@@ -2,100 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 026D857A2A1
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 17:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC33857A2AD
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 17:09:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235107AbiGSPHW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 19 Jul 2022 11:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
+        id S237596AbiGSPJl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 19 Jul 2022 11:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233614AbiGSPHU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 11:07:20 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000AD5005C;
-        Tue, 19 Jul 2022 08:07:16 -0700 (PDT)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LnMWl0Fm3z67ykV;
-        Tue, 19 Jul 2022 23:02:43 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 19 Jul 2022 17:07:14 +0200
-Received: from localhost (10.81.209.49) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 19 Jul
- 2022 16:07:13 +0100
-Date:   Tue, 19 Jul 2022 16:07:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Lukas Wunner" <lukas@wunner.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V13 8/9] cxl/port: Retry reading CDAT on failure
-Message-ID: <20220719160711.000078f9@Huawei.com>
-In-Reply-To: <62d043d8bd04c_16fb9729422@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220705154932.2141021-1-ira.weiny@intel.com>
-        <20220705154932.2141021-9-ira.weiny@intel.com>
-        <62d043d8bd04c_16fb9729422@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S236184AbiGSPJk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 11:09:40 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 775665073D
+        for <linux-pci@vger.kernel.org>; Tue, 19 Jul 2022 08:09:39 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-183-zqQ9LstYPPWsc5DQ7f8mTg-1; Tue, 19 Jul 2022 16:09:36 +0100
+X-MC-Unique: zqQ9LstYPPWsc5DQ7f8mTg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Tue, 19 Jul 2022 16:09:35 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Tue, 19 Jul 2022 16:09:35 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Stafford Horne' <shorne@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] asm-generic: Add new pci.h and use it
+Thread-Topic: [PATCH v2 2/2] asm-generic: Add new pci.h and use it
+Thread-Index: AQHYm2+TjSo9GtSn30WwmySb6t2iTK2Fy5bA
+Date:   Tue, 19 Jul 2022 15:09:35 +0000
+Message-ID: <874af766883a4c0da6759eff433ec6d6@AcuMS.aculab.com>
+References: <20220717033453.2896843-1-shorne@gmail.com>
+ <20220717033453.2896843-3-shorne@gmail.com> <YtTjeEnKr8f8z4JS@infradead.org>
+ <CAK8P3a1KJe4K5g1z-Faoxc9NhXqjCUWxnvk2HPxsj2wzG_iDbg@mail.gmail.com>
+ <CAAfxs740yz1vJmtFHOPTXT6fqi0+37SR_OhoGsONe4mx_21+_g@mail.gmail.com>
+ <CAK8P3a1Mo9+-t21rkP8SDnPrmbj3-uuVPtmHbeUerAevxN3TNw@mail.gmail.com>
+ <YtaNvpE7AA/4eV1I@antec>
+ <CAK8P3a2UTND+F83k2uQ+f=o1GWV=oa5coshy8Hy+cKHUGuNzEg@mail.gmail.com>
+ <YtaiSEAnMhVqR4HS@antec>
+In-Reply-To: <YtaiSEAnMhVqR4HS@antec>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.81.209.49]
-X-ClientProxiedBy: lhreml749-chm.china.huawei.com (10.201.108.199) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Jul 2022 09:27:04 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> ira.weiny@ wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The CDAT read may fail for a number of reasons but mainly it is possible
-> > to get different parts of a valid state.  The checksum in the CDAT table
-> > protects against this.  
+From: Stafford Horne
+> Sent: 19 July 2022 13:24
 > 
-> I don't know what "different parts of a valid state" means. The CDAT
-> should not be changing as it is being read unless someone is issuing a
-> set-partition while the DOE operation is happening.
-
-Unfortunately not true. The device is allowed to change it with no input
-from OS software at all.
-
-From CDAT spec
-
-"For Revision=1, the following changes are permitted during the
-runtime
-• Changes to the latency and bandwidth fields in DSLBIS
-• Changes to the latency and bandwidth fields in SSLBIS
-• Changes to the number of DSEMTS instances and their
-contents
-The changes to latency and bandwidth may represent events such
-as failover or degradation that are internal to a component."
-
-> Rather than
-> arbitrary retries, block out set-partition while CDAT is being read.
-
-Blocking that out is still useful even though we probably still need retries.
-
+> On Tue, Jul 19, 2022 at 01:55:03PM +0200, Arnd Bergmann wrote:
+> > On Tue, Jul 19, 2022 at 12:55 PM Stafford Horne <shorne@gmail.com> wrote:
+> >
+> > > diff --git a/drivers/comedi/drivers/comedi_isadma.c b/drivers/comedi/drivers/comedi_isadma.c
+> > > index 700982464c53..508421809128 100644
+> > > --- a/drivers/comedi/drivers/comedi_isadma.c
+> > > +++ b/drivers/comedi/drivers/comedi_isadma.c
+> > > @@ -104,8 +104,10 @@ unsigned int comedi_isadma_poll(struct comedi_isadma *dma)
+> > >
+> > >         flags = claim_dma_lock();
+> > >         clear_dma_ff(desc->chan);
+> > > +#ifdef CONFIG_X86_32
+> > >         if (!isa_dma_bridge_buggy)
+> > >                 disable_dma(desc->chan);
+> > > +#endif
+> >
+> > There is a logic mistake here: if we are on something other than x86-32,
+> > this always needs to call the disable_dma()/enable_dma().
 > 
-> You can use {set,clear}_exclusive_cxl_commands() to temporarily lock out
-> set-partition while the CDAT read is happening.
+> Oops, thats right.  Sorry, I should have noticed that.
 > 
-> ...and since this series is only for enabling 
+> > Not sure how to best express this in a readable way, something like this
+> > would work:
+> 
+> Option 1:
+> 
+> > #ifdef CONFIG_X86_32
+> >         if (!isa_dma_bridge_buggy)
+> > #endif
+> >                disable_dma(desc->chan);
+> >
+> >
+> > or possibly at the start of this file, a
+> 
+> Option 2:
+> 
+> > #ifndef CONFIG_X86_32
+> > #define isa_dma_bridge_buggy 0
+> > #endif
+> 
+> Option 3:
+> 
+> > Or we could try to keep the generic definition in a global header
+> > like linux/isa-dma.h.
+> 
+> Perhaps option 3 makes the whole patch the most clean.
+
+Isn't there a define that can be used inside an if?
+So you could do:
+		if (!IS_CONFIG_X86_32 || !isa_dma_bridge_buggy)
+			disable_dma();
+(but I can't remember the name!)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
