@@ -2,56 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 770F657A2D7
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 17:21:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95DD057A3D3
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 17:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239023AbiGSPV5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jul 2022 11:21:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51796 "EHLO
+        id S239673AbiGSP6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 11:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbiGSPVz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 11:21:55 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5273550B1;
-        Tue, 19 Jul 2022 08:21:53 -0700 (PDT)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LnMsv75gxz689SS;
-        Tue, 19 Jul 2022 23:18:27 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 19 Jul 2022 17:21:48 +0200
-Received: from localhost (10.81.209.49) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 19 Jul
- 2022 16:21:47 +0100
-Date:   Tue, 19 Jul 2022 16:21:45 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V14 0/7] CXL: Read CDAT
-Message-ID: <20220719162145.000054bc@Huawei.com>
-In-Reply-To: <20220715030424.462963-1-ira.weiny@intel.com>
-References: <20220715030424.462963-1-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.209.49]
-X-ClientProxiedBy: lhreml749-chm.china.huawei.com (10.201.108.199) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S239672AbiGSP6n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 11:58:43 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19285B7A5
+        for <linux-pci@vger.kernel.org>; Tue, 19 Jul 2022 08:58:40 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id s18-20020a17090aa11200b001f1e9e2438cso3417600pjp.2
+        for <linux-pci@vger.kernel.org>; Tue, 19 Jul 2022 08:58:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GtB8BI3Lg6RgIY+Axlp49dX2tSqW+wRJGV6SskGWNCM=;
+        b=X9q2GMc7HLMzv8eirrUEa5w1MWi56Y0W9j1JKwKt/i1hk0onwXPhvLNJuaz04N5yLC
+         QFzEf+SdOP0+Ok5BCOqp5kJnwAlrPuXztiqghKC0+T7VuOmuNm/UA6mcOGMRX27SdVDg
+         MIHYRin+E7ZWiYZ64pkCzFtLSM0a92iD994BxYhngFMi8qh09rSjw+3UDF6EwPHAfNm0
+         lA+tnQFr3nLUQHma2Wk56b5JO57cQHqs2e03f+jJVKp1vvtgCSBMuGC2nf2OAwzSD6ZX
+         Te4nQTx1/QnL5hXh6coSlvDGehckBcBOi3cUsrRpSdcBDGWwC/K+te9+oMGQbZaDhnia
+         ojCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=GtB8BI3Lg6RgIY+Axlp49dX2tSqW+wRJGV6SskGWNCM=;
+        b=CjWiatT+YMTXb+GQdVuV+9TgpUH9McvmOtaRVC2SapqUOTxqP77DRPDTsIqRSVVyPp
+         SYnSKS+MqUqJk4TBrINEp7L1559L4WXrm4Nfg54mwPmDn9kLvaTAkXkMBYrQY1TZF6/F
+         mB0SQ3n+0T1O0d2lTume+u2ZY5Lu7QLMZX06RDkjw7P9Kyo7nDYdc07Ho+s1BJzk6IQ8
+         iKNawj4Tk5gK/3OS88IH+T4BHCdXg33dqMZi4hPoEyuCxVgJsS1+tP0WaPsqe1rsx8Nk
+         OTJw6BbF4+fTap7Ypp5lbM2Kn7wRxYu9QwqHNSJLsM2kt6V9048Jqads2Ma/axcES4Lz
+         Zynw==
+X-Gm-Message-State: AJIora/uk9wJ5BRkSn1CSENnHW7hKZY24r5AYpqXNZ/j0pf/SM9r4q/Y
+        R4Ke6wa/9IUhRaXRE99sNOEakg==
+X-Google-Smtp-Source: AGRyM1umXjHvfiCigjJ7IRDdLwG4rJDpGBCKgBPKB6XLgieis4LZ9EeDAGrjqpraxW+lvusRBwMHrQ==
+X-Received: by 2002:a17:902:eb86:b0:16c:c491:fce7 with SMTP id q6-20020a170902eb8600b0016cc491fce7mr24066423plg.14.1658246319913;
+        Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id e2-20020a17090a118200b001ef3f85d1aasm14072478pja.9.2022.07.19.08.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
+Date:   Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
+X-Google-Original-Date: Tue, 19 Jul 2022 08:58:37 PDT (-0700)
+Subject:     Re: [PATCH v3 2/2] asm-generic: Add new pci.h and use it
+In-Reply-To: <20220718004114.3925745-3-shorne@gmail.com>
+CC:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        shorne@gmail.com, catalin.marinas@arm.com,
+        Will Deacon <will@kernel.org>, guoren@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-um@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     shorne@gmail.com
+Message-ID: <mhng-3ae42214-abe0-4fad-9fa9-8f19809fa4d9@palmer-mbp2014>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,207 +76,239 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Jul 2022 20:04:17 -0700
-ira.weiny@intel.com wrote:
+On Sun, 17 Jul 2022 17:41:14 PDT (-0700), shorne@gmail.com wrote:
+> The asm/pci.h used for many newer architectures share similar
+> definitions.  Move the common parts to asm-generic/pci.h to allow for
+> sharing code.
+>
+> Two things to note are:
+>
+>  - isa_dma_bridge_buggy, traditionally this is defined in asm/dma.h but
+>    these architectures avoid creating that file and add the definition
+>    to asm/pci.h.
+>  - ARCH_GENERIC_PCI_MMAP_RESOURCE, csky does not define this so we
+>    undefine it after including asm-generic/pci.h.  Why doesn't csky
+>    define it?
+>  - pci_get_legacy_ide_irq, This function is only used on architectures
+>    that support PNP.  It is only maintained for arm64, in other
+>    architectures it is removed.
+>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
+> ---
+> Second note on isa_dma_bridge_buggy, this is set on x86 but it it also set in
+> pci/quirks.c.  We discussed limiting it only to x86 though as its a general
+> quick triggered by pci ids I think it will be more tricky than we thought so I
+> will leave as is.  It might be nice to move it out of asm/dma.h and into
+> asm/pci.h though.
+>
+> Since v2:
+>  - Nothing
+> Since v1:
+>  - Remove definition of pci_get_legacy_ide_irq
+>
+>  arch/arm64/include/asm/pci.h | 12 +++---------
+>  arch/csky/include/asm/pci.h  | 24 ++++--------------------
+>  arch/riscv/include/asm/pci.h | 25 +++----------------------
+>  arch/um/include/asm/pci.h    | 24 ++----------------------
+>  include/asm-generic/pci.h    | 36 ++++++++++++++++++++++++++++++++++++
+>  5 files changed, 48 insertions(+), 73 deletions(-)
+>  create mode 100644 include/asm-generic/pci.h
+>
+> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
+> index b33ca260e3c9..1180e83712f5 100644
+> --- a/arch/arm64/include/asm/pci.h
+> +++ b/arch/arm64/include/asm/pci.h
+> @@ -9,7 +9,6 @@
+>  #include <asm/io.h>
+>
+>  #define PCIBIOS_MIN_IO		0x1000
+> -#define PCIBIOS_MIN_MEM		0
+>
+>  /*
+>   * Set to 1 if the kernel should re-assign all PCI bus numbers
+> @@ -18,9 +17,6 @@
+>  	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
+>
+>  #define arch_can_pci_mmap_wc() 1
+> -#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
+> -
+> -extern int isa_dma_bridge_buggy;
+>
+>  #ifdef CONFIG_PCI
+>  static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
+> @@ -28,11 +24,9 @@ static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
+>  	/* no legacy IRQ on arm64 */
+>  	return -ENODEV;
+>  }
+> -
+> -static inline int pci_proc_domain(struct pci_bus *bus)
+> -{
+> -	return 1;
+> -}
+>  #endif  /* CONFIG_PCI */
+>
+> +/* Generic PCI */
+> +#include <asm-generic/pci.h>
+> +
+>  #endif  /* __ASM_PCI_H */
+> diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
+> index ebc765b1f78b..44866c1ad461 100644
+> --- a/arch/csky/include/asm/pci.h
+> +++ b/arch/csky/include/asm/pci.h
+> @@ -9,26 +9,10 @@
+>
+>  #include <asm/io.h>
+>
+> -#define PCIBIOS_MIN_IO		0
+> -#define PCIBIOS_MIN_MEM		0
+> +/* Generic PCI */
+> +#include <asm-generic/pci.h>
+>
+> -/* C-SKY shim does not initialize PCI bus */
+> -#define pcibios_assign_all_busses() 1
+> -
+> -extern int isa_dma_bridge_buggy;
+> -
+> -#ifdef CONFIG_PCI
+> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
+> -{
+> -	/* no legacy IRQ on csky */
+> -	return -ENODEV;
+> -}
+> -
+> -static inline int pci_proc_domain(struct pci_bus *bus)
+> -{
+> -	/* always show the domain in /proc */
+> -	return 1;
+> -}
+> -#endif  /* CONFIG_PCI */
+> +/* csky doesn't use generic pci resource mapping */
+> +#undef ARCH_GENERIC_PCI_MMAP_RESOURCE
+>
+>  #endif  /* __ASM_CSKY_PCI_H */
+> diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
+> index 7fd52a30e605..12ce8150cfb0 100644
+> --- a/arch/riscv/include/asm/pci.h
+> +++ b/arch/riscv/include/asm/pci.h
+> @@ -12,29 +12,7 @@
+>
+>  #include <asm/io.h>
+>
+> -#define PCIBIOS_MIN_IO		0
+> -#define PCIBIOS_MIN_MEM		0
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Details of changes are in the individual patches.
-> 
-> Major changes from V13:[10]
-> 	Dan minor updates
-> 	Willy's suggestion of documentation is good but I'm deferring it until
-> 	we get the location of the PCI mailboxes settled.
-> 	Drop retry CDAT patch
-> 	Drop DSMAS patch
-> 	Rebased on latest cxl-pending
-> 
-> CXL drivers need various data which are provided through generic DOE mailboxes
-> as defined in the PCIe 6.0 spec.[1]
-> 
-> One such data is the Coherent Device Attribute Table (CDAT).  CDAT data provides
-> coherent information about the various devices in the system.  It was developed
-> because systems no longer have a priori knowledge of all coherent devices
-> within a system.  CDAT describes the coherent characteristics of the
-> components on the CXL bus separate from system configurations.  The OS can
-> then, for example, use this information to form correct interleave sets.
-> 
-> To begin reading the CDAT the OS must have support to access the DOE mailboxes
-> provided by the CXL devices.
-> 
-> Because DOE is not specific to DOE but is provided within the PCI spec, the
-> series adds PCI DOE capability library functions.  These functions allow for
-> the iteration of the DOE capabilities on a device as well as creating
-> pci_doe_mb structures which can control the operation of the DOE state machine.
-> 
-> For now the iteration of and storage of the DOE mailboxes is done on memdev
-> objects within the CXL stack.  When this is needed in more generic code this
-> can be lifted later.
-> 
-> This work was tested using qemu.
-> 
-> [0] https://lore.kernel.org/linux-cxl/20211105235056.3711389-1-ira.weiny@intel.com/
-> [1] https://pcisig.com/specifications
-> [2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
-> [3] https://lore.kernel.org/linux-cxl/20220201071952.900068-1-ira.weiny@intel.com/
-> [4] https://lore.kernel.org/linux-cxl/20220330235920.2800929-1-ira.weiny@intel.com/
-> [5] https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com/
-> [6] https://lore.kernel.org/linux-cxl/20220531152632.1397976-1-ira.weiny@intel.com/
-> [7] https://lore.kernel.org/linux-cxl/20220605005049.2155874-1-ira.weiny@intel.com/
-> [8] https://lore.kernel.org/linux-cxl/20220610202259.3544623-1-ira.weiny@intel.com/
-> [9] https://lore.kernel.org/linux-cxl/20220628041527.742333-1-ira.weiny@intel.com/
-> [10] https://lore.kernel.org/linux-cxl/20220705154932.2141021-1-ira.weiny@intel.com/
-> 
-> 
-> Previous changes
-> ================
-> 
-> Changes from V12:[9]
-> 	A couple of bug fixes in the new XArray stuff
-> 	Remove the IRQ support because I did not realize how that worked and it
-> 	was complicating things.
-> 	Remove busy retries and replace with an error as there is no good way
-> 	to ensure it will work.
+My for-next changes these in bb356ddb78b2 ("RISC-V: PCI: Avoid handing 
+out address 0 to devices").  Do you mind either splitting out the 
+arch/riscv bits or having this in via some sort of shared tag?
 
-This is fine for userspace access, but I think we probably will want retries
-once we are using it in kernel.  Whilst we'd not expect it to be common as
-per (very late) reply I sent to v13 discussion, the CDAT table can change
-all on it's own (as far as software can see).  I'd expect it to be a once in
-a blue moon thing though.
-
-
-> 	Other code clean ups mentioned in the individual patches.
-> 
-> Changes from V11:[8]
-> 	The major change in this version is to remove the workqueue from the
-> 	internal implementation of the state machine.  A single ordered
-> 	workqueue within each mailbox processes tasks submitted.  This
-> 	workqueue takes care of all locking and guarantees that tasks are
-> 	completed in the order submitted.  Any synchronization which is
-> 	required between tasks will need to be handled by the user of the
-> 	mailbox.  However, the user can depend on work items being completed in
-> 	the order they are submitted.  So a single thread submitter is
-> 	guaranteed to get all work items completed in order.  This also aids in
-> 	the support of a single mailbox supporting multiple protocols.  Each
-> 	protocol could have a separate thread submitting tasks for that
-> 	protocol.  The mailbox object will ensure that each protocol task is
-> 	complete before another task starts.  But multiple user threads can be
-> 	submitting tasks for different protocols all at the same time without
-> 	regard to other protocols being used.
-> 
-> 	XArrays are used throughout the series.
-> 
-> 	Other minor changes are noted in the individual patches.
-> 
-> Changes from V10:[7]
-> 	Address Ben Widawsky's comments
-> 		Protect against potentially malicious devices.
-> 		Fix ownership issue of cdat_mb
-> 
-> Changes from V9:[6]
-> 	Address feedback from
-> 		Lukas Wunner, Davidlohr Bueso, Jonathan Cameron,
-> 		Alison Schofield, and Ben Widawsky
-> 		Details in each individual patch.
-> 
-> Changes from V8:[5]
-> 	For this version I've punted a bit to get it out and drop the auxiliary
-> 	bus functionality.  I like where Jonathan is going with the port driver
-> 	idea.  I think eventually the irq/mailbox creation will need to be more
-> 	generic in a PCI port driver.  I've modeled this version on such an
-> 	architecture but used the CXL port for the time being.
-> 
-> 	From Dan
-> 		Drop the auxiliary bus/device
-> 	From Jonathan
-> 		Cleanups
-> 	From Bjorn
-> 		Clean up commit messages
-> 		move pci-doe.c to doe.c
-> 		Clean up PCI spec references
-> 		Ensure all messages use pci_*()
-> 		Add offset to error messages to distinguish mailboxes
-> 			use hex for DOE offsets
-> 		Print 4 nibbles for Vendor ID and 2 for type.
-> 		s/irq/IRQ in comments
-> 		Fix long lines
-> 		Fix typos
-> 
-> 
-> Changes from V7:[4]
-> 	Avoid code bloat by making pci-doe.c conditional on CONFIG_PCI_DOE
-> 		which is auto selected by the CXL_PCI config option.
-> 	Minor code clean ups
-> 	Fix bug in pci_doe_supports_prot()
-> 	Rebase to cxl-pending
-> 
-> Changes from V6:[3]
-> 	The big change is the removal of the auxiliary bus code from the PCI
-> 	layer.  The auxiliary bus usage is now in the CXL layer.  The PCI layer
-> 	provides helpers for subsystems to utilize DOE mailboxes by creating a
-> 	pci_doe_mb object which controls a state machine for that mailbox
-> 	capability.  The CXL layer wraps this object in an auxiliary device and
-> 	driver which can then be used to determine if the kernel is controlling
-> 	the capability or it is available to be used by user space.  Reads from
-> 	user space via lspci are allowed.  Writes are allowed but flagged via a
-> 	tainting the kernel.
-> 
-> 	Feedback from Bjorn, Jonathan, and Dan
-> 		Details in each patch
-> 
-> Changes from V5:[0]
-> 
-> 	Rework the patch set to split PCI vs CXL changes
-> 		Also make each change a bit more stand alone for easier review
-> 	Add cxl_cdat structure
-> 	Put CDAT related data structures in cdat.h
-> 	Clarify some device lifetimes with comments
-> 	Incorporate feedback from Jonathan, Bjorn and Dan
-> 		The bigest change is placing the DOE scanning code into the
-> 			pci_doe driver (part of the PCI codre).
-> 		Validate the CDAT when it is read rather than before DSMAS
-> 			parsing
-> 		Do not report DSMAS failure as an error, report a warning and
-> 			keep going.
-> 		Retry reading the table 1 time.
-> 	Update commit messages and this cover letter
-> 
-> 
-> 
-> Ira Weiny (5):
->   PCI: Replace magic constant for PCI Sig Vendor ID
->   cxl/pci: Create PCI DOE mailbox's for memory devices
->   driver-core: Introduce BIN_ATTR_ADMIN_{RO,RW}
->   cxl/port: Read CDAT table
->   cxl/port: Introduce cxl_cdat_valid()
-> 
-> Jonathan Cameron (2):
->   PCI: Add vendor ID for the PCI SIG
->   PCI/DOE: Add DOE mailbox support functions
-> 
->  .clang-format                           |   1 +
->  Documentation/ABI/testing/sysfs-bus-cxl |  10 +
->  drivers/cxl/Kconfig                     |   1 +
->  drivers/cxl/cdat.h                      |  63 +++
->  drivers/cxl/core/pci.c                  | 206 +++++++++
->  drivers/cxl/cxl.h                       |   5 +
->  drivers/cxl/cxlmem.h                    |   3 +
->  drivers/cxl/cxlpci.h                    |   1 +
->  drivers/cxl/pci.c                       |  44 ++
->  drivers/cxl/port.c                      |  54 +++
->  drivers/pci/Kconfig                     |   3 +
->  drivers/pci/Makefile                    |   1 +
->  drivers/pci/doe.c                       | 546 ++++++++++++++++++++++++
->  drivers/pci/probe.c                     |   2 +-
->  include/linux/pci-doe.h                 |  79 ++++
->  include/linux/pci_ids.h                 |   1 +
->  include/linux/sysfs.h                   |  16 +
->  include/uapi/linux/pci_regs.h           |  29 +-
->  18 files changed, 1063 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/cxl/cdat.h
->  create mode 100644 drivers/pci/doe.c
->  create mode 100644 include/linux/pci-doe.h
-> 
-> 
-> base-commit: b060edfd8cdd52bc8648392500bf152a8dd6d4c5
-
+> -
+> -/* RISC-V shim does not initialize PCI bus */
+> -#define pcibios_assign_all_busses() 1
+> -
+> -#define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
+> -
+> -extern int isa_dma_bridge_buggy;
+> -
+>  #ifdef CONFIG_PCI
+> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
+> -{
+> -	/* no legacy IRQ on risc-v */
+> -	return -ENODEV;
+> -}
+> -
+> -static inline int pci_proc_domain(struct pci_bus *bus)
+> -{
+> -	/* always show the domain in /proc */
+> -	return 1;
+> -}
+> -
+>  #ifdef	CONFIG_NUMA
+>
+>  static inline int pcibus_to_node(struct pci_bus *bus)
+> @@ -50,4 +28,7 @@ static inline int pcibus_to_node(struct pci_bus *bus)
+>
+>  #endif  /* CONFIG_PCI */
+>
+> +/* Generic PCI */
+> +#include <asm-generic/pci.h>
+> +
+>  #endif  /* _ASM_RISCV_PCI_H */
+> diff --git a/arch/um/include/asm/pci.h b/arch/um/include/asm/pci.h
+> index da13fd5519ef..34fe4921b5fa 100644
+> --- a/arch/um/include/asm/pci.h
+> +++ b/arch/um/include/asm/pci.h
+> @@ -4,28 +4,8 @@
+>  #include <linux/types.h>
+>  #include <asm/io.h>
+>
+> -#define PCIBIOS_MIN_IO		0
+> -#define PCIBIOS_MIN_MEM		0
+> -
+> -#define pcibios_assign_all_busses() 1
+> -
+> -extern int isa_dma_bridge_buggy;
+> -
+> -#ifdef CONFIG_PCI
+> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
+> -{
+> -	/* no legacy IRQs */
+> -	return -ENODEV;
+> -}
+> -#endif
+> -
+> -#ifdef CONFIG_PCI_DOMAINS
+> -static inline int pci_proc_domain(struct pci_bus *bus)
+> -{
+> -	/* always show the domain in /proc */
+> -	return 1;
+> -}
+> -#endif  /* CONFIG_PCI */
+> +/* Generic PCI */
+> +#include <asm-generic/pci.h>
+>
+>  #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+>  /*
+> diff --git a/include/asm-generic/pci.h b/include/asm-generic/pci.h
+> new file mode 100644
+> index 000000000000..fbc25741696a
+> --- /dev/null
+> +++ b/include/asm-generic/pci.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __ASM_GENERIC_PCI_H
+> +#define __ASM_GENERIC_PCI_H
+> +
+> +#include <linux/types.h>
+> +
+> +#ifndef PCIBIOS_MIN_IO
+> +#define PCIBIOS_MIN_IO		0
+> +#endif
+> +
+> +#ifndef PCIBIOS_MIN_MEM
+> +#define PCIBIOS_MIN_MEM		0
+> +#endif
+> +
+> +#ifndef pcibios_assign_all_busses
+> +/* For bootloaders that do not initialize the PCI bus */
+> +#define pcibios_assign_all_busses() 1
+> +#endif
+> +
+> +extern int isa_dma_bridge_buggy;
+> +
+> +/* Enable generic resource mapping code in drivers/pci/ */
+> +#define ARCH_GENERIC_PCI_MMAP_RESOURCE
+> +
+> +#ifdef CONFIG_PCI
+> +
+> +static inline int pci_proc_domain(struct pci_bus *bus)
+> +{
+> +	/* always show the domain in /proc */
+> +	return 1;
+> +}
+> +
+> +#endif /* CONFIG_PCI */
+> +
+> +#endif /* __ASM_GENERIC_PCI_H */
