@@ -2,232 +2,339 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 949E1579993
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 14:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCEBA579AC3
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 14:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237912AbiGSME5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jul 2022 08:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
+        id S237784AbiGSMSp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 08:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238075AbiGSMED (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 08:04:03 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CC04BD39;
-        Tue, 19 Jul 2022 04:59:48 -0700 (PDT)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26JBhBZS010624;
-        Tue, 19 Jul 2022 11:58:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=1bpmIwvLzc5rcXgHQnnpEZ/Q/uGD8Ks+HgDZHU3a1oU=;
- b=XsGGcQhgQqeaBTDby6kBDSnY3UWfeOhcYCvhv1wB6ujJcxJiGxS0MZNEpZpP82C7GxFD
- qy0fOIgAnaZwSxQsme0oU2OpnkxYpE+uDH15E6VZ9FqoTPk7uueHM+xVjuA9H19obp0k
- s6iB/AuopbdOfFuRs3T2itJljC8cZmRau6vqNPrTRTAxzfHZyritEJt69CrO+tr2fYk/
- a5TusVt3iaTwjyfbAiIDSIJqvsZkWlSpdU3F1bDpC3b6TgQn/5VHYn1uIF65z9GqayDx
- YdNoMbE1y4UxcJQu+DMYqVGDiinlaBUTWkz8lq6RHrSk8VDZR7Xjb4CnhDZwmjv11EvB 1g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hdv01gdw7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 11:58:04 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26JBhkdX012906;
-        Tue, 19 Jul 2022 11:58:03 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hdv01gduu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 11:58:03 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26JBoeWj007350;
-        Tue, 19 Jul 2022 11:58:00 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 3hbmy8v4fv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 11:58:00 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26JBvvjl21299544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Jul 2022 11:57:57 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2952D4C040;
-        Tue, 19 Jul 2022 11:57:57 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3ABB34C044;
-        Tue, 19 Jul 2022 11:57:54 +0000 (GMT)
-Received: from [9.171.46.191] (unknown [9.171.46.191])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Jul 2022 11:57:54 +0000 (GMT)
-Message-ID: <38027ee9-bc70-6a2c-202c-1b4d2c9bdc74@linux.ibm.com>
-Date:   Tue, 19 Jul 2022 14:02:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v3 1/2] asm-generic: Remove pci.h copying remaining code
- to x86
-Content-Language: en-US
-To:     Stafford Horne <shorne@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
+        with ESMTP id S238977AbiGSMRL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 08:17:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B9A564DF;
+        Tue, 19 Jul 2022 05:06:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C25896175E;
+        Tue, 19 Jul 2022 12:06:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF6A4C341CB;
+        Tue, 19 Jul 2022 12:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658232376;
+        bh=uwACB1yuObS8U+E/T/PUesn+NshojJNg3KPoba6GifE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P5nrzWujzDqIndV4XVXajZPIvbUcjqKAtF6FAI5FhVGpEn7ny8uokTaD5IBVi1Lht
+         AOh0+8o1yyA7lmyryyYP23TFBDq5QYHiRH1d3jfkQdmk5KuVNbRwTfvSj6npmSejGk
+         X+U2W57C4AwDaUUCnb4aZcTDlwBThQ0WjrlRepIyH/nNHVBjF01oLCs33iAl/m4WUP
+         EW9nb/MI+C2MZUIGQ2sqE4YmJoAve+kBs6EKV3LQdjvBNTaeqX0t/9wXKzjZroeU/w
+         mXK5EIUY8ly4aDHEJxZeuLcCy+0J1qwr2KBbcim/6QL036N6nrurrzScIWYVUVWPd5
+         n5DAexrtujngg==
+Received: by pali.im (Postfix)
+        id D46B4F3C; Tue, 19 Jul 2022 14:06:12 +0200 (CEST)
+Date:   Tue, 19 Jul 2022 14:06:12 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Elad Nachman <enachman@marvell.com>
+Cc:     Ratheesh Kannoth <rkannoth@marvell.com>,
+        Tanmay Jagdale <tanmay@marvell.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Arun Easi <aeasi@marvell.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nick Child <nick.child@ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-References: <20220718004114.3925745-1-shorne@gmail.com>
- <20220718004114.3925745-2-shorne@gmail.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-In-Reply-To: <20220718004114.3925745-2-shorne@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QgXJydNrlCCOif_CNKu_BbM2Q3VZjQ3W
-X-Proofpoint-GUID: cwEMgAD_v6m2Yb1ImP5KSKWCOkQJrtGO
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        Veerasenareddy Burru <vburru@marvell.com>,
+        Wojciech Bartczak <wbartczak@marvell.com>
+Subject: Re: [EXT] Re: Issues with A3720 PCIe controller driver pci-aardvark.c
+Message-ID: <20220719120612.eziy4magdznr6uek@pali>
+References: <20210723221710.wtztsrddudnxeoj3@pali>
+ <20220216200940.fwdwk5rcb4zq6dyg@pali>
+ <20220710112108.jegpz4khfsrb4ahd@pali>
+ <BN9PR18MB425154FE5019DCAF2028A1D5DB8D9@BN9PR18MB4251.namprd18.prod.outlook.com>
+ <20220719093323.nzkpe2kcibszzgzm@pali>
+ <BN9PR18MB4251243341CBA5A66107F6ADDB8F9@BN9PR18MB4251.namprd18.prod.outlook.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-18_22,2022-07-19_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 clxscore=1011 phishscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207190048
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BN9PR18MB4251243341CBA5A66107F6ADDB8F9@BN9PR18MB4251.namprd18.prod.outlook.com>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello Elad and thank you for information!
 
+I have looked at register 0x40000408, but it cannot be accessed from
+A3720 ARM A53 core, because that register is in address space of secure
+ARM CM3 core, to which Linux kernel does not access.
 
-On 7/18/22 02:41, Stafford Horne wrote:
-> The generic pci.h header now only provides a definition of
-> pci_get_legacy_ide_irq which is used by architectures that support PNP.
-> Of the architectures that use asm-generic/pci.h this is only x86.
+I looked into my notes and bit 6 of register 0x40000408 controls AXI
+SLVERR propagation just from BCM slave to CM3 core. BCM is Base
+cryptographic module, which is used by the secure firmware running on
+CM3 core. So it looks like it is irrelevant to ARM A53 cores on which is
+running Linux kernel and which receive these crashes, and also does not
+apply for PCIe AXI slave which is connected A3720 South Fabric.
+I guess that register 0x40000408 controls only Fabric directly connected
+to ARM CM3 core.
+
+So it is needed to know what is equivalent register for A53 and A3720
+South Fabric. Or register specific for A3720 PCIe block, so for
+Unsupported Request, Completer Abort, Configuration request retry status
+and Completion Timeout does not throw AXI SLVERR to A53 core.
+
+Whole description of errata is important for kernel developers /
+maintainers who will be reviewing code. We do not need whole document,
+just that one errata. It would really help if Marvell could get
+permission for sharing this errata for kernel developers. Because it is
+really a pain if every kernel developer has to go throw NDA/LULA process
+and wait for Sales team if they approve access or not.
+
+In past documentation for Marvell SoCs was public and every developer
+was able to download it from marvell.com website without registration.
+But now all links to public documentation do not work anymore.
+Thankfully web.archive.org created backup of some of them and they are
+linked from Kernel documentation file:
+https://www.kernel.org/doc/html/latest/arm/marvell.html
+(see how many documents were lost...)
+
+Anyway, I have access to Marvell portal and some A3720 documents, but
+lot of parts in those documents to which I have access are incomplete
+or registers undocumented.
+
+So to recap, workaround should be to disable ordering checks via
+DIS_ORD_CHK bit, adding DSB barrier when entering aardvark summary irq
+handler and ideally also enable relaxed ordering bit, so initiated
+transactions could use relaxed ordering when requested (as strong
+ordering does not work).
+
+On Tuesday 19 July 2022 10:50:59 Elad Nachman wrote:
+> Hi Pali,
 > 
-> This patch removes the old pci.h in order to make room for a new
-> pci.h to be used by arm64, riscv, openrisc, etc.
+> Regarding your request - while I understand the need, I am bound by the internal regulation set forth by my employer.
+> Passing of any document must by done via the Marvell Support site following account creation with the proper NDA and LULA (Limited Use License Agreement) in place.
+> Unfortunately I do not have the power to bypass this internal, hard requirement.
+> Anyone needing these documents should apply for a Marvell support site account.
+> I can try to expedite request internally or if an account is set in place, request on your behalf access to Aramda 37xx documents.
+> The final decision is of the Marvell Support and sales.
 > 
-> The existing code in pci.h is moved out to x86.  On other architectures
-> we clean up any outstanding references.
+> Regarding AXI SLVERR, this is the propagation of the following PCIe errors: Unsupported Request, Completer Abort, Configuration request retry status and Completion Timeout.
 > 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
-> Since v2:
->   - Remove pci_get_legacy_ide_irq in m68k
-> Since v1:
->   - Remove pci_get_legacy_ide_irq for most architectures as its not needed.
+> To prevent SLVERR generated for out-of-range errors, clear bit 6 (0x40) of register 0x40000408 (physical address).
 > 
->   arch/alpha/include/asm/pci.h   |  1 -
->   arch/ia64/include/asm/pci.h    |  1 -
->   arch/m68k/include/asm/pci.h    |  2 --
->   arch/powerpc/include/asm/pci.h |  1 -
->   arch/s390/include/asm/pci.h    |  1 -
->   arch/sparc/include/asm/pci.h   |  9 ---------
->   arch/x86/include/asm/pci.h     |  6 ++++--
->   arch/xtensa/include/asm/pci.h  |  3 ---
->   include/asm-generic/pci.h      | 17 -----------------
->   9 files changed, 4 insertions(+), 37 deletions(-)
->   delete mode 100644 include/asm-generic/pci.h
+> Regarding ordering model, Erratum is a description of the final HW behavior which deviates from the design.
+> The design was meant to support strong ordering, unfortunately due to some kind of mis-implementation, this feature does not work as designed. The erratum is designed to provide a workaround, which perhaps is not perfect (which why you are confused as to what ordering model is supported), but is the best available with the actual physical HW behavior.
 > 
-> diff --git a/arch/alpha/include/asm/pci.h b/arch/alpha/include/asm/pci.h
-> index cf6bc1e64d66..8ac5af0fc4da 100644
-> --- a/arch/alpha/include/asm/pci.h
-> +++ b/arch/alpha/include/asm/pci.h
-> @@ -56,7 +56,6 @@ struct pci_controller {
->   
->   /* IOMMU controls.  */
->   
-> -/* TODO: integrate with include/asm-generic/pci.h ? */
->   static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
->   {
->   	return channel ? 15 : 14;
-> diff --git a/arch/ia64/include/asm/pci.h b/arch/ia64/include/asm/pci.h
-> index 8c163d1d0189..218412d963c2 100644
-> --- a/arch/ia64/include/asm/pci.h
-> +++ b/arch/ia64/include/asm/pci.h
-> @@ -63,7 +63,6 @@ static inline int pci_proc_domain(struct pci_bus *bus)
->   	return (pci_domain_nr(bus) != 0);
->   }
->   
-> -#define HAVE_ARCH_PCI_GET_LEGACY_IDE_IRQ
->   static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
->   {
->   	return channel ? isa_irq_to_vector(15) : isa_irq_to_vector(14);
-> diff --git a/arch/m68k/include/asm/pci.h b/arch/m68k/include/asm/pci.h
-> index 5a4bc223743b..ccdfa0dc8413 100644
-> --- a/arch/m68k/include/asm/pci.h
-> +++ b/arch/m68k/include/asm/pci.h
-> @@ -2,8 +2,6 @@
->   #ifndef _ASM_M68K_PCI_H
->   #define _ASM_M68K_PCI_H
->   
-> -#include <asm-generic/pci.h>
-> -
->   #define	pcibios_assign_all_busses()	1
->   
->   #define	PCIBIOS_MIN_IO		0x00000100
-> diff --git a/arch/powerpc/include/asm/pci.h b/arch/powerpc/include/asm/pci.h
-> index 915d6ee4b40a..f9da506751bb 100644
-> --- a/arch/powerpc/include/asm/pci.h
-> +++ b/arch/powerpc/include/asm/pci.h
-> @@ -39,7 +39,6 @@
->   #define pcibios_assign_all_busses() \
->   	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
->   
-> -#define HAVE_ARCH_PCI_GET_LEGACY_IDE_IRQ
->   static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
->   {
->   	if (ppc_md.pci_get_legacy_ide_irq)
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index fdb9745ee998..5889ddcbc374 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -6,7 +6,6 @@
->   #include <linux/mutex.h>
->   #include <linux/iommu.h>
->   #include <linux/pci_hotplug.h>
-> -#include <asm-generic/pci.h>
->   #include <asm/pci_clp.h>
->   #include <asm/pci_debug.h>
->   #include <asm/sclp.h>
-
-Did not notice any problem for S390.
-
-Acked-by: Pierre Morel <pmorel@linux.ibm.com>
-
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> Regarding the Relaxed ordering bit you have described, this bit only controls whether the relaxed ordering bit can be set in the attribute fields of the transactions initiated by it. 
+> I agree, however, that to be fully coherent in the driver software design with the workaround implementation, I would set this bit, although it is not required by the Erratum workaround.
+> 
+> Regarding the memory barrier, you understood me perfectly. I think DSB should be executed by the Aardvark IRQ handler before invoking the PCI EP IRQ driver handler.
+> 
+> Elad.
+> 
+> -----Original Message-----
+> From: Pali Rohár <pali@kernel.org> 
+> Sent: Tuesday, July 19, 2022 12:33 PM
+> To: Elad Nachman <enachman@marvell.com>
+> Cc: Ratheesh Kannoth <rkannoth@marvell.com>; Tanmay Jagdale <tanmay@marvell.com>; Shijith Thotton <sthotton@marvell.com>; Arun Easi <aeasi@marvell.com>; Krzysztof Wilczyński <kw@linux.com>; Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; Thomas Petazzoni <thomas.petazzoni@bootlin.com>; Bjorn Helgaas <bhelgaas@google.com>; Marek Behún <kabel@kernel.org>; Remi Pommarel <repk@triplefau.lt>; Xogium <contact@xogium.me>; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Bharat Bhushan <bbhushan2@marvell.com>; Veerasenareddy Burru <vburru@marvell.com>; Wojciech Bartczak <wbartczak@marvell.com>
+> Subject: Re: [EXT] Re: Issues with A3720 PCIe controller driver pci-aardvark.c
+> 
+> Hello Elad!
+> 
+> Thank you very much for your response! Together with Krzysztof we were unable to get any response regarding this issue for more than year.
+> 
+> I would kindly ask if you/Marvell could publish description of this errata to Linux kernel developers, so more kernel developers can look at it and try to implement workarounds.
+> 
+> Together with Krzysztof we have really an issue to retrieve any kind of documentation or user guide for Armada 3720 erratas/bugs.
+> 
+> Rest of my comments I'm putting inline below.
+> 
+> On Sunday 17 July 2022 09:47:14 Elad Nachman wrote:
+> > Hi Pali,
+> > 
+> > Can you please indicate what is the HW source (e.g. which register in the PCIe controller) bits is translated to the fatal abort?
+> 
+> I observed this fatal abort on CPU when endpoint PCIe card sent interrupt to A3720 PCIe controller and interrupt handler in driver for endpoint card did PCIe memory write to PCIe card memory space.
+> 
+> Writing to PCIe address range for PCIe MEM of endpoint card cause that
+> A3720 PCIe controller sends fatal unrecoverable error to CPU.
+> 
+> Here is the crashlog from mediatek wifi card which I captured year ago.
+> 
+> [   71.457007] Internal error: synchronous external abort: 96000210 [#1] SMP
+> [   71.464021] Modules linked in: xt_connlimit pppoe ppp_async nf_conncount iptable_nat ath9k xt_state xt_nat xt_helper xt_conntrack xt_connmark xt_connbytes xt_REDIREl
+> [   71.464187]  btintel br_netfilter bnep bluetooth ath9k_hw ath10k_pci ath10k_core ath sch_tbf sch_ingress sch_htb sch_hfsc em_u32 cls_u32 cls_tcindex cls_route cls_mg
+> [   71.629589] CPU: 0 PID: 1298 Comm: kworker/u5:3 Not tainted 5.4.114 #0
+> [   71.636319] Hardware name: CZ.NIC Turris Mox Board (DT)
+> [   71.641725] Workqueue: napi_workq napi_workfn
+> [   71.646221] pstate: 80400085 (Nzcv daIf +PAN -UAO)
+> [   71.651169] pc : mt76_set_irq_mask+0x118/0x150 [mt76]
+> [   71.656385] lr : mt7915_init_debugfs+0x358/0x368 [mt7915e]
+> [   71.662038] sp : ffffffc010003cd0
+> [   71.665451] x29: ffffffc010003cd0 x28: 0000000000000060 
+> [   71.670929] x27: ffffffc010a56f98 x26: ffffffc010c0fa9a 
+> [   71.676407] x25: ffffffc010ba8788 x24: ffffff803e01fe00 
+> [   71.681885] x23: 0000000000000030 x22: ffffffc010003dc4 
+> [   71.687361] x21: 0000000000000000 x20: ffffff803e01fea4 
+> [   71.692839] x19: ffffff803cb725c0 x18: 000000002d660780 
+> [   71.698317] x17: 0000000000000000 x16: 0000000000000001 
+> [   71.703795] x15: 0000000000005ee0 x14: ffffffc010d1d000 
+> [   71.709272] x13: 0000000000002f70 x12: 0000000000000000 
+> [   71.714749] x11: 0000000000000000 x10: 0000000000000040 
+> [   71.720226] x9 : ffffffc010bbe980 x8 : ffffffc010bbe978 
+> [   71.725704] x7 : ffffff803e4003f0 x6 : 0000000000000000 
+> [   71.731181] x5 : ffffffc02f240000 x4 : ffffffc010003e00 
+> [   71.736658] x3 : 0000000000000000 x2 : ffffffc008e3f230 
+> [   71.742135] x1 : 00000000000d7010 x0 : ffffffc0114d7010 
+> [   71.747613] Call trace:
+> [   71.750137]  mt76_set_irq_mask+0x118/0x150 [mt76]
+> [   71.754990]  mt7915_dual_hif_set_irq_mask+0x108/0xdc0 [mt7915e]
+> [   71.761098]  __handle_irq_event_percpu+0x6c/0x170
+> [   71.765950]  handle_irq_event_percpu+0x34/0x88
+> [   71.770531]  handle_irq_event+0x40/0xb0
+> [   71.774486]  handle_level_irq+0xe0/0x170
+> [   71.778530]  generic_handle_irq+0x24/0x38
+> [   71.782667]  advk_pcie_irq_handler+0x11c/0x238
+> [   71.787249]  __handle_irq_event_percpu+0x6c/0x170
+> [   71.792099]  handle_irq_event_percpu+0x34/0x88
+> [   71.796680]  handle_irq_event+0x40/0xb0
+> [   71.800633]  handle_fasteoi_irq+0xdc/0x190
+> [   71.804855]  generic_handle_irq+0x24/0x38
+> [   71.808988]  __handle_domain_irq+0x60/0xb8
+> [   71.813213]  gic_handle_irq+0x8c/0x198
+> [   71.817077]  el1_irq+0xf0/0x1c0
+> [   71.820314]  el1_da+0xc/0xc0
+> [   71.823288]  mt76_set_irq_mask+0x118/0x150 [mt76]
+> [   71.828141]  mt7915_mac_tx_free+0x4c4/0x828 [mt7915e]
+> [   71.833352]  mt7915_queue_rx_skb+0x5c/0xa8 [mt7915e]
+> [   71.838473]  mt76_dma_cleanup+0x89c/0x1248 [mt76]
+> [   71.843329]  __napi_poll+0x38/0xf8
+> [   71.846835]  napi_workfn+0x58/0xb0
+> [   71.850342]  process_one_work+0x1fc/0x390
+> [   71.854475]  worker_thread+0x48/0x4d0
+> [   71.858252]  kthread+0x120/0x128
+> [   71.861581]  ret_from_fork+0x10/0x1c
+> [   71.865273] Code: 52800000 d65f03c0 f9562c00 8b214000 (b9400000) 
+> [   71.871560] ---[ end trace 1d4e29987011411b ]---
+> [   71.876320] Kernel panic - not syncing: Fatal exception in interrupt
+> [   71.882875] SMP: stopping secondary CPUs
+> [   71.886923] Kernel Offset: disabled
+> [   71.890519] CPU features: 0x0002,00002008
+> [   71.894649] Memory Limit: none
+> [   71.897799] Rebooting in 3 seconds..
+> 
+> (in other SoC/systems, including Marvell, is this card working fine)
+> 
+> It is from older kernel, but issue is still there and happens also with new kernels. Mediatek driver in its interrupt handler is masking some interrupts in its interrupt handler, which is done by writing to PCIe address space of endpoint card.
+> 
+> Anyway, I can reproduce same crash when I set PCIe link down or reset link and trying to read from PCIe MEM or CFG space. Seems that PCIe controller incorrectly reports errors to CPU, it should return all-ones when PCIe device is not present (e.g. during link down) and not send fatal abort to CPU. I.e. instead of AXI OK with 0xffffffff data, it sends AXI SLVERR to CPU which cause that crash.
+> 
+> This is something which should be configurable but I'm not able to find any A3720 documentation which would describe how to configure it.
+> 
+> > Regarding the Erratum, basically to the best of my understanding, if the End Point is posting a PCIe write to the host, and the host is trying to read the End Point registers via PCIe, Completion data is generated . With the strong ordered mode, one would expect that first the post write will finish, and only then the completion data will be processed. The Erratum means that this mode is not supported. The DIS_ORD_CHK must be set to disable this feature, which is not supported by HW.
+> 
+> Ok, thank you for explanation!
+> 
+> > Regarding Bjorn comment, not enabling this bit will not help as the strong-order feature is not implemented in HW.
+> > Leaving this bit disabled will not make the HW enforce strong-order. There is no detailed description of the HW behavior when the bit is disabled per the default, but as is clearly evident from the Erratum and from your own experience, leaving this bit disabled would not create the correct, expected behavior from the HW, which is why it must be enabled for correct functionality of the system (both hardware and software).
+> 
+> What does it mean that strong-order feature is not implemented in HW?
+> Strong-order model is requirement in PCIe. This is really strange if PCIe core requirement does not work in A3720 HW.
+> 
+> Anyway, in Marvell original A3720 PCIe driver is explicitly turned off Relaxed PCIe ordering (and same is in mainline pci-aardvark.c driver):
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_MarvellEmbeddedProcessors_linux-2Dmarvell_blob_f12b3557095ff1d9b7be78bef7a3237e27b7778e_drivers_pci_host_pci-2Dadvk-2Darm64.c-23L397&d=DwIDaQ&c=nKjWec2b6R0mOyPaz7xtfQ&r=eTeNTLEK5-TxXczjOcKPhANIFtlB9pP4lq9qhdlFrwQ&m=QoWBVtlmK8dcnqfqPuLlrYZW9dLkLAXjQsXnSTsyLXtAG5xwVrUj34pscwdHn0qv&s=dJOx9jStTL77pFhd5KB7ZjA-QJr1hryKyBaO8iykKQI&e= 
+> 
+> So if both Relaxed and Strong ordering are going to be disabled, what kind of ordering model is then used? This is something which I do not understand here.
+> 
+> > Regarding the patch - I would also add a full memory barrier (if you use interrupts on the host to handle the write completion - then in the PCIe driver interrupt handler, otherwise this will require modifying the specific WIFI driver) in order to minimize the risk for the race condition documented in the Erratum between the DMA done status reading and the completion of writing to the host memory. This of course does not guarantee order, but it is better than leaving it the way it is.
+> 
+> I'm not sure if I understand you correctly. Do you mean to call ARM DSB instruction for Data Synchronization Barrier in A3720 PCIe summary interrupt handler in pci-aardvark.c prior chaining to wifi driver interrupt handler?
+> 
+> > Hopefully this helps,
+> > 
+> > Elad.
+> > 
+> > -----Original Message-----
+> > From: Pali Rohár <pali@kernel.org>
+> > Sent: Sunday, July 10, 2022 2:21 PM
+> > To: Elad Nachman <enachman@marvell.com>; Ratheesh Kannoth 
+> > <rkannoth@marvell.com>; Tanmay Jagdale <tanmay@marvell.com>; Shijith 
+> > Thotton <sthotton@marvell.com>; Arun Easi <aeasi@marvell.com>
+> > Cc: Krzysztof Wilczyński <kw@linux.com>; Lorenzo Pieralisi 
+> > <lorenzo.pieralisi@arm.com>; Thomas Petazzoni 
+> > <thomas.petazzoni@bootlin.com>; Bjorn Helgaas <bhelgaas@google.com>; 
+> > Marek Behún <kabel@kernel.org>; Remi Pommarel <repk@triplefau.lt>; 
+> > Xogium <contact@xogium.me>; linux-pci@vger.kernel.org; 
+> > linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; 
+> > Bharat Bhushan <bbhushan2@marvell.com>; Veerasenareddy Burru 
+> > <vburru@marvell.com>; Wojciech Bartczak <wbartczak@marvell.com>
+> > Subject: [EXT] Re: Issues with A3720 PCIe controller driver 
+> > pci-aardvark.c
+> > 
+> > External Email
+> > 
+> > ----------------------------------------------------------------------
+> > + Other people from Marvell active on LKML.
+> > 
+> > Could you please look at this issue and give us some comment? It is really critical issue which needs to be solved.
+> > 
+> > On Wednesday 16 February 2022 21:09:40 Pali Rohár wrote:
+> > > + Bharat, Veerasenareddy and Wojciech from Marvell
+> > > 
+> > > Hello! Could you please look at this email and help us with this Marvell HW issue?
+> > > 
+> > > On Saturday 24 July 2021 00:17:10 Pali Rohár wrote:
+> > > > Hello Konstantin!
+> > > > 
+> > > > There are issues with Marvell Armada 3720 PCIe controller when 
+> > > > high performance PCIe card (e.g. WiFi AX) is connected to this 
+> > > > SOC. Under heavy load PCIe controller sends fatal abort to CPU and kernel crash.
+> > > > 
+> > > > In Marvell Armada 3700 Functional Errata, Guidelines, and 
+> > > > Restrictions document is described erratum 3.12 PCIe Completion 
+> > > > Timeout (Ref #: 251) which may be relevant. But neither Bjorn, 
+> > > > Thomas nor me were able to understood text of this erratum. And we 
+> > > > have already spent lot of time on this erratum. My guess that is 
+> > > > that in erratum itself are mistakes and there are missing some other important details.
+> > > > 
+> > > > Konstantin, are you able to understand this erratum? Or do you 
+> > > > know somebody in Marvell who understand this erratum and can 
+> > > > explain details to us? Or do you know some more details about this erratum?
+> > > > 
+> > > > Also it would be useful if you / Marvell could share text of this 
+> > > > erratum with linux-pci people as currently it is available only on 
+> > > > Marvell Customer Portal which requires registration with signed NDA.
+> > > > 
+> > > > In past Thomas wrote patch "according to this erratum" and I have 
+> > > > rebased, rewritten and resent it to linux-pci mailing list for review:
+> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.o
+> > > > rg 
+> > > > _linux-2Dpci_20210624222621.4776-2D6-2Dpali-40kernel.org_&d=DwIDaQ
+> > > > &c 
+> > > > =nKjWec2b6R0mOyPaz7xtfQ&r=eTeNTLEK5-TxXczjOcKPhANIFtlB9pP4lq9qhdlF
+> > > > rw
+> > > > Q&m=opYsQsv_sfSvTtA5oJwc1paZrPAWMHVhTx_9J1VWBVDksBETCXVsC3rRDb5ejg
+> > > > g- &s=AKbEBWOIxa4A0QSFXiq6HhKpByn0hPJuZvbxsu3m8oo&e=
+> > > > 
+> > > > Similar patch is available also in kernel which is part of Marvell SDK.
+> > > > 
+> > > > Bjorn has objections for this patch as he thinks that bit 
+> > > > DIS_ORD_CHK in that patch should be disabled. Seems that enabling 
+> > > > this bit effectively disables PCIe strong ordering model. PCIe 
+> > > > kernel drivers rely on PCIe strong ordering, so it would implicate 
+> > > > that that bit should not be enabled. Which is opposite of what is mentioned patch doing.
+> > > > 
+> > > > Konstantin, could you help us with this problem?
