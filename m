@@ -2,144 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1853357BCE6
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1B3A57BCEB
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235833AbiGTRkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 13:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37214 "EHLO
+        id S236293AbiGTRk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 13:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232685AbiGTRka (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:40:30 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BF92A241;
-        Wed, 20 Jul 2022 10:40:29 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id u12so1649231qtk.0;
-        Wed, 20 Jul 2022 10:40:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PmcZJKXW5L1h76Y7jDvbkfD3n85Nfb/cTZUz3jaZfpo=;
-        b=IPjEJxNrYKP/bAlPgxKrn9FRbVKtzEunsywWgj6Ah5b2RkACwEAkC9UR3zFDDBuGCf
-         DmR2Tria1RLN9CtkfNsyxYmmIVc7LqeCC0PPw1ie4atvpQKIws0vBKhVN2NoXwCo6Iu3
-         6pi3IWLHoNY++xp3S8EJdXkRSrg6SCZne70H354F+qWvVyz12PztKFB0AJuVKzwXQC6z
-         W+9/NatlcBA6ngOBQsGZU905K0CGJEHQbKn+mm7DAuE38BJhiKHkfqulCvF7CfYYoscW
-         zDt6uR/kHv/q8ff5orI6JiHpXMzqXg6L6dPJvNNSMLU/ozAufiz2HcHBxZ3e11S4Uilw
-         xljA==
-X-Gm-Message-State: AJIora/NodvMzBgl4OHy4tqkS3vMy+2Yvabf/5xoRajZ1W9oiDUaFc08
-        ZKDwIcI85P7lvk6Xz5nMMjd4wW++ToamFa1M
-X-Google-Smtp-Source: AGRyM1s9l8OS7ZCQgfbMTab10+PGIrLc1fxawXk5LNRiK0T4+LYGriYHhmB3sDRnu/Jk9uLMG6tKGA==
-X-Received: by 2002:ac8:5a41:0:b0:31f:280:b7ca with SMTP id o1-20020ac85a41000000b0031f0280b7camr6179579qta.518.1658338828709;
-        Wed, 20 Jul 2022 10:40:28 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id bq7-20020a05620a468700b006b578ff5dfasm5045912qkb.41.2022.07.20.10.40.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Jul 2022 10:40:28 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 75so33323451ybf.4;
-        Wed, 20 Jul 2022 10:40:28 -0700 (PDT)
-X-Received: by 2002:a5b:6c1:0:b0:669:a7c3:4c33 with SMTP id
- r1-20020a5b06c1000000b00669a7c34c33mr36151263ybq.543.1658338827759; Wed, 20
- Jul 2022 10:40:27 -0700 (PDT)
+        with ESMTP id S240910AbiGTRkz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:40:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0F5481CC;
+        Wed, 20 Jul 2022 10:40:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0373E615F7;
+        Wed, 20 Jul 2022 17:40:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEF2C36AE7;
+        Wed, 20 Jul 2022 17:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658338853;
+        bh=WfYi/BhtMY0afgPXBetwwnngHy3gOqIEhszPyFrt6to=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QvEVmQcVYAWcyH492tj8U6fAmZYyRlH6VlwcMrCBbokxpA0WUpHnTwr779pqatWPZ
+         XUMxzHVR0zOQIknmnlZXpumhMkgaDVIR2nkLLzBk379S3pxWW2V3N2BEDeVQnY+QSR
+         5vL8gO9wRTCs/N9KKuGwLEEEzRAQ/KRoKbU9pAmdQV4aiHtqRPlJsD7k34SaZhWofN
+         QWcA+1Hd8GXZqNwIvQr3jto8vtyVQ9SWr9FxEM+YE08O5U4VBQyhkTlM49nkFHQ2U0
+         swDxfE/RcTtF0bVWnIvUOk3zAdTt59V8oCiTCl5lvCneB6Bex2upX+K+fmtzpH/Ue5
+         S80mAkYovC4Pg==
+Received: by mail-vk1-f169.google.com with SMTP id c185so7263507vkh.12;
+        Wed, 20 Jul 2022 10:40:53 -0700 (PDT)
+X-Gm-Message-State: AJIora/3sLBGtbeiGhHfkXrzXAk+9Yv2RyIjlmrth9NQwIQLKv1J6nBc
+        jYCT1qqcakKHVQk11KE37mEHbSrRVS4KTs3RPQ==
+X-Google-Smtp-Source: AGRyM1vqhG3YXF5i1gvh8yLgBdQlamgFHdK/ECn2oPRqnCH28gYrN3RiQpRx1CwG3MT6fSbj9ytvNfWePKN6VYl9ZmA=
+X-Received: by 2002:a1f:1ec8:0:b0:36c:643a:e985 with SMTP id
+ e191-20020a1f1ec8000000b0036c643ae985mr14132012vke.14.1658338852305; Wed, 20
+ Jul 2022 10:40:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220720131934.373932-1-shorne@gmail.com> <20220720131934.373932-3-shorne@gmail.com>
-In-Reply-To: <20220720131934.373932-3-shorne@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 Jul 2022 19:40:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX7_CSQd14tGPfL7R7V0h6AwNi7bVDCWhcdNoZV_md4bw@mail.gmail.com>
-Message-ID: <CAMuHMdX7_CSQd14tGPfL7R7V0h6AwNi7bVDCWhcdNoZV_md4bw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] PCI: Move isa_dma_bridge_buggy out of dma.h
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
+References: <20220718202843.6766-1-maukka@ext.kapsi.fi> <20220718202843.6766-4-maukka@ext.kapsi.fi>
+ <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
+ <20220719094649.pzyrqdvm3fm5fqh2@pali> <CAK8P3a1RpMQ5zdiH_jkydxDOCm6WyD7qqdN+5T+503tN4SnOqw@mail.gmail.com>
+ <20220720161315.rr4ujakl7akm7pur@pali>
+In-Reply-To: <20220720161315.rr4ujakl7akm7pur@pali>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 20 Jul 2022 11:40:40 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+H+nzacGEZ4TRgZ70jUHugpNj=jpA+XfaWjhuduH1GLA@mail.gmail.com>
+Message-ID: <CAL_Jsq+H+nzacGEZ4TRgZ70jUHugpNj=jpA+XfaWjhuduH1GLA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: mvebu: add support for orion5x
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>,
         linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 3:20 PM Stafford Horne <shorne@gmail.com> wrote:
-> During recent PCI cleanups we noticed that the isa_dma_bridge_buggy
-> symbol supported by all architectures is actually only used for x86_32.
+On Wed, Jul 20, 2022 at 10:13 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >
-> This patch moves the symbol out of all architectures limiting usage to
-> only x86_32.  This is possible because only x86_32 platforms or quirks
-> existing in PCI devices supported on x86_32 ever set this.  A new global
-> header linux/isa-dma.h is added to provide a common place to maintain
-> the definition.
+> On Tuesday 19 July 2022 12:16:34 Arnd Bergmann wrote:
+> > On Tue, Jul 19, 2022 at 11:46 AM Pali Roh=C3=A1r <pali@kernel.org> wrot=
+e:
+> > > On Tuesday 19 July 2022 10:05:28 Arnd Bergmann wrote:
+> > > > > +/* Relevant only for Orion-1/Orion-NAS */
+> > > > > +#define ORION5X_PCIE_WA_PHYS_BASE      0xf0000000
+> > > > > +#define ORION5X_PCIE_WA_VIRT_BASE      IOMEM(0xfd000000)
+> > > >
+> > > > You should not need to hardcode these here. The ORION5X_PCIE_WA_PHY=
+S_BASE
+> > > > should already be part of the DT binding.
+> > >
+> > > Of course! But the issue is that we do not know how to do this DT
+> > > binding. I have already wrote email with asking for help in which
+> > > property and which format should be this config range defined, but no
+> > > answer yet: https://lore.kernel.org/linux-pci/20220710225108.bgedria6=
+igtqpz5l@pali/
+> >
+> > Ah, I had not seen that email. Quoting from there:
+> >
+> > > So my question is: How to properly define config space range in devic=
+e
+> > > tree file? In which device tree property and in which format? Please
+> > > note that this memory range of config space is PCIe root port specifi=
+c
+> > > and it requires its own MBUS_ID() like memory range of PCIe MEM and P=
+CIe
+> > > IO mapping. Please look e.g. at armada-385.dtsi how are MBUS_ID() use=
+d:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/arch/arm/boot/dts/armada-385.dtsi
+> >
+> > This is probably a question for Rob as the mvebu driver is a rather spe=
+cial
+> > case. Normally this would just be a 'reg' property of the host bridge,
+> > but I think
+> > in your case the root device is imaginary, and the ports under it are t=
+he
+> > actual hardware devices
 >
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
-> Since v3:
->  - New patch.
+> yes
+>
+> > so you'll probably have to do the same thing as
+> > the armada-385, translating the mbus ranges for the config space in the
+> > "ranges" property of the parent
+>
+> Problem is that "ranges" in PCIe are used for specifying MEM and IO
+> mappings and kernel PCI code does not allow any other type.
 
->  arch/m68k/include/asm/dma.h            |  6 ------
+The kernel does not, but the binding does (well, the original OF PCI
+bus supplement does, but the schema currently does not). If there's a
+real need to support config space in ranges, then we can relax the
+constraints.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
