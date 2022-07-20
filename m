@@ -2,49 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7068257BF4E
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 22:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B534257BF6F
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 23:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbiGTUob (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 16:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57176 "EHLO
+        id S230232AbiGTVHi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 17:07:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiGTUoa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 16:44:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CB85006A;
-        Wed, 20 Jul 2022 13:44:29 -0700 (PDT)
+        with ESMTP id S230233AbiGTVHh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 17:07:37 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97224F19A;
+        Wed, 20 Jul 2022 14:07:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 35A7E61CCC;
-        Wed, 20 Jul 2022 20:44:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BB5C3411E;
-        Wed, 20 Jul 2022 20:44:28 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4DE69B8220E;
+        Wed, 20 Jul 2022 21:07:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A98C3411E;
+        Wed, 20 Jul 2022 21:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658349868;
-        bh=zhiyjAW9l4b4itQWhFUg7rsehAAhronWLWWddtiazk8=;
+        s=k20201202; t=1658351253;
+        bh=1Ld4FvfjIhGCC9DAILNlZfNuF8HT5i1wxQaeRVUbfMo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QMa3za9JYFJljN29o+DxJwNZ0EoZ97n3e8Ft1Zbg6C07nib+EiOC4UgvoaxdMS7rl
-         rVQe0ccnOz1wDC4GJ5KHQVIiMh00YPCDHWUAd7OGScLey1N7PiM7dNgNo79aprNtJC
-         2QU5oyJTYVW9ZPhjtEThW+EqhqdAKWIEAi9uKWPMKOkFaQ2VYIgE+CEimV7+FzKuOH
-         YthYPg8f3V3/RMWVAR999jtZwgKgTHUJ9dUsDs18JZAAeVzodPCcfr/R0mbYIscjgo
-         ZGsnm+RVOLtyyAAoyQGMhDlavK5Uh0cQJLB3YkS2nc8HhzTvmdLBdCNHN+umMBX3td
-         1IS41iIE/61Jw==
-Date:   Wed, 20 Jul 2022 15:44:26 -0500
+        b=YvbWZdQJXXfi+kz4PP7VNfP/Lt3RfB/QdW2APqnK3nR0oBW0+dANP1X0CgPOUUFe6
+         FttzxgsV+e0eqZyzMrSt1rfzsejYVtyh9GkzcWeh6mGJl3bc1nTYqP0OCnlRPSPpCu
+         PCFTf/r1PWwEZD8SWKNB2Q3aC87VZtVpABHwLR3lVS+XJe4UgSgwZVRk+3480klkwl
+         WON4x3e+oYZzkn5EwDZ7rgCRT+eg+3K3ILPYEaT8k38eXeLmxeZF+L3HDL6gNuZGMt
+         KcW5+BtLrO25bO971OEaCcz7YxGco9FiLWob3G7gffa1LQOgQnTqovNErrBtmDtwpt
+         ygvexKjEkj3eA==
+Date:   Wed, 20 Jul 2022 16:07:31 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrey Strachuk <strochuk@ispras.ru>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org
-Subject: Re: [PATCH v2] ACPI/PCI: Remove useless NULL pointer checks
-Message-ID: <20220720204426.GA1655974@bhelgaas>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: fsl,imx6q-pcie: Add missing type for
+ 'reset-gpio-active-high'
+Message-ID: <20220720210731.GA1657725@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220720094743.471304-1-strochuk@ispras.ru>
+In-Reply-To: <20220719215031.1875860-1-robh@kernel.org>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,60 +61,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 12:47:43PM +0300, Andrey Strachuk wrote:
-> Local variable 'p' is initialized by an address
-> of field of acpi_resource, so it does not make
-> sense to compare 'p' with NULL.
-
-Rewrap to fill 75 columns, which is the typical width of commit logs.
-
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+On Tue, Jul 19, 2022 at 03:50:31PM -0600, Rob Herring wrote:
+> 'reset-gpio-active-high' is missing a type definition and is not a common
+> property. The type is boolean.
 > 
-> Signed-off-by: Andrey Strachuk <strochuk@ispras.ru>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+You've merged previous updates, Rob, so I assume you'll do the same
+with this.
+
 > ---
->  drivers/acpi/pci_link.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index 58647051c948..aa1038b8aec4 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -95,7 +95,7 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
->  	case ACPI_RESOURCE_TYPE_IRQ:
->  		{
->  			struct acpi_resource_irq *p = &resource->data.irq;
-> -			if (!p || !p->interrupt_count) {
-> +			if (!p->interrupt_count) {
->  				acpi_handle_debug(handle,
->  						  "Blank _PRS IRQ resource\n");
->  				return AE_OK;
-> @@ -121,7 +121,7 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
->  		{
->  			struct acpi_resource_extended_irq *p =
->  			    &resource->data.extended_irq;
-> -			if (!p || !p->interrupt_count) {
-> +			if (!p->interrupt_count) {
->  				acpi_handle_debug(handle,
->  						  "Blank _PRS EXT IRQ resource\n");
->  				return AE_OK;
-> @@ -182,7 +182,7 @@ static acpi_status acpi_pci_link_check_current(struct acpi_resource *resource,
->  	case ACPI_RESOURCE_TYPE_IRQ:
->  		{
->  			struct acpi_resource_irq *p = &resource->data.irq;
-> -			if (!p || !p->interrupt_count) {
-> +			if (!p->interrupt_count) {
->  				/*
->  				 * IRQ descriptors may have no IRQ# bits set,
->  				 * particularly those w/ _STA disabled
-> @@ -197,7 +197,7 @@ static acpi_status acpi_pci_link_check_current(struct acpi_resource *resource,
->  		{
->  			struct acpi_resource_extended_irq *p =
->  			    &resource->data.extended_irq;
-> -			if (!p || !p->interrupt_count) {
-> +			if (!p->interrupt_count) {
->  				/*
->  				 * extended IRQ descriptors must
->  				 * return at least 1 IRQ
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index 252e5b72aee0..376e739bcad4 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -144,6 +144,7 @@ properties:
+>      description: If present then the reset sequence using the GPIO
+>        specified in the "reset-gpio" property is reversed (H=reset state,
+>        L=operation state) (optional required).
+> +    type: boolean
+>  
+>    vpcie-supply:
+>      description: Should specify the regulator in charge of PCIe port power.
 > -- 
-> 2.25.1
+> 2.34.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
