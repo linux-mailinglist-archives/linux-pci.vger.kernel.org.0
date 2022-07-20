@@ -2,135 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B3A57BCEB
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA00B57BCEF
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:42:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236293AbiGTRk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 13:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
+        id S230208AbiGTRmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 13:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240910AbiGTRkz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:40:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0F5481CC;
-        Wed, 20 Jul 2022 10:40:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0373E615F7;
-        Wed, 20 Jul 2022 17:40:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEF2C36AE7;
-        Wed, 20 Jul 2022 17:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658338853;
-        bh=WfYi/BhtMY0afgPXBetwwnngHy3gOqIEhszPyFrt6to=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QvEVmQcVYAWcyH492tj8U6fAmZYyRlH6VlwcMrCBbokxpA0WUpHnTwr779pqatWPZ
-         XUMxzHVR0zOQIknmnlZXpumhMkgaDVIR2nkLLzBk379S3pxWW2V3N2BEDeVQnY+QSR
-         5vL8gO9wRTCs/N9KKuGwLEEEzRAQ/KRoKbU9pAmdQV4aiHtqRPlJsD7k34SaZhWofN
-         QWcA+1Hd8GXZqNwIvQr3jto8vtyVQ9SWr9FxEM+YE08O5U4VBQyhkTlM49nkFHQ2U0
-         swDxfE/RcTtF0bVWnIvUOk3zAdTt59V8oCiTCl5lvCneB6Bex2upX+K+fmtzpH/Ue5
-         S80mAkYovC4Pg==
-Received: by mail-vk1-f169.google.com with SMTP id c185so7263507vkh.12;
-        Wed, 20 Jul 2022 10:40:53 -0700 (PDT)
-X-Gm-Message-State: AJIora/3sLBGtbeiGhHfkXrzXAk+9Yv2RyIjlmrth9NQwIQLKv1J6nBc
-        jYCT1qqcakKHVQk11KE37mEHbSrRVS4KTs3RPQ==
-X-Google-Smtp-Source: AGRyM1vqhG3YXF5i1gvh8yLgBdQlamgFHdK/ECn2oPRqnCH28gYrN3RiQpRx1CwG3MT6fSbj9ytvNfWePKN6VYl9ZmA=
-X-Received: by 2002:a1f:1ec8:0:b0:36c:643a:e985 with SMTP id
- e191-20020a1f1ec8000000b0036c643ae985mr14132012vke.14.1658338852305; Wed, 20
- Jul 2022 10:40:52 -0700 (PDT)
+        with ESMTP id S230042AbiGTRmA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:42:00 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0253B3E77B;
+        Wed, 20 Jul 2022 10:41:58 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lp2yy5SyYz67bMk;
+        Thu, 21 Jul 2022 01:40:10 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Jul 2022 19:41:56 +0200
+Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
+ 2022 18:41:55 +0100
+Date:   Wed, 20 Jul 2022 18:41:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <hch@lst.de>,
+        <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 24/28] cxl/region: Program target lists
+Message-ID: <20220720184151.00005b85@Huawei.com>
+In-Reply-To: <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
+References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
+        <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20220718202843.6766-1-maukka@ext.kapsi.fi> <20220718202843.6766-4-maukka@ext.kapsi.fi>
- <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
- <20220719094649.pzyrqdvm3fm5fqh2@pali> <CAK8P3a1RpMQ5zdiH_jkydxDOCm6WyD7qqdN+5T+503tN4SnOqw@mail.gmail.com>
- <20220720161315.rr4ujakl7akm7pur@pali>
-In-Reply-To: <20220720161315.rr4ujakl7akm7pur@pali>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 20 Jul 2022 11:40:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+H+nzacGEZ4TRgZ70jUHugpNj=jpA+XfaWjhuduH1GLA@mail.gmail.com>
-Message-ID: <CAL_Jsq+H+nzacGEZ4TRgZ70jUHugpNj=jpA+XfaWjhuduH1GLA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: add support for orion5x
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauri Sandberg <maukka@ext.kapsi.fi>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.121]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 10:13 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> On Tuesday 19 July 2022 12:16:34 Arnd Bergmann wrote:
-> > On Tue, Jul 19, 2022 at 11:46 AM Pali Roh=C3=A1r <pali@kernel.org> wrot=
-e:
-> > > On Tuesday 19 July 2022 10:05:28 Arnd Bergmann wrote:
-> > > > > +/* Relevant only for Orion-1/Orion-NAS */
-> > > > > +#define ORION5X_PCIE_WA_PHYS_BASE      0xf0000000
-> > > > > +#define ORION5X_PCIE_WA_VIRT_BASE      IOMEM(0xfd000000)
-> > > >
-> > > > You should not need to hardcode these here. The ORION5X_PCIE_WA_PHY=
-S_BASE
-> > > > should already be part of the DT binding.
-> > >
-> > > Of course! But the issue is that we do not know how to do this DT
-> > > binding. I have already wrote email with asking for help in which
-> > > property and which format should be this config range defined, but no
-> > > answer yet: https://lore.kernel.org/linux-pci/20220710225108.bgedria6=
-igtqpz5l@pali/
-> >
-> > Ah, I had not seen that email. Quoting from there:
-> >
-> > > So my question is: How to properly define config space range in devic=
-e
-> > > tree file? In which device tree property and in which format? Please
-> > > note that this memory range of config space is PCIe root port specifi=
-c
-> > > and it requires its own MBUS_ID() like memory range of PCIe MEM and P=
-CIe
-> > > IO mapping. Please look e.g. at armada-385.dtsi how are MBUS_ID() use=
-d:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/arch/arm/boot/dts/armada-385.dtsi
-> >
-> > This is probably a question for Rob as the mvebu driver is a rather spe=
-cial
-> > case. Normally this would just be a 'reg' property of the host bridge,
-> > but I think
-> > in your case the root device is imaginary, and the ports under it are t=
-he
-> > actual hardware devices
->
-> yes
->
-> > so you'll probably have to do the same thing as
-> > the armada-385, translating the mbus ranges for the config space in the
-> > "ranges" property of the parent
->
-> Problem is that "ranges" in PCIe are used for specifying MEM and IO
-> mappings and kernel PCI code does not allow any other type.
+On Thu, 14 Jul 2022 17:02:58 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-The kernel does not, but the binding does (well, the original OF PCI
-bus supplement does, but the schema currently does not). If there's a
-real need to support config space in ranges, then we can relax the
-constraints.
+> Once the region's interleave geometry (ways, granularity, size) is
+> established and all the endpoint decoder targets are assigned, the next
+> phase is to program all the intermediate decoders. Specifically, each
+> CXL switch in the path between the endpoint and its CXL host-bridge
+> (including the logical switch internal to the host-bridge) needs to have
+> its decoders programmed and the target list order assigned.
+> 
+> The difficulty in this implementation lies in determining which endpoint
+> decoder ordering combinations are valid. Consider the cxl_test case of 2
+> host bridges, each of those host-bridges attached to 2 switches, and
+> each of those switches attached to 2 endpoints for a potential 8-way
+> interleave. The x2 interleave at the host-bridge level requires that all
+> even numbered endpoint decoder positions be located on the "left" hand
+> side of the topology tree, and the odd numbered positions on the other.
+> The endpoints that are peers on the same switch need to have a position
+> that can be routed with a dedicated address bit per-endpoint. See
+> check_last_peer() for the details.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Rob
+I'm less confident on this one than most the other patches (and I see I skipped
+reviewing it in v1) as I haven't closely checked the verification logic
+but except for one trivial comment inline it looks fine to me.
+I want to hit the whole series with a wide range of test cases (I'm sure you
+already have) to build that confidence, but won't have time to do that till early
+August. However, if there are gremlins hiding, I'd expect them to be minor.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 8ac0c557f6aa..225340529fc3 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -485,6 +485,7 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+>  		return NULL;
+>  	cxl_rr->port = port;
+>  	cxl_rr->region = cxlr;
+> +	cxl_rr->nr_targets = 1;
+>  	xa_init(&cxl_rr->endpoints);
+>  
+>  	rc = xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr, GFP_KERNEL);
+> @@ -525,10 +526,12 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
+>  	struct cxl_decoder *cxld = cxl_rr->decoder;
+>  	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
+>  
+> -	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
+> -			 GFP_KERNEL);
+> -	if (rc)
+> -		return rc;
+> +	if (ep) {
+> +		rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
+> +			       GFP_KERNEL);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  	cxl_rr->nr_eps++;
+>  
+>  	if (!cxld->region) {
+> @@ -565,7 +568,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  				  struct cxl_endpoint_decoder *cxled, int pos)
+>  {
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+> +	const struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+
+Why const now and not previously?  Feels like this should be in an earlier patch.
+Maybe I'm missing something though.
+
+>  	struct cxl_region_ref *cxl_rr = NULL, *iter;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_decoder *cxld = NULL;
+> @@ -649,6 +652,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  		goto out_erase;
+>  	}
+>  
+> +	dev_dbg(&cxlr->dev,
+> +		"%s:%s %s add: %s:%s @ %d next: %s nr_eps: %d nr_targets: %d\n",
+> +		dev_name(port->uport), dev_name(&port->dev),
+> +		dev_name(&cxld->dev), dev_name(&cxlmd->dev),
+> +		dev_name(&cxled->cxld.dev), pos,
+> +		ep ? ep->next ? dev_name(ep->next->uport) :
+> +				      dev_name(&cxlmd->dev) :
+> +			   "none",
+> +		cxl_rr->nr_eps, cxl_rr->nr_targets);
+> +
+>  	return 0;
+>  out_erase:
+>  	if (cxl_rr->nr_eps == 0)
+
+
