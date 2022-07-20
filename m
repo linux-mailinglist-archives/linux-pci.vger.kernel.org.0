@@ -2,68 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADDAC57BB27
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 18:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C83157BB35
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 18:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234514AbiGTQNW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 12:13:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        id S238173AbiGTQSr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 12:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbiGTQNV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 12:13:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F8A952FCF;
-        Wed, 20 Jul 2022 09:13:20 -0700 (PDT)
+        with ESMTP id S238337AbiGTQSo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 12:18:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD5C54050;
+        Wed, 20 Jul 2022 09:18:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 05C1161D3F;
-        Wed, 20 Jul 2022 16:13:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1155AC3411E;
-        Wed, 20 Jul 2022 16:13:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CF0B3B8210A;
+        Wed, 20 Jul 2022 16:18:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D508C341D0;
+        Wed, 20 Jul 2022 16:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658333599;
-        bh=azV4rh1tEUOtwWZ2k2aBfyGO80U70CDuAQhKmnY7ZKk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EeYPcSugudjlBWfAxIxhS/y+sDO1CCygJN/OTX4NYpdkO48bFcLdvojgNscHQtdmO
-         KIGkv7FqwfAXkiElizH3BulePE15ai1LQkaJ57QKace1gYbv3URSk4hXk5mQpP5xuA
-         NyW50165+EVAxLaMbxviS7xK6t23lI17H2vGPHV0h5w3omqUPqsl6mWWd4i+bMKxjh
-         Lvfl2QitS6R6rVZFkC5KjyqUOgeukl15ePHNOaKUbpQmOjEWZ/7byJkg5AnkZ1K6+8
-         M3DDpv38cQiqO+h1kdj3sGhphMwlWpPemE83Y3oFVZ7oFXVhTtxozaHUyyMj7Gq0jJ
-         Fsp2oyO1xweXA==
-Received: by pali.im (Postfix)
-        id E1729797; Wed, 20 Jul 2022 18:13:15 +0200 (CEST)
-Date:   Wed, 20 Jul 2022 18:13:15 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauri Sandberg <maukka@ext.kapsi.fi>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: add support for orion5x
-Message-ID: <20220720161315.rr4ujakl7akm7pur@pali>
-References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
- <20220718202843.6766-4-maukka@ext.kapsi.fi>
- <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
- <20220719094649.pzyrqdvm3fm5fqh2@pali>
- <CAK8P3a1RpMQ5zdiH_jkydxDOCm6WyD7qqdN+5T+503tN4SnOqw@mail.gmail.com>
+        s=k20201202; t=1658333919;
+        bh=dBAYRKIzFm0RTKOcH+0KPke3E8MEw8rlIWS4O1tZUf8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T9YI5+FhKac8fuIV3QPR3CTu79OZY1DHEEAfFE4Iim6EREIDLDo+mQtP1mxW1sggg
+         yt7JoQkZfykvX12pala/eTUXAaJ3AkijMLabBuMpLpzF+Up0VP8nP6WqWD5oYllZ7V
+         T/NcMA6ky6NLqgMz9bHnkh7JhSPYcB9qMKxguCKk6PZQTgW/+j7Np/I9ItGdl8R3Sf
+         IirxP8/4VzC0NN6Oqc19EFy/Tzj7n1fs3rlwpeMpIg74IFPBFuGlJoUI+Xdqks+UgY
+         yzjYj2x+/rSwjxcUbDFOjRGhWwOh6e1hQLkAqsSbS8DfftnnfN4IZaFoBIxbhqHYd8
+         hlxESxWG0hfLQ==
+Received: by mail-vs1-f48.google.com with SMTP id l190so16812109vsc.0;
+        Wed, 20 Jul 2022 09:18:39 -0700 (PDT)
+X-Gm-Message-State: AJIora8M3AUpI++Smmzjy6ERlkbaWrW8kWPO9r5Yuoh9RrB662lYXVfn
+        6hVr4oFzSOWHwGDOdfdrdJNMcycKntDVJastKQ==
+X-Google-Smtp-Source: AGRyM1voQ4F5sT5eKvu1fTJ7ITqpMhh2FJ7XwBQbxVTbwxyO9/skYla1F1uslswBejdiQH8uJSTEQjOOUOMZ4R5nVvM=
+X-Received: by 2002:a67:c18e:0:b0:357:5fc3:45d7 with SMTP id
+ h14-20020a67c18e000000b003575fc345d7mr13075314vsj.53.1658333918336; Wed, 20
+ Jul 2022 09:18:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a1RpMQ5zdiH_jkydxDOCm6WyD7qqdN+5T+503tN4SnOqw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <CA+-6iNz8DTjAMXnWuOd=0W=qa6J4uD03oH3RJezEk1WxaUN1NA@mail.gmail.com>
+ <20220719200332.GA1552587@bhelgaas> <CA+-6iNzn=JsG=xU2BxagyfeUMZ13p9yg=y+_wVcsAaZ0NgEvKg@mail.gmail.com>
+In-Reply-To: <CA+-6iNzn=JsG=xU2BxagyfeUMZ13p9yg=y+_wVcsAaZ0NgEvKg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 20 Jul 2022 10:18:27 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLm5pWFNLMYjRXrBNYumOd0Vdyaxj0+PGnABQbjA6bDBQ@mail.gmail.com>
+Message-ID: <CAL_JsqLm5pWFNLMYjRXrBNYumOd0Vdyaxj0+PGnABQbjA6bDBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -73,117 +77,139 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 19 July 2022 12:16:34 Arnd Bergmann wrote:
-> On Tue, Jul 19, 2022 at 11:46 AM Pali Rohár <pali@kernel.org> wrote:
-> > On Tuesday 19 July 2022 10:05:28 Arnd Bergmann wrote:
-> > > > +/* Relevant only for Orion-1/Orion-NAS */
-> > > > +#define ORION5X_PCIE_WA_PHYS_BASE      0xf0000000
-> > > > +#define ORION5X_PCIE_WA_VIRT_BASE      IOMEM(0xfd000000)
-> > >
-> > > You should not need to hardcode these here. The ORION5X_PCIE_WA_PHYS_BASE
-> > > should already be part of the DT binding.
+On Wed, Jul 20, 2022 at 8:53 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> On Tue, Jul 19, 2022 at 4:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > >
-> > Of course! But the issue is that we do not know how to do this DT
-> > binding. I have already wrote email with asking for help in which
-> > property and which format should be this config range defined, but no
-> > answer yet: https://lore.kernel.org/linux-pci/20220710225108.bgedria6igtqpz5l@pali/
-> 
-> Ah, I had not seen that email. Quoting from there:
-> 
-> > So my question is: How to properly define config space range in device
-> > tree file? In which device tree property and in which format? Please
-> > note that this memory range of config space is PCIe root port specific
-> > and it requires its own MBUS_ID() like memory range of PCIe MEM and PCIe
-> > IO mapping. Please look e.g. at armada-385.dtsi how are MBUS_ID() used:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/armada-385.dtsi
-> 
-> This is probably a question for Rob as the mvebu driver is a rather special
-> case. Normally this would just be a 'reg' property of the host bridge,
-> but I think
-> in your case the root device is imaginary, and the ports under it are the
-> actual hardware devices
-
-yes
-
-> so you'll probably have to do the same thing as
-> the armada-385, translating the mbus ranges for the config space in the
-> "ranges" property of the parent
-
-Problem is that "ranges" in PCIe are used for specifying MEM and IO
-mappings and kernel PCI code does not allow any other type.
-
-> and then referring to them by PCI
-> MMIO addresses using the assigned-addresses property to pass the
-> config-space registers as a second set of registers in addition to the
-> first set.
-
-It is more complicated. PCIe MEM and IO memory ranges are defined in
-"soc" node in "pcie-mem-aperture" and "pcie-io-aperture" properties.
-These ranges are shared across all PCIe controllers and assigning slices
-of these ranges to specific devices is done later by dynamic allocation.
-"soc" node is bind to mbus driver (which parse these properties) and
-provides API for other kernel drivers for dynamic allocation of memory
-from pcie aperture. In pcie node is just indirect reference to PCIe MEM
-and IO via MBUS_ID() macro and it is pci-mvebu.c driver who ask mbus
-driver for PCIe MEM and IO dynamic allocation.
-
-So because PCIe config space is not of type PCIe MEM nor PCIe IO
-(obviously) it cannot use "ranges" property. Because DT pcie nodes use
-"reg" property for specifying BDF address, we cannot use neither "reg"
-property for specifying memory range of PCIe config space.
-
-And here I'm lost.
-
-My guess is that proper way is to define "pcie-cfg-aperture" in "soc"
-node where would be defined physical address range without any binding
-to controller, then extend mbus driver to export API also for PCIe CFG
-and add code which dynamically assign slice of this range to some
-controller. And then use this new API by pci-mvebu.c to access config
-space. But pci-mvebu.c needs to know MBUS_ID() attributes which needs to
-be defined somewhere in pcie DT node...
-
-> > > There is little practical difference
-> > > here, but I see no value in taking the shortcut here either.
+> > On Tue, Jul 19, 2022 at 09:08:48AM -0400, Jim Quinlan wrote:
+> > > On Mon, Jul 18, 2022 at 6:40 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Mon, Jul 18, 2022 at 02:56:03PM -0400, Jim Quinlan wrote:
+> > > > > On Mon, Jul 18, 2022 at 2:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Sat, Jul 16, 2022 at 06:24:49PM -0400, Jim Quinlan wrote:
+> > > > > > > Currently, the function does the setup for establishing PCIe link-up
+> > > > > > > with the downstream device, and it does the actual link-up as well.
+> > > > > > > The calling sequence is (roughly) the following in the probe:
+> > > > > > >
+> > > > > > > -> brcm_pcie_probe()
+> > > > > > >     -> brcm_pcie_setup();                       /* Set-up and link-up */
+> > > > > > >     -> pci_host_probe(bridge);
+> > > > > > >
+> > > > > > > This commit splits the setup function in two: brcm_pcie_setup(), which only
+> > > > > > > does the set-up, and brcm_pcie_start_link(), which only does the link-up.
+> > > > > > > The reason why we are doing this is to lay a foundation for subsequent
+> > > > > > > commits so that we can turn on any power regulators, as described in the
+> > > > > > > root port's DT node, prior to doing link-up.
+> > > > > >
+> > > > > > All drivers that care about power regulators turn them on before
+> > > > > > link-up, but typically those regulators are described directly under
+> > > > > > the host bridge itself.
+> > > > >
+> > > > > Actually, what you describe is what I proposed with my v1 back in Nov 2020.
+> > > > > The binding commit message said,
+> > > > >
+> > > > >     "Quite similar to the regulator bindings found in
+> > > > >     "rockchip-pcie-host.txt", this allows optional regulators to be
+> > > > >     attached and controlled by the PCIe RC driver."
+> > > > >
+> > > > > > IIUC the difference here is that you have regulators described under
+> > > > > > Root Ports (not the host bridge/Root Complex itself), so you don't
+> > > > > > know about them until you've enumerated the Root Ports.
+> > > > > > brcm_pcie_probe() can't turn them on directly because it doesn't know
+> > > > > > what Root Ports are present and doesn't know about regulators below
+> > > > > > them.
+> > > > >
+> > > > > The reviewer's requested me to move the regulator node(s)
+> > > > > elsewhere, and at some point later it was requested to be placed
+> > > > > under the Root Port driver.  I would love to return them under the
+> > > > > host bridge, just say the word!
+> > > >
+> > > > Actually, I think my understanding is wrong.  Even though the PCI core
+> > > > hasn't enumerated the Root Port as a pci_dev, brcm_pcie_setup() knows
+> > > > about it and should be able to look up the regulators and turn them
+> > > > on.
 > > >
-> > > For the ORION5X_PCIE_WA_VIRT_BASE, you rely on this to match the
-> > > definition in arch/arm/mach-orion5x/common.c, and this is rather fragile.
+> > > One can do this with
+> > >         regulator_bulk_get(NULL, ...);
 > > >
-> > > Instead, please use ioremap() to create a mapping at runtime. The ioremap()
-> > > implementation on ARM is smart enough to reuse the address from the static
-> > > mapping in common.c, but will also keep working if that should go away.
+> > > However, MarkB did not like the idea of a driver getting the
+> > > regulator from the global DT namespace [1].
+> > >
+> > > For the RC driver, one  cannot invoke  regulator_bulk_get(dev, ...)
+> > > if there is not a direct child regulator node.  One needs to use the
+> > > Port driver device.  The Port driver device does not exist at this
+> > > point unless one tries to prematurely create it; I tried this and it
+> > > was a mess to say the least.
+> > >
+> > > > Can you dig up the previous discussion about why the regulators need
+> > > > to be under the Root Port and why they can't be turned on before
+> > > > calling pci_host_probe()?
+> > >
+> > > RobH did not want the regulators to be under the RC as he said their
+> > > DT location should resemble the HW [2].  The consensus evolved to
+> > > place it under the port driver, which can provide a general
+> > > mechanism for turning on regulators anywhere in the PCIe tree.
 > >
-> > I'm planning to work with Mauri on this, but current blocker is DT.
-> 
-> Ok. It should not be hard to do this first, as you just need to pass the
-> same physical address that you pass in the mbus setup, but I agree
-> it's easier to do this afterwards to avoid having to rewrite it again.
-> 
-> > > This is probably good enough here, though I think you could also use
-> > > the trick from drivers/pci/ecam.c and map each bus at a time.
-> > >
-> > Yes, there are also helper functions like map bus and etc. which could
-> > simplify this code. I'm planning to do cleanups once we have fully
-> > working driver for Orion.
-> 
-> Ok. This is probably not worth the effort if the old driver doesn't already
-> do provide access to the high registers.
-> 
->       Arnd
+> > I don't want to redesign this whole thing.  I just want a crisp
+> > rationale for the commit log.
+> >
+> > All other drivers (exynos, imx6, rw-rockchip, histb, qcom, tegra194,
+> > tegra, rockchip-host) have regulators for downstream PCIe power
+> > directly under the RC.  If putting the regulators under an RP instead
+> > is the direction of the future, I guess that might be OK, and I guess
+> > the reasons are:
+> >
+> >   1) Slot or device power regulators that are logically below the RP
+> >      should be described that way in the DT.
+> >
+> >   2) Associating regulators with a RP allows the possibility of
+> >      selectively controlling power to slots/devices below the RP,
+> >      e.g., to power down devices below RP A when suspending while
+> >      leaving wakeup devices below RP B powered up.
+> >
+> > I think in your case the motivating reason is 2).
+> >
+> > Your commit log for "Add mechanism to turn on subdev regulators"
+> > suggests that you want some user control of endpoint power, e.g., via
+> > sysfs, but I don't see that implemented yet except possibly via a
+> > "remove" file that would unbind the driver and remove the entire
+> > device.
+> Hi Bjorn,
+>
+> Initially we wanted to (a) turn on any regulator found under the RC
+> node and (b) allow the possibility of the regulator to control the
+> EP's power. From the feedback, we realized early on that neither of
+> these were going to fly, so we conceded both requests and just wanted
+> to turn on standard PCIe regulators.  Upon reading the aforementioned
+> commit message I realize that there are a couple of leftover sentences
+> from these early days that must be removed.
+>
+> I think when I submitted v1 of the original series that only the
+> rockchip driver had regulators under the RC.   And my recollection was
+> that this was accepted but there was apprehension of this turning into
+> the "standard" way of turning on such regulators,  as the location of
+> the regulator nodes was in question.
+>
+> In short, I would be quite content  to follow the existing examples.
 
-If we have free 256MB in physical address space, then we can implement
-it easily. It is just changing _size_ argument. I'm not sure how much
-DDR RAM has Orion, but if only 2GB then we should be fine (remaining 2GB
-should be enough for all peripherals + 256MB for PCIe config space).
+The existing examples are, in general, incomplete and only work for
+the simplest cases.
 
-Main issue is that there is no Orion documentation which would describe
-how direct mapping of PCIe config space is working.
-(see also https://lore.kernel.org/linux-doc/20220719080807.16729-1-pali@kernel.org/)
+There's 2 cases to consider here. The first is standard slots with
+standard PCIe signals (e.g. PERST#) and voltage rails. The 2nd is
+either non-standard slots or just soldered down devices which could
+have any number of device specific resources. In the latter case,
+those resources need to go into the node for the device. For the
+former case (which we are discussing here), putting the resources in
+the upstream (side of the link) node is fine. That's the root port
+node(s) or switch port nodes. However, since most host bridges are a
+single RP and don't put the RP node in DT, we've ended up with these
+properties in host bridge nodes. That's fine as long as it's a single
+RP and device. When it is not, we need to do something different. The
+only way this scales is putting resources in the port nodes as those
+are what have a 1:1 relationship to slots. If that's supported, then
+the simple cases are also easily supported with if the resources are
+not found in the port node/device, then look for them in the parent
+node. That's also the path for how we get the handling of PERST out of
+every host bridge driver.
 
-So we can only set "size" of the physical config space mapping and if we
-choose smaller size then we cannot access upper registers. I do not see
-any option how to specify "offset" for physical config space to allow
-mapping just one PCI bus.
-
-What we have under full control is virtual address space mapping, so we
-can just map only one PCI bus to virtual address space from large 256MB
-physical config address space.
+Rob
