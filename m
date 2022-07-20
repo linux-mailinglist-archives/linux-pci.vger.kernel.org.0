@@ -2,147 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA00B57BCEF
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:42:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D841E57BCFF
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:42:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbiGTRmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 13:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
+        id S229478AbiGTRmc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 13:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230042AbiGTRmA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:42:00 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0253B3E77B;
-        Wed, 20 Jul 2022 10:41:58 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lp2yy5SyYz67bMk;
-        Thu, 21 Jul 2022 01:40:10 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 20 Jul 2022 19:41:56 +0200
-Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
- 2022 18:41:55 +0100
-Date:   Wed, 20 Jul 2022 18:41:51 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <hch@lst.de>,
-        <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 24/28] cxl/region: Program target lists
-Message-ID: <20220720184151.00005b85@Huawei.com>
-In-Reply-To: <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
-References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
-        <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229618AbiGTRma (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:42:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECBF43E55;
+        Wed, 20 Jul 2022 10:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=2rSAiUGaxhl5GiQNkevi7FT3Eu
+        oFi3t8oDDYv4tYthoJZObu5RAVdChzLc5kXcdS3yRuhYFdjIjcZClXaZYuDc87JZwUu5GiY1aYUWW
+        ou1/+WwAtYRLE3WMCGyN9OMmI7korRiRPxqavWTJiXadQoQFXdbyseLF9vnKAeCgNvVwj+f44qDzd
+        dSabyG6xdDBthHR+4c2+oSKP458OHShOBXgTmuC/IbjSx4tdZFMqwJdq+81uw1+a8U+y9JOl3gjg0
+        IFdeBmLGYrl7Ye5mw/cb1wzyCjDAB6r8sbxY2kFORmOeMz4VzJnHb8ZFgYrsg7NJ/998p0J1R7RgX
+        zIiPty1A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oEDi7-008mLl-Ev; Wed, 20 Jul 2022 17:42:11 +0000
+Date:   Wed, 20 Jul 2022 10:42:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v4 2/3] PCI: Move isa_dma_bridge_buggy out of dma.h
+Message-ID: <Ytg+c8F4IIVbije9@infradead.org>
+References: <20220720131934.373932-1-shorne@gmail.com>
+ <20220720131934.373932-3-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.205.121]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220720131934.373932-3-shorne@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Jul 2022 17:02:58 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Looks good:
 
-> Once the region's interleave geometry (ways, granularity, size) is
-> established and all the endpoint decoder targets are assigned, the next
-> phase is to program all the intermediate decoders. Specifically, each
-> CXL switch in the path between the endpoint and its CXL host-bridge
-> (including the logical switch internal to the host-bridge) needs to have
-> its decoders programmed and the target list order assigned.
-> 
-> The difficulty in this implementation lies in determining which endpoint
-> decoder ordering combinations are valid. Consider the cxl_test case of 2
-> host bridges, each of those host-bridges attached to 2 switches, and
-> each of those switches attached to 2 endpoints for a potential 8-way
-> interleave. The x2 interleave at the host-bridge level requires that all
-> even numbered endpoint decoder positions be located on the "left" hand
-> side of the topology tree, and the odd numbered positions on the other.
-> The endpoints that are peers on the same switch need to have a position
-> that can be routed with a dedicated address bit per-endpoint. See
-> check_last_peer() for the details.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-I'm less confident on this one than most the other patches (and I see I skipped
-reviewing it in v1) as I haven't closely checked the verification logic
-but except for one trivial comment inline it looks fine to me.
-I want to hit the whole series with a wide range of test cases (I'm sure you
-already have) to build that confidence, but won't have time to do that till early
-August. However, if there are gremlins hiding, I'd expect them to be minor.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 8ac0c557f6aa..225340529fc3 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -485,6 +485,7 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
->  		return NULL;
->  	cxl_rr->port = port;
->  	cxl_rr->region = cxlr;
-> +	cxl_rr->nr_targets = 1;
->  	xa_init(&cxl_rr->endpoints);
->  
->  	rc = xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr, GFP_KERNEL);
-> @@ -525,10 +526,12 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
->  	struct cxl_decoder *cxld = cxl_rr->decoder;
->  	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
->  
-> -	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
-> -			 GFP_KERNEL);
-> -	if (rc)
-> -		return rc;
-> +	if (ep) {
-> +		rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
-> +			       GFP_KERNEL);
-> +		if (rc)
-> +			return rc;
-> +	}
->  	cxl_rr->nr_eps++;
->  
->  	if (!cxld->region) {
-> @@ -565,7 +568,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  				  struct cxl_endpoint_decoder *cxled, int pos)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-> +	const struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-
-Why const now and not previously?  Feels like this should be in an earlier patch.
-Maybe I'm missing something though.
-
->  	struct cxl_region_ref *cxl_rr = NULL, *iter;
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_decoder *cxld = NULL;
-> @@ -649,6 +652,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
->  		goto out_erase;
->  	}
->  
-> +	dev_dbg(&cxlr->dev,
-> +		"%s:%s %s add: %s:%s @ %d next: %s nr_eps: %d nr_targets: %d\n",
-> +		dev_name(port->uport), dev_name(&port->dev),
-> +		dev_name(&cxld->dev), dev_name(&cxlmd->dev),
-> +		dev_name(&cxled->cxld.dev), pos,
-> +		ep ? ep->next ? dev_name(ep->next->uport) :
-> +				      dev_name(&cxlmd->dev) :
-> +			   "none",
-> +		cxl_rr->nr_eps, cxl_rr->nr_targets);
-> +
->  	return 0;
->  out_erase:
->  	if (cxl_rr->nr_eps == 0)
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
