@@ -2,178 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2920E57BB8D
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 18:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD8DC57BB9A
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 18:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232557AbiGTQkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 12:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39962 "EHLO
+        id S229713AbiGTQnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 12:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232276AbiGTQkj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 12:40:39 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEA24F683;
-        Wed, 20 Jul 2022 09:40:38 -0700 (PDT)
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lp1cB1lL8z67mMG;
-        Thu, 21 Jul 2022 00:38:50 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 20 Jul 2022 18:40:35 +0200
-Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
- 2022 17:40:34 +0100
-Date:   Wed, 20 Jul 2022 17:40:31 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <bwidawsk@kernel.org>,
-        <hch@lst.de>, <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 06/28] cxl/hdm: Enumerate allocated DPA
-Message-ID: <20220720174031.00006f78@Huawei.com>
-In-Reply-To: <165784327682.1758207.7914919426043855876.stgit@dwillia2-xfh.jf.intel.com>
-References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
-        <165784327682.1758207.7914919426043855876.stgit@dwillia2-xfh.jf.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S229437AbiGTQnP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 12:43:15 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19233643F6;
+        Wed, 20 Jul 2022 09:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=WlQloxKMSNzYA8huu2dHZOkx95q65YqX8GP/ptxtt8I=; b=L+EJ7oX+O6+3U4HbS+0k0fDH7c
+        T2b90gQbRgb1ukynOljIVqwD/upHXuAptXtzWg1Kjw4MsEQtqQYdtSCDbZSl00D0/kn4qPmhxFh/G
+        35rebU2BpBH6VTXtaJGzdN+IdP35CJqoGbLs8co9VNXe8G9FhmBZyQbUAk1LUFUJ2TpY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1oECmt-00AwjJ-DX; Wed, 20 Jul 2022 18:43:03 +0200
+Date:   Wed, 20 Jul 2022 18:43:03 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/2] PCI: mvebu: add support for orion5x
+Message-ID: <Ytgwl53POEjWPoeN@lunn.ch>
+References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
+ <20220718202843.6766-4-maukka@ext.kapsi.fi>
+ <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
+ <20220719094649.pzyrqdvm3fm5fqh2@pali>
+ <CAK8P3a1RpMQ5zdiH_jkydxDOCm6WyD7qqdN+5T+503tN4SnOqw@mail.gmail.com>
+ <20220720161315.rr4ujakl7akm7pur@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.205.121]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220720161315.rr4ujakl7akm7pur@pali>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Jul 2022 17:01:16 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+> If we have free 256MB in physical address space, then we can implement
+> it easily. It is just changing _size_ argument. I'm not sure how much
+> DDR RAM has Orion, but if only 2GB then we should be fine (remaining 2GB
+> should be enough for all peripherals + 256MB for PCIe config space).
 
-> In preparation for provisioning CXL regions, add accounting for the DPA
-> space consumed by existing regions / decoders. Recall, a CXL region is a
-> memory range comprised from one or more endpoint devices contributing a
-> mapping of their DPA into HPA space through a decoder.
-> 
-> Record the DPA ranges covered by committed decoders at initial probe of
-> endpoint ports relative to a per-device resource tree of the DPA type
-> (pmem or volatile-ram).
-> 
-> The cxl_dpa_rwsem semaphore is introduced to globally synchronize DPA
-> state across all endpoints and their decoders at once. The vast majority
-> of DPA operations are reads as region creation is expected to be as rare
-> as disk partitioning and volume creation. The device_lock() for this
-> synchronization is specifically avoided for concern of entangling with
-> sysfs attribute removal.
-> 
-> Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-> Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com> 
+All the Orion5x devices i've seen have had small amounts of RAM, 64MB,
+maybe 128M. It seems very unlikely there are any with 2GB for RAM. So
+i don't see a problem with taking 256MB of physical addresses for PCI.
 
-One trivial ordering question inline. I'm not that bothered whether you
-do anything about it though as it's all very local.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/hdm.c |  143 ++++++++++++++++++++++++++++++++++++++++++++----
->  drivers/cxl/cxl.h      |    2 +
->  drivers/cxl/cxlmem.h   |   13 ++++
->  3 files changed, 147 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 650363d5272f..d4c17325001b 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -153,10 +153,105 @@ void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dpa_debug, CXL);
->  
-> +/*
-> + * Must be called in a context that synchronizes against this decoder's
-> + * port ->remove() callback (like an endpoint decoder sysfs attribute)
-> + */
-> +static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct resource *res = cxled->dpa_res;
-> +
-> +	lockdep_assert_held_write(&cxl_dpa_rwsem);
-> +
-> +	if (cxled->skip)
-> +		__release_region(&cxlds->dpa_res, res->start - cxled->skip,
-> +				 cxled->skip);
-> +	cxled->skip = 0;
-> +	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
-
-Minor but I think the ordering in here is unnecessarily not the opposite
-of what is going on in __cxl_dpa_reserve()  Should be releasing the
-actual rs first, then releasing the skip.
-
-> +	cxled->dpa_res = NULL;
-> +}
-> +
-> +static void cxl_dpa_release(void *cxled)
-> +{
-> +	down_write(&cxl_dpa_rwsem);
-> +	__cxl_dpa_release(cxled);
-> +	up_write(&cxl_dpa_rwsem);
-> +}
-> +
-> +static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
-> +			     resource_size_t base, resource_size_t len,
-> +			     resource_size_t skipped)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct device *dev = &port->dev;
-> +	struct resource *res;
-> +
-> +	lockdep_assert_held_write(&cxl_dpa_rwsem);
-> +
-> +	if (!len)
-> +		return 0;
-> +
-> +	if (cxled->dpa_res) {
-> +		dev_dbg(dev, "decoder%d.%d: existing allocation %pr assigned\n",
-> +			port->id, cxled->cxld.id, cxled->dpa_res);
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (skipped) {
-> +		res = __request_region(&cxlds->dpa_res, base - skipped, skipped,
-> +				       dev_name(&cxled->cxld.dev), 0);
-> +		if (!res) {
-> +			dev_dbg(dev,
-> +				"decoder%d.%d: failed to reserve skipped space\n",
-> +				port->id, cxled->cxld.id);
-> +			return -EBUSY;
-> +		}
-> +	}
-> +	res = __request_region(&cxlds->dpa_res, base, len,
-> +			       dev_name(&cxled->cxld.dev), 0);
-> +	if (!res) {
-> +		dev_dbg(dev, "decoder%d.%d: failed to reserve allocation\n",
-> +			port->id, cxled->cxld.id);
-> +		if (skipped)
-> +			__release_region(&cxlds->dpa_res, base - skipped,
-> +					 skipped);
-> +		return -EBUSY;
-> +	}
-> +	cxled->dpa_res = res;
-> +	cxled->skip = skipped;
-> +
-> +	return 0;
-> +}
-> +
-
-...
-
+  Andrew
