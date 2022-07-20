@@ -2,122 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1249B57BC89
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A44DD57BC95
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 19:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233532AbiGTRXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 13:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
+        id S240266AbiGTR0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 13:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbiGTRXb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:23:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720DA62489;
-        Wed, 20 Jul 2022 10:23:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F4C360A6D;
-        Wed, 20 Jul 2022 17:23:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F827C3411E;
-        Wed, 20 Jul 2022 17:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658337809;
-        bh=l64eNEL01LL7AhwbuDc6ZfskIyioKtZYaB4s9mZGuxw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YF+iVRp3FgEJiLnhxHApOdIjZhUT0lJw0k4AwBXwcAUpmrIzHmOFApJ+HFTbpl0Wi
-         /CSrc/Y1G/R/xwEdaJJqnb/xZEqxQQAj+1wfmu/v/CIGZIxVBq9g90CJTpLeDNfTh9
-         9lVTbSv3USzWlVmT/Lz9j4/4puaVt4stzD25yc1AELlqbKZ+xnpc6lKcsQbfuftBq6
-         5nBqUBncE9Vp+VmVm68yyyiYINzKlYUHr/GP2aghFxpWC8IHlci6MlS0aTAj1KkyHJ
-         ezg65EeNKmtC8+P8hyWVJPHLNxQEso0ENSMuq36P+YaiNJGf1s/xeNmzuNtqZ8PoIi
-         JJhFr4s/XLHAA==
-Date:   Wed, 20 Jul 2022 12:23:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Liu Song <liusong@linux.alibaba.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] PCI: eliminate abnormal characters when reads help
- information of "PCI_P2PDMA" under menuconfig
-Message-ID: <20220720172328.GA1647083@bhelgaas>
+        with ESMTP id S240385AbiGTR0H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 13:26:07 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFEB2DF4;
+        Wed, 20 Jul 2022 10:26:06 -0700 (PDT)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lp2Zj3vwVz67TPf;
+        Thu, 21 Jul 2022 01:22:37 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Jul 2022 19:26:04 +0200
+Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
+ 2022 18:26:03 +0100
+Date:   Wed, 20 Jul 2022 18:26:01 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <bwidawsk@kernel.org>,
+        <hch@lst.de>, <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 21/28] cxl/region: Enable the assignment of endpoint
+ decoders to regions
+Message-ID: <20220720182601.00001307@Huawei.com>
+In-Reply-To: <165784336184.1758207.16403282029203949622.stgit@dwillia2-xfh.jf.intel.com>
+References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
+        <165784336184.1758207.16403282029203949622.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1658301723-111283-1-git-send-email-liusong@linux.alibaba.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.121]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Andy, Joe, possible checkpatch question]
+On Thu, 14 Jul 2022 17:02:41 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On Wed, Jul 20, 2022 at 03:22:03PM +0800, Liu Song wrote:
-> From: Liu Song <liusong@linux.alibaba.com>
+> The region provisioning process involves allocating DPA to a set of
+> endpoint decoders, and HPA plus the region geometry to a region device.
+> Then the decoder is assigned to the region. At this point several
+> validation steps can be performed to validate that the decoder is
+> suitable to participate in the region.
 > 
-> Read the help information of PCI_P2PDMA through make menuconfig,
-> "Enables" is partially displayed as garbled characters, so fix it.
-> 
-> Signed-off-by: Liu Song <liusong@linux.alibaba.com>
-> ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 133c732..8102b78 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -166,7 +166,7 @@ config PCI_P2PDMA
->  	depends on ZONE_DEVICE
->  	select GENERIC_ALLOCATOR
->  	help
-> -	  Enableѕ drivers to do PCI peer-to-peer transactions to and from
-> +	  Enables drivers to do PCI peer-to-peer transactions to and from
+> Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
+> Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I see this problem ("Enables" renders as "Enable ~U" because the "s"
-is actually UTF-8 D195, CYRILLIC SMALL LETTER DZE).
+I think you've lost some planned changes here as typos from v1 review
+still here as is the stale comment.
 
-"file" found the following other Kconfig files that also contain
-UTF-8:
+With those fixed
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-  drivers/pci/Kconfig
-    D195 CYRILLIC SMALL LETTER DZE, which looks like "s"
-    "Enables" renders as "Enable ~U"
-  net/netfilter/ipvs/Kconfig
-    C2A0 NO-BREAK SPACE
-    renders fine
-  drivers/mtd/nand/raw/Kconfig
-    MTD_NAND_CAFE  C389 LATIN CAPITAL LETTER E WITH ACUTE
-    "CAFÉ" renders as "CAF ~I"
-  drivers/mtd/spi-nor/Kconfig
-    MTD_SPI_NOR_USE_4K_SECTORS
-    "16 × 4 KiB" renders as "16  ~W 4 KiB"
-  drivers/net/can/usb/Kconfig
-  drivers/net/can/peak_canfd/Kconfig
-  drivers/gpu/drm/panel/Kconfig
-  drivers/platform/mellanox/Kconfig
-  kernel/time/Kconfig
-  crypto/Kconfig
-  arch/Kconfig
 
-Some of these are clearly wrong (Cyrillic letter), some are
-unnecessary (non-breakable space), some are arguable ("CAFÉ" and "16 ×
-4 KiB" -- these take advantage of UTF-8 in useful ways).
+ 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b1e847827c6b..871bfdbb9bc8 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
 
-Not being a charset guru, I dunno if the rendering problem means
-my terminal is set incorrectly or if they all need to be changed.
+> +/*
+> + * - Check that the given endpoint is attached to a host-bridge identified
+> + *   in the root interleave.
 
-But I think we should address all of them at the same time.  If we do
-need to avoid UTF-8 in Kconfig help, maybe checkpatch should look for
-it.
+In reply to v1 review I think you said you had dropped this comment as stale?
 
->  	  BARs that are exposed in other devices that are the part of
->  	  the hierarchy where peer-to-peer DMA is guaranteed by the PCI
->  	  specification to work (ie. anything below a single PCI bridge).
-> -- 
-> 1.8.3.1
-> 
+> + */
+> +static int cxl_region_attach(struct cxl_region *cxlr,
+> +			     struct cxl_endpoint_decoder *cxled, int pos)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +
+> +	if (cxled->mode == CXL_DECODER_DEAD) {
+> +		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (pos >= p->interleave_ways) {
+> +		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
+> +			p->interleave_ways);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (p->targets[pos] == cxled)
+> +		return 0;
+> +
+> +	if (p->targets[pos]) {
+> +		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
+> +		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
+> +
+> +		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
+> +			pos, dev_name(&cxlmd_target->dev),
+> +			dev_name(&cxled_target->cxld.dev));
+> +		return -EBUSY;
+> +	}
+> +
+> +	p->targets[pos] = cxled;
+> +	cxled->pos = pos;
+> +	p->nr_targets++;
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_region *cxlr = cxled->cxld.region;
+> +	struct cxl_region_params *p;
+> +
+> +	lockdep_assert_held_write(&cxl_region_rwsem);
+> +
+> +	if (!cxlr)
+> +		return;
+> +
+> +	p = &cxlr->params;
+> +	get_device(&cxlr->dev);
+> +
+> +	if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
+> +	    p->targets[cxled->pos] != cxled) {
+> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +
+> +		dev_WARN_ONCE(&cxlr->dev, 1, "expected %s:%s at position %d\n",
+> +			      dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+> +			      cxled->pos);
+> +		goto out;
+> +	}
+> +
+> +	p->targets[cxled->pos] = NULL;
+> +	p->nr_targets--;
+> +
+> +	/* notify the region driver that one of its targets has deparated */
+typo still here.
+
+> +	up_write(&cxl_region_rwsem);
+> +	device_release_driver(&cxlr->dev);
+> +	down_write(&cxl_region_rwsem);
+> +out:
+> +	put_device(&cxlr->dev);
+> +}
+
+
