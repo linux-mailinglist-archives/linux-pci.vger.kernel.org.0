@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C64A657BFE7
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 00:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DAA057BFE8
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 00:08:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230309AbiGTWGI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 18:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47116 "EHLO
+        id S229504AbiGTWIq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 18:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiGTWGG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 18:06:06 -0400
+        with ESMTP id S229449AbiGTWIp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 18:08:45 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F92422DB;
-        Wed, 20 Jul 2022 15:06:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FC642AC1;
+        Wed, 20 Jul 2022 15:08:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ACEA7B82220;
-        Wed, 20 Jul 2022 22:06:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F105BC341C7;
-        Wed, 20 Jul 2022 22:05:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 66195B8220F;
+        Wed, 20 Jul 2022 22:08:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0374C341C7;
+        Wed, 20 Jul 2022 22:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658354760;
-        bh=qYViTxSdzdo85TRjxcG0IeVUNVFx1NYEZydO+uq4vs0=;
+        s=k20201202; t=1658354921;
+        bh=6NPJbp8qd++ZJMzUvD/xwkV8ieUhuhN8noME2rFU4ao=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rH/cEngXsM5vG3FeARaAn+VpgiODrGvNEsYBjPBEEZsWiDRBuoUFwIbYVS2BWk41q
-         p7V5o0O/kvHoiPhiCTDabYy7EJhDCWaRgmnfM9pI0jdsTV9kGU786tpttATFol5Oa2
-         PqoPA44LabkGXX4G0PMMkHFJh8RFiWIijX+ywehOBSy7Khs1oFmDJoLzk+n6ffneEg
-         KDEg1zCVgJjqY461V6vjaeA0ydqk89Vgf3x/2F0KnHm4G5C6AyFws8xor1z74o29KJ
-         DhY1nxzPp2j4bBXjEnWNJWfkGi5kJ2pBu9f+JJqQUwtw+OEADs96/rZTi1TKbpfDoQ
-         D4LQibpCeRBBQ==
-Date:   Wed, 20 Jul 2022 17:05:58 -0500
+        b=vImESz6H+FmCQBQFGg6RwGB1qUexGM88QKZgQo2j6EKPY9DUkTE6WFlJPsdKOsCWi
+         tQgqkpnO/efA4PMFoBcERZacJUh+sxI/8da7uS/J3ZLjQBaH14ge3TBLfQ84Quu8N2
+         Qa53LZ9RqK3fgLnWTzhKfjknNgTBxaZrDNSO/+m9rFQMvTj8DyA7FFqpKQIBhfOzlq
+         1I3rb8cNi9M3B7g3A8kyb+fnHdVoocE9k42ZA9u6WalZammMd5HRfK/qiJu7Ei2KB0
+         uxQfIc4IfRU2n7z27cZgp3L70A5knqsvG9bc0ifZ8OxsFfZY9lVJ/0gXMNTPo92m+d
+         k4LfG3JnkObvg==
+Date:   Wed, 20 Jul 2022 17:08:40 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jim Quinlan <jim2101024@gmail.com>
 Cc:     linux-pci@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc:     linux-pci@vger.kernel.org,
         open list <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v2 3/6] PCI: brcmstb: Add "refusal mode" to preclude
  PCIe-induced CPU aborts
-Message-ID: <20220720220558.GA1661469@bhelgaas>
+Message-ID: <20220720220840.GA1663326@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -71,109 +71,10 @@ On Sat, Jul 16, 2022 at 06:24:50PM -0400, Jim Quinlan wrote:
 > access causes a CPU abort.  This commit sets a "refusal mode" if the PCIe
 > link-up fails, and this has our pci_ops map_bus function returning a NULL
 > address, which in turn precludes the access from happening.
-> 
-> Right now, "refusal mode" is window dressing.  It will become relevant
-> in a future commit when brcm_pcie_start_link() is invoked during
-> enumeration instead of before it.
-> 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index c026446d5830..72219a4f3964 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -255,6 +255,7 @@ struct brcm_pcie {
->  	u32			hw_rev;
->  	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-> +	bool			refusal_mode;
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
+
 > @@ -687,6 +688,19 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
->  	if (pci_is_root_bus(bus))
->  		return PCI_SLOT(devfn) ? NULL : base + where;
->  
-> +	if (pcie->refusal_mode) {
-> +		/*
-> +		 * At this point we do not have PCIe link-up.  If there is
-> +		 * a config read or write access besides those targeting
-> +		 * the host bridge, our PCIe HW throws a CPU abort.  To
-> +		 * prevent this we return the NULL address.  The calling
-> +		 * functions -- pci_generic_config_*() -- will notice this
-> +		 * and not perform the access, and if it is a read access,
-> +		 * 0xffffffff is returned.
-> +		 */
-> +		return NULL;
-> +	}
 
-Is this any different from all the other .map_bus() implementations
-that return NULL when the link is down?
-
-  cdns_pci_map_bus()
-  dw_pcie_other_conf_map_bus()
-  nwl_pcie_map_bus() (see nwl_pcie_valid_device())
-  xilinx_pcie_map_bus() (see xilinx_pcie_valid_device())
-
-If you can implement this the same way, i.e., using
-brcm_pcie_link_up(), it would be nice.
-
->  	/* For devices, write to the config space index register */
->  	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
->  	writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
-> @@ -704,6 +718,11 @@ static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devf
->  	if (pci_is_root_bus(bus))
->  		return PCI_SLOT(devfn) ? NULL : base + (where & ~0x3);
->  
-> +	if (pcie->refusal_mode) {
-> +		/* See note above in brcm_pcie_map_conf() */
-> +		return NULL;
-> +	}
-> +
->  	/* For devices, write to the config space index register */
->  	idx = PCIE_ECAM_OFFSET(bus->number, devfn, (where & ~3));
->  	writel(idx, base + IDX_ADDR(pcie));
-> @@ -989,6 +1008,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
->  		dev_err(dev, "link down\n");
->  		return -ENODEV;
->  	}
-> +	pcie->refusal_mode = false;
->  
->  	if (!brcm_pcie_rc_mode(pcie)) {
->  		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
-> @@ -1134,6 +1154,8 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->  	void __iomem *base = pcie->base;
->  	int tmp;
->  
-> +	pcie->refusal_mode = true;
-> +
->  	if (brcm_pcie_link_up(pcie))
->  		brcm_pcie_enter_l23(pcie);
->  	/* Assert fundamental reset */
-> @@ -1185,6 +1207,7 @@ static int brcm_pcie_resume(struct device *dev)
->  	u32 tmp;
->  	int ret;
->  
-> +	pcie->refusal_mode = true;
->  	base = pcie->base;
->  	ret = clk_prepare_enable(pcie->clk);
->  	if (ret)
-> @@ -1361,6 +1384,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  	pcie->type = data->type;
->  	pcie->perst_set = data->perst_set;
->  	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
-> +	pcie->refusal_mode = true;
->  
->  	pcie->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pcie->base))
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Oh, and I forgot to mention that brcmstb is one of the few drivers
+that doesn't name these functions ".*_map_bus()".  It's helpful when
+they all match a simple grep pattern.  Maybe a patch at the end could
+fix this.
