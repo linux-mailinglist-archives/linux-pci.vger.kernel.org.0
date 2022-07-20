@@ -2,93 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B1A257B422
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 11:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A4857B43E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 12:00:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232322AbiGTJr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jul 2022 05:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        id S230346AbiGTKAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jul 2022 06:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiGTJr4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 05:47:56 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C34765598;
-        Wed, 20 Jul 2022 02:47:53 -0700 (PDT)
-Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPS id 6116840D403D;
-        Wed, 20 Jul 2022 09:47:49 +0000 (UTC)
-From:   Andrey Strachuk <strochuk@ispras.ru>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andrey Strachuk <strochuk@ispras.ru>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org
-Subject: [PATCH v2] ACPI/PCI: Remove useless NULL pointer checks
-Date:   Wed, 20 Jul 2022 12:47:43 +0300
-Message-Id: <20220720094743.471304-1-strochuk@ispras.ru>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229492AbiGTKAE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jul 2022 06:00:04 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4516C12A84;
+        Wed, 20 Jul 2022 03:00:02 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lnrh201lXz67bf9;
+        Wed, 20 Jul 2022 17:56:34 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Jul 2022 11:59:59 +0200
+Received: from localhost (10.81.205.121) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 20 Jul
+ 2022 10:59:50 +0100
+Date:   Wed, 20 Jul 2022 10:59:46 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
+Subject: Re: [PATCH 36/46] cxl/region: Add interleave ways attribute
+Message-ID: <20220720105946.00007fc2@Huawei.com>
+In-Reply-To: <62d72cf43c74_11a1662945b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+        <20220624041950.559155-11-dan.j.williams@intel.com>
+        <20220630144420.000005b5@Huawei.com>
+        <62cb6f9a74b33_3535162944e@dwillia2-xfh.notmuch>
+        <20220719154718.000077ec@Huawei.com>
+        <62d72cf43c74_11a1662945b@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.205.121]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Local variable 'p' is initialized by an address
-of field of acpi_resource, so it does not make
-sense to compare 'p' with NULL.
+On Tue, 19 Jul 2022 15:15:16 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Jonathan Cameron wrote:
+> > > No, I would prefer that as far as the Linux implementation is concerned
+> > > the software-guide does not exist. In the sense that the Linux
+> > > implementation choices supersede and are otherwise a superset of what
+> > > the guide recommends.  
+> > 
+> > ah. I phrased that badly. I just meant lift the argument as a comment rather
+> > than a cross reference.  
+> 
+> Oh, you mean promote it to an actual rationale comment rather than just
+> parrot what the code is doing? Yeah, that's a good idea.
 
-Signed-off-by: Andrey Strachuk <strochuk@ispras.ru>
----
- drivers/acpi/pci_link.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index 58647051c948..aa1038b8aec4 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -95,7 +95,7 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
- 	case ACPI_RESOURCE_TYPE_IRQ:
- 		{
- 			struct acpi_resource_irq *p = &resource->data.irq;
--			if (!p || !p->interrupt_count) {
-+			if (!p->interrupt_count) {
- 				acpi_handle_debug(handle,
- 						  "Blank _PRS IRQ resource\n");
- 				return AE_OK;
-@@ -121,7 +121,7 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
- 		{
- 			struct acpi_resource_extended_irq *p =
- 			    &resource->data.extended_irq;
--			if (!p || !p->interrupt_count) {
-+			if (!p->interrupt_count) {
- 				acpi_handle_debug(handle,
- 						  "Blank _PRS EXT IRQ resource\n");
- 				return AE_OK;
-@@ -182,7 +182,7 @@ static acpi_status acpi_pci_link_check_current(struct acpi_resource *resource,
- 	case ACPI_RESOURCE_TYPE_IRQ:
- 		{
- 			struct acpi_resource_irq *p = &resource->data.irq;
--			if (!p || !p->interrupt_count) {
-+			if (!p->interrupt_count) {
- 				/*
- 				 * IRQ descriptors may have no IRQ# bits set,
- 				 * particularly those w/ _STA disabled
-@@ -197,7 +197,7 @@ static acpi_status acpi_pci_link_check_current(struct acpi_resource *resource,
- 		{
- 			struct acpi_resource_extended_irq *p =
- 			    &resource->data.extended_irq;
--			if (!p || !p->interrupt_count) {
-+			if (!p->interrupt_count) {
- 				/*
- 				 * extended IRQ descriptors must
- 				 * return at least 1 IRQ
--- 
-2.25.1
-
+yup
