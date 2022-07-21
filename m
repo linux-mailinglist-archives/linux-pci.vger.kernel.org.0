@@ -2,54 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1210C57D6C2
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3B157D6CF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:21:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233417AbiGUWSj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 18:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
+        id S233866AbiGUWVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 18:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiGUWSh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:18:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C09140ED;
-        Thu, 21 Jul 2022 15:18:34 -0700 (PDT)
+        with ESMTP id S233663AbiGUWV2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:21:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABCE3ED5F;
+        Thu, 21 Jul 2022 15:21:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1313661D29;
-        Thu, 21 Jul 2022 22:18:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15352C3411E;
-        Thu, 21 Jul 2022 22:18:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5C371B82587;
+        Thu, 21 Jul 2022 22:21:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A78BC341C0;
+        Thu, 21 Jul 2022 22:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658441913;
-        bh=OJi+z9qqPj6IFenYIhxZJ8HTqaeEtifwY78sUa9C01g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UuulMPQZ0Q1acIjWMIt0ZWNnOYFmGyCmGCZbuC6Ri6S+vPHJf3uodol68GDZopJPJ
-         s2uW7gJ5QcSctUYY6pU9SbWuiE7/z991gx+MZBdHtIz5v3nHwH18YX9tm5Bticg6Bj
-         RpRePvIEgWlYwa8c6gkXbQu6036hF5zbXl49LSgxhLxNrKwxJbJu900lW0XUemm/n6
-         e0kVdCUc9KV5IkGcJ/i1dmkGBfmTwmIxEdv1IsoHE6v9aZkBzFhzjU94/SHML2gqNU
-         3qV0ulyi5jcwIlMRSK5n465MRaFmLa/nlyaVOckYM8KzQ7/BgPnNaUIDhTTIqRGUIT
-         dF+Db1k4SMBRQ==
-Received: by pali.im (Postfix)
-        id E977722EF; Fri, 22 Jul 2022 00:18:29 +0200 (CEST)
-Date:   Fri, 22 Jul 2022 00:18:29 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        s=k20201202; t=1658442085;
+        bh=Yjf5MWQLAPw4IWWhGL15WD5FiZeYXerj3Q2VN55OYsI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ntJPnLbfLqNyyd2s/HX7AvbocCcWjDATuMoYhms0Nn2ImMIs56NIxSmzmYH/3IPLi
+         VTZhEIDhW1FdlSm6506f4af5PPMiRrkRSsOR1EQ1gMoi0cJiYpghQKZ5IzoNL6HJlp
+         AkPfXARCGc37WRp/04s2yY5WiGV8kDvvV/Kd3UfhiZjR080OA4CrS1aGD2Rh5xtJwJ
+         GKuKYnRnbNPBEZ74wL1hoHtb+TWGz2s9fqL1z6w2OQ4gVYTcNFY0F9WP6qVcg8dNTJ
+         U58qjAzKH1bzBiiym7xxK5mksJW1fFsVtqGaO24/0T9OQ+K3LaS0b0BbEPI9aObMPZ
+         Va6eSjJBu4pAA==
+Date:   Thu, 21 Jul 2022 17:21:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/fsl-pci: Fix Class Code of PCIe Root Port
-Message-ID: <20220721221829.4iq47kazcb757l2s@pali>
-References: <20220706101043.4867-1-pali@kernel.org>
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+Message-ID: <20220721222122.GA1754784@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220706101043.4867-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20220721204607.xklzyklbgwcgepjm@pali>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,84 +61,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PING?
+[+to Johan for qcom]
+[-cc Tom, email bounces]
 
-On Wednesday 06 July 2022 12:10:43 Pali Rohár wrote:
-> By default old pre-3.0 Freescale PCIe controllers reports invalid PCI Class
-> Code 0x0b20 for PCIe Root Port. It can be seen by lspci -b output on P2020
-> board which has this pre-3.0 controller:
+On Thu, Jul 21, 2022 at 10:46:07PM +0200, Pali Roh�r wrote:
+> On Thursday 21 July 2022 14:54:33 Bjorn Helgaas wrote:
+> > The j721e, kirin, tegra, and mediatek drivers all implement .remove().
+> > 
+> > They also set ".suppress_bind_attrs = true".  I think this means
+> > bus_add_driver() will not create the "bind" and "unbind" sysfs
+> > attributes for the driver that would allow users to users to manually
+> > attach and detach devices from it.
+> > 
+> > Is there a reason for this, or should these drivers stop setting
+> > .suppress_bind_attrs?
 > 
->   $ lspci -bvnn
->   00:00.0 Power PC [0b20]: Freescale Semiconductor Inc P2020E [1957:0070] (rev 21)
->           !!! Invalid class 0b20 for header type 01
->           Capabilities: [4c] Express Root Port (Slot-), MSI 00
+> I have already asked this question during review of kirin driver:
+> https://lore.kernel.org/linux-pci/20211031205527.ochhi72dfu4uidii@pali/
 > 
-> Fix this issue by programming correct PCI Class Code 0x0604 for PCIe Root
-> Port to the Freescale specific PCIe register 0x474.
+> Microchip driver wanted to change its type from bool to tristate
+> https://lore.kernel.org/linux-pci/20220420093449.38054-1-u.kleine-koenig@pengutronix.de/t/#u
+> and after discussion it seems that it is needed to do more work for this
+> driver.
 > 
-> With this change lspci -b output is:
+> > For example, Pali and Ley Foon *did* stop setting .suppress_bind_attrs
+> > when adding .remove() methods in these commits:
+> > 
+> >   0746ae1be121 ("PCI: mvebu: Add support for compiling driver as module")
+> >   526a76991b7b ("PCI: aardvark: Implement driver 'remove' function and allow to build it as module")
+> >   ec15c4d0d5d2 ("PCI: altera: Allow building as module")
 > 
->   $ lspci -bvnn
->   00:00.0 PCI bridge [0604]: Freescale Semiconductor Inc P2020E [1957:0070] (rev 21) (prog-if 00 [Normal decode])
->           Capabilities: [4c] Express Root Port (Slot-), MSI 00
+> I added it for both pci-mvebu.c and pci-aardvark.c. And just few days
+> ago I realized why suppress_bind_attrs was set to true and remove method
+> was not implemented.
+
+With suppress_bind_attrs, the user can't manually unbind a device, so
+we can't get to mvebu_pcie_remove() that way, but since mvebu is a
+modular driver, I assume we can unload the module and *that* would
+call mvebu_pcie_remove().  Right?
+
+> Implementing remove method is not really simple, specially when pci
+> controller driver implements also interrupt controller (e.g. for
+> handling legacy interrupts).
+
+Hmmm.  Based on your patches below, it looks like we need to call
+irq_dispose_mapping() in some cases, but I'm very confused about
+*which* cases.
+
+I first thought it was for mappings created with irq_create_mapping(),
+but pci-aardvark.c never calls that, so there must be more to it.
+
+Currently only altera, iproc, mediatek-gen3, and mediatek call
+irq_dispose_mapping() from their .remove() methods.  (They all call
+irq_domain_remove() *before* irq_dispose_mapping().  Is that legal?
+Your patches do irq_dispose_mapping() *first*.)
+
+altera, mediatek-gen3, and mediatek call irq_dispose_mapping() on IRQs
+that came from platform_get_irq().
+
+qcom is a DWC driver, so all the IRQ stuff happens in
+dw_pcie_host_init().  qcom_pcie_remove() does call
+dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
+calls irq_dispose_mapping().
+
+I'm thoroughly confused by all this.  But I suspect that maybe I
+should drop the "make qcom modular" patch because it seems susceptible
+to this problem:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
+
+> Here are waiting fixup patches for pci-mvebu.c and pci-aardvark.c which
+> fixes .remove callback. Without these patches calling 'rmmod driver' let
+> dangling pointer in kernel which may cause random kernel crashes. See:
 > 
-> Without any "Invalid class" error. So class code was properly reflected
-> into standard (read-only) PCI register 0x08.
+> https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
+> https://lore.kernel.org/linux-pci/20220711120626.11492-1-pali@kernel.org/
+> https://lore.kernel.org/linux-pci/20220711120626.11492-2-pali@kernel.org/
 > 
-> Same fix is already implemented in U-Boot pcie_fsl.c driver in commit:
-> http://source.denx.de/u-boot/u-boot/-/commit/d18d06ac35229345a0af80977a408cfbe1d1015b
-> 
-> Fix activated by U-Boot stay active also after booting Linux kernel.
-> But boards which use older U-Boot version without that fix are affected and
-> still require this fix.
-> 
-> So implement this class code fix also in kernel fsl_pci.c driver.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  arch/powerpc/sysdev/fsl_pci.c | 8 ++++++++
->  arch/powerpc/sysdev/fsl_pci.h | 1 +
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-> index 1011cfea2e32..bfbb8c8fc9aa 100644
-> --- a/arch/powerpc/sysdev/fsl_pci.c
-> +++ b/arch/powerpc/sysdev/fsl_pci.c
-> @@ -521,6 +521,7 @@ int fsl_add_bridge(struct platform_device *pdev, int is_primary)
->  	struct resource rsrc;
->  	const int *bus_range;
->  	u8 hdr_type, progif;
-> +	u32 class_code;
->  	struct device_node *dev;
->  	struct ccsr_pci __iomem *pci;
->  	u16 temp;
-> @@ -594,6 +595,13 @@ int fsl_add_bridge(struct platform_device *pdev, int is_primary)
->  			PPC_INDIRECT_TYPE_SURPRESS_PRIMARY_BUS;
->  		if (fsl_pcie_check_link(hose))
->  			hose->indirect_type |= PPC_INDIRECT_TYPE_NO_PCIE_LINK;
-> +		/* Fix Class Code to PCI_CLASS_BRIDGE_PCI_NORMAL for pre-3.0 controller */
-> +		if (in_be32(&pci->block_rev1) < PCIE_IP_REV_3_0) {
-> +			early_read_config_dword(hose, 0, 0, PCIE_FSL_CSR_CLASSCODE, &class_code);
-> +			class_code &= 0xff;
-> +			class_code |= PCI_CLASS_BRIDGE_PCI_NORMAL << 8;
-> +			early_write_config_dword(hose, 0, 0, PCIE_FSL_CSR_CLASSCODE, class_code);
-> +		}
->  	} else {
->  		/*
->  		 * Set PBFR(PCI Bus Function Register)[10] = 1 to
-> diff --git a/arch/powerpc/sysdev/fsl_pci.h b/arch/powerpc/sysdev/fsl_pci.h
-> index cdbde2e0c96e..093a875d7d1e 100644
-> --- a/arch/powerpc/sysdev/fsl_pci.h
-> +++ b/arch/powerpc/sysdev/fsl_pci.h
-> @@ -18,6 +18,7 @@ struct platform_device;
->  
->  #define PCIE_LTSSM	0x0404		/* PCIE Link Training and Status */
->  #define PCIE_LTSSM_L0	0x16		/* L0 state */
-> +#define PCIE_FSL_CSR_CLASSCODE	0x474	/* FSL GPEX CSR */
->  #define PCIE_IP_REV_2_2		0x02080202 /* PCIE IP block version Rev2.2 */
->  #define PCIE_IP_REV_3_0		0x02080300 /* PCIE IP block version Rev3.0 */
->  #define PIWAR_EN		0x80000000	/* Enable */
-> -- 
-> 2.20.1
-> 
+> So I would suggest to do more detailed review when adding .remove
+> callback for pci controller driver (or when remove suppress_bind_attrs)
+> and do more testings and checking if all IRQ mappings are disposed.
+
+I'm not smart enough to do "more detailed review" because I don't know
+what things to look for :)  Thanks for all your work in sorting out
+these arcane details!
+
+Bjorn
