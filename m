@@ -2,83 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1E157C4B4
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 08:51:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D99A57C4DA
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 09:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231779AbiGUGvi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 02:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38624 "EHLO
+        id S230388AbiGUHCP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 03:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230058AbiGUGvh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 02:51:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D9242ADA;
-        Wed, 20 Jul 2022 23:51:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C752061D96;
-        Thu, 21 Jul 2022 06:51:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A1BC3411E;
-        Thu, 21 Jul 2022 06:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658386296;
-        bh=vmVX9bnmGimudbWeAcntQ9Q8n8YB6rg9wKjyHxHE1Rg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D0sP2Y5BF9BX4KbXc6RGH2xefa/cpPfdKM+EXSigmJlyPYlUtAd2b6Q/On8yw7Lu8
-         IP0DF4iUgtzK5Y0BOuwL8kQB+Sw5wO8NmbQIHZvjzyTQuN3Fc1ns/JjlxTiehde2zk
-         6bsVotR3iAyn49ouWMSbw4lcPINxiDZIY22Lr7JkltvppygcNMaWaoNLadNmrQ/Aj7
-         oy3U7uIsj7/jVJA9GHZ07WHVb022YpcCZofBxqYE+UM4Gs5bui1FZhfc52L581adpN
-         Jt6SOJGusXzeh7xzG9oL5KhwCZqJ7u7AdinDsts9kWD8T9K3LJycZaI7KaKDOmj14A
-         2FGnR8h+zr+sA==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oEQ23-0002pw-Qv; Thu, 21 Jul 2022 08:51:35 +0200
-Date:   Thu, 21 Jul 2022 08:51:35 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Add support for modular builds
-Message-ID: <Ytj3dzQveHhf/0+P@hovoldconsulting.com>
-References: <20220519094646.23009-1-johan+linaro@kernel.org>
- <20220720212053.GA1659584@bhelgaas>
+        with ESMTP id S229684AbiGUHCN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 03:02:13 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Jul 2022 00:02:12 PDT
+Received: from 10.mo582.mail-out.ovh.net (10.mo582.mail-out.ovh.net [87.98.157.236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD725E31B
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 00:02:12 -0700 (PDT)
+Received: from player158.ha.ovh.net (unknown [10.108.16.135])
+        by mo582.mail-out.ovh.net (Postfix) with ESMTP id B05DD22990
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 06:55:31 +0000 (UTC)
+Received: from RCM-web2.webmail.mail.ovh.net (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
+        (Authenticated sender: rafal@milecki.pl)
+        by player158.ha.ovh.net (Postfix) with ESMTPSA id 40A322CCE9609;
+        Thu, 21 Jul 2022 06:55:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220720212053.GA1659584@bhelgaas>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Date:   Thu, 21 Jul 2022 08:55:10 +0200
+From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+To:     William Zhang <william.zhang@broadcom.com>
+Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, dan.beygelman@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [RESEND PATCH 0/9] arm64: bcmbca: Move BCM4908 SoC support under
+ ARCH_BCMBCA
+In-Reply-To: <20220721000626.29497-1-william.zhang@broadcom.com>
+References: <20220721000626.29497-1-william.zhang@broadcom.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <cb6bcce75bec6c845fa4a35587a2332d@milecki.pl>
+X-Sender: rafal@milecki.pl
+X-Originating-IP: 194.187.74.233
+X-Webmail-UserID: rafal@milecki.pl
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 17898149347535334168
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrudelkedgudejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlpgfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpeegvdffjeelvdeggeetheegveejieetgeeiiefggeelveejffehieekhfduueelhfenucfkpheptddrtddrtddrtddpudelgedrudekjedrjeegrddvfeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehplhgrhigvrhduheekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekvd
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 04:20:53PM -0500, Bjorn Helgaas wrote:
-> On Thu, May 19, 2022 at 11:46:46AM +0200, Johan Hovold wrote:
-> > Allow the Qualcomm PCIe controller driver to be built as a module, which
-> > is useful for multi-platform kernels as well as during development.
-> > 
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+On 2022-07-21 02:06, William Zhang wrote:
+> RESEND to include linux arm kernel mailing list.
 > 
-> This no longer applies on my pci/ctrl/qcom branch:
-> 839fbdee4c08 ("dt-bindings: PCI: qcom: Fix reset conditional")
-> 
-> Do you want to refresh it, or should we wait until the next cycle?
+> Now that Broadcom Broadband arch ARCH_BCMBCA is in the kernel, this 
+> change
+> set migrates the existing broadband chip BCM4908 support to 
+> ARCH_BCMBCA.
 
-I just sent a rebased v2 (the context had changed due to the addition of
-the ipq6018 device-id entry):
-
-	https://lore.kernel.org/all/20220721064720.10762-1-johan+linaro@kernel.org/
-
-Johan
+I'd expect me to receive patches 7/9, 8/9 and 9/9 too.
