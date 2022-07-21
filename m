@@ -2,53 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 615ED57CE41
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 16:54:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E648857CE52
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 16:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231678AbiGUOyJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 10:54:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
+        id S229582AbiGUO5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 10:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232296AbiGUOyI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 10:54:08 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D7E2981F
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:54:07 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id k30so2467673edk.8
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:54:07 -0700 (PDT)
+        with ESMTP id S230248AbiGUO5I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 10:57:08 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3715F7A
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:57:07 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id z23so3614471eju.8
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vMHhtHD1hf3iJepYJ8ceRNwH6fCOnvVvTafWeoP52sM=;
-        b=BiZUY8JM1OQAIk/TZXPsqXhBfA8mZBjDoR8E7YpHpDB3qVKT2gpAGRthj0L26D4HO6
-         uxwLD5euipHfPBpcdEfygdGrfYv6968sarZ5Nb1DC6/9rOXW11EoPAGFrQP7sO75wDXL
-         vv+8rPqUwDmYGJ6Ku7o7BryySLxVv5VZ7nQJQ=
+        bh=JvZJ0H7Uo3rdrXBSDMULfzxE967bLfkAGXQDlB4dggM=;
+        b=YLuvHNCs9Wil+dN7o93cDGadtzv3WScmNWmGYjzxb5BGE9W8R1Szvm0/S48itl1HMM
+         8ul/Ada5+9tXVXrmITWIYosierk8pitpvLKSnvdNc46crciU8gWvJWGDhmF2zUJ62dKg
+         17KyP7gOQ8SIr3jjQ7mX6pMJL8WmL7VTxzIgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vMHhtHD1hf3iJepYJ8ceRNwH6fCOnvVvTafWeoP52sM=;
-        b=RJxNaBfBGelSknGokdPY0FcCwd8nhUFBsAasNJQSLL41ZAw1ONkqlwzY8lqBzdhIFO
-         8thENVB20V9LvETALWOYNWhojqZJlmQXOrGwY1HJ40K89K6VTalM4akw8gONt+lRWLrw
-         UJcnsu72ozn+phveUmERK1o8PMBgv52x6XsSUhr7X9R+zDYsWqZpG/EWef45KwA795PZ
-         L/eZjmEFAM+VdYZO9EzvrID93qOoKa7M83iLmLRiSCZvdFQfnRHyX4DfeP/Fi46Vsj4E
-         SSIXeywYlh+AZfCVVVtowEF/9qf+7fhO/gEnegsF/er99ouKl2eGfCyKj0IqU5reOtNg
-         4tJQ==
-X-Gm-Message-State: AJIora+Tv3sBkA0jVq7NTssLMWxXoHuROo0ZfvtA8i7XmVbrDth8Jm9i
-        8MI6sQFAf2B/Dw0ZHwRN9odzKq1AOrM85qFOOTZv/g==
-X-Google-Smtp-Source: AGRyM1sKU5/O8mfIMSKIaBGKnBHyXSDhXUgiSAXiOyfISOy+u7vmrww4kWeaw6K/wWpJHzMX0ArX1ZUHGX7coL0uPXA=
-X-Received: by 2002:a05:6402:26c8:b0:43a:c404:a553 with SMTP id
- x8-20020a05640226c800b0043ac404a553mr57620298edd.53.1658415245466; Thu, 21
- Jul 2022 07:54:05 -0700 (PDT)
+        bh=JvZJ0H7Uo3rdrXBSDMULfzxE967bLfkAGXQDlB4dggM=;
+        b=5Sfxn9aTPKTseRmc6YKB3A9N9VYMVko99/u1pQTK6WdNlMUMSDDq4f8NM5hx1KtUG0
+         0o12sLyXC0Byex7SB6LtqJqibNPXicviXjuT4Il6N9nMYPUjghvv053wx0Nq/CReV8rW
+         ke9AEFBObDFmXjWYSgvhT60Zs8t2QHU+xcqI34cJI5byrbnvLK3a/CnHFjOceuXy8PDb
+         F8vwbBcDky6aJhZh0DiESbM2IOiCyBYvZj4uLNFLfIFQbZdJ3colFyEO4LNlr7gNRntD
+         Ox44x4oCDvNr7HBAktiETnmhTXEfc5rZzcwtYCYZk2N+q0y4IqsKCsbuLvUJ+PGqVJij
+         6cQw==
+X-Gm-Message-State: AJIora8/xIbD0I5/m2h1mz6o4Fqj1VlK5jRIr6Y6yVSp+cAmBTUi4khe
+        QnwirnmK2bEBtp8uyMh8TijpBvdF+K6+KbOWmZndXw==
+X-Google-Smtp-Source: AGRyM1uKuCK5XU9mrN1KyK9VOGrq9PVjbeJNNkDMJitdEMpXWQ7KLU5QEBMUUAKOJdsRQxn51H+WNhZby6VcXRPOHac=
+X-Received: by 2002:a17:906:106:b0:715:7cdf:400f with SMTP id
+ 6-20020a170906010600b007157cdf400fmr41073145eje.1.1658415425127; Thu, 21 Jul
+ 2022 07:57:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220716222454.29914-4-jim2101024@gmail.com> <20220720220558.GA1661469@bhelgaas>
-In-Reply-To: <20220720220558.GA1661469@bhelgaas>
+References: <20220718224033.GA1450714@bhelgaas> <20220720203705.GA1654821@bhelgaas>
+In-Reply-To: <20220720203705.GA1654821@bhelgaas>
 From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 21 Jul 2022 10:53:54 -0400
-Message-ID: <CA+-6iNyUB4es01xsSvsvS0gZyUuuttJJ4XSBVajtBrVNFT5dMw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] PCI: brcmstb: Add "refusal mode" to preclude
- PCIe-induced CPU aborts
+Date:   Thu, 21 Jul 2022 10:56:53 -0400
+Message-ID: <CA+-6iNyAXEYT=pc-i0RgtA2njD3f6yELNppJqy733c7O_rmgUg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Jim Quinlan <jim2101024@gmail.com>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
@@ -69,7 +68,7 @@ Cc:     Jim Quinlan <jim2101024@gmail.com>,
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000009f7c7a05e451e331"
+        boundary="00000000000061508105e451eebc"
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -79,137 +78,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---0000000000009f7c7a05e451e331
+--00000000000061508105e451eebc
 Content-Type: text/plain; charset="UTF-8"
 
-https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
-On Wed, Jul 20, 2022 at 6:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Jul 20, 2022 at 4:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Sat, Jul 16, 2022 at 06:24:50PM -0400, Jim Quinlan wrote:
-> > Our PCIe RC HW has an atypical behavior: if it does not have PCIe link
-> > established between itself and downstream, any subsequent config space
-> > access causes a CPU abort.  This commit sets a "refusal mode" if the PCIe
-> > link-up fails, and this has our pci_ops map_bus function returning a NULL
-> > address, which in turn precludes the access from happening.
+> On Mon, Jul 18, 2022 at 05:40:33PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 18, 2022 at 01:14:25PM -0500, Bjorn Helgaas wrote:
+> > > ...
 > >
-> > Right now, "refusal mode" is window dressing.  It will become relevant
-> > in a future commit when brcm_pcie_start_link() is invoked during
-> > enumeration instead of before it.
+> > > So I think brcm_pcie_setup() does initialization that doesn't depend
+> > > on the link or any downstream devices, and brcm_pcie_start_link() does
+> > > things that depend on the link being up.  Right?
+> > >
+> > > If so, "start_link" might be a slight misnomer since AFAICT
+> > > brcm_pcie_start_link() doesn't do anything to initiate link-up except
+> > > maybe deasserting fundamental reset.  Some drivers start the LTSSM or
+> > > explicitly enable link training, but brcm_pcie_start_link() doesn't
+> > > seem to do anything like that.
+> > >
+> > > brcm_pcie_start_link() still does brcm_pcie_set_outbound_win().  Does
+> > > that really depend on the link being up?  If that only affects the
+> > > Root Port, maybe it could be done before link-up?
 > >
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
+> > What about the /* PCIe->SCB endian mode for BAR */ thing?  Does that
+> > depend on the link being up?
 > >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index c026446d5830..72219a4f3964 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -255,6 +255,7 @@ struct brcm_pcie {
-> >       u32                     hw_rev;
-> >       void                    (*perst_set)(struct brcm_pcie *pcie, u32 val);
-> >       void                    (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-> > +     bool                    refusal_mode;
-> >  };
+> > And the "Refclk from RC should be gated with CLKREQ#" part?  Does that
+> > depend on the link being up?
 > >
-> >  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> > @@ -687,6 +688,19 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
-> >       if (pci_is_root_bus(bus))
-> >               return PCI_SLOT(devfn) ? NULL : base + where;
-> >
-> > +     if (pcie->refusal_mode) {
-> > +             /*
-> > +              * At this point we do not have PCIe link-up.  If there is
-> > +              * a config read or write access besides those targeting
-> > +              * the host bridge, our PCIe HW throws a CPU abort.  To
-> > +              * prevent this we return the NULL address.  The calling
-> > +              * functions -- pci_generic_config_*() -- will notice this
-> > +              * and not perform the access, and if it is a read access,
-> > +              * 0xffffffff is returned.
-> > +              */
-> > +             return NULL;
-> > +     }
+> > It seems obvious that brcm_pcie_set_ssc() and reading the negotiated
+> > link speed and width depend on the link being up.
 >
-> Is this any different from all the other .map_bus() implementations
-> that return NULL when the link is down?
+> Can we close on this?  Splitting into
+Absolutely.
 
-Not really,,but long ago I submitted code that gated the config spec
-access based on link status and was advised not to do it  [1].
-I'll be happy to make it look like the others.
+>
+>   (a) stuff that can be initialized before the link is available and
+>   (b) stuff that depends on the link
+>
+> makes good sense, but then (b) should only contain stuff that actually
+> depends on the link.
+>
+> The "PCIe->SCB endian mode for BAR" *sounds* like something related to
+> the primary side of the RP, not the link.
+>
+> Not sure about "Refclk from RC".  RC would certainly be primary side,
+> but ASPM has to do with secondary (link) side.
+
+I get the feedback, submission coming soon -- I was waiting for the
+email thread to conclude.
 
 Regards,
 Jim Quinlan
 Broadcom STB
 
-[1] https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
 
 >
->   cdns_pci_map_bus()
->   dw_pcie_other_conf_map_bus()
->   nwl_pcie_map_bus() (see nwl_pcie_valid_device())
->   xilinx_pcie_map_bus() (see xilinx_pcie_valid_device())
->
-> If you can implement this the same way, i.e., using
-> brcm_pcie_link_up(), it would be nice.
->
-> >       /* For devices, write to the config space index register */
-> >       idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
-> >       writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
-> > @@ -704,6 +718,11 @@ static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devf
-> >       if (pci_is_root_bus(bus))
-> >               return PCI_SLOT(devfn) ? NULL : base + (where & ~0x3);
-> >
-> > +     if (pcie->refusal_mode) {
-> > +             /* See note above in brcm_pcie_map_conf() */
-> > +             return NULL;
-> > +     }
-> > +
-> >       /* For devices, write to the config space index register */
-> >       idx = PCIE_ECAM_OFFSET(bus->number, devfn, (where & ~3));
-> >       writel(idx, base + IDX_ADDR(pcie));
-> > @@ -989,6 +1008,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
-> >               dev_err(dev, "link down\n");
-> >               return -ENODEV;
-> >       }
-> > +     pcie->refusal_mode = false;
-> >
-> >       if (!brcm_pcie_rc_mode(pcie)) {
-> >               dev_err(dev, "PCIe misconfigured; is in EP mode\n");
-> > @@ -1134,6 +1154,8 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> >       void __iomem *base = pcie->base;
-> >       int tmp;
-> >
-> > +     pcie->refusal_mode = true;
-> > +
-> >       if (brcm_pcie_link_up(pcie))
-> >               brcm_pcie_enter_l23(pcie);
-> >       /* Assert fundamental reset */
-> > @@ -1185,6 +1207,7 @@ static int brcm_pcie_resume(struct device *dev)
-> >       u32 tmp;
-> >       int ret;
-> >
-> > +     pcie->refusal_mode = true;
-> >       base = pcie->base;
-> >       ret = clk_prepare_enable(pcie->clk);
-> >       if (ret)
-> > @@ -1361,6 +1384,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> >       pcie->type = data->type;
-> >       pcie->perst_set = data->perst_set;
-> >       pcie->bridge_sw_init_set = data->bridge_sw_init_set;
-> > +     pcie->refusal_mode = true;
-> >
-> >       pcie->base = devm_platform_ioremap_resource(pdev, 0);
-> >       if (IS_ERR(pcie->base))
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Bjorn
 
---0000000000009f7c7a05e451e331
+--00000000000061508105e451eebc
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -280,13 +208,13 @@ S2kM2wvSlgSWDb6pL7myuKR5lCkQhj7piGSgrVLJRDRrMPw1L4MvnV9DjUFMlGCB40Hm6xqn/jm0
 8FCLlWhxve5mj+hgUOPETiKbjhCxJhhAPDdCvDRkZtJlQ8oxUVvXHugG8jm1YqB5AWx7MYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMI+Aj9XRk/wFexb9/
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCcfLLzxAVOHh/E9KP8Y18dg61oQKvp
-i6yBVTYVn2I5wDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
-MjExNDU0MDVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBELyzMjGBCviKtpUT9+Nla/JO/h98f
+IRLvitgDMnnG+TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
+MjExNDU3MDZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAA2P9GdG0hEWWk94H1EnbbkTA4soRaGGzdunJ/jRzTz+Lhmso
-gU8Wc7XpwzjqTMfpTCbmEFBe4fBKcvehy6dgEE+pBqBcwJq9D7kkCZYknQ31ouPhcEpC70Avz3zO
-ALaZTwNam9v8lBgbG4OLT57VVePZIrsUBjrAlMqdLVTU7NsASh25tKzrZ3IUHVXnzbinycCQMIWx
-9iiZ8tp/ShlFjbOEgAfcFfurXjloYx9Q4r27rA3sbGRxsNyKJpGDT3dfAgr8QBdVG7AoOX21pfx/
-MgySpJJoX8HT+KpbHHjolBYvTysn0kQH1dHMvV+wm/S7dL4XbNTHLuZGn0ZVa35r7w==
---0000000000009f7c7a05e451e331--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAREEFXsrmI9WMXe54+37RL+oX0k0vb5vTT7mUtg7LdsCeyfOI
+EZ5aTR4X11aRidmGSnPt01aq1frraU+bbgWY0A4L5vrpD3WM2a2QR0l6Syqsl2DjZhhJOXSHLKk0
+RJuaynlttl3ducL5oJPys/Sn+jqwQwNLnamEWUoZ0lXboWq3kAPsjkx2kMlTaFA/uwsdWyaZ6tw2
+mOUcIPLJ1cDcXgfpO3Y2RHEJ4QxLCDpMcyJU/QMjh5+dXQUZv0zn6Gt2D4hygvSOG91fGMIxF/5l
+UdqsHe0x6ssIZHV2D+8hd+9Eu2GHdgP9ej5I4rANpcDcYCADPVfveaYVrriU01/Uhg==
+--00000000000061508105e451eebc--
