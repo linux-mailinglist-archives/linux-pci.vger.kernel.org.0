@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B12D57C6F4
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 10:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C2957C710
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 11:04:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232667AbiGUIzl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 04:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
+        id S232741AbiGUJEI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 05:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232691AbiGUIzi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 04:55:38 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74292F3AA
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 01:55:36 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id e11so1034044ljl.4
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 01:55:36 -0700 (PDT)
+        with ESMTP id S232763AbiGUJEH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 05:04:07 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E795491FD
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 02:04:06 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id z25so1772138lfr.2
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 02:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=4GeLyV51uYj8j4S4aBve635E01r+lvLx2pbTjxK4lWY=;
-        b=r7/Jn5fBFKJaOhtb44Dkjir5D0my9GI5ryjs+mFVridMBGrA31diU16QC2UbpL167X
-         eWcY8H3uvQu/abRABlzE4W9nzhLybMEhXsBOdE58UnvdATo2x6OEIbQqKhZdpU3IPFRs
-         OuFHTLK8S75Bpltb/aEvT2UawF69arCPTyn/s7/V7R2GFzZEHjUXqM1Lj6ZVHtKihRFk
-         L6sMUxXH+LKkm7F5trbtBIN0gM93PTfJSox5aFPGm5Igsp6ejwaOqGtyDZL+eaFLO406
-         pFblBNMt5JH4n1C5KILz8CDIoS9kmWbFwlGYo0UEgw77xnYXHEGzBawWEW4cymTG2oO0
-         GEig==
+        bh=qOhFQavxJkvkRKqQgOoA5BchNmvzO4jziMu32JUVuNA=;
+        b=QNll75k6VEea9CaxOaIqrXRacFYtNT3F2Bq/yWxrAhnNJRCSumd9rM9kVEns5mq0r1
+         U/B9TB7RsXf1gS5hcws1WFcFdA8ZW0GsU4IYok0wx7o31IFwdNjiQ6w+3VayslxIcg4y
+         Pz/MHe9t1EoO0sbXkdEoatUHtBYkAajEGt6UNdat+csjNevWWF/ZYnzxQhVgMCD3km/B
+         93nrPvREJIogZIZqjmjnQK+bSL3rCHZIxoCRTWEfmkwerhFUwTtO0rhaIvTwI7nvNeDH
+         A1DtJKugWVoy3PNWaPCeXjX1Qxw+V7z5tGLd8LgjgcuA7KQoQ9BRukuHUiRx1m4nxMys
+         5ujQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=4GeLyV51uYj8j4S4aBve635E01r+lvLx2pbTjxK4lWY=;
-        b=4QjhNiMkLQRASs5fPauA7r4u6W2ynfaoW/7H7rgvhLuwn16GBakcGxOjMl4XzeXaIN
-         EQ46f/ppXgurCwbrNJ+3Ydnb0RJnJAyskWQUGAFZtYQCrntuSZmxdh5fplrfS8wsO0K0
-         lHUyj80toaRgDvw8kv26YkNZW8FU/MXzoZK76T3Ar0Qh06Ri4+8SLrrAoZwg6WX7D5f0
-         nI5wBaas+/gIA4ZHQlRcmhAPquijdWOBDs1FzxAEADldLLEBd0r/Z7PB12TA+uGXnPym
-         YCqhebGMzVYuvrLKT9QguhwYQLKojJWTAehad7p5g8L01iyNpa8XIWTwEXAobXXGMMEs
-         70pA==
-X-Gm-Message-State: AJIora/Ft2F4R2Z/Cr+MzZOSrnC9AqzjHBSLTcm+GfpNCfdDv/ptT1E1
-        GtxRZyHbxB+6xDOlVpEYg65bFg==
-X-Google-Smtp-Source: AGRyM1t+1EDHj6uDmmwBE6CgTZopBYct95p34fYs4E202hjjQ4LPh6wl3Vozu3ATNCFfiaswEwGWyw==
-X-Received: by 2002:a2e:8852:0:b0:25d:4ab5:593b with SMTP id z18-20020a2e8852000000b0025d4ab5593bmr17501577ljj.261.1658393735136;
-        Thu, 21 Jul 2022 01:55:35 -0700 (PDT)
+        bh=qOhFQavxJkvkRKqQgOoA5BchNmvzO4jziMu32JUVuNA=;
+        b=yB7eNz3FGikmoG8OMbnRQecn6Hi8kYXJUZqFQcJyRuhizgVdVxfomEoQ+OnriELl8O
+         Nk1TT5s1GkmQ+Clr0Pf12PUYWRZrFbZy54hRVP4g4JL7DM6blXgCzPasmQjWABDPOxrq
+         hyUCLTTI4YcNUiMmRyKjdB9h9kW7Kven0+rSRz/Qv7q7NxIxnjK37E0XgFTXDIEbkgoN
+         sbX0PFmCFbTbd1Q5r6QaJA1GDhDoIvmeejDQwVNrnXRRJQ4n/Njbhe67RoHThXl4xTpY
+         IOTogsUrnQRqeWbl/lPTlH60fiqYsWvZnjEFVnoFdQloKInGBXpcT4Cj22Pq7AHgCuva
+         G9lw==
+X-Gm-Message-State: AJIora/CzBzPfiVT0/5k2CPFO9Yvub8SY7+//B0pgmFTzAWs9j/SEQEc
+        5X2UNl+vRD5yxSejkwzWFqUq+w==
+X-Google-Smtp-Source: AGRyM1ush+aEGmuDIEZDFrboDoGXmSzQ7CNf3N7FSQSEBZ71eG+3L8h9AZRDlRReQksfSBw+oJSTIA==
+X-Received: by 2002:a05:6512:228f:b0:489:c924:d44a with SMTP id f15-20020a056512228f00b00489c924d44amr20793946lfu.252.1658394244694;
+        Thu, 21 Jul 2022 02:04:04 -0700 (PDT)
 Received: from [192.168.115.193] (89-162-31-138.fiber.signal.no. [89.162.31.138])
-        by smtp.gmail.com with ESMTPSA id bp25-20020a056512159900b0047f76a935a5sm308444lfb.137.2022.07.21.01.55.32
+        by smtp.gmail.com with ESMTPSA id o23-20020ac24e97000000b004867a427026sm318964lfr.40.2022.07.21.02.04.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 01:55:33 -0700 (PDT)
-Message-ID: <19ccf775-cc1d-37de-bf4e-7745f0943851@linaro.org>
-Date:   Thu, 21 Jul 2022 10:55:32 +0200
+        Thu, 21 Jul 2022 02:04:03 -0700 (PDT)
+Message-ID: <226ac31e-2ac4-cb73-ab67-62f86d5e5783@linaro.org>
+Date:   Thu, 21 Jul 2022 11:04:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v4 1/5] dt-bindings: pci: Add ARTPEC-8 PCIe controller
+Subject: Re: [PATCH v4 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
 Content-Language: en-US
 To:     wangseok.lee@samsung.com,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -76,168 +76,57 @@ Cc:     Moon-Ki Jun <moonki.jun@samsung.com>,
         Dongjin Yang <dj76.yang@samsung.com>,
         Yeeun Kim <yeeun119.kim@samsung.com>
 References: <20220720055108epcms2p563c65b3de6333ccbc68386aa2471a800@epcms2p5>
- <CGME20220720055108epcms2p563c65b3de6333ccbc68386aa2471a800@epcms2p6>
- <20220720055436epcms2p63896ebe4e2131e3844044d0112288570@epcms2p6>
+ <CGME20220720055108epcms2p563c65b3de6333ccbc68386aa2471a800@epcms2p3>
+ <20220720060112epcms2p30a05414992cf814e5886af2b70c0f58f@epcms2p3>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220720055436epcms2p63896ebe4e2131e3844044d0112288570@epcms2p6>
+In-Reply-To: <20220720060112epcms2p30a05414992cf814e5886af2b70c0f58f@epcms2p3>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/07/2022 07:54, Wangseok Lee wrote:
-> Add description to support Axis, ARTPEC-8 SoC. ARTPEC-8 is the SoC platform
-> of Axis Communications and PCIe controller is designed based on Design-Ware
-> PCIe controller.
+On 20/07/2022 08:01, Wangseok Lee wrote:
+> Add support Axis, ARTPEC-8 SoC. ARTPEC-8 is the SoC platform of Axis
+> Communications. This is based on arm64 and support GEN4 & 2lane. This
+> PCIe controller is based on DesignWare Hardware core and uses DesignWare
+> core functions to implement the driver. "pcie-artpec6. c" supports artpec6
+> and artpec7 H/W. artpec8 can not be expanded because H/W configuration is
+> completely different from artpec6/7. PHY and sub controller are different.
 > 
 > Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
+> Signed-off-by: Jaeho Cho <jaeho79.cho@samsung.com>
 > ---
 > v3->v4 :
-> -Add missing properties
+> -Remove unnecessary enum type
+> -Fix indentation
 > 
-> v2->v3 :
-> -Modify version history to fit the linux commit rule
-> -Remove 'Device Tree Bindings' on title
-> -Remove clock-names entries
-> -Change node name to soc from artpec8 on excamples
 
-Please rebase on newest Linux kernel or linux-next and use
-get_maintainers.pl script.
+Thanks for the changes. This starts to look good, however I am not going
+to ack it. This is also not a strong NAK, as I would respect Bjorn and
+other maintainers decision.
 
-> 
-> v1->v2 :
-> -'make dt_binding_check' result improvement
-> -Add the missing property list
-> -Align the indentation of continued lines/entries
-> ---
->  .../bindings/pci/axis,artpec8-pcie-ep.yaml         | 138 +++++++++++++++++++
->  .../devicetree/bindings/pci/axis,artpec8-pcie.yaml | 148 +++++++++++++++++++++
->  2 files changed, 286 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec8-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec8-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec8-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/axis,artpec8-pcie-ep.yaml
-> new file mode 100644
-> index 0000000..435e86f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec8-pcie-ep.yaml
-> @@ -0,0 +1,138 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/axis,artpec8-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARTPEC-8 SoC PCIe Controller
-> +
-> +maintainers:
-> +  - Jesper Nilsson <jesper.nilsson@axis.com>
-> +
-> +description: |+
-> +  This PCIe end-point controller is based on the Synopsys DesignWare PCIe IP
-> +  and thus inherits all the common properties defined in snps,dw-pcie-ep.yaml.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: axis,artpec8-pcie-ep
-> +
-> +  reg:
-> +    items:
-> +      - description: Data Bus Interface (DBI) registers.
-> +      - description: Data Bus Interface (DBI2) registers.
-> +      - description: PCIe address space region.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: dbi2
-> +      - const: addr_space
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: PIPE clock, used by the controller to clock the PIPE
-> +      - description: PCIe dbi clock, ungated version
-> +      - description: PCIe master clock, ungated version
-> +      - description: PCIe slave clock, ungated version
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pipe
-> +      - const: dbi
-> +      - const: mstr
-> +      - const: slv
-> +
-> +  samsung,fsys-sysreg:
-> +    description:
-> +      Phandle to system register of fsys block.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+I don't like the approach of creating only Artpec-8 specific driver.
+Samsung heavily reuses its block in all Exynos devices. Now it re-uses
+them for other designs as well. Therefore, even if merging with existing
+Exynos PCIe driver is not feasible (we had such discussions), I expect
+this to cover all Samsung Foundry PCIe devices. From all current designs
+up to future licensed blocks, including some new Samsung Exynos SoC. Or
+at least be ready for it.
 
-Since you wrote this is one register, I expect offset:
-https://elixir.bootlin.com/linux/v5.18-rc1/source/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml#L42
+However it seems you are interested only in achieving one goal here -
+satisfy Axis. I believe it is not the "upstream approach". Next month
+you come up with same driver for different customer and you keep
+insisting "it's different!".
 
-
-> +
-> +  samsung,syscon-phandle:
-> +    description:
-> +      Phandle to the PMU system controller node.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  samsung,fsys-bus-s:
-> +    description:
-> +      Phandle to bus-s of fsys block, this register
-> +      is additional control sysreg in fsys block and
-> +      this is used for pcie slave control setting.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-Ditto
-
-> +
-> +  samsung,fsys-bus-p:
-> +    description:
-> +      Phandle to bus-p of fsys block, this register
-> +      is additional control sysreg in fsys block and
-> +      this is used for pcie dbi control setting.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-Ditto
-
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    items:
-> +      - const: pcie_phy
-> +
-> +  num-lanes:
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - clocks
-> +  - clock-names
-> +  - samsung,fsys-sysreg
-> +  - samsung,syscon-phandle
-> +  - samsung,syscon-bus-s-fsys
-
-This does not match what you wrote in properties.
+To get my ack I want to see something generic for Samsung Exynos SoC and
+other licensed or designed blocks, instead of something made for only
+one of your customers.
 
 Best regards,
 Krzysztof
