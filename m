@@ -2,411 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0627457D6F6
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25F2B57D711
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:48:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233210AbiGUWfG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 18:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42416 "EHLO
+        id S229615AbiGUWsf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 18:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233560AbiGUWfC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:35:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 876E08049F
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 15:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658442899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r3sdCgNwyGzNe6Cz4z9RbORPZPqKisFUaqCsD1RI8+g=;
-        b=DcS0RPm2EtSZDyUeZ4SPlYAV0OsBzZuYw0q0zqGlmfsQM9By+ln6QlsnAKSGr+v/xAA2bo
-        1WS+AYRUEEA/HBhHMzCwwsezDKDdmW+Q/yy4FfQmQjMiJe36FeHVYEwQ7KJNeguyk6Q4R+
-        vHtSBT+nusPPs4ARq0jviSgBGwwi8y0=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-251-PPgcb9SnPiSjF0ugilXJEw-1; Thu, 21 Jul 2022 18:34:58 -0400
-X-MC-Unique: PPgcb9SnPiSjF0ugilXJEw-1
-Received: by mail-il1-f199.google.com with SMTP id k1-20020a056e021a8100b002dccedf8a35so1633916ilv.14
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 15:34:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=r3sdCgNwyGzNe6Cz4z9RbORPZPqKisFUaqCsD1RI8+g=;
-        b=U3IrJ01wZ65iHr6gCw4D1pjTHXCZ7YHFjeFv87X5D3lHaR8CNl2v7U9YdCCMPmIhA7
-         24eE5ypTsAcB3sBjiT0VkucXVbO0iNwpd/c5v49he5jQNKUKT78XptHZjAGBsq/cimIu
-         2kI1/ec7UtV8ZRFng8CrMSq9uAYSHyXFPg/eC851NTvFUuwdQ0HGhCDQ8HBaPlgjk089
-         REwRxoZjkPi2xlDM4W4G9zFtuwebwVUc+fCqxfRAD6Jetz00mwXdt3SiN9MIuK/iqHKE
-         u5+ac7j5H5rRKuFZGvkbWEWLjxelIwiafuOAbxOHzo7hKBHmGl4MD/F07HacLYW6wnU3
-         E+fA==
-X-Gm-Message-State: AJIora8wuzkQeiqfbzm/3BZ9NWS5uOXjkVJQ2N+YTwacQV7WCjQPZ6Kq
-        J7M+j8F5ub9s2xGwCZc478Syxe5PXWwX3Xxpvg9wzl9GZadjhWFNUpkW3QwRGbYgKCWT4dJqY70
-        wCCHWr+PRwwvyrV/Ccp72
-X-Received: by 2002:a05:6602:330e:b0:67b:9fed:49db with SMTP id b14-20020a056602330e00b0067b9fed49dbmr254269ioz.54.1658442897320;
-        Thu, 21 Jul 2022 15:34:57 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1upfOvx2IuMXWj8108fxKfQwX1gQNZ4j2bBsTtZQUyd0UR+JuSP7WK9WLRRPvOKTUpzQq6/Ug==
-X-Received: by 2002:a05:6602:330e:b0:67b:9fed:49db with SMTP id b14-20020a056602330e00b0067b9fed49dbmr254252ioz.54.1658442896965;
-        Thu, 21 Jul 2022 15:34:56 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id t2-20020a056602140200b0066952cfe3e2sm1334400iov.39.2022.07.21.15.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 15:34:56 -0700 (PDT)
-Date:   Thu, 21 Jul 2022 16:34:55 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 4/5] vfio/pci: Implement
- VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY/EXIT
-Message-ID: <20220721163455.5ba133ef.alex.williamson@redhat.com>
-In-Reply-To: <20220719121523.21396-5-abhsahu@nvidia.com>
-References: <20220719121523.21396-1-abhsahu@nvidia.com>
-        <20220719121523.21396-5-abhsahu@nvidia.com>
-Organization: Red Hat
+        with ESMTP id S229552AbiGUWsd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:48:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B088C751;
+        Thu, 21 Jul 2022 15:48:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B7B52B826A9;
+        Thu, 21 Jul 2022 22:48:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9190C3411E;
+        Thu, 21 Jul 2022 22:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658443709;
+        bh=1UFENBlgwQq77rrpTbU6/vp8Zr5tSDD80m0Xs15SA6A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OESy5lSYdbzOn9FyKllVt2zbDtGp5zTl3tz4jVhrJhm36rZU4nEOrT7IhsN/iftPm
+         JaL8Itny2XVzALLJKVTFue2vUePipf5ylH2F+MqObmJM/HAR5bxzIHNa4WMm82m6rl
+         5BYYyFyWty39LaqJ3MYVfn8OXgo7nlhWyj9OeJm6c4UwP9rdtj4VPihfy015SnjSpN
+         989+Un8YGD+fW452eOQH9cRxkW89L88DGEWDCp+XGVEQI6GFGnuZsZ2mAOEtIZ/vOn
+         JkJkzahTtFe71YZ8JNWYsAznF1Gan+hUGW1BaAE9IdNg/asqEF6jqnt/GF5H82JZZz
+         szftlBAWNvuIg==
+Received: by pali.im (Postfix)
+        id BF5CA22EF; Fri, 22 Jul 2022 00:48:25 +0200 (CEST)
+Date:   Fri, 22 Jul 2022 00:48:25 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+Message-ID: <20220721224825.7aqcvcnzaht57mii@pali>
+References: <20220721204607.xklzyklbgwcgepjm@pali>
+ <20220721222122.GA1754784@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220721222122.GA1754784@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 19 Jul 2022 17:45:22 +0530
-Abhishek Sahu <abhsahu@nvidia.com> wrote:
-
-> Currently, if the runtime power management is enabled for vfio-pci
-> based devices in the guest OS, then the guest OS will do the register
-> write for PCI_PM_CTRL register. This write request will be handled in
-> vfio_pm_config_write() where it will do the actual register write of
-> PCI_PM_CTRL register. With this, the maximum D3hot state can be
-> achieved for low power. If we can use the runtime PM framework, then
-> we can achieve the D3cold state (on the supported systems) which will
-> help in saving maximum power.
+On Thursday 21 July 2022 17:21:22 Bjorn Helgaas wrote:
+> [+to Johan for qcom]
+> [-cc Tom, email bounces]
 > 
-> 1. D3cold state can't be achieved by writing PCI standard
->    PM config registers. This patch implements the following
->    newly added low power related device features:
->     - VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY
->     - VFIO_DEVICE_FEATURE_LOW_POWER_EXIT
+> On Thu, Jul 21, 2022 at 10:46:07PM +0200, Pali Rohár wrote:
+> > On Thursday 21 July 2022 14:54:33 Bjorn Helgaas wrote:
+> > > The j721e, kirin, tegra, and mediatek drivers all implement .remove().
+> > > 
+> > > They also set ".suppress_bind_attrs = true".  I think this means
+> > > bus_add_driver() will not create the "bind" and "unbind" sysfs
+> > > attributes for the driver that would allow users to users to manually
+> > > attach and detach devices from it.
+> > > 
+> > > Is there a reason for this, or should these drivers stop setting
+> > > .suppress_bind_attrs?
+> > 
+> > I have already asked this question during review of kirin driver:
+> > https://lore.kernel.org/linux-pci/20211031205527.ochhi72dfu4uidii@pali/
+> > 
+> > Microchip driver wanted to change its type from bool to tristate
+> > https://lore.kernel.org/linux-pci/20220420093449.38054-1-u.kleine-koenig@pengutronix.de/t/#u
+> > and after discussion it seems that it is needed to do more work for this
+> > driver.
+> > 
+> > > For example, Pali and Ley Foon *did* stop setting .suppress_bind_attrs
+> > > when adding .remove() methods in these commits:
+> > > 
+> > >   0746ae1be121 ("PCI: mvebu: Add support for compiling driver as module")
+> > >   526a76991b7b ("PCI: aardvark: Implement driver 'remove' function and allow to build it as module")
+> > >   ec15c4d0d5d2 ("PCI: altera: Allow building as module")
+> > 
+> > I added it for both pci-mvebu.c and pci-aardvark.c. And just few days
+> > ago I realized why suppress_bind_attrs was set to true and remove method
+> > was not implemented.
 > 
->    The VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY will move the device into
->    the low power state, and the VFIO_DEVICE_FEATURE_LOW_POWER_EXIT
->    will move the device out of the low power state.
+> With suppress_bind_attrs, the user can't manually unbind a device, so
+> we can't get to mvebu_pcie_remove() that way, but since mvebu is a
+> modular driver, I assume we can unload the module and *that* would
+> call mvebu_pcie_remove().  Right?
 
-Isn't this really:
+Yes! It looks like that if module unloading is allowed then .remove
+callback would be called despite suppress_bind_attrs was set.
 
-	The VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY feature will allow the
-	device to make use of low power platform states on the host
-	while the VFIO_DEVICE_FEATURE_LOW_POWER_EXIT will prevent
-	further use of those power states.
-
-ie. we can't make the device move to low power and every ioctl/access
-will make it exit, it's more about allowing/preventing use of those
-platform provided low power states.
-
+> > Implementing remove method is not really simple, specially when pci
+> > controller driver implements also interrupt controller (e.g. for
+> > handling legacy interrupts).
 > 
-> 2. The vfio-pci driver uses runtime PM framework for low power entry and
->    exit. On the platforms where D3cold state is supported, the runtime
->    PM framework will put the device into D3cold otherwise, D3hot or some
->    other power state will be used. If the user has explicitly disabled
->    runtime PM for the device, then the device will be in the power state
->    configured by the guest OS through PCI_PM_CTRL.
-
-This is talking about disabling runtime PM support for a device on the
-host precluding this interface from allowing the device to enter
-platform defined low power states, right?
- 
-> 3. The hypervisors can implement virtual ACPI methods. For example,
->    in guest linux OS if PCI device ACPI node has _PR3 and _PR0 power
->    resources with _ON/_OFF method, then guest linux OS invokes
->    the _OFF method during D3cold transition and then _ON during D0
->    transition. The hypervisor can tap these virtual ACPI calls and then
->    call the low power device feature IOCTL.
+> Hmmm.  Based on your patches below, it looks like we need to call
+> irq_dispose_mapping() in some cases, but I'm very confused about
+> *which* cases.
 > 
-> 4. The 'pm_runtime_engaged' flag tracks the entry and exit to
->    runtime PM. This flag is protected with 'memory_lock' semaphore.
+> I first thought it was for mappings created with irq_create_mapping(),
+> but pci-aardvark.c never calls that, so there must be more to it.
+
+From reading kernel code it looks like that mapping is created when
+some other driver request shared INTx IRQ. So it is not done by
+pci-aardvark.c but e.g. by wifi driver ath9k (which uses INTx).
+
+> Currently only altera, iproc, mediatek-gen3, and mediatek call
+> irq_dispose_mapping() from their .remove() methods.  (They all call
+> irq_domain_remove() *before* irq_dispose_mapping().  Is that legal?
+> Your patches do irq_dispose_mapping() *first*.)
+
+Documentation says:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/irq/irqdomain.c?h=v5.18#n240
+
+/**
+ * irq_domain_remove() - Remove an irq domain.
+ * @domain: domain to remove
+ *
+ * This routine is used to remove an irq domain. The caller must ensure
+ * that all mappings within the domain have been disposed of prior to
+ * use, depending on the revmap type.
+ */
+
+> altera, mediatek-gen3, and mediatek call irq_dispose_mapping() on IRQs
+> that came from platform_get_irq().
+
+I think that if IRQ is not used it could be disposed (no need to have it
+mapped). So if this IRQ from platform_get_irq() is not shared then in
+pci controller driver .remove callback for sure it is not used anymore.
+So for non-shared IRQs this looks fine.
+
+> qcom is a DWC driver, so all the IRQ stuff happens in
+> dw_pcie_host_init().  qcom_pcie_remove() does call
+> dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
+> calls irq_dispose_mapping().
 > 
-> 5. All the config and other region access are wrapped under
->    pm_runtime_resume_and_get() and pm_runtime_put(). So, if any
->    device access happens while the device is in the runtime suspended
->    state, then the device will be resumed first before access. Once the
->    access has been finished, then the device will again go into the
->    runtime suspended state.
+> I'm thoroughly confused by all this.
+
+Beware that there are IRQs which pci controller uses as "client" and
+then there may be also IRQs which pci controller driver allocates via
+own IRQ chip driver and provides for other drivers (e.g. as chained irq
+handler). So it is needed to distinguish between them. IRQs which
+controller driver create via own IRQ chip driver have to be properly
+cleaned when calling .remove driver. IRQ which controller driver get via
+platform_get_irq() (or similar of method) is under parent driver control
+and parent driver is responsible for proper dispose/cleanup.
+
+> But I suspect that maybe I
+> should drop the "make qcom modular" patch because it seems susceptible
+> to this problem:
 > 
-> 6. The memory region access through mmap will not be allowed in the low
->    power state. Since __vfio_pci_memory_enabled() is a common function,
->    so check for 'pm_runtime_engaged' has been added explicitly in
->    vfio_pci_mmap_fault() to block only mmap'ed access.
+>   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
+
+In pcie-qcom.c there is no irq reference. So maybe it is safe? But I do
+not understand designware driver API design...
+
+The best is probably to do runtime test. Boot kernel with pci=nomsi and
+connect some PCIe card which supports legacy INTx interrupt. This should
+force usage of INTx. Check that card driver is loaded and in file
+/proc/interrupts is IRQ line for that driver. Then rmmod pci controller
+driver and check that IRQ line in /proc/interrupts disappeared. And also
+check that /sys/kernel/debug/irq/irqs/<num> does not exist.
+
+Also another runtime test is to call rmmod and modprobe of pci
+controller driver more times (with PCIe card connected) and check that
+IRQ numbers assigned to card in /proc/interrupts are same. If after
+rmmod + modprobe sequence are numbers increasing then there is some
+IRQ-leak in .remove callback.
+
+> > Here are waiting fixup patches for pci-mvebu.c and pci-aardvark.c which
+> > fixes .remove callback. Without these patches calling 'rmmod driver' let
+> > dangling pointer in kernel which may cause random kernel crashes. See:
+> > 
+> > https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
+> > https://lore.kernel.org/linux-pci/20220711120626.11492-1-pali@kernel.org/
+> > https://lore.kernel.org/linux-pci/20220711120626.11492-2-pali@kernel.org/
+> > 
+> > So I would suggest to do more detailed review when adding .remove
+> > callback for pci controller driver (or when remove suppress_bind_attrs)
+> > and do more testings and checking if all IRQ mappings are disposed.
 > 
-> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 151 +++++++++++++++++++++++++++++--
->  include/linux/vfio_pci_core.h    |   1 +
->  2 files changed, 144 insertions(+), 8 deletions(-)
+> I'm not smart enough to do "more detailed review" because I don't know
+> what things to look for :)  Thanks for all your work in sorting out
+> these arcane details!
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 9517645acfa6..726a6f282496 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -259,11 +259,98 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
->  	return ret;
->  }
->  
-> +static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev)
-> +{
-> +	/*
-> +	 * The vdev power related flags are protected with 'memory_lock'
-> +	 * semaphore.
-> +	 */
-> +	vfio_pci_zap_and_down_write_memory_lock(vdev);
-> +	if (vdev->pm_runtime_engaged) {
-> +		up_write(&vdev->memory_lock);
-> +		return -EINVAL;
-> +	}
+> Bjorn
 
-Awkward that we zap memory for the error path here, but optimizing
-performance for a user that can't remember they've already activated
-low power for a device doesn't seem like a priority ;)
+Anyway, this issue was discovered by Hajo Noerenberg as a "Side note:"
+during debugging SATA controller:
+https://bugzilla.kernel.org/show_bug.cgi?id=216094#c31
 
-> +
-> +	vdev->pm_runtime_engaged = true;
-> +	pm_runtime_put_noidle(&vdev->pdev->dev);
-> +	up_write(&vdev->memory_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int vfio_pci_core_pm_entry(struct vfio_device *device, u32 flags,
-> +				  void __user *arg, size_t argsz)
-> +{
-> +	struct vfio_pci_core_device *vdev =
-> +		container_of(device, struct vfio_pci_core_device, vdev);
-> +	int ret;
-> +
-> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_SET, 0);
-> +	if (ret != 1)
-> +		return ret;
-> +
-> +	/*
-> +	 * Inside vfio_pci_runtime_pm_entry(), only the runtime PM usage count
-> +	 * will be decremented. The pm_runtime_put() will be invoked again
-> +	 * while returning from the ioctl and then the device can go into
-> +	 * runtime suspended state.
-> +	 */
-> +	return vfio_pci_runtime_pm_entry(vdev);
-> +}
-> +
-> +static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
-> +{
-> +	/*
-> +	 * The vdev power related flags are protected with 'memory_lock'
-> +	 * semaphore.
-> +	 */
-> +	down_write(&vdev->memory_lock);
-> +	if (vdev->pm_runtime_engaged) {
-> +		vdev->pm_runtime_engaged = false;
-> +		pm_runtime_get_noresume(&vdev->pdev->dev);
-> +	}
-> +
-> +	up_write(&vdev->memory_lock);
-> +}
-> +
-> +static int vfio_pci_core_pm_exit(struct vfio_device *device, u32 flags,
-> +				 void __user *arg, size_t argsz)
-> +{
-> +	struct vfio_pci_core_device *vdev =
-> +		container_of(device, struct vfio_pci_core_device, vdev);
-> +	int ret;
-> +
-> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_SET, 0);
-> +	if (ret != 1)
-> +		return ret;
-> +
-> +	/*
-> +	 * The device should already be resumed by the vfio core layer.
-> +	 * vfio_pci_runtime_pm_exit() will internally increment the usage
-> +	 * count corresponding to pm_runtime_put() called during low power
-> +	 * feature entry.
-> +	 */
-> +	vfio_pci_runtime_pm_exit(vdev);
-> +	return 0;
-> +}
-> +
->  #ifdef CONFIG_PM
->  static int vfio_pci_core_runtime_suspend(struct device *dev)
->  {
->  	struct vfio_pci_core_device *vdev = dev_get_drvdata(dev);
->  
-> +	down_write(&vdev->memory_lock);
-> +	/*
-> +	 * The user can move the device into D3hot state before invoking
-> +	 * power management IOCTL. Move the device into D0 state here and then
-> +	 * the pci-driver core runtime PM suspend function will move the device
-> +	 * into the low power state. Also, for the devices which have
-> +	 * NoSoftRst-, it will help in restoring the original state
-> +	 * (saved locally in 'vdev->pm_save').
-> +	 */
-> +	vfio_pci_set_power_state(vdev, PCI_D0);
-> +	up_write(&vdev->memory_lock);
-> +
->  	/*
->  	 * If INTx is enabled, then mask INTx before going into the runtime
->  	 * suspended state and unmask the same in the runtime resume.
-> @@ -393,6 +480,18 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
->  
->  	/*
->  	 * This function can be invoked while the power state is non-D0.
-> +	 * This non-D0 power state can be with or without runtime PM.
-> +	 * vfio_pci_runtime_pm_exit() will internally increment the usage
-> +	 * count corresponding to pm_runtime_put() called during low power
-> +	 * feature entry and then pm_runtime_resume() will wake up the device,
-> +	 * if the device has already gone into the suspended state. Otherwise,
-> +	 * the vfio_pci_set_power_state() will change the device power state
-> +	 * to D0.
-> +	 */
-> +	vfio_pci_runtime_pm_exit(vdev);
-> +	pm_runtime_resume(&pdev->dev);
-> +
-> +	/*
->  	 * This function calls __pci_reset_function_locked() which internally
->  	 * can use pci_pm_reset() for the function reset. pci_pm_reset() will
->  	 * fail if the power state is non-D0. Also, for the devices which
-> @@ -1224,6 +1323,10 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
->  	switch (flags & VFIO_DEVICE_FEATURE_MASK) {
->  	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
->  		return vfio_pci_core_feature_token(device, flags, arg, argsz);
-> +	case VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY:
-> +		return vfio_pci_core_pm_entry(device, flags, arg, argsz);
-> +	case VFIO_DEVICE_FEATURE_LOW_POWER_EXIT:
-> +		return vfio_pci_core_pm_exit(device, flags, arg, argsz);
->  	default:
->  		return -ENOTTY;
->  	}
-> @@ -1234,31 +1337,47 @@ static ssize_t vfio_pci_rw(struct vfio_pci_core_device *vdev, char __user *buf,
->  			   size_t count, loff_t *ppos, bool iswrite)
->  {
->  	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-> +	int ret;
->  
->  	if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions)
->  		return -EINVAL;
->  
-> +	ret = pm_runtime_resume_and_get(&vdev->pdev->dev);
-> +	if (ret < 0) {
-
-if (ret) {
-
-Thanks,
-Alex
-
-> +		pci_info_ratelimited(vdev->pdev, "runtime resume failed %d\n",
-> +				     ret);
-> +		return -EIO;
-> +	}
-> +
->  	switch (index) {
->  	case VFIO_PCI_CONFIG_REGION_INDEX:
-> -		return vfio_pci_config_rw(vdev, buf, count, ppos, iswrite);
-> +		ret = vfio_pci_config_rw(vdev, buf, count, ppos, iswrite);
-> +		break;
->  
->  	case VFIO_PCI_ROM_REGION_INDEX:
->  		if (iswrite)
-> -			return -EINVAL;
-> -		return vfio_pci_bar_rw(vdev, buf, count, ppos, false);
-> +			ret = -EINVAL;
-> +		else
-> +			ret = vfio_pci_bar_rw(vdev, buf, count, ppos, false);
-> +		break;
->  
->  	case VFIO_PCI_BAR0_REGION_INDEX ... VFIO_PCI_BAR5_REGION_INDEX:
-> -		return vfio_pci_bar_rw(vdev, buf, count, ppos, iswrite);
-> +		ret = vfio_pci_bar_rw(vdev, buf, count, ppos, iswrite);
-> +		break;
->  
->  	case VFIO_PCI_VGA_REGION_INDEX:
-> -		return vfio_pci_vga_rw(vdev, buf, count, ppos, iswrite);
-> +		ret = vfio_pci_vga_rw(vdev, buf, count, ppos, iswrite);
-> +		break;
-> +
->  	default:
->  		index -= VFIO_PCI_NUM_REGIONS;
-> -		return vdev->region[index].ops->rw(vdev, buf,
-> +		ret = vdev->region[index].ops->rw(vdev, buf,
->  						   count, ppos, iswrite);
-> +		break;
->  	}
->  
-> -	return -EINVAL;
-> +	pm_runtime_put(&vdev->pdev->dev);
-> +	return ret;
->  }
->  
->  ssize_t vfio_pci_core_read(struct vfio_device *core_vdev, char __user *buf,
-> @@ -1453,7 +1572,11 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
->  	mutex_lock(&vdev->vma_lock);
->  	down_read(&vdev->memory_lock);
->  
-> -	if (!__vfio_pci_memory_enabled(vdev)) {
-> +	/*
-> +	 * Memory region cannot be accessed if the low power feature is engaged
-> +	 * or memory access is disabled.
-> +	 */
-> +	if (vdev->pm_runtime_engaged || !__vfio_pci_memory_enabled(vdev)) {
->  		ret = VM_FAULT_SIGBUS;
->  		goto up_out;
->  	}
-> @@ -2164,6 +2287,15 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
->  		goto err_unlock;
->  	}
->  
-> +	/*
-> +	 * Some of the devices in the dev_set can be in the runtime suspended
-> +	 * state. Increment the usage count for all the devices in the dev_set
-> +	 * before reset and decrement the same after reset.
-> +	 */
-> +	ret = vfio_pci_dev_set_pm_runtime_get(dev_set);
-> +	if (ret)
-> +		goto err_unlock;
-> +
->  	list_for_each_entry(cur_vma, &dev_set->device_list, vdev.dev_set_list) {
->  		/*
->  		 * Test whether all the affected devices are contained by the
-> @@ -2219,6 +2351,9 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
->  		else
->  			mutex_unlock(&cur->vma_lock);
->  	}
-> +
-> +	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list)
-> +		pm_runtime_put(&cur->pdev->dev);
->  err_unlock:
->  	mutex_unlock(&dev_set->lock);
->  	return ret;
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index e96cc3081236..7ec81271bd05 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -125,6 +125,7 @@ struct vfio_pci_core_device {
->  	bool			nointx;
->  	bool			needs_pm_restore;
->  	bool			pm_intx_masked;
-> +	bool			pm_runtime_engaged;
->  	struct pci_saved_state	*pci_saved_state;
->  	struct pci_saved_state	*pm_save;
->  	int			ioeventfds_nr;
-
+It looks like that on some machines rmmod cause immediate kernel crash
+and on other machines it is hard to reproduce.
