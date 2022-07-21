@@ -2,72 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A40157D02C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 17:47:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD2E57D033
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 17:48:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233405AbiGUPrg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 11:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43298 "EHLO
+        id S231895AbiGUPsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 11:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231918AbiGUPrX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 11:47:23 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290978964F
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id b26so2864331wrc.2
-        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
-        b=KR5jFlimFPd+AkLDoDHt5RiquTz0YP1EyolOlUIuGajh3UX2xBn5LLbTEjZc09ZCK6
-         4N2bmXuvCiLwzNSEIvqP11MfDABNVW/u0CN23FI+vbGs43gB7X+7AO179u+ZLLYTbaB/
-         ihwGYzFmvWBVoZIY2XyXzE+fOkq92m3vJHh0Vj5M28itzwqQbeFsQ78sTAFDvwv03/bk
-         QfAxZOtXEswtWoW9o1DRuo5paof7UW+YcMB8YUOeT21EhRvvpA4nar86+Y06ptCt5qVF
-         73+ahc4V3wk7JSb7Z/nWeELDYUWyJBDUktzaei8JIvzHF9OzPL1GWpHFyN7t72zE2zCj
-         5O8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
-        b=cEtmcp0PJde/fG3vnhtXnLz58OtYsQCxXFhgq1I5ctToReH5/CW/Sl5cLj2Haocgxa
-         lKkRQKULHaiBcNY4TZqaRRi9Qyg9VjQAGJ6O9QeaqOOHKSo3L+8BOVyaxFIxysD8IKj4
-         jLcSn9pmBsIdb7MWbObqY3qTwtyZDqi14YeZumAo8mr9bnGMEE8Dz67jJGcTnS3hGAz3
-         P43o5DcytM5AkqgaxHwCmxT1A6iqBooepMgSJdQZLbk/4qHRdZrkiWeDc6aetlQVLW2D
-         EnpnMnkeZdXZF+GzTmymp9mbsPARXcXZ/A5A5wnVXdLpJZABNZ4lHRFWzSiwnhZL+/13
-         /s+w==
-X-Gm-Message-State: AJIora9t/EmT0fVPmgapNExDuf0I6cpVguTxdw/gmIijUmH+AvBOlZSN
-        uRSNjbggCUQjVxuUo0pz+74HDMwjIUbSo4ZwnPgXEQ==
-X-Google-Smtp-Source: AGRyM1v1CI5ASKUMMOe2LYBQ2qxxMT6SUjbCRv3kBmgmbf8vDirKdV5boYsZgos8ZDKXS4jonmVDira8Vogn0zgiPSQ=
-X-Received: by 2002:adf:e30c:0:b0:21e:51b9:113c with SMTP id
- b12-20020adfe30c000000b0021e51b9113cmr4203513wrj.247.1658418248611; Thu, 21
- Jul 2022 08:44:08 -0700 (PDT)
+        with ESMTP id S233097AbiGUPsH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 11:48:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2866289A8F;
+        Thu, 21 Jul 2022 08:46:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CD0B4B8253C;
+        Thu, 21 Jul 2022 15:46:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC5A7C341C0;
+        Thu, 21 Jul 2022 15:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658418389;
+        bh=PXrSX6TqOGgu/mUPbX1MSmgTXFQ9SHdxh/ZWILLOrWM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XGWFT/851segzOr4xlR49pzv4LvKUjk8gig6g8kUKwDDgcAfTJIc0R03rIpTCY3aV
+         1KS2DiK3JMESQACTiJYmZnlYMzrquaz7yK9Ez8VrJ/LZQaJgf2rfBdSgOhwbUqkzpG
+         D2pmFlqhbcZ+QcwhmIyeTcq2fZX2aRJQB4L5M27vI9F/cn/a7Ml03p2IFh2BhHstQY
+         NKaz8J6QOMgt1His78n/IsY6GxYY/VWBhcWsosInI/8e3MsKz0I8NbQ3AAOrOvAXSX
+         cmmhojATSEUiEIMJnHwSnQwTuUsqO49oryt5KKAbQk+sjHW9S6KS3PuTrCOx089Q5B
+         KugxgcpzPBFXQ==
+Date:   Thu, 21 Jul 2022 10:46:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/6] PCI: brcmstb: Add "refusal mode" to preclude
+ PCIe-induced CPU aborts
+Message-ID: <20220721154627.GA1722428@bhelgaas>
 MIME-Version: 1.0
-References: <20220721130116.43366-1-yangyicong@huawei.com>
-In-Reply-To: <20220721130116.43366-1-yangyicong@huawei.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 21 Jul 2022 09:43:56 -0600
-Message-ID: <CANLsYkwMsmnj4CaqGigmBa4snn75iGkvE6tUDgHiMNsP3003zA@mail.gmail.com>
-Subject: Re: [PATCH v11 0/8] Add support for HiSilicon PCIe Tune and Trace device
-To:     yangyicong@huawei.com
-Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
-        robin.murphy@arm.com, acme@kernel.org, peterz@infradead.org,
-        corbet@lwn.net, mark.rutland@arm.com, jonathan.cameron@huawei.com,
-        john.garry@huawei.com, helgaas@kernel.org,
-        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com, joro@8bytes.org,
-        shameerali.kolothum.thodi@huawei.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
-        linux-doc@vger.kernel.org, prime.zeng@huawei.com,
-        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
-        linuxarm@huawei.com, yangyicong@hisilicon.com, bagasdotme@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNyUB4es01xsSvsvS0gZyUuuttJJ4XSBVajtBrVNFT5dMw@mail.gmail.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,182 +68,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 21 Jul 2022 at 07:03, <yangyicong@huawei.com> wrote:
+On Thu, Jul 21, 2022 at 10:53:54AM -0400, Jim Quinlan wrote:
+> https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
+> On Wed, Jul 20, 2022 at 6:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Sat, Jul 16, 2022 at 06:24:50PM -0400, Jim Quinlan wrote:
+> > > Our PCIe RC HW has an atypical behavior: if it does not have PCIe link
+> > > established between itself and downstream, any subsequent config space
+> > > access causes a CPU abort.  This commit sets a "refusal mode" if the PCIe
+> > > link-up fails, and this has our pci_ops map_bus function returning a NULL
+> > > address, which in turn precludes the access from happening.
+> > >
+> > > Right now, "refusal mode" is window dressing.  It will become relevant
+> > > in a future commit when brcm_pcie_start_link() is invoked during
+> > > enumeration instead of before it.
+> > >
+> > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > > index c026446d5830..72219a4f3964 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -255,6 +255,7 @@ struct brcm_pcie {
+> > >       u32                     hw_rev;
+> > >       void                    (*perst_set)(struct brcm_pcie *pcie, u32 val);
+> > >       void                    (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+> > > +     bool                    refusal_mode;
+> > >  };
+> > >
+> > >  static inline bool is_bmips(const struct brcm_pcie *pcie)
+> > > @@ -687,6 +688,19 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+> > >       if (pci_is_root_bus(bus))
+> > >               return PCI_SLOT(devfn) ? NULL : base + where;
+> > >
+> > > +     if (pcie->refusal_mode) {
+> > > +             /*
+> > > +              * At this point we do not have PCIe link-up.  If there is
+> > > +              * a config read or write access besides those targeting
+> > > +              * the host bridge, our PCIe HW throws a CPU abort.  To
+> > > +              * prevent this we return the NULL address.  The calling
+> > > +              * functions -- pci_generic_config_*() -- will notice this
+> > > +              * and not perform the access, and if it is a read access,
+> > > +              * 0xffffffff is returned.
+> > > +              */
+> > > +             return NULL;
+> > > +     }
+> >
+> > Is this any different from all the other .map_bus() implementations
+> > that return NULL when the link is down?
+> 
+> Not really, but long ago I submitted code that gated the config spec
+> access based on link status and was advised not to do it  [1].
+> I'll be happy to make it look like the others.
 >
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
-> integrated Endpoint (RCiEP) device, providing the capability
-> to dynamically monitor and tune the PCIe traffic (tune),
-> and trace the TLP headers (trace).
->
-> PTT tune is designed for monitoring and adjusting PCIe link parameters.
-> We provide several parameters of the PCIe link. Through the driver,
-> user can adjust the value of certain parameter to affect the PCIe link
-> for the purpose of enhancing the performance in certian situation.
->
-> PTT trace is designed for dumping the TLP headers to the memory, which
-> can be used to analyze the transactions and usage condition of the PCIe
-> Link. Users can choose filters to trace headers, by either requester
-> ID, or those downstream of a set of Root Ports on the same core of the
-> PTT device. It's also supported to trace the headers of certain type and
-> of certain direction.
->
-> The driver registers a PMU device for each PTT device. The trace can
-> be used through `perf record` and the traced headers can be decoded
-> by `perf report`. The perf command support for the device is also
-> added in this patchset. The tune can be used through the sysfs
-> attributes of related PMU device. See the documentation for the
-> detailed usage.
->
-> Change since v10:
-> - Use title case in the documentation
-> - Add RB from Bagas, thanks.
-> Link: https://lore.kernel.org/lkml/20220714092710.53486-1-yangyicong@hisilicon.com/
->
-> Change since v9:
-> - Add sysfs ABI description documentation
-> - Remove the controversial available_{root_port, requester}_filters sysfs file
-> - Shorten 2 tune sysfs attributes name and add some comments
-> - Move hisi_ptt_process_auxtrace_info() to Patch 6.
-> - Add RB from Leo and Ack-by from Mathieu, thanks!
+> [1] https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
 
-You can add my Ack-by to patch 03 as well.  See below for another comment.
+My point there was that if you can deal with the abort cleanly, that's
+the best approach.  Apparently brcmstb can't recover cleanly, so you
+have to settle for the 99% solution.
 
-> Link: https://lore.kernel.org/lkml/20220606115555.41103-1-yangyicong@hisilicon.com/
->
-> Change since v8:
-> - Cleanups and one minor fix from Jonathan and John, thanks
-> Link: https://lore.kernel.org/lkml/20220516125223.32012-1-yangyicong@hisilicon.com/
->
-> Change since v7:
-> - Configure the DMA in probe rather than in runtime. Also use devres to manage
->   PMU device as we have no order problem now
-> - Refactor the config validation function per John and Leo
-> - Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
->   in pmu::start as it's in atomic context
-> - Only commit the traced data when stop, per Leo and James
-> - Drop the filter dynamically updating patch from this series to simply the review
->   of the driver. That patch will be send separately.
-> - add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
->   uncore PMU convention
-> - Other cleanups and fixes, both in driver and perf tool
-> Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
->
-> Change since v6:
-> - Fix W=1 errors reported by lkp test, thanks
->
-> Change since v5:
-> - Squash the PMU patch into PATCH 2 suggested by John
-> - refine the commit message of PATCH 1 and some comments
-> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
->
-> Change since v4:
-> Address the comments from Jonathan, John and Ma Ca, thanks.
-> - Use devm* also for allocating the DMA buffers
-> - Remove the IRQ handler stub in Patch 2
-> - Make functions waiting for hardware state return boolean
-> - Manual remove the PMU device as it should be removed first
-> - Modifier the orders in probe and removal to make them matched well
-> - Make available {directions,type,format} array const and non-global
-> - Using the right filter list in filters show and well protect the
->   list with mutex
-> - Record the trace status with a boolean @started rather than enum
-> - Optimize the process of finding the PTT devices of the perf-tool
-> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
->
-> Change since v3:
-> Address the comments from Jonathan and John, thanks.
-> - drop members in the common struct which can be get on the fly
-> - reduce buffer struct and organize the buffers with array instead of list
-> - reduce the DMA reset wait time to avoid long time busy loop
-> - split the available_filters sysfs attribute into two files, for root port
->   and requester respectively. Update the documentation accordingly
-> - make IOMMU mapping check earlier in probe to avoid race condition. Also
->   make IOMMU quirk patch prior to driver in the series
-> - Cleanups and typos fixes from John and Jonathan
-> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
->
-> Change since v2:
-> - address the comments from Mathieu, thanks.
->   - rename the directory to ptt to match the function of the device
->   - spinoff the declarations to a separate header
->   - split the trace function to several patches
->   - some other comments.
-> - make default smmu domain type of PTT device to identity
->   Drop the RMR as it's not recommended and use an iommu_def_domain_type
->   quirk to passthrough the device DMA as suggested by Robin.
-> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
->
-> Change since v1:
-> - switch the user interface of trace to perf from debugfs
-> - switch the user interface of tune to sysfs from debugfs
-> - add perf tool support to start trace and decode the trace data
-> - address the comments of documentation from Bjorn
-> - add RMR[1] support of the device as trace works in RMR mode or
->   direct DMA mode. RMR support is achieved by common APIs rather
->   than the APIs implemented in [1].
-> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
-> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
->
-> Qi Liu (3):
->   perf tool: arm: Refactor event list iteration in
->     auxtrace_record__init()
->   perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
->   perf tool: Add support for parsing HiSilicon PCIe Trace packet
->
-> Yicong Yang (5):
->   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
->     identity
->   hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
->     Tune and Trace device
->   hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
->     and Trace device
->   docs: trace: Add HiSilicon PTT device driver documentation
->   MAINTAINERS: Add maintainer for HiSilicon PTT driver
->
->  .../ABI/testing/sysfs-devices-hisi_ptt        |   61 +
->  Documentation/trace/hisi-ptt.rst              |  298 +++++
->  Documentation/trace/index.rst                 |    1 +
->  MAINTAINERS                                   |    8 +
->  drivers/Makefile                              |    1 +
->  drivers/hwtracing/Kconfig                     |    2 +
->  drivers/hwtracing/ptt/Kconfig                 |   12 +
->  drivers/hwtracing/ptt/Makefile                |    2 +
->  drivers/hwtracing/ptt/hisi_ptt.c              | 1032 +++++++++++++++++
->  drivers/hwtracing/ptt/hisi_ptt.h              |  200 ++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
+The refusal_mode approach has the same race as checking
+*_pcie_link_up(), since the link may go down between the time
+brcm_pcie_start_link() sees that it is up and the time somebody does a
+config access:
 
-Everything above needs to go in one patchset and everything below in
-another one.  The first patchset will need to be merged before the
-second one.  Someone already commented on that.
+  brcm_pcie_start_link
+    pcie->refusal_mode = false
 
->  tools/perf/arch/arm/util/auxtrace.c           |  116 +-
->  tools/perf/arch/arm/util/pmu.c                |    3 +
->  tools/perf/arch/arm64/util/Build              |    2 +-
->  tools/perf/arch/arm64/util/hisi-ptt.c         |  188 +++
->  tools/perf/util/Build                         |    2 +
->  tools/perf/util/auxtrace.c                    |    4 +
->  tools/perf/util/auxtrace.h                    |    1 +
->  tools/perf/util/hisi-ptt-decoder/Build        |    1 +
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |  164 +++
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   31 +
->  tools/perf/util/hisi-ptt.c                    |  192 +++
->  tools/perf/util/hisi-ptt.h                    |   19 +
->  23 files changed, 2341 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-devices-hisi_ptt
->  create mode 100644 Documentation/trace/hisi-ptt.rst
->  create mode 100644 drivers/hwtracing/ptt/Kconfig
->  create mode 100644 drivers/hwtracing/ptt/Makefile
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
->  create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
->  create mode 100644 tools/perf/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt.h
->
-> --
-> 2.24.0
->
+  <link goes down>
+
+  brcm_pcie_map_conf
+    if (pcie->refusal_mode)            # still false
+
+  <config access causes abort>
+
+So there's no advantage in making the code look different.  Checking
+for link-up in the config access path can never completely remove the
+window, but it does make it smaller than using refusal_mode.
+
+Bjorn
