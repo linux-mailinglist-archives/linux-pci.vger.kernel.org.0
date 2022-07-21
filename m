@@ -2,106 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C5357D552
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 22:58:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C24357D65B
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 23:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233570AbiGUU61 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 16:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
+        id S234001AbiGUV6t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 17:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233559AbiGUU6Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 16:58:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30BB904CA;
-        Thu, 21 Jul 2022 13:58:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F04260AD8;
-        Thu, 21 Jul 2022 20:58:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71230C3411E;
-        Thu, 21 Jul 2022 20:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658437101;
-        bh=H/aHhtlRLOeWCCQ5QG+qxA0GsTmdnIKgv+5n5V0Q6n8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KLeVB7ABm4ecgcmx0viupligXKNnNx1xb7evo72pn3Zlb4f9eDbW8miXjfzrZzyoE
-         FRiZz2NHq5lMMXydznLM7Q7iz+GaZAz8bIarL8okiQT673X1g0Wj/itVgSQrKUVjZS
-         Ww/Sd1cwfSQuLKvqe4oz5WZuRpcOyiOkRbRtp1aFR12hbBzDAvbGF6iN+4IAuJ0P18
-         xxyjw3TAuOlcTEOauJkLKoUVcL/AB3FBE6OCKZImLVtRjPmYzO6C64O4WgFgwzwgF6
-         daVATJG/L3yJWqYc4RcpjVzTk//ao+3Vun3a2HC7TXVVW/OAiSwydS/vidV7KXF892
-         ZUFONRMtOpNLg==
-Date:   Thu, 21 Jul 2022 15:58:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     wangseok.lee@samsung.com,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>,
-        Moon-Ki Jun <moonki.jun@samsung.com>,
-        Sang Min Kim <hypmean.kim@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>,
-        Yeeun Kim <yeeun119.kim@samsung.com>
-Subject: Re: [PATCH v4 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
-Message-ID: <20220721205819.GA1753070@bhelgaas>
+        with ESMTP id S233998AbiGUV6s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 17:58:48 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E58F936B6;
+        Thu, 21 Jul 2022 14:58:46 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id x24-20020a17090ab01800b001f21556cf48so6528059pjq.4;
+        Thu, 21 Jul 2022 14:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PktSKT1L2O3nGxL2SVwxNXiNfS8ZomkMf08apPvZeCg=;
+        b=DJY3jYWEFScuIXxMnaqONdYTGCVVwRulQsGebVz6JYCl1utvdLvXQ94toEx5kGMkZZ
+         z1/pEiOFwUNWBrMC7+4ufNAkz0jd7cbHp8Zx0ZkqjXfnzObxdRWZcdzVyVOTA1gGu7Wp
+         JmFlPgpXKXjsmdzknKots5Mlaul12c7HuPzlH/glqY7CBGvnUXzOUm/Pn6d996JPp/kd
+         n4swd/grc13CTgVSCCDo1KShFnI4Jm/FapFGmE8Z2OWfZZMKtLemGcWh4NS19m7XSq9K
+         xCmGPLb+25sN7ef6IEg88SWqFRVXLoHcy1Qc9xBZLqp1omKZJBnUyIg5gJB28vKKwrti
+         vv4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PktSKT1L2O3nGxL2SVwxNXiNfS8ZomkMf08apPvZeCg=;
+        b=QX3ON5P8XnidJ3mqnXmOxCx30psrBgp2f2fHaCVchi4PAvYzaHh7oouU5akT/bHnzz
+         CGkMXACMHBAJFnMii1Sk11QDzcANeFkIgAvIVydM+ozIG3XDxxX40Dmd1ysTiM1ZcnJ+
+         ZFK9I3RBFuAvOJevR2wxKAToqPNSSHV7C1AwMq8tBdfxhDGVSyKf5krwlfCh13WcreDF
+         m4/iseMeKoFM+yN8LsMigP9H8OogUQc2TCVB61Ifgs2Uhbcg5D7NB1SSTrUJ3xcbSIi2
+         7nOBowFR+pnGE4lw6TDyRwpviH3ELKFWj1HUWn5VQh6gcmGr1ZHpqaEqJgUEuOBrMlJY
+         I+Kg==
+X-Gm-Message-State: AJIora+ShTVDGUfTQI3igZk2vlwavHQ3sTo2K0qs/h5q3ntrtiMKnZCv
+        cafkeCgX0t7Wg8J0elw5n/s=
+X-Google-Smtp-Source: AGRyM1ulFYUkEqFxa2Ru+9pVLJDAQXGuHlUKI/EVz0VkAXFTFzAMfPLdmoEQMlVX34zoyjKglGkluQ==
+X-Received: by 2002:a17:902:db02:b0:16c:5568:d740 with SMTP id m2-20020a170902db0200b0016c5568d740mr362437plx.100.1658440725499;
+        Thu, 21 Jul 2022 14:58:45 -0700 (PDT)
+Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
+        by smtp.gmail.com with ESMTPSA id b17-20020a170903229100b0016bef6f6903sm2266180plh.72.2022.07.21.14.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jul 2022 14:58:44 -0700 (PDT)
+Date:   Fri, 22 Jul 2022 06:58:43 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] asm-generic: Add new pci.h and use it
+Message-ID: <YtnMEwh3U3Ng9q4a@antec>
+References: <20220721134924.596152-5-shorne@gmail.com>
+ <20220721173733.GA1731649@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <226ac31e-2ac4-cb73-ab67-62f86d5e5783@linaro.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220721173733.GA1731649@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 21, 2022 at 11:04:00AM +0200, Krzysztof Kozlowski wrote:
-> On 20/07/2022 08:01, Wangseok Lee wrote:
-> > Add support Axis, ARTPEC-8 SoC. ARTPEC-8 is the SoC platform of Axis
-> > Communications. This is based on arm64 and support GEN4 & 2lane. This
-> > PCIe controller is based on DesignWare Hardware core and uses DesignWare
-> > core functions to implement the driver. "pcie-artpec6. c" supports artpec6
-> > and artpec7 H/W. artpec8 can not be expanded because H/W configuration is
-> > completely different from artpec6/7. PHY and sub controller are different.
+On Thu, Jul 21, 2022 at 12:37:33PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jul 21, 2022 at 10:49:24PM +0900, Stafford Horne wrote:
+> > The asm/pci.h used for many newer architectures share similar
+> > definitions.  Move the common parts to asm-generic/pci.h to allow for
+> > sharing code.
 > > 
-> > Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
-> > Signed-off-by: Jaeho Cho <jaeho79.cho@samsung.com>
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
+> > Acked-by: Pierre Morel <pmorel@linux.ibm.com>
+> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Stafford Horne <shorne@gmail.com>
 > > ---
-> > v3->v4 :
-> > -Remove unnecessary enum type
-> > -Fix indentation
+> > Since v4:
+> >  - Add reviewed-by
 > > 
+> >  arch/arm64/include/asm/pci.h | 10 ++--------
+> >  arch/csky/include/asm/pci.h  | 17 ++---------------
+> >  arch/riscv/include/asm/pci.h | 23 ++++-------------------
+> >  arch/um/include/asm/pci.h    | 14 ++------------
+> >  include/asm-generic/pci.h    | 32 ++++++++++++++++++++++++++++++++
+> >  5 files changed, 42 insertions(+), 54 deletions(-)
+> >  create mode 100644 include/asm-generic/pci.h
 > 
-> Thanks for the changes. This starts to look good, however I am not going
-> to ack it. This is also not a strong NAK, as I would respect Bjorn and
-> other maintainers decision.
+> > +++ b/include/asm-generic/pci.h
+> > @@ -0,0 +1,32 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +#ifndef __ASM_GENERIC_PCI_H
+> > +#define __ASM_GENERIC_PCI_H
+> > +
+> > +#include <linux/types.h>
 > 
-> I don't like the approach of creating only Artpec-8 specific driver.
-> Samsung heavily reuses its block in all Exynos devices. Now it re-uses
-> them for other designs as well. Therefore, even if merging with existing
-> Exynos PCIe driver is not feasible (we had such discussions), I expect
-> this to cover all Samsung Foundry PCIe devices. From all current designs
-> up to future licensed blocks, including some new Samsung Exynos SoC. Or
-> at least be ready for it.
+> Do we need <linux/types.h> here?  I don't see anything below that
+> depends on it.
 
-I would certainly prefer fewer drivers but I don't know enough about
-the underlying IP and the places it's integrated to to know what's
-practical.  The only way I could figure that out would be by manually
-comparing the drivers for similarity.  I assume/expect all driver
-authors are doing that.
+Thanks, you are right, I think some of the earlier functions may have needed it,
+which is why I had it earlier.  But now that we have removed those we should be
+able to remove this.
 
-Bjorn
+That said, I think some of the architecture includes could also be removed.  On
+OpenRISC we are able to get away with only having the global asm-generic/pci.h
+so we don't need a wrapper pci.h header at all.
+
+However, I don't have everything setup to build all of those architectures so I
+was being a bit conservative to remove headers.  I'll see what I can do in the
+next version.
+
+-Stafford
+
+> > +#ifndef PCIBIOS_MIN_IO
+> > +#define PCIBIOS_MIN_IO		0
+> > +#endif
+> > +
+> > +#ifndef PCIBIOS_MIN_MEM
+> > +#define PCIBIOS_MIN_MEM		0
+> > +#endif
+> > +
+> > +#ifndef pcibios_assign_all_busses
+> > +/* For bootloaders that do not initialize the PCI bus */
+> > +#define pcibios_assign_all_busses() 1
+> > +#endif
+> > +
+> > +/* Enable generic resource mapping code in drivers/pci/ */
+> > +#define ARCH_GENERIC_PCI_MMAP_RESOURCE
+> > +
+> > +#ifdef CONFIG_PCI_DOMAINS
+> > +static inline int pci_proc_domain(struct pci_bus *bus)
+> > +{
+> > +	/* always show the domain in /proc */
+> > +	return 1;
+> > +}
+> > +#endif /* CONFIG_PCI_DOMAINS */
+> > +
+> > +#endif /* __ASM_GENERIC_PCI_H */
+> > -- 
+> > 2.36.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
