@@ -2,101 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A87657C500
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 09:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D53957C57F
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 09:47:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbiGUHI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 03:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
+        id S230330AbiGUHrd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 03:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbiGUHI5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 03:08:57 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D3077A4E;
-        Thu, 21 Jul 2022 00:08:55 -0700 (PDT)
-Received: from mail-oi1-f171.google.com ([209.85.167.171]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M6DOg-1o7nXJ33o8-006jZU; Thu, 21 Jul 2022 09:08:53 +0200
-Received: by mail-oi1-f171.google.com with SMTP id n206so892922oia.6;
-        Thu, 21 Jul 2022 00:08:53 -0700 (PDT)
-X-Gm-Message-State: AJIora/6vUDb1PeQbx59q0h1bgPnkSZimdddhuprsG/aCI0bOiLo5meu
-        8YCPa0horuO1m+5R2Yhe7V934S+6fTntb5CtTMk=
-X-Google-Smtp-Source: AGRyM1v+odWduFrFFJeiRzgTsqetnRIRebzlh0VM+scMiYoVZko9IL5QdoNAc0bk1qIjkxiy/D4D3vzSAK4r7FcXEDY=
-X-Received: by 2002:a05:6808:23cb:b0:339:f8b4:ecae with SMTP id
- bq11-20020a05680823cb00b00339f8b4ecaemr3937025oib.188.1658387332349; Thu, 21
- Jul 2022 00:08:52 -0700 (PDT)
+        with ESMTP id S229672AbiGUHrc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 03:47:32 -0400
+X-Greylist: delayed 1012 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Jul 2022 00:47:31 PDT
+Received: from 6.mo575.mail-out.ovh.net (6.mo575.mail-out.ovh.net [46.105.63.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA461A047
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 00:47:31 -0700 (PDT)
+Received: from player730.ha.ovh.net (unknown [10.110.171.50])
+        by mo575.mail-out.ovh.net (Postfix) with ESMTP id D49B423DFC
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:30:37 +0000 (UTC)
+Received: from RCM-web2.webmail.mail.ovh.net (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
+        (Authenticated sender: rafal@milecki.pl)
+        by player730.ha.ovh.net (Postfix) with ESMTPSA id 07AC42CA88489;
+        Thu, 21 Jul 2022 07:30:13 +0000 (UTC)
 MIME-Version: 1.0
-References: <20220719215108.1583108-1-helgaas@kernel.org>
-In-Reply-To: <20220719215108.1583108-1-helgaas@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 Jul 2022 09:08:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0pbA7hSNgKw+yjBmXHGuwc_Y1tNJ7=vD5wiPn+rE1a8w@mail.gmail.com>
-Message-ID: <CAK8P3a0pbA7hSNgKw+yjBmXHGuwc_Y1tNJ7=vD5wiPn+rE1a8w@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Convert to new *_PM_OPS macros
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+Date:   Thu, 21 Jul 2022 09:30:12 +0200
+From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+To:     William Zhang <william.zhang@broadcom.com>
+Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, dan.beygelman@broadcom.com,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z2623rrrgkPASP5C2ZFI1n4BRGHsMz7/ASwncv5Qv2/QP7F1Ecc
- IDtbv9UUGyXRKubaAOzkPn2q4mF7QqTuiXI1Tvh+9UkTViyYzhw866FrILfJL+FbX6264qu
- fODteRk3KYzdpxL+Z0Jn1a0BFXztpwGCO3n3VFMkAoZQ/+C/N3YfbASz8uJpoJPqYAl5/aQ
- cion8CecWAD9W+aqOHHSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5vjoARo5n2Y=:1btSfPP4QaFxPCvPVSdFH6
- MXi4k114+PI3NTgeBigguzGM0R+I3qJYpIMa7NjTj+jjTrrx9FCumyp7A8gOvoY/obWkHHYWM
- t10BXmEXKQcbEEog5aNeb1XJkXbRG8YCfNWp/aJdAI0kQhFZbvVz5n6lwNgSs2W938KhQ9gxd
- MjAyjIVBIyPZk4QyRm3yQpT3i3Sx3e2kmHZuS4RpL2TUTiHJwfOLFgw+I5LuMW73O0L9DOOtW
- gCTnmCOXhA/IyOmeFUBBGXMlQfY+OxbPOz5hHojjXK9fSrq9w3JvIsXR+LV+oeNh/ZM77+Pnu
- HJIqlJYH74SBgOBjatnGPeShaV2i5axWL6q0PawPBasTW7MRo9j8LY2scukqAKFSxRDuVmsNc
- O/3pBmKTFJcHBEmWON1wI4fY0HDPy450OYbUNEe89M6X9ZP1cMkchUwxYXaipRV/kBhsaP8BU
- QfqinFuyUjTlIMrND+YH6hZ6ApkegrKv5BFmkYo8uTAnEjq6Lu9KHOmKyiw0jBvSdnClY71GP
- WG67Oi8kMoEt0/fRxIhNqlPdglOaAJ6uYp7rClFWsKMCGeqBicUhp5pWC7WQbd2cld4m7D46F
- EFyEy+2zFUiX1Y32aoDu4PnCa2pIUhP47KY3HZdBiDkKUm2HQihCGWvYxFajXxWZ1aUJsxa4C
- 6GtJDomwqcyRPGH0wXf+uPJoKyg1XB59kN8pKesIUlCBSusdkR7TLs/T7CrTiMOR9ri6DIYun
- yZgdyqAw7jZFFstbZJ4OT6nK8RJieiX414w9jXtPATyGijD3f7suouQZeFISaOYpYBNUPPZcT
- ke8wnLsLflA4NAQKjfBO4yDI2J9r5+WyXFz83489j4GDmay2BzkgoZ8xuOUVBZWCWIxIgO9NN
- BxSXmGwSAa8ntO3Y3YuQ==
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [RESEND PATCH 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+In-Reply-To: <20220721000740.29624-1-william.zhang@broadcom.com>
+References: <20220721000740.29624-1-william.zhang@broadcom.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <67a913c5cc1672152a34370f952b93eb@milecki.pl>
+X-Sender: rafal@milecki.pl
+X-Originating-IP: 194.187.74.233
+X-Webmail-UserID: rafal@milecki.pl
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 44191571924659028
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrudelkedgvdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlpgfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpeegvdffjeelvdeggeetheegveejieetgeeiiefggeelveejffehieekhfduueelhfenucfkpheptddrtddrtddrtddpudelgedrudekjedrjeegrddvfeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehplhgrhigvrhejfedtrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejhe
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 19, 2022 at 11:51 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Replace SET_*_PM_OPS with *_PM_OPS, which which have the advantage that the
-> compiler always sees the PM callbacks as referenced, so they don't need to
-> be wrapped with "#ifdef CONFIG_PM_SLEEP" or tagged with "__maybe_unused" to
-> avoid "defined but not used" warnings.
->
-> See 1a3c7bb08826 ("PM: core: Add new *_PM_OPS macros, deprecate old ones").
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On 2022-07-21 02:07, William Zhang wrote:
+> Replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
 
-I did some additional testing, using an arm allmodconfig kernel with CONFIG_PM
-and/or CONFIG_PM_SLEEP disabled to ensure this does not cause any
-unexpected regressions. Everything seems to work as intended.
+Commit messages should generally answer *why* instead of *what*.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Tested-by: Arnd Bergmann <arnd@arndb.de>
+That helps subsystem maintainers review/approve your change without
+having to walk through the whole series.
