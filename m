@@ -2,48 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C83557CD9A
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 16:28:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 615ED57CE41
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 16:54:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbiGUO16 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 10:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43702 "EHLO
+        id S231678AbiGUOyJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 10:54:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231421AbiGUO15 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 10:27:57 -0400
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F1481B2D;
-        Thu, 21 Jul 2022 07:27:56 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id n7so1455112ioo.7;
-        Thu, 21 Jul 2022 07:27:56 -0700 (PDT)
+        with ESMTP id S232296AbiGUOyI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 10:54:08 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D7E2981F
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:54:07 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id k30so2467673edk.8
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vMHhtHD1hf3iJepYJ8ceRNwH6fCOnvVvTafWeoP52sM=;
+        b=BiZUY8JM1OQAIk/TZXPsqXhBfA8mZBjDoR8E7YpHpDB3qVKT2gpAGRthj0L26D4HO6
+         uxwLD5euipHfPBpcdEfygdGrfYv6968sarZ5Nb1DC6/9rOXW11EoPAGFrQP7sO75wDXL
+         vv+8rPqUwDmYGJ6Ku7o7BryySLxVv5VZ7nQJQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qBJTWgon/52QKDNKvwQ/1dAnUOGZb8BigxgRHRUYN3E=;
-        b=rfk+6IYEx50KM9ydRNr2VXGvpIHnYNoM3AXMsp9O4JeDhfHaSObNf8HWve/OwnovQ5
-         XtHQduQZutTW+GS319HJ/TMVq5YKX/bbKUuc2Vq5lKuogbiVJvzZif2LtqSahAoONj33
-         /mdVwJf9p0pgVqRA0TWypjGexWtRz/yOFAOkp75dXXQ2vzWLP0PPLDYWeyKOZQrd6OJ2
-         u5Bl5hx0IexSnV0Ss66Bp/SqxfCGkof43FlFuCGc3wvuSl9xCHPHpjOEHDftSyYFrkS8
-         wshZKikBItceUAQmZ2QGDHSD8M3E4+ZMBL+g3i2xf/bH8BkjoFgTLwbmDIcX2lTHBGf2
-         rJnQ==
-X-Gm-Message-State: AJIora/zi3UytJEDbP1VKB9GUTKZ9oLdIkGEH84tM2YM+4xh6p7a234j
-        TtX67GHHy/46YwY8xFL5nA==
-X-Google-Smtp-Source: AGRyM1uy0MMvlRSPtMURVNBNja2uiyOQUJm5OGmRvR2jHyTXmaQzYmWTVgVpWaMp2udn8QgjFAkTrQ==
-X-Received: by 2002:a05:6638:4129:b0:340:2718:ece3 with SMTP id ay41-20020a056638412900b003402718ece3mr20449201jab.148.1658413675576;
-        Thu, 21 Jul 2022 07:27:55 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id d73-20020a02624c000000b0033202bb9829sm831138jac.49.2022.07.21.07.27.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 07:27:55 -0700 (PDT)
-Received: (nullmailer pid 1345795 invoked by uid 1000);
-        Thu, 21 Jul 2022 14:27:53 -0000
-Date:   Thu, 21 Jul 2022 08:27:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vMHhtHD1hf3iJepYJ8ceRNwH6fCOnvVvTafWeoP52sM=;
+        b=RJxNaBfBGelSknGokdPY0FcCwd8nhUFBsAasNJQSLL41ZAw1ONkqlwzY8lqBzdhIFO
+         8thENVB20V9LvETALWOYNWhojqZJlmQXOrGwY1HJ40K89K6VTalM4akw8gONt+lRWLrw
+         UJcnsu72ozn+phveUmERK1o8PMBgv52x6XsSUhr7X9R+zDYsWqZpG/EWef45KwA795PZ
+         L/eZjmEFAM+VdYZO9EzvrID93qOoKa7M83iLmLRiSCZvdFQfnRHyX4DfeP/Fi46Vsj4E
+         SSIXeywYlh+AZfCVVVtowEF/9qf+7fhO/gEnegsF/er99ouKl2eGfCyKj0IqU5reOtNg
+         4tJQ==
+X-Gm-Message-State: AJIora+Tv3sBkA0jVq7NTssLMWxXoHuROo0ZfvtA8i7XmVbrDth8Jm9i
+        8MI6sQFAf2B/Dw0ZHwRN9odzKq1AOrM85qFOOTZv/g==
+X-Google-Smtp-Source: AGRyM1sKU5/O8mfIMSKIaBGKnBHyXSDhXUgiSAXiOyfISOy+u7vmrww4kWeaw6K/wWpJHzMX0ArX1ZUHGX7coL0uPXA=
+X-Received: by 2002:a05:6402:26c8:b0:43a:c404:a553 with SMTP id
+ x8-20020a05640226c800b0043ac404a553mr57620298edd.53.1658415245466; Thu, 21
+ Jul 2022 07:54:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220716222454.29914-4-jim2101024@gmail.com> <20220720220558.GA1661469@bhelgaas>
+In-Reply-To: <20220720220558.GA1661469@bhelgaas>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 21 Jul 2022 10:53:54 -0400
+Message-ID: <CA+-6iNyUB4es01xsSvsvS0gZyUuuttJJ4XSBVajtBrVNFT5dMw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] PCI: brcmstb: Add "refusal mode" to preclude
+ PCIe-induced CPU aborts
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
         <linux-pci@vger.kernel.org>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -52,183 +59,234 @@ Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
         Cyril Brulebois <kibi@debian.org>,
         "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two
- funcs
-Message-ID: <20220721142753.GA1334140-robh@kernel.org>
-References: <CA+-6iNz8DTjAMXnWuOd=0W=qa6J4uD03oH3RJezEk1WxaUN1NA@mail.gmail.com>
- <20220719200332.GA1552587@bhelgaas>
- <CA+-6iNzn=JsG=xU2BxagyfeUMZ13p9yg=y+_wVcsAaZ0NgEvKg@mail.gmail.com>
- <CAL_JsqLm5pWFNLMYjRXrBNYumOd0Vdyaxj0+PGnABQbjA6bDBQ@mail.gmail.com>
- <3cf519d2-9ffa-1337-935e-4a617a0eab16@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3cf519d2-9ffa-1337-935e-4a617a0eab16@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000009f7c7a05e451e331"
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 02:34:06PM -0700, Florian Fainelli wrote:
-> On 7/20/22 09:18, Rob Herring wrote:
-> > On Wed, Jul 20, 2022 at 8:53 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> >>
-> >> On Tue, Jul 19, 2022 at 4:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>
-> >>> On Tue, Jul 19, 2022 at 09:08:48AM -0400, Jim Quinlan wrote:
-> >>>> On Mon, Jul 18, 2022 at 6:40 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>>> On Mon, Jul 18, 2022 at 02:56:03PM -0400, Jim Quinlan wrote:
-> >>>>>> On Mon, Jul 18, 2022 at 2:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>>>>> On Sat, Jul 16, 2022 at 06:24:49PM -0400, Jim Quinlan wrote:
-> >>>>>>>> Currently, the function does the setup for establishing PCIe link-up
-> >>>>>>>> with the downstream device, and it does the actual link-up as well.
-> >>>>>>>> The calling sequence is (roughly) the following in the probe:
-> >>>>>>>>
-> >>>>>>>> -> brcm_pcie_probe()
-> >>>>>>>>     -> brcm_pcie_setup();                       /* Set-up and link-up */
-> >>>>>>>>     -> pci_host_probe(bridge);
-> >>>>>>>>
-> >>>>>>>> This commit splits the setup function in two: brcm_pcie_setup(), which only
-> >>>>>>>> does the set-up, and brcm_pcie_start_link(), which only does the link-up.
-> >>>>>>>> The reason why we are doing this is to lay a foundation for subsequent
-> >>>>>>>> commits so that we can turn on any power regulators, as described in the
-> >>>>>>>> root port's DT node, prior to doing link-up.
-> >>>>>>>
-> >>>>>>> All drivers that care about power regulators turn them on before
-> >>>>>>> link-up, but typically those regulators are described directly under
-> >>>>>>> the host bridge itself.
-> >>>>>>
-> >>>>>> Actually, what you describe is what I proposed with my v1 back in Nov 2020.
-> >>>>>> The binding commit message said,
-> >>>>>>
-> >>>>>>     "Quite similar to the regulator bindings found in
-> >>>>>>     "rockchip-pcie-host.txt", this allows optional regulators to be
-> >>>>>>     attached and controlled by the PCIe RC driver."
-> >>>>>>
-> >>>>>>> IIUC the difference here is that you have regulators described under
-> >>>>>>> Root Ports (not the host bridge/Root Complex itself), so you don't
-> >>>>>>> know about them until you've enumerated the Root Ports.
-> >>>>>>> brcm_pcie_probe() can't turn them on directly because it doesn't know
-> >>>>>>> what Root Ports are present and doesn't know about regulators below
-> >>>>>>> them.
-> >>>>>>
-> >>>>>> The reviewer's requested me to move the regulator node(s)
-> >>>>>> elsewhere, and at some point later it was requested to be placed
-> >>>>>> under the Root Port driver.  I would love to return them under the
-> >>>>>> host bridge, just say the word!
-> >>>>>
-> >>>>> Actually, I think my understanding is wrong.  Even though the PCI core
-> >>>>> hasn't enumerated the Root Port as a pci_dev, brcm_pcie_setup() knows
-> >>>>> about it and should be able to look up the regulators and turn them
-> >>>>> on.
-> >>>>
-> >>>> One can do this with
-> >>>>         regulator_bulk_get(NULL, ...);
-> >>>>
-> >>>> However, MarkB did not like the idea of a driver getting the
-> >>>> regulator from the global DT namespace [1].
-> >>>>
-> >>>> For the RC driver, one  cannot invoke  regulator_bulk_get(dev, ...)
-> >>>> if there is not a direct child regulator node.  One needs to use the
-> >>>> Port driver device.  The Port driver device does not exist at this
-> >>>> point unless one tries to prematurely create it; I tried this and it
-> >>>> was a mess to say the least.
-> >>>>
-> >>>>> Can you dig up the previous discussion about why the regulators need
-> >>>>> to be under the Root Port and why they can't be turned on before
-> >>>>> calling pci_host_probe()?
-> >>>>
-> >>>> RobH did not want the regulators to be under the RC as he said their
-> >>>> DT location should resemble the HW [2].  The consensus evolved to
-> >>>> place it under the port driver, which can provide a general
-> >>>> mechanism for turning on regulators anywhere in the PCIe tree.
-> >>>
-> >>> I don't want to redesign this whole thing.  I just want a crisp
-> >>> rationale for the commit log.
-> >>>
-> >>> All other drivers (exynos, imx6, rw-rockchip, histb, qcom, tegra194,
-> >>> tegra, rockchip-host) have regulators for downstream PCIe power
-> >>> directly under the RC.  If putting the regulators under an RP instead
-> >>> is the direction of the future, I guess that might be OK, and I guess
-> >>> the reasons are:
-> >>>
-> >>>   1) Slot or device power regulators that are logically below the RP
-> >>>      should be described that way in the DT.
-> >>>
-> >>>   2) Associating regulators with a RP allows the possibility of
-> >>>      selectively controlling power to slots/devices below the RP,
-> >>>      e.g., to power down devices below RP A when suspending while
-> >>>      leaving wakeup devices below RP B powered up.
-> >>>
-> >>> I think in your case the motivating reason is 2).
-> >>>
-> >>> Your commit log for "Add mechanism to turn on subdev regulators"
-> >>> suggests that you want some user control of endpoint power, e.g., via
-> >>> sysfs, but I don't see that implemented yet except possibly via a
-> >>> "remove" file that would unbind the driver and remove the entire
-> >>> device.
-> >> Hi Bjorn,
-> >>
-> >> Initially we wanted to (a) turn on any regulator found under the RC
-> >> node and (b) allow the possibility of the regulator to control the
-> >> EP's power. From the feedback, we realized early on that neither of
-> >> these were going to fly, so we conceded both requests and just wanted
-> >> to turn on standard PCIe regulators.  Upon reading the aforementioned
-> >> commit message I realize that there are a couple of leftover sentences
-> >> from these early days that must be removed.
-> >>
-> >> I think when I submitted v1 of the original series that only the
-> >> rockchip driver had regulators under the RC.   And my recollection was
-> >> that this was accepted but there was apprehension of this turning into
-> >> the "standard" way of turning on such regulators,  as the location of
-> >> the regulator nodes was in question.
-> >>
-> >> In short, I would be quite content  to follow the existing examples.
-> > 
-> > The existing examples are, in general, incomplete and only work for
-> > the simplest cases.
-> > 
-> > There's 2 cases to consider here. The first is standard slots with
-> > standard PCIe signals (e.g. PERST#) and voltage rails. The 2nd is
-> > either non-standard slots or just soldered down devices which could
-> > have any number of device specific resources. In the latter case,
-> > those resources need to go into the node for the device. For the
-> > former case (which we are discussing here), putting the resources in
-> > the upstream (side of the link) node is fine. That's the root port
-> > node(s) or switch port nodes. However, since most host bridges are a
-> > single RP and don't put the RP node in DT, we've ended up with these
-> > properties in host bridge nodes. That's fine as long as it's a single
-> > RP and device. When it is not, we need to do something different. The
-> > only way this scales is putting resources in the port nodes as those
-> > are what have a 1:1 relationship to slots. If that's supported, then
-> > the simple cases are also easily supported with if the resources are
-> > not found in the port node/device, then look for them in the parent
-> > node. That's also the path for how we get the handling of PERST out of
-> > every host bridge driver.
-> 
-> This has me confused now, are you suggesting that we pursue what Jim 
-> has put together here as a series which describes the regulators in 
-> the PCIe end-point device DT node, or that given that we have a 
-> single RC single RP configuration it is somewhat acceptable to 
-> describe regulators in the PCIe RC node?
+--0000000000009f7c7a05e451e331
+Content-Type: text/plain; charset="UTF-8"
 
-(Need to fix your mailer to wrap lines)
+https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
+On Wed, Jul 20, 2022 at 6:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sat, Jul 16, 2022 at 06:24:50PM -0400, Jim Quinlan wrote:
+> > Our PCIe RC HW has an atypical behavior: if it does not have PCIe link
+> > established between itself and downstream, any subsequent config space
+> > access causes a CPU abort.  This commit sets a "refusal mode" if the PCIe
+> > link-up fails, and this has our pci_ops map_bus function returning a NULL
+> > address, which in turn precludes the access from happening.
+> >
+> > Right now, "refusal mode" is window dressing.  It will become relevant
+> > in a future commit when brcm_pcie_start_link() is invoked during
+> > enumeration instead of before it.
+> >
+> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index c026446d5830..72219a4f3964 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -255,6 +255,7 @@ struct brcm_pcie {
+> >       u32                     hw_rev;
+> >       void                    (*perst_set)(struct brcm_pcie *pcie, u32 val);
+> >       void                    (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+> > +     bool                    refusal_mode;
+> >  };
+> >
+> >  static inline bool is_bmips(const struct brcm_pcie *pcie)
+> > @@ -687,6 +688,19 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+> >       if (pci_is_root_bus(bus))
+> >               return PCI_SLOT(devfn) ? NULL : base + where;
+> >
+> > +     if (pcie->refusal_mode) {
+> > +             /*
+> > +              * At this point we do not have PCIe link-up.  If there is
+> > +              * a config read or write access besides those targeting
+> > +              * the host bridge, our PCIe HW throws a CPU abort.  To
+> > +              * prevent this we return the NULL address.  The calling
+> > +              * functions -- pci_generic_config_*() -- will notice this
+> > +              * and not perform the access, and if it is a read access,
+> > +              * 0xffffffff is returned.
+> > +              */
+> > +             return NULL;
+> > +     }
+>
+> Is this any different from all the other .map_bus() implementations
+> that return NULL when the link is down?
 
-We should not continue with the same mistake of putting per slot 
-properties in the RC node when they belong in the RP node. I was just 
-pointing out that we could still handle those existing cases by checking 
-the parent node.
+Not really,,but long ago I submitted code that gated the config spec
+access based on link status and was advised not to do it  [1].
+I'll be happy to make it look like the others.
 
-Rob
+Regards,
+Jim Quinlan
+Broadcom STB
+
+[1] https://lore.kernel.org/linux-pci/20171215201434.GY30595@bhelgaas-glaptop.roam.corp.google.com/
+
+>
+>   cdns_pci_map_bus()
+>   dw_pcie_other_conf_map_bus()
+>   nwl_pcie_map_bus() (see nwl_pcie_valid_device())
+>   xilinx_pcie_map_bus() (see xilinx_pcie_valid_device())
+>
+> If you can implement this the same way, i.e., using
+> brcm_pcie_link_up(), it would be nice.
+>
+> >       /* For devices, write to the config space index register */
+> >       idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
+> >       writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
+> > @@ -704,6 +718,11 @@ static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devf
+> >       if (pci_is_root_bus(bus))
+> >               return PCI_SLOT(devfn) ? NULL : base + (where & ~0x3);
+> >
+> > +     if (pcie->refusal_mode) {
+> > +             /* See note above in brcm_pcie_map_conf() */
+> > +             return NULL;
+> > +     }
+> > +
+> >       /* For devices, write to the config space index register */
+> >       idx = PCIE_ECAM_OFFSET(bus->number, devfn, (where & ~3));
+> >       writel(idx, base + IDX_ADDR(pcie));
+> > @@ -989,6 +1008,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+> >               dev_err(dev, "link down\n");
+> >               return -ENODEV;
+> >       }
+> > +     pcie->refusal_mode = false;
+> >
+> >       if (!brcm_pcie_rc_mode(pcie)) {
+> >               dev_err(dev, "PCIe misconfigured; is in EP mode\n");
+> > @@ -1134,6 +1154,8 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+> >       void __iomem *base = pcie->base;
+> >       int tmp;
+> >
+> > +     pcie->refusal_mode = true;
+> > +
+> >       if (brcm_pcie_link_up(pcie))
+> >               brcm_pcie_enter_l23(pcie);
+> >       /* Assert fundamental reset */
+> > @@ -1185,6 +1207,7 @@ static int brcm_pcie_resume(struct device *dev)
+> >       u32 tmp;
+> >       int ret;
+> >
+> > +     pcie->refusal_mode = true;
+> >       base = pcie->base;
+> >       ret = clk_prepare_enable(pcie->clk);
+> >       if (ret)
+> > @@ -1361,6 +1384,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >       pcie->type = data->type;
+> >       pcie->perst_set = data->perst_set;
+> >       pcie->bridge_sw_init_set = data->bridge_sw_init_set;
+> > +     pcie->refusal_mode = true;
+> >
+> >       pcie->base = devm_platform_ioremap_resource(pdev, 0);
+> >       if (IS_ERR(pcie->base))
+> > --
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--0000000000009f7c7a05e451e331
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+LeylbuEJGL9I80yqq8e6Z+Q6ulLxa6SopzpoysJe/vEVHgp9jPNppZzwKngVd2iDBRqpKlCngIAM
+DXgVGyEojXnuEbRs3NlB7wq1kJGlYysrnDug55ncJM8CAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFCeTeUYv84Mo3T1V+OyDdxib
+DDLvMA0GCSqGSIb3DQEBCwUAA4IBAQCCqR1PBVtHPvQHuG8bjMFQ94ZB7jmFEGhgfAsFJMaSMLov
+qyt8DKr8suCYF4dKGzqalbxo5QU9mmZXdLifqceHdt/Satxb+iGJjBhZg4E0cDds24ofYq+Lbww2
+YlIKC2HHxIN+JX2mFpavSXkshR5GT29B9EIJ8hgSjbs61XXeAcrmVIDfYbXQEmGbsnwqxdq+DJpQ
+S2kM2wvSlgSWDb6pL7myuKR5lCkQhj7piGSgrVLJRDRrMPw1L4MvnV9DjUFMlGCB40Hm6xqn/jm0
+8FCLlWhxve5mj+hgUOPETiKbjhCxJhhAPDdCvDRkZtJlQ8oxUVvXHugG8jm1YqB5AWx7MYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMI+Aj9XRk/wFexb9/
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCcfLLzxAVOHh/E9KP8Y18dg61oQKvp
+i6yBVTYVn2I5wDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
+MjExNDU0MDVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAA2P9GdG0hEWWk94H1EnbbkTA4soRaGGzdunJ/jRzTz+Lhmso
+gU8Wc7XpwzjqTMfpTCbmEFBe4fBKcvehy6dgEE+pBqBcwJq9D7kkCZYknQ31ouPhcEpC70Avz3zO
+ALaZTwNam9v8lBgbG4OLT57VVePZIrsUBjrAlMqdLVTU7NsASh25tKzrZ3IUHVXnzbinycCQMIWx
+9iiZ8tp/ShlFjbOEgAfcFfurXjloYx9Q4r27rA3sbGRxsNyKJpGDT3dfAgr8QBdVG7AoOX21pfx/
+MgySpJJoX8HT+KpbHHjolBYvTysn0kQH1dHMvV+wm/S7dL4XbNTHLuZGn0ZVa35r7w==
+--0000000000009f7c7a05e451e331--
