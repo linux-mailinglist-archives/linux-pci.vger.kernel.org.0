@@ -2,56 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC3B157D6CF
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9355F57D6D1
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 00:21:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233866AbiGUWVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 18:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        id S234059AbiGUWVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 18:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233663AbiGUWV2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:21:28 -0400
+        with ESMTP id S234027AbiGUWVw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 18:21:52 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABCE3ED5F;
-        Thu, 21 Jul 2022 15:21:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA7A90DB6;
+        Thu, 21 Jul 2022 15:21:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C371B82587;
-        Thu, 21 Jul 2022 22:21:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A78BC341C0;
-        Thu, 21 Jul 2022 22:21:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 98C0CB82585;
+        Thu, 21 Jul 2022 22:21:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D62C3411E;
+        Thu, 21 Jul 2022 22:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658442085;
-        bh=Yjf5MWQLAPw4IWWhGL15WD5FiZeYXerj3Q2VN55OYsI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ntJPnLbfLqNyyd2s/HX7AvbocCcWjDATuMoYhms0Nn2ImMIs56NIxSmzmYH/3IPLi
-         VTZhEIDhW1FdlSm6506f4af5PPMiRrkRSsOR1EQ1gMoi0cJiYpghQKZ5IzoNL6HJlp
-         AkPfXARCGc37WRp/04s2yY5WiGV8kDvvV/Kd3UfhiZjR080OA4CrS1aGD2Rh5xtJwJ
-         GKuKYnRnbNPBEZ74wL1hoHtb+TWGz2s9fqL1z6w2OQ4gVYTcNFY0F9WP6qVcg8dNTJ
-         U58qjAzKH1bzBiiym7xxK5mksJW1fFsVtqGaO24/0T9OQ+K3LaS0b0BbEPI9aObMPZ
-         Va6eSjJBu4pAA==
-Date:   Thu, 21 Jul 2022 17:21:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
+        s=k20201202; t=1658442108;
+        bh=vIfiBaGEG7obwDQ4LLJAIFN/Wy9b/LZ6SQl8EVd2Y2M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z8iGvj5LFkICYjgl/XImEosmB5fHbTwsN4w48yTQOcPLE3o1VfZYtHxLfnBxsMLnj
+         URR/9BmR4YC5R2uL0tnx2XGP3lM4RJEr140+VlaEj4YqFvOQaWDhP2tnWwHagwV10U
+         9W9hbfHlVA2UpHC023O0vbjgKFQ+lRGJd5R2mPsfaye7EPnOomcYz7lFECdQaLo1H8
+         FBEkolEPCMUKbIzq6LZFJXHv8svJ4a+i4UfnYDcIOGZod6Cr75krRrX99kwG3MV5sQ
+         3BEI1NtxI27uyz0ZddwIjf4RQ0LKofHMLXTOuNvpdMMU+Js9edAw5gViZ/3ZrkgEQk
+         8z9SJEeeVM1Gw==
+Received: by pali.im (Postfix)
+        id 9FE5122EF; Fri, 22 Jul 2022 00:21:45 +0200 (CEST)
+Date:   Fri, 22 Jul 2022 00:21:45 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Nick Child <nick.child@ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <20220721222122.GA1754784@bhelgaas>
+Subject: Re: [PATCH 5/5] powerpc/pci: Add config option for using all 256 PCI
+ buses
+Message-ID: <20220721222145.rzgthbwoselx2l43@pali>
+References: <20220706104308.5390-1-pali@kernel.org>
+ <20220706104308.5390-6-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220721204607.xklzyklbgwcgepjm@pali>
+In-Reply-To: <20220706104308.5390-6-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,89 +64,93 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Johan for qcom]
-[-cc Tom, email bounces]
-
-On Thu, Jul 21, 2022 at 10:46:07PM +0200, Pali Roh�r wrote:
-> On Thursday 21 July 2022 14:54:33 Bjorn Helgaas wrote:
-> > The j721e, kirin, tegra, and mediatek drivers all implement .remove().
-> > 
-> > They also set ".suppress_bind_attrs = true".  I think this means
-> > bus_add_driver() will not create the "bind" and "unbind" sysfs
-> > attributes for the driver that would allow users to users to manually
-> > attach and detach devices from it.
-> > 
-> > Is there a reason for this, or should these drivers stop setting
-> > .suppress_bind_attrs?
+On Wednesday 06 July 2022 12:43:08 Pali Rohár wrote:
+> By default on PPC32 are PCI bus numbers unique across all PCI domains.
+> So system could have only 256 PCI buses independently of available
+> PCI domains.
 > 
-> I have already asked this question during review of kirin driver:
-> https://lore.kernel.org/linux-pci/20211031205527.ochhi72dfu4uidii@pali/
+> This is due to filling DT property pci-OF-bus-map which does not reflect
+> multi-domain setup.
 > 
-> Microchip driver wanted to change its type from bool to tristate
-> https://lore.kernel.org/linux-pci/20220420093449.38054-1-u.kleine-koenig@pengutronix.de/t/#u
-> and after discussion it seems that it is needed to do more work for this
-> driver.
+> On all powerpc platforms except chrp and powermac there is no DT property
+> pci-OF-bus-map anymore and therefore it is possible on non-chrp/powermac
+> platforms to avoid this limitation of maximal number of 256 PCI buses in
+> system even on multi-domain setup.
 > 
-> > For example, Pali and Ley Foon *did* stop setting .suppress_bind_attrs
-> > when adding .remove() methods in these commits:
-> > 
-> >   0746ae1be121 ("PCI: mvebu: Add support for compiling driver as module")
-> >   526a76991b7b ("PCI: aardvark: Implement driver 'remove' function and allow to build it as module")
-> >   ec15c4d0d5d2 ("PCI: altera: Allow building as module")
+> But avoiding this limitation would mean that all PCI and PCIe devices would
+> be present on completely different BDF addresses as every PCI domain starts
+> numbering PCI bueses from zero (instead of the last bus number of previous
+> enumerated PCI domain). Such change could break existing software which
+> expects fixed PCI bus numbers.
 > 
-> I added it for both pci-mvebu.c and pci-aardvark.c. And just few days
-> ago I realized why suppress_bind_attrs was set to true and remove method
-> was not implemented.
-
-With suppress_bind_attrs, the user can't manually unbind a device, so
-we can't get to mvebu_pcie_remove() that way, but since mvebu is a
-modular driver, I assume we can unload the module and *that* would
-call mvebu_pcie_remove().  Right?
-
-> Implementing remove method is not really simple, specially when pci
-> controller driver implements also interrupt controller (e.g. for
-> handling legacy interrupts).
-
-Hmmm.  Based on your patches below, it looks like we need to call
-irq_dispose_mapping() in some cases, but I'm very confused about
-*which* cases.
-
-I first thought it was for mappings created with irq_create_mapping(),
-but pci-aardvark.c never calls that, so there must be more to it.
-
-Currently only altera, iproc, mediatek-gen3, and mediatek call
-irq_dispose_mapping() from their .remove() methods.  (They all call
-irq_domain_remove() *before* irq_dispose_mapping().  Is that legal?
-Your patches do irq_dispose_mapping() *first*.)
-
-altera, mediatek-gen3, and mediatek call irq_dispose_mapping() on IRQs
-that came from platform_get_irq().
-
-qcom is a DWC driver, so all the IRQ stuff happens in
-dw_pcie_host_init().  qcom_pcie_remove() does call
-dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
-calls irq_dispose_mapping().
-
-I'm thoroughly confused by all this.  But I suspect that maybe I
-should drop the "make qcom modular" patch because it seems susceptible
-to this problem:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
-
-> Here are waiting fixup patches for pci-mvebu.c and pci-aardvark.c which
-> fixes .remove callback. Without these patches calling 'rmmod driver' let
-> dangling pointer in kernel which may cause random kernel crashes. See:
+> So add a new config option CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT which
+> enables this change. By default it is disabled. It cause that initial value
+> of hose->first_busno is zero.
 > 
-> https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
-> https://lore.kernel.org/linux-pci/20220711120626.11492-1-pali@kernel.org/
-> https://lore.kernel.org/linux-pci/20220711120626.11492-2-pali@kernel.org/
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  arch/powerpc/Kconfig         | 11 +++++++++++
+>  arch/powerpc/kernel/pci_32.c |  6 ++++++
+>  2 files changed, 17 insertions(+)
 > 
-> So I would suggest to do more detailed review when adding .remove
-> callback for pci controller driver (or when remove suppress_bind_attrs)
-> and do more testings and checking if all IRQ mappings are disposed.
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index be68c1f02b79..f66084bc1dfe 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -370,6 +370,17 @@ config PPC_DCR
+>  	depends on PPC_DCR_NATIVE || PPC_DCR_MMIO
+>  	default y
+>  
+> +config PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+> +	depends on PPC32
+> +	depends on !PPC_PMAC && !PPC_CHRP
+> +	bool "Assign PCI bus numbers from zero individually for each PCI domain"
+> +	help
+> +	  By default on PPC32 were PCI bus numbers unique across all PCI domains.
+> +	  So system could have only 256 PCI buses independently of available
+> +	  PCI domains. When this option is enabled then PCI bus numbers are
+> +	  PCI domain dependent and each PCI controller on own domain can have
+> +	  256 PCI buses, like it is on other Linux architectures.
+> +
 
-I'm not smart enough to do "more detailed review" because I don't know
-what things to look for :)  Thanks for all your work in sorting out
-these arcane details!
+What do you think, would it be possible to set default value of this
+option to enabled?
 
-Bjorn
+>  config PPC_OF_PLATFORM_PCI
+>  	bool
+>  	depends on PCI
+> diff --git a/arch/powerpc/kernel/pci_32.c b/arch/powerpc/kernel/pci_32.c
+> index 2f7284b68f06..433965bf37b4 100644
+> --- a/arch/powerpc/kernel/pci_32.c
+> +++ b/arch/powerpc/kernel/pci_32.c
+> @@ -239,7 +239,9 @@ void pcibios_setup_phb_io_space(struct pci_controller *hose)
+>  static int __init pcibios_init(void)
+>  {
+>  	struct pci_controller *hose, *tmp;
+> +#ifndef CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+>  	int next_busno = 0;
+> +#endif
+>  
+>  	printk(KERN_INFO "PCI: Probing PCI hardware\n");
+>  
+> @@ -248,13 +250,17 @@ static int __init pcibios_init(void)
+>  
+>  	/* Scan all of the recorded PCI controllers.  */
+>  	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+> +#ifndef CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+>  		if (pci_assign_all_buses)
+>  			hose->first_busno = next_busno;
+> +#endif
+>  		hose->last_busno = 0xff;
+>  		pcibios_scan_phb(hose);
+>  		pci_bus_add_devices(hose->bus);
+> +#ifndef CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+>  		if (pci_assign_all_buses || next_busno <= hose->last_busno)
+>  			next_busno = hose->last_busno + pcibios_assign_bus_offset;
+> +#endif
+>  	}
+>  
+>  #if defined(CONFIG_PPC_PMAC) || defined(CONFIG_PPC_CHRP)
+> -- 
+> 2.20.1
+> 
