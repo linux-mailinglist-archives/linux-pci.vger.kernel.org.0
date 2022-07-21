@@ -2,268 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA5D357CCA8
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 15:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A826B57CCCA
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jul 2022 16:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230449AbiGUNue (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 09:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
+        id S229681AbiGUOBf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 10:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230415AbiGUNu2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 09:50:28 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69635192A7;
-        Thu, 21 Jul 2022 06:50:21 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id q16so1731510pgq.6;
-        Thu, 21 Jul 2022 06:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=O3NW8StoMQqfZ5lEvH9Li2usMzQWsOyWcla1sD26BZA=;
-        b=l4Jy+1eGLeneEJth/E1CnZE/vsnjojIheWPBXvcrXjH+5BQBFbjvceMhq+o2pYAjKS
-         MD+VaXcYRMyFQ16WfImVaSy1OSpSNO3QdZxATD45lmRC5q8WXWrh41xZ8lLcHXMHWme3
-         yZGGX36QpZNxL+P2fz44ZKZwUW4ptPlS4+EEtkTNXZHcyig8/8wP8+sqiscc2BxaVrpH
-         ONRfaiu/jl6jB+cubZ542DsdjnE0Ne5GvBSHEQE4CAZXbdeQ70BLcUMXF7xU87BnGei8
-         x1dzKBuh/3S1IDjQOX2yebPuN3bRR5pO5c9YGGMKFT5ELeF+n2YXZ/a1UloYUeuOHSWi
-         rIqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=O3NW8StoMQqfZ5lEvH9Li2usMzQWsOyWcla1sD26BZA=;
-        b=JmqR07NmzZobv0i3ia3zi6Ti6wwUBrL0vozCmJEzNRWtXntZoDcq4Gadv0H/CoVIHP
-         2L74UcDutdBjydxJ3n8CMvo9Dk1DaFKboF8P7faQkDuWfCIjIJ2aqmfdtQjQzt5+Zofp
-         /sCjRsdRVDZ7X0xArawHivFuFJngVjXVf6NW3YhpluM8rqNq7LAt2ImFW/4MacdgH8tT
-         PcEBVV51rLyL/+27KJXEz7NCH83PQrHUNGMVCOYjUNxO1itb47v6Wh8l1Zqcy2AK02kg
-         QzkRDn3grr4LnXXbWmkidxzm2wd1QM9GsFejgv4RaJJV/dX0KGFblmFc3BkUvGz+Hwfg
-         /rPA==
-X-Gm-Message-State: AJIora9Oylijkw0Q2gmHFGP7V1y45jUQ3bmNxiTn3GxxhqeB4wTw4AWm
-        8h4/JSSaBg5AzC8JirqjsMFo+TgsDijINQ==
-X-Google-Smtp-Source: AGRyM1vPMEeONk3v7CnRF6RKdDnbix8SCNiG1wqm5GnfxgVPELvgoMqTxIJK0nCWixsFG2HB0x6P+w==
-X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id r11-20020a65498b000000b0041208e42842mr38195607pgs.71.1658411420668;
-        Thu, 21 Jul 2022 06:50:20 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id a142-20020a621a94000000b0052b433aa45asm1794762pfa.159.2022.07.21.06.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 06:50:20 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Stafford Horne <shorne@gmail.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v5 4/4] asm-generic: Add new pci.h and use it
-Date:   Thu, 21 Jul 2022 22:49:24 +0900
-Message-Id: <20220721134924.596152-5-shorne@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220721134924.596152-1-shorne@gmail.com>
-References: <20220721134924.596152-1-shorne@gmail.com>
+        with ESMTP id S229513AbiGUOBe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 10:01:34 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9CA3D5B3
+        for <linux-pci@vger.kernel.org>; Thu, 21 Jul 2022 07:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658412093; x=1689948093;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+k1rwtGxJbPsnW7bAgdcnI+jwBwnI+hAMOd2jTGmiBA=;
+  b=FsweIh0J8sUdYEPGiBPlBkNLke1IUX6/cncar+ViW93lyJ6ZSqTEyDdt
+   uvMyfVMvZyWbY9u7+1P8MRYUrx276w7L7GEIxnz5x+JStS4ebGBFJttNo
+   XRg43e7qaDKdFOkVQwLFMYv5E4IgDu1b7bENC90nqxhd3+9sOnDLeGTso
+   KqABjdYL6qEKOoF/P1XH2+5w/0JFsFdSvXVHMS/DFvbP8eSIz28YGSeEt
+   yT+oVp3yWiuVWPEMDTvftYOSPNz2CFL0mxEsmcalWnt/eLZ8r++r9pirt
+   gap/bfdxXasNkRC62vAAMa/XX7O3vufBms/xt406ONQpzRHnrqEg2I2Jx
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10414"; a="266827241"
+X-IronPort-AV: E=Sophos;i="5.93,289,1654585200"; 
+   d="scan'208";a="266827241"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2022 07:01:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,289,1654585200"; 
+   d="scan'208";a="656755140"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jul 2022 07:01:32 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oEWk7-0000Bo-2S;
+        Thu, 21 Jul 2022 14:01:31 +0000
+Date:   Thu, 21 Jul 2022 22:01:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/pm-ops] BUILD SUCCESS
+ eae9b2dae6ce00b1fef77ca09f25e912fb556763
+Message-ID: <62d95c27.Vw/CiR89qO3eDk5E%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The asm/pci.h used for many newer architectures share similar
-definitions.  Move the common parts to asm-generic/pci.h to allow for
-sharing code.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/pm-ops
+branch HEAD: eae9b2dae6ce00b1fef77ca09f25e912fb556763  PCI: Convert to new *_PM_OPS macros
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-Acked-by: Pierre Morel <pmorel@linux.ibm.com>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
-Since v4:
- - Add reviewed-by
+elapsed time: 980m
 
- arch/arm64/include/asm/pci.h | 10 ++--------
- arch/csky/include/asm/pci.h  | 17 ++---------------
- arch/riscv/include/asm/pci.h | 23 ++++-------------------
- arch/um/include/asm/pci.h    | 14 ++------------
- include/asm-generic/pci.h    | 32 ++++++++++++++++++++++++++++++++
- 5 files changed, 42 insertions(+), 54 deletions(-)
- create mode 100644 include/asm-generic/pci.h
+configs tested: 123
+configs skipped: 6
 
-diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-index 682c922b5658..016eb6b46dc0 100644
---- a/arch/arm64/include/asm/pci.h
-+++ b/arch/arm64/include/asm/pci.h
-@@ -9,7 +9,6 @@
- #include <asm/io.h>
- 
- #define PCIBIOS_MIN_IO		0x1000
--#define PCIBIOS_MIN_MEM		0
- 
- /*
-  * Set to 1 if the kernel should re-assign all PCI bus numbers
-@@ -18,13 +17,8 @@
- 	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
- 
- #define arch_can_pci_mmap_wc() 1
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
- 
--#ifdef CONFIG_PCI
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #endif  /* __ASM_PCI_H */
-diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
-index 875bc028f8f6..42724c630d30 100644
---- a/arch/csky/include/asm/pci.h
-+++ b/arch/csky/include/asm/pci.h
-@@ -9,20 +9,7 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--/* C-SKY shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
--
--#ifdef CONFIG_PCI
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #endif  /* __ASM_CSKY_PCI_H */
-diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
-index f904df586c03..6ef4a1426194 100644
---- a/arch/riscv/include/asm/pci.h
-+++ b/arch/riscv/include/asm/pci.h
-@@ -12,23 +12,7 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--/* RISC-V shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
--
--#ifdef CONFIG_PCI
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--
--#ifdef	CONFIG_NUMA
--
-+#if defined(CONFIG_PCI) && defined(CONFIG_NUMA)
- static inline int pcibus_to_node(struct pci_bus *bus)
- {
- 	return dev_to_node(&bus->dev);
-@@ -38,8 +22,9 @@ static inline int pcibus_to_node(struct pci_bus *bus)
- 				 cpu_all_mask :				\
- 				 cpumask_of_node(pcibus_to_node(bus)))
- #endif
--#endif	/* CONFIG_NUMA */
-+#endif /* defined(CONFIG_PCI) && defined(CONFIG_NUMA) */
- 
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #endif  /* _ASM_RISCV_PCI_H */
-diff --git a/arch/um/include/asm/pci.h b/arch/um/include/asm/pci.h
-index 1211855aff34..34fe4921b5fa 100644
---- a/arch/um/include/asm/pci.h
-+++ b/arch/um/include/asm/pci.h
-@@ -4,18 +4,8 @@
- #include <linux/types.h>
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--#define pcibios_assign_all_busses() 1
--
--#ifdef CONFIG_PCI_DOMAINS
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
- /*
-diff --git a/include/asm-generic/pci.h b/include/asm-generic/pci.h
-new file mode 100644
-index 000000000000..3ceb0cb12321
---- /dev/null
-+++ b/include/asm-generic/pci.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __ASM_GENERIC_PCI_H
-+#define __ASM_GENERIC_PCI_H
-+
-+#include <linux/types.h>
-+
-+#ifndef PCIBIOS_MIN_IO
-+#define PCIBIOS_MIN_IO		0
-+#endif
-+
-+#ifndef PCIBIOS_MIN_MEM
-+#define PCIBIOS_MIN_MEM		0
-+#endif
-+
-+#ifndef pcibios_assign_all_busses
-+/* For bootloaders that do not initialize the PCI bus */
-+#define pcibios_assign_all_busses() 1
-+#endif
-+
-+/* Enable generic resource mapping code in drivers/pci/ */
-+#define ARCH_GENERIC_PCI_MMAP_RESOURCE
-+
-+#ifdef CONFIG_PCI_DOMAINS
-+static inline int pci_proc_domain(struct pci_bus *bus)
-+{
-+	/* always show the domain in /proc */
-+	return 1;
-+}
-+#endif /* CONFIG_PCI_DOMAINS */
-+
-+#endif /* __ASM_GENERIC_PCI_H */
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                        spear6xx_defconfig
+arm                          pxa910_defconfig
+mips                        vocore2_defconfig
+arm                      integrator_defconfig
+arm                        keystone_defconfig
+arc                          axs101_defconfig
+xtensa                  audio_kc705_defconfig
+powerpc                    adder875_defconfig
+mips                         bigsur_defconfig
+csky                              allnoconfig
+um                             i386_defconfig
+mips                           ci20_defconfig
+arm                          lpd270_defconfig
+arm                        mvebu_v7_defconfig
+m68k                           virt_defconfig
+sh                           se7206_defconfig
+sh                             shx3_defconfig
+sh                                  defconfig
+powerpc                     rainier_defconfig
+powerpc                        cell_defconfig
+nios2                               defconfig
+openrisc                 simple_smp_defconfig
+xtensa                    smp_lx200_defconfig
+sh                         microdev_defconfig
+mips                          rb532_defconfig
+parisc                           allyesconfig
+arm                            hisi_defconfig
+sh                           se7724_defconfig
+arm                       aspeed_g5_defconfig
+arm                            zeus_defconfig
+powerpc                     tqm8548_defconfig
+sparc                             allnoconfig
+arm                        mini2440_defconfig
+arc                        nsimosci_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                   secureedge5410_defconfig
+m68k                        mvme147_defconfig
+nios2                         10m50_defconfig
+xtensa                              defconfig
+m68k                            mac_defconfig
+arm                           viper_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                      pcm030_defconfig
+ia64                         bigsur_defconfig
+arm                          exynos_defconfig
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+nios2                            allyesconfig
+parisc                              defconfig
+parisc64                            defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+arm                  randconfig-c002-20220718
+i386                 randconfig-c001-20220718
+x86_64               randconfig-c001-20220718
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64               randconfig-a012-20220718
+x86_64               randconfig-a011-20220718
+x86_64               randconfig-a014-20220718
+x86_64               randconfig-a016-20220718
+x86_64               randconfig-a013-20220718
+x86_64               randconfig-a015-20220718
+i386                 randconfig-a015-20220718
+i386                 randconfig-a011-20220718
+i386                 randconfig-a012-20220718
+i386                 randconfig-a014-20220718
+i386                 randconfig-a016-20220718
+i386                 randconfig-a013-20220718
+i386                          randconfig-a012
+i386                          randconfig-a016
+s390                 randconfig-r044-20220718
+riscv                randconfig-r042-20220718
+arc                  randconfig-r043-20220718
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                      tct_hammer_defconfig
+mips                           ip28_defconfig
+powerpc                 mpc8315_rdb_defconfig
+powerpc                 mpc832x_mds_defconfig
+x86_64                        randconfig-k001
+i386                 randconfig-a001-20220718
+i386                 randconfig-a006-20220718
+i386                 randconfig-a002-20220718
+i386                          randconfig-a004
+i386                 randconfig-a004-20220718
+i386                 randconfig-a005-20220718
+i386                 randconfig-a003-20220718
+x86_64               randconfig-a005-20220718
+x86_64               randconfig-a003-20220718
+x86_64               randconfig-a006-20220718
+hexagon              randconfig-r041-20220721
+s390                 randconfig-r044-20220721
+hexagon              randconfig-r045-20220721
+riscv                randconfig-r042-20220721
+hexagon              randconfig-r041-20220718
+hexagon              randconfig-r045-20220718
+
 -- 
-2.36.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
