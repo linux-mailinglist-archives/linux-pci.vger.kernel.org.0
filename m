@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 457E557E8B0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 23:07:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9FC57E8BA
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 23:13:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233512AbiGVVHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jul 2022 17:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49310 "EHLO
+        id S233203AbiGVVNf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jul 2022 17:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiGVVHh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 17:07:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601B29B56C;
-        Fri, 22 Jul 2022 14:07:36 -0700 (PDT)
+        with ESMTP id S229572AbiGVVNe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 17:13:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECA9B504E;
+        Fri, 22 Jul 2022 14:13:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF2C4620DD;
-        Fri, 22 Jul 2022 21:07:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED47C341C6;
-        Fri, 22 Jul 2022 21:07:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BC061B82B1C;
+        Fri, 22 Jul 2022 21:13:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E77C341C7;
+        Fri, 22 Jul 2022 21:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658524055;
-        bh=BjE6WAFN8f+7PcLVzym80m/hAtGxPQSDC3WhNnOk+G0=;
+        s=k20201202; t=1658524411;
+        bh=Msfql5pg85Ax6GZuIhAfLpJ9yluJf279FymZfm9pLYE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ruDZgOs5bS6n57s1Z4ZCM8Gaa4i+Rbknj2eIDMdbL+yQ2jG/VrQXcHUAWiTYf/x1B
-         Y2lIDYkvubc8UykDSDfJcJk84t3gBNbxr5jLuu2QxyeMf+5SFbPoX3xiR/AbqMc71v
-         akXmZrInkgokuZqMIWBW4cIM1h+FcqP0VZtW05qn319FVKPZMgbIwdKtZVn1GDGexl
-         kTyZ8uNeDJf0jRo+dqCEIYScE9l4Mzy+M0lL9Ti5IMvXV8tAfVKcMJdO/5LC7B9Dm+
-         YbBK4POBUV2yv4HnyO9xMJcNhxXEPofug4D1pZwpXWgWB9+WAo4xmYBWVfxxLuR6+d
-         uB+REBQS4dSrQ==
-Date:   Fri, 22 Jul 2022 16:07:33 -0500
+        b=a7h7pC3Q21q8A7UeiC8kGfMcTAWnUU42P7avg0TJkl6C/w+lszyRY4z/9g7JVv2o4
+         hU2iqB4gdzpt9e9Q/gAJO+QRRxSfpi+YYEaism01NVZ6KJQ34JILv1/i0tvWbdCNS5
+         qWUZlXbHN6sXLsWMHoVONhMTMJ4Pri/TVwKhXF0x4gwjadGlgHQeAkYEG3kzOXZ4mp
+         qsUxETQWSLZeV6hWgi53OON/6sA4DRqVRwuvdjqBKBgnT+Lt5mBjWbAJuvcAH9KG+u
+         Q77Oeuhs6TYhlhwIS2JqioBcfHLEJqD+GB32KlDHQsf7J5Tb1QXrEUtEWFxnD1MbP8
+         lp+SbYYzoWE9w==
+Date:   Fri, 22 Jul 2022 16:13:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Niklas Schnelle <schnelle@linux.ibm.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -40,13 +40,12 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Pierre Morel <pmorel@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] PCI: Rework pci_scan_slot() and isolated PCI
- functions
-Message-ID: <20220722210733.GA1935162@bhelgaas>
+Subject: Re: [PATCH v6 4/5] PCI: Extend isolated function probing to s390
+Message-ID: <20220722211329.GA1935284@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220628143100.3228092-1-schnelle@linux.ibm.com>
+In-Reply-To: <20220628143100.3228092-5-schnelle@linux.ibm.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,60 +55,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 04:30:55PM +0200, Niklas Schnelle wrote:
-> Hi Bjorn,
+On Tue, Jun 28, 2022 at 04:30:59PM +0200, Niklas Schnelle wrote:
+> Like the jailhouse hypervisor s390's PCI architecture allows passing
+> isolated PCI functions to an OS instance. As of now this is was not
+> utilized even with multi-function support as the s390 PCI code makes
+> sure that only virtual PCI busses including a function with devfn 0 are
+> presented to the PCI subsystem. A subsequent change will remove this
+> restriction.
 > 
-> In an earlier version[0], I sought to apply the existing jailhouse special case
-> for isolated PCI functions to s390. As Bjorn noted in[1] there appears to be
-> some potential for cleaning things up and removing duplication.
+> Allow probing such functions by replacing the existing check for
+> jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
+> helper.
 > 
-> This series attempts to do this cleanup (Patches 1 through 3) followed by enabling
-> isolated PCI functions for s390 (Patches 4 and 5).
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/pci/probe.c        | 2 +-
+>  include/linux/hypervisor.h | 8 ++++++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
 > 
-> Testing:
-> - On s390 with SR-IOV and a ConnectX NIC with PF 1 but not PF 0 passed throug
->   i.e. the isolated function case. Also of course with just VFs and an NVMe.
-> - On x86_64 on a desktop system where ARI is disabled and with an SR-IOV NIC
->   with non-contiguous VFs as well as the usual other PCI devices.
-> 
-> Thanks,
-> Niklas
-> 
-> [0] https://lore.kernel.org/linux-pci/20220404095346.2324666-1-schnelle@linux.ibm.com/
-> [1] https://lore.kernel.org/linux-pci/20220408224514.GA353445@bhelgaas/
-> 
-> Changes v5 -> v6:
-> - Added a patch (2) which separates the ARI case into its own function
-> - Some whitespace changes to remove unnecesssary empty lines
-> Changes v4 -> v5:
-> - Remove unintended whitespace change in patch 1
-> Changes v3 -> v4:
-> - Use a do {} while loop in pci_scan_slot() as it is simpler (Bjorn)
-> - Explicitly check "fn == 0" as it is not a pointer or bool (Bjorn)
-> - Keep the "!dev" check in the ARI branch of next_fn() (Bjorn)
-> - Moved the "fn == 0 && !dev" condition out of next_fn() into pci_scan_slot().
->   This allows us to keep the "!dev" case in the ARI branch and means there are
->   no new conditions in next_fn() making it easier to verify that its behavior
->   is equivalent to the existing code.
-> - Guard the assignment of dev->multifunction with "fn > 0"
->   instead of "nr > 0". This matches the existing logic more closely and works
->   for the jailhouse case which unconditionally sets dev->multifunction for
->   "fn > 0". This also means fn == 0 is the single "first iteration" test.
-> - Remove some unneeded whitespace in patch 2
-> 
-> Changes v2 -> v3:
-> - Removed now unused nr_devs variable (kernel test robot)
-> 
-> Niklas Schnelle (5):
->   PCI: Clean up pci_scan_slot()
->   PCI: Split out next_ari_fn() from next_fn()
->   PCI: Move jailhouse's isolated function handling to pci_scan_slot()
->   PCI: Extend isolated function probing to s390
->   s390/pci: allow zPCI zbus without a function zero
-> 
->  arch/s390/pci/pci_bus.c    | 82 +++++++++---------------------------
->  drivers/pci/probe.c        | 86 ++++++++++++++++++--------------------
->  include/linux/hypervisor.h |  8 ++++
->  3 files changed, 68 insertions(+), 108 deletions(-)
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index a18e07e6a7df..156dd13594b8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2667,7 +2667,7 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+>  			 * a hypervisor which passes through individual PCI
+>  			 * functions.
+>  			 */
+> -			if (!jailhouse_paravirt())
+> +			if (!hypervisor_isolated_pci_functions())
+>  				break;
+>  		}
+>  		fn = next_fn(bus, dev, fn);
+> diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
+> index fc08b433c856..33b1c0482aac 100644
+> --- a/include/linux/hypervisor.h
+> +++ b/include/linux/hypervisor.h
+> @@ -32,4 +32,12 @@ static inline bool jailhouse_paravirt(void)
+>  
+>  #endif /* !CONFIG_X86 */
+>  
+> +static inline bool hypervisor_isolated_pci_functions(void)
+> +{
+> +	if (IS_ENABLED(CONFIG_S390))
+> +		return true;
+> +	else
+> +		return jailhouse_paravirt();
 
-Applied to pci/enumeration for v5.20, thanks!
+It looks kind of wasteful that jailhouse_paravirt() searches the DT
+for "jailhouse,cell" several times when I think that's an unchanging
+property.
+
+Obviously you didn't add that in this series, and s390 avoids that
+cost anyway.  But the jailhouse folks might consider optimizing it
+somehow.
+
+> +}
+> +
+>  #endif /* __LINUX_HYPEVISOR_H */
+> -- 
+> 2.32.0
+> 
