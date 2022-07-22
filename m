@@ -2,922 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D09B57E3F1
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 17:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E64057E42F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 18:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235229AbiGVPtj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jul 2022 11:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
+        id S234830AbiGVQMt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jul 2022 12:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235478AbiGVPtf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 11:49:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9CAC3B94C;
-        Fri, 22 Jul 2022 08:49:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2F41CB82916;
-        Fri, 22 Jul 2022 15:49:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F2DC341C6;
-        Fri, 22 Jul 2022 15:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658504968;
-        bh=nX16+awWZS6ia17Fvu7daGAS+SSgvULs9xsWrxnls+c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ko2dwALHEglyOmE082e8bKAnnb5v6Rqt5Y6wADNnL8OO8m/NTzNIBQTewXgQd1emK
-         Itl9pS68cQwkJMEC5Ju0JnCPErRY+KUrZz5/qgbm2spSyIuA1IQfhzIHHm3vzbUm72
-         EzrFndXJ2373HXx0kkC4fL86gNXHBa04xX1L52GjLFb0FGAGhkT1skF6mCnFm4EAjY
-         BDobFzNYZf2t+bt1C03Lm87U0Z1uF7xgQUZlCkHT7eqq416Ol9CegTV12wyIMzuQUn
-         y7WVzJZ5G7ODLVgI6Z8YklS2Z8hXJZoz0A4AZct1/mpclmWPHmwOqfy79sdP71hVqy
-         7o8g/9jc0ZSag==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Robert Marko <robimarko@gmail.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI: qcom: Sort variants by Qcom IP rev
-Date:   Fri, 22 Jul 2022 10:49:19 -0500
-Message-Id: <20220722154919.1826027-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220722154919.1826027-1-helgaas@kernel.org>
-References: <20220722154919.1826027-1-helgaas@kernel.org>
+        with ESMTP id S229593AbiGVQMs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 12:12:48 -0400
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2066.outbound.protection.outlook.com [40.107.20.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694DF61714;
+        Fri, 22 Jul 2022 09:12:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LXo5d82sg5OCQ4QLc4YD4lzmeMfUZ1swJ2ULzdM3Nfx0B/QmhNJDQ/Lr5JgGNire1GLt8TtulXQQlkB39PGjvfyqkrhi6C/B3CQPvZKF4Kupdejv0DqVwiTYhwJvO9k2nYgbMkjXCZRjtEgjFxr3prUL68OVWZq1WL+hTPQg12NcPwt80xDudjemfuKS4d7w3JI03SF+wosnf2UYAqoE/B3paVvg1Aq2Ke244McrdfNBbUlt439nWEPON80pVuAECCuNhZxnvgnDq8CIOfq/UDX9KLV1rvynUWSfnM4/AoQn09VMQgs6h371edfO0ynM5jor/8JsN3E6Ka99QWo9Eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gz2PgsWuNYbE//zu9uY2y6GoiyAhUrWTIJbFBI2Uglg=;
+ b=YGiY1OPo+tmD3btCcXUI43/VQopufxGkaMO/APGYrG6i/PrmWqyxH97T2mUB9/EbHDixVgbPOqm7I48EXXn+mA8FPs4Q4kEBt+NGrbYbGsE/Mw8qVYqsW+9ve/0UNsxoqol3U1/osfOaLtW0dd2f0QzsGH6Bh/+SsPPMMmU/Bred+gTvL5EettNXIJINsKnjZIH9IMRt23IxvdWe2ZXQVTbCoK31GddawjdWciK0nf6cvE2xYbkc3q2gqWnRRfVCP00Aamv82QN5gfc7EOE2Jq2mCPlcWUfEMlR2O/qaiA25T0kYEhUA15Gvm7IoaNIdSR7TDw83KdWy70SOQueWKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gz2PgsWuNYbE//zu9uY2y6GoiyAhUrWTIJbFBI2Uglg=;
+ b=dpuPEln6ho3rHEWabJO0ff3lPxEzH6n/ThMtdOiUY8djBdACSbZKTUvwb8tgSoLrHXrvuYZ19hodluHVbpym51R+ch+QvjIyyWHf/eWLB7BK/1qIh6nUrtvzCszknCIsTrbjfuvTp80by9jmZ6x3qgMOSkgCs+qyuXfTrMVvogo=
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by PA4PR04MB9294.eurprd04.prod.outlook.com (2603:10a6:102:2a5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19; Fri, 22 Jul
+ 2022 16:12:44 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::54aa:b7cb:a13c:66ab]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::54aa:b7cb:a13c:66ab%9]) with mapi id 15.20.5438.023; Fri, 22 Jul 2022
+ 16:12:44 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>
+Subject: RE: [EXT] Re: [PATCH v3 2/4] irqchip: imx mu worked as msi controller
+Thread-Topic: [EXT] Re: [PATCH v3 2/4] irqchip: imx mu worked as msi
+ controller
+Thread-Index: AQHYnIAGRldFRqOr4kOZ1c4K3zYfO62IdfUAgAB4j7CAARMagIAAhh1w
+Date:   Fri, 22 Jul 2022 16:12:43 +0000
+Message-ID: <PAXPR04MB9186346EE6EB9A13CCDBB91C88909@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220720213036.1738628-1-Frank.Li@nxp.com>
+        <20220720213036.1738628-3-Frank.Li@nxp.com>     <874jza525l.wl-maz@kernel.org>
+        <PAXPR04MB9186A1D283ACE8BD6954039288919@PAXPR04MB9186.eurprd04.prod.outlook.com>
+ <87tu79y536.wl-maz@kernel.org>
+In-Reply-To: <87tu79y536.wl-maz@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 74e5d83a-a400-46a7-5769-08da6bfd027f
+x-ms-traffictypediagnostic: PA4PR04MB9294:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1zTsBSHBpyaX19cU45t5NPUepJRqgbDeBSPn5bxIX0XUlT0n6NBYQkMTY8GGijG6Pp0f4zY0UczEo9MDe9yJNovNBno8kpIUl4WavbaH1BP6NukQpuahvWCJiHTKclyG6XtOni0+fAOdfgK9v4pVobng8ASKVS+tfKFssGlNSgTrDNRlTPzfjRwagpFtYM7WX5CiKgr1+vLVABx2e/8570ANEJE4HrkpTn9PzObYGqT5y1lUzSnFnkHy3Q0CDSFaCBoIGgCg8RtEwz9rkM1G2nx4lS2KEi2aXZhixPM1ZwUBZ4SFtA9INs/b7YC/5qEJXA+yaQktEBLaG1gLV1+/7/2U0w/viN9byApWSnaeYbjRombMMDajIgnPlGdtw5wvo+o1fOCd1KOL5/090ktYAvwey0FbbmBS0CZTD5zRPmgTgMCU8nx4mqEti0AjT21xUROOsUo0vOQBOQbdjJktEEhZUl3rM+ljC7qkZZTps5QyVhLHN4OA7LcxZfjJYUtfYPAsOjqEXwFE4wBWVcFhdnmGSPRuL/WfViKbY/s56/R6n37/yrbGiMNwaahJThh9wWWO29k+MpEQsuyHwDGSGH9ujXDGH9Bmno+cSxjd6QiafkfE+DC0Gxxm8EKzjB50cYXT/OAgW1w5YrM4iOxjG3om8FynMUeoZV95A4xY7i/BCLenT15AWUElC5rE5XdxbfTOWvSH+ETfvFRP4pKouPGSWCE7ou5+TXQwd8vmmpRmxXGm7g73pJOH86WipgsJ8WwpXk6SHO+l2/4fOKAW5MrDfkGy8IqK6vHAE1mPxYCjwUBj8cLNKPiVEMJXOJF2
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(186003)(8676002)(33656002)(66556008)(4326008)(86362001)(83380400001)(64756008)(76116006)(122000001)(66446008)(38100700002)(38070700005)(66476007)(66946007)(44832011)(2906002)(316002)(7416002)(71200400001)(8936002)(6506007)(55236004)(54906003)(55016003)(5660300002)(7696005)(6916009)(26005)(9686003)(52536014)(478600001)(53546011)(41300700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?jEeUK2Bb68+hXkY5Y3o46PmuPMx3OHCxtcLp1eP1sAEf3a4MEQ80fYWAlusC?=
+ =?us-ascii?Q?SqHlM5p0KkqFBXRV5Swjv6xVjJp/6wJj8J3+qg/y2ZMbHkRTHp/r+RFcrDEC?=
+ =?us-ascii?Q?Is8lB7CNrnWhbTIfsK8qZ69z6SvwaCX4IUrAeQeYc0gK78CvgmETHX4LUSag?=
+ =?us-ascii?Q?Z4kGOIg4ABdOUoQfldOU9jxgvsP9cIRMcwE8lSgWmip+6tdfk6pvZq6bB4QK?=
+ =?us-ascii?Q?DXWoHLPwo/GfGFiuCzQ9s0SOY76zyjrMH6hzbHC/b8IM73Xg+MsPXNFf3hGC?=
+ =?us-ascii?Q?KeG4T8w4EDnJezQO6CYRO0W2ZQypszWHe6glZQt505tx4ChpGRgFlBRUqpsS?=
+ =?us-ascii?Q?76b6UQkegVgeKsjkr7OjMPv6rU/2/SQ0crDTU5cOkxBtLeIujIItjB7Ygwgd?=
+ =?us-ascii?Q?+tEEs0IuZgGCd3cQ7YjmOvuNwL1V3WKsCja5fd/n5xGk1K9EWqIoqQa+rHxz?=
+ =?us-ascii?Q?gGxtuTZgli7033EB8DyDaJHMPw6C4PlAEwsg1LkEdsyLETe8IWSsAT0qju4I?=
+ =?us-ascii?Q?NkpZ3Ry9zPDMQCjbVCul2zRlanQSxX8227vyLCJG1Niobr2v4hDH0ZAOYU2T?=
+ =?us-ascii?Q?aSa4mWrWxjH7ilV31j/FAoQh05chiZjlH0nhwumfbCa9e9Ufba1QTojRR9zd?=
+ =?us-ascii?Q?nVeCmyo6X72tgqEMBXmV111Rbcyl9YxJjQ1yjWB/MSTj+zjnSnmFfgiSZhGf?=
+ =?us-ascii?Q?UZBf3HVYag9/vJZ0tSiSkbk6GMrfanbqvkvBVQj49BdojZoeydhPR+jMgqeM?=
+ =?us-ascii?Q?n3/0SLaUOIOHJ+5NTnCY87Ra+sQT/aYixlcaFmWWLEBLJ+NyC0P2SqRGypD7?=
+ =?us-ascii?Q?ExKn/zeUZWmnaAaDqHA/fvfKFPwK9jeQC09kEDS4lUcwyHSXRTX5o5ZQj5A3?=
+ =?us-ascii?Q?uLXtRolgKZvAMZrHEKhxbLj4K4qsOESwKJuWiPCHxERaP9QBN9uR8bopsn8G?=
+ =?us-ascii?Q?jW+BM+EQAHaaEej6AuU4TUsgtPLoLS++GX953n/BObzk9s8mUlCF2M1WPvCE?=
+ =?us-ascii?Q?uKgH47JeACRInsS47sbN3/jhjBeKh0/WZJP2WdZm2j7nDg7+ks5sJcXRH3Dp?=
+ =?us-ascii?Q?m44j44OFSDlMkZoZHfWtIl6c8ZUvQYXwgXPF7anYXC9srpTqzXPvGH0xfNXS?=
+ =?us-ascii?Q?DxIebvLQLw11ZLHeZ91TSPe3nNW6FB0S9HEslS4AzrBuhCO92T5GJ/KguMe1?=
+ =?us-ascii?Q?FVWAsFiTK9EwoW7a9b8nxVKBS5/PQmM95daRDnOWJDyQP2F5JM14159xXUO5?=
+ =?us-ascii?Q?7FItIdSPO0ORaL5S49B4oqDTmzh6vstb14Y0c+pqmvit8EJUvuc4T1X5iG36?=
+ =?us-ascii?Q?gtgxYhQUAOBIwNq2lwzM1HMqAa91gh0lO5bbHmcmQ0UI5KCrzhu5K7JNZP77?=
+ =?us-ascii?Q?ejc4wpuxse/yeaFNYDi4o/mMEDj7GRUyjiq9hJ/VYhgrFsou6ihWWFfYWWwO?=
+ =?us-ascii?Q?gb4gtTJS6S6UVqFbE+5H8YYmQtz+2JpwOAxVYRZVpdrex7saWeh2N3G5gK1r?=
+ =?us-ascii?Q?kJnX51BWx19ZSaxs4F2MD1DRy7FqJ9nzFue9P7xcnZ13NJJJpDxn6T4p74FP?=
+ =?us-ascii?Q?b4yaE2W2jEMoxKdECpU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74e5d83a-a400-46a7-5769-08da6bfd027f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2022 16:12:43.8674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0YQFPhKyvcbIHp+d+4szyA8kFthmuXi4KF+XxExTctUDNhJ/j/YfPbaqZxefkOh29m+Sm+Q5B1ngAJcHygB8Xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9294
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
 
-Previously the variant resource structs, ops, etc., were in no obvious
-order (mostly but not consistently in *Synopsys* IP rev order, which is not
-reflected in the naming).
 
-Reorder them in order of the struct and function names.  No functional
-change intended.
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: Friday, July 22, 2022 2:33 AM
+> To: Frank Li <frank.li@nxp.com>
+> Cc: jdmason@kudzu.us; tglx@linutronix.de; robh+dt@kernel.org;
+> krzysztof.kozlowski+dt@linaro.org; shawnguo@kernel.org;
+> s.hauer@pengutronix.de; kw@linux.com; bhelgaas@google.com;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> pci@vger.kernel.org; Peng Fan <peng.fan@nxp.com>; Aisheng Dong
+> <aisheng.dong@nxp.com>; kernel@pengutronix.de; festevam@gmail.com;
+> dl-linux-imx <linux-imx@nxp.com>; kishon@ti.com;
+> lorenzo.pieralisi@arm.com; ntb@lists.linux.dev
+> Subject: Re: [EXT] Re: [PATCH v3 2/4] irqchip: imx mu worked as msi
+> controller
+>=20
+> Caution: EXT Email
+>=20
+> On Thu, 21 Jul 2022 16:22:08 +0100,
+> Frank Li <frank.li@nxp.com> wrote:
+> >
+> > > > +     pos =3D find_first_zero_bit(&msi_data->used, IMX_MU_CHANS);
+> > > > +     if (pos < IMX_MU_CHANS)
+> > > > +             __set_bit(pos, &msi_data->used);
+> > > > +     else
+> > > > +             err =3D -ENOSPC;
+> > > > +     spin_unlock(&msi_data->lock);
+> > > > +
+> > > > +     if (err)
+> > > > +             return err;
+> > > > +
+> > > > +     err =3D iommu_dma_prepare_msi(info->desc, msi_data->msiir_add=
+r
+> +
+> > > pos * 4);
+> > >
+> > > Does this HW even have an IOMMU?
+> >
+> > [Frank Li] we have a platform with iommu.
+>=20
+> I really wonder whether you are taking me for a ride, or whether you
+> are completely misunderstanding what this IOMMU business is about.
+>=20
+> This is a *CPU* writing to the device to generate an MSI. CPU
+> transactions cannot be translated by an IOMMU as they are not
+> (surprise!) IO devices. They are in control of their own translation,
+> contrary to devices that generate MSIs.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 732 ++++++++++++-------------
- 1 file changed, 366 insertions(+), 366 deletions(-)
+[Frank Li] I think that It is not *CPU* writing to the device to generate a=
+n MSI.=20
+It is another bus master to write to generate IRQ.  According to my underst=
+and,=20
+Bus master (such as PCI EP devices) write to an address to trigger irq, OR
+DMA setup DMA write descriptor at last one.  Any address should be translat=
+e by
+IOMMU if it is enabled.  If not,  this is empty function call. =20
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index c27e3494179f..d0237d821323 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -118,17 +118,6 @@
- 
- #define QCOM_PCIE_CRC8_POLYNOMIAL (BIT(2) | BIT(1) | BIT(0))
- 
--struct qcom_pcie_resources_2_1_0 {
--	struct clk_bulk_data clks[QCOM_PCIE_2_1_0_MAX_CLOCKS];
--	struct reset_control *pci_reset;
--	struct reset_control *axi_reset;
--	struct reset_control *ahb_reset;
--	struct reset_control *por_reset;
--	struct reset_control *phy_reset;
--	struct reset_control *ext_reset;
--	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
--};
--
- struct qcom_pcie_resources_1_0_0 {
- 	struct clk *iface;
- 	struct clk *aux;
-@@ -138,6 +127,17 @@ struct qcom_pcie_resources_1_0_0 {
- 	struct regulator *vdda;
- };
- 
-+struct qcom_pcie_resources_2_1_0 {
-+	struct clk_bulk_data clks[QCOM_PCIE_2_1_0_MAX_CLOCKS];
-+	struct reset_control *pci_reset;
-+	struct reset_control *axi_reset;
-+	struct reset_control *ahb_reset;
-+	struct reset_control *por_reset;
-+	struct reset_control *phy_reset;
-+	struct reset_control *ext_reset;
-+	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
-+};
-+
- #define QCOM_PCIE_2_3_2_MAX_SUPPLY	2
- struct qcom_pcie_resources_2_3_2 {
- 	struct clk *aux_clk;
-@@ -147,6 +147,15 @@ struct qcom_pcie_resources_2_3_2 {
- 	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
- };
- 
-+struct qcom_pcie_resources_2_3_3 {
-+	struct clk *iface;
-+	struct clk *axi_m_clk;
-+	struct clk *axi_s_clk;
-+	struct clk *ahb_clk;
-+	struct clk *aux_clk;
-+	struct reset_control *rst[7];
-+};
-+
- #define QCOM_PCIE_2_4_0_MAX_CLOCKS	4
- struct qcom_pcie_resources_2_4_0 {
- 	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
-@@ -165,15 +174,6 @@ struct qcom_pcie_resources_2_4_0 {
- 	struct reset_control *phy_ahb_reset;
- };
- 
--struct qcom_pcie_resources_2_3_3 {
--	struct clk *iface;
--	struct clk *axi_m_clk;
--	struct clk *axi_s_clk;
--	struct clk *ahb_clk;
--	struct clk *aux_clk;
--	struct reset_control *rst[7];
--};
--
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
- 	struct clk_bulk_data clks[9];
-@@ -254,6 +254,121 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- 	return 0;
- }
- 
-+static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+
-+	res->vdda = devm_regulator_get(dev, "vdda");
-+	if (IS_ERR(res->vdda))
-+		return PTR_ERR(res->vdda);
-+
-+	res->iface = devm_clk_get(dev, "iface");
-+	if (IS_ERR(res->iface))
-+		return PTR_ERR(res->iface);
-+
-+	res->aux = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux))
-+		return PTR_ERR(res->aux);
-+
-+	res->master_bus = devm_clk_get(dev, "master_bus");
-+	if (IS_ERR(res->master_bus))
-+		return PTR_ERR(res->master_bus);
-+
-+	res->slave_bus = devm_clk_get(dev, "slave_bus");
-+	if (IS_ERR(res->slave_bus))
-+		return PTR_ERR(res->slave_bus);
-+
-+	res->core = devm_reset_control_get_exclusive(dev, "core");
-+	return PTR_ERR_OR_ZERO(res->core);
-+}
-+
-+static void qcom_pcie_deinit_1_0_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
-+
-+	reset_control_assert(res->core);
-+	clk_disable_unprepare(res->slave_bus);
-+	clk_disable_unprepare(res->master_bus);
-+	clk_disable_unprepare(res->iface);
-+	clk_disable_unprepare(res->aux);
-+	regulator_disable(res->vdda);
-+}
-+
-+static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	ret = reset_control_deassert(res->core);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert core reset\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_res;
-+	}
-+
-+	ret = clk_prepare_enable(res->iface);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable iface clock\n");
-+		goto err_aux;
-+	}
-+
-+	ret = clk_prepare_enable(res->master_bus);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable master_bus clock\n");
-+		goto err_iface;
-+	}
-+
-+	ret = clk_prepare_enable(res->slave_bus);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable slave_bus clock\n");
-+		goto err_master;
-+	}
-+
-+	ret = regulator_enable(res->vdda);
-+	if (ret) {
-+		dev_err(dev, "cannot enable vdda regulator\n");
-+		goto err_slave;
-+	}
-+
-+	return 0;
-+err_slave:
-+	clk_disable_unprepare(res->slave_bus);
-+err_master:
-+	clk_disable_unprepare(res->master_bus);
-+err_iface:
-+	clk_disable_unprepare(res->iface);
-+err_aux:
-+	clk_disable_unprepare(res->aux);
-+err_res:
-+	reset_control_assert(res->core);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
-+{
-+	/* change DBI base address */
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+
-+		val |= BIT(31);
-+		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+	}
-+
-+	return 0;
-+}
-+
- static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
-@@ -469,121 +584,6 @@ static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
--static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
--	struct dw_pcie *pci = pcie->pci;
--	struct device *dev = pci->dev;
--
--	res->vdda = devm_regulator_get(dev, "vdda");
--	if (IS_ERR(res->vdda))
--		return PTR_ERR(res->vdda);
--
--	res->iface = devm_clk_get(dev, "iface");
--	if (IS_ERR(res->iface))
--		return PTR_ERR(res->iface);
--
--	res->aux = devm_clk_get(dev, "aux");
--	if (IS_ERR(res->aux))
--		return PTR_ERR(res->aux);
--
--	res->master_bus = devm_clk_get(dev, "master_bus");
--	if (IS_ERR(res->master_bus))
--		return PTR_ERR(res->master_bus);
--
--	res->slave_bus = devm_clk_get(dev, "slave_bus");
--	if (IS_ERR(res->slave_bus))
--		return PTR_ERR(res->slave_bus);
--
--	res->core = devm_reset_control_get_exclusive(dev, "core");
--	return PTR_ERR_OR_ZERO(res->core);
--}
--
--static void qcom_pcie_deinit_1_0_0(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
--
--	reset_control_assert(res->core);
--	clk_disable_unprepare(res->slave_bus);
--	clk_disable_unprepare(res->master_bus);
--	clk_disable_unprepare(res->iface);
--	clk_disable_unprepare(res->aux);
--	regulator_disable(res->vdda);
--}
--
--static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
--	struct dw_pcie *pci = pcie->pci;
--	struct device *dev = pci->dev;
--	int ret;
--
--	ret = reset_control_deassert(res->core);
--	if (ret) {
--		dev_err(dev, "cannot deassert core reset\n");
--		return ret;
--	}
--
--	ret = clk_prepare_enable(res->aux);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable aux clock\n");
--		goto err_res;
--	}
--
--	ret = clk_prepare_enable(res->iface);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable iface clock\n");
--		goto err_aux;
--	}
--
--	ret = clk_prepare_enable(res->master_bus);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable master_bus clock\n");
--		goto err_iface;
--	}
--
--	ret = clk_prepare_enable(res->slave_bus);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable slave_bus clock\n");
--		goto err_master;
--	}
--
--	ret = regulator_enable(res->vdda);
--	if (ret) {
--		dev_err(dev, "cannot enable vdda regulator\n");
--		goto err_slave;
--	}
--
--	return 0;
--err_slave:
--	clk_disable_unprepare(res->slave_bus);
--err_master:
--	clk_disable_unprepare(res->master_bus);
--err_iface:
--	clk_disable_unprepare(res->iface);
--err_aux:
--	clk_disable_unprepare(res->aux);
--err_res:
--	reset_control_assert(res->core);
--
--	return ret;
--}
--
--static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
--{
--	/* change DBI base address */
--	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
--
--	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
--
--		val |= BIT(31);
--		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
--	}
--
--	return 0;
--}
--
- static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
-@@ -719,6 +719,174 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i;
-+	const char *rst_names[] = { "axi_m", "axi_s", "pipe",
-+				    "axi_m_sticky", "sticky",
-+				    "ahb", "sleep", };
-+
-+	res->iface = devm_clk_get(dev, "iface");
-+	if (IS_ERR(res->iface))
-+		return PTR_ERR(res->iface);
-+
-+	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-+	if (IS_ERR(res->axi_m_clk))
-+		return PTR_ERR(res->axi_m_clk);
-+
-+	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-+	if (IS_ERR(res->axi_s_clk))
-+		return PTR_ERR(res->axi_s_clk);
-+
-+	res->ahb_clk = devm_clk_get(dev, "ahb");
-+	if (IS_ERR(res->ahb_clk))
-+		return PTR_ERR(res->ahb_clk);
-+
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
-+		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
-+		if (IS_ERR(res->rst[i]))
-+			return PTR_ERR(res->rst[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+
-+	clk_disable_unprepare(res->iface);
-+	clk_disable_unprepare(res->axi_m_clk);
-+	clk_disable_unprepare(res->axi_s_clk);
-+	clk_disable_unprepare(res->ahb_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+}
-+
-+static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i, ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_assert(res->rst[i]);
-+		if (ret) {
-+			dev_err(dev, "reset #%d assert failed (%d)\n", i, ret);
-+			return ret;
-+		}
-+	}
-+
-+	usleep_range(2000, 2500);
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_deassert(res->rst[i]);
-+		if (ret) {
-+			dev_err(dev, "reset #%d deassert failed (%d)\n", i,
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	/*
-+	 * Don't have a way to see if the reset has completed.
-+	 * Wait for some time.
-+	 */
-+	usleep_range(2000, 2500);
-+
-+	ret = clk_prepare_enable(res->iface);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_iface;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_m_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_s_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_prepare_enable(res->ahb_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ahb clock\n");
-+		goto err_clk_ahb;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	return 0;
-+
-+err_clk_aux:
-+	clk_disable_unprepare(res->ahb_clk);
-+err_clk_ahb:
-+	clk_disable_unprepare(res->axi_s_clk);
-+err_clk_axi_s:
-+	clk_disable_unprepare(res->axi_m_clk);
-+err_clk_axi_m:
-+	clk_disable_unprepare(res->iface);
-+err_clk_iface:
-+	/*
-+	 * Not checking for failure, will anyway return
-+	 * the original failure in 'ret'.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-+		reset_control_assert(res->rst[i]);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	u32 val;
-+
-+	writel(SLV_ADDR_SPACE_SZ,
-+		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-+		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-+		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-+		pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-+
-+	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
-+	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
-+	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
-+
-+	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
-+	val &= ~PCI_EXP_LNKCAP_ASPMS;
-+	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
-+
-+	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
-+		PCI_EXP_DEVCTL2);
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
-@@ -998,174 +1166,6 @@ static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
--static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
--	struct dw_pcie *pci = pcie->pci;
--	struct device *dev = pci->dev;
--	int i;
--	const char *rst_names[] = { "axi_m", "axi_s", "pipe",
--				    "axi_m_sticky", "sticky",
--				    "ahb", "sleep", };
--
--	res->iface = devm_clk_get(dev, "iface");
--	if (IS_ERR(res->iface))
--		return PTR_ERR(res->iface);
--
--	res->axi_m_clk = devm_clk_get(dev, "axi_m");
--	if (IS_ERR(res->axi_m_clk))
--		return PTR_ERR(res->axi_m_clk);
--
--	res->axi_s_clk = devm_clk_get(dev, "axi_s");
--	if (IS_ERR(res->axi_s_clk))
--		return PTR_ERR(res->axi_s_clk);
--
--	res->ahb_clk = devm_clk_get(dev, "ahb");
--	if (IS_ERR(res->ahb_clk))
--		return PTR_ERR(res->ahb_clk);
--
--	res->aux_clk = devm_clk_get(dev, "aux");
--	if (IS_ERR(res->aux_clk))
--		return PTR_ERR(res->aux_clk);
--
--	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
--		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
--		if (IS_ERR(res->rst[i]))
--			return PTR_ERR(res->rst[i]);
--	}
--
--	return 0;
--}
--
--static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
--
--	clk_disable_unprepare(res->iface);
--	clk_disable_unprepare(res->axi_m_clk);
--	clk_disable_unprepare(res->axi_s_clk);
--	clk_disable_unprepare(res->ahb_clk);
--	clk_disable_unprepare(res->aux_clk);
--}
--
--static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
--	struct dw_pcie *pci = pcie->pci;
--	struct device *dev = pci->dev;
--	int i, ret;
--
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
--		ret = reset_control_assert(res->rst[i]);
--		if (ret) {
--			dev_err(dev, "reset #%d assert failed (%d)\n", i, ret);
--			return ret;
--		}
--	}
--
--	usleep_range(2000, 2500);
--
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
--		ret = reset_control_deassert(res->rst[i]);
--		if (ret) {
--			dev_err(dev, "reset #%d deassert failed (%d)\n", i,
--				ret);
--			return ret;
--		}
--	}
--
--	/*
--	 * Don't have a way to see if the reset has completed.
--	 * Wait for some time.
--	 */
--	usleep_range(2000, 2500);
--
--	ret = clk_prepare_enable(res->iface);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_iface;
--	}
--
--	ret = clk_prepare_enable(res->axi_m_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_axi_m;
--	}
--
--	ret = clk_prepare_enable(res->axi_s_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable axi slave clock\n");
--		goto err_clk_axi_s;
--	}
--
--	ret = clk_prepare_enable(res->ahb_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable ahb clock\n");
--		goto err_clk_ahb;
--	}
--
--	ret = clk_prepare_enable(res->aux_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable aux clock\n");
--		goto err_clk_aux;
--	}
--
--	return 0;
--
--err_clk_aux:
--	clk_disable_unprepare(res->ahb_clk);
--err_clk_ahb:
--	clk_disable_unprepare(res->axi_s_clk);
--err_clk_axi_s:
--	clk_disable_unprepare(res->axi_m_clk);
--err_clk_axi_m:
--	clk_disable_unprepare(res->iface);
--err_clk_iface:
--	/*
--	 * Not checking for failure, will anyway return
--	 * the original failure in 'ret'.
--	 */
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
--		reset_control_assert(res->rst[i]);
--
--	return ret;
--}
--
--static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
--{
--	struct dw_pcie *pci = pcie->pci;
--	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
--	u32 val;
--
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
--
--	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
--	val &= ~BIT(0);
--	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
--
--	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
--
--	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
--		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
--		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
--		pcie->parf + PCIE20_PARF_SYS_CTRL);
--	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
--
--	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
--	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
--	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
--
--	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
--	val &= ~PCI_EXP_LNKCAP_ASPMS;
--	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
--
--	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
--		PCI_EXP_DEVCTL2);
--
--	return 0;
--}
--
- static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-@@ -1530,15 +1530,6 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.host_init = qcom_pcie_host_init,
- };
- 
--/* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
--static const struct qcom_pcie_ops ops_2_1_0 = {
--	.get_resources = qcom_pcie_get_resources_2_1_0,
--	.init = qcom_pcie_init_2_1_0,
--	.post_init = qcom_pcie_post_init_2_1_0,
--	.deinit = qcom_pcie_deinit_2_1_0,
--	.ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
--};
--
- /* Qcom IP rev.: 1.0.0	Synopsys IP rev.: 4.11a */
- static const struct qcom_pcie_ops ops_1_0_0 = {
- 	.get_resources = qcom_pcie_get_resources_1_0_0,
-@@ -1548,6 +1539,24 @@ static const struct qcom_pcie_ops ops_1_0_0 = {
- 	.ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 1.9.0 */
-+static const struct qcom_pcie_ops ops_1_9_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_7_0,
-+	.init = qcom_pcie_init_2_7_0,
-+	.deinit = qcom_pcie_deinit_2_7_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+	.config_sid = qcom_pcie_config_sid_sm8250,
-+};
-+
-+/* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-+static const struct qcom_pcie_ops ops_2_1_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_1_0,
-+	.init = qcom_pcie_init_2_1_0,
-+	.post_init = qcom_pcie_post_init_2_1_0,
-+	.deinit = qcom_pcie_deinit_2_1_0,
-+	.ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
-+};
-+
- /* Qcom IP rev.: 2.3.2	Synopsys IP rev.: 4.21a */
- static const struct qcom_pcie_ops ops_2_3_2 = {
- 	.get_resources = qcom_pcie_get_resources_2_3_2,
-@@ -1557,15 +1566,6 @@ static const struct qcom_pcie_ops ops_2_3_2 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
--/* Qcom IP rev.: 2.4.0	Synopsys IP rev.: 4.20a */
--static const struct qcom_pcie_ops ops_2_4_0 = {
--	.get_resources = qcom_pcie_get_resources_2_4_0,
--	.init = qcom_pcie_init_2_4_0,
--	.post_init = qcom_pcie_post_init_2_4_0,
--	.deinit = qcom_pcie_deinit_2_4_0,
--	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
--};
--
- /* Qcom IP rev.: 2.3.3	Synopsys IP rev.: 4.30a */
- static const struct qcom_pcie_ops ops_2_3_3 = {
- 	.get_resources = qcom_pcie_get_resources_2_3_3,
-@@ -1575,6 +1575,15 @@ static const struct qcom_pcie_ops ops_2_3_3 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 2.4.0	Synopsys IP rev.: 4.20a */
-+static const struct qcom_pcie_ops ops_2_4_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_4_0,
-+	.init = qcom_pcie_init_2_4_0,
-+	.post_init = qcom_pcie_post_init_2_4_0,
-+	.deinit = qcom_pcie_deinit_2_4_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- /* Qcom IP rev.: 2.7.0	Synopsys IP rev.: 4.30a */
- static const struct qcom_pcie_ops ops_2_7_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
-@@ -1583,15 +1592,6 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
--/* Qcom IP rev.: 1.9.0 */
--static const struct qcom_pcie_ops ops_1_9_0 = {
--	.get_resources = qcom_pcie_get_resources_2_7_0,
--	.init = qcom_pcie_init_2_7_0,
--	.deinit = qcom_pcie_deinit_2_7_0,
--	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
--	.config_sid = qcom_pcie_config_sid_sm8250,
--};
--
- /* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
- static const struct qcom_pcie_ops ops_2_9_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_9_0,
-@@ -1605,6 +1605,42 @@ static const struct qcom_pcie_cfg apq8084_cfg = {
- 	.ops = &ops_1_0_0,
- };
- 
-+static const struct qcom_pcie_cfg sm8150_cfg = {
-+	/* sm8150 has qcom IP rev 1.5.0. However 1.5.0 ops are same as
-+	 * 1.9.0, so reuse the same.
-+	 */
-+	.ops = &ops_1_9_0,
-+};
-+
-+static const struct qcom_pcie_cfg sm8250_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_tbu_clk = true,
-+	.has_ddrss_sf_tbu_clk = true,
-+};
-+
-+static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_ddrss_sf_tbu_clk = true,
-+	.has_aggre0_clk = true,
-+	.has_aggre1_clk = true,
-+};
-+
-+static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_ddrss_sf_tbu_clk = true,
-+	.has_aggre1_clk = true,
-+};
-+
-+static const struct qcom_pcie_cfg sc7280_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_tbu_clk = true,
-+};
-+
-+static const struct qcom_pcie_cfg sc8180x_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_tbu_clk = true,
-+};
-+
- static const struct qcom_pcie_cfg ipq8064_cfg = {
- 	.ops = &ops_2_1_0,
- };
-@@ -1626,42 +1662,6 @@ static const struct qcom_pcie_cfg sdm845_cfg = {
- 	.has_tbu_clk = true,
- };
- 
--static const struct qcom_pcie_cfg sm8150_cfg = {
--	/* sm8150 has qcom IP rev 1.5.0. However 1.5.0 ops are same as
--	 * 1.9.0, so reuse the same.
--	 */
--	.ops = &ops_1_9_0,
--};
--
--static const struct qcom_pcie_cfg sm8250_cfg = {
--	.ops = &ops_1_9_0,
--	.has_tbu_clk = true,
--	.has_ddrss_sf_tbu_clk = true,
--};
--
--static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
--	.ops = &ops_1_9_0,
--	.has_ddrss_sf_tbu_clk = true,
--	.has_aggre0_clk = true,
--	.has_aggre1_clk = true,
--};
--
--static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
--	.ops = &ops_1_9_0,
--	.has_ddrss_sf_tbu_clk = true,
--	.has_aggre1_clk = true,
--};
--
--static const struct qcom_pcie_cfg sc7280_cfg = {
--	.ops = &ops_1_9_0,
--	.has_tbu_clk = true,
--};
--
--static const struct qcom_pcie_cfg sc8180x_cfg = {
--	.ops = &ops_1_9_0,
--	.has_tbu_clk = true,
--};
--
- static const struct qcom_pcie_cfg ipq6018_cfg = {
- 	.ops = &ops_2_9_0,
- };
--- 
-2.25.1
+>=20
+> So what sort of translation do you expect this to setup? What StreamID
+> is getting used by the DMA framework? There is no answer to these
+> questions because they don't make any sense. None of it makes any
+> sense.
+>=20
+> At best, you are simply copy-pasting things from various drivers
+> without understanding what they are all about.
+=20
+[Frank Li] it is first time to write irq chip driver, so I have to base on =
+or reference
+Other drivers to start development.  Of course, there are some miss underst=
+and
+During development.  From functional call name, it make sense although I do=
+n't know
+All detail behind that. =20
 
+Any bus master access memory need go through IOMMU if enabled. =20
+
+I have not tested it at IOMMU enabled platform yet.  Some maintainer requir=
+e
+Added similar function call if a feature enabled when I do other upstream w=
+ork. =20
+So I kept as refer driver did. Maybe refer driver code is too old. =20
+
+If there are problem, I can delete it.  So far, it don't impact my test pla=
+tform.=20
+I can add fix patch if met problem at IOMMU enabled platform.
+
+> I suggest you stop
+> doing that and make use of your time working out the problem rather
+> than wasting the reviewers'.
+
+Thank you for your review and great comments.  This driver function worked.=
+=20
+I know I made some stupid problem, it should be fixed before sent out.
+
+I also want to make sure the overall idea worked firstly.  So far no-one
+Use MSI as doorbell from PCIe-EP function drivers yet. =20
+
+>=20
+>         M.
+>=20
+> --
+> Without deviation from the norm, progress is not possible.
