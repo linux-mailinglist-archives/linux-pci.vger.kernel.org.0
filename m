@@ -2,72 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 108C557E796
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 21:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3928B57E7A2
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 21:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236531AbiGVTmm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jul 2022 15:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        id S236558AbiGVTrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jul 2022 15:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236532AbiGVTml (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 15:42:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9959A7822C;
-        Fri, 22 Jul 2022 12:42:40 -0700 (PDT)
+        with ESMTP id S236374AbiGVTrM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 15:47:12 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3864621E3E;
+        Fri, 22 Jul 2022 12:47:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3917A61EFD;
-        Fri, 22 Jul 2022 19:42:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D82BC341D2;
-        Fri, 22 Jul 2022 19:42:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E1425B828EB;
+        Fri, 22 Jul 2022 19:47:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A66C341D0;
+        Fri, 22 Jul 2022 19:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658518959;
-        bh=YWzIul9hGbwyzj2QABvAP1bl4Le92NfHp2dc2pubYJc=;
+        s=k20201202; t=1658519228;
+        bh=k1kecu27UOxg6c6RvnOriO0pqtKqAK/t5BBpPxWwgvE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h8zN0U/XN5NU2wFfkFyroujrtY/386+7fCTYjcuMUkmD4XIGlpSn7ZnU4ZolmV/x1
-         eCezEU3aHdNDxS3SqdB3SnELmLCsbL2IewKbYyRbHxs3sjPnt48iaNXde+SaB+BCh0
-         HI3d477Tf2sEvehgNwadjad+rH80Q3SJgzmHVzgb+0JdTSt2+xwtrIpNgPKScXu1hp
-         8v/K+ewAaSFvpGGDZjLIFiHnjB6CLM+QiPngj3CcyDQVmVcqaqJ1r6N2TihxNN+9/6
-         uL8UA+9uwHwH7CpGbkqFW8moMpd9btIOgLwly2ylF5WLM1Qa+GdcZMipgiYLnKguaI
-         fjlW0z2gG4eTg==
-Received: by mail-vs1-f46.google.com with SMTP id o4so2045239vsc.12;
-        Fri, 22 Jul 2022 12:42:39 -0700 (PDT)
-X-Gm-Message-State: AJIora9fJzZZTpGyJUoBGT3e5Relf1UtfdADUo3r2ecOUQaCHawNkRsh
-        f3n3nuexUBxDg6WmKFGl5xg64SI+s6WJ5karog==
-X-Google-Smtp-Source: AGRyM1sYSLwcS2d5BKZ605LbIBDuQ7FVSSV1zuVCvhEy9wn82CnrWQCs9eT+2Zp2gVSOkp8hHljE+zkArm7bYaXLsO0=
-X-Received: by 2002:a67:d194:0:b0:357:8ea:5554 with SMTP id
- w20-20020a67d194000000b0035708ea5554mr641848vsi.0.1658518958470; Fri, 22 Jul
- 2022 12:42:38 -0700 (PDT)
+        b=X9o4TDJQj6UKuRVRXllkeL8bUoN//CK+zVX9e1Ev5AjBUIZasR2fsPyq7CcRMjOXH
+         bIROU9Pwm3zQAB+V6mBjygZIXtBkynu7Mdo0bDig/0mChVsdeyqb2Kgql8B6WtP5q5
+         th5rJnI5nTV2JPB4r1smcbTEDFftKzr91ESUDOJaDApop05cNmdWhSYNqALn2kHXGr
+         DYyEJfBF6pFc6Ml+TH3YRu7gQlcfet2wGogCiRecgLHGPLWdsz1btkCwZnlG+tQRsx
+         uHXM736BF7CsfIwSZOTwvBpEDSFTBotarGpqWpAAp+jU9BTyYwsgmAPXg7hzCPD8EC
+         huHoTSb0pd8eQ==
+Received: by mail-vk1-f171.google.com with SMTP id b2so927738vkg.2;
+        Fri, 22 Jul 2022 12:47:08 -0700 (PDT)
+X-Gm-Message-State: AJIora/PBKKnJ3MB5WpLXpNxjDSYzdqi9xNL+tNQMbick+wGQhdqjZSB
+        RNBKAbA8MbNbrxyge6g6TaIDAREZk1hrDM2iXg==
+X-Google-Smtp-Source: AGRyM1t/qED/RzNJtCJKxlNwMdvxy06ft+4UAxfO0C+byw3FDjsg8eO5ieMlJsAxhe/hzjmnpgB+FAwcyBtoBwAtcC0=
+X-Received: by 2002:a1f:2454:0:b0:375:10ae:8bca with SMTP id
+ k81-20020a1f2454000000b0037510ae8bcamr502088vkk.26.1658519227394; Fri, 22 Jul
+ 2022 12:47:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAL_Jsq+_5-fhXddhxG2mr-4HD_brcKZExkZqvME1yEpa6dOGGg@mail.gmail.com>
- <mhng-7e3146ca-79b8-4e16-98a9-e354fb6d03ba@palmer-mbp2014>
- <CAL_JsqJHZEcnJi+UHQbYWVoy1okQjHSc9T377P1q8oOJnHBWFw@mail.gmail.com> <alpine.DEB.2.21.2207222006140.48997@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2207222006140.48997@angie.orcam.me.uk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 22 Jul 2022 13:42:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK-_m2=yiD4qeSoXD-Uhh_r+kmC1qK50t8Tads-i+iJqw@mail.gmail.com>
-Message-ID: <CAL_JsqK-_m2=yiD4qeSoXD-Uhh_r+kmC1qK50t8Tads-i+iJqw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] asm-generic: Add new pci.h and use it
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stafford Horne <shorne@gmail.com>,
+References: <226ac31e-2ac4-cb73-ab67-62f86d5e5783@linaro.org> <20220721205819.GA1753070@bhelgaas>
+In-Reply-To: <20220721205819.GA1753070@bhelgaas>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 22 Jul 2022 13:46:55 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Li_PhkRw4LkZwGdRn5mpCO5cePgBMLORF21-W65fqEA@mail.gmail.com>
+Message-ID: <CAL_Jsq+Li_PhkRw4LkZwGdRn5mpCO5cePgBMLORF21-W65fqEA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        =?UTF-8?B?7J207JmV7ISd?= <wangseok.lee@samsung.com>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-um@lists.infradead.org, PCI <linux-pci@vger.kernel.org>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "lars.persson@axis.com" <lars.persson@axis.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "kernel@axis.com" <kernel@axis.com>,
+        Moon-Ki Jun <moonki.jun@samsung.com>,
+        Sang Min Kim <hypmean.kim@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>,
+        Yeeun Kim <yeeun119.kim@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -78,44 +78,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 1:23 PM Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+On Thu, Jul 21, 2022 at 2:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Fri, 22 Jul 2022, Rob Herring wrote:
->
-> > > Maybe the right thing to do here is actually to make the default
-> > > definitions of these macros non-zero, or to add some sort of ARCH_
-> > > flavor of them and move that non-zero requirement closer to where it
-> > > comes from?  From the look of it any port that uses the generic port I/O
-> > > functions and has 0 for these will be broken in the same way.
+> On Thu, Jul 21, 2022 at 11:04:00AM +0200, Krzysztof Kozlowski wrote:
+> > On 20/07/2022 08:01, Wangseok Lee wrote:
+> > > Add support Axis, ARTPEC-8 SoC. ARTPEC-8 is the SoC platform of Axis
+> > > Communications. This is based on arm64 and support GEN4 & 2lane. This
+> > > PCIe controller is based on DesignWare Hardware core and uses DesignWare
+> > > core functions to implement the driver. "pcie-artpec6. c" supports artpec6
+> > > and artpec7 H/W. artpec8 can not be expanded because H/W configuration is
+> > > completely different from artpec6/7. PHY and sub controller are different.
 > > >
-> > > That said, I'm not really a PCI guy so maybe Bjorn or Maciej has a
-> > > better idea?
+> > > Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
+> > > Signed-off-by: Jaeho Cho <jaeho79.cho@samsung.com>
+> > > ---
+> > > v3->v4 :
+> > > -Remove unnecessary enum type
+> > > -Fix indentation
+> > >
 > >
-> > >From fu740:
-> >                        ranges = <0x81000000  0x0 0x60080000  0x0
-> > 0x60080000 0x0 0x10000>,      /* I/O */
-> >                                  <0x82000000  0x0 0x60090000  0x0
-> > 0x60090000 0x0 0xff70000>,    /* mem */
-> >                                  <0x82000000  0x0 0x70000000  0x0
-> > 0x70000000 0x0 0x1000000>,    /* mem */
-> >                                  <0xc3000000 0x20 0x00000000 0x20
-> > 0x00000000 0x20 0x00000000>;  /* mem prefetchable */
+> > Thanks for the changes. This starts to look good, however I am not going
+> > to ack it. This is also not a strong NAK, as I would respect Bjorn and
+> > other maintainers decision.
 > >
-> > So again, how does one get a 0 address handed out when that's not even
-> > a valid region according to DT? Is there some legacy stuff that
-> > ignores the bridge windows?
+> > I don't like the approach of creating only Artpec-8 specific driver.
+> > Samsung heavily reuses its block in all Exynos devices. Now it re-uses
+> > them for other designs as well. Therefore, even if merging with existing
+> > Exynos PCIe driver is not feasible (we had such discussions), I expect
+> > this to cover all Samsung Foundry PCIe devices. From all current designs
+> > up to future licensed blocks, including some new Samsung Exynos SoC. Or
+> > at least be ready for it.
 >
->  It doesn't matter as <asm/pci.h> just sets it as a generic parameter for
-> the platform, reflecting the limitation of PCI core, which in the course
-> of the discussion referred was found rather infeasible to remove.  The
-> FU740 does not decode to PCI at 0, but another RISC-V device could.  And I
-> think that DT should faithfully describe hardware and not our software
-> limitations.
+> I would certainly prefer fewer drivers but I don't know enough about
+> the underlying IP and the places it's integrated to to know what's
+> practical.  The only way I could figure that out would be by manually
+> comparing the drivers for similarity.  I assume/expect all driver
+> authors are doing that.
 
-Let me ask this another way. When would a 0 memory or i/o address ever
-work? It doesn't seem this s/w limitation has anything specific to
-Risc-V. Given pci_iomap_range() rejects 0, I can't see how it could
-ever work. Maybe only for legacy ISA? So should the generic defaults
-just be what Risc-V is using instead of 0?
+Sadly, I would not assume that. :(
+
+Just looking at the ELBI registers between Exynos and this one, the
+registers look completely different with nothing shared between the 2.
+Maybe sharing is possible with some new, yet to be upstreamed Samsung
+PCIe IP, but not the existing one. Same vendor is not always a good
+reason to share a driver.
+
+I think the way to further shrink the vendor DWC drivers is getting
+the DWC core and PCI core to do more in terms of clocks, resets, and
+phys management, handling of PERST, and link state management. We
+should also get rid of vendor drivers doing their own abstraction
+layers (ops structs) (looking at you QCom).
 
 Rob
