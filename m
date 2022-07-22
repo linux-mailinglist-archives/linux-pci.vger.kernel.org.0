@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 068C357D7BA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 02:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1A4F57D7C6
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 02:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233724AbiGVA1r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jul 2022 20:27:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53336 "EHLO
+        id S233887AbiGVA2r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jul 2022 20:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229740AbiGVA1q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 20:27:46 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E15C89E84;
-        Thu, 21 Jul 2022 17:27:44 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id l24so2616238ion.13;
-        Thu, 21 Jul 2022 17:27:44 -0700 (PDT)
+        with ESMTP id S233878AbiGVA2q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jul 2022 20:28:46 -0400
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B392A8C5B0;
+        Thu, 21 Jul 2022 17:28:45 -0700 (PDT)
+Received: by mail-io1-f51.google.com with SMTP id r70so2621991iod.10;
+        Thu, 21 Jul 2022 17:28:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=A9LvynJxe0rCoPzcWA/a2z9MnHe9fzfAmnZLQao5YE4=;
-        b=5Sg8yG6FctNga7dzguT02WpfwDlLPoM/nR1XfXDYI4ct1+DQHu96OB6UZmtBwieeex
-         AHhqd/u3meZc/tH5TwjG33HTOvlUjndNL0XeBa8vjgO1RzqVwrs/kYVvnERjq5hTpe8t
-         xBrdLyo1gU4YuKpr2MrEOz41d+ioxhRjDAHe+1tIkmRIUYCBKeVathyXvW7Fp4QDfyww
-         V97JQVbUBhGB0QfN1jUTN0cOzpToZcDCWIAhek7K+ohXoitb4V0xlQJBvEK5tWDFFeAq
-         yNxI5TwCW28nD5lXrEvwkmry9N8z++3EsQ97G2AHLcgdcl5jIZ+CAvnzMWHS/CA5rYCC
-         Dwdw==
-X-Gm-Message-State: AJIora+JEkMDATPfWcUcHp+Fpieulm3YSnPSszZ6kiyJEjIVT7ZfW1Ub
-        TaAXeRdXgPHcyA/lpD1YKw==
-X-Google-Smtp-Source: AGRyM1uKEwGqiQ/Z9aZ83MzaBv/qqZB45fvT+eCioKSO8RtevK4Osdshp0UwcAy+wcfB8VcdIGXIaQ==
-X-Received: by 2002:a05:6638:160c:b0:33f:54c7:ee69 with SMTP id x12-20020a056638160c00b0033f54c7ee69mr470125jas.65.1658449663359;
-        Thu, 21 Jul 2022 17:27:43 -0700 (PDT)
+        bh=6DrkXoX5cXYOJhQa0g1AYrB3wtqFIVlejRy8w2AKUQE=;
+        b=Jj9ZnoDKF9rOo4OBibadCTIlVZgumPRz+eWLg/Im2U31YXnY5JKZXd5gucO5PujuaW
+         6tdc1RSK+Sqe22k2e6VJT/KdXVpi2ZBhEkhxnp5jddqgxxY0vo897GRc+Ux+puYuy4xT
+         CouUJhJn45NfasQjafuLAaFAwq/EYQK1HHegkDlPgMoEx8y6wWxecpxcyswxpZPZgXZ4
+         5666FrqLDSWt0WuvwYqimchKyz3qp6pedHBZA9Wx7vMxfbaT4zo7aAgh8bjKIAPdnBBR
+         ApbBIOl881bo1HFbeFQq+cavntxfsvExFtaUFasuAUmvidRqWObaDksxugScgwT5uQPa
+         jlBQ==
+X-Gm-Message-State: AJIora9sWfuXMuH5QW28A4+cCedhn6PP6DM8qCX9aHN6zBhhjBo1pg1w
+        +jTLLLD+ImdVksgt5KzQkQ==
+X-Google-Smtp-Source: AGRyM1sax7Knc34JQSbu2WweBKxoJdyvHKHR70asPoL1I5e+1I7G9SQzQHXv5Glg2tSZ7m3IT5o38g==
+X-Received: by 2002:a05:6638:1441:b0:33f:64ae:aabe with SMTP id l1-20020a056638144100b0033f64aeaabemr452208jad.89.1658449724998;
+        Thu, 21 Jul 2022 17:28:44 -0700 (PDT)
 Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id c6-20020a056e020cc600b002dd143ee62esm1105139ilj.14.2022.07.21.17.27.42
+        by smtp.gmail.com with ESMTPSA id u14-20020a02b1ce000000b00339e42c3e2fsm1387059jah.80.2022.07.21.17.28.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 17:27:42 -0700 (PDT)
-Received: (nullmailer pid 2243073 invoked by uid 1000);
-        Fri, 22 Jul 2022 00:27:41 -0000
-Date:   Thu, 21 Jul 2022 18:27:41 -0600
+        Thu, 21 Jul 2022 17:28:44 -0700 (PDT)
+Received: (nullmailer pid 2244596 invoked by uid 1000);
+        Fri, 22 Jul 2022 00:28:43 -0000
+Date:   Thu, 21 Jul 2022 18:28:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mauri Sandberg <maukka@ext.kapsi.fi>
-Cc:     pali@kernel.org, thomas.petazzoni@bootlin.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, gregory.clement@bootlin.com, kw@linux.com,
-        andrew@lunn.ch, linux-arm-kernel@lists.infradead.org,
-        bhelgaas@google.com, linux@armlinux.org.uk,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        sebastian.hesselbarth@gmail.com
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: mvebu: Add orion5x compatible
-Message-ID: <20220722002741.GA2243040-robh@kernel.org>
-References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
- <20220718202843.6766-2-maukka@ext.kapsi.fi>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     kishon@ti.com, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, kernel@pengutronix.de,
+        lorenzo.pieralisi@arm.com, linux-imx@nxp.com, shawnguo@kernel.org,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de,
+        kw@linux.com, frank.li@nxp.com, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org
+Subject: Re: [PATCH v1 01/10] dt-bindings: imx6q-pcie: Add iMX8MM PCIe EP
+ mode compatible string
+Message-ID: <20220722002843.GA2244544-robh@kernel.org>
+References: <1658223939-25478-1-git-send-email-hongxing.zhu@nxp.com>
+ <1658223939-25478-2-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220718202843.6766-2-maukka@ext.kapsi.fi>
+In-Reply-To: <1658223939-25478-2-git-send-email-hongxing.zhu@nxp.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -66,13 +66,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 18 Jul 2022 23:28:41 +0300, Mauri Sandberg wrote:
-> Add a compatible string to bindings to indicate that orion5x PCIe is
-> supported too.
+On Tue, 19 Jul 2022 17:45:30 +0800, Richard Zhu wrote:
+> Add i.MX8MM PCIe endpoint mode compatible string.
 > 
-> Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > ---
->  Documentation/devicetree/bindings/pci/mvebu-pci.txt | 1 +
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
