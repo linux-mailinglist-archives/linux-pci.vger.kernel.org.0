@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C79A057E0A2
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 13:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4AF57E0A0
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 13:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234637AbiGVLIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S234381AbiGVLIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 22 Jul 2022 07:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234405AbiGVLIB (ORCPT
+        with ESMTP id S234394AbiGVLIB (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 07:08:01 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AED3DA6F90;
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2AA6176E88;
         Fri, 22 Jul 2022 04:08:00 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.93,185,1654527600"; 
-   d="scan'208";a="128784536"
+   d="scan'208";a="127031996"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 22 Jul 2022 20:07:58 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 22 Jul 2022 20:07:58 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 269A541FF8A7;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4E5E941FFA2D;
         Fri, 22 Jul 2022 20:07:58 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -28,9 +28,9 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 10/12] MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-Date:   Fri, 22 Jul 2022 20:07:42 +0900
-Message-Id: <20220722110744.2274466-11-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 11/12] arm64: dts: renesas: r8a779f0: Add PCIe Host and Endpoint nodes
+Date:   Fri, 22 Jul 2022 20:07:43 +0900
+Message-Id: <20220722110744.2274466-12-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220722110744.2274466-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20220722110744.2274466-1-yoshihiro.shimoda.uh@renesas.com>
@@ -44,25 +44,146 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Update this entry for R-Car Gen4's source code.
+Add PCIe Host and Endpoint nodes for R-Car S4-8 (R8A779F0).
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a779f0.dtsi | 122 ++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d14a446df13..fffcb4f8fb2c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15629,6 +15629,7 @@ L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/*rcar*
- F:	drivers/pci/controller/*rcar*
-+F:	drivers/pci/controller/dwc/*rcar*
+diff --git a/arch/arm64/boot/dts/renesas/r8a779f0.dtsi b/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
+index 0c59a93cbaaa..bb414295ebc9 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
+@@ -504,6 +504,128 @@ hscif3: serial@e66a0000 {
+ 			status = "disabled";
+ 		};
  
- PCI DRIVER FOR SAMSUNG EXYNOS
- M:	Jingoo Han <jingoohan1@gmail.com>
++		pciec0: pcie@e65d0000 {
++			compatible = "renesas,r8a779f0-pcie",
++				     "renesas,rcar-gen4-pcie";
++			reg = <0 0xe65d0000 0 0x3000>, <0 0xe65d3000 0 0x2000>,
++			      <0 0xe65d5000 0 0x1200>, <0 0xe65d6200 0 0x0e00>,
++			      <0 0xfe000000 0 0x400000>;
++			reg-names = "dbi", "atu", "dma", "app", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x00 0xff>;
++			device_type = "pci";
++			ranges = <0x82000000 0 0x30000000 0 0x30000000 0 0x10000000>;
++			dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
++			interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "others", "dma", "correctable",
++					  "fatal", "nonfatal", "lp", "vndmsg";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 624>;
++			power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++			resets = <&cpg 624>;
++			num-lanes = <2>;
++			snps,enable-cdm-check;
++			max-link-speed = <2>;
++			status = "disabled";
++		};
++
++		pciec1: pcie@e65d8000 {
++			compatible = "renesas,r8a779f0-pcie",
++				     "renesas,rcar-gen4-pcie";
++			reg = <0 0xe65d8000 0 0x3000>, <0 0xe65db000 0 0x2000>,
++			      <0 0xe65dd000 0 0x1200>, <0 0xe65de200 0 0x0e00>,
++			      <0 0xee900000 0 0x400000>;
++			reg-names = "dbi", "atu", "dma", "app", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x00 0xff>;
++			device_type = "pci";
++			ranges = <0x82000000 0 0xc0000000 0 0xc0000000 0 0x10000000>;
++			dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
++			interrupts = <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "others", "dma", "correctable",
++					  "fatal", "nonfatal", "lp", "vndmsg";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &gic GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &gic GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &gic GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 625>;
++			power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++			resets = <&cpg 625>;
++			num-lanes = <2>;
++			snps,enable-cdm-check;
++			max-link-speed = <2>;
++			status = "disabled";
++		};
++
++		pciec0_ep: pcie-ep@e65d0000 {
++			compatible = "renesas,r8a779f0-pcie-ep",
++				     "renesas,rcar-gen4-pcie-ep";
++			reg = <0 0xe65d0000 0 0x3000>, <0 0xe65d3000 0 0x2000>,
++			      <0 0xe65d5000 0 0x1200>, <0 0xe65d6200 0 0x0e00>,
++			      <0 0xfe000000 0 0x400000>;
++			reg-names = "dbi", "atu", "dma", "appl", "addr_space";
++			interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "others", "dma", "correctable",
++					  "fatal", "nonfatal", "lp", "vndmsg";
++			clocks = <&cpg CPG_MOD 624>;
++			power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++			resets = <&cpg 624>;
++			num-lanes = <2>;
++			max-link-speed = <2>;
++			status = "disabled";
++		};
++
++		pciec1_ep: pcie-ep@e65d8000 {
++			compatible = "renesas,r8a779f0-pcie-ep",
++				     "renesas,rcar-gen4-pcie-ep";
++			reg = <0 0xe65d8000 0 0x3000>, <0 0xe65db000 0 0x2000>,
++			      <0 0xe65dd000 0 0x1200>, <0 0xe65de200 0 0x0e00>,
++			      <0 0xee900000 0 0x400000>;
++			reg-names = "dbi", "atu", "dma", "appl", "addr_space";
++			interrupts = <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "others", "dma", "correctable",
++					  "fatal", "nonfatal", "lp", "vndmsg";
++			clocks = <&cpg CPG_MOD 625>;
++			power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++			resets = <&cpg 625>;
++			num-lanes = <2>;
++			max-link-speed = <2>;
++			status = "disabled";
++		};
++
+ 		ufs: ufs@e6860000 {
+ 			compatible = "renesas,r8a779f0-ufs";
+ 			reg = <0 0xe6860000 0 0x100>;
 -- 
 2.25.1
 
