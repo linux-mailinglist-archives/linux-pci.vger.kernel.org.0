@@ -2,97 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC13F57E534
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 19:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E1E57E5B3
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jul 2022 19:36:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235502AbiGVRRL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jul 2022 13:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
+        id S236131AbiGVRgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jul 2022 13:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235870AbiGVRRK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 13:17:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B231D0FF;
-        Fri, 22 Jul 2022 10:17:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B823B62247;
-        Fri, 22 Jul 2022 17:17:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E347BC341C6;
-        Fri, 22 Jul 2022 17:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658510228;
-        bh=67d/Not1hKY4NVqkbCFOQPdysDFNxNtFZQSnVlf7hIo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FVrm0BMwyDx76XrevBFVTwTFxgwtmek+wzL6uG72fFpvDDFabRvskX1aRjQdF/lZt
-         jgGX26R/t1gq7tSZNakRPbQGm48CSIsenNxPt0g6djdTpYQVnY4XMUKnxZuNO1CQv7
-         B8179KbCc6WaxMR6lwIl3/y/YdFLdmS4V5q87WkUQYfksGYtCrfXagB9xVOq5bnfp5
-         VvhUxsmXjMrIvNriprQXp3Sd1Y1xP3/vZpQRwN5oLLBpqO+OQOesOvABz/jhheGLPm
-         WgzdZTnpdeNoJmTHGW+NVs6Md8PKpoH0tp1Px3XgJc3ivA3BtxgF+lRTIiqtdrKWKw
-         paD+E8y70hMvQ==
-Date:   Fri, 22 Jul 2022 12:17:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <20220722171706.GA1911557@bhelgaas>
+        with ESMTP id S236065AbiGVRgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 13:36:07 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E67A8D5EC
+        for <linux-pci@vger.kernel.org>; Fri, 22 Jul 2022 10:36:06 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id r14so6242236ljp.2
+        for <linux-pci@vger.kernel.org>; Fri, 22 Jul 2022 10:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=siI7/lD81kyWLQyF5/WV8DbZeAWnZDkinKrf8vJZ9AQ=;
+        b=G2yZ9ZDC+GHFFgMKdqoofXT8fAAOL5E/soGuGLEBu11gQckoorXPxw9IS78d2w1qiR
+         f31mMLqaAf4UmprVakQTiPZ5Qv4YTwjY1LYXNIioKuzGx0rRrYNC1RoHDk19kYLUUECt
+         uB40RencH11PrSF5EjoGNepdrL/jgL/XAmqW+fuN3SdzMyz5ej2YqGydCYhh4ruoxnxs
+         5a25dzgWSJpS3ZSqClnzkjAGZWTiVH9HnRxYDc+6CBzbiW6zkOonAaE+/PbOsaRWDlur
+         BR7YEmEKzVSy1wdsWwvcy/o2YQKOPkGIWx2kvXEmGcNBP2fr66F2WSLa32EI7o4YvmlP
+         0+ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=siI7/lD81kyWLQyF5/WV8DbZeAWnZDkinKrf8vJZ9AQ=;
+        b=dw3MzGWYIc2miFlC28AcuidJIiNtkyckxYXWUr42ZtvQ9AnU8CIMCC9yX7xdkrvCGf
+         +4RzJOyhrtBltbpXCJ+M2mb/6gBgWBWVVVtH1MZXyfUP1iJQi+4dyyzakeI9onOH83mH
+         IbS17lzSzas+Nv+/SFDswFhlSADqQ16LR0kiyWHT+EabegrrwqoGa70Rvsk+beXvhLay
+         +mblocfbBEl4tmh6n5j03uTftYWeq8huCQf+rCSF+36ohMH/C7FcyPMbSdC5eGn5QdoY
+         Y0TQzi9xoOaWgrXo+q3HeTP3DdN5/BLKxv2lxpLNe24ylCmLOqIYnN3S6ZOCzkfNY8Gd
+         CZnQ==
+X-Gm-Message-State: AJIora/w9KJSBkMy/Ah31rnC2PvvxvhGIDCds5HfTAbXIWo5/LST1IAN
+        5Rkl/0ybWHBq/l+nwcrNs4MLSw==
+X-Google-Smtp-Source: AGRyM1ugHJdaM+Sgsif3zEWtynxobA/cIJhsISRhil968uqOXy7mRTTqFcH/dcHqHHvr3AyxCeLIrQ==
+X-Received: by 2002:a2e:bc17:0:b0:25d:50b7:74fa with SMTP id b23-20020a2ebc17000000b0025d50b774famr377988ljf.444.1658511364370;
+        Fri, 22 Jul 2022 10:36:04 -0700 (PDT)
+Received: from [192.168.10.173] (93.81-167-86.customer.lyse.net. [81.167.86.93])
+        by smtp.gmail.com with ESMTPSA id c23-20020a056512325700b0048374164e22sm1159225lfr.193.2022.07.22.10.36.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Jul 2022 10:36:03 -0700 (PDT)
+Message-ID: <4133c99a-b6a1-6a17-0ad8-f3bf6f8ab176@linaro.org>
+Date:   Fri, 22 Jul 2022 19:36:01 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k085xekg.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v4 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     wangseok.lee@samsung.com,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "lars.persson@axis.com" <lars.persson@axis.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "kernel@axis.com" <kernel@axis.com>,
+        Moon-Ki Jun <moonki.jun@samsung.com>,
+        Sang Min Kim <hypmean.kim@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>,
+        Yeeun Kim <yeeun119.kim@samsung.com>
+References: <20220721205819.GA1753070@bhelgaas>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220721205819.GA1753070@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 06:06:07PM +0100, Marc Zyngier wrote:
-> On Fri, 22 Jul 2022 15:39:05 +0100,
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > 
-> > [+cc Marc, can you clarify when we need irq_dispose_mapping()?]
+On 21/07/2022 22:58, Bjorn Helgaas wrote:
+> On Thu, Jul 21, 2022 at 11:04:00AM +0200, Krzysztof Kozlowski wrote:
+>> On 20/07/2022 08:01, Wangseok Lee wrote:
+>>> Add support Axis, ARTPEC-8 SoC. ARTPEC-8 is the SoC platform of Axis
+>>> Communications. This is based on arm64 and support GEN4 & 2lane. This
+>>> PCIe controller is based on DesignWare Hardware core and uses DesignWare
+>>> core functions to implement the driver. "pcie-artpec6. c" supports artpec6
+>>> and artpec7 H/W. artpec8 can not be expanded because H/W configuration is
+>>> completely different from artpec6/7. PHY and sub controller are different.
+>>>
+>>> Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
+>>> Signed-off-by: Jaeho Cho <jaeho79.cho@samsung.com>
+>>> ---
+>>> v3->v4 :
+>>> -Remove unnecessary enum type
+>>> -Fix indentation
+>>>
+>>
+>> Thanks for the changes. This starts to look good, however I am not going
+>> to ack it. This is also not a strong NAK, as I would respect Bjorn and
+>> other maintainers decision.
+>>
+>> I don't like the approach of creating only Artpec-8 specific driver.
+>> Samsung heavily reuses its block in all Exynos devices. Now it re-uses
+>> them for other designs as well. Therefore, even if merging with existing
+>> Exynos PCIe driver is not feasible (we had such discussions), I expect
+>> this to cover all Samsung Foundry PCIe devices. From all current designs
+>> up to future licensed blocks, including some new Samsung Exynos SoC. Or
+>> at least be ready for it.
 > 
-> In general, interrupt controllers should not have to discard mappings
-> themselves, just like they rarely create mappings themselves. That's
-> usually a different layer that has created it (DT, for example).
-> 
-> The problem is that these mappings persist even if the interrupt has
-> been released by the driver (it called free_irq()), and the IRQ number
-> can be further reused. The client driver could dispose of the mapping
-> after having released the IRQ, but nobody does that in practice.
-> 
-> From the point of view of the controller, there is no simple way to
-> tell when an interrupt is "unused". And even if a driver was
-> overzealous and called irq_dispose_mapping() on all the possible
-> mappings (and made sure no mapping could be created in parallel), this
-> could result in a bunch of dangling pointers should a client driver
-> still have the interrupt requested.
-> 
-> Fixing this is pretty hard, as IRQ descriptors are leaky (you can
-> either have a pointer to one, or just an IRQ number -- they are
-> strictly equivalent). So in general, being able to remove an interrupt
-> controller driver is at best fragile, and I'm trying not to get more
-> of this in the tree.
+> I would certainly prefer fewer drivers but I don't know enough about
+> the underlying IP and the places it's integrated to to know what's
+> practical.  The only way I could figure that out would be by manually
+> comparing the drivers for similarity.  I assume/expect all driver
+> authors are doing that.
 
-Thank you!
+Merging with existing Exynos PCIe driver (and phy) might be indeed
+tricky, as existing one does not support that much as here. However I
+really expect that all current designs from Samsung - Exynos SoC, Artpec
+and for other customers - have very similar PCIe thus this should be a
+generic, new generation Samsung PCIe driver. If designed that way, also
+the naming should be back Samsung specific, no Axis/Artpec.
 
-How do we identify an interrupt controller driver?  Apparently some of
-these PCIe controller drivers also include an interrupt controller
-driver, but I don't know what to look for to find them.
-
-Bjorn
+Best regards,
+Krzysztof
