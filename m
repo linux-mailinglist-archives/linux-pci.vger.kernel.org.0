@@ -2,215 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 329A857E98E
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Jul 2022 00:14:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB51157E995
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Jul 2022 00:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232576AbiGVWOq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jul 2022 18:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
+        id S231772AbiGVWR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jul 2022 18:17:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbiGVWOo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 18:14:44 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 505CCA9B96
-        for <linux-pci@vger.kernel.org>; Fri, 22 Jul 2022 15:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658528083; x=1690064083;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FqSj+BapONT0uWHu6Wa47AQQry2W0Y0hDTriIX/N1mA=;
-  b=d9+mR8/NRyvs25ZPVmActJgrTRgQF1uf6Qyp6NOMSpqzGWKUQ5c0u8Dj
-   qdcAJDcXtbfok8vPk4jWonN4lb+FEuR4dzekLZg9hOzCrywiewAtFOuAz
-   bZea6G/Hkr8HQibPGjXW7Gy+3v8xtxOHtBMk+MHBnMzRggrUZvxF58RI4
-   u8bwMQ+CtxQJUZE9jiJz2zkcw29105sdiXw5YPraS/0HQkYj3gKcnkZan
-   w3GbHPvYB5rQZsBlyQc7AFh+uiCsykpPNuaUEs6sQ99O3XgTWtqbVfMrl
-   cGrvMo4tT47hQyW9NJ5EtH8HUeP8yqDzGO2nOsXvmivmrqD4mew2/8bIf
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10416"; a="270451452"
-X-IronPort-AV: E=Sophos;i="5.93,186,1654585200"; 
-   d="scan'208";a="270451452"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2022 15:14:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,186,1654585200"; 
-   d="scan'208";a="549322117"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 22 Jul 2022 15:14:41 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oF0uu-0001sV-2x;
-        Fri, 22 Jul 2022 22:14:40 +0000
-Date:   Sat, 23 Jul 2022 06:14:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/ctrl/pm-ops] BUILD SUCCESS
- 5f4053d43a941d0ae7844fd07da10080eb2fc41d
-Message-ID: <62db2130.27DQlukYrATKv7LA%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231478AbiGVWR3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jul 2022 18:17:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D048AECC;
+        Fri, 22 Jul 2022 15:17:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BEABA621E8;
+        Fri, 22 Jul 2022 22:17:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A4FC341C6;
+        Fri, 22 Jul 2022 22:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658528247;
+        bh=td+YTMshEeyZGR/evZyRigCvIWW9VLZJZY+E/aX4XtA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=S1ndK01/ka7GJbgw/cDPqIQy+34bqZ9cz0xCTuY/CdrGB80SKtQKydn5MfoLX3dBb
+         tIamNlcJei626DkoXe4l5sa+yCoRsCQRV6HiU98yxYX6Qf+Xio79GY8oFBf3P6/m97
+         kDRQj2WaYbZXSQvoOA0uBuDgCcn0UkHsD8IhiKUhbT90HV5mqKVxK+fzLPpapScxRt
+         SyIU0D3BVrQcjPUCwwZXz3pt6vmNdH4SZHTMiffdg9QuJn94S38ReBfjpDRLc793s3
+         D7D1v4U2fjy2fWvFB5vQ2d1lAQLw8ollZ8vDeGKhMOt0rkn3ABl2NVIe+AsK6A8qJj
+         ibs3Vt+kwsgrw==
+Date:   Fri, 22 Jul 2022 17:17:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, lpieralisi@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, kw@linux.com, kishon@ti.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V6 00/16] PCI: tegra: Add Tegra234 PCIe support
+Message-ID: <20220722221725.GA1945889@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220721142052.25971-1-vidyas@nvidia.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/pm-ops
-branch HEAD: 5f4053d43a941d0ae7844fd07da10080eb2fc41d  PCI: Convert to new *_PM_OPS macros
+On Thu, Jul 21, 2022 at 07:50:36PM +0530, Vidya Sagar wrote:
+> Tegra234 has a total of 11 PCIe controllers based on Synopsys DesignWare core.
+> There are three Universal PHY (UPHY) blocks (viz. HSIO, NVHS and GBE) with
+> each block supporting 8 lanes respectively. Controllers:0~4 use UPHY lanes
+> from HSIO block, Controllers:5,6 use UPHY lanes from NVHS block and
+> Controllers:7~10 use UPHY lanes from GBE block. Lane mapping in each block
+> is controlled in XBAR module by BPMP-FW. Since PCIe core has PIPE interface,
+> a glue module called PIPE-to-UPHY (P2U) is used to connect each UPHY lane
+> (applicable to all three UPHY bricks i.e. HSIO/NVHS/GBE) to PCIe controller.
+> All the controllers can operate in the RootPort mode where as only controllers
+> C5, C6, C7 and C10 can operate in the EndPoint mode.
+> 
+> This patch series
+> - Adds support for Tegra234 in the existing P2U PHY driver
+> - Adds support for Tegra234 in the existing PCIe platform controller driver
+> - Adds device tree nodes for all PCIe controllers
+> - Enables nodes applicable to P3737-0000 platform
+> 
+> Testing done on P3737-0000 platform
+> - PCIe link is up with on-board Broadcom WiFi controller
+> 
+> - PCIe link is up with an NVMe drive connected to M.2 Key-M slot and its
+>   functionality is verified
+> 
+> - PCIe link is up with a variety of cards (NICs and USB3.0 add-on cards)
+>   connected to CEM slot and their functionality is verified
+> 
+> - PCIe link is up with C5 controller configured for the endpoint mode with
+>   a host
+> 
+> V6:
+> * Addressed review comments from Bjorn
+> * Moved out non-Tegra234 specific changes and created separate patches
+> 
+> V5:
+> * Addressed review comments from Rob
+> 
+> V4:
+> * Addressed review comments from Krzysztof and Rob
+> * Changes are only in schema files and regulator patch
+> * Dropped PHY related patches as they are already accepted
+> 
+> V3:
+> * Add DT nodes for the controllers that can work in the EndPoint mode
+> * Converted the existing device-tree binding documentation from .txt to .yaml
+> * Add T234 specific information to the RP and EP .yaml documentation files
+> * Added regulators required to power up required power rails
+> 
+> V2:
+> * Dropped 3 patches that add clocks & resets IDs, power-domain IDs and
+>   memory IDs for PCIe controllers as the patches are already available
+>   in linux-next
+> * Based on Bjorn's review comment, reverted the commit b57256918399 ("PCI:
+>   tegra194: Rename tegra_pcie_dw to tegra194_pcie") and pushed it as a
+>   separate patch before adding support for T234 in the existing driver
+> * Addressed review comments from Rob for the other changes
+> 
+> Vidya Sagar (16):
+>   dt-bindings: pci: tegra: Convert to json-schema
+>   dt-bindings: PCI: tegra234: Add schema for tegra234 rootport mode
+>   dt-bindings: PCI: tegra234: Add schema for tegra234 endpoint mode
+>   arm64: tegra: Add regulators required for PCIe
+>   arm64: tegra: Add P2U and PCIe controller nodes to Tegra234 DT
+>   arm64: tegra: Enable PCIe slots in P3737-0000 board
+>   PCI: Disable MSI for Tegra234 root ports
+>   Revert "PCI: tegra194: Rename tegra_pcie_dw to tegra194_pcie"
+>   PCI: tegra194: Find RAS DES PCIe capability offset
+>   PCI: tegra194: Fix root port interrupt handling
+>   PCI: tegra194: Clear bandwidth management status
+>   PCI: tegra194: Enable support for 256 Byte payload
+>   PCI: tegra194: Cleanup the exit path for endpoint mode
+>   PCI: tegra194: Fix link up retry sequence
+>   PCI: tegra194: Extend endpoint mode support
+>   PCI: tegra: Add Tegra234 PCIe support
 
-elapsed time: 1794m
+I applied these (except the arch/arm64 .dtsi changes, which I assume
+should go via arm-soc) to pci/ctrl/tegra194 for v5.20, thanks!
 
-configs tested: 131
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-powerpc              randconfig-c003-20220722
-sh                               j2_defconfig
-arc                          axs101_defconfig
-alpha                               defconfig
-mips                         cobalt_defconfig
-arm                      jornada720_defconfig
-m68k                          atari_defconfig
-sh                          r7785rp_defconfig
-m68k                                defconfig
-powerpc                 mpc834x_itx_defconfig
-sh                              ul2_defconfig
-powerpc                        cell_defconfig
-riscv             nommu_k210_sdcard_defconfig
-mips                           xway_defconfig
-mips                          rb532_defconfig
-powerpc                 mpc834x_mds_defconfig
-xtensa                           allyesconfig
-arc                        vdk_hs38_defconfig
-powerpc                       maple_defconfig
-powerpc                      makalu_defconfig
-parisc                              defconfig
-arc                      axs103_smp_defconfig
-m68k                        mvme147_defconfig
-mips                     loongson1b_defconfig
-arm                         at91_dt_defconfig
-sh                             sh03_defconfig
-xtensa                           alldefconfig
-powerpc                     sequoia_defconfig
-powerpc                       ppc64_defconfig
-csky                                defconfig
-arm                          gemini_defconfig
-nios2                         10m50_defconfig
-sh                               alldefconfig
-powerpc                     tqm8555_defconfig
-arm                             pxa_defconfig
-powerpc                      tqm8xx_defconfig
-mips                           gcw0_defconfig
-arm                        oxnas_v6_defconfig
-powerpc                    amigaone_defconfig
-arm                     eseries_pxa_defconfig
-sh                        edosk7760_defconfig
-sh                          rsk7203_defconfig
-powerpc                   currituck_defconfig
-mips                      maltasmvp_defconfig
-sparc                               defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-s390                                defconfig
-s390                             allmodconfig
-arc                                 defconfig
-s390                             allyesconfig
-powerpc                          allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                              debian-10.3
-loongarch                           defconfig
-loongarch                         allnoconfig
-arm                  randconfig-c002-20220721
-x86_64                        randconfig-c001
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-sh                               allmodconfig
-powerpc                          allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220721
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-arm                         s3c2410_defconfig
-arm                          ixp4xx_defconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                          allyesconfig
-powerpc                     akebono_defconfig
-powerpc                    mvme5100_defconfig
-mips                      malta_kvm_defconfig
-arm                                 defconfig
-arm                           spitz_defconfig
-arm                          pxa168_defconfig
-i386                             allyesconfig
-x86_64                           allyesconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220721
-s390                 randconfig-r044-20220721
-hexagon              randconfig-r045-20220721
-riscv                randconfig-r042-20220721
-hexagon              randconfig-r041-20220722
-hexagon              randconfig-r045-20220722
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+>  .../bindings/pci/nvidia,tegra194-pcie-ep.yaml | 318 ++++++
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 245 -----
+>  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 349 +++++++
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+>  .../boot/dts/nvidia/tegra234-p3701-0000.dtsi  |  36 +
+>  .../nvidia/tegra234-p3737-0000+p3701-0000.dts |  51 +
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi      | 927 ++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  19 +
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 658 ++++++++-----
+>  drivers/pci/quirks.c                          |  13 +-
+>  10 files changed, 2136 insertions(+), 484 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> 
+> -- 
+> 2.17.1
+> 
