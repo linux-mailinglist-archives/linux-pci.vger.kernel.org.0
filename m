@@ -2,161 +2,279 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3BC57F3DA
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Jul 2022 10:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0E157F3FE
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Jul 2022 10:25:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235202AbiGXICy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Jul 2022 04:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        id S229871AbiGXIY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Jul 2022 04:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbiGXICx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 04:02:53 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E533715706;
-        Sun, 24 Jul 2022 01:02:52 -0700 (PDT)
+        with ESMTP id S229772AbiGXIYz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 04:24:55 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9285186F0
+        for <linux-pci@vger.kernel.org>; Sun, 24 Jul 2022 01:24:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658649772; x=1690185772;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CAUlyqlmn8DRqlIwM/F0ha25qVFV/n8XQ56UArsr3MI=;
-  b=bdVr9buzqMzA6Y9cOztPH21ilT0sqCXjMXlPELRdfmqkGSONlC/+Sq4F
-   mxmcpx44O0oqv2LbBy1OYOkYV2D3mqbfcwNpQobALyuXKY7wTlYtT3Bxi
-   FGOrE9b7SpdHsYNSmvkorwFsLdsq5ux/kqGC2vG2RSOz9GEp8a1A1HU1d
-   Y+IQ9+NZBIk5Uxd2jPI/2RkkY32PBrL9SPGrCulVWGybinPTwSW+2xGDs
-   uA3ZPRNa5juG+eb+rIT20rv8vHODsufk54B0wZLndOk2sglmXImcpPume
-   wTvnivFGau34vwK+Hz8QQYKAK2yvLPtCw+Pbl90E9YjwIlIS+ZBVkWgY8
+  t=1658651094; x=1690187094;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aqJEIaFi3Avjaphrl5tLtiArlIYGmrU69UVaQ/fiODE=;
+  b=crp6ILzU2yIfiXbOHUTxJaaJCLagsaDpYglFxFoO+jkkyhbykn7M9poS
+   S346/PTNxS2oa7QximRlCVbNPa+6Uk/OT2NdtXTQ87T50N011EiNeW8aK
+   A5/AsOllmwo06MBcklAFHwbpPYYDg+RlFPHcAY3gvXslfjY0jah5e38W6
+   KF88sGyjoCozGrB3smCBTZCoPgAguy4V4DKhak/DGCpGnxB91qHlrWSGr
+   7UGY+hAiEpYLBl4hXUJNhPMLyePojQ3oTdzYKChciPr0qBEIKLuzGhhUZ
+   QXo3hY81ioLXbYDDAVaeiuKHH2DzhV2u7PaxVfkJ66XApmSJIDtFWh+h6
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10417"; a="267298194"
+X-IronPort-AV: E=McAfee;i="6400,9594,10417"; a="267918317"
 X-IronPort-AV: E=Sophos;i="5.93,190,1654585200"; 
-   d="scan'208";a="267298194"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2022 01:02:52 -0700
+   d="scan'208";a="267918317"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2022 01:24:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,190,1654585200"; 
-   d="scan'208";a="549631966"
+   d="scan'208";a="627069384"
 Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2022 01:02:48 -0700
+  by orsmga008.jf.intel.com with ESMTP; 24 Jul 2022 01:24:48 -0700
 Received: from kbuild by e0eace57cfef with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oFWZb-0003hl-1q;
-        Sun, 24 Jul 2022 08:02:47 +0000
-Date:   Sun, 24 Jul 2022 16:01:49 +0800
+        id 1oFWuu-0003ir-0y;
+        Sun, 24 Jul 2022 08:24:48 +0000
+Date:   Sun, 24 Jul 2022 16:24:09 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-        bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        shawnguo@kernel.org, kishon@ti.com, kw@linux.com, frank.li@nxp.com
-Cc:     kbuild-all@lists.01.org, hongxing.zhu@nxp.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: Re: [PATCH v1 09/10] PCI: imx6: Add iMX8MM PCIe EP mode
-Message-ID: <202207241506.pe2RsQWk-lkp@intel.com>
-References: <1658223939-25478-10-git-send-email-hongxing.zhu@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
+ 6943f3e3ffe537d2c4683c5c13a04e80798b9496
+Message-ID: <62dd01a9.1e6cZh3hjUj6A8FS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1658223939-25478-10-git-send-email-hongxing.zhu@nxp.com>
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: 6943f3e3ffe537d2c4683c5c13a04e80798b9496  PCI/ACPI: Update link to PCI firmware specification
 
-I love your patch! Yet something to improve:
+elapsed time: 2152m
 
-[auto build test ERROR on next-20220718]
-[cannot apply to helgaas-pci/next robh/for-next char-misc/char-misc-testing v5.19-rc7 v5.19-rc6 v5.19-rc5 linus/master v5.19-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 198
+configs skipped: 7
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Zhu/Add-iMX-PCIe-EP-mode-support/20220719-180421
-base:    036ad6daa8f0fd357af7f50f9da58539eaa6f68c
-config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20220724/202207241506.pe2RsQWk-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/1ebd36a42f9836f97d60b714e8ae000135c68576
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Richard-Zhu/Add-iMX-PCIe-EP-mode-support/20220719-180421
-        git checkout 1ebd36a42f9836f97d60b714e8ae000135c68576
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash drivers/pci/controller/dwc/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc              randconfig-c003-20220724
+powerpc              randconfig-c003-20220722
+arc                        nsim_700_defconfig
+sparc                       sparc64_defconfig
+s390                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                          atari_defconfig
+sh                          r7785rp_defconfig
+m68k                                defconfig
+powerpc                 mpc834x_itx_defconfig
+sh                               alldefconfig
+arm                          lpd270_defconfig
+m68k                            mac_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                      tqm8xx_defconfig
+arc                      axs103_smp_defconfig
+um                                  defconfig
+arm                           u8500_defconfig
+sh                             shx3_defconfig
+arm                          simpad_defconfig
+sparc                       sparc32_defconfig
+sh                  sh7785lcr_32bit_defconfig
+parisc                generic-64bit_defconfig
+m68k                        m5407c3_defconfig
+mips                           jazz_defconfig
+powerpc                 mpc8540_ads_defconfig
+openrisc                 simple_smp_defconfig
+nios2                         3c120_defconfig
+arm                           h5000_defconfig
+mips                  decstation_64_defconfig
+mips                         mpc30x_defconfig
+powerpc                     pq2fads_defconfig
+mips                       bmips_be_defconfig
+x86_64                              defconfig
+mips                         bigsur_defconfig
+sh                          rsk7269_defconfig
+sh                     magicpanelr2_defconfig
+sh                        apsh4ad0a_defconfig
+alpha                            alldefconfig
+openrisc                            defconfig
+parisc                           alldefconfig
+m68k                          amiga_defconfig
+mips                 decstation_r4k_defconfig
+sh                             sh03_defconfig
+xtensa                           alldefconfig
+powerpc                     sequoia_defconfig
+sh                        sh7763rdp_defconfig
+m68k                         amcore_defconfig
+arm                            hisi_defconfig
+sh                         ap325rxa_defconfig
+xtensa                  nommu_kc705_defconfig
+arm                           stm32_defconfig
+arm                           tegra_defconfig
+sh                                  defconfig
+arm                       omap2plus_defconfig
+xtensa                              defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                     asp8347_defconfig
+xtensa                           allyesconfig
+m68k                          sun3x_defconfig
+xtensa                    smp_lx200_defconfig
+arm                         nhk8815_defconfig
+arm                           corgi_defconfig
+arc                    vdk_hs38_smp_defconfig
+arm                         at91_dt_defconfig
+riscv                               defconfig
+mips                          rb532_defconfig
+openrisc                         alldefconfig
+powerpc                       ppc64_defconfig
+csky                                defconfig
+arm                          gemini_defconfig
+arm                        mini2440_defconfig
+sh                             espt_defconfig
+alpha                               defconfig
+mips                           ci20_defconfig
+sh                          kfr2r09_defconfig
+powerpc                     tqm8548_defconfig
+powerpc                      mgcoge_defconfig
+sh                           se7751_defconfig
+parisc64                         alldefconfig
+m68k                       m5208evb_defconfig
+sh                            titan_defconfig
+arm                            pleb_defconfig
+sh                           se7724_defconfig
+sparc64                             defconfig
+loongarch                         allnoconfig
+ia64                         bigsur_defconfig
+loongarch                           defconfig
+sparc                               defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+s390                                defconfig
+arc                                 defconfig
+s390                             allyesconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220721
+arm                  randconfig-c002-20220724
+arm                  randconfig-c002-20220722
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a003
+i386                          randconfig-a005
+i386                          randconfig-a001
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220721
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-All errors (new ones prefixed by >>):
-
-   drivers/pci/controller/dwc/pci-imx6.c: In function 'imx6_add_pcie_ep':
->> drivers/pci/controller/dwc/pci-imx6.c:1069:32: error: initialization of 'struct pcie_port *' from incompatible pointer type 'struct dw_pcie_rp *' [-Werror=incompatible-pointer-types]
-    1069 |         struct pcie_port *pp = &pci->pp;
-         |                                ^
-   drivers/pci/controller/dwc/pci-imx6.c:1072:29: error: passing argument 1 of 'imx6_pcie_host_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
-    1072 |         imx6_pcie_host_init(pp);
-         |                             ^~
-         |                             |
-         |                             struct pcie_port *
-   drivers/pci/controller/dwc/pci-imx6.c:925:51: note: expected 'struct dw_pcie_rp *' but argument is of type 'struct pcie_port *'
-     925 | static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
-         |                                ~~~~~~~~~~~~~~~~~~~^~
-   cc1: some warnings being treated as errors
-
-
-vim +1069 drivers/pci/controller/dwc/pci-imx6.c
-
-  1060	
-  1061	static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
-  1062				   struct platform_device *pdev)
-  1063	{
-  1064		int ret;
-  1065		unsigned int pcie_dbi2_offset;
-  1066		struct dw_pcie_ep *ep;
-  1067		struct resource *res;
-  1068		struct dw_pcie *pci = imx6_pcie->pci;
-> 1069		struct pcie_port *pp = &pci->pp;
-  1070		struct device *dev = pci->dev;
-  1071	
-  1072		imx6_pcie_host_init(pp);
-  1073		ep = &pci->ep;
-  1074		ep->ops = &pcie_ep_ops;
-  1075	
-  1076		switch (imx6_pcie->drvdata->variant) {
-  1077		case IMX8MM_EP:
-  1078			pcie_dbi2_offset = SZ_1M;
-  1079			break;
-  1080		default:
-  1081			pcie_dbi2_offset = SZ_4K;
-  1082			break;
-  1083		}
-  1084		pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
-  1085		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-  1086		if (!res)
-  1087			return -EINVAL;
-  1088	
-  1089		ep->phys_base = res->start;
-  1090		ep->addr_size = resource_size(res);
-  1091		ep->page_size = SZ_64K;
-  1092	
-  1093		ret = dw_pcie_ep_init(ep);
-  1094		if (ret) {
-  1095			dev_err(dev, "failed to initialize endpoint\n");
-  1096			return ret;
-  1097		}
-  1098		/* Start LTSSM. */
-  1099		imx6_pcie_ltssm_enable(dev);
-  1100	
-  1101		return 0;
-  1102	}
-  1103	
+clang tested configs:
+mips                          malta_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                     akebono_defconfig
+arm                  colibri_pxa300_defconfig
+hexagon                             defconfig
+mips                       rbtx49xx_defconfig
+powerpc                      acadia_defconfig
+arm                       mainstone_defconfig
+mips                        qi_lb60_defconfig
+arm                      pxa255-idp_defconfig
+mips                      maltaaprp_defconfig
+mips                          ath79_defconfig
+arm                        multi_v5_defconfig
+mips                        bcm63xx_defconfig
+powerpc                     ksi8560_defconfig
+mips                        maltaup_defconfig
+powerpc                      obs600_defconfig
+arm                            dove_defconfig
+riscv                    nommu_virt_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                     ppa8548_defconfig
+mips                      malta_kvm_defconfig
+mips                           rs90_defconfig
+arm                       spear13xx_defconfig
+mips                     loongson1c_defconfig
+powerpc                   microwatt_defconfig
+powerpc                 mpc8272_ads_defconfig
+arm                        spear3xx_defconfig
+mips                         tb0287_defconfig
+arm                         hackkit_defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r041-20220721
+hexagon              randconfig-r045-20220721
+s390                 randconfig-r044-20220721
+riscv                randconfig-r042-20220721
 
 -- 
 0-DAY CI Kernel Test Service
