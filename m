@@ -2,189 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1DB57F0FD
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Jul 2022 20:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00B6357F246
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Jul 2022 02:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbiGWSuN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Jul 2022 14:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53324 "EHLO
+        id S239128AbiGXAyS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Jul 2022 20:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231244AbiGWSuL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Jul 2022 14:50:11 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3F42600
-        for <linux-pci@vger.kernel.org>; Sat, 23 Jul 2022 11:50:08 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id m12so11315273lfj.4
-        for <linux-pci@vger.kernel.org>; Sat, 23 Jul 2022 11:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=B+vvDtYGi1XDKiuGjmDw/lVU+xC9oujhBoztFUY2G+U=;
-        b=SlWw/tImFQZIeS1Hg1TtKzgSZQ49TJZ9bTLtA3YySZ2LrccpK+g5tHfRNOnwpTOwzZ
-         ly8aO31AcU0X43fVYjnTzcZ5U9PXvri7Setm6Uehj2NeCVG6Wjzq1eOrcpFVPGBB2kJl
-         3EPxeCd7hCS9tcwd4b4eBwXXOQMN9lCdGOE9pIgR9I1NDzezeoxImAWWsfYDwZk5QTZv
-         2jlE8byeiWrusQDzQr8VBArJn7GJAUHKjVGsEFg/7NZ+M0DNaan0sHO5hpD2kBViTQaT
-         pfYaxsrpL3CqUEkhCtiyKvxCfpF3IiopehUCN704LF2wp6sMtmunyKlPJljjP4r2K765
-         GX/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=B+vvDtYGi1XDKiuGjmDw/lVU+xC9oujhBoztFUY2G+U=;
-        b=MdTvUi2/lRuJJYVzndGD700XjttLTQrc2ut8ba8E6PQHsYYasPH3z4m6S/Xw6BChTv
-         5quZ5GPZ0jOAP4zUlztVwvp211IOfpvEaB5CclZNt2+ATOYu2jb8pp3GizQaAM5uLdln
-         odjPc5CO9LSvc46FahUjm9Omfpj9ZJc9lgFiYmwbAMd1FQRGJNyLOMGxYP2KSK2K6TgJ
-         FWaZg9C+lRuw3dhY3cRvHuLxh6BrJI6hdW7Od2vdAro1Nd1r9ugAoWow64e79WIcMhGg
-         /qZyUmvH09PrHuQR/FNCSey1L6S75Qvf5/oQUJe7TYmWc4cLbSVX5v0FweE6cq06uOxh
-         Hciw==
-X-Gm-Message-State: AJIora/iIpTOgW5qeGjeFxzM308UMgzyZHMFeoBy7NPYyQj7bh/en9ft
-        fNiZhNB7CV3kABIMZrGKv0f/kQ==
-X-Google-Smtp-Source: AGRyM1tJ3m1Ldo3gY1ozOqzQBPwlbigKbf8YB3WWehnFWJAkReNx2LOf/rTS6Rxfn1qC7HMI24wTxw==
-X-Received: by 2002:a05:6512:10d0:b0:48a:6cee:50d0 with SMTP id k16-20020a05651210d000b0048a6cee50d0mr2039323lfg.222.1658602206736;
-        Sat, 23 Jul 2022 11:50:06 -0700 (PDT)
-Received: from [192.168.10.173] (93.81-167-86.customer.lyse.net. [81.167.86.93])
-        by smtp.gmail.com with ESMTPSA id h11-20020a0565123c8b00b0048a7d33e0f0sm447803lfv.261.2022.07.23.11.50.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Jul 2022 11:50:06 -0700 (PDT)
-Message-ID: <2c11d0b0-b012-ea24-5c3c-305bbdd231a0@linaro.org>
-Date:   Sat, 23 Jul 2022 20:50:03 +0200
+        with ESMTP id S239065AbiGXAyR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Jul 2022 20:54:17 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F1B14D3B
+        for <linux-pci@vger.kernel.org>; Sat, 23 Jul 2022 17:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658624057; x=1690160057;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vG9N0UngUx1hN6OPP7+Pgn+AkWDPdRZF5yNUX1yLm2k=;
+  b=l2Fs0kzZ6X5AR9lhRBbHxwO0Lh5eBWlFV+9894FdFmpcz5l1O3uwD2lQ
+   7hIb7QKD6SrCTSytFOJWD8BdIwppnkwYf3E/aaa5/zyv8OKrzNAdK4hNS
+   M4xHD/v2y3j6kXutfq2FAJzciiRtekUTzgfCIuVMUuwd4lYtZaltfu0SL
+   QKgEDLUzzZsD6sq0+li3pk1GkOTnDQKME6D7m/N+OjARpgk1C1VcQs01Q
+   hSk/QpHA1uc9KcUgACSiLKKdSNdfDIwxkwLE62BWxU4GOyjTZzU1+Ebo9
+   W63HJXQOKXD0+SUTC32sFw4h2tUWm9Zl7SRDvessdH7yurYZG31R+ThNI
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10417"; a="373808248"
+X-IronPort-AV: E=Sophos;i="5.93,189,1654585200"; 
+   d="scan'208";a="373808248"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2022 17:54:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,189,1654585200"; 
+   d="scan'208";a="574595658"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 23 Jul 2022 17:54:15 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oFPss-0003Jb-2U;
+        Sun, 24 Jul 2022 00:54:14 +0000
+Date:   Sun, 24 Jul 2022 08:53:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/tegra194] BUILD SUCCESS
+ a54e190737181c12d2a49a8f6456622e8b70f4f1
+Message-ID: <62dc9804.9hio4VxEY3ISETY/%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3 3/4] dt-bindings: irqchip: imx mu work as msi
- controller
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, jdmason@kudzu.us, maz@kernel.org,
-        tglx@linutronix.de, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com
-Cc:     kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        peng.fan@nxp.com, aisheng.dong@nxp.com, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, ntb@lists.linux.dev
-References: <20220720213036.1738628-1-Frank.Li@nxp.com>
- <20220720213036.1738628-4-Frank.Li@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220720213036.1738628-4-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/07/2022 23:30, Frank Li wrote:
-> imx mu support generate irq by write a register.
-> provide msi controller support so other driver
-> can use it by standard msi interface.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/tegra194
+branch HEAD: a54e190737181c12d2a49a8f6456622e8b70f4f1  PCI: tegra194: Add Tegra234 PCIe support
 
-Please start sentences with capital letter. Unfortunately I don't
-understand the sentences. Please describe shortly the hardware.
+elapsed time: 1554m
 
+configs tested: 107
+configs skipped: 5
 
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../interrupt-controller/fsl,mu-msi.yaml      | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
-> new file mode 100644
-> index 0000000000000..e125294243af3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/fsl,mu-msi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX Messaging Unit (MU) work as msi controller
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description: |
-> +  The Messaging Unit module enables two processors within the SoC to
-> +  communicate and coordinate by passing messages (e.g. data, status
-> +  and control) through the MU interface. The MU also provides the ability
-> +  for one processor to signal the other processor using interrupts.
-> +
-> +  Because the MU manages the messaging between processors, the MU uses
-> +  different clocks (from each side of the different peripheral buses).
-> +  Therefore, the MU must synchronize the accesses from one side to the
-> +  other. The MU accomplishes synchronization using two sets of matching
-> +  registers (Processor A-facing, Processor B-facing).
-> +
-> +  MU can work as msi interrupt controller to do doorbell
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx6sx-mu-msi
-> +      - fsl,imx7ulp-mu-msi
-> +      - fsl,imx8ulp-mu-msi
-> +      - fsl,imx8ulp-mu-msi-s4
-> +
-> +  reg:
-> +    minItems: 2
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Not minItems but maxItems in general, but anyway you need to actually
-list and describe the items (and then skip min/max)
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+powerpc              randconfig-c003-20220722
+i386                          randconfig-c001
+sh                               alldefconfig
+arm                          lpd270_defconfig
+m68k                            mac_defconfig
+um                                  defconfig
+arm                           h5000_defconfig
+mips                  decstation_64_defconfig
+mips                         mpc30x_defconfig
+powerpc                     pq2fads_defconfig
+mips                       bmips_be_defconfig
+sh                          r7785rp_defconfig
+parisc                           alldefconfig
+m68k                          amiga_defconfig
+mips                 decstation_r4k_defconfig
+sh                             sh03_defconfig
+powerpc                     sequoia_defconfig
+xtensa                           alldefconfig
+sh                        sh7763rdp_defconfig
+m68k                         amcore_defconfig
+arm                            hisi_defconfig
+sh                         ap325rxa_defconfig
+xtensa                  nommu_kc705_defconfig
+arm                           stm32_defconfig
+arm                           tegra_defconfig
+sh                                  defconfig
+parisc                generic-64bit_defconfig
+powerpc                     tqm8548_defconfig
+openrisc                         alldefconfig
+m68k                       m5208evb_defconfig
+sh                            titan_defconfig
+ia64                         bigsur_defconfig
+loongarch                           defconfig
+parisc64                         alldefconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+loongarch                         allnoconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220721
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-> +
-> +  reg-names:
-> +    items:
-> +      - const: a
-> +      - const: b
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 2
+clang tested configs:
+arm                       mainstone_defconfig
+mips                        qi_lb60_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                     akebono_defconfig
+mips                      malta_kvm_defconfig
+mips                           rs90_defconfig
+x86_64                        randconfig-k001
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+hexagon              randconfig-r041-20220721
+hexagon              randconfig-r045-20220721
+riscv                randconfig-r042-20220721
+s390                 randconfig-r044-20220721
 
-and here you correctly use maxItems, so why min in reg? Anyway, instead
-you need to list and describe the items.
-
-Actually I asked you this last time about interrupts, so you ignored
-that comment.
-
-> +
-> +  power-domain-names:
-> +    items:
-> +      - const: a
-> +      - const: b
-> +
-> +  interrupt-controller: true
-> +
-> +  msi-controller: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - msi-controller
-> +  - interrupt-controller
-
-Why different order than used in properties?
-
-
-
-Best regards,
-Krzysztof
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
