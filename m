@@ -2,184 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2DFE57F769
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 00:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424A557F827
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 04:08:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiGXWsg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Jul 2022 18:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
+        id S229745AbiGYCIL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Jul 2022 22:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiGXWsf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 18:48:35 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC37CCE30
-        for <linux-pci@vger.kernel.org>; Sun, 24 Jul 2022 15:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658702914; x=1690238914;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TZwe8VklvVKYNdhxQotjEMHMq+MYUHTYiYU0XJvr8uU=;
-  b=E/DY7Uj33ZRDw4jbOs9l46WNrHlHyBNanI2F063oJs1APgUhiKTKlGOD
-   hAuzkYm4MVl7v5KayhB8i06KJApxE3b/HuZXeEYWGQPBRRp18uTnjVoCR
-   ZJzRzYFBKZvF/ZE13YebtKq9g8lz67f9KVT00lVXh72LCrq9cgrm+ykkd
-   Sweh2/VAS4vzPrN5P9IXR8kWTXXWhBDeo81J6WsJyn2eF/kUmhvozt4Ez
-   24HeXFDoRyQnnd+2ck9mjdH1eJa7oCINmYmwahi809JfRqGxPQx49Qxuo
-   LcE3QRDY0jtvbmO5YOmD9NSE/VTB0gOVSYK6p53JTtN0KYe3WSE127fM1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10418"; a="286335462"
-X-IronPort-AV: E=Sophos;i="5.93,191,1654585200"; 
-   d="scan'208";a="286335462"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2022 15:48:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,191,1654585200"; 
-   d="scan'208";a="549769635"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2022 15:48:32 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oFkOm-0004NS-0r;
-        Sun, 24 Jul 2022 22:48:32 +0000
-Date:   Mon, 25 Jul 2022 06:48:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/ctrl/loongson] BUILD SUCCESS
- 930c6074d7dd579f3d4e8b04548dd8cb0341de1d
-Message-ID: <62ddcc20.022IEkjnfm0fe8R+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231421AbiGYCIL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 22:08:11 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F32DF83;
+        Sun, 24 Jul 2022 19:08:10 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id q16so9090698pgq.6;
+        Sun, 24 Jul 2022 19:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wPqnXwXti1+G5tWXmkHTdMuVELnLmjzK9jn4d9GRpd0=;
+        b=VDm5l9E+2HuSM1K5W3uvSA51dlS6VFJXblBSWOH2EKnXLZLKifshM9+cmkfKqXqAUb
+         Lp01f6pGs2IG5th9y+gzAgnoZyOUTS457R7GeR7X3tNC+E+iXNQAXN0Qd4UuEi0U+3v0
+         C+jiaAKkB7x7fMhMAIsdmN7ryNK/1kImmiv2hXwbRjrtoyn7K6C1IlmAFbJrokDljWbE
+         BTPjtHcG50eFJHzfvIje0tKIPXFBn6nm8vJ/aQyGieEPQgHRJYtjDGexIk/pnZT99f8n
+         xFR3vW/ENV7nyioVcn8fFeB9XyBq+F8rpBjvB+t0iVm4uXIjL50iPed1qZKZpi6JGHAC
+         JHCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wPqnXwXti1+G5tWXmkHTdMuVELnLmjzK9jn4d9GRpd0=;
+        b=1XIRkiJfCFu8o7XC9v2/lcUjq8FBQuT75FAykK9BprSIBlBb4FHjAYOYovfZSer0R4
+         4lHJnXLtgAx3Y1ca0uJno/n2YKQa+ElQPtnCcRo4w2bRH6cz31KInxoJKmM21rjh6G8P
+         CGsHsW2isqKW5SelcUU+kJjw8LvpKYFLLsP+n0p2Nwzpbc8OipziWMeYo0BvG1Cb3szu
+         1EvOH+wdgVy9qgiygathR3C+GFEG6ls09CUB6QqUs1wv3y7er1MdjmdscEgn/tr5H9OF
+         r1IB041JJqn+b80I7JThpaZ10oIx4Rlb7j2Wp32qnV9HawmcqlgEJEIKSld0P6/9RGFD
+         cJeg==
+X-Gm-Message-State: AJIora+WTH15FGuBuQ71nqz+e6+QgwmFIeKWQyVZUSyhFk0jcwy6leAf
+        y37v+nw0iLrUvcdulifGCpzg2OG+u2jTlA==
+X-Google-Smtp-Source: AGRyM1sv7D6TECjQbd7J6r840ZgNyxq3COsXrFclaRJu6HRQYwhr+T1u7cICzUR21mWnw3rw92Zopg==
+X-Received: by 2002:a63:6c87:0:b0:419:b667:6622 with SMTP id h129-20020a636c87000000b00419b6676622mr8895996pgc.495.1658714889186;
+        Sun, 24 Jul 2022 19:08:09 -0700 (PDT)
+Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
+        by smtp.gmail.com with ESMTPSA id z10-20020a1709027e8a00b0016c740e53bbsm307815pla.79.2022.07.24.19.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Jul 2022 19:08:08 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v3 1/3] asm-generic: Support NO_IOPORT_MAP in pci_iomap.h
+Date:   Mon, 25 Jul 2022 11:07:35 +0900
+Message-Id: <20220725020737.1221739-2-shorne@gmail.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20220725020737.1221739-1-shorne@gmail.com>
+References: <20220725020737.1221739-1-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/loongson
-branch HEAD: 930c6074d7dd579f3d4e8b04548dd8cb0341de1d  PCI: loongson: Work around LS7A incorrect Interrupt Pin registers
+When building OpenRISC PCI which has no ioport_map we get the following build
+error.
 
-elapsed time: 4559m
+    lib/pci_iomap.c: In function 'pci_iomap_range':
+      CC      drivers/i2c/i2c-core-base.o
+    ./include/asm-generic/pci_iomap.h:29:41: error: implicit declaration of function 'ioport_map'; did you mean 'ioremap'? [-Werror=implicit-function-declaration]
+       29 | #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
+          |                                         ^~~~~~~~~~
+    lib/pci_iomap.c:44:24: note: in expansion of macro '__pci_ioport_map'
+       44 |                 return __pci_ioport_map(dev, start, len);
+          |                        ^~~~~~~~~~~~~~~~
 
-configs tested: 104
-configs skipped: 4
+This patch adds a NULL definition of __pci_ioport_map for architetures
+which do not support ioport_map.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+---
+ include/asm-generic/pci_iomap.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arc                        nsim_700_defconfig
-sparc                       sparc64_defconfig
-s390                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                          atari_defconfig
-sh                          r7785rp_defconfig
-m68k                                defconfig
-powerpc                 mpc834x_itx_defconfig
-m68k                        m5407c3_defconfig
-mips                           jazz_defconfig
-powerpc                 mpc8540_ads_defconfig
-openrisc                 simple_smp_defconfig
-nios2                         3c120_defconfig
-sh                        apsh4ad0a_defconfig
-powerpc                     pq2fads_defconfig
-alpha                            alldefconfig
-openrisc                            defconfig
-arm                           corgi_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                         at91_dt_defconfig
-powerpc                      mgcoge_defconfig
-sh                           se7751_defconfig
-alpha                               defconfig
-parisc64                         alldefconfig
-sh                           se7724_defconfig
-sparc64                             defconfig
-powerpc                       ppc64_defconfig
-mips                           ci20_defconfig
-loongarch                         allnoconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-s390                                defconfig
-arc                                 defconfig
-s390                             allyesconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-loongarch                           defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220721
-arm                  randconfig-c002-20220722
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                                defconfig
-i386                             allyesconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220721
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-powerpc                     akebono_defconfig
-arm                  colibri_pxa300_defconfig
-hexagon                             defconfig
-arm                        multi_v5_defconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220721
-hexagon              randconfig-r045-20220721
-riscv                randconfig-r042-20220721
-s390                 randconfig-r044-20220721
-
+diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
+index 5a2f9bf53384..8fbb0a55545d 100644
+--- a/include/asm-generic/pci_iomap.h
++++ b/include/asm-generic/pci_iomap.h
+@@ -25,6 +25,8 @@ extern void pci_iounmap(struct pci_dev *dev, void __iomem *);
+ #ifdef CONFIG_NO_GENERIC_PCI_IOPORT_MAP
+ extern void __iomem *__pci_ioport_map(struct pci_dev *dev, unsigned long port,
+ 				      unsigned int nr);
++#elif !defined(CONFIG_HAS_IOPORT_MAP)
++#define __pci_ioport_map(dev, port, nr) NULL
+ #else
+ #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
+ #endif
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.36.1
+
