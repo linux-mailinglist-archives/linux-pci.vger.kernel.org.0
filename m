@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8EDC580182
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5224D580185
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236121AbiGYPQ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:16:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        id S236204AbiGYPRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 11:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236054AbiGYPQT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:19 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23911EEE8;
-        Mon, 25 Jul 2022 08:13:45 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id 17so10757826pfy.0;
-        Mon, 25 Jul 2022 08:13:45 -0700 (PDT)
+        with ESMTP id S235910AbiGYPQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:23 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F0D1B78A;
+        Mon, 25 Jul 2022 08:13:49 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id o5-20020a17090a3d4500b001ef76490983so10566982pjf.2;
+        Mon, 25 Jul 2022 08:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cWqt3A+kTTr3GuQ/QKtvOTNiaH7+FtME/Jys/x5W9Qg=;
-        b=RnHVXJ7QzoxC/Sb4hfqcVvvu5DQpUvhCBmwM3ZfgRwfuFoTwxujBXVmTDApsn5EFw9
-         JL9cAxz6gNHdtxWfy195R63xeEHToGNb3wCwYSSuCipWefhsDN54obbf36XGugonATR6
-         pkZSuaMmGyX6bXjcdWRhFVkvvc9CHgeafUcE+ow2bRHr3Cg8vTLwUGP/wAg3j69csvj1
-         /iOtfyxFG3WltjRMO0gdDJj4RvkUxx1bIlhaCQirgSYjvl7eFKG3wztVR5EVt8Cpxh37
-         P7zJWc6cYo64Vr5zPZ1sejbk3ohHiGia6ceCSqh7QQslmVn/dhdfx+ydUN8i4WjPnehU
-         l+dw==
+        bh=XRISqH0YEt9x37mOvZB1aRfZZEl6+ks0JDgNi4Ug7Zk=;
+        b=o5neeh4ryOoBCB8aglOKL52nvvcBgFyio+39f1GPtB2O/slaQJdSCAr4qATZhCQmF7
+         1zjFyzWkusGEbaJI6oYjegXXuPo5ICsGd2dXIQ3WCRyjOMFl1YGlKEM/kFKKyzPx72An
+         8bKV15YiEXk1Ungcvs+IogfaUTguat61aZa9aDVmg4Q/qvSsp4AhG19nCC+xfY3ti/Fx
+         geXalA7hGJGtLujyQ4lCHfgFo1jn7cZ3B0VK+qwRSVNqXAysraPUQa2by2+4YDAEhftO
+         xpAiofVS6Qh3GnK8oRRIe2TiGXoHU+WOyIcastiLhcc/h49+tTNlSpugOwWQo1fONNrV
+         N0Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=cWqt3A+kTTr3GuQ/QKtvOTNiaH7+FtME/Jys/x5W9Qg=;
-        b=Wsxi/pnVajP7lpcfqOb9xDaw3BWNMxULJkgjjy+fHn8OQZ1yiaCBEuk49v1KLmoTRP
-         RksydYGnifdMoUvrlavG9O0Tvqam13SXq/BfIXzb4qU4CuX/PGVKS8OtFqxbi3XoQmzz
-         A1qFFxknn6LHK9iI3Er42LfUEC9pOqxfk+ArldZpdJTf72CnmqYCiZr5fIa5Ham8C/k7
-         84GEPQe97Aj1hT0ppTOiFaDgR/1zg8kWLTnLLfojHTG8oBNj8i0/kpCt9ujQ3YLrBEd1
-         /IGyZx3fK5YNosRTKN17VOH0lHSV/eJ5WXYqod2wmvnYBrpqf6taQDUwXLZCk3aU7ypl
-         HBiA==
-X-Gm-Message-State: AJIora/7Hi+KM0qCHVu2McwhlITK9tqy6GiQe9ROKCIrSN+sdnWdsrpA
-        Gf/8G7Z9+2PSg1I7lx16TsAkSyWgGE4=
-X-Google-Smtp-Source: AGRyM1uRxc0dreTIHkxKj089Ou1wxbKhCJI9jsthW/cnZ/UAr2TLk2D+Hk9H+Qdjneaasbc5pXkq3A==
-X-Received: by 2002:a63:fb01:0:b0:419:699f:a0bb with SMTP id o1-20020a63fb01000000b00419699fa0bbmr11334115pgh.4.1658762019875;
-        Mon, 25 Jul 2022 08:13:39 -0700 (PDT)
+        bh=XRISqH0YEt9x37mOvZB1aRfZZEl6+ks0JDgNi4Ug7Zk=;
+        b=EN2HqiH/endOWYT8s6zHVsmLnThfi/DGEAV5SudbZU+2q+8H/sCpFO0lhF8dgRVH4F
+         ZN/nRlLrBsMd63yWTnHA5MMRelkQI17Rq1upT72m9fOeobP5QKzL/4j6MUKaQ9BUTrCH
+         kwizF+8DGeFsuHr14FViIo+b2Az+1+sT/rUebb4/DxzrtmdN9njXftoeGcnWl1EFlq4Z
+         p6QayWV5AZsVad+7ElnSQx6fpXiv6MorsPBOIYfusNWj0zo+9hAEpNhVAFmUcJc1wqBC
+         doblPzGHV6eplpFv+qxOsxPBrDiLS+Tbmdqlf4tp77FR49R5zzrkmPGzzpfXVZtAgABW
+         QvmQ==
+X-Gm-Message-State: AJIora+MA9gZ4r/6FYdJXkTwKniYxQjAi3g1e6WGr5VsGLlZRIVPrdER
+        Ao0lyxyN/I4zQApOh2ZdeowG8LFr0ec=
+X-Google-Smtp-Source: AGRyM1uCEX3dmY0dBa+CpILOTqJu48Q9xyKEqm4oI4EyeWgqGjO1n1uVJmCPP5x3Ng2Y3fble129qw==
+X-Received: by 2002:a17:902:c40a:b0:16d:2dbd:35cd with SMTP id k10-20020a170902c40a00b0016d2dbd35cdmr12397728plk.65.1658762022801;
+        Mon, 25 Jul 2022 08:13:42 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.37
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 08:13:39 -0700 (PDT)
+        Mon, 25 Jul 2022 08:13:42 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -58,15 +58,14 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 6/7] PCI: brcmstb: Do not turn off WOL regulators on suspend
-Date:   Mon, 25 Jul 2022 11:12:55 -0400
-Message-Id: <20220725151258.42574-7-jim2101024@gmail.com>
+Subject: [PATCH v3 7/7] PCI: brcmstb: Have .map_bus function names end with 'map_bus'
+Date:   Mon, 25 Jul 2022 11:12:56 -0400
+Message-Id: <20220725151258.42574-8-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220725151258.42574-1-jim2101024@gmail.com>
 References: <20220725151258.42574-1-jim2101024@gmail.com>
@@ -80,104 +79,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If any downstream device can be a wakeup device, do not turn off the
-regulators as the device will need them on.
+Conform with other drivers' map_bus functions.
 
-Link: https://lore.kernel.org/r/20220106160332.2143-8-jim2101024@gmail.com
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 54 ++++++++++++++++++++++-----
- 1 file changed, 44 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index aa199b0a39e2..fc1d36f6094e 100644
+index fc1d36f6094e..b40733dd253c 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -263,6 +263,7 @@ struct brcm_pcie {
- 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
- 	bool			regulator_oops;
- 	struct subdev_regulators *sr;
-+	bool			ep_wakeup_capable;
- };
- 
- static inline bool is_bmips(const struct brcm_pcie *pcie)
-@@ -1283,9 +1284,21 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- 	pcie->bridge_sw_init_set(pcie, 1);
+@@ -685,7 +685,7 @@ static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
+ 	return dla && plu;
  }
  
-+static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
-+{
-+	bool *ret = data;
-+
-+	if (device_may_wakeup(&dev->dev)) {
-+		*ret = true;
-+		dev_info(&dev->dev, "disable cancelled for wake-up device\n");
-+	}
-+	return (int) *ret;
-+}
-+
- static int brcm_pcie_suspend_noirq(struct device *dev)
+-static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
++static void __iomem *brcm_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 					int where)
  {
- 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	int ret;
+ 	struct brcm_pcie *pcie = bus->sysdata;
+@@ -706,7 +706,7 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+ 	return base + PCIE_EXT_CFG_DATA + (where & 0xfff);
+ }
  
- 	brcm_pcie_turn_off(pcie);
-@@ -1304,11 +1317,22 @@ static int brcm_pcie_suspend_noirq(struct device *dev)
- 	}
+-static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devfn,
++static void __iomem *brcm_pcie_map_bus32(struct pci_bus *bus, unsigned int devfn,
+ 					 int where)
+ {
+ 	struct brcm_pcie *pcie = bus->sysdata;
+@@ -1509,7 +1509,7 @@ static const struct of_device_id brcm_pcie_match[] = {
+ };
  
- 	if (pcie->sr) {
--		ret = regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
--		if (ret) {
--			dev_err(dev, "Could not turn off regulators\n");
--			reset_control_reset(pcie->rescal);
--			return ret;
-+		/*
-+		 * Now turn off the regulators, but if at least one
-+		 * downstream device is enabled as a wake-up source, do not
-+		 * turn off regulators.
-+		 */
-+		pcie->ep_wakeup_capable = false;
-+		pci_walk_bus(bridge->bus, pci_dev_may_wakeup,
-+			     &pcie->ep_wakeup_capable);
-+		if (!pcie->ep_wakeup_capable) {
-+			ret = regulator_bulk_disable(pcie->sr->num_supplies,
-+						     pcie->sr->supplies);
-+			if (ret) {
-+				dev_err(dev, "Could not turn off regulators\n");
-+				reset_control_reset(pcie->rescal);
-+				return ret;
-+			}
- 		}
- 	}
- 	clk_disable_unprepare(pcie->clk);
-@@ -1352,11 +1376,21 @@ static int brcm_pcie_resume_noirq(struct device *dev)
- 		goto err_reset;
+ static struct pci_ops brcm_pcie_ops = {
+-	.map_bus = brcm_pcie_map_conf,
++	.map_bus = brcm_pcie_map_bus,
+ 	.read = pci_generic_config_read,
+ 	.write = pci_generic_config_write,
+ 	.add_bus = brcm_pcie_add_bus,
+@@ -1517,7 +1517,7 @@ static struct pci_ops brcm_pcie_ops = {
+ };
  
- 	if (pcie->sr) {
--		ret = regulator_bulk_enable(pcie->sr->num_supplies,
--					    pcie->sr->supplies);
--		if (ret) {
--			dev_err(dev, "Could not turn on regulators\n");
--			goto err_reset;
-+		if (pcie->ep_wakeup_capable) {
-+			/*
-+			 * We are resuming from a suspend.  In the suspend we
-+			 * did not disable the power supplies, so there is
-+			 * no need to enable them (and falsely increase their
-+			 * usage count).
-+			 */
-+			pcie->ep_wakeup_capable = false;
-+		} else {
-+			ret = regulator_bulk_enable(pcie->sr->num_supplies,
-+						    pcie->sr->supplies);
-+			if (ret) {
-+				dev_err(dev, "Could not turn on regulators\n");
-+				goto err_reset;
-+			}
- 		}
- 	}
- 
+ static struct pci_ops brcm_pcie_ops32 = {
+-	.map_bus = brcm_pcie_map_conf32,
++	.map_bus = brcm_pcie_map_bus32,
+ 	.read = pci_generic_config_read32,
+ 	.write = pci_generic_config_write32,
+ 	.add_bus = brcm_pcie_add_bus,
 -- 
 2.17.1
 
