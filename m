@@ -2,68 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424A557F827
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 04:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1794D57F859
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 04:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbiGYCIL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Jul 2022 22:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
+        id S231171AbiGYCpZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Jul 2022 22:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231421AbiGYCIL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 22:08:11 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F32DF83;
-        Sun, 24 Jul 2022 19:08:10 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id q16so9090698pgq.6;
-        Sun, 24 Jul 2022 19:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wPqnXwXti1+G5tWXmkHTdMuVELnLmjzK9jn4d9GRpd0=;
-        b=VDm5l9E+2HuSM1K5W3uvSA51dlS6VFJXblBSWOH2EKnXLZLKifshM9+cmkfKqXqAUb
-         Lp01f6pGs2IG5th9y+gzAgnoZyOUTS457R7GeR7X3tNC+E+iXNQAXN0Qd4UuEi0U+3v0
-         C+jiaAKkB7x7fMhMAIsdmN7ryNK/1kImmiv2hXwbRjrtoyn7K6C1IlmAFbJrokDljWbE
-         BTPjtHcG50eFJHzfvIje0tKIPXFBn6nm8vJ/aQyGieEPQgHRJYtjDGexIk/pnZT99f8n
-         xFR3vW/ENV7nyioVcn8fFeB9XyBq+F8rpBjvB+t0iVm4uXIjL50iPed1qZKZpi6JGHAC
-         JHCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wPqnXwXti1+G5tWXmkHTdMuVELnLmjzK9jn4d9GRpd0=;
-        b=1XIRkiJfCFu8o7XC9v2/lcUjq8FBQuT75FAykK9BprSIBlBb4FHjAYOYovfZSer0R4
-         4lHJnXLtgAx3Y1ca0uJno/n2YKQa+ElQPtnCcRo4w2bRH6cz31KInxoJKmM21rjh6G8P
-         CGsHsW2isqKW5SelcUU+kJjw8LvpKYFLLsP+n0p2Nwzpbc8OipziWMeYo0BvG1Cb3szu
-         1EvOH+wdgVy9qgiygathR3C+GFEG6ls09CUB6QqUs1wv3y7er1MdjmdscEgn/tr5H9OF
-         r1IB041JJqn+b80I7JThpaZ10oIx4Rlb7j2Wp32qnV9HawmcqlgEJEIKSld0P6/9RGFD
-         cJeg==
-X-Gm-Message-State: AJIora+WTH15FGuBuQ71nqz+e6+QgwmFIeKWQyVZUSyhFk0jcwy6leAf
-        y37v+nw0iLrUvcdulifGCpzg2OG+u2jTlA==
-X-Google-Smtp-Source: AGRyM1sv7D6TECjQbd7J6r840ZgNyxq3COsXrFclaRJu6HRQYwhr+T1u7cICzUR21mWnw3rw92Zopg==
-X-Received: by 2002:a63:6c87:0:b0:419:b667:6622 with SMTP id h129-20020a636c87000000b00419b6676622mr8895996pgc.495.1658714889186;
-        Sun, 24 Jul 2022 19:08:09 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id z10-20020a1709027e8a00b0016c740e53bbsm307815pla.79.2022.07.24.19.08.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Jul 2022 19:08:08 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stafford Horne <shorne@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v3 1/3] asm-generic: Support NO_IOPORT_MAP in pci_iomap.h
-Date:   Mon, 25 Jul 2022 11:07:35 +0900
-Message-Id: <20220725020737.1221739-2-shorne@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220725020737.1221739-1-shorne@gmail.com>
-References: <20220725020737.1221739-1-shorne@gmail.com>
+        with ESMTP id S230036AbiGYCpY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Jul 2022 22:45:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13DE6DFBC;
+        Sun, 24 Jul 2022 19:45:23 -0700 (PDT)
+Received: from dggpeml500020.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Lrkpt59H0zjXN9;
+        Mon, 25 Jul 2022 10:42:30 +0800 (CST)
+Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
+ dggpeml500020.china.huawei.com (7.185.36.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 25 Jul 2022 10:45:21 +0800
+Received: from [127.0.0.1] (10.67.111.83) by dggpeml500008.china.huawei.com
+ (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 25 Jul
+ 2022 10:45:20 +0800
+Message-ID: <52cc2ddf-1a16-32c0-5c44-0f4c389fd626@huawei.com>
+Date:   Mon, 25 Jul 2022 10:45:20 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH -next] PCI: imx6: Fix build error unused-function
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20220724101353.127875-1-renzhijie2@huawei.com>
+ <CAK8P3a317gaAjwLhaxbR8bwZW60htG4pV+_DoS8VFkR39yCLMQ@mail.gmail.com>
+From:   Ren Zhijie <renzhijie2@huawei.com>
+In-Reply-To: <CAK8P3a317gaAjwLhaxbR8bwZW60htG4pV+_DoS8VFkR39yCLMQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Originating-IP: [10.67.111.83]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500008.china.huawei.com (7.185.36.147)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,40 +60,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When building OpenRISC PCI which has no ioport_map we get the following build
-error.
+在 2022/7/24 23:40, Arnd Bergmann 写道:
+> On Sun, Jul 24, 2022 at 12:13 PM Ren Zhijie <renzhijie2@huawei.com> wrote:
+>> If CONFIG_PM_SLEEP is not set,
+>> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-, will be failed, like this:
+>>
+>> drivers/pci/controller/dwc/pci-imx6.c:973:13: error: ‘imx6_pcie_host_exit’ defined but not used [-Werror=unused-function]
+>>   static void imx6_pcie_host_exit(struct dw_pcie_rp *pp)
+>>               ^~~~~~~~~~~~~~~~~~~
+>> drivers/pci/controller/dwc/pci-imx6.c:904:13: error: ‘imx6_pcie_stop_link’ defined but not used [-Werror=unused-function]
+>>   static void imx6_pcie_stop_link(struct dw_pcie *pci)
+>>               ^~~~~~~~~~~~~~~~~~~
+>> cc1: all warnings being treated as errors
+>> make[4]: *** [drivers/pci/controller/dwc/pci-imx6.o] Error 1
+>>
+>> These two functions imx6_pcie_host_exit() and imx6_pcie_stop_link() only be called by imx6_pcie_suspend_noirq(), which was warpped by CONFIG_PM_SLEEP.
+>> To fix build error unused-function, use __maybe_unused to attach them.
+>>
+>> Fixes: 25ae5434c3de ("PCI: imx6: Reformat suspend callback to keep symmetric with resume")
+>> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+> There is already a better fix for this, see
+> https://lore.kernel.org/all/20220719210427.GA1568454@bhelgaas/
+>
+> If you come across other suspend/resume functions that trigger the
+> unused-function
+> warning, please use the same method there instead of adding __maybe_unused
+> or #ifdef annotations.
+>
+>        Arnd
 
-    lib/pci_iomap.c: In function 'pci_iomap_range':
-      CC      drivers/i2c/i2c-core-base.o
-    ./include/asm-generic/pci_iomap.h:29:41: error: implicit declaration of function 'ioport_map'; did you mean 'ioremap'? [-Werror=implicit-function-declaration]
-       29 | #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
-          |                                         ^~~~~~~~~~
-    lib/pci_iomap.c:44:24: note: in expansion of macro '__pci_ioport_map'
-       44 |                 return __pci_ioport_map(dev, start, len);
-          |                        ^~~~~~~~~~~~~~~~
+Hi, Arnd
 
-This patch adds a NULL definition of __pci_ioport_map for architetures
-which do not support ioport_map.
+Thanks for your reply. I have actually met the other warning, and I use 
+the new  marco RUNTIME_PM_OPS to replace the old one,see
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
- include/asm-generic/pci_iomap.h | 2 ++
- 1 file changed, 2 insertions(+)
+https://lore.kernel.org/all/20220725023611.57055-1-renzhijie2@huawei.com/
 
-diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
-index 5a2f9bf53384..8fbb0a55545d 100644
---- a/include/asm-generic/pci_iomap.h
-+++ b/include/asm-generic/pci_iomap.h
-@@ -25,6 +25,8 @@ extern void pci_iounmap(struct pci_dev *dev, void __iomem *);
- #ifdef CONFIG_NO_GENERIC_PCI_IOPORT_MAP
- extern void __iomem *__pci_ioport_map(struct pci_dev *dev, unsigned long port,
- 				      unsigned int nr);
-+#elif !defined(CONFIG_HAS_IOPORT_MAP)
-+#define __pci_ioport_map(dev, port, nr) NULL
- #else
- #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
- #endif
--- 
-2.36.1
+
+Thanks,
+
+Ren Zhijie
+
+> .
 
