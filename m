@@ -2,413 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C43A58011C
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E492580175
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235733AbiGYPE7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50762 "EHLO
+        id S235936AbiGYPQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 11:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiGYPE6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:04:58 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C412963F2;
-        Mon, 25 Jul 2022 08:04:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JycwG0ekZNr3JgILgElj3VBVIEWhuzwmgZ2AsthA6b26ojrk6ae0GhU6Io2zJ8JVCXw7jrDHqEH8t2xDIMuwvSiqEdGPAKlgoEvye6pTXtDxDUP5lnzB6IjH/EHiDUA0Z9NjTm2PQPVC7lf2dkHoQmHweY9gQ9C90eC0n9fxOrKQ8uvMzgr7tH96AtjiTrY8XtKZzxMIO7XomrjKYOVUfuSI4e3jOw/Jz66leHFAk+NDMQSwuh7ZAPio+TtLmO7V2ysxG/w/WIO4UQBGaH8dnL6zvHBpCMSp9FU3N4PIbF/f9dy9TtNh8wfs1qA7aTGvpp08jWQhgu7dyxy0rA1xuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GtS745aC1kfm/yavZ1A5WOhL4qTyaMOKUUgj94JOQeE=;
- b=YSePFRRx/F0LpF8rhD0AoKXcUGt+qg4LiHoRht62bEPojCsKrSuMrIqjjJe6gneBJpRQC0k+z/vmcgRozcLbTbnub7RzmjYOCaEHmYQ37cFHTpi1RUhZLG6u+WHJfKiq946iBPqP3NpQYi6mUrdQN6aPouPZhR4abboyKaP3gqMb/ZVWY1xYs2GeI360sI23EDG38Hrnqo33mDTPNRy7lFZmkm81iR8d0phAa2/iHHxsUVHXuFVKDhNACJa2YFpvb5pEnb3ecFtX8kNQkkEF9FGvLQxbXbewVvLCw9Xa9lwo5Zno1HsFl2yBt3atJ6K0wcrVb80BsmxnjkH2HiL/Ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GtS745aC1kfm/yavZ1A5WOhL4qTyaMOKUUgj94JOQeE=;
- b=WoCHVNPLFHgaGk0ptg59s621t/+tchOhq9d6u5R70HFT4CwMIi+yR4gdbFXAYgpI8S9fWAhgk4XnDbq087lLdjjI+6zO9AkY9ZA/KSFWtT6jlg0hPWowSx0SIqWFvbn+vr+iJd6dyieBbHyl8zdCLRF8oDsAQ304nW9VV7lR4kRX5+yKvD5zNyaoE+SxF0mEBpjjpwVbaUECHD8n33MMmzMZxUvu58hBVEjx9p/5My+mZvzaDAeuo7ZfioNu8Py0FlpPXL87L+W5xuBtyYnLJiHZTMhVO2wqSbatlCO4Gz7AEuSJUQv4p1PDsO2/qceOor+w+XplTG18HDrxIhtcxg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com (2603:10b6:208:314::13)
- by BYAPR12MB4789.namprd12.prod.outlook.com (2603:10b6:a03:111::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.23; Mon, 25 Jul
- 2022 15:04:53 +0000
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::784c:3561:5f6a:10ed]) by BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::784c:3561:5f6a:10ed%8]) with mapi id 15.20.5458.024; Mon, 25 Jul 2022
- 15:04:53 +0000
-Message-ID: <9c9b9a7a-bee4-305a-019b-54b96ffba3af@nvidia.com>
-Date:   Mon, 25 Jul 2022 20:34:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v5 5/5] vfio/pci: Implement
- VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP
-Content-Language: en-US
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        with ESMTP id S235880AbiGYPPn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:15:43 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A45419293;
+        Mon, 25 Jul 2022 08:13:22 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id c3so10678440pfb.13;
+        Mon, 25 Jul 2022 08:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=vClZEDHW/p/nRPc4T2OtKWpsEU80qB0nIfVJ1m6OHYg=;
+        b=PiD+kKPGc4Pm9OcZQZJwoMV3H+yXJCQjYhEzcQJJYC2lKA2LyX9CNLTurlguPmz/BD
+         N6jJGH0qORg74v0B7iaS52QPlrLohHdqbARsv1KrPjuEX575/HlU3fgBxP9rFn1JbFOs
+         8LfPqUSH7qL0BbkY5LU6M3Sn/vOCsV6x+GZVbLdEMSTeBtcTAnhTskxx7QraJKs8x/1M
+         uvD6mEzN6OF4vfBD64EOdKSwRoyUuB+o/uvthi8MgGPBX/Iq31tZlASDKPHnb5rh8SWo
+         WgFLYdUvp127aYedetMr5vIlqH5JjOrCpCIwlHHitnTIYGE1ijc2cLnR5hTuaV2POFBr
+         2auA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vClZEDHW/p/nRPc4T2OtKWpsEU80qB0nIfVJ1m6OHYg=;
+        b=kAktalVQBkQtaSJCSgIsMxK7DfujsAZ8s+gYN7It+9Z2UWobHDbU9An6xMGfycd3Sg
+         XywOwRxaDOCxtypI/Li9agmnhUlX1W509uJ65p9bqDp6E0iQyiYebCpjfAieItHvCmyJ
+         QpficXOdN2iJvhUb27M9ZTz9TpztXH5djJjMzD0ZDLAz6DiZPKoNoPk6VVvUEXJGxFy2
+         plWMOYHHnOEM5nPFuxPnGyJt9lyVuintEU+VE+nHFTmVj4Ay/i3WiVhlap2QFyDtnnrL
+         y/UO3LhjlfaepX9kvXWsQPwW50feQjdo/b+RxOh72Xy+jsC3PsTL11Y+K9EXkWvxiz+s
+         UAUw==
+X-Gm-Message-State: AJIora8jHgcHVtmU51+t4u7h8UsxvKXg630XRNrJOldYmr6I9Mx/p40I
+        TnEk7m04BskUgZpNms5of582AUjEsT8=
+X-Google-Smtp-Source: AGRyM1sODvWco/wy/JwP4+nnbMCuyaPj/uRKlViVYr6xlq2RO9aNdFighhUzr9JC6hRduAn8/tZWMA==
+X-Received: by 2002:a63:4e09:0:b0:412:1ba3:672a with SMTP id c9-20020a634e09000000b004121ba3672amr11728676pgb.597.1658762000782;
+        Mon, 25 Jul 2022 08:13:20 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 08:13:19 -0700 (PDT)
+From:   Jim Quinlan <jim2101024@gmail.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220719121523.21396-1-abhsahu@nvidia.com>
- <20220719121523.21396-6-abhsahu@nvidia.com>
- <20220721163442.7d2ae47f.alex.williamson@redhat.com>
-X-Nvconfidentiality: public
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-In-Reply-To: <20220721163442.7d2ae47f.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXPR0101CA0072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:e::34) To BL1PR12MB5304.namprd12.prod.outlook.com
- (2603:10b6:208:314::13)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f261cd23-9111-4814-a3de-08da6e4f078a
-X-MS-TrafficTypeDiagnostic: BYAPR12MB4789:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XFDmGZ7ocqnepdpfiRQDljHdRcXjYt35GoBSRXdnkYjWh9lIcIKzgRrgnEph/AZ8t5RXKFlr2GNTKFM2MxmF4phdyjdRr5dB06JaauTjEInWfLkqbyztBD+AtMeGVJbRBkkQSVhC6cry9YSWIIcNRvaxICDryc3uK15+FbAEE4JXEk5gO/BglTRoTieMcusA4q6c/xTKdbTIA0IwJsBgsjLygz33bgQwUfBYPTqTg5p1dkCliYXoJ1fo1qbkRTdZkcf9fu7TNvViZSbnPCX54IKiMEFvyMaB+NBiNC0ED3XKYeo6Cu7cG+KtAFsRj6uNWD5K5EaNdxFktqdR9vA0tkwdCZahTCeF33AEN4hiw55f1xWqFp8AYNLWJbZDSrukByjMTtFnwbbMEAsampAkCmzNKd/P16rCYEHeYpK2RT0/+OU+OTMy3g4lxl0s7yipF5oXsjp76/W03Bg6Zy4chdpVf3WRiPUkFR2+Vcz18yF2kNl61FjEQKj2i3j2hY0yeS/mWVc24r6Hw5QWTBEK33sosvRslGIzi2tpbj36TkfdT/Zy2h12wwHcaaV/CLDpRNclqORDp0nE2vurvsCVOe8W1cFIzRiUzGDCii5PxikXQozW3jdHVIx702hyHnHQ4r9SNSIva3l3mNS4FYmAAvC7oI6L9ehaU84t3Y66LjL+j3QDsJkxistD3p49YpEb4owc9W/m2xejLcdy5Pa64gmE2wYxVE7j+IgxRUGqS34MdfShTMnI9QAD4O5dHeSWUsN61l3iuOcqQhRGVJXJQkV+u6oLiSeiKe/GdBZERFstTpiR3U8RzpXw+Y02Cn0GMlRFKeuyTGAum4FFoQCHdA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5304.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(186003)(38100700002)(4326008)(8676002)(66556008)(66476007)(316002)(66946007)(54906003)(6916009)(31686004)(36756003)(6486002)(6506007)(86362001)(6666004)(41300700001)(31696002)(26005)(2906002)(53546011)(55236004)(6512007)(7416002)(83380400001)(2616005)(5660300002)(8936002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RDNoUVcwY0pNL3gxaTZTYmZVV3pUcy9SVE5OVG5HdmcwSkdFM3VGZkdUWlhj?=
- =?utf-8?B?d28zaWRRR1pMSmloOGg1bWtaZE5ZUFIvNDhyb3FPVXVWa2lMa3B2WkdQMXlP?=
- =?utf-8?B?T05iK1VsSjVSREtCYUUxNFlpdEJIeVU4OGp0T1d3NEZnQjRCRDVxN1hZM1RF?=
- =?utf-8?B?MHRBWkJZRld4aGFUQTVFdHB4MEIvZVd3REpEK0EzbElla1BxNTNINk8wRE9Q?=
- =?utf-8?B?V21ydENuZi9uM1Z3WVlTWVRZUHFBRkZSOWVWRk1PMWM3R2MyOWNSSUFleTIw?=
- =?utf-8?B?Sk9wTmdNUTZIWWdtYkpiWkx4MTl6dWZZNEFkMHBUbXRpdmQ3VnNoT2ZZYVNY?=
- =?utf-8?B?WU02ejRySGFQK210Um5HajE2YW9zUDczYVlocXdGUVZ6N0RmQlYvUG4xVXZS?=
- =?utf-8?B?cndFTjFkTU1rL3Y4bnRFMWFIL1B3aXRISHY3WWVKdG5OYUVNVi9TVzN5dUFI?=
- =?utf-8?B?V0JQYW1xT3lUNzYwNjNFT0hPejV4ZTl1VDJYVUxSd2RkUWw1TU9ocUtvUjhp?=
- =?utf-8?B?b3ZCVGVSQ2M3WDVjdXNZeWV0TW93Nm1aNk13LzhWZWVLSUhWYkRJWDdWejRj?=
- =?utf-8?B?a2JaMXFjREtwS29qUEVQQlgrUlBWNFBzNU5UR1hJMVROMUZPUE9XMVFLYWpR?=
- =?utf-8?B?WERjaS81VTBFSTJKREMyYjRNblJrWVhFNzhFWHhReWt6akxBdmUxQkhpZXpV?=
- =?utf-8?B?dkFURGtJTnpiQnFsMEtRangrTnRvNW9lb3VPQi9NaFIyZ3ZwZTlHVWpoeDBW?=
- =?utf-8?B?aDJIY0ZhMkk3dzQ2WGNyWnB1QWVkVUZmbElSdG1tY0lOaFFlR0UvTWUzcDJa?=
- =?utf-8?B?N2dqMVhMaWJuTzl2QmtvazBlS3d1L1NaUThlSGphTk9YK3RpWkVTQ1FOU013?=
- =?utf-8?B?WEZOU052RWxkWHhFc2JaZ3BKUXQ2OU81ODF0S2Q1WTRBOWNkZ1VvNFRoRU9x?=
- =?utf-8?B?ekxJVSsvalV0ck5aNnE3Ty9ZTzAvMVd2ZWlvSlhFTmNLNFZXMU5WNVpTUlly?=
- =?utf-8?B?aTlxU0tOL2RacVJ4WnFjc1V2RHE2SFRmaWxKWDI5TlJRd25GUEV1akZPb0Z4?=
- =?utf-8?B?V29nMUc5N1VtVEhRYkZOUzRkaTJEamZjU2xhSjlCaE9IUlp3SWVidXoxSFdr?=
- =?utf-8?B?NkJRV0dMMFYvZ1BqeHg4dGw1UHZkU2lBWnBGd0ZhSmo5VmtkVHk1V25IL25B?=
- =?utf-8?B?RlNKbXg1cUhKYUVzaDRsc2lIV3ZBMzBaY0hXblJ5OHcwT1NOUkp5YnJsNloy?=
- =?utf-8?B?ajFoWXZUU0s4R2krWldhdGtRcmRvSEJodWRDTVcrRWlYVzlZMVo0WFpoak5P?=
- =?utf-8?B?NVlLMlNITm1mWGwvWE9JM0xTYUY0WEVlWm91SHFyUm5YWHVZRVVjazFPRU1y?=
- =?utf-8?B?cndNYWxsNldpNG5vSmlTQVludCtvTmNaZStaUnJFUW56SXBncnNUZGd4a1R6?=
- =?utf-8?B?Zkh1cnlrU3MrcC94TDcwME5OOXp1QVJRV2k5enNNdXFGSGVsbzVPaXdQOTNK?=
- =?utf-8?B?NnVYNGM1Y2JGZUlNTDlRVUFybTFJVXhHVVUyMWhhaUtPdUxxREdjUVM2OCtx?=
- =?utf-8?B?MHNhL2RYbWtmNlk1ZGZRR3daUzhDRU9HZjFRdGQ2S1FzWHpBeDU0YVBFMHFi?=
- =?utf-8?B?ZUtoWXBaa1B1VFpKcHRzYjBOM3ZPaGsvMHkzS1FwQWlvcm9BNTdudlRRRHo2?=
- =?utf-8?B?VFVBdzZ2NEZDUjMvY3YzZWNzSjRXUTZHUnk3cWR2RDFZcEhTV215Uy9qOEJZ?=
- =?utf-8?B?ZDlJSnNVbTZpQW9JYXlCUlpmSW1nYmlvZlJLcUhVL1ZleG1LT1VTakZJWU9M?=
- =?utf-8?B?bHA5WDNGTkRrVnd6cHNERUV4Z2pkeXBsUTEzNXNpY24rZDJ3NmxSUGJFc0Nn?=
- =?utf-8?B?bHMrbVhEV1JGU0RYVVFKaUIwWnAwVDkxVXlCRUtQai8zakYzLzMraDZLcVAv?=
- =?utf-8?B?Q0RGWHE3ZXh1Y1cxdkJpZ3lGTjZVWHdPQ3M1bkFGUFhjeStETTRMOHd1eEpq?=
- =?utf-8?B?R2Rha2hQcmp6QVFaQjhkTG5ySGY1SU5zUVJPS2VubXd1d21UUGQ4ekpaY0dr?=
- =?utf-8?B?S3VXUEdwNXU0VlFXN1lPOXdVQUpDcE1GV2kzWXU4QjRyaTQ0SVFhRlZ0b1Rj?=
- =?utf-8?Q?CUBz/nWXTS8wSPjy79DGsmKbV?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f261cd23-9111-4814-a3de-08da6e4f078a
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5304.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2022 15:04:53.7781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K2M0goy8WE0pz8eMmXg5IvofdeqKpeUbdk5kQhGS0EGllfZz70taDjHQ4jzbj2gsS29QFFd75LBh507GQ1k6Og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB4789
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+        james.quinlan@broadcom.com
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 0/7] PCI: brcmstb: Re-submit reverted patchset
+Date:   Mon, 25 Jul 2022 11:12:49 -0400
+Message-Id: <20220725151258.42574-1-jim2101024@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/22/2022 4:04 AM, Alex Williamson wrote:
-> On Tue, 19 Jul 2022 17:45:23 +0530
-> Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> 
->> This patch implements VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP
->> device feature. In the VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY, if there is
->> any access for the VFIO device on the host side, then the device will
->> be moved out of the low power state without the user's guest driver
->> involvement. Once the device access has been finished, then the device
->> will be moved again into low power state. With the low power
->> entry happened through VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP,
->> the device will not be moved back into the low power state and
->> a notification will be sent to the user by triggering wakeup eventfd.
->>
->> vfio_pci_core_pm_entry() will be called for both the variants of low
->> power feature entry so add an extra argument for wakeup eventfd context
->> and store locally in 'struct vfio_pci_core_device'.
->>
->> For the entry happened without wakeup eventfd, all the exit related
->> handling will be done by the LOW_POWER_EXIT device feature only.
->> When the LOW_POWER_EXIT will be called, then the vfio core layer
->> vfio_device_pm_runtime_get() will increment the usage count and will
->> resume the device. In the driver runtime_resume callback,
->> the 'pm_wake_eventfd_ctx' will be NULL so the vfio_pci_runtime_pm_exit()
->> will return early. Then vfio_pci_core_pm_exit() will again call
->> vfio_pci_runtime_pm_exit() and now the exit related handling will be done.
->>
->> For the entry happened with wakeup eventfd, in the driver resume
->> callback, eventfd will be triggered and all the exit related handling will
->> be done. When vfio_pci_runtime_pm_exit() will be called by
->> vfio_pci_core_pm_exit(), then it will return early. But if the user has
->> disabled the runtime PM on the host side, the device will never go
->> runtime suspended state and in this case, all the exit related handling
->> will be done during vfio_pci_core_pm_exit() only. Also, the eventfd will
->> not be triggered since the device power state has not been changed by the
->> host driver.
->>
->> For vfio_pci_core_disable() also, all the exit related handling
->> needs to be done if user has closed the device after putting into
->> low power. In this case eventfd will not be triggered since
->> the device close has been initiated by the user only.
->>
->> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
->> ---
->>  drivers/vfio/pci/vfio_pci_core.c | 78 ++++++++++++++++++++++++++++++--
->>  include/linux/vfio_pci_core.h    |  1 +
->>  2 files changed, 74 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
->> index 726a6f282496..dbe942bcaa67 100644
->> --- a/drivers/vfio/pci/vfio_pci_core.c
->> +++ b/drivers/vfio/pci/vfio_pci_core.c
->> @@ -259,7 +259,8 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
->>  	return ret;
->>  }
->>  
->> -static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev)
->> +static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev,
->> +				     struct eventfd_ctx *efdctx)
->>  {
->>  	/*
->>  	 * The vdev power related flags are protected with 'memory_lock'
->> @@ -272,6 +273,7 @@ static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev)
->>  	}
->>  
->>  	vdev->pm_runtime_engaged = true;
->> +	vdev->pm_wake_eventfd_ctx = efdctx;
->>  	pm_runtime_put_noidle(&vdev->pdev->dev);
->>  	up_write(&vdev->memory_lock);
->>  
->> @@ -295,21 +297,67 @@ static int vfio_pci_core_pm_entry(struct vfio_device *device, u32 flags,
->>  	 * while returning from the ioctl and then the device can go into
->>  	 * runtime suspended state.
->>  	 */
->> -	return vfio_pci_runtime_pm_entry(vdev);
->> +	return vfio_pci_runtime_pm_entry(vdev, NULL);
->>  }
->>  
->> -static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
->> +static int
->> +vfio_pci_core_pm_entry_with_wakeup(struct vfio_device *device, u32 flags,
->> +				   void __user *arg, size_t argsz)
->> +{
->> +	struct vfio_pci_core_device *vdev =
->> +		container_of(device, struct vfio_pci_core_device, vdev);
->> +	struct vfio_device_low_power_entry_with_wakeup entry;
->> +	struct eventfd_ctx *efdctx;
->> +	int ret;
->> +
->> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_SET,
->> +				 sizeof(entry));
->> +	if (ret != 1)
->> +		return ret;
->> +
->> +	if (copy_from_user(&entry, arg, sizeof(entry)))
->> +		return -EFAULT;
->> +
->> +	if (entry.wakeup_eventfd < 0)
->> +		return -EINVAL;
->> +
->> +	efdctx = eventfd_ctx_fdget(entry.wakeup_eventfd);
->> +	if (IS_ERR(efdctx))
->> +		return PTR_ERR(efdctx);
->> +
->> +	ret = vfio_pci_runtime_pm_entry(vdev, efdctx);
->> +	if (ret)
->> +		eventfd_ctx_put(efdctx);
->> +
->> +	return ret;
->> +}
->> +
->> +static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev,
->> +				     bool resume_callback)
->>  {
->>  	/*
->>  	 * The vdev power related flags are protected with 'memory_lock'
->>  	 * semaphore.
->>  	 */
->>  	down_write(&vdev->memory_lock);
->> +	if (resume_callback && !vdev->pm_wake_eventfd_ctx) {
->> +		up_write(&vdev->memory_lock);
->> +		return;
->> +	}
->> +
->>  	if (vdev->pm_runtime_engaged) {
->>  		vdev->pm_runtime_engaged = false;
->>  		pm_runtime_get_noresume(&vdev->pdev->dev);
->>  	}
->>  
->> +	if (vdev->pm_wake_eventfd_ctx) {
->> +		if (resume_callback)
->> +			eventfd_signal(vdev->pm_wake_eventfd_ctx, 1);
->> +
->> +		eventfd_ctx_put(vdev->pm_wake_eventfd_ctx);
->> +		vdev->pm_wake_eventfd_ctx = NULL;
->> +	}
->> +
->>  	up_write(&vdev->memory_lock);
->>  }
->>  
-> 
-> I find the pm_exit handling here confusing.  We only have one caller
-> that can signal the eventfd, so it seems cleaner to me to have that
-> caller do the eventfd signal.  We can then remove the arg to pm_exit
-> and pull the core of it out to a pre-locked function for that call
-> path.  Sometime like below (applies on top of this patch).  Also moved
-> the intx unmasking until after the eventfd signaling.  What do you
-> think?  Thanks,
-> 
-> Alex
-> 
+v3 -- Replaced "refusal mode" commit with one that gates config
+      space accesses based on link status (Bjorn)
+   -- Restrict the brcm_pcie_start_link() code to only those things
+      related to link-up and put the rest in brcm_pcie_setup()
+   -- Added commit to change map functions to end with 'map_bus' (Bjorn)
+   -- s/0x060400/PCI_CLASS_BRIDGE_PCI_NORMAL/ (Pali)
+   -- Limit config space accesess to 4k window.
+   -- Remove wording in a commit message that said the regulators
+      could be endpoint power supplies
 
- Thanks Alex. The updated code looks cleaner.
- I will make the above changes.
+V2  -- As v1 included the minimal code to fix a regression.  v2 does
+       the same but adds some improvements suggested by Bjorn.
+    -- In the unlikely but possible case that some other driver
+       starts using the port driver's dev_data field, do not overwrite
+       it but issue an error and return.
+    -- Functions probe() and resume() do similar operations but
+       did them in a different order; make this order consistent
+       for both.
+    -- New commit to remove forward declarations.
+    -- New commit for only the PCIe config-space access "refusal mode".
+    -- brcm_pcie_linkup renamed to brcm_pcie_start_link
+    -- Add '_noirq' to the brcm_pcie_{suspend,resume} function names
+       to match the dev_pm_ops names.
+    -- Changes to commit messages:
+           o Explain why we are splitting a function in two parts.
+           o s/RB/Root Port/
 
- Regards,
- Abhishek
+    NOTE for Bjorn: The two commits "add mechanism .." and "add control ..."
+        would probably be more clear if they were squashed.  They are kept
+        separate as the first one's code may someday be moved under the Port
+        driver.  As such, there's some churn.
 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index dbe942bcaa67..93169b7d6da2 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -332,32 +332,27 @@ vfio_pci_core_pm_entry_with_wakeup(struct vfio_device *device, u32 flags,
->  	return ret;
->  }
->  
-> -static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev,
-> -				     bool resume_callback)
-> +static void __vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
->  {
-> -	/*
-> -	 * The vdev power related flags are protected with 'memory_lock'
-> -	 * semaphore.
-> -	 */
-> -	down_write(&vdev->memory_lock);
-> -	if (resume_callback && !vdev->pm_wake_eventfd_ctx) {
-> -		up_write(&vdev->memory_lock);
-> -		return;
-> -	}
-> -
->  	if (vdev->pm_runtime_engaged) {
->  		vdev->pm_runtime_engaged = false;
->  		pm_runtime_get_noresume(&vdev->pdev->dev);
-> -	}
-> -
-> -	if (vdev->pm_wake_eventfd_ctx) {
-> -		if (resume_callback)
-> -			eventfd_signal(vdev->pm_wake_eventfd_ctx, 1);
->  
-> -		eventfd_ctx_put(vdev->pm_wake_eventfd_ctx);
-> -		vdev->pm_wake_eventfd_ctx = NULL;
-> +		if (vdev->pm_wake_eventfd_ctx) {
-> +			eventfd_ctx_put(vdev->pm_wake_eventfd_ctx);
-> +			vdev->pm_wake_eventfd_ctx = NULL;
-> +		}
->  	}
-> +}
->  
-> +static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
-> +{
-> +	/*
-> +	 * The vdev power related flags are protected with 'memory_lock'
-> +	 * semaphore.
-> +	 */
-> +	down_write(&vdev->memory_lock);
-> +	__vfio_pci_runtime_pm_exit(vdev);
->  	up_write(&vdev->memory_lock);
->  }
->  
-> @@ -373,22 +368,13 @@ static int vfio_pci_core_pm_exit(struct vfio_device *device, u32 flags,
->  		return ret;
->  
->  	/*
-> -	 * The device should already be resumed by the vfio core layer.
-> -	 * vfio_pci_runtime_pm_exit() will internally increment the usage
-> -	 * count corresponding to pm_runtime_put() called during low power
-> -	 * feature entry.
-> -	 *
-> -	 * For the low power entry happened with wakeup eventfd, there will
-> -	 * be two cases:
-> -	 *
-> -	 * 1. The device has gone into runtime suspended state. In this case,
-> -	 *    the runtime resume by the vfio core layer should already have
-> -	 *    performed all exit related handling and the
-> -	 *    vfio_pci_runtime_pm_exit() will return early.
-> -	 * 2. The device was in runtime active state. In this case, the
-> -	 *    vfio_pci_runtime_pm_exit() will do all the required handling.
-> +	 * The device is always in the active state here due to pm wrappers
-> +	 * around ioctls.  If the device had entered a low power state and
-> +	 * pm_wake_eventfd_ctx is valid, vfio_pci_core_runtime_resume() has 
-> +	 * already signaled the eventfd and exited low power mode itself.
-> +	 * pm_runtime_engaged protects the redundant call here.
->  	 */
-> -	vfio_pci_runtime_pm_exit(vdev, false);
-> +	vfio_pci_runtime_pm_exit(vdev);
->  	return 0;
->  }
->  
-> @@ -425,15 +411,19 @@ static int vfio_pci_core_runtime_resume(struct device *dev)
->  {
->  	struct vfio_pci_core_device *vdev = dev_get_drvdata(dev);
->  
-> -	if (vdev->pm_intx_masked)
-> -		vfio_pci_intx_unmask(vdev);
-> -
->  	/*
-> -	 * Only for the low power entry happened with wakeup eventfd,
-> -	 * the vfio_pci_runtime_pm_exit() will perform exit related handling
-> -	 * and will trigger eventfd. For the other cases, it will return early.
-> +	 * Resume with a pm_wake_eventfd_ctx signals the eventfd and exits
-> +	 * low power mode.
->  	 */
-> -	vfio_pci_runtime_pm_exit(vdev, true);
-> +	down_write(&vdev->memory_lock);
-> +	if (vdev->pm_wake_eventfd_ctx) {
-> +		eventfd_signal(vdev->pm_wake_eventfd_ctx, 1);
-> +		__vfio_pci_runtime_pm_exit(vdev);
-> +	}
-> +	up_write(&vdev->memory_lock);
-> +
-> +	if (vdev->pm_intx_masked)
-> +		vfio_pci_intx_unmask(vdev);
->  
->  	return 0;
->  }
-> @@ -553,7 +543,7 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
->  	 * the vfio_pci_set_power_state() will change the device power state
->  	 * to D0.
->  	 */
-> -	vfio_pci_runtime_pm_exit(vdev, false);
-> +	vfio_pci_runtime_pm_exit(vdev);
->  	pm_runtime_resume(&pdev->dev);
->  
->  	/*
-> 
+    NOTE for Bjorn: There is no hurry on Broadcom's side wrt which
+        release cycle/phase this patchset is applied.  It goes in
+        when you think it is ready.
+
+V1 -- Resubmission of patchset after original was reverted for a
+    regression.
+
+    A submission [1] was made to enable a PCIe root port to turn on
+    regulators for downstream devices.  It was accepted.  Months later, a
+    regression was discovered on an RPi CM4 [2].  The patchset was reverted
+    [3] as the fix came too late in the release cycle.  The regression in
+    question is triggered only when the PCIe RC DT node has no root port
+    subnode, which is a perfectly reasonsable configuration.
+
+    The original commits are now being resubmitted with some modifications
+    to fix the regression.  The modifcations on the original commits are
+    described below (the SHA is that of the original commit):
+
+    [830aa6f29f07  PCI: brcmstb: Split brcm_pcie_setup() into two funcs]
+        NOTE: In the originally submitted patchset, this commit introduced a
+        regression that was corrected by a subsequent commit in the same
+        patchset.  Let's not do this again.
+
+        @@ -1411,6 +1411,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+            if (ret)
+                    goto fail;
+
+        +       ret = brcm_pcie_linkup(pcie);
+        +       if (ret)
+        +               goto fail;
+
+
+    [67211aadcb4b  PCI: brcmstb: Add mechanism to turn on subdev regulators]
+        NOTE: Not related to the regression, the regulators must be freed whenever
+        the PCIe tree is dismantled:
+
+        @@ -507,6 +507,7 @@ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
+
+        if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
+                    dev_err(dev, "failed to disable regulators for downstream device\n");
+        +       regulator_bulk_free(sr->num_supplies, sr->supplies);
+            dev->driver_data = NULL;
+
+
+    [93e41f3fca3d  PCI: brcmstb: Add control of subdevice voltage regulators]
+        NOTE: If the PCIe RC DT node was missing a Root Port subnode, the PCIe
+        link-up was skipped.  This is the regression.  Fix it by attempting
+        link-up even if the Root Port DT subnode is missing.
+
+        @@ -503,11 +503,10 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+
+         static int brcm_pcie_add_bus(struct pci_bus *bus)
+         {
+        -       struct device *dev = &bus->dev;
+            struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
+            int ret;
+
+        -       if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
+        +       if (!bus->parent || !pci_is_root_bus(bus->parent))
+                    return 0;
+
+            ret = pci_subdev_regulators_add_bus(bus);
+
+    [1] https://lore.kernel.org/r/20220106160332.2143-1-jim2101024@gmail.com
+    [2] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+    [3] https://lore.kernel.org/linux-pci/20220511201856.808690-1-helgaas@kernel.org/
+
+
+Jim Quinlan (7):
+  PCI: brcmstb: Remove unnecessary forward declarations
+  PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+  PCI: brcmstb: Gate config space access on link status
+  PCI: brcmstb: Add mechanism to turn on subdev regulators
+  PCI: brcmstb: Add control of subdevice voltage regulators
+  PCI: brcmstb: Do not turn off WOL regulators on suspend
+  PCI: brcmstb: Have .map_bus function names end with 'map_bus'
+
+ drivers/pci/controller/pcie-brcmstb.c | 476 ++++++++++++++++++--------
+ 1 file changed, 341 insertions(+), 135 deletions(-)
+
+
+base-commit: e0dccc3b76fb35bb257b4118367a883073d7390e
+-- 
+2.17.1
 
