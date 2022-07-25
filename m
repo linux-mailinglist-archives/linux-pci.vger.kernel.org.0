@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B63FA58017D
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DCFC58017E
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236271AbiGYPQj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
+        id S236335AbiGYPQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 11:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236284AbiGYPQK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:10 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B181AF24;
-        Mon, 25 Jul 2022 08:13:37 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id c13so3968904pla.6;
-        Mon, 25 Jul 2022 08:13:36 -0700 (PDT)
+        with ESMTP id S235089AbiGYPQL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:11 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492111EC42;
+        Mon, 25 Jul 2022 08:13:38 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id y1so2617017pja.4;
+        Mon, 25 Jul 2022 08:13:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=edERAY+W+H8xhkt0YCtw/+TrmSGvoLSrgsbiPZWxo1M=;
-        b=UDP6QyDPlufFmbTy8VQCrHP42wyCskSWjF2zPuud5pMczdl6GbM6D8bN89NWSZ4hQQ
-         tF/pJakz0tYHrYxexzU1aNRfQ9TLRFKRLCglMYcW77K2Ydx1qN76V3huI1jU7X6KdqRr
-         OLPib1LuuE6so0BUWiDxC+aL6Sm7aITXo0OH8zzr+CiFaOWuIBi8pg/J1QiHSHD7yWUj
-         bgEohqYHOk0z7Znhfd1hO0uO91Ul9KvTsgqw8UdP7W0AxXhTdtxotsgObo/uwtXPUqT+
-         FRc7Teddza1fGCnJSsGHp+uArSwJoaPMHrt5EKmlBPV4aI2rObaSZkJhC+QABPcB3JSQ
-         4+eg==
+        bh=JE8bRC6uYHCtiV8R8EE5D5GYSiT8jkroOdZWcPrNIso=;
+        b=dJPeHC17hBf5NkCv/C83Oow9fLbq2L9cbdIVaIvvEUSgLtdOZ2BsIevw0UK4GWIdpT
+         UdPxLsui6l4A1Hrz/VlNNftUqOgSuWGcg3ajaQgRTYke+lNBhKmYiKpCGf/YLmQeCvH3
+         LJ1wgktinCSwxPVXHPgUqatA+WoI+fLLeOd0hsckOveIb8WY3Z3LFyhDJBH1qkkMEKwr
+         ELaljoH1+paxcH1QdDkCEjeEAagMI7/FIRXrcHP4MK2KgIZJj52wgq6JdMrMMnZX1jqx
+         t1dA6gykJBj+Q1EcrdHxdkySKvWF6pdAD7y2wxNPBc+Ph/fXbPkNXrywVf6rkBVrBVxa
+         qdEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=edERAY+W+H8xhkt0YCtw/+TrmSGvoLSrgsbiPZWxo1M=;
-        b=KOjBZkAPF2rQIq2+EtMFqGkH00cqO9HjLBM1+FlfEV4Svm7xIooi9ZA3v36a3ko226
-         O3inarzO65BWZ+N1o5mUwuKRXcL8Iq5zUY4T8gpLoVhVsLfbypcOlSOGKGvl9ByqLc7W
-         gYy3s+2LkR9HYixwNk8V1FYonRPXPiaXYF4DYz39iwZByQAgKkGpfpWt4xRVQakFgne7
-         LTAs+e6l+fET/d5dsn28KuYm7/o13lMuWjY6fXK37pZRL8qms8IKKk4KOFgWzfGOI+H3
-         ppO21dczYdtpe5jy6eV2nT8eTmzL4HK7Ie1PiSRJeDSlR9GoLiEdULJRdhI8fAeBrVtM
-         gE+A==
-X-Gm-Message-State: AJIora+ksyUvEewbg/Ze2kXWYe7UEINvVDuqn7UA4lNaoXYUXtEMFSn9
-        QF2PDk0xVhCyhScSARdYHZnaj9816Is=
-X-Google-Smtp-Source: AGRyM1sSUDuX+xnwkkAVMFJXj5KVqkNcQeCnhtjYu7jL33O/Td6gUjb2DbJFnpP9PujuFAk2qrMr7Q==
-X-Received: by 2002:a17:90a:9b03:b0:1f1:85b2:c52b with SMTP id f3-20020a17090a9b0300b001f185b2c52bmr33387441pjp.159.1658762013809;
-        Mon, 25 Jul 2022 08:13:33 -0700 (PDT)
+        bh=JE8bRC6uYHCtiV8R8EE5D5GYSiT8jkroOdZWcPrNIso=;
+        b=1xA4HeDQTyGqw3W5KtKDmVXyv4BCzm27FcdpE0zVLZBBEzAwg1v+MQ0IA02F5yjFzv
+         /5y/Pb+wR4goJjZ4lKgru6FQKDR5GBn//BLoNuDZVODshjmZbmlTzXzGeIg55IvJ9vW/
+         Eb3Q4MpXHyl8MCiHK7SVLMCWKZ6KYulZdbVHQMuXdAblhwooM/A88oK9ta1Ksyw4M6Gh
+         /F7CZ2Ry9inP5zJla91AF9BH6H9BmK0CbXsJXsQIUggdFXzCbttcC4XIw1EZY+UdKrFW
+         Gs9cjempw8mJAgjfiukpg7kXmQy6P0XiDN5oO538hGEna/OTLT+EO0eEl6BycVCEqRrh
+         BzCA==
+X-Gm-Message-State: AJIora9Jff7Rrq8HyW0R/QZTlO+5SVI0neZzSMOm+8nuqj7D0islK/hh
+        uTk/xhQQtxxLp7BMf7JaS0zywi1c/ZY=
+X-Google-Smtp-Source: AGRyM1vE7L8X4jFX0/CbMVa/j1CVPqAjkMZJ1o95jHXF818zgQj4imyni/y+UHauWYM0NPcWXTXuLA==
+X-Received: by 2002:a17:90a:880a:b0:1ef:76fb:d8b6 with SMTP id s10-20020a17090a880a00b001ef76fbd8b6mr15047682pjn.69.1658762016747;
+        Mon, 25 Jul 2022 08:13:36 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.31
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 08:13:33 -0700 (PDT)
+        Mon, 25 Jul 2022 08:13:36 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -58,14 +58,15 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 4/7] PCI: brcmstb: Add mechanism to turn on subdev regulators
-Date:   Mon, 25 Jul 2022 11:12:53 -0400
-Message-Id: <20220725151258.42574-5-jim2101024@gmail.com>
+Subject: [PATCH v3 5/7] PCI: brcmstb: Add control of subdevice voltage regulators
+Date:   Mon, 25 Jul 2022 11:12:54 -0400
+Message-Id: <20220725151258.42574-6-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220725151258.42574-1-jim2101024@gmail.com>
 References: <20220725151258.42574-1-jim2101024@gmail.com>
@@ -79,206 +80,287 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a mechanism to identify standard PCIe regulators in the DT, allocate
-them, and turn them on before the rest of the bus is scanned during
-pci_host_probe().
+This Broadcom STB PCIe RC driver has one port and connects directly to one
+device, be it a switch or an endpoint.  We want to be able to leverage the
+recently added mechanism that allocates and turns on/off subdevice
+regulators.
 
-The allocated structure that contains the regulators is stored in the port
-driver dev.driver_data field.  Here is a point-by-point of how and when
-this mechanism is activated:
+All that needs to be done is to put the regulator DT nodes in the bridge
+below host and to set the pci_ops methods add_bus and remove_bus.
 
-If:
-    -- PCIe RC driver sets pci_ops {add,remove)_bus to
-       pci_subdev_regulators_{add,remove}_bus during its probe.
-    -- There is a root port DT node under the host bridge DT node.
-    -- During the RC driver's pci_host_probe() the add_bus callback
-       is invoked where (bus->parent && pci_is_root_bus(bus->parent)
-       is true
+Note that the pci_subdev_regulators_add_bus() method is wrapped for two
+reasons:
 
-Then:
-    -- A struct subdev_regulators structure will be allocated and
-       assigned to bus->dev.driver_data.
-    -- regulator_bulk_{get,enable} will be invoked on &bus->dev
-       and the former will search for and process any
-       vpcie{12v,3v3,3v3aux}-supply properties that reside in the
-       root port DT node.
-    -- The regulators will be turned off/on for any unbind/bind operations.
-    -- The regulators will be turned off/on for any suspend/resumes, but
-       only if the RC driver handles this on its own.  This will appear
-       in a later commit for the pcie-brcmstb.c driver.
+   1. To achieve link up after the voltage regulators are turned on.
 
-The unabridged reason for doing this is as follows.  We would like the
-Broadcom STB PCIe root complex driver (and others) to be able to turn
-off/on standard PCIe regulators.  Typically, the drivers of endpoint
-devices are stock Linux drivers that are not aware that these regulator(s)
-exist and must be turned on for the driver to be probed.  The simple
-solution of course is to turn these regulators on at boot and keep them on.
-However, this solution does not satisfy at least three of our usage modes:
+   2. If, in the case of an unsuccessful link up, to redirect any PCIe
+      accesses to subdevices, e.g. the scan for DEV/ID.  This redirection
+      is needed because the Broadcom PCIe HW will issue a CPU abort if such
+      an access is made when the link is down.
 
-  1. For example, one customer uses multiple PCIe controllers, but wants
-     the ability to, by script invoking and unbind, turn any or all of them
-     and their subdevices off to save power, e.g. when in battery mode.
+The pci_subdev_regulators_remove_bus() is wrapped as well as
+we must avoid invoking it if we see that there is a collision
+in the use of dev->driver_data.
 
-  2. Another example is when a watchdog script discovers that an endpoint
-     device is in an unresponsive state and would like to unbind, power
-     toggle, and re-bind just the PCIe endpoint and controller.
-
-  3. Of course we also want power turned off during suspend mode.  However,
-     some endpoint devices may be able to "wake" during suspend and we need
-     to recognise this case and veto the nominal act of turning off its
-     regulator.  Such is the case with Wake-on-LAN and Wake-on-WLAN support
-     where the PCIe endpoint device needs to be kept powered on in order to
-     receive network packets and wake the system.
-
-In all of these cases it is advantageous for the PCIe controller to govern
-the turning off/on the regulators needed by the endpoint device.  The first
-two cases can be done by simply unbinding and binding the PCIe controller,
-if the controller has control of these regulators.
-
-[1] The 99% configuration of our boards is a single endpoint device
-    attached to the PCIe controller.  I use the term endpoint but it could
-    possibly mean a switch as well.
-
-Link: https://lore.kernel.org/r/20220106160332.2143-6-jim2101024@gmail.com
+[bhelgaas: fold in
+https://lore.kernel.org/r/20220112013100.48029-1-jim2101024@gmail.com]
+Link: https://lore.kernel.org/r/20220106160332.2143-7-jim2101024@gmail.com
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 96 +++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 134 ++++++++++++++++++--------
+ 1 file changed, 95 insertions(+), 39 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 3443206d2a95..1be6e71142d8 100644
+index 1be6e71142d8..aa199b0a39e2 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -24,6 +24,7 @@
- #include <linux/pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/printk.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-@@ -218,6 +219,11 @@ struct pcie_cfg_data {
- 	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+@@ -261,6 +261,8 @@ struct brcm_pcie {
+ 	u32			hw_rev;
+ 	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
+ 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
++	bool			regulator_oops;
++	struct subdev_regulators *sr;
  };
  
-+struct subdev_regulators {
-+	unsigned int num_supplies;
-+	struct regulator_bulk_data supplies[];
-+};
-+
- struct brcm_msi {
- 	struct device		*dev;
- 	void __iomem		*base;
-@@ -1065,6 +1071,92 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
- 	return 0;
- }
+ static inline bool is_bmips(const struct brcm_pcie *pcie)
+@@ -1100,10 +1102,37 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+ 	struct subdev_regulators *sr;
+ 	int ret;
  
-+static const char * const supplies[] = {
-+	"vpcie3v3",
-+	"vpcie3v3aux",
-+	"vpcie12v",
-+};
-+
-+static void *alloc_subdev_regulators(struct device *dev)
-+{
-+	const size_t size = sizeof(struct subdev_regulators)
-+		+ sizeof(struct regulator_bulk_data) * ARRAY_SIZE(supplies);
-+	struct subdev_regulators *sr;
-+	int i;
-+
-+	sr = devm_kzalloc(dev, size, GFP_KERNEL);
-+	if (sr) {
-+		sr->num_supplies = ARRAY_SIZE(supplies);
-+		for (i = 0; i < ARRAY_SIZE(supplies); i++)
-+			sr->supplies[i].supply = supplies[i];
-+	}
-+
-+	return sr;
-+}
-+
-+static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
-+{
-+	struct device *dev = &bus->dev;
-+	struct subdev_regulators *sr;
-+	int ret;
-+
-+	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
-+		return 0;
-+
-+	if (dev->driver_data) {
-+		/*
-+		 * Oops, this is unfortunate.  We are using the port
-+		 * driver's driver_data field to store our regulator info
-+		 * and it appears that another driver started using it as
-+		 * well.  If so, be a team player do not overwrite it.  We
-+		 * may still be okay if there are no regulators.
-+		 */
-+		dev_err(dev, "root port dev.driver_data non-NULL; something wrong\n");
-+		return 0;
-+	}
-+
+-	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
 +	sr = alloc_subdev_regulators(dev);
 +	if (!sr)
 +		return -ENOMEM;
 +
-+	/*
-+	 * There is not much of a point to return an error as currently it
-+	 * will cause a WARNING() from pci_alloc_child_bus().  So only
-+	 * return the error if it is -ENOMEM.  Note that we are always
-+	 * doing a dev_err() for other erros.
-+	 */
 +	ret = regulator_bulk_get(dev, sr->num_supplies, sr->supplies);
 +	if (ret) {
 +		dev_err(dev, "failed to get regulators for downstream device\n");
-+		return 0;
++		return ret;
 +	}
 +
 +	ret = regulator_bulk_enable(sr->num_supplies, sr->supplies);
 +	if (ret) {
 +		dev_err(dev, "failed to enable regulators for downstream device\n");
 +		regulator_bulk_free(sr->num_supplies, sr->supplies);
-+		return 0;
++		return ret;
 +	}
-+
 +	dev->driver_data = sr;
 +
 +	return 0;
 +}
 +
-+static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
++static int brcm_pcie_add_bus(struct pci_bus *bus)
++{
++	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
++	struct device *dev = &bus->dev;
++	int ret;
++
++	if (!bus->parent || !pci_is_root_bus(bus->parent) || !pcie)
+ 		return 0;
+ 
+-	if (dev->driver_data) {
++	if (dev->of_node && dev->driver_data) {
+ 		/*
+ 		 * Oops, this is unfortunate.  We are using the port
+ 		 * driver's driver_data field to store our regulator info
+@@ -1112,12 +1141,15 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+ 		 * may still be okay if there are no regulators.
+ 		 */
+ 		dev_err(dev, "root port dev.driver_data non-NULL; something wrong\n");
+-		return 0;
++
++	} else if (dev->of_node) {
++		ret = pci_subdev_regulators_add_bus(bus);
++		/* Grab the regulators for suspend/resume */
++		pcie->sr = bus->dev.driver_data;
+ 	}
+ 
+-	sr = alloc_subdev_regulators(dev);
+-	if (!sr)
+-		return -ENOMEM;
++	/* Try to start the link. */
++	brcm_pcie_start_link(pcie);
+ 
+ 	/*
+ 	 * There is not much of a point to return an error as currently it
+@@ -1125,22 +1157,7 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+ 	 * return the error if it is -ENOMEM.  Note that we are always
+ 	 * doing a dev_err() for other erros.
+ 	 */
+-	ret = regulator_bulk_get(dev, sr->num_supplies, sr->supplies);
+-	if (ret) {
+-		dev_err(dev, "failed to get regulators for downstream device\n");
+-		return 0;
+-	}
+-
+-	ret = regulator_bulk_enable(sr->num_supplies, sr->supplies);
+-	if (ret) {
+-		dev_err(dev, "failed to enable regulators for downstream device\n");
+-		regulator_bulk_free(sr->num_supplies, sr->supplies);
+-		return 0;
+-	}
+-
+-	dev->driver_data = sr;
+-
+-	return 0;
++	return ret == -ENOMEM ? ret : 0;
+ }
+ 
+ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
+@@ -1148,15 +1165,28 @@ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
+ 	struct device *dev = &bus->dev;
+ 	struct subdev_regulators *sr = dev->driver_data;
+ 
+-	if (!dev->of_node || !sr || !bus->parent || !pci_is_root_bus(bus->parent))
+-		return;
+-
+ 	if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
+ 		dev_err(dev, "failed to disable regulators for downstream device\n");
+ 	regulator_bulk_free(sr->num_supplies, sr->supplies);
+ 	dev->driver_data = NULL;
+ }
+ 
++static void brcm_pcie_remove_bus(struct pci_bus *bus)
 +{
 +	struct device *dev = &bus->dev;
-+	struct subdev_regulators *sr = dev->driver_data;
++	struct brcm_pcie *pcie;
 +
-+	if (!dev->of_node || !sr || !bus->parent || !pci_is_root_bus(bus->parent))
++	if (!dev->of_node || !dev->driver_data || !bus->parent ||
++	    !pci_is_root_bus(bus->parent))
 +		return;
 +
-+	if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
-+		dev_err(dev, "failed to disable regulators for downstream device\n");
-+	regulator_bulk_free(sr->num_supplies, sr->supplies);
-+	dev->driver_data = NULL;
++	pcie = (struct brcm_pcie *) bus->sysdata;
++	if (pcie && pcie->sr) {
++		pci_subdev_regulators_remove_bus(bus);
++		pcie->sr = NULL;
++	}
 +}
 +
  /* L23 is a low-power PCIe link state */
  static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
  {
-@@ -1336,12 +1428,16 @@ static struct pci_ops brcm_pcie_ops = {
+@@ -1253,7 +1283,7 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	pcie->bridge_sw_init_set(pcie, 1);
+ }
+ 
+-static int brcm_pcie_suspend(struct device *dev)
++static int brcm_pcie_suspend_noirq(struct device *dev)
+ {
+ 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
+ 	int ret;
+@@ -1273,12 +1303,20 @@ static int brcm_pcie_suspend(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	if (pcie->sr) {
++		ret = regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
++		if (ret) {
++			dev_err(dev, "Could not turn off regulators\n");
++			reset_control_reset(pcie->rescal);
++			return ret;
++		}
++	}
+ 	clk_disable_unprepare(pcie->clk);
+ 
+ 	return 0;
+ }
+ 
+-static int brcm_pcie_resume(struct device *dev)
++static int brcm_pcie_resume_noirq(struct device *dev)
+ {
+ 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
+ 	void __iomem *base;
+@@ -1313,15 +1351,27 @@ static int brcm_pcie_resume(struct device *dev)
+ 	if (ret)
+ 		goto err_reset;
+ 
++	if (pcie->sr) {
++		ret = regulator_bulk_enable(pcie->sr->num_supplies,
++					    pcie->sr->supplies);
++		if (ret) {
++			dev_err(dev, "Could not turn on regulators\n");
++			goto err_reset;
++		}
++	}
++
+ 	ret = brcm_pcie_start_link(pcie);
+ 	if (ret)
+-		goto err_reset;
++		goto err_regulator;
+ 
+ 	if (pcie->msi)
+ 		brcm_msi_set_regs(pcie->msi);
+ 
+ 	return 0;
+ 
++err_regulator:
++	if (pcie->sr)
++		regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
+ err_reset:
+ 	reset_control_rearm(pcie->rescal);
+ err_disable_clk:
+@@ -1428,16 +1478,16 @@ static struct pci_ops brcm_pcie_ops = {
  	.map_bus = brcm_pcie_map_conf,
  	.read = pci_generic_config_read,
  	.write = pci_generic_config_write,
-+	.add_bus = pci_subdev_regulators_add_bus,
-+	.remove_bus = pci_subdev_regulators_remove_bus,
+-	.add_bus = pci_subdev_regulators_add_bus,
+-	.remove_bus = pci_subdev_regulators_remove_bus,
++	.add_bus = brcm_pcie_add_bus,
++	.remove_bus = brcm_pcie_remove_bus
  };
  
  static struct pci_ops brcm_pcie_ops32 = {
  	.map_bus = brcm_pcie_map_conf32,
  	.read = pci_generic_config_read32,
  	.write = pci_generic_config_write32,
-+	.add_bus = pci_subdev_regulators_add_bus,
-+	.remove_bus = pci_subdev_regulators_remove_bus,
+-	.add_bus = pci_subdev_regulators_add_bus,
+-	.remove_bus = pci_subdev_regulators_remove_bus,
++	.add_bus = brcm_pcie_add_bus,
++	.remove_bus = brcm_pcie_remove_bus
  };
  
  static int brcm_pcie_probe(struct platform_device *pdev)
+@@ -1510,10 +1560,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto fail;
+ 
+-	ret = brcm_pcie_start_link(pcie);
+-	if (ret)
+-		goto fail;
+-
+ 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
+ 	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
+ 		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
+@@ -1535,7 +1581,17 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, pcie);
+ 
+-	return pci_host_probe(bridge);
++	ret = pci_host_probe(bridge);
++	if (!ret && !brcm_pcie_link_up(pcie))
++		ret = -ENODEV;
++
++	if (ret) {
++		brcm_pcie_remove(pdev);
++		return ret;
++	}
++
++	return 0;
++
+ fail:
+ 	__brcm_pcie_remove(pcie);
+ 	return ret;
+@@ -1544,8 +1600,8 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+ 
+ static const struct dev_pm_ops brcm_pcie_pm_ops = {
+-	.suspend = brcm_pcie_suspend,
+-	.resume = brcm_pcie_resume,
++	.suspend_noirq = brcm_pcie_suspend_noirq,
++	.resume_noirq = brcm_pcie_resume_noirq,
+ };
+ 
+ static struct platform_driver brcm_pcie_driver = {
 -- 
 2.17.1
 
