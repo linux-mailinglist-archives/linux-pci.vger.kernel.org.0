@@ -2,130 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5224D580185
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:17:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C363B5801A1
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:21:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236204AbiGYPRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        id S235866AbiGYPVZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 11:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235910AbiGYPQX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:23 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F0D1B78A;
-        Mon, 25 Jul 2022 08:13:49 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id o5-20020a17090a3d4500b001ef76490983so10566982pjf.2;
-        Mon, 25 Jul 2022 08:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XRISqH0YEt9x37mOvZB1aRfZZEl6+ks0JDgNi4Ug7Zk=;
-        b=o5neeh4ryOoBCB8aglOKL52nvvcBgFyio+39f1GPtB2O/slaQJdSCAr4qATZhCQmF7
-         1zjFyzWkusGEbaJI6oYjegXXuPo5ICsGd2dXIQ3WCRyjOMFl1YGlKEM/kFKKyzPx72An
-         8bKV15YiEXk1Ungcvs+IogfaUTguat61aZa9aDVmg4Q/qvSsp4AhG19nCC+xfY3ti/Fx
-         geXalA7hGJGtLujyQ4lCHfgFo1jn7cZ3B0VK+qwRSVNqXAysraPUQa2by2+4YDAEhftO
-         xpAiofVS6Qh3GnK8oRRIe2TiGXoHU+WOyIcastiLhcc/h49+tTNlSpugOwWQo1fONNrV
-         N0Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XRISqH0YEt9x37mOvZB1aRfZZEl6+ks0JDgNi4Ug7Zk=;
-        b=EN2HqiH/endOWYT8s6zHVsmLnThfi/DGEAV5SudbZU+2q+8H/sCpFO0lhF8dgRVH4F
-         ZN/nRlLrBsMd63yWTnHA5MMRelkQI17Rq1upT72m9fOeobP5QKzL/4j6MUKaQ9BUTrCH
-         kwizF+8DGeFsuHr14FViIo+b2Az+1+sT/rUebb4/DxzrtmdN9njXftoeGcnWl1EFlq4Z
-         p6QayWV5AZsVad+7ElnSQx6fpXiv6MorsPBOIYfusNWj0zo+9hAEpNhVAFmUcJc1wqBC
-         doblPzGHV6eplpFv+qxOsxPBrDiLS+Tbmdqlf4tp77FR49R5zzrkmPGzzpfXVZtAgABW
-         QvmQ==
-X-Gm-Message-State: AJIora+MA9gZ4r/6FYdJXkTwKniYxQjAi3g1e6WGr5VsGLlZRIVPrdER
-        Ao0lyxyN/I4zQApOh2ZdeowG8LFr0ec=
-X-Google-Smtp-Source: AGRyM1uCEX3dmY0dBa+CpILOTqJu48Q9xyKEqm4oI4EyeWgqGjO1n1uVJmCPP5x3Ng2Y3fble129qw==
-X-Received: by 2002:a17:902:c40a:b0:16d:2dbd:35cd with SMTP id k10-20020a170902c40a00b0016d2dbd35cdmr12397728plk.65.1658762022801;
-        Mon, 25 Jul 2022 08:13:42 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 08:13:42 -0700 (PDT)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-        james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 7/7] PCI: brcmstb: Have .map_bus function names end with 'map_bus'
-Date:   Mon, 25 Jul 2022 11:12:56 -0400
-Message-Id: <20220725151258.42574-8-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220725151258.42574-1-jim2101024@gmail.com>
-References: <20220725151258.42574-1-jim2101024@gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S236193AbiGYPVM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:21:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC976167;
+        Mon, 25 Jul 2022 08:18:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48A8661284;
+        Mon, 25 Jul 2022 15:18:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3B7C341C8;
+        Mon, 25 Jul 2022 15:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658762319;
+        bh=9nUkscWr6F41nc6e9ioJgyDs4jP8GMh1w//u9IckWOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=togkg6dzHsqFJNhh2OMC+RUpofF2Ut8DKGR/s7JbC1NxYk+eaySs9IUspg6SkixDC
+         +P3g/3CjBISitRaQ6IokxpMUcRBdu4KtFH9i5OcU9HhqN3zOrkeVyLbOqHJlJUkAvF
+         mSVqApIroZEc77KjLvHCcpJlI+/hoUulDkxsarq/qhvbXrYk6XxXCFr7U/xblMxcV0
+         uP7jQ4mdHKp+niT3l0qwKf1nSnWQFwiAVdHEuaNbPDcTPJRyqkusS1Z+NTt2khGTyb
+         T2LiVKORgQsaGXc7lhQYhzCbKwWk8FbewyWFIbVA6ema+ZmAbBWn2TA6LVuFJTrhFm
+         RnlTiw7Q+M2mg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1oFzr6-0001RI-6H; Mon, 25 Jul 2022 17:18:48 +0200
+Date:   Mon, 25 Jul 2022 17:18:48 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+Message-ID: <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
+References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
+ <20220722143858.GA1818206@bhelgaas>
+ <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
+ <87czdtxnfn.wl-maz@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87czdtxnfn.wl-maz@kernel.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Conform with other drivers' map_bus functions.
+On Mon, Jul 25, 2022 at 03:43:40PM +0100, Marc Zyngier wrote:
+> On Mon, 25 Jul 2022 14:25:49 +0100,
+> Johan Hovold <johan@kernel.org> wrote:
+> > 
+> > [ +CC: maz ]
+> > 
+> > On Fri, Jul 22, 2022 at 09:38:58AM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Jul 22, 2022 at 03:26:44PM +0200, Johan Hovold wrote:
+> > > > On Thu, Jul 21, 2022 at 05:21:22PM -0500, Bjorn Helgaas wrote:
+> > > 
+> > > > > qcom is a DWC driver, so all the IRQ stuff happens in
+> > > > > dw_pcie_host_init().  qcom_pcie_remove() does call
+> > > > > dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
+> > > > > calls irq_dispose_mapping().
+> > > > > 
+> > > > > I'm thoroughly confused by all this.  But I suspect that maybe I
+> > > > > should drop the "make qcom modular" patch because it seems susceptible
+> > > > > to this problem:
+> > > > > 
+> > > > >   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
+> > > > 
+> > > > That should not be necessary.
+> > > > 
+> > > > As you note above, interrupt handling is implemented in dwc core so if
+> > > > there are any issue here at all, which I doubt, then all of the dwc
+> > > > drivers that currently can be built as modules would all be broken and
+> > > > this would need to be fixed in core.
+> > > 
+> > > I don't know yet whether there's an issue.  We need a clear argument
+> > > for why there is or is not.  The fact that others might be broken is
+> > > not an argument for breaking another one ;)
+> > 
+> > It's not breaking anything that is currently working, and if there's
+> > some corner case during module unload, that's not the end of the world
+> > either.
+> 
+> It may not be the end of the world for you, but you have absolutely no
+> idea of what dangling pointers to kernel memory will do on a user
+> machine, nor how this can be further exploited. Unloading a module
+> should never result in an unsafe kernel.
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Since when is unloading modules something that is expected to work
+perfectly? I keep hearing "well, don't do that then" when someone
+complains about unloading this module while doing this or that broke
+something. (And it's only root that can unload modules in the first
+place.)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index fc1d36f6094e..b40733dd253c 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -685,7 +685,7 @@ static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
- 	return dla && plu;
- }
- 
--static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
-+static void __iomem *brcm_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
- 					int where)
- {
- 	struct brcm_pcie *pcie = bus->sysdata;
-@@ -706,7 +706,7 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
- 	return base + PCIE_EXT_CFG_DATA + (where & 0xfff);
- }
- 
--static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devfn,
-+static void __iomem *brcm_pcie_map_bus32(struct pci_bus *bus, unsigned int devfn,
- 					 int where)
- {
- 	struct brcm_pcie *pcie = bus->sysdata;
-@@ -1509,7 +1509,7 @@ static const struct of_device_id brcm_pcie_match[] = {
- };
- 
- static struct pci_ops brcm_pcie_ops = {
--	.map_bus = brcm_pcie_map_conf,
-+	.map_bus = brcm_pcie_map_bus,
- 	.read = pci_generic_config_read,
- 	.write = pci_generic_config_write,
- 	.add_bus = brcm_pcie_add_bus,
-@@ -1517,7 +1517,7 @@ static struct pci_ops brcm_pcie_ops = {
- };
- 
- static struct pci_ops brcm_pcie_ops32 = {
--	.map_bus = brcm_pcie_map_conf32,
-+	.map_bus = brcm_pcie_map_bus32,
- 	.read = pci_generic_config_read32,
- 	.write = pci_generic_config_write32,
- 	.add_bus = brcm_pcie_add_bus,
--- 
-2.17.1
+If this was the general understanding, then it seems the only option
+would be to disable module unloading completely as module remove code
+almost by definition gets less testing and is subject to bit rot.
 
+It's useful for developers, but use it at your own risk.
+
+That said, I agree that if something is next to impossible to get right,
+as may be the case with interrupt controllers generally, then fine,
+let's disable module unloading for that class of drivers.
+
+And this would mean disabling driver unbind for the 20+ driver PCI
+drivers that currently implement it to some degree.
+
+Also note that we only appear to have some 60 drivers in the tree that
+can be built as modules but cannot be unloaded (if my grep patterns
+were correct).
+
+> > > > I've been using the modular pcie-qcom patch for months now, unloading
+> > > > and reloading the driver repeatedly to test power sequencing, without
+> > > > noticing any problems whatsoever.
+> > > 
+> > > Pali's commit log suggests that unloading the module is not, by
+> > > itself, enough to trigger the problem:
+> > > 
+> > >   https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
+> > > 
+> > > Can you test the scenario he mentions?
+> > 
+> > Turns out the pcie-qcom driver does not support legacy interrupts so
+> > there's no risk of there being any lingering mappings if I understand
+> > things correctly.
+> 
+> It still does MSIs, thanks to dw_pcie_host_init(). If you can remove
+> the driver while devices are up and running with MSIs allocated,
+> things may get ugly if things align the wrong way (if a driver still
+> has a reference to an irq_desc or irq_data, for example).
+
+That is precisely the way I've been testing it and everything appears
+to be tore down as it should.
+
+And a PCI driver that has been unbound should have released its
+resources, or that's a driver bug. Right?
+
+And for the OF INTx case you mentioned earlier, aren't those mapped by
+PCI core and could in theory be released by core as well?
+
+Johan
