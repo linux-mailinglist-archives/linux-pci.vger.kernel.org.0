@@ -2,140 +2,276 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 959C457FA4B
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 09:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF7A57FEB9
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 14:03:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbiGYHbu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 25 Jul 2022 03:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60966 "EHLO
+        id S232990AbiGYMD2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 08:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiGYHbu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 03:31:50 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211B311C39
-        for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022 00:31:48 -0700 (PDT)
-Received: from mail-ej1-f41.google.com ([209.85.218.41]) by
- mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MnJdC-1noY1X28VI-00jMwu for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022
- 09:31:47 +0200
-Received: by mail-ej1-f41.google.com with SMTP id os14so19008117ejb.4
-        for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022 00:31:47 -0700 (PDT)
-X-Gm-Message-State: AJIora+47KnhFXEk+p80HoYMy/UeWqzNtEV96PlFQYfl0iRuouz87Yg8
-        r+hBiRS3kBuPrlcFS5scan9QytXrtHYGM+gxWHU=
-X-Google-Smtp-Source: AGRyM1vsvWClRqqetm520re8n4cGTiovqA9RjGoSp74hFiueZ1PjJyB2gnzgaznRGNLgBPfjuUt3vHEKZBa/C/XKbu0=
-X-Received: by 2002:a17:906:98c7:b0:72b:20fe:807d with SMTP id
- zd7-20020a17090698c700b0072b20fe807dmr9187171ejb.75.1658734307158; Mon, 25
- Jul 2022 00:31:47 -0700 (PDT)
+        with ESMTP id S234616AbiGYMD1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 08:03:27 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C194186C5
+        for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022 05:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658750607; x=1690286607;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kQyAFVT7yiJXaR0kFlbygX97BaMjBorb/NG/n9VPoxQ=;
+  b=bilysahEs6lHvBjfdx24pp0oEsiesEjgb+A/Pf6VILdmVWEjfVD4dIdo
+   XyymClmKwbLQ1z+M4yhZkEBbhkJQZjzYF8OKRmKQb4/cSYUnR7WrRFOpR
+   gSx8cuYI5jZCxN6o2efBWZ6tT1J6nw8t31pRdRj6HjDiCndCZAHyiXtWv
+   u7cJ4JLJgz5s54XrlpD3HWrMoHppu1EbUzRtBmlUy6NPxT2JjmzVsnZtl
+   /SlEDVnO+GQeESOIvmBhtPbg+i6Ew5flEel8vQhw6au1jwiAazYPokGuq
+   kd/NEEP+nZhxpG/06pVI1z4fBMJfvDs0WVSfcA8DRFvxOutkls2vhOo+2
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10418"; a="313429831"
+X-IronPort-AV: E=Sophos;i="5.93,192,1654585200"; 
+   d="scan'208";a="313429831"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2022 05:03:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,192,1654585200"; 
+   d="scan'208";a="667464335"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Jul 2022 05:03:25 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oFwo0-00057B-2j;
+        Mon, 25 Jul 2022 12:03:24 +0000
+Date:   Mon, 25 Jul 2022 20:02:35 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 17fc94dd0f52cc3800451c4fac06803499c9a132
+Message-ID: <62de865b.tlPqzZ1XdOZr4zhy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <202207170012.RhbvYS0z-lkp@intel.com> <20220722194023.GA1924461@bhelgaas>
- <20220722201928.x6c4omhpqsnctzxv@pali>
-In-Reply-To: <20220722201928.x6c4omhpqsnctzxv@pali>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 25 Jul 2022 09:31:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a34kKvLEFGW6XXenjP0mZBU5E+JWSdLfn+Dxzf6Dk6Ybw@mail.gmail.com>
-Message-ID: <CAK8P3a34kKvLEFGW6XXenjP0mZBU5E+JWSdLfn+Dxzf6Dk6Ybw@mail.gmail.com>
-Subject: Re: [helgaas-pci:pci/misc 2/2] drivers/pcmcia/omap_cf.c:240:18:
- error: implicit declaration of function 'pci_remap_iospace'; did you mean 'pci_remap_cfgspace'?
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        kbuild-all@lists.01.org, linux-pci <linux-pci@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:cr9Jba82OBhSEMXgCeqsWsn+NRERayikna6psOKZWKfG7B7Cdwo
- BpknXmaT3R0Vo1NOf50iIAN4LEDPMUb11MMA6H5XZdqtfZdDVtH7okcuggp6Dr48DeLwasH
- XN95Alwai9ETaWBkFiWMO/DkIqLG6NuPJkZDW8jL3Z+Oa8Qyn/m6mpCKUKCuHkWbP5PvyCY
- DmOGEzk3aTYzbyz3WhPjg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:X3wQmynpHkQ=:ALsxOxM/udMFgKjG0A/F5+
- VM3mpaxTRUhwhAU1x1R8cNJGVZBQGBASgzn4GM39r1L9rIVAA2tup1xiUXYD/gCxX7HGxZvwy
- sni24kV243tJg5aWF1IDNZ1DePqz7LIESavw8zrHDnD3B+T4yEHT1zJWJkYfy9/MosfTkvhWw
- eoYyYrZ9pRQk93IDbYJ3h7G+/loQu0GlY3Hxyc0skEGHdKNWzkybWfrSN4FxLry/f8rO6Zqv4
- n+HQjRaW4WW+iISxte3Wkms5ZqohGOHMc0AFFq3ln8/temjFNqVmhc31MdX+TMJlGhH+ehqQ9
- Ny1R2KXjdBMCPCU6cYETt84VpzkEg7pXT/aImYt05LXNwZHbiW2mq7kW75nErDWPSXvwqpg0b
- 31WgHI5JHMhLVbr0COaA6QkdCuae75ECD2qTEpDKbXcwf4zyNG4p7PW1mgH3+ZrlLb+M6g5Tj
- hdRFKbm3UPAtpr0rDTUuIGvoiBLtRos22lZ/SMLcd66GWgHRVDpivHtNyRSG03EJD4efMFWIq
- qIKeTSdKnrzW8tmZGZdKDNyui7OUWP1hhRjvWipRXjQf0WyHi5ytK/eUSIk7QyOcZMEOqiGkk
- yQn4ol7f06tgMrOheOuSWBv33Sgv4bNfgu5+GbW9VttGtx2bjUI5KgeiGesDsjF+8o+qOhev7
- nyljBYWYT5wPQeHZ+7C0lB7qnu31xTuvAlyLW0FQMVPtJBVghkViHkPpfQYD8bnlD4LMR4u0a
- zw7J1oHMEmTgfk57CdW+asMyrqaTAA1aiJ4OANBOXVfGikwrdfI3es93gJt5wdWq1FpCyR+Wk
- tik/A1JBKfLXnI+f5TvGcMS4xqz5NLaD9FvRavtUy7oscwT6Jnxv+4g0CTHb1qgf+N/b7fMjR
- z7iXoqoflb3drto9CABw==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 10:19 PM Pali Rohár <pali@kernel.org> wrote:
-> On Friday 22 July 2022 14:40:23 Bjorn Helgaas wrote:
-> > On Sun, Jul 17, 2022 at 12:21:13AM +0800, kernel test robot wrote:
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-> > > head:   c86c8360959ec706576baf17237dec3004154d4b
-> > > commit: c86c8360959ec706576baf17237dec3004154d4b [2/2] arm: ioremap: Fix pci_remap_iospace() when CONFIG_MMU unset
-> > > config: arm-randconfig-r016-20220715 (https://download.01.org/0day-ci/archive/20220717/202207170012.RhbvYS0z-lkp@intel.com/config)
-> > > compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
-> > > reproduce (this is a W=1 build):
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=c86c8360959ec706576baf17237dec3004154d4b
-> > >         git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-> > >         git fetch --no-tags helgaas-pci pci/misc
-> > >         git checkout c86c8360959ec706576baf17237dec3004154d4b
-> > >         # save the config file
-> > >         mkdir build_dir && cp config build_dir/.config
-> > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pcmcia/
-> > >
-> > > If you fix the issue, kindly add following tag where applicable
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > >
-> > > All errors (new ones prefixed by >>):
-> > >
-> > >    drivers/pcmcia/omap_cf.c: In function 'omap_cf_set_socket':
-> > >    drivers/pcmcia/omap_cf.c:127:25: warning: variable 'control' set but not used [-Wunused-but-set-variable]
-> > >      127 |         u16             control;
-> > >          |                         ^~~~~~~
-> >
-> > The above is a pre-existing warning, legitimate, but not our problem.
-> >
-> > >    drivers/pcmcia/omap_cf.c: In function 'omap_cf_probe':
-> > > >> drivers/pcmcia/omap_cf.c:240:18: error: implicit declaration of function 'pci_remap_iospace'; did you mean 'pci_remap_cfgspace'? [-Werror=implicit-function-declaration]
-> > >      240 |         status = pci_remap_iospace(&iospace, cf->phys_cf + SZ_4K);
-> > >          |                  ^~~~~~~~~~~~~~~~~
-> > >          |                  pci_remap_cfgspace
-> >
-> > This config (arm-randconfig-r016-20220715 above) has:
-> >
-> >   # CONFIG_MMU is not set
->
-> Arnd, any idea what is happening here with pcmcia omap driver?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 17fc94dd0f52cc3800451c4fac06803499c9a132  Merge branch 'pci/header-cleanup-immutable'
 
-The OMAP PCMCIA driver can be enabled for non-MMU configurations when
-compile testing, and it does not depend on PCI:
+elapsed time: 2510m
 
-config OMAP_CF
-        tristate "OMAP CompactFlash Controller"
-        depends on PCMCIA
-        depends on ARCH_OMAP16XX || (ARM && COMPILE_TEST)
+configs tested: 194
+configs skipped: 5
 
-> It is just missing some include header file, or broken dependences in
-> Kconfig?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The problem is that the generic pci_remap_iospace() is only available
-when PCI is enabled, both the function definition and the declaration are
-guarded with CONFIG_PCI.
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+powerpc              randconfig-c003-20220724
+i386                          randconfig-c001
+sh                               alldefconfig
+arm                          lpd270_defconfig
+m68k                            mac_defconfig
+arm                        clps711x_defconfig
+powerpc                 mpc85xx_cds_defconfig
+parisc64                         alldefconfig
+um                                  defconfig
+arm                           tegra_defconfig
+sh                          polaris_defconfig
+nios2                               defconfig
+arm                            qcom_defconfig
+m68k                       m5208evb_defconfig
+powerpc                        warp_defconfig
+arc                               allnoconfig
+powerpc                     stx_gp3_defconfig
+mips                       capcella_defconfig
+nios2                         3c120_defconfig
+arm                           u8500_defconfig
+nios2                         10m50_defconfig
+xtensa                              defconfig
+arm                         cm_x300_defconfig
+powerpc                 mpc834x_itx_defconfig
+sh                          sdk7786_defconfig
+arm                         axm55xx_defconfig
+sh                               allmodconfig
+sh                          lboxre2_defconfig
+arm                           h5000_defconfig
+mips                  decstation_64_defconfig
+mips                         mpc30x_defconfig
+powerpc                     pq2fads_defconfig
+mips                       bmips_be_defconfig
+x86_64                              defconfig
+mips                         bigsur_defconfig
+sh                          rsk7269_defconfig
+sh                     magicpanelr2_defconfig
+xtensa                         virt_defconfig
+microblaze                      mmu_defconfig
+arm                        realview_defconfig
+arm                          badge4_defconfig
+arm                       imx_v6_v7_defconfig
+arm                       aspeed_g5_defconfig
+sh                      rts7751r2d1_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                          r7785rp_defconfig
+parisc                           alldefconfig
+m68k                          amiga_defconfig
+mips                 decstation_r4k_defconfig
+s390                             allmodconfig
+sh                           se7780_defconfig
+sh                        sh7763rdp_defconfig
+m68k                         amcore_defconfig
+arm                            hisi_defconfig
+sh                         ap325rxa_defconfig
+xtensa                  nommu_kc705_defconfig
+powerpc                    amigaone_defconfig
+arm                        cerfcube_defconfig
+arc                          axs101_defconfig
+arm                        shmobile_defconfig
+m68k                           virt_defconfig
+arm                           stm32_defconfig
+sh                                  defconfig
+parisc                generic-64bit_defconfig
+mips                           jazz_defconfig
+xtensa                           allyesconfig
+m68k                          sun3x_defconfig
+xtensa                    smp_lx200_defconfig
+arm                         nhk8815_defconfig
+arm                        trizeps4_defconfig
+powerpc                      ep88xc_defconfig
+sparc                       sparc32_defconfig
+ia64                          tiger_defconfig
+powerpc                         ps3_defconfig
+sh                         apsh4a3a_defconfig
+mips                           ip32_defconfig
+sh                           se7724_defconfig
+sh                           se7721_defconfig
+xtensa                  cadence_csp_defconfig
+arm                          iop32x_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                     tqm8548_defconfig
+openrisc                         alldefconfig
+sh                            titan_defconfig
+s390                                defconfig
+riscv                            allyesconfig
+arc                 nsimosci_hs_smp_defconfig
+arm                            pleb_defconfig
+arm                            lart_defconfig
+xtensa                generic_kc705_defconfig
+ia64                         bigsur_defconfig
+loongarch                           defconfig
+sparc                               defconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+nios2                            allyesconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+loongarch                         allnoconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220724
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+m68k                             allyesconfig
+alpha                            allyesconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220724
+riscv                randconfig-r042-20220724
+s390                 randconfig-r044-20220724
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-Since the I/O space accessors are shared between PCI, ISA and
-PCMCIA, we have to use the same pci_remap_iospace() function to
-map it when any of the three are in use. For some platforms,
-we work around it using a static boot-time mapping to PCI_IOBASE
-with iotable_init(), but pci_remap_iospace() is generally the cleaner
-approach.
+clang tested configs:
+arm                           sama7_defconfig
+mips                           ip22_defconfig
+arm                      pxa255-idp_defconfig
+arm                          ixp4xx_defconfig
+mips                          malta_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                     powernv_defconfig
+mips                            e55_defconfig
+arm                       mainstone_defconfig
+mips                        qi_lb60_defconfig
+mips                        bcm63xx_defconfig
+mips                           mtx1_defconfig
+mips                        omega2p_defconfig
+riscv                    nommu_virt_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                     ppa8548_defconfig
+mips                     loongson2k_defconfig
+mips                      maltaaprp_defconfig
+mips                      malta_kvm_defconfig
+mips                           rs90_defconfig
+arm                         hackkit_defconfig
+mips                         tb0219_defconfig
+powerpc                   microwatt_defconfig
+powerpc                 mpc8272_ads_defconfig
+arm                        spear3xx_defconfig
+arm                        mvebu_v5_defconfig
+mips                   sb1250_swarm_defconfig
+x86_64                        randconfig-k001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20220724
+hexagon              randconfig-r045-20220724
 
-It's probably best to just mark this driver as depending on !MMU,
-since we don't care about MMU-less OMAP kernels and the driver
-is not usable elsewhere.
-
-        Arnd
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
