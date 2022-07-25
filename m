@@ -2,164 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C363B5801A1
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A4B580260
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 18:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235866AbiGYPVZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35366 "EHLO
+        id S235717AbiGYQCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 12:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236193AbiGYPVM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:21:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC976167;
-        Mon, 25 Jul 2022 08:18:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48A8661284;
-        Mon, 25 Jul 2022 15:18:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3B7C341C8;
-        Mon, 25 Jul 2022 15:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658762319;
-        bh=9nUkscWr6F41nc6e9ioJgyDs4jP8GMh1w//u9IckWOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=togkg6dzHsqFJNhh2OMC+RUpofF2Ut8DKGR/s7JbC1NxYk+eaySs9IUspg6SkixDC
-         +P3g/3CjBISitRaQ6IokxpMUcRBdu4KtFH9i5OcU9HhqN3zOrkeVyLbOqHJlJUkAvF
-         mSVqApIroZEc77KjLvHCcpJlI+/hoUulDkxsarq/qhvbXrYk6XxXCFr7U/xblMxcV0
-         uP7jQ4mdHKp+niT3l0qwKf1nSnWQFwiAVdHEuaNbPDcTPJRyqkusS1Z+NTt2khGTyb
-         T2LiVKORgQsaGXc7lhQYhzCbKwWk8FbewyWFIbVA6ema+ZmAbBWn2TA6LVuFJTrhFm
-         RnlTiw7Q+M2mg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oFzr6-0001RI-6H; Mon, 25 Jul 2022 17:18:48 +0200
-Date:   Mon, 25 Jul 2022 17:18:48 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
-References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
- <20220722143858.GA1818206@bhelgaas>
- <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
- <87czdtxnfn.wl-maz@kernel.org>
+        with ESMTP id S235512AbiGYQCW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 12:02:22 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335E913F98
+        for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022 09:02:21 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id p6-20020a17090a680600b001f2267a1c84so13092197pjj.5
+        for <linux-pci@vger.kernel.org>; Mon, 25 Jul 2022 09:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JKqeLialV+6vbEP9iLh1rw+b+hmjByPHU1zMv6k/ebc=;
+        b=3zsZRztKOEhwhcwxTyuAJc8jmK7Yd5DM5WDlQ8uNoCD0B0JdzO0Zr6i0fvzBbIeHGL
+         K1J9803VZkOtPHjBJjT4QvcPcrBqPmlyBibQFNfoLnJL2nH/8cmJZUl6jIbQx7NGbPNN
+         08+Ll+QxTbHmmBtibJ4KKjfXAbYDVI3PjoT0djdSDPSnUr00wKWUXUem3GEA9s+0sqso
+         vpZFIY0eOy38/uhvApzUMyDSDhHH3jPQ1VTXer2Cyum9Ff5GijNMSLUXAyVfmk/nlRqL
+         c0WLgAt1NLkoXArDAkcdqPEZWBzIV/RYls6whvzrjgsVYeCHBq/VtW9q21vfsycSgx3Y
+         CQZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JKqeLialV+6vbEP9iLh1rw+b+hmjByPHU1zMv6k/ebc=;
+        b=sqCQfaU6xbyIQf+GLWeUkOMvShdT8dL9PPFGoZoFxl/VcRgZacNaNXZFNwMsTdcrcF
+         bUX7+ZdDYNiqf5gBV0Wu8788CUnQdQcBheEvaP4svSkl5eXt0K7e038qO3e2Ley6ICJJ
+         E6MUU0Bqmw1ANm8KV2O9ITg4+KNa263CAA4pEcuNkU/S3yRMgH4MKUX0zLYQpvKxB1El
+         1n79wDEmgB1BV/nSgWHLJh4svBcJJYUwqWVibp54DdjgojkFeakjYIvlpuT9aMgMxUeo
+         2WIPBkP5hybTNuA84kMXj5Nne5vZ7WikpyORCkb+vZ9h9eOgwOKsmYEUfrEfl3In9wRv
+         H1uA==
+X-Gm-Message-State: AJIora+R516DLZV+cSD1jtdvG97tU1LATZWtolICefn7J1vgzKoOtwAj
+        syYoWU5OINh2IYXUVDh0fPUgMg==
+X-Google-Smtp-Source: AGRyM1tqvaWk/DDOXJIx1or0Y+22nYb/JgOeC2l2098PgfKLfLZkKZF0XasYDv3WsyNFz03m/6wFVA==
+X-Received: by 2002:a17:90b:3ec5:b0:1f0:3986:4502 with SMTP id rm5-20020a17090b3ec500b001f039864502mr15647381pjb.6.1658764940683;
+        Mon, 25 Jul 2022 09:02:20 -0700 (PDT)
+Received: from C02F63J9MD6R.bytedance.net ([61.120.150.78])
+        by smtp.gmail.com with ESMTPSA id o6-20020a1709026b0600b0015e8d4eb2easm9273441plk.308.2022.07.25.09.02.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Jul 2022 09:02:19 -0700 (PDT)
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+To:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com
+Cc:     chenzhuo.1@bytedance.com, lukas@wunner.de, jan.kiszka@siemens.com,
+        stuart.w.hayes@gmail.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/ERR: Use pcie_aer_is_native() to judge whether OS owns AER
+Date:   Tue, 26 Jul 2022 00:01:31 +0800
+Message-Id: <20220725160131.83687-1-chenzhuo.1@bytedance.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87czdtxnfn.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 03:43:40PM +0100, Marc Zyngier wrote:
-> On Mon, 25 Jul 2022 14:25:49 +0100,
-> Johan Hovold <johan@kernel.org> wrote:
-> > 
-> > [ +CC: maz ]
-> > 
-> > On Fri, Jul 22, 2022 at 09:38:58AM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Jul 22, 2022 at 03:26:44PM +0200, Johan Hovold wrote:
-> > > > On Thu, Jul 21, 2022 at 05:21:22PM -0500, Bjorn Helgaas wrote:
-> > > 
-> > > > > qcom is a DWC driver, so all the IRQ stuff happens in
-> > > > > dw_pcie_host_init().  qcom_pcie_remove() does call
-> > > > > dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
-> > > > > calls irq_dispose_mapping().
-> > > > > 
-> > > > > I'm thoroughly confused by all this.  But I suspect that maybe I
-> > > > > should drop the "make qcom modular" patch because it seems susceptible
-> > > > > to this problem:
-> > > > > 
-> > > > >   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
-> > > > 
-> > > > That should not be necessary.
-> > > > 
-> > > > As you note above, interrupt handling is implemented in dwc core so if
-> > > > there are any issue here at all, which I doubt, then all of the dwc
-> > > > drivers that currently can be built as modules would all be broken and
-> > > > this would need to be fixed in core.
-> > > 
-> > > I don't know yet whether there's an issue.  We need a clear argument
-> > > for why there is or is not.  The fact that others might be broken is
-> > > not an argument for breaking another one ;)
-> > 
-> > It's not breaking anything that is currently working, and if there's
-> > some corner case during module unload, that's not the end of the world
-> > either.
-> 
-> It may not be the end of the world for you, but you have absolutely no
-> idea of what dangling pointers to kernel memory will do on a user
-> machine, nor how this can be further exploited. Unloading a module
-> should never result in an unsafe kernel.
+After commit 7d7cbeaba5b7 ("PCI/ERR: Clear status of the reporting
+device"), the AER status of the device that reported the error
+rather than the first downstream port is cleared. So the problem
+in commit aa344bc8b727 ("PCI/ERR: Clear AER status only when we
+control AER") is no longer existent, and we change to use
+pcie_aer_is_native() here.
 
-Since when is unloading modules something that is expected to work
-perfectly? I keep hearing "well, don't do that then" when someone
-complains about unloading this module while doing this or that broke
-something. (And it's only root that can unload modules in the first
-place.)
+pci_aer_clear_nonfatal_status() already has pcie_aer_is_native(),
+so we move pci_aer_clear_nonfatal_status() out of
+pcie_aer_is_native().
 
-If this was the general understanding, then it seems the only option
-would be to disable module unloading completely as module remove code
-almost by definition gets less testing and is subject to bit rot.
+Replace statements that judge whether OS owns AER in
+get_port_device_capability() with pcie_aer_is_native().
 
-It's useful for developers, but use it at your own risk.
+Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
+---
+ drivers/pci/pcie/err.c          | 12 ++----------
+ drivers/pci/pcie/portdrv_core.c |  3 +--
+ 2 files changed, 3 insertions(+), 12 deletions(-)
 
-That said, I agree that if something is next to impossible to get right,
-as may be the case with interrupt controllers generally, then fine,
-let's disable module unloading for that class of drivers.
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 0c5a143025af..28339c741555 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -184,7 +184,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	int type = pci_pcie_type(dev);
+ 	struct pci_dev *bridge;
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+-	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 
+ 	/*
+ 	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+@@ -237,16 +236,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(bridge, "broadcast resume message\n");
+ 	pci_walk_bridge(bridge, report_resume, &status);
+ 
+-	/*
+-	 * If we have native control of AER, clear error status in the device
+-	 * that detected the error.  If the platform retained control of AER,
+-	 * it is responsible for clearing this status.  In that case, the
+-	 * signaling device may not even be visible to the OS.
+-	 */
+-	if (host->native_aer || pcie_ports_native) {
++	if (pcie_aer_is_native(dev))
+ 		pcie_clear_device_status(dev);
+-		pci_aer_clear_nonfatal_status(dev);
+-	}
++	pci_aer_clear_nonfatal_status(dev);
+ 	pci_info(bridge, "device recovery successful\n");
+ 	return status;
+ 
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 604feeb84ee4..98c18f4a01b2 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -221,8 +221,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	}
+ 
+ #ifdef CONFIG_PCIEAER
+-	if (dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer)) {
++	if (pcie_aer_is_native(dev) && pci_aer_available()) {
+ 		services |= PCIE_PORT_SERVICE_AER;
+ 
+ 		/*
+-- 
+2.30.1 (Apple Git-130)
 
-And this would mean disabling driver unbind for the 20+ driver PCI
-drivers that currently implement it to some degree.
-
-Also note that we only appear to have some 60 drivers in the tree that
-can be built as modules but cannot be unloaded (if my grep patterns
-were correct).
-
-> > > > I've been using the modular pcie-qcom patch for months now, unloading
-> > > > and reloading the driver repeatedly to test power sequencing, without
-> > > > noticing any problems whatsoever.
-> > > 
-> > > Pali's commit log suggests that unloading the module is not, by
-> > > itself, enough to trigger the problem:
-> > > 
-> > >   https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
-> > > 
-> > > Can you test the scenario he mentions?
-> > 
-> > Turns out the pcie-qcom driver does not support legacy interrupts so
-> > there's no risk of there being any lingering mappings if I understand
-> > things correctly.
-> 
-> It still does MSIs, thanks to dw_pcie_host_init(). If you can remove
-> the driver while devices are up and running with MSIs allocated,
-> things may get ugly if things align the wrong way (if a driver still
-> has a reference to an irq_desc or irq_data, for example).
-
-That is precisely the way I've been testing it and everything appears
-to be tore down as it should.
-
-And a PCI driver that has been unbound should have released its
-resources, or that's a driver bug. Right?
-
-And for the OF INTx case you mentioned earlier, aren't those mapped by
-PCI core and could in theory be released by core as well?
-
-Johan
