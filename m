@@ -2,105 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C932B580378
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 19:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94BAD580387
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 19:35:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235580AbiGYRXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 13:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
+        id S232224AbiGYRff (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 13:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234713AbiGYRXa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 13:23:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA82214D18;
-        Mon, 25 Jul 2022 10:23:24 -0700 (PDT)
+        with ESMTP id S233651AbiGYRfe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 13:35:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5D4A46D;
+        Mon, 25 Jul 2022 10:35:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 465B0B81023;
-        Mon, 25 Jul 2022 17:23:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D523DC341C6;
-        Mon, 25 Jul 2022 17:23:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D2986136C;
+        Mon, 25 Jul 2022 17:35:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9D7C341C6;
+        Mon, 25 Jul 2022 17:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658769802;
-        bh=fchiwXgbBdTjI1tnnwCi+jTVEwh6cgK0qLJkFVlCACE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UqKK0uJQDwEvh2Vi54J+93uJuKGLM7IAOnAOwLCMCuksblRTIRvEgXkjLeUwqPW4N
-         5AlvtwsxU8J+i6CNRj/GwiuTygIy05ACwDSzeTQ+zvHZZeFsgMNuaEmyOq9f2QGPgo
-         jzadUidSTOzLEpy1Nhq2yX1MX85TEzM+PBpLT4HGtOXqtYBeAfqJkxRmMvfjDsm9aI
-         K/31R1brUtwHQtk8FOCFFXUBR+qLE9ofcMp7SDDnxR0K3xBtPT9c3I7y/tmztyWRFy
-         F7zgU4j4dUOu+92AJ19L5FXRwcSmVR2o1dhXqEDJi9+Ppq0vOBeD2FIAOdLMZ4hn+j
-         Y3FxR5pnKkL0w==
-Date:   Mon, 25 Jul 2022 19:23:14 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     William Zhang <william.zhang@broadcom.com>
-Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
-        kursad.oney@broadcom.com, rafal@milecki.pl,
-        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
+        s=k20201202; t=1658770531;
+        bh=kh3tndFuVD2wJowfuXuViF7ZbZfeBVF01vFmDB5+zMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nHQYUm7pAy8gTngWmTf0uFsMzw7YjqQDGiq/xazn19yNqsWr3sA04SOkAC9WtualF
+         Qgfmiz8sL0eYXWIoKcJpiInFK037rMp6t4hJY7h2DjgtTJnEsEEECoKKy3WXnul18p
+         We61RxXPB3R55oQYCXqwnR7HxynqlipEUM+EHw+JJnAL9UbfIz5g51rZ3rrcWnJUIk
+         XXUWfgFXZa0/4qVe5J7OOHRnN5WY6eGD/87mSOVnnkLFWE7ozjAr/yUxXMB35UxJe6
+         /1nDo3bCkED3R3lirUpgj/HYFi6AtvEZu/wXVI9CRsh2+ho7NOUM/98WHOLtmSacA7
+         YtaU0s5SeFR0g==
+Received: from 82-132-215-64.dab.02.net ([82.132.215.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oG1zN-009tTK-FG;
+        Mon, 25 Jul 2022 18:35:29 +0100
+Date:   Mon, 25 Jul 2022 18:35:27 +0100
+Message-ID: <87zggxaye8.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" 
-        <linux-mtd@lists.infradead.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
- ARCH_BCMBCA
-Message-ID: <Yt7RgsTA/1TmMcbU@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        William Zhang <william.zhang@broadcom.com>,
-        Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
-        kursad.oney@broadcom.com, rafal@milecki.pl,
-        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" <linux-mtd@lists.infradead.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
-References: <20220725055402.6013-1-william.zhang@broadcom.com>
- <20220725055402.6013-7-william.zhang@broadcom.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cDMN9LvOKh7YHFAv"
-Content-Disposition: inline
-In-Reply-To: <20220725055402.6013-7-william.zhang@broadcom.com>
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+In-Reply-To: <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
+References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
+        <20220722143858.GA1818206@bhelgaas>
+        <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
+        <87czdtxnfn.wl-maz@kernel.org>
+        <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.215.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, helgaas@kernel.org, pali@kernel.org, johan+linaro@kernel.org, kishon@ti.com, songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, thierry.reding@gmail.com, ryder.lee@mediatek.com, jianjun.wang@mediatek.com, linux-pci@vger.kernel.org, kw@linux.com, ley.foon.tan@intel.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -110,43 +79,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 25 Jul 2022 16:18:48 +0100,
+Johan Hovold <johan@kernel.org> wrote:
+> 
+> On Mon, Jul 25, 2022 at 03:43:40PM +0100, Marc Zyngier wrote:
+> > On Mon, 25 Jul 2022 14:25:49 +0100,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > 
+> > > [ +CC: maz ]
+> > > 
+> > > On Fri, Jul 22, 2022 at 09:38:58AM -0500, Bjorn Helgaas wrote:
+> > > > On Fri, Jul 22, 2022 at 03:26:44PM +0200, Johan Hovold wrote:
+> > > > > On Thu, Jul 21, 2022 at 05:21:22PM -0500, Bjorn Helgaas wrote:
+> > > > 
+> > > > > > qcom is a DWC driver, so all the IRQ stuff happens in
+> > > > > > dw_pcie_host_init().  qcom_pcie_remove() does call
+> > > > > > dw_pcie_host_deinit(), which calls irq_domain_remove(), but nobody
+> > > > > > calls irq_dispose_mapping().
+> > > > > > 
+> > > > > > I'm thoroughly confused by all this.  But I suspect that maybe I
+> > > > > > should drop the "make qcom modular" patch because it seems susceptible
+> > > > > > to this problem:
+> > > > > > 
+> > > > > >   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/ctrl/qcom&id=41b68c2d097e
+> > > > > 
+> > > > > That should not be necessary.
+> > > > > 
+> > > > > As you note above, interrupt handling is implemented in dwc core so if
+> > > > > there are any issue here at all, which I doubt, then all of the dwc
+> > > > > drivers that currently can be built as modules would all be broken and
+> > > > > this would need to be fixed in core.
+> > > > 
+> > > > I don't know yet whether there's an issue.  We need a clear argument
+> > > > for why there is or is not.  The fact that others might be broken is
+> > > > not an argument for breaking another one ;)
+> > > 
+> > > It's not breaking anything that is currently working, and if there's
+> > > some corner case during module unload, that's not the end of the world
+> > > either.
+> > 
+> > It may not be the end of the world for you, but you have absolutely no
+> > idea of what dangling pointers to kernel memory will do on a user
+> > machine, nor how this can be further exploited. Unloading a module
+> > should never result in an unsafe kernel.
+> 
+> Since when is unloading modules something that is expected to work
+> perfectly? I keep hearing "well, don't do that then" when someone
+> complains about unloading this module while doing this or that broke
+> something. (And it's only root that can unload modules in the first
+> place.)
 
---cDMN9LvOKh7YHFAv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, maybe I have higher standards. For the stuff I maintain, I now
+point-blank refuse to support module unloading if this can result in a
+crash. Or worse.
 
-On Sun, Jul 24, 2022 at 10:53:59PM -0700, William Zhang wrote:
-> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
-> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
-> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
->=20
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
->=20
+> If this was the general understanding, then it seems the only option
+> would be to disable module unloading completely as module remove code
+> almost by definition gets less testing and is subject to bit rot.
 
-Acked-by: Wolfram Sang <wsa@kernel.org> (for i2c)
+My personal preference would be to prevent module unloading by default
+if the probing has succeeded, and have modules to actually buy into
+unloading. But that ship has sailed a long time ago.
 
+> It's useful for developers, but use it at your own risk.
+> 
+> That said, I agree that if something is next to impossible to get right,
+> as may be the case with interrupt controllers generally, then fine,
+> let's disable module unloading for that class of drivers.
+> 
+> And this would mean disabling driver unbind for the 20+ driver PCI
+> drivers that currently implement it to some degree.
 
---cDMN9LvOKh7YHFAv
-Content-Type: application/pgp-signature; name="signature.asc"
+That would be Bjorn's and Lorenzo's call.
 
------BEGIN PGP SIGNATURE-----
+> Also note that we only appear to have some 60 drivers in the tree that
+> can be built as modules but cannot be unloaded (if my grep patterns
+> were correct).
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmLe0X0ACgkQFA3kzBSg
-KbYqKBAAh7tkSiVNXcYCzGYcFhSLUkuioAtbrLXR6vkeUJ6qMvd2WkG15238Ti4s
-KlFKMBOWT2L+reNiojNZlZ2QMc/U1f/itwXDlViRuwpHBsITqGK+vGE1DH8eiCFP
-A5cPFVTh/jXJwGPQmXVzmZ8+opgeBbDg/KJI4PlX0I7KtNhdeArtlCf1EXBZiiOi
-QePGA9J4JahuNyjo33zq5Xv1OtyaPFe6hFRtCKR4tsGIHtrJlRtDy/x0Av2hj4fz
-m5tju8M/szl7hFyO15x9gg98xif+hTcgOS1H01D29vK74y7iZ61ExKGZ4/4eHz23
-3DWL6bANwKiE0CHnJzS9TLPTBrZdv3FHjCATrzJPaVs1VloRBuF86Bo7RFl6Zoi8
-fX0j3twBJ8ZqMPEVE4Cw4zHZ2gbAMcQwupF5TTwkPoFrObQJ0Zgx9HrRhTK8HxlO
-SiHSdGUJ8LaQq/oZL1OrPJOYVOknOJCWtqfoksGRee+zAjK3muZSEqaJxOjiTawv
-xYXDrpbKTEpL+WiEAIvXB4ViWm4YFU7SyDLhizLDRxYQsX2SM1i+phxe/aF98VOb
-6CyTctT+bwk/4XZRk3AXLAQq5/haStsr0mf//sUaiJxbdutgWlnnztwHvtZX4hdJ
-6h2BPcjqESC3cUfMFPT44QPaa+XZ0YlkTZWyRUP4b+bJNgn2TII=
-=c2vg
------END PGP SIGNATURE-----
+I'm not surprised. Preventing module unload requires extra "code", and
+hardly anyone cares.
 
---cDMN9LvOKh7YHFAv--
+> 
+> > > > > I've been using the modular pcie-qcom patch for months now, unloading
+> > > > > and reloading the driver repeatedly to test power sequencing, without
+> > > > > noticing any problems whatsoever.
+> > > > 
+> > > > Pali's commit log suggests that unloading the module is not, by
+> > > > itself, enough to trigger the problem:
+> > > > 
+> > > >   https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
+> > > > 
+> > > > Can you test the scenario he mentions?
+> > > 
+> > > Turns out the pcie-qcom driver does not support legacy interrupts so
+> > > there's no risk of there being any lingering mappings if I understand
+> > > things correctly.
+> > 
+> > It still does MSIs, thanks to dw_pcie_host_init(). If you can remove
+> > the driver while devices are up and running with MSIs allocated,
+> > things may get ugly if things align the wrong way (if a driver still
+> > has a reference to an irq_desc or irq_data, for example).
+> 
+> That is precisely the way I've been testing it and everything appears
+> to be tore down as it should.
+>
+> And a PCI driver that has been unbound should have released its
+> resources, or that's a driver bug. Right?
+
+But that's the thing: you can easily remove part of the infrastructure
+without the endpoint driver even noticing. It may not happen in your
+particular case if removing the RC driver will also nuke the endpoints
+in the process, but I can't see this is an absolute guarantee. The
+crash pointed to by an earlier email is symptomatic of it.
+
+> And for the OF INTx case you mentioned earlier, aren't those mapped by
+> PCI core and could in theory be released by core as well?
+
+Potentially, though I haven't tried to follow the life cycle of those.
+The whole thing is pretty fragile, and this sort of resource is rarely
+expected to be removed...
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
