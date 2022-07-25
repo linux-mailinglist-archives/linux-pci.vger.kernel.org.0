@@ -2,49 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E492580175
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C42D758017B
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 17:16:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235936AbiGYPQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 11:16:09 -0400
+        id S236311AbiGYPQe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 11:16:34 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235880AbiGYPPn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:15:43 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A45419293;
-        Mon, 25 Jul 2022 08:13:22 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id c3so10678440pfb.13;
-        Mon, 25 Jul 2022 08:13:22 -0700 (PDT)
+        with ESMTP id S236097AbiGYPQI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 11:16:08 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABCC1EAE2;
+        Mon, 25 Jul 2022 08:13:35 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id 17so10757577pfy.0;
+        Mon, 25 Jul 2022 08:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=vClZEDHW/p/nRPc4T2OtKWpsEU80qB0nIfVJ1m6OHYg=;
-        b=PiD+kKPGc4Pm9OcZQZJwoMV3H+yXJCQjYhEzcQJJYC2lKA2LyX9CNLTurlguPmz/BD
-         N6jJGH0qORg74v0B7iaS52QPlrLohHdqbARsv1KrPjuEX575/HlU3fgBxP9rFn1JbFOs
-         8LfPqUSH7qL0BbkY5LU6M3Sn/vOCsV6x+GZVbLdEMSTeBtcTAnhTskxx7QraJKs8x/1M
-         uvD6mEzN6OF4vfBD64EOdKSwRoyUuB+o/uvthi8MgGPBX/Iq31tZlASDKPHnb5rh8SWo
-         WgFLYdUvp127aYedetMr5vIlqH5JjOrCpCIwlHHitnTIYGE1ijc2cLnR5hTuaV2POFBr
-         2auA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2t980Sr9Ua/t6NokOYt+cxt415QzejuNvLB89UJ9Rvo=;
+        b=LFZ/s5HrtNGmw5hwkrLpfaC/dPfWZLUZjBAOiqFovZXKstFpV5dPgTResg2x0L9Nmw
+         Y/FusNB7i4AY2rm3fgv6cKpgB+k1V/kj2G/uTASgyesGFKMbP1evibXRfmSLHe7TI4T/
+         iO/Tv4SCHthYZxJPdQVaq4QsPOfeJdvWDc022vRo+aKCOQmlCMABMcZrDl8VDHaAVmds
+         IW2nzxDL8yb4hEkvmClggbKseAZ6m7tgT8PCQkSUqUnIJiNVjP1AFrklhFjbNsFc/naH
+         UUBiHADaJ6dbBGP9PY0BtzKG+waRgE93t7y+R0/HuJvQnnsdwCkqT2IYJW47dgc16xeM
+         /1/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vClZEDHW/p/nRPc4T2OtKWpsEU80qB0nIfVJ1m6OHYg=;
-        b=kAktalVQBkQtaSJCSgIsMxK7DfujsAZ8s+gYN7It+9Z2UWobHDbU9An6xMGfycd3Sg
-         XywOwRxaDOCxtypI/Li9agmnhUlX1W509uJ65p9bqDp6E0iQyiYebCpjfAieItHvCmyJ
-         QpficXOdN2iJvhUb27M9ZTz9TpztXH5djJjMzD0ZDLAz6DiZPKoNoPk6VVvUEXJGxFy2
-         plWMOYHHnOEM5nPFuxPnGyJt9lyVuintEU+VE+nHFTmVj4Ay/i3WiVhlap2QFyDtnnrL
-         y/UO3LhjlfaepX9kvXWsQPwW50feQjdo/b+RxOh72Xy+jsC3PsTL11Y+K9EXkWvxiz+s
-         UAUw==
-X-Gm-Message-State: AJIora8jHgcHVtmU51+t4u7h8UsxvKXg630XRNrJOldYmr6I9Mx/p40I
-        TnEk7m04BskUgZpNms5of582AUjEsT8=
-X-Google-Smtp-Source: AGRyM1sODvWco/wy/JwP4+nnbMCuyaPj/uRKlViVYr6xlq2RO9aNdFighhUzr9JC6hRduAn8/tZWMA==
-X-Received: by 2002:a63:4e09:0:b0:412:1ba3:672a with SMTP id c9-20020a634e09000000b004121ba3672amr11728676pgb.597.1658762000782;
-        Mon, 25 Jul 2022 08:13:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2t980Sr9Ua/t6NokOYt+cxt415QzejuNvLB89UJ9Rvo=;
+        b=ZVkzFRG5W5AqIA/NVLgprSwLo9LGa2kf/3/8g0VDuWWEfpLy+GGy6YiDWRe7VFE6O2
+         WlS2A+Izmd4Jp6zhEu7rs6kn0CI6HYBlstJW3kJniMhvlGEol84AYwZR9gE6SwNZ8IJF
+         iVUhKy86LyzsinZOOlh/DPDSZ4S0y2A5otAYiylaDlYNz8CpF6vtxzmgKOjOQvttnycn
+         U8A8s0XtLQQOWkGte+mVi+zgeElCz8FI1eCinkjQe8dzEujePqgDcAy58co50v4wGSh+
+         bYlww0ZfMdenzCpCmkhSXO7KPg7e2Ra2SzSgy8n/ZPisNwmAuWJU7tEUTGYlPJic6DWk
+         dW4Q==
+X-Gm-Message-State: AJIora9aPrvjNTWaM3FppzGMNXAqpwX8ZPEeSXbBYFJaCvWJY87BGZgW
+        q09bLIOn8IjMgKm7eAAkqJh4pHN6AtA=
+X-Google-Smtp-Source: AGRyM1vBMjzcaPknwMkhetj0IuXkME38zOiwmYRnY7TDo+E1HRoMdNkswHOyoRS0JWccp6y0YoAyEQ==
+X-Received: by 2002:aa7:9583:0:b0:52a:f076:5043 with SMTP id z3-20020aa79583000000b0052af0765043mr13423527pfj.9.1658762003654;
+        Mon, 25 Jul 2022 08:13:23 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.18
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b001641b2d61d4sm6649667plh.30.2022.07.25.08.13.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 08:13:19 -0700 (PDT)
+        Mon, 25 Jul 2022 08:13:23 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -53,16 +54,21 @@ To:     linux-pci@vger.kernel.org,
         Cyril Brulebois <kibi@debian.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 0/7] PCI: brcmstb: Re-submit reverted patchset
-Date:   Mon, 25 Jul 2022 11:12:49 -0400
-Message-Id: <20220725151258.42574-1-jim2101024@gmail.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 1/7] PCI: brcmstb: Remove unnecessary forward declarations
+Date:   Mon, 25 Jul 2022 11:12:50 -0400
+Message-Id: <20220725151258.42574-2-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220725151258.42574-1-jim2101024@gmail.com>
+References: <20220725151258.42574-1-jim2101024@gmail.com>
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -73,120 +79,204 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v3 -- Replaced "refusal mode" commit with one that gates config
-      space accesses based on link status (Bjorn)
-   -- Restrict the brcm_pcie_start_link() code to only those things
-      related to link-up and put the rest in brcm_pcie_setup()
-   -- Added commit to change map functions to end with 'map_bus' (Bjorn)
-   -- s/0x060400/PCI_CLASS_BRIDGE_PCI_NORMAL/ (Pali)
-   -- Limit config space accesess to 4k window.
-   -- Remove wording in a commit message that said the regulators
-      could be endpoint power supplies
+The forward function declarations in this driver are removed.  Besides
+that, some constant structure definitions are moved towards a lower
+position in the file.  There are no changes to the code that has been
+moved.
 
-V2  -- As v1 included the minimal code to fix a regression.  v2 does
-       the same but adds some improvements suggested by Bjorn.
-    -- In the unlikely but possible case that some other driver
-       starts using the port driver's dev_data field, do not overwrite
-       it but issue an error and return.
-    -- Functions probe() and resume() do similar operations but
-       did them in a different order; make this order consistent
-       for both.
-    -- New commit to remove forward declarations.
-    -- New commit for only the PCIe config-space access "refusal mode".
-    -- brcm_pcie_linkup renamed to brcm_pcie_start_link
-    -- Add '_noirq' to the brcm_pcie_{suspend,resume} function names
-       to match the dev_pm_ops names.
-    -- Changes to commit messages:
-           o Explain why we are splitting a function in two parts.
-           o s/RB/Root Port/
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 149 +++++++++++++-------------
+ 1 file changed, 72 insertions(+), 77 deletions(-)
 
-    NOTE for Bjorn: The two commits "add mechanism .." and "add control ..."
-        would probably be more clear if they were squashed.  They are kept
-        separate as the first one's code may someday be moved under the Port
-        driver.  As such, there's some churn.
-
-    NOTE for Bjorn: There is no hurry on Broadcom's side wrt which
-        release cycle/phase this patchset is applied.  It goes in
-        when you think it is ready.
-
-V1 -- Resubmission of patchset after original was reverted for a
-    regression.
-
-    A submission [1] was made to enable a PCIe root port to turn on
-    regulators for downstream devices.  It was accepted.  Months later, a
-    regression was discovered on an RPi CM4 [2].  The patchset was reverted
-    [3] as the fix came too late in the release cycle.  The regression in
-    question is triggered only when the PCIe RC DT node has no root port
-    subnode, which is a perfectly reasonsable configuration.
-
-    The original commits are now being resubmitted with some modifications
-    to fix the regression.  The modifcations on the original commits are
-    described below (the SHA is that of the original commit):
-
-    [830aa6f29f07  PCI: brcmstb: Split brcm_pcie_setup() into two funcs]
-        NOTE: In the originally submitted patchset, this commit introduced a
-        regression that was corrected by a subsequent commit in the same
-        patchset.  Let's not do this again.
-
-        @@ -1411,6 +1411,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-            if (ret)
-                    goto fail;
-
-        +       ret = brcm_pcie_linkup(pcie);
-        +       if (ret)
-        +               goto fail;
-
-
-    [67211aadcb4b  PCI: brcmstb: Add mechanism to turn on subdev regulators]
-        NOTE: Not related to the regression, the regulators must be freed whenever
-        the PCIe tree is dismantled:
-
-        @@ -507,6 +507,7 @@ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
-
-        if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
-                    dev_err(dev, "failed to disable regulators for downstream device\n");
-        +       regulator_bulk_free(sr->num_supplies, sr->supplies);
-            dev->driver_data = NULL;
-
-
-    [93e41f3fca3d  PCI: brcmstb: Add control of subdevice voltage regulators]
-        NOTE: If the PCIe RC DT node was missing a Root Port subnode, the PCIe
-        link-up was skipped.  This is the regression.  Fix it by attempting
-        link-up even if the Root Port DT subnode is missing.
-
-        @@ -503,11 +503,10 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
-
-         static int brcm_pcie_add_bus(struct pci_bus *bus)
-         {
-        -       struct device *dev = &bus->dev;
-            struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
-            int ret;
-
-        -       if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
-        +       if (!bus->parent || !pci_is_root_bus(bus->parent))
-                    return 0;
-
-            ret = pci_subdev_regulators_add_bus(bus);
-
-    [1] https://lore.kernel.org/r/20220106160332.2143-1-jim2101024@gmail.com
-    [2] https://bugzilla.kernel.org/show_bug.cgi?id=215925
-    [3] https://lore.kernel.org/linux-pci/20220511201856.808690-1-helgaas@kernel.org/
-
-
-Jim Quinlan (7):
-  PCI: brcmstb: Remove unnecessary forward declarations
-  PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-  PCI: brcmstb: Gate config space access on link status
-  PCI: brcmstb: Add mechanism to turn on subdev regulators
-  PCI: brcmstb: Add control of subdevice voltage regulators
-  PCI: brcmstb: Do not turn off WOL regulators on suspend
-  PCI: brcmstb: Have .map_bus function names end with 'map_bus'
-
- drivers/pci/controller/pcie-brcmstb.c | 476 ++++++++++++++++++--------
- 1 file changed, 341 insertions(+), 135 deletions(-)
-
-
-base-commit: e0dccc3b76fb35bb257b4118367a883073d7390e
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index e61058e13818..bd88a0a46c63 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -190,11 +190,6 @@
+ 
+ /* Forward declarations */
+ struct brcm_pcie;
+-static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val);
+-static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val);
+-static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val);
+-static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
+-static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
+ 
+ enum {
+ 	RGR1_SW_INIT_1,
+@@ -223,66 +218,6 @@ struct pcie_cfg_data {
+ 	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+ };
+ 
+-static const int pcie_offsets[] = {
+-	[RGR1_SW_INIT_1] = 0x9210,
+-	[EXT_CFG_INDEX]  = 0x9000,
+-	[EXT_CFG_DATA]   = 0x9004,
+-};
+-
+-static const int pcie_offsets_bmips_7425[] = {
+-	[RGR1_SW_INIT_1] = 0x8010,
+-	[EXT_CFG_INDEX]  = 0x8300,
+-	[EXT_CFG_DATA]   = 0x8304,
+-};
+-
+-static const struct pcie_cfg_data generic_cfg = {
+-	.offsets	= pcie_offsets,
+-	.type		= GENERIC,
+-	.perst_set	= brcm_pcie_perst_set_generic,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+-};
+-
+-static const struct pcie_cfg_data bcm7425_cfg = {
+-	.offsets	= pcie_offsets_bmips_7425,
+-	.type		= BCM7425,
+-	.perst_set	= brcm_pcie_perst_set_generic,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+-};
+-
+-static const struct pcie_cfg_data bcm7435_cfg = {
+-	.offsets	= pcie_offsets,
+-	.type		= BCM7435,
+-	.perst_set	= brcm_pcie_perst_set_generic,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+-};
+-
+-static const struct pcie_cfg_data bcm4908_cfg = {
+-	.offsets	= pcie_offsets,
+-	.type		= BCM4908,
+-	.perst_set	= brcm_pcie_perst_set_4908,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+-};
+-
+-static const int pcie_offset_bcm7278[] = {
+-	[RGR1_SW_INIT_1] = 0xc010,
+-	[EXT_CFG_INDEX] = 0x9000,
+-	[EXT_CFG_DATA] = 0x9004,
+-};
+-
+-static const struct pcie_cfg_data bcm7278_cfg = {
+-	.offsets	= pcie_offset_bcm7278,
+-	.type		= BCM7278,
+-	.perst_set	= brcm_pcie_perst_set_7278,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
+-};
+-
+-static const struct pcie_cfg_data bcm2711_cfg = {
+-	.offsets	= pcie_offsets,
+-	.type		= BCM2711,
+-	.perst_set	= brcm_pcie_perst_set_generic,
+-	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+-};
+-
+ struct brcm_msi {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -775,18 +710,6 @@ static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devf
+ 	return base + DATA_ADDR(pcie);
+ }
+ 
+-static struct pci_ops brcm_pcie_ops = {
+-	.map_bus = brcm_pcie_map_conf,
+-	.read = pci_generic_config_read,
+-	.write = pci_generic_config_write,
+-};
+-
+-static struct pci_ops brcm_pcie_ops32 = {
+-	.map_bus = brcm_pcie_map_conf32,
+-	.read = pci_generic_config_read32,
+-	.write = pci_generic_config_write32,
+-};
+-
+ static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
+ {
+ 	u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
+@@ -1316,6 +1239,66 @@ static int brcm_pcie_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const int pcie_offsets[] = {
++	[RGR1_SW_INIT_1] = 0x9210,
++	[EXT_CFG_INDEX]  = 0x9000,
++	[EXT_CFG_DATA]   = 0x9004,
++};
++
++static const int pcie_offsets_bmips_7425[] = {
++	[RGR1_SW_INIT_1] = 0x8010,
++	[EXT_CFG_INDEX]  = 0x8300,
++	[EXT_CFG_DATA]   = 0x8304,
++};
++
++static const struct pcie_cfg_data generic_cfg = {
++	.offsets	= pcie_offsets,
++	.type		= GENERIC,
++	.perst_set	= brcm_pcie_perst_set_generic,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++};
++
++static const struct pcie_cfg_data bcm7425_cfg = {
++	.offsets	= pcie_offsets_bmips_7425,
++	.type		= BCM7425,
++	.perst_set	= brcm_pcie_perst_set_generic,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++};
++
++static const struct pcie_cfg_data bcm7435_cfg = {
++	.offsets	= pcie_offsets,
++	.type		= BCM7435,
++	.perst_set	= brcm_pcie_perst_set_generic,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++};
++
++static const struct pcie_cfg_data bcm4908_cfg = {
++	.offsets	= pcie_offsets,
++	.type		= BCM4908,
++	.perst_set	= brcm_pcie_perst_set_4908,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++};
++
++static const int pcie_offset_bcm7278[] = {
++	[RGR1_SW_INIT_1] = 0xc010,
++	[EXT_CFG_INDEX] = 0x9000,
++	[EXT_CFG_DATA] = 0x9004,
++};
++
++static const struct pcie_cfg_data bcm7278_cfg = {
++	.offsets	= pcie_offset_bcm7278,
++	.type		= BCM7278,
++	.perst_set	= brcm_pcie_perst_set_7278,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
++};
++
++static const struct pcie_cfg_data bcm2711_cfg = {
++	.offsets	= pcie_offsets,
++	.type		= BCM2711,
++	.perst_set	= brcm_pcie_perst_set_generic,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++};
++
+ static const struct of_device_id brcm_pcie_match[] = {
+ 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
+ 	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
+@@ -1328,6 +1311,18 @@ static const struct of_device_id brcm_pcie_match[] = {
+ 	{},
+ };
+ 
++static struct pci_ops brcm_pcie_ops = {
++	.map_bus = brcm_pcie_map_conf,
++	.read = pci_generic_config_read,
++	.write = pci_generic_config_write,
++};
++
++static struct pci_ops brcm_pcie_ops32 = {
++	.map_bus = brcm_pcie_map_conf32,
++	.read = pci_generic_config_read32,
++	.write = pci_generic_config_write32,
++};
++
+ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node, *msi_np;
 -- 
 2.17.1
 
