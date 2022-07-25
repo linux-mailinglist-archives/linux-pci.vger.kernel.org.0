@@ -2,47 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5FDF58035D
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 19:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C932B580378
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jul 2022 19:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236614AbiGYRLE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jul 2022 13:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32820 "EHLO
+        id S235580AbiGYRXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jul 2022 13:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234035AbiGYRLC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 13:11:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F8D13E16;
-        Mon, 25 Jul 2022 10:11:02 -0700 (PDT)
+        with ESMTP id S234713AbiGYRXa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jul 2022 13:23:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA82214D18;
+        Mon, 25 Jul 2022 10:23:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1DC361345;
-        Mon, 25 Jul 2022 17:11:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D49C341C6;
-        Mon, 25 Jul 2022 17:11:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 465B0B81023;
+        Mon, 25 Jul 2022 17:23:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D523DC341C6;
+        Mon, 25 Jul 2022 17:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658769061;
-        bh=SKW2lL3RlrSi+/8Qu/3N2lRnWb6J3ulHowVphz7pQtE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sPQ7nARImAwmj+nzuV8LmZgvN1dpsNBcLWMAICfr/sXPG+RikK6b14xwlJHc4Sr7H
-         N++SSGKbS7ZkK8OchvHd1uKqqpW7mhSKuNxbelpGtgl9F5usierf+i3luVwrUzmpt9
-         3aqirHSNSt3/X5McCYtntpw+USgiHiS0a/KT1U1m2HkajGK6Gey9TFfHOtiVDEejNX
-         /xoU88ySj9oUikU3hP+hjcKgJL9l5rLMZIas4W5cbJmuopgK0V0U+CfdM+N2d3pevr
-         QVSj5KZh125f9r/pPjQuLQwIslplYeZQwLfGydP1sJtSpPgy4DGme2vIolPHyG50Q8
-         poIXnqWG5WbAg==
-Date:   Mon, 25 Jul 2022 12:10:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] asm-generic: Support NO_IOPORT_MAP in pci_iomap.h
-Message-ID: <20220725171059.GA5779@bhelgaas>
+        s=k20201202; t=1658769802;
+        bh=fchiwXgbBdTjI1tnnwCi+jTVEwh6cgK0qLJkFVlCACE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UqKK0uJQDwEvh2Vi54J+93uJuKGLM7IAOnAOwLCMCuksblRTIRvEgXkjLeUwqPW4N
+         5AlvtwsxU8J+i6CNRj/GwiuTygIy05ACwDSzeTQ+zvHZZeFsgMNuaEmyOq9f2QGPgo
+         jzadUidSTOzLEpy1Nhq2yX1MX85TEzM+PBpLT4HGtOXqtYBeAfqJkxRmMvfjDsm9aI
+         K/31R1brUtwHQtk8FOCFFXUBR+qLE9ofcMp7SDDnxR0K3xBtPT9c3I7y/tmztyWRFy
+         F7zgU4j4dUOu+92AJ19L5FXRwcSmVR2o1dhXqEDJi9+Ppq0vOBeD2FIAOdLMZ4hn+j
+         Y3FxR5pnKkL0w==
+Date:   Mon, 25 Jul 2022 19:23:14 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     William Zhang <william.zhang@broadcom.com>
+Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
+        kursad.oney@broadcom.com, rafal@milecki.pl,
+        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" 
+        <linux-mtd@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+Message-ID: <Yt7RgsTA/1TmMcbU@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        William Zhang <william.zhang@broadcom.com>,
+        Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
+        kursad.oney@broadcom.com, rafal@milecki.pl,
+        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" <linux-mtd@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
+References: <20220725055402.6013-1-william.zhang@broadcom.com>
+ <20220725055402.6013-7-william.zhang@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cDMN9LvOKh7YHFAv"
 Content-Disposition: inline
-In-Reply-To: <20220725020737.1221739-2-shorne@gmail.com>
+In-Reply-To: <20220725055402.6013-7-william.zhang@broadcom.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,48 +110,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 11:07:35AM +0900, Stafford Horne wrote:
-> When building OpenRISC PCI which has no ioport_map we get the following build
-> error.
-> 
->     lib/pci_iomap.c: In function 'pci_iomap_range':
->       CC      drivers/i2c/i2c-core-base.o
->     ./include/asm-generic/pci_iomap.h:29:41: error: implicit declaration of function 'ioport_map'; did you mean 'ioremap'? [-Werror=implicit-function-declaration]
->        29 | #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
->           |                                         ^~~~~~~~~~
->     lib/pci_iomap.c:44:24: note: in expansion of macro '__pci_ioport_map'
->        44 |                 return __pci_ioport_map(dev, start, len);
->           |                        ^~~~~~~~~~~~~~~~
-> 
-> This patch adds a NULL definition of __pci_ioport_map for architetures
-> which do not support ioport_map.
-> 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-FWIW,
+--cDMN9LvOKh7YHFAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Sun, Jul 24, 2022 at 10:53:59PM -0700, William Zhang wrote:
+> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
+> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
+> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
+>=20
+> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
+>=20
 
-I assume this will go via some other tree; let me know if otherwise.
+Acked-by: Wolfram Sang <wsa@kernel.org> (for i2c)
 
-> ---
->  include/asm-generic/pci_iomap.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
-> index 5a2f9bf53384..8fbb0a55545d 100644
-> --- a/include/asm-generic/pci_iomap.h
-> +++ b/include/asm-generic/pci_iomap.h
-> @@ -25,6 +25,8 @@ extern void pci_iounmap(struct pci_dev *dev, void __iomem *);
->  #ifdef CONFIG_NO_GENERIC_PCI_IOPORT_MAP
->  extern void __iomem *__pci_ioport_map(struct pci_dev *dev, unsigned long port,
->  				      unsigned int nr);
-> +#elif !defined(CONFIG_HAS_IOPORT_MAP)
-> +#define __pci_ioport_map(dev, port, nr) NULL
->  #else
->  #define __pci_ioport_map(dev, port, nr) ioport_map((port), (nr))
->  #endif
-> -- 
-> 2.36.1
-> 
+
+--cDMN9LvOKh7YHFAv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmLe0X0ACgkQFA3kzBSg
+KbYqKBAAh7tkSiVNXcYCzGYcFhSLUkuioAtbrLXR6vkeUJ6qMvd2WkG15238Ti4s
+KlFKMBOWT2L+reNiojNZlZ2QMc/U1f/itwXDlViRuwpHBsITqGK+vGE1DH8eiCFP
+A5cPFVTh/jXJwGPQmXVzmZ8+opgeBbDg/KJI4PlX0I7KtNhdeArtlCf1EXBZiiOi
+QePGA9J4JahuNyjo33zq5Xv1OtyaPFe6hFRtCKR4tsGIHtrJlRtDy/x0Av2hj4fz
+m5tju8M/szl7hFyO15x9gg98xif+hTcgOS1H01D29vK74y7iZ61ExKGZ4/4eHz23
+3DWL6bANwKiE0CHnJzS9TLPTBrZdv3FHjCATrzJPaVs1VloRBuF86Bo7RFl6Zoi8
+fX0j3twBJ8ZqMPEVE4Cw4zHZ2gbAMcQwupF5TTwkPoFrObQJ0Zgx9HrRhTK8HxlO
+SiHSdGUJ8LaQq/oZL1OrPJOYVOknOJCWtqfoksGRee+zAjK3muZSEqaJxOjiTawv
+xYXDrpbKTEpL+WiEAIvXB4ViWm4YFU7SyDLhizLDRxYQsX2SM1i+phxe/aF98VOb
+6CyTctT+bwk/4XZRk3AXLAQq5/haStsr0mf//sUaiJxbdutgWlnnztwHvtZX4hdJ
+6h2BPcjqESC3cUfMFPT44QPaa+XZ0YlkTZWyRUP4b+bJNgn2TII=
+=c2vg
+-----END PGP SIGNATURE-----
+
+--cDMN9LvOKh7YHFAv--
