@@ -2,196 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C8658106C
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jul 2022 11:56:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E0B581099
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jul 2022 11:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232079AbiGZJ4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jul 2022 05:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57212 "EHLO
+        id S232139AbiGZJ71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jul 2022 05:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbiGZJ4v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 05:56:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90BE1A3AA;
-        Tue, 26 Jul 2022 02:56:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65F19B811C9;
-        Tue, 26 Jul 2022 09:56:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25BF3C341C0;
-        Tue, 26 Jul 2022 09:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658829408;
-        bh=Mc8eFBIjYIwEhEUBjx7ssWeK9viPjrwFrzaAxDIwyJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bZiD48wEsVG0yTLimL1POFy0Qvdvf92mMEh/WlvjU8/bsR78nlgDFcw46e9V78Qnc
-         RI2VKPcCKvTLgopY6WmxwY63oBblN6DrX3AYvXwgXlDPSnPO8P+NN5rUww/7qynnBd
-         nDaGBfxo/iVGtYxQOmNJgsZH5OBi03+2lx4nULGtzflmfML1k+bmPg6ob1a2FO6jbC
-         p5TF7AHF9Jcm8Oo9SZ/q2BoeXqPdS+iAIsYYHjMhz6csDZSILQMWr/sEQdE3Gt0wxY
-         9jCg5zKBDLsLSeUj0HwkhYrLi7Vttb69adaoiqKdsvpYN1RWpfe5w1+oGJ86VoJh49
-         s3VYcKytgXFiw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oGHJD-0007iu-2V; Tue, 26 Jul 2022 11:56:59 +0200
-Date:   Tue, 26 Jul 2022 11:56:59 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
+        with ESMTP id S230081AbiGZJ70 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 05:59:26 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07olkn2105.outbound.protection.outlook.com [40.92.15.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE042F03B;
+        Tue, 26 Jul 2022 02:59:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EW7PU43l/Ea3htRyUtBjaLhEdR7tw4c2KqitEuGL2sj2L3d3a39WjawObZ3DUXQQvaFeRAltiasA2BHkEf/NLNZ5qBEQUcLD6TVpxb16Q+bBVPQ8OEhmIzMGp5Dn/2bo7mnlz4e0QH8Mfr6OrSv/2DDp51AiWl91xQmBGcVwaZfuNA1tq/VBwHrMc0ldWV2EWu6JCN5wdTd61uOUwHuIeBI4GCFEg+aqzEbOaUgfn8a8ROSZDS85AMDTdyLk2qbfMk6+MzuwJBqMomB4lWZluHIv++kneXHxoaqtoWOtNwHX5ts9RkDeen0fWarJ7SPSqslGfSpEFr2UazCmvG4tig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ShlT19q2N07oTs6AckZDhc7JJpLVxdctyDbRaQ3H50A=;
+ b=DzEMN+98T8VXGoMeYFwY4QtNKsDj9JmDGQne4Ti6dD5p6EbZyPQa1AiT1yIeqQmFxHId6UOzNoKoCdIKqX5NffL/g9nhZWguIUf0g7U6WOn1BnnIaJJV1ieua84peFBalwfKIU74pjdbvlz6auiBtfDmgRiG8DQVoMLy6TPkFmmVpFhxoEk+LIqme5IpEV2BTDnRBlraVx5yha9t755faXlhQf6sWmbNztlFrb4mGF7lgqA4udBRyqCxRAN+UQJywcwnwF59scMhMldb+J+CEjk/Fg4nV+LSGuH8I/F/ny+9Qvjqo6DfRRjQHyyWgngzFbU07sSJHAirUOkCiszEgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ShlT19q2N07oTs6AckZDhc7JJpLVxdctyDbRaQ3H50A=;
+ b=MRy3ofc1vhinTF8YfvfHNNj+SpbATChUy2aEC2R99Pk4wNPFgJm7FFDh0CN9saZxp/Q9++Z71ODoWQ7x1BQGmcZjRoP0rtzxOvg5hfSt1qs5b5eCLeC5Ypr3GI2EWFgRWReItO+aw6C7IQvdaJG9Z7qDs7dCgXd/ZSEcokBQaBb8kuS+VsqKbMYpDKWxREjsSBdJtml95fNg9/QoDtnTUpROBaEV+cfHRAz+kNud984Yt+5g9ysfnPghYkpXTYZ+ndDZFEhrzaHRLVU4nl2hXQOcV4HvhVEWa03sxy6nsWvjZXJfhNhxJXfXpG1u/pu5dk/hhj1akFkrj8ZRSKsCqw==
+Received: from MN2PR17MB3375.namprd17.prod.outlook.com (2603:10b6:208:13c::25)
+ by BY3PR17MB5681.namprd17.prod.outlook.com (2603:10b6:a03:3cc::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.25; Tue, 26 Jul
+ 2022 09:59:21 +0000
+Received: from MN2PR17MB3375.namprd17.prod.outlook.com
+ ([fe80::3409:88f8:6069:ccba]) by MN2PR17MB3375.namprd17.prod.outlook.com
+ ([fe80::3409:88f8:6069:ccba%3]) with mapi id 15.20.5458.025; Tue, 26 Jul 2022
+ 09:59:20 +0000
+From:   Vanessa Page <Vebpe@outlook.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+CC:     William Zhang <william.zhang@broadcom.com>,
+        Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        "joel.peshkin@broadcom.com" <joel.peshkin@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        "dan.beygelman@broadcom.com" <dan.beygelman@broadcom.com>,
+        "anand.gore@broadcom.com" <anand.gore@broadcom.com>,
+        "kursad.oney@broadcom.com" <kursad.oney@broadcom.com>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
-References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
- <20220722143858.GA1818206@bhelgaas>
- <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
- <87czdtxnfn.wl-maz@kernel.org>
- <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
- <87zggxaye8.wl-maz@kernel.org>
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" 
+        <linux-mtd@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+Thread-Topic: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+Thread-Index: AQHYn+uxAbB9TwTL6U6uXQZJxy0Tvq2QU3IAgAAZdsw=
+Date:   Tue, 26 Jul 2022 09:59:20 +0000
+Message-ID: <MN2PR17MB33752B92BF227C5288B51C2CB8949@MN2PR17MB3375.namprd17.prod.outlook.com>
+References: <20220725055402.6013-1-william.zhang@broadcom.com>
+         <20220725055402.6013-7-william.zhang@broadcom.com>
+ <55668d62aad8feedb7fa78f410f4f71ecfce8c98.camel@pengutronix.de>
+In-Reply-To: <55668d62aad8feedb7fa78f410f4f71ecfce8c98.camel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-tmn:  [raj1UmtPwuQtfdiq+c3IiZem6Z8ALjhxv4+VFCoEmUREoqhJy3lpG7OUXVrXXwm3MBcekyLRAF8=]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f712d961-22d6-4cde-f000-08da6eed82f5
+x-ms-traffictypediagnostic: BY3PR17MB5681:EE_
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wcqTzd4eWB/95+ELGO/TfSGBCeZxaQTRHCIMRmL79lDoKcqcWZIB2ufXnoh+BMdif2nPj9xoI67UzH2uAHu7xtvyfxY6BOufT1Km7d71mOk15F2qFVQZpzeZNpCBXP15r0n6Tm7PgvKM3aW8u0K1bnNjd8th9DNOcoDwXrkRbAUHcDTwew+SYB+GaBy+tEjK9ILXKc0wjaAiXgJMA57/3ebpvOgQBN52uT8uYkrTeONGph0Jt/rjGvxnQpF2/n1GNy567FbDMq/fA3WobgIja7/862pHDa6+4fLPZqgxW9IXKLmcOfq+XfgoAK27wgDUFVjScRq0rShlkBTfrHIuT7FMDLReT2fBdyu1xHT5tIVbIitv0rEKx5W6Znr7aZF3JjUM6PC+qEQLOaxzKlhCW6GLbY0lZ+uh2bXjpVf9SlaBJXPEtwgyu0yanTcsD2GXdGFfSta1A9wvGKaQM1zFsLI7eWEWihs7Ar9+rvnd5fCZNmfzK/2FGnMuh/AF3lnrBmzBFWlZo6lpuEpCppSV3xSh9HBj6tnJyYMaKl6qzU0PbZxnfuBC+QmrIl3c7cUcOBypurBQgnMM/ChiF6R5p6TUyPbrYqF4vMWCyTmpoKuznfsif1c89S6grXGO1eECaN37sB+fhCqTs+RXM52UdIJf8Z3BX/xU3Ksj+FSMeqoaBGSB0v+Bld0+7hJFPebK
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SEJ1SC9iQ2gyQkxRckx2ZGpJZDZkZllRYjl6cXNQVWZUQk9BTHVySEMyK2xN?=
+ =?utf-8?B?TExFUXlrLzZYYnFBc3dCVTJNT1FqeW5mVFREZzE2a3lDTUd5ckxIN1NIQTBB?=
+ =?utf-8?B?TzdnTi9yUFFIZys4Q1A3UjJRUWtwMGtNdWY4RjVTS1h2TGlVY1JqcFdGSmxl?=
+ =?utf-8?B?M1JWbzhnWFhnZU4wdjRGVHcwc3ZnWDJtU2pJcHhqRGNHSTdDM0tvT1FRMWJO?=
+ =?utf-8?B?T3EwcFRRR2VRVVF5L1ZRbXdzbEVEcE15UXhINlFyNEJoSjJydHptYk5tdEVV?=
+ =?utf-8?B?akpialpNK2FESFIwQ3A4dkNMTWxOZVphWW9qSkN4M1FNK1lRaG81SHBsblk4?=
+ =?utf-8?B?NVA4VWh4UlE5cE5TbXpJM0lFSndxeW04TGIrUnB1bkZIS1p3aGt4bXA1bE43?=
+ =?utf-8?B?R1Zvd3dOV0JGSGtxMkVTVDFzYklHNXlJQWk0T1Uza1dTYkYza1FXTVROZkg1?=
+ =?utf-8?B?YWpHZks3Z3FRSHYrRmVFZTEvM1FTQVNkckRCSXhneVFWaG11VTVmSTgyRmZK?=
+ =?utf-8?B?M04rdTF3cTNxNmViT1FSQTNQUzdOMHAwaUoyUmtBUVlIaGVNNGcrVWRnbEE4?=
+ =?utf-8?B?VjAzNkdlSVVrVWpiUGEwd01taTdrUUZGeFV0d3pMUS90S2FCamNKd2IyVENY?=
+ =?utf-8?B?cWlpMm9oeGZuOVl5QzZiRVBVVGJDL09LZkQvSFhocFpUb2xrMlVyZnRoZ055?=
+ =?utf-8?B?NXBIdWkyQlhna1hjSTJXOEtYWFZLMkVrMDlYdUdaUWNtOFg4VjlUdGNMN0Z2?=
+ =?utf-8?B?MEQ2OWJUVFNJTmdhTExGK1NPREpxRnFycXlUN2Z0UUtiaTkxRE1VWDA5N3B0?=
+ =?utf-8?B?VkxoY2k0Z04yZEI0VEs5TFVzR0VvRXhLKzhtYzdUZFJ2Vzl0d01QdVgzMUho?=
+ =?utf-8?B?OHYraEZRMTR5bmRlcGRhVTVJRmxTbHE0MHNRYzFUS2tnTjM0MS92U2hKTGUx?=
+ =?utf-8?B?RVphd1B0OWU3NHowSDBnVXpMZ3pKY293TTVxUkNNZXRCWkl3MlNGcDhRZWlZ?=
+ =?utf-8?B?aWVJSlZ2QXp1bUw0enlWVnB0bmVtY0RKWFQxZFJxTS9ONktvcjRFNWFIWGl6?=
+ =?utf-8?B?cm9TR0tsbUJ2eDFiWTdoUnc1TFZyRks5Y2hlbGpvalJVRXVPZG0ycFVJY2NI?=
+ =?utf-8?B?T2JJemZFa0dkZ0pjMWFZTVRFZFp1bjlucEhmYkhMeTdtZWtKMU9FclpEQ1Jq?=
+ =?utf-8?B?RlQ0VzNPTkQ2ZFdEbXdhMmFOdzVzaFkwS2tnSnhQd09SNzkrQUhYTjQ0WDha?=
+ =?utf-8?B?WXc4cEd5bEc4cWZESXg2WndHOWlwRERBUElsNFUwM1pscWJCZjBiL0RJb3px?=
+ =?utf-8?B?bEt1TzZFblhOR0tzd005K0VQU0ltQjdkZnB1OEMxWHl5RjRlL1hBbzd2aXV6?=
+ =?utf-8?B?cERiYmNUOUdXalQrMG9xcnJleloyTXVMQmZGSkJaYWtBcEpRWmhablRqTDF4?=
+ =?utf-8?B?RXNaMlBrS09jc01wVUFCdnRWUFE5ajFjWm15T3d6WkF5aVZqQlloc1NrNVN0?=
+ =?utf-8?B?STZDaG41d3RvUVVrUmp2dmdOeVhiRjZtOW50ZDQ0L2psQTVORGVNVkFVUkxG?=
+ =?utf-8?B?L2lzb0hDY0wybytteis2ajlMektSTUtkTnhCTHdqekdVU3BBQ3I2enNYbTQx?=
+ =?utf-8?B?Q0p6S0l4VkFTdnBnOTB4aS9UV3ZySHlpQkJzazdJQ1ZmMjk3emVBRERSMVRG?=
+ =?utf-8?B?L1JkN0FlMnl0RHNpNGpSOU92MWY4T3BESEozbWVyNnJ3VGE5SUVVNzd2T0hS?=
+ =?utf-8?Q?vE1+ni485rTpmA/COIf9MNpe0bwMVOCbkuJFhEM?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zggxaye8.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR17MB3375.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f712d961-22d6-4cde-f000-08da6eed82f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2022 09:59:20.9650
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR17MB5681
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
-> On Mon, 25 Jul 2022 16:18:48 +0100,
-> Johan Hovold <johan@kernel.org> wrote:
-
-> > Since when is unloading modules something that is expected to work
-> > perfectly? I keep hearing "well, don't do that then" when someone
-> > complains about unloading this module while doing this or that broke
-> > something. (And it's only root that can unload modules in the first
-> > place.)
-> 
-> Well, maybe I have higher standards. For the stuff I maintain, I now
-> point-blank refuse to support module unloading if this can result in a
-> crash. Or worse.
-
-That makes sense for regular interrupt controllers where its hard to
-tell that all consumers are gone, but I don't think that should limit
-the usefulness of having modular PCI controller drivers where we know
-that the consumers are gone after deregistering the bus (i.e. the
-consumers are descendants of the controller in the device tree).
- 
-> > If this was the general understanding, then it seems the only option
-> > would be to disable module unloading completely as module remove code
-> > almost by definition gets less testing and is subject to bit rot.
-> 
-> My personal preference would be to prevent module unloading by default
-> if the probing has succeeded, and have modules to actually buy into
-> unloading. But that ship has sailed a long time ago.
-
-We obviously agree that modular driver are important (e.g. for
-multi-platform kernels), but being able to unload a module is also a
-useful debugging and development tool. I've fixed several driver bugs in
-paths that are rarely tested (or hard to test) by unloading the
-pcie-qcom driver.
-
-This old quote from Linus seems to agree with my position on this:
-
-	The proper thing to do (and what we _have_ done) is to say
-	"unloading of modules is not supported". It's a debugging
-	feature, and you literally shouldn't do it unless you are
-	actively developing that module.
-
-	https://lore.kernel.org/all/Pine.LNX.4.58.0401251054340.18932@home.osdl.org/
-
-But of course we should fix any issues we find, such as the missing
-unmapping of legacy interrupts pointed out by Pali earlier in this
-thread.
-
-> > It's useful for developers, but use it at your own risk.
-> > 
-> > That said, I agree that if something is next to impossible to get right,
-> > as may be the case with interrupt controllers generally, then fine,
-> > let's disable module unloading for that class of drivers.
-> > 
-> > And this would mean disabling driver unbind for the 20+ driver PCI
-> > drivers that currently implement it to some degree.
-> 
-> That would be Bjorn's and Lorenzo's call.
-
-Sure, but I think it would be the wrong decision here. Especially, since
-the end result will likely just be that more drivers will become always
-compiled-in.
-
-> > Also note that we only appear to have some 60 drivers in the tree that
-> > can be built as modules but cannot be unloaded (if my grep patterns
-> > were correct).
-> 
-> I'm not surprised. Preventing module unload requires extra "code", and
-> hardly anyone cares.
-
-And it's primarily a debugging feature.
-
-> > > > Turns out the pcie-qcom driver does not support legacy interrupts so
-> > > > there's no risk of there being any lingering mappings if I understand
-> > > > things correctly.
-> > > 
-> > > It still does MSIs, thanks to dw_pcie_host_init(). If you can remove
-> > > the driver while devices are up and running with MSIs allocated,
-> > > things may get ugly if things align the wrong way (if a driver still
-> > > has a reference to an irq_desc or irq_data, for example).
-> > 
-> > That is precisely the way I've been testing it and everything appears
-> > to be tore down as it should.
-> >
-> > And a PCI driver that has been unbound should have released its
-> > resources, or that's a driver bug. Right?
-> 
-> But that's the thing: you can easily remove part of the infrastructure
-> without the endpoint driver even noticing. It may not happen in your
-> particular case if removing the RC driver will also nuke the endpoints
-> in the process, but I can't see this is an absolute guarantee. The
-> crash pointed to by an earlier email is symptomatic of it.
-
-But that was arguably due to a driver bug, which we know how to fix. For
-MSIs the endpoint driver will free its interrupts and all is good.
-
-The key observation is that the driver model will make sure that any
-endpoint drivers have been unbound before the bus is deregistered.
-
-That means there are no longer any consumers of the interrupts, which
-can be disposed. For MSI this is handled by pci_free_irq_vectors() when
-unbinding the endpoint drivers. For legacy interrupts, which can be
-shared, the PCIe RC driver needs to manage this itself after the
-consumers are gone.
-
-> > And for the OF INTx case you mentioned earlier, aren't those mapped by
-> > PCI core and could in theory be released by core as well?
-> 
-> Potentially, though I haven't tried to follow the life cycle of those.
-> The whole thing is pretty fragile, and this sort of resource is rarely
-> expected to be removed...
-
-The OF mapping is typically done by PCI core when binding the endpoint
-driver, but as the interrupts can be shared, they cannot be disposed at
-unbind.
-
-Instead the host-bridge driver needs to dispose the mappings after
-deregistering the bus and before removing the domain, as in Pali's
-fixes:
-
-	https://lore.kernel.org/linux-pci/20220709161858.15031-1-pali@kernel.org/
-
-at which point the consumers are gone.
-
-Johan
+VGhpcyBpcyBzdHVwaWQgDQoNClNlbnQgZnJvbSBteSBpUGhvbmUNCg0KPiBPbiBKdWwgMjYsIDIw
+MjIsIGF0IDQ6MzEgQU0sIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdy
+b3RlOg0KPiANCj4g77u/T24gU28sIDIwMjItMDctMjQgYXQgMjI6NTMgLTA3MDAsIFdpbGxpYW0g
+Wmhhbmcgd3JvdGU6DQo+PiBXaXRoIEJyb2FkY29tIEJyb2FkYmFuZCBhcmNoIEFSQ0hfQkNNQkNB
+IHN1cHBvcnRlZCBpbiB0aGUga2VybmVsLCB0aGlzDQo+PiBwYXRjaCBzZXJpZXMgbWlncmF0ZSB0
+aGUgQVJDSF9CQ000OTA4IHN5bWJvbCB0byBBUkNIX0JDTUJDQS4gSGVuY2UNCj4+IHJlcGxhY2Ug
+QVJDSF9CQ000OTA4IHdpdGggQVJDSF9CQ01CQ0EgaW4gc3Vic3lzdGVtIEtjb25maWcgZmlsZXMu
+DQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IFdpbGxpYW0gWmhhbmcgPHdpbGxpYW0uemhhbmdAYnJv
+YWRjb20uY29tPg0KPj4gQWNrZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLXVzLm5l
+dD4gKGZvciB3YXRjaGRvZykNCj4+IEFja2VkLWJ5OiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bn
+b29nbGUuY29tPiAoZm9yIGRyaXZlcnMvcGNpKQ0KPiANCj4gQWNrZWQtYnk6IFBoaWxpcHAgWmFi
+ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IChmb3IgcmVzZXQpDQo+IA0KPiByZWdhcmRzDQo+
+IFBoaWxpcHANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0KPiBMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QNCj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvDQo=
