@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5FE5833DA
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 21:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 467BD5833E6
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 22:03:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231161AbiG0T5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jul 2022 15:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39970 "EHLO
+        id S230392AbiG0UDE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jul 2022 16:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbiG0T5X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 15:57:23 -0400
+        with ESMTP id S229508AbiG0UDD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 16:03:03 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5252158B47;
-        Wed, 27 Jul 2022 12:57:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7343A5A2FF;
+        Wed, 27 Jul 2022 13:03:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E82F2B82279;
-        Wed, 27 Jul 2022 19:57:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58074C433D6;
-        Wed, 27 Jul 2022 19:57:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1CA66B8227B;
+        Wed, 27 Jul 2022 20:03:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F31C433D6;
+        Wed, 27 Jul 2022 20:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658951838;
-        bh=7QZYmwrZG8Sh+D/oho3aNQtPpOKtF7UQO1cgldixeeM=;
+        s=k20201202; t=1658952179;
+        bh=bhXdU0USntkiB9VeAjJXudqJtJ1Zhml+HGIlkrxNYwA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ttzeWYdIb1nRjk/211e/C9p3EW2o66CuWJWHiSEXQN2nuTmFo91k/lUqNaY2YeMKj
-         5smWl38FbyzKv+eaoBDXl0azZ3lMoznTCdeCNFaJL6hvi/k82aZ34qb2gt4SVsGbmO
-         6kDjiD/pcBQ5KrChlE+0oRrlXL0fdcFkMJ09eP5+f4eXBxWOLHaYCyKs3gl9jsg28k
-         aAiGAyG7Ffaft6uPWbE33lxGpj3seSIZCdXSlSVhHfO5xLUuuUv/fzGrcBz1u+w7m9
-         K1IQwBpuJo9LEXr9GRivOYTxSJdtM2UlUoLuI4Wds2phLrvHUaz2coHyisCQ5FbFoA
-         jCFtHB13pyb9Q==
-Date:   Wed, 27 Jul 2022 14:57:16 -0500
+        b=dGnKjVscu3t5TawgOTdxEwwl8LqhsjRowLOYg2qWQJKUbZFLdh5py6vJBEojWemHW
+         SVTwUXLNCdTNFHdhlL7KZxoeh711XvpjpOZHQE2wZMuVVKByn+M4xg1RUbWB+YMJMP
+         APGh9+toyjXVhTrAlSvLkajsDPFzIew4DBVQXY7yWrrsUlN/8Y1qpsOAO1+eIaP0ii
+         5FezdknkEYoY7Vv0rMRodjvJMvgM1mWFzxVxYYq3EqPwgxrQZNNXUeLBVVgSVXr5dy
+         5ydAQUp+3KAIj0U9jBlFnnnZRU4np/E6YPAYsgH8OTbaa5O4L+x7H6OQRe2/UnrkOy
+         Q4wnU12bL8vkA==
+Date:   Wed, 27 Jul 2022 15:02:57 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <20220727195716.GA220011@bhelgaas>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2] PCI: qcom: Add support for modular builds
+Message-ID: <20220727200257.GA220948@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
+In-Reply-To: <20220721193513.GA1747404@bhelgaas>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,90 +62,128 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 11:56:59AM +0200, Johan Hovold wrote:
-> On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
-> > On Mon, 25 Jul 2022 16:18:48 +0100,
-> > Johan Hovold <johan@kernel.org> wrote:
-> 
-> > > Since when is unloading modules something that is expected to
-> > > work perfectly? I keep hearing "well, don't do that then" when
-> > > someone complains about unloading this module while doing this
-> > > or that broke something. (And it's only root that can unload
-> > > modules in the first place.)
+On Thu, Jul 21, 2022 at 02:35:13PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jul 21, 2022 at 08:47:20AM +0200, Johan Hovold wrote:
+> > Allow the Qualcomm PCIe controller driver to be built as a module, which
+> > is useful for multi-platform kernels as well as during development.
 > > 
-> > Well, maybe I have higher standards. For the stuff I maintain, I
-> > now point-blank refuse to support module unloading if this can
-> > result in a crash. Or worse.
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > 
-> That makes sense for regular interrupt controllers where its hard to
-> tell that all consumers are gone, but I don't think that should
-> limit the usefulness of having modular PCI controller drivers where
-> we know that the consumers are gone after deregistering the bus
-> (i.e. the consumers are descendants of the controller in the device
-> tree).
+> Applied to pci/ctrl/qcom for v5.20, thanks!
 
-Those consumers are endpoint drivers, so I think this depends on those
-drivers correctly unmapping the interrupts they use, right?
+I'm going to drop this one for now, since the module vs remove
+discussion [1] is still ongoing.
 
-> > > It's useful for developers, but use it at your own risk.
-> > > 
-> > > That said, I agree that if something is next to impossible to
-> > > get right, as may be the case with interrupt controllers
-> > > generally, then fine, let's disable module unloading for that
-> > > class of drivers.
-> > > 
-> > > And this would mean disabling driver unbind for the 20+ driver
-> > > PCI drivers that currently implement it to some degree.
+This patch actually makes it both *modular* and *removable*.  I think
+the modular part is uncontroversial and valuable by itself.
+
+If you want to just make it modular and *non*-removable, I think that
+would be fine and we can add removability next cycle if we think it's
+safe.
+
+[1] https://lore.kernel.org/r/20220721195433.GA1747571@bhelgaas
+
+> > Changes in v2
+> >  - rebase on next-20220720 (adjust context)
+> >  - add Rob and Mani's reviewed-by tags
 > > 
-> > That would be Bjorn's and Lorenzo's call.
-> 
-> Sure, but I think it would be the wrong decision here. Especially,
-> since the end result will likely just be that more drivers will
-> become always compiled-in.
-
-Can you elaborate on this?  I think Marc is suggesting that these PCI
-controller drivers be modular but not removable.  Why would that cause
-more of them to be compiled-in?
-
-> > > > > Turns out the pcie-qcom driver does not support legacy
-> > > > > interrupts so there's no risk of there being any lingering
-> > > > > mappings if I understand things correctly.
-> > > > 
-> > > > It still does MSIs, thanks to dw_pcie_host_init(). If you can
-> > > > remove the driver while devices are up and running with MSIs
-> > > > allocated, things may get ugly if things align the wrong way
-> > > > (if a driver still has a reference to an irq_desc or irq_data,
-> > > > for example).
-> > > 
-> > > That is precisely the way I've been testing it and everything
-> > > appears to be tore down as it should.
-> > >
-> > > And a PCI driver that has been unbound should have released its
-> > > resources, or that's a driver bug. Right?
 > > 
-> > But that's the thing: you can easily remove part of the
-> > infrastructure without the endpoint driver even noticing. It may
-> > not happen in your particular case if removing the RC driver will
-> > also nuke the endpoints in the process, but I can't see this is an
-> > absolute guarantee. The crash pointed to by an earlier email is
-> > symptomatic of it.
-> 
-> But that was arguably due to a driver bug, which we know how to fix.
-> For MSIs the endpoint driver will free its interrupts and all is
-> good.
-> 
-> The key observation is that the driver model will make sure that any
-> endpoint drivers have been unbound before the bus is deregistered.
-> 
-> That means there are no longer any consumers of the interrupts,
-> which can be disposed. For MSI this is handled by
-> pci_free_irq_vectors() when unbinding the endpoint drivers. For
-> legacy interrupts, which can be shared, the PCIe RC driver needs to
-> manage this itself after the consumers are gone.
-
-The driver model ensures that endpoint drivers have been unbound. But
-doesn't the interrupt disposal depend on the correct functioning of
-those endpoint drivers?  So if a buggy endpoint driver failed to
-dispose of them, we're still vulnerable?
-
-Bjorn
+> >  drivers/pci/controller/dwc/Kconfig     |  2 +-
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++---
+> >  2 files changed, 34 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 62ce3abf0f19..230f56d1a268 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -168,7 +168,7 @@ config PCI_HISI
+> >  	  Hip05 and Hip06 SoCs
+> >  
+> >  config PCIE_QCOM
+> > -	bool "Qualcomm PCIe controller"
+> > +	tristate "Qualcomm PCIe controller"
+> >  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> >  	depends on PCI_MSI_IRQ_DOMAIN
+> >  	select PCIE_DW_HOST
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5ed164c2afa3..d176c635016b 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -16,7 +16,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/iopoll.h>
+> >  #include <linux/kernel.h>
+> > -#include <linux/init.h>
+> > +#include <linux/module.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_gpio.h>
+> >  #include <linux/pci.h>
+> > @@ -1518,6 +1518,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> >  	return ret;
+> >  }
+> >  
+> > +static void qcom_pcie_host_deinit(struct qcom_pcie *pcie)
+> > +{
+> > +	qcom_ep_reset_assert(pcie);
+> > +	if (pcie->cfg->ops->post_deinit)
+> > +		pcie->cfg->ops->post_deinit(pcie);
+> > +	phy_power_off(pcie->phy);
+> > +	pcie->cfg->ops->deinit(pcie);
+> > +}
+> > +
+> >  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+> >  	.host_init = qcom_pcie_host_init,
+> >  };
+> > @@ -1752,6 +1761,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >  	return ret;
+> >  }
+> >  
+> > +static int qcom_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > +	struct device *dev = &pdev->dev;
+> > +
+> > +	dw_pcie_host_deinit(&pcie->pci->pp);
+> > +	qcom_pcie_host_deinit(pcie);
+> > +
+> > +	phy_exit(pcie->phy);
+> > +
+> > +	pm_runtime_put_sync(dev);
+> > +	pm_runtime_disable(dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
+> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
+> > @@ -1771,6 +1796,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
+> >  	{ }
+> >  };
+> > +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
+> >  
+> >  static void qcom_fixup_class(struct pci_dev *dev)
+> >  {
+> > @@ -1786,10 +1812,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> >  
+> >  static struct platform_driver qcom_pcie_driver = {
+> >  	.probe = qcom_pcie_probe,
+> > +	.remove = qcom_pcie_remove,
+> >  	.driver = {
+> >  		.name = "qcom-pcie",
+> > -		.suppress_bind_attrs = true,
+> >  		.of_match_table = qcom_pcie_match,
+> >  	},
+> >  };
+> > -builtin_platform_driver(qcom_pcie_driver);
+> > +module_platform_driver(qcom_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
+> > +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.35.1
+> > 
