@@ -2,163 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6D258215F
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 09:44:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC195821B4
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 10:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230397AbiG0HoL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jul 2022 03:44:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
+        id S229606AbiG0ICr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jul 2022 04:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbiG0HoE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 03:44:04 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F65842AC3
-        for <linux-pci@vger.kernel.org>; Wed, 27 Jul 2022 00:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658907841; x=1690443841;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XrH/MZ9vLtzWehtNqKNNLwlyfs4yF4O9gtO4Gk2m/Nw=;
-  b=JudHZiQuqo5Vxe3e85U0iU0QI3Y8C6wL7iVMKj227K2ya3I4uwpnD7JQ
-   tbmpXLmEEAJSGl1YI76kp2c742Z+Z6StvhH//y+Sl48dVoNbjKA3df6uz
-   n/j9DE2ruuj1Z2g804aCvCzunIvfgnzeVZzRO7o+ZEiGfLMS6y8g6DpO2
-   54vm6jre6+o9RvX+pARP8KzKkRNGLgDgBCwMdX3QqSxjMgjDzfAAEpirK
-   dWNLIykj1NyNyRKHm/wRGVbOI337cpt3JOfBiLdAupgX9zBdIhXEbr8g+
-   ouMdwFkXmofn0SIWVNLnMmHXBkqrzN4b8fR/1QxLlzmjH1FIW0Smz7HHd
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10420"; a="289362393"
-X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
-   d="scan'208";a="289362393"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 00:44:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
-   d="scan'208";a="927689869"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Jul 2022 00:43:59 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oGbi2-0008UJ-1a;
-        Wed, 27 Jul 2022 07:43:58 +0000
-Date:   Wed, 27 Jul 2022 15:43:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/header-cleanup-immutable] BUILD SUCCESS
- d63ed7fe85eed2e70bdb16610f327edc765f4c44
-Message-ID: <62e0ec84.G6SB2DatDOtOmm6M%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229481AbiG0ICq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 04:02:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1AAB422ED;
+        Wed, 27 Jul 2022 01:02:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51A3861645;
+        Wed, 27 Jul 2022 08:02:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6473DC433C1;
+        Wed, 27 Jul 2022 08:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658908964;
+        bh=oFIkkeAnr7pbdOUU0Rf2VovOOsOXvFXow9Y98anFXPk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nu3uQjGzBuXof6HuTHqu3Zbs+UQq/I1YjZ+dKIGVFHKhl8i3LGnFxVfiBRLIyTYQM
+         iN+y0sVuXNHHEDCqHuIChHKhH6gIQonUEBjvNA9sWO96xKT36Q+/ckWWBKmGczPoiF
+         YOBArGwnqQ9l426SjaJaKAYVFkr2LdLT+07irGekkDikfk+UvhVZvHYF1FmpZUDvHV
+         7Fjeq50Ki40NW4eznO/jPWDtZE14kiSYzbUcHvFNx3uPrN9+wfvqJ1FsXjLMw6gZaN
+         6KtGjfEbOX+nkWHsDmFGfqd5TucjRCF3hgKGljZygFGcxSn/0ofV7lc25Nnxi9Zijt
+         BgdI0qA3nuNoA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oGc0A-00ALOt-13;
+        Wed, 27 Jul 2022 09:02:42 +0100
+Date:   Wed, 27 Jul 2022 09:02:41 +0100
+Message-ID: <877d3zx9su.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kernel@vger.kernel.org" <kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>
+Subject: Re: [EXT] Re: [PATCH v3 2/4] irqchip: imx mu worked as msi controller
+In-Reply-To: <PAXPR04MB918621013E6276D37B56C48488949@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220720213036.1738628-1-Frank.Li@nxp.com>
+        <20220720213036.1738628-3-Frank.Li@nxp.com>
+        <874jza525l.wl-maz@kernel.org>
+        <PAXPR04MB9186A1D283ACE8BD6954039288919@PAXPR04MB9186.eurprd04.prod.outlook.com>
+        <87wnc6xz6r.wl-maz@kernel.org>
+        <PAXPR04MB918621013E6276D37B56C48488949@PAXPR04MB9186.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: frank.li@nxp.com, jdmason@kudzu.us, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/header-cleanup-immutable
-branch HEAD: d63ed7fe85eed2e70bdb16610f327edc765f4c44  x86/cyrix: include header linux/isa-dma.h
+On Tue, 26 Jul 2022 22:48:32 +0100,
+Frank Li <frank.li@nxp.com> wrote:
+> 
+> > > > > +static void imx_mu_msi_irq_handler(struct irq_desc *desc)
+> > > > > +{
+> > > > > +     struct imx_mu_msi *msi_data = irq_desc_get_handler_data(desc);
+> > > > > +     u32 status;
+> > > > > +     int i;
+> > > > > +
+> > > > > +     status = imx_mu_read(msi_data, msi_data->cfg-
+> > >xSR[IMX_MU_RSR]);
+> > > > > +
+> > > > > +     chained_irq_enter(irq_desc_get_chip(desc), desc);
+> > > > > +     for (i = 0; i < IMX_MU_CHANS; i++) {
+> > > > > +             if (status & IMX_MU_xSR_RFn(msi_data->cfg->type, i)) {
+> > > > > +                     imx_mu_read(msi_data, msi_data->cfg->xRR + i * 4);
+> > > > > +                     generic_handle_domain_irq(msi_data->parent, i);
+> > > >
+> > > > Why the parent? You must start at the top of the hierarchy.
+> 
+> [Frank Li] Do you means that should be msi_data->msi_domain instead
+> of msi_data->parent?
 
-elapsed time: 726m
+Indeed. you must *not* bypass the hierarchy, and the top level of the
+hierarchy has to implement whatever is required by the interrupt flow.
 
-configs tested: 82
-configs skipped: 2
+> 
+> > > >
+> > > > > +             }
+> > > > > +     }
+> > > > > +     chained_irq_exit(irq_desc_get_chip(desc), desc);
+> > > >
+> > > > If your MSIs are a chained interrupt, why do you even provide an
+> > > > affinity setting callback?
+> > >
+> > > [Frank Li]  it will be crash if no affinity setting callback.	
+> > 
+> > Then you have to fix your driver.
+> 
+> [Frank Li] After debug,  msi_domain_set_affinity() have not did null check for (parent->chip->irq_set_affinity). 
+> I think impact by using dummy set_affinity is minimized.  
+> 
+> int msi_domain_set_affinity(struct irq_data *irq_data,	
+> 			    const struct cpumask *mask, bool force)
+> {
+> 	struct irq_data *parent = irq_data->parent_data;
+> 	struct msi_msg msg[2] = { [1] = { }, };
+> 	int ret;
+> 
+> 	ret = parent->chip->irq_set_affinity(parent, mask, force);
+> 	if (ret >= 0 && ret != IRQ_SET_MASK_OK_DONE) {
+> 		BUG_ON(irq_chip_compose_msi_msg(irq_data, msg));
+> 		msi_check_level(irq_data->domain, msg);
+> 		irq_chip_write_msi_msg(irq_data, msg);
+> 	}
+> 
+> 	return ret;
+> }
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No. Changing the affinity of an interrupt must not affect the affinity
+of another. Given that this is a chained handler, you *cannot* satisfy
+this requirement. So you can't change the affinity at all.
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm64                               defconfig
-arm                        spear6xx_defconfig
-sh                               j2_defconfig
-powerpc                  iss476-smp_defconfig
-mips                       capcella_defconfig
-powerpc                         ps3_defconfig
-arm                        keystone_defconfig
-sh                          rsk7264_defconfig
-m68k                       m5275evb_defconfig
-arm                        shmobile_defconfig
-powerpc                 mpc837x_rdb_defconfig
-nios2                            allyesconfig
-arc                          axs103_defconfig
-nios2                               defconfig
-m68k                         apollo_defconfig
-um                                  defconfig
-parisc                           allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arc                  randconfig-r043-20220724
-riscv                randconfig-r042-20220724
-s390                 randconfig-r044-20220724
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-arm                        multi_v5_defconfig
-powerpc                          allmodconfig
-mips                  cavium_octeon_defconfig
-powerpc               mpc834x_itxgp_defconfig
-powerpc                 mpc836x_rdk_defconfig
-mips                           rs90_defconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220724
-hexagon              randconfig-r045-20220724
+	N,
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Without deviation from the norm, progress is not possible.
