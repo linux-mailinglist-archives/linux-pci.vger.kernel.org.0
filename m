@@ -2,175 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 853B9581D35
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 03:34:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F92581E5F
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 05:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240153AbiG0BeL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jul 2022 21:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46316 "EHLO
+        id S240199AbiG0Dxs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jul 2022 23:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240173AbiG0BeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 21:34:08 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52163B954;
-        Tue, 26 Jul 2022 18:34:02 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id E199F3F39B;
-        Wed, 27 Jul 2022 01:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1658885640;
-        bh=DsZRX8j/q4Cpjzn1W11I3hAQXEWJrBN86NgoVVaLV3A=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=TFT3im8fedDV8eqhGPtwSn5vtGFvE76IEoZRXyiGAyzytfZ8PqyKDLyMGQMWenpoz
-         EdSIjBu6PSxYV7wq2N2wFN1sjp2XAE+SK1jV7fNMAAz8baJle8ANICSqr+hTaycaEh
-         FuYrwAQ2Di/3kKJWgn6RN/72amg9Xwr4/uATsenmxJ0BgIRSXeod0tz+cHOwRMQnu1
-         /R68+i0BdBJgtsIjpvbw9QwfsdOwIwgSUDlTyRXpn9DA6Sh2gOy/CNheuZLoPyvSq5
-         a4cN9IRMFVgkW+Ij64VEIj9aOxWqBDJLEO93w7suSgZPd0+IMpRG85rwJZ24vvL62M
-         1rBCFxj6z5rGg==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] PCI/DPC: Disable DPC service on suspend when IRQ is shared with PME
-Date:   Wed, 27 Jul 2022 09:32:52 +0800
-Message-Id: <20220727013255.269815-3-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220727013255.269815-1-kai.heng.feng@canonical.com>
-References: <20220727013255.269815-1-kai.heng.feng@canonical.com>
+        with ESMTP id S232586AbiG0Dxr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 23:53:47 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F528371A2
+        for <linux-pci@vger.kernel.org>; Tue, 26 Jul 2022 20:53:46 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 15-20020a17090a098f00b001f305b453feso908228pjo.1
+        for <linux-pci@vger.kernel.org>; Tue, 26 Jul 2022 20:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7jhbj5Abg4TXA2patlqLjYtOIDWLphgG/ZlRWxSbkmg=;
+        b=TTb6Ern0vF5/xiSQCYnJ6Gg46rjWaD0lesX5iMjCWYSKagGQwasI8rZx4GE+f9WmcK
+         Ggv2fbmEV69lUNGSXnrr+YM+YEHUekKd1nY4FlYQgZ5IPWhBmUq4u3xQYvHkfcPHMh6B
+         md+w4lFiGy8n1GDONsIK9I1uT+huTwHEDmCv2krKvh0VI6EyRv5Sj4SHZWfjm6CEmXfw
+         80lGsC8h0lp/ctlJKfildkSPLMZzf3dpVDNzZgd0dKZhEV5SMPL2f5tJFQHUvLIxhbtl
+         Yq71FexWR0TTqYK6VkaK+pSjM5vZ3HTz7nMJvhMRrekFbAAZZmXc6weE0qBWmJXMsG3A
+         15+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7jhbj5Abg4TXA2patlqLjYtOIDWLphgG/ZlRWxSbkmg=;
+        b=tUJFx3X4PbqXwQ/3KBVYE4uMdonAJNPcdEBNMJiHJXs+EDqmTMBuVBav7e6EMkUDYg
+         LN6Tp7unFe7mLsn8NBTeEfj19Hb+Whs6RktCnjvDFJ5q2ODl+pCLp69F1wGQRXG7g1OL
+         MdebJ6IhvDLaEGo9GLHWW3n6XsrRrF71zLsladyVhLe8IYIiWlxTrU12/2C5VMZBZSyl
+         xjCxDFzvuae2bpMs0Oh2y6cPrzY8nWDZPkFN9TYyIGT+lImJn1Wl+kr8S4o4UkcZr26K
+         55nkzrc1Qbweg4oAunLbq7y6Yr1woAebzQdaO+1Im/AIkW3ZH2e35dpiIOQlq49Pmkgs
+         tkrA==
+X-Gm-Message-State: AJIora/b4GB0+dOAt49Hb6Z6ssWQ/dMAJxysiFSTVJ5CJ6SwT7rbTfF9
+        fnuHYPPwY2hXx7NWLlUJ5XbfEw==
+X-Google-Smtp-Source: AGRyM1s980FWuq1gVlztoVmgOxTY3rsrl6DOXaqVSgmqR8KVUchf4hKTtG0e9jsYHw4zD/h04NZfrA==
+X-Received: by 2002:a17:903:2601:b0:16d:b055:2985 with SMTP id jd1-20020a170903260100b0016db0552985mr1722624plb.161.1658894025876;
+        Tue, 26 Jul 2022 20:53:45 -0700 (PDT)
+Received: from C02F63J9MD6R.bytedance.net ([61.120.150.78])
+        by smtp.gmail.com with ESMTPSA id t9-20020a1709027fc900b0016bb24f5d19sm12516515plb.209.2022.07.26.20.53.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Jul 2022 20:53:45 -0700 (PDT)
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+To:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     chenzhuo.1@bytedance.com, lukas@wunner.de, jan.kiszka@siemens.com,
+        stuart.w.hayes@gmail.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] PCI/ERR: Use pcie_aer_is_native() to judge whether OS owns AER
+Date:   Wed, 27 Jul 2022 11:53:34 +0800
+Message-Id: <20220727035334.9997-1-chenzhuo.1@bytedance.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe service that shares IRQ with PME may cause spurious wakeup on
-system suspend.
+Use pcie_aer_is_native() in place of "host->native_aer ||
+pcie_ports_native" to judge whether OS has native control of AER
+in pcie_do_recovery().
 
-Since AER is conditionally disabled in previous patch, also apply the
-same condition to disable DPC which depends on AER to work.
+Replace "dev->aer_cap && (pcie_ports_native || host->native_aer)" in
+get_port_device_capability() with pcie_aer_is_native(), which has no
+functional changes.
 
-PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
-that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
-(D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-much here to disable DPC during system suspend.
-
-This is very similar to previous attempts to suspend AER and DPC [1],
-but with a different reason.
-
-[1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.feng@canonical.com/
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
 ---
- drivers/pci/pcie/dpc.c | 52 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 11 deletions(-)
+Changelog:
+v3:
+- Simplify why we use pcie_aer_is_native().
+- Revert modification of pci_aer_clear_nonfatal_status() and comments.
+v2:
+- Add details and note in commit log.
+---
+ drivers/pci/pcie/err.c          | 3 +--
+ drivers/pci/pcie/portdrv_core.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3e9afee02e8d1..542f282c43f75 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -343,13 +343,33 @@ void pci_dpc_init(struct pci_dev *pdev)
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 0c5a143025af..121a53338e44 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -184,7 +184,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	int type = pci_pcie_type(dev);
+ 	struct pci_dev *bridge;
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+-	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 
+ 	/*
+ 	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+@@ -243,7 +242,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	 * it is responsible for clearing this status.  In that case, the
+ 	 * signaling device may not even be visible to the OS.
+ 	 */
+-	if (host->native_aer || pcie_ports_native) {
++	if (pcie_aer_is_native(dev)) {
+ 		pcie_clear_device_status(dev);
+ 		pci_aer_clear_nonfatal_status(dev);
  	}
- }
- 
-+static void dpc_enable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
-+static void dpc_disable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
--	u16 ctl, cap;
-+	u16 cap;
- 
- 	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
-@@ -364,10 +384,7 @@ static int dpc_probe(struct pcie_device *dev)
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 604feeb84ee4..98c18f4a01b2 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -221,8 +221,7 @@ static int get_port_device_capability(struct pci_dev *dev)
  	}
  
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--
--	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	dpc_enable(dev);
- 	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+ #ifdef CONFIG_PCIEAER
+-	if (dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer)) {
++	if (pcie_aer_is_native(dev) && pci_aer_available()) {
+ 		services |= PCIE_PORT_SERVICE_AER;
  
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-@@ -380,14 +397,25 @@ static int dpc_probe(struct pcie_device *dev)
- 	return status;
- }
- 
--static void dpc_remove(struct pcie_device *dev)
-+static int dpc_suspend(struct pcie_device *dev)
- {
--	struct pci_dev *pdev = dev->port;
--	u16 ctl;
-+	if (dev->shared_pme_irq)
-+		dpc_disable(dev);
- 
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	return 0;
-+}
-+
-+static int dpc_resume(struct pcie_device *dev)
-+{
-+	if (dev->shared_pme_irq)
-+		dpc_enable(dev);
-+
-+	return 0;
-+}
-+
-+static void dpc_remove(struct pcie_device *dev)
-+{
-+	dpc_disable(dev);
- }
- 
- static struct pcie_port_service_driver dpcdriver = {
-@@ -395,6 +423,8 @@ static struct pcie_port_service_driver dpcdriver = {
- 	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_DPC,
- 	.probe		= dpc_probe,
-+	.suspend	= dpc_suspend,
-+	.resume		= dpc_resume,
- 	.remove		= dpc_remove,
- };
- 
+ 		/*
 -- 
-2.36.1
+2.30.1 (Apple Git-130)
 
