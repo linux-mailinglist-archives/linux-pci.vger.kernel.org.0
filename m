@@ -2,285 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9C4758292A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 16:58:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCB7F58287F
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 16:23:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232416AbiG0O62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jul 2022 10:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45632 "EHLO
+        id S233497AbiG0OXn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jul 2022 10:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231614AbiG0O61 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 10:58:27 -0400
-X-Greylist: delayed 6600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 Jul 2022 07:58:26 PDT
-Received: from 10.mo584.mail-out.ovh.net (10.mo584.mail-out.ovh.net [188.165.33.109])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1406B37FB4
-        for <linux-pci@vger.kernel.org>; Wed, 27 Jul 2022 07:58:26 -0700 (PDT)
-Received: from player692.ha.ovh.net (unknown [10.110.103.91])
-        by mo584.mail-out.ovh.net (Postfix) with ESMTP id 5A0DD250E9
-        for <linux-pci@vger.kernel.org>; Wed, 27 Jul 2022 12:32:16 +0000 (UTC)
-Received: from RCM-web1.webmail.mail.ovh.net (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
-        (Authenticated sender: rafal@milecki.pl)
-        by player692.ha.ovh.net (Postfix) with ESMTPSA id 08DA82CE188E7;
-        Wed, 27 Jul 2022 12:31:45 +0000 (UTC)
+        with ESMTP id S229957AbiG0OXm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 10:23:42 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CE81ADA0;
+        Wed, 27 Jul 2022 07:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658931821; x=1690467821;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QDqJWX3QsIY+mVrjQjqamt6AMbOAQVyx8v1KjAUsHEM=;
+  b=KZ2SzJxwlUVPQEowgw/NnnmY3vF4gaL9UpHW79AyAIiilzyR+/zXGtRB
+   yZSQ9T0ZrXMzas2tHL88mjt9j9rH7h3SMv6UycGxMQv6TqZuzPx5CjHrb
+   VV1sRox5/D3m3/itnTD9MYBfml3MOr1+GBV3D3icMAXhcy4VKlcgffA17
+   +xvk8ZCxsleE3pteEJpVdZs7BAW/bwxipeM8tkJPd0XaqItiDYTTv9J7G
+   o+A6NXHkF/KH9LRzg82aquGyrsDGRfiK6h73azVzaIXt/cWs9ZSBknak1
+   +kkfvAkHgeH98ceMRHLzpSHSGKsD3tsCTE1VQD5uqdoUEvYCoc/A1tWQj
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10421"; a="275120443"
+X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
+   d="scan'208";a="275120443"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 07:23:40 -0700
+X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
+   d="scan'208";a="726942897"
+Received: from jkasten-mobl.amr.corp.intel.com (HELO [10.209.24.156]) ([10.209.24.156])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2022 07:23:40 -0700
+Message-ID: <3dc43f00-0b01-1b02-74dc-6938f6db6e29@linux.intel.com>
+Date:   Wed, 27 Jul 2022 07:23:39 -0700
 MIME-Version: 1.0
-Date:   Wed, 27 Jul 2022 14:31:45 +0200
-From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To:     William Zhang <william.zhang@broadcom.com>
-Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
-        kursad.oney@broadcom.com, krzysztof.kozlowski@linaro.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
- ARCH_BCMBCA
-In-Reply-To: <20220725055402.6013-7-william.zhang@broadcom.com>
-References: <20220725055402.6013-1-william.zhang@broadcom.com>
- <20220725055402.6013-7-william.zhang@broadcom.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <63797827553783061a0ad5e897ed6538@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Originating-IP: 194.187.74.233
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 3481282513174571860
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrvdduvddgheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlpgfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpeetgfekfeduveehuedvgeefhffhieevhfejteeggfefieevffdtueeukedugeelieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedtrddtrddtrddtpdduleegrddukeejrdejgedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepphhlrgihvghrieelvddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehrrghfrghlsehmihhlvggtkhhirdhplhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeeg
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH v1] PCI/DPC: Skip EDR init when BIOS disable OS native DPC
+Content-Language: en-US
+To:     Xiaochun Lee <lixiaochun.2888@163.com>, linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        Xiaochun Lee <lixc17@lenovo.com>
+References: <1658919957-53006-1-git-send-email-lixiaochun.2888@163.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <1658919957-53006-1-git-send-email-lixiaochun.2888@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-07-25 07:53, William Zhang wrote:
-> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
-> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
-> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
-> 
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
+Hi,
 
-I still think it may be a bad idea for all below drivers. Please see my
-previous e-mail:
-Re: [RESEND PATCH 6/9] arm64: bcmbca: Make BCM4908 drivers depend on 
-ARCH_BCMBCA
-https://lore.kernel.org/linux-arm-kernel/eee8c85652e6dac69420a876d03f67c4@milecki.pl/
+On 7/27/22 4:05 AM, Xiaochun Lee wrote:
+> From: Xiaochun Lee <lixc17@lenovo.com>
+> 
+> ACPI BIOS may disable OS native AER and DPC support to notify OS
+> that our platform doesn't support AER and DPC via the _OSC method.
+> BIOS also might leave the containment be accomplished purely in HW.
+> When firmware is set to non-aware OS DPC, we skip to install
+> EDR handler to an ACPI device.
 
-I think we should:
-1. Keep ARCH_BCM4908 for 4908 specific drivers (e.g. mtd, pinctrl, net)
-2. Use ARCH_BCMBCA for more generic drivers (e.g. I2C, PCI,serial, WD)
+No, EDR is used when firmware controls the DPC.
 
+When the Firmware owns Downstream Port Containment, it is expected to use
+the new “Error Disconnect Recover” notification to alert OSPM of a
+Downstream Port Containment event.
 
-> Changes in v2:
-> - Add Acked-by tags
-> - Update commit message with more details
 > 
->  drivers/i2c/busses/Kconfig            | 4 ++--
->  drivers/mtd/parsers/Kconfig           | 6 +++---
->  drivers/net/ethernet/broadcom/Kconfig | 4 ++--
->  drivers/pci/controller/Kconfig        | 2 +-
->  drivers/phy/broadcom/Kconfig          | 4 ++--
->  drivers/pinctrl/bcm/Kconfig           | 4 ++--
->  drivers/reset/Kconfig                 | 2 +-
->  drivers/soc/bcm/bcm63xx/Kconfig       | 4 ++--
->  drivers/tty/serial/Kconfig            | 4 ++--
->  drivers/watchdog/Kconfig              | 2 +-
->  10 files changed, 18 insertions(+), 18 deletions(-)
+> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+> ---
+>  drivers/pci/pcie/edr.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 45a4e9f1b639..fd9a4dd01997 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -487,8 +487,8 @@ config I2C_BCM_KONA
-> 
->  config I2C_BRCMSTB
->  	tristate "BRCM Settop/DSL I2C controller"
-> -	depends on ARCH_BCM2835 || ARCH_BCM4908 || ARCH_BCMBCA || \
-> -		   ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-> +	depends on ARCH_BCM2835 || ARCH_BCMBCA || ARCH_BRCMSTB || \
-> +		   BMIPS_GENERIC || COMPILE_TEST
->  	default y
->  	help
->  	  If you say yes to this option, support will be included for the
-> diff --git a/drivers/mtd/parsers/Kconfig b/drivers/mtd/parsers/Kconfig
-> index b43df73927a0..d6db655a1d24 100644
-> --- a/drivers/mtd/parsers/Kconfig
-> +++ b/drivers/mtd/parsers/Kconfig
-> @@ -69,8 +69,8 @@ config MTD_OF_PARTS
-> 
->  config MTD_OF_PARTS_BCM4908
->  	bool "BCM4908 partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM4908 || COMPILE_TEST)
-> -	default ARCH_BCM4908
-> +	depends on MTD_OF_PARTS && (ARCH_BCMBCA || COMPILE_TEST)
-> +	default ARCH_BCMBCA
->  	help
->  	  This provides partitions parser for BCM4908 family devices
->  	  that can have multiple "firmware" partitions. It takes care of
-> @@ -78,7 +78,7 @@ config MTD_OF_PARTS_BCM4908
-> 
->  config MTD_OF_PARTS_LINKSYS_NS
->  	bool "Linksys Northstar partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCM4908 || 
-> COMPILE_TEST)
-> +	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCMBCA || 
-> COMPILE_TEST)
->  	default ARCH_BCM_5301X
->  	help
->  	  This provides partitions parser for Linksys devices based on 
-> Broadcom
-> diff --git a/drivers/net/ethernet/broadcom/Kconfig
-> b/drivers/net/ethernet/broadcom/Kconfig
-> index 56e0fb07aec7..f4e1ca68d831 100644
-> --- a/drivers/net/ethernet/broadcom/Kconfig
-> +++ b/drivers/net/ethernet/broadcom/Kconfig
-> @@ -53,8 +53,8 @@ config B44_PCI
-> 
->  config BCM4908_ENET
->  	tristate "Broadcom BCM4908 internal mac support"
-> -	depends on ARCH_BCM4908 || COMPILE_TEST
-> -	default y if ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || COMPILE_TEST
-> +	default y if ARCH_BCMBCA
->  	help
->  	  This driver supports Ethernet controller integrated into Broadcom
->  	  BCM4908 family SoCs.
-> diff --git a/drivers/pci/controller/Kconfig 
-> b/drivers/pci/controller/Kconfig
-> index d1c5fcf00a8a..bfd9bac37e24 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -274,7 +274,7 @@ config VMD
-> 
->  config PCIE_BRCMSTB
->  	tristate "Broadcom Brcmstb PCIe host controller"
-> -	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || \
-> +	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCMBCA || \
->  		   BMIPS_GENERIC || COMPILE_TEST
->  	depends on OF
->  	depends on PCI_MSI_IRQ_DOMAIN
-> diff --git a/drivers/phy/broadcom/Kconfig 
-> b/drivers/phy/broadcom/Kconfig
-> index 93a6a8ee4716..1d89a2fd9b79 100644
-> --- a/drivers/phy/broadcom/Kconfig
-> +++ b/drivers/phy/broadcom/Kconfig
-> @@ -93,11 +93,11 @@ config PHY_BRCM_SATA
-> 
->  config PHY_BRCM_USB
->  	tristate "Broadcom STB USB PHY driver"
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || COMPILE_TEST
->  	depends on OF
->  	select GENERIC_PHY
->  	select SOC_BRCMSTB if ARCH_BRCMSTB
-> -	default ARCH_BCM4908 || ARCH_BRCMSTB
-> +	default ARCH_BCMBCA || ARCH_BRCMSTB
->  	help
->  	  Enable this to support the Broadcom STB USB PHY.
->  	  This driver is required by the USB XHCI, EHCI and OHCI
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index 8f4d89806fcb..35b51ce4298e 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -31,13 +31,13 @@ config PINCTRL_BCM2835
-> 
->  config PINCTRL_BCM4908
->  	tristate "Broadcom BCM4908 pinmux driver"
-> -	depends on OF && (ARCH_BCM4908 || COMPILE_TEST)
-> +	depends on OF && (ARCH_BCMBCA || COMPILE_TEST)
->  	select PINMUX
->  	select PINCONF
->  	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> -	default ARCH_BCM4908
-> +	default ARCH_BCMBCA
->  	help
->  	  Driver for BCM4908 family SoCs with integrated pin controller.
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index f9a7cee01659..7ae71535fe2a 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -201,7 +201,7 @@ config RESET_SCMI
-> 
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST || EXPERT
-> -	default ARCH_ASPEED || ARCH_BCM4908 || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
-> +	default ARCH_ASPEED || ARCH_BCMBCA || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
->  	help
->  	  This enables a simple reset controller driver for reset lines that
->  	  that can be asserted and deasserted by toggling bits in a 
-> contiguous,
-> diff --git a/drivers/soc/bcm/bcm63xx/Kconfig 
-> b/drivers/soc/bcm/bcm63xx/Kconfig
-> index 9e501c8ac5ce..355c34482076 100644
-> --- a/drivers/soc/bcm/bcm63xx/Kconfig
-> +++ b/drivers/soc/bcm/bcm63xx/Kconfig
-> @@ -13,8 +13,8 @@ endif # SOC_BCM63XX
-> 
->  config BCM_PMB
->  	bool "Broadcom PMB (Power Management Bus) driver"
-> -	depends on ARCH_BCM4908 || (COMPILE_TEST && OF)
-> -	default ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || (COMPILE_TEST && OF)
-> +	default ARCH_BCMBCA
->  	select PM_GENERIC_DOMAINS if PM
->  	help
->  	  This enables support for the Broadcom's PMB (Power Management Bus) 
-> that
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index e3279544b03c..f32bb01c3feb 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1100,8 +1100,8 @@ config SERIAL_TIMBERDALE
->  config SERIAL_BCM63XX
->  	tristate "Broadcom BCM63xx/BCM33xx UART support"
->  	select SERIAL_CORE
-> -	depends on ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> || COMPILE_TEST
-> -	default ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> +	depends on ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC || COMPILE_TEST
-> +	default ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
->  	help
->  	  This enables the driver for the onchip UART core found on
->  	  the following chipsets:
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 32fd37698932..1f85ec8a4b3b 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1798,7 +1798,7 @@ config BCM7038_WDT
->  	tristate "BCM63xx/BCM7038 Watchdog"
->  	select WATCHDOG_CORE
->  	depends on HAS_IOMEM
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
->  	help
->  	  Watchdog driver for the built-in hardware in Broadcom 7038 and
->  	  later SoCs used in set-top boxes.  BCM7038 was made public
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index a6b9b47..97a680b 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -19,6 +19,17 @@
+>  #define EDR_OST_SUCCESS			0x80
+>  #define EDR_OST_FAILED			0x81
+>  
+> +static int pcie_dpc_is_native(struct pci_dev *dev)
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +
+> +	if (!dev->dpc_cap)
+> +		return 0;
+> +
+> +	return pcie_ports_dpc_native || host->native_dpc;
+> +}
+> +
+> +
+>  /*
+>   * _DSM wrapper function to enable/disable DPC
+>   * @pdev   : PCI device structure
+> @@ -212,6 +223,11 @@ void pci_acpi_add_edr_notifier(struct pci_dev *pdev)
+>  		return;
+>  	}
+>  
+> +	if (!pcie_dpc_is_native(pdev) && !pcie_aer_is_native(pdev)) {
+> +		pci_dbg(pdev, "OS doesn't control DPC, skipping EDR init\n");
+> +		return;
+> +	}
+> +
+>  	status = acpi_install_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
+>  					     edr_handle_event, pdev);
+>  	if (ACPI_FAILURE(status)) {
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
