@@ -2,57 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 467BD5833E6
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 22:03:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 179A7583506
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 00:02:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbiG0UDE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jul 2022 16:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        id S231886AbiG0WC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jul 2022 18:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiG0UDD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 16:03:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7343A5A2FF;
-        Wed, 27 Jul 2022 13:03:02 -0700 (PDT)
+        with ESMTP id S229628AbiG0WC0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jul 2022 18:02:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920D84F6BB;
+        Wed, 27 Jul 2022 15:02:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1CA66B8227B;
-        Wed, 27 Jul 2022 20:03:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F31C433D6;
-        Wed, 27 Jul 2022 20:02:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F42BB82282;
+        Wed, 27 Jul 2022 22:02:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB6E6C433D6;
+        Wed, 27 Jul 2022 22:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658952179;
-        bh=bhXdU0USntkiB9VeAjJXudqJtJ1Zhml+HGIlkrxNYwA=;
+        s=k20201202; t=1658959342;
+        bh=JHxLD7adE29C3PTZwVw6TG/arziY/IL7wPNO7oLQuoo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dGnKjVscu3t5TawgOTdxEwwl8LqhsjRowLOYg2qWQJKUbZFLdh5py6vJBEojWemHW
-         SVTwUXLNCdTNFHdhlL7KZxoeh711XvpjpOZHQE2wZMuVVKByn+M4xg1RUbWB+YMJMP
-         APGh9+toyjXVhTrAlSvLkajsDPFzIew4DBVQXY7yWrrsUlN/8Y1qpsOAO1+eIaP0ii
-         5FezdknkEYoY7Vv0rMRodjvJMvgM1mWFzxVxYYq3EqPwgxrQZNNXUeLBVVgSVXr5dy
-         5ydAQUp+3KAIj0U9jBlFnnnZRU4np/E6YPAYsgH8OTbaa5O4L+x7H6OQRe2/UnrkOy
-         Q4wnU12bL8vkA==
-Date:   Wed, 27 Jul 2022 15:02:57 -0500
+        b=cD8DGlrfRJFeJlWrRdjqTpGlsBiWus7K4m/IXrCbhThL3ipJaa1SJhgU790eSrBud
+         vjDg+rAG4+E28DQyY9eYH0a4HeM+5HTORjsu6zLxnjk0Gi2/qL4BBWXUxMk7T+udx8
+         OJeIvFGjXR8ja6ziFri8PnSQWqcn5Nm54xDv4bS9e4Z87zRsv9k5bwDsShEds1jYFt
+         ZB2KY+AJUKFDuJDMHKOM5ldwXXDibRqbDRulftn2DDtb4c61J12vhcLZ4q0DTo6PKf
+         Hcjeq3ivadB9CgRmpcYkYBHH5ry+Xb8q6nWMkc+KN8mOKuCpSvbgeTj5AfTs4ONTZL
+         ehBHAtVexcNAg==
+Date:   Wed, 27 Jul 2022 17:02:20 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
+        Baruch Siach <baruch.siach@siklu.com>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2] PCI: qcom: Add support for modular builds
-Message-ID: <20220727200257.GA220948@bhelgaas>
+        Robert Marko <robimarko@gmail.com>,
+        Christian Marangi <ansuelsmth@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] PCI: qcom: Sort variants by Qcom IP rev
+Message-ID: <20220727220220.GA218338@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220721193513.GA1747404@bhelgaas>
+In-Reply-To: <Yt/h7q9OBtlyG+Sw@hovoldconsulting.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,128 +63,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 21, 2022 at 02:35:13PM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 21, 2022 at 08:47:20AM +0200, Johan Hovold wrote:
-> > Allow the Qualcomm PCIe controller driver to be built as a module, which
-> > is useful for multi-platform kernels as well as during development.
+On Tue, Jul 26, 2022 at 02:45:34PM +0200, Johan Hovold wrote:
+> On Fri, Jul 22, 2022 at 10:49:19AM -0500, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> Applied to pci/ctrl/qcom for v5.20, thanks!
-
-I'm going to drop this one for now, since the module vs remove
-discussion [1] is still ongoing.
-
-This patch actually makes it both *modular* and *removable*.  I think
-the modular part is uncontroversial and valuable by itself.
-
-If you want to just make it modular and *non*-removable, I think that
-would be fine and we can add removability next cycle if we think it's
-safe.
-
-[1] https://lore.kernel.org/r/20220721195433.GA1747571@bhelgaas
-
-> > Changes in v2
-> >  - rebase on next-20220720 (adjust context)
-> >  - add Rob and Mani's reviewed-by tags
+> > Previously the variant resource structs, ops, etc., were in no obvious
+> > order (mostly but not consistently in *Synopsys* IP rev order, which is not
+> > reflected in the naming).
 > > 
+> > Reorder them in order of the struct and function names.  No functional
+> > change intended.
 > > 
-> >  drivers/pci/controller/dwc/Kconfig     |  2 +-
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++---
-> >  2 files changed, 34 insertions(+), 4 deletions(-)
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 732 ++++++++++++-------------
+> >  1 file changed, 366 insertions(+), 366 deletions(-)
 > > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 62ce3abf0f19..230f56d1a268 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -168,7 +168,7 @@ config PCI_HISI
-> >  	  Hip05 and Hip06 SoCs
-> >  
-> >  config PCIE_QCOM
-> > -	bool "Qualcomm PCIe controller"
-> > +	tristate "Qualcomm PCIe controller"
-> >  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-> >  	depends on PCI_MSI_IRQ_DOMAIN
-> >  	select PCIE_DW_HOST
 > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 5ed164c2afa3..d176c635016b 100644
+> > index c27e3494179f..d0237d821323 100644
 > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
 > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -16,7 +16,7 @@
-> >  #include <linux/io.h>
-> >  #include <linux/iopoll.h>
-> >  #include <linux/kernel.h>
-> > -#include <linux/init.h>
-> > +#include <linux/module.h>
-> >  #include <linux/of_device.h>
-> >  #include <linux/of_gpio.h>
-> >  #include <linux/pci.h>
-> > @@ -1518,6 +1518,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> >  	return ret;
-> >  }
-> >  
-> > +static void qcom_pcie_host_deinit(struct qcom_pcie *pcie)
-> > +{
-> > +	qcom_ep_reset_assert(pcie);
-> > +	if (pcie->cfg->ops->post_deinit)
-> > +		pcie->cfg->ops->post_deinit(pcie);
-> > +	phy_power_off(pcie->phy);
-> > +	pcie->cfg->ops->deinit(pcie);
-> > +}
-> > +
-> >  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
-> >  	.host_init = qcom_pcie_host_init,
+> 
+> Moving code around like this makes code forensics harder as it messes up
+> git blame. At least the callbacks appears to be grouped by IP version
+> currently, so not sure how much you gain from moving the callbacks
+> around.
+
+The existing hodge-podge is sloppy and makes code reading harder for
+everybody.  If we want them grouped by IP version, they should be
+*named* by IP version.
+
+> > -static const struct qcom_pcie_cfg sc8180x_cfg = {
+> > -	.ops = &ops_1_9_0,
+> > -	.has_tbu_clk = true,
+> > -};
+> > -
+> >  static const struct qcom_pcie_cfg ipq6018_cfg = {
+> >  	.ops = &ops_2_9_0,
 > >  };
-> > @@ -1752,6 +1761,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >  	return ret;
-> >  }
-> >  
-> > +static int qcom_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> > +	struct device *dev = &pdev->dev;
-> > +
-> > +	dw_pcie_host_deinit(&pcie->pci->pp);
-> > +	qcom_pcie_host_deinit(pcie);
-> > +
-> > +	phy_exit(pcie->phy);
-> > +
-> > +	pm_runtime_put_sync(dev);
-> > +	pm_runtime_disable(dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static const struct of_device_id qcom_pcie_match[] = {
-> >  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
-> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> > @@ -1771,6 +1796,7 @@ static const struct of_device_id qcom_pcie_match[] = {
-> >  	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
-> >  	{ }
-> >  };
-> > +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
-> >  
-> >  static void qcom_fixup_class(struct pci_dev *dev)
-> >  {
-> > @@ -1786,10 +1812,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
-> >  
-> >  static struct platform_driver qcom_pcie_driver = {
-> >  	.probe = qcom_pcie_probe,
-> > +	.remove = qcom_pcie_remove,
-> >  	.driver = {
-> >  		.name = "qcom-pcie",
-> > -		.suppress_bind_attrs = true,
-> >  		.of_match_table = qcom_pcie_match,
-> >  	},
-> >  };
-> > -builtin_platform_driver(qcom_pcie_driver);
-> > +module_platform_driver(qcom_pcie_driver);
-> > +
-> > +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
-> > +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
-> > +MODULE_LICENSE("GPL");
-> > -- 
-> > 2.35.1
-> > 
+> 
+> But this bit I disagree with. Why sort the SoCs configurations by IP
+> revision, when what you typically need is to look them up by name?
+
+Makes sense.
+
+> Also note that this conflicts with my sc8280xp-support and IP-revision
+> series:
+> 
+> 	https://lore.kernel.org/all/20220714071348.6792-1-johan+linaro@kernel.org/
+> 
+> The result of applying that series is that these structs are renamed
+> after the IP revision (and sorted alphabetically) so the end-result is
+> similar.
+> 
+> Could you consider dropping this patch, or at least the struct
+> qcom_pcie_cfg bits, and applying the above series for 5.20?
+
+I dropped it for now.  We can see how it shakes out after your series,
+but not sure I'll get to it for this cycle.
+
+Bjorn
