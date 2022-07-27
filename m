@@ -2,144 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAF98581CE3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 03:01:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D603581D2B
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jul 2022 03:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233232AbiG0BBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jul 2022 21:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55942 "EHLO
+        id S231334AbiG0Bdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jul 2022 21:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239991AbiG0BBj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 21:01:39 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689B21ADA6;
-        Tue, 26 Jul 2022 18:01:38 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id cb12-20020a056830618c00b00616b871cef3so11979921otb.5;
-        Tue, 26 Jul 2022 18:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gn4xx2ifAzxcQHGoHfrDi5Bg504WW4qTvnA+0yEtrvc=;
-        b=IRERJkzBMT4myUzKDVBlehcanwUy5CTz5LhMJuahDJUwzHQQd7DltAZ6Kzm4/gdKSx
-         si7brIhiRWFUCEa6hSVsbVm9VPZHRzbkCsbPXIXs7yidgOahH0+raO3f8PXK8f+f8MeK
-         21svn8TxhIpy7GwD6OfyXT1lNpcImrXCsEp2qciNru3pLdGs7rsYLNEcaQQQyMm8KNlH
-         30WZvmXdD/cpfJmmvZhmhhH3kwztmJX2p3C/DCxLSbAhr9twfvUuFKUWRMibzZyxPzE5
-         k+j59VSGK4TJHAsxEtCeIFkra9XjLT/Qgfrucyrd+Ay/tbEFvaXLuASDqKd+KTBsDwrQ
-         25wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gn4xx2ifAzxcQHGoHfrDi5Bg504WW4qTvnA+0yEtrvc=;
-        b=nAGNxAjWnylY0bAKoxDzrIQlFA2BU7owh5JbfUTHuMFkZ9sK2oF9HOdwo5JJ5mnaTi
-         4JvKhnLZmLzKgeFztXqtOV64L25D4O7iiMoVqmIscKazybd6/XPRhdpJuxKHh+c4mmen
-         jBsV78teq6O1magRhroZy8tXVdEqDHVhEVhEfW/H4jIv3ipXmNdGKMY/YHLVN9IBI4G3
-         Oo1EQuxrIsuwW93XvGkfR8FgI70eRXgormsb9n6YrZ3LVhQeItQ51+TYXoSJxePfJWor
-         s/nOoV16N9V4NhsPgN7k7CLtU29RHVR64R9M79yotgkEOMk912r9kbGpi1KdTvKtmu+A
-         MjUQ==
-X-Gm-Message-State: AJIora9nqs1tljCzTMEErFBUS6x6v4yzAfNPTHohYA+EaNeWxWg0ojQN
-        MiP3gI5gi2z/j0QVgn8ZUXVCeGZj/lJoYYqiw/YW+sZS
-X-Google-Smtp-Source: AGRyM1ulgmt7T0TcsvMpxz+mwBSCOWGzlWBXaxO8R2gepjQXC15dFrzPZpENc/2eGRJbU8hc7DpTcpi92wgEeLfM5s8=
-X-Received: by 2002:a9d:6f01:0:b0:61c:b224:e7c9 with SMTP id
- n1-20020a9d6f01000000b0061cb224e7c9mr7691565otq.245.1658883697748; Tue, 26
- Jul 2022 18:01:37 -0700 (PDT)
+        with ESMTP id S230245AbiG0Bdv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jul 2022 21:33:51 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5743AE74;
+        Tue, 26 Jul 2022 18:33:49 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id D66123F0E1;
+        Wed, 27 Jul 2022 01:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1658885628;
+        bh=zAZzDf5aGoTBpAzJoH3PK3AquzA6pEp7Sdhc0ZGtT3Q=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=n08e71jppZrm/5ZH++ydry++70qnxTirBD69Wny/y3E2uHFaUroEpOAOPrqmkHq5T
+         n6n9q4J2SWNsX0KlGsJbgyd3hdlrKL2rA/Yz/TwzHHnLKLbHKhGKHSELVPEPwgwcjc
+         CEe1bX5+HtqkFQTK+yqmqaHiF3qWkscGAHSx5wHYcYfxqikHApXBNv1lziGhPFZOXH
+         sMJM+bAIO+K4iNWktotjLWijfNVK2lcyKJMJmWbwNEFtRyVJaBkXGtIAdy3O7BhD3Q
+         UzJZ6KruMm6y2tqzXO5ee2koXLAmTp1O3+Yb0VvFUkNMsJ8DlLNeTSHQmKzWr9029d
+         qLBqNrLMcMXFw==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] PCI/portdrv: Flag services when IRQ is shared with PME
+Date:   Wed, 27 Jul 2022 09:32:50 +0800
+Message-Id: <20220727013255.269815-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220725151258.42574-1-jim2101024@gmail.com> <20220726220303.GA109624@bhelgaas>
-In-Reply-To: <20220726220303.GA109624@bhelgaas>
-From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Tue, 26 Jul 2022 21:01:26 -0400
-Message-ID: <CANCKTBt=Mt6i+PgBwXfBUUOfo+vpCKv2NK8xJtZFoe5sheyZ7A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] PCI: brcmstb: Re-submit reverted patchset
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 6:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jul 25, 2022 at 11:12:49AM -0400, Jim Quinlan wrote:
-> > ...
-> > Jim Quinlan (7):
-> >   PCI: brcmstb: Remove unnecessary forward declarations
-> >   PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-> >   PCI: brcmstb: Gate config space access on link status
-> >   PCI: brcmstb: Add mechanism to turn on subdev regulators
-> >   PCI: brcmstb: Add control of subdevice voltage regulators
-> >   PCI: brcmstb: Do not turn off WOL regulators on suspend
-> >   PCI: brcmstb: Have .map_bus function names end with 'map_bus'
-> >
-> >  drivers/pci/controller/pcie-brcmstb.c | 476 ++++++++++++++++++--------
-> >  1 file changed, 341 insertions(+), 135 deletions(-)
->
-> I reworked these and put them on pci/ctrl/brcm for v5.20.  This is a
-> proposal, not something set in stone.  But time is of the essence to
-> figure out how we want to proceed.
->
-> I changed a lot of stuff and it's likely I broke something in the
-> process, so please take a look and test this out.  Here's an outline
-> of what I changed:
->
->   - Moved the config access "link up" check earlier because it's not
->     related to the power regulator patches.
->
->   - Changed config access "link up" checks to use PCIE_ECAM_REG()
->     instead of hard-coding 0xfff masks.  The 32-bit accessors already
->     mask out the low two bits, so we don't need to do that here.
->
->   - Squashed pci_subdev_regulators_add_bus() directly into
->     brcm_pcie_add_bus() for readability.  Similarly for
->     pci_subdev_regulators_remove_bus().
->
->   - This makes a clear split between:
->
->     * A patch that adds get/enable of regulators, and starting the
->       link after enabling regulators, and
->
->     * A patch that disables/enables regulators for suspend/resume.
->
->   - Since we only support one set of subregulator info (for one Root
->     Port, and brcm_pcie_suspend_noirq() depends on this since it uses
->     the pcie->sr pointer), use pcie->sr always instead of
->     dev->driver_data.
->
->   - Squashed wakeup device checking into the suspend/resume patch so
->     there's not a time when suspend might turn off power to a wakeup
->     device.
->
->   - Renamed brcm_pcie_map_bus32() to brcm7425_pcie_map_bus() so it
->     ends in "_map_bus()" like other drivers.  Also,
->     brcm7425_pcie_map_bus() doesn't actually depend on the 32-bitness.
+After commit cb1f65c1e142 ("PM: s2idle: ACPI: Fix wakeup interrupts
+handling"), there's a system that always gets woken up by spurious PME
+event when one of the root port is put to D3cold.
 
-Hi Bjorn,
-Sorry, it seems that some of my future commits have somehow bled code
-into the driver (e.g. "has_phy").
-LGTM.
+'/sys/power/pm_wakeup_irq' shows 122, which is an IRQ shared between
+PME, AER and DPC:
+pcieport 0000:00:01.0: PME: Signaling with IRQ 122
+pcieport 0000:00:01.0: AER: enabled with IRQ 122
+pcieport 0000:00:01.0: DPC: enabled with IRQ 122
 
-Thanks and regards,
-Jim Quinlan
-Broadcom STB
+Disabling services one by one and the issue goes away when
+PCIE_PORT_SERVICE_AER is not enabled. Following the lead, more info can
+be found on resume when pci_aer_clear_status() is removed from
+pci_restore_state() to print out what happened:
+pcieport 0000:00:01.0: AER: Corrected error received: 0000:00:01.0
+pcieport 0000:00:01.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
+pcieport 0000:00:01.0:   device [8086:4c01] error status/mask=00000001/00002000
+pcieport 0000:00:01.0:    [ 0] RxErr
 
->
-> Bjorn
+Since the corrected AER error happens at physical layer when the root
+port is transitioning to D3cold, making system be able to suspend is
+more important than reporting issues like this.
+
+So introduce a new flag to indicate when IRQ is shared with PME,
+therefore AER and DPC can be suspended to prevent any spurious wakeup.
+HP already has its own suspend routine so it doesn't need to use this
+flag.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pcie/portdrv.h      | 11 ++++++-----
+ drivers/pci/pcie/portdrv_core.c | 21 +++++++++++++++------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index 0ef4bf5f811d9..97a9d15638cc8 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -57,11 +57,12 @@ static inline int pcie_dpc_init(void) { return 0; }
+ #define PCIE_ANY_PORT			(~0)
+ 
+ struct pcie_device {
+-	int		irq;	    /* Service IRQ/MSI/MSI-X Vector */
+-	struct pci_dev *port;	    /* Root/Upstream/Downstream Port */
+-	u32		service;    /* Port service this device represents */
+-	void		*priv_data; /* Service Private Data */
+-	struct device	device;     /* Generic Device Interface */
++	int		irq;	        /* Service IRQ/MSI/MSI-X Vector */
++	struct pci_dev *port;	        /* Root/Upstream/Downstream Port */
++	u32		service;        /* Port service this device represents */
++	bool		shared_pme_irq; /* Service IRQ shared with PME */
++	void		*priv_data;     /* Service Private Data */
++	struct device	device;         /* Generic Device Interface */
+ };
+ #define to_pcie_device(d) container_of(d, struct pcie_device, device)
+ 
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 604feeb84ee40..ddc6854cdde2d 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -274,7 +274,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+  * @service: Type of service to associate with the service device
+  * @irq: Interrupt vector to associate with the service device
+  */
+-static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
++static struct pcie_device *pcie_device_init(struct pci_dev *pdev, int service, int irq)
+ {
+ 	int retval;
+ 	struct pcie_device *pcie;
+@@ -282,7 +282,7 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
+ 
+ 	pcie = kzalloc(sizeof(*pcie), GFP_KERNEL);
+ 	if (!pcie)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 	pcie->port = pdev;
+ 	pcie->irq = irq;
+ 	pcie->service = service;
+@@ -300,12 +300,12 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
+ 	retval = device_register(device);
+ 	if (retval) {
+ 		put_device(device);
+-		return retval;
++		return ERR_PTR(retval);
+ 	}
+ 
+ 	pm_runtime_no_callbacks(device);
+ 
+-	return 0;
++	return pcie;
+ }
+ 
+ /**
+@@ -350,10 +350,19 @@ int pcie_port_device_register(struct pci_dev *dev)
+ 	nr_service = 0;
+ 	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
+ 		int service = 1 << i;
++		struct pcie_device *pcie;
+ 		if (!(capabilities & service))
+ 			continue;
+-		if (!pcie_device_init(dev, service, irqs[i]))
+-			nr_service++;
++
++		pcie = pcie_device_init(dev, service, irqs[i]);
++		if (IS_ERR(pcie))
++			continue;
++
++		nr_service++;
++
++		if (i != PCIE_PORT_SERVICE_PME_SHIFT &&
++		    irqs[i] == irqs[PCIE_PORT_SERVICE_PME_SHIFT])
++			pcie->shared_pme_irq = true;
+ 	}
+ 	if (!nr_service)
+ 		goto error_cleanup_irqs;
+-- 
+2.36.1
+
