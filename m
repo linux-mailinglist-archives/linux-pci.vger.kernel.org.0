@@ -2,335 +2,327 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D013583E9C
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 14:21:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D710B583ECB
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 14:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236038AbiG1MVp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jul 2022 08:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
+        id S238475AbiG1M0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jul 2022 08:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236444AbiG1MVf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 08:21:35 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD7C49B7F;
-        Thu, 28 Jul 2022 05:21:32 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id t17so2653623lfk.0;
-        Thu, 28 Jul 2022 05:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=n3olH6gq/B3RKr1Nv0cHF1AA/miXKUeZTOf6sJbeJCU=;
-        b=ks3WtqHxXxLhHY0jUGfcMt1266HUTP8DsN3TWQ5ee39lU2Z3iBYkh/+f2kLMF7r12n
-         q9AdKcoSsJraxVwqWqni2qZpd+Nqs+8Awfbrjg5osRexlF9KyzEjTqObMMVoZMvaemVo
-         Tr+HvILpXlwNP3Pr3hXYvg07YRf342ySKLRq5B/stjlgD2lExzP8+EkiGyomBCSSrkG1
-         2YTZv4GXpwH1wDb5+KdWfvpybgUmiOPeCScTRoNVhOLvhPyzmOkEjoVkyUaDeBnH74vg
-         aTFIX4530a1SjlnN3NZhsBPfDBg4V4YYpwK29hyajKPMeBYyZrZovP4Avr7d1WEZ/w12
-         /JQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=n3olH6gq/B3RKr1Nv0cHF1AA/miXKUeZTOf6sJbeJCU=;
-        b=so/m0bmDsW6HKJML7DAUIwhreBVfR0IQycjo3/fy3/xOGorscJtRSJvJiqLmzzXNUi
-         /QIHIAXtmx9mAIuw5T23YHl2BI9iDCuxrkUM/GouSZqDGEb5DcCQ90X7V9z8GnmFLgPd
-         wiUd6acs1ytjonj9o6ehlyO9Y/MPIhYBqLUTdrBZTWBJFIuqFkz7EuQi5lIHlSlnO+pN
-         Vm7zl7AiPEUgby17qrEacgi2ruamI94Ww27jopRfnleKu2F5dMRqPZeWtd+IucOzm/Rt
-         02rG+GESYKEB6zbg7N+i/toPRoCyBHWuMS1/dh5J0IdUYX+4C/+nilJLkpFXQ6FzoovC
-         xHmw==
-X-Gm-Message-State: AJIora8CEsvev5E43MUxY7x6ZixrVmIHE3S58bCmoMh4ozmL22dne+WN
-        iY9gzgzIojLCRHktUPn+vsI=
-X-Google-Smtp-Source: AGRyM1vlYJp3Kg1WE9mOHGV2AbiuMTusSwWyOgGYz6c+f4J8+DSKBzG+Dwnrp2qkWWYbuKBj5UshFw==
-X-Received: by 2002:a05:6512:2625:b0:48a:a77a:5b08 with SMTP id bt37-20020a056512262500b0048aa77a5b08mr4669666lfb.116.1659010890831;
-        Thu, 28 Jul 2022 05:21:30 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id i27-20020a2ea23b000000b0025a67779931sm122822ljm.57.2022.07.28.05.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jul 2022 05:21:30 -0700 (PDT)
-Date:   Thu, 28 Jul 2022 15:21:27 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
+        with ESMTP id S238173AbiG1M0p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 08:26:45 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129A76050F;
+        Thu, 28 Jul 2022 05:26:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NLe+cRPcmr9kBvZcwR4ipo3Oigv+hzKn1mhsAkPPtxZrGzYL9Gz9doxlyfa0VXbEa/wELWLBSUIP3oGRKa41v4GzGADF0wahvw+2CQp6lbGYD6MlOhBbp3C/+NgFp7RIOGi2vEEImh4YRjN3rP1HQDPrZTq69EBwAn/hlrgTTt32VfQzTGzizD8EIeTmX57hdXYmvO64AyrvPQuk+Qa4uUIizf6/l7FWYJwJOZ4TEMMbtPwjziZTG74QNapZgpGtJ5yB/+jXb59Y9ZNe1J6O4jZwq3Jazq5y/W9mvXdk2QqdmnWN65InGsk5Ws7cd+5SVDuMt/o3z2lyjNc0R0eq8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MN9R5nzMSUFXmm7GQPaXiYSxxNnlJ5u/Fz+5vLYjkTQ=;
+ b=SvzuFgE8lm1ReX1fO0NuMOyDu5Q2JmpJnR/tp4lpwTsCSnXwfPQ6OG8PCE9Fm6TdwN508vZCkVpTgMAhHcXLZwkrx6UkhSF8ehXKjw/8xawbangJ3bHFsb+EAmj2qFtmVcDcFjFS58ZbPsGVDThAZfhvGu7RexaQL9hi95E3roRasJCap71ZBO0GRW/rM9+lGNNdurrOqFIaMslw/lkaAbBKwWy+5tyj/piS0O8Ah6A1RO6yJ6MICpeN04Azi1VXLCuEAd1HvfrGLV2A4WEd+vvofxk+8qLzKDBVdYDFIM9Q0bkeLeGLDWAETxRKwBs0TLEJAsTIi25N2IjdHZHQnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MN9R5nzMSUFXmm7GQPaXiYSxxNnlJ5u/Fz+5vLYjkTQ=;
+ b=Cmhkr0UKqOVf8RjbWbSMk6BbbxyM6p8dJhR7SxsJ3L94dZOrMcW+EaCXvAwDQzBnec24JOAWCc6L7tTyK42+1Jx5Sjed5BF0Tmot+HEMMXD0XSIm2wehiFpRe7KHsXmd0eIgoiuEjbxc7jcI9QYGJ6vam5R8GjcmJYvwgWeLTdhmEOCiztX/GXayMOWhq075XUhfEKvE9+gh9mGgSeNbUpahUGrqBNcZXo1wG1IrHgAPqB0hSADldlg8FwJOwonFXTJsPYEKnlXdeuEca5SnGXAL2zWWNxz+RcbJweDVwMeUzQR/9HlI9XY4KFvspcqzYfpG0fAdEooy4lo/hLrCGA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
+ by SA1PR12MB6822.namprd12.prod.outlook.com (2603:10b6:806:25d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19; Thu, 28 Jul
+ 2022 12:26:41 +0000
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::b150:321c:21e4:40c9]) by BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::b150:321c:21e4:40c9%7]) with mapi id 15.20.5482.006; Thu, 28 Jul 2022
+ 12:26:40 +0000
+Message-ID: <051a3baf-b4dd-7764-2e61-03584cefb4d3@nvidia.com>
+Date:   Thu, 28 Jul 2022 17:56:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V1] PCI: designware-ep: Fix DBI access before core init
+Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4 00/15] PCI: dwc: Add hw version and dma-ranges
- support
-Message-ID: <20220728122127.lsncoxbpoopd3w6r@mobilestation>
-References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
- <20220727224904.GA253904@bhelgaas>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20220727221415.GA250151@bhelgaas>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <20220727221415.GA250151@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MAXP287CA0007.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::20) To BN8PR12MB2900.namprd12.prod.outlook.com
+ (2603:10b6:408:69::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220727224904.GA253904@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 910286c6-ed6b-42c9-c340-08da70946c4d
+X-MS-TrafficTypeDiagnostic: SA1PR12MB6822:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lwumDv0srn4kHVytZ0JiNKLTAdtoHj0/2Go/5HmbMvGTRdu35cLF5uGrL89UVKVmMgPzkCaKWXbF3S/MSGWOZ+DxEy4RlTXPVlo/CSXM6tcj2O+9jDRtl+joHdEbKh6uPAsgzQXMbaAo9h1A2LpUCL2oFsq9hBOqebR/RYOLZiL4OjD+QnsLv7/RjoeszFM7ER06PdJM9y1KZTOfJh2K8Ri0Cce1fQ/DUCuE2FNKRjLVkUccvEmFQXupf1+02xHNSgo3vEpl28p//VRhv9h5It2dzTjuPSHK0Hl99kYa9JykL4Ahnwth7IDAeVDX8yjw00r9YRp5yYrSmQUVfZbCQDWsQH8d1GYrS8a4aJ+5r8FXoFL4OmHUAvUGWnV9dt1283xneoY+CQ3se0WtdnypaNXIkHcmeSFNJUtvegslZZ/lyiRPAR8MHjeXGeCzognLzGxHLCpkpXprB7d5OEV12wngl1+IO88wOEcPNmR/zu8jt+d/wfVc37lC1B+IGjJ17si3kYCACyuVvWxUMRVOUIW3GI7eDG4gJ8ln9HVIyv16aVZK3+MFST9DxEg9LkVUJizOT15/IOdlu4BrStBjuH4p4Y3pySEktKkfIILGwoCqo0c/D4DboYY2mt9/IAZ8IOzwMRKMsJnSOnRDtZHZTyS0Ts0vdehpVRvUljoGp9nmLbtAoI9ZER0iI2Bzd7f8Ms0VS9fvhVkByE+ar7XVcJY5XIhz4h13XpPqhOk8wOpvyA8nS33P5tP5Gx+ju39yHRjeQNrLWEDdW9iNkkqaod5GIbiPCSI9Z86KynTaUOCtCoFs2cKTt6fZgYL/si5kPiPwWFotnur2ONGY/Rpdpg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(6506007)(31696002)(66946007)(38100700002)(478600001)(86362001)(6486002)(66556008)(4326008)(6916009)(66476007)(316002)(5660300002)(53546011)(8676002)(2616005)(186003)(31686004)(6512007)(26005)(36756003)(7416002)(6666004)(2906002)(41300700001)(83380400001)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXB4RkpVVjdQTXdvVzZBR21tSVExZjZwRzVSZi9iRWp0SVg0QjNUbC9ScGh0?=
+ =?utf-8?B?bGpxRnVSbHQrV1J0M1lpRUZXaEttTGlFM1g5d1JLZjl0Q0V4eElVU3RNenpo?=
+ =?utf-8?B?dTlHVWp0dmZDVWRpSC93bHo0LzBZZ0ZnRjZwODd0RWJGRGJ1dkxPdjZibDFv?=
+ =?utf-8?B?TG5aUXVRNGJpbThLREllbTZ6bHBWWmtHNjRISWo3ZmRPYityYlU2anVMWi92?=
+ =?utf-8?B?U1NYdUczTE5OM0ZtN1BXQzVySnJ1SjRYMUl0Si9CSHE5Rms2YTNRa0FXU3Jn?=
+ =?utf-8?B?ODlsTi9aWDNUYTZ6MjhEVU02OFpuV3FHYncra24zTnU3R2xXMEFVS2d4Y0di?=
+ =?utf-8?B?QU9hS2lXY3hLS0F1RXJmRTFCaXJ5aFdCMzdQUmFhRUFXdVFxL08xQXY3TjVX?=
+ =?utf-8?B?L0p0THFPZnQzZWxlL2JWVkQ2N1VaNFVySnZMbi85cytHclRYdzUxRmF4U3Vm?=
+ =?utf-8?B?dnJ1eFNnT1JwdEpNVUxiYktkSEJkb1ZOL2NVQklwZldqeHRzQjdGZlh4M2pE?=
+ =?utf-8?B?bW1BQ0pjNFJhQXBKdkczTWhCQTlJUXFzZ1l0cTdkeWV5MmF4QjVpTHAvWm5N?=
+ =?utf-8?B?RkZjeDhtRGdqSklUWEc0RDdoUktodFJjbHphZDVDeFl3S3FSOU80eSszK0U2?=
+ =?utf-8?B?d1B5cXM5TDFlREdLQ2VWdFcraldhSWRMNmg2QWdpdXhUdmVpVXhsSlhGZE9N?=
+ =?utf-8?B?ZERhVlBoMVI2ZE9lYXh0ckRqZXJmYnNMbTMzazNmQnJDWTNkMU9wM0VsSklQ?=
+ =?utf-8?B?MU03clptYzAyOVgxYlRtcnVMbEtieWROZE13Q3ZuRFp6MElqOEdDZmZxenZJ?=
+ =?utf-8?B?NmZoclo0OVBBWEFpNnRPRTdxMmVmWU9NME1JdWFEVStUdW9HMGo3eE8xNVpV?=
+ =?utf-8?B?cmdCUzdLd2RJOVMxVlJ2V2g0YXRNb01yRFdFdEJuaklxREk0Z1BLenMxVW16?=
+ =?utf-8?B?ZW1UZnN0amlBbDY0aWNiMmVoeExPdUJoL3l6aVB0VXRpbklpdnZiQmdJWGg0?=
+ =?utf-8?B?V3ZEc05CY2Zxc2ZSNzgreDZkMVFaV0FyVHI0Z1lmSXk2UmRhcUIvRlhIYno3?=
+ =?utf-8?B?ZVQrU2dQaUNVNWZTWUdmSWFIbFBjVkJmaU1JR2F3aDFxNUZwNFBaalVSQ0I1?=
+ =?utf-8?B?MWdheVhXelZ4YTIxdzcyVENhMXlJN0xFc0NCTWlyZHF0U3pnOXVoQndsOG5W?=
+ =?utf-8?B?K2lZUGE5OTJKSXNsd3M1bU1pckhjMmUrTmlRNmE4SXlrT3F5U3NkV0FtTTkx?=
+ =?utf-8?B?NEJLaUI4K2llNFJjYzBEUlc5UlQyTlVYdFVlSmk1OEJ3Y291QjRKczJrRDVI?=
+ =?utf-8?B?Q3d1MG1OcUpYZXQrenF4OHg4OW84aUkySlpVMVovL2hqYVpBUGhkK0FaNnpK?=
+ =?utf-8?B?eXEzN1o5aTczblNYekduckhmdzgxNFViSGtibTU3bW0zbmFJbkllb0w5QjZw?=
+ =?utf-8?B?cnVYVVJXd3B4UFdqZG5BTzBGN212OUZwNlFDOTFTRW9YTHpMZnN4MFNlTHg1?=
+ =?utf-8?B?MjRZVHVGeTZIRzBuNC9HdUU3OHo3QWFNQ2hHYzYydzlMRzQ5WnVTbitjUHlT?=
+ =?utf-8?B?emQvV1NmM216bGxKdHdmODZ1eWVKeXZWZ1NaRU5WQjBYWU16UVBqTC9rVCtT?=
+ =?utf-8?B?OFhZREo2SWlROWRrU1ZUdXY4dU9Ua05xSGc2TVA3RGxOWFp1TUxHU0IweVhn?=
+ =?utf-8?B?SFpmTFAvNTZTcTlMdzVUL2NubzhzZWplZGNiZUMwcDk2K1NwK0tnWlYzQTlP?=
+ =?utf-8?B?Z3hYYlRUeURaRUxnNnlBYmkvZ2haNS9SOGdJbEVuV1VvOXVSWGE1NGd5MmF2?=
+ =?utf-8?B?WmlLR0RRMllEeDNhMFFLQU42T21OdUkxMkIrMU41K0VLOUc1QkoyTVVScnZQ?=
+ =?utf-8?B?TTgyVktiK0FDRFZXL0ZnMVYzQ1BSL2RaVk11dUtnZ2ZrdGQyLzhxWUZuRzhE?=
+ =?utf-8?B?dUNTMnU4SHJrV1dWcm93M3VYbVZnTkhGUW1ERWF6dWxnWUU5YTl4cUZBVEI5?=
+ =?utf-8?B?ekZwTStZeXJBbG5qWVhFYVlmSEhkdVNnY3BqemRVZGlseTZrc3JoRGdmZ25K?=
+ =?utf-8?B?c2FCTTcvQlM1TXh1Nmh2T3RnKzJNamVOLzNsTG1yaVBnTEYrbytYMG5VK0ho?=
+ =?utf-8?Q?sKXkymgUhxZZ3y2oNTa7ZYEGP?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 910286c6-ed6b-42c9-c340-08da70946c4d
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 12:26:40.4915
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SECykBKdYItx08UtJQlwJnZNd3Jx9gBNPrsAW1Tz9jri743ALEEXHHnn6Yw5+J/RbMRLko6pC+E6Crqep0I0fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6822
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn
 
-On Wed, Jul 27, 2022 at 05:49:04PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 24, 2022 at 05:39:32PM +0300, Serge Semin wrote:
-> > This patchset is a second one in the series created in the framework of
-> > my Baikal-T1 PCIe/eDMA-related work:
-> > 
-> > [1: In-progress v5] PCI: dwc: Various fixes and cleanups
-> > Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
-> > [2: In-progress v4] PCI: dwc: Add hw version and dma-ranges support
-> > Link: ---you are looking at it---
+
+On 7/28/2022 3:44 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
 > 
-> https://lore.kernel.org/r/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
 > 
-> > [3: In-progress v3] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
-> > Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> > [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> > Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru
+> On Wed, Jun 22, 2022 at 09:31:33AM +0530, Vidya Sagar wrote:
+>> Platforms that cannot support their core initialization without the
+>> reference clock from the host, implement the feature 'core_init_notifier'
+>> to indicate the DesignWare sub-system about when their core is getting
+>> initialized. Any accesses to the core (Ex:- DBI) would result in system
+>> hang in such systems (Ex:- tegra194). This patch moves any access to the
+>> core to dw_pcie_ep_init_complete() API which is effectively called only
+>> after the core initialization.
 > 
-
-> Hi Serge, is the above the latest and greatest list?  The 3rd series
-> doesn't apply cleanly for me:
-
-Thanks for getting back to my patchsets. The 3rd series is still under
-review (see below for details). Here is the summary regarding the
-patchsets state:
-
-[1: Done v5] PCI: dwc: Various fixes and cleanups
-The latest lore
-Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
-You've already merged it in here:
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/ctrl/dwc
-
-[2: Done v4] PCI: dwc: Add hw version and dma-ranges support
-The latest lore
-Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
-
-[3: In-progress v3] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
-The latest lore
-Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-This series, you are having difficulties to apply, is still under Rob'
-review. I've addressed all your comments locally in my repo, but Rob'
-didn't respond on some of my questions (there are several principal
-aspects of the dt-bindings patches he didn't like). First he used to
-be in vacation, then he just missed several of my email messages, but
-responded on another ones. Pings didn't work either. Then I thought
-the merge-window was opened so I has stopped bothering him for some
-time.) So I'll resend the series as is one more time today then.
-Hopefully he'll get back to it soon.
-
-[4: Done v3] dmaengine: dw-edma: Add RP/EP local DMA support
-The latest lore
-Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru/
-The series review is done. It has even got Vinod' Ab tag. But I need
-to resend it (will do this today) since it needs to be rebased on the
-latest Frank Li patchset. Frank series is in your repo already:
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/ctrl/dwc-edma
-
-So if you aren't going to merge the DW PCIe/eDMA related series in on this
-merge window, please collect my and Frank work in a single branch of
-yours (pci/ctrl/dwc-edma), since my patchset #4 depends on his series
-and the patchsets #3, #2 and #1 described above.
-
--Sergey
+> I assume this is still broken.  I want to fix it.  I assume this patch
+> fixes it and there are no known problems with it.  I assume this can
+> be fixed so it works on all platforms, whether they use
+> core_init_notifier or not.
+Yes. All your assumptions are correct.
 
 > 
->   05:40:34 ~/linux (main)$ git checkout -b wip/serge v5.19-rc1
->   Switched to a new branch 'wip/serge'
+> I'd like the commit log to be specific about where the hang occurs so
+> it's easy for a non-DesignWare expert (me!) to see the problem.  E.g.,
+> on tegra194, X depends on Y, but Y is initialized after X.  Say
+> specifically what functions X and Y are.
+X = DBI accesses
+Y = Core initialization which in turn depends on the REFCLK from the host
+
+Without this patch, hang happens when DBI registers are accessed without 
+core being initialized. In the case of Tegra194 at least, core gets 
+initialized only after REFCLK is available from the host. The way we 
+make sure that the REFCLK is available from the host is by checking for 
+PERST# de-assertion interrupt. (PCIe spec mandates that the host must 
+supply REFCLK before de-asserting PERST# signal).
+This patch prevents any accesses to the DBI/Core registers if the 
+platform says that it supports core_init_notifier.
+
+Thanks,
+Vidya Sagar
 > 
->   # fetch 1: PCI: dwc: Various fixes and cleanups
->   05:40:45 ~/linux (wip/serge)$ b4 am -om/ https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
->   Analyzing 37 messages in the thread
->   Checking attestation on all messages, may take a moment...
->   ---
->     ✓ [PATCH v5 1/18] PCI: dwc: Stop link in the host init error and de-initialization
->     ✓ [PATCH v5 2/18] PCI: dwc: Add unroll iATU space support to the regions disable method
->     ✓ [PATCH v5 3/18] PCI: dwc: Disable outbound windows for controllers with iATU
->     ✓ [PATCH v5 4/18] PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
->     ✓ [PATCH v5 5/18] PCI: dwc: Deallocate EPC memory on EP init error
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 6/18] PCI: dwc: Enable CDM-check independently from the num_lanes value
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 7/18] PCI: dwc: Add braces to the multi-line if-else statements
->     ✓ [PATCH v5 8/18] PCI: dwc: Add trailing new-line literals to the log messages
->     ✓ [PATCH v5 9/18] PCI: dwc: Discard IP-core version checking on unrolled iATU detection
->     ✓ [PATCH v5 10/18] PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
->     ✓ [PATCH v5 11/18] PCI: dwc: Organize local variables usage
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 12/18] PCI: dwc: Re-use local pointer to the resource data
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 13/18] PCI: dwc: Add start_link/stop_link inliners
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 14/18] PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->     ✓ [PATCH v5 15/18] PCI: dwc: Add dw_ prefix to the pcie_port structure name
->       + Acked-by: Jesper Nilsson <jesper.nilsson@axis.com> (✓ DKIM/axis.com)
->       + Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> (✓ DKIM/linaro.org)
->       + Reviewed-by: Neil Armstrong <narmstrong@baylibre.com> (✓ DKIM/baylibre-com.20210112.gappssmtp.com)
->     ✓ [PATCH v5 16/18] PCI: dwc-plat: Simplify the probe method return value handling
->     ✓ [PATCH v5 17/18] PCI: dwc-plat: Discard unused regmap pointer
->     ✓ [PATCH v5 18/18] PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
->     ---
->     ✓ Signed: DKIM/baikalelectronics.ru
->   ---
->   Total patches: 18
->   ---
->   NOTE: some trailers ignored due to from/email mismatches:
->       ! Trailer: Link: https://lore.kernel.org/linux-pci/20220616152048.gcqacgs2ed66vsl4@mobilestation/
->        Msg From: Serge Semin <fancer.lancer@gmail.com>
->   NOTE: Rerun with -S to apply them anyway
->   ---
->   Cover: m/v5_20220624_sergey_semin_pci_dwc_various_fixes_and_cleanups.cover
->    Link: https://lore.kernel.org/r/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru
->    Base: applies clean to current tree
-> 	 git am m/v5_20220624_sergey_semin_pci_dwc_various_fixes_and_cleanups.mbx
-> 
->   # apply 1: PCI: dwc: Various fixes and cleanups
->   05:41:24 ~/linux (wip/serge)$ git am m/v5_20220624_sergey_semin_pci_dwc_various_fixes_and_cleanups.mbx
->   Applying: PCI: dwc: Stop link in the host init error and de-initialization
->   Applying: PCI: dwc: Add unroll iATU space support to the regions disable method
->   Applying: PCI: dwc: Disable outbound windows for controllers with iATU
->   Applying: PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
->   Applying: PCI: dwc: Deallocate EPC memory on EP init error
->   Applying: PCI: dwc: Enable CDM-check independently from the num_lanes value
->   Applying: PCI: dwc: Add braces to the multi-line if-else statements
->   Applying: PCI: dwc: Add trailing new-line literals to the log messages
->   Applying: PCI: dwc: Discard IP-core version checking on unrolled iATU detection
->   Applying: PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
->   Applying: PCI: dwc: Organize local variables usage
->   Applying: PCI: dwc: Re-use local pointer to the resource data
->   Applying: PCI: dwc: Add start_link/stop_link inliners
->   Applying: PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
->   Applying: PCI: dwc: Add dw_ prefix to the pcie_port structure name
->   Applying: PCI: dwc-plat: Simplify the probe method return value handling
->   Applying: PCI: dwc-plat: Discard unused regmap pointer
->   Applying: PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
-> 
->   # fetch 2: PCI: dwc: Add hw version and dma-ranges support
->   05:41:46 ~/linux (wip/serge)$ b4 am -om/ https://lore.kernel.org/r/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
->   Looking up https://lore.kernel.org/r/20220624143947.8991-1-Sergey.Semin%40baikalelectronics.ru
->   Analyzing 19 messages in the thread
->   Checking attestation on all messages, may take a moment...
->   ---
->     ✓ [PATCH v4 1/15] PCI: dwc: Add more verbose link-up message
->     ✓ [PATCH v4 2/15] PCI: dwc: Detect iATU settings after getting "addr_space" resource
->     ✓ [PATCH v4 3/15] PCI: dwc: Convert to using native IP-core versions representation
->     ✓ [PATCH v4 4/15] PCI: dwc: Add IP-core version detection procedure
->     ✓ [PATCH v4 5/15] PCI: dwc: Introduce Synopsys IP-core versions/types interface
->     ✓ [PATCH v4 6/15] PCI: intel-gw: Drop manual DW PCIe controller version setup
->     ✓ [PATCH v4 7/15] PCI: tegra194: Drop manual DW PCIe controller version setup
->     ✓ [PATCH v4 8/15] PCI: dwc: Add host de-initialization callback
->     ✓ [PATCH v4 9/15] PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
->     ✓ [PATCH v4 10/15] PCI: dwc: Drop iATU regions enumeration - dw_pcie_region_type
->     ✓ [PATCH v4 11/15] PCI: dwc: Simplify in/outbound iATU setup methods
->     ✓ [PATCH v4 12/15] PCI: dwc: Add iATU regions size detection procedure
->     ✓ [PATCH v4 13/15] PCI: dwc: Verify in/out regions against iATU constraints
->     ✓ [PATCH v4 14/15] PCI: dwc: Check iATU in/outbound ranges setup methods status
->     ✓ [PATCH v4 15/15] PCI: dwc: Introduce dma-ranges property support for RC-host
->     ---
->     ✓ Signed: DKIM/baikalelectronics.ru
->   ---
->   Total patches: 15
->   ---
->   NOTE: some trailers ignored due to from/email mismatches:
->       ! Trailer: Link: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci%2Fctrl%2Fdwc-fixes
->        Msg From: Serge Semin <fancer.lancer@gmail.com>
->       ! Trailer: Link: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/edma
->        Msg From: Serge Semin <fancer.lancer@gmail.com>
->   NOTE: Rerun with -S to apply them anyway
->   ---
->   Cover: m/v4_20220624_sergey_semin_pci_dwc_add_hw_version_and_dma_ranges_support.cover
->    Link: https://lore.kernel.org/r/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
->    Base: applies clean to current tree
-> 	 git am m/v4_20220624_sergey_semin_pci_dwc_add_hw_version_and_dma_ranges_support.mbx
-> 
->   # apply 2: PCI: dwc: Add hw version and dma-ranges support
->   05:42:05 ~/linux (wip/serge)$ git am m/v4_20220624_sergey_semin_pci_dwc_add_hw_version_and_dma_ranges_support.mbx
->   Applying: PCI: dwc: Add more verbose link-up message
->   Applying: PCI: dwc: Detect iATU settings after getting "addr_space" resource
->   Applying: PCI: dwc: Convert to using native IP-core versions representation
->   Applying: PCI: dwc: Add IP-core version detection procedure
->   Applying: PCI: dwc: Introduce Synopsys IP-core versions/types interface
->   Applying: PCI: intel-gw: Drop manual DW PCIe controller version setup
->   Applying: PCI: tegra194: Drop manual DW PCIe controller version setup
->   Applying: PCI: dwc: Add host de-initialization callback
->   Applying: PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
->   Applying: PCI: dwc: Drop iATU regions enumeration - dw_pcie_region_type
->   Applying: PCI: dwc: Simplify in/outbound iATU setup methods
->   Applying: PCI: dwc: Add iATU regions size detection procedure
->   Applying: PCI: dwc: Verify in/out regions against iATU constraints
->   Applying: PCI: dwc: Check iATU in/outbound ranges setup methods status
->   Applying: PCI: dwc: Introduce dma-ranges property support for RC-host
-> 
->   # fetch 3: PCI: dwc: Add extended YAML-schema and Baikal-T1 support
->   05:42:40 ~/linux (wip/serge)$ b4 am -om/ https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
->   Analyzing 51 messages in the thread
->   Checking attestation on all messages, may take a moment...
->   ---
->     ✓ [PATCH v3 1/17] dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
->     ✓ [PATCH v3 2/17] dt-bindings: PCI: dwc: Remove bus node from the examples
->       + Reviewed-by: Rob Herring <robh@kernel.org>
->     ✓ [PATCH v3 3/17] dt-bindings: PCI: dwc: Add phys/phy-names common properties
->     ✓ [PATCH v3 4/17] dt-bindings: PCI: dwc: Add max-link-speed common property
->     ✓ [PATCH v3 5/17] dt-bindings: PCI: dwc: Stop selecting generic bindings by default
->     ✓ [PATCH v3 6/17] dt-bindings: PCI: dwc: Add max-functions EP property
->       + Reviewed-by: Rob Herring <robh@kernel.org>
->     ✓ [PATCH v3 7/17] dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
->     ✓ [PATCH v3 8/17] dt-bindings: PCI: dwc: Add reg/reg-names common properties
->     ✓ [PATCH v3 9/17] dt-bindings: PCI: dwc: Add clocks/resets common properties
->     ✓ [PATCH v3 10/17] dt-bindings: PCI: dwc: Add dma-coherent property
->     ✓ [PATCH v3 11/17] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
->     ✓ [PATCH v3 12/17] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
->     ✓ [PATCH v3 13/17] PCI: dwc: Introduce generic controller capabilities interface
->       + Reviewed-by: Rob Herring <robh@kernel.org>
->     ✓ [PATCH v3 14/17] PCI: dwc: Introduce generic resources getter
->       + Reviewed-by: Rob Herring <robh@kernel.org>
->     ✓ [PATCH v3 15/17] PCI: dwc: Combine iATU detection procedures
->       + Reviewed-by: Rob Herring <robh@kernel.org>
->     ✓ [PATCH v3 16/17] PCI: dwc: Introduce generic platform clocks and resets
->     ✓ [PATCH v3 17/17] PCI: dwc: Add Baikal-T1 PCIe controller support
->     ---
->     ✓ Signed: DKIM/baikalelectronics.ru
->   ---
->   Total patches: 17
->   ---
->   NOTE: some trailers ignored due to from/email mismatches:
->       ! Trailer: Link: https://lore.kernel.org/linux-pci/20220610091459.17612-23-Sergey.Semin@baikalelectronics.ru/
->        Msg From: Serge Semin <fancer.lancer@gmail.com>
->       ! Trailer: Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru/
->        Msg From: Serge Semin <fancer.lancer@gmail.com>
->   NOTE: Rerun with -S to apply them anyway
->   ---
->   Cover: m/v3_20220610_sergey_semin_pci_dwc_add_generic_resources_and_baikal_t1_support.cover
->    Link: https://lore.kernel.org/r/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru
->    Base: not specified
-> 	 git am m/v3_20220610_sergey_semin_pci_dwc_add_generic_resources_and_baikal_t1_support.mbx
-> 
->   # apply 3: PCI: dwc: Add extended YAML-schema and Baikal-T1 support
->   05:42:58 ~/linux (wip/serge)$ git am m/v3_20220610_sergey_semin_pci_dwc_add_generic_resources_and_baikal_t1_support.mbx
->   Applying: dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
->   error: patch failed: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml:36
->   error: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml: patch does not apply
->   error: patch failed: Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml:37
->   error: Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml: patch does not apply
->   Patch failed at 0001 dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
->   hint: Use 'git am --show-current-patch' to see the failed patch
->   When you have resolved this problem, run "git am --continue".
->   If you prefer to skip this patch, run "git am --skip" instead.
->   To restore the original branch and stop patching, run "git am --abort".
->   05:43:07 ~/linux (wip/serge|AM 1/17)$
+>> ---
+>>   .../pci/controller/dwc/pcie-designware-ep.c   | 88 +++++++++++--------
+>>   1 file changed, 49 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 0eda8236c125..9feec720175f 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -639,9 +639,14 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>>   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>>   {
+>>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +     struct dw_pcie_ep_func *ep_func;
+>> +     struct device *dev = pci->dev;
+>> +     struct pci_epc *epc = ep->epc;
+>>        unsigned int offset;
+>>        unsigned int nbars;
+>>        u8 hdr_type;
+>> +     u8 func_no;
+>> +     void *addr;
+>>        u32 reg;
+>>        int i;
+>>
+>> @@ -654,6 +659,42 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>>                return -EIO;
+>>        }
+>>
+>> +     dw_pcie_iatu_detect(pci);
+>> +
+>> +     ep->ib_window_map = devm_kcalloc(dev,
+>> +                                      BITS_TO_LONGS(pci->num_ib_windows),
+>> +                                      sizeof(long),
+>> +                                      GFP_KERNEL);
+>> +     if (!ep->ib_window_map)
+>> +             return -ENOMEM;
+>> +
+>> +     ep->ob_window_map = devm_kcalloc(dev,
+>> +                                      BITS_TO_LONGS(pci->num_ob_windows),
+>> +                                      sizeof(long),
+>> +                                      GFP_KERNEL);
+>> +     if (!ep->ob_window_map)
+>> +             return -ENOMEM;
+>> +
+>> +     addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+>> +                         GFP_KERNEL);
+>> +     if (!addr)
+>> +             return -ENOMEM;
+>> +     ep->outbound_addr = addr;
+>> +
+>> +     for (func_no = 0; func_no < epc->max_functions; func_no++) {
+>> +             ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+>> +             if (!ep_func)
+>> +                     return -ENOMEM;
+>> +
+>> +             ep_func->func_no = func_no;
+>> +             ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+>> +                                                           PCI_CAP_ID_MSI);
+>> +             ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+>> +                                                            PCI_CAP_ID_MSIX);
+>> +
+>> +             list_add_tail(&ep_func->list, &ep->func_list);
+>> +     }
+>> +
+>>        offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>>
+>>        dw_pcie_dbi_ro_wr_en(pci);
+>> @@ -677,8 +718,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   {
+>>        int ret;
+>> -     void *addr;
+>> -     u8 func_no;
+>>        struct resource *res;
+>>        struct pci_epc *epc;
+>>        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> @@ -686,7 +725,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>        struct platform_device *pdev = to_platform_device(dev);
+>>        struct device_node *np = dev->of_node;
+>>        const struct pci_epc_features *epc_features;
+>> -     struct dw_pcie_ep_func *ep_func;
+>>
+>>        INIT_LIST_HEAD(&ep->func_list);
+>>
+>> @@ -708,8 +746,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>                }
+>>        }
+>>
+>> -     dw_pcie_iatu_detect(pci);
+>> -
+>>        res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>>        if (!res)
+>>                return -EINVAL;
+>> @@ -717,26 +753,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>        ep->phys_base = res->start;
+>>        ep->addr_size = resource_size(res);
+>>
+>> -     ep->ib_window_map = devm_kcalloc(dev,
+>> -                                      BITS_TO_LONGS(pci->num_ib_windows),
+>> -                                      sizeof(long),
+>> -                                      GFP_KERNEL);
+>> -     if (!ep->ib_window_map)
+>> -             return -ENOMEM;
+>> -
+>> -     ep->ob_window_map = devm_kcalloc(dev,
+>> -                                      BITS_TO_LONGS(pci->num_ob_windows),
+>> -                                      sizeof(long),
+>> -                                      GFP_KERNEL);
+>> -     if (!ep->ob_window_map)
+>> -             return -ENOMEM;
+>> -
+>> -     addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+>> -                         GFP_KERNEL);
+>> -     if (!addr)
+>> -             return -ENOMEM;
+>> -     ep->outbound_addr = addr;
+>> -
+>>        if (pci->link_gen < 1)
+>>                pci->link_gen = of_pci_get_max_link_speed(np);
+>>
+>> @@ -753,20 +769,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>        if (ret < 0)
+>>                epc->max_functions = 1;
+>>
+>> -     for (func_no = 0; func_no < epc->max_functions; func_no++) {
+>> -             ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+>> -             if (!ep_func)
+>> -                     return -ENOMEM;
+>> -
+>> -             ep_func->func_no = func_no;
+>> -             ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+>> -                                                           PCI_CAP_ID_MSI);
+>> -             ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+>> -                                                            PCI_CAP_ID_MSIX);
+>> -
+>> -             list_add_tail(&ep_func->list, &ep->func_list);
+>> -     }
+>> -
+>>        if (ep->ops->ep_init)
+>>                ep->ops->ep_init(ep);
+>>
+>> @@ -790,6 +792,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>                        return 0;
+>>        }
+>>
+>> +     /*
+>> +      * NOTE:- Avoid accessing the hardware (Ex:- DBI space) before this
+>> +      * step as platforms that implement 'core_init_notifier' feature may
+>> +      * not have the hardware ready (i.e. core initialized) for access
+>> +      * (Ex: tegra194). Any hardware access on such platforms result
+>> +      * in system hard hang.
+>> +      */
+>> +
+>>        return dw_pcie_ep_init_complete(ep);
+>>   }
+>>   EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
+>> --
+>> 2.17.1
+>>
