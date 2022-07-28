@@ -2,137 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 899B5583F2B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 14:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFB18584023
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 15:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236585AbiG1Msi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jul 2022 08:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57486 "EHLO
+        id S229725AbiG1NiO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jul 2022 09:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236167AbiG1Msh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 08:48:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966232A735;
-        Thu, 28 Jul 2022 05:48:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 51BADB82444;
-        Thu, 28 Jul 2022 12:48:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38116C433D6;
-        Thu, 28 Jul 2022 12:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659012514;
-        bh=GqVou8FJ9PvJ260MOYcAAAtI+MUkQSlq45F1U6gbAY8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ODU0OqvM3AR+wqq3g55htv08CeOrpl8Blt3t3Tyadr1BNcZXCFIZfsD002olR0Onn
-         p1qTf/eljP+4xjyrGZ6tJ03kltSHGK8EntLejCOVpv0W+8Ye4rGsnRdsWvtV7MBfga
-         kQIPjyjTKZ1TjEGBAVlQVljI2GA8CmDDZ1t72oTyyyza3BOSFZAwTm6nZVQXug/F4S
-         FjmjnnFcaDPyKzYCBn5+d0hZEkFFRIWe0PC/CY+PuJBVmHPI9VfCqU5nSr+cwM99ar
-         wUxvwm7AhBTdbx6jcRvLgy3P5BKCK92Qpy1ZYAM5TdtKJphcUkuf8kQZWUw9oMCm0b
-         INHHJAkF0Ieng==
-Date:   Thu, 28 Jul 2022 18:18:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <YuKFnjrxnyNa+98X@matsya>
-References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
- <YtlDivjaXfSEK1Xg@matsya>
- <20220728113359.hs54apv22bo5bnyr@mobilestation>
+        with ESMTP id S230043AbiG1NiI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 09:38:08 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB8A54673;
+        Thu, 28 Jul 2022 06:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659015487; x=1690551487;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=L2FRLYaTBI7F5ftQ6oi1R3XDVtj/kTzSoGnS9O2fMz0=;
+  b=NLgoZx2G4Pih9yiocwB+cazIVanC/HY/T2YOajpVQaqKa75pbmiov6iT
+   Y3mH3uehpVQn9bkmoohuJPVolJmW9cqkG89Im4XWpsjdFPJICUMHeBJ9R
+   dc6Jd3ZLGaZJCTZGGICwjvHR8XJrCeMjS9y+p/MXnXgq2QWLeIDF62WfY
+   1gtggE3hz+weiA4CJ3XixVvu7yLPibAXxSK61lgdfuKq2hSloHUfnNFu4
+   n7kXGzRq0KX7r4dlh2g27itjedXTJKy8jvJ24YwlEnxFyZ0c4e+ev14XZ
+   nCX4jvnE2qxgwUpJAhbpHOcQFTi9k4P3xKuMnb9UyX5iBB4VTWiAHKWx4
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10421"; a="275394349"
+X-IronPort-AV: E=Sophos;i="5.93,198,1654585200"; 
+   d="scan'208";a="275394349"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2022 06:38:06 -0700
+X-IronPort-AV: E=Sophos;i="5.93,198,1654585200"; 
+   d="scan'208";a="690318074"
+Received: from hurleyst-mobl.amr.corp.intel.com (HELO [10.209.106.108]) ([10.209.106.108])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2022 06:38:06 -0700
+Message-ID: <b841ef44-98f4-fddd-def9-963172a0c4f5@linux.intel.com>
+Date:   Thu, 28 Jul 2022 06:38:06 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220728113359.hs54apv22bo5bnyr@mobilestation>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [External] Re: [PATCH v1] PCI/DPC: Skip EDR init when BIOS
+ disable OS native DPC
+Content-Language: en-US
+To:     Xiaochun XC17 Li <lixc17@lenovo.com>,
+        Xiaochun Lee <lixiaochun.2888@163.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1658919957-53006-1-git-send-email-lixiaochun.2888@163.com>
+ <3dc43f00-0b01-1b02-74dc-6938f6db6e29@linux.intel.com>
+ <TY2PR03MB45574010689A675444CCFA98BC969@TY2PR03MB4557.apcprd03.prod.outlook.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <TY2PR03MB45574010689A675444CCFA98BC969@TY2PR03MB4557.apcprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28-07-22, 14:33, Serge Semin wrote:
-> On Thu, Jul 21, 2022 at 05:46:10PM +0530, Vinod Koul wrote:
-> > On 10-06-22, 12:14, Serge Semin wrote:
-> > > This is a final patchset in the series created in the framework of
-> > > my Baikal-T1 PCIe/eDMA-related work:
-> > > 
-> > > [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> > > Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> > > [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> > > Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-> > > [3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-> > > Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> > > [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> > > Link: ---you are looking at it---
-> > > 
-> > > Note it is very recommended to merge the patchsets in the same order as
-> > > they are listed in the set above in order to have them applied smoothly.
-> > > Nothing prevents them from being reviewed synchronously though.
-> > > 
-> > > Please note originally this series was self content, but due to Frank
-> > > being a bit faster in his work submission I had to rebase my patchset onto
-> > > his one. So now this patchset turns to be dependent on the Frank' work:
-> > > 
-> > > Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
-> > > 
-> > > So please merge Frank' series first before applying this one.
-> > > 
-> > > Here is a short summary regarding this patchset. The series starts with
-> > > fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
-> > > initializes the LL/DT base addresses for the platforms with not matching
-> > > CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-> > > method to get a correct base address. After that you can find a series of
-> > > the interleaved xfers fixes. It turned out the interleaved transfers
-> > > implementation didn't work quite correctly from the very beginning for
-> > > instance missing src/dst addresses initialization, etc. In the framework
-> > > of the next two patches we suggest to add a new platform-specific
-> > > callback - pci_address() and use it to convert the CPU address to the PCIe
-> > > space address. It is at least required for the DW eDMA remote End-point
-> > > setup on the platforms with not-matching CPU/PCIe address spaces. In case
-> > > of the DW eDMA local RP/EP setup the conversion will be done automatically
-> > > by the outbound iATU (if no DMA-bypass flag is specified for the
-> > > corresponding iATU window). Then we introduce a set of the patches to make
-> > > the DebugFS part of the code supporting the multi-eDMA controllers
-> > > platforms. It starts with several cleanup patches and is closed joining
-> > > the Read/Write channels into a single DMA-device as they originally should
-> > > have been. After that you can find the patches with adding the non-atomic
-> > > io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> > > chip IDs with the device name. In addition to that in order to have the
-> > > eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-> > > dma-ranges-based memory ranges mapping since in case of the root port DT
-> > > node it's applicable for the peripheral PCIe devices only. Finally at the
-> > > series closure we introduce a generic DW eDMA controller support being
-> > > available in the DW PCIe Root Port/Endpoint driver.
-> > 
-> 
-> > Acked-By: Vinod Koul <vkoul@kernel.org>
-> 
-> Thanks, Vinod! The series will be merged in after the patchset
-> [PATCH vX 00/17] PCI: dwc: Add generic resources and Baikal-T1 support
-> Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> is done with Rob' review (I failed to reach him with a few issues
-> lately). I'll add your ab-tag to this one on the next patchset re-spin
-> (rebase will be likely needed).
 
-You can cc Krzysztof (cced him0, maybe he can help with review of DT
-parts
 
-thanks
+On 7/28/22 3:11 AM, Xiaochun XC17 Li wrote:
+> Hi, 
+>> -----Original Message-----
+>> From: Sathyanarayanan Kuppuswamy
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Sent: Wednesday, July 27, 2022 10:24 PM
+>> To: Xiaochun Lee <lixiaochun.2888@163.com>; linux-pci@vger.kernel.org
+>> Cc: bhelgaas@google.com; linux-kernel@vger.kernel.org; Xiaochun XC17 Li
+>> <lixc17@lenovo.com>
+>> Subject: [External] Re: [PATCH v1] PCI/DPC: Skip EDR init when BIOS disable
+>> OS native DPC
+>>
+>> Hi,
+>>
+>> On 7/27/22 4:05 AM, Xiaochun Lee wrote:
+>>> From: Xiaochun Lee <lixc17@lenovo.com>
+>>>
+>>> ACPI BIOS may disable OS native AER and DPC support to notify OS that
+>>> our platform doesn't support AER and DPC via the _OSC method.
+>>> BIOS also might leave the containment be accomplished purely in HW.
+>>> When firmware is set to non-aware OS DPC, we skip to install EDR
+>>> handler to an ACPI device.
+>>
+>> No, EDR is used when firmware controls the DPC.
+>>
+>> When the Firmware owns Downstream Port Containment, it is expected to
+>> use the new “Error Disconnect Recover” notification to alert OSPM of a
+>> Downstream Port Containment event.
+> 
+> Thank you for correcting me on that. Could you please share more information
+> about the below questions? Many thanks!
+> As you mentioned, when Firmware is set to the platform not to support
+> OS native DPC,  should OS still have to handle DPC flow from an EDR event?
+
+During OSC negotiation, OS will advertise its support for EDR, if it
+is available. If DPC is owned by firmware, then it can leverage the
+EDR support, to let OS handle the error recovery.
+
+> In my systems, when I disable native DPC in UEFI BIOS, kernel messages
+> show the "platform does not support [SHPCHotplug AER DPC]" as follows,
+> and it says OS now controls capabilities that do not include AER DPC.
+> 
+> [    2.400996] acpi PNP0A08:04: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+> [    2.402227] acpi PNP0A08:04: _OSC: platform does not support [SHPCHotplug AER DPC]
+> [    2.402520] acpi PNP0A08:04: _OSC: OS now controls [PCIeHotplug PME PCIeCapability LTR]
+> [    2.402521] acpi PNP0A08:04: FADT indicates ASPM is unsupported, using BIOS configuration
+> 
+> After I injected a PCIE CTO UCE DER event received and DPC started
+> running as you said, But there is a little bit of confusion as to why I
+> disable OS native DCP, it still be triggered. 
+> The injection message listed as below.
+> 
+> [  832.834785] pcieport 0000:a7:01.0: EDR: EDR event received
+> [  832.835232] pcieport 0000:a7:01.0: DPC: containment event, status:0x1f09 source:0x0000
+> [  832.835239] pcieport 0000:a7:01.0: DPC: unmasked uncorrectable error detected
+> [  832.835246] pcieport 0000:a7:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> [  832.835253] pcieport 0000:a7:01.0:   device [8086:352a] error status/mask=00004000/00180020
+> [  832.835258] pcieport 0000:a7:01.0:    [14] CmpltTO                (First)
+> [  903.394837] pcieport 0000:a7:01.0: AER: device recovery successful
+
+EDR is the hybird mode. In this case, the firmware owns the DPC and will detect
+the DPC event. But for error recovery, it will let OS handle it to EDR
+notification.
+
+You can find more details in the latest PCIe firmware specification and APCI
+specification.
+
+> 
+> On the contrary, if we keep OS native AER DPC enabled on BIOS,
+> we can see the message as below, OS now controls AER DPC. 
+> Under these settings, who should  handle DPC if an error is coming?
+
+If native DPC is enabled then OS will handle the DPC detection and
+error recover.
+
+In firmwre DPC mode, firmware will do the DPC detection and it can
+optionally use OS for error recovery using EDR>
+
+> Is it the EDR event or the DPC interrupt (dpc_irq)? 
+> Does the BIOS participate in the DPC process in this situation? If BIOS
+> do not notify OS EDR via send WHEASCI, do we need to  install edr notifier
+> handler in function pci_acpi_add_edr_notifier? 
+> How about we skip EDR init when OS native AER/DPC enabled? Because we
+> now trigger DPC that be notified by an interrupt of DPC Control (DPCCTL)
+> register, install EDR handler seems redundant on OS native AER/DPC enabled.
+
+Installing handler will just register callback with ACPI device. AFAIK,
+preventing it in OS native DPC case is not going to fix anything or
+optimize the path.
+
+> Thanks!
+> [    2.350709] acpi PNP0A08:04: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+> [    2.351799] acpi PNP0A08:04: _OSC: platform does not support [SHPCHotplug]
+> [    2.353144] acpi PNP0A08:04: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability LTR DPC]
+> [    2.353145] acpi PNP0A08:04: FADT indicates ASPM is unsupported, using BIOS configuration
+> 
+>>
+>>>
+>>> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+>>> ---
+>>>  drivers/pci/pcie/edr.c | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c index
+>>> a6b9b47..97a680b 100644
+>>> --- a/drivers/pci/pcie/edr.c
+>>> +++ b/drivers/pci/pcie/edr.c
+>>> @@ -19,6 +19,17 @@
+>>>  #define EDR_OST_SUCCESS			0x80
+>>>  #define EDR_OST_FAILED			0x81
+>>>
+>>> +static int pcie_dpc_is_native(struct pci_dev *dev) {
+>>> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>>> +
+>>> +	if (!dev->dpc_cap)
+>>> +		return 0;
+>>> +
+>>> +	return pcie_ports_dpc_native || host->native_dpc; }
+>>> +
+>>> +
+>>>  /*
+>>>   * _DSM wrapper function to enable/disable DPC
+>>>   * @pdev   : PCI device structure
+>>> @@ -212,6 +223,11 @@ void pci_acpi_add_edr_notifier(struct pci_dev
+>> *pdev)
+>>>  		return;
+>>>  	}
+>>>
+>>> +	if (!pcie_dpc_is_native(pdev) && !pcie_aer_is_native(pdev)) {
+>>> +		pci_dbg(pdev, "OS doesn't control DPC, skipping EDR init\n");
+>>> +		return;
+>>> +	}
+>>> +
+>>>  	status = acpi_install_notify_handler(adev->handle,
+>> ACPI_SYSTEM_NOTIFY,
+>>>  					     edr_handle_event, pdev);
+>>>  	if (ACPI_FAILURE(status)) {
+>>
+>> --
+>> Sathyanarayanan Kuppuswamy
+>> Linux Kernel Developer
+
 -- 
-~Vinod
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
