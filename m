@@ -2,78 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDBE584855
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 00:37:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABFBC584859
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 00:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232319AbiG1WhY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jul 2022 18:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45476 "EHLO
+        id S233180AbiG1Wh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jul 2022 18:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231392AbiG1WhX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 18:37:23 -0400
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC6C3190B;
-        Thu, 28 Jul 2022 15:37:22 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id w16so1669004ilh.0;
-        Thu, 28 Jul 2022 15:37:22 -0700 (PDT)
+        with ESMTP id S233043AbiG1WhZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 18:37:25 -0400
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1ED43190B;
+        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
+Received: by mail-il1-f170.google.com with SMTP id h16so1656698ila.2;
+        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=message-id:date:subject:references:in-reply-to:cc:to:from
          :x-gm-message-state:from:to:cc;
-        bh=dYYAr8co2bcY4aoh9KM7tdmdrbq0srMDfWvjozC6xYU=;
-        b=f3QmZKZp9YgTX8dBap6eZTqiKkMQ0VxceiKY3dLuWX5oa01UutF0886iklgVzu2LNm
-         F2XRq7d0U1dwaJ5vlr679huotNOCHv+L9uYdpyw4Z8PY+mJbHFGje3qZhD0TOBUWicDP
-         9ZUdFmMzcgiwxZCzYZ2slrSSEh5li0cw66aN8ys7Yusgdacaj9vXHn/ekZjIKBIn0WlU
-         NDdWqiOarTKs13ogG2FmxbPsZU45jR2tP6xOh5DAp+fmNDCcdCH9DXbtNY0TLFNB9jGX
-         uaX5kRiX8dbHNRjO+4+OB1HRLYnMHowK6x0r+12wM+TkTBoq6MBR/xfW19pec4EcuX47
-         /tPg==
-X-Gm-Message-State: AJIora89lgrB/6FY0PAezZgwWBdKOGe9U4/RLC4mZwqSPjFkhuXb0A14
-        afoGqRW16RyIqi01sTz5hQ==
-X-Google-Smtp-Source: AGRyM1t8gPtr0jfiLGqpqBeVgPBWp5Jvaj+VqsYRj5EBlOfRnZku+XX3U8Phe8/Vi4cysn8vqzid8A==
-X-Received: by 2002:a05:6e02:1aa5:b0:2dd:384:f3ba with SMTP id l5-20020a056e021aa500b002dd0384f3bamr295123ilv.45.1659047841615;
-        Thu, 28 Jul 2022 15:37:21 -0700 (PDT)
+        bh=I3vEeMiDJCjGWEDJLfzHyBotayrkz42xF0yEiFQyelw=;
+        b=NF2+ZdKEOQxw5SrR9ud3Ww7pViD8Nuv54mMGY6PGC242CTogptuHXgdurTSO9szFwJ
+         eDqvAj3Hs/ywYkDCiFhNoMvF52YuOElHFNC9rpl6eufY3jrliH+Eh6mBs2DuEMFNeVQ0
+         qvY6637d9zUNfJpix14pKR3kfXACFresdxfZlXwdvLvuBjCW/vW5y3difa8gBUrAKJU3
+         nSiEuIrYFPCx4Gij+QWMBgHJXQGAc7Xh0iG0kfEJbkYulcLg+TlllS5h21xcbE0vgGlF
+         1LfxA36OhIDgJeh0xyQeWOiEKgisrqv2cUsvIHwwehm12IJqKzGP6Gksl+kvi2VLQh+s
+         DbUg==
+X-Gm-Message-State: AJIora9xndpXsJVCNCYn0aVIIvZZtU7CEq46gciOo/XEIrVRqqqYM24l
+        QtHutPrbdoWm1lxIPPFwoQ==
+X-Google-Smtp-Source: AGRyM1tXEvNHVsuWYfcBbpLRfuPajccl51f0Q5BP6aS+ie1v/TyeduYIT450S4eOIgWM5efIgTSX+Q==
+X-Received: by 2002:a05:6e02:1bad:b0:2dd:bc59:5078 with SMTP id n13-20020a056e021bad00b002ddbc595078mr294248ili.19.1659047844102;
+        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
 Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id y8-20020a027308000000b00339c4e447e2sm897117jab.151.2022.07.28.15.37.18
+        by smtp.gmail.com with ESMTPSA id h16-20020a05660208d000b0067b4d6cecc8sm834748ioz.45.2022.07.28.15.37.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jul 2022 15:37:21 -0700 (PDT)
-Received: (nullmailer pid 1710887 invoked by uid 1000);
+        Thu, 28 Jul 2022 15:37:23 -0700 (PDT)
+Received: (nullmailer pid 1710890 invoked by uid 1000);
         Thu, 28 Jul 2022 22:37:18 -0000
 From:   Rob Herring <robh@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-pci@vger.kernel.org, Greentime Hu <greentime.hu@sifive.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        devicetree@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        Frank Li <Frank.Li@nxp.com>, Simon Xue <xxm@rock-chips.com>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <20220728143427.13617-6-Sergey.Semin@baikalelectronics.ru>
-References: <20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru> <20220728143427.13617-6-Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 05/17] dt-bindings: PCI: dwc: Stop selecting generic bindings by default
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20220728143427.13617-12-Sergey.Semin@baikalelectronics.ru>
+References: <20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru> <20220728143427.13617-12-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v4 11/17] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
 Date:   Thu, 28 Jul 2022 16:37:18 -0600
-Message-Id: <1659047838.052652.1710886.nullmailer@robh.at.kernel.org>
+Message-Id: <1659047838.065764.1710889.nullmailer@robh.at.kernel.org>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -84,44 +72,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Jul 2022 17:34:15 +0300, Serge Semin wrote:
-> It's highly encouraged to have the separate DT schema for each available
-> particular device, while the generic schema should be left untouched
-> representing just a set of the common device properties (mainly advertised
-> by the IP-core reference manual). Seeing there is no currently DW PCIe
-> RP/EP dts nodes with only generic compatible string and since there isn't
-> any vendor-specific compatible string added to the generic DT schema,
-> before it's too late let's mark the snps,dw-pcie.yaml and
-> snps,dw-pcie-ep.yaml schemas not selected for checking by default and add
-> the explicit requirement to have the compatible string containing the
-> generic device name.
-> 
-> Note due to this modification we need to switch some of the DW PCIe-based
-> DT-bindings to referring to the common DT-schema instead of evaluating
-> against the generic DW PCIe DT-bindings. They are already defined as
-> having the vendor-specific compatible string only. So we can't change that
-> semantic.
+On Thu, 28 Jul 2022 17:34:21 +0300, Serge Semin wrote:
+> As the DT-bindings description states the Rockchip PCIe controller is
+> based on the DW PCIe RP IP-core thus its DT-nodes are supposed to be
+> compatible with the common DW PCIe controller schema. Let's make sure they
+> evaluated against it by referring to the snps,dw-pcie-common.yaml schema
+> in the allOf sub-schemas composition.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
 > ---
 > 
 > Changelog v3:
-> - This is a new patch unpinned from the next one:
->   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
->   by the Rob' request. (@Rob)
-> - Fix compatible property schema so one would work as expected: string
->   must contain either generic DW PCIe IP-core name or both generic and
->   equipped with IP-core version names.
+> - This is a new patch created on v3 lap of the series.
 > ---
->  .../bindings/pci/fsl,imx6q-pcie.yaml          |  3 ++-
->  .../bindings/pci/hisilicon,kirin-pcie.yaml    |  3 ++-
->  .../bindings/pci/sifive,fu740-pcie.yaml       |  3 ++-
->  .../bindings/pci/snps,dw-pcie-ep.yaml         | 24 +++++++++++++++----
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 24 +++++++++++++++----
->  .../pci/socionext,uniphier-pcie-ep.yaml       |  9 +++----
->  .../bindings/pci/toshiba,visconti-pcie.yaml   |  3 ++-
->  7 files changed, 53 insertions(+), 16 deletions(-)
+>  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
@@ -130,26 +96,10 @@ on your patch (DT_CHECKER_FLAGS is new in v5.13):
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.example.dtb: pcie@e00000000: Unevaluated properties are not allowed ('clocks', 'interrupts' were unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.example.dtb: pcie@28400000: Unevaluated properties are not allowed ('interrupt-names' was unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb:0:0: /example-0/pcie-ep@dfd00000: failed to match any schema with compatible: ['vendor,soc-pcie', 'snps,dw-pcie-ep']
-Documentation/devicetree/bindings/pci/snps,dw-pcie.example.dtb:0:0: /example-0/pcie@dfc00000: failed to match any schema with compatible: ['vendor,soc-pcie', 'snps,dw-pcie']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dtb: pcie@15700000: compatible: 'anyOf' conditional failed, one must be fixed:
-	['samsung,exynos5433-pcie'] does not contain items matching the given schema
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dtb: pcie@15700000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'ranges' were unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.example.dtb: pcie@66000000: compatible: 'anyOf' conditional failed, one must be fixed:
-	['socionext,uniphier-pcie'] does not contain items matching the given schema
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.example.dtb: pcie@66000000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'interrupt-names', 'interrupts', 'ranges' were unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dtb: pcie@f4000000: Unevaluated properties are not allowed ('interrupt-names', 'interrupts' were unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dtb: pcie@f5000000: Unevaluated properties are not allowed ('interrupt-names', 'interrupts' were unexpected)
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+./Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/pci/snps,dw-pcie-common.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dtb: pcie@fe280000: False schema does not allow {'compatible': ['rockchip,rk3568-pcie'], 'reg': [[3, 3229614080, 0, 3735552], [0, 4264034304, 0, 65536], [3, 2147483648, 0, 1048576]], 'reg-names': ['dbi', 'apb', 'config'], 'bus-range': [[32, 47]], 'clocks': [[4294967295, 143], [4294967295, 144], [4294967295, 145], [4294967295, 146], [4294967295, 147]], 'clock-names': ['aclk_mst', 'aclk_slv', 'aclk_dbi', 'pclk', 'aux'], 'device_type': ['pci'], 'linux,pci-domain': [[2]], 'max-link-speed': [[2]], 'msi-map': [[8192, 4294967295, 8192, 4096]], 'num-lanes': [[2]], 'phys': [[4294967295]], 'phy-names': ['pcie-phy'], 'power-domains': [[4294967295, 15]], 'ranges': [[2164260864, 0, 2155872256, 3, 2155872256, 0, 1048576], [2197815296, 0, 2156920832, 3, 2156920832, 0, 1064304640]], 'resets': [[4294967295, 193]], 'reset-names': ['pipe'], '#address-cells': [[3]], '#size-cells': [[2]], '$nodename': ['pcie
+ @fe280000']}
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
 
 doc reference errors (make refcheckdocs):
 
