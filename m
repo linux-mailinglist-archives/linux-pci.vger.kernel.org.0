@@ -2,83 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C071158461B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 20:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50734584677
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jul 2022 21:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbiG1SxR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jul 2022 14:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        id S233147AbiG1TWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jul 2022 15:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiG1SxR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 14:53:17 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2330C743EE;
-        Thu, 28 Jul 2022 11:53:16 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id t1so4113825lft.8;
-        Thu, 28 Jul 2022 11:53:16 -0700 (PDT)
+        with ESMTP id S229570AbiG1TWU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 15:22:20 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DBA1A05E;
+        Thu, 28 Jul 2022 12:22:19 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 6so2256476pgb.13;
+        Thu, 28 Jul 2022 12:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YqDuXzOWTVq7U9l2+ECUplWD7jFZHdMOUjcOJGRtYg8=;
-        b=oTsUjBvaphUVin2C+irLGt/eQKo8mEz1OmLk6F+TFa44ZlbqPfzst4bMz9r/xmHSJn
-         thA2IcTMKOtkE6tSKOAoLZeDN9FCKJOUe6kVcn7gDptnjwA2zrQ62oIqrel+7PJy1eiN
-         Bz4Jy2DumSblx8a+L+V3MUsziemK6oDsm3XXQ9nJl4DqDHl9dr7qFXz00Pba9LA5P9Sy
-         Tdq/417wkgMqW5LmNlpGXjAdixfia0K5C0RoOmOwJYOEDwrS/dQYxVFs/5wobUFefq6M
-         L5bZ5MPFbowYk7VxyDWZSVHPwrE3X42q5Xm82TlVolK+O5NlXoj96r7m+1z1WU5dLTab
-         4o0g==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=EFOAo/QdtEPRv+rmfrGIwUMKLAu+6hzcQDL1f3TAQNM=;
+        b=lB+pWhhlv93nZ1uF9MlIOnX5O59BjNqfBlzyuwaJ9IcEqZIikDytWL8FxK9mRR7bGC
+         CP0N3vcVC4GRQyBqp/aXDsHM+Rp/kL+AcBtbGgawHiyB0n2SQ/S9YTLhVKYgLJzYvnfa
+         DRgHjFYGggf4djkLYGpyCKIAfFc4nCcIoEjsFfGVMZ1/sB2/Jgb8jz20AGsMwpQd4Rhb
+         5lHHgqgPkKGl66JAg/+e1Wkvj9UiHeRANwaOr3+bwehcQ5WJ52Rwi+bf7sjW1dQxqAEB
+         0wInCPsCu9FBE5kiqsjVn81pQZUQnEayOJ4Rp+zGMKxlzT+3V1MGecumxQBkOPnllvzK
+         p+iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YqDuXzOWTVq7U9l2+ECUplWD7jFZHdMOUjcOJGRtYg8=;
-        b=PHN7/lMdiuSHNm4K7NgKIYg8J3vgIjc0cP66RO3bDQ5H7CkeajccK/1/otzGzLNf3q
-         G2ZVpNVFa++39uQiBGW3SvNbzMVgN+r4+7sEQNFB5ZvPHTc6RjBHPtBaCe9Lzd5ZYsm9
-         k5IjD+wvSC7RxcFMxg1hkj6uJ60zZm89qOA0hv/MZi9rxTC8IdJXmTO9dmHAGrGOowYW
-         brVMUa7mBdStK2uDTlh7dHFD/n61NsB9M9vrYiRtdni1uh8txrlsD8RxbCJw8GlXv+QY
-         RIQdolyA//imBpmhR+Am/4bbgVjWfe0cCPkAdKTicKXyyCr7YZyk1STObQCxI+CirGRG
-         wHfg==
-X-Gm-Message-State: AJIora8/M+y1H2jLegPhGAQ9lGIwp7mZJjG99gXD/v5/pWa5XAqOdEfD
-        JDxX6ODQ8e92SDRR5SDBGiA=
-X-Google-Smtp-Source: AGRyM1vxbrmC9UG6lvhuS8D++pmLdPzd/EMFdQeBuXzwgUbAdL+jtkgDOa5UQ8z/YDvwcmjbrXhETQ==
-X-Received: by 2002:a05:6512:ac6:b0:48a:8379:bcc0 with SMTP id n6-20020a0565120ac600b0048a8379bcc0mr56793lfu.601.1659034394104;
-        Thu, 28 Jul 2022 11:53:14 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id y14-20020a0565123f0e00b0048a9a756763sm322087lfa.19.2022.07.28.11.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jul 2022 11:53:13 -0700 (PDT)
-Date:   Thu, 28 Jul 2022 21:53:11 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH RESEND v4 03/15] PCI: dwc: Convert to using native
- IP-core versions representation
-Message-ID: <20220728185311.3b4n2izy64fdpfk6@mobilestation>
-References: <20220624143947.8991-4-Sergey.Semin@baikalelectronics.ru>
- <20220728152418.GA302516@bhelgaas>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=EFOAo/QdtEPRv+rmfrGIwUMKLAu+6hzcQDL1f3TAQNM=;
+        b=irglV27uulHB7xGlavq7wJq+OWG1Pi6Aw9k9FKOFJIio3ETkwpBw5qFVt7bbmNwKOw
+         TH/ON1/OYg+Us/xaO0vhBaIxyfbP7BpbGTIAL0qZTDHb2xBEeUj7E40VDt7T5T52W0Vy
+         u+tbtfA9XkbkCiL5nWaXAIoyzmwAtdDWPl+xvQrlHOB1cjN+xVaRxVoMpW9iw3oP5bDx
+         0UZvB2cVuzafW0Uuf6UxC5LKRROo/pujw6NV4LKVFu4dz4WJMfxIqezIrV2g24OVcstg
+         9U2NPvkEQmS/YHSetnMDgOGEZ1juTFEhSBCYR9VGI1DyWjZ+EgkFYiiEg6ItedX4RV1G
+         aOhA==
+X-Gm-Message-State: AJIora8+ABlM6yjJXM2FAwHDWGyDzeLeYqPgJAiXgl2znlIaaqu8Dml8
+        juVaIkI+9S2i0adDs/H8kY0=
+X-Google-Smtp-Source: AGRyM1tj9cuz/W4LAd9BMq4WIOZkxkrW2UJLCS/AeNw+AhegYlhfdsgfmykyQIPR9LbFViQAWRDZ3w==
+X-Received: by 2002:a63:ce0f:0:b0:41a:f0ee:c28e with SMTP id y15-20020a63ce0f000000b0041af0eec28emr190116pgf.43.1659036138925;
+        Thu, 28 Jul 2022 12:22:18 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id m8-20020a654c88000000b0040cfb5151fcsm1282985pgt.74.2022.07.28.12.22.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Jul 2022 12:22:18 -0700 (PDT)
+Message-ID: <db9560c1-7fc7-405e-bee1-3827a943b712@gmail.com>
+Date:   Thu, 28 Jul 2022 12:22:12 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220728152418.GA302516@bhelgaas>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+Content-Language: en-US
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        William Zhang <william.zhang@broadcom.com>
+Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
+        kursad.oney@broadcom.com, krzysztof.kozlowski@linaro.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20220725055402.6013-1-william.zhang@broadcom.com>
+ <20220725055402.6013-7-william.zhang@broadcom.com>
+ <63797827553783061a0ad5e897ed6538@milecki.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <63797827553783061a0ad5e897ed6538@milecki.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -87,61 +97,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 28, 2022 at 10:24:18AM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 24, 2022 at 05:39:35PM +0300, Serge Semin wrote:
-> > Since DWC PCIe v4.70a the controller version can be read from the
-> > PORT_LOGIC.PCIE_VERSION_OFF register. Version is represented in the FourCC
-> > format [1]. It's standard versioning approach for the Synopsys DWC
-> > IP-cores. Moreover some of the DWC kernel drivers already make use of it
-> > to fixup version-dependent functionality (See DWC USB3, Stmicro STMMAC or
-> > recent DW SPI driver).
+On 7/27/22 05:31, Rafał Miłecki wrote:
+> On 2022-07-25 07:53, William Zhang wrote:
+>> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
+>> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
+>> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
+>>
+>> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+>> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
 > 
-
-> These references to other drivers might be useful, but without a
-> function name or file name, I can't easily find them.
-
-1. DW APB SSI driver, defined in drivers/spi/spi-dw.h:
-#define DW_HSSI_102A                    0x3130322a
-#define dw_spi_ip_is(_dws, _ip) ...
-#define dw_spi_ver_is(_dws, _ip, _ver) ...
-#define dw_spi_ver_is_ge(_dws, _ip, _ver) ...
-
-2. DWC USB3 driver, defined in drivers/usb/dwc3/core.h
-#define DWC3_IP                 0x5533
-#define DWC31_IP                0x3331
-#define DWC32_IP                0x3332
-#define DWC3_REVISION_173A      0x5533173a
-#define DWC3_REVISION_175A      0x5533175a
-...
-#define DWC31_REVISION_110A     0x3131302a
-#define DWC31_REVISION_120A     0x3132302a
-...
-#define DWC3_IP_IS(_ip) ...
-#define DWC3_VER_IS(_ip, _ver) ...
-#define DWC3_VER_IS_PRIOR(_ip, _ver) ...
-#define DWC3_VER_IS_WITHIN(_ip, _from, _to) ...
-#define DWC3_VER_TYPE_IS_WITHIN(_ip, _ver, _from, _to) ...
-
-Regarding the STMMAC (DW MAC/GMAC/xGMAC) driver. I've harried up to
-claim it has the native IP-core versioning support. The current kernel
-driver doesn't have it. Instead I have it implemented in my local
-repo, but it isn't ready to be submitted yet. I need some more time to
-finish my DW GMAC/xGMAC work first.
-
-Ideally we could have created a common interface for all the drivers.
-I thought about it first when I was initially creating the patchsets.
-But now I don't time left for this at all. The review process's taken
-way much more time than I had/planned to spend for the PCIe-patches.
-So what I can do at this stage is to provide minor fixes if required.
-
--Sergey
-
+> I still think it may be a bad idea for all below drivers. Please see my
+> previous e-mail:
+> Re: [RESEND PATCH 6/9] arm64: bcmbca: Make BCM4908 drivers depend on ARCH_BCMBCA
+> https://lore.kernel.org/linux-arm-kernel/eee8c85652e6dac69420a876d03f67c4@milecki.pl/
 > 
-> > In order to preserve the standard version
-> > representation and prevent the data conversion back and forth, we suggest
-> > to preserve the native version representation in the DWC PCIe driver too
-> > in the same way as it has already been done in the rest of the DWC
-> > drivers. IP-core version reading from the CSR will be introduced in the
-> > next commit together with a simple macro-based API to use it.
-> > 
-> > [1] https://en.wikipedia.org/wiki/FourCC
+> I think we should:
+> 1. Keep ARCH_BCM4908 for 4908 specific drivers (e.g. mtd, pinctrl, net)
+> 2. Use ARCH_BCMBCA for more generic drivers (e.g. I2C, PCI,serial, WD)
+
+IMHO here is no point in keeping an ARCH_BCM4908 anymore when the whole point of the patch series is to do a broad conversion of ARCH_BCM4908 into ARCH_BCMBCA. Even if some of the drivers are considered or thought to be 4908-specific, this is not going to be an issue in practice because there ought to be appropriate compatible strings such that even if you built a 4908-specific driver into a generic ARCH_BCMCA kernel, the actual probing would only happen on 4908.
+
+Now let us flip it the other way round, let's say we keep ARCH_BCM4908 as a sub-arch of ARCH_BCMBCA, then this sets a precedent for adding more and more of those ARCH_BCM4906, ARCH_BCM4912 etc. etc to future kernels under the same reasons that we might want to gate certain drivers to certain sub-arches. But what good does that do?
+
+At some point we got to make it simple for the users, and the simplest way is to have ARCH_BCMBCA only and let DT dictate the device specific probing.
+-- 
+Florian
