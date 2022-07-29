@@ -2,117 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABFBC584859
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 00:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D95E25849D3
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 04:36:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbiG1Wh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jul 2022 18:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45486 "EHLO
+        id S233940AbiG2Cgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jul 2022 22:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233043AbiG1WhZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 18:37:25 -0400
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1ED43190B;
-        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
-Received: by mail-il1-f170.google.com with SMTP id h16so1656698ila.2;
-        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:references:in-reply-to:cc:to:from
-         :x-gm-message-state:from:to:cc;
-        bh=I3vEeMiDJCjGWEDJLfzHyBotayrkz42xF0yEiFQyelw=;
-        b=NF2+ZdKEOQxw5SrR9ud3Ww7pViD8Nuv54mMGY6PGC242CTogptuHXgdurTSO9szFwJ
-         eDqvAj3Hs/ywYkDCiFhNoMvF52YuOElHFNC9rpl6eufY3jrliH+Eh6mBs2DuEMFNeVQ0
-         qvY6637d9zUNfJpix14pKR3kfXACFresdxfZlXwdvLvuBjCW/vW5y3difa8gBUrAKJU3
-         nSiEuIrYFPCx4Gij+QWMBgHJXQGAc7Xh0iG0kfEJbkYulcLg+TlllS5h21xcbE0vgGlF
-         1LfxA36OhIDgJeh0xyQeWOiEKgisrqv2cUsvIHwwehm12IJqKzGP6Gksl+kvi2VLQh+s
-         DbUg==
-X-Gm-Message-State: AJIora9xndpXsJVCNCYn0aVIIvZZtU7CEq46gciOo/XEIrVRqqqYM24l
-        QtHutPrbdoWm1lxIPPFwoQ==
-X-Google-Smtp-Source: AGRyM1tXEvNHVsuWYfcBbpLRfuPajccl51f0Q5BP6aS+ie1v/TyeduYIT450S4eOIgWM5efIgTSX+Q==
-X-Received: by 2002:a05:6e02:1bad:b0:2dd:bc59:5078 with SMTP id n13-20020a056e021bad00b002ddbc595078mr294248ili.19.1659047844102;
-        Thu, 28 Jul 2022 15:37:24 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id h16-20020a05660208d000b0067b4d6cecc8sm834748ioz.45.2022.07.28.15.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jul 2022 15:37:23 -0700 (PDT)
-Received: (nullmailer pid 1710890 invoked by uid 1000);
-        Thu, 28 Jul 2022 22:37:18 -0000
-From:   Rob Herring <robh@kernel.org>
+        with ESMTP id S232456AbiG2Cgv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jul 2022 22:36:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEDC363912;
+        Thu, 28 Jul 2022 19:36:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 62445B82677;
+        Fri, 29 Jul 2022 02:36:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4BCC433D6;
+        Fri, 29 Jul 2022 02:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659062208;
+        bh=cVG+ATCgcUfwL3lkHWG2UgB0F2FCWRxuUaK7fXxdEU8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=b3DfgOJ/48XvUjyLkvp4sM+3H+kdMfqje6D7jrV9svFvhRpP57dS1ramWfEBMpZnh
+         n+Rg71eHPUQVCEqTpEwgvl2F9r8Y/GsLXqtnJXvJ7QqMEIohCA1VOJbYYFB//PaBf1
+         5FvAbpvjG/gxMX3YkvLbatQOwjkOvoAIk9Qj+zlHDWCJvbIBwIodGeMCHL70Rbfuva
+         yciGQ83UTAyyOxT4kP1RzU90saNROlCZxA7arsxcRk5QINL09Qkkgn8bEh4GM3v51Q
+         IaIbwqyszRJqqrAeio9dEvulEHlbNJqwmiFlBCqEJzyUVoEATIZVNID1efOhKf75kL
+         a9efKhVjxEzQw==
+Date:   Thu, 28 Jul 2022 21:36:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        devicetree@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Frank Li <Frank.Li@nxp.com>, Simon Xue <xxm@rock-chips.com>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Heiko Stuebner <heiko@sntech.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20220728143427.13617-12-Sergey.Semin@baikalelectronics.ru>
-References: <20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru> <20220728143427.13617-12-Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 11/17] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
-Date:   Thu, 28 Jul 2022 16:37:18 -0600
-Message-Id: <1659047838.065764.1710889.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v4 00/15] PCI: dwc: Add hw version and dma-ranges
+ support
+Message-ID: <20220729023645.GA423256@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Jul 2022 17:34:21 +0300, Serge Semin wrote:
-> As the DT-bindings description states the Rockchip PCIe controller is
-> based on the DW PCIe RP IP-core thus its DT-nodes are supposed to be
-> compatible with the common DW PCIe controller schema. Let's make sure they
-> evaluated against it by referring to the snps,dw-pcie-common.yaml schema
-> in the allOf sub-schemas composition.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch created on v3 lap of the series.
-> ---
->  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+On Fri, Jun 24, 2022 at 05:39:32PM +0300, Serge Semin wrote:
+> This patchset is a second one in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> Serge Semin (15):
+>   PCI: dwc: Add more verbose link-up message
+>   PCI: dwc: Detect iATU settings after getting "addr_space" resource
+>   PCI: dwc: Convert to using native IP-core versions representation
+>   PCI: dwc: Add IP-core version detection procedure
+>   PCI: dwc: Introduce Synopsys IP-core versions/types interface
+>   PCI: intel-gw: Drop manual DW PCIe controller version setup
+>   PCI: tegra194: Drop manual DW PCIe controller version setup
+>   PCI: dwc: Add host de-initialization callback
+>   PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
+>   PCI: dwc: Drop iATU regions enumeration - dw_pcie_region_type
+>   PCI: dwc: Simplify in/outbound iATU setup methods
+>   PCI: dwc: Add iATU regions size detection procedure
+>   PCI: dwc: Verify in/out regions against iATU constraints
+>   PCI: dwc: Check iATU in/outbound ranges setup methods status
 
-yamllint warnings/errors:
+I applied the above to pci/ctrl/dwc for v5.20, thanks!
 
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/pci/snps,dw-pcie-common.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dtb: pcie@fe280000: False schema does not allow {'compatible': ['rockchip,rk3568-pcie'], 'reg': [[3, 3229614080, 0, 3735552], [0, 4264034304, 0, 65536], [3, 2147483648, 0, 1048576]], 'reg-names': ['dbi', 'apb', 'config'], 'bus-range': [[32, 47]], 'clocks': [[4294967295, 143], [4294967295, 144], [4294967295, 145], [4294967295, 146], [4294967295, 147]], 'clock-names': ['aclk_mst', 'aclk_slv', 'aclk_dbi', 'pclk', 'aux'], 'device_type': ['pci'], 'linux,pci-domain': [[2]], 'max-link-speed': [[2]], 'msi-map': [[8192, 4294967295, 8192, 4096]], 'num-lanes': [[2]], 'phys': [[4294967295]], 'phy-names': ['pcie-phy'], 'power-domains': [[4294967295, 15]], 'ranges': [[2164260864, 0, 2155872256, 3, 2155872256, 0, 1048576], [2197815296, 0, 2156920832, 3, 2156920832, 0, 1064304640]], 'resets': [[4294967295, 193]], 'reset-names': ['pipe'], '#address-cells': [[3]], '#size-cells': [[2]], '$nodename': ['pcie
- @fe280000']}
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+>   PCI: dwc: Introduce dma-ranges property support for RC-host
 
-doc reference errors (make refcheckdocs):
+I deferred this one for now because the current value isn't clear yet.
+If we have a user for it, I'll be glad to add it.
 
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Bjorn
