@@ -2,129 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C006E584E6F
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 11:58:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BED1584FA4
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 13:33:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbiG2J6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jul 2022 05:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
+        id S235820AbiG2Ldw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jul 2022 07:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiG2J6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jul 2022 05:58:18 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584F739BBC;
-        Fri, 29 Jul 2022 02:58:16 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LvNDP3QxmzjXTx;
-        Fri, 29 Jul 2022 17:55:17 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Jul 2022 17:58:13 +0800
-CC:     <yangyicong@hisilicon.com>, <alexander.shishkin@linux.intel.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <acme@kernel.org>, <peterz@infradead.org>,
-        <corbet@lwn.net>, <mathieu.poirier@linaro.org>,
-        <mark.rutland@arm.com>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <suzuki.poulose@arm.com>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <iommu@lists.linux.dev>,
-        <linux-doc@vger.kernel.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <bagasdotme@gmail.com>
-Subject: Re: [PATCH v11 2/8] hwtracing: hisi_ptt: Add trace function support
- for HiSilicon PCIe Tune and Trace device
-To:     Greg KH <gregkh@linuxfoundation.org>
-References: <20220721130116.43366-1-yangyicong@huawei.com>
- <20220721130116.43366-3-yangyicong@huawei.com> <YuKZKGKMz+UcbETM@kroah.com>
- <33f372f6-36bf-f84e-bca0-86347fa4d579@huawei.com>
- <YuOi3i0XHV++z1YI@kroah.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <db1beba9-8db8-b14a-9078-99750a9f49a3@huawei.com>
-Date:   Fri, 29 Jul 2022 17:58:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S235559AbiG2Ldv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jul 2022 07:33:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4B02AE13;
+        Fri, 29 Jul 2022 04:33:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3055EB82748;
+        Fri, 29 Jul 2022 11:33:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F10FC433C1;
+        Fri, 29 Jul 2022 11:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659094427;
+        bh=tMQuEz9/O5iN9YupqcwyAfC6BmIM2k+OavS4lms+KSU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JU8FkWo6Tq2G0bmNjIfJvnViN9ubzzOgmUtjEW+UPyKj0J8ADt71vHiviOb65+qys
+         TFcCpC67YRVqggywTtDsU+6HIQos8D/o6NXgouFBm3lJLZWF07M06OSSeT1y0Pvze1
+         DGHNWg1+wCfg/tKfiYVum2kxW9Ho419ZwpARx85NdOw7JRQX/+FnFavQ69I4AcKHP0
+         gXUOUWvKs8whgz4PUUX7i/sKTfyR7T8xJJVQDlO7FZK56A8+DRQBWTK7eJUhDj11Ab
+         J60web7Uh9kyk4O0a8stKw7a8zA5GgZEdy1DkeNL3Nd8ZNdSNhbNp/Q22m74gn/ZPO
+         N6BGJbRM7r/Ew==
+Date:   Fri, 29 Jul 2022 06:33:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v4 15/15] PCI: dwc: Introduce dma-ranges property
+ support for RC-host
+Message-ID: <20220729113345.GA445581@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <YuOi3i0XHV++z1YI@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220729045220.akdabli5szd5lbdt@mobilestation>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[ reply again in plain text, sorry for the wrong format ]
+On Fri, Jul 29, 2022 at 07:52:20AM +0300, Serge Semin wrote:
+> On Thu, Jul 28, 2022 at 05:11:20PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 24, 2022 at 05:39:47PM +0300, Serge Semin wrote:
+> > > In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
+> > > property has the same format as the "ranges" property. The only difference
+> > > is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
+> > > memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
+> > > property. Even though the DW PCIe controllers are normally equipped with
+> > > the internal Address Translation Unit which inbound and outbound tables
+> > > can be used to implement both properties semantics, it was surprising for
+> > > me to discover that the host-related part of the DW PCIe driver currently
+> > > supports the "ranges" property only while the "dma-ranges" windows are
+> > > just ignored. Having the "dma-ranges" supported in the driver would be
+> > > very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
+> > > mapping and require a customized PCIe memory layout. So let's fix that by
+> > > introducing the "dma-ranges" property support.
+> 
+> > Do we have a platform that requires this yet?  Or does this fix a bug?
+> > 
+> > I see that dw_pcie_host_init() calls devm_pci_alloc_host_bridge(),
+> > which eventually parses "dma-ranges", but I don't see any DWC DT
+> > bindings that use it yet.
+> > 
+> > I'm not clear on what value this adds today.
+> 
+> There are several points of having this supported.
+> First of all, generic PCIe DT-bindings permit having the dma-ranges
+> specified for the PCIe RCs. If so having it unsupported by the driver
+> just breaks the bindings or at least makes it incomplete.
 
-On 2022/7/29 17:05, Greg KH wrote:
-> On Fri, Jul 29, 2022 at 03:29:14PM +0800, Yicong Yang wrote:
->>>> +	/*
->>>> +	 * Handle the interrupt on the same cpu which starts the trace to avoid
->>>> +	 * context mismatch. Otherwise we'll trigger the WARN from the perf
->>>> +	 * core in event_function_local().
->>>> +	 */
->>>> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
->>>> +				 cpumask_of(cpu)));
->>>
->>> If this hits, you just crashed the machine :(
->>>
->>
->> We'll likely to have a calltrace here without crash the machine and reboot in
->> most time, unless user has set panic_on_warn.
-> 
-> Again, please do not use WARN_ON for this, please read:
-> 	https://elixir.bootlin.com/linux/v5.19-rc8/source/include/asm-generic/bug.h#L74
-> 
-> If you want a traceback (what would you do with that?), then call the
-> function to give you that.  Don't crash people's boxes.
-> 
+Are there bindings in the tree that are broken and will be fixed by
+this?
 
-ok, will change to a dev_warn/err() per documented.
+> Second, the main point of this patchset is to add the dma-ranges
+> support.) Especially seeing some other PCIe RC drivers do have it
+> supported too.
+> Finally. It is required for our platform (and for all the platforms
+> with similar issues). The problem is that the outbound source window
+> base address (on CPU-side) is size-unaligned. It resides at the 128MB
+> base address (size is somewhat about ~335MB). In case of the
+> one-on-one CPU->PCI mapping the peripherals with relatively big BARs
+> (at least of 256MB) and which need the BARs having size-aligned memory
+> won't be supported. So we had to remap the PCIe space to the
+> size-aligned base address. But in its turn that caused the PCIe-CPU
+> memory overlap. So PCIe DMA stopped working for the overlapped memory
+> due to the implicit P2P transactions. In order to fix that we had to
+> add the dma-ranges support to the DW PCIe driver and use it to remap
+> the overlapped memory. So please add this patch to the repo. We really
+> need it.
 
->>> Please properly recover from errors if you hit them, like this.  Don't
->>> just give up and throw a message to userspace and watch the machine
->>> reboot with all data lost.
->>>
->>> Same for the other WARN_ON() instances here.  Handle the error and
->>> report it properly up the call chain.
->>>
->>
->> The driver use WARN_ON() in two places, once in pmu::start() and another in cpu teardown's
->> callback, both when the irq_set_affinity() failed. This is common to behave so when driver
->> fails to set irq affinity in pmu::start() and cpu_teardown():
-> 
-> Don't repeat broken patterns please.
-> 
->> yangyicong@ubuntu:~/mainline_linux/linux/drivers$ grep -rn WARN_ON ./ | grep irq_set_affinity
->> ./perf/arm_smmuv3_pmu.c:649:    WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(target)));
->> ./perf/arm_smmuv3_pmu.c:895:    WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(smmu_pmu->on_cpu)));
->> ./perf/arm-ccn.c:1214:          WARN_ON(irq_set_affinity(ccn->irq, cpumask_of(dt->cpu)));
->> ./perf/qcom_l2_pmu.c:796:       WARN_ON(irq_set_affinity(cluster->irq, cpumask_of(cpu)));
->> ./perf/qcom_l2_pmu.c:834:       WARN_ON(irq_set_affinity(cluster->irq, cpumask_of(target)));
->> ./perf/arm_dmc620_pmu.c:624:    WARN_ON(irq_set_affinity(irq->irq_num, cpumask_of(target)));
->> ./perf/fsl_imx8_ddr_perf.c:674: WARN_ON(irq_set_affinity(pmu->irq, cpumask_of(pmu->cpu)));
->> ./perf/xgene_pmu.c:1793:        WARN_ON(irq_set_affinity(xgene_pmu->irq, &xgene_pmu->cpu));
->> ./perf/xgene_pmu.c:1826:        WARN_ON(irq_set_affinity(xgene_pmu->irq, &xgene_pmu->cpu));
->> ./perf/hisilicon/hisi_pcie_pmu.c:658:           WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(cpu)));
->> ./perf/hisilicon/hisi_pcie_pmu.c:684:   WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(target)));
->> ./perf/hisilicon/hisi_uncore_pmu.c:495: WARN_ON(irq_set_affinity(hisi_pmu->irq, cpumask_of(cpu)));
->> ./perf/hisilicon/hisi_uncore_pmu.c:528: WARN_ON(irq_set_affinity(hisi_pmu->irq, cpumask_of(target)));
-> 
-> Great, you can fix all of these up as well any time :)
-> 
+Does the above apply to the pending Baikal-T1 driver?  If so, let's
+just include this patch in that series.  Then we'll have a user of
+this functionality and we'll be able to exercise and test this code.
 
-will have a look on this.
-
-Thanks.
-
+Bjorn
