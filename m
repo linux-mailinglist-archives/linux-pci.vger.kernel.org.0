@@ -2,57 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E47A585451
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 19:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 869FC58545E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jul 2022 19:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238295AbiG2RSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jul 2022 13:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
+        id S238319AbiG2RW4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jul 2022 13:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234120AbiG2RSa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jul 2022 13:18:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F109381489;
-        Fri, 29 Jul 2022 10:18:29 -0700 (PDT)
+        with ESMTP id S236038AbiG2RWy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jul 2022 13:22:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414EF7FE53;
+        Fri, 29 Jul 2022 10:22:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6409B828C5;
-        Fri, 29 Jul 2022 17:18:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C15C433C1;
-        Fri, 29 Jul 2022 17:18:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D1D5161E75;
+        Fri, 29 Jul 2022 17:22:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBD90C433C1;
+        Fri, 29 Jul 2022 17:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659115107;
-        bh=e2HT1ixOuJoMonAGRNwr4kq3x5uFCATLmS986J+K4m8=;
+        s=k20201202; t=1659115373;
+        bh=jzsBm81Z2APGky+J4VtIjqj2/KDbhD3FAL0kxiPdSOY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N4/Ovl3eVPp1FDYa5h1Ucx7QhWp9a8MJWxt1TzfWEQnnp3hmh8UVT7XtndgTbXUoz
-         tR3iaeYkjB9DNIxgz+msU6R8Wuw17Sxxg/CzJUdUZbDMXcDVkLyKu2BmXyh1ROOGYA
-         3OAW46UBhYsAvSH386Iwzs1xxRSx7jOgvzsdHBLI8ALWMU3jO7ID2/lxnE0HPPfPCK
-         5Cq77PztEvAL2CZJ3EH7e8X2UPumz+O1t/b2wGStWURZXr1C/Kef5BR6tIarlaW3iQ
-         KT10UVBTBzT0s6O6oUKgKLgVb4ualYaeTqx4jHkQx/M9Boi0nRJQG2xOW3HiSjwcoi
-         sZ9wilDCPE1sw==
-Date:   Fri, 29 Jul 2022 12:18:25 -0500
+        b=No/qZkAsLquzTWNBkgsZTV6FzgNlYNPu2stjScU01CvzuWBVz/owz/0gsrseusR0k
+         MOeJUNaIlftdcULJiwVEOTqZskOMhZ3j67lGbPJz2FBcL+3ArEv7H5D2wk1Z1LZa7T
+         tsSYrZZi/6E1wi0L2YA9WzkqQLroYQJVWr8RSxls6u9FjTz3U1EtwdRF7hjzXRss0K
+         Blt4/x6p6rou4NiN0bD5ugXfAM1vTXHCksk4bMuZdxrer6HMc8pUQKpB+3rE6tqJ9q
+         BBMrSAjIRTlh8bvSlL6IXJ1wNRauLLz0ty+5n/AoKtV/dc57062mNv+Xcnn+DPlc9w
+         q5Ez4JKqk3ItA==
+Date:   Fri, 29 Jul 2022 12:22:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3] PCI: qcom: Allow L1 and its sub states
-Message-ID: <20220729171825.GA465668@bhelgaas>
+To:     Mauri Sandberg <maukka@ext.kapsi.fi>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bhelgaas@google.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, andrew@lunn.ch,
+        sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
+        linux@armlinux.org.uk, lpieralisi@kernel.org, kw@linux.com,
+        thomas.petazzoni@bootlin.com, pali@kernel.org
+Subject: Re: [PATCH 0/2] PCI: mvebu: add support for orion soc
+Message-ID: <20220729172251.GA465917@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1657886366-32685-1-git-send-email-quic_krichai@quicinc.com>
+In-Reply-To: <20220718202843.6766-1-maukka@ext.kapsi.fi>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,55 +56,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 05:29:25PM +0530, Krishna chaitanya chundru wrote:
-> Allow L1 and its sub-states in the qcom pcie driver.
-> By default this is disabled in the qcom specific hardware.
-> So enabling it explicitly only for controllers belonging to
-> 2_7_0.
+On Mon, Jul 18, 2022 at 11:28:40PM +0300, Mauri Sandberg wrote:
+> Hello all!
 > 
-> This patch will not affect any link capability registers, this
-> will allow the link transitions to L1 and its sub states only
-> if they are already supported.
+> Working in close co-operation with Pali we made an initial attempt at bringing
+> support for orion PCIe into mvebu PCIe driver. Currently the address of
+> workaround memory range is hard coded and based on compatible string only. As
+> Pali describes in another thread, we were not able to figure out what's the
+> correct way to configure a configuration space. That discussion is here:
+> https://lore.kernel.org/linux-pci/20220710225108.bgedria6igtqpz5l@pali/T/#u
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> I tested this with D-Link DNS-323 rev A1 and it's working. As usual, all
+> comments and feedback is welcome.
+> 
+> Thanks,
+> Mauri
+> 
+> Mauri Sandberg (2):
+>   dt-bindings: PCI: mvebu: Add orion5x compatible
+>   PCI: mvebu: add support for orion5x
+> 
+>  .../devicetree/bindings/pci/mvebu-pci.txt     |  1 +
+>  arch/arm/mach-orion5x/common.c                | 13 ----
+>  drivers/pci/controller/Kconfig                |  2 +-
+>  drivers/pci/controller/pci-mvebu.c            | 59 +++++++++++++++++++
+>  4 files changed, 61 insertions(+), 14 deletions(-)
 
-Applied to pci/ctrl/qcom for v5.20, thanks!
+Hi Mauri,
 
-> ----
-> 
-> Changes since v1 & v2:
-> 	- Update in the commit text only.
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index a7202f0..5ef444f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -41,6 +41,9 @@
->  #define L23_CLK_RMV_DIS				BIT(2)
->  #define L1_CLK_RMV_DIS				BIT(1)
->  
-> +#define PCIE20_PARF_PM_CTRL			0x20
-> +#define REQ_NOT_ENTR_L1				BIT(5)
-> +
->  #define PCIE20_PARF_PHY_CTRL			0x40
->  #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
->  #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-> @@ -1261,6 +1264,11 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  	val |= BIT(4);
->  	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
->  
-> +	/* Enable L1 and L1ss */
-> +	val = readl(pcie->parf + PCIE20_PARF_PM_CTRL);
-> +	val &= ~REQ_NOT_ENTR_L1;
-> +	writel(val, pcie->parf + PCIE20_PARF_PM_CTRL);
-> +
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->  		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
->  		val |= BIT(31);
-> -- 
-> 2.7.4
-> 
+Can you address anything in 2/2 (if necessary), incorporate any acks,
+and post a v2?  There was some confusion around the first patch (there
+are two in the thread, likely the same?), and I didn't read the 2/2
+feedback in detail to see if any changes were needed.
+
+Bjorn
