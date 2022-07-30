@@ -2,436 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92153585ADA
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Jul 2022 16:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E43D585BA0
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Jul 2022 20:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234802AbiG3Ouh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 Jul 2022 10:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32814 "EHLO
+        id S235364AbiG3S3V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 Jul 2022 14:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234519AbiG3Oug (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Jul 2022 10:50:36 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEF818355
-        for <linux-pci@vger.kernel.org>; Sat, 30 Jul 2022 07:50:34 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id bh13so6167910pgb.4
-        for <linux-pci@vger.kernel.org>; Sat, 30 Jul 2022 07:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DrncD3onKxZF5yhems+JHbQznjyNcw1aP3dIQ3WpAPI=;
-        b=DthVpUpC22v5on9byDrgwsxaDfuYChPOHTmSva2C7kQvwit/lVU1pxUgyzHE8pAQH+
-         aXdtOkSw0fYAUJuCnpo1lKuGa2/Q79RIxQRQAqOInakFpr0EpESRYvuHGmNkxakuj+Vp
-         63BD3t22z8e4tN57r2vMRc2H2dMxgZjuYcLyaHFpJZC+Cv6EnEDd6mbQyOY6WeS/WwXF
-         qAFv2f5VHEpW1BLWkNU5G1mt9ghhvUGuLj/jOqnTBDXAt4TMBxhMj/9dhvhjCtrrrx0T
-         7O+yc4wfS+e5IBsHKU1eY3Ou5El1FGcXwpjqIPET/aHtH04afnRwwJemhGh/7WM4u+wJ
-         TqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DrncD3onKxZF5yhems+JHbQznjyNcw1aP3dIQ3WpAPI=;
-        b=8R1xw4XAQ2jZf5akOI6DvaDJ+PXylzhQOnbk3yGhS2CgZ68qMmCEZgSpC3mQrcsy+F
-         aivzHOkGAL7oA4TO/Mei6M553QwJANIUPQ/f9DuP0hdHZTkokzNsLecBVTWSZoN9OVIg
-         9fWfpBAwGe+jLmOR3fYIkSe8U1rGcrvI30JIHS4sfF34oZAYfNC6S/Xoe/Ua93fyKywc
-         r/AWFskgVhuO29lrLbaXrQAitxzXDuo0oH7Jr840sLruNTcE4zXNN0xbcBoKzH1rVQYO
-         NxFVaP0RSvRjkD8g5i5SZcpm+8GSXjKlf420LyDP6OMnqTQe2bKw+q3OGPxay0aE2xrA
-         D+ow==
-X-Gm-Message-State: AJIora+T+EXKbE9S3/LY1ZNlZ3hgqCyWYxbcJtcTqIj/EsiwvpZS8G2r
-        SgJDP06u+F8aj/3dpy904Al6
-X-Google-Smtp-Source: AGRyM1sgi7Lwjc0XMlmGOILKZz47/JtwTAexMGJcdfcjGAq2MVh2zhSGNcxDtUNippxNlfxoe5KgBg==
-X-Received: by 2002:a05:6a00:1745:b0:52a:f0d3:ae7 with SMTP id j5-20020a056a00174500b0052af0d30ae7mr8644017pfc.72.1659192633852;
-        Sat, 30 Jul 2022 07:50:33 -0700 (PDT)
-Received: from thinkpad ([117.207.28.107])
-        by smtp.gmail.com with ESMTPSA id n5-20020a170903110500b0016d3935eff0sm5902018plh.176.2022.07.30.07.50.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Jul 2022 07:50:33 -0700 (PDT)
-Date:   Sat, 30 Jul 2022 20:20:25 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+        with ESMTP id S233622AbiG3S3U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Jul 2022 14:29:20 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A304B165BE
+        for <linux-pci@vger.kernel.org>; Sat, 30 Jul 2022 11:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659205759; x=1690741759;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=la8DANfvRVoP5cy3/F8GxrdG+0nPqlf20TnaQn26OWI=;
+  b=FVGkySZDpYCpKjIn7IDaLEFEHJofTNEpAp655Lrp+Ikojh9o0oyPrgJI
+   W5BCtMHP62EgfHualzdKUFSBOKTLktTXiFT3OUEIGIMr5zldfxVQycEib
+   XrOzKr4WqsqOQZ8IYDknCNpowjZF6LFSkOATL+cc/Nff3vjpdxebH2dzI
+   1cMq1+1e1zE74XkLHLK1CdRuY4+UF6BnAc8RuVlOYTVnOSmSW/U48YIpG
+   Mu9mvO+5eiGsvY06ZqVm7ASJmUSdOKGcCyjs8gmaclU2/lPuSHiBwScpC
+   +5TR7d/UzwTVODMJ6g9AwL6YOR8ul8kqegJ4IZyWaPS3/8ebnQMxRv0Ue
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10424"; a="287693937"
+X-IronPort-AV: E=Sophos;i="5.93,204,1654585200"; 
+   d="scan'208";a="287693937"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2022 11:29:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,204,1654585200"; 
+   d="scan'208";a="629744988"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2022 11:29:17 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oHrDB-000D47-0t;
+        Sat, 30 Jul 2022 18:29:17 +0000
+Date:   Sun, 31 Jul 2022 02:28:18 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH V1] PCI: designware-ep: Fix DBI access before core init
-Message-ID: <20220730145025.GA4005@thinkpad>
-References: <051a3baf-b4dd-7764-2e61-03584cefb4d3@nvidia.com>
- <20220729224404.GA478920@bhelgaas>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/qcom] BUILD SUCCESS
+ 5147ba8af2d707d9bbd65e84286c42b11d612c83
+Message-ID: <62e57842.Z4l0gutPfPP0/MUb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220729224404.GA478920@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 29, 2022 at 05:44:04PM -0500, Bjorn Helgaas wrote:
-> [+cc Xiaowei (author of 6bfc9c3a2c70), Hou (author of 8bcca2658558)]
-> 
-> On Thu, Jul 28, 2022 at 05:56:28PM +0530, Vidya Sagar wrote:
-> > On 7/28/2022 3:44 AM, Bjorn Helgaas wrote:
-> > > On Wed, Jun 22, 2022 at 09:31:33AM +0530, Vidya Sagar wrote:
-> > > > Platforms that cannot support their core initialization without the
-> > > > reference clock from the host, implement the feature 'core_init_notifier'
-> > > > to indicate the DesignWare sub-system about when their core is getting
-> > > > initialized. Any accesses to the core (Ex:- DBI) would result in system
-> > > > hang in such systems (Ex:- tegra194). This patch moves any access to the
-> > > > core to dw_pcie_ep_init_complete() API which is effectively called only
-> > > > after the core initialization.
-> > > 
-> > > I assume this is still broken.  I want to fix it.  I assume this patch
-> > > fixes it and there are no known problems with it.  I assume this can
-> > > be fixed so it works on all platforms, whether they use
-> > > core_init_notifier or not.
-> >
-> > Yes. All your assumptions are correct.
-> > 
-> > > I'd like the commit log to be specific about where the hang occurs so
-> > > it's easy for a non-DesignWare expert (me!) to see the problem.  E.g.,
-> > > on tegra194, X depends on Y, but Y is initialized after X.  Say
-> > > specifically what functions X and Y are.
-> >
-> > X = DBI accesses
-> > Y = Core initialization which in turn depends on the REFCLK from the host
-> > 
-> > Without this patch, hang happens when DBI registers are accessed without
-> > core being initialized. In the case of Tegra194 at least, core gets
-> > initialized only after REFCLK is available from the host. The way we make
-> > sure that the REFCLK is available from the host is by checking for PERST#
-> > de-assertion interrupt. (PCIe spec mandates that the host must supply REFCLK
-> > before de-asserting PERST# signal).
-> > This patch prevents any accesses to the DBI/Core registers if the platform
-> > says that it supports core_init_notifier.
-> 
-> There are several commits involved in this, oldest to newest:
-> 
->   e966f7390da9 ("PCI: dwc: Refactor core initialization code for EP mode")
->     Split EP initialization into dw_pcie_ep_init() (which doesn't
->     touch core registers) and dw_pcie_ep_init_complete() (which does).
-> 
->     dw_pcie_ep_init
->       of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows)
->       ep->ib_window_map = devm_kcalloc(..., ep->num_ib_windows, ...)
->       dw_pcie_ep_init_complete        # core regs are available
->         dw_pcie_readb_dbi             # <-- read core regs
-> 
->   6bfc9c3a2c70 ("PCI: designware-ep: Move the function of getting MSI capability forward")
->     Move MSI capability lookup from dw_pcie_ep_init_complete() to
->     dw_pcie_ep_init().
-> 
->     dw_pcie_ep_init
->       dw_pcie_find_capability(pci, PCI_CAP_ID_MSI)
->         dw_pcie_readw_dbi             # <-- read core regs
->       dw_pcie_ep_init_complete        # core regs are available
-> 
->     This is broken because we access the DBI registers before the core
->     is initialized.
-> 
->   281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
->     Read num_ib_windows from iATU registers instead of from DT
->     property.
-> 
->     dw_pcie_ep_init
->       ib_window_map = devm_kcalloc(..., pci->num_ib_windows, ...)  # use
->       dw_pcie_ep_init_complete
->         dw_pcie_setup
->           dw_pcie_iatu_detect_regions
->             dw_pcie_readl_dbi
->             pci->num_ib_windows = ib                               # init
-> 
->     This ordering is broken because we use pci->num_ib_windows before
->     we initialize it.
-> 
->   8bcca2658558 ("PCI: dwc: Move iATU detection earlier")
->     Fix the use-before-init problem by moving init earlier:
-> 
->     dw_pcie_ep_init
->       dw_pcie_iatu_detect
->         dw_pcie_readl_dbi             # <-- read core regs
->         pci->num_ib_windows = ib                                   # init
->       ib_window_map = devm_kcalloc(..., pci->num_ib_windows, ...)  # use
->       dw_pcie_ep_init_complete        # core regs are available
->         dw_pcie_setup
-> 
->     This fixed the use-before-init, but it causes the hang by
->     accessing the DBI registers before the core is initialized.
-> 
-> This patch addresses the problems of 6bfc9c3a2c70 and 8bcca2658558 by
-> moving dw_pcie_iatu_detect() and dw_pcie_ep_find_capability() from
-> dw_pcie_ep_init() to dw_pcie_ep_init_complete().
-> 
-> We probably need Fixes: tags for both.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/qcom
+branch HEAD: 5147ba8af2d707d9bbd65e84286c42b11d612c83  PCI: qcom: Allow ASPM L1 and substates for 2.7.0
 
-That sounds right to me.
+elapsed time: 1434m
 
-> But I don't think this patch is enough, and I have a lot of questions:
-> 
->   1) The "core_init_notifier" mechanism is kind of obtuse.  IIUC, any
->      driver that sets ".core_init_notifier = true" is responsible for
->      calling dw_pcie_ep_init_complete() at some point.  But that's not
->      explicit at all in the code.  There's no "notifier" involved.  I
->      suppose the idea is that the *interrupt* is the notifier, but the
->      naming doesn't help connect things.
+configs tested: 148
+configs skipped: 6
 
-The actual notifier is used *inside* the interrupt handler.
-dw_pcie_ep_init_notify(). This notifies the EPF drivers.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-LINK_UP notifier is used with dw_pcie_ep_linkup().
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+arc                  randconfig-r043-20220729
+i386                                defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                           allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-syz
+i386                          randconfig-a001
+i386                          randconfig-a005
+arm                                 defconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+powerpc                           allnoconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+x86_64                        randconfig-a004
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+powerpc                      bamboo_defconfig
+m68k                          hp300_defconfig
+sh                              ul2_defconfig
+nios2                               defconfig
+sh                         ecovec24_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+arm                         lpc18xx_defconfig
+powerpc                 mpc8540_ads_defconfig
+xtensa                    xip_kc705_defconfig
+i386                          randconfig-c001
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+powerpc                      pcm030_defconfig
+m68k                                defconfig
+mips                         tb0226_defconfig
+sh                     sh7710voipgw_defconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+powerpc                     pq2fads_defconfig
+ia64                            zx1_defconfig
+xtensa                  audio_kc705_defconfig
+sh                          r7785rp_defconfig
+sh                            hp6xx_defconfig
+mips                       bmips_be_defconfig
+sh                           se7206_defconfig
+powerpc                       eiger_defconfig
+arm                           h3600_defconfig
+x86_64                           alldefconfig
+arm                             ezx_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                           jazz_defconfig
+powerpc                      makalu_defconfig
+powerpc                     tqm8541_defconfig
+powerpc                     tqm8555_defconfig
+arm                          badge4_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+sh                           se7724_defconfig
+sh                          rsk7201_defconfig
+sh                           se7619_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220729
+sh                          r7780mp_defconfig
+sh                         apsh4a3a_defconfig
+powerpc                      mgcoge_defconfig
+arm                        shmobile_defconfig
+powerpc                        cell_defconfig
+sh                          kfr2r09_defconfig
+mips                          rb532_defconfig
+m68k                        mvme147_defconfig
+xtensa                    smp_lx200_defconfig
+sh                            migor_defconfig
+sh                        sh7757lcr_defconfig
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+mips                     decstation_defconfig
+m68k                         amcore_defconfig
+arm                       aspeed_g5_defconfig
+arm                            qcom_defconfig
+mips                        vocore2_defconfig
+nios2                            allyesconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+arm                        clps711x_defconfig
+powerpc                  iss476-smp_defconfig
+ia64                             alldefconfig
+parisc                generic-64bit_defconfig
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
 
-> 
->   2) I still want to know exactly where (what function) the critical
->      transition that enables DBI access is.  I guess it's
->      qcom_pcie_perst_deassert() for qcom and
->      pex_ep_event_pex_rst_deassert() for tegra?  And for drivers that
->      don't set .core_init_notifier, DBI is accessible any time in
->      dw_pcie_ep_init() or later?
-> 
-
-On the Qcom platforms, qcom_pcie_enable_resources() is what enabling all
-resources required for DBI access. This function turns ON clocks, brings the
-endpoint IP block out of reset and turns ON the PHY. The last step (turning
-ON the PHY) requires active refclk from the host.
-
-So with mainline pcie-qcom-ep driver, the PCIe host should be active by the
-time the ep driver probes. Then only refclk will be active and phy_power_on()
-will succeed. Now, this creates a hard dependency with the PCIe host even for
-ep driver probing (remember the phy_power_on() gets called during probe time),
-and this order won't work if we'd like to use the pcie-qcom-ep driver in a
-standalone product like a PCIe modem, where the modem would power up
-independently of the PCIe host.
-
-And this is the reason, *I* wanted to move all the DBI access to
-dw_pcie_ep_init_complete(), so that the ep driver can probe successfully
-independent of the host and becomes operational when the PCIe host comes up
-and deasserts the PERST#.
-
-I have mentioned this in my version of the patch:
-https://lore.kernel.org/lkml/20220330060515.22328-1-manivannan.sadhasivam@linaro.org/
-
-The reason why I decided to use core_init_notifier in the first place was, it
-ensures that the endpoint gets initialized only when the PCIe host de-asserts
-the PERST# signal. And this behaviour matches the PCIe spec.
-
->   3) How do these interrupt handlers work?  I'm used to the model of:
-> 
->        Install interrupt handler
->        Do something to the device so it will generate an interrupt
->        Later, the device generates the interrupt
->        Execute the interrupt handler
-> 
->      We register tegra_pcie_ep_pex_rst_irq() as an interrupt handler,
->      but what touches the device and starts the process that causes
->      the interrupt?
-> 
->   4) 6bfc9c3a2c70 moved the MSI capability lookup to dw_pcie_ep_init()
->      because .ep_init() functions, e.g., ls_pcie_ep_init(), depend on
->      ep_func->msi_cap.  Moving the MSI lookup to
->      dw_pcie_ep_init_complete() will break that again, won't it?
-> 
-
-Good catch! Yes, it will break the NXP driver. But the rest of the ep drivers
-set the msi{x}_capable flags statically and this information should be known
-beforehand IMO.
-
->   5) dw_pcie_ep_init() calls ep->ops->ep_init(ep), and almost all of
->      those .ep_init() methods, e.g., dra7xx_pcie_ep_init(),
->      ls_pcie_ep_init(), etc., call dw_pcie_ep_reset_bar(), which does
->      DBI writes.  These are before dw_pcie_ep_init_complete(), so the
->      are broken per the design (though they probably *work* because
->      the drivers don't set .core_init_notifier, so DBI accesses
->      probably work earlier).
-> 
->      The only .ep_init() in a driver that sets .core_init_notifier is
->      qcom_pcie_ep_init().  That *looks* like it should actually be
->      broken because it runs before dw_pcie_ep_init_complete().
-
-As per my above justification, it is not broken technically.
-
-> 
->   6) What's going on with the CORE_INIT and LINK_UP notifiers?
->      dw_pcie_ep_init_notify() is only called by qcom and tegra.
->      dw_pcie_ep_linkup() is only called by dra7xx, qcom, and tegra.
->      As far as I can tell, nobody at all registers to handle those
->      events except a test.  I think it's pointless to have that code
->      if nobody uses it.
->
-
-I have submitted an actual driver that makes use of these notifiers:
-https://lore.kernel.org/lkml/20220502060611.58987-9-manivannan.sadhasivam@linaro.org/
-
-Thanks,
-Mani
-
-> > > > ---
-> > > >   .../pci/controller/dwc/pcie-designware-ep.c   | 88 +++++++++++--------
-> > > >   1 file changed, 49 insertions(+), 39 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > index 0eda8236c125..9feec720175f 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > @@ -639,9 +639,14 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > > >   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> > > >   {
-> > > >        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > +     struct dw_pcie_ep_func *ep_func;
-> > > > +     struct device *dev = pci->dev;
-> > > > +     struct pci_epc *epc = ep->epc;
-> > > >        unsigned int offset;
-> > > >        unsigned int nbars;
-> > > >        u8 hdr_type;
-> > > > +     u8 func_no;
-> > > > +     void *addr;
-> > > >        u32 reg;
-> > > >        int i;
-> > > > 
-> > > > @@ -654,6 +659,42 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> > > >                return -EIO;
-> > > >        }
-> > > > 
-> > > > +     dw_pcie_iatu_detect(pci);
-> > > > +
-> > > > +     ep->ib_window_map = devm_kcalloc(dev,
-> > > > +                                      BITS_TO_LONGS(pci->num_ib_windows),
-> > > > +                                      sizeof(long),
-> > > > +                                      GFP_KERNEL);
-> > > > +     if (!ep->ib_window_map)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     ep->ob_window_map = devm_kcalloc(dev,
-> > > > +                                      BITS_TO_LONGS(pci->num_ob_windows),
-> > > > +                                      sizeof(long),
-> > > > +                                      GFP_KERNEL);
-> > > > +     if (!ep->ob_window_map)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-> > > > +                         GFP_KERNEL);
-> > > > +     if (!addr)
-> > > > +             return -ENOMEM;
-> > > > +     ep->outbound_addr = addr;
-> > > > +
-> > > > +     for (func_no = 0; func_no < epc->max_functions; func_no++) {
-> > > > +             ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-> > > > +             if (!ep_func)
-> > > > +                     return -ENOMEM;
-> > > > +
-> > > > +             ep_func->func_no = func_no;
-> > > > +             ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-> > > > +                                                           PCI_CAP_ID_MSI);
-> > > > +             ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-> > > > +                                                            PCI_CAP_ID_MSIX);
-> > > > +
-> > > > +             list_add_tail(&ep_func->list, &ep->func_list);
-> > > > +     }
-> > > > +
-> > > >        offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > > 
-> > > >        dw_pcie_dbi_ro_wr_en(pci);
-> > > > @@ -677,8 +718,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
-> > > >   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >   {
-> > > >        int ret;
-> > > > -     void *addr;
-> > > > -     u8 func_no;
-> > > >        struct resource *res;
-> > > >        struct pci_epc *epc;
-> > > >        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > @@ -686,7 +725,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >        struct platform_device *pdev = to_platform_device(dev);
-> > > >        struct device_node *np = dev->of_node;
-> > > >        const struct pci_epc_features *epc_features;
-> > > > -     struct dw_pcie_ep_func *ep_func;
-> > > > 
-> > > >        INIT_LIST_HEAD(&ep->func_list);
-> > > > 
-> > > > @@ -708,8 +746,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >                }
-> > > >        }
-> > > > 
-> > > > -     dw_pcie_iatu_detect(pci);
-> > > > -
-> > > >        res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-> > > >        if (!res)
-> > > >                return -EINVAL;
-> > > > @@ -717,26 +753,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >        ep->phys_base = res->start;
-> > > >        ep->addr_size = resource_size(res);
-> > > > 
-> > > > -     ep->ib_window_map = devm_kcalloc(dev,
-> > > > -                                      BITS_TO_LONGS(pci->num_ib_windows),
-> > > > -                                      sizeof(long),
-> > > > -                                      GFP_KERNEL);
-> > > > -     if (!ep->ib_window_map)
-> > > > -             return -ENOMEM;
-> > > > -
-> > > > -     ep->ob_window_map = devm_kcalloc(dev,
-> > > > -                                      BITS_TO_LONGS(pci->num_ob_windows),
-> > > > -                                      sizeof(long),
-> > > > -                                      GFP_KERNEL);
-> > > > -     if (!ep->ob_window_map)
-> > > > -             return -ENOMEM;
-> > > > -
-> > > > -     addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-> > > > -                         GFP_KERNEL);
-> > > > -     if (!addr)
-> > > > -             return -ENOMEM;
-> > > > -     ep->outbound_addr = addr;
-> > > > -
-> > > >        if (pci->link_gen < 1)
-> > > >                pci->link_gen = of_pci_get_max_link_speed(np);
-> > > > 
-> > > > @@ -753,20 +769,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >        if (ret < 0)
-> > > >                epc->max_functions = 1;
-> > > > 
-> > > > -     for (func_no = 0; func_no < epc->max_functions; func_no++) {
-> > > > -             ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-> > > > -             if (!ep_func)
-> > > > -                     return -ENOMEM;
-> > > > -
-> > > > -             ep_func->func_no = func_no;
-> > > > -             ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-> > > > -                                                           PCI_CAP_ID_MSI);
-> > > > -             ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-> > > > -                                                            PCI_CAP_ID_MSIX);
-> > > > -
-> > > > -             list_add_tail(&ep_func->list, &ep->func_list);
-> > > > -     }
-> > > > -
-> > > >        if (ep->ops->ep_init)
-> > > >                ep->ops->ep_init(ep);
-> > > > 
-> > > > @@ -790,6 +792,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >                        return 0;
-> > > >        }
-> > > > 
-> > > > +     /*
-> > > > +      * NOTE:- Avoid accessing the hardware (Ex:- DBI space) before this
-> > > > +      * step as platforms that implement 'core_init_notifier' feature may
-> > > > +      * not have the hardware ready (i.e. core initialized) for access
-> > > > +      * (Ex: tegra194). Any hardware access on such platforms result
-> > > > +      * in system hard hang.
-> > > > +      */
-> > > > +
-> > > >        return dw_pcie_ep_init_complete(ep);
-> > > >   }
-> > > >   EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
-> > > > --
-> > > > 2.17.1
-> > > > 
+clang tested configs:
+hexagon              randconfig-r041-20220729
+riscv                randconfig-r042-20220729
+hexagon              randconfig-r045-20220729
+s390                 randconfig-r044-20220729
+x86_64                        randconfig-a014
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-k001
+mips                     loongson1c_defconfig
+arm                         palmz72_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                      katmai_defconfig
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+arm                      tct_hammer_defconfig
+mips                        maltaup_defconfig
+powerpc                 mpc832x_mds_defconfig
+mips                      maltaaprp_defconfig
+mips                          ath25_defconfig
+powerpc                    socrates_defconfig
+powerpc                          g5_defconfig
+mips                           mtx1_defconfig
+mips                           ip28_defconfig
+powerpc                  mpc866_ads_defconfig
+x86_64                           allyesconfig
+arm                       spear13xx_defconfig
+riscv                             allnoconfig
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://01.org/lkp
