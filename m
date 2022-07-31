@@ -2,84 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D842658607D
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Jul 2022 21:02:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB24586151
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Jul 2022 22:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237617AbiGaTCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Jul 2022 15:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48610 "EHLO
+        id S236639AbiGaU3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Jul 2022 16:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbiGaTCV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jul 2022 15:02:21 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D33EE0E
-        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 12:02:20 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1EBE4116BE5D9;
-        Sun, 31 Jul 2022 21:02:16 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id DC7B62ED8EB; Sun, 31 Jul 2022 21:02:15 +0200 (CEST)
-Date:   Sun, 31 Jul 2022 21:02:15 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Harald Dunkel <harri@afaics.de>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: problem on reboot: pcieport 0000:00:1c:0: pciehp: Slot(0): No
- link
-Message-ID: <20220731190215.GA19323@wunner.de>
-References: <4013c5d1-5b47-ae2f-1071-17a7b13a3dbe@afaics.de>
+        with ESMTP id S230074AbiGaU3G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jul 2022 16:29:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78CE4DF30
+        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 13:29:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 13DE361123
+        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 20:29:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F80CC433C1
+        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 20:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659299344;
+        bh=pD5duAqAKVwZ2XGf4smSm37mjDhEE7Ll6IHePEhQ14E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uBI78kQb9x7rrpHq6Y1xVQWgtZYUEklJu5OGxqC3/veTOEEvScCyUozot4WJX6YcT
+         cQBzUVc2UQk/DDdPHxRF0QbQ2IxPdDoIxYqtT7ssRmjLoaQWSGUxxLUrC6lhFUQ0Zy
+         jGnEIwu0C4D/n/zms1uqg8Wxodriu/gDuHGuFt4JLyFq1rG4+kuN+bLEbOjzfeDIuf
+         neRS7A9Av8T/9F+Fj3XIzJ5XSFBHkjGDcLqI9hPOCkau0Ba9cUhEi7ocJWt6+wTrN7
+         naWXLJGHO0y93fXQCylkMb5ycRjGFjFqUGwAVwKwUWyrfhx4F/QsnNhagwiAFc7bNO
+         QoFJPAODNOfUQ==
+Received: by mail-wr1-f46.google.com with SMTP id bk11so1960572wrb.10
+        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 13:29:04 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0Ta3kHu6IZCFLibyfCDq9oc5Df1CjppHBVPJhd8yqZB07W5/qe
+        9dsqS5bbYfe3ZrZv0vf5ijwYxHurAfNTfi1XR5Y=
+X-Google-Smtp-Source: AA6agR79tdJ0bQV19BgfmBoGyMqfLrs/n9gMBlKcjvcWjFGe8T3+J9h0DQKmrIgZBhtlhS3+X8OG7Qh/6u7mKrTo2dU=
+X-Received: by 2002:a05:6000:2a4:b0:21e:6e0e:df1f with SMTP id
+ l4-20020a05600002a400b0021e6e0edf1fmr8362159wry.516.1659299342640; Sun, 31
+ Jul 2022 13:29:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4013c5d1-5b47-ae2f-1071-17a7b13a3dbe@afaics.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <202207301404.VdeSPptt-lkp@intel.com>
+In-Reply-To: <202207301404.VdeSPptt-lkp@intel.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Sun, 31 Jul 2022 22:29:00 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0w4iTQ9p+4Njfk8jPPv6dHn6dv-_VoE90rhToAwHY==A@mail.gmail.com>
+Message-ID: <CAK8P3a0w4iTQ9p+4Njfk8jPPv6dHn6dv-_VoE90rhToAwHY==A@mail.gmail.com>
+Subject: Re: [helgaas-pci:pci/header-cleanup-immutable 2/6]
+ arch/x86/kernel/cpu/cyrix.c:277:3: error: use of undeclared identifier 'isa_dma_bridge_buggy'
+To:     kernel test robot <lkp@intel.com>
+Cc:     Stafford Horne <shorne@gmail.com>, llvm@lists.linux.dev,
+        kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 31, 2022 at 07:25:06PM +0200, Harald Dunkel wrote:
-> 	kernel 5.18.14 (built from git)
-> 	Qnap TS-559 Pro II, 4*3.5 HDD + 1 SSD, /boot is on USB stick
-> 	Intel(R) Atom(TM) CPU D525
-> 	Debian Sid
-> 
-> On a reboot after some runtime my Qnap TS-559 Pro II shuts down cleanly, but
-> after the kernel and initrd are loaded again it writes an endless stream of
-> messages to the console
-> 
-> pcieport 0000:00:1c:0: pciehp: Slot(0): Card present
-> pcieport 0000:00:1c:0: pciehp: Slot(0): No link
-> pcieport 0000:00:1c:0: pciehp: Slot(0): Card present
-> pcieport 0000:00:1c:0: pciehp: Slot(0): No link
-[...]
+On Sat, Jul 30, 2022 at 8:53 AM kernel test robot <lkp@intel.com> wrote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/header-cleanup-immutable
+> head:   933c5a4f87d92a865d1db76caf190f1a4a1927f9
+> commit: abb4970ac33514c84b143516583eaf8cc47abd67 [2/6] PCI: Move isa_dma_bridge_buggy out of asm/dma.h
+> config: i386-randconfig-a006 (https://download.01.org/0day-ci/archive/20220730/202207301404.VdeSPptt-lkp@intel.com/config)
+> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 52cd00cabf479aa7eb6dbb063b7ba41ea57bce9e)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=abb4970ac33514c84b143516583eaf8cc47abd67
 
-Is this a regression?  Was it also present on older kernel versions?
+> >> arch/x86/kernel/cpu/cyrix.c:277:3: error: use of undeclared identifier 'isa_dma_bridge_buggy'
+>                    isa_dma_bridge_buggy = 2;
+>                    ^
 
-The PCIe Root Port 0000:00:1c:0 is hotplug-capable and is constantly
-signaling an interrupt.  Upon checking the Slot Status register,
-the PCIe hotplug driver discovers that the Presence Detect bit is set,
-i.e. the hardware signals hotplug of a card.  However when trying
-to bring up the slot, the link fails to go up.
 
-What's the Secondary Bus number of that Root Port?  Is there a PCIe
-device below it or is the Presence Detect bit just a phantom?
+This file now needs to #include the new linux/isa-dma.h header.
 
-If you open a bug at bugzilla.kernel.org and attach full dmesg and
-lspci -vvv output plus an ACPI dump, we can analyze the issue further,
-but I suspect this is a BIOS issue (vendor probably forgot to disable
-that Root Port) and you need to ask your vendor for a BIOS update.
-It doesn't look like a bug in the kernel to me at first glance.
-If your vendor is unresponsive, you can try removing the offending
-Root Port via sysfs on boot.
-
-Thanks,
-
-Lukas
+        Arnd
