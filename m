@@ -2,281 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF43E587042
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 20:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CE91587074
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 20:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233286AbiHASNQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Aug 2022 14:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51144 "EHLO
+        id S232971AbiHASnA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Aug 2022 14:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbiHASNP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Aug 2022 14:13:15 -0400
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1223D26C6;
-        Mon,  1 Aug 2022 11:13:14 -0700 (PDT)
-Received: by mail-il1-f181.google.com with SMTP id s16so2265549ilp.3;
-        Mon, 01 Aug 2022 11:13:14 -0700 (PDT)
+        with ESMTP id S231667AbiHASm7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Aug 2022 14:42:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5DEDF15710
+        for <linux-pci@vger.kernel.org>; Mon,  1 Aug 2022 11:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659379377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9VSxu6kH6OVSyxacr8C8nn8K1lJQbLqb/x2+RqZOLy0=;
+        b=QvNgiCjjg/jSdCPKebxoYEWTwFwczJk7X6OtbeQt6dSJou1eV8PFwegR2ChVG26E8UDyum
+        Au/lixGBMBAH3IsKfP2FVfgtmClENf5Q02UiNdsovhk11b2YhLUxlAgANo0/y5cpViHemx
+        SDQnSKgy85tZaGTkQTAxJHkFuIb/cKs=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-320-U_G0iEPOMOGdxjSOErEk_g-1; Mon, 01 Aug 2022 14:42:56 -0400
+X-MC-Unique: U_G0iEPOMOGdxjSOErEk_g-1
+Received: by mail-il1-f200.google.com with SMTP id k11-20020a92c24b000000b002dd46b47e01so7244875ilo.14
+        for <linux-pci@vger.kernel.org>; Mon, 01 Aug 2022 11:42:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=j9dit8EqlWhA+Rr+GJY5510B6cmCqLCKgNOXN9P6uiM=;
-        b=g8nQZ1BPkX1lxBLXzzF9tLiYNS8AWv8vmeSkpRN39CJsP3CN2UhZwf0ZJKXm5SarFk
-         xuFdroBl/f9yoqVl7goFTN+1pYbYTDV/QvTVxkACTOxYPtdgiuk2VvMdtLg/UyYTTcfS
-         U50W3j0GSVT6ubgxdVx4IzYERIEmzNy9vxF5ni8f37d4seikOJisPH8JLlJiWmJv4Lha
-         jdjZdY7ggcrL89a5sVp3pLPZCmu7IeKE2To+CuTxS6d1awE5b5mv05tq7WmhbL6gUsq/
-         TOXkLPG17VVPIdEJVWRO5nfhtOIE/z2je0LWiH5ZLPkM7SIE0OTx6lzW1R1YvpiJPhN9
-         2vlw==
-X-Gm-Message-State: ACgBeo0V4qjRFLpc63yBmCd9KZBAmkuY7F1lRawcy67HPntee9/jrIFf
-        TweHwr8UaUzaSUFMxM/FYw==
-X-Google-Smtp-Source: AA6agR5C9PX1B7eebFsRwDF+jj5DM2vHaWnHure64vtNN+g1MnF9pk2wwrqQ/RR8MEbUiTuAqhqUVA==
-X-Received: by 2002:a92:c26d:0:b0:2de:bfd7:17e with SMTP id h13-20020a92c26d000000b002debfd7017emr1403981ild.156.1659377593211;
-        Mon, 01 Aug 2022 11:13:13 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id g14-20020a05663810ee00b003423f7b779csm4718055jae.41.2022.08.01.11.13.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=9VSxu6kH6OVSyxacr8C8nn8K1lJQbLqb/x2+RqZOLy0=;
+        b=Bd0nZzqXldOslT+RIlc6MepyOeK1/CRQbdhPkGh3LH/VFOtepI9cn804bNkUzlEcLF
+         OI5vg13wSJBct0cLPWeHkZ/JAN0vAJMvCQFm8Ir27DdT39/5nZXgbDrjkvn/CjhmiqCa
+         ikJ4KiADkjJ4vM/c5fcoZfm6HEfv/WpktBM1b78PFuSzTRr3BO6nwvW6M36GlaZxTp8M
+         DPi5nv76lVBNG5JeNHuJVvsI1N3fxfri1XtidQEq1IalHc6+2wLlL7wtaca+0mUaZqyh
+         P8bLSOPaSKKsv8/y3LgBoJ5/5fGxy7G2DD8B12DkKJXa/OxJq+ee2FBqS69rT8b2H6yx
+         eORA==
+X-Gm-Message-State: AJIora8AT/DRKhmX6AWSVTGr1OzPLxyJ22ZESTm6iPSPapZZSBs98npS
+        X8H/AaJsglEgMbdibj2gbgBKAXyxfLMAq24qPVFL3JG7hsuC2DNiYjNYDUZOOPozxRsf1DkV4B5
+        Oq3VNF/iQ1iwEPYkmOsuZ
+X-Received: by 2002:a05:6e02:12c7:b0:2dc:8862:15ed with SMTP id i7-20020a056e0212c700b002dc886215edmr6218129ilm.253.1659379375617;
+        Mon, 01 Aug 2022 11:42:55 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vPhYcUSteoNNgux6SlllUg3TqHUG5Z8FH+OPi18qAeH1VyuLr2yZZAoZeI2cQIAMhW3mQv6g==
+X-Received: by 2002:a05:6e02:12c7:b0:2dc:8862:15ed with SMTP id i7-20020a056e0212c700b002dc886215edmr6218115ilm.253.1659379375287;
+        Mon, 01 Aug 2022 11:42:55 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id cs12-20020a056638470c00b003427bb38ccasm771291jab.54.2022.08.01.11.42.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 11:13:12 -0700 (PDT)
-Received: (nullmailer pid 1278505 invoked by uid 1000);
-        Mon, 01 Aug 2022 18:13:11 -0000
-Date:   Mon, 1 Aug 2022 12:13:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Mon, 01 Aug 2022 11:42:54 -0700 (PDT)
+Date:   Mon, 1 Aug 2022 12:42:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Abhishek Sahu <abhsahu@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 12/17] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root
- Port bindings
-Message-ID: <20220801181311.GA1266390-robh@kernel.org>
-References: <20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru>
- <20220728143427.13617-13-Sergey.Semin@baikalelectronics.ru>
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] vfio: Add the device features for the low power
+ entry and exit
+Message-ID: <20220801124253.11c24d91.alex.williamson@redhat.com>
+In-Reply-To: <f903e2b9-f85b-a4c8-4706-f463919723a3@nvidia.com>
+References: <20220719121523.21396-1-abhsahu@nvidia.com>
+        <20220719121523.21396-2-abhsahu@nvidia.com>
+        <20220721163445.49d15daf.alex.williamson@redhat.com>
+        <aaef2e78-1ed2-fe8b-d167-8ea2dcbe45b6@nvidia.com>
+        <20220725160928.43a17560.alex.williamson@redhat.com>
+        <bd7bca18-ae07-c04a-23d3-bf71245da0cc@nvidia.com>
+        <20220726172356.GH4438@nvidia.com>
+        <f903e2b9-f85b-a4c8-4706-f463919723a3@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220728143427.13617-13-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 28, 2022 at 05:34:22PM +0300, Serge Semin wrote:
-> Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
-> link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
-> controller is supposed to be fed up with four clock sources: DBI
-> peripheral clock, AXI application Tx/Rx clocks and external PHY/core
-> reference clock generating the 100MHz signal. In addition to that the
-> platform provide a way to reset each part of the controller:
-> sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
-> Hot/Power reset signal. The Root Port controller is equipped with multiple
-> IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
-> equalization request and eDMA ones. The registers space is accessed over
-> the DBI interface. There can be no more than four inbound or outbound iATU
-> windows configured.
+On Wed, 27 Jul 2022 11:37:02 +0530
+Abhishek Sahu <abhsahu@nvidia.com> wrote:
+
+> On 7/26/2022 10:53 PM, Jason Gunthorpe wrote:
+> > On Tue, Jul 26, 2022 at 06:17:18PM +0530, Abhishek Sahu wrote:  
+> >>  Thanks Alex for your thorough review of uAPI.
+> >>  I have incorporated all the suggestions.
+> >>  Following is the updated uAPI.
+> >>  
+> >>  /*
+> >>   * Upon VFIO_DEVICE_FEATURE_SET, allow the device to be moved into a low power
+> >>   * state with the platform-based power management.  Device use of lower power
+> >>   * states depends on factors managed by the runtime power management core,
+> >>   * including system level support and coordinating support among dependent
+> >>   * devices.  Enabling device low power entry does not guarantee lower power
+> >>   * usage by the device, nor is a mechanism provided through this feature to
+> >>   * know the current power state of the device.  If any device access happens
+> >>   * (either from the host or through the vfio uAPI) when the device is in the
+> >>   * low power state, then the host will move the device out of the low power
+> >>   * state as necessary prior to the access.  Once the access is completed, the
+> >>   * device may re-enter the low power state.  For single shot low power support
+> >>   * with wake-up notification, see
+> >>   * VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP below.  Access to mmap'd
+> >>   * device regions is disabled on LOW_POWER_ENTRY and may only be resumed after
+> >>   * calling LOW_POWER_EXIT.
+> >>   */
+> >>  #define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
+> >>  
+> >>  /*
+> >>   * This device feature has the same behavior as
+> >>   * VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY with the exception that the user
+> >>   * provides an eventfd for wake-up notification.  
+> > 
+> > It feels like this should be one entry point instead of two.
+> > 
+> > A flag "automatic re-sleep" and an optional eventfd (-1 means not
+> > provided) seems to capture both of these behaviors in a bit clearer
+> > and extendable way.
+
+I think the mutual exclusion between re-entrant mode and one-shot is
+quite a bit more subtle in the version below, so I don't particularly
+find this cleaner.  Potentially we could have variant drivers support
+one w/o the other in the previously proposed model as well.  It's
+interesting to see this suggestion since since we seem to have a theme
+of making features single purpose elsewhere.  Thanks,
+
+Alex 
+
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>  We discussed about that in the earlier version of the patch series.
+>  Since we have different exit related handling, so to avoid confusion
+>  we proceeded with 2 separate variants for the low power entry. Also,
+>  we don't need any parameter for the first case.
 > 
-> ---
+>  But, I can do the changes to make a single entry point, if we conclude
+>  for that. 
 > 
-> Changelog v2:
-> - Rename 'syscon' property to 'baikal,bt1-syscon'.
-> - Fix the 'compatible' property definition to being more specific about
->   what strings are supposed to be used. Due to that we had to add the
->   select property to evaluate the schema against the Baikal-T1 PCIe DT
->   nodes only.
-> ---
->  .../bindings/pci/baikal,bt1-pcie.yaml         | 154 ++++++++++++++++++
->  1 file changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+>  From my side, I have explored how the uAPI looks like if
+>  we go with this approach.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
-> new file mode 100644
-> index 000000000000..23bd1d0aa5c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
-> @@ -0,0 +1,154 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/baikal,bt1-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Baikal-T1 PCIe Root Port Controller
-> +
-> +maintainers:
-> +  - Serge Semin <fancer.lancer@gmail.com>
-> +
-> +description:
-> +  Embedded into Baikal-T1 SoC Root Complex controller. It's based on the
-> +  DWC RC PCIe v4.60a IP-core, which is configured to have just a single Root
-> +  Port function and is capable of establishing the link up to Gen.3 speed
-> +  on x4 lanes. It doesn't have embedded clock and reset control module, so
-> +  the proper interface initialization is supposed to be performed by software.
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: baikal,bt1-pcie
-> +
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: baikal,bt1-pcie
-> +      - const: snps,dw-pcie-4.60a
-> +      - const: snps,dw-pcie
-
-Again, these fallbacks simply aren't useful.
-
-> +
-> +  reg:
-> +    description:
-> +      DBI, DBI2 and at least 4KB outbound iATU-capable region.
-
-'iATU-capable region' means config space? That's not very clear.
-
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    minItems: 3
-> +    maxItems: 3
-> +    items:
-> +      enum: [ dbi, dbi2, config ]
-
-Define the order. Here, and the rest.
-
-> +
-> +  interrupts:
-> +    description:
-> +      MSI, AER, PME, Hot-plug, Link Bandwidth Management, Link Equalization
-> +      request and eight Read/Write eDMA IRQ lines are available.
-> +    maxItems: 14
-> +
-> +  interrupt-names:
-> +    minItems: 14
-> +    maxItems: 14
-> +    items:
-> +      oneOf:
-> +        - pattern: '^dma[0-7]$'
-> +        - enum: [ msi, aer, pme, hp, bw_mg, l_eq ]
-> +
-> +  clocks:
-> +    description:
-> +      DBI (attached to the APB bus), AXI-bus master and slave interfaces
-> +      are fed up by the dedicated application clocks. A common reference
-> +      clock signal is supposed to be attached to the corresponding Ref-pad
-> +      of the SoC. It will be redistributed amongst the controller core
-> +      sub-modules (pipe, core, aux, etc).
-> +    minItems: 4
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    minItems: 4
-> +    maxItems: 4
-> +    items:
-> +      enum: [ dbi, mstr, slv, ref ]
-> +
-> +  resets:
-> +    description:
-> +      A comprehensive controller reset logic is supposed to be implemented
-> +      by software, so almost all the possible application and core reset
-> +      signals are exposed via the system CCU module.
-> +    minItems: 9
-> +    maxItems: 9
-> +
-> +  reset-names:
-> +    minItems: 9
-> +    maxItems: 9
-> +    items:
-> +      enum: [ mstr, slv, pwr, hot, phy, core, pipe, sticky, non-sticky ]
-> +
-> +  baikal,bt1-syscon:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the Baikal-T1 System Controller DT node. It's required to
-> +      access some additional PM, Reset-related and LTSSM signals.
-> +
-> +  num-lanes:
-> +    maximum: 4
-> +
-> +  max-link-speed:
-> +    maximum: 3
-> +
-
-> +  num-ob-windows:
-> +    const: 4
-> +
-> +  num-ib-windows:
-> +    const: 4
-
-These are deprecated. Don't add them for a new binding.
-
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie@1f052000 {
-> +      compatible = "baikal,bt1-pcie", "snps,dw-pcie-4.60a", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      reg = <0x1f052000 0x1000>, <0x1f053000 0x1000>, <0x1bdbf000 0x1000>;
-> +      reg-names = "dbi", "dbi2", "config";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      ranges = <0x81000000 0 0x00000000 0x1bdb0000 0 0x00008000>,
-> +               <0x82000000 0 0x20000000 0x08000000 0 0x13db0000>;
-> +      bus-range = <0x0 0xff>;
-> +
-> +      interrupts = <0 80 4>, <0 81 4>, <0 82 4>, <0 83 4>,
-> +                   <0 84 4>, <0 85 4>, <0 86 4>, <0 87 4>,
-> +                   <0 88 4>, <0 89 4>, <0 90 4>, <0 91 4>,
-> +                   <0 92 4>, <0 93 4>;
-> +      interrupt-names = "dma0", "dma1", "dma2", "dma3", "dma4", "dma5", "dma6",
-> +                        "dma7", "msi", "aer", "pme", "hp", "bw_mg", "l_eq";
-> +
-> +      clocks = <&ccu_sys 1>, <&ccu_axi 6>, <&ccu_axi 7>, <&clk_pcie>;
-> +      clock-names = "dbi", "mstr", "slv", "ref";
-> +
-> +      resets = <&ccu_axi 6>, <&ccu_axi 7>, <&ccu_sys 7>, <&ccu_sys 10>,
-> +               <&ccu_sys 4>, <&ccu_sys 6>, <&ccu_sys 5>, <&ccu_sys 8>,
-> +               <&ccu_sys 9>;
-> +      reset-names = "mstr", "slv", "pwr", "hot", "phy", "core", "pipe",
-> +                    "sticky", "non-sticky";
-> +
-> +      reset-gpios = <&port0 0 1>;
-> +
-> +      num-lanes = <4>;
-> +      max-link-speed = <3>;
-> +    };
-> +...
-> -- 
-> 2.35.1
+>  /*
+>   * Upon VFIO_DEVICE_FEATURE_SET, allow the device to be moved into a low power
+>   * state with the platform-based power management.  Device use of lower power
+>   * states depends on factors managed by the runtime power management core,
+>   * including system level support and coordinating support among dependent
+>   * devices.  Enabling device low power entry does not guarantee lower power
+>   * usage by the device, nor is a mechanism provided through this feature to
+>   * know the current power state of the device.  If any device access happens
+>   * (either from the host or through the vfio uAPI) when the device is in the
+>   * low power state, then the host will move the device out of the low power
+>   * state as necessary prior to the access.  Once the access is completed, the
+>   * device re-entry to a low power state will be controlled through
+>   * VFIO_DEVICE_LOW_POWER_REENTERY_DISABLE flag.
+>   *
+>   * If LOW_POWER_REENTERY_DISABLE flag is not set, the device may re-enter the
+>   * low power state.  Access to mmap'd device regions is disabled on
+>   * LOW_POWER_ENTRY and may only be resumed after calling LOW_POWER_EXIT.
+>   *
+>   * If LOW_POWER_REENTERY_DISABLE flag is set, then user needs to provide an
+>   * eventfd for wake-up notification.  When the device moves out of the low
+>   * power state for the wake-up, the host will not allow the device to re-enter
+>   * a low power state without a subsequent user call to LOW_POWER_ENTRY.
+>   * Access to mmap'd device regions is disabled on LOW_POWER_ENTRY and may only
+>   * be resumed after the low power exit.  The low power exit can happen either
+>   * through LOW_POWER_EXIT or through any other access (where the wake-up
+>   * notification has been generated).  The access to mmap'd device regions will
+>   * not trigger low power exit.
+>   *
+>   * The notification through the provided eventfd will be generated only when
+>   * the device has entered and is resumed from a low power state after
+>   * calling this device feature IOCTL.  A device that has not entered low power
+>   * state, as managed through the runtime power management core, will not
+>   * generate a notification through the provided eventfd on access.  Calling the
+>   * LOW_POWER_EXIT feature is optional in the case where notification has been
+>   * signaled on the provided eventfd that a resume from low power has occurred.
+>   *
+>   * The wakeup_eventfd needs to be valid only if LOW_POWER_REENTERY_DISABLE
+>   * flag is set, otherwise, it will be ignored.
+>   */
+>  #define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
+>  
+>  struct vfio_device_low_power_entry_with_wakeup {
+>  	__u32 flags;
+>  #define VFIO_DEVICE_LOW_POWER_REENTERY_DISABLE	(1 << 0)
+>  	__s32 wakeup_eventfd;
+>  };
+>  
+>  /*
+>   * Upon VFIO_DEVICE_FEATURE_SET, disallow use of device low power states as
+>   * previously enabled via VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY device feature.
+>   * This device feature IOCTL may itself generate a wakeup eventfd notification
+>   * if the device had previously entered a low power state with
+>   * VFIO_DEVICE_LOW_POWER_REENTERY_DISABLE flag set.
+>   */
+>  #define VFIO_DEVICE_FEATURE_LOW_POWER_EXIT 4
 > 
+>  Thanks,
+>  Abhishek
 > 
+
