@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1130586B7A
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 15:00:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D58C586B85
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 15:02:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbiHANAH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Aug 2022 09:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35282 "EHLO
+        id S234910AbiHANCK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Aug 2022 09:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230521AbiHANAG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Aug 2022 09:00:06 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1861A6
-        for <linux-pci@vger.kernel.org>; Mon,  1 Aug 2022 06:00:05 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id h21-20020a17090aa89500b001f31a61b91dso12312955pjq.4
-        for <linux-pci@vger.kernel.org>; Mon, 01 Aug 2022 06:00:05 -0700 (PDT)
+        with ESMTP id S234871AbiHANCI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Aug 2022 09:02:08 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907B921E26
+        for <linux-pci@vger.kernel.org>; Mon,  1 Aug 2022 06:02:07 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id d7so6574064pgc.13
+        for <linux-pci@vger.kernel.org>; Mon, 01 Aug 2022 06:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=WMttnS6786b423fQsUol7xp6daZx9WIRE9Va6l8vCz0=;
-        b=TdvGEzzjPigBTAV/dJ0yqMMPTywQkqPnT3xWMLzHjEKXbliDR63GJyDkApkmmAwGNV
-         0QOM3frpgoyipK6QjQE/w6+DNROMdqo/6RyzqoT2KuVHdo8PyH4LevkBNfHOj1hxanAi
-         uhyX68xf46SQmShSv4H9+l40m6ZCyhb4SnnrgY4dAKAExYDlsxdndWS26XPX6szWCUKr
-         Y3Xn1E88jQb/V4e3mxA1aab0GiBTyv4l+qhNMIh4abQ1A+Ftgt7mr39HSCKzjYWKD+wU
-         GzTcdCyVsLkK9j4rvuVsD5MqaYR+vERD0NFrYj3ltKwVNsYA2zb8ityKUieNxFucLt35
-         CbuQ==
+        bh=EvOAW4yiouCDKKU3+SAhHIjwe4Iq+NIZHcYSBGK2BkA=;
+        b=zer2RPT3O5Pvq9MFNfvqeNRzkAHAIQJOF5BY2yC+7XQOOGYT+6Fhdv0lQK8DHWJcWv
+         q6kthAQB9cC2djVZG2Q8KiG8cxFjSxEE7ICdzAZwyo8J1IEiJHbwAsY0LgqfdMMaku9m
+         KE8Ke0uijhNv3AOaIYkk1ciJk0a5igEkllh/pgUnbR4GFSwZsBinRaOkC6cDiSR3hdgG
+         mscs3eGr6zyoP8riWH26ryU/7vmmcwr88vmKEYQrByXm2eM/mIwNMb49utW3vhHHaiXW
+         w+yA2j6mtLfLy0dedkfeH+9OaecwvJXilvkhwSpfHpDE2mZUePZsR1Yi4ljFm1AJpp1l
+         lVIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=WMttnS6786b423fQsUol7xp6daZx9WIRE9Va6l8vCz0=;
-        b=N7+9wCsMDp0bwkNCNZHOdOB9KOwD9CKDpU4qqxhL95sa0GS+oJjxOoK2SlC2yzjXDg
-         LpYcVT3R87TBleBaOQxRgMBL75gFkDNzHw9r2cOJZllIrTRlyLdFNws/p8vQ0Go21wU9
-         4m9MeZz3n9UwoaE92VNBzJIRTmDc3ZEn2vtadCe6np7OItZSFSgjpjLDlRw9q40NqnTV
-         JIaDaHy5wxNAX59YtxH4iDX5gBn7vWjqZVi+umdK8VO0YPsNBwBJcnaNyov4jIyxKwRW
-         syWjBbjFNKnBUT91VIgqeK08okDjnXbN0AoPsreSoJ5vbZ333yFhg8ngLuw9d6d9JJ6S
-         XRew==
-X-Gm-Message-State: ACgBeo07u7jt4xMiTTzUpSVeGh66vc8R3VyWitGWFy8ZLBVIuCfIBGDx
-        ebRiMBsvLyA6x/MdzALS3GC8
-X-Google-Smtp-Source: AA6agR5yiSZwGmqaUz5kg61unyw5YhM4CiMdmJiQOLhVV+ii1rYUbBGpG6ooO9+RQMoNvr56N3b0Ew==
-X-Received: by 2002:a17:902:d487:b0:16d:8b0d:fd2e with SMTP id c7-20020a170902d48700b0016d8b0dfd2emr16755245plg.134.1659358804376;
-        Mon, 01 Aug 2022 06:00:04 -0700 (PDT)
+        bh=EvOAW4yiouCDKKU3+SAhHIjwe4Iq+NIZHcYSBGK2BkA=;
+        b=zRD6K+9cVcFu8Z4H4qC3cDbMp2L98pfvHvDTOqJP56qwWasSSAyYhsO67wBnAqjgNN
+         CkBMSAjrTYeOnpPa0oIQnEnS+/JbtI5dm4pchoSyfk9cxODxV7HSuDahmZtlkMRzUYiS
+         Zlv6KQJdo7LlRyAX4FiDibvURMFtvKPI4LZyn5dnM7RC9+rJ9NWWrMVR1E5u9HFhahUx
+         uPWuFdITyL77UHbFhr5/AFL0x/DaRjrDOA3kMn7DOowV3gS/BgD/zVgKk6VxmFn1fuZg
+         Ev/rPuEocsOYjzWl4jIPA+yp8kISyOhY+u6Dt1Th2yLbeG5lPNk0bY579nWWhDhMlQaI
+         ZKfA==
+X-Gm-Message-State: AJIora9TZO5ixx9ID7oN/kyqkZXbhPjnHEoK/3gC4JkizEGw2pYbK2aL
+        MiFNOZRuLg+dS+f1B6wjamI8
+X-Google-Smtp-Source: AGRyM1t2yBT05/URt/oW2WJKpKzxW6Y7uwcj9b/xWhJp7MeEmTYmW9r8cStM+EaKQx/cdPH9tw+Cow==
+X-Received: by 2002:aa7:8d94:0:b0:52b:a70e:ae89 with SMTP id i20-20020aa78d94000000b0052ba70eae89mr16522697pfr.23.1659358926978;
+        Mon, 01 Aug 2022 06:02:06 -0700 (PDT)
 Received: from thinkpad ([117.217.185.73])
-        by smtp.gmail.com with ESMTPSA id s18-20020a170902ea1200b0016c28fbd7e5sm9768080plg.268.2022.08.01.05.59.58
+        by smtp.gmail.com with ESMTPSA id x17-20020aa79ad1000000b0052d90512a53sm1772687pfp.44.2022.08.01.06.02.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 06:00:04 -0700 (PDT)
-Date:   Mon, 1 Aug 2022 18:29:49 +0530
+        Mon, 01 Aug 2022 06:02:06 -0700 (PDT)
+Date:   Mon, 1 Aug 2022 18:31:56 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -63,36 +63,37 @@ Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4 01/15] PCI: dwc: Add more verbose link-up
- message
-Message-ID: <20220801125949.GA93763@thinkpad>
+Subject: Re: [PATCH RESEND v4 02/15] PCI: dwc: Detect iATU settings after
+ getting "addr_space" resource
+Message-ID: <20220801130156.GB93763@thinkpad>
 References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
- <20220624143947.8991-2-Sergey.Semin@baikalelectronics.ru>
+ <20220624143947.8991-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220624143947.8991-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220624143947.8991-3-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 24, 2022 at 05:39:33PM +0300, Serge Semin wrote:
-> Printing just "link up" isn't that much informative especially when it
-> comes to working with the PCI Express bus. Even if the link is up, due to
-> multiple reasons the bus performance can degrade to slower speeds or to
-> narrower width than both Root Port and its partner is capable of. In that
-> case it would be handy to know the link specifications as early as
-> possible. So let's add a more verbose message to the busy-wait link-state
-> method, which will contain the link speed generation and the PCIe bus
-> width in case if the link up state is discovered. Otherwise an error will
-> be printed to the system log.
+On Fri, Jun 24, 2022 at 05:39:34PM +0300, Serge Semin wrote:
+> The iATU detection procedure was introduced in the commit 281f1f99cf3a
+> ("PCI: dwc: Detect number of iATU windows"). A bit later the procedure
+> execution was moved to Host/EP-specific methods in the framework of commit
+> 8bcca2658558 ("PCI: dwc: Move iATU detection earlier"). The later
+> modification wasn't done in the most optimal way since the "addr_space"
+> CSR region resource doesn't depend on anything detected in the
+> dw_pcie_iatu_detect() method. Thus the detection can be postponed to be
+> executed after the resource request which can fail and make the detection
+> pointless. It will be also helpful for the dw_pcie_ep_init() method
+> readability since we are about to add the IP-core version and eDMA module
+> (a bit later) detection procedures.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
@@ -106,53 +107,33 @@ Mani
 > ---
 > 
 > Changelog v2:
-> - Test the error condition first and return straight away if it comes true.
->   The typical return is better to be unindented (@Joe).
+> - This is a new patch added on v2 iteration of the series.
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 22 ++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index ce01187947c9..e66d16a86168 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -524,20 +524,30 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->  
->  int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  {
-> +	u32 offset, val;
->  	int retries;
->  
->  	/* Check if the link is up or not */
->  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-> -		if (dw_pcie_link_up(pci)) {
-> -			dev_info(pci->dev, "Link up\n");
-> -			return 0;
-> -		}
-> +		if (dw_pcie_link_up(pci))
-> +			break;
-> +
->  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 15b8059544e3..1e35542d6f72 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -704,8 +704,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		}
 >  	}
 >  
-> -	dev_info(pci->dev, "Phy link never came up\n");
-> +	if (retries >= LINK_WAIT_MAX_RETRIES) {
-> +		dev_err(pci->dev, "Phy link never came up\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> -	dw_pcie_iatu_detect(pci);
+> -
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>  	if (!res)
+>  		return -EINVAL;
+> @@ -713,6 +711,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	ep->phys_base = res->start;
+>  	ep->addr_size = resource_size(res);
 >  
-> -	return -ETIMEDOUT;
-> +	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> +		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> +		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
+> +	dw_pcie_iatu_detect(pci);
 > +
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_wait_for_link);
->  
+>  	ep->ib_window_map = devm_kcalloc(dev,
+>  					 BITS_TO_LONGS(pci->num_ib_windows),
+>  					 sizeof(long),
 > -- 
 > 2.35.1
 > 
