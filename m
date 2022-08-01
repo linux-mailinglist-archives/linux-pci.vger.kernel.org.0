@@ -2,71 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0129E5861F0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 01:02:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA27586245
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Aug 2022 03:41:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238441AbiGaXC3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Jul 2022 19:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
+        id S238881AbiHABkl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Jul 2022 21:40:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231264AbiGaXC1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jul 2022 19:02:27 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA98101EF
-        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 16:02:26 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id c139so9073995pfc.2
-        for <linux-pci@vger.kernel.org>; Sun, 31 Jul 2022 16:02:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HiqBkou7TsDXWZ2bZ9jDnOVGt8hHICY7VSsWQ2Opi0I=;
-        b=IS3SvA25XetUr6LNZ+s3A/JfWHVWla1uJ3dL+GWYRa3wB0jbYs2SaFtdR1ONZmuo/7
-         gEQyEVKf8LgB8ubET2nLYEzmlU4jidwAl9vlHXILgkm8ipNaP6p8albKDo3Qd9JjmBFu
-         QvYa2G5IE/CJ69chHtBUWAWPPfdRzKUyOBIcNYxMebCZt4664vxJdhxO5Qn0xaSeit/N
-         hL2/0w+/miUhMW7Vnxg08jCjKTHSbncRsh5JW89AqX4h4uZgmb/Tfet8UdKaASW6DcQQ
-         WaxBj1SIEj0Qt5L1OiML2vPalCr1uzng0aV6wNIWnqFGe4nA0oBkr+/+hRre0G4wKbNm
-         3SHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HiqBkou7TsDXWZ2bZ9jDnOVGt8hHICY7VSsWQ2Opi0I=;
-        b=Am2YrL+5ndfWGN2/Tk9mP1bIcMIl7K0YXh6SDocW1U3au2tQYVXRdruvNFcTzwBuxS
-         RWsYG/M1Lyw4tBYoVVP0RoHVamVi0T0Pmir7LhRE20dM36gkndIzDse5FV1NTTdsS99p
-         A4llp49gaP492ovRTNEX9mb85CX9DzU7+vhr8hJ/NbZzrV1GBGKMG+t1SfKjfZsTJtgn
-         4n0EdkRKFfTvH/NVU96cYo5gcFAQbQnFl+pPsKsw8AF3o6fcI6C3qkNCuB5jlu6xIWRg
-         t++9lHUkq0U2qNOJZWRfplgUKIz5d6ZfwQqjW5jD0T+leCCk4a1hJQJmY/37wQLV2yi/
-         V45g==
-X-Gm-Message-State: AJIora9IZLzTJShUefsL8pav9jRlHLl5488rJ1bE0NMh6R3c12qT/1qL
-        2Pf7pRo16P2JtloBHrFea+TefIXhqB0=
-X-Google-Smtp-Source: AGRyM1sE4jYBZfkZMDOxr5DyoRi73yAzT1WIcsVuRu8+at9KvBjAeMycEocydbJLxo1scKp+wpJ7bQ==
-X-Received: by 2002:a63:d055:0:b0:41b:539c:7125 with SMTP id s21-20020a63d055000000b0041b539c7125mr10860043pgi.461.1659308545891;
-        Sun, 31 Jul 2022 16:02:25 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id d10-20020a170902654a00b0016d710d8af7sm7957855pln.142.2022.07.31.16.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Jul 2022 16:02:25 -0700 (PDT)
-Date:   Mon, 1 Aug 2022 08:02:23 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
-        kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [helgaas-pci:pci/header-cleanup-immutable 2/6]
- arch/x86/kernel/cpu/cyrix.c:277:3: error: use of undeclared identifier
- 'isa_dma_bridge_buggy'
-Message-ID: <YucJ/9tvO1t8EbZs@antec>
-References: <202207301404.VdeSPptt-lkp@intel.com>
- <CAK8P3a0w4iTQ9p+4Njfk8jPPv6dHn6dv-_VoE90rhToAwHY==A@mail.gmail.com>
+        with ESMTP id S239055AbiHABkX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jul 2022 21:40:23 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5CB13E98;
+        Sun, 31 Jul 2022 18:39:31 -0700 (PDT)
+X-UUID: 213dae2b2dec447c8b97c3e895659d9e-20220801
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.8,REQID:ae1fe426-8d54-41d4-b68e-b743b9e7b799,OB:0,LO
+        B:0,IP:0,URL:5,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
+        ON:release,TS:5
+X-CID-META: VersionHash:0f94e32,CLOUDID:b6fbe4cf-a6cf-4fb6-be1b-c60094821ca2,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
+        ,QS:nil,BEC:nil,COL:0
+X-UUID: 213dae2b2dec447c8b97c3e895659d9e-20220801
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 754513474; Mon, 01 Aug 2022 09:39:24 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Mon, 1 Aug 2022 09:39:23 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkmbs11n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.15 via Frontend
+ Transport; Mon, 1 Aug 2022 09:39:22 +0800
+Message-ID: <989faa34506ab4db8b8ce6eae5457ad07b1a2dee.camel@mediatek.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: mediatek-gen3: Add support for
+ MT8188 and MT8195
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <Rex-BC.Chen@mediatek.com>,
+        <TingHan.Shen@mediatek.com>, <Liju-clr.Chen@mediatek.com>,
+        <Jian.Yang@mediatek.com>
+Date:   Mon, 1 Aug 2022 09:39:22 +0800
+In-Reply-To: <20220729225320.GA82746-robh@kernel.org>
+References: <20220729033331.3075-1-jianjun.wang@mediatek.com>
+         <20220729225320.GA82746-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0w4iTQ9p+4Njfk8jPPv6dHn6dv-_VoE90rhToAwHY==A@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,28 +66,117 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 31, 2022 at 10:29:00PM +0200, Arnd Bergmann wrote:
-> On Sat, Jul 30, 2022 at 8:53 AM kernel test robot <lkp@intel.com> wrote:
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/header-cleanup-immutable
-> > head:   933c5a4f87d92a865d1db76caf190f1a4a1927f9
-> > commit: abb4970ac33514c84b143516583eaf8cc47abd67 [2/6] PCI: Move isa_dma_bridge_buggy out of asm/dma.h
-> > config: i386-randconfig-a006 (https://download.01.org/0day-ci/archive/20220730/202207301404.VdeSPptt-lkp@intel.com/config)
-> > compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 52cd00cabf479aa7eb6dbb063b7ba41ea57bce9e)
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=abb4970ac33514c84b143516583eaf8cc47abd67
-> 
-> > >> arch/x86/kernel/cpu/cyrix.c:277:3: error: use of undeclared identifier 'isa_dma_bridge_buggy'
-> >                    isa_dma_bridge_buggy = 2;
-> >                    ^
-> 
-> 
-> This file now needs to #include the new linux/isa-dma.h header.
+Hi Rob,
 
-There is a patch on the branch that adds the include but it was not added into
-the patch 2/6 as we took the branch to be immutable to allow riscv to have
-branch to resolve a merge conflict.
+Thanks for your comment.
 
--Stafford
+On Fri, 2022-07-29 at 16:53 -0600, Rob Herring wrote:
+> On Fri, Jul 29, 2022 at 11:33:31AM +0800, Jianjun Wang wrote:
+> > MT8188 and MT8195 are ARM platform SoCs with the same PCIe IP as
+> > MT8192.
+> > 
+> > Also add new clock name "peri_mem" since the MT8188 and MT8195 use
+> > clock
+> > "peri_mem" instead of "top_133m".
+> > 
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > ---
+> > Changes in v2:
+> > Merge two patches into one.
+> > ---
+> >  .../bindings/pci/mediatek-pcie-gen3.yaml      | 51
+> > +++++++++++++++----
+> >  1 file changed, 40 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-
+> > gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-
+> > gen3.yaml
+> > index 0499b94627ae..038e25ae0be7 100644
+> > --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > @@ -43,12 +43,16 @@ description: |+
+> >    each set has its own address for MSI message, and supports 32
+> > MSI vectors
+> >    to generate interrupt.
+> >  
+> > -allOf:
+> > -  - $ref: /schemas/pci/pci-bus.yaml#
+> > -
+> >  properties:
+> >    compatible:
+> > -    const: mediatek,mt8192-pcie
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - mediatek,mt8188-pcie
+> > +              - mediatek,mt8195-pcie
+> > +          - const: mediatek,mt8192-pcie
+> > +      - items:
+> > +          - const: mediatek,mt8192-pcie
+> >  
+> >    reg:
+> >      maxItems: 1
+> > @@ -78,13 +82,7 @@ properties:
+> >      maxItems: 6
+> >  
+> >    clock-names:
+> > -    items:
+> > -      - const: pl_250m
+> > -      - const: tl_26m
+> > -      - const: tl_96m
+> > -      - const: tl_32k
+> > -      - const: peri_26m
+> > -      - const: top_133m
+> > +    maxItems: 6
+> >  
+> >    assigned-clocks:
+> >      maxItems: 1
+> > @@ -126,9 +124,40 @@ required:
+> >    - interrupts
+> >    - ranges
+> >    - clocks
+> > +  - clock-names
+> >    - '#interrupt-cells'
+> >    - interrupt-controller
+> >  
+> > +allOf:
+> > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - mediatek,mt8188-pcie
+> > +              - mediatek,mt8195-pcie
+> > +    then:
+> > +      properties:
+> > +        clock-names:
+> > +          items:
+> > +            - const: pl_250m
+> > +            - const: tl_26m
+> > +            - const: tl_96m
+> > +            - const: tl_32k
+> > +            - const: peri_26m
+> > +            - const: peri_mem
+> > +    else:
+> > +      properties:
+> > +        clock-names:
+> > +          items:
+> > +            - const: pl_250m
+> > +            - const: tl_26m
+> > +            - const: tl_96m
+> > +            - const: tl_32k
+> > +            - const: peri_26m
+> > +            - const: top_133m
+> 
+> I'm not sure it's worth enforcing just the last clock name. Just do:
+> 
+> enum: [ peri_mem, top_133m ]
+> 
+> And key in the top level.
+OK, I'll use "enum" to add the new clock name in the next version.
+
+Thanks.
+> 
+> Rob
+
