@@ -2,61 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C34B587F2B
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Aug 2022 17:41:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC039588059
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Aug 2022 18:35:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230333AbiHBPls (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Aug 2022 11:41:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
+        id S238181AbiHBQfZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Aug 2022 12:35:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235032AbiHBPlf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Aug 2022 11:41:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 617C1B0F
-        for <linux-pci@vger.kernel.org>; Tue,  2 Aug 2022 08:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659454892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vpq/mpo2WNFVjK/1SFKm7AqhW/wtXa+ryiiWx9FIdwo=;
-        b=OszbwqrfR7TiJi1I8vrPWCO2EKTzC5w+yCkQmbo1ctg8gsMy/YKwz8vleU6D8OKxid8MJ2
-        kCronqdSAYZA1+/8JfaUTM4Cm5bAySnoNgZ65QpjYuN1DYSxclMCQeK8YwsbtX2rRxiSBa
-        Ka5iu51LkyG34dotqLdpPTm7Pq8CTWg=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-624--exLGfEcO_SDly3CynX_EQ-1; Tue, 02 Aug 2022 11:41:31 -0400
-X-MC-Unique: -exLGfEcO_SDly3CynX_EQ-1
-Received: by mail-il1-f198.google.com with SMTP id o5-20020a056e02102500b002ddcc65029cso8736787ilj.8
-        for <linux-pci@vger.kernel.org>; Tue, 02 Aug 2022 08:41:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Vpq/mpo2WNFVjK/1SFKm7AqhW/wtXa+ryiiWx9FIdwo=;
-        b=mIot9Vk71C+dDMRUh0XemY24u63oF9GmR+7TJ86u7y9LA6Qg1M8I8zd+3i+rP96nll
-         5ebfk503HMJtdgr1KWlrtM2+Yw1OrC8bPS5p/VZygS95vr9Lb8008nau6qs1mi5l6Z10
-         94JeHBwgsPU2ayV91z0RlbDM30Kxkha+aoAX8/fjL35x4iYkarpBjozr/TNiUeJv/CxA
-         iwIU8u9V/ZgGyVM30VIpxEJ9LHJVdSjRHpT1Q0s2v8tj5NbKjjoIH8IvaxPlb+0FBd+o
-         06AF8x+uNSLYlHFrbhvqZ2+idtSZf1v0rFw+j7UpDFDYxkkj189EyJnFnG+iAmw/nygx
-         4CWg==
-X-Gm-Message-State: ACgBeo3cvkDcEm6T4GQCvRKAGqDDz7jU372WovAPahRae5IPpPYXSmQA
-        F46KscmlcmZKGG0PExoTvimmu7pB/JDAELsIeOOLpre7oM+R6JvNYWX5hLRbJcvMLp2bnSMGfoE
-        ma/1wVWQ9UwZPHDGr8Oq+
-X-Received: by 2002:a05:6e02:e14:b0:2de:60af:e408 with SMTP id a20-20020a056e020e1400b002de60afe408mr6063694ilk.170.1659454890372;
-        Tue, 02 Aug 2022 08:41:30 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7b9a7RjKkWMNOiP3M5XstmTpCDl0M45uztCly2mRb5G/+mIzsYnvwcX6X02nRrNDdeg1moeA==
-X-Received: by 2002:a05:6e02:e14:b0:2de:60af:e408 with SMTP id a20-20020a056e020e1400b002de60afe408mr6063688ilk.170.1659454890099;
-        Tue, 02 Aug 2022 08:41:30 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id y10-20020a02730a000000b003427170b558sm2309947jab.57.2022.08.02.08.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 08:41:29 -0700 (PDT)
-Date:   Tue, 2 Aug 2022 09:41:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        with ESMTP id S231305AbiHBQfH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Aug 2022 12:35:07 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141914B0F7;
+        Tue,  2 Aug 2022 09:35:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QTzu9kE1yTG9rWpxg6HXx15jtnSMC57GsdCaBux6IJJIYBz4bWAr0Cb7xukvjV/pT8Z9iYMmfElAfDnp2j1qMiT5U3X9GUoVR+tgAyY3M8A8obAqO3+3zRBF1tMLqMaim+z/IMeWUw13n7Rc9AdqepoJWe6q/zkIMVeuSxAFBDKvED4mg9yghFzSFpjotvuOUS8zap6hfmFw0LtgLwMYXYAxazkredZgng4+a4SCm0q2Ozs/fTdm60KvYMBUtxS5DFrOIpcCK9jkInrjzxKMWfey/9EmbW3tlnofogAq7V1hUQHAIc6Yfhw4nC7xqEUVDA636IhmHWXEln7TSZmRDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NrMAzaQWGC1E/LeUoeymVAaQsVoLc2YAwavjL+Rw6EY=;
+ b=O/IpTU6CmJIFkO58QVV5UsBEipxUmbhbqZneDefTJH5pDaHNANwcryJp0LKMlirzEvYXAtzEaKdbldY03QxvSuEr8uESZ9suas7GVdQSIWsdVsz+LAgP7MLSlhcmEg29sHUDXmeh160JdZ5Q/yYwSGPxRDISg0BXMqLM1PI+FgVeBWfrhne190emk8WymgQk9aG3wmNPYGBdixikUZB13+j0QKLzcrTXX7ZG1mPeNhRCG5zrp7AGMViUK7LFExFFLL0/vgAyDcJD6PBCWG4hfnLXypkcIC3yFe1FgIw9Nzw1hvnn/llX7sNmmTus/KkobXCHpDPxhuOu7KH8VlgINA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NrMAzaQWGC1E/LeUoeymVAaQsVoLc2YAwavjL+Rw6EY=;
+ b=HXF1YQwwuBY/eYjC+irHQbQKFh+b/ZlHtgK5aXoDTgsDRQJAnwcNFcAmhC9u8jI0pErVo8NGuF8cTw+OEn2nLiqPGuNdekyQZtulwKUxbwtbfnXHgdihEGaLAR//Tb3ZZEavYwQPhY4fRE4jlnvJ9AdnirqMRZ2uZZ6n9hI+cx7r7O/9cbjGbubKGLYGwNl8dD1h1CUG6S78llXOoQLe8qL76pqfboxA38svHnEL6IF+rOFLX49sf2Jf9T0fWxlQAxZE7efHvAYCFxHAm8uPpAMmOiSCPKUzQIhpmuO5+RPearWrJxYHwLuS/FAr1QVLUEjN3WvnGZd6qmt9EEq2Rw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by DM4PR12MB6496.namprd12.prod.outlook.com (2603:10b6:8:bd::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.16; Tue, 2 Aug
+ 2022 16:35:05 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::4cce:310f:93:5d58]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::4cce:310f:93:5d58%8]) with mapi id 15.20.5482.016; Tue, 2 Aug 2022
+ 16:35:05 +0000
+Date:   Tue, 2 Aug 2022 13:35:04 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
 Cc:     Abhishek Sahu <abhsahu@nvidia.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Yishai Hadas <yishaih@nvidia.com>,
@@ -69,94 +55,102 @@ Cc:     Abhishek Sahu <abhsahu@nvidia.com>,
         linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
 Subject: Re: [PATCH v5 1/5] vfio: Add the device features for the low power
  entry and exit
-Message-ID: <20220802094128.38fba103.alex.williamson@redhat.com>
-In-Reply-To: <YukvBBClrbCbIitm@nvidia.com>
-References: <20220719121523.21396-1-abhsahu@nvidia.com>
-        <20220719121523.21396-2-abhsahu@nvidia.com>
-        <20220721163445.49d15daf.alex.williamson@redhat.com>
-        <aaef2e78-1ed2-fe8b-d167-8ea2dcbe45b6@nvidia.com>
-        <20220725160928.43a17560.alex.williamson@redhat.com>
-        <bd7bca18-ae07-c04a-23d3-bf71245da0cc@nvidia.com>
-        <20220726172356.GH4438@nvidia.com>
-        <f903e2b9-f85b-a4c8-4706-f463919723a3@nvidia.com>
-        <20220801124253.11c24d91.alex.williamson@redhat.com>
-        <YukvBBClrbCbIitm@nvidia.com>
-Organization: Red Hat
+Message-ID: <YulSOK+YKjV2634b@nvidia.com>
+References: <20220719121523.21396-2-abhsahu@nvidia.com>
+ <20220721163445.49d15daf.alex.williamson@redhat.com>
+ <aaef2e78-1ed2-fe8b-d167-8ea2dcbe45b6@nvidia.com>
+ <20220725160928.43a17560.alex.williamson@redhat.com>
+ <bd7bca18-ae07-c04a-23d3-bf71245da0cc@nvidia.com>
+ <20220726172356.GH4438@nvidia.com>
+ <f903e2b9-f85b-a4c8-4706-f463919723a3@nvidia.com>
+ <20220801124253.11c24d91.alex.williamson@redhat.com>
+ <YukvBBClrbCbIitm@nvidia.com>
+ <20220802094128.38fba103.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220802094128.38fba103.alex.williamson@redhat.com>
+X-ClientProxiedBy: BL1P223CA0022.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::27) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ca652ef4-c87d-4267-bf60-08da74a4f46b
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6496:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 812IN+sQp/gd/y2/5escjHYaGsOQvtTr7eX1bPtlcKMrk9416txDmLh6wPMQIzQ6HFZemecZP2ms8FKHJhkfr2OZFxGhkeJqKm+q2w/d5vae7zYhlR4GC8DyOW4y0QzyPidTqyY89Wdk7XL5UPJkfN4r9vlVFUVmbhuVQH5euRgMIiR8HqIkv1+LP4vwM5RboMynhuRN7jBmBt7tWJ6CnQ1YgUxFHKQ9vgfJFXNgsO3DeSEl8wlj90wnyoD487B584Gd9zv4AHsfJ4i5hI1TqJQ0HX2IGdtIcUhPtNaxRHdXAkhmjRgIvDaVWPgxPt/6mfdk+2ve+k21GfUgA6Kh1gwMvYud7CwNF/9Bj4amHzhjLIHSzy+yWwB1cj1nesobbQVemc1Ioe0IUjtCFzPvfGy2V5ruTIzVN/qNMvzPjXivyC5XpwQOCYYZ2xaAJZMSl2F3+KzprVoXWsg+rSb4UiM7LcQ8BFbp+EeNM8ZhJN3PD4EyNUUbaS7Y8IMVKo6y1xr7kz7NupVlVXAEjMUUUSzOWuADLyih8bt/kCizM9xpxwHjWTcnkForMJc43EkquS6Rw/xZk68ti0Z/Af71vDjfBdXnB8mJbPlOHHy7FUHLrrBNwj8ILQ1Q8kCLNcFBPljWdiTGKgLHXQRKC5Tsq0pMwUrcxSVCKlBG7gtOMBaDsW3Fvk4x153/7xwRYn+OrfXA4hwIQ3pv2MPQJGWgv5Zsz8docHbSgkLCvalRCS1jLEWelnPpYuk9m5L+LYAd13wXH4j2HBhCZas84tlDFDcznkT15R5VJz0lgc/kYy4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(376002)(396003)(136003)(366004)(39860400002)(86362001)(83380400001)(26005)(6506007)(2906002)(41300700001)(186003)(38100700002)(6512007)(66946007)(6916009)(316002)(6486002)(4326008)(8676002)(66476007)(66556008)(54906003)(478600001)(2616005)(8936002)(36756003)(5660300002)(7416002)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BIQcxWrUGrVl+N0b/ceNNGtFk8quMX2x9zVH1yE+wksZhKMSgmdxaPW/o6Ib?=
+ =?us-ascii?Q?WnbMSV611dp85/CDlcTSJfJ9w3BFK1XACJB9aUlG1s6zlvBIdaOXeKeVdFi1?=
+ =?us-ascii?Q?7la+4OyIvGPIyVrSzsLElmf5bcGS9Oimu/+DSUYJahSkJQDywSzIX9skLelC?=
+ =?us-ascii?Q?NYsi1yOQjNrVgePCxbzti0lezjLGOlkZXlw3jIIsn+Mm17tqPrHA4XiyCbU+?=
+ =?us-ascii?Q?Kv6wI1Kbn4RPf8OdS/C0TJ57xce5U3vI/0WxOHx9T6ohLzZ+tqS3ka01/E5Y?=
+ =?us-ascii?Q?+XwqL9cCcSrtQLgg3lDrbs+tLwumPuiPgIcep8uX/Wq1YtF4Q6rDedxC6nDe?=
+ =?us-ascii?Q?3WgmoTnJN29Di0tePabEzp3CcD6g72KIzrIDUAobtIlz+MmAEBf7g4Zzrwqt?=
+ =?us-ascii?Q?CeGdzRveK5CZ9cpvyzC2eLq+9wBi4PliDJJVqcsdhG/lCXw97lSeKuORF6Ch?=
+ =?us-ascii?Q?QqpkkhFSmnJaojuGbaMuCmrr7zopBZz26ZNlD4cqdlhFUA76e51A/aOPqcgm?=
+ =?us-ascii?Q?uOadec970mBmWbfk4sURDt79UoixrNSEci37Z1Zh0PWRsNz5K1OFaM3OovzZ?=
+ =?us-ascii?Q?OThhvtNhqFxsROqOWbY7PzjKnVU7nsTSTEMeY7bSVlG8t7nZq+zXMQdlgQ7L?=
+ =?us-ascii?Q?dPMrhZCA+fz3IjvFsU6qBhZW+yRfg/VmALgLjqGR5HrIy3MyTkkOLXdA2P2u?=
+ =?us-ascii?Q?1zeaizgynZh7mn2tryI7PUFtHwt3HMJZsaReNDg+7kwZucp5Bsdrx8KHtf+k?=
+ =?us-ascii?Q?x6bXdjZqjYcQYVSHsfn2QvzJ34SOqmXY1dBKCmyShTHjsK/WrYRDJbMhpiQE?=
+ =?us-ascii?Q?Jb3pvze6yBzQtIQ4J8UIdgzovbi9efsB9NZrpCWgcadTrGIfZWAJ258dggEq?=
+ =?us-ascii?Q?nI6klSl4rbVsPTpmsvG6goqJFn9HLmTLH8EDu0tG2wIduEroTsMp93Kx/WjK?=
+ =?us-ascii?Q?S7eECcZeqzyjsJXg0zvDEHnXEJbs6A652rp+J4chd9+KTvU19tkOAWVWWdkz?=
+ =?us-ascii?Q?0dmGLX/9fQEmCpVuuLiwuuCq8zNsRnEM32ZQwLO3oh3AD9YQDZX49XQytHZ+?=
+ =?us-ascii?Q?CfXiYXoiCMuDOE3v1t34b6uG+VNrH/Zkj8oxfn1PSkshKoXaZN5/SFNHrziV?=
+ =?us-ascii?Q?HhuxLq7ML2MSTkvJqiLJbgL98Xv//M0rptAJ+Gssq3UqsizvijPIgAE+k+uE?=
+ =?us-ascii?Q?KjFRPNBndaL8O+B1KM/W9RY+YJwqdcn0YdfmRjkEb9wlejygO6fLIkwX6bB+?=
+ =?us-ascii?Q?LzoaEKDUcwbDNoRq7IIPPahy23+phDDy0qbkbPLwWyKg2ME6imb8gE1gMFUd?=
+ =?us-ascii?Q?vD8oEnvUNDqlCqihR0wdY7vkNz8x4LeXEUuqK9K4ROpAoh0uu0e4dhn4jBDH?=
+ =?us-ascii?Q?2m3AqVvya77tCQ77t7y9irdEN8alUo8tHrqOTzKVfCQW+0Y81DFwLbWDRQ2r?=
+ =?us-ascii?Q?AabZeyTYK+0vnJ43CH1rP43GbQaxEEbkgd2Jajne+VhKUB0KqjP52fUdkYsK?=
+ =?us-ascii?Q?cVk5CGCh0yaRzIcjCgIcmLegeb2miNir4xRLVAEe7029YFphvPoZV7ZV6UyE?=
+ =?us-ascii?Q?fCc338D+2c8Ot7EqjKEEMiKcHSqVrV7LjJl4n9ri?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca652ef4-c87d-4267-bf60-08da74a4f46b
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2022 16:35:05.1600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qXvK0Vg8lFwlyPcp3SOkfSEAyOfLghG3JN1rmv+c4KQX7eEnOK9G9b2Ag35Zi1p1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6496
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2 Aug 2022 11:04:52 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Tue, Aug 02, 2022 at 09:41:28AM -0600, Alex Williamson wrote:
 
-> On Mon, Aug 01, 2022 at 12:42:53PM -0600, Alex Williamson wrote:
-> > On Wed, 27 Jul 2022 11:37:02 +0530
-> > Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> >   
-> > > On 7/26/2022 10:53 PM, Jason Gunthorpe wrote:  
-> > > > On Tue, Jul 26, 2022 at 06:17:18PM +0530, Abhishek Sahu wrote:    
-> > > >>  Thanks Alex for your thorough review of uAPI.
-> > > >>  I have incorporated all the suggestions.
-> > > >>  Following is the updated uAPI.
-> > > >>  
-> > > >>  /*
-> > > >>   * Upon VFIO_DEVICE_FEATURE_SET, allow the device to be moved into a low power
-> > > >>   * state with the platform-based power management.  Device use of lower power
-> > > >>   * states depends on factors managed by the runtime power management core,
-> > > >>   * including system level support and coordinating support among dependent
-> > > >>   * devices.  Enabling device low power entry does not guarantee lower power
-> > > >>   * usage by the device, nor is a mechanism provided through this feature to
-> > > >>   * know the current power state of the device.  If any device access happens
-> > > >>   * (either from the host or through the vfio uAPI) when the device is in the
-> > > >>   * low power state, then the host will move the device out of the low power
-> > > >>   * state as necessary prior to the access.  Once the access is completed, the
-> > > >>   * device may re-enter the low power state.  For single shot low power support
-> > > >>   * with wake-up notification, see
-> > > >>   * VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP below.  Access to mmap'd
-> > > >>   * device regions is disabled on LOW_POWER_ENTRY and may only be resumed after
-> > > >>   * calling LOW_POWER_EXIT.
-> > > >>   */
-> > > >>  #define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
-> > > >>  
-> > > >>  /*
-> > > >>   * This device feature has the same behavior as
-> > > >>   * VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY with the exception that the user
-> > > >>   * provides an eventfd for wake-up notification.    
-> > > > 
-> > > > It feels like this should be one entry point instead of two.
-> > > > 
-> > > > A flag "automatic re-sleep" and an optional eventfd (-1 means not
-> > > > provided) seems to capture both of these behaviors in a bit clearer
-> > > > and extendable way.  
-> > 
-> > I think the mutual exclusion between re-entrant mode and one-shot is
-> > quite a bit more subtle in the version below, so I don't particularly
-> > find this cleaner.  Potentially we could have variant drivers support
-> > one w/o the other in the previously proposed model as well.  It's
-> > interesting to see this suggestion since since we seem to have a theme
-> > of making features single purpose elsewhere.  Thanks,  
-> 
-> It is still quite single purpose, just
-> VFIO_DEVICE_LOW_POWER_REENTERY_DISABLE is some minor customization of
-> that single purpose.
-> 
-> Either the flag is set or not, it isn't subtle..
+> The subtlety is that there's a flag and a field and the flag can only
+> be set if the field is set, the flag can only be clear if the field is
+> clear, so we return -EINVAL for the other cases?  Why do we have both a
+> flag and a field?  This isn't like we're adding a feature later and the
+> flag needs to indicate that the field is present and valid.  It's just
+> not a very clean interface, imo.  Thanks,
 
-The subtlety is that there's a flag and a field and the flag can only
-be set if the field is set, the flag can only be clear if the field is
-clear, so we return -EINVAL for the other cases?  Why do we have both a
-flag and a field?  This isn't like we're adding a feature later and the
-flag needs to indicate that the field is present and valid.  It's just
-not a very clean interface, imo.  Thanks,
+That isn't how I read Abhishek's proposal.. The eventfd should always
+work and should always behave as described "The notification through
+the provided eventfd will be generated only when the device has
+entered and is resumed from a low power state"
 
-Alex
+If userspace provides it without LOW_POWER_REENTERY_DISABLE then it
+still generates the events.
 
+The linkage to LOW_POWER_REENTERY_DISABLE is only that userspace
+probably needs to use both elements together to generate the
+auto-reentry behavior. Kernel should not enforce it.
+
+Two fields, orthogonal behaviors.
+
+Jason
