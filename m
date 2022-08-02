@@ -2,121 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACA955874FD
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Aug 2022 03:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 097FD58762F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Aug 2022 06:13:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233736AbiHBBL7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Aug 2022 21:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44644 "EHLO
+        id S235233AbiHBENZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Aug 2022 00:13:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbiHBBL6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Aug 2022 21:11:58 -0400
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D472125EAC;
-        Mon,  1 Aug 2022 18:11:56 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=liusong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VL8sRT9_1659402713;
-Received: from 30.178.81.22(mailfrom:liusong@linux.alibaba.com fp:SMTPD_---0VL8sRT9_1659402713)
-          by smtp.aliyun-inc.com;
-          Tue, 02 Aug 2022 09:11:54 +0800
-Message-ID: <4bff1924-ef4b-2c88-e3d3-a60ed5bf6599@linux.alibaba.com>
-Date:   Tue, 2 Aug 2022 09:11:52 +0800
+        with ESMTP id S235020AbiHBENY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Aug 2022 00:13:24 -0400
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB1A519000
+        for <linux-pci@vger.kernel.org>; Mon,  1 Aug 2022 21:13:22 -0700 (PDT)
+Received: from ip6-localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 272470J0003344;
+        Mon, 1 Aug 2022 23:07:01 -0500
+Message-ID: <204dda77248a7c95787e27fc7a382f514341c88e.camel@kernel.crashing.org>
+Subject: arm64 PCI resource allocation issue
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        David Woodhouse <dwmw@amazon.co.uk>
+Date:   Tue, 02 Aug 2022 14:07:00 +1000
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.0.3
-Subject: Re: [PATCH] PCI: eliminate abnormal characters when reads help
- information of "PCI_P2PDMA" under menuconfig
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>
-References: <20220801215623.GA676484@bhelgaas>
-From:   Liu Song <liusong@linux.alibaba.com>
-In-Reply-To: <20220801215623.GA676484@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Folks !
 
-在 2022/8/2 05:56, Bjorn Helgaas 写道:
-> On Wed, Jul 20, 2022 at 12:23:29PM -0500, Bjorn Helgaas wrote:
->> [+cc Andy, Joe, possible checkpatch question]
->>
->> On Wed, Jul 20, 2022 at 03:22:03PM +0800, Liu Song wrote:
->>> From: Liu Song <liusong@linux.alibaba.com>
->>>
->>> Read the help information of PCI_P2PDMA through make menuconfig,
->>> "Enables" is partially displayed as garbled characters, so fix it.
->>>
->>> Signed-off-by: Liu Song <liusong@linux.alibaba.com>
->>> ---
->>>   drivers/pci/Kconfig | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->>> index 133c732..8102b78 100644
->>> --- a/drivers/pci/Kconfig
->>> +++ b/drivers/pci/Kconfig
->>> @@ -166,7 +166,7 @@ config PCI_P2PDMA
->>>   	depends on ZONE_DEVICE
->>>   	select GENERIC_ALLOCATOR
->>>   	help
->>> -	  Enableѕ drivers to do PCI peer-to-peer transactions to and from
->>> +	  Enables drivers to do PCI peer-to-peer transactions to and from
->> I see this problem ("Enables" renders as "Enable ~U" because the "s"
->> is actually UTF-8 D195, CYRILLIC SMALL LETTER DZE).
->>
->> "file" found the following other Kconfig files that also contain
->> UTF-8:
->>
->>    drivers/pci/Kconfig
->>      D195 CYRILLIC SMALL LETTER DZE, which looks like "s"
->>      "Enables" renders as "Enable ~U"
->>    net/netfilter/ipvs/Kconfig
->>      C2A0 NO-BREAK SPACE
->>      renders fine
->>    drivers/mtd/nand/raw/Kconfig
->>      MTD_NAND_CAFE  C389 LATIN CAPITAL LETTER E WITH ACUTE
->>      "CAFÉ" renders as "CAF ~I"
->>    drivers/mtd/spi-nor/Kconfig
->>      MTD_SPI_NOR_USE_4K_SECTORS
->>      "16 × 4 KiB" renders as "16  ~W 4 KiB"
->>    drivers/net/can/usb/Kconfig
->>    drivers/net/can/peak_canfd/Kconfig
->>    drivers/gpu/drm/panel/Kconfig
->>    drivers/platform/mellanox/Kconfig
->>    kernel/time/Kconfig
->>    crypto/Kconfig
->>    arch/Kconfig
->>
->> Some of these are clearly wrong (Cyrillic letter), some are
->> unnecessary (non-breakable space), some are arguable ("CAFÉ" and "16 ×
->> 4 KiB" -- these take advantage of UTF-8 in useful ways).
->>
->> Not being a charset guru, I dunno if the rendering problem means
->> my terminal is set incorrectly or if they all need to be changed.
->>
->> But I think we should address all of them at the same time.  If we do
->> need to avoid UTF-8 in Kconfig help, maybe checkpatch should look for
->> it.
-> Any progress on this problem?  I certainly agree that it should be
-> fixed; I would just like to fix all the problems, not just the PCI
-> one.
->
-> Bjorn
+It's been a while ... (please extend the CC list as needed)
 
+I'd like to re-open an ancient issue because it's still biting us
+(AWS).
 
-Totally agree, according to your suggestion, I will resubmit with all 
-the revisions.
+A few years back, I updated the PCIe resource allocation code to be a
+bit more in line with what other architectures do. That said, once
+thing we couldn't agree on was to do like x86 and default to preserving
+the firmware provided resources by default.
 
+On x86, the kernel "allocates" (claims) the resources (unless it finds
+something obviously wrong), then allocates anything left unallocated.
 
-Thanks
+On arm64, we use to just re-allocate everything. I changed this to
+first use some more common code for doing all that, but also to have
+the option to claim existing resources if _DSM tells us to preserve
+them for a given host brigde.
+
+I still think this is the wrong way to go and that we should preserve
+the UEFI resources by default unless told not to :-)
+
+The case back then was that there existed some (how many ? there was
+one real example if I remember correctly) bogus firwmares that came out
+of UEFI with too small windows. We could just quirk those ....
+
+The reason I'm bringing this back is that re-allocating resources for
+system devices cause problems.
+
+The most obvious one today that is affecting EC2 instances is that the
+UART address specified in SPCR is no longer valid, causing issues
+ranging from the console not working to MMIO to what becomes "random
+addresses". Typically today this is "worked around" by using
+console=ttyS0 to force selection of the first detected PCI UART,
+because the match against SPCR is based on address and it won't match,
+but there's always the underlying risk that things like earlycon starts
+poking at now-incorrect addresses until 8250 takes over.
+
+This is the most obvious problem. Any other "system" device that
+happens to be PCIe based (anything detected early, via device-tree,
+ACPI or otherwise) is at risk of a similar issue. On x86 that could be
+catastrophic because near everything looks like a PCI device, on arm64
+we seem to have been getting away with it a bit more easily ... so far.
+
+The alternative here would be to use ad-hock kludges for such system
+devices, to "register" the addresses early, and have some kind of hook
+in the PCI code that keeps track of them as they get remapped.
+
+If we want this, I would propose (happy to provide the implementation
+but let's discuss the design first) something along the line of a
+generic mechanism to "register" such a system device, which would add
+it to a list. That list would be scanned on PCI device discovery for
+BAR address matches, and the pci_dev/BAR# added to the entry (that or
+put a pointer to the entry into pci_dev for speed/efficiency).
+
+The difficulty is how is that update propagated:
+
+This is of course fiddly. For example, the serial info is passed via
+two different ways, one being earlycon (and probably the easiest to
+track), the other one an ASCII string passed to
+add_preferred_console(), which would require more significant hackery
+(the code dealing with console mathing is a gothic horror).
+
+Also if such a system device is in continuous use during the boot
+process (UART ?) it needs to be "updated" as soon as possible after the
+BARs (and parent BARs) have been also updated (in fact this is
+generally why PCI debug dies horribly when using PCI based UARTs).
+Maybe an (optional) callback that earlycon can add ?
+
+Additionally, this would only work if such system devices are
+"registered" before they get remapped... 
+
+Another approach would be to have pci_dev keep a copy of the original
+resources (at least for the primary BARs) and provide an accessor for
+use by things like earlycon or 8250 to compare against these, though
+that doesn't solve the problem of promptly "updating" drivers for
+system devices.
+
+Opinions ?
+
+Cheers,
+Ben.
 
 
