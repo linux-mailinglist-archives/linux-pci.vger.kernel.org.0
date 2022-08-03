@@ -2,114 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DECEC588859
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Aug 2022 09:57:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C407B588AA1
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Aug 2022 12:33:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235896AbiHCH5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Aug 2022 03:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
+        id S237996AbiHCKdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Aug 2022 06:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231671AbiHCH5w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Aug 2022 03:57:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1C9129C90
-        for <linux-pci@vger.kernel.org>; Wed,  3 Aug 2022 00:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659513470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OEFsmwkVi669wYEes65YKb6PZlH2lsPyfB4kF4NfeRE=;
-        b=YBSUKuUq3Xlsha77mUJKXW5KwMdllETzhNfjIf0+juGcREgDFZoUF3RekuA+S9tKChQsco
-        oRPZ/A/HdrAf9gpTdx2OeAnXAL0C7SNilaba4j/XueTm+aGNRK0Oqntv2qykzNXLqgzyyy
-        AwwlgkwSgymDR4gK31skRWXjLlMwTgI=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-27-PpgsgZ-LNtepI3SZnUDDTQ-1; Wed, 03 Aug 2022 03:57:49 -0400
-X-MC-Unique: PpgsgZ-LNtepI3SZnUDDTQ-1
-Received: by mail-lj1-f200.google.com with SMTP id k1-20020a2e9201000000b0025dd56bd7a4so4022225ljg.17
-        for <linux-pci@vger.kernel.org>; Wed, 03 Aug 2022 00:57:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEFsmwkVi669wYEes65YKb6PZlH2lsPyfB4kF4NfeRE=;
-        b=bQVA/G1SO3Vv5bY2Uvy5l6JUG8aaare0D28NDCGn5QsiNrH2KQzvUUJAEJw2X20eEP
-         RnBjiy3slMvkVlM2efB7Gzjdceht+srJyaAIEVjJ4SCv1aXhZM+Qy+DG4f463DPPLZxz
-         5B5pis0oL8P4vJ5nCEoJeG0U3Y9BCX2etEOx/eveUBLxENQL+FUZibm9KqAyv4T3ryW6
-         XsMqCa+QPsMjiB9ed/VgIN9a/8grQtXbx7KZEIHe6VPuUzACVPCurCfIoXrD3iCQ6lRF
-         76Hjamayn7ScuVwOkf+7DRq8RoBJqiqOVuYU3K4Yec3dFfRG0JXnoZJcTLlhqlgnBYtE
-         p/fw==
-X-Gm-Message-State: ACgBeo2CbunFHMhTdpOVX0AtAh4kVIP0Sjoh1REnvOW1DIYdpt8ka7vX
-        CEbzKC5iTN0+MZkXn3lI/dkbvZAPfkxysUT4eEaru/TL6MyrK/Ge5IyIprER8m+t5AT2BEIs25y
-        n1K8VFnrTTRg6yTokPiJngv3ccln9D5n3smga
-X-Received: by 2002:ac2:43b0:0:b0:48b:1eb:d1e5 with SMTP id t16-20020ac243b0000000b0048b01ebd1e5mr4033027lfl.641.1659513468092;
-        Wed, 03 Aug 2022 00:57:48 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR600ldUB8qbBwa7CANdnj6UO9/ZbaTlVrEpGYh1sEEV3xqsMglefFL6pbFFalSJdNMSIfi9UKtLwl2x+Q35u4E=
-X-Received: by 2002:ac2:43b0:0:b0:48b:1eb:d1e5 with SMTP id
- t16-20020ac243b0000000b0048b01ebd1e5mr4033015lfl.641.1659513467888; Wed, 03
- Aug 2022 00:57:47 -0700 (PDT)
+        with ESMTP id S238047AbiHCKb1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Aug 2022 06:31:27 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D83F6140AE;
+        Wed,  3 Aug 2022 03:30:29 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360A7113E;
+        Wed,  3 Aug 2022 03:30:30 -0700 (PDT)
+Received: from [10.57.12.36] (unknown [10.57.12.36])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4093F3F67D;
+        Wed,  3 Aug 2022 03:30:28 -0700 (PDT)
+Message-ID: <50d04f45-6aa9-dee8-6647-3f0b909049ea@arm.com>
+Date:   Wed, 3 Aug 2022 11:30:22 +0100
 MIME-Version: 1.0
-References: <165719918216.28149.7678451615870416505.stgit@palantir17.mph.net>
- <20220707155500.GA305857@bhelgaas> <Yswn7p+OWODbT7AR@gmail.com>
- <20220711114806.2724b349@kernel.org> <Ys6E4fvoufokIFqk@gmail.com>
- <20220713114804.11c7517e@kernel.org> <Ys/+vCNAfh/AKuJv@gmail.com> <20220714090500.356846ea@kernel.org>
-In-Reply-To: <20220714090500.356846ea@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Wed, 3 Aug 2022 15:57:34 +0800
-Message-ID: <CACGkMEt1qLsSf2Stn1YveW-HaDByiYFdCTzdsKESypKNbF=eTg@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 0/2] sfc: Add EF100 BAR config support
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Martin Habets <habetsm.xilinx@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        davem <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>, ecree.xilinx@gmail.com,
-        linux-pci@vger.kernel.org,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        mst <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] dt-bindings: PCI: host-generic-pci: Allow IOMMU and MSI
+ properties
+Content-Language: en-GB
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20220728175137.1172841-1-robh@kernel.org>
+ <a673e846-e3d7-63e3-70cd-4adef3f761cc@arm.com>
+ <CAL_JsqL37RQqGv6ZB5uxsnPFoUjKPh6uc7_SWpaqDJqvWAF4Dg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <CAL_JsqL37RQqGv6ZB5uxsnPFoUjKPh6uc7_SWpaqDJqvWAF4Dg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 12:05 AM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Thu, 14 Jul 2022 12:32:12 +0100 Martin Habets wrote:
-> > > Okay. Indeed, we could easily bolt something onto devlink, I'd think
-> > > but I don't know the space enough to push for one solution over
-> > > another.
-> > >
-> > > Please try to document the problem and the solution... somewhere, tho.
-> > > Otherwise the chances that the next vendor with this problem follows
-> > > the same approach fall from low to none.
-> >
-> > Yeah, good point. The obvious thing would be to create a
-> >  Documentation/networking/device_drivers/ethernet/sfc/sfc/rst
-> > Is that generic enough for other vendors to find out, or there a better place?
->
-> Documentation/vdpa.rst ? I don't see any kernel level notes on
-> implementing vDPA perhaps virt folks can suggest something.
+On 2022-08-02 23:21, Rob Herring wrote:
+> On Tue, Aug 2, 2022 at 3:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 2022-07-28 18:51, Rob Herring wrote:
+>>> Allow 'iommu-map', 'iommu-map-mask', and 'msi-parent' properties for
+>>> generic host. This fixes unevaluated property warnings on Arm Juno, AMD
+>>> Seattle, and FSL LS1028a.
+>>>
+>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>    Documentation/devicetree/bindings/pci/host-generic-pci.yaml | 3 +++
+>>>    1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>> index 6bcaa8f2c3cf..d25423aa7167 100644
+>>> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>> @@ -106,6 +106,9 @@ properties:
+>>>        maxItems: 3
+>>>
+>>>      dma-coherent: true
+>>> +  iommu-map: true
+>>> +  iommu-map-mask: true
+>>> +  msi-parent: true
+>>
+>> Hmm, in general this set looks suspiciously incomplete without msi-map
+>> and msi-map-mask too. Am I right in thinking that the ideal thing to do
+>> here would be to convert pci-msi.txt and pci-iommu.txt to schema and
+>> $ref them?
+> 
+> I already added msi-map/msi-map-mask to pci-bus.yaml[1] as well as
+> schemas for iommu-map/iommu-map-mask[2] and msi-parent[3]. Since
+> msi-map is already in the referenced schema, it is allowed here.
+> msi-parent is separate because it is used elsewhere. iommu-map is
+> separate largely to make copying pci-iommu.txt as-is easier.
+> 
+> And yes, pci-iommu.txt can now be removed. pci-msi.txt is more
+> complicated as all of it hasn't been moved into schemas.
 
-Not sure, since it's not a vDPA general thing but a vendor/parent
-specific thing.
+Ah, great! One general comment, though - iommu-map/msi-map have pretty 
+much grown into common IOMMU/MSI consumer properties by now, so IMO 
+they'd be better off living alongside their respective iommus/msi-parent 
+counterparts, so that other consumers like fsl-mc and host1x can 
+reference a common definition rather than duplicating their own. The 
+only aspect that should still belong to the PCI binding is the detail of 
+how PCI B:D:F forms the input ID for the mappings (and equivalently for 
+other bus bindings).
 
-Or maybe Documentation/vdpa/sfc ?
+Thanks,
+Robin.
 
-Thanks
-
-> I don't think people would be looking into driver-specific docs
-> when trying to implement an interface, so sfc is not a great option
-> IMHO.
->
-> > I can do a follow-up patch for this.
->
-> Let's make it part of the same series.
->
-
+> 
+> Rob
+> 
+> [1] https://github.com/devicetree-org/dt-schema/commit/109bde712466281e8c96a4fadb0f68e7a90a6eca
+> [2] https://github.com/devicetree-org/dt-schema/commit/3d44bf2b46a9ac638550ca3916d7d7f70823bb58
+> [3] https://github.com/devicetree-org/dt-schema/commit/59f2e3103b6e776afe4f42e45897f7eabae06fa4
