@@ -2,129 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4471E58A018
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 19:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30E1E58A042
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 20:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239595AbiHDR6g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Aug 2022 13:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
+        id S236413AbiHDSJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Aug 2022 14:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234947AbiHDR6c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 13:58:32 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE4D6AA2E
-        for <linux-pci@vger.kernel.org>; Thu,  4 Aug 2022 10:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659635911; x=1691171911;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IAoP3BxmWvcY7pbiZOVG5hKW9UcpIJQY8CM70xIzfr8=;
-  b=nMe0I0t1fu1kBjm2Nlx4GJNqH5jXtrjnfSawxnAscM2sEjIJYeCFTDNg
-   T73bB/DCw/UijIlpuYL3AufoN9P7be2oZKAElB9Cj0iWNQfRVQNlXLl0s
-   p96+NUaOo9rzENhWBAFOmvcpDBpZdZDvvZeBxbxZHZ6ThO73RaLNw109s
-   cbAi3QhSPATMfHS+EWCb4jqIXSwkIHkcaxzeci8Q2T7qXEYqLVLQv8+T2
-   YpLWeiOaVwL08fa2MrL3wTwu4Ckf6HJVvYO6LzyUXcZMeERg6VjsI3INq
-   x0GNnWg4kpTxa4HyYVMDgcq+07KYnd/7LNnnykDoYlEwduCSWEN/zX6EI
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10429"; a="269778251"
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="269778251"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 10:58:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
-   d="scan'208";a="671364664"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Aug 2022 10:58:30 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oJf77-000Ihd-1f;
-        Thu, 04 Aug 2022 17:58:29 +0000
-Date:   Fri, 05 Aug 2022 01:58:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- f4ca87ba21cbd62f479824587ff660a0e576bcd0
-Message-ID: <62ec08b7.Bgg+DhdpmiCvyJmn%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S239585AbiHDSI4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 14:08:56 -0400
+Received: from mail.rv.npu.gov.ua (mail.rv.npu.gov.ua [85.159.5.210])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306A46BD7B;
+        Thu,  4 Aug 2022 11:08:55 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rv.npu.gov.ua (Postfix) with ESMTP id B43E541E43E0;
+        Thu,  4 Aug 2022 21:08:31 +0300 (EEST)
+Received: from mail.rv.npu.gov.ua ([127.0.0.1])
+        by localhost (mail.rv.npu.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id uxyIPWRVF31O; Thu,  4 Aug 2022 21:08:30 +0300 (EEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rv.npu.gov.ua (Postfix) with ESMTP id 431F34148C5E;
+        Thu,  4 Aug 2022 21:08:30 +0300 (EEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rv.npu.gov.ua 431F34148C5E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rv.npu.gov.ua;
+        s=D9C6921A-69F2-11EB-967E-80F8358BD1FC; t=1659636510;
+        bh=rXKZG/8bQHY28IslpDmB9+1lxzhBpWrTxjnUDTFW+HM=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=RwBa2BXbcjfgiprD964VAcniC/gNbtYJzlwW/YPzlslO9/NxDK/3aZRqENGTzZ/pA
+         tAkAN/AwWjC+4piiU6reJb7ul7uZB8x84blkOkaBu8pzIMDMyQl0yXc+UI0WJu7Gxf
+         V5z9QxAfjW46PANMqYS2uwsMJDKIIlz5VZyfd8kWAaICIWPxyU9ekS/Esr4VU5r9Vo
+         dtty9vkaTWudADH0F4P5aVXSyrBrzOmx7qx3Gr05v8OKaTQJU6MILOaUkusFPlwBd+
+         FzIS0BSKJo4Kv9NlaUh65a64p4GJWAXHYlqSGEXUh8+/LzHP/HKu+lx9G6zoTL6ZHI
+         2I6mFTcYSi3yA==
+X-Virus-Scanned: amavisd-new at rv.npu.gov.ua
+Received: from mail.rv.npu.gov.ua ([127.0.0.1])
+        by localhost (mail.rv.npu.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Xs2I_XAyHCom; Thu,  4 Aug 2022 21:08:30 +0300 (EEST)
+Received: from DESKTOP-CJHK18M.home (gateway [101.19.1.22])
+        by mail.rv.npu.gov.ua (Postfix) with ESMTPSA id 89509414A6F3;
+        Thu,  4 Aug 2022 21:08:27 +0300 (EEST)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Re:
+To:     Recipients <kt@rv.npu.gov.ua>
+From:   "MacKenzie Scott" <kt@rv.npu.gov.ua>
+Date:   Fri, 05 Aug 2022 02:08:42 +0800
+Reply-To: mackenziescott@reservasgoldenwayki.com
+Message-Id: <20220804180827.89509414A6F3@mail.rv.npu.gov.ua>
+X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,LOTS_OF_MONEY,RCVD_IN_BL_SPAMCOP_NET,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: f4ca87ba21cbd62f479824587ff660a0e576bcd0  Merge branch 'pci/header-cleanup-immutable'
+Hello, =
 
-elapsed time: 1253m
+                          =
 
-configs tested: 49
-configs skipped: 2
+I'm MacKenzie Scott Ex-wife of Amazon CEO and founder, I'm donating $ 4 bil=
+lion Dollars to charities, individuals, colleges across the Globe from Scot=
+t's foundation, to provide immediate support to people suffering economical=
+ly from COVID-19 pandemic and you're one of the lucky winners, i have a don=
+ation grant worth $100,800,000.00 Dollars for you, you can contact me for m=
+ore information if you're interested.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-i386                                defconfig
-x86_64                           allyesconfig
-x86_64                        randconfig-a006
-i386                             allyesconfig
-x86_64                               rhel-8.3
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                          rhel-8.3-func
-arc                  randconfig-r043-20220803
-powerpc                           allnoconfig
-x86_64                         rhel-8.3-kunit
-x86_64                        randconfig-a015
-x86_64                           rhel-8.3-syz
-i386                          randconfig-a014
-m68k                             allmodconfig
-powerpc                          allmodconfig
-alpha                            allyesconfig
-sh                               allmodconfig
-i386                          randconfig-a012
-i386                          randconfig-a016
-mips                             allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-ia64                             allmodconfig
-arc                  randconfig-r043-20220804
-m68k                             allyesconfig
-arc                              allyesconfig
-
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a013
-hexagon              randconfig-r045-20220803
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220803
-i386                          randconfig-a015
-x86_64                        randconfig-a012
-i386                          randconfig-a011
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-hexagon              randconfig-r041-20220804
-hexagon              randconfig-r045-20220804
-riscv                randconfig-r042-20220804
-s390                 randconfig-r044-20220804
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards,
+MacKenzie Scott.
