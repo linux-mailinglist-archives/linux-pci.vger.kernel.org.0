@@ -2,161 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4FEE58A2C1
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 23:33:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3430958A405
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Aug 2022 01:55:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234441AbiHDVdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Aug 2022 17:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
+        id S233897AbiHDXzw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Aug 2022 19:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232085AbiHDVdX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 17:33:23 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D609248F4
-        for <linux-pci@vger.kernel.org>; Thu,  4 Aug 2022 14:33:22 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id g12so636493pfb.3
-        for <linux-pci@vger.kernel.org>; Thu, 04 Aug 2022 14:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vYaDvUJ9r4UGTKuVjXopXRfBzot6ijDWJtz0uXFMHR0=;
-        b=ePBy7JgHhVbC+RePbrVuQPX/dxKFpEjwEmLw2ZtraZ5KywxyBhQA/joyWGIVB6wHqr
-         X077mRmwc3K8nu8o0V0kqlMTH+xBvNO6ILDnWa6JuME4DIE5iEL0gQDjURwpeICnbvyo
-         QYEkiP5WupoXHL5SUPBs8+Ya+lgjEzDm+LoNY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vYaDvUJ9r4UGTKuVjXopXRfBzot6ijDWJtz0uXFMHR0=;
-        b=qBC+LTO0lGcRvpfgISbcf5u7D7zuPVO3s3oYEwwpsuZYorYJB514IH1qXqgE/hIDzN
-         WZwzdpdxCvDMQAcPa4zsR0dHB88x6tvTRwaoMTbCxgfswQZG4+TzvIsdWpon0HkFcZJR
-         T9fk1rLCAhXsD3fqNSE9mQ/L0niV+WSTBYQ6t0JooNCcbT/tReCV8IDj/Nv/yMeZw78S
-         LE7nQjnG0Bdg21M/pp+IRroq2SKCAuEOfNBMakPmqGPY7MeHk+vABaXf8gDD36QEjGF9
-         MU4GpJzIm9gmc0lKFioLZjfK5eP0lP9X9LdW+U0rJ2cVn42IA5kI8Cg7PZsnH7M2XCkn
-         IMKg==
-X-Gm-Message-State: ACgBeo3zy0fqT580hazkXtvgbLkibb4LcQo+Lel18Q9+xep7Otc0hquG
-        b4Qo2vaKBAIgvhTjdekxmr9/EQ==
-X-Google-Smtp-Source: AA6agR4McsMJc49mlH9ZdYiVvmgISwj1z95oxvo8/NlEocMn1wQgsswTty3yaXNEf8y/pXmasLLEfA==
-X-Received: by 2002:a63:1245:0:b0:41a:29a3:aa31 with SMTP id 5-20020a631245000000b0041a29a3aa31mr2976612pgs.583.1659648801911;
-        Thu, 04 Aug 2022 14:33:21 -0700 (PDT)
-Received: from localhost ([2620:15c:11a:202:87c4:32ca:84b6:e942])
-        by smtp.gmail.com with UTF8SMTPSA id h4-20020a170902f7c400b0016d5e4d29f8sm1474596plw.9.2022.08.04.14.33.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Aug 2022 14:33:21 -0700 (PDT)
-Date:   Thu, 4 Aug 2022 14:33:19 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v5 3/3] PCI: qcom: Add retry logic for link to be stable
- in L1ss
-Message-ID: <Yuw7HyoFX4jk6eOE@google.com>
-References: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
- <1659526134-22978-4-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S231256AbiHDXzv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 19:55:51 -0400
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6D85BE0C9
+        for <linux-pci@vger.kernel.org>; Thu,  4 Aug 2022 16:55:49 -0700 (PDT)
+Received: from ip6-localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 274NpEqu007425;
+        Thu, 4 Aug 2022 18:51:15 -0500
+Message-ID: <e7d035519b2d921cc4f6cfa3b6f64b27fd11f078.camel@kernel.crashing.org>
+Subject: Re: arm64 PCI resource allocation issue
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        David Woodhouse <dwmw@amazon.co.uk>
+Date:   Fri, 05 Aug 2022 09:51:14 +1000
+In-Reply-To: <YuuhOdV09R+K5ui/@lpieralisi>
+References: <204dda77248a7c95787e27fc7a382f514341c88e.camel@kernel.crashing.org>
+         <YuuhOdV09R+K5ui/@lpieralisi>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1659526134-22978-4-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 03, 2022 at 04:58:54PM +0530, Krishna chaitanya chundru wrote:
-> Some specific devices are taking time to settle the link in L1ss.
-> So added a retry logic before returning from the suspend op.
+On Thu, 2022-08-04 at 12:36 +0200, Lorenzo Pieralisi wrote:
+> On Tue, Aug 02, 2022 at 02:07:00PM +1000, Benjamin Herrenschmidt wrote:
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
+> [...]
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index f7dd5dc..f3201bd 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1829,15 +1829,30 @@ static int __maybe_unused qcom_pcie_pm_suspend(struct device *dev)
->  {
->  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
->  	u32 val;
-> +	ktime_t timeout, start;
->  
->  	if (!pcie->cfg->supports_system_suspend)
->  		return 0;
->  
-> -	/* if the link is not in l1ss don't turn off clocks */
-> -	val = readl(pcie->parf + PCIE20_PARF_PM_STTS);
-> -	if (!(val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB)) {
-> -		dev_warn(dev, "Link is not in L1ss\n");
-> -		return 0;
-> +	start = ktime_get();
-> +	/* Wait max 100 ms */
-> +	timeout = ktime_add_ms(start, 100);
+> > The case back then was that there existed some (how many ? there was
+> > one real example if I remember correctly) bogus firwmares that came out
+> > of UEFI with too small windows. We could just quirk those ....
+> 
+> There is just one way to discover "how many" unfortunately, quirking
+> those can be more problematic than it seems.
 
-In my tests 100 ms is ample margin for most NVMe models (it's often 0 and
-generally < 10), however with one model I saw delays of up to 150 ms, so
-this should probably be 200 ms or so (it's a long time, but most of the
-time the actual delay is significantly lower
+Yes it can be but I'm still keen to try, if anything to keep all
+UEFI+ACPI platforms on the same basic mechanism.
 
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
+> [...]
+> 
+> > The alternative here would be to use ad-hock kludges for such system
+> > devices, to "register" the addresses early, and have some kind of hook
+> > in the PCI code that keeps track of them as they get remapped.
+> 
+> That's what x86 does AFAICS (pcibios_save_fw_addr()), even though
+> it is used in a different scope (ie revert to FW address if the
+> resource allocation fails).
 
-'timedout' looks very similar to the other local variable 'timeout'
-in this function. Actually why not just do without the new variable and
-put this after reading the register.
+Right. Another kludge... It won't work much better than
+IORESOURCE_PCI_FIXED the minute the device is below any amount of
+bridges that have themselves be re-assigned. Worst, we might have moved
+something else over to where the FW left that device.
 
-   		if (ktime_after(ktime_get(), timeout)) {
-			dev_warn(dev, "Link is not in L1ss\n");
- 			return 0;
-		}
+It's ugly as heck :-) Oh well... I also really don't like how it
+maintains that separate list, would be much nicer to have something
+hanging off pci_dev.
 
-> +
-> +		/* if the link is not in l1ss don't turn off clocks */
-> +		val = readl(pcie->parf + PCIE20_PARF_PM_STTS);
-> +		if ((val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB)) {
-> +			dev_info(dev, "Link enters L1ss after %d ms\n",
-> +					ktime_to_ms(ktime_get() - start));
+../...
+
+> > Opinions ?
+> 
+> You may also want to look into IORESOURCE_PCI_FIXED even though the
+> last time I looked into I found some broken logic (basically the
+> immutable/"fixed" BAR resources should obviously take into account the
+> PCI tree hierarchy - upstream bridges, etc., which I don't think
+> IORESOURCE_PCI_FIXED does - how it works remains a bit of
+> a mystery for me).
+
+It doesn't really work for the reasons you cited ... or rather it works
+in limited cases. I did look into it as well ages ago, and unless
+things changed, it was broken and not easily fixable. Our resource
+allocation code is.... intricated.
+
+That leaves us with 3 overall routes I can think of (we can figure out
+the details next):
+
+ 1) We can try to detect early those devices (easy with SPCR, are there
+more on aarch64 ? on x86 there is) and hammer them into place, flagging
+them somewhat and forcing them (and all their parents) to keep their
+resources.
+
+Pros: It's rather easy to implement, we can "register" the addresses
+early and have the PCI probe code match detected devices againt that
+list & flag them (for example IORESOURCE_PCI_FIXES :-) and their
+parents.
+
+Cons: It will force entire bus hierarchies to be fixed, which might not
+really help on firmwares that are known to setup sub-optimal apertures
+(or even completely b0rked ones). But we don't know who those are
+except maybe one or two if we dig down into the previous version of
+that discussion from a couple of years ago.
+
+ 2) We can try to "keep track" of them as they move. Variant A.
+
+We do it the way efifb does it and wrap that in something a bit nicer
+as follow:
+
+ - We add a helper to "record" a pci_dev/BAR#/offset combination and an
+other one to do the lookup & fixup of a FW originated address.
+
+ - We make efifb quirk use that instead of its existing global
+"bar_resource".
+
+ - We add a similar quirk to the ACPI code that parses SPCR and (maybe)
+another one for earlycon (hint they may be the same device, some
+deduplication would be useful).
+ 
+ - We update 8250_pci (I assume pl01x are never PCI ?) to call this to
+"fixup" addresses obtained from earlycon. That's the easy bit. SPRC is
+trickier, we'd need to fixup addressed parsed from
+add_preferred_console() .. I'm not 100% sure there's a case where such
+an address would be added post-PCI-remap and we might incorrectly fix
+it up.  I don't think so but ...
+
+Pros: It should (hopefully) not be overly complicated and reasonably
+self contained, low risk.
+
+Cons: 
+
+ - It's a bit more complicated than other solutions, though not
+insanely
+
+ - This doesn't solve the problem of a driver such as earlycon being
+"live" accross the remapping (and thus means we'll probably still have
+verybose PCI probing with earlycon dying horribly). This is already
+partially broken since we temporarily disable decoding during probing
+but that's a small window ... We can look at solving that separately by
+adding on top of this registration mechanism: We *could* optionally
+register in our above helper a pair of callbacks that the PCI code
+would call for each registered "early device" before and after
+remapping to "suspend access" and "fixup address". Those would be
+ideally called around the remapping of the entire host bridge the
+device is on.
+
+3) Keeping track, Variant B
+
+(note: the more I think about it, the more I prefer variant A but let's
+see what others think)
+
+We generalize pcibios_save_fw_addr() and for the sake of it, we move
+that into pci_dev which simplifies everything and gets rid of that
+separate list.
+
+Then, things like efifb, 8250_pci etc... do a lookup in there for
+addresses they obtain from screen_info, earlycon,
+add_preferred_console.. and on match, perform the necessary fixup.
+Assuming we are confident those addresses originate from before the PCI
+remapping that is.
+
+Pros: It *seems* even simpler than the above other options and maybe
+even faster.
+
+Cons: It's more resource intensive as we now backup original BARs for
+everything under the sun. It also doesn't provide a great path to
+address the case I mentioned earlier for dealing with "live" devices.
+
+That's all I came up with ... Any better ideas and any preferences ? At
+this point I'm reasonably keen on (2) (tracking variant A).
+
+I'll be travelling this weekend and next week, so probably won't have
+time to produce much code but this has been broken forever so I don't
+see a huge emergency. So unless somebody beats me to it or strongly
+objects, I'll start hacking at it in the next few weeks.
+
+Cheers,
+Ben.
 
 
-Probably this should be dev_dbg() to avoid cluttering the kernel log that
-isn't relevant most of the time.
 
-> +			break;
-> +		}
-> +
-> +		if (timedout) {
-> +			dev_warn(dev, "Link is not in L1ss\n");
-> +			return 0;
-> +		}
-> +		usleep_range(1000, 1200);
-
-You could use fsleep() instead of specifying a range.
-
-Based on my testing I think a slightly higher delay like 5ms wouldn't hurt.
-That would result in less 'busy looping' for slower NVMes and would still
-be reasonable fast for those that need 10 ms or so.
-
-Actually you could replace the entire loop with something like this:
-
-	if (readl_poll_timeout(pcie->parf + PCIE20_PARF_PM_STTS, val,
-	    val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB, 5000, 200000) {
-	    dev_warn(dev, "Link is not in L1ss\n");
-	    return 0;
-	}
