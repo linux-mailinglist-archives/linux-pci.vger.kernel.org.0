@@ -2,98 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13BAA589611
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 04:20:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFA6058962B
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 04:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiHDCUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Aug 2022 22:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
+        id S238573AbiHDCfr convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 3 Aug 2022 22:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239016AbiHDCUS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Aug 2022 22:20:18 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6100361117;
-        Wed,  3 Aug 2022 19:18:32 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 15-20020a17090a098f00b001f305b453feso3861460pjo.1;
-        Wed, 03 Aug 2022 19:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=1dsYc5CCG9nBj+rwfi2DNCDwXt8IjUaLCNS+n83XUDY=;
-        b=YgmSq8oWeAz+cQHVwYA7934UN/e/erwNkvrnNnaXVoLMGsIUxpUGx2sHDVRtMXL0Y8
-         VUEGXN2D92C7TfNQ87s9YS0G5apme5vjhrlToMaF2qx8aRC2B46LwwOih5icuoHNgc7x
-         jm3qsYdVxWS8pOAcrI/79KbzYdH5CliWfVYFTuFcHXZi1bEdZUWdTrDkru6JO4JvJBXk
-         XhGuWyRXe4Zz5qLf/6eidQLncbrSWvNkXbMtnEIyYgzVKQQTy4326FpqWL9OoJvKTpva
-         6JJVKmIedYmG8MmMIScKgBOiQ+J+8oELEdf5sNmSAlLhkfw4FuHJnvO4jUnhwpORVk0d
-         eUSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=1dsYc5CCG9nBj+rwfi2DNCDwXt8IjUaLCNS+n83XUDY=;
-        b=bVB1L9aS6Q/iWtWmPrWIQDJaNhq2HF2MH4eRaYPmwra7b2kw9UiHqAtPwCSvAb2EN4
-         HTFGMuE9IJquQ5SCCoIX1XxRnMsUNKL7dyzlXgQEP72QW8Gk3Mg3qcrS6OalEaOYiD2U
-         HIzJZb4qG9BAVrVbZ6kuRvq8gwXzYxlvu689C+neEAdnCzIEa9V9qDIrxUl/T24sEne9
-         SzlB8BPKckGbBR2V7OljqG/pmqqgoRDOGLLdw5wfyAP1RcRbiMCdUOINUOHBl/Cx3JIT
-         Ls5CIu3T2vmtEKeCz8a15oaJWI6AR3UYCwjQZzdKXOksteEiK7CwD/vuoXZvs8S0eSE1
-         GPRg==
-X-Gm-Message-State: ACgBeo3n8kzHtU7vD7J2DczEhmJ+Ri6UQuxq7kPJs735WQKtzlmRuiNb
-        3DqjHGcaal1gU9pv4UPUU7Q=
-X-Google-Smtp-Source: AA6agR4ZyAwkqOmwDBIOTcfsNUAteDufXkFgihVuncQD+861YXQPlsEFAkRWZ6+vDvSK9KhQJHTrWw==
-X-Received: by 2002:a17:902:e884:b0:16d:87b2:657d with SMTP id w4-20020a170902e88400b0016d87b2657dmr29256131plg.2.1659579511663;
-        Wed, 03 Aug 2022 19:18:31 -0700 (PDT)
-Received: from [192.168.43.80] (subs03-180-214-233-2.three.co.id. [180.214.233.2])
-        by smtp.gmail.com with ESMTPSA id j9-20020a17090a31c900b001ef7c7564fdsm2316855pjf.21.2022.08.03.19.18.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Aug 2022 19:18:31 -0700 (PDT)
-Message-ID: <4503fbf0-aeda-8e85-432a-8808f7312152@gmail.com>
-Date:   Thu, 4 Aug 2022 09:18:26 +0700
+        with ESMTP id S239066AbiHDCff (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Aug 2022 22:35:35 -0400
+X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 03 Aug 2022 19:35:34 PDT
+Received: from lvs-smtpgate3.nz.fh-koeln.de (lvs-smtpgate3.nz.FH-Koeln.DE [139.6.1.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294D112AAD
+        for <linux-pci@vger.kernel.org>; Wed,  3 Aug 2022 19:35:33 -0700 (PDT)
+Message-Id: <c8230b$21d9ka@smtp.intranet.fh-koeln.de>
+X-IPAS-Result: =?us-ascii?q?A2D//wDdL+ti/wQiBotaHQEBPAEFBQECAQkBFYFRARoIA?=
+ =?us-ascii?q?YEWAgFPAQEBgRSBLAEBK4ROg0+IT4NDAYEpgnWLFYFjBQKPBAsBAQEBAQEBA?=
+ =?us-ascii?q?QEJEgIlCQQBAYUDAVMBAQEBB4QdJjgTAQIEAQEBAQMCAwEBAQEBAQMBAQgBA?=
+ =?us-ascii?q?QEBBgSBHIUvOQ1fAQEBgQw0AQEBhBABAQEGAQEBK2sgAhkNAkkWRwEBAQGCR?=
+ =?us-ascii?q?kUBAQGCHQEBMxOiLIdhgTGBAYIpgSYBgQuCKQWCcoEXKgIBAQGHZ5BcgQ8BA?=
+ =?us-ascii?q?oUYHROCUgSXbwICGjgDNBEeNwsDXQgJFxIgAgQRGgsGAxY/CQIEDgNACA0DE?=
+ =?us-ascii?q?QQDDxgJEggQBAYDMQwlCwMUDAEGAwYFAwEDGwMUAwUkBwMcDyMNDQQfHQMDB?=
+ =?us-ascii?q?SUDAgIbBwICAwIGFQYCAk45CAQIBCsjDwUCBy8FBC8CHgQFBhEIAhYCBgQEB?=
+ =?us-ascii?q?AQWAhAIAggnFwcTMxkBBVkQCSEcCR8QBQYTAyBtBUUPKDM1PCsfGwpgJwsqJ?=
+ =?us-ascii?q?wQVAwQEAwIGEwMDIgIQLjEDFQYpExItCSp1CQIDIm0DAwQoLgMJPgcJJixMP?=
+ =?us-ascii?q?g+WQ4INgTgCMIcLjUKDZQWKVKBbCoNRgUQCk32MKIJGknQOBJF9CYVvhHaME?=
+ =?us-ascii?q?KdXgXiBfnCBbgolgRtRGQ+SEopfdAI5AgYBCgEBAwmMZIEKgRgBAQ?=
+IronPort-Data: A9a23:Gml2OaspHf0Tk8mj8hthFBIlp+fnVJZYMUV32f8akzHdYApBsoF/q
+ tZmKTiAOaqKYjShfdsjbt+/9BgDv5bTx4M3HAdpq3oyFXsagMeUXt7xwmUcns+xwm8vaGo9s
+ q3yv/GZdJhcokf0/0vraP65xZVF/fngbqLmD+LZMTxGSwZhSSMw4TpugOdRbrRA2LBVPivU0
+ T/Mi5yHULOa82MsWo4kw/rrgA9iuv30pAQZsjQWDRyclAaD/5W9JMt3yZCZdxMUcKENdgKJb
+ 7qrIIWCw4/s10xF5uVJMlrMWhZirrb6ZWBig5fNMkSoqkAqSicais7XOBeAAKtao23hojx/9
+ DlCnZO7ZD4TF7Tqo7gmVzZgIyckLIxjyoaSdBBTseTLp6HHW17F6KwzIhpwI5UevOh3RGJJ+
+ PgebjwABvyBr7vtkfTlDLIwwJhLwMrDZevzvlllxDraAPA0QJ2GX7jW+dtV9Dw5wNpUW/3ZY
+ qL1bBIxPEmROEceYj/7DroCmMaM2EHEVQYEl1KpuvM2wmzK71xYhe2F3N39IIXRHJ4Fzy50v
+ Fnu+m3jARYEPcaQwGbc2n2pj+7L2yj8Xeo6Erix7P1tnlSJyWVPUTUZUFK6pb+yjUvWc95DA
+ 08Z4Cwjqe417kPDZtnwXh6/iGWCohMXW5xcHoUS7ACL17qR+QGSBWMETyZpbN09qNRwRDokz
+ FaFktrlQzt1v9W9TXOb66fRtTizETYaIHVEZiIeSwYBpd75r+kbgh/RT91uDLS4g/XrFjzqh
+ TOHti4zg/MUl8Fj/6G6+03Xxju2o93KQxQz6wH/WmO+8hg/ZYirfYWk5FHXq/FaI+6xFAHb5
+ iBYwpXEtbhQV8jLyXfdGb1cWe3s//maMSXRhkNzN5Yk/jWpvXWkeOh4umkkfh81a5teIGe3O
+ haV5FgBvccCeSLvdaBoYpq8DNk25aflHNXhEPvTa7JmOMArLlfbpXw0PBbOhTmrzRN8yPluf
+ MreacmzDG4XDrl75DWzTuYZl7Qsw0gWnzuJH8inlkn9iOLAPifTFOxVaQPfK7t89KyboR3Y9
+ MtDH8SPwhRbFub5Z0H/q9ZJdwhWdCVhXMio8ZURK7XTe1I3XTtkE/DOwKssfJF5t6tQn+bMu
+ Hq6Xydwk1Gl3SedcVnTNyo6MO21BNAi9iJiZX1pYROw1GcieYuo8bs3eJ4+fL1h/+tmpdZ2Q
+ uMedtSbAvNVRyzO4SgbYIPmrI16chaDigeHPi7jaz86F7ZrQAvN8db4OBDm8C0fJiWyvMo65
+ ban02vzSp0EQw9rEIDbbPau51y0tHkZ3ul1WiPgKd5UfE7l7M5wJirwkvYfLMQFKBGFzTyfv
+ y6dBhAcruDR5Yw07MXYra+BpoatVeB5GyJyEWDQ4LCrODfT4GuvyKdPVe+JeXbWU2acxUm5T
+ f0NlK2kaKFBgk5M9oQkT/Blzec94NbroflWw2yIAUkncXykAZ5ZGFCf+/ITjali/o9f4xqXf
+ 3C2r4wy1aqyBC/1LLIADFN7M7XfjaxNx2C6AecdfR2qvn4plFaTeRsDb0DX4MBIBOItWL7J1
+ 9vNr+Y6xmRTYDIVP82dgyRV8WvkwpcoDv185sBy7GPDrA0x1lEKW5zdDCKz35yUd81MO00rK
+ 1epaEv+a1d0nxSqn4IbTySl4Aakrc1mVdAj5AZqy661stTEnOQr+xZa7C46SA9Ypj0ejb8iZ
+ zUyaxYodPvVl9uNuCSldz/xc+2mLELCknEdN3NTyDOxo7SACT2dfDxsY45hAmhFojsEJ1C3A
+ 410OE6/CG2zJ5GgtsfDcUJotuD4Rtx87UXMn9q8FMSYGZYhZzf5kMeTiZkg9HPa7AJYrBOvm
+ NSGC84rNPCkbHJN8v1jY2RYvJxJIC25yKV5aakJ1Ms08av0J1leBRDmx5iNR/5w
+IronPort-HdrOrdr: A9a23:IAEcnaDJKR0fi07lHem755DYdb4zR+YMi2TCHihKJSC9Ffb0qy
+ nOpp8mPHDP6Ar5NEtApTniAsO9qBrnnPZICO8qTNSftMyMghrMEGgI1+TfKlPbdREWjdQtt5
+ tdTw==
+X-IronPort-Anti-Spam-Filtered: true
+THK-HEADER: Antispam--identified_spam--outgoing_filter
+Received: from p034004.vpn-f04.fh-koeln.de (HELO MAC15F3.vpn.fh-koeln.de) ([139.6.34.4])
+  by smtp.intranet.fh-koeln.de with ESMTP/TLS/DHE-RSA-AES128-SHA; 04 Aug 2022 04:34:03 +0200
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] PCI: fix the invalid aer-inject git tree
-Content-Language: en-US
-To:     Huang Shijie <shijie@os.amperecomputing.com>, bhelgaas@google.com
-Cc:     patches@amperecomputing.com, zwang@amperecomputing.com,
-        darren@os.amperecomputing.com, corbet@lwn.net,
-        yangyicong@hisilicon.com, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220804094755.1885603-1-shijie@os.amperecomputing.com>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20220804094755.1885603-1-shijie@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Charity Donation
+To:     You <mackenzie-tuttle@ca.rr.com>
+From:   "MacKenzie Scott" <mackenzie-tuttle@ca.rr.com>
+Date:   Thu, 04 Aug 2022 03:34:01 +0100
+Reply-To: mackenzie-tuttle@californiamail.com
+X-Priority: 1 (High)
+Sensitivity: Company-Confidential
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,MSGID_FROM_MTA_HEADER,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/4/22 16:47, Huang Shijie wrote:
-> The old tree is invalid now, fix it with the right git tree:
->     https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> 
-<snip>
-> -	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
-> +            https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
-<snip>
-> - *   https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
-> + *   https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
->   *
->   * Copyright 2009 Intel Corporation.
->   *     Huang Ying <ying.huang@intel.com>
+Hi,
+  My name is MacKenzie Scott Tuttle; I'm a philanthropist and founder of one of the largest private foundations in the world. I'm on a mission to give it all away as I believe in ‘giving while living.’ I always had the idea that never changed in my mind — that wealth should be used to help each other, which has made me decide to donate to you. Kindly acknowledge this message and I will get back to you with more details.
 
-This is essentially s:cgit:pub/scm:.
+Visit the web page to know more about me: https://www.nytimes.com/2022/04/10/business/mackenzie-scott-charity.html
 
-Better wording is "The aer-inject tree have been moved to <new location>.
-Update the link."
-
--- 
-An old man doll... just what I always wanted! - Clara
+Regards,
+MacKenzie Scott Tuttle.
