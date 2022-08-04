@@ -2,77 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11BCC589A65
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 12:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 213ED589A63
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Aug 2022 12:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236633AbiHDKZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Aug 2022 06:25:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        id S231335AbiHDKZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Aug 2022 06:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235283AbiHDKZN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 06:25:13 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA7E97;
-        Thu,  4 Aug 2022 03:25:10 -0700 (PDT)
+        with ESMTP id S229687AbiHDKZL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Aug 2022 06:25:11 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECC939BB9;
+        Thu,  4 Aug 2022 03:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659608710; x=1691144710;
+  t=1659608709; x=1691144709;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=TMv41kPjFNwEES+IgD1kd1GmqY4KLGHdI4MsZyeLejA=;
-  b=AazTVLbsvW4NY5ZF2w32Gr0m9LQ5XQ87ZyJWl4DvlMUUanJxOskjsYMk
-   UMz52mV84ZRfudicXmhSFR/1qOO2wQTTvZmOHS5PC6IJwi9hRdg16ituB
-   kqgO9kdd4RoUXOGJ92j3/cCUQvWlLYLf6qH9gT3T52RXcFeckT04r93Ne
-   wirWD2VSLr56hcSuwQSbydyqrGQsbGwApjPMTJu69E8gO3DYefjEzrraj
-   xApq0RG3/PtSgUDRQt+KW8mGz9UrT7Xd902kvZtvzQcLwutFYM4UxXrpp
-   jX7Qpq5QP8CmijU979i3fVXdkIDpQZWZr2xFWsNFUzk28bYdQ3B4ftHJv
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10428"; a="269672283"
+  bh=IS40OMJ59ildUV2BC52fslfsJVgIpVJ9nPZ8BK1lyVc=;
+  b=C9fIzDiZhSkkJJS3rb4VpqdIIbUJQ7Fh2YJuDiLF326cjQtNFynfIRbO
+   wSczxWCexbMYPCtFmvUJ59GnhTg+L5LqKu1JZLQs34KCs0VdsN13BU+Fd
+   +PU2Mt5u8HPoB8hBfEegKij61efStmdmi6L0oOzP30CfZqhsEtyoSbQt3
+   Uxt9qsBobT92XlXOHheAZ+Jfq48RBZ34COsaxIjApiSGcgd+yN4ZLjWpK
+   pvsijZqlhBKAnXc6dMqY47rddY5oWIyL/2fhPFT7mc7drCbIq3pT1ok/G
+   Ls8tBUkHhnLNtnhA3YFd7VCA+1E/5PqH6OTS6Qx8ymFoZKutIKK3tIrki
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10428"; a="351612101"
 X-IronPort-AV: E=Sophos;i="5.93,215,1654585200"; 
-   d="scan'208";a="269672283"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 03:25:10 -0700
+   d="scan'208";a="351612101"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 03:25:09 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,215,1654585200"; 
-   d="scan'208";a="779316253"
+   d="scan'208";a="553672251"
 Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 04 Aug 2022 03:25:04 -0700
+  by orsmga003.jf.intel.com with ESMTP; 04 Aug 2022 03:25:04 -0700
 Received: from kbuild by e0eace57cfef with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oJY2J-000IIL-13;
+        id 1oJY2J-000IIJ-0x;
         Thu, 04 Aug 2022 10:25:03 +0000
-Date:   Thu, 4 Aug 2022 18:24:55 +0800
+Date:   Thu, 4 Aug 2022 18:24:57 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
         helgaas@kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, quic_vbadigan@quicinc.com,
+        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        dmitry.baryshkov@linaro.org,
         Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v5 2/3] PCI: qcom: Restrict pci transactions after pci
- suspend
-Message-ID: <202208041800.BLHfNzzW-lkp@intel.com>
-References: <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 3/3] PCI: qcom: Add retry logic for link to be stable
+ in L1ss
+Message-ID: <202208041821.cik847re-lkp@intel.com>
+References: <1659526134-22978-4-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
+In-Reply-To: <1659526134-22978-4-git-send-email-quic_krichai@quicinc.com>
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -81,10 +79,10 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Krishna,
 
-Thank you for the patch! Yet something to improve:
+Thank you for the patch! Perhaps something to improve:
 
-[auto build test ERROR on helgaas-pci/next]
-[also build test ERROR on next-20220803]
+[auto build test WARNING on helgaas-pci/next]
+[also build test WARNING on next-20220803]
 [cannot apply to linus/master v5.19]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -92,136 +90,91 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-chaitanya-chundru/PCI-Restrict-pci-transactions-after-pci-suspend/20220803-193033
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: s390-randconfig-r044-20220804 (https://download.01.org/0day-ci/archive/20220804/202208041800.BLHfNzzW-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 26dd42705c2af0b8f6e5d6cdb32c9bd5ed9524eb)
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20220804/202208041821.cik847re-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # install s390 cross compiling tool for clang build
-        # apt-get install binutils-s390x-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/9e799ab52db3245911b15a8903977d99554d900d
+        # https://github.com/intel-lab-lkp/linux/commit/64b4ad561ad4a28aa8840303f29669bf7af77757
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Krishna-chaitanya-chundru/PCI-Restrict-pci-transactions-after-pci-suspend/20220803-193033
-        git checkout 9e799ab52db3245911b15a8903977d99554d900d
+        git checkout 64b4ad561ad4a28aa8840303f29669bf7af77757
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/pci/controller/dwc/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/pci/controller/dwc/
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   In file included from drivers/pci/controller/dwc/pcie-designware-host.c:11:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:75:
-   include/asm-generic/io.h:464:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __raw_readb(PCI_IOBASE + addr);
-                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:477:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-   #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-                                                             ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-   #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-                                                        ^
-   In file included from drivers/pci/controller/dwc/pcie-designware-host.c:11:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:75:
-   include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-   #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-                                                             ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-   #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-                                                        ^
-   In file included from drivers/pci/controller/dwc/pcie-designware-host.c:11:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:75:
-   include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writeb(value, PCI_IOBASE + addr);
-                               ~~~~~~~~~~ ^
-   include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsb(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsw(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsl(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesb(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
-   include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesw(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
-   include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesl(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
->> drivers/pci/controller/dwc/pcie-designware-host.c:33:24: error: static assertion failed due to requirement '__builtin_types_compatible_p(struct pcie_port, struct dw_pcie_rp) || __builtin_types_compatible_p(struct pcie_port, void)': pointer type mismatch in container_of()
-           struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-                                 ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware.h:327:34: note: expanded from macro 'to_dw_pcie_from_pp'
-   #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/container_of.h:19:2: note: expanded from macro 'container_of'
-           static_assert(__same_type(*(ptr), ((type *)0)->member) ||       \
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:77:34: note: expanded from macro 'static_assert'
-   #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:78:41: note: expanded from macro '__static_assert'
-   #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-                                           ^              ~~~~
-   drivers/pci/controller/dwc/pcie-designware-host.c:44:24: error: static assertion failed due to requirement '__builtin_types_compatible_p(struct pcie_port, struct dw_pcie_rp) || __builtin_types_compatible_p(struct pcie_port, void)': pointer type mismatch in container_of()
-           struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-                                 ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware.h:327:34: note: expanded from macro 'to_dw_pcie_from_pp'
-   #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/container_of.h:19:2: note: expanded from macro 'container_of'
-           static_assert(__same_type(*(ptr), ((type *)0)->member) ||       \
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:77:34: note: expanded from macro 'static_assert'
-   #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:78:41: note: expanded from macro '__static_assert'
-   #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-                                           ^              ~~~~
-   12 warnings and 2 errors generated.
+   In file included from include/linux/device.h:15,
+                    from include/linux/node.h:18,
+                    from include/linux/cpu.h:17,
+                    from include/linux/of_device.h:5,
+                    from drivers/pci/controller/dwc/pcie-qcom.c:20:
+   drivers/pci/controller/dwc/pcie-qcom.c: In function 'qcom_pcie_pm_suspend':
+>> drivers/pci/controller/dwc/pcie-qcom.c:1846:39: warning: format '%d' expects argument of type 'int', but argument 3 has type 's64' {aka 'long long int'} [-Wformat=]
+    1846 |                         dev_info(dev, "Link enters L1ss after %d ms\n",
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ^~~
+   include/linux/dev_printk.h:150:58: note: in expansion of macro 'dev_fmt'
+     150 |         dev_printk_index_wrap(_dev_info, KERN_INFO, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                          ^~~~~~~
+   drivers/pci/controller/dwc/pcie-qcom.c:1846:25: note: in expansion of macro 'dev_info'
+    1846 |                         dev_info(dev, "Link enters L1ss after %d ms\n",
+         |                         ^~~~~~~~
+   drivers/pci/controller/dwc/pcie-qcom.c:1846:64: note: format string is defined here
+    1846 |                         dev_info(dev, "Link enters L1ss after %d ms\n",
+         |                                                               ~^
+         |                                                                |
+         |                                                                int
+         |                                                               %lld
 
 
-vim +33 drivers/pci/controller/dwc/pcie-designware-host.c
+vim +1846 drivers/pci/controller/dwc/pcie-qcom.c
 
-    29	
-    30	static void dw_msi_mask_irq(struct irq_data *d)
-    31	{
-    32		struct pcie_port *pp = irq_data_get_irq_chip_data(d->parent_data);
-  > 33		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-    34	
-    35		if (dw_pcie_link_up(pci))
-    36			pci_msi_mask_irq(d);
-    37	
-    38		irq_chip_mask_parent(d);
-    39	}
-    40	
+  1827	
+  1828	static int __maybe_unused qcom_pcie_pm_suspend(struct device *dev)
+  1829	{
+  1830		struct qcom_pcie *pcie = dev_get_drvdata(dev);
+  1831		u32 val;
+  1832		ktime_t timeout, start;
+  1833	
+  1834		if (!pcie->cfg->supports_system_suspend)
+  1835			return 0;
+  1836	
+  1837		start = ktime_get();
+  1838		/* Wait max 100 ms */
+  1839		timeout = ktime_add_ms(start, 100);
+  1840		while (1) {
+  1841			bool timedout = ktime_after(ktime_get(), timeout);
+  1842	
+  1843			/* if the link is not in l1ss don't turn off clocks */
+  1844			val = readl(pcie->parf + PCIE20_PARF_PM_STTS);
+  1845			if ((val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB)) {
+> 1846				dev_info(dev, "Link enters L1ss after %d ms\n",
+  1847						ktime_to_ms(ktime_get() - start));
+  1848				break;
+  1849			}
+  1850	
+  1851			if (timedout) {
+  1852				dev_warn(dev, "Link is not in L1ss\n");
+  1853				return 0;
+  1854			}
+  1855			usleep_range(1000, 1200);
+  1856		}
+  1857	
+  1858		if (pcie->cfg->ops->suspend)
+  1859			pcie->cfg->ops->suspend(pcie);
+  1860	
+  1861		pcie->is_suspended = true;
+  1862	
+  1863		return 0;
+  1864	}
+  1865	
 
 -- 
 0-DAY CI Kernel Test Service
