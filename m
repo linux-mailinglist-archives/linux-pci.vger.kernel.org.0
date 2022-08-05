@@ -2,88 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7FE058AAFF
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Aug 2022 14:45:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BC8758ABA8
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Aug 2022 15:31:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233513AbiHEMpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Aug 2022 08:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
+        id S238247AbiHENbq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Aug 2022 09:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231492AbiHEMpI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Aug 2022 08:45:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8831B79E;
-        Fri,  5 Aug 2022 05:45:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 198CEB82756;
-        Fri,  5 Aug 2022 12:45:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9717CC433D6;
-        Fri,  5 Aug 2022 12:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659703504;
-        bh=RpHuoKL2UGBwsxt7NltwOhTg3dkIpbQAwReG+w/GQik=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=Rt8dL+9yokv0qzRXJvV+EhXJyDxFvmyvjZlLUObivuaa3KwnemXBk1+k/XJnYgOj5
-         i1WDwfl5ila+2jYZODQ4ivs/uxAsTLCqUm2iQLdo6usnQa7vGZdMt4MskyP1OPyoje
-         b6FyODP4tyJt2FeHVZpMzKOKjPUs4BBwAaYkwfkdZuAUycPG79AVi6T9zeMPcWky7R
-         Fh7ekqXXbFg5Ltz7WyYr7HGYP9MWRVbcoAnPLtAhwc4iJ35G5f44/CMWppcr3JJZ66
-         TYyUwSVkysWYr4vYttroAJxIyPk1BkGZBQJYXLCjU7WwxiSaVWL2OVksPxz9vM0inU
-         A77YOueJpOzow==
-Received: by pali.im (Postfix)
-        id 1FF9582D; Fri,  5 Aug 2022 14:45:02 +0200 (CEST)
-Date:   Fri, 5 Aug 2022 14:45:01 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mauri Sandberg <maukka@ext.kapsi.fi>,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: How to correctly define memory range of PCIe config space
-Message-ID: <20220805124501.t5miqz2pifzb73st@pali>
-References: <20220710225108.bgedria6igtqpz5l@pali>
- <20220723090506.wofibbrrhicvxi4t@pali>
+        with ESMTP id S233133AbiHENbo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Aug 2022 09:31:44 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972DB3ED65;
+        Fri,  5 Aug 2022 06:31:43 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id y141so2267013pfb.7;
+        Fri, 05 Aug 2022 06:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=fqcWmY1mBve1L/uK9Q+d74rl0xxAsTmgo1FtwEWwwi0=;
+        b=SODgQsLFaA7548Zpjjv2VLPVl/UV/irb9dxu/w/+UjNZXjR1BeMD/bU4PhxF9c+LYZ
+         1vdp8emXzb70f3ki8I3WdxH1vp6Go0YNphh2930b3OaaXAqwqHx/tvWLDEFQaFBvZawy
+         TrUfn1vyWnpBHZT7qTCk4JOWF6y5ZAfBK2wEDMlYG5KKXmHpAzauLMj/wjAnR8rfS2XZ
+         qT7sQ/NHML+jFqwHwMbAIcCCyxHJ2LLDrlzZcFTjM+W5VTu34UrKajSFohAH2M1Bt9/P
+         CouzaEnd2CnpGoZ2VT6QzxsV6xWmF4IS7sWtJZBnPpChNwee00yrvt8VWGWGWLTmPpJ8
+         47kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=fqcWmY1mBve1L/uK9Q+d74rl0xxAsTmgo1FtwEWwwi0=;
+        b=V1TELQ0MGEVLYQD6xaDrEhVfmPcdkYzq30qIVMGAGRkftsQucLR7BOroHnsgRU96P3
+         ZXCCJroeJuEP9iAXswVbeElQO9exHxIRXUdkJVDucozocb68u6wUV7f8LxG725P8y475
+         C4siroiw3UVVUyU25HVMmSfqaLCjJJy4NXc8pDOY7E82s3103ySEwkCxwxKVFH6z1c9Y
+         q3UR4Va5YgzwV0chjJIf8Kb3lgM+uMSxv8nUbiuuq1XhjQykNEijRmPTyGmlnMEaMv4M
+         coIpTfLMCvPGSVLOyte62eJI6IyOlWC7uRRE5rC+i6yvotyDyKKwDbLZd5kJGCuTceLM
+         WJKg==
+X-Gm-Message-State: ACgBeo1SdiXLuFQzZFtYPmZn8ULxvUEsETT7su0n+AfqggTVGN4a+kuc
+        Z7N2nMOtRZ8GTaSLjw74izA=
+X-Google-Smtp-Source: AA6agR6KuhQSga1/p3WOwML8vH6DRegVLh9KAFWWEKI7bOc+i+Zc0lA261DTS0lb5MDl1Xf44fiPrg==
+X-Received: by 2002:a05:6a00:2a7:b0:52d:7d79:b836 with SMTP id q7-20020a056a0002a700b0052d7d79b836mr7063001pfs.52.1659706302895;
+        Fri, 05 Aug 2022 06:31:42 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-75.three.co.id. [180.214.232.75])
+        by smtp.gmail.com with ESMTPSA id nn16-20020a17090b38d000b001efa35356besm5678374pjb.28.2022.08.05.06.31.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Aug 2022 06:31:42 -0700 (PDT)
+Message-ID: <6556c478-976c-27f1-ad9b-606fe47f7ce1@gmail.com>
+Date:   Fri, 5 Aug 2022 20:31:33 +0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220723090506.wofibbrrhicvxi4t@pali>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v3] PCI: update the links for aer-inject git tree
+Content-Language: en-US
+To:     Huang Shijie <shijie@os.amperecomputing.com>, bhelgaas@google.com
+Cc:     patches@amperecomputing.com, zwang@amperecomputing.com,
+        darren@os.amperecomputing.com, corbet@lwn.net,
+        yangyicong@hisilicon.com, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220805105238.345599-1-shijie@os.amperecomputing.com>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20220805105238.345599-1-shijie@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Gentle reminder...
-
-On Saturday 23 July 2022 11:05:06 Pali Rohár wrote:
-> Gentle reminder...
+On 8/5/22 17:52, Huang Shijie wrote:
+> The aer-inject tree has been moved to:
+>     https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> Update the links.
 > 
-> On Monday 11 July 2022 00:51:08 Pali Rohár wrote:
-> > Hello!
-> > 
-> > Together with Mauri we are working on extending pci-mvebu.c driver to
-> > support Orion PCIe controllers as these controllers are same as mvebu
-> > controller.
-> > 
-> > There is just one big difference: Config space access on Orion is
-> > different. mvebu uses classic Intel CFC/CF8 registers for indirect
-> > config space access but Orion has direct memory mapped config space.
-> > So Orion DTS files need to have this memory range for config space and
-> > pci-mvebu.c driver have to read this range from DTS and properly map it.
-> > 
-> > So my question is: How to properly define config space range in device
-> > tree file? In which device tree property and in which format? Please
-> > note that this memory range of config space is PCIe root port specific
-> > and it requires its own MBUS_ID() like memory range of PCIe MEM and PCIe
-> > IO mapping. Please look e.g. at armada-385.dtsi how are MBUS_ID() used:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/armada-385.dtsi
-> > 
-> > Krzysztof, would you be able to help with proper definition of this
-> > property, so it would be fine also for schema checkers or other
-> > automatic testing tools?
+> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+> ---
+> v1 --> v2: Modified the commit message and the title.
+> v2 --> v3: Change the commit message again.
+> ---
+
+The change log could have been before the diffstat below (so it won't be
+displayed on git log when applied).
+
+>  Documentation/PCI/pcieaer-howto.rst | 2 +-
+>  drivers/pci/pcie/Kconfig            | 2 +-
+>  drivers/pci/pcie/aer_inject.c       | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index 0b36b9ebfa4b..b31fc9a0edbc 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -294,7 +294,7 @@ After reboot with new kernel or insert the module, a device file named
+>  Then, you need a user space tool named aer-inject, which can be gotten
+>  from:
+>  
+> -    https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+> +    https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
+>  
+>  More information about aer-inject can be found in the document comes
+>  with its source code.
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 788ac8df3f9d..d6ea0fd9892d 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -43,7 +43,7 @@ config PCIEAER_INJECT
+>  	  error injection can fake almost all kinds of errors with the
+>  	  help of a user space helper tool aer-inject, which can be
+>  	  gotten from:
+> -	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+> +            https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
+>  
+>  #
+>  # PCI Express ECRC
+> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+> index 2dab275d252f..262b06b0dc1d 100644
+> --- a/drivers/pci/pcie/aer_inject.c
+> +++ b/drivers/pci/pcie/aer_inject.c
+> @@ -6,7 +6,7 @@
+>   * trigger various real hardware errors. Software based error
+>   * injection can fake almost all kinds of errors with the help of a
+>   * user space helper tool aer-inject, which can be gotten from:
+> - *   https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+> + *   https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
+>   *
+>   * Copyright 2009 Intel Corporation.
+>   *     Huang Ying <ying.huang@intel.com>
+
+Otherwise looks OK.
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+-- 
+An old man doll... just what I always wanted! - Clara
