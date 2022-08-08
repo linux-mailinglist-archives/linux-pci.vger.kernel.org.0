@@ -2,152 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D69C58CD0E
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Aug 2022 19:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2B4A58CDD7
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Aug 2022 20:42:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243532AbiHHRv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Aug 2022 13:51:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        id S244294AbiHHSmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Aug 2022 14:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243784AbiHHRv0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Aug 2022 13:51:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BF3AE53;
-        Mon,  8 Aug 2022 10:51:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E3A46117C;
-        Mon,  8 Aug 2022 17:51:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E904C433C1;
-        Mon,  8 Aug 2022 17:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659981084;
-        bh=vTbGYaylM7shGWl1jQ9xdtmFNsKG4CvmKO/ubi157C0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dqNfP+jXwKsui2Zs2v09N7U78wd7FfV5TDKqTgWx0grCbSJy7jkWeTDQMWY9rcz3A
-         UBp/gOe1y4ZftYr0oLIZIM+ls0XupoMKShhfpaM5t/GoUzVHu2uBIF8fX9w0EqwrmM
-         i6w8i8GwrUs8NjslAhQZ3zrk1TsHEA5F/PJmPUV0WxpE3iTVaaoYFxIOTfYf8opA6j
-         svWWpRI3shmPRdO/gFETjTGhrLO7s2K4A8sLzJL4nNNWXPmUba/EVIrFGg5L/lfwen
-         8JuuRFH8gmCg+6/jgT/QkTtTFS+IbFPWjqj6p+dghD56HWLbaxM07ZhW7Ck+yK2ClV
-         +d5FVdddhhiUw==
-Date:   Mon, 8 Aug 2022 12:51:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, pmladek@suse.com,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 27/32] PCI/P2PDMA: Convert to printbuf
-Message-ID: <20220808175122.GA1215280@bhelgaas>
+        with ESMTP id S244479AbiHHSmc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Aug 2022 14:42:32 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F528E2A;
+        Mon,  8 Aug 2022 11:42:06 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id u8so7005345qvv.1;
+        Mon, 08 Aug 2022 11:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=u1PXgfOS9jeLalo7AqxZr5mK2SKHlkfGpYodsapJQG0=;
+        b=evq7RpP0UH6ogV/39TW0beGjB2CUxeCUB1sI9H42E5IvZ7DEJTAyurPerZvYvH9F82
+         ddaPRi7cFPWoggHGbJ/v9V48kOtVcKZNvQy/OEeVS7UXlIIAH6cvNLdXwp6lNlfnymB5
+         4tMnK7gyUpjQAv1RXNYoYr0KCMNra9dfCXWxWQDDXFJpqDfs89gBufzcWhVxPCCQOARd
+         aENVHKyOF45k061pvPpuBcjon+YacO94Sma6kMy1mCmw+FJ7JW04cmrI8QNE/NoK8q+O
+         g9Th/A58vsl1nfVxb2FPunrNy57fGSCMsFKdnBDpg+V2Cs8cH6ZPEIKT2u35PkGF1EPR
+         pX6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=u1PXgfOS9jeLalo7AqxZr5mK2SKHlkfGpYodsapJQG0=;
+        b=aVfRciCjuqZ0suJ2t3xob8N/riaoi46SxosXmFDPO/e/h88Vx7UbPl2V/j8AV4QIKr
+         GYtKruAaf58HP1XdRMF1jW8C7sGTB6SZEAMBUb07eghNaPzxGiXcVETgORbhQrOJyzuB
+         DYNSfRnwK+OruwlNaZlvF1uJv2qa3IIsqVShYZBHOXnseBNn5iIVUOLdzIoTNBTs9LK5
+         uR/NvMI+PslgHGHR7KEVlv+t9VSbsWJXjjY9wjbOfE9Jd3JkzSVVQPO+9bfUYcfrK0ZO
+         OdSFLGFIJ+IjV8StN5V4PHINasyAuFhCKZq5QbNqeCKX7/gp46zi0ggy1OF/S2L3FA8G
+         bmEg==
+X-Gm-Message-State: ACgBeo3sUh/CFhkpyefE/vhi3qx0QknJBEI7wnHVS5wgB0B90nEKR4uJ
+        0PajoSN5cAsaxd+KKHQrKBVw/Sa/z6/d
+X-Google-Smtp-Source: AA6agR7ylZhaRL35P4ikdTZUEYUyOFJJd0qNC4BP1gf9ihEu2Q6xzs2KPYDk+AZ3UgpgBrJ44Q/GOg==
+X-Received: by 2002:ad4:5f48:0:b0:476:787f:1cd with SMTP id p8-20020ad45f48000000b00476787f01cdmr17061393qvg.77.1659984125390;
+        Mon, 08 Aug 2022 11:42:05 -0700 (PDT)
+Received: from [192.168.1.210] (c-73-219-103-14.hsd1.vt.comcast.net. [73.219.103.14])
+        by smtp.gmail.com with ESMTPSA id j17-20020a05620a289100b006b5bf5d45casm10265069qkp.27.2022.08.08.11.42.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Aug 2022 11:42:04 -0700 (PDT)
+Message-ID: <1b92761a-c166-b84f-8d77-a966d4c0ef9a@gmail.com>
+Date:   Mon, 8 Aug 2022 14:42:03 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220808024128.3219082-28-willy@infradead.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: [PATCH v5 27/32] PCI/P2PDMA: Convert to printbuf
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, pmladek@suse.com,
+        linux-pci@vger.kernel.org
+References: <20220808175122.GA1215280@bhelgaas>
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+In-Reply-To: <20220808175122.GA1215280@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 08, 2022 at 03:41:23AM +0100, Matthew Wilcox (Oracle) wrote:
-> From: Kent Overstreet <kent.overstreet@gmail.com>
-> 
-> This converts from seq_buf to printbuf. We're using printbuf in external
-> buffer mode, so it's a direct conversion, aside from some trivial
-> refactoring in cpu_show_meltdown() to make the code more consistent.
+On 8/8/22 13:51, Bjorn Helgaas wrote:
+> I don't object to the patch, but it would be nice if the commit log
+> hinted at what the advantage is.  I assume it's faster/safer/better in
+> some way, but I have no idea what.
 
-I don't object to the patch, but it would be nice if the commit log
-hinted at what the advantage is.  I assume it's faster/safer/better in
-some way, but I have no idea what.
+Printbufs have some additional features over seq_buf but they're not 
+used here. The main one you might be interested in is heap allocation: 
+that means no need to statically allocate buffers on the stack and no 
+need to calculate the buffer size, printbufs will reallocate as necessary.
 
-Also, cpu_show_meltdown() doesn't appear in this patch, so maybe
-that's relevant to some other patch but not this one?
+I generally haven't been converting code to use that unless it's obvious 
+that we're in a context where it's safe to allocate memory and can deal 
+with allocation failures.
 
-> Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-> Cc: linux-pci@vger.kernel.org
-> ---
->  drivers/pci/p2pdma.c | 21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 4496a7c5c478..8e29e7cabad3 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -18,7 +18,7 @@
->  #include <linux/memremap.h>
->  #include <linux/percpu-refcount.h>
->  #include <linux/random.h>
-> -#include <linux/seq_buf.h>
-> +#include <linux/printbuf.h>
->  #include <linux/xarray.h>
->  
->  struct pci_p2pdma {
-> @@ -275,12 +275,9 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
->  	return 0;
->  }
->  
-> -static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
-> +static void prt_bus_devfn(struct printbuf *buf, struct pci_dev *pdev)
->  {
-> -	if (!buf)
-> -		return;
-> -
-> -	seq_buf_printf(buf, "%s;", pci_name(pdev));
-> +	prt_printf(buf, "%s;", pci_name(pdev));
->  }
->  
->  static bool cpu_supports_p2pdma(void)
-> @@ -454,13 +451,11 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  	struct pci_dev *a = provider, *b = client, *bb;
->  	bool acs_redirects = false;
->  	struct pci_p2pdma *p2pdma;
-> -	struct seq_buf acs_list;
->  	int acs_cnt = 0;
->  	int dist_a = 0;
->  	int dist_b = 0;
->  	char buf[128];
-> -
-> -	seq_buf_init(&acs_list, buf, sizeof(buf));
-> +	struct printbuf acs_list = PRINTBUF_EXTERN(buf, sizeof(buf));
->  
->  	/*
->  	 * Note, we don't need to take references to devices returned by
-> @@ -471,7 +466,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  		dist_b = 0;
->  
->  		if (pci_bridge_has_acs_redir(a)) {
-> -			seq_buf_print_bus_devfn(&acs_list, a);
-> +			prt_bus_devfn(&acs_list, a);
->  			acs_cnt++;
->  		}
->  
-> @@ -500,7 +495,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  			break;
->  
->  		if (pci_bridge_has_acs_redir(bb)) {
-> -			seq_buf_print_bus_devfn(&acs_list, bb);
-> +			prt_bus_devfn(&acs_list, bb);
->  			acs_cnt++;
->  		}
->  
-> @@ -515,11 +510,11 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  	}
->  
->  	if (verbose) {
-> -		acs_list.buffer[acs_list.len-1] = 0; /* drop final semicolon */
-> +		acs_list.buf[acs_list.pos-1] = 0; /* drop final semicolon */
->  		pci_warn(client, "ACS redirect is set between the client and provider (%s)\n",
->  			 pci_name(provider));
->  		pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
-> -			 acs_list.buffer);
-> +			 acs_list.buf);
->  	}
->  	acs_redirects = true;
->  
-> -- 
-> 2.35.1
-> 
+I notice that in calc_map_type_and_dist() you're using xa_store() which 
+can fail, but you're not checking for that or returning errors properly 
+:) perhaps a fix for that could also switch to using printbuf in 
+heap-allocation mode.
+
+> Also, cpu_show_meltdown() doesn't appear in this patch, so maybe
+> that's relevant to some other patch but not this one?
+
+Whoops, was copying the commit message from another patch, yeah.n
