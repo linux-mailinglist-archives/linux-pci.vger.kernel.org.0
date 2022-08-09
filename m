@@ -2,187 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B176158E0E2
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Aug 2022 22:17:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A88A58E2F8
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Aug 2022 00:17:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244980AbiHIUR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Aug 2022 16:17:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
+        id S229868AbiHIWQZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Aug 2022 18:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244696AbiHIURX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Aug 2022 16:17:23 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8206C6E;
-        Tue,  9 Aug 2022 13:17:21 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id v7so14126461ljj.4;
-        Tue, 09 Aug 2022 13:17:21 -0700 (PDT)
+        with ESMTP id S229901AbiHIWPS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Aug 2022 18:15:18 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910CA26AF5
+        for <linux-pci@vger.kernel.org>; Tue,  9 Aug 2022 15:15:16 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id r5so10747240iod.10
+        for <linux-pci@vger.kernel.org>; Tue, 09 Aug 2022 15:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=3mJZlwcPuZ9W9ftRRvNLyfL45/YwPQIszBn93QgeHJk=;
-        b=TL7Np1LTKvuyqpbYbUW1ACTFwZ6T5Hf3Oix/ypKZhdtd7RPNdSKCjt62U7lBLja915
-         jrrXtNj6m1AHhT8WDhRZmf7QCpjRWZnN+aLky18s1MYY080G/X2f2WTiehU0dKN2P0Ms
-         zeI6K7byB+4qeHGurE+vK9EteZDP/hE9UAgFEjLZoPVjF2P9PE6HTYQYOjyl9teTXIsu
-         Zj+NYfTESkULy0P/mPcOwbDJWdfBJd5prEUGYQ1Qgi3KbSiSBG4YWF7SgsLl0l5k80Yj
-         TXcZERlGGVU2+UpKbNinZyDm83BzVa70/4DXjnrLwWH4rZksZxyEKaSRNzlagPNE5kHl
-         fWQQ==
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=QTP95oQi+RYhXbI8sz4RyTZp0RSE4jP48cyyUmWbTiK1ItvOHbADVtjkGHK/8zFbqv
+         EIzUG3d4HgG5eAQxnVHuBpH33ycuIiNpMEXk8S0LHARhhQGb6AufQVVn/40aQfLvP77W
+         778oK7qnpGZXO0Q2aGCYT4Mad4FGDHlh1br3s7D4D+9Vr7gPQrhXDR8bwR1fyz6kQ1n2
+         /mI7/+oIm6xqfpBjeRephfywWnzvzUcqvvdKwYuFsxmTm/GRVEQb9jKfBsLPvHEPeyBR
+         SLk52BQ10Zm7GZ4Mv5gugSKJZhGFXVOipaGDVsAOq6ABLyMrmGMv+5RYTjL3cqduwO+M
+         O1Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=3mJZlwcPuZ9W9ftRRvNLyfL45/YwPQIszBn93QgeHJk=;
-        b=1LXcVv9w6KPWV14wmLLolyom0sCYXIHWDS4IjuozOpRGRedLkt1phKSCnfI0du6w+q
-         QlO4yzGQ9ow5ZM7klWNq4NRYUUfBoZIE14Zu4xf39s6ediRLdzwCFGsu0l3IUBpEaHsS
-         OBzdl8rZBnS8TvMflp4aeGGmdC1hOya4C9NXtY0hf8NWZxxR4gACAQTcaAjVTmUZp22U
-         TvKhqaeEqvefIwjzC3FZrm7kyLDJGnueBWe/EB9qZBtrJIvrbKV+T1Zzv6Tef7m973q1
-         cNW9xzGpwjchTAOL29YSPyXW8P8OB+PqB0n+PECqoDYYCTTsUKtN9yPvewM6UhCtJrCn
-         Ekug==
-X-Gm-Message-State: ACgBeo3wqBGbpIMToOvCQlCYXgVhThduShskTDgTm/5MoIMBc5YHldqu
-        SJf6H7XfUC53iPOOeZqvEPE=
-X-Google-Smtp-Source: AA6agR7EQjDbh5FyX3H2TLIPLgFDklraZb1iHpWt/twPEHXFxCqniGw6N1pztZoT2ApgQanAn1ecGw==
-X-Received: by 2002:a2e:a99b:0:b0:25e:be66:72f2 with SMTP id x27-20020a2ea99b000000b0025ebe6672f2mr5535835ljq.27.1660076240273;
-        Tue, 09 Aug 2022 13:17:20 -0700 (PDT)
-Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
-        by smtp.gmail.com with ESMTPSA id z18-20020a2eb532000000b0025e4a8a8038sm93534ljm.88.2022.08.09.13.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Aug 2022 13:17:19 -0700 (PDT)
-Date:   Tue, 9 Aug 2022 23:17:16 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 12/17] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root
- Port bindings
-Message-ID: <20220809201716.wy7ij2tawmzk7ihe@mobilestation>
-References: <20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru>
- <20220728143427.13617-13-Sergey.Semin@baikalelectronics.ru>
- <20220801181311.GA1266390-robh@kernel.org>
- <20220808160118.m5ka7o7gdhei2yzl@mobilestation>
- <CAL_JsqJSYAsotjzvOUy_f7ZRfsSrfZyuEzq7eRwwKk12FBgxYg@mail.gmail.com>
- <20220809192846.ozixf6kgs242dbvl@mobilestation>
- <CAL_JsqJGvZnaV+kRazsb953+RtXadFxhEkw_uSjwR9PUXQeAAw@mail.gmail.com>
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=kSa9Fq/uHeui7wEkkjLGfwUb8t4ABW/1dVkXcXEYQMlRWwALUWiUClG54/FXMx+y1Q
+         zZGYDi15CRAhHp/l4aYIu49DFIvdWvmLc4cYpaaKtJgX5KXUgN9y/HSnAWV62QUjwrRW
+         ScuoKYqMaLOfPTDAtvjVODNfw2kcZJczfZiRspkPR8N2T7ilAziP64AsI0rpqlF64WeG
+         A3VDE9YJrCPZJ+uY1c+vQf8U0tFunLa73KW5cbia9bz9aZRoPcvLcRAvOWJ7KvCuTTBp
+         KIAm3qpDh1gvNZir3ZJ6Xag7uZqpUZg4jue40JMUZrh+kxK1Pb33/chYn6UuE2X+prIr
+         FFWQ==
+X-Gm-Message-State: ACgBeo3W9ZyR4iDKmQYOgi1+PVYeiIlhoqYnwnvq3UNTrR16/vqsug00
+        KVDUNS0CRYvPAxXVvK4eslLua1RbG9v3HWzyZJDEkEuMV9CGgQ==
+X-Google-Smtp-Source: AA6agR7pJ6r7fhR2kV9XLe+oV3h+/ej1weqLnpTQS1YP5ule1vsDwGSNCnOW6LlEIY2xTapZFY+hu5KXPqSjTYpoaJM=
+X-Received: by 2002:a63:4642:0:b0:41b:d353:c5c7 with SMTP id
+ v2-20020a634642000000b0041bd353c5c7mr20359415pgk.568.1660083303718; Tue, 09
+ Aug 2022 15:15:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJGvZnaV+kRazsb953+RtXadFxhEkw_uSjwR9PUXQeAAw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a10:e8a6:b0:2d4:fb1c:cc5e with HTTP; Tue, 9 Aug 2022
+ 15:15:03 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Dr. Ali Moses" <alimoses07@gmail.com>
+Date:   Tue, 9 Aug 2022 15:15:03 -0700
+Message-ID: <CADWzZe65tcOX2+bMZfMLLauGpHEQ9Cdv814nLU=uQvKzDFrEVg@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:d33 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [alimoses07[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [alimoses07[at]gmail.com]
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 09, 2022 at 02:06:16PM -0600, Rob Herring wrote:
-> On Tue, Aug 9, 2022 at 1:28 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > On Tue, Aug 09, 2022 at 09:12:31AM -0600, Rob Herring wrote:
-> > > On Mon, Aug 8, 2022 at 10:01 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > > >
-> > > > On Mon, Aug 01, 2022 at 12:13:11PM -0600, Rob Herring wrote:
-> > > > > On Thu, Jul 28, 2022 at 05:34:22PM +0300, Serge Semin wrote:
-> > > > > > Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
-> > > > > > link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
-> > > > > > controller is supposed to be fed up with four clock sources: DBI
-> > > > > > peripheral clock, AXI application Tx/Rx clocks and external PHY/core
-> > > > > > reference clock generating the 100MHz signal. In addition to that the
-> > > > > > platform provide a way to reset each part of the controller:
-> > > > > > sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
-> > > > > > Hot/Power reset signal. The Root Port controller is equipped with multiple
-> > > > > > IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
-> > > > > > equalization request and eDMA ones. The registers space is accessed over
-> > > > > > the DBI interface. There can be no more than four inbound or outbound iATU
-> > > > > > windows configured.
-> > > > > >
-> > > > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > > >
-> 
-> [...]
-> 
-> > > > > > +  reg-names:
-> > > > > > +    minItems: 3
-> > > > > > +    maxItems: 3
-> > > > > > +    items:
-> > > > > > +      enum: [ dbi, dbi2, config ]
-> > > > >
-> > > >
-> > > > > Define the order. Here, and the rest.
-> > > >
-> > > > Ok. I will, but please answer to my question, I asked you in the
-> > > > previous email thread:
-> > > >
-> > > > Serge Semin wrote:
-> > > > > Rob Herring wrote:
-> > > > > > ...
-> > > > > > Tell me why you need random order.
-> > > > >
-> > > > > Because I don't see a need in constraining the order. If we get to set
-> > > > > the order requirement, then why do we need to have the "*-names"
-> > > > > property at all?
-> > >
-> > > Originally, it was for cases where you have a variable number of
-> > > entries and can't determine what each entry is. IOW, when you have
-> > > optional entries in the middle of required entries. But then everyone
-> > > *loves* -names even when not needed or useful such as 'phy-names =
-> > > "pcie"' (the phy subsys requiring names was part of the problem there,
-> > > but that's been fixed).
-> > >
-> 
-> > > > > IMO having "reg" with max/minItems restriction plus generic
-> > > > > description and "reg-names" with possible values enumerated seems very
-> > > > > suitable pattern in this case. Don't you think?
-> > >
-> > > No, I think this is just as concise and defines the order too:
-> > >
-> > > reg-names:
-> > >   items:
-> > >     - const: dbi
-> > >     - const: dbi2
-> > >     - const: config
-> > >
-> > > >
-> > > > In addition to that what about optional names? How would you suggest
-> > > > to handle such case without the non-ordered pattern?
-> > >
-> >
-> > > Sorry, I don't follow.
-> >
-> > I meant exactly the case you've described as the main goal of the
-> > named properties. My worry was that by using the pattern:
-> >
-> > reg-names:
-> >   items:
-> >     - const: name
-> >     - const: another_name
-> >     - const: one_more_name
-> >
-> > you get to fix the names order, which they were invented to get rid
-> > from. If you get to use that pattern the only optional names could be
-> > the names at the tail of the array, which isn't always applicable. In
-> > that case you'd have no choice but to use the pattern suggested by
-> > me.
-> 
-> For this binding, we use reg-names because the order and what's
-> present varies by platform. But for a given platform the order is
-> fixed.
+-- 
+Hello,
+We the Board Directors believe you are in good health, doing great and
+with the hope that this mail will meet you in good condition, We are
+privileged and delighted to reach you via email" And we are urgently
+waiting to hear from you. and again your number is not connecting.
 
-Got it. Thanks for your time and for the detailed case clarification.
+My regards,
+Dr. Ali Moses..
 
--Sergey
-
-> 
-> Rob
+Sincerely,
+Prof. Chin Guang
