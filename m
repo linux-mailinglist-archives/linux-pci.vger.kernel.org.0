@@ -2,75 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A1C958D510
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Aug 2022 10:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E3658D97F
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Aug 2022 15:39:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238932AbiHIIBE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Aug 2022 04:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45734 "EHLO
+        id S239080AbiHINjU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Aug 2022 09:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240871AbiHIIAu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Aug 2022 04:00:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D001610A1;
-        Tue,  9 Aug 2022 01:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hDBpP4uDRt2zuUoRgz7F9W9nhp5+fTzERpgmXxdqiU8=; b=Q6gIiB1ouX0R2+3djawK+betiN
-        7GRTDMPpU86FB/GWnNkrwkXYIX1ZFehC77Otp5JXz2oz2zz+gI2N/fH952uTIyMTAppFH24QKZRI0
-        HQ/9mTIfjcLOMAE13LtSIynOOF/p9huOVtywCUPR55oZujc2u38htj3/ZppjX/65eUhIxgJfgLBZ/
-        zAYWzdq4n+YOFy6FfeSvdRqxRFngslM+hHwiCu/R1wOPMIKDyWeQN/rPIr+y8Rn2jOu51phEJ8Xjm
-        uCndwM2prrLpE0Vvl29ZCc2+ruFwdjzx2ct8oJHaoVZTilQsoBuNsQTkKWJGRIjxa/iTJTIAd4cx1
-        xMI2KzJQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oLKAO-002blo-3J; Tue, 09 Aug 2022 08:00:44 +0000
-Date:   Tue, 9 Aug 2022 01:00:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
+        with ESMTP id S243862AbiHINjS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Aug 2022 09:39:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F961A82E;
+        Tue,  9 Aug 2022 06:39:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 88D3FB815A2;
+        Tue,  9 Aug 2022 13:39:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D315FC433C1;
+        Tue,  9 Aug 2022 13:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660052354;
+        bh=i+tuQMz6/NRl54XQHb1uzeR70pLUacxi3nLipmoLQ9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q6Rp1BGvqoJO71/hl7HUQcR5WQQgPGnJ5mlYF3Iswc8Ed8pxjCUDLTSZeY7/RrqJs
+         bLuCDHF54x096zedr4f+t/0AuwunAAvmG+4EwAGTG0NOzw00yInBtr/5pFS2mC1ao3
+         MslTXeIDY8RCuWEr7n4v+hy6G6N62SSiw/v+lKRgKhzo7YWZQDfgPGeYERAClMp2/J
+         HIGkPJMkB2UD5JmoAB70s1MqGG8Yeos8vKJiFnoz498DjdPgf8eUwEcvuFg8b2qPDY
+         UjL6JMLTJ3OAK6R40JUwv/U/yz+moeUXzgs8wv/3knZkcyzaxbhBxiFz9pfTp9/tAE
+         /ucwnxGUe73cw==
+Received: by pali.im (Postfix)
+        id 59CFDC1F; Tue,  9 Aug 2022 15:39:11 +0200 (CEST)
+Date:   Tue, 9 Aug 2022 15:39:11 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, pmladek@suse.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 27/32] PCI/P2PDMA: Convert to printbuf
-Message-ID: <YvIULAsLGMNVdPek@infradead.org>
-References: <1b92761a-c166-b84f-8d77-a966d4c0ef9a@gmail.com>
- <20220809020734.GA1260912@bhelgaas>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
+ domain
+Message-ID: <20220809133911.hqi7eyskcq2sojia@pali>
+References: <20220808184418.brjntz26kalathig@pali>
+ <20220809020042.GA1260418@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220809020734.GA1260912@bhelgaas>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220809020042.GA1260418@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 08, 2022 at 09:07:34PM -0500, Bjorn Helgaas wrote:
-> This doesn't tell me what the advantage of this patch is, since I
-> don't think *this* patch uses heap allocation.
+On Monday 08 August 2022 21:00:42 Bjorn Helgaas wrote:
+> On Mon, Aug 08, 2022 at 08:44:18PM +0200, Pali Rohár wrote:
+> > PING?
 > 
-> As far as I can tell, this particular patch doesn't improve safety or
-> readability, so "convert X to Y even though we don't use any fancy Y
-> features" is a pointless message.
+> We're in the middle of the merge window.  We'll start applying patches
+> for the next release after -rc1 is tagged, which will probably be on
+> August 14.
 > 
-> But if printbufs are better than seq_buf overall, and converting this
-> gets us closer to the goal of removing seq_buf completely, that's a
-> perfectly acceptable reason.  Just say that.
+> Then we'll need either a strong argument that this is safe even if
+> drivers for endpoints below fail to dispose of their IRQ info
+> correctly, or an argument that the benefit of making the PCI
+> controller drivers removable outweighs that risk.
+> 
+> I haven't been paying close attention recently, so I may have missed
+> the details here, but my superficial opinion is that removability of
+> PCI controller drivers is primarily useful to developers, not to end
+> users.
 
-Which still brings me back to a point made long time ago:  Why are
-we doing the renaming to start with?  Add the new functionality and
-or changes to seq_buf gradually instead of doing a tree wide sweep.
-I don't think the new naming has a huge advantage (in fact I think
-the old one actually is a little better, but the biggest argument here
-really is to not change something if we don't have to).
+For developers it is strong need. Hajo needed this patch for debugging
+SATA related issue.
 
-That will massively reduce the churn at the cost of Kent having to
-rework the code a bit, but that seems like a worthwhile tradeoff and
-one that we've usuall made in the past.
+For end-users in more cases it is also needed because cards, card
+drivers or controller drivers can be buggy and calling rmmod && modprobe
+is the way how to reload PCIe bus with controller without need to reboot
+whole machine. This approach is lot of times suggested by admins and
+also on user forums, because it really helps.
+
+In my opinion, if hotplug capable kernel driver (for what ever reasons)
+leaks resources on unbind procedure, it is an big issue. It basically
+disallow proper next bind procedure; which is required for hotplug
+capable drivers and buses, which PCIe is. memory and interrupts are just
+example of resources which drivers use lot of.
+
+So I consider a bug if driver does not release resource properly and
+"parent" driver should not expect that something like it is normal.
+
+This particular patch was tested at least by two people that is really
+fixes resource-free issue with more endpoint drivers.
+
+I think that in this case for pci-mvebu.c it is safe because: At the
+first step of unbind procedure is called unregistraction of PCIe bus
+with all devices bound on it. This ensures that all PCIe endpoint
+drivers are unbind, devices removed and no new driver or device and
+appear. After that there should not be any remaining usage of PCIe
+resources (if there is then whole PCIe hotplug code is broken and we
+have other and bigger issue...). Next pci-mvebu.c manually disposes all
+remaining legacy interrupts (which PCI core code does not because legacy
+interrupts are shared and it does not know if they are used or not).
+This is safe because at these stage there are no PCI drivers bound,
+there is no PCI device for that controller registered. And after that is
+removed IRQ domain (which has finally disposed all interrupts).
+If you see there some logical issue, please let me know.
+
+Note that allowing doing device unbind and disallowing rmmod is useless
+as the whole issue happens during unbind, not during rmmod. So the
+discussion should have been about device unbinding, not rmmoding.
+
+I see very big benefit for both developers and end users to allow doing
+unbind procedure as explained above.
+
+But if you decide that unbind should be disallowed, then doing it
+properly should probably imply to also disallow doing PCIe hog-unplug.
+As unplugging device means to unbind endpoint card drivers. And I think
+hot-plug and hot-unplug is a PCIe feature which could be supported. But
+well, this is decision for you as maintainer.
+
+> Bjorn
+> 
+> > On Saturday 09 July 2022 18:18:58 Pali Rohár wrote:
+> > > Documentation for irq_domain_remove() says that all mapping within the
+> > > domain must be disposed prior to domain remove.
+> > > 
+> > > Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
+> > > which cause that kernel crashes after unloading driver and trying to read
+> > > /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
+> > > 
+> > > Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
+> > > Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > ---
+> > > Depends on patch:
+> > > https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+> > > 
+> > > Here is the captured kernel crash which happens without this patch:
+> > > 
+> > > $ cat /sys/kernel/debug/irq/irqs/64
+> > > [  301.571370] 8<--- cut here ---
+> > > [  301.574496] Unable to handle kernel paging request at virtual address 0a00002a
+> > > [  301.581736] [0a00002a] *pgd=00000000
+> > > [  301.585323] Internal error: Oops: 80000005 [#1] SMP ARM
+> > > [  301.590560] Modules linked in:
+> > > [  301.593621] CPU: 1 PID: 4641 Comm: cat Not tainted 5.16.0-rc1+ #192
+> > > [  301.599905] Hardware name: Marvell Armada 380/385 (Device Tree)
+> > > [  301.605836] PC is at 0xa00002a
+> > > [  301.608896] LR is at irq_debug_show+0x210/0x2d4
+> > > [  301.613440] pc : [<0a00002a>]    lr : [<c018ca40>]    psr: 200000b3
+> > > [  301.619721] sp : c797fdd8  ip : 0000000b  fp : 0a00002b
+> > > [  301.624957] r10: c0d9a364  r9 : 00000001  r8 : 00000000
+> > > [  301.630192] r7 : c18fee18  r6 : c0da2a74  r5 : c18fee00  r4 : c66ec050
+> > > [  301.636734] r3 : 00000001  r2 : c18fee18  r1 : 00000000  r0 : c66ec050
+> > > [  301.643275] Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
+> > > [  301.650689] Control: 10c5387d  Table: 0790c04a  DAC: 00000051
+> > > [  301.656446] Register r0 information: slab seq_file start c66ec050 pointer offset 0
+> > > [  301.664040] Register r1 information: NULL pointer
+> > > [  301.668755] Register r2 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
+> > > [  301.677480] Register r3 information: non-paged memory
+> > > [  301.682543] Register r4 information: slab seq_file start c66ec050 pointer offset 0
+> > > [  301.690133] Register r5 information: slab kmalloc-256 start c18fee00 pointer offset 0 size 256
+> > > [  301.698770] Register r6 information: non-slab/vmalloc memory
+> > > [  301.704442] Register r7 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
+> > > [  301.713165] Register r8 information: NULL pointer
+> > > [  301.717879] Register r9 information: non-paged memory
+> > > [  301.722941] Register r10 information: non-slab/vmalloc memory
+> > > [  301.728699] Register r11 information: non-paged memory
+> > > [  301.733848] Register r12 information: non-paged memory
+> > > [  301.738997] Process cat (pid: 4641, stack limit = 0xf591166e)
+> > > [  301.744756] Stack: (0xc797fdd8 to 0xc7980000)
+> > > [  301.749123] fdc0:                                                       0000000a 830d3f3e
+> > > [  301.757321] fde0: c1004f48 c0d9a374 c7a9cc10 c66ec050 00000000 c88af900 c797fe80 7ffff000
+> > > [  301.765518] fe00: 00400cc0 c66ec068 00000001 c02c5cb8 00000000 00000000 c66ec078 c797fe68
+> > > [  301.773715] fe20: c1cdf6c0 c7a9cc10 ffffffea c88af900 00000010 00000000 00000000 c88af900
+> > > [  301.781911] fe40: c1004f48 c797ff78 00001000 00004004 c03efcb8 c02c6100 00001000 00000000
+> > > [  301.790108] fe60: bec73e04 00001000 00000000 00000000 00001000 c797fe60 00000001 00000000
+> > > [  301.798304] fe80: c88af900 00000000 00000000 00000000 00000000 00000000 00000000 40040000
+> > > [  301.806501] fea0: 00000000 00000000 c1004f48 830d3f3e c88af900 c02c6018 c1c7a770 bec73e04
+> > > [  301.814697] fec0: 00001000 c797ff78 00000001 c03efd0c 00001000 c88af900 00000000 bec73e04
+> > > [  301.822894] fee0: c1004f48 c797ff78 00000001 c029c728 c887ca20 01100cca 0000004f 0045f000
+> > > [  301.831091] ff00: 00000254 c790c010 c790c010 00000000 00000000 00000000 c5f6117c eeece9b8
+> > > [  301.839288] ff20: 00000000 830d3f3e 00000000 c797ffb0 c79fc000 80000007 0045f5b8 00000254
+> > > [  301.847484] ff40: c79fc040 00000004 c887ca20 830d3f3e 00000000 c1004f48 c88af900 00000000
+> > > [  301.855681] ff60: 00000000 c88af900 bec73e04 00001000 00000000 c029cd68 00000000 00000000
+> > > [  301.863877] ff80: 00000000 830d3f3e 00000000 00000000 01000000 00000003 c0100284 c1b8abc0
+> > > [  301.872074] ffa0: 00000003 c0100060 00000000 00000000 00000003 bec73e04 00001000 00000000
+> > > [  301.880270] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
+> > > [  301.888468] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410 60000010 00000003 00000000 00000000
+> > > [  301.896666] [<c018ca40>] (irq_debug_show) from [<c02c5cb8>] (seq_read_iter+0x1a4/0x504)
+> > > [  301.904700] [<c02c5cb8>] (seq_read_iter) from [<c02c6100>] (seq_read+0xe8/0x12c)
+> > > [  301.912117] [<c02c6100>] (seq_read) from [<c03efd0c>] (full_proxy_read+0x54/0x70)
+> > > [  301.919623] [<c03efd0c>] (full_proxy_read) from [<c029c728>] (vfs_read+0xa0/0x2c8)
+> > > [  301.927214] [<c029c728>] (vfs_read) from [<c029cd68>] (ksys_read+0x58/0xd0)
+> > > [  301.934195] [<c029cd68>] (ksys_read) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
+> > > [  301.941785] Exception stack(0xc797ffa8 to 0xc797fff0)
+> > > [  301.946849] ffa0:                   00000000 00000000 00000003 bec73e04 00001000 00000000
+> > > [  301.955045] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
+> > > [  301.963241] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410
+> > > [  301.968304] Code: bad PC value
+> > > [  301.971365] ---[ end trace fe25fd26d042b605 ]---
+> > > [  301.975992] Kernel panic - not syncing: Fatal exception
+> > > [  301.981229] CPU0: stopping
+> > > [  301.983946] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D           5.16.0-rc1+ #192
+> > > [  301.991884] Hardware name: Marvell Armada 380/385 (Device Tree)
+> > > [  301.997817] [<c010e120>] (unwind_backtrace) from [<c010a170>] (show_stack+0x10/0x14)
+> > > [  302.005587] [<c010a170>] (show_stack) from [<c0bbf108>] (dump_stack_lvl+0x40/0x4c)
+> > > [  302.013179] [<c0bbf108>] (dump_stack_lvl) from [<c010c3f8>] (do_handle_IPI+0xf4/0x128)
+> > > [  302.021117] [<c010c3f8>] (do_handle_IPI) from [<c010c444>] (ipi_handler+0x18/0x20)
+> > > [  302.028707] [<c010c444>] (ipi_handler) from [<c0185c5c>] (handle_percpu_devid_irq+0x78/0x124)
+> > > [  302.037256] [<c0185c5c>] (handle_percpu_devid_irq) from [<c017ffb8>] (generic_handle_domain_irq+0x44/0x88)
+> > > [  302.046938] [<c017ffb8>] (generic_handle_domain_irq) from [<c05f051c>] (gic_handle_irq+0x74/0x88)
+> > > [  302.055839] [<c05f051c>] (gic_handle_irq) from [<c0bc7ef8>] (generic_handle_arch_irq+0x34/0x44)
+> > > [  302.064564] [<c0bc7ef8>] (generic_handle_arch_irq) from [<c0100b10>] (__irq_svc+0x50/0x68)
+> > > [  302.072851] Exception stack(0xc1001f00 to 0xc1001f48)
+> > > [  302.077916] 1f00: 000d6830 00000000 00000001 c0116be0 c1004f90 c1004fd4 00000001 00000000
+> > > [  302.086114] 1f20: c1004f48 c0f5d2a8 c1009e80 00000000 00000000 c1001f50 c01076f4 c01076f8
+> > > [  302.094309] 1f40: 60000013 ffffffff
+> > > [  302.097804] [<c0100b10>] (__irq_svc) from [<c01076f8>] (arch_cpu_idle+0x38/0x3c)
+> > > [  302.105223] [<c01076f8>] (arch_cpu_idle) from [<c0bcf3a0>] (default_idle_call+0x1c/0x2c)
+> > > [  302.113338] [<c0bcf3a0>] (default_idle_call) from [<c015db34>] (do_idle+0x1c8/0x218)
+> > > [  302.121106] [<c015db34>] (do_idle) from [<c015de40>] (cpu_startup_entry+0x18/0x20)
+> > > [  302.128697] [<c015de40>] (cpu_startup_entry) from [<c0f00fec>] (start_kernel+0x650/0x694)
+> > > [  302.136901] Rebooting in 3 seconds..
+> > > ---
+> > >  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > index 31f53a019b8f..951030052358 100644
+> > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > @@ -1713,8 +1713,15 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+> > >  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> > >  
+> > >  		/* Remove IRQ domains. */
+> > > -		if (port->intx_irq_domain)
+> > > +		if (port->intx_irq_domain) {
+> > > +			int virq, j;
+> > > +			for (j = 0; j < PCI_NUM_INTX; j++) {
+> > > +				virq = irq_find_mapping(port->intx_irq_domain, j);
+> > > +				if (virq > 0)
+> > > +					irq_dispose_mapping(virq);
+> > > +			}
+> > >  			irq_domain_remove(port->intx_irq_domain);
+> > > +		}
+> > >  
+> > >  		/* Free config space for emulated root bridge. */
+> > >  		pci_bridge_emul_cleanup(&port->bridge);
+> > > -- 
+> > > 2.20.1
+> > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
