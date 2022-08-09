@@ -2,106 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D846F58D1B9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Aug 2022 03:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD05458D1DF
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Aug 2022 04:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230441AbiHIB1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Aug 2022 21:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37252 "EHLO
+        id S230117AbiHICAu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Aug 2022 22:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230347AbiHIB1Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Aug 2022 21:27:16 -0400
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868D712AFF;
-        Mon,  8 Aug 2022 18:27:08 -0700 (PDT)
-X-UUID: 27e598429d0541afa06531cf86b97cd3-20220809
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mfplZHXj79DnlaJB5yFqH6RkA8orBckNoJNlMVuwnjQ=;
-        b=YXxD/RLyOqFTRphVVPPVt+FW+z0PvWhikqAnQLnTfypUmHm4P/V1UZbF+tzeNmxBhrQZq4zz2putGmxsYShnYkIrIVc7ZnlPnTWTdnpf3IYHeqfgE2B4Vd+LXFesifr7IFYb/Eir6OgU8lLJ4O7qAA8ABVdnI+QX5wSOQmXBwf4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.9,REQID:a5849bc3-2871-4064-9959-d6390f1d71ff,OB:0,LO
-        B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_H
-        am,ACTION:release,TS:0
-X-CID-META: VersionHash:3d8acc9,CLOUDID:126c43ae-9535-44a6-aa9b-7f62b79b6ff6,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil
-        ,Bulk:nil,QS:nil,BEC:nil,COL:0
-X-UUID: 27e598429d0541afa06531cf86b97cd3-20220809
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1292698929; Tue, 09 Aug 2022 09:27:01 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.792.15; Tue, 9 Aug 2022 09:27:00 +0800
-Received: from mhfsdcap04 (10.17.3.154) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 9 Aug 2022 09:26:59 +0800
-Message-ID: <13b0813576f57add0d2eacb519eedec73fcf1920.camel@mediatek.com>
-Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
- domain
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        with ESMTP id S229520AbiHICAt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Aug 2022 22:00:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517AB18354;
+        Mon,  8 Aug 2022 19:00:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F0B35B80E0F;
+        Tue,  9 Aug 2022 02:00:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DEFC433C1;
+        Tue,  9 Aug 2022 02:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660010444;
+        bh=lCnP/zKjtfN8Rvupa60HHb16JouCQUNHzKDV0RG00BQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FhO/s9lH/e5ZqDSuvP44uV/42zkA15LvTQ9I3SHW9h9/cIhCusxUk01peRJatnRkD
+         KvlI3ZpBM0aWjOlO7VUstEcBTDCitsHWOQmdr6cDETcgutGwhwZ87xxkQ1ciSNr9jI
+         dMLEONFfhlPU8h5VdmSTJgzxuzDfrwiL6hFSNiJ+n4byg+bDeTcrqxrZqrZ9c1D3If
+         s7yZjFadAE1OLg5SQ20n3MbbQtwaVdbK5GUUsBc5M4uDVNwD+c/Nwvh7nlLMoHoK9z
+         CDm1/Br0e66pxVBZAoNA0dwIcKU5ThHFm0ed/g9ebDOiiiiaQ5IBbL67tfAbT+XCXW
+         HtrVaqdma+zbQ==
+Date:   Mon, 8 Aug 2022 21:00:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Tue, 9 Aug 2022 09:26:59 +0800
-In-Reply-To: <20220710001421.lqwprzgn5jrblqcu@pali>
-References: <20220709161858.15031-1-pali@kernel.org>
-         <20220710001421.lqwprzgn5jrblqcu@pali>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
+ domain
+Message-ID: <20220809020042.GA1260418@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-MTK:  N
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY,URIBL_CSS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220808184418.brjntz26kalathig@pali>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Pali,
+On Mon, Aug 08, 2022 at 08:44:18PM +0200, Pali Roh·r wrote:
+> PING?
 
-On Sun, 2022-07-10 at 02:14 +0200, Pali Roh√°r wrote:
-> On Saturday 09 July 2022 18:18:58 Pali Roh√°r wrote:
-> > Documentation for irq_domain_remove() says that all mapping within
-> > the
+We're in the middle of the merge window.  We'll start applying patches
+for the next release after -rc1 is tagged, which will probably be on
+August 14.
+
+Then we'll need either a strong argument that this is safe even if
+drivers for endpoints below fail to dispose of their IRQ info
+correctly, or an argument that the benefit of making the PCI
+controller drivers removable outweighs that risk.
+
+I haven't been paying close attention recently, so I may have missed
+the details here, but my superficial opinion is that removability of
+PCI controller drivers is primarily useful to developers, not to end
+users.
+
+Bjorn
+
+> On Saturday 09 July 2022 18:18:58 Pali Roh·r wrote:
+> > Documentation for irq_domain_remove() says that all mapping within the
 > > domain must be disposed prior to domain remove.
 > > 
-> > Currently INTx irqs are not disposed in pci-mvebu.c device unbind
-> > callback
-> > which cause that kernel crashes after unloading driver and trying
-> > to read
+> > Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
+> > which cause that kernel crashes after unloading driver and trying to read
 > > /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
 > > 
-> > Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx
-> > interrupts")
+> > Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
 > > Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-> > Signed-off-by: Pali Roh√°r <pali@kernel.org>
+> > Signed-off-by: Pali Roh·r <pali@kernel.org>
+> > ---
+> > Depends on patch:
+> > https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+> > 
+> > Here is the captured kernel crash which happens without this patch:
+> > 
+> > $ cat /sys/kernel/debug/irq/irqs/64
+> > [  301.571370] 8<--- cut here ---
+> > [  301.574496] Unable to handle kernel paging request at virtual address 0a00002a
+> > [  301.581736] [0a00002a] *pgd=00000000
+> > [  301.585323] Internal error: Oops: 80000005 [#1] SMP ARM
+> > [  301.590560] Modules linked in:
+> > [  301.593621] CPU: 1 PID: 4641 Comm: cat Not tainted 5.16.0-rc1+ #192
+> > [  301.599905] Hardware name: Marvell Armada 380/385 (Device Tree)
+> > [  301.605836] PC is at 0xa00002a
+> > [  301.608896] LR is at irq_debug_show+0x210/0x2d4
+> > [  301.613440] pc : [<0a00002a>]    lr : [<c018ca40>]    psr: 200000b3
+> > [  301.619721] sp : c797fdd8  ip : 0000000b  fp : 0a00002b
+> > [  301.624957] r10: c0d9a364  r9 : 00000001  r8 : 00000000
+> > [  301.630192] r7 : c18fee18  r6 : c0da2a74  r5 : c18fee00  r4 : c66ec050
+> > [  301.636734] r3 : 00000001  r2 : c18fee18  r1 : 00000000  r0 : c66ec050
+> > [  301.643275] Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
+> > [  301.650689] Control: 10c5387d  Table: 0790c04a  DAC: 00000051
+> > [  301.656446] Register r0 information: slab seq_file start c66ec050 pointer offset 0
+> > [  301.664040] Register r1 information: NULL pointer
+> > [  301.668755] Register r2 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
+> > [  301.677480] Register r3 information: non-paged memory
+> > [  301.682543] Register r4 information: slab seq_file start c66ec050 pointer offset 0
+> > [  301.690133] Register r5 information: slab kmalloc-256 start c18fee00 pointer offset 0 size 256
+> > [  301.698770] Register r6 information: non-slab/vmalloc memory
+> > [  301.704442] Register r7 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
+> > [  301.713165] Register r8 information: NULL pointer
+> > [  301.717879] Register r9 information: non-paged memory
+> > [  301.722941] Register r10 information: non-slab/vmalloc memory
+> > [  301.728699] Register r11 information: non-paged memory
+> > [  301.733848] Register r12 information: non-paged memory
+> > [  301.738997] Process cat (pid: 4641, stack limit = 0xf591166e)
+> > [  301.744756] Stack: (0xc797fdd8 to 0xc7980000)
+> > [  301.749123] fdc0:                                                       0000000a 830d3f3e
+> > [  301.757321] fde0: c1004f48 c0d9a374 c7a9cc10 c66ec050 00000000 c88af900 c797fe80 7ffff000
+> > [  301.765518] fe00: 00400cc0 c66ec068 00000001 c02c5cb8 00000000 00000000 c66ec078 c797fe68
+> > [  301.773715] fe20: c1cdf6c0 c7a9cc10 ffffffea c88af900 00000010 00000000 00000000 c88af900
+> > [  301.781911] fe40: c1004f48 c797ff78 00001000 00004004 c03efcb8 c02c6100 00001000 00000000
+> > [  301.790108] fe60: bec73e04 00001000 00000000 00000000 00001000 c797fe60 00000001 00000000
+> > [  301.798304] fe80: c88af900 00000000 00000000 00000000 00000000 00000000 00000000 40040000
+> > [  301.806501] fea0: 00000000 00000000 c1004f48 830d3f3e c88af900 c02c6018 c1c7a770 bec73e04
+> > [  301.814697] fec0: 00001000 c797ff78 00000001 c03efd0c 00001000 c88af900 00000000 bec73e04
+> > [  301.822894] fee0: c1004f48 c797ff78 00000001 c029c728 c887ca20 01100cca 0000004f 0045f000
+> > [  301.831091] ff00: 00000254 c790c010 c790c010 00000000 00000000 00000000 c5f6117c eeece9b8
+> > [  301.839288] ff20: 00000000 830d3f3e 00000000 c797ffb0 c79fc000 80000007 0045f5b8 00000254
+> > [  301.847484] ff40: c79fc040 00000004 c887ca20 830d3f3e 00000000 c1004f48 c88af900 00000000
+> > [  301.855681] ff60: 00000000 c88af900 bec73e04 00001000 00000000 c029cd68 00000000 00000000
+> > [  301.863877] ff80: 00000000 830d3f3e 00000000 00000000 01000000 00000003 c0100284 c1b8abc0
+> > [  301.872074] ffa0: 00000003 c0100060 00000000 00000000 00000003 bec73e04 00001000 00000000
+> > [  301.880270] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
+> > [  301.888468] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410 60000010 00000003 00000000 00000000
+> > [  301.896666] [<c018ca40>] (irq_debug_show) from [<c02c5cb8>] (seq_read_iter+0x1a4/0x504)
+> > [  301.904700] [<c02c5cb8>] (seq_read_iter) from [<c02c6100>] (seq_read+0xe8/0x12c)
+> > [  301.912117] [<c02c6100>] (seq_read) from [<c03efd0c>] (full_proxy_read+0x54/0x70)
+> > [  301.919623] [<c03efd0c>] (full_proxy_read) from [<c029c728>] (vfs_read+0xa0/0x2c8)
+> > [  301.927214] [<c029c728>] (vfs_read) from [<c029cd68>] (ksys_read+0x58/0xd0)
+> > [  301.934195] [<c029cd68>] (ksys_read) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
+> > [  301.941785] Exception stack(0xc797ffa8 to 0xc797fff0)
+> > [  301.946849] ffa0:                   00000000 00000000 00000003 bec73e04 00001000 00000000
+> > [  301.955045] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
+> > [  301.963241] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410
+> > [  301.968304] Code: bad PC value
+> > [  301.971365] ---[ end trace fe25fd26d042b605 ]---
+> > [  301.975992] Kernel panic - not syncing: Fatal exception
+> > [  301.981229] CPU0: stopping
+> > [  301.983946] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D           5.16.0-rc1+ #192
+> > [  301.991884] Hardware name: Marvell Armada 380/385 (Device Tree)
+> > [  301.997817] [<c010e120>] (unwind_backtrace) from [<c010a170>] (show_stack+0x10/0x14)
+> > [  302.005587] [<c010a170>] (show_stack) from [<c0bbf108>] (dump_stack_lvl+0x40/0x4c)
+> > [  302.013179] [<c0bbf108>] (dump_stack_lvl) from [<c010c3f8>] (do_handle_IPI+0xf4/0x128)
+> > [  302.021117] [<c010c3f8>] (do_handle_IPI) from [<c010c444>] (ipi_handler+0x18/0x20)
+> > [  302.028707] [<c010c444>] (ipi_handler) from [<c0185c5c>] (handle_percpu_devid_irq+0x78/0x124)
+> > [  302.037256] [<c0185c5c>] (handle_percpu_devid_irq) from [<c017ffb8>] (generic_handle_domain_irq+0x44/0x88)
+> > [  302.046938] [<c017ffb8>] (generic_handle_domain_irq) from [<c05f051c>] (gic_handle_irq+0x74/0x88)
+> > [  302.055839] [<c05f051c>] (gic_handle_irq) from [<c0bc7ef8>] (generic_handle_arch_irq+0x34/0x44)
+> > [  302.064564] [<c0bc7ef8>] (generic_handle_arch_irq) from [<c0100b10>] (__irq_svc+0x50/0x68)
+> > [  302.072851] Exception stack(0xc1001f00 to 0xc1001f48)
+> > [  302.077916] 1f00: 000d6830 00000000 00000001 c0116be0 c1004f90 c1004fd4 00000001 00000000
+> > [  302.086114] 1f20: c1004f48 c0f5d2a8 c1009e80 00000000 00000000 c1001f50 c01076f4 c01076f8
+> > [  302.094309] 1f40: 60000013 ffffffff
+> > [  302.097804] [<c0100b10>] (__irq_svc) from [<c01076f8>] (arch_cpu_idle+0x38/0x3c)
+> > [  302.105223] [<c01076f8>] (arch_cpu_idle) from [<c0bcf3a0>] (default_idle_call+0x1c/0x2c)
+> > [  302.113338] [<c0bcf3a0>] (default_idle_call) from [<c015db34>] (do_idle+0x1c8/0x218)
+> > [  302.121106] [<c015db34>] (do_idle) from [<c015de40>] (cpu_startup_entry+0x18/0x20)
+> > [  302.128697] [<c015de40>] (cpu_startup_entry) from [<c0f00fec>] (start_kernel+0x650/0x694)
+> > [  302.136901] Rebooting in 3 seconds..
+> > ---
+> >  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > index 31f53a019b8f..951030052358 100644
+> > --- a/drivers/pci/controller/pci-mvebu.c
+> > +++ b/drivers/pci/controller/pci-mvebu.c
+> > @@ -1713,8 +1713,15 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+> >  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> >  
+> >  		/* Remove IRQ domains. */
+> > -		if (port->intx_irq_domain)
+> > +		if (port->intx_irq_domain) {
+> > +			int virq, j;
+> > +			for (j = 0; j < PCI_NUM_INTX; j++) {
+> > +				virq = irq_find_mapping(port->intx_irq_domain, j);
+> > +				if (virq > 0)
+> > +					irq_dispose_mapping(virq);
+> > +			}
+> >  			irq_domain_remove(port->intx_irq_domain);
+> > +		}
+> >  
+> >  		/* Free config space for emulated root bridge. */
+> >  		pci_bridge_emul_cleanup(&port->bridge);
+> > -- 
+> > 2.20.1
+> > 
 > 
-> Just to note, Hajo Noerenberg observed this issue during testing and
-> debugging other unrelated issue in bugzilla [1] and triggered this
-> crash
-> just by calling: rmmod pci_mvebu && modprobe pci-mvebu && cat
-> /proc/interrupts
-> 
-> I suppose that other pci controller drivers with unbind / rmmod
-> support
-> would suffer from same issues.
-
-FYI, we found the same issue after unloading the PCIe controller
-driver, if this is the proper way to dispose the INTx irqs, I'll send a
-similar patch for MediaTek's PCIe controller driver.
-
-Thanks.
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
