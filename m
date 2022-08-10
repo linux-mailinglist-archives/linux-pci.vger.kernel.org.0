@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB42558EDD1
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Aug 2022 16:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 038E958EDDE
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Aug 2022 16:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232691AbiHJOED (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Aug 2022 10:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
+        id S232845AbiHJOGU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Aug 2022 10:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232845AbiHJODt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Aug 2022 10:03:49 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC9D6CD3B
-        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 07:03:47 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id r22so12036627pgm.5
-        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 07:03:47 -0700 (PDT)
+        with ESMTP id S232420AbiHJOGT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Aug 2022 10:06:19 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4074D5A153
+        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 07:06:17 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id t22so14867050pjy.1
+        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 07:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=networkplumber-org.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc;
-        bh=p8mtjx8JwOj09UK2SbqBNp9/cVRUkNodrG3vv7jXsbc=;
-        b=r67rwasignVgPzllz4gI2jNUvcLyFJXgHkzyUSYHOq3j+Bm38y3AbJrg8u86pE3nTC
-         0rwCLgLU42DNmUtDxIjz6pxzKKLctVrT9Mnfnh82ULGBWT5gjnW/YXW6csfzvNG4UvR3
-         pZGslfBRq5nfwCfw4O+s3QcOJjOH1qIkXgiOIyY3pyjcoK2FQKfYxrXCI7QPtTWaLWzt
-         eKwft6YPv+lj0SBcE9yefIqLjy6H+Rt8l1pH2RguvhU5Dt2nILS95fJxFVRjoVy8DlEH
-         tSZCrVHxvnE8yGqrch4yOF3Sa+7ZNlSQiKI6cpL6mOAl3xSljzL4+aWAMRO2hEPOdFzg
-         laIw==
+        bh=UBYU1kWWO5JShEdSdGq0yMGTNDTq36UYslphzmafG8s=;
+        b=Wlg08SgTx0wDhTB7jgmjbuq/9ta+oM7GzobRnjxXnWsNDdfnCkQ7Qbewz5gys9rdUP
+         Qa8hHLPPLCOuhJuTQXdT2rGQe5C7xPZp1byfTP4N8fjUQDzNs1I5NtKU3Wbdpy7KKWiW
+         pksa4e8MrejYoUimk/rMzGNfXALmxiBXBSXJw9T/wVcubszVPUTq+J8eAwrCUIaxNY8O
+         xAaeWRQpwt+OtFTpFlnBN0I4y0tC0od5UNni5t2snLVhOC8W5n1sM0N9WeZk/4R/Mzwe
+         bgYhh/JEOZi/B98Lrx/ur1sU050CKTfpw5F9HgOztPa8m4zN2wgrCrtSkk7vfLR7biJD
+         D3zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=p8mtjx8JwOj09UK2SbqBNp9/cVRUkNodrG3vv7jXsbc=;
-        b=5t06xXr58wLNJToUooGrQIAnzaLrsMxfaiM/dHWqCAlqBAEBRasJnx2udw2AGs76yC
-         5pTRFXIGRYCay6Z7cKHNbB1quiILfxuPSygTbUleiGCdY5tJQyLbrYAdZZwmFMiu58Cu
-         bcF/OQxxThnfBS3ddR1hG45AWQilZuKzQtg4vAMsFr89M3WJWXZ6inFka1CrBfczVHc2
-         yBN2fsSgTHWMOlcNAVFjdLRzWyhjjdS0pBzGTlBddoNXRWDrQk91vS1m1Kv3lf99RZM7
-         y2EfjCL4MfvBwjK65Z8/pw60Aff5tutohw9gXTL2NmVjnSou/7tiAPYxslEcAbX2zkPG
-         GvKA==
-X-Gm-Message-State: ACgBeo00UotZhIjUO4jwTGZTMGjuks2rOOObvAya0sK1aSuxxZ7VQ5Rc
-        cHJaHMn9Rl17VLCnh12jb/YsA/VcFlScdA==
-X-Google-Smtp-Source: AA6agR4OHVY8R26UHtWDV7yFoG5TWHXLzX/TJQITwX0M3Cbh5d9+pfZ4/9kCsPTDJpHQPSyN1vWMuQ==
-X-Received: by 2002:a65:57c8:0:b0:41c:fa29:ae1d with SMTP id q8-20020a6557c8000000b0041cfa29ae1dmr22100855pgr.136.1660140227200;
-        Wed, 10 Aug 2022 07:03:47 -0700 (PDT)
+        bh=UBYU1kWWO5JShEdSdGq0yMGTNDTq36UYslphzmafG8s=;
+        b=GEEf/lbE8yYBvLrrejsplTqyRQ9aAR5RkzOPcA8q+TshLCjUxnwXEYzxS+NrN9Lh8R
+         eJViykCA8sMfk1EgSwyAWHb8mWd/veul/ttO7dn/MuMlmd7DOHcJJxTxUFJwBT/7MusZ
+         el9z2RuPtI133rUkMzdpoW0K2kwXjyc6v9yHHBAIG5b14FR53EZ1GrI7nXzVCrD8rBcb
+         9aBayu/aRwEXIf+NUFFVtoTkJegdOUdUYaAMtIE8OYMVmCGzA83ekbqkhV0n+JxHmuIJ
+         fgxm34667CFEDV2qmv4163s1fZAHERS8SaMwvFZUHUdO/h/SKgB+Y5EoKXHNif8SW/zz
+         KfWA==
+X-Gm-Message-State: ACgBeo1P39wTYrUAe/5QHErY1aod4+SHeA8sONhnLVJC725z3OQZh9pV
+        tFkZi6ooi5uRVZ0j9ktsvweGBQ==
+X-Google-Smtp-Source: AA6agR70y8QZ2gsWb688PhZB222/NbLZNKzQpqlPNAEs8p8Y6kKCKyMBGdjttv8Cal6Esj9JRC+xHw==
+X-Received: by 2002:a17:90a:fd06:b0:1f3:29d8:72d8 with SMTP id cv6-20020a17090afd0600b001f329d872d8mr3854290pjb.23.1660140374693;
+        Wed, 10 Aug 2022 07:06:14 -0700 (PDT)
 Received: from hermes.local (204-195-120-218.wavecable.com. [204.195.120.218])
-        by smtp.gmail.com with ESMTPSA id t13-20020a17090340cd00b0016dc6279ab8sm12772873pld.159.2022.08.10.07.03.46
+        by smtp.gmail.com with ESMTPSA id q12-20020a17090a68cc00b001f50c1f896esm1633944pjj.5.2022.08.10.07.06.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 07:03:46 -0700 (PDT)
-Date:   Wed, 10 Aug 2022 07:03:44 -0700
+        Wed, 10 Aug 2022 07:06:14 -0700 (PDT)
+Date:   Wed, 10 Aug 2022 07:06:12 -0700
 From:   Stephen Hemminger <stephen@networkplumber.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
@@ -55,11 +55,10 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
         regressions@lists.linux.dev
 Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK
  script
-Message-ID: <20220810070344.1701f4a6@hermes.local>
-In-Reply-To: <28388e27-e562-65cd-4663-977ea4ad51a0@linaro.org>
+Message-ID: <20220810070612.5860d673@hermes.local>
+In-Reply-To: <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
 References: <20220809192102.GA1331186@bhelgaas>
         <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
-        <28388e27-e562-65cd-4663-977ea4ad51a0@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -72,77 +71,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 10 Aug 2022 09:13:40 +0300
+On Wed, 10 Aug 2022 08:54:36 +0300
 Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-> On 10/08/2022 08:54, Krzysztof Kozlowski wrote:
-> > On 09/08/2022 22:21, Bjorn Helgaas wrote:  
-> >> [+cc regressions list]
-> >>
-> >> 23d99baf9d72 appeared in v5.19-rc1.
-> >>
-> >> On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:  
-> >>> This commit broke the driver override script in DPDK.
-> >>> This is an API/ABI breakage, please revert or fix the commit.
-> >>>
-> >>> Report of problem:
-> >>> http://mails.dpdk.org/archives/dev/2022-August/247794.html  
-> > 
-> > Thanks for the report. I'll take a look.
-> >   
+> >> The script is sending single nul character to remove override
+> >> and that no longer works.  
 > 
-> I could not find in the report (neither here) steps to reproduce it. Can
-> you provide me some short description (what kernel options are required,
-> what commands to run)?
+> The sysfs API clearly states:
+> "and
+>  may be cleared with an empty string (echo > driver_override)."
+> Documentation/ABI/testing/sysfs-bus-pci
 > 
-> I tried to run:
-> $ usertools/dpdk-devbind.py --status
-> $ usertools/dpdk-devbind.py --bind '0000:00:03.0'
-> Error: No devices specified.
+> Sending other data and expecting the same result is not conforming to
+> API. Therefore we have usual example of some undocumented behavior which
+> user-space started relying on and instead using API, user-space expect
+> that undocumented behavior to be back.
 > 
+> Yay! I wonder what is the point to even describe the ABI if user-space
+> can simply ignore it?
 > 
 > Best regards,
 > Krzysztof
 
-To test, you need to be willing to have one network device disappear from
-kernel. The bug is in the unbind step this is an example of it working
-with 5.17 kernel.
+The code that does this in the python script is relatively old.
+The writing of null was introduced back in 2017 by:
 
+commit 720b7a058260dfd6ae0fcce956bfe44c18681499
+Author: Guduri Prathyusha <gprathyusha@caviumnetworks.com>
+Date:   Wed Apr 26 19:22:19 2017 +0530
 
-~/DPDK/main $ ./usertools/dpdk-devbind.py --status
-
-Network devices using kernel driver
-===================================
-0000:01:00.0 'Wi-Fi 6 AX200 2723' if=wlo1 drv=iwlwifi unused= 
-0000:02:00.0 'RTL8125 2.5GbE Controller 8125' if=enp2s0 drv=r8169 unused= *Active*
-
-
-~/DPDK/main $ sudo modprobe vfio-pci
-~/DPDK/main $ sudo ./usertools/dpdk-devbind.py --bind=vfio-pci enp2s0
-Warning: routing table indicates that interface 0000:02:00.0 is active. Not modifying
-~/DPDK/main $ ip li set dev enp2s0 down
-RTNETLINK answers: Operation not permitted
-~/DPDK/main $ sudo ip li set dev enp2s0 down
-~/DPDK/main $ sudo ./usertools/dpdk-devbind.py --bind=vfio-pci enp2s0
-~/DPDK/main $ ./usertools/dpdk-devbind.py --status
-
-Network devices using DPDK-compatible driver
-============================================
-0000:02:00.0 'RTL8125 2.5GbE Controller 8125' drv=vfio-pci unused=r8169
-
-Network devices using kernel driver
-===================================
-0000:01:00.0 'Wi-Fi 6 AX200 2723' if=wlo1 drv=iwlwifi unused=vfio-pci 
-
-
-~/DPDK/main $ sudo ./usertools/dpdk-devbind.py -u 0000:02:00.0
-~/DPDK/main $ ./usertools/dpdk-devbind.py --status
-
-Network devices using kernel driver
-===================================
-0000:01:00.0 'Wi-Fi 6 AX200 2723' if=wlo1 drv=iwlwifi unused=vfio-pci 
-
-Other Network devices
-=====================
-0000:02:00.0 'RTL8125 2.5GbE Controller 8125' unused=r8169,vfio-pci
-
+    usertools: fix device binding with kernel tools
+    
+    The following sequence of operation gives error in binding devices
+    1) Bind a device using dpdk-devbind.py
+    2) Unbind the device using kernel tools(/sys/bus/pci/device/driver/unbind)
+    3) Bind the device using kernel tools(/sys/bus/pci/driver/new_id and
+    /sys/bus/pci/driver/bind)
+    
+    The bind failure was due to cached driver name in 'driver_override'.
+    Fix it by writing 'null' to driver_override just after binding a
+    device so that any method of binding/unbinding can be used.
+    
+    Fixes: 2fc350293570 ("usertools: use optimized driver override scheme to bind")
+    
+    Reported-by: Lijuan A Tu <lijuanx.a.tu@intel.com>
+    Signed-off-by: Guduri Prathyusha <gprathyusha@caviumnetworks.com>
