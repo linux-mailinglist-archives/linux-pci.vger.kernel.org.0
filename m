@@ -2,105 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46DE258E72A
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Aug 2022 08:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323B858E90B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Aug 2022 10:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbiHJGNr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Aug 2022 02:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48870 "EHLO
+        id S231800AbiHJIuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Aug 2022 04:50:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231288AbiHJGNp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Aug 2022 02:13:45 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B80647FA
-        for <linux-pci@vger.kernel.org>; Tue,  9 Aug 2022 23:13:43 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id z6so12407010lfu.9
-        for <linux-pci@vger.kernel.org>; Tue, 09 Aug 2022 23:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=i2gdhC2rvffRFn6QLbsSeXxxD0KZvfsj4PfnDV5evx8=;
-        b=b8C+B3uEVgdnTcwAksQm0gbtOcmyA1OEwrGay4Rek4sgd0pJK12dIGk2YSm0MeupVG
-         eBHbzLS8mBKS4Hwo0QTRuEHkChMhQsw/852H9Ww4sggXrT0KrRsHoJbt9U3zyYQLePFD
-         /E10+cd5jHiD0Z76BzMXcStnyqeQJjyEIu2PiwW+KDiRCFSQ1E4bwsyDCtTeo6zuk6uP
-         l4WSpNoNkLTapxhzSQbWXp6l9bOOduvmUMOjPlC/QTLz2oidn8OqNxatwR0XVHxCoHrG
-         Vf/PFaymUoAiKrxfcV3OQdcZQ3tT2G9dV/gH9mdQxzBcH+285riOMycB6Txr9rNmaDq3
-         DBDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=i2gdhC2rvffRFn6QLbsSeXxxD0KZvfsj4PfnDV5evx8=;
-        b=P6gUYQOVnk6kfil6CCAyxRL+E1nYMHLrWN7XEtiwNGvw7qdXEjUOwXBY3DGKHOXql1
-         CB3hmU0bYksxSMU1dshSYxJ0+gCEzxFmj8YCrsTpCJQ9tYnY9wNtzvkRmvgQ34OCi4ob
-         jIHl6lAavc3NpT8zQrxB1gNHozkhwZcVYTN/BUAncVxaadfoq+dRQIUiHrFOh+Qi2YnE
-         8iDuocO6QJgrb7+Cjtn4LrY2hP4R2WiImX4g2sgERs3h7RQhi1GwBMKO9nBu+P1pD5Qe
-         icxu5DCaEi+AXO4jwevaZSM3FfmTeFGJJpro3wbHXGa8jdspwNBzkDO1CDM0/c3aMAG7
-         KLjw==
-X-Gm-Message-State: ACgBeo1MO2BV4P4374G+1WUMp+4hibP5vpXH7wI8c+jX1a4NIsehMEyp
-        YM3ukQhmkNAcJs2FhNUBodxO8Q==
-X-Google-Smtp-Source: AA6agR4qu+3Sz3tifCu8c4Zy550No4zrXM4kHyQBskFrpvpiKh43LgFdchUEg3JlJmjwYjLT8GhqxQ==
-X-Received: by 2002:a05:6512:3501:b0:48b:205f:91a2 with SMTP id h1-20020a056512350100b0048b205f91a2mr8947820lfs.83.1660112022262;
-        Tue, 09 Aug 2022 23:13:42 -0700 (PDT)
-Received: from [192.168.1.39] ([83.146.140.105])
-        by smtp.gmail.com with ESMTPSA id x1-20020a2e9dc1000000b0025df5f38da8sm268641ljj.119.2022.08.09.23.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Aug 2022 23:13:41 -0700 (PDT)
-Message-ID: <28388e27-e562-65cd-4663-977ea4ad51a0@linaro.org>
-Date:   Wed, 10 Aug 2022 09:13:40 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
+        with ESMTP id S231804AbiHJIuH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Aug 2022 04:50:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCBC6D567
+        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 01:50:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 891F460FA6
+        for <linux-pci@vger.kernel.org>; Wed, 10 Aug 2022 08:50:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B911C433D7;
+        Wed, 10 Aug 2022 08:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1660121405;
+        bh=uX0qx6JS7G4I1Ll9bxyuKI02HeVaRxAtbCIIk3YzWBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KoDnu+s5ygOxN9ES/uPtnZGLXUYcIbvJpKb/4oPRmcUiiyn581KCPjjo8ofrl9fh3
+         CxMrV1KLLEfF/K9fMv5u040ASvVUMvN/XMp64GJtIqMgReoqi9zzZn5+44Qg+CzHoi
+         2pkaV1YS9wD2lcBtEXqxx+4CoDbWt/VbK6mCj6WA=
+Date:   Wed, 10 Aug 2022 07:45:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        bhelgaas@google.com, linux-pci@vger.kernel.org
 Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK script
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org,
-        linux-pci@vger.kernel.org, regressions@lists.linux.dev
-References: <20220809192102.GA1331186@bhelgaas>
- <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
-In-Reply-To: <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Message-ID: <YvNGFTD/XjXpwWnk@kroah.com>
+References: <20220809112943.393684af@hermes.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220809112943.393684af@hermes.local>
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/08/2022 08:54, Krzysztof Kozlowski wrote:
-> On 09/08/2022 22:21, Bjorn Helgaas wrote:
->> [+cc regressions list]
->>
->> 23d99baf9d72 appeared in v5.19-rc1.
->>
->> On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
->>> This commit broke the driver override script in DPDK.
->>> This is an API/ABI breakage, please revert or fix the commit.
->>>
->>> Report of problem:
->>> http://mails.dpdk.org/archives/dev/2022-August/247794.html
+On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
+> This commit broke the driver override script in DPDK.
+> This is an API/ABI breakage, please revert or fix the commit.
 > 
-> Thanks for the report. I'll take a look.
+> Report of problem:
+> http://mails.dpdk.org/archives/dev/2022-August/247794.html
 > 
+> 
+> commit 23d99baf9d729ca30b2fb6798a7b403a37bfb800
+> Author: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Date:   Tue Apr 19 13:34:28 2022 +0200
+> 
+>     PCI: Use driver_set_override() instead of open-coding
+>     
+>     Use a helper to set driver_override to the reduce amount of duplicated
+>     code.  Make the driver_override field const char, because it is not
+>     modified by the core and it matches other subsystems.
+>     
+>     Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>     Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>     Link: https://lore.kernel.org/r/20220419113435.246203-6-krzysztof.kozlowski@linaro.org
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> 
+> The script is sending single nul character to remove override
+> and that no longer works.
+> 
+> Source code to dpdk-devbind
+> https://github.com/DPDK/dpdk/blob/main/usertools/dpdk-devbind.py
 
-I could not find in the report (neither here) steps to reproduce it. Can
-you provide me some short description (what kernel options are required,
-what commands to run)?
+Ah, that's messy.  I'll try to fix up driver_override() to handle a \0
+being sent as the string, we should treat that as an empty write.  Let
+me think about that later today...
 
-I tried to run:
-$ usertools/dpdk-devbind.py --status
-$ usertools/dpdk-devbind.py --bind '0000:00:03.0'
-Error: No devices specified.
+thanks,
 
-
-Best regards,
-Krzysztof
+greg k-h
