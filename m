@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1083A590767
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Aug 2022 22:33:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D88AB590764
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Aug 2022 22:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235976AbiHKUd2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Aug 2022 16:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37096 "EHLO
+        id S235764AbiHKUd3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Aug 2022 16:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235787AbiHKUd0 (ORCPT
+        with ESMTP id S235793AbiHKUd0 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Aug 2022 16:33:26 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0299F0FA
-        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 13:33:18 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id m17-20020a7bce11000000b003a5bedec07bso1490937wmc.0
-        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 13:33:18 -0700 (PDT)
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9AB9F0F5
+        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 13:33:19 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id z16so22486407wrh.12
+        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 13:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=conchuod.ie; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=44JZfQo8qBDZMgfCdrZJwZLuiR284QlmRSCfMxTvtpo=;
-        b=Rg+2K2aUJR5EC4EzeEhjweVggh3LGAxXDW+n+myh6+YEfAOfixSRbOplNLuQc+hbCh
-         k+KeOqNm6R7kogF4zChBu0vPRB6/t4pC7dpmsahLZa0MR1bkVO2XWKiYhLL+J8YqQUDk
-         ZtKBGxLruXNAffh3BmuL+H6PQwULOjdofcVTtJDehPnCkEwCuYwFQvxMN+8on0EzLv0W
-         8hG4NzCnIC7nauXERnsjmeIsK9LpEBmZMluKZGrodeAYGFQJLpKQqnVMGITSegeShwjt
-         CAS9qdr1VnbdcCuBIY3JiurrcquUlr5/UocbOVp2P97KWNRvHxATlrQBQ9jfvz51J/Lu
-         zNfw==
+        bh=QxkmtF8asgPVQHFJENq/ehachAsL+qmscZvCCu05yWc=;
+        b=XaRcrphLz19LTNxZ0dzKwHA8K/MkiviSjiw49WVWXeVE5qRONAyZyq8QlcuzrvefVq
+         DVNMQX04znal0vPNRmcNC3MbIYAUaAwumKVcp1t0JK2JWpjZ/cp5ve/O9xgtHIB9jYp1
+         a8nRH+Wy1LAZE51EqhGYykiH3KzE9PEX9dP0kwd3yenGFVrqs5lMmYFvz3ozZW8IIaAJ
+         Bj4EyFhC9G2D5gf3y3F2K/Htv7ZqH11Y9ovKD1Bz7OjfH17QcK/dDGLuF9YkGgrMvCco
+         4DIJtEW+NiKBMz3o+dzkdKU5lyhNrWpghKTXW2kDbXlMfdJOmER6MuwSLRX/k4n+MNIT
+         Ftcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=44JZfQo8qBDZMgfCdrZJwZLuiR284QlmRSCfMxTvtpo=;
-        b=yE9gDmIPbOmrPSSHLsvOlWA1mja0AM5yT5SW9fAXM9sRFEP+MxQJD/8FxRIAnA0Yqx
-         7s3+SzcOf8t/+AJuUmd5+jVedkWuj2glp1YWnC2iR4/jcZShTwU83yHcjGL1PU/GsAMO
-         24xDC7rsBjBTdePyVnUQljxZ3joKZ+y3S1p6dIixsgIhoKmeQXMnGzO5I8jfm9a4mvAZ
-         3L39L6jOzeb+7NeaFN/rAvz7aqBPSmN0cOGKiygNcmy09+jNgipEK7385EI4/yfSPhWP
-         Cq7TGFcccwx1tArbLS+9qiD3ueE4RolE4DZIW6wAE388HfVSjO4w4yixo/NTyAY8r9f/
-         zUXg==
-X-Gm-Message-State: ACgBeo0v0INZLrUKNzWnrAR4DbXIDoNlAhmncoKcseTiFTvPWnTBF9Bq
-        inx7gKpYlRK/huXNCHPqHuDhhQ==
-X-Google-Smtp-Source: AA6agR5N8mHJgZv+snXP8haUdkqppQ+4312cBLsCj598n23ICeGirf1H5+hFJyDA92da/FyY+BkSUQ==
-X-Received: by 2002:a05:600c:3845:b0:3a3:19e8:829e with SMTP id s5-20020a05600c384500b003a319e8829emr6647580wmr.11.1660249996798;
-        Thu, 11 Aug 2022 13:33:16 -0700 (PDT)
+        bh=QxkmtF8asgPVQHFJENq/ehachAsL+qmscZvCCu05yWc=;
+        b=2Oc9s5AW6KUY/cqim0HTavPRub/ctHXPj9YeMrtpGZBqwcQmJyb3stCJWv+L1I5T0K
+         ixREnIvWEBOuqwAEXaHcEMcLa6X2YsQBHi2O+N5jA1xqFIckm1Vun//rCkK/dPuiui5r
+         bSItjkkB3pvbTyWztN9I0IyD5lx8SjYd+rXcB/7rM6EkYTeQcj2zPkEsJKe1mkqcpr1y
+         8WI0u0rudwazPNU0lhxRLzZJU79QPXhb18J/RImPcawl0qoZTsQ9uuG+W+hsE/cbbapG
+         8tceWFSDBRivOJXctgSqI/7hX7jI80gL9pg3lXmbLMwtof+bXcOruNsRt1RoczoDWL/a
+         DP+Q==
+X-Gm-Message-State: ACgBeo3nd8RzcB3SoMakHkG7K6tFkdiPAXoQjyY3gMQtLubah2jYzGxD
+        hlD9tQOq2wj9g311uIqGrRDkNw==
+X-Google-Smtp-Source: AA6agR5//7v1W6BSWMIoYqn+Fu+wgEM3FNII37M+y/PlRKeC6C5AWj7949Ozxp/ApCOBEqaRSPZzpw==
+X-Received: by 2002:a5d:59a5:0:b0:222:c5a5:59c4 with SMTP id p5-20020a5d59a5000000b00222c5a559c4mr337239wrr.656.1660249997915;
+        Thu, 11 Aug 2022 13:33:17 -0700 (PDT)
 Received: from henark71.. ([109.76.58.63])
-        by smtp.gmail.com with ESMTPSA id i12-20020adfefcc000000b0021f1ec8776fsm86643wrp.61.2022.08.11.13.33.15
+        by smtp.gmail.com with ESMTPSA id i12-20020adfefcc000000b0021f1ec8776fsm86643wrp.61.2022.08.11.13.33.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Aug 2022 13:33:16 -0700 (PDT)
+        Thu, 11 Aug 2022 13:33:17 -0700 (PDT)
 From:   Conor Dooley <mail@conchuod.ie>
 To:     Daire McNamara <daire.mcnamara@microchip.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ To:     Daire McNamara <daire.mcnamara@microchip.com>,
         Conor Dooley <conor.dooley@microchip.com>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH 1/4] dt-bindings: PCI: fu740-pci: fix missing clock-names
-Date:   Thu, 11 Aug 2022 21:33:04 +0100
-Message-Id: <20220811203306.179744-2-mail@conchuod.ie>
+Subject: [PATCH 2/4] dt-bindings: PCI: microchip,pcie-host: fix missing clocks properties
+Date:   Thu, 11 Aug 2022 21:33:05 +0100
+Message-Id: <20220811203306.179744-3-mail@conchuod.ie>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220811203306.179744-1-mail@conchuod.ie>
 References: <20220811203306.179744-1-mail@conchuod.ie>
@@ -80,44 +80,57 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-The commit in the fixes tag removed the clock-names property from the
-SiFive FU740 PCI Controller dt-binding, but it was already in the dts
-for the FU740. dtbs_check was not able to pick up on this at the time
-but v2022.08 of dt-schema now can:
+Upgrading dt-schema to v2022.08 reveals unevaluatedProperties issues
+that were not previously visible, such as the missing clocks and
+clock-names properties for PolarFire SoC's PCI controller:
+arch/riscv/boot/dts/microchip/mpfs-icicle-kit.dtb: pcie@2000000000: Unevaluated properties are not allowed ('clock-names', 'clocks', 'legacy-interrupt-controller', 'microchip,axi-m-atr0' were unexpected)
+        From schema: Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 
-arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dtb: pcie@e00000000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-        From schema: linux/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+The clocks are required to enable interfaces between the FPGA fabric
+and the core complex, so add them to the binding.
 
-The Linux driver does not use this property, but outside of the kernel
-this property may have users. Re-add the property and its "clocks"
-dependency.
-
-Fixes: b92225b034c0 ("dt-bindings: PCI: designware: Fix 'unevaluatedProperties' warnings")
+Fixes: 6ee6c89aac35 ("dt-bindings: PCI: microchip: Add Microchip PolarFire host binding")
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-I went back and forth on removing the property from the dts, but this
-seems like the change that is more conservative..
----
- .../devicetree/bindings/pci/sifive,fu740-pcie.yaml          | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/pci/microchip,pcie-host.yaml     | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-index 195e6afeb169..c7a9a2dc0fa6 100644
---- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-@@ -51,6 +51,12 @@ properties:
-     description: A phandle to the PCIe power up reset line.
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+index edb4f81253c8..2a2166f09e2c 100644
+--- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+@@ -25,6 +25,31 @@ properties:
+       - const: cfg
+       - const: apb
  
 +  clocks:
-+    maxItems: 1
++    description:
++      Fabric Interface Controllers, FICs, are the interface between the FPGA
++      fabric and the core complex on PolarFire SoC. The FICs require two clocks,
++      one from each side of the interface. The "FIC clocks" described by this
++      property are on the core complex side & communication through a FIC is not
++      possible unless it's corresponding clock is enabled. A clock must be
++      enabled for each of the interfaces the root port is connected through.
++    minItems: 1
++    items:
++      - description: FIC0's clock
++      - description: FIC1's clock
++      - description: FIC2's clock
++      - description: FIC3's clock
 +
 +  clock-names:
-+    const: pcie_aux
++    items:
++      enum:
++        - fic0
++        - fic1
++        - fic2
++        - fic3
++    minItems: 1
++    maxItems: 4
 +
-   pwren-gpios:
-     description: Should specify the GPIO for controlling the PCI bus device power on.
-     maxItems: 1
+   interrupts:
+     minItems: 1
+     items:
 -- 
 2.37.1
 
