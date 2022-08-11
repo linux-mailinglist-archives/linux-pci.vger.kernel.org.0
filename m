@@ -2,68 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6EB058FC57
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Aug 2022 14:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E0159037E
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Aug 2022 18:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235066AbiHKMdy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Aug 2022 08:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42580 "EHLO
+        id S238174AbiHKQ0n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Aug 2022 12:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234133AbiHKMdx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Aug 2022 08:33:53 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BC0DF38;
-        Thu, 11 Aug 2022 05:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660221232; x=1691757232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sePsZki6rNGWhBmuPvYhrZYvNbhkUqbQ1QhmhPMXOe8=;
-  b=e5C/CF9Gb6wdTlmdRKdBA8vJK7WxBI12Mp2SiazYtFhC7PlXq64aR9M4
-   vbruL2KJ+0g016c8vD9apvYMEGRZ79nGLAURINcZhgSK45PePgnUPw68P
-   pZGcjHA6xYYo7xlkl3oqb20vIxTRxgHp9kutxmFCIhWYrrlhpvORlmfnP
-   7p0yweDdYW51kBSoO+Rkc1SLnglBHw0W2iiRQo+ycP0DPM6jJLBKMzllP
-   zsAjBumDY9nLuF0ATZnyU1oYMZmPfkgUAeNHh8PxrXM51HwJa1/QM5Yp4
-   /NWqFmGif9E/mUxwGCxzXlVelMTzFl0yLOlWcBnItQf7WVt/kLJl1ULMz
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10435"; a="288900957"
-X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
-   d="scan'208";a="288900957"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2022 05:33:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
-   d="scan'208";a="708599120"
-Received: from lkp-server02.sh.intel.com (HELO cfab306db114) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Aug 2022 05:33:49 -0700
-Received: from kbuild by cfab306db114 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oM7Nk-0000Bj-1z;
-        Thu, 11 Aug 2022 12:33:48 +0000
-Date:   Thu, 11 Aug 2022 20:32:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Will McVicker <willmcvicker@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S238377AbiHKQ0M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Aug 2022 12:26:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7602A405B;
+        Thu, 11 Aug 2022 09:07:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 613E7613F8;
+        Thu, 11 Aug 2022 16:07:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BAEC433C1;
+        Thu, 11 Aug 2022 16:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660234046;
+        bh=7QoczvgOuOfMe4Jd+WK4SX4WdFG16qmwH7KOQtIynuU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uVZHGAwTaYEUuMVQ9Bw5yPZjVShkv34lmZOmZSFsBQZ9Zi1g6zK4SzNlKMJDMchAp
+         8dDx9FbJtN/O2k0MbWpD9y/JdZX0ReYTCv5fWieVVzAHmdEh2CoXiLElf6VhJGvejO
+         9DN9jsi6ING+cHCIhrtmtLtQM4VXKX65pvweWYvZhk/hJiSFypjPPITOl0OnT3mIV0
+         NVRSn8fv1kerfMkqpDyQK/QuU4HZwW9FWQBcrejy0/STsrSKQPDslfRLoRp792x8RR
+         jyStYLOLzLzvyjHxKTEsa11+233qJR7rk4SG0SjGu5dkcMsBjjA1ruYG5QTGy6Obqt
+         2G5M8U/CsZf4g==
+Date:   Thu, 11 Aug 2022 11:07:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Will McVicker <willmcvicker@google.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        kernel-team@android.com, Vidya Sagar <vidyas@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] PCI: dwc: add support for 64-bit MSI target
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/2] PCI: dwc: add support for 64-bit MSI target
  address
-Message-ID: <202208112017.jLSXQXjV-lkp@intel.com>
-References: <20220809180051.1063653-3-willmcvicker@google.com>
+Message-ID: <20220811160725.GA1526733@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220809180051.1063653-3-willmcvicker@google.com>
+In-Reply-To: <20220810231445.2242126-3-willmcvicker@google.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,61 +59,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Will,
+No need to rush the versions (I see v1 on 8/9, v2 and v3 on 8/10).
 
-Thank you for the patch! Yet something to improve:
+But if/when you update this, capitalize the subject lines
+("PCI: dwc: Add support ...") to match previous history.
 
-[auto build test ERROR on helgaas-pci/next]
-[also build test ERROR on linus/master next-20220811]
-[cannot apply to v5.19]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Wed, Aug 10, 2022 at 11:14:44PM +0000, Will McVicker wrote:
+> Since not all devices require a 32-bit MSI address, add support to the
+> PCIe host driver to allow setting the DMA mask to 64-bits. This allows
+> kernels to disable ZONE_DMA32 and bounce buffering (swiotlb) without
+> risking not being able to get a 32-bit address during DMA allocation.
+> Basically, in the slim chance that there are no 32-bit allocations
+> available, the current PCIe host driver will fail to allocate the
+> msi_msg page due to a DMA address overflow (seen in [1]).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Will-McVicker/PCI-dwc-Add-support-for-64-bit-MSI-target-addresses/20220810-020421
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: powerpc-randconfig-c003-20220810 (https://download.01.org/0day-ci/archive/20220811/202208112017.jLSXQXjV-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 5f1c7e2cc5a3c07cbc2412e851a7283c1841f520)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install powerpc cross compiling tool for clang build
-        # apt-get install binutils-powerpc-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/7a41faa4e02a0a8945f79e7af86d10e371b2fc12
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Will-McVicker/PCI-dwc-Add-support-for-64-bit-MSI-target-addresses/20220810-020421
-        git checkout 7a41faa4e02a0a8945f79e7af86d10e371b2fc12
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash drivers/pci/
+> With this patch, the PCIe driver can advertise 64-bit support via
+> it's MSI capabilities to hint to the PCIe host driver to set the DMA
+> mask to 64-bits.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+s/via it's/via its/
 
-All errors (new ones prefixed by >>):
+I'm not quite sure what this sentence is saying.  I think it's
+actually the *device* (not the PCIe driver) that advertises 64-bit
+support in its MSI capability.
 
->> drivers/pci/controller/dwc/pcie-designware.c:85:5: error: redefinition of 'dw_pcie_msi_capabilities'
-   u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
-       ^
-   drivers/pci/controller/dwc/pcie-designware.h:467:19: note: previous definition is here
-   static inline u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
-                     ^
-   1 error generated.
+> +u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
+> +{
+> +	u8 offset;
+> +
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> +	return dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_msi_capabilities);
 
+Why does this need to be exported?  CONFIG_PCIE_DW and
+CONFIG_PCIE_DW_HOST are both bool, so I don't see any callers from
+modules.
 
-vim +/dw_pcie_msi_capabilities +85 drivers/pci/controller/dwc/pcie-designware.c
+I see there are some other functions in pcie-designware.c that are
+exported, but I'm a little dubious about those, too.  There are
+several DWC drivers that are tristate (PCI_DRA7XX, PCI_EXYNOS, etc),
+but they select PCIE_DW_HOST and PCIE_DW, which are bool.  I guess
+this means the DWC core code gets built-in while the dra7xx, exynos,
+etc code is a module.
 
-    84	
-  > 85	u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
-    86	{
-    87		u8 offset;
-    88	
-    89		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-    90		return dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
-    91	}
-    92	EXPORT_SYMBOL_GPL(dw_pcie_msi_capabilities);
-    93	
+If we want these to be modules, it would make more sense to me to have
+the module include both the DWC core code and the specific driver.
+I.e., the DWC core code would not be statically included at all, and
+the dra7xx module would contain DWC core and dra7xx, the exynos module
+would contain DWC core and exynos, etc.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Maybe Kconfig isn't expressive enough for that?  I don't know Kconfig
+well enough.
+
+Bjorn
