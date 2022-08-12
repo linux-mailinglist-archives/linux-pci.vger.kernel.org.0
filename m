@@ -2,95 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12A67590A62
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 04:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8500590A6B
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 04:54:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236747AbiHLCrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Aug 2022 22:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
+        id S234955AbiHLCyn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Aug 2022 22:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234955AbiHLCr3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Aug 2022 22:47:29 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC4F9F0FB;
-        Thu, 11 Aug 2022 19:47:28 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a7so36672457ejp.2;
-        Thu, 11 Aug 2022 19:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=GcNdwEO8FoZtzCiz5/zB16w3s7IblMBBq798/8mACkU=;
-        b=DeZWWkEoQ8aVoGUnbk4zfbh/E0W9q8D02hcEftJ6RaFyrJTMVzb0x4lIhMoC3QPGAr
-         /W8IcAvJyFCNxV/J5WuaOgIChYrQ6N6l/kPpwOaRdTMzaDTo+mDyYhP7izXqgD+Qt7Bj
-         2wtEnzfHA7INN+ZskcRGPNzgDNfJU/rUTZmxMTYZBacO9lWduVLHH6MXqoE0qTYF/CBa
-         mWWlvEx9C0Z4mrSlMioqEbbDZaTmxDg6bGF4J63eDwRSh0PItuJf4WPE2smw4kboy+6s
-         T26Qp0FQ7EtUMSqelzBLjUE4sKZuH9EWw6XjWFgtIQvvWecIskhKA0qklmvnoxRtw3WR
-         Aihg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=GcNdwEO8FoZtzCiz5/zB16w3s7IblMBBq798/8mACkU=;
-        b=acrx13aicdLPKWYWU1OwHb0yN1Zeodk0cpUjxyyPoUOKyP7722M311VUx1D+NzvVER
-         PtZ++D5mdau1krjHRPREMVZqMOy8wawEbdV4nhUt7BpKcPO2lqZ6xZzGgEJMaA23BZhr
-         vwGR2af89EANjTzxdFZ8yVA976whvQzqwwshjyAlqjbSytVc3ka0im5hT62nUk0QmwCG
-         p/rRoYaM96aXQsX0+OwkaVgI3Nz7A75zCbdreLY+0iHOvvsZmO9JWtwfK4TfnlIbnCyF
-         abPweHKmcrZnpCvd54v6GjXIuPsm2s6+ljnEAAFRomJJkD8umP+nRrp23acvnaFrKYyT
-         62Zg==
-X-Gm-Message-State: ACgBeo2MxHN5fOGC58ITostUlMgjU0j9EbuSvBNM1x6+D7fbVj2dkoni
-        HcJ46ZDvnGa54s3Pke2ealYvxI96VnD8bPCv/7s=
-X-Google-Smtp-Source: AA6agR4Re/OSbedyix7zj107RLI4c5Cka8uFz3/RD4s3QZXauUItCqEa4RGkuRAoiZX8Pisj1WJKVnJVdAGU5eGZPww=
-X-Received: by 2002:a17:906:7e43:b0:72b:52de:b039 with SMTP id
- z3-20020a1709067e4300b0072b52deb039mr1264832ejr.198.1660272447023; Thu, 11
- Aug 2022 19:47:27 -0700 (PDT)
+        with ESMTP id S230006AbiHLCym (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Aug 2022 22:54:42 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB748A2863
+        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 19:54:41 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M3p9D0xvCzlW89;
+        Fri, 12 Aug 2022 10:51:44 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (7.193.23.242) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 12 Aug 2022 10:54:40 +0800
+Received: from [10.67.103.231] (10.67.103.231) by
+ kwepemm600004.china.huawei.com (7.193.23.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 12 Aug 2022 10:54:39 +0800
+Message-ID: <f8825129-1566-df86-ade3-8d2885ce90b3@huawei.com>
+Date:   Fri, 12 Aug 2022 10:54:38 +0800
 MIME-Version: 1.0
-References: <20220812000327.3154251-1-willmcvicker@google.com> <20220812000327.3154251-2-willmcvicker@google.com>
-In-Reply-To: <20220812000327.3154251-2-willmcvicker@google.com>
-From:   Han Jingoo <jingoohan1@gmail.com>
-Date:   Thu, 11 Aug 2022 19:47:15 -0700
-Message-ID: <CAPOBaE6rQmk6yZhhRPvvqcOHSv_83Z=qXDoOEMhkcCFw91A5JQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] PCI: dwc: Drop dependency on ZONE_DMA32
-To:     Will McVicker <willmcvicker@google.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "<linux-pci@vger.kernel.org>" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Isaac J . Manjarres" <isaacmanjarres@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK script
+To:     Dongdong Liu <liudongdong3@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Stephen Hemminger <stephen@networkplumber.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <regressions@lists.linux.dev>
+References: <20220809192102.GA1331186@bhelgaas>
+ <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
+ <YvNMFR1dgtShQJju@kroah.com> <YvNqnSGDKm0LyJwH@kroah.com>
+ <872d304a-3aa0-53a4-c26a-3cb30594274d@huawei.com>
+From:   "lihuisong (C)" <lihuisong@huawei.com>
+In-Reply-To: <872d304a-3aa0-53a4-c26a-3cb30594274d@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.103.231]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 08/11/2022, Will McVicker wrote:
-> Re-work the msi_msg DMA allocation logic to use dmam_alloc_coherent() whi=
-ch
-> uses the coherent DMA mask to try to return an allocation within the DMA
-> mask limits. With that, we now can drop the msi_page parameter in struct
-> dw_pcie_rp. This allows kernel configurations that disable ZONE_DMA32 to
-> continue supporting a 32-bit DMA mask. Without this patch, the PCIe host
-> device will fail to probe when ZONE_DMA32 is disabled.
+
+在 2022/8/12 9:48, Dongdong Liu 写道:
+> cc Huisong who found the issue.
 >
-> Fixes: 35797e672ff0 ("PCI: dwc: Fix MSI msi_msg DMA mapping")
-> Reported-by: Isaac J. Manjarres <isaacmanjarres@google.com>
-> Signed-off-by: Will McVicker <willmcvicker@google.com>
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
-
-> ---
-> .../pci/controller/dwc/pcie-designware-host.c | 28 +++++--------------
-> drivers/pci/controller/dwc/pcie-designware.h  |  1 -
-> 2 files changed, 7 insertions(+), 22 deletions(-)
-
-=E2=80=A6..
+> On 2022/8/10 16:21, Greg KH wrote:
+>> On Wed, Aug 10, 2022 at 08:11:33AM +0200, Greg KH wrote:
+>>> On Wed, Aug 10, 2022 at 08:54:36AM +0300, Krzysztof Kozlowski wrote:
+>>>> On 09/08/2022 22:21, Bjorn Helgaas wrote:
+>>>>> [+cc regressions list]
+>>>>>
+>>>>> 23d99baf9d72 appeared in v5.19-rc1.
+>>>>>
+>>>>> On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
+>>>>>> This commit broke the driver override script in DPDK.
+>>>>>> This is an API/ABI breakage, please revert or fix the commit.
+>>>>>>
+>>>>>> Report of problem:
+>>>>>> http://mails.dpdk.org/archives/dev/2022-August/247794.html
+>>>>
+>>>> Thanks for the report. I'll take a look.
+>>>>
+>>>>>>
+>>>>>>
+>>>>>> commit 23d99baf9d729ca30b2fb6798a7b403a37bfb800
+>>>>>> Author: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>>> Date:   Tue Apr 19 13:34:28 2022 +0200
+>>>>>>
+>>>>>>     PCI: Use driver_set_override() instead of open-coding
+>>>>>>
+>>>>>>     Use a helper to set driver_override to the reduce amount of 
+>>>>>> duplicated
+>>>>>>     code.  Make the driver_override field const char, because it 
+>>>>>> is not
+>>>>>>     modified by the core and it matches other subsystems.
+>>>>>>
+>>>>>>     Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>>>>>     Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>>>>     Signed-off-by: Krzysztof Kozlowski 
+>>>>>> <krzysztof.kozlowski@linaro.org>
+>>>>>>     Link: 
+>>>>>> https://lore.kernel.org/r/20220419113435.246203-6-krzysztof.kozlowski@linaro.org
+>>>>>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>>
+>>>>>>
+>>>>>> The script is sending single nul character to remove override
+>>>>>> and that no longer works.
+>>>>
+>>>> The sysfs API clearly states:
+>>>> "and
+>>>>  may be cleared with an empty string (echo > driver_override)."
+>>>> Documentation/ABI/testing/sysfs-bus-pci
+>>>>
+>>>> Sending other data and expecting the same result is not conforming to
+>>>> API. Therefore we have usual example of some undocumented behavior 
+>>>> which
+>>>> user-space started relying on and instead using API, user-space expect
+>>>> that undocumented behavior to be back.
+>>>>
+>>>> Yay! I wonder what is the point to even describe the ABI if user-space
+>>>> can simply ignore it?
+>>>
+>>> One can argue that a string of just '\0' is an "empty string" and we
+>>> should be able to properly handle this in the kernel.  Heck,
+>>> "\0\0\0\0\0\0" is also an "empty string", right?
+>>>
+>>> I don't have an issue with fixing the kernel up here, it should be able
+>>> to handle this.
+>>
+>> Stephen, does the patch below fix this for you?
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
+>> -----------------
+>>
+>> diff --git a/drivers/base/driver.c b/drivers/base/driver.c
+>> index 15a75afe6b84..676b6275d5b5 100644
+>> --- a/drivers/base/driver.c
+>> +++ b/drivers/base/driver.c
+>> @@ -63,6 +63,12 @@ int driver_set_override(struct device *dev, const 
+>> char **override,
+>>      if (len >= (PAGE_SIZE - 1))
+>>          return -EINVAL;
+>>
+>> +    /*
+>> +     * Compute the real length of the string in case userspace sends 
+>> us a
+>> +     * bunch of \0 characters like python likes to do.
+>> +     */
+>> +    len = strlen(s);
+>> +
+>>      if (!len) {
+>>          /* Empty string passed - clear override */
+>>          device_lock(dev);
+>> .
+>>
+> This patch looks good,  @huisong, please help to test the patch.
+>
+> Thanks,
+> Dongdong
+> .
+Tested-by: Huisong Li <lihuisong@huawei.com>
