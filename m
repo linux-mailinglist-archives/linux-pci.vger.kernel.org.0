@@ -2,56 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 744E1590B99
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 07:46:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED61590C97
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 09:34:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230133AbiHLFqs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 01:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51618 "EHLO
+        id S237134AbiHLHe5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 03:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiHLFqs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 01:46:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584AB9925D
-        for <linux-pci@vger.kernel.org>; Thu, 11 Aug 2022 22:46:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0050BB82366
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 05:46:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F91C433C1;
-        Fri, 12 Aug 2022 05:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1660283204;
-        bh=QFmGKyYPLL13ap364ddSdUbbIiC4zpEm/0wwmFgg198=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N9e3tr3NQfUaRVThT2uJYbr96YSl8lWfV49sQyxfmXlKl2OJx5sJl6fJQ2QXOi2mZ
-         nLf/JPx1J4LbCTgFkc5IfFpM4eRzQxUVo+hTy81WXQwVGFa1hhZAlcG7yACmCA0dN+
-         YhmdRXAN1wP3fLJSv0HrbwFu5jSALa9xzaSpo7pk=
-Date:   Fri, 12 Aug 2022 07:46:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "lihuisong (C)" <lihuisong@huawei.com>
-Cc:     Dongdong Liu <liudongdong3@huawei.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK script
-Message-ID: <YvXpQrQ5DToXWVWm@kroah.com>
-References: <20220809192102.GA1331186@bhelgaas>
- <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
- <YvNMFR1dgtShQJju@kroah.com>
- <YvNqnSGDKm0LyJwH@kroah.com>
- <872d304a-3aa0-53a4-c26a-3cb30594274d@huawei.com>
- <f8825129-1566-df86-ade3-8d2885ce90b3@huawei.com>
+        with ESMTP id S237268AbiHLHe4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 03:34:56 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC59A61C5
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:34:52 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id y23so128892ljh.12
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=/0za9YUjlCWR21SNkhMiDN3IDAZyQAT6AQCAzmrddpE=;
+        b=VVrjuOUNW/QU9Hyq7AfSOklgFQwWn6UP6bxTIRkljjoWCpC8QQLG9DC0P/t1Oll7mL
+         kzTOzeEaUrvcGu/3YoXWafwJlEUumZAELskM1pAYKtQsFAW3CQQv8Utl6uLjJ933ATii
+         e4V/vTszQiTuYATPbenDeaWd1TKFpa7GP1ra0QgapKOW6gSjw+q/J9jdAErQczA1KCvt
+         /z7jVeVK/iMdP6S/ct64eiKm/cWReCD6aBvTUozAb1KMH4e0QudMAxz2XxFMW9Uvkcp8
+         rUKrS+g9jTpKaoP7rgYriKkkMlUHUFz3ivGkmqmgO8YHeZf7fvPqVEwkIRJclCqm9VzK
+         8CDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=/0za9YUjlCWR21SNkhMiDN3IDAZyQAT6AQCAzmrddpE=;
+        b=14ureKWQpfsEJQ8caneVgtfY74Xj62tD6OPGHFTIjcZWqqFqeA/I0+/S4K3m5Ve7B1
+         2CM4sEmkvlqRYsc+AYZHTF6FoGWYuqTxBYvLhfFLqO4qbKE/RQI61+m4BgQNPy0uazAE
+         PUxcD8Cocg+zTmP4SZ8Xibk94wQOsR31Ca3XMH3/kN8rrL+uSxeBXUUM99wo8IbqtF7h
+         yau9aeHnAhF4WGY3nXtnfHts8zdC2Zt1cbIv+gP4L0DBMn64FFXN74e54dN+ZUeToddk
+         JTP5G5WW71/cRp9iazQT3L3BvU1gDTsowt4o1cenmV77r2pUvpnvCQeFLuBOxF6wtAQt
+         Ra7w==
+X-Gm-Message-State: ACgBeo0lcRjiF3eqZz4Fo6/YJwvc1oElZcPJPirkNR0NHughWddCAeP3
+        3gT4P6oWQz3frAWvZA84I7hH6g==
+X-Google-Smtp-Source: AA6agR6znqORoYJxRfGm+Kmi2onxatlXLgKKjqviuP7ROeF5zZKHdK1k0rlZjV8xnPXrXDRmjs5bWQ==
+X-Received: by 2002:a2e:3515:0:b0:25e:7139:345f with SMTP id z21-20020a2e3515000000b0025e7139345fmr773042ljz.129.1660289691141;
+        Fri, 12 Aug 2022 00:34:51 -0700 (PDT)
+Received: from [192.168.1.39] ([83.146.140.105])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0025e4a8a8038sm258775ljc.88.2022.08.12.00.34.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Aug 2022 00:34:50 -0700 (PDT)
+Message-ID: <f636ad9d-5e9c-f703-221a-3c09f31ed105@linaro.org>
+Date:   Fri, 12 Aug 2022 10:34:40 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f8825129-1566-df86-ade3-8d2885ce90b3@huawei.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: fu740-pci: fix missing clock-names
+Content-Language: en-US
+To:     Conor Dooley <mail@conchuod.ie>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20220811203306.179744-1-mail@conchuod.ie>
+ <20220811203306.179744-2-mail@conchuod.ie>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220811203306.179744-2-mail@conchuod.ie>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,111 +85,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 12, 2022 at 10:54:38AM +0800, lihuisong (C) wrote:
+On 11/08/2022 23:33, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> 在 2022/8/12 9:48, Dongdong Liu 写道:
-> > cc Huisong who found the issue.
-> > 
-> > On 2022/8/10 16:21, Greg KH wrote:
-> > > On Wed, Aug 10, 2022 at 08:11:33AM +0200, Greg KH wrote:
-> > > > On Wed, Aug 10, 2022 at 08:54:36AM +0300, Krzysztof Kozlowski wrote:
-> > > > > On 09/08/2022 22:21, Bjorn Helgaas wrote:
-> > > > > > [+cc regressions list]
-> > > > > > 
-> > > > > > 23d99baf9d72 appeared in v5.19-rc1.
-> > > > > > 
-> > > > > > On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
-> > > > > > > This commit broke the driver override script in DPDK.
-> > > > > > > This is an API/ABI breakage, please revert or fix the commit.
-> > > > > > > 
-> > > > > > > Report of problem:
-> > > > > > > http://mails.dpdk.org/archives/dev/2022-August/247794.html
-> > > > > 
-> > > > > Thanks for the report. I'll take a look.
-> > > > > 
-> > > > > > > 
-> > > > > > > 
-> > > > > > > commit 23d99baf9d729ca30b2fb6798a7b403a37bfb800
-> > > > > > > Author: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > > > > > > Date:   Tue Apr 19 13:34:28 2022 +0200
-> > > > > > > 
-> > > > > > >     PCI: Use driver_set_override() instead of open-coding
-> > > > > > > 
-> > > > > > >     Use a helper to set driver_override to the
-> > > > > > > reduce amount of duplicated
-> > > > > > >     code.  Make the driver_override field const
-> > > > > > > char, because it is not
-> > > > > > >     modified by the core and it matches other subsystems.
-> > > > > > > 
-> > > > > > >     Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > > > >     Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > >     Signed-off-by: Krzysztof Kozlowski
-> > > > > > > <krzysztof.kozlowski@linaro.org>
-> > > > > > >     Link: https://lore.kernel.org/r/20220419113435.246203-6-krzysztof.kozlowski@linaro.org
-> > > > > > >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > > 
-> > > > > > > 
-> > > > > > > The script is sending single nul character to remove override
-> > > > > > > and that no longer works.
-> > > > > 
-> > > > > The sysfs API clearly states:
-> > > > > "and
-> > > > >  may be cleared with an empty string (echo > driver_override)."
-> > > > > Documentation/ABI/testing/sysfs-bus-pci
-> > > > > 
-> > > > > Sending other data and expecting the same result is not conforming to
-> > > > > API. Therefore we have usual example of some undocumented
-> > > > > behavior which
-> > > > > user-space started relying on and instead using API, user-space expect
-> > > > > that undocumented behavior to be back.
-> > > > > 
-> > > > > Yay! I wonder what is the point to even describe the ABI if user-space
-> > > > > can simply ignore it?
-> > > > 
-> > > > One can argue that a string of just '\0' is an "empty string" and we
-> > > > should be able to properly handle this in the kernel.  Heck,
-> > > > "\0\0\0\0\0\0" is also an "empty string", right?
-> > > > 
-> > > > I don't have an issue with fixing the kernel up here, it should be able
-> > > > to handle this.
-> > > 
-> > > Stephen, does the patch below fix this for you?
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > > 
-> > > -----------------
-> > > 
-> > > diff --git a/drivers/base/driver.c b/drivers/base/driver.c
-> > > index 15a75afe6b84..676b6275d5b5 100644
-> > > --- a/drivers/base/driver.c
-> > > +++ b/drivers/base/driver.c
-> > > @@ -63,6 +63,12 @@ int driver_set_override(struct device *dev, const
-> > > char **override,
-> > >      if (len >= (PAGE_SIZE - 1))
-> > >          return -EINVAL;
-> > > 
-> > > +    /*
-> > > +     * Compute the real length of the string in case userspace
-> > > sends us a
-> > > +     * bunch of \0 characters like python likes to do.
-> > > +     */
-> > > +    len = strlen(s);
-> > > +
-> > >      if (!len) {
-> > >          /* Empty string passed - clear override */
-> > >          device_lock(dev);
-> > > .
-> > > 
-> > This patch looks good,  @huisong, please help to test the patch.
-> > 
-> > Thanks,
-> > Dongdong
-> > .
-> Tested-by: Huisong Li <lihuisong@huawei.com>
+> The commit in the fixes tag removed the clock-names property from the
 
-Wonderful, thanks!  I'll queue this up to send to Linus after -rc1 is
-out.
+Instead:
+The commit b92225b034c0 ("dt-bindings: PCI: designware: Fix
+'unevaluatedProperties' warnings")....
 
-greg k-h
+> SiFive FU740 PCI Controller dt-binding,
+
+No, it did not do it... At least I cannot see it. Where is the removal
+exactly in that patch? The commit removed clock-names from required, not
+from properties.
+
+ but it was already in the dts
+> for the FU740. dtbs_check was not able to pick up on this at the time
+> but v2022.08 of dt-schema now can:
+> 
+> arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dtb: pcie@e00000000: Unevaluated properties are not allowed ('clock-names' was unexpected)
+>         From schema: linux/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> 
+> The Linux driver does not use this property, but outside of the kernel
+> this property may have users. Re-add the property and its "clocks"
+> dependency.
+> 
+
+
+Best regards,
+Krzysztof
