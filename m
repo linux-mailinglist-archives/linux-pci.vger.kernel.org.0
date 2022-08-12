@@ -2,175 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C63655911DF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 16:09:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9D675911FC
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 16:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239113AbiHLOHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 10:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+        id S238897AbiHLOL2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 10:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239094AbiHLOHF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 10:07:05 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A98D8E44B
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:07:00 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id cb8so839905qtb.0
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=o4cCmpae5Idf9m29hglIkfFTnBFWQVCZxl7mM3GbfcU=;
-        b=B3yaLfs9Wy7dodnPS67DfPjojKeP/JGGel7gsgyzSoXI8lwU3k3smrdy/iqw0vpBmt
-         naTNFw3+feF9dkb2/Sd4AjglFJoIxWleV54qkIjmBHMeJ6LSTgOIzRIiPAFVBlr5gC59
-         v+kozDyx9Sav+v5z9Cu0dUSH0tbGISETEOOwWHQt7v0lmzXIlxJ2ni1D4uxIaJ7hbL9b
-         YV9vRtbsR8zhz1K3THK38vdRKmxtOO9/sC0/VnXEJr/bQ422VJ1GiDSsHI+RNVQzC0+Z
-         +vO9g3L7ZLS36fdcBURDgnAUKaKM4rqHOF3VQZUb2ADaT54MBg0Z6DfHkYF48X6YD7NK
-         TP8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=o4cCmpae5Idf9m29hglIkfFTnBFWQVCZxl7mM3GbfcU=;
-        b=vvq3N9AaY6pVQPU0NQdclB70UjE4k7mRcQFIsyItwXKrofM3byWxcEcrRTv13kLpT6
-         tV38dDbICv/3INYkIDNnz8NVwj18VuADVpqqeOh51Ecyhd82DA7+RhdG/lDifr9Q1KTR
-         QpN3VBIupSblKgwepBRD+IdG3dDWFLWQmgzz0D0ijX+1lDA7HfkvMbPOxazFK+z+tnS/
-         dFws7QOXAs4utYivB/M8oRUK5pOyehp0tS6PchlJrkGjAKa8U1IlHWu2aEXzioSCWI+G
-         ZgCH3IaXrQc3g5DSoGgaj+zo+wzF47sFcs8ZVWrve86ToRvId7/fnnZlSXq598Pwnb7s
-         pxaA==
-X-Gm-Message-State: ACgBeo2xPtvW6fkdZ2aMRGW81LjzPWU18KIgczh0piws13k+n2nvEB3f
-        MGpfm30J8REsyxpAWNWW5W1hcw==
-X-Google-Smtp-Source: AA6agR4YuIPl4rmACKJQ36o7TO+IeIUSBODJJr3K7YFMV9Zrpd9l7IJHYIgIYA5RCSIb4R/ZZ4vlhg==
-X-Received: by 2002:ac8:5f4c:0:b0:320:795c:b414 with SMTP id y12-20020ac85f4c000000b00320795cb414mr3754593qta.302.1660313219471;
-        Fri, 12 Aug 2022 07:06:59 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id i21-20020a05620a249500b006b8fb2a1145sm1830463qkn.124.2022.08.12.07.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 07:06:58 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 10:06:57 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Frank.Li@nxp.com, kishon@ti.com, lpieralisi@kernel.org,
-        kw@linux.com, bhelgaas@google.com
-Subject: Re: [PATCH -next v2] PCI: endpoint: pci-epf-vntb: fix error handle
- in epf_ntb_mw_bar_init()
-Message-ID: <YvZegcACgf5vKTB1@kudzu.us>
-References: <20220625021516.431473-1-yangyingliang@huawei.com>
- <20220627202704.GA1775928@bhelgaas>
+        with ESMTP id S237287AbiHLOL2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 10:11:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4B460D1;
+        Fri, 12 Aug 2022 07:11:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA633617C9;
+        Fri, 12 Aug 2022 14:11:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E20BEC433C1;
+        Fri, 12 Aug 2022 14:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660313486;
+        bh=BTGirNTJKdOnbxrAivRXR4fKPWdv5EpCDd3Iq4xnpCA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p41Ag3Jsx9Xs+AbvaQ+ME2QzTXDmaMpPLcQWP5IUC+d8vAgBuOG99J/X6qhmRtYu6
+         DgTYuQn/Ff3wvS4zKe0nMQM3dPJ0eWnWmUzdkvzscotpLauNKgIo7hBdgzE/ZI9e23
+         l9OA7+SiV4xfLbnjJEAUA4Eut+z6nQy1knVxebl/8s4RfiHDNzGidJhyHKDOTmD8tG
+         vF+lCRTwDIhG64vdqgD5K7/cYkbt9Ej1zC0i1ci4me/AQy15PETrO1fg1OQB7O0THX
+         QZVOwD9ePNt55zWVQQGTb4Fxe4g9oVj6nqZh19pKzta5mCTsriHQatl94kquJA+hFo
+         l6/rMaIcxEERg==
+Received: by pali.im (Postfix)
+        id 40AAC9CF; Fri, 12 Aug 2022 16:11:23 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: mvebu: Fix endianity when accessing pci emul bridge members
+Date:   Fri, 12 Aug 2022 16:11:15 +0200
+Message-Id: <20220812141115.24082-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220812094058.16141-1-pali@kernel.org>
+References: <20220812094058.16141-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220627202704.GA1775928@bhelgaas>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 03:27:04PM -0500, Bjorn Helgaas wrote:
-> On Sat, Jun 25, 2022 at 10:15:16AM +0800, Yang Yingliang wrote:
-> > In error case of epf_ntb_mw_bar_init(), memory window BARs should be
-> > cleared, so add 'num_mws' parameter in epf_ntb_mw_bar_clear() and
-> > calling it in error path to clear the BARs. Also add missing error
-> > code when pci_epc_mem_alloc_addr() fails.
-> 
-> Another one for Jon, since ff32fac00d97 appeared in -next via his
-> tree
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ff32fac00d97
+PCI emul bridge members iolimitupper, iobaseupper, memlimit and membase are
+of type __le16, so correctly access these members via le16_to_cpu() macros.
 
-Sorry for the extremely long delay in response.  This series is in my
-ntb branch and will be in my pull request for v5.20 which should be
-going out later today.
+Fixes: 4ded69473adb ("PCI: mvebu: Propagate errors when updating PCI_IO_BASE and PCI_MEM_BASE registers")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+Changes in v2:
+* Fix parenthesis around le16_to_cpu() calls
+---
+ drivers/pci/controller/pci-mvebu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thanks,
-Jon
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 0798ed182a96..b04b9bbe9217 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -587,7 +587,7 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+ 
+ 	/* Are the new iobase/iolimit values invalid? */
+ 	if (conf->iolimit < conf->iobase ||
+-	    conf->iolimitupper < conf->iobaseupper)
++	    le16_to_cpu(conf->iolimitupper) < le16_to_cpu(conf->iobaseupper))
+ 		return mvebu_pcie_set_window(port, port->io_target, port->io_attr,
+ 					     &desired, &port->iowin);
+ 
+@@ -599,10 +599,10 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+ 	 * is the CPU address.
+ 	 */
+ 	desired.remap = ((conf->iobase & 0xF0) << 8) |
+-			(conf->iobaseupper << 16);
++			(le16_to_cpu(conf->iobaseupper) << 16);
+ 	desired.base = port->pcie->io.start + desired.remap;
+ 	desired.size = ((0xFFF | ((conf->iolimit & 0xF0) << 8) |
+-			 (conf->iolimitupper << 16)) -
++			 (le16_to_cpu(conf->iolimitupper) << 16)) -
+ 			desired.remap) +
+ 		       1;
+ 
+@@ -616,7 +616,7 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+ 	struct pci_bridge_emul_conf *conf = &port->bridge.conf;
+ 
+ 	/* Are the new membase/memlimit values invalid? */
+-	if (conf->memlimit < conf->membase)
++	if (le16_to_cpu(conf->memlimit) < le16_to_cpu(conf->membase))
+ 		return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr,
+ 					     &desired, &port->memwin);
+ 
+@@ -626,8 +626,8 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+ 	 * window to setup, according to the PCI-to-PCI bridge
+ 	 * specifications.
+ 	 */
+-	desired.base = ((conf->membase & 0xFFF0) << 16);
+-	desired.size = (((conf->memlimit & 0xFFF0) << 16) | 0xFFFFF) -
++	desired.base = ((le16_to_cpu(conf->membase) & 0xFFF0) << 16);
++	desired.size = (((le16_to_cpu(conf->memlimit) & 0xFFF0) << 16) | 0xFFFFF) -
+ 		       desired.base + 1;
+ 
+ 	return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr, &desired,
+-- 
+2.20.1
 
-> 
-> > Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and EP connection")
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> > ---
-> > v2:
-> >   add error label err_set_bar and move pci_epc_clear_bar() to it
-> > ---
-> >  drivers/pci/endpoint/functions/pci-epf-vntb.c | 20 ++++++++++++++-----
-> >  1 file changed, 15 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> > index ebf7e243eefa..ee9fee167d48 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> > @@ -567,6 +567,8 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
-> >  	return -1;
-> >  }
-> >  
-> > +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws);
-> > +
-> >  /**
-> >   * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
-> >   *   allocated in peers outbound address space
-> > @@ -625,13 +627,21 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
-> >  							      &ntb->vpci_mw_phy[i],
-> >  							      size);
-> >  		if (!ntb->vpci_mw_addr[i]) {
-> > +			ret = -ENOMEM;
-> >  			dev_err(dev, "Failed to allocate source address\n");
-> > -			goto err_alloc_mem;
-> > +			goto err_set_bar;
-> >  		}
-> >  	}
-> >  
-> >  	return ret;
-> > +
-> > +err_set_bar:
-> > +	pci_epc_clear_bar(ntb->epf->epc,
-> > +			  ntb->epf->func_no,
-> > +			  ntb->epf->vfunc_no,
-> > +			  &ntb->epf->bar[barno]);
-> >  err_alloc_mem:
-> > +	epf_ntb_mw_bar_clear(ntb, i);
-> >  	return ret;
-> >  }
-> >  
-> > @@ -640,12 +650,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
-> >   * @ntb: NTB device that facilitates communication between HOST and vHOST
-> >   *
-> >   */
-> > -static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
-> > +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
-> >  {
-> >  	enum pci_barno barno;
-> >  	int i;
-> >  
-> > -	for (i = 0; i < ntb->num_mws; i++) {
-> > +	for (i = 0; i < num_mws; i++) {
-> >  		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
-> >  		pci_epc_clear_bar(ntb->epf->epc,
-> >  				  ntb->epf->func_no,
-> > @@ -774,7 +784,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
-> >  	return 0;
-> >  
-> >  err_write_header:
-> > -	epf_ntb_mw_bar_clear(ntb);
-> > +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
-> >  err_mw_bar_init:
-> >  	epf_ntb_db_bar_clear(ntb);
-> >  err_db_bar_init:
-> > @@ -794,7 +804,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
-> >  static void epf_ntb_epc_cleanup(struct epf_ntb *ntb)
-> >  {
-> >  	epf_ntb_db_bar_clear(ntb);
-> > -	epf_ntb_mw_bar_clear(ntb);
-> > +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
-> >  }
-> >  
-> >  #define EPF_NTB_R(_name)						\
-> > -- 
-> > 2.25.1
-> > 
