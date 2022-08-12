@@ -2,80 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE58590FCA
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 12:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 052C85911C7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 16:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237390AbiHLKzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 06:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
+        id S235497AbiHLN6t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 09:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237628AbiHLKzr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 06:55:47 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4719E2C9
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 03:55:45 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 73so501779pgb.9
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 03:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc;
-        bh=447DttLGWlnXVhl3+i4qWwJxEj6tFprhGwRHCuyrWEY=;
-        b=CJ8cmabUBS6s6xxd/K2d4ioKxSyRIqE+ZbMGdtOsB0xEii8PW96QxCDErfQIjC5BLN
-         N2ucmgiycJJWzTi4cqrjfE9/Qd9qFAIMAw3S3lJYynV7FOantBCVlh8p1SpJp0OmBkJd
-         zJ1W862js8LoAcODPIYF/9lavQGzrv9SxLLzKYwZYs+aFDugs4i1SnnikoRnH73/HBzk
-         m18p9qWtHEY7DEvtYfAV2/hTbPa+PdePCQgit6nPZjTo7qoxPOQVMH1Q9ud8T5lQAHsP
-         cKX6gM3XXgZAfM0H0ll1XdJ5ldBa3MmWx9WKcy61QJhphhLbPc4wMweOQcNzCq3zEyrE
-         y24w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=447DttLGWlnXVhl3+i4qWwJxEj6tFprhGwRHCuyrWEY=;
-        b=nwxtSNpUm4GT7JGIJ8gYXiJyVX/q5u9T4OH+bDAIJTPS7Rbdv499A/oFlz57aiS6D0
-         +FTfOjYF5APbtxMiN85K0/hEaokW1q9d5NhAwQ/bRH0aAAYs6S0pc/1IWIndGOlmCUWs
-         6Kj+xXAbiGc8UjdK5W02Yzn4ZiECtuRzEjzFjgg7LzBVbZe99NNF41QuVD3lNGoQ7Y9K
-         xchwgmyfLDVtiRSpf6jOn8AEkqUUhYZfwcui1CV98PpjhC20CUfdV26MgSa+Q33E5ZdT
-         5j1MpBQtuiHGC5snBgS3SN1UDxZvtCdgm+8fk+87FGw6lF+Tigqayp15I4pmw0L/unni
-         Ri5g==
-X-Gm-Message-State: ACgBeo1X9ey41enaRocXy4RZWrxZQ4Sm6P5O5UVt/7/bg9tSF4jvi/oX
-        Wl4KkJHZMuqqfw+WO52v3s0MKV/Or73RfWBFois=
-X-Google-Smtp-Source: AA6agR5zQzBmW33GmQFIhAp2AFpk7CL7LTn9PCx8JAiUD3jKsaMXzwesI8XRy+JYh8XJgI9UhTgK6vqxdcdpvvJuJ30=
-X-Received: by 2002:a65:688f:0:b0:41d:e38a:e8c4 with SMTP id
- e15-20020a65688f000000b0041de38ae8c4mr2677864pgt.437.1660301744807; Fri, 12
- Aug 2022 03:55:44 -0700 (PDT)
+        with ESMTP id S232791AbiHLN6s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 09:58:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3C6A50E1;
+        Fri, 12 Aug 2022 06:58:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 57482B8243A;
+        Fri, 12 Aug 2022 13:58:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5901C433C1;
+        Fri, 12 Aug 2022 13:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660312725;
+        bh=xh5J5TASioRfOeCFMDXvtupuSBvJ7WbXoTGn877mnnY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NCCsa0p2UBi6sZpooriV0YmzPMP5tTpKco8A5NLhoBTJwVW5Ys06UitalfBCRzCa7
+         Wf+lUQ04QeKe4hzMr7T/Hx2nIpY4opUsL/hnt4d3jQMlGiAw9yEMvKtjtMAOYSG9Xc
+         DIuNRGfFEbQaoIYuegJK4pTG0HAiH26rdtJFYP0rdZMApBM25cRbzyqeiYtOqycgZx
+         BH/NLpIncOQj206IkvdXakmL4df/QYb+HfEoKx/V7E9YWPLVlwhdUqN5QVETI6BTSS
+         xXIMED9PznDBup60i/dfBLyl1JQlywVzb7xAt3Q5XxTst6IIfWnV9D18L25iCkDg3q
+         qAcy/NtPGzVjA==
+Received: by pali.im (Postfix)
+        id B34BC9CF; Fri, 12 Aug 2022 15:58:41 +0200 (CEST)
+Date:   Fri, 12 Aug 2022 15:58:41 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Fix endianity when accessing pci emul bridge
+ members
+Message-ID: <20220812135841.uhmdkpvjok574ijf@pali>
+References: <20220812094058.16141-1-pali@kernel.org>
+ <3096bb82-62e6-bc9f-1600-fb58d6826302@arm.com>
 MIME-Version: 1.0
-Sender: bazarkowanigeria@gmail.com
-Received: by 2002:a17:90a:9f91:0:0:0:0 with HTTP; Fri, 12 Aug 2022 03:55:44
- -0700 (PDT)
-From:   "Mrs. Margaret Christopher" <mrsmargaretchristopher01@gmail.com>
-Date:   Fri, 12 Aug 2022 03:55:44 -0700
-X-Google-Sender-Auth: 9ez0BQ54ybr4-2FSOghKq3nW-Ek
-Message-ID: <CAPgaJa30zdehdauxJA=VaWKLgjKBywWenmnn-VngZ4tZAfQP_Q@mail.gmail.com>
-Subject: Humanitarian Project For Less Privileged.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3096bb82-62e6-bc9f-1600-fb58d6826302@arm.com>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Hello Dear
+On Friday 12 August 2022 11:32:59 Robin Murphy wrote:
+> On 2022-08-12 10:40, Pali Rohár wrote:
+> > PCI emul bridge members iolimitupper, iobaseupper, memlimit and membase are
+> > of type __le16, so correctly access these members via le16_to_cpu() macros.
+> > 
+> > Fixes: 4ded69473adb ("PCI: mvebu: Propagate errors when updating PCI_IO_BASE and PCI_MEM_BASE registers")
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >   drivers/pci/controller/pci-mvebu.c | 12 ++++++------
+> >   1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > index c1ffdb06c971..00ea0836b81a 100644
+> > --- a/drivers/pci/controller/pci-mvebu.c
+> > +++ b/drivers/pci/controller/pci-mvebu.c
+> > @@ -523,7 +523,7 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+> >   	/* Are the new iobase/iolimit values invalid? */
+> >   	if (conf->iolimit < conf->iobase ||
+> > -	    conf->iolimitupper < conf->iobaseupper)
+> > +	    le16_to_cpu(conf->iolimitupper) < le16_to_cpu(conf->iobaseupper))
+> >   		return mvebu_pcie_set_window(port, port->io_target, port->io_attr,
+> >   					     &desired, &port->iowin);
+> > @@ -535,10 +535,10 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+> >   	 * is the CPU address.
+> >   	 */
+> >   	desired.remap = ((conf->iobase & 0xF0) << 8) |
+> > -			(conf->iobaseupper << 16);
+> > +			le16_to_cpu(conf->iobaseupper << 16);
+> 
+> This will always give 0, even when natively LE.
 
-  Am a dying woman here in the hospital, i was diagnose as a
-Coronavirus patient over 2 months ago. I am A business woman who is
-dealing with Gold Exportation, I Am 59 year old from USA California i
-have a charitable and unfufilling  project that am about to handover
-to you, if you are interested to know more about this project please reply me.
+You are right, I overlooked it and I put closing parenthesis at wrong
+place. Bit shifting should be applied after le to cpu conversion. I will
+fix it in V2.
 
- Hope to hear from you
-
-Best Regard
-
-Mrs. Margaret
+> >   	desired.base = port->pcie->io.start + desired.remap;
+> >   	desired.size = ((0xFFF | ((conf->iolimit & 0xF0) << 8) |
+> > -			 (conf->iolimitupper << 16)) -
+> > +			 le16_to_cpu(conf->iolimitupper << 16)) -
+> 
+> Similarly here.
+> 
+> Robin.
+> 
+> >   			desired.remap) +
+> >   		       1;
+> > @@ -552,7 +552,7 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+> >   	struct pci_bridge_emul_conf *conf = &port->bridge.conf;
+> >   	/* Are the new membase/memlimit values invalid? */
+> > -	if (conf->memlimit < conf->membase)
+> > +	if (le16_to_cpu(conf->memlimit) < le16_to_cpu(conf->membase))
+> >   		return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr,
+> >   					     &desired, &port->memwin);
+> > @@ -562,8 +562,8 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+> >   	 * window to setup, according to the PCI-to-PCI bridge
+> >   	 * specifications.
+> >   	 */
+> > -	desired.base = ((conf->membase & 0xFFF0) << 16);
+> > -	desired.size = (((conf->memlimit & 0xFFF0) << 16) | 0xFFFFF) -
+> > +	desired.base = ((le16_to_cpu(conf->membase) & 0xFFF0) << 16);
+> > +	desired.size = (((le16_to_cpu(conf->memlimit) & 0xFFF0) << 16) | 0xFFFFF) -
+> >   		       desired.base + 1;
+> >   	return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr, &desired,
