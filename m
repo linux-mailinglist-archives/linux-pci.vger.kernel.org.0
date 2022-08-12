@@ -2,135 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99F495911D4
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 16:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9710E5911D9
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 16:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238718AbiHLODA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 10:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49444 "EHLO
+        id S238906AbiHLOFw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 10:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238716AbiHLOCy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 10:02:54 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBFDA2866
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:02:52 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id m10so664728qvu.4
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:02:52 -0700 (PDT)
+        with ESMTP id S238836AbiHLOFv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 10:05:51 -0400
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFFA2AE09
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:05:49 -0700 (PDT)
+Received: by mail-qk1-x736.google.com with SMTP id f14so843139qkm.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 07:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=Lmq1oz6ZC4m5awQCBsFC3VCq9hpAYJiCiT2XZrwkX+Q=;
-        b=z6TOXBbOfd8v4yGLGKARzOV897DUwc1TWaAMeNGJ3+gp3LuG1/nfwIEP+Kh4LLM0Yk
-         cCFh7r/zvTOuZHOkwdUu8aKP6pQVRaUq7q3856WuOb8WVtu8zAH/AujmLsq/BgpXYXZr
-         U8eUql3Y5XlQ1uC91Wi3hFbc20EGkArw5ue3g3bSlykeQBKEEBHNsorxxgUkubyO0msG
-         FnLZdslK/kWjoXMmpWanf3gery901iKMbDKMEsqZoN6LV4xUAFDLzP5QC/ZkrqbgEG5Q
-         jirQFgFrt11qBFBw8Be1fS///51kSF0bOG0cTMIsC4GWnMbb4lgwOzGxvUXE7uufUvlu
-         Unlg==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=3Fi1VTtDFgyZAXD5ict/NicDWj9+d/F9avdnvytM5Yo=;
+        b=CqKUxs9HWvgk5EACnCWAc4IABQ81zQ5HxyhhzOwel9K82MNYA5ZpimTG2n/G/CZoj6
+         2biBPqLvZGzKN2QgBG2PshKuMmlgoUKalrEXqoJiew9yNntYLZEydSpxMikj9pMOOJys
+         XkRg28HFxcvZt+BJ/xCbkaKj3xS8nheYn78igbl1YBwN6BI7jV3Pb9uIZEHaHSu6e7TJ
+         FtRUyZe27glwYb/yHjMHO1+kfD2xl6BCSDpP+RcBVWff/GaeKp90oupVNBtu/VY7oJi3
+         8aItvPHy5I1E36ul/9VLB5dM9uGH9wLmJT/Mr4T7l15k40Ep82PClCmYUGEVGTd26Ba3
+         kAhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=Lmq1oz6ZC4m5awQCBsFC3VCq9hpAYJiCiT2XZrwkX+Q=;
-        b=2mtygXSON9uH2EEKhnPblGdJCGtIE2GC/ZIjSVGW4ju8NthPvpxHlXa98hFgrlv8Cy
-         J1aN0wuSBjT+hhdWwjcpYukQHgAqkbzr05Gc+1rvDx4iT3T04XjYczakwxAit5cipVEv
-         nuO543Wj6RpvYSidBP8LOoxTedWH1FRi3VnIizTIXJwIfuogh9cfZ0gXzl5PK4UK4/Eh
-         ZOlbPOK/RdoufSjXcqaK3d3fD4QLD9I9m762jYox/NDNMgUwgR/+ocelPfccUhoshsm6
-         52IYcN58E6gsBinWLu9RTEGAFykw9huDYR7op/mgYxwldqnegUKv5o3X4WK49rGnXMB9
-         FiYQ==
-X-Gm-Message-State: ACgBeo3x1wRzUyjfePRwBcBbPHSYNfjfakEf0t4eDylznq4RKNF58oFD
-        29IewGRLdERvcjg+rmU3x7VdlQ==
-X-Google-Smtp-Source: AA6agR6LoB/1BRoidSD4eFh2loreq6urV5VtZ4Z/dzeelaL7aUmOmo9Et0vW3bR4Mbywz0UPztHB3w==
-X-Received: by 2002:ad4:4eeb:0:b0:474:8435:1508 with SMTP id dv11-20020ad44eeb000000b0047484351508mr3601983qvb.5.1660312971999;
-        Fri, 12 Aug 2022 07:02:51 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=3Fi1VTtDFgyZAXD5ict/NicDWj9+d/F9avdnvytM5Yo=;
+        b=PXgyJbu1xY/fQZdLobZx8yId8q1c0wUwcwK0lKjF+33nQJlsFG4le8ahN/bSHXxrc6
+         jchE46oYQaVgonMHvU3QG7GqWc3QraX/ABC2+vd7goK8xqlE1VORRmZlJsdhD7l/qyy5
+         /zZrIrcezjkg6G4jEnmtkQS95rsnoIcAyaINxWh6V+OZl9zDDD7uztKTFhcgYH+XYBNp
+         LWw7Voa00fU3LNKRlUW45fP/Xo6XeUPy2CJQ1NsHa6ii0We2/+wnrT65mLSLEDcdns5z
+         +vvsJM3fJfQe2AOZ0U/aS1zM0Ff2aQzVcS8422Nk4p8QhwIzTWqMGFRcGwsjPgC81/eE
+         EyQQ==
+X-Gm-Message-State: ACgBeo05wLvVH+wB7Ri6Ny4Qz57n2AwycOkPpU0T7UYC4Q/wRu1/G1Xy
+        DROuPWX5a+44VBc4fwfU2S7aUA==
+X-Google-Smtp-Source: AA6agR6rVO/mlp2whKyQ+m6Evhgl5o+7HirB+451gg9nOuhJ3xNjn898fYAaT1rtyGmDyk6Q4LMiEA==
+X-Received: by 2002:a37:a853:0:b0:6ba:ceba:9656 with SMTP id r80-20020a37a853000000b006baceba9656mr1704225qke.466.1660313148548;
+        Fri, 12 Aug 2022 07:05:48 -0700 (PDT)
 Received: from kudzu.us ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id d1-20020a05622a100100b0034305a91aaesm1856742qte.83.2022.08.12.07.02.51
+        by smtp.gmail.com with ESMTPSA id h5-20020a05620a400500b006b615cd8c13sm1173685qko.106.2022.08.12.07.05.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 07:02:51 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 10:02:49 -0400
+        Fri, 12 Aug 2022 07:05:48 -0700 (PDT)
+Date:   Fri, 12 Aug 2022 10:05:46 -0400
 From:   Jon Mason <jdmason@kudzu.us>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     helgaas@kernel.org, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        kw@linux.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lznuaa@gmail.com, hongxing.zhu@nxp.com, dave.jiang@intel.com,
-        allenbh@gmail.com, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V2 0/4] NTB function for PCIe RC to EP connection
-Message-ID: <YvZdiWoWb6njBvEA@kudzu.us>
-References: <20220222162355.32369-1-Frank.Li@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Colin Ian King <colin.i.king@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] NTB: EPF: set pointer addr to null using NULL
+ rather than 0
+Message-ID: <YvZeOkd1wrdYJXqs@kudzu.us>
+References: <20220623165709.77229-1-colin.i.king@gmail.com>
+ <20220627202858.GA1776067@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220222162355.32369-1-Frank.Li@nxp.com>
+In-Reply-To: <20220627202858.GA1776067@bhelgaas>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 10:23:51AM -0600, Frank Li wrote:
-> This implement NTB function for PCIe EP to RC connections.
-> The existed ntb epf need two PCI EPs and two PCI Host.
+On Mon, Jun 27, 2022 at 03:28:58PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jun 23, 2022 at 05:57:09PM +0100, Colin Ian King wrote:
+> > The pointer addr is being set to null using 0. Use NULL instead.
+> > 
+> > Cleans up sparse warning:
+> > warning: Using plain integer as NULL pointer
 > 
-> This just need EP to RC connections.
+> Another one for Jon; fixes this commit:
 > 
->     ┌────────────┐         ┌─────────────────────────────────────┐
->     │            │         │                                     │
->     ├────────────┤         │                      ┌──────────────┤
->     │ NTB        │         │                      │ NTB          │
->     │ NetDev     │         │                      │ NetDev       │
->     ├────────────┤         │                      ├──────────────┤
->     │ NTB        │         │                      │ NTB          │
->     │ Transfer   │         │                      │ Transfer     │
->     ├────────────┤         │                      ├──────────────┤
->     │            │         │                      │              │
->     │  PCI NTB   │         │                      │              │
->     │    EPF     │         │                      │              │
->     │   Driver   │         │                      │ PCI Virtual  │
->     │            │         ├───────────────┐      │ NTB Driver   │
->     │            │         │ PCI EP NTB    │◄────►│              │
->     │            │         │  FN Driver    │      │              │
->     ├────────────┤         ├───────────────┤      ├──────────────┤
->     │            │         │               │      │              │
->     │  PCI BUS   │ ◄─────► │  PCI EP BUS   │      │  Virtual PCI │
->     │            │  PCI    │               │      │     BUS      │
->     └────────────┘         └───────────────┴──────┴──────────────┘
->         PCI RC                        PCI EP
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ff32fac00d97
 > 
-> 
-> 
-> Frank Li (4):
->   PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address
->   NTB: epf: Allow more flexibility in the memory BAR map method
->   PCI: endpoint: Support NTB transfer between RC and EP
->   Documentation: PCI: Add specification for the PCI vNTB function device
-> 
->  Documentation/PCI/endpoint/index.rst          |    2 +
->  .../PCI/endpoint/pci-vntb-function.rst        |  126 ++
->  Documentation/PCI/endpoint/pci-vntb-howto.rst |  167 ++
->  drivers/ntb/hw/epf/ntb_hw_epf.c               |   48 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   10 +-
->  drivers/pci/endpoint/functions/Kconfig        |   11 +
->  drivers/pci/endpoint/functions/Makefile       |    1 +
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 1424 +++++++++++++++++
->  8 files changed, 1775 insertions(+), 14 deletions(-)
->  create mode 100644 Documentation/PCI/endpoint/pci-vntb-function.rst
->  create mode 100644 Documentation/PCI/endpoint/pci-vntb-howto.rst
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vntb.c
-> 
-> -- 
-> 2.24.0.rc1
-> 
+> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > index ebf7e243eefa..fb31c868af6a 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > @@ -605,7 +605,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+> >  
+> >  		ntb->epf->bar[barno].barno = barno;
+> >  		ntb->epf->bar[barno].size = size;
+> > -		ntb->epf->bar[barno].addr = 0;
+> > +		ntb->epf->bar[barno].addr = NULL;
+> >  		ntb->epf->bar[barno].phys_addr = 0;
+> >  		ntb->epf->bar[barno].flags |= upper_32_bits(size) ?
+> >  				PCI_BASE_ADDRESS_MEM_TYPE_64 :
+> > -- 
+> > 2.35.3
+> > 
 
-Sorry for the extremely long delay in response.  This series has been
-in my ntb-next branch for some time and will be in my pull request for
-v5.20 which should be going out later today.
+Sorry for the extremely long delay in response.  This series is in my
+ntb branch and will be in my pull request for v5.20 which should be
+going out later today.
 
 Thanks,
 Jon
