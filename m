@@ -2,53 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E75FF590E48
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 11:41:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C0EC590EB2
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 12:07:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237564AbiHLJlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 05:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
+        id S237546AbiHLKH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 06:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbiHLJlW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 05:41:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD80F832C1;
-        Fri, 12 Aug 2022 02:41:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 88855B82381;
-        Fri, 12 Aug 2022 09:41:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065F7C433C1;
-        Fri, 12 Aug 2022 09:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660297279;
-        bh=55Efb2gdzPjhW+qOIM5Dyr4neXhJPdJKwm88KVCVi50=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mvbs34zQ+bawuchqVsh6v9z0FLxlCScGVfyftyUSFVrxxxKKdmVobpjOisREaxnIK
-         Y0IBKU9aHHcdj397eDM4ZR7e5l2ivB3TgOcO1wweWv16K2wy+CqBrKdbu98RDFl1nF
-         J/n68PgZQIEl2TEG4Q9Dc8UuC01BCM74V4vz+xGgr7WS7lv6PjsR4rgmwCJTi04whQ
-         JbigfVIEXzSLWYMwcGOZgECeV73s3TwMglkGKzJA8WppfyWPICSWXcj3TKEcPE5Z/2
-         hqc5+n0K9AzT6PP6VXQXxKt1svQ8DhIr5PNzuAdDfiwsIPNtnkYCmR1rhqRcAeQkCp
-         GUULC9xVN37rA==
-Received: by pali.im (Postfix)
-        id 396B09CF; Fri, 12 Aug 2022 11:41:16 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: mvebu: Fix endianity when accessing pci emul bridge members
-Date:   Fri, 12 Aug 2022 11:40:58 +0200
-Message-Id: <20220812094058.16141-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S235949AbiHLKH0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 06:07:26 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11883BD
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 03:07:24 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id x19so695766lfq.7
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 03:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=pGicgmrkVGpAXVpWBOOwVqoHRpuAuKtD+Wqhn/gpirk=;
+        b=MN1hOu0MvGFfVSNI3SZCMYZgGjhChvjodGSJYoVCvE2Vlkb/G85d1rwBzHEKFU7BoE
+         HNrF5VHtjbtSbVBlPWmrHGCzPLPHjYt5HXG7uLbVxTyFZwP0AzOHLXjZFICp8YmJprtC
+         gX30SbRsIPIu632N0gevqC3jhBV22xnq7p5vafKxI8sgjHiquWCcPgq61ao8BCM1ZRLy
+         fvl11FVIenCL2nYausoYZ3BTaXnAxZX5ZEy3RgIbsRCcA6U2BI3JgqfEKFq/6OYBXH2P
+         5IFQbe3/FiF9ph2qjFSK3Nc7prxcUEQrUR7BsYX/1ybOnFr7KYWEB/B3O4KvuP/4zQSt
+         qtQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=pGicgmrkVGpAXVpWBOOwVqoHRpuAuKtD+Wqhn/gpirk=;
+        b=ojngP2LPGtViGJ3XO0wVgop0v0OfDU8iVxHKqcIxnQhDz7wUmzx/VutOIWn9XZ3UFy
+         5SgzQ7sKS5o05RBGJykN/2udkl9QcrYEQOYa4QGJ3a44T7bXC6ch/9RFel6z0h+zH5nW
+         Mj0NLoWogY7LC9QILDx1hGNbVadX71QTPfr/yeBDCX9n/NpfaxdZit0NN5ePYFnV2sim
+         WmTKkRSOqt4l0vdmjP26yIKvrWvhgDoW75L76C50F6amOAce61iQBNJjl+Y/YOzby7bK
+         D7AqCf8+5oL/EHBz8dlrz0+SppjxPKJYGF5yMQUIGK76jFfbgoYEnf4vuWtAeTNV+EAS
+         prSQ==
+X-Gm-Message-State: ACgBeo3JNv3h9gBK3iza3uvjybc6GmW9UqLkQF65JH24XvUi5KFjuqZz
+        ldKjtmRDPAHGGIxsgaxU+Yrjqw==
+X-Google-Smtp-Source: AA6agR7MhLzXhxFMHxvkBaYUjtFOzy1aQfTD91gtSyNkxDgILHvzPNc3FZ2NiCEPl+DJXfmXSUF4vg==
+X-Received: by 2002:ac2:44bc:0:b0:48a:eb48:6b78 with SMTP id c28-20020ac244bc000000b0048aeb486b78mr1152514lfm.326.1660298842630;
+        Fri, 12 Aug 2022 03:07:22 -0700 (PDT)
+Received: from [192.168.1.39] ([83.146.140.105])
+        by smtp.gmail.com with ESMTPSA id u28-20020ac251dc000000b0048a7c162bbesm155510lfm.279.2022.08.12.03.07.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Aug 2022 03:07:22 -0700 (PDT)
+Message-ID: <a21c4d34-81b2-cdc5-133e-7c7d2c0657f6@linaro.org>
+Date:   Fri, 12 Aug 2022 13:07:16 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 3/4] dt-bindings: PCI: microchip,pcie-host: fix incorrect
+ child node name
+Content-Language: en-US
+To:     Conor.Dooley@microchip.com, mail@conchuod.ie,
+        Daire.McNamara@microchip.com, bhelgaas@google.com,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20220811203306.179744-1-mail@conchuod.ie>
+ <20220811203306.179744-4-mail@conchuod.ie>
+ <721ccb76-c162-30ee-68cc-3316a2d62554@linaro.org>
+ <272557c5-3e30-a873-40af-16a65c3043b2@microchip.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <272557c5-3e30-a873-40af-16a65c3043b2@microchip.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,62 +82,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI emul bridge members iolimitupper, iobaseupper, memlimit and membase are
-of type __le16, so correctly access these members via le16_to_cpu() macros.
+On 12/08/2022 10:55, Conor.Dooley@microchip.com wrote:
+> On 12/08/2022 08:42, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 11/08/2022 23:33, Conor Dooley wrote:
+>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>> v2022.08 of dt-schema improved checking of unevaluatedProperties, and
+>>> exposed a previously unseen warning for the PCIe controller's interrupt
+>>> controller node name:
+>>>
+>>> arch/riscv/boot/dts/microchip/mpfs-icicle-kit.dtb: pcie@2000000000: Unevaluated properties are not allowed ('clock-names', 'clocks', 'legacy-interrupt-controller', 'microchip,axi-m-atr0' were unexpected)
+>>>          From schema: Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+>>>
+>>> Make the property in the binding match the node name actually used in
+>>> the dts.
+>>>
+>>> Fixes: dcd49679fb3a ("dt-bindings: PCI: Fix 'unevaluatedProperties' warnings")
+>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>>> ---
+>>> This is another one Rob where I feel like I'm doing the wrong thing.
+>>> The Linux driver gets the child node without using the name, but
+>>> another OS etc could in theory (or reality), right?
+>>
+>> Yes and we had such cases when renaming device nodes caused regression.
+>> My interpretation is that node name is not part of ABI, so anyone
+>> depending on it made a mistake and they need to fix their stuff. I think
+>> actually that is really poor coding and poor solution to parse device
+>> node names and expect specific name.
+>>
+>> Other folks interpretation is that we never break the users of kernel,
+>> regardless what is documented in the ABI... so it depends. :)
+>>
+>> Here however it is not a device node name, but a property name (although
+>> still a node). Bindings require these to be specific, thus such name is
+>> a part of ABI.
+> 
+> Yup, pretty much aligned to my thoughts on this.
+> 
+>> For your case, I wonder why it was called "legacy-interrupt-controller"
+>> in the first place? Node names - also for properties - should be
+>> generic, so generic name is just "interrupt-controller".
+> 
+> I don't know. It's what we had in our internal tree prior to upstreaming.
+> "We" don't rely on the name for the Linux driver, so I am not really that
+> bothered if we change the binding or the dts.
 
-Fixes: 4ded69473adb ("PCI: mvebu: Propagate errors when updating PCI_IO_BASE and PCI_MEM_BASE registers")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pci/controller/pci-mvebu.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Then I propose to change the name in DTS.
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index c1ffdb06c971..00ea0836b81a 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -523,7 +523,7 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
- 
- 	/* Are the new iobase/iolimit values invalid? */
- 	if (conf->iolimit < conf->iobase ||
--	    conf->iolimitupper < conf->iobaseupper)
-+	    le16_to_cpu(conf->iolimitupper) < le16_to_cpu(conf->iobaseupper))
- 		return mvebu_pcie_set_window(port, port->io_target, port->io_attr,
- 					     &desired, &port->iowin);
- 
-@@ -535,10 +535,10 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
- 	 * is the CPU address.
- 	 */
- 	desired.remap = ((conf->iobase & 0xF0) << 8) |
--			(conf->iobaseupper << 16);
-+			le16_to_cpu(conf->iobaseupper << 16);
- 	desired.base = port->pcie->io.start + desired.remap;
- 	desired.size = ((0xFFF | ((conf->iolimit & 0xF0) << 8) |
--			 (conf->iolimitupper << 16)) -
-+			 le16_to_cpu(conf->iolimitupper << 16)) -
- 			desired.remap) +
- 		       1;
- 
-@@ -552,7 +552,7 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
- 	struct pci_bridge_emul_conf *conf = &port->bridge.conf;
- 
- 	/* Are the new membase/memlimit values invalid? */
--	if (conf->memlimit < conf->membase)
-+	if (le16_to_cpu(conf->memlimit) < le16_to_cpu(conf->membase))
- 		return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr,
- 					     &desired, &port->memwin);
- 
-@@ -562,8 +562,8 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
- 	 * window to setup, according to the PCI-to-PCI bridge
- 	 * specifications.
- 	 */
--	desired.base = ((conf->membase & 0xFFF0) << 16);
--	desired.size = (((conf->memlimit & 0xFFF0) << 16) | 0xFFFFF) -
-+	desired.base = ((le16_to_cpu(conf->membase) & 0xFFF0) << 16);
-+	desired.size = (((le16_to_cpu(conf->memlimit) & 0xFFF0) << 16) | 0xFFFFF) -
- 		       desired.base + 1;
- 
- 	return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr, &desired,
--- 
-2.20.1
-
+Best regards,
+Krzysztof
