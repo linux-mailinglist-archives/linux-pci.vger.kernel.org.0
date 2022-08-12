@@ -2,131 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED61590E3B
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 11:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E75FF590E48
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 11:41:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237967AbiHLJim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 05:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53658 "EHLO
+        id S237564AbiHLJlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 05:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232592AbiHLJik (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 05:38:40 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D14FAA3DA;
-        Fri, 12 Aug 2022 02:38:40 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id z16so564690wrh.12;
-        Fri, 12 Aug 2022 02:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc;
-        bh=ERTAjE4YBXwlIAPuQ54C7Q9lp+2azDksoI412fuEdqY=;
-        b=WE9+dHKahuSirjgmF6WXBaHxhhYsKgO2bSeBxRGrYgs38X9K6ev+KamaCiVxcj/uvA
-         j9K/6BXpNcRgyG/3UZ/uCKqeHMSlVBDh/O42Mu1j2vVlLeKD+OsvLAFTyi3uVRuhlTck
-         GvL1LYQxof0tQEXwClk/KKbROlRMQN+YiXCmIKu9WXg7zQvG/nl+WcxzRzwK0E4XM5wY
-         dctVdcnTlfnVxNnZLPIurd+gC0rL/5B3AlFSj2g4XxuhJp9JDsG4tfHhmyC8BFiGkzKW
-         PY1oJSXjDXjkg7EClEb2Rs4TiqPZSks2MgL2Jw64MU6fmYhsfsMuAmAUBkFrLKVjt5p9
-         pVlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=ERTAjE4YBXwlIAPuQ54C7Q9lp+2azDksoI412fuEdqY=;
-        b=3WkOR9ypDeredXsaySz4DWHIHjzy4f1BH8c2jL3HmI72dlFOfYQ9tliZRkUlT+6QT9
-         l+h0MeaGYPnPfhutqZHRzcTn7QBLVFYO7jgadvvT0zOFw0Vz1179vVtnr6hYbk4pREgx
-         S6hRqnwfwOtHTCWNv+SDBld0suZCABHEsIYlruLnasQZpbjqN1BJN1MCycH2xn59mXb/
-         ulL8NnBSQWy21CN/OwSiqr0tMJR3b32UGOgJUAcrlsdBlI2zozL8ZofYCg5w7UC958FT
-         FPgb9cmwp7HNAtl+xWWKVLoH4Kw5y0ibUFIrpXsB5OLf4/sz9XkFNG03CLwuM23av34e
-         BWwA==
-X-Gm-Message-State: ACgBeo2U3i8qNaMTd17i2F6gNLjiP9+jQRi1d5eyA5wMQufVv06x3Hba
-        XMQr3rZ7wIW3fj4j7HnFKa3BnGMGpQ4=
-X-Google-Smtp-Source: AA6agR4gihiQ5+Svk3TasYVDnVOKo7mZeeXtENUCd/WvNr3gUCwruGgcgmkD8EYL01EdKV2xOOzE8w==
-X-Received: by 2002:a5d:6da5:0:b0:222:4634:6a4e with SMTP id u5-20020a5d6da5000000b0022246346a4emr1628955wrs.172.1660297118487;
-        Fri, 12 Aug 2022 02:38:38 -0700 (PDT)
-Received: from gmail.com ([81.168.73.77])
-        by smtp.gmail.com with ESMTPSA id q64-20020a1c4343000000b003a2cf1ba9e2sm2235602wma.6.2022.08.12.02.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 02:38:37 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 10:38:35 +0100
-From:   Martin Habets <habetsm.xilinx@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, davem <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>, ecree.xilinx@gmail.com,
-        linux-pci@vger.kernel.org,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        mst <mst@redhat.com>
-Subject: Re: [PATCH net-next v2 0/2] sfc: Add EF100 BAR config support
-Message-ID: <YvYfmw44gpuqexYz@gmail.com>
-Mail-Followup-To: Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, davem <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>, ecree.xilinx@gmail.com,
-        linux-pci@vger.kernel.org,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        mst <mst@redhat.com>
-References: <165719918216.28149.7678451615870416505.stgit@palantir17.mph.net>
- <20220707155500.GA305857@bhelgaas>
- <Yswn7p+OWODbT7AR@gmail.com>
- <20220711114806.2724b349@kernel.org>
- <Ys6E4fvoufokIFqk@gmail.com>
- <20220713114804.11c7517e@kernel.org>
- <Ys/+vCNAfh/AKuJv@gmail.com>
- <20220714090500.356846ea@kernel.org>
- <CACGkMEt1qLsSf2Stn1YveW-HaDByiYFdCTzdsKESypKNbF=eTg@mail.gmail.com>
+        with ESMTP id S229942AbiHLJlW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 05:41:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD80F832C1;
+        Fri, 12 Aug 2022 02:41:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 88855B82381;
+        Fri, 12 Aug 2022 09:41:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065F7C433C1;
+        Fri, 12 Aug 2022 09:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660297279;
+        bh=55Efb2gdzPjhW+qOIM5Dyr4neXhJPdJKwm88KVCVi50=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mvbs34zQ+bawuchqVsh6v9z0FLxlCScGVfyftyUSFVrxxxKKdmVobpjOisREaxnIK
+         Y0IBKU9aHHcdj397eDM4ZR7e5l2ivB3TgOcO1wweWv16K2wy+CqBrKdbu98RDFl1nF
+         J/n68PgZQIEl2TEG4Q9Dc8UuC01BCM74V4vz+xGgr7WS7lv6PjsR4rgmwCJTi04whQ
+         JbigfVIEXzSLWYMwcGOZgECeV73s3TwMglkGKzJA8WppfyWPICSWXcj3TKEcPE5Z/2
+         hqc5+n0K9AzT6PP6VXQXxKt1svQ8DhIr5PNzuAdDfiwsIPNtnkYCmR1rhqRcAeQkCp
+         GUULC9xVN37rA==
+Received: by pali.im (Postfix)
+        id 396B09CF; Fri, 12 Aug 2022 11:41:16 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: mvebu: Fix endianity when accessing pci emul bridge members
+Date:   Fri, 12 Aug 2022 11:40:58 +0200
+Message-Id: <20220812094058.16141-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACGkMEt1qLsSf2Stn1YveW-HaDByiYFdCTzdsKESypKNbF=eTg@mail.gmail.com>
-X-Spam-Status: No, score=1.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_HELO_FAKE,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-FYI, during my holiday my colleagues found a way to use the vdpa tool for this.
-That means we should not need this series, at least for vDPA.
-So we can drop this series.
+PCI emul bridge members iolimitupper, iobaseupper, memlimit and membase are
+of type __le16, so correctly access these members via le16_to_cpu() macros.
 
-Thanks,
-Martin
+Fixes: 4ded69473adb ("PCI: mvebu: Propagate errors when updating PCI_IO_BASE and PCI_MEM_BASE registers")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/pci/controller/pci-mvebu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-On Wed, Aug 03, 2022 at 03:57:34PM +0800, Jason Wang wrote:
-> On Fri, Jul 15, 2022 at 12:05 AM Jakub Kicinski <kuba@kernel.org> wrote:
-> >
-> > On Thu, 14 Jul 2022 12:32:12 +0100 Martin Habets wrote:
-> > > > Okay. Indeed, we could easily bolt something onto devlink, I'd think
-> > > > but I don't know the space enough to push for one solution over
-> > > > another.
-> > > >
-> > > > Please try to document the problem and the solution... somewhere, tho.
-> > > > Otherwise the chances that the next vendor with this problem follows
-> > > > the same approach fall from low to none.
-> > >
-> > > Yeah, good point. The obvious thing would be to create a
-> > >  Documentation/networking/device_drivers/ethernet/sfc/sfc/rst
-> > > Is that generic enough for other vendors to find out, or there a better place?
-> >
-> > Documentation/vdpa.rst ? I don't see any kernel level notes on
-> > implementing vDPA perhaps virt folks can suggest something.
-> 
-> Not sure, since it's not a vDPA general thing but a vendor/parent
-> specific thing.
-> 
-> Or maybe Documentation/vdpa/sfc ?
-> 
-> Thanks
-> 
-> > I don't think people would be looking into driver-specific docs
-> > when trying to implement an interface, so sfc is not a great option
-> > IMHO.
-> >
-> > > I can do a follow-up patch for this.
-> >
-> > Let's make it part of the same series.
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index c1ffdb06c971..00ea0836b81a 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -523,7 +523,7 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+ 
+ 	/* Are the new iobase/iolimit values invalid? */
+ 	if (conf->iolimit < conf->iobase ||
+-	    conf->iolimitupper < conf->iobaseupper)
++	    le16_to_cpu(conf->iolimitupper) < le16_to_cpu(conf->iobaseupper))
+ 		return mvebu_pcie_set_window(port, port->io_target, port->io_attr,
+ 					     &desired, &port->iowin);
+ 
+@@ -535,10 +535,10 @@ static int mvebu_pcie_handle_iobase_change(struct mvebu_pcie_port *port)
+ 	 * is the CPU address.
+ 	 */
+ 	desired.remap = ((conf->iobase & 0xF0) << 8) |
+-			(conf->iobaseupper << 16);
++			le16_to_cpu(conf->iobaseupper << 16);
+ 	desired.base = port->pcie->io.start + desired.remap;
+ 	desired.size = ((0xFFF | ((conf->iolimit & 0xF0) << 8) |
+-			 (conf->iolimitupper << 16)) -
++			 le16_to_cpu(conf->iolimitupper << 16)) -
+ 			desired.remap) +
+ 		       1;
+ 
+@@ -552,7 +552,7 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+ 	struct pci_bridge_emul_conf *conf = &port->bridge.conf;
+ 
+ 	/* Are the new membase/memlimit values invalid? */
+-	if (conf->memlimit < conf->membase)
++	if (le16_to_cpu(conf->memlimit) < le16_to_cpu(conf->membase))
+ 		return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr,
+ 					     &desired, &port->memwin);
+ 
+@@ -562,8 +562,8 @@ static int mvebu_pcie_handle_membase_change(struct mvebu_pcie_port *port)
+ 	 * window to setup, according to the PCI-to-PCI bridge
+ 	 * specifications.
+ 	 */
+-	desired.base = ((conf->membase & 0xFFF0) << 16);
+-	desired.size = (((conf->memlimit & 0xFFF0) << 16) | 0xFFFFF) -
++	desired.base = ((le16_to_cpu(conf->membase) & 0xFFF0) << 16);
++	desired.size = (((le16_to_cpu(conf->memlimit) & 0xFFF0) << 16) | 0xFFFFF) -
+ 		       desired.base + 1;
+ 
+ 	return mvebu_pcie_set_window(port, port->mem_target, port->mem_attr, &desired,
+-- 
+2.20.1
+
