@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEC2F590CAA
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 09:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DB8590CDC
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Aug 2022 09:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236856AbiHLHmm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 03:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        id S237607AbiHLHwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Aug 2022 03:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236015AbiHLHml (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 03:42:41 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDC4A5C7A
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:42:39 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id x10so171067ljq.4
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:42:39 -0700 (PDT)
+        with ESMTP id S235743AbiHLHwP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 03:52:15 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A650901A7
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:52:14 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id s9so184560ljs.6
+        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 00:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc;
-        bh=sBayUxRV4uPcA67ScjufKHzSC2Zb9c963r0CFb87BtI=;
-        b=ZxmhqxbLyYEKBoaek1kELjS9zWam3584fB7+hC/D/yOL5VIzNTYK2p+l0hnDNec9la
-         PwxLpp7lD6asWrVMYpbxrj8CbVyUjv+NVMDvJQ01IIQ3ojDKu3SMAzbB9PvJGAfK3fCK
-         lkPqvEEQ8nOZyQOfiBSseOBQ7ZNyvByQ1xgfkWez5dbQam9X0jF7DEuJvdUItPIMj2D2
-         8ZDjhhQJFeNyqQOi02JzoFx5Kx2hfyqAuoAih/KeJAK3t/ha771sLC3pi1DeUhwxVRiF
-         9/iQ6NkHA47vsEsZ2Tl7BU0G13wAuZtxRxVCb6yhix5INR8JKJEsY1rHWI+KVd/0i0pu
-         9dSQ==
+        bh=Y1FgwE1S0sZxGVZfKzOP1495FUieOVb1Ijht3ICAFkg=;
+        b=mL0W5VC6YSoWJdmliy79TMTZKdBE0ndlkNHtLaGGwh6t3xDn+H2ok9auBHCeQ88/Pr
+         akeMAs/sbQxBsK39m3xjJHHbOo9x6yrGvlspQtODqTOgqChqdD1hKHnANPOhSTLnm00N
+         I7n/2QBlBqTZ+PBv4evi+qLwiJos6vXDlo8lmnSoajfFbooNbIXyWsIlBGu9hjERgQgc
+         QNt9VSW65T9PvyuMsZ17SkJBTzyXmqZkxIP1Y23gHfdCDPUI/sX0dvDVOFjE3qgRvQDO
+         dr8x/65eK7Yfl7khzi00d7fI15M5Gdm+HZ3zc9Q9OYpqKXmSFFrsiGwbsCCaY98pCNBC
+         lf4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc;
-        bh=sBayUxRV4uPcA67ScjufKHzSC2Zb9c963r0CFb87BtI=;
-        b=TqFX6+wAAEYQ2/fGbJbLDk4Ol+HhTBrmlw75Ib92nJt7Ml9EeRlLlp/fvOLzfND3Z0
-         uJEKXFtilkV2l2IvF6K6DlCWlw9xnV4mj035kwylwZSVvj+dDtyQtTmzmwcnQsbdOgrf
-         EOL5qfJmHGE9tt+8xEzc/fmRVWGniGQVnhWGW/y6WCmvSRtINnqfRtDMB3izWQcd6KrM
-         QMYxBGLL5eY7kwp7lN3QbO1chj13/DRuLQM22BxJskCEVuWvO3Ew/xnBbhHRH+bzZV3U
-         LOw9aCgguF0vyZqxue5y4RZc+Va+bm+SAEqkI0FSF4RDuA7y12PG7+8M/m6A1ybHToLU
-         k2aQ==
-X-Gm-Message-State: ACgBeo1lEEidb3vosAuQ6tLNlrfGHc7oDSrME+WAaiOXLTw50RQMhddZ
-        k0h3NIfDS0et2SX559SCGjESVA==
-X-Google-Smtp-Source: AA6agR5MQ83Hq/A33QupzFIOLxPxAA89VBM9ILO2jMHCQZcILllbnmG9wAY/i+GQ4ZHqX8XArqLi1Q==
-X-Received: by 2002:a2e:9941:0:b0:247:dce8:b0ec with SMTP id r1-20020a2e9941000000b00247dce8b0ecmr871902ljj.404.1660290158243;
-        Fri, 12 Aug 2022 00:42:38 -0700 (PDT)
+        bh=Y1FgwE1S0sZxGVZfKzOP1495FUieOVb1Ijht3ICAFkg=;
+        b=LprEo40jVkpyGJ4NEtsnnjK/F6WXzcxZ2IDuAyvU7XdaAooI+2949dgXduM/O2+KHt
+         maNX3UeLo0gXKGFaA4eQpqVH4sjURc8qUWLdyzks9Xb8JFKg/BZxw+5lzTCRZuWKbgro
+         hC24VkbljEnRWirx/SxBayzXnIsy3XB7SyMZEtycnYTziB2dZNOd6Cz8qpcMdjYoaUl5
+         /dfr+HrYXUn2Qh7W7B1RHui/8HjS467jg1JwUTmTiYIgJIqn+QwhKYY3Brd09Ab6gIJl
+         OaQ2GDOo6IszaWVxG8mwU7I9AnqvDARPhmVcUEO76L35CJWyLNFXXF5QDkKXzheeESPs
+         KWEA==
+X-Gm-Message-State: ACgBeo1RsPphahQp6I7bpNxz9sGh+t/nUohdkJYK1HGSQxiUjfPFGXDP
+        rXviYMPLBbm4P/dQWGM5skw2+Q==
+X-Google-Smtp-Source: AA6agR7ieagGDwa45zL3pLJwwj3Fc73INAw9s0I68eA2wdC3N+LrYS0gii7eVHf8+1bD5EKhkVFLpQ==
+X-Received: by 2002:a2e:bd89:0:b0:25a:9386:75d0 with SMTP id o9-20020a2ebd89000000b0025a938675d0mr866830ljq.431.1660290732392;
+        Fri, 12 Aug 2022 00:52:12 -0700 (PDT)
 Received: from [192.168.1.39] ([83.146.140.105])
-        by smtp.gmail.com with ESMTPSA id b19-20020a056512071300b0048b16fb79a0sm118602lfs.214.2022.08.12.00.42.34
+        by smtp.gmail.com with ESMTPSA id i27-20020ac25b5b000000b0048b18fb378fsm124440lfp.119.2022.08.12.00.52.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Aug 2022 00:42:37 -0700 (PDT)
-Message-ID: <721ccb76-c162-30ee-68cc-3316a2d62554@linaro.org>
-Date:   Fri, 12 Aug 2022 10:42:28 +0300
+        Fri, 12 Aug 2022 00:52:11 -0700 (PDT)
+Message-ID: <edf3da1b-79dc-4e09-8d3e-73aca09e847f@linaro.org>
+Date:   Fri, 12 Aug 2022 10:52:02 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH 3/4] dt-bindings: PCI: microchip,pcie-host: fix incorrect
- child node name
+Subject: Re: [PATCH 4/4] dt-bindings: PCI: microchip,pcie-host: fix missing
+ address translation property
 Content-Language: en-US
 To:     Conor Dooley <mail@conchuod.ie>,
         Daire McNamara <daire.mcnamara@microchip.com>,
@@ -71,9 +71,9 @@ To:     Conor Dooley <mail@conchuod.ie>,
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 References: <20220811203306.179744-1-mail@conchuod.ie>
- <20220811203306.179744-4-mail@conchuod.ie>
+ <20220811203306.179744-5-mail@conchuod.ie>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220811203306.179744-4-mail@conchuod.ie>
+In-Reply-To: <20220811203306.179744-5-mail@conchuod.ie>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -89,54 +89,63 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On 11/08/2022 23:33, Conor Dooley wrote:
 > From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> v2022.08 of dt-schema improved checking of unevaluatedProperties, and
-> exposed a previously unseen warning for the PCIe controller's interrupt
-> controller node name:
+> When the PCI controller node was added to the PolarFire SoC dtsi,
+> dt-schema was not able to detect the presence of some undocumented
+> properties due to how it handled unevaluatedProperties. v2022.08
+> introduces better validation, producing the following error:
 > 
-> arch/riscv/boot/dts/microchip/mpfs-icicle-kit.dtb: pcie@2000000000: Unevaluated properties are not allowed ('clock-names', 'clocks', 'legacy-interrupt-controller', 'microchip,axi-m-atr0' were unexpected)
+> arch/riscv/boot/dts/microchip/mpfs-polarberry.dtb: pcie@2000000000: Unevaluated properties are not allowed ('clock-names', 'microchip,axi-m-atr0' were unexpected)
 >         From schema: Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 > 
-> Make the property in the binding match the node name actually used in
-> the dts.
-> 
-> Fixes: dcd49679fb3a ("dt-bindings: PCI: Fix 'unevaluatedProperties' warnings")
+> Fixes: 528a5b1f2556 ("riscv: dts: microchip: add new peripherals to icicle kit device tree")
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
-> This is another one Rob where I feel like I'm doing the wrong thing.
-> The Linux driver gets the child node without using the name, but
-> another OS etc could in theory (or reality), right?
+> I feel like there's a pretty good chance that this is not the way this
+> should have been done and the property should be marked as deprecated
+> but I don't know enough about PCI to answer that.
 
-Yes and we had such cases when renaming device nodes caused regression.
-My interpretation is that node name is not part of ABI, so anyone
-depending on it made a mistake and they need to fix their stuff. I think
-actually that is really poor coding and poor solution to parse device
-node names and expect specific name.
+It seems bindings were added incomplete and now based on DTS (which did
+not match bindings), we keep adding "missing" properties. I don't think
+it is good. It creates a precedence where someone might intentionally
+sneak limited bindings (without controversial property) and later claim
+"I forgot to include foo,bar".
 
-Other folks interpretation is that we never break the users of kernel,
-regardless what is documented in the ABI... so it depends. :)
-
-Here however it is not a device node name, but a property name (although
-still a node). Bindings require these to be specific, thus such name is
-a part of ABI.
-
-For your case, I wonder why it was called "legacy-interrupt-controller"
-in the first place? Node names - also for properties - should be
-generic, so generic name is just "interrupt-controller".
+Therefore the property should pass review just like it is newly added
+property.
 
 > ---
->  .../devicetree/bindings/pci/microchip,pcie-host.yaml          | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/pci/microchip,pcie-host.yaml  | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-> index 2a2166f09e2c..9b123bcd034c 100644
+> index 9b123bcd034c..9ac34b33c4b2 100644
 > --- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 > +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-> @@ -71,7 +71,7 @@ properties:
+> @@ -71,6 +71,17 @@ properties:
 >    msi-parent:
 >      description: MSI controller the device is capable of using.
 >  
-> -  interrupt-controller:
-> +  legacy-interrupt-controller:
+> +  microchip,axi-m-atr0:
+
+Name is not helping. If it is offset, add such suffix (see
+brcm,iproc-pcie.yaml).
+
+Unfortunately I don't know PCIe good enough to judge whether the
+property makes any sense or some other ranges-style should be used.
+
+> +    description: |
+> +      Depending on the FPGA bitstream, the AXIM address translation table in the
+> +      PCIe controllers bridge layer may need to be configured. Use this property
+> +      to set the address offset. For more information, see Section 1.3.3,
+> +      "PCIe/AXI4 Address Translation" of the PolarFire SoC PCIe User Guide:
+> +      https://www.microsemi.com/document-portal/doc_download/1245812-polarfire-fpga-and-polarfire-soc-fpga-pci-express-user-guide
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    minItems: 2
+
+minItems should not be needed, but you should instead describe the items
+in the matrix.
+
+> +    maxItems: 2
 
 
 Best regards,
