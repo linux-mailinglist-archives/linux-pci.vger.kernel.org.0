@@ -2,111 +2,658 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A96B25917AC
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Aug 2022 01:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76C2E591989
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Aug 2022 11:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbiHLXzE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Aug 2022 19:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
+        id S233599AbiHMJTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 Aug 2022 05:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiHLXzD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Aug 2022 19:55:03 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7580966A5D
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 16:55:02 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id e205so3505643ybb.2
-        for <linux-pci@vger.kernel.org>; Fri, 12 Aug 2022 16:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=bLYym+odgwpeMFEmoqhG8B5fPLIFcCkrvxdH9rfX5Zs=;
-        b=cIB+N9SLj46PFP0BruIvmlALxQc65JJRFAatZOB4CG/kzZ7UV7GwHsM0W0lxs6PNhY
-         TxFJGsAqouPVGMODYR2lV6WW7s4F+Gya2Vbm12qsmtEI4OqzW74uw0zOoRFowqzKs1jI
-         AaMxnqkyLfkhhcujJneCJ860l3D8UMn+hZwLB6WwivqUd5aSgVJDDsYQYUaa2Vu3Y9Ta
-         /iKXCo9PujQ5eC7/P3Em7zq6XoSlGQDnG6bEqZtr2fwNQ4C6URfOmOitwTm43EG/LesS
-         58mb26NTVY+u1NBvDcVnud2NuTw1AjwpGZ7J7mjEa5r7mggac5G8WK0PSSdbJo5nlSoj
-         qFyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=bLYym+odgwpeMFEmoqhG8B5fPLIFcCkrvxdH9rfX5Zs=;
-        b=Isi7XYpf5MPpnouk15ilJQLgNE14qHhV0hE0KOpXoWroL2x8MB/jqntBGcChWD1OaF
-         DBnevq7l19PGEqvgqTizGIBeG/rOArmfXIavULVQwPZ8hSyspqxoW515ctJhsfUmn63G
-         8ghWtblkzbeP+Y6QyzWhHNFczRvIQxP6OafiFW4W5hRAYl6lE+eGDfIvQN+VSG7XR5OD
-         zYWRAJgs5DHNZodxgzicMLqmK0L15yiWy9cJBJRQMFOpGPsjWY+YUFBSgKLqvMCk457g
-         LWfQzfzHkVSuQ4P3i6mUYx8v2vXyOAo8lHsWIhJr8skDivPA8A8g0lgfx3Llcr72hWQS
-         qnbQ==
-X-Gm-Message-State: ACgBeo0/YHYghg0T/A/3Z4mF313T+XMxkqYVrQsgSa9UzhbyuViD8S+/
-        ZaJ/94dXwcVJwVz9njjDgv7RAeLa+wvdfTfNbK/enQ==
-X-Google-Smtp-Source: AA6agR7By7pr6dtco57EwxJaAqWzVc8fkjbB5JVPyrYeu66yWySpSHhjwVyqm88zTSJYzWqMd3r8KjybpgN/ilA/kCU=
-X-Received: by 2002:a05:6902:2cb:b0:684:aebe:49ab with SMTP id
- w11-20020a05690202cb00b00684aebe49abmr2011800ybh.242.1660348501605; Fri, 12
- Aug 2022 16:55:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <62eed399.170a0220.2503a.1c64@mx.google.com> <YvEAF1ZvFwkNDs01@sirena.org.uk>
- <deda4eb1592cb61504c9d42765998653@walle.cc> <YvEEidOZ62igUYrR@sirena.org.uk>
-In-Reply-To: <YvEEidOZ62igUYrR@sirena.org.uk>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 12 Aug 2022 16:54:25 -0700
-Message-ID: <CAGETcx_JSViBcySNp+Rany2osBiKL7ON+tooPKW8TOTP6+t_HA@mail.gmail.com>
-Subject: Re: next/master bisection: baseline.bootrr.intel-igb-probed on kontron-pitx-imx8m
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Michael Walle <michael@walle.cc>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernelci-results@groups.io, bot@kernelci.org,
-        gtucker@collabora.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229507AbiHMJTO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Aug 2022 05:19:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3631EED3;
+        Sat, 13 Aug 2022 02:19:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 08CB560B83;
+        Sat, 13 Aug 2022 09:19:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 114B5C433D6;
+        Sat, 13 Aug 2022 09:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660382348;
+        bh=4MwwNe7RUPDBGPKVJsIcGlFLY/HjKbCPUTluCRyzFLU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CD6iW46YaWd6s+XlsU3yNClwvgWWaBYlrUAZxMvND4IjSXEfxTD9sKY1m4boXjPL5
+         ltwenaS/VjseyWjHEpqfPbrS2ef6DqO+JF4BbDt2EkI2XvPzdxss6C7z3N0VLuKJul
+         Ts9iN8TBf6RQZbldY4A+P1idGwTJr2ZzV/ngwmRx3b++f47dBuAd0H6nE+4OtrJt1+
+         AwT78Z35ZqwYtDJFN7sQZtdm0yvxIpj+/YWMoG+7uG+oBjOpI8ruvvMcjPoGMA18X6
+         hZXGpw3g1xkLRFse4H4Eyt9hgpFKhMrwqu+GKRhmEeWHa2uOtX+1lP0I9+zfn1ZvJZ
+         5dvfO4HgvXwog==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oMnIP-002h5K-P4;
+        Sat, 13 Aug 2022 10:19:05 +0100
+Date:   Sat, 13 Aug 2022 10:19:01 +0100
+Message-ID: <875yiwsdq2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     tglx@linutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
+        kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com
+Subject: Re: [PATCH v4 2/4] irqchip: imx mu worked as msi controller
+In-Reply-To: <20220812215242.2255824-3-Frank.Li@nxp.com>
+References: <20220812215242.2255824-1-Frank.Li@nxp.com>
+        <20220812215242.2255824-3-Frank.Li@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 5:41 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Aug 08, 2022 at 02:35:38PM +0200, Michael Walle wrote:
-> > Am 2022-08-08 14:22, schrieb Mark Brown:
-> > > On Sat, Aug 06, 2022 at 01:48:25PM -0700, KernelCI bot wrote:
->
-> > > The KernelCI bisection bot found that 5a46079a96451 "PM: domains: Delete
-> > > usage of driver_deferred_probe_check_state()" triggered a failure to
-> > > probe the PCI controller or attached ethernet on kontron-pitx-imx8m.
-> > > There's no obvious errors in the boot log when things fail, we simply
-> > > don't see any of the announcements from the PCI controller probe like we
-> > > do on a working boot:
->
-> > I guess that is the same as:
-> > https://lore.kernel.org/lkml/Yr3vEDDulZj1Dplv@sirena.org.uk/
+Frank,
 
-Yeah, that series caused a bunch of breakages. So I sent a revert
-series and then started working on the proper fix. I sent out the
-proper fix a few days ago. Can anyone give this a shot?
+The patch title needs work:
 
-[1-] https://lore.kernel.org/lkml/20220810060040.321697-1-saravanak@google.com/
+"irqchip: Add IMX MU MSI controller driver"
 
-Mark,
+On Fri, 12 Aug 2022 22:52:40 +0100,
+Frank Li <Frank.Li@nxp.com> wrote:
+> 
+> MU support generate irq by write data to a register.
 
-While you are here, I'm working towards patches on top of [1] where
-fw_devlink will tie the sync_state() callback to each regulator. Also,
-i realized that if you can convert the regulator_class to a
-regulator_bus, we could remove a lot of the "find the supply for this
-regulator when it's registered" code and let device links handle it.
-Let me know if that's something you'd be okay with. It would change
-the sysfs path for /sys/class/regulator and moves it to
-/sys/bus/regulator, but not sure if that's considered an ABI breakage
-(sysfs paths change all the time).
+"The MU block found in a number of Freescale/NXP SoCs supports
+generating IRQs by writing data to a register."
 
--Saravana
+> This patch make mu worked as msi controller.
+
+Please see Documentation/process/submitting-patches.rst, and the
+requirement to avoid wordings such as "This patch".
+
+> So MU can do doorbell by using standard msi api.
+
+"This enables the MU block to be used as a MSI controller, by
+leveraging the platform-MSI API"
 
 >
-> Looks plausible, yes.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/irqchip/Kconfig          |   7 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-imx-mu-msi.c | 443 +++++++++++++++++++++++++++++++
+>  3 files changed, 451 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-mu-msi.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 5e4e50122777d..4599471d880c0 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -470,6 +470,13 @@ config IMX_INTMUX
+>  	help
+>  	  Support for the i.MX INTMUX interrupt multiplexer.
+>  
+> +config IMX_MU_MSI
+> +	bool "i.MX MU work as MSI controller"
+> +	default y if ARCH_MXC
+> +	select IRQ_DOMAIN
+> +	help
+> +	  MU work as MSI controller to do general doorbell
+> +
+>  config LS1X_IRQ
+>  	bool "Loongson-1 Interrupt Controller"
+>  	depends on MACH_LOONGSON32
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 5d8e21d3dc6d8..870423746c783 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -98,6 +98,7 @@ obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
+>  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+>  obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+>  obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
+> +obj-$(CONFIG_IMX_MU_MSI)		+= irq-imx-mu-msi.o
+>  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-msi.c
+> new file mode 100644
+> index 0000000000000..bb111412d598f
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-mu-msi.c
+> @@ -0,0 +1,443 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * NXP MU worked as MSI controller
+
+Freescale? Or NXP? Please make up your mind.
+
+> + *
+> + * Copyright (c) 2018 Pengutronix, Oleksij Rempel <o.rempel@pengutronix.de>
+> + * Copyright 2022 NXP
+> + *	Frank Li <Frank.Li@nxp.com>
+> + *	Peng Fan <peng.fan@nxp.com>
+> + *
+> + * Based on drivers/mailbox/imx-mailbox.c
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/dma-iommu.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/pm_domain.h>
+> +
+> +
+> +#define IMX_MU_CHANS            4
+> +
+> +enum imx_mu_xcr {
+> +	IMX_MU_GIER,
+> +	IMX_MU_GCR,
+> +	IMX_MU_TCR,
+> +	IMX_MU_RCR,
+> +	IMX_MU_xCR_MAX,
+> +};
+> +
+> +enum imx_mu_xsr {
+> +	IMX_MU_SR,
+> +	IMX_MU_GSR,
+> +	IMX_MU_TSR,
+> +	IMX_MU_RSR,
+> +};
+> +
+> +enum imx_mu_type {
+> +	IMX_MU_V1 = BIT(0),
+> +	IMX_MU_V2 = BIT(1),
+> +	IMX_MU_V2_S4 = BIT(15),
+> +};
+> +
+> +/* Receive Interrupt Enable */
+> +#define IMX_MU_xCR_RIEn(data, x) ((data->cfg->type) & IMX_MU_V2 ? BIT(x) : BIT(24 + (3 - (x))))
+> +#define IMX_MU_xSR_RFn(data, x) ((data->cfg->type) & IMX_MU_V2 ? BIT(x) : BIT(24 + (3 - (x))))
+> +
+> +struct imx_mu_dcfg {
+> +	enum imx_mu_type type;
+> +	u32     xTR;            /* Transmit Register0 */
+> +	u32     xRR;            /* Receive Register0 */
+> +	u32     xSR[4];         /* Status Registers */
+> +	u32     xCR[4];         /* Control Registers */
+> +};
+> +
+> +struct imx_mu_msi {
+> +	spinlock_t			lock;
+> +	struct platform_device		*pdev;
+
+This pointer isn't useful. It is only used in
+imx_mu_msi_domains_init(), which could take it as a parameter.
+
+> +	struct irq_domain		*parent;
+
+This pointer isn't useful. It is only used in the same function, and
+could well be a local variable.
+
+> +	struct irq_domain		*msi_domain;
+> +	void __iomem			*regs;
+> +	phys_addr_t			msiir_addr;
+> +	const struct imx_mu_dcfg	*cfg;
+> +	unsigned long			used;
+> +	int				gic_irq;
+
+This variable is only used in a single function.
+
+> +	struct clk			*clk;
+> +	struct device			*pd_a;
+> +	struct device			*pd_b;
+> +	struct device_link		*pd_link_a;
+> +	struct device_link		*pd_link_b;
+
+Same thing. All this pd_* stuff is *never* used outside of a single
+function.
+
+> +};
+> +
+> +static void imx_mu_write(struct imx_mu_msi *msi_data, u32 val, u32 offs)
+> +{
+> +	iowrite32(val, msi_data->regs + offs);
+> +}
+> +
+> +static u32 imx_mu_read(struct imx_mu_msi *msi_data, u32 offs)
+> +{
+> +	return ioread32(msi_data->regs + offs);
+> +}
+> +
+> +static u32 imx_mu_xcr_rmw(struct imx_mu_msi *msi_data, enum imx_mu_xcr type, u32 set, u32 clr)
+> +{
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	spin_lock_irqsave(&msi_data->lock, flags);
+
+This needs to be a raw spinlock.
+
+> +	val = imx_mu_read(msi_data, msi_data->cfg->xCR[type]);
+> +	val &= ~clr;
+> +	val |= set;
+> +	imx_mu_write(msi_data, val, msi_data->cfg->xCR[type]);
+> +	spin_unlock_irqrestore(&msi_data->lock, flags);
+> +
+> +	return val;
+> +}
+> +
+> +static void imx_mu_msi_parent_mask_irq(struct irq_data *data)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +	imx_mu_xcr_rmw(msi_data, IMX_MU_RCR, 0, IMX_MU_xCR_RIEn(msi_data, data->hwirq));
+> +}
+> +
+> +static void imx_mu_msi_parent_unmask_irq(struct irq_data *data)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +	imx_mu_xcr_rmw(msi_data, IMX_MU_RCR, IMX_MU_xCR_RIEn(msi_data, data->hwirq), 0);
+> +}
+> +
+> +static void imx_mu_msi_parent_ack_irq(struct irq_data *data)
+> +{
+> +        struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +        imx_mu_read(msi_data, msi_data->cfg->xRR + data->hwirq * 4);
+> +}
+> +
+> +static struct irq_chip imx_mu_msi_irq_chip = {
+> +	.name = "MU-MSI",
+> +	.irq_ack = irq_chip_ack_parent,
+
+Crucially, no irq_write_msi_msg callback. So we happily inherit
+platform_msi_write_msg() and use the per descriptor write_msg()
+callback. Who sets this? Nobody.
+
+So I suspect you're hiding it somewhere else, and I really want to see
+this code. I really don't see a good reason why it should be anywhere
+else.
+
+> +};
+> +
+> +static struct msi_domain_ops imx_mu_msi_irq_ops = {
+> +};
+> +
+> +static struct msi_domain_info imx_mu_msi_domain_info = {
+> +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+> +	.ops	= &imx_mu_msi_irq_ops,
+> +	.chip	= &imx_mu_msi_irq_chip,
+> +};
+> +
+> +static void imx_mu_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +	u64 addr = msi_data->msiir_addr + 4 * data->hwirq;
+> +
+> +	msg->address_hi = upper_32_bits(addr);
+> +	msg->address_lo = lower_32_bits(addr);
+> +	msg->data = data->hwirq;
+> +}
+> +
+> +static struct irq_chip imx_mu_msi_parent_chip = {
+> +	.name		= "MU",
+> +	.irq_mask	= imx_mu_msi_parent_mask_irq,
+> +	.irq_unmask	= imx_mu_msi_parent_unmask_irq,
+> +	.irq_ack	= imx_mu_msi_parent_ack_irq,
+> +	.irq_compose_msi_msg	= imx_mu_msi_compose_msg,
+
+Please be consistent in the naming.
+
+> +};
+> +
+> +static int imx_mu_msi_domain_irq_alloc(struct irq_domain *domain,
+> +					unsigned int virq,
+> +					unsigned int nr_irqs,
+> +					void *args)
+> +{
+> +	struct imx_mu_msi *msi_data = domain->host_data;
+> +	unsigned long flags;
+> +	int pos, err = 0;
+> +
+> +	WARN_ON(nr_irqs != 1);
+> +
+> +	spin_lock_irqsave(&msi_data->lock, flags);
+> +	pos = find_first_zero_bit(&msi_data->used, IMX_MU_CHANS);
+> +	if (pos < IMX_MU_CHANS)
+> +		__set_bit(pos, &msi_data->used);
+> +	else
+> +		err = -ENOSPC;
+> +	spin_unlock_irqrestore(&msi_data->lock, flags);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	irq_domain_set_info(domain, virq, pos,
+> +			    &imx_mu_msi_parent_chip, msi_data,
+> +			    handle_edge_irq, NULL, NULL);
+> +	return 0;
+> +}
+> +
+> +static void imx_mu_msi_domain_irq_free(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&msi_data->lock, flags);
+> +	__clear_bit(d->hwirq, &msi_data->used);
+> +	spin_unlock_irqrestore(&msi_data->lock, flags);
+> +}
+> +
+> +static const struct irq_domain_ops imx_mu_msi_domain_ops = {
+> +	.alloc	= imx_mu_msi_domain_irq_alloc,
+> +	.free	= imx_mu_msi_domain_irq_free,
+> +};
+> +
+> +static void imx_mu_msi_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_desc_get_handler_data(desc);
+> +	u32 status;
+> +	int i;
+> +
+> +	status = imx_mu_read(msi_data, msi_data->cfg->xSR[IMX_MU_RSR]);
+> +
+> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
+> +	for (i = 0; i < IMX_MU_CHANS; i++) {
+> +		if (status & IMX_MU_xSR_RFn(msi_data, i)) {
+> +			generic_handle_domain_irq(msi_data->msi_domain, i);
+> +		}
+> +	}
+> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
+
+Do yourself a favour, and compute irq_desc_get_chip(desc) once, just
+like for most irqchips.
+
+> +}
+> +
+> +static int imx_mu_msi_domains_init(struct imx_mu_msi *msi_data)
+> +{
+> +	struct fwnode_handle *fwnodes = of_node_to_fwnode(dev_of_node(&msi_data->pdev->dev));
+
+How about dev_fwnode()?
+
+> +
+> +	/* Initialize MSI domain parent */
+> +	msi_data->parent = irq_domain_create_linear(fwnodes,
+> +						    IMX_MU_CHANS,
+> +						    &imx_mu_msi_domain_ops,
+> +						    msi_data);
+
+Consider setting the bus_token attribute for this domain to something
+that isn't the default, as it otherwise clashes with the following
+creation.
+
+> +	if (!msi_data->parent) {
+> +		dev_err(&msi_data->pdev->dev, "failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	msi_data->msi_domain = platform_msi_create_irq_domain(
+> +				of_node_to_fwnode(msi_data->pdev->dev.of_node),
+
+Why aren't you using the 'fwnodes' variable here?
+
+> +				&imx_mu_msi_domain_info,
+> +				msi_data->parent);
+> +
+> +	if (!msi_data->msi_domain) {
+> +		dev_err(&msi_data->pdev->dev, "failed to create MSI domain\n");
+> +		irq_domain_remove(msi_data->parent);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* clean irq_set_affinity again because it is chained irq */
+> +	imx_mu_msi_irq_chip.irq_set_affinity = NULL;
+
+NAK. The way to do this is to provide a callback that returns -EINVAL,
+not to try and adjust things after the facts.
+
+> +
+> +	irq_domain_set_pm_device(msi_data->msi_domain, &msi_data->pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Register offset of different version MU IP */
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
+> +	.xTR    = 0x0,
+> +	.xRR    = 0x10,
+> +	.xSR    = {0x20, 0x20, 0x20, 0x20},
+> +	.xCR    = {0x24, 0x24, 0x24, 0x24},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
+> +	.xTR    = 0x20,
+> +	.xRR    = 0x40,
+> +	.xSR    = {0x60, 0x60, 0x60, 0x60},
+> +	.xCR    = {0x64, 0x64, 0x64, 0x64},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp = {
+> +	.type   = IMX_MU_V2,
+> +	.xTR    = 0x200,
+> +	.xRR    = 0x280,
+> +	.xSR    = {0xC, 0x118, 0x124, 0x12C},
+> +	.xCR    = {0x110, 0x114, 0x120, 0x128},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp_s4 = {
+> +
+> +	.type   = IMX_MU_V2 | IMX_MU_V2_S4,
+> +	.xTR    = 0x200,
+> +	.xRR    = 0x280,
+> +	.xSR    = {0xC, 0x118, 0x124, 0x12C},
+> +	.xCR    = {0x110, 0x114, 0x120, 0x128},
+> +};
+> +
+> +static int __init imx_mu_of_init(struct device_node *dn,
+> +				 struct device_node *parent,
+> +				 const struct imx_mu_dcfg *cfg)
+> +{
+> +	struct platform_device *pdev = of_find_device_by_node(dn);
+> +	struct imx_mu_msi *msi_data, *priv;
+> +	struct resource *res;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	if (!pdev)
+> +		return -ENODEV;
+> +
+> +	dev = &pdev->dev;
+> +
+> +	priv = msi_data = devm_kzalloc(&pdev->dev, sizeof(*msi_data), GFP_KERNEL);
+> +	if (!msi_data)
+> +		return -ENOMEM;
+> +
+> +	msi_data->cfg = cfg;
+> +
+> +	msi_data->regs = devm_platform_ioremap_resource_byname(pdev, "a");
+> +	if (IS_ERR(msi_data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize 'regs'\n");
+> +		return PTR_ERR(msi_data->regs);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "b");
+> +	if (!res)
+> +		return -EIO;
+> +
+> +	msi_data->msiir_addr = res->start + msi_data->cfg->xTR;
+> +
+> +	msi_data->pdev = pdev;
+> +
+> +	msi_data->gic_irq = platform_get_irq(msi_data->pdev, 0);
+> +	if (msi_data->gic_irq <= 0)
+> +		return -ENODEV;
+> +
+> +	platform_set_drvdata(pdev, msi_data);
+> +
+> +	msi_data->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(msi_data->clk)) {
+> +		if (PTR_ERR(msi_data->clk) != -ENOENT)
+> +			return PTR_ERR(msi_data->clk);
+> +
+> +		msi_data->clk = NULL;
+> +	}
+> +
+> +	ret = clk_prepare_enable(msi_data->clk);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	priv->pd_a = dev_pm_domain_attach_by_name(dev, "a");
+
+I'm sorry, but you'll have to come up with something slightly more
+descriptive than "a" or "b". At least add a qualifier to it. Same
+thing for the DT by the way.
+
+> +	if (IS_ERR(priv->pd_a))
+> +		return PTR_ERR(priv->pd_a);
+> +
+> +	priv->pd_link_a = device_link_add(dev, priv->pd_a,
+> +			DL_FLAG_STATELESS |
+> +			DL_FLAG_PM_RUNTIME |
+> +			DL_FLAG_RPM_ACTIVE);
+> +
+> +	if (!priv->pd_link_a) {
+> +		dev_err(dev, "Failed to add device_link to mu a.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv->pd_b = dev_pm_domain_attach_by_name(dev, "b");
+> +	if (IS_ERR(priv->pd_b))
+> +		return PTR_ERR(priv->pd_b);
+> +
+> +	priv->pd_link_b = device_link_add(dev, priv->pd_b,
+> +			DL_FLAG_STATELESS |
+> +			DL_FLAG_PM_RUNTIME |
+> +			DL_FLAG_RPM_ACTIVE);
+> +
+> +	if (!priv->pd_link_b) {
+> +		dev_err(dev, "Failed to add device_link to mu a.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = imx_mu_msi_domains_init(msi_data);
+> +	if (ret)
+> +		return ret;
+
+How about the clocks, the links, and everything else that has been
+allocated, enabled?
+
+> +
+> +	irq_set_chained_handler_and_data(msi_data->gic_irq,
+> +					 imx_mu_msi_irq_handler,
+> +					 msi_data);
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx_mu_runtime_suspend(struct device *dev)
+> +{
+> +	struct imx_mu_msi *priv = dev_get_drvdata(dev);
+> +
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx_mu_runtime_resume(struct device *dev)
+> +{
+> +	struct imx_mu_msi *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret)
+> +		dev_err(dev, "failed to enable clock\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct dev_pm_ops imx_mu_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(imx_mu_runtime_suspend,
+> +			   imx_mu_runtime_resume, NULL)
+> +};
+> +
+> +static int __init imx_mu_imx7ulp_of_init(struct device_node *dn,
+> +					 struct device_node *parent)
+> +{
+> +	return imx_mu_of_init(dn, parent, &imx_mu_cfg_imx7ulp);
+> +}
+> +
+> +static int __init imx_mu_imx6sx_of_init(struct device_node *dn,
+> +					struct device_node *parent)
+> +{
+> +	return imx_mu_of_init(dn, parent, &imx_mu_cfg_imx6sx);
+> +}
+> +
+> +static int __init imx_mu_imx8ulp_of_init(struct device_node *dn,
+> +					 struct device_node *parent)
+> +{
+> +	return imx_mu_of_init(dn, parent, &imx_mu_cfg_imx8ulp);
+> +}
+> +
+> +static int __init imx_mu_imx8ulp_s4_of_init(struct device_node *dn,
+> +					    struct device_node *parent)
+> +{
+> +	return imx_mu_of_init(dn, parent, &imx_mu_cfg_imx8ulp_s4);
+> +}
+> +
+> +IRQCHIP_PLATFORM_DRIVER_BEGIN(imx_mu_msi)
+> +IRQCHIP_MATCH("fsl,imx7ulp-mu-msi", imx_mu_imx7ulp_of_init)
+> +IRQCHIP_MATCH("fsl,imx6sx-mu-msi", imx_mu_imx6sx_of_init)
+> +IRQCHIP_MATCH("fsl,imx8ulp-mu-msi", imx_mu_imx8ulp_of_init)
+> +IRQCHIP_MATCH("fsl,imx8ulp-mu-msi-s4", imx_mu_imx8ulp_s4_of_init)
+> +IRQCHIP_PLATFORM_DRIVER_END(imx_mu_msi, .pm = &imx_mu_pm_ops)
+> +
+> +
+> +MODULE_AUTHOR("Frank Li <Frank.Li@nxp.com>");
+> +MODULE_DESCRIPTION("Freescale MU work as MSI controller driver");
+
+Please come up with a better description. Something like
+"Freescale MU MSI controller driver"
+
+> +MODULE_LICENSE("GPL");
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
