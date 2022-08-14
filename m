@@ -2,48 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD1F359206C
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Aug 2022 17:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7705059207A
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Aug 2022 17:27:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231791AbiHNPYs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Aug 2022 11:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        id S239928AbiHNP1r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Aug 2022 11:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231681AbiHNPYr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Aug 2022 11:24:47 -0400
+        with ESMTP id S239624AbiHNP1h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Aug 2022 11:27:37 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A770D65FC;
-        Sun, 14 Aug 2022 08:24:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EF0AE62;
+        Sun, 14 Aug 2022 08:27:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 45314B80B27;
-        Sun, 14 Aug 2022 15:24:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB55C433C1;
-        Sun, 14 Aug 2022 15:24:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1A1E6B80B27;
+        Sun, 14 Aug 2022 15:27:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4449C433C1;
+        Sun, 14 Aug 2022 15:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660490682;
-        bh=XoTiZoUVZX4pd9WYhnysuZkslFJxFicRZdPAq2tGTyg=;
+        s=k20201202; t=1660490852;
+        bh=5GyLM1CyVv10Ove+YIIf3oMlmnKfA55OKySxx0jDfxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qY8jbHtDgFw+1QDEpQXs29aR9mg2W/H3kXt4M2OTl/PBSFo90AHNcf6yZv2InJ57Q
-         RwLI2RlwJx9UuKmGe76eqkoXymSLuoW7Yh5WUDuEuIOuUecBJt+Njz3b46O0Q+3ZG7
-         Sq/VI9csD/HF3tnbSv1rMdKf9D3oEFb92x39gCmwWSLbqiOkcmeMgSvDKZsMzM97+n
-         W0COnuCX024WS+lQez0VOfpRn23GOKGUzvLjZLiptqwx9/PMoQ6z/vg9Mcnjj5+n9J
-         p4KvVNnLjMNFMUAy0fPTdh7i/2ABbtbQTEutY+A3lgEvWcIp5zFCchzGF5GEgmeNi9
-         KnJQQVU+kCzfA==
+        b=A67viJI2thCRSB5Fr624goC6G8U1y/41RffDWMv3el7/1F5562HU7+47a5YiiP9Ot
+         TysGLZucmttPDDe19UCllhJRbGjjdO+lTNKqdr/axnMHyP1s9OpcWvPpF3u0iriyrQ
+         uiLjl49XE4bTjfYG1at4sIHhvbZuB4+4B9QcN53jzRhvZGyuywshhbVWGoOSR3oiMy
+         zlrcu5+0RPdHL5glYp30e1m95EwxtmV+Vfc2BvC0W2q9kqaGyTV7Fy0mGwObry0X1v
+         cNMHHoajVxJQOIbWVerTbdoquP7uleM1qwZEF+VVtbbB5ia36TLPHB85Toy00u2UOp
+         xZ436PF4wxogA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 03/64] PCI: Add ACS quirk for Broadcom BCM5750x NICs
-Date:   Sun, 14 Aug 2022 11:23:36 -0400
-Message-Id: <20220814152437.2374207-3-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, thomas.petazzoni@bootlin.com,
+        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.19 12/64] PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
+Date:   Sun, 14 Aug 2022 11:23:45 -0400
+Message-Id: <20220814152437.2374207-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220814152437.2374207-1-sashal@kernel.org>
 References: <20220814152437.2374207-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,42 +60,97 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit afd306a65cedb9589564bdb23a0c368abc4215fd ]
+[ Upstream commit bcdb6fd4f3e9ac1097698c8d8f56b70853b49873 ]
 
-The Broadcom BCM5750x NICs may be multi-function devices.  They do not
-advertise ACS capability. Peer-to-peer transactions are not possible
-between the individual functions, so it is safe to treat them as fully
-isolated.
+Slot capabilities are currently not reported because emulated bridge does
+not report the PCI_EXP_FLAGS_SLOT flag.
 
-Add an ACS quirk for these devices so the functions can be in independent
-IOMMU groups and attached individually to userspace applications using
-VFIO.
+Set PCI_EXP_FLAGS_SLOT to let the kernel know that PCI_EXP_SLT* registers
+are supported.
 
-Link: https://lore.kernel.org/r/1654796507-28610-1-git-send-email-michael.chan@broadcom.com
-Signed-off-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Move setting of PCI_EXP_SLTCTL register from "dynamic" pcie_conf_read
+function to static buffer as it is only statically filled the
+PCI_EXP_SLTSTA_PDS flag and dynamic read callback is not needed for this
+register.
+
+Set Presence State Bit to 1 since there is no support for unplugging the
+card and there is currently no platform able to detect presence of a card -
+in such a case the bit needs to be set to 1.
+
+Finally correctly set Physical Slot Number to 1 since there is only one
+port and zero value is reserved for ports within the same silicon as Root
+Port which is not our case for Aardvark HW.
+
+Link: https://lore.kernel.org/r/20220524132827.8837-3-kabel@kernel.org
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 33 +++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 41aeaa235132..2e68f50bc7ae 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4924,6 +4924,9 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
- 	/* Broadcom multi-function device */
- 	{ PCI_VENDOR_ID_BROADCOM, 0x16D7, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1750, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1751, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1752, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	/* Amazon Annapurna Labs */
- 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index ffec82c8a523..62db476a8651 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -8,6 +8,7 @@
+  * Author: Hezi Shahmoon <hezi.shahmoon@marvell.com>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+@@ -857,14 +858,11 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 
+ 
+ 	switch (reg) {
+-	case PCI_EXP_SLTCTL:
+-		*value = PCI_EXP_SLTSTA_PDS << 16;
+-		return PCI_BRIDGE_EMUL_HANDLED;
+-
+ 	/*
+-	 * PCI_EXP_RTCTL and PCI_EXP_RTSTA are also supported, but do not need
+-	 * to be handled here, because their values are stored in emulated
+-	 * config space buffer, and we read them from there when needed.
++	 * PCI_EXP_SLTCAP, PCI_EXP_SLTCTL, PCI_EXP_RTCTL and PCI_EXP_RTSTA are
++	 * also supported, but do not need to be handled here, because their
++	 * values are stored in emulated config space buffer, and we read them
++	 * from there when needed.
+ 	 */
+ 
+ 	case PCI_EXP_LNKCAP: {
+@@ -977,8 +975,25 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	/* Support interrupt A for MSI feature */
+ 	bridge->conf.intpin = PCI_INTERRUPT_INTA;
+ 
+-	/* Aardvark HW provides PCIe Capability structure in version 2 */
+-	bridge->pcie_conf.cap = cpu_to_le16(2);
++	/*
++	 * Aardvark HW provides PCIe Capability structure in version 2 and
++	 * indicate slot support, which is emulated.
++	 */
++	bridge->pcie_conf.cap = cpu_to_le16(2 | PCI_EXP_FLAGS_SLOT);
++
++	/*
++	 * Set Presence Detect State bit permanently since there is no support
++	 * for unplugging the card nor detecting whether it is plugged. (If a
++	 * platform exists in the future that supports it, via a GPIO for
++	 * example, it should be implemented via this bit.)
++	 *
++	 * Set physical slot number to 1 since there is only one port and zero
++	 * value is reserved for ports within the same silicon as Root Port
++	 * which is not our case.
++	 */
++	bridge->pcie_conf.slotcap = cpu_to_le32(FIELD_PREP(PCI_EXP_SLTCAP_PSN,
++							   1));
++	bridge->pcie_conf.slotsta = cpu_to_le16(PCI_EXP_SLTSTA_PDS);
+ 
+ 	/* Indicates supports for Completion Retry Status */
+ 	bridge->pcie_conf.rootcap = cpu_to_le16(PCI_EXP_RTCAP_CRSVIS);
 -- 
 2.35.1
 
