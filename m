@@ -2,229 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85022592C3A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Aug 2022 12:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04291592BBB
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Aug 2022 12:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241432AbiHOJDP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Aug 2022 05:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
+        id S242179AbiHOJuv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Aug 2022 05:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241792AbiHOJC5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Aug 2022 05:02:57 -0400
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 419AC21E38;
-        Mon, 15 Aug 2022 02:02:45 -0700 (PDT)
-X-QQ-mid: bizesmtp70t1660554134t47qzo8d
-Received: from [10.4.23.219] ( [58.240.82.166])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Mon, 15 Aug 2022 17:02:13 +0800 (CST)
-X-QQ-SSF: 00400000002000B0I000B00A0000000
-X-QQ-FEAT: DRnj/z+Sqac/pDfMcGKewOhR8gwdyqv276yH3w/u2kw2jNHQieFeCF97uH08o
-        MgYYYfIP6Z23HyViNi3apYkWhX9dyjlh9tP6TnRDIdEk+EeZKdRY2M8KTLG/3bD6DsruTCF
-        FMxHIPzUzo17pO2CIrJv9TvrPlcDdONuNznoCaH6nNp0llct+cHEnzDWLeADHbezx7shODB
-        PQHA8q+lOMnz3ynakb4Vwfx5aRf3JZ55uamnAgd+lGF1h64p8i09hjDhLGyoR4N5CPcjP/H
-        29wYDhzNDPbBbS7FHfqD0PS80LEF1XjGOhiUjWNM4FTtiBLS9hU5sGT2MaiKyDC5d4WvhLY
-        S1kPMVukCIsIbZxrQ+8W1WR0CMgtSU5nESkrxjYcHoT/MR37bs2OweEEcHAmDpf2EsVs2t7
-        i5fn65HH14c=
-X-QQ-GoodBg: 2
-Message-ID: <6D38148AAA1F82C9+de98717f-8d03-7583-299e-f48050d11dba@uniontech.com>
-Date:   Mon, 15 Aug 2022 17:02:13 +0800
+        with ESMTP id S242230AbiHOJuo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Aug 2022 05:50:44 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F77710C4;
+        Mon, 15 Aug 2022 02:50:42 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M5qK11dRlz67x0m;
+        Mon, 15 Aug 2022 17:50:29 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 15 Aug 2022 11:50:39 +0200
+Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 15 Aug
+ 2022 10:50:39 +0100
+Date:   Mon, 15 Aug 2022 10:50:38 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     "Li, Ming" <ming4.li@intel.com>
+CC:     <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V16 3/6] PCI/DOE: Add DOE mailbox support functions
+Message-ID: <20220815105038.00000336@huawei.com>
+In-Reply-To: <a3f72cdd-884d-efa1-89e8-f9d6660bf760@intel.com>
+References: <20220719205249.566684-1-ira.weiny@intel.com>
+        <20220719205249.566684-4-ira.weiny@intel.com>
+        <a3f72cdd-884d-efa1-89e8-f9d6660bf760@intel.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH] PCI/ASPM: Should not report ASPM support to BIOS if FADT
- indicates ASPM is unsupported
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <20220713112612.6935-1-limanyi@uniontech.com>
- <20220713182852.GA841582@bhelgaas>
- <CAAd53p7g2Md73=UU6Rp-TZkksc+H02KAX58bWCzsgQ__VwvJ+g@mail.gmail.com>
- <62d11a02.1c69fb81.ee60c.b0efSMTPIN_ADDED_BROKEN@mx.google.com>
- <CAJZ5v0gKMqOwg3JLx4PBksnpUhgaDDfahmE5RjJMTByOLAQOFg@mail.gmail.com>
- <CAJZ5v0gt761WUPn-3HQ3sA+8N_s_yHrSkk6CH1gBW0gy1c_+KA@mail.gmail.com>
-From:   Manyi Li <limanyi@uniontech.com>
-In-Reply-To: <CAJZ5v0gt761WUPn-3HQ3sA+8N_s_yHrSkk6CH1gBW0gy1c_+KA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr4
-X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 15 Aug 2022 10:17:00 +0800
+"Li, Ming" <ming4.li@intel.com> wrote:
 
-
-在 2022/7/15 22:07, Rafael J. Wysocki 写道:
-> On Fri, Jul 15, 2022 at 2:24 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>
->> On Fri, Jul 15, 2022 at 9:40 AM Manyi Li <limanyi@uniontech.com> wrote:
->>>
->>>
->>>
->>> On 2022/7/14 11:20, Kai-Heng Feng wrote:
->>>> [+Cc Matthew]
->>>>
->>>> On Thu, Jul 14, 2022 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>>
->>>>> [+cc Kai-Heng, Vidya, who also have ASPM patches in flight]
->>>>>
->>>>> On Wed, Jul 13, 2022 at 07:26:12PM +0800, Manyi Li wrote:
->>>>>> Startup log of ASUSTeK X456UJ Notebook show:
->>>>>> [    0.130563] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
->>>>>> [   48.092472] pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
->>>>>> [   48.092479] pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
->>>>>> [   48.092481] pcieport 0000:00:1c.5:    [ 0] RxErr
->>>>>> [   48.092490] pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
->>>>>> [   48.092504] pcieport 0000:00:1c.5: AER: can't find device of ID00e5
->>>>>> [   48.092506] pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
->>>>>
->>>>> Can you elaborate on the connection between the FADT ASPM bit and the
->>>>> AER logs above?
->>>
->>> Sorry,I don't know about that.
->>>
->>>>>
->>>>> What problem are we solving here?  A single corrected error being
->>>>> logged?  An infinite stream of errors?  A device that doesn't work at
->>>>> all?
->>>>
->>>> Agree, what's the real symptom of the issue?
->>>
->>> Please see the details of this issus:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=216245
->>>
->>>>
->>>>>
->>>>> We don't need the dmesg timestamps unless they contribute to
->>>>> understanding the problem.  I don't think they do in this case.
->>>>
->>>> According to commit 387d37577fdd ("PCI: Don't clear ASPM bits when the
->>>> FADT declares it's unsupported"), the bit means "just use the ASPM
->>>> bits handed over by BIOS".
->>>>
->>>> However, I do wonder why both drivers/pci/pci-acpi.c and
->>>> drivers/acpi/pci_root.c are doing the ACPI_FADT_NO_ASPM check,
->>
->> Because pci_root.c doesn't read aspm_disabled.
+> On 7/20/2022 4:52 AM, ira.weiny@intel.com wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
+> > mailbox with standard protocol discovery.  Each mailbox is accessed
+> > through a DOE Extended Capability.
+> > 
+> > Each DOE mailbox must support the DOE discovery protocol in addition to
+> > any number of additional protocols.
+> > 
+> > Define core PCIe functionality to manage a single PCIe DOE mailbox at a
+> > defined config space offset.  Functionality includes iterating,
+> > creating, query of supported protocol, and task submission.  Destruction
+> > of the mailboxes is device managed.
+> > 
+> > Cc: "Li, Ming" <ming4.li@intel.com>
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---  
 > 
-> I've recalled a bit in the meantime.
-> 
-> First off, ACPI_FADT_NO_ASPM forbids the OS from enabling ASPM control
-> (quite literally).  It doesn't mean that the OS should not enumerate
-> ASPM and it doesn't mean that it should not report ASPM support to the
-> firmware via _OSC.  Moreover, there are (or at least there were)
-> systems where the firmware expected ASPM support to be reported via
-> _OSC anyway (see commit 8b8bae901ce2 PCI/ACPI: Report ASPM support to
-> BIOS if not disabled from command line).
-> 
-> Thus, if ASPM is not disabled from command line, it would be
-> consistent to carry out the _OSC negotiation as usual regardless of
-> ACPI_FADT_NO_ASPM and then handle the case in which it is set in the
-> same way as the case in which the firmware doesn't grant the kernel
-> control of some PCIe features.  Does this sound reasonable
-
-This sound reasonable.
-
-> 
-> If it does, I think that ASPM should be enumerated regardless of
-> ACPI_FADT_NO_ASPM, but we need to ensure that its configuration is not
-> changed in any way if ACPI_FADT_NO_ASPM is set and I'm not sure if
-> that is the case now.
-> 
-> Of course, the same needs to happen when the kernel doesn't get full
-> control over PCIe features via _OSC, but AFAICS that case is handled
-> in the same way as the above already.
-> 
->>>> maybe one of them should be removed?
->>
->> Arguably, pci_root.c could look at aspm_disabled instead of looking at
->> the FADT flag directly.
-> 
-> Second, if the former does sound reasonable, I'd rather avoid setting
-> aspm_disabled from drivers/pci/pci-acpi.c upfront when
-> ACPI_FADT_NO_ASPM is set, because doing that is not consistent with
-> the above.
-> 
-> Now, there may be BIOSes that don't expect to be informed of the OS
-> support for ASPM via _OSC if ACPI_FADT_NO_ASPM is set, and the
-> question is what to do with them.  They clearly are at odds with the
-> BIOSes that do expect that to happen (mentioned above), so honestly
-> I'm not sure.
-
-I'm not sure my issues is caused by report ASPM support to the firmware 
-via _OSC.My issues is the same as this link:
-https://groups.google.com/g/fa.linux.kernel/c/0uz8Nr_NVOI
-
-Links to other discussions on this issue:
-https://lore.kernel.org/all/20151229155822.GA17321@localhost/T/#u
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1521173
-
-> 
->>> I think duplicate work has been done, but comment
->>> in drivers/acpi/pci_root.c is
->>> * We want to disable ASPM here, but aspm_disabled
->>> * needs to remain in its state from boot so that we
->>> * properly handle PCIe 1.1 devices.  So we set this
->>> * flag here, to defer the action until after the ACPI
->>> * root scan.
->>>
->>> I don't understand this logic.
->>
->> This is about the case after failing acpi_pci_osc_control_set() and
->> generally we need to defer setting aspm_disabled because of
->> pcie_aspm_sanity_check().
->>
->>>>
->>>>>
->>>>>> Signed-off-by: Manyi Li <limanyi@uniontech.com>
->>>>>> ---
->>>>>>    drivers/pci/pcie/aspm.c | 1 +
->>>>>>    1 file changed, 1 insertion(+)
->>>>>>
->>>>>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->>>>>> index a96b7424c9bc..b173d3c75ae7 100644
->>>>>> --- a/drivers/pci/pcie/aspm.c
->>>>>> +++ b/drivers/pci/pcie/aspm.c
->>>>>> @@ -1359,6 +1359,7 @@ void pcie_no_aspm(void)
->>>>>>         if (!aspm_force) {
->>>>>>                 aspm_policy = POLICY_DEFAULT;
->>>>>>                 aspm_disabled = 1;
->>>>>> +             aspm_support_enabled = false;
->>>>>
->>>>> This makes pcie_no_aspm() work the same as booting with
->>>>> "pcie_aspm=off".  That might be reasonable.
->>>>>
->>>>> I do wonder why we need both "aspm_disabled" and
->>>>> "aspm_support_enabled".  And I wonder why we need to set "aspm_policy"
->>>>> when we're disabling ASPM.  But those aren't really connected to your
->>>>> change here.
->>>>
->>>>   From what I can understand "aspm_disabled" means "don't touch ASPM
->>>> left by BIOS", and "aspm_support_enabled" means "whether ASPM is
->>>> disabled via command line".
->>>> There seems to be some overlaps though.
->>>
->>> According to commit 8b8bae901ce23 ("PCI/ACPI: Report ASPM support to
->>> BIOS if not disabled from command line"), "aspm_support_enabled" means
->>> whether or not report ASPM support to the BIOS through _OSC.
->>
->> Right.
+> > +/**
+> > + * pci_doe_submit_task() - Submit a task to be processed by the state machine
+> > + *
+> > + * @doe_mb: DOE mailbox capability to submit to
+> > + * @task: task to be queued
+> > + *
+> > + * Submit a DOE task (request/response) to the DOE mailbox to be processed.
+> > + * Returns upon queueing the task object.  If the queue is full this function
+> > + * will sleep until there is room in the queue.
+> > + *
+> > + * task->complete will be called when the state machine is done processing this
+> > + * task.
+> > + *
+> > + * Excess data will be discarded.
+> > + *
+> > + * RETURNS: 0 when task has been successfully queued, -ERRNO on error
+> > + */
+> > +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> > +{
+> > +	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * DOE requests must be a whole number of DW and the response needs to
+> > +	 * be big enough for at least 1 DW
+> > +	 */
+> > +	if (task->request_pl_sz % sizeof(u32) ||
+> > +	    task->response_pl_sz < sizeof(u32))
+> > +		return -EINVAL;
+> > +
+> > +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
+> > +		return -EIO;
+> > +
+> > +	task->doe_mb = doe_mb;
+> > +	INIT_WORK(&task->work, doe_statemachine_work);
+> > +	queue_work(doe_mb->work_queue, &task->work);
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_doe_submit_task);  
 > 
 
--- 
-Manyi Li
+> I'm curious why there is not a sychronous function for DOE users. I
+> think some protocols over DOE need a DOE sychrounous interface(e.g.
+> SPDM, TDISP, IDE...). These protocols have to implement an sychronous
+> function over pci_doe_submit_task() by themselves, maybe we can
+> implement an generic sychronous function in PCI/DOE for these DOE
+> users.
+
+This came up during discussions of earlier versions of the series.
+IIRC we decided to postpone adding a synchronous wrapper function
+until there were more use cases.
+
+So if it is useful to you, go ahead and propose it as part of a
+patch series supporting one of those protocols you reference.
+
+Note there are a bunch of other changes that will be necessary
+in this code to make it more generic anyway.  The plan is to
+make those as and when they are useful.  E.g. interrupt support,
+coupling some of the infrastructure more closely to the PCI core,
+probably a few other things I've forgotten.
+
+Jonathan
+
+
+
+
+> 
+> Thanks
+> Ming
+> 
+> > diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> > new file mode 100644
+> > index 000000000000..ed9b4df792b8
+> > --- /dev/null
+> > +++ b/include/linux/pci-doe.h
+> > @@ -0,0 +1,77 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Data Object Exchange
+> > + *	PCIe r6.0, sec 6.30 DOE
+> > + *
+> > + * Copyright (C) 2021 Huawei
+> > + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > + *
+> > + * Copyright (C) 2022 Intel Corporation
+> > + *	Ira Weiny <ira.weiny@intel.com>
+> > + */
+> > +
+> > +#ifndef LINUX_PCI_DOE_H
+> > +#define LINUX_PCI_DOE_H
+> > +
+> > +struct pci_doe_protocol {
+> > +	u16 vid;
+> > +	u8 type;
+> > +};
+> > +
+> > +struct pci_doe_mb;
+> > +
+> > +/**
+> > + * struct pci_doe_task - represents a single query/response
+> > + *
+> > + * @prot: DOE Protocol
+> > + * @request_pl: The request payload
+> > + * @request_pl_sz: Size of the request payload (bytes)
+> > + * @response_pl: The response payload
+> > + * @response_pl_sz: Size of the response payload (bytes)
+> > + * @rv: Return value.  Length of received response or error (bytes)
+> > + * @complete: Called when task is complete
+> > + * @private: Private data for the consumer
+> > + * @work: Used internally by the mailbox
+> > + * @doe_mb: Used internally by the mailbox
+> > + *
+> > + * The payload sizes and rv are specified in bytes with the following
+> > + * restrictions concerning the protocol.
+> > + *
+> > + *	1) The request_pl_sz must be a multiple of double words (4 bytes)
+> > + *	2) The response_pl_sz must be >= a single double word (4 bytes)
+> > + *	3) rv is returned as bytes but it will be a multiple of double words
+> > + *
+> > + * NOTE there is no need for the caller to initialize work or doe_mb.
+> > + */
+> > +struct pci_doe_task {
+> > +	struct pci_doe_protocol prot;
+> > +	u32 *request_pl;
+> > +	size_t request_pl_sz;
+> > +	u32 *response_pl;
+> > +	size_t response_pl_sz;
+> > +	int rv;
+> > +	void (*complete)(struct pci_doe_task *task);
+> > +	void *private;
+> > +
+> > +	/* No need for the user to initialize these fields */
+> > +	struct work_struct work;
+> > +	struct pci_doe_mb *doe_mb;
+> > +};
+> > +
+> > +/**
+> > + * pci_doe_for_each_off - Iterate each DOE capability
+> > + * @pdev: struct pci_dev to iterate
+> > + * @off: u16 of config space offset of each mailbox capability found
+> > + */
+> > +#define pci_doe_for_each_off(pdev, off) \
+> > +	for (off = pci_find_next_ext_capability(pdev, off, \
+> > +					PCI_EXT_CAP_ID_DOE); \
+> > +		off > 0; \
+> > +		off = pci_find_next_ext_capability(pdev, off, \
+> > +					PCI_EXT_CAP_ID_DOE))
+> > +
+> > +struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+> > +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+> > +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> > +
+> > +#endif
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > index 108f8523fa04..57b8e2ffb1dd 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -737,7 +737,8 @@
+> >  #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+> >  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> >  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+> > -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+> > +#define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+> > +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+> >  
+> >  #define PCI_EXT_CAP_DSN_SIZEOF	12
+> >  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> > @@ -1103,4 +1104,30 @@
+> >  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
+> >  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
+> >  
+> > +/* Data Object Exchange */
+> > +#define PCI_DOE_CAP		0x04    /* DOE Capabilities Register */
+> > +#define  PCI_DOE_CAP_INT_SUP			0x00000001  /* Interrupt Support */
+> > +#define  PCI_DOE_CAP_INT_MSG_NUM		0x00000ffe  /* Interrupt Message Number */
+> > +#define PCI_DOE_CTRL		0x08    /* DOE Control Register */
+> > +#define  PCI_DOE_CTRL_ABORT			0x00000001  /* DOE Abort */
+> > +#define  PCI_DOE_CTRL_INT_EN			0x00000002  /* DOE Interrupt Enable */
+> > +#define  PCI_DOE_CTRL_GO			0x80000000  /* DOE Go */
+> > +#define PCI_DOE_STATUS		0x0c    /* DOE Status Register */
+> > +#define  PCI_DOE_STATUS_BUSY			0x00000001  /* DOE Busy */
+> > +#define  PCI_DOE_STATUS_INT_STATUS		0x00000002  /* DOE Interrupt Status */
+> > +#define  PCI_DOE_STATUS_ERROR			0x00000004  /* DOE Error */
+> > +#define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
+> > +#define PCI_DOE_WRITE		0x10    /* DOE Write Data Mailbox Register */
+> > +#define PCI_DOE_READ		0x14    /* DOE Read Data Mailbox Register */
+> > +
+> > +/* DOE Data Object - note not actually registers */
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_1_VID		0x0000ffff
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_1_TYPE		0x00ff0000
+> > +#define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+> > +
+> > +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+> > +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+> > +
+> >  #endif /* LINUX_PCI_REGS_H */  
+> 
+
