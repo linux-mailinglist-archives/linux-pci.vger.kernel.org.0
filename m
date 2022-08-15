@@ -2,74 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7192D592ABF
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Aug 2022 10:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B5DF592D45
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Aug 2022 12:52:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241526AbiHOHzz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Aug 2022 03:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
+        id S240265AbiHOI6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Aug 2022 04:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbiHOHzy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Aug 2022 03:55:54 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9B4120BC
-        for <linux-pci@vger.kernel.org>; Mon, 15 Aug 2022 00:55:52 -0700 (PDT)
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S230468AbiHOI6v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Aug 2022 04:58:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BE520F53;
+        Mon, 15 Aug 2022 01:58:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id ED33E3F12C
-        for <linux-pci@vger.kernel.org>; Mon, 15 Aug 2022 07:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1660550150;
-        bh=ZeK/4GM2DAERl5jSwdbqaxPua0JzPliZulx33fNAkb8=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=ZEJaeJnJep4z8AmdoKJRVqtbJiZLI9nQ04cPdpx6Lxj5ucvT5g95dE/Tv2QOHMaZo
-         JbhvcJdJcEYoGoHpyTMHSHc5Za6eGZbour2hTPCyxvAkYqgbDuc+H4CQFi3ZKKsP8B
-         At9IfMfwbs1dH25tpWyTCjB4dj3g21XdjbzfworDxEFeny85iUUTnwWZ70Hi1wBFKb
-         6TngLkiGBzl3m4MNgQ6iA1LQAvTnDPX160g2hFhJ2DNXi90iGv9zmZRbO0zGfp89Qb
-         Cr2AWN0RoIR/vAb9J4tZkl4ITpSJbVOm/mYMeDlyMi9ao2ZaPH/yfwRRm5ZcqoeX1D
-         HBvuH1YZ9/pUw==
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-10eafb7a9f7so997160fac.13
-        for <linux-pci@vger.kernel.org>; Mon, 15 Aug 2022 00:55:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=ZeK/4GM2DAERl5jSwdbqaxPua0JzPliZulx33fNAkb8=;
-        b=sqrbWw41x0Ui4pMIZ0PEDBOZVU8Ot8zzi5+nQSXr+1aJ50mGlbcbTJtdab7Avsj03L
-         1MloW6A2z76lea6oI7WMbwFt7lhi+mvcsOLM8a48DVYpfZEw1lk8gKOir3WTaXnNuasE
-         Vxg7GzdDosQt/6qJZDOR4AoNiHOnLHhc6RRnHzaT+UwEiwVb9ny50eR3m35y6WSYLxDX
-         8ddfyi2H/SR450TM3mmsGfPV+DB1kvRYpyM4yByUAD4Dg+9TrYERPm3KFeDud+up/H1q
-         6tIQnKH5zGcMoHkqc3UGkz1T/DKASrr/4GOqV4Moqmuwhsd/ErXT6p39o0BSXmc02qTA
-         j0AQ==
-X-Gm-Message-State: ACgBeo1QeVPSiGZGBATSdKwp0xVT1t12MHQm4S7Xb8pwiVcO9GbApuCs
-        7bVe8cf1j4A1HJGXJmLtT5O0KWw8q9H1C6glM6Nk5qQHjY5vDGvjn5Nvr/F0Nv1r/oTCnRyLDAg
-        MPrSJ5g5TZ9IUSOhQEipLcZgdQzaLYCXmIj8cjszaA//QYrCRfdc+tA==
-X-Received: by 2002:a05:6870:2111:b0:e6:8026:8651 with SMTP id f17-20020a056870211100b000e680268651mr6234000oae.42.1660550149812;
-        Mon, 15 Aug 2022 00:55:49 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5IrHGGx4EgeCSzds0PVIvFzXVMzkl0mOjPY4nJL7WACPeiDtQcM0ACWeSWTM/uXP0x6AY+wCHRJEw3NdSM+bg=
-X-Received: by 2002:a05:6870:2111:b0:e6:8026:8651 with SMTP id
- f17-20020a056870211100b000e680268651mr6233991oae.42.1660550149504; Mon, 15
- Aug 2022 00:55:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220706123244.18056-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20220706123244.18056-1-kai.heng.feng@canonical.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Mon, 15 Aug 2022 15:55:36 +0800
-Message-ID: <CAAd53p4Kg=mu8boPY-jGefsqxSBLdo6WPYHv+=eD5ZYz3_1AXw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Disable upstream port PTM during suspend
-To:     bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B91460F7E;
+        Mon, 15 Aug 2022 08:58:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B403BC433D7;
+        Mon, 15 Aug 2022 08:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660553929;
+        bh=BqH/4KtYjxbCwUUl+LU32sSE5MD8q5kMSnS0XBF9Bt4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gEn5jVDeyFy0f1Io+cvIpMoR/lZuNLQOEtYhEh/MsTFrdSQLsgfxtZLyxTXlmjiNf
+         JPs985fMu1hoSw0YKEj6UAySKrouzovKRCjqeAS693zmQ42rM1jwm/Rznh6NZH/9a5
+         sZ2U3Di0ZbWeTZwegrxUqtaytvG9QiLfFe/Wci/0R/YlZkTwOj0YsrOu8FHwdqS3NX
+         7gKm6Q0hnAWni1rZvl4mtCa3Lrqqy01yTc3kKNCMTJvQBHehiWrTSQfZ19OdSmu4XU
+         TUFLpUwEta0ZV5WPxkXicDE+gJgLu23iDU7g18gx5brJT7IByoRz+BdqDiJuH91PuR
+         OD2Mc8Us324Xw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oNVvr-0032af-A2;
+        Mon, 15 Aug 2022 09:58:47 +0100
+Date:   Mon, 15 Aug 2022 09:58:46 +0100
+Message-ID: <87czd1vq61.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        "lznuaa@gmail.com" <lznuaa@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v4 2/4] irqchip: imx mu worked as msi controller
+In-Reply-To: <PAXPR04MB918614DF535DA7FBADC956F988699@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220812215242.2255824-1-Frank.Li@nxp.com>
+        <20220812215242.2255824-3-Frank.Li@nxp.com>
+        <875yiwsdq2.wl-maz@kernel.org>
+        <PAXPR04MB918614DF535DA7FBADC956F988699@PAXPR04MB9186.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: frank.li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,83 +88,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 6, 2022 at 8:33 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> On Intel Alder Lake platforms, Thunderbolt entering D3cold can cause
-> some errors reported by AER:
-> pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-> pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-> pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-> pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-> thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-> xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-> pcieport 0000:00:1d.0: AER: device recovery failed
->
-> In addition to that, it can also block system from suspending when
-> a Thunderbolt dock is attached to the same system.
->
-> The original approach [1] is to disable AER and DPC when link is in
-> L2/L3 Ready, L2 and L3, but Bjorn identified the root cause is the Unsupported
-> Request:
->   - 08:00.0 sent a PTM Request Message (a Posted Request)
->   - 00:1d.0 received the PTM Request Message
->   - The link transitioned to DL_Down
->   - Per sec 2.9.1, 00:1d.0 discarded the Request and reported an
->     Unsupported Request
->   - Or, per sec 6.21.3, if 00:1d.0 received a PTM Request when its
->     own PTM Enable was clear, it would also be treated as an
->     Unsupported Request
->
-> And further: 'David did something like this [1], but just for Root Ports. That
-> looks wrong to me because sec 6.21.3 says we should not have PTM enabled in an
-> Upstream Port (i.e., in a downstream device like 08:00.0) unless it is already
-> enabled in the Downstream Port (i.e., in the Root Port 00:1d.0).'
->
-> So also disable upstream port PTM to make the PCI driver conform to the spec
-> and solve the issue.
->
-> [1] https://lore.kernel.org/all/20220408153159.106741-1-kai.heng.feng@canonical.com/
-> [2] https://lore.kernel.org/all/20220422222433.GA1464120@bhelgaas/
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216210
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On Sun, 14 Aug 2022 04:12:01 +0100,
+Frank Li <frank.li@nxp.com> wrote:
 
-A gentle ping...
+> > > new file mode 100644
+> > > index 0000000000000..bb111412d598f
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-imx-mu-msi.c
+> > > @@ -0,0 +1,443 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * NXP MU worked as MSI controller
+> > 
+> > Freescale? Or NXP? Please make up your mind.
+> 
+> 
+> [Frank Li] NXP and freescale is the same thing. 
+> It is mux used at many place.
 
-> ---
->  drivers/pci/pci.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index cfaf40a540a82..8ba8a0e12946e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2717,7 +2717,8 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
->          * port to enter a lower-power PM state and the SoC to reach a
->          * lower-power idle state as a whole.
->          */
-> -       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> +       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +           pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
->                 pci_disable_ptm(dev);
->
->         pci_enable_wake(dev, target_state, wakeup);
-> @@ -2775,7 +2776,8 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
->          * port to enter a lower-power PM state and the SoC to reach a
->          * lower-power idle state as a whole.
->          */
-> -       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> +       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +           pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
->                 pci_disable_ptm(dev);
->
->         __pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
-> --
-> 2.36.1
->
+Pick one, and stick to it. Having two names for the same thing is
+pointlessly confusing.
+
+> > > +static struct irq_chip imx_mu_msi_irq_chip = {
+> > > +     .name = "MU-MSI",
+> > > +     .irq_ack = irq_chip_ack_parent,
+> > 
+> > Crucially, no irq_write_msi_msg callback. So we happily inherit
+> > platform_msi_write_msg() and use the per descriptor write_msg()
+> > callback. Who sets this? Nobody.
+> 
+> [Frank Li] when set flag MSI_FLAG_USE_DEF_CHIP_OPS, 
+>  irq_write_msi_msg callback will be set at function platform_msi_update_chip_ops();
+
+That wasn't my question. But never mind, I found the call to
+platform_msi_domain_alloc_irqs() in patch #4.
+
+> > > +
+> > > +     /* Initialize MSI domain parent */
+> > > +     msi_data->parent = irq_domain_create_linear(fwnodes,
+> > > +                                                 IMX_MU_CHANS,
+> > > +                                                 &imx_mu_msi_domain_ops,
+> > > +                                                 msi_data);
+> > 
+> > Consider setting the bus_token attribute for this domain to something
+> > that isn't the default, as it otherwise clashes with the following
+> > creation.
+> 
+> [Frank Li] Any suggestion? Which bus_token is good?
+
+DOMAIN_BUS_NEXUS is what other drivers use.
+
+> > > +     priv->pd_a = dev_pm_domain_attach_by_name(dev, "a");
+> > 
+> > I'm sorry, but you'll have to come up with something slightly more
+> > descriptive than "a" or "b". At least add a qualifier to it. Same
+> > thing for the DT by the way.
+> 
+> [Frank Li] MU spec using  term "A side" and "B side".  So I think "a" and "b"
+> is enough.
+
+No, it really isn't.
+
+> 
+> Or do you think "a-side" is better?
+
+No, I would like something fully descriptive. The DT actually has
+"Processor A-facing", which seems like a reasonable description.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
