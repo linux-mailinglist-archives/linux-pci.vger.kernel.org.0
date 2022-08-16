@@ -2,99 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7063B5961DC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 20:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE7AE59625F
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 20:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236103AbiHPSFO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 14:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
+        id S237092AbiHPS0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 14:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236847AbiHPSEw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 14:04:52 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C9882FB1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:04:49 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-333b049f231so60282287b3.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:04:49 -0700 (PDT)
+        with ESMTP id S237027AbiHPS0C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 14:26:02 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E3A86B5C
+        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:25:57 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id bs25so13637373wrb.2
+        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=0w+kmT2IbUXrv0eEHZ7FURm/G1X4f15u8QTqDUvP+zs=;
-        b=H+4Fp77UiZPJN22tx2zuSYct+ZUgUX/7KRVbTNfke0uF6CNy93XZ8gt30706iFh0VT
-         aCongEVTuK5iXpZgQYKMZFGYmue0cCWVo2JMCM7dd2B0JMuKeunwa3LCXe8sljOBbbSL
-         u4nGojyki+E9M4mN0W+jJWzRkX5aq4ghPhh9ytmtiSSFl/2kQ0ZgO8Rz4idq9YY5Cjs0
-         CyRMu9a3SgdsV6qHvYP72SORdEPcSkvqpN7xDj1HHYMpL7jL5rqRmEojLHzQ18G3pDlK
-         EUDo54AhME2R07o+vSqqBH2BLBYxSjimNBffmG6IuNz37v5HKEtTyoOWkpRoC5EyDtYW
-         Lh0w==
+        d=conchuod.ie; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=i14dSapeS6A95og3h5kVrEaeQxUOEEcffvmz7W7v7mg=;
+        b=SFfhLwGA1m3W49evekpktH/l4IitnbDTV07fTcveNPx+SVDpmrIhLDWbuuqx94qZCQ
+         3k4dwlMnCtECF1kUYylgBOCmMmcHMH2BGHCInV4vx1IHN8RZaI7SxCTkW5Z+hlZS0pAA
+         px1nzTkEaWBBn7CjvMDvM064Rs4nvR8/vGfqGAmsu49ckurodNOHilwC9LJa56thDAbT
+         fU7QmYIp9OyTLf3KIAqEXBh1A0W0uJtqQZaIYZdz+q8dQ1n7mQFlY6ZF6w4BS1wiBa12
+         dc5ffczB0xcWpaLya62H3cEkimt/Lu4jTTZtqctIcDm6rpHHOEgxMLffokpP/uAwnuDD
+         gI1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=0w+kmT2IbUXrv0eEHZ7FURm/G1X4f15u8QTqDUvP+zs=;
-        b=hVXpj8QWpI9WBwbn3agjo03rWE5y2Jruwl0Xngrmlyf0NpWrs3Sjnkxau7+nVSWiOQ
-         5Kc/Z1VZRGJz1C2nTytl9zWGsSVnEJfL3nEAoB+dkkt/I04LnacskzM9SE6GAQ8GvfcR
-         RKVQn9qI1F8diP59OEW00N4dqeoFZk4hs27go64/drcpp3TRgykDHJABcG/J0052jN9W
-         b8bgZwVPyY11mOi8TQBk5lz0yQSI+4R5mo+KKHrFOCNTwkM6LmfYalrTVw3/0iP6cRwv
-         YMaP78QVOap9kldPFmVbiZbxpiC8709+j/KQjPrQYXc5QdVlSfVhiuBcpnOFAnaRxTBQ
-         alhQ==
-X-Gm-Message-State: ACgBeo1CezXHHupr6ThEQQ7v3FNobt0Z1iEk4JHr/6kcY9v0+WXZnlpb
-        oU4G3w2QAElV/cO2YLdlS1s3qhShbGp/Ip6peBZV0g==
-X-Google-Smtp-Source: AA6agR79SF4EVFLJlu516gzZNXQSrzpATfClnQlDyUuKj1440u+ghdhgDcnBveRRMmlbFyLXqFF1Wsq0FWdZ5y0SreE=
-X-Received: by 2002:a81:1793:0:b0:31f:4989:20ce with SMTP id
- 141-20020a811793000000b0031f498920cemr18517758ywx.80.1660673088222; Tue, 16
- Aug 2022 11:04:48 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=i14dSapeS6A95og3h5kVrEaeQxUOEEcffvmz7W7v7mg=;
+        b=d0heU4+heayVsBI6qUn2JXzpkFRaz8G3AaPOaK1RfIVXJ8h8yO5g1UT0utBX8lkqSF
+         fjwDH4J5QCak05BNlJD7DqGoXXJgusBdzSyWNBEQXKtY0in9NmoijL5GdrQDr1okpxnz
+         52BUrqP7tBGdrZFlH95EaoudvSdnKsniNgtFMNr/l7IXP6FLHzgC/swKW3bzLSuWZ6nL
+         vADqaJddgETeaOLCtuVuFub+XbAMysb4syzAG4e+urK0cZE+7/yG9zrxU65KR+Dns6zn
+         8WwyUSA+IWKue6QcxJ2esvrcjAmuD5Q1iDT/SQTUBMe6TBZiZBOgz+EsT0WXyzJMKoat
+         9cDA==
+X-Gm-Message-State: ACgBeo18DPnO1WudUBOD7qlxzhkhzlx//KGLJAyseOOORCC5+MbyMWHd
+        nwn2AGKAvwhG6BgwnbIuuINSDA==
+X-Google-Smtp-Source: AA6agR6bTwH/YxxR5LcBXZI5QTnN9mSXoYCK/TmLm8WaQxf55ygx9S28F9mU7Vc29aiDwpv9EgOsEQ==
+X-Received: by 2002:adf:f74b:0:b0:225:1fdb:a787 with SMTP id z11-20020adff74b000000b002251fdba787mr1250471wrp.33.1660674355174;
+        Tue, 16 Aug 2022 11:25:55 -0700 (PDT)
+Received: from henark71.. ([109.76.58.63])
+        by smtp.gmail.com with ESMTPSA id s17-20020a1cf211000000b003a603fbad5bsm4015482wmc.45.2022.08.16.11.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 11:25:54 -0700 (PDT)
+From:   Conor Dooley <mail@conchuod.ie>
+To:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH v2 0/6] Fix RISC-V/PCI dt-schema issues with dt-schema v2022.08
+Date:   Tue, 16 Aug 2022 19:25:42 +0100
+Message-Id: <20220816182547.3454843-1-mail@conchuod.ie>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-References: <62eed399.170a0220.2503a.1c64@mx.google.com> <YvEAF1ZvFwkNDs01@sirena.org.uk>
- <deda4eb1592cb61504c9d42765998653@walle.cc> <YvEEidOZ62igUYrR@sirena.org.uk>
- <CAGETcx_JSViBcySNp+Rany2osBiKL7ON+tooPKW8TOTP6+t_HA@mail.gmail.com>
- <YvvTKkR4sOIsFxA4@sirena.org.uk> <CAGETcx8vwDd3m3DZFJK7h0jjHMZhOfChRKHPt5qj8O8cJ_ReHA@mail.gmail.com>
- <YvvZsPcUPND6ZC9e@sirena.org.uk>
-In-Reply-To: <YvvZsPcUPND6ZC9e@sirena.org.uk>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 16 Aug 2022 11:04:12 -0700
-Message-ID: <CAGETcx9pFtiQy43wV+vbK84P=SbbGcvy6cg9VHg2OzfYHT5n3A@mail.gmail.com>
-Subject: Re: next/master bisection: baseline.bootrr.intel-igb-probed on kontron-pitx-imx8m
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Michael Walle <michael@walle.cc>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernelci-results@groups.io, bot@kernelci.org,
-        gtucker@collabora.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 10:54 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Aug 16, 2022 at 10:48:04AM -0700, Saravana Kannan wrote:
-> > On Tue, Aug 16, 2022 at 10:26 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > (though
-> > > TBH given how entirely virtual this stuff us it seems odd that we'd be
-> > > going for a bus).
->
-> > I'm going for a bus because class doesn't have a distinction between
-> > "device has been added" and "device is ready if these things happen".
-> > There's nothing to say that a "bus" has to be a real hardware bus.
->
-> Sure, but then there's the push to stop using platform devices for
-> virtual devices - this feels similar.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-That's why we wouldn't be using the platform bus :) I was suggesting
-changing regulator_class to regulator_bus and being able to delete
-some of the regulator core code because device links would take care
-of the same functionality. But this is just improving maintenance so
-maybe I should focus more on the feature TODOs first :)
+Hey all,
 
--Saravana
+Got a few fixes for PCI dt-bindings that I noticed after upgrading my
+dt-schema to v2022.08. (and the associated dts now too)
+
+Since all the dts patches are for "my" boards, I'll take them once the
+bindings are approved. I added a pair of other dts changes to the series,
+mostly for my own benefit in tracking what I need to apply that were
+previously at [0] & [1].
+
+Thanks,
+Conor.
+
+0 - https://lore.kernel.org/all/20220811203207.179470-1-mail@conchuod.ie/
+1 - https://lore.kernel.org/all/20220811204024.182453-1-mail@conchuod.ie/
+
+Changes since v1:
+- fu740: rewrite commit message
+- mchp: rework clock-names as per rob's suggestion on IRC
+- mchp: drop the "legacy" from the node name
+- mchp: renemove the address translation property
+- mchp: change the child node name in the dts rather than the binding
+
+Conor Dooley (6):
+  dt-bindings: PCI: fu740-pci: fix missing clock-names
+  dt-bindings: PCI: microchip,pcie-host: fix missing clocks properties
+  riscv: dts: microchip: mpfs: fix incorrect pcie child node name
+  riscv: dts: microchip: mpfs: remove ti,fifo-depth property
+  riscv: dts: microchip: mpfs: remove bogus card-detect-delay
+  riscv: dts: microchip: mpfs: remove pci axi address translation
+    property
+
+ .../bindings/pci/microchip,pcie-host.yaml     | 25 +++++++++++++++++++
+ .../bindings/pci/sifive,fu740-pcie.yaml       |  6 +++++
+ .../boot/dts/microchip/mpfs-icicle-kit.dts    |  3 ---
+ .../boot/dts/microchip/mpfs-polarberry.dts    |  3 ---
+ arch/riscv/boot/dts/microchip/mpfs.dtsi       |  3 +--
+ 5 files changed, 32 insertions(+), 8 deletions(-)
+
+-- 
+2.37.1
+
