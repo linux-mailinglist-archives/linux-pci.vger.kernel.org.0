@@ -2,97 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 548C85952C3
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 08:42:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 932195954E9
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 10:23:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbiHPGmw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 02:42:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        id S231441AbiHPIX0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 04:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbiHPGmh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 02:42:37 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE9E14EBBF
-        for <linux-pci@vger.kernel.org>; Mon, 15 Aug 2022 18:31:23 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id d14so12856128lfl.13
-        for <linux-pci@vger.kernel.org>; Mon, 15 Aug 2022 18:31:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=7TyoM62NCZIF/E5AFBSvac1IoKHCKnc+Y34dVW1eFns=;
-        b=52twqYpswvNn+4ufPoVuXYwtbANQzS3ciJHHysFqnHecqsLdTFoUN61U2QnWgSOr/i
-         TQXgO1Kgv9T1Y5tejanZLTzhnIOUEsj5CMpDvBvcmdPa8Ln6VeZXc+jRILGAocJ6E8RW
-         7y08HcEa1rce+7Swcc0KuD+qTjLsrwqbtFz126x5RHIN/0PddL+W1xRRoH7AH1YRe/Rp
-         CXDOW5VF9sZxW9yiFOQMjwzFnMIDKsAw/XyYbFvxPA2rDgUt1AgEnHLi0I5dZKVeURfk
-         ZP4BOyrrJzorHKeWyI48/PMOKhIAdiBwuCr9OkfvKfwMUdHgOk+7ncSIvuE5Zpd605x2
-         Q6eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=7TyoM62NCZIF/E5AFBSvac1IoKHCKnc+Y34dVW1eFns=;
-        b=jaf+fyHDmRBFXj07uv91kwHeuZ99lHrQlyt6+73huqff2A+wag2OjfL06gZ1MHyno6
-         9YLqwKewLAIp3O//BU+cBsWqggeHhx4ondUGhgmY1BBsARJxcU6Rb48T4FUkD1UYIU5z
-         HJOtveL9OCFjKslGhxHtsEg785XMT0NsDmTFnuwyl8OyBatQM8L3NvS0wC//nn+1ymdd
-         lQq7QwklHepEruWZy8e//LIY64upGPikVy40d3SAcywM8tMn2hF4SaYVrdDn5cO7++he
-         xdJdncoayFoqkrrlp9yEGw/MiRVSaIJ8qS4UEzxQk+103OSW4CO/7rANMzWSpsxy9rVr
-         bDwQ==
-X-Gm-Message-State: ACgBeo1JzenimUsu0jSwr6NskN++scd492XOifZTurNXQ4T8s2HcoPWt
-        mwGkM33udav8M7yJVbIEYrGqi2qwvZS0mZWU7Z+A5Q==
-X-Google-Smtp-Source: AA6agR49I5XQ54GRFcSaPPrWeKWJQ1VX4qlPtuaRTyVtiXCjCJXwKQDjJPBmvzfPhHNye0mxtkh2JKlWpGWhbwfbcxg=
-X-Received: by 2002:ac2:563b:0:b0:492:8f3a:44fc with SMTP id
- b27-20020ac2563b000000b004928f3a44fcmr1878799lff.645.1660613482321; Mon, 15
- Aug 2022 18:31:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANXvt5osmx+iFdVXYQhGcdBiz5VsA60jzdKXg42c_zSDuxoHxg@mail.gmail.com>
- <20220815183920.GA1960006@bhelgaas>
-In-Reply-To: <20220815183920.GA1960006@bhelgaas>
-From:   Shunsuke Mie <mie@igel.co.jp>
-Date:   Tue, 16 Aug 2022 10:31:11 +0900
-Message-ID: <CANXvt5oOZfPZp6gMjS7AL=NPjUuKTXW6Co-o9w+-X3hyM0k+aQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: fix Kconfig indent style
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Mason <jdmason@kudzu.us>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ren Zhijie <renzhijie2@huawei.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S231493AbiHPIWC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 04:22:02 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A251514658D;
+        Mon, 15 Aug 2022 23:01:56 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BE1D2020E6;
+        Tue, 16 Aug 2022 08:01:55 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E93EE2020DF;
+        Tue, 16 Aug 2022 08:01:54 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 3A3EB180031A;
+        Tue, 16 Aug 2022 14:01:53 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
+        lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
+        kw@linux.com, frank.li@nxp.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: [PATCH v2 0/10] Add iMX PCIe EP mode support
+Date:   Tue, 16 Aug 2022 13:44:37 +0800
+Message-Id: <1660628687-25676-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjom,
+i.MX PCIe controller is one dual mode PCIe controller, and can work either
+as RC or EP.
+This series add the i.MX PCIe EP mode support. And had been verified on
+i.MX8MQ and i.MX8MM EVK boards.
+In the verification, one EVK board used as RC, the other one used as EP.
+Use the cross TX/RX differential cable connect the two PCIe ports of these
+two EVK boards.
 
-2022=E5=B9=B48=E6=9C=8816=E6=97=A5(=E7=81=AB) 3:39 Bjorn Helgaas <helgaas@k=
-ernel.org>:
->
-> On Mon, Aug 15, 2022 at 12:00:23PM +0900, Shunsuke Mie wrote:
-> > I have a question, not related to the patch. Could you please tell me
-> > why the ntb related patches are managed outside the pci branch,
-> > Helgaas's branch? It confused me a little to find the ntb branch.
->
-> My understanding is that the recent drivers/pci/endpoint/functions/*ntb.c
-> patches were merged by Jon because they had dependencies on other
-> patches in his tree.
-That makes sense.
++-----------+                +------------+
+|   PCIe TX |<-------------->|PCIe RX     |
+|           |                |            |
+|EVK Board  |                |EVK Board   |
+|           |                |            |
+|   PCIe RX |<-------------->|PCIe TX     |
++-----------+                +------------+
 
-> In the future, I think most NTB-related patches in drivers/pci/ will
-> be merged via my PCI tree.
->
-> Bjorn
+Main changes from v1 -> v2:
+- Add Rob's ACK into first two commits.
+- Rebase to the tag: pci-v5.20-changes of the pci/next branch.
 
-Thanks,
-Shunsuke
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml |   2 +
+arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi             |  14 +++++++
+arch/arm64/boot/dts/freescale/imx8mm.dtsi                 |  20 ++++++++++
+arch/arm64/boot/dts/freescale/imx8mq-evk.dts              |  12 ++++++
+arch/arm64/boot/dts/freescale/imx8mq.dtsi                 |  27 +++++++++++++
+drivers/misc/pci_endpoint_test.c                          |   2 +
+drivers/pci/controller/dwc/Kconfig                        |  25 +++++++++++-
+drivers/pci/controller/dwc/pci-imx6.c                     | 181 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+8 files changed, 264 insertions(+), 19 deletions(-)
+
+[PATCH v2 01/10] dt-bindings: imx6q-pcie: Add iMX8MM PCIe EP mode
+[PATCH v2 02/10] dt-bindings: imx6q-pcie: Add iMX8MQ PCIe EP mode
+[PATCH v2 03/10] PCI: dwc: Kconfig: Add iMX PCIe EP mode support
+[PATCH v2 04/10] arm64: dts: Add iMX8MM PCIe EP support
+[PATCH v2 05/10] arm64: dts: Add iMX8MQ PCIe EP support
+[PATCH v2 06/10] arm64: dts: Add iMX8MM PCIe EP support on EVK board
+[PATCH v2 07/10] arm64: dts: Add iMX8MQ PCIe EP support on EVK board
+[PATCH v2 08/10] misc: pci_endpoint_test: Add iMX8 PCIe EP device
+[PATCH v2 09/10] PCI: imx6: Add iMX8MM PCIe EP mode
+[PATCH v2 10/10] PCI: imx6: Add iMX8MQ PCIe EP support
