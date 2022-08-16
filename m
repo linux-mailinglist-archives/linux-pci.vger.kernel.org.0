@@ -2,307 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9CF2595E68
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 16:35:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D790595E99
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 16:54:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235946AbiHPOfb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 10:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
+        id S229536AbiHPOyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 10:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234214AbiHPOfZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 10:35:25 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7821A6CF65;
-        Tue, 16 Aug 2022 07:35:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ds9vtXKl6pDzoLL6UlJHFwgzmb3wo9Z6aB9PU5Idd2J0P9KafudZiKMBupiSi0m4ONvfIcKi37kBoi2OZaMxs09m72n1Jk39aEYMKuFiXqM5yVC2XaOBM2kA6tVjdIFPQ/ZwGKDxMD+DqQtm8yE8yQ9rGMEi9TckSQEOAtxtrT5eBcZKh6JCErK7clOPqYdCIYLNUJibZygMZTaHPZ9uPH4GhetN6ml++P2eSiPfviH+29AlDWTQZEqLaDX1+jXgTXlFiwaGmtnII97HOIZByAqWQJ2WzL6Xm3Yjr7hq5GDkwbrwxMcpIx+dKM4kH8XdXQflBgZm5j4hzbLqToXmuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fXY0gozIbvPFL27WYqJUQOvc6i+Rbm3I/iaIB5C8whk=;
- b=P6NKJ73sy8/7Znd6qAmRao9amKi24b3qsCY9bNj5EKi9D/HybNnBwMpio3hB5/F+qSbrg3tkE2pgqSmGAqMMI6G4b2vJK/y8vn7uzifQMJB6o21rUWDsxgOBA0khhjhqfdAmaGiAm8jiCQVDYKuTbVncTqrmHqseVCQ40phdcWJkMuuDOr/O9ofog3oJPp3F58uTuBDK15gLFGcuA6YPgjiqTSVLINWENpMFuRI2c6q9htKFQ5NKYxzE9tgy5bObLcDKBQ7wW+roUbpLGSf8aSAQRxxuKdVXbqLGDAbu6Q2kp5KgfgvjQkomJLogXsOiTPoBP0kVmtz3/BEWse1w9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fXY0gozIbvPFL27WYqJUQOvc6i+Rbm3I/iaIB5C8whk=;
- b=lsBmqxid6Qbm5LXeONBKpNIW2LT/B1mgS0WRj2iOMl/GTvyabPpvDoi+pYeeSJzjfT8WBbr+JlKEQToej8i61vYnLcpCYsrY269u3M3rg0Z3VhXs47vu9SA48yp0V8+YPpbv7OA8Bc0DQY9SYzqhOK5UPhHbbOQZHTbbTpqbEBxfh1lutbdlTQSW8OUQ/gyoye0IKszmEf8SULHIVy/FzTo9zc4MhLGFRZE9kNSbgV5VO9eCPt/kKLjMGJj8Y6QpmXfdQJz/jz33/BhwWAchYQKuAqDGnzx3XB/Lh9rXM/AKigGdWwXmeJiv4u1NaawLHLebf8rH++txTqk39Dsong==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by BYAPR12MB3093.namprd12.prod.outlook.com (2603:10b6:a03:dc::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Tue, 16 Aug
- 2022 14:35:21 +0000
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::b150:321c:21e4:40c9]) by BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::b150:321c:21e4:40c9%7]) with mapi id 15.20.5525.011; Tue, 16 Aug 2022
- 14:35:20 +0000
-Message-ID: <5d9f537b-a7a3-b8ae-8779-9ffc15fd11bb@nvidia.com>
-Date:   Tue, 16 Aug 2022 20:05:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH V1] PCI: designware-ep: Fix DBI access before core init
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        sagar.tv@gmail.com, Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-References: <051a3baf-b4dd-7764-2e61-03584cefb4d3@nvidia.com>
- <20220729224404.GA478920@bhelgaas> <20220730145025.GA4005@thinkpad>
- <CAL_Jsq+tnLMcKGxzTJODQjCUTXU1yoMS2yF3WxEEfMmfgRt5uQ@mail.gmail.com>
- <20220802072426.GA2494@thinkpad> <20220802140738.GA115652@thinkpad>
- <YvumZJdDAqo7DfBe@lpieralisi>
-From:   Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <YvumZJdDAqo7DfBe@lpieralisi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0180.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::18) To BN8PR12MB2900.namprd12.prod.outlook.com
- (2603:10b6:408:69::18)
+        with ESMTP id S235713AbiHPOyk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 10:54:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971F761D7B;
+        Tue, 16 Aug 2022 07:54:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5C834B81646;
+        Tue, 16 Aug 2022 14:54:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83073C433D6;
+        Tue, 16 Aug 2022 14:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660661676;
+        bh=yKFsnzw1EkWC0v+w7uDhNcNgjrX28e9te6FlH9rY5gs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mhiNfPag2m49FMccdwipbtZoOkyKltOcgF/mTUupmGmlKjSohmYcjvR3RWB2eBWwF
+         aIVwafKsA9zEO8EEOUWrLQfo/8iHfqZ3/gv3/SrbVkovOn8taPnYOxJu899d1/S2bh
+         VQwaiiErgwpU1jX/BXClF3N76/DLyalTiqRpddkdUPTyV4O9SVfv6ORgaDpygGkokd
+         fGkfkYzbtSOFi3uqHrNCuxIfdaagJyh98QWGsqDvibjxgx3ItVVQsVNKyYe3jliEzo
+         zYdKEsGko5v1ZbfDdBupsqPH9RQnATTl/VY34x2zwZNhzqLSA90yHkziINalLW4WM7
+         2bDnoZtOjy96w==
+Date:   Tue, 16 Aug 2022 16:54:29 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kishon@ti.com
+Cc:     Shunsuke Mie <mie@igel.co.jp>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Fix
+ pci_endpoint_test_{copy,write,read}() panic
+Message-ID: <Yvuvpd9n59mp96p0@lpieralisi>
+References: <20220816100617.90720-1-mie@igel.co.jp>
+ <YvtxAN7E4nmZmL/X@kroah.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2c34c6ff-cb57-4402-f12b-08da7f948bc8
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3093:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?b3BmK2JITjVxN1FoN2x2RGVwdHBFT2trTmVmdXVlKzB3VnE2TFNGTHQrUFFi?=
- =?utf-8?B?YTYzTW8zVDFuU0lpUzVWQ0VlVWxBR2JSdFJJMHVDMlgwd0dtcmRoN3BobTNG?=
- =?utf-8?B?MWUzeDBidDl6a09PTExJOUJkUFliWFVvckJrZTZ2ZGlnK2lkMDk1eU9VK0FU?=
- =?utf-8?B?WE9UVmVLQThjNlAxZW9XYlg5RGk5NnBodGd0aG42UEdJUENqOGhSOHlLbzJM?=
- =?utf-8?B?cFFDMVVRdU9kS2c2MEJtVXdxampVMHNIR205TXlIak5zVmh5YkdObThXZ0pU?=
- =?utf-8?B?bm9vMTM2NmJ3U2FqMGRNQ0tOOU94MHUxUjhyaFlWOGw4NVBXVkM0V2g2YjFp?=
- =?utf-8?B?Z05LeXBENEN0ZWlLVWlzcURvR1YyUDYvTnRuZWNPUW0yTXdFRTVZbFBWOW51?=
- =?utf-8?B?NlBudkV2V3NoQk1zWGtHZHovbXZVWWF5cTZ1ZmYwc29CRjl4NXJsdWhpSzdw?=
- =?utf-8?B?TVVua1lMZ29yY3hDV0dCTDkvQW1vTnhjMzRTNDN2bUx1dlNrRUU5QUVtdWhO?=
- =?utf-8?B?Mnhwa2hhc051U1hEUDB3ejRTZ1o3czJqUVo1cWtkS0lIamlmT2xRNDgxZDkr?=
- =?utf-8?B?L2dHYUwxaXdxaVNicDhOczBPN283QkxJT05INldmN0VRZVFPQXZLOHYvOENK?=
- =?utf-8?B?OFVRdFhkcEhHOTIyMUpENFFOSlcyQ2NWU2t1UkppK2pXZjc0Y0UzcVN6Mlgv?=
- =?utf-8?B?dXJUallhRUFhS1Q5MTlqREwweVJQWWg1Y0NVOEY4Mk1KU1pPUFZLclVjSXU5?=
- =?utf-8?B?WWlMdm8yY0wyaTZVTVZ1ZSsweXFzQTlwMWtRcGJET25reUg4YTc1NFkxS0po?=
- =?utf-8?B?eTU0T2xYektFQWlCOXZjM2YxS0E1R1QvYjVRai9Wb1p3MEk5WGpReWVCREFS?=
- =?utf-8?B?aERLTVRxbEwxWDEwTm1jK3hBcEFYRVdmSVltSFhib0lWd25MV0t3ekd2RVJF?=
- =?utf-8?B?TVFQK0R5YzVDSFNMNlFCUUF5Wm1ta2FrRkRjTVZoeWYrMHZ2bm5WYmU1Rm9O?=
- =?utf-8?B?dWdWSXZDSlprbnMxQXAydXdqV0Rrd3k5R3hSNXlsYjlieE5ZV2dLTGRHalYx?=
- =?utf-8?B?eTZXeDZqcTJyZ3c2a0FOSEMyMEFjNVc1cGZwWGl1cHRZYU9aLzFsL3NXOWUy?=
- =?utf-8?B?RFdLYzFEYlpyc2Q0c1QraDNFWHUwMkQ5V3VRM2Iyb0hDakpaL2p1YkZzL1Zi?=
- =?utf-8?B?QlJDTGl2VmFJS0xJWTI2bFJCRERyRkVyY1B0NEN0REZ1TE9zdzR3UTN4TWFJ?=
- =?utf-8?B?RTl5aVpnTUhvSE5aR3lCN1JyRUtja1AvM041VENHVnlhTU9Kdz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(66946007)(316002)(31696002)(66556008)(8676002)(83380400001)(53546011)(41300700001)(6666004)(4326008)(2906002)(110136005)(36756003)(54906003)(186003)(31686004)(2616005)(38100700002)(26005)(66476007)(6512007)(6486002)(6506007)(86362001)(8936002)(478600001)(7416002)(5660300002)(966005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ei9TbFdvdXUxVjhlNGlNWGQ2MWgxMWsxMUlyci9xNVNqTmJ5b2tXdGRPY3ho?=
- =?utf-8?B?OCtWY3NaN1VqRHZ1WTd5b3R6ZTFZbnhMY2VHUkkxclZ6U1FSbkJqWFUyczdz?=
- =?utf-8?B?T1pyV2ZrSFFZa0o1SzA4dGFpOURldE5nVHdzbmdxaklnelRGMlZDaERmdTdM?=
- =?utf-8?B?Yi9yclBmTFZuWnVlajNlc2J3QzZodjdsYTJlU0FQUzFSK0hnMzJJU2c4NHh6?=
- =?utf-8?B?SzFVcEtLTi92UzllUFVpSXNFeUcyak96WnZkOVdyNTlMMy94Wm93NWlrQ3Yx?=
- =?utf-8?B?N1VwVi9pMy92dnRuWGZFS1d3YU1yZUJZNm1EaW1uZ01TdkZOTzYzblAwYlNl?=
- =?utf-8?B?TmNsRVI3cmVwT3NRYXlxZ0hzS2dqSDBRNytUSmRUVjhTYWNnSjRTaDhNa2Ew?=
- =?utf-8?B?QXFGWE9ab08xYkN5TWhhQk55Rm5DSnFBUS9iY1d1MVVYc0c0WSt1MkJGQ1NK?=
- =?utf-8?B?ckZzSnpBaWxHcGZyYVN3N3JvWm4reFFKU0VZeTAzMWlqc2Rid0VPay93aEdT?=
- =?utf-8?B?dmZiUnJscVZkOXRNRFhBdlo5cFNwaTlYaC9CMmlETzBqS3BUd2w0WkhRK3Rx?=
- =?utf-8?B?RVZUK3BsMUlVa3U3cENMOTIrUExpK0tUK0FNdlU4Z2crWnlCZS92UzNqcmND?=
- =?utf-8?B?ZzNZOWVzVzZJY3lIYW9pU3QwUkYrMEU3b1VFMmdZbTNjUzNFRkEwRW02MFp5?=
- =?utf-8?B?eWxKSTFBdnRZMFl3dFdUZXovV0FqK3NTNHJ3MjVoRlljQjBzaEtoNkM1TkFG?=
- =?utf-8?B?OEpQMDRIY3E0SWxrRmMxKzFNbFhpOHRxMGpHNTVjUTJ2TnNrSUtwbVdVdmMv?=
- =?utf-8?B?WGVNZnI4cG5KWWN5SUowSnFNWUdOQkFST21yRjBvU2h5QVJnQTN5a3VFVUV2?=
- =?utf-8?B?SDBuSXNlRnU3aFFCSFZlM2NaWlBPcU1DT3FtSWxEWmJwbTY1Wkw4MjdTZ3B2?=
- =?utf-8?B?OU1NUTZDRkZybDVGL0Z3eFpNQVZFdjJmUUFwdlU0alNwY1kxNElad0x3TG5G?=
- =?utf-8?B?cjQ1c0NCV0RIMklxaFlPaHRLajI5cGQ1ZGFQR0s5ZVRWdXA1ZVJzRE9zUFov?=
- =?utf-8?B?SmhkVktJYURxWUlsbWhtR0lSNG5XZUJ3VEFnVldZMktYYm9BM3BIcnRuWVVT?=
- =?utf-8?B?WkZnK0QyeXNwNnRETWlUdUluSHByUmlkbmlVRUJGSXBGZzZBcitNekpMYXpI?=
- =?utf-8?B?N28rYXEyUmYrR0szanM5SmovT0RhbkpDZlVQdFBYS3phVHpVRFFLbThKalJy?=
- =?utf-8?B?SzdBdXlqZmdPOU50VDcwN0pxSk8xcWlMd1d2WlA2N0wzVjU3VHVHZjI0L3gz?=
- =?utf-8?B?SDdyZkJzYVNWT2gzK2laVFNEbjBBeE81R3NLNWlCWEZkYlB0SXBkWE1maE8v?=
- =?utf-8?B?bFMzVmZ5bHdOS241dnR5MWM5UlJyYVRYN09EMkFaK1dudWdtemtVWnNpS1l2?=
- =?utf-8?B?OElKUGxCV01rZVFPRDZKbGsvRXZEUDNXeGszTDRhVmx1T2VhQVMzbElvb3lI?=
- =?utf-8?B?VDBZVXNkWFBiWXJuT2d0dUwyM2lkZkcwMWJISXBxTDVNT2RldkdHSmhvTmtw?=
- =?utf-8?B?MWVtTjVRaEJyZTgraDZMa0ZFVjVkTDdFSVB2MVE2cytub09zV1J5OFU4ZE9a?=
- =?utf-8?B?UGYwZW5Hb0Z6eWFneHVycTJzU3oweTFYTFRJWWFWWTZDdVllNkN6U1VBVEM3?=
- =?utf-8?B?cFRmdGk5NldSU251NHQ1R2NlK2N6VGZQNVY1OHlFZ2pNYXAyYmhIN25nTlMz?=
- =?utf-8?B?MkYrbzBiWDFsdmVkT3UxS3RYYkVaTGZGTlJyb2ZKOG5mYk96NC9YSnBxSUx1?=
- =?utf-8?B?SE5LK095dTlqRXdYTE9xbFJIQmkrd2ZIT0U5OTlaOHNEcXFYMjVQOVhXVUNC?=
- =?utf-8?B?MGh1UjQveHhOaldRcUJTV29Od1J1TVJrY1c4K2xmS2t1NG1YWkRmQmZ1KzFB?=
- =?utf-8?B?cGNsckUxaUFSM3ZPL1drWm1YY3ZrY0dpZXJFWHZrUHRVSzN5SjB4TTFJVkNJ?=
- =?utf-8?B?azdmMll1SkUwQm16c2lmWjIwcTlEU0lkeTdEZG11Y3crRCtWWitxaWZMeEQr?=
- =?utf-8?B?SGhDYWg5dWxpR3U1ZVA1YnNnVFYrUzgyNXNjL2ZWSVovQ3JmQldDQmNMUHZ3?=
- =?utf-8?Q?XSBseIa+6CqQRkQaxjYFCYvSt?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c34c6ff-cb57-4402-f12b-08da7f948bc8
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 14:35:20.8279
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hm0u4Ji+3GGhvxDAYVaHucz+1PcQ7hiob1nUKv1ARPDNggZ0rHs17sdgenK6LUvYAy4GL/Ab62q/6oNMn1k4Og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3093
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YvtxAN7E4nmZmL/X@kroah.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 8/16/2022 7:45 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
+On Tue, Aug 16, 2022 at 12:27:12PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Aug 16, 2022 at 07:06:17PM +0900, Shunsuke Mie wrote:
+> > Although dma_map_single() doesn't permit zero length mapping, the each
+> > test functions called the function without zero checking.
+> > 
+> > A panic was reported on arm64:
+> > 
+> > [   60.137988] ------------[ cut here ]------------
+> > [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+> > [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+> > 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+> > c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+> > [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
+> > [   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> > [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+> > [   60.213149] lr : swiotlb_map+0x88/0x1f0
+> > [   60.216982] sp : ffff80000a883bc0
+> > [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
+> > [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
+> > [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
+> > [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
+> > [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
+> > [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
+> > [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+> > [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
+> > [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
+> > [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
+> > [   60.291658] Call trace:
+> > [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+> > [   60.298629]  swiotlb_map+0x88/0x1f0
+> > [   60.302115]  dma_map_page_attrs+0x188/0x230
+> > [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
+> > [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+> > [   60.316583]  invoke_syscall+0x44/0x108
+> > [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+> > [   60.325038]  do_el0_svc+0x2c/0xb8
+> > [   60.328351]  el0_svc+0x2c/0x88
+> > [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+> > [   60.335587]  el0t_64_sync+0x18c/0x190
+> > [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
+> > [   60.345344] ---[ end trace 0000000000000000 ]---
+> > 
+> > To fix it, this patch adds checkings the payload length if it is zero.
+> > 
+> > Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
+> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > ---
+> >  drivers/misc/pci_endpoint_test.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> > index 8f786a225dcf..d45426a73396 100644
+> > --- a/drivers/misc/pci_endpoint_test.c
+> > +++ b/drivers/misc/pci_endpoint_test.c
+> > @@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+> >  	}
+> >  
+> >  	size = param.size;
+> > -	if (size > SIZE_MAX - alignment)
+> > +	if (size > SIZE_MAX - alignment || !size)
+> >  		goto err;
 > 
+> Can we test size first?  And do it in the ioctl handler in one place so
+> you don't have to add it everywhere?
 > 
-> On Tue, Aug 02, 2022 at 07:37:38PM +0530, Manivannan Sadhasivam wrote:
->> On Tue, Aug 02, 2022 at 12:54:37PM +0530, Manivannan Sadhasivam wrote:
->>> On Mon, Aug 01, 2022 at 02:27:14PM -0600, Rob Herring wrote:
->>>> On Sat, Jul 30, 2022 at 8:50 AM Manivannan Sadhasivam
->>>> <manivannan.sadhasivam@linaro.org> wrote:
->>>>>
->>>>> On Fri, Jul 29, 2022 at 05:44:04PM -0500, Bjorn Helgaas wrote:
->>>>>> [+cc Xiaowei (author of 6bfc9c3a2c70), Hou (author of 8bcca2658558)]
->>>>>>
->>>>>> On Thu, Jul 28, 2022 at 05:56:28PM +0530, Vidya Sagar wrote:
->>>>>>> On 7/28/2022 3:44 AM, Bjorn Helgaas wrote:
->>>>>>>> On Wed, Jun 22, 2022 at 09:31:33AM +0530, Vidya Sagar wrote:
->>>>>>>>> Platforms that cannot support their core initialization without the
->>>>>>>>> reference clock from the host, implement the feature 'core_init_notifier'
->>>>>>>>> to indicate the DesignWare sub-system about when their core is getting
->>>>>>>>> initialized. Any accesses to the core (Ex:- DBI) would result in system
->>>>>>>>> hang in such systems (Ex:- tegra194). This patch moves any access to the
->>>>>>>>> core to dw_pcie_ep_init_complete() API which is effectively called only
->>>>>>>>> after the core initialization.
->>>>
->>>>>>    6) What's going on with the CORE_INIT and LINK_UP notifiers?
->>>>>>       dw_pcie_ep_init_notify() is only called by qcom and tegra.
->>>>>>       dw_pcie_ep_linkup() is only called by dra7xx, qcom, and tegra.
->>>>>>       As far as I can tell, nobody at all registers to handle those
->>>>>>       events except a test.  I think it's pointless to have that code
->>>>>>       if nobody uses it.
->>>>>>
->>>>>
->>>>> I have submitted an actual driver that makes use of these notifiers:
->>>>> https://lore.kernel.org/lkml/20220502060611.58987-9-manivannan.sadhasivam@linaro.org/
->>>>
->>>> Notifiers aren't the best interface in the kernel. I think they are
->>>> best used if there's no real linkage between the sender and receiver.
->>>> For an EPC and EPF that's a fixed interface, so define a proper
->>>> interface.
->>>>
->>>
->>> Fair point! The use of notifiers also suffer from an issue where the notifier
->>> chain in EPC is atomic but the EPF calls some of the functions like
->>> pci_epc_write_header() could potentially sleep.
->>>
->>> I'll try to come up with an interface.
->>>
->>
->> I thought about using a new set of callbacks that define the EPC events and
->> have the EPF drivers populate them during probe time. Like below,
->>
->> ```
->> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
->> index e03c57129ed5..45247802d6f7 100644
->> --- a/include/linux/pci-epf.h
->> +++ b/include/linux/pci-epf.h
->> @@ -74,6 +74,20 @@ struct pci_epf_ops {
->>                                          struct config_group *group);
->>   };
->>
->> +/**
->> + * struct pci_epf_events - Callbacks for capturing the EPC events
->> + * @init_complete: Callback for the EPC initialization complete event
->> + * @link_up: Callback for the EPC link up event
->> + */
->> +struct pci_epc_events {
->> +       void (*init_complete)(struct pci_epf *epf);
->> +       void (*link_up)(struct pci_epf *epf);
->> +};
->> +
->>   /**
->>    * struct pci_epf_driver - represents the PCI EPF driver
->>    * @probe: ops to perform when a new EPF device has been bound to the EPF driver
->> @@ -172,6 +186,7 @@ struct pci_epf {
->>          unsigned int            is_vf;
->>          unsigned long           vfunction_num_map;
->>          struct list_head        pci_vepf;
->> +       struct pci_epc_events   *events;
->>   };
->>
->>   /**
->> ```
->>
->> When each of the event is received by the EPC driver, it will use the EPC API
->> to call the relevant event callback for _each_ EPF. Like below:
->>
->> ```
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index 6ad9b38b63a9..4b0b30b91403 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -724,10 +724,15 @@ EXPORT_SYMBOL_GPL(pci_epc_linkdown);
->>    */
->>   void pci_epc_init_notify(struct pci_epc *epc)
->>   {
->> +       struct pci_epf *epf;
->> +
->>          if (!epc || IS_ERR(epc))
->>                  return;
->>
->> -       blocking_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
->> +       list_for_each_entry(epf, &epc->pci_epf, list) {
->> +               if (epf->events->init_complete)
->> +                       epf->events->init_complete(epf);
->> +       }
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_init_notify);
->> ```
->>
->> Does this look good to you? I can spin up an RFC series, but wanted to check the
->> interface design beforehand.
+> Or have a "validate all parameters" function that you do it in one
+> place?
 > 
-> I am resuming patch reviews, have you posted a follow up ?
-> 
-> Just to understand where we are with this thread and start reviewing
-> from there, I will update patchwork accordingly (you should add
-> a Link: to this thread anyway in the new series).
+> Also, all of these ioctl handlers are wrong, they are returning "0" to
+> userspace if they fail, which is not correct at all.
 
-Manivannan posted a new patch set at 
-https://patchwork.kernel.org/project/linux-pci/list/?series=666818 to 
-address concerns with the notifier mechanism.
+This is bad, thanks Greg for spotting it.
 
-I would be sending a follow-up patch for the current patch soon.
+@Kishon, we have to fix it asap, please let me know if you
+can post a patch promptly.
 
-Thanks,
-Vidya Sagar
+Lorenzo
 
+> thanks,
 > 
-> Thanks,
-> Lorenzo
+> greg k-h
 > 
->> Thanks,
->> Mani
->>
->>> Thanks,
->>> Mani
->>>
->>>> Rob
->>>
->>> --
->>> மணிவண்ணன் சதாசிவம்
->>
->> --
->> மணிவண்ணன் சதாசிவம்
