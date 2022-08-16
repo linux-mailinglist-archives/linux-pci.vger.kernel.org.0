@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE7AE59625F
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 20:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AEF6596260
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 20:26:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237092AbiHPS0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 14:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45682 "EHLO
+        id S237100AbiHPS0J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 14:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237027AbiHPS0C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 14:26:02 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E3A86B5C
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:25:57 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id bs25so13637373wrb.2
+        with ESMTP id S237065AbiHPS0G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 14:26:06 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EEE86B63
+        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:25:58 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id bu15so5112023wrb.7
         for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=conchuod.ie; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=i14dSapeS6A95og3h5kVrEaeQxUOEEcffvmz7W7v7mg=;
-        b=SFfhLwGA1m3W49evekpktH/l4IitnbDTV07fTcveNPx+SVDpmrIhLDWbuuqx94qZCQ
-         3k4dwlMnCtECF1kUYylgBOCmMmcHMH2BGHCInV4vx1IHN8RZaI7SxCTkW5Z+hlZS0pAA
-         px1nzTkEaWBBn7CjvMDvM064Rs4nvR8/vGfqGAmsu49ckurodNOHilwC9LJa56thDAbT
-         fU7QmYIp9OyTLf3KIAqEXBh1A0W0uJtqQZaIYZdz+q8dQ1n7mQFlY6ZF6w4BS1wiBa12
-         dc5ffczB0xcWpaLya62H3cEkimt/Lu4jTTZtqctIcDm6rpHHOEgxMLffokpP/uAwnuDD
-         gI1A==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=d9TppbXdiWPs+48x7U6F2RLRbtXIB7UvU4Wm4rVvtl0=;
+        b=f2AlxGScpJunozXwr3OLri+tVAp8DP91ryrotY2//J2fi1OUCt1LNagskuDqphhkZT
+         YrquLa/5e3kZ0mNDTpe8BZPCqsenNm2Iz6veDpmpJ2eS1/XvlY9RG0X5z1/PE71xJM/z
+         T89NIgNPpq6E+d39MQKxfD7TWO20cghUHmkysLjgO3lWV5s7Rl+R6uqjodyd8Uo9Phd8
+         3Jpqpdld6ng03AVC6cciJzWfKieF0XVANREG8RAcZlM+uEsFPf0miZbDNl9GDQcXyNWL
+         1Gy9OFXRx+voQGCrcVvklEEfQh2gOjJjjJeoID3OXAAvB/6mk0/QFGfKnDLEXI1kcD03
+         MiRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=i14dSapeS6A95og3h5kVrEaeQxUOEEcffvmz7W7v7mg=;
-        b=d0heU4+heayVsBI6qUn2JXzpkFRaz8G3AaPOaK1RfIVXJ8h8yO5g1UT0utBX8lkqSF
-         fjwDH4J5QCak05BNlJD7DqGoXXJgusBdzSyWNBEQXKtY0in9NmoijL5GdrQDr1okpxnz
-         52BUrqP7tBGdrZFlH95EaoudvSdnKsniNgtFMNr/l7IXP6FLHzgC/swKW3bzLSuWZ6nL
-         vADqaJddgETeaOLCtuVuFub+XbAMysb4syzAG4e+urK0cZE+7/yG9zrxU65KR+Dns6zn
-         8WwyUSA+IWKue6QcxJ2esvrcjAmuD5Q1iDT/SQTUBMe6TBZiZBOgz+EsT0WXyzJMKoat
-         9cDA==
-X-Gm-Message-State: ACgBeo18DPnO1WudUBOD7qlxzhkhzlx//KGLJAyseOOORCC5+MbyMWHd
-        nwn2AGKAvwhG6BgwnbIuuINSDA==
-X-Google-Smtp-Source: AA6agR6bTwH/YxxR5LcBXZI5QTnN9mSXoYCK/TmLm8WaQxf55ygx9S28F9mU7Vc29aiDwpv9EgOsEQ==
-X-Received: by 2002:adf:f74b:0:b0:225:1fdb:a787 with SMTP id z11-20020adff74b000000b002251fdba787mr1250471wrp.33.1660674355174;
-        Tue, 16 Aug 2022 11:25:55 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=d9TppbXdiWPs+48x7U6F2RLRbtXIB7UvU4Wm4rVvtl0=;
+        b=smESEcxayVeDVRmbYaaqwd56/bWSJJ+ZrtdTAb9U6S9CMgaFos/HKUzCVhh2UoNo2Q
+         1uUUj3Ki9DMQ4LWpMwRfm8KI8ELxO0n0/L5gdd+nc//z+RKkThY4FSLhjlxxcOBXPJh2
+         yR8Ea6sCMiuOb9SP9CT2IZZ2w7kQjqLXW5jllLsrmR/VucmuHJeFM7gJJBV+9SQyo9vn
+         39rmchNEpbBY1WBT+quhRnZ9pLuBbO9HcMvGHZcRLwZZCs+M/0A/mlzbgmqwJ59X9nVn
+         DVC8Zn/S3IW9rsnolqsRsAmt5Gqkj27b4qcxHk2m0m5JcGFt1rX2LnXHExtHUF0P2BHL
+         EDiA==
+X-Gm-Message-State: ACgBeo08zsR5rxx3PKeXPo1CE/kF8Vhvgdj/0VwCuv84sEyV22cZnBtJ
+        w98JsIyXZOeuNmx2GnO//1yPEQ==
+X-Google-Smtp-Source: AA6agR5I+KbBV3e/0Gh9/t5/+sRspQ2mbNFQlQO0aX1NckIqMfw5q/VrA8Cv5/N3BXLfG6j4FPECGg==
+X-Received: by 2002:a05:6000:1152:b0:220:6421:ccdc with SMTP id d18-20020a056000115200b002206421ccdcmr12322712wrx.61.1660674356514;
+        Tue, 16 Aug 2022 11:25:56 -0700 (PDT)
 Received: from henark71.. ([109.76.58.63])
-        by smtp.gmail.com with ESMTPSA id s17-20020a1cf211000000b003a603fbad5bsm4015482wmc.45.2022.08.16.11.25.53
+        by smtp.gmail.com with ESMTPSA id s17-20020a1cf211000000b003a603fbad5bsm4015482wmc.45.2022.08.16.11.25.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 11:25:54 -0700 (PDT)
+        Tue, 16 Aug 2022 11:25:55 -0700 (PDT)
 From:   Conor Dooley <mail@conchuod.ie>
 To:     Daire McNamara <daire.mcnamara@microchip.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,10 +60,12 @@ To:     Daire McNamara <daire.mcnamara@microchip.com>,
         Conor Dooley <conor.dooley@microchip.com>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH v2 0/6] Fix RISC-V/PCI dt-schema issues with dt-schema v2022.08
-Date:   Tue, 16 Aug 2022 19:25:42 +0100
-Message-Id: <20220816182547.3454843-1-mail@conchuod.ie>
+Subject: [PATCH v2 1/6] dt-bindings: PCI: fu740-pci: fix missing clock-names
+Date:   Tue, 16 Aug 2022 19:25:43 +0100
+Message-Id: <20220816182547.3454843-2-mail@conchuod.ie>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220816182547.3454843-1-mail@conchuod.ie>
+References: <20220816182547.3454843-1-mail@conchuod.ie>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -78,45 +80,46 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-Hey all,
+The commit b92225b034c0 ("dt-bindings: PCI: designware: Fix
+'unevaluatedProperties' warnings") removed the clock-names property as
+a requirement and from the example as it triggered unevaluatedProperty
+warnings. dtbs_check was not able to pick up on this at the time, but
+now can:
 
-Got a few fixes for PCI dt-bindings that I noticed after upgrading my
-dt-schema to v2022.08. (and the associated dts now too)
+arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dtb: pcie@e00000000: Unevaluated properties are not allowed ('clock-names' was unexpected)
+        From schema: linux/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
 
-Since all the dts patches are for "my" boards, I'll take them once the
-bindings are approved. I added a pair of other dts changes to the series,
-mostly for my own benefit in tracking what I need to apply that were
-previously at [0] & [1].
+The property was already in use by the FU740 DTS and the clock must be
+enabled. The Linux driver does not use this property, but outside of
+the kernel this property may have users. Re-add the property and its
+"clocks" dependency.
 
-Thanks,
-Conor.
+Fixes: b92225b034c0 ("dt-bindings: PCI: designware: Fix 'unevaluatedProperties' warnings")
+Fixes: 43cea116be0b ("dt-bindings: PCI: Add SiFive FU740 PCIe host controller")
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+v2022.08 of dt-schema is required.
+---
+ .../devicetree/bindings/pci/sifive,fu740-pcie.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-0 - https://lore.kernel.org/all/20220811203207.179470-1-mail@conchuod.ie/
-1 - https://lore.kernel.org/all/20220811204024.182453-1-mail@conchuod.ie/
-
-Changes since v1:
-- fu740: rewrite commit message
-- mchp: rework clock-names as per rob's suggestion on IRC
-- mchp: drop the "legacy" from the node name
-- mchp: renemove the address translation property
-- mchp: change the child node name in the dts rather than the binding
-
-Conor Dooley (6):
-  dt-bindings: PCI: fu740-pci: fix missing clock-names
-  dt-bindings: PCI: microchip,pcie-host: fix missing clocks properties
-  riscv: dts: microchip: mpfs: fix incorrect pcie child node name
-  riscv: dts: microchip: mpfs: remove ti,fifo-depth property
-  riscv: dts: microchip: mpfs: remove bogus card-detect-delay
-  riscv: dts: microchip: mpfs: remove pci axi address translation
-    property
-
- .../bindings/pci/microchip,pcie-host.yaml     | 25 +++++++++++++++++++
- .../bindings/pci/sifive,fu740-pcie.yaml       |  6 +++++
- .../boot/dts/microchip/mpfs-icicle-kit.dts    |  3 ---
- .../boot/dts/microchip/mpfs-polarberry.dts    |  3 ---
- arch/riscv/boot/dts/microchip/mpfs.dtsi       |  3 +--
- 5 files changed, 32 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+index 195e6afeb169..c7a9a2dc0fa6 100644
+--- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+@@ -51,6 +51,12 @@ properties:
+     description: A phandle to the PCIe power up reset line.
+     maxItems: 1
+ 
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: pcie_aux
++
+   pwren-gpios:
+     description: Should specify the GPIO for controlling the PCI bus device power on.
+     maxItems: 1
 -- 
 2.37.1
 
