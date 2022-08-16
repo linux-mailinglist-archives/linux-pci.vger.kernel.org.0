@@ -2,55 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6023F59601F
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 18:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3178F5960DF
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 19:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236349AbiHPQ0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 12:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44526 "EHLO
+        id S232654AbiHPRQ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 13:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236237AbiHPQ0A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 12:26:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B67B7B293
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 09:25:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22F7DB81A8C
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 16:25:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ABD0C433C1;
-        Tue, 16 Aug 2022 16:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660667156;
-        bh=R1xq11x6NRuXRDw6mj7ARmgejl3H5Ns/RHgrrlQhP7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VMfRcPFrBNhQC7rN5PgbxXUXHTYvgNBuAl1g+yxFc21MKx1RhSE+ZdtgktJ+iitmk
-         2nJt3uyqzqlTqy1IkoJG8hJJ8EW/BO6FtFKoIYmY9cnbZamMAX/+lcg8kibnFzBGz2
-         V4WmD8pquWHLJVt03aDuDLlDBG+Gk4OB0hdD5HrDa+DQkT0GW2QVWP1Mk1F4sBzwiv
-         /v5Npg4dTu/H76dmINec68Nn/MfECi6OA+6drod/CPp3ffhqLKkmXeoNwsRtePqHpo
-         1XvBQE76moLbtvEOUg1bQuXQicw7NgYAOcnFROKHsqZ3YDYpK5RGWfn1g/c1K+JzVa
-         jooahrgkwbTtg==
-Date:   Tue, 16 Aug 2022 18:25:48 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 00/18] PCI: aardvark controller changes BATCH 5
-Message-ID: <YvvFDGpcEz8E4SpA@lpieralisi>
-References: <20220220193346.23789-1-kabel@kernel.org>
+        with ESMTP id S231502AbiHPRQ4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 13:16:56 -0400
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DED7B1D3;
+        Tue, 16 Aug 2022 10:16:55 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id x64so8741876iof.1;
+        Tue, 16 Aug 2022 10:16:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=D6Sgt43wReIJnABbhCpmxjkDmeNfZCDyXj29Wo+CNs8=;
+        b=oqsGkJNcK9PlGa0hC+MpVDFoUX2AprOvdi8mcPanOLRigWx5JGABs70fBOcrv7GAs4
+         hpBEgIuLq9Q7UqJqxXfU8n2kW/d4KJit8+JrVLt4tZ3MctWzoIhXA/NcPrSqUCIkRjFt
+         htf9Cuflbo0A2gadI3GbF7dMUQvNC28FQ8DO9uE3+UDyUv787MXbjxhkAqrEmbhtEWpp
+         SWzaoDgGCZnrwQvp64iZY2e39+5C9b0V8Q0abt3xNuHqj/po1qelVRrDH1ysYQFHYC0r
+         lUD6SB0i7Iz2VW7v6KBZrO31eKKRIwGNPLfAT4GBAKxiKe3XT9kvKTQ+fcvdHdaTITOW
+         3Isg==
+X-Gm-Message-State: ACgBeo1Vmpe62eEieuI9yIefLFt1ug2dowkVxwF7ihWtnpkhz+/E1oMH
+        vl32G2c8ZyanLuqG0rS0Rw==
+X-Google-Smtp-Source: AA6agR4UoyqZp5rPDlBv+twyXjIBp3pBBc8VUd5rGKNF9vZzXP9/deWo2SFDDC4yGZQAjMi/xA1z6A==
+X-Received: by 2002:a05:6638:1450:b0:346:8b01:c980 with SMTP id l16-20020a056638145000b003468b01c980mr4307459jad.286.1660670214577;
+        Tue, 16 Aug 2022 10:16:54 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id f24-20020a02a118000000b00339df77c491sm4536515jag.114.2022.08.16.10.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 10:16:54 -0700 (PDT)
+Received: (nullmailer pid 2399174 invoked by uid 1000);
+        Tue, 16 Aug 2022 17:16:52 -0000
+Date:   Tue, 16 Aug 2022 11:16:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Conor.Dooley@microchip.com
+Cc:     krzysztof.kozlowski@linaro.org, mail@conchuod.ie,
+        Daire.McNamara@microchip.com, bhelgaas@google.com,
+        krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
+        greentime.hu@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 4/4] dt-bindings: PCI: microchip,pcie-host: fix missing
+ address translation property
+Message-ID: <20220816171652.GA2390778-robh@kernel.org>
+References: <20220811203306.179744-1-mail@conchuod.ie>
+ <20220811203306.179744-5-mail@conchuod.ie>
+ <edf3da1b-79dc-4e09-8d3e-73aca09e847f@linaro.org>
+ <0dd12c70-70f9-1dc1-c5c8-a3ff15be81f6@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220220193346.23789-1-kabel@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <0dd12c70-70f9-1dc1-c5c8-a3ff15be81f6@microchip.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,69 +70,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 08:33:28PM +0100, Marek Behún wrote:
-> Hello Lorenzo, Krzysztof,
+On Fri, Aug 12, 2022 at 08:20:45AM +0000, Conor.Dooley@microchip.com wrote:
+> On 12/08/2022 08:52, Krzysztof Kozlowski wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > On 11/08/2022 23:33, Conor Dooley wrote:
+> >> From: Conor Dooley <conor.dooley@microchip.com>
+> >>
+> >> When the PCI controller node was added to the PolarFire SoC dtsi,
+> >> dt-schema was not able to detect the presence of some undocumented
+> >> properties due to how it handled unevaluatedProperties. v2022.08
+> >> introduces better validation, producing the following error:
+> >>
+> >> arch/riscv/boot/dts/microchip/mpfs-polarberry.dtb: pcie@2000000000: Unevaluated properties are not allowed ('clock-names', 'microchip,axi-m-atr0' were unexpected)
+> >>          From schema: Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> >>
+> >> Fixes: 528a5b1f2556 ("riscv: dts: microchip: add new peripherals to icicle kit device tree")
+> >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> >> ---
+> >> I feel like there's a pretty good chance that this is not the way this
+> >> should have been done and the property should be marked as deprecated
+> >> but I don't know enough about PCI to answer that.
+> > 
+> > It seems bindings were added incomplete and now based on DTS (which did
+> > not match bindings), we keep adding "missing" properties. I don't think
+> > it is good. It creates a precedence where someone might intentionally
+> > sneak limited bindings (without controversial property) and later claim
+> > "I forgot to include foo,bar".
 > 
-> here comes batch 5 of changes for Aardvark PCIe controller.
+> Yup, again pretty much the same thoughts as me. I don't think that, even
+> if the property is valid, should be either named as it is or only work
+> for translation table 0.
 > 
-> This batch
-> - adds support for AER
-> - adds support for DLLSC and hotplug interrupt
-> - adds support for sending slot power limit message
-> - adds enabling/disabling PCIe clock
-> - adds suspend support
-> - optimizes link training by adding it into separate worker
-> - optimizes GPIO resetting by asserting it only if it wasn't asserted
->   already
+> > 
+> > Therefore the property should pass review just like it is newly added
+> > property.
 > 
-> Marek
+> SGTM.
 > 
-> Marek Behún (1):
->   arm64: dts: marvell: armada-37xx: Add clock to PCIe node
+> > 
+> >> ---
+> >>   .../devicetree/bindings/pci/microchip,pcie-host.yaml  | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> >> index 9b123bcd034c..9ac34b33c4b2 100644
+> >> --- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> >> +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> >> @@ -71,6 +71,17 @@ properties:
+> >>     msi-parent:
+> >>       description: MSI controller the device is capable of using.
+> >>
+> >> +  microchip,axi-m-atr0:
+> > 
+> > Name is not helping. If it is offset, add such suffix (see
+> > brcm,iproc-pcie.yaml).
+> > 
+> > Unfortunately I don't know PCIe good enough to judge whether the
+> > property makes any sense or some other ranges-style should be used.
 > 
-> Miquel Raynal (2):
->   PCI: aardvark: Add clock support
->   PCI: aardvark: Add suspend to RAM support
-> 
-> Pali Rohár (13):
->   PCI: aardvark: Add support for AER registers on emulated bridge
->   PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
->   PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
->   PCI: pciehp: Enable DLLSC interrupt only if supported
->   PCI: pciehp: Enable Command Completed Interrupt only if supported
->   PCI: aardvark: Add support for DLLSC and hotplug interrupt
->   PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
->   PCI: Add function for parsing `slot-power-limit-milliwatt` DT property
->   dt-bindings: PCI: aardvark: Describe slot-power-limit-milliwatt
->   PCI: aardvark: Send Set_Slot_Power_Limit message
->   arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt
->     for PCIe
->   PCI: aardvark: Run link training in separate worker
->   PCI: aardvark: Optimize PCIe card reset via GPIO
-> 
-> Russell King (2):
->   PCI: pci-bridge-emul: Re-arrange register tests
->   PCI: pci-bridge-emul: Add support for PCIe extended capabilities
-> 
->  .../devicetree/bindings/pci/aardvark-pci.txt  |   2 +
->  .../dts/marvell/armada-3720-turris-mox.dts    |   1 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   1 +
->  drivers/pci/controller/pci-aardvark.c         | 380 ++++++++++++++++--
->  drivers/pci/hotplug/pciehp_hpc.c              |  34 +-
->  drivers/pci/hotplug/pnv_php.c                 |  13 +-
->  drivers/pci/of.c                              |  64 +++
->  drivers/pci/pci-bridge-emul.c                 | 130 +++---
->  drivers/pci/pci-bridge-emul.h                 |  15 +
->  drivers/pci/pci.h                             |  15 +
->  include/uapi/linux/pci_regs.h                 |   4 +
->  11 files changed, 565 insertions(+), 94 deletions(-)
+> Yup, I think it is similar to that. Except we have 4 tables rather
+> than one.
 
-Hi Marek,
+Looks to me like dma-ranges is the answer.
 
-back from a hiatus, just catching up with threads. According to
-patchwork patches {8,14,16} of this series are still to be
-reviewed; may I ask you please an update on the status and we
-will take it from there.
-
-Thanks,
-Lorenzo
+Rob
