@@ -2,220 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9557059572E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 11:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88AB45958DC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 12:48:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233711AbiHPJyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 05:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
+        id S235064AbiHPKsK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 06:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234129AbiHPJx7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 05:53:59 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B7571A3A1;
-        Tue, 16 Aug 2022 01:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660639199; x=1692175199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RSEQvzyLuQNM7I4Q/O8zTlnKSg2x78+IvGBFvjba1ps=;
-  b=ZJQhUY37KNj5BcnSIqxBhb8EGUC3gDMC6DNmGKTBctXxtM6z/SDEx3z9
-   eFrPJE3ruj1U5jt/JCaVlAeXzElzr/4SX6l65EGFxhyfzOjCel1thYtcu
-   Vnm5iR/KcNEW8w0dUOsc0wh23pgMtMSNvN/bcLY8xqknaUft6ByTeJ6T0
-   DIvdxrM4vjfCfu45XPCcoFjStzSx4fW9EN9EsTmBzBGm080VrIwwYfxnL
-   Ji+2SAnZnwsBxIxwJzKYOkoE88Wek4N239WIXOoVI+Jsmq87CrBP+T3f0
-   s3FYHfqUnx+uXnh8zvt6PO9KTQ3eqzqsjybNLwZjdWIGZtPTmZdCqCMlM
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="279124302"
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="279124302"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 01:39:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="710058969"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Aug 2022 01:39:52 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oNs74-0001dx-2Y;
-        Tue, 16 Aug 2022 08:39:50 +0000
-Date:   Tue, 16 Aug 2022 16:39:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Frank Li <Frank.Li@nxp.com>, maz@kernel.org, tglx@linutronix.de,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com,
-        bhelgaas@google.com
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
-        lznuaa@gmail.com
-Subject: Re: [PATCH v5 2/4] irqchip: Add IMX MU MSI controller driver
-Message-ID: <202208161638.7Rn1SHT2-lkp@intel.com>
-References: <20220815213936.2380439-3-Frank.Li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220815213936.2380439-3-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234223AbiHPKrj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 06:47:39 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9678F6331
+        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 03:06:51 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id h21-20020a17090aa89500b001f31a61b91dso16928160pjq.4
+        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 03:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc;
+        bh=95RmrDaOTs+TArBQIen65/TK8NYN58Pk/yEsVpA/XLQ=;
+        b=zz9Kx3opIvtvTrScnyxJFs+GMVOTDDp5nBSvQKpeRSoleANTX97HmK+QRmChlfTaKV
+         jGVVnWVywSPSjU/a1ky6Uzb13fGSTlUMNszCrAZnwHKYSsuJRvLnm9XnY/hSfuhXTxbY
+         UP3EsrGopcq32sK+1wS/JrcKLEUuEmAHuhB8T0Rlkd63ALxbuaOALnGeUDDAZpvicfFw
+         wBm6+MTqaNHlBnO60iQ98zQp0sfAdXY84wjR0IIBqqmM+NTV5XhCYShRZXQ6l/lxcEcD
+         0TdQrSd2U16XmkLX3UFTO3u2dhKUX1gwgXDG+2jiPAWkcbZRzCOEACiokc4Ud8V0GdU2
+         4mgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=95RmrDaOTs+TArBQIen65/TK8NYN58Pk/yEsVpA/XLQ=;
+        b=WLf+BQbaMltF8Gj8S5y9Ot59WwKgnD7SVmEpK8Sq7ghGkxcseRO2Le5n+vOhN6F2Yn
+         dvx/P8Px4klK5wnV60Bw3RWSv0OuRqCXcmhDn9mqAz59N3vy+tTI70YZikd8N9FPMSYm
+         sQUpn6YcIQdDD2MVGnDcJGVo69xR+Bw7F09jBbVLHF9NH4Njl/+0U6SvtxSxkkyMn65y
+         GE5bh+9QCptxz1RxItP99bDILt7SBN/un1NzK+PklOo9toDhvRHoW3DTW4cCrvao/M5d
+         o3lqq0Vp8ql0HXv21nn7Vw4q98DcFcz460dezvwW65YpFOOggiblpA2kxDTIwZG+bBcU
+         OjBA==
+X-Gm-Message-State: ACgBeo1JjZcnDPxVirrvvKesChS9+w2fdRO3AAF9kHSABnnnzrBZaW0u
+        38NCE13wOSEx3+z2ki6AM20m0g==
+X-Google-Smtp-Source: AA6agR6iuIfqsnKC8rmEvnL+RqpghMmdGBLz80IUfA88+gmFc61k0TjFisYsOWDicYjBJ7EdB/T1VA==
+X-Received: by 2002:a17:90b:17ce:b0:1f4:d068:5722 with SMTP id me14-20020a17090b17ce00b001f4d0685722mr31558785pjb.28.1660644411079;
+        Tue, 16 Aug 2022 03:06:51 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id y24-20020a631818000000b004202cb1c491sm7219029pgl.31.2022.08.16.03.06.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 03:06:50 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shunsuke Mie <mie@igel.co.jp>
+Subject: [PATCH] misc: pci_endpoint_test: Fix pci_endpoint_test_{copy,write,read}() panic
+Date:   Tue, 16 Aug 2022 19:06:17 +0900
+Message-Id: <20220816100617.90720-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Frank,
+Although dma_map_single() doesn't permit zero length mapping, the each
+test functions called the function without zero checking.
 
-I love your patch! Perhaps something to improve:
+A panic was reported on arm64:
 
-[auto build test WARNING on jonmason-ntb/ntb-next]
-[also build test WARNING on robh/for-next linus/master v6.0-rc1 next-20220816]
-[cannot apply to tip/irq/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[   60.137988] ------------[ cut here ]------------
+[   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+[   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+[   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
+[   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+[   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+[   60.213149] lr : swiotlb_map+0x88/0x1f0
+[   60.216982] sp : ffff80000a883bc0
+[   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
+[   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
+[   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
+[   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
+[   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
+[   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
+[   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
+[   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
+[   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
+[   60.291658] Call trace:
+[   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+[   60.298629]  swiotlb_map+0x88/0x1f0
+[   60.302115]  dma_map_page_attrs+0x188/0x230
+[   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
+[   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+[   60.316583]  invoke_syscall+0x44/0x108
+[   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+[   60.325038]  do_el0_svc+0x2c/0xb8
+[   60.328351]  el0_svc+0x2c/0x88
+[   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+[   60.335587]  el0t_64_sync+0x18c/0x190
+[   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
+[   60.345344] ---[ end trace 0000000000000000 ]---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220816-131930
-base:   https://github.com/jonmason/ntb ntb-next
-config: arm64-randconfig-r025-20220815 (https://download.01.org/0day-ci/archive/20220816/202208161638.7Rn1SHT2-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project aed5e3bea138ce581d682158eb61c27b3cfdd6ec)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/71296e2ad757d90e870b2ab81f2b06b9c76e7c41
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220816-131930
-        git checkout 71296e2ad757d90e870b2ab81f2b06b9c76e7c41
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/irqchip/
+To fix it, this patch adds checkings the payload length if it is zero.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
+Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+---
+ drivers/misc/pci_endpoint_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-All warnings (new ones prefixed by >>):
-
->> drivers/irqchip/irq-imx-mu-msi.c:295:32: warning: variable 'priv' set but not used [-Wunused-but-set-variable]
-           struct imx_mu_msi *msi_data, *priv;
-                                         ^
-   1 warning generated.
-
-
-vim +/priv +295 drivers/irqchip/irq-imx-mu-msi.c
-
-   288	
-   289	static int __init imx_mu_of_init(struct device_node *dn,
-   290					 struct device_node *parent,
-   291					 const struct imx_mu_dcfg *cfg
-   292					)
-   293	{
-   294		struct platform_device *pdev = of_find_device_by_node(dn);
- > 295		struct imx_mu_msi *msi_data, *priv;
-   296		struct device_link *pd_link_a;
-   297		struct device_link *pd_link_b;
-   298		struct resource *res;
-   299		struct device *pd_a;
-   300		struct device *pd_b;
-   301		struct device *dev;
-   302		int ret;
-   303		int irq;
-   304	
-   305		if (!pdev)
-   306			return -ENODEV;
-   307	
-   308		dev = &pdev->dev;
-   309	
-   310		priv = msi_data = devm_kzalloc(&pdev->dev, sizeof(*msi_data), GFP_KERNEL);
-   311		if (!msi_data)
-   312			return -ENOMEM;
-   313	
-   314		msi_data->cfg = cfg;
-   315	
-   316		msi_data->regs = devm_platform_ioremap_resource_byname(pdev, "processor a-facing");
-   317		if (IS_ERR(msi_data->regs)) {
-   318			dev_err(&pdev->dev, "failed to initialize 'regs'\n");
-   319			return PTR_ERR(msi_data->regs);
-   320		}
-   321	
-   322		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "processor b-facing");
-   323		if (!res)
-   324			return -EIO;
-   325	
-   326		msi_data->msiir_addr = res->start + msi_data->cfg->xTR;
-   327	
-   328		irq = platform_get_irq(pdev, 0);
-   329		if (irq <= 0)
-   330			return -ENODEV;
-   331	
-   332		platform_set_drvdata(pdev, msi_data);
-   333	
-   334		msi_data->clk = devm_clk_get(dev, NULL);
-   335		if (IS_ERR(msi_data->clk)) {
-   336			if (PTR_ERR(msi_data->clk) != -ENOENT)
-   337				return PTR_ERR(msi_data->clk);
-   338	
-   339			msi_data->clk = NULL;
-   340		}
-   341	
-   342		pd_a = dev_pm_domain_attach_by_name(dev, "processor a-facing");
-   343		if (IS_ERR(pd_a))
-   344			return PTR_ERR(pd_a);
-   345	
-   346		pd_b = dev_pm_domain_attach_by_name(dev, "processor b-facing");
-   347		if (IS_ERR(pd_b))
-   348			return PTR_ERR(pd_b);
-   349	
-   350		pd_link_a = device_link_add(dev, pd_a,
-   351				DL_FLAG_STATELESS |
-   352				DL_FLAG_PM_RUNTIME |
-   353				DL_FLAG_RPM_ACTIVE);
-   354	
-   355		if (!pd_link_a) {
-   356			dev_err(dev, "Failed to add device_link to mu a.\n");
-   357			goto err_pd_a;
-   358		}
-   359	
-   360		pd_link_b = device_link_add(dev, pd_b,
-   361				DL_FLAG_STATELESS |
-   362				DL_FLAG_PM_RUNTIME |
-   363				DL_FLAG_RPM_ACTIVE);
-   364	
-   365	
-   366		if (!pd_link_b) {
-   367			dev_err(dev, "Failed to add device_link to mu a.\n");
-   368			goto err_pd_b;
-   369		}
-   370	
-   371		ret = imx_mu_msi_domains_init(msi_data, dev);
-   372		if (ret)
-   373			goto err_dm_init;
-   374	
-   375		irq_set_chained_handler_and_data(irq,
-   376						 imx_mu_msi_irq_handler,
-   377						 msi_data);
-   378	
-   379		pm_runtime_enable(dev);
-   380	
-   381		return 0;
-   382	
-   383	err_dm_init:
-   384		device_link_remove(dev,	pd_b);
-   385	err_pd_b:
-   386		device_link_remove(dev, pd_a);
-   387	err_pd_a:
-   388		return -EINVAL;
-   389	}
-   390	
-
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 8f786a225dcf..d45426a73396 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 	}
+ 
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
++	if (size > SIZE_MAX - alignment || !size)
+ 		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+@@ -498,7 +498,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
+ 	}
+ 
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
++	if (size > SIZE_MAX - alignment || !size)
+ 		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+@@ -596,7 +596,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 	}
+ 
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
++	if (size > SIZE_MAX - alignment || !size)
+ 		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.17.1
+
