@@ -2,75 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 914EF59626F
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 20:27:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E685962D4
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 21:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236559AbiHPS0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 14:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
+        id S236658AbiHPTFH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 15:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237090AbiHPS0I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 14:26:08 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA6F86C3F
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:26:03 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id v3so13646899wrp.0
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 11:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=0menBycPydf3OF4brxfxIM8hwmBUp4QdVL5XPrXyre0=;
-        b=cq/wfBYlh9TNFle3AyyvA6aRqw5tapsXhJ5VOkQTJzEV+SvWLBxc0M7sv8kJVNFdJ5
-         5JncrYyhkUkDXQWKF8FAx4sOG+2Ex6/MC0HoGJhU8vOvxPOwd8YhEMi9IQCLhhDbmhUD
-         5joEaePchEDaqh7S5PvvzvcmKFLRa3Wqpo562J+IcuT6DJ4Rc6YKoH3AOuH7ki/Avy3R
-         hLP2aCDDBDn0P/4xlwEI29MsDEgyaxsNArRWr+Y9os15aApcQqcS3ANBUaBPIP9sDbWh
-         yow8teObOTaeHu0HIjh+iczV/cqIcV45gESM0bCY/PkvniEAUabK6pe1YdzVVW39fcvQ
-         JHBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=0menBycPydf3OF4brxfxIM8hwmBUp4QdVL5XPrXyre0=;
-        b=oFY+pzHsNYwC+5LpH7iOZhRovIgmtGou47N9VDR0PB8oOtp1TQz416tHvM62lNsg5T
-         RJrMm+2vup4uRoXLrYw69mStzIb8WAARHdyIcQjmMP9FJaQpjRY0Ur8bAO+XM3BPM+NL
-         JjItaQ/v/sNUQbsqtJZTllZgFR/nQQFPc4NQPrTObvm4RX+ei3sYOQVYKFV6E60y19Af
-         DFli6H1E4JjlB2dpA14GN1OUqxKNN6xlJxRULfoAKgfPhWa566+WM9Sll5JivsiEpA/p
-         ru7/6l8Gf1eY4ClQTUt6ndYs/DS0hykPzTGBIjPCX1FoMMg5XKQqFAF1Cuc4P26WpmnQ
-         fGCw==
-X-Gm-Message-State: ACgBeo29r4/HcRLCs8KExTcbG1Dz7gCEq6z4xKOMPkQbECLFsrqLkDTn
-        LDe/JGg3d7sxMJJfBF1LtAgIDxEmjMjkkx79
-X-Google-Smtp-Source: AA6agR6kxEpAlsWHGGaIsHWoq0lgu/Z8DXmzz/tOaQf+JXZgc8EJhMGnIovPSVPfRDBgUP5kkbMmOQ==
-X-Received: by 2002:a5d:4d4d:0:b0:225:fbf:fbac with SMTP id a13-20020a5d4d4d000000b002250fbffbacmr4093198wru.623.1660674362913;
-        Tue, 16 Aug 2022 11:26:02 -0700 (PDT)
-Received: from henark71.. ([109.76.58.63])
-        by smtp.gmail.com with ESMTPSA id s17-20020a1cf211000000b003a603fbad5bsm4015482wmc.45.2022.08.16.11.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 11:26:02 -0700 (PDT)
-From:   Conor Dooley <mail@conchuod.ie>
-To:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH v2 6/6] riscv: dts: microchip: mpfs: remove pci axi address translation property
-Date:   Tue, 16 Aug 2022 19:25:48 +0100
-Message-Id: <20220816182547.3454843-7-mail@conchuod.ie>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220816182547.3454843-1-mail@conchuod.ie>
-References: <20220816182547.3454843-1-mail@conchuod.ie>
+        with ESMTP id S233407AbiHPTFH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 15:05:07 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373205D11B;
+        Tue, 16 Aug 2022 12:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660676706; x=1692212706;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fw20SIT8UosrRyl9DK6OBZL1qLEKx8DhIicuKy/Nujk=;
+  b=SnNSVFEk85LBDnsXbOkaF8x8PpODHWIDJy4HMvCyGD3KUQuW8ubWWXjA
+   LIntEJ5fTonYNRom/cc+Oft1hEiEhVRQF3VlGscnTYKJuai0JdC8/u5un
+   E/9BL6BsZyI+FVWgYxNBusc2ER2uL/32wqE4dN9NZ0B+p9k/FsRtAQEhf
+   Gd++bdbMCa6IUdXOJba3EQAHTqOqLhQqt0dU+tjhYnHpyrl6pYjOY8DxF
+   CYlZHPpJiImiQc4Sk9H0dfQzS8lS4U29MiMAWnEvcIBbG+efhhiyETcMB
+   l0Xms4HvceCog37hBLLvAFpkGPdwwJCH5q0KPjh9VvFMP+j7crfVPPhqQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10441"; a="292303577"
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="292303577"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 12:05:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="733409002"
+Received: from lkp-server02.sh.intel.com (HELO 81d7e1ade3ba) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 16 Aug 2022 12:04:59 -0700
+Received: from kbuild by 81d7e1ade3ba with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oO1s3-00009Y-0i;
+        Tue, 16 Aug 2022 19:04:59 +0000
+Date:   Wed, 17 Aug 2022 03:04:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Frank Li <Frank.Li@nxp.com>, maz@kernel.org, tglx@linutronix.de,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com,
+        bhelgaas@google.com
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com
+Subject: Re: [PATCH v5 2/4] irqchip: Add IMX MU MSI controller driver
+Message-ID: <202208170210.zGxvHnIZ-lkp@intel.com>
+References: <20220815213936.2380439-3-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815213936.2380439-3-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,32 +71,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Hi Frank,
 
-An AXI master address translation table property was inadvertently
-added to the device tree & this was not caught by dtbs_check at the
-time. Remove the property - it should not be in mpfs.dtsi anyway as
-it would be more suitable in -fabric.dtsi nor does it actually apply
-to the version of the reference design we are using for upstream.
+I love your patch! Yet something to improve:
 
-Fixes: 528a5b1f2556 ("riscv: dts: microchip: add new peripherals to icicle kit device tree")
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- arch/riscv/boot/dts/microchip/mpfs.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+[auto build test ERROR on jonmason-ntb/ntb-next]
+[also build test ERROR on robh/for-next linus/master v6.0-rc1 next-20220816]
+[cannot apply to tip/irq/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/riscv/boot/dts/microchip/mpfs.dtsi b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-index e69322f56516..a1176260086a 100644
---- a/arch/riscv/boot/dts/microchip/mpfs.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-@@ -485,7 +485,6 @@ pcie: pcie@2000000000 {
- 			ranges = <0x3000000 0x0 0x8000000 0x20 0x8000000 0x0 0x80000000>;
- 			msi-parent = <&pcie>;
- 			msi-controller;
--			microchip,axi-m-atr0 = <0x10 0x0>;
- 			status = "disabled";
- 			pcie_intc: interrupt-controller {
- 				#address-cells = <0>;
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220816-131930
+base:   https://github.com/jonmason/ntb ntb-next
+config: arm-multi_v5_defconfig (https://download.01.org/0day-ci/archive/20220817/202208170210.zGxvHnIZ-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project aed5e3bea138ce581d682158eb61c27b3cfdd6ec)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/71296e2ad757d90e870b2ab81f2b06b9c76e7c41
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220816-131930
+        git checkout 71296e2ad757d90e870b2ab81f2b06b9c76e7c41
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/irqchip/irq-imx-mu-msi.c:124:13: error: use of undeclared identifier 'irq_chip_ack_parent'
+           .irq_ack = irq_chip_ack_parent,
+                      ^
+   drivers/irqchip/irq-imx-mu-msi.c:127:30: error: variable has incomplete type 'struct msi_domain_ops'
+   static struct msi_domain_ops imx_mu_msi_irq_ops = {
+                                ^
+   drivers/irqchip/irq-imx-mu-msi.c:127:15: note: forward declaration of 'struct msi_domain_ops'
+   static struct msi_domain_ops imx_mu_msi_irq_ops = {
+                 ^
+   drivers/irqchip/irq-imx-mu-msi.c:131:12: error: use of undeclared identifier 'MSI_FLAG_USE_DEF_DOM_OPS'
+           .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+                      ^
+   drivers/irqchip/irq-imx-mu-msi.c:131:39: error: use of undeclared identifier 'MSI_FLAG_USE_DEF_CHIP_OPS'
+           .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+                                                 ^
+   drivers/irqchip/irq-imx-mu-msi.c:130:31: error: variable has incomplete type 'struct msi_domain_info'
+   static struct msi_domain_info imx_mu_msi_domain_info = {
+                                 ^
+   drivers/irqchip/irq-imx-mu-msi.c:130:15: note: forward declaration of 'struct msi_domain_info'
+   static struct msi_domain_info imx_mu_msi_domain_info = {
+                 ^
+   drivers/irqchip/irq-imx-mu-msi.c:203:3: error: field designator 'alloc' does not refer to any field in type 'const struct irq_domain_ops'
+           .alloc  = imx_mu_msi_domain_irq_alloc,
+            ^
+   drivers/irqchip/irq-imx-mu-msi.c:204:3: error: field designator 'free' does not refer to any field in type 'const struct irq_domain_ops'
+           .free   = imx_mu_msi_domain_irq_free,
+            ^
+   drivers/irqchip/irq-imx-mu-msi.c:241:25: error: call to undeclared function 'platform_msi_create_irq_domain'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           msi_data->msi_domain = platform_msi_create_irq_domain(
+                                  ^
+   drivers/irqchip/irq-imx-mu-msi.c:295:32: warning: variable 'priv' set but not used [-Wunused-but-set-variable]
+           struct imx_mu_msi *msi_data, *priv;
+                                         ^
+   1 warning and 8 errors generated.
+
+
+vim +/irq_chip_ack_parent +124 drivers/irqchip/irq-imx-mu-msi.c
+
+   121	
+   122	static struct irq_chip imx_mu_msi_irq_chip = {
+   123		.name = "MU-MSI",
+ > 124		.irq_ack = irq_chip_ack_parent,
+   125	};
+   126	
+
 -- 
-2.37.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
