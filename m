@@ -2,147 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 110325958FF
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 12:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F57D595913
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Aug 2022 12:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234003AbiHPKxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 06:53:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41350 "EHLO
+        id S234930AbiHPK5h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 06:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbiHPKxE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 06:53:04 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539AA2C641
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 03:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660645232; x=1692181232;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HJfYgK5NM8XnPZRlYHb+V1fcgMGYYKdU4fQLCC4Lhm8=;
-  b=lM6uscP/5nUm7Iw+pA6VJ7dy16sbRDLnapliFSfzx4AQNW2isW0QK6wt
-   NMrrYdEQmaaWrYQVcrvnosm9xSlr1MtcHNKxq9L4Q91JmML4wr4PpBHNQ
-   pExCHhbB2D3ntSxONF/aH2gF0d2Z6qpRsBm/1eOqsgsB24/ZOk69lx4cg
-   b68iaUTMHvPN2JxfOLPT7MGCcOy71zvjYhoMzvrk9JQp1OnWnVPbQu/NV
-   GonbWaq80nDa690ynAcEWbNBrEfIVg+gfxlj+Bi7u8YGJ8EwB19Mbtb+u
-   m/d0j5NHK+htQf5zcD3HmEkcWJf4ylQnpFBjPeKQTeb5sV7vmsDNja0ho
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="290934009"
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="290934009"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 03:20:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="639981362"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 16 Aug 2022 03:20:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E19262D5; Tue, 16 Aug 2022 13:20:42 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Russell Currey <ruscur@russell.cc>, oohall@gmail.com,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/DPC: Quirk PIO log size for certain Intel PCIe root ports
-Date:   Tue, 16 Aug 2022 13:20:42 +0300
-Message-Id: <20220816102042.69125-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S233565AbiHPK5K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 06:57:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B302985B1;
+        Tue, 16 Aug 2022 03:27:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3464F601BF;
+        Tue, 16 Aug 2022 10:27:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05255C433D6;
+        Tue, 16 Aug 2022 10:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1660645635;
+        bh=Vez2PaWp4k1h9o9aKWJXXm1qC0RzAbHH5x5Do9Gf33w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SEqW73XQ3X47k5+ITNUnPUbL9FlDFnzZVvGYm0GVXqQdQ1TcZCwiOhv+ULLaatJoD
+         YGZ6nEX6Ygwy+k6qaGpdw9Z/qtZvBcfGwSuT9w676ZBNHae8zE+PKVctDrQ1ynICG4
+         puofc8Jl7CsOHPMeYBF8vAelz+yhFumxnJA8wqOM=
+Date:   Tue, 16 Aug 2022 12:27:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shunsuke Mie <mie@igel.co.jp>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Fix
+ pci_endpoint_test_{copy,write,read}() panic
+Message-ID: <YvtxAN7E4nmZmL/X@kroah.com>
+References: <20220816100617.90720-1-mie@igel.co.jp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816100617.90720-1-mie@igel.co.jp>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is a BIOS bug on Intel Tiger Lake and Alder Lake systems that
-accidentally clears the root port PIO log size even though it should be 4.
-Fix the affected root ports by forcing the log size to be 4 if it is set
-to 0. The BIOS for the next generation CPUs should have this fixed.
+On Tue, Aug 16, 2022 at 07:06:17PM +0900, Shunsuke Mie wrote:
+> Although dma_map_single() doesn't permit zero length mapping, the each
+> test functions called the function without zero checking.
+> 
+> A panic was reported on arm64:
+> 
+> [   60.137988] ------------[ cut here ]------------
+> [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+> [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+> 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+> c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+> [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
+> [   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+> [   60.213149] lr : swiotlb_map+0x88/0x1f0
+> [   60.216982] sp : ffff80000a883bc0
+> [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
+> [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
+> [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
+> [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
+> [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
+> [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
+> [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+> [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
+> [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
+> [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
+> [   60.291658] Call trace:
+> [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+> [   60.298629]  swiotlb_map+0x88/0x1f0
+> [   60.302115]  dma_map_page_attrs+0x188/0x230
+> [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
+> [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+> [   60.316583]  invoke_syscall+0x44/0x108
+> [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+> [   60.325038]  do_el0_svc+0x2c/0xb8
+> [   60.328351]  el0_svc+0x2c/0x88
+> [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+> [   60.335587]  el0t_64_sync+0x18c/0x190
+> [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
+> [   60.345344] ---[ end trace 0000000000000000 ]---
+> 
+> To fix it, this patch adds checkings the payload length if it is zero.
+> 
+> Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
+> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 8f786a225dcf..d45426a73396 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  	}
+>  
+>  	size = param.size;
+> -	if (size > SIZE_MAX - alignment)
+> +	if (size > SIZE_MAX - alignment || !size)
+>  		goto err;
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=209943
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/pcie/dpc.c | 13 ++++++++-----
- drivers/pci/quirks.c   | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 5 deletions(-)
+Can we test size first?  And do it in the ioctl handler in one place so
+you don't have to add it everywhere?
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3e9afee02e8d..ab06c801a2c1 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -335,11 +335,14 @@ void pci_dpc_init(struct pci_dev *pdev)
- 		return;
- 
- 	pdev->dpc_rp_extensions = true;
--	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
--	if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
--		pci_err(pdev, "RP PIO log size %u is invalid\n",
--			pdev->dpc_rp_log_size);
--		pdev->dpc_rp_log_size = 0;
-+	/* If not already set by the quirk in quirks.c */
-+	if (!pdev->dpc_rp_log_size) {
-+		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-+		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-+			pci_err(pdev, "RP PIO log size %u is invalid\n",
-+				pdev->dpc_rp_log_size);
-+			pdev->dpc_rp_log_size = 0;
-+		}
- 	}
- }
- 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4944798e75b5..260d8b50f68d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5956,3 +5956,40 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
- #endif
-+
-+#ifdef CONFIG_PCIE_DPC
-+/*
-+ * Intel Tiger Lake and Alder Lake BIOS has a bug that clears the DPC
-+ * log size of the integrated Thunderbolt PCIe root ports so we quirk
-+ * them here.
-+ */
-+static void dpc_log_size(struct pci_dev *dev)
-+{
-+	u16 dpc_cap, val;
-+
-+	dpc_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC);
-+	if (!dpc_cap)
-+		return;
-+
-+	pci_read_config_word(dev, dpc_cap + PCI_EXP_DPC_CAP, &val);
-+	if (!(val & PCI_EXP_DPC_CAP_RP_EXT))
-+		return;
-+
-+	if (!((val & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8)) {
-+		pci_info(dev, "quirking RP PIO log size\n");
-+		dev->dpc_rp_log_size = 4;
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x461f, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x462f, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x463f, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x466e, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a23, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a25, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a27, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a29, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
-+#endif
--- 
-2.35.1
+Or have a "validate all parameters" function that you do it in one
+place?
 
+Also, all of these ioctl handlers are wrong, they are returning "0" to
+userspace if they fail, which is not correct at all.
+
+thanks,
+
+greg k-h
