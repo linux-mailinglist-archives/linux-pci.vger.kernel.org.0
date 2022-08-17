@@ -2,106 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3560D5969CC
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 08:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8F3B596A9A
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 09:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiHQGoR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Aug 2022 02:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53664 "EHLO
+        id S231688AbiHQHnk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Aug 2022 03:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230183AbiHQGoQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 02:44:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792034CA2F
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 23:44:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 158DA6117D
-        for <linux-pci@vger.kernel.org>; Wed, 17 Aug 2022 06:44:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D298C433D6;
-        Wed, 17 Aug 2022 06:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1660718654;
-        bh=IEC1gV3N39NMhQ3mBHUUZstUlnMF4Nl/M3D+D2V5PZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A0yeE7NWJFfwDWUMDymU+v0vOrH/cHwVCu4ocahR+kYd7KmHGvwvfFcDR0sItdoin
-         mRJpcZwVbm/F76zIGzeNKT2nsMEE8b49Nl7JolX8seOXpugiYaMq8B795GB0BDdqoK
-         zTcMZTShe8kFxzTHeXIXa06upQAtZoI2HiuapC34=
-Date:   Wed, 17 Aug 2022 08:44:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Mark Brown <broonie@kernel.org>, Michael Walle <michael@walle.cc>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        kernelci-results@groups.io, bot@kernelci.org,
-        gtucker@collabora.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: next/master bisection: baseline.bootrr.intel-igb-probed on
- kontron-pitx-imx8m
-Message-ID: <YvyOOWB6rBq0ZEpF@kroah.com>
-References: <62eed399.170a0220.2503a.1c64@mx.google.com>
- <YvEAF1ZvFwkNDs01@sirena.org.uk>
- <deda4eb1592cb61504c9d42765998653@walle.cc>
- <YvEEidOZ62igUYrR@sirena.org.uk>
- <CAGETcx_JSViBcySNp+Rany2osBiKL7ON+tooPKW8TOTP6+t_HA@mail.gmail.com>
- <YvvTKkR4sOIsFxA4@sirena.org.uk>
- <CAGETcx8vwDd3m3DZFJK7h0jjHMZhOfChRKHPt5qj8O8cJ_ReHA@mail.gmail.com>
+        with ESMTP id S232822AbiHQHnj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 03:43:39 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B73075CF6;
+        Wed, 17 Aug 2022 00:43:36 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M70L66wVTzcfh3;
+        Wed, 17 Aug 2022 15:40:30 +0800 (CST)
+Received: from dggpemm100006.china.huawei.com (7.185.36.196) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 17 Aug 2022 15:43:34 +0800
+Received: from canpemm500001.china.huawei.com (7.192.104.163) by
+ dggpemm100006.china.huawei.com (7.185.36.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 17 Aug 2022 15:43:34 +0800
+Received: from canpemm500001.china.huawei.com ([7.192.104.163]) by
+ canpemm500001.china.huawei.com ([7.192.104.163]) with mapi id 15.01.2375.024;
+ Wed, 17 Aug 2022 15:43:34 +0800
+From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "Gonglei (Arei)" <arei.gonglei@huawei.com>,
+        zhuangshengen <zhuangshengen@huawei.com>
+Subject: [Question] Any plan to support enable PCI SRIOV concurrently in
+ kernel side?
+Thread-Topic: [Question] Any plan to support enable PCI SRIOV concurrently in
+ kernel side?
+Thread-Index: AdiyDNZvspPz1b9KT9CKr88dkJbU8g==
+Date:   Wed, 17 Aug 2022 07:43:34 +0000
+Message-ID: <0a8ce5714e2d4eed909cb096d4832036@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.151.254]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx8vwDd3m3DZFJK7h0jjHMZhOfChRKHPt5qj8O8cJ_ReHA@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 10:48:04AM -0700, Saravana Kannan wrote:
-> On Tue, Aug 16, 2022 at 10:26 AM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Fri, Aug 12, 2022 at 04:54:25PM -0700, Saravana Kannan wrote:
-> >
-> > > While you are here, I'm working towards patches on top of [1] where
-> > > fw_devlink will tie the sync_state() callback to each regulator. Also,
-> > > i realized that if you can convert the regulator_class to a
-> > > regulator_bus, we could remove a lot of the "find the supply for this
-> > > regulator when it's registered" code and let device links handle it.
-> > > Let me know if that's something you'd be okay with. It would change
-> > > the sysfs path for /sys/class/regulator and moves it to
-> > > /sys/bus/regulator, but not sure if that's considered an ABI breakage
-> > > (sysfs paths change all the time).
-> >
-> > That *does* sound like it'd be an ABI issue TBH.  I thought there was
-> > support for keeping class around even when converting to a bus
-> 
-> Ah, this is news to me. I'll poke around to see if the path can be
-> maintained even after converting a class to a bus.
+Hi,
 
-Which specific path are you worried about?
+Enable SRIOV concurrently with many different PFs in userspace seems workable.
+I'm trying to do it with 8 PFs(each one with 240+ VFs), but get some warnings,
+here is the backtrace:
 
-> (though
-> > TBH given how entirely virtual this stuff us it seems odd that we'd be
-> > going for a bus).
-> 
-> I'm going for a bus because class doesn't have a distinction between
-> "device has been added" and "device is ready if these things happen".
-> There's nothing to say that a "bus" has to be a real hardware bus.
+Warning 1:
+---
+sysfs: cannot create duplicate filename '/devices/pci0000:30/0000:30:02.0/pci_bus/0000:32'
+Call Trace:
+ dump_stack+0x6f/0xab
+ sysfs_warn_dup+0x56/0x70
+ sysfs_create_dir_ns+0x80/0x90
+ kobject_add_internal+0xa0/0x2b0
+ kobject_add+0x71/0xd0
+ device_add+0x126/0x630
+ pci_add_new_bus+0x17c/0x4b0
+ pci_iov_add_virtfn+0x336/0x390
+ sriov_enable+0x26e/0x450
+ virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
+---
+The reason is that different VFs may create the same pci bus number
+and try to add new bus concurrently in virtfn_add_bus.
 
-busses are not always real hardware busses, look at the virtual bus code
-for examples of that.
+Warning 2:
+---
+proc_dir_entry 'pci/33' already registered
+WARNING: CPU: 71 PID: 893 at fs/proc/generic.c:360 proc_register+0xf8/0x130
+Call Trace:
+ proc_mkdir_data+0x5d/0x80
+ pci_proc_attach_device+0xe9/0x120
+ pci_bus_add_device+0x33/0x90
+ pci_iov_add_virtfn+0x375/0x390
+ sriov_enable+0x26e/0x450
+ virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
+---
+The reason is that different VFs may create '/proc/bus/pci/bus_number'
+directory using the same bus number in pci_proc_attach_device concurrently.
 
-Classes are "representations of a type of device that userspace
-interacts with" like input, sound, tty, and so on, that are independant
-of the type of hardware bus or device it is.  Do all regulators need to
-interact with userspace in a common way?  If so, it's a class, if not,
-maybe a bus would work, but that takes more code than a class so it
-should only be done if you really need it for some odd reason.
+Mutex lock can avoid potential conflict. With the patch below the warnings above
+are no longer appear.
 
-thanks,
+My question is that any plan to support enable PCI SRIOV concurrently in kernel side?
 
-greg k-h
+Thanks
+
+---
+drivers/pci/iov.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 952217572113..6a8a849298c4 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -16,6 +16,12 @@
+ 
+ #define VIRTFN_ID_LEN    16
+ 
++static struct mutex add_bus_mutex;
++static int add_bus_mutex_initialized;
++
++static struct mutex add_device_mutex;
++static int add_device_mutex_initialized;
++
+ int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
+ {
+     if (!dev->is_physfn)
+@@ -127,13 +133,24 @@ static struct pci_bus *virtfn_add_bus(struct pci_bus *bus, int busnr)
+     if (bus->number == busnr)
+         return bus;
+ 
++    if (!add_bus_mutex_initialized) {
++        mutex_init(&add_bus_mutex);
++        add_bus_mutex_initialized = 1;
++    }
++    mutex_lock(&add_bus_mutex);
++
+     child = pci_find_bus(pci_domain_nr(bus), busnr);
+-    if (child)
++    if (child) {
++        mutex_unlock(&add_bus_mutex);
+         return child;
++    }
+ 
+     child = pci_add_new_bus(bus, NULL, busnr);
+-    if (!child)
++    if (!child) {
++        mutex_unlock(&add_bus_mutex);
+         return NULL;
++    }
++    mutex_unlock(&add_bus_mutex);
+ 
+     pci_bus_insert_busn_res(child, busnr, busnr);
+ 
+@@ -339,8 +356,16 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+     if (rc)
+         goto failed1;
+ 
++    if (!add_device_mutex_initialized) {
++        mutex_init(&add_device_mutex);
++        add_device_mutex_initialized = 1;
++    }
++    mutex_lock(&add_device_mutex);
++
+     pci_bus_add_device(virtfn);
+ 
++    mutex_unlock(&add_device_mutex);
++
+     return 0;
+ 
+ failed1:
+---
