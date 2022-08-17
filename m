@@ -2,172 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8F3B596A9A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 09:47:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413B8596AA1
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 09:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231688AbiHQHnk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Aug 2022 03:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
+        id S230216AbiHQHvl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Aug 2022 03:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232822AbiHQHnj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 03:43:39 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B73075CF6;
-        Wed, 17 Aug 2022 00:43:36 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M70L66wVTzcfh3;
-        Wed, 17 Aug 2022 15:40:30 +0800 (CST)
-Received: from dggpemm100006.china.huawei.com (7.185.36.196) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 17 Aug 2022 15:43:34 +0800
-Received: from canpemm500001.china.huawei.com (7.192.104.163) by
- dggpemm100006.china.huawei.com (7.185.36.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 17 Aug 2022 15:43:34 +0800
-Received: from canpemm500001.china.huawei.com ([7.192.104.163]) by
- canpemm500001.china.huawei.com ([7.192.104.163]) with mapi id 15.01.2375.024;
- Wed, 17 Aug 2022 15:43:34 +0800
-From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        with ESMTP id S229637AbiHQHvk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 03:51:40 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99967A515;
+        Wed, 17 Aug 2022 00:51:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 59B11CE1B94;
+        Wed, 17 Aug 2022 07:51:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22AF1C433D6;
+        Wed, 17 Aug 2022 07:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660722693;
+        bh=iWwfXuklbTOD8tVpuV3XjT6Wa57Mj01ZLbe2IkbtdKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C2eph+kYna/HuHPyA/igO7h9P+7F2b0o8WDm4OrL0ynZwGSdrfx+cYjwJ5gJwounJ
+         NNDhAJUY+DleGgqjH+/qi0OVe1DtS9o/uN9EIm2g8OvrEa/1I2W3nM5e0gcGyF4Uqs
+         fKNIAzA7NLRzL8tXlkyTOEaP6kboP274qKMN+2Dim9FjzxSDwf+A89MikbaA+e71rM
+         q2CoB/a1EuJaC4vyt0w1wu/EzTRkSrLddYbEy6WOyj6BSM+th77MDWdIercFxdNvz2
+         X25jolRrEVoDzivDpaqyx5KbRgv1diJ5/ERtnF2YNZJU+qgjNc5YegYlamnZHXbnMm
+         nhgdJP5IK0/kg==
+Date:   Wed, 17 Aug 2022 09:51:24 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "Gonglei (Arei)" <arei.gonglei@huawei.com>,
-        zhuangshengen <zhuangshengen@huawei.com>
-Subject: [Question] Any plan to support enable PCI SRIOV concurrently in
- kernel side?
-Thread-Topic: [Question] Any plan to support enable PCI SRIOV concurrently in
- kernel side?
-Thread-Index: AdiyDNZvspPz1b9KT9CKr88dkJbU8g==
-Date:   Wed, 17 Aug 2022 07:43:34 +0000
-Message-ID: <0a8ce5714e2d4eed909cb096d4832036@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.151.254]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        Carl Vanderlip <quic_carlv@quicinc.com>
+Subject: Re: [PATCH] PCI: hv: Only reuse existing IRTE allocation for
+ Multi-MSI
+Message-ID: <Yvyd/OoDWeDil/Tm@lpieralisi>
+References: <20220804025104.15673-1-decui@microsoft.com>
+ <20220816155122.GA2064495@bhelgaas>
+ <SA1PR21MB1335FD78A02C0CE2632E532BBF6B9@SA1PR21MB1335.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR21MB1335FD78A02C0CE2632E532BBF6B9@SA1PR21MB1335.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, Aug 16, 2022 at 09:13:26PM +0000, Dexuan Cui wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Tuesday, August 16, 2022 8:51 AM
+> > To: Dexuan Cui <decui@microsoft.com>
+> > 
+> > This has only observations with no explanations, and I don't see how
+> > it will be useful to future readers of the git history.
+> Please see the below.
+>  
+> > I assume you bisected the problem to b4b77778ecc5?  
+> Yes.
+> 
+> > Can you just revert that?  A revert requires no more explanation than
+> >  "this broke something."
+> 
+> It's better to not revert b4b77778ecc5, which is required by Jeff's
+> Multi-MSI device, which doesn't seem to be affected by the interrupt
+> issue I described.
 
-Enable SRIOV concurrently with many different PFs in userspace seems workable.
-I'm trying to do it with 8 PFs(each one with 240+ VFs), but get some warnings,
-here is the backtrace:
+You must debug it, there are no two ways about it.
 
-Warning 1:
----
-sysfs: cannot create duplicate filename '/devices/pci0000:30/0000:30:02.0/pci_bus/0000:32'
-Call Trace:
- dump_stack+0x6f/0xab
- sysfs_warn_dup+0x56/0x70
- sysfs_create_dir_ns+0x80/0x90
- kobject_add_internal+0xa0/0x2b0
- kobject_add+0x71/0xd0
- device_add+0x126/0x630
- pci_add_new_bus+0x17c/0x4b0
- pci_iov_add_virtfn+0x336/0x390
- sriov_enable+0x26e/0x450
- virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
----
-The reason is that different VFs may create the same pci bus number
-and try to add new bus concurrently in virtfn_add_bus.
+We can't apply fixes on a hunch, more so given that I am not convinced
+at all this patch is fixing anything, it is just papering over an
+underlying bug that is still to be pinpointed.
 
-Warning 2:
----
-proc_dir_entry 'pci/33' already registered
-WARNING: CPU: 71 PID: 893 at fs/proc/generic.c:360 proc_register+0xf8/0x130
-Call Trace:
- proc_mkdir_data+0x5d/0x80
- pci_proc_attach_device+0xe9/0x120
- pci_bus_add_device+0x33/0x90
- pci_iov_add_virtfn+0x375/0x390
- sriov_enable+0x26e/0x450
- virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
----
-The reason is that different VFs may create '/proc/bus/pci/bus_number'
-directory using the same bus number in pci_proc_attach_device concurrently.
+> > I guess this is a fine distinction, but I really don't like random
+> > code changes that "seem to avoid a problem but we don't know how."
+> > A revert at least has the advantage that we can cover our eyes and
+> > pretend the commit never happened. This patch feels like future
+> > readers will have to try to understand the code even though we
+> > clearly don't understand why it makes a difference.
+> 
+> I just replied to Lorenzo's email with more details. FYI, this is the link
+> to my reply:
+> https://lwn.net/ml/linux-kernel/SA1PR21MB1335D08F987BBAE08EADF010BF6B9@SA1PR21MB1335.namprd21.prod.outlook.com/
+>  
+> I just felt the commit message might be too long if I had put all the
+> details there. :-) Can we add a Links: tag?
 
-Mutex lock can avoid potential conflict. With the patch below the warnings above
-are no longer appear.
+Commit logs must describe the issue you are fixing, thouroughly and
+concisely. To start with "Jeffrey's 4 recent patches" is a very bad
+start for a commit log, it means nothing, try to read your log as
+someone who needs to understand the commit years down the line please.
 
-My question is that any plan to support enable PCI SRIOV concurrently in kernel side?
+Now, back to this patch: we are at -rc1, unless Bjorn is willing to
+do so I am not inclined to apply this patch till next merge window
+(and actually I am not inclined to merge it at all).
 
-Thanks
+This gives you folks time to debug it (and it must be debugged), the
+fact that it works for one multi-MSI device does not mean that the
+bug isn't still there - I am worried that the issue is with
+b4b77778ecc5 and the interaction with core MSI/IOMMU.
 
----
-drivers/pci/iov.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 952217572113..6a8a849298c4 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -16,6 +16,12 @@
- 
- #define VIRTFN_ID_LEN    16
- 
-+static struct mutex add_bus_mutex;
-+static int add_bus_mutex_initialized;
-+
-+static struct mutex add_device_mutex;
-+static int add_device_mutex_initialized;
-+
- int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
- {
-     if (!dev->is_physfn)
-@@ -127,13 +133,24 @@ static struct pci_bus *virtfn_add_bus(struct pci_bus *bus, int busnr)
-     if (bus->number == busnr)
-         return bus;
- 
-+    if (!add_bus_mutex_initialized) {
-+        mutex_init(&add_bus_mutex);
-+        add_bus_mutex_initialized = 1;
-+    }
-+    mutex_lock(&add_bus_mutex);
-+
-     child = pci_find_bus(pci_domain_nr(bus), busnr);
--    if (child)
-+    if (child) {
-+        mutex_unlock(&add_bus_mutex);
-         return child;
-+    }
- 
-     child = pci_add_new_bus(bus, NULL, busnr);
--    if (!child)
-+    if (!child) {
-+        mutex_unlock(&add_bus_mutex);
-         return NULL;
-+    }
-+    mutex_unlock(&add_bus_mutex);
- 
-     pci_bus_insert_busn_res(child, busnr, busnr);
- 
-@@ -339,8 +356,16 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-     if (rc)
-         goto failed1;
- 
-+    if (!add_device_mutex_initialized) {
-+        mutex_init(&add_device_mutex);
-+        add_device_mutex_initialized = 1;
-+    }
-+    mutex_lock(&add_device_mutex);
-+
-     pci_bus_add_device(virtfn);
- 
-+    mutex_unlock(&add_device_mutex);
-+
-     return 0;
- 
- failed1:
----
+Thanks,
+Lorenzo
