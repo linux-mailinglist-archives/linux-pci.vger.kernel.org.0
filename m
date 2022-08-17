@@ -2,188 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B15B0596CA0
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 12:15:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6586596D5C
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 13:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238796AbiHQKKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Aug 2022 06:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46836 "EHLO
+        id S238849AbiHQLOT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Aug 2022 07:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235173AbiHQKKw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 06:10:52 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2048.outbound.protection.outlook.com [40.107.212.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F48E54CB4;
-        Wed, 17 Aug 2022 03:10:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a3MTG4yCCZk6qzJKk5eUW2VBnz9TfSTiljm8EyYlQ/c4hSQHGg4Ppr3/zrxbrXHblKj5yp+vBBfZIjs3SC+6vS659GcevySpos8oR7/o1NYvMy36N4RcMyYRW0WF8oCBKtrUMtXgYKiIv21BIPUpOWf5U5goP0ftw4cyz87cAiay+wq+mgdbfaNzb3S3z+YH5n9yuWVruPAltQXOP4MNCG2HqbMzkOjTnYhafR0MTTSx9KbwPvGVHvT6P0hNwZnDZJamrNSIiYp28kB4ISWbcWRgnTTiTliDJoVbTDBCOqmS5be1AGeLWLlvBhkJMO0iplbwS0rWDIXFAgn5znw3cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ELA/LLDHdb7/6Mlej4kFjhbK6L1dKInKuJcTp124QqU=;
- b=RyVpiUHfRTblmwb4TUYqVTG/MZQr25AQGc5c+l/7g6DUj3J6SMhjlzXZcNyVNd/mxp9S0/3rQ7hroVvktb9LoTm2qUeD7+qTietT+813CdxQaAumuYH4lq/NGDdVM60nMyLx9l11nhdV3EaucIBBWB3bjNpz4VRSIUs/uYQuqBiZUMyT+RSN/tQkbN4szLgpkwv7WgLkY2TcqzcPW+GkC7cmDR5wr9JfLJTpfZliwg78xmKKsKj1+RzINv7HkN9EoPqQ2qynXNwUW0Yelw3N5TfBOdfKACaemETOogGktA9VhFTBBu84/4QaHI+RcuIfKDILwT3zUDAPYMnBaxWWsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ELA/LLDHdb7/6Mlej4kFjhbK6L1dKInKuJcTp124QqU=;
- b=pLyE+TkV54SVw0XXh6lVq4EHyq+rLeaAcmBN6RitMGwHb76fVWBk+ndtgvgNHfBdy6a6xhQp0CN0SCCYPvEIiOwpdNUtAMiYKmXKMZ23SnntaXyjWKPGvH0fJGkucGGhFufWZ6ew3jV2nKdY2VBkXQF/RLmh0B02l5QYOZpacic=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by DM4PR12MB6543.namprd12.prod.outlook.com (2603:10b6:8:8c::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5504.14; Wed, 17 Aug 2022 10:10:48 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::905:1701:3b51:7e39]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::905:1701:3b51:7e39%2]) with mapi id 15.20.5504.020; Wed, 17 Aug 2022
- 10:10:48 +0000
-Message-ID: <a15fe381-1f41-2c92-2ef1-0b4eb30a5142@amd.com>
-Date:   Wed, 17 Aug 2022 12:10:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 0/3] PCI: Expose resource resizing through sysfs
-Content-Language: en-US
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc:     linux-kernel@vger.kernel.org
-References: <166067824399.1885802.12557332818208187324.stgit@omen>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-In-Reply-To: <166067824399.1885802.12557332818208187324.stgit@omen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM6P192CA0021.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:209:83::34) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+        with ESMTP id S230122AbiHQLOS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 07:14:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3155A884;
+        Wed, 17 Aug 2022 04:14:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A795BB815DF;
+        Wed, 17 Aug 2022 11:14:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF5DC433C1;
+        Wed, 17 Aug 2022 11:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1660734854;
+        bh=gKsyoiXpQfvK+t3+8O7SdbTWSMeMfmoQPtX4/sg+ffo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zLeEm1lMFMHUx1ybmkdNdDkfmatpndn3cmB8V7nCx4qMHTRa2ZEiE78rVwcH+G/6O
+         QsvPF7a+8V3Q3JxkPab8EnITte3SRlNTbm3kWycfccYYm4NdwLA1CSrmBW/clwgtQ0
+         UPbUVKLtep8RyRjB66BS3qVgvoGFtQHd4aZjjvIs=
+Date:   Wed, 17 Aug 2022 13:14:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Shunsuke Mie <mie@igel.co.jp>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Fix
+ pci_endpoint_test_{copy,write,read}() panic
+Message-ID: <YvzNg5ROnxEApDgS@kroah.com>
+References: <20220816100617.90720-1-mie@igel.co.jp>
+ <YvtxAN7E4nmZmL/X@kroah.com>
+ <Yvuvpd9n59mp96p0@lpieralisi>
+ <695ab9b3-8385-e8bd-0095-14b07de66b15@ti.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9748830e-029a-4437-6dbd-08da8038c18c
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6543:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LomHn/wOtS2hsy17pvQ8r68J6wVI04QTWeOMT51IkXP+5X/J9b5idq+SmD6sE6lKZvzRaeovvdDh0RLROB+5gGII1SKysV26rTSTNmtiyZU5N/qoQhpo+eFlDllPxiji4iSNQeG3dAxv9GmI58bqNWLtsitFhtQAOme168mHjr7G0V6W6VKmT7oI6IZ23oas2dxfCJ8s5fh+Rwvr2px+wuzVXlCCxQQMjOsExqaqsboKRCxHMLWGzP4o8mrpoYA8KJPfBarfAmcdxWTcUocWpVm/g7Ie1WfyYFniHEspsAF+ZOk/vESXWFNsRNtCKY7b5CxscrCHyNUdQIyaTHw0/tBd7KufY4TkLuwBDj4OYHB3DaFEyUeYtw2+Opzr0pFO4BZv7js/6haiRWnA2aVF7UR6DWUCjEgqm0y23WPP6VFgtYpkAaF3cjshznf17iOD/S4B6uiqO5dKM/vISKcMLno1iEOiNHrE7tQ/u+UyQj341L0j6pgxSU75bUKQmomaLd4JeaVUIPHHzQiD6cfi6qyUvL4ARZwFnqkaz2McG6lrZEjGwV73Z/XyagsiJBg6hXACX2xeh4XiSk9vBUQJ5zD3LgRlK5H5a0QnGtP5mZrknoaAWpMaR/2Juw5ntzVOwUbS2oM04Sgl7YQEIIsq7O9FQU9G0W6xFQcqUU/wKEHDyHk6s9HmrxLNij5tw4K2FHijUcrwvE30p0dkQ1Jh3QyiWTkGtL0SNmkBeTiZ97pPXaJD+aFBVBiZQdh6KfkKAlQenLp0pG07vI97X7mdh03NLfWD7Hk9oDhMVr3IshuYem1MQl5+7dYv9wUzjEuMOP3ZA76utREtKsz+KkUeCg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(6506007)(6666004)(38100700002)(5660300002)(41300700001)(31686004)(2906002)(36756003)(66946007)(31696002)(6486002)(86362001)(66556008)(66476007)(8676002)(4326008)(8936002)(316002)(478600001)(66574015)(2616005)(83380400001)(186003)(6512007)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N1hxejk5ZDVMSjIxVzVaQ2lLYml3Y2o4NWdlNVJ1RVJvMGFQdWlZSldzYlJa?=
- =?utf-8?B?MHdPa3piOGQwRmFaZW9DazFpOUZ4czc1Myt2N2FvcnBwN04rRFpvMTh1K2JT?=
- =?utf-8?B?Y2xnSXZBcU4xbnFZNTJybFRUanVwc09CZXpnUm5SeDNuNkdtckJ6L2t5UmRn?=
- =?utf-8?B?Q3l5c0dDSEU5UHFVaUdMK3UzT0NPNDA5WExvbzljV3k1THRaamFUbWZTMmcw?=
- =?utf-8?B?WERaK1FLdVVTNGJhWVB4ejdwMU8xNC9WZVY2T1lQb1NNNkk4Q1c3MEdaUjls?=
- =?utf-8?B?TlgvM2VjUDdHaFRjNjdaZU9yZEhxY1ErYmMwWFR6MUdycFNlRUl6LzJ2a21J?=
- =?utf-8?B?dGZHSXM4MlRZY1RrVTNybGtUcEIvVnJ2ZG12ako5MlByVXVoZnlia3FIRjkv?=
- =?utf-8?B?Y21sN0VaVUUwVHk0ZCt4ejJEYTdwRmVoa1lIYjkrNEV6Ull2TlVOd2xtS0RS?=
- =?utf-8?B?NHhqN0QrcktWTW8wcmVvZGZVK2Rzb1c1dlg0cCsxK3JtclQ3Szkxb1p2Z3NL?=
- =?utf-8?B?d3hOVTFQZzREZnFRZ2oycUV1NDJBVzhmcjhRVVVReU5RMlNEd1Y4TEh0Z21i?=
- =?utf-8?B?bGNlZENGeEpYMXFOeERUdWZkYUdaQUFzVnQ0SUYrNXdIV2c0ZWNLZG9ncW1I?=
- =?utf-8?B?RDBZZ0V2VjY1N25iOE5hTlBOTnFiYnlmQzJkZ1ZLaW81U0FqdU0rcmxEaGp5?=
- =?utf-8?B?T3RlOVJrUnEwZkFPVkpxUmYvREhqYy9sUEFJUTRucXJCbGw3VnFpUDJ5Y2tU?=
- =?utf-8?B?OTU3dGJqcEs1NTZNMVlIeDRSS2NmNDNVRE5wZm1QSWREc1pwOTFOcGdNSCtO?=
- =?utf-8?B?MVF3YndIWTNxVkNiTk9Ec2w1TVNkbWpBZ29RZnZHbHFhcW9ITFRKc2NkWTdM?=
- =?utf-8?B?T0V0emtFQ2pwODExVHArTXBIS01HWndTRFVteVhHYlNidWtVcnJKczE5U1Ay?=
- =?utf-8?B?bWJBclI3SThxYTQ3bHVrcWc1UFNlY2xHWk5nZVZDM0VIMzh4cHZqalJEczNl?=
- =?utf-8?B?U0VoUGZPMTlqdStoUWFheXBhdFF5WTFqSFdxZzZoM3ZNSEMzUCtIWExvL253?=
- =?utf-8?B?SnI5b2hVc0FVZmVpM3pJeTQ2QTRWZERCVFhKbTB5YXgxZTU2Rnk0MWdUblhp?=
- =?utf-8?B?T1hTSk9PbjhmLzd1UHFWWEJZVjVpK1NRa1B4UEZ4NXQ3SGdXWFBpYzdrelda?=
- =?utf-8?B?cEF5VnVEbGdBbWg4TmtNdkpaU25FVk5oTWpXSUJJTXRWZno4K2F4cHJmLytK?=
- =?utf-8?B?NkZ0dDhWK2o5dFVqeE9iK29UMGVDbDlCeDQ2UzljUXg0QmtaSnVmYTJpdm1H?=
- =?utf-8?B?ekR1a1F0UExBNW5XMnJhSFdXWG5rcXcxM1dtUFk3b3BlUHN5TkpGU1ZvWTBF?=
- =?utf-8?B?VzdVL295ckN4NnViWVNxSGNXeVZUcS9lYmtXVWlkd2Fxc29JSU5Ubi9uT3Ar?=
- =?utf-8?B?NUdXSjZVL0xVeG5yeWpoMTdsMTZRSXZScSt2WXdHNURUZ2piZVFrMU5nbE82?=
- =?utf-8?B?bU5GbTVwend3ZDBsaE9MY2JhM3BmamJBRy94ZkkwN3pjVWNZMkpkL3l5QUpz?=
- =?utf-8?B?N0dKQzhkb1ZhT2RqRE5qdW5kUFdMQXRsdFRWTVowMDNtNVJCUjFYdHhTTHFH?=
- =?utf-8?B?aEdTMjJaTHU3WVE2UHgyUDU1ck9obWFtQU9vTnAyRjltODNkbzFkUk5DVnU3?=
- =?utf-8?B?RDFuK1hLVUNVdlc5MHp4L3hTdUJ4RmxSbGRqSXdOUEsyckxwRElMVXpxOSs4?=
- =?utf-8?B?UjdmWjlwZmxqOGkvVjg4dlliaGphVVI1MUlNQnBvNkN3UW5KQzNhaG5JTm9B?=
- =?utf-8?B?SGl2MUppOFAwSEhkZnp2aHA0emQrOTQ0Q0dXRHpuRmhta0l5LzdjQ2l3ZmlK?=
- =?utf-8?B?MDVkcnc2M0p2bHVSdEFLcFBWSDFRbnlVdytBQWVXZ1kzQ2dMQjloMnB3bkdY?=
- =?utf-8?B?Q0VmblhKVVQ3V1piUnZHenEzWUI5c1VDeWhPckpFR2VNSlBWNDhyaFcrUVk3?=
- =?utf-8?B?M0Zjd0xaTzhPWlA2M1g1a0hwaEYrcmtNcVVtYW1jQjdCY0VIK3Z2U1cxREtp?=
- =?utf-8?B?QjlVN2FFRkJPWmxZbHBDc2FsVTRXSS95U2xvajVyWFdwS2ZjTkVKS0RFdGxW?=
- =?utf-8?Q?jjqKMAI4IC5UZpvgBb8HGpVul?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9748830e-029a-4437-6dbd-08da8038c18c
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2022 10:10:48.1638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XBJYIOKzDdVTXkvxckKSuRWQ3uW+rAcH/DvohPUk7E+2AKISDm65wXTTsZV/jE/G
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6543
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <695ab9b3-8385-e8bd-0095-14b07de66b15@ti.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 16.08.22 um 21:39 schrieb Alex Williamson:
-> We have a couple graphics drivers making use of PCIe Resizable BARs
-> now, but I've been trying to figure out how we can make use of such
-> features for devices assigned to a VM.  This is a proposal for a
-> rather basic interface in sysfs such that we have the ability to
-> pre-enable larger BARs before we bind devices to vfio-pci and
-> attach them to a VM.
+On Wed, Aug 17, 2022 at 02:18:58PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
+> 
+> On 16/08/22 20:24, Lorenzo Pieralisi wrote:
+> > On Tue, Aug 16, 2022 at 12:27:12PM +0200, Greg Kroah-Hartman wrote:
+> >> On Tue, Aug 16, 2022 at 07:06:17PM +0900, Shunsuke Mie wrote:
+> >>> Although dma_map_single() doesn't permit zero length mapping, the each
+> >>> test functions called the function without zero checking.
+> >>>
+> >>> A panic was reported on arm64:
+> >>>
+> >>> [   60.137988] ------------[ cut here ]------------
+> >>> [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+> >>> [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> >>> [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+> >>> 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+> >>> c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+> >>> [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
+> >>> [   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> >>> [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> >>> [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+> >>> [   60.213149] lr : swiotlb_map+0x88/0x1f0
+> >>> [   60.216982] sp : ffff80000a883bc0
+> >>> [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
+> >>> [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
+> >>> [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
+> >>> [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
+> >>> [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
+> >>> [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
+> >>> [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+> >>> [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
+> >>> [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
+> >>> [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
+> >>> [   60.291658] Call trace:
+> >>> [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+> >>> [   60.298629]  swiotlb_map+0x88/0x1f0
+> >>> [   60.302115]  dma_map_page_attrs+0x188/0x230
+> >>> [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
+> >>> [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+> >>> [   60.316583]  invoke_syscall+0x44/0x108
+> >>> [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+> >>> [   60.325038]  do_el0_svc+0x2c/0xb8
+> >>> [   60.328351]  el0_svc+0x2c/0x88
+> >>> [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+> >>> [   60.335587]  el0t_64_sync+0x18c/0x190
+> >>> [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
+> >>> [   60.345344] ---[ end trace 0000000000000000 ]---
+> >>>
+> >>> To fix it, this patch adds checkings the payload length if it is zero.
+> >>>
+> >>> Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
+> >>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> >>> ---
+> >>>  drivers/misc/pci_endpoint_test.c | 6 +++---
+> >>>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> >>> index 8f786a225dcf..d45426a73396 100644
+> >>> --- a/drivers/misc/pci_endpoint_test.c
+> >>> +++ b/drivers/misc/pci_endpoint_test.c
+> >>> @@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+> >>>  	}
+> >>>  
+> >>>  	size = param.size;
+> >>> -	if (size > SIZE_MAX - alignment)
+> >>> +	if (size > SIZE_MAX - alignment || !size)
+> >>>  		goto err;
+> >>
+> >> Can we test size first?  And do it in the ioctl handler in one place so
+> >> you don't have to add it everywhere?
+> >>
+> >> Or have a "validate all parameters" function that you do it in one
+> >> place?
+> >>
+> >> Also, all of these ioctl handlers are wrong, they are returning "0" to
+> >> userspace if they fail, which is not correct at all.
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/pci/pcitest.c
+> > This is bad, thanks Greg for spotting it.
+> > 
+> > @Kishon, we have to fix it asap, please let me know if you
+> > can post a patch promptly.
+> 
+> The userspace tool (pcitest [1]) that calls these IOCTLS prints "NOT
+> OKAY" on 0 and "OKAY" for 1.
+> 
+> I'll change to negative value for error and still keep '0' for data
+> mismatch error?
 
-Ah, yes please.
+No, 0 as a return value from a system call means "success".  You can not
+redefine it to mean something else for a tiny single kernel driver,
+otherwise so much for consistency.
 
-I was considering doing this myself just for testing while adding the 
-rebar support for the GFX drivers, but then just implementing it on the 
-GFX side was simpler.
+0 is success, -ERROR_NUMBER is an error, please read the ioctl man page.
 
-I would just add a warning that resizing BARs can easily crash the 
-system even when no driver directly claimed the resource or PCIe device.
+thanks,
 
-It literally took me weeks to figure out that I need to kick out the EFI 
-framebuffer driver before trying to resize the BAR or otherwise I just 
-get a hung system.
-
-> Along the way I found a double-free in the error path of creating
-> resource attributes, that can certainly be pulled separately (1/).
->
-> I'm using an RTX6000 for testing, which unexpectedly only supports
-> REBAR with smaller than default sizes, which led me to question
-> why we have such heavy requirements for shrinking resources (2/).
-
-Oh, that's easy. You got tons of ARM boards with less than 512MiB of 
-address space per root PCIe complex.
-
-If you want to get a GPU working on those you need to decrease the BAR 
-size or otherwise you won't be able to fit 256MiB VRAM BAR + register 
-BAR into the same hole for the PCIe root complex.
-
-An alternative explanation is that at least AMD produced some boards 
-with a messed up resize configuration word. But on those you only got 
-256MiB, 512MiB and 1GiB potential BAR sizes IIRC.
-
-Anyway, with an appropriate warning added to the sysfs documentation the 
-patch #2 and #3 are Acked-by: Christian König <christian.koenig@amd.com>
-
-Regards,
-Christian.
-
->
-> The final patch proposes the sysfs interface and I'll leave the
-> discussion there for whether this is a good approach.  Thanks,
->
-> Alex
-> ---
->
-> Alex Williamson (3):
->        PCI: Fix double-free in resource attribute error path
->        PCI: Skip reassigning bridge resources if reducing BAR size
->        PCI: Expose PCIe Resizable BAR support via sysfs
->
->
->   Documentation/ABI/testing/sysfs-bus-pci |  27 +++++
->   drivers/pci/pci-sysfs.c                 | 126 +++++++++++++++++++++++-
->   drivers/pci/setup-res.c                 |   2 +-
->   include/linux/pci.h                     |   1 +
->   4 files changed, 154 insertions(+), 2 deletions(-)
->
-
+greg k-h
