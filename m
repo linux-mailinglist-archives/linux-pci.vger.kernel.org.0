@@ -2,176 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 670EC5973B4
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 18:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BC2E59746C
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 18:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240486AbiHQQHV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Aug 2022 12:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
+        id S238084AbiHQQmx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Aug 2022 12:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240531AbiHQQFL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 12:05:11 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39419C2C9;
-        Wed, 17 Aug 2022 09:04:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=knjYKgu5mAvDYGmxcQRs6BkALwlUgRBepBpt+wqS8RkhVSGTvJXz6qzmJZy/4Dq5HUrYMid2PxoWvRbv19vHsS2AuPQIyJXy4lH4TvNkOR31NXHgXM6fLiK7Vf3jNDFTCPqYQ23Cztaa+zMQBPV2qTSICQivtmMRiVcb6nEHVv43XrcJ/eI3hi6DueIlfsa/ZLxdZZmDEaRsaGDLKbsMDGhIemt6R+NQO2amscYL0JR1+fhD8uabr4F5d19kr4GjBCRxiPRI5Ys1PJrd8UIIogdwrzQS5o2eQoJacNs6OvD55fCiQVTEDqkkorwB/m3dg48WBWiaOQSRgnYZ+y+09A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KXOD1sbfn2N18p1fW5WOHy5QWLp/1PgQL+ozKR9XdW4=;
- b=law1mKSDkBHRMdJ6FJDEvuisAoweJ42KL3F2G2qT1LiczJ2+3ElfLpmOq9OdWmuByW/IAGgjids0PbbmskZY9uHUUc2VIKke5p8U0vMyIqQ5TxYKWeMT6wtjeTtYMRG1+cDeOfq1uI9srOU1gOxdF7BpJ9jQkMBxzyNB3F5h73xlQGyY5BmUsEJMXufKOZyOBcLqCjHeqxadsQZsxYfdpmvKh88QTlgF6ZKrwKUJxNcySlh64qQV+49gfV+Vw7QQwOOuz3vYVI8NP0lUKjpemQfZHu/eBtR60w3+8RC35OP0OX0VD740V+MkDVhJMMwYXtfApzKR6aaacuaGyFA1Aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KXOD1sbfn2N18p1fW5WOHy5QWLp/1PgQL+ozKR9XdW4=;
- b=agA2/ynVJa0kghSlNmncLV9xKBydhvLQkdzyXIVl4nXyTrEID8+PKv/bHF92YR/TTD9r+Fjf0IJoNTUVRZRuMyTWVcIWFALtKAuX0By+ODAoTPugOLFkLaDHICMS0qVU/kSnEfER71qEXn/IdcfJcK9RK12TZyYIKA6yJmZ964srwN10KCmCNb9zmn4UJ8t53nTr1+7t28dHvjJUGsxFkOpN9ZpmBFnwdaFKp/DxDo84Lwivmqs1sLda0J2XWdXPDExyuQY8O+2MH9VO0nv/kHwEs/mx2jN3rkq2Pauz678n+HQ9jl/7hop87cTQJf2iSwqUxPqRpbAlxURuuPJHEQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com (2603:10b6:208:314::13)
- by BL0PR12MB2403.namprd12.prod.outlook.com (2603:10b6:207:40::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.19; Wed, 17 Aug
- 2022 16:04:43 +0000
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::784c:3561:5f6a:10ed]) by BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::784c:3561:5f6a:10ed%8]) with mapi id 15.20.5525.011; Wed, 17 Aug 2022
- 16:04:43 +0000
-Message-ID: <5363303b-30bb-3c4a-bf42-426dd7f8138d@nvidia.com>
-Date:   Wed, 17 Aug 2022 21:34:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v6 5/5] vfio/pci: Implement
- VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220817051323.20091-1-abhsahu@nvidia.com>
- <20220817051323.20091-6-abhsahu@nvidia.com> <Yvzy0VOfKkKod0OV@nvidia.com>
-X-Nvconfidentiality: public
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-In-Reply-To: <Yvzy0VOfKkKod0OV@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXPR01CA0118.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::36) To BL1PR12MB5304.namprd12.prod.outlook.com
- (2603:10b6:208:314::13)
+        with ESMTP id S237506AbiHQQmw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Aug 2022 12:42:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76BBD88DFB;
+        Wed, 17 Aug 2022 09:42:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F944B81E25;
+        Wed, 17 Aug 2022 16:42:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9BBC433D6;
+        Wed, 17 Aug 2022 16:42:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660754568;
+        bh=+wEnZVI2aj40wim23BMsG+ci2KQg9to47RsgHXVHy10=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YpvpIKT4XzsirkSD5uvjCpB+/1pIK+WsuRzW1OyY4JFHJM/UPgkTU0Dyof3gdxlD+
+         N9UeWOT6DqR/F02nr8dTesCV9NATI2TGSUYB/R9tBGzxXPSg7QngOCs5ui5IBs+gJK
+         rLwzJXJaLD1zhLxBAV94ZgMrFc9tma23ROcaLTcjfUc11WtX2f8GtAX3UuppT+RZ9D
+         D/K4io2T2RJfGjy4B2YcPEiR8BzL+YTRRIVdYftQPQGNTKD9lAaaBVMtxJbptx87kx
+         xeTN8Ihpf1nOpMTw7H4aCfYwqI9wj9ciPuFbzK99E0x0QcrXw5JhOlTMGBiJ4wrrEc
+         osemWEeY22khw==
+Received: by pali.im (Postfix)
+        id AAA9C739; Wed, 17 Aug 2022 18:42:45 +0200 (CEST)
+Date:   Wed, 17 Aug 2022 18:42:45 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Nick Child <nick.child@ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] powerpc/pci: Add config option for using all 256 PCI
+ buses
+Message-ID: <20220817164245.qanxklpavge3shcm@pali>
+References: <20220706104308.5390-1-pali@kernel.org>
+ <20220706104308.5390-6-pali@kernel.org>
+ <20220721222145.rzgthbwoselx2l43@pali>
+ <875yjkb0ht.fsf@mpe.ellerman.id.au>
+ <20220726111001.a2upqf5m5welcla6@pali>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d24e28ab-85ff-4dd9-7703-08da806a322f
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2403:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Vu5W3MMw4MesHF7Jo8wIKtoCivFjBwpp7WZeU7OAh/Y9Q5+0L2hk+cS1SM/n5v6r7I7Ea9tw4r+ZMlCERlXNf5R1CKXyDBUIgCChkbSDQvjKNEINWqjeylDlS5fbpJggHaNS9+Urr2ZdYJRdhdxEwUh+IsQzqUqPN4NRyr3WzZXBQJ6PJf1kTFqf/e95P9qnBy1ifgG+ojHattasIxoH8aqitE80R3zU/DmZa3l5DlWdRg+x5bj3iHHHqbv5LIjSOtCzhfqNTeWxk2OSCyB8zSlaC//gS9qN26wc6IUe1J1o7YVbA/DZHbw6fPQqfilj2Xt1hLZjXawhmtqrJuxFMYeH8n9DP+I9TUfnSshSEIQU0pXBQYlNHZjLaWoIFKRoM58UIvk4D6kgickYfmD7itJKOt9VT3RB94fv3wWKnW0Yjy2wVJctjFMFvPBP+F7hHU+b6T/9aFcIt/QgL2EgBdM5P3eG1sYDvWgYkPTkduKU84vVf8Xss3s4pFxonWH/5Kipd2LbLEwwME7G3ViWztn5le6RO5iRJeV3NBGXrTxdo9BCNtorOa0Du3VTnMS0Em8pYrHw3tSJhPmBEWCeaK/9TA6APw4CA3wqvI162qf3EFKbdZ6IymAYwnhYFY8SIRv6nSIUuWUvRff2mR4OKG/N2d2u621GoxmWWamZHNU/N2+Cqvyx9IrkqvaY5oaMrIZDvF7IikbuZpfCgz4oLnvOViy9a9sqLA78SW7RB4O1O+uMQ/8kziKwdYfQuhxHOoMeOspk0u026+ZeOX8IH/AobDn6r48qZZHDzAQxNgH0Az9ofMNb0EmG97Zy0tY7hob8cqWXqgAa8OrXH36lGw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5304.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(83380400001)(38100700002)(54906003)(37006003)(7416002)(8936002)(6862004)(66946007)(66556008)(66476007)(4326008)(8676002)(5660300002)(6636002)(316002)(2616005)(186003)(55236004)(53546011)(2906002)(478600001)(6486002)(26005)(6666004)(6512007)(6506007)(41300700001)(31696002)(31686004)(36756003)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WDcyRHhCUGx4YjZjcVlKdXBKLzRiMm02K09reWVpZkNIV1JjUGpzRnlLRzJI?=
- =?utf-8?B?Q0p3ZFpFeWJsWmMwQUduV1ZWMWZYNkZ0bG50NEV6NnRYb3ZySDNVMCtkTzk5?=
- =?utf-8?B?VFlCSHJKNFNyNC82V2s1aFlXbUtjTFBzMlJyU2pWNGYvWlR0U2FnZmlNbGNl?=
- =?utf-8?B?di96dlkxNzFzSWhRUEtNREVxejJBSUFSS240N0FTa0JlclM2bDZMdjg3THc0?=
- =?utf-8?B?MHlSd0ZTcTAvcU5oQ1ZLNUtNODhpbjZmbmhKby9aaDUva1M3OFZ6WFhUekFH?=
- =?utf-8?B?bFNSUzZXNlVRVFgrZldxZ1dwVk5pS2FsUHMxTElhekpjaytOQm1Jc3pSZFJu?=
- =?utf-8?B?UE5TQ2xGL0ErcWFPSzBJTXNuTjl1ZzgxK25pY3NzZXAyMzBhZitiQmFhYmdR?=
- =?utf-8?B?R05xK3B4b0hJR3hCdGxQa3NqOXNJc0psU1lWenBoZFdwZlV0YkpYR2hxWlM2?=
- =?utf-8?B?ZnFyeUV3bDFGMUhnYTBieVo3bm01ZU1YamtqaEs2SVBuSTF6ckY0M0xiTVpt?=
- =?utf-8?B?bGx0VFhkUlBJUGpQbnBMOGxXT3lOTGZiUWtvMUFjTFJvQ3dDa0w4NFU1TDdV?=
- =?utf-8?B?bkl6TXVkUWdGdFhZdWp2ZFRGZSs5VXY0L3dUM1p3ZjRHMnkvbkw1VFhuZVJT?=
- =?utf-8?B?WUMvQ1lhb2JlNXU1cytZdjBlbGN6dVJ4Yk1Rc09ON0dZNkJ0WjJ2K3lGR0Y1?=
- =?utf-8?B?dURYSStsTDcwSUk4K3N5czA3RExyK0Vid3h5bFdzVEdQbVdQWTRFajhCWjlU?=
- =?utf-8?B?dHFmMks1RjM4OXVXUzRRb2pJOGlidVRsUTlIZUsrd2dyZEZMY1NJbkhYWEov?=
- =?utf-8?B?Sm9mZ2J1eVd3eFdXYWpGQ0M4SkJKNnZ2M0g1dEh3RzFsU0lkN1J6ckJ5dWVk?=
- =?utf-8?B?ZkNFQ0pRSVVCcXk1MmZ1TXF4dzVrM2dnQ2F0aCtIYVF5YVhtRU8vODZZcThm?=
- =?utf-8?B?aDdOZFhhZVM1OVE5ZTRGU0ppZDlZMUs4dER1UnJjaEdIZ1J1d0UrTXRIRU0y?=
- =?utf-8?B?WEhrRXZIcTRsVHR5TnBEZ3RrdFJuSnhLbEFVZ0htOGtJN2dBdTdGQ2ZTdzFx?=
- =?utf-8?B?OGJueFZjMU9XVU1GUVU5ak85a1B3ckF3OWxPMTBHQ3dOa2VnRWNkQkkyazVY?=
- =?utf-8?B?ek5ubVM1cEZkRittK1djOHlYaXkrdkxFSmdacFdtQ2dabHN5RGdwQ0g0SmtK?=
- =?utf-8?B?ZEhjK0c0dVVJN2txOHNBS2VhaWRlQ1JJUEN5TmFxUG5UNzJJc3BhZnp3dHFx?=
- =?utf-8?B?cERxcFQ1NDVWTXJWSStEK1o3UnpiNUNhM3Nnb09ySlRJc25RTUFZZC9vSlVS?=
- =?utf-8?B?SE1WY0tYY2ZXMXJveGtXeCtSZ3BvZzhvSSt4dEZMVDM3cmRKdzNvVittOHFK?=
- =?utf-8?B?RndmcjFiZGY0Y0JjL0g1S2JRMzhKcHFQVVNPbGR6VDAzdWRONmRsOWVwclpR?=
- =?utf-8?B?NXlpY2ZwT0krZ0NabmF6ZXVMbnd6RDhRb1I3cXo1Wi9SR01ONS8zam9sZkNt?=
- =?utf-8?B?ZXdLbjJTZzlFbTh2QTNHWUtISC9xTEFqbTk4V0JmSXl2Q3RDUjBQS0VDeDhS?=
- =?utf-8?B?cHZUK3lwWXMvS2pENTRnWnZzMi93S0RKOGkxWDlESUlUZEhtRy8xT0l6aXBk?=
- =?utf-8?B?M3h2N3BxaXcwbUttZXMxU0hFN2Y0SzBIbXYxWDVVVThNKy9CdlpudHZwYWY3?=
- =?utf-8?B?aDcrSTVWTUlhNzJGRnFPcGRtRHJIMTZwRWkrWFREV0p5dUVwbUZ4bGI0d2Rk?=
- =?utf-8?B?NnVlU3hpTEY5akhxWHpXN21pWnJVUXVBUGd0a0JPcVU3WHZyL2pheDlIekM5?=
- =?utf-8?B?MTlhUUdJZTVaNDVZU0J2NXhBbW1RQnBNbGdkQUVPRDQybVVIRGYvNkk4NG9Z?=
- =?utf-8?B?YWdoSXJXYmVUY1VzcGhMQ1czTjNhcDlQNkJoTGl1Yi91SGhkc0h0cTg2WEll?=
- =?utf-8?B?ZHo5dHdrVTdka040V0J3T1NKc05WZnpRVjZnOE53TllXMGxXcWF6WHcycnZj?=
- =?utf-8?B?Ykc5YzNqTk1QaCswK0sxZTRaWVJ1NURwQ0FodlhLT1FoSEIwRFdXSXhPeTFF?=
- =?utf-8?B?SEtLSmZnb284dmlQbXo2NHkxdUNua1lMM2toVWhiNFdHeFZka05JOG1SNkNO?=
- =?utf-8?Q?2dewS8d80/pk6nqlMa7xKv7GR?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d24e28ab-85ff-4dd9-7703-08da806a322f
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5304.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2022 16:04:42.6499
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cF9osWuhLQoWRFMeXoTw7lKxIyi+L76MpumEs2DIicZGegiVcddXVm3MvLWoolhvnpbfiup+v7sRbm89poLGag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2403
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220726111001.a2upqf5m5welcla6@pali>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/17/2022 7:23 PM, Jason Gunthorpe wrote:
-> On Wed, Aug 17, 2022 at 10:43:23AM +0530, Abhishek Sahu wrote:
+On Tuesday 26 July 2022 13:10:01 Pali Rohár wrote:
+> On Tuesday 26 July 2022 21:02:22 Michael Ellerman wrote:
+> > Pali Rohár <pali@kernel.org> writes:
+> > > On Wednesday 06 July 2022 12:43:08 Pali Rohár wrote:
+> > >> By default on PPC32 are PCI bus numbers unique across all PCI domains.
+> > >> So system could have only 256 PCI buses independently of available
+> > >> PCI domains.
+> > >>
+> > >> This is due to filling DT property pci-OF-bus-map which does not reflect
+> > >> multi-domain setup.
+> > >>
+> > >> On all powerpc platforms except chrp and powermac there is no DT property
+> > >> pci-OF-bus-map anymore and therefore it is possible on non-chrp/powermac
+> > >> platforms to avoid this limitation of maximal number of 256 PCI buses in
+> > >> system even on multi-domain setup.
+> > >>
+> > >> But avoiding this limitation would mean that all PCI and PCIe devices would
+> > >> be present on completely different BDF addresses as every PCI domain starts
+> > >> numbering PCI bueses from zero (instead of the last bus number of previous
+> > >> enumerated PCI domain). Such change could break existing software which
+> > >> expects fixed PCI bus numbers.
+> > >>
+> > >> So add a new config option CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT which
+> > >> enables this change. By default it is disabled. It cause that initial value
+> > >> of hose->first_busno is zero.
+> > >>
+> > >> Signed-off-by: Pali Rohár <pali@kernel.org>
+> > >> ---
+> > >>  arch/powerpc/Kconfig         | 11 +++++++++++
+> > >>  arch/powerpc/kernel/pci_32.c |  6 ++++++
+> > >>  2 files changed, 17 insertions(+)
+> > >>
+> > >> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > >> index be68c1f02b79..f66084bc1dfe 100644
+> > >> --- a/arch/powerpc/Kconfig
+> > >> +++ b/arch/powerpc/Kconfig
+> > >> @@ -370,6 +370,17 @@ config PPC_DCR
+> > >>  	depends on PPC_DCR_NATIVE || PPC_DCR_MMIO
+> > >>  	default y
+> > >>
+> > >> +config PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+> > >> +	depends on PPC32
+> > >> +	depends on !PPC_PMAC && !PPC_CHRP
+> > >> +	bool "Assign PCI bus numbers from zero individually for each PCI domain"
+> > >> +	help
+> > >> +	  By default on PPC32 were PCI bus numbers unique across all PCI domains.
+> > >> +	  So system could have only 256 PCI buses independently of available
+> > >> +	  PCI domains. When this option is enabled then PCI bus numbers are
+> > >> +	  PCI domain dependent and each PCI controller on own domain can have
+> > >> +	  256 PCI buses, like it is on other Linux architectures.
+> > >> +
+> > >
+> > > What do you think, would it be possible to set default value of this
+> > > option to enabled?
+> > 
+> > My preference would be to not have the option at all, just make it the
+> > default behaviour. Every new CONFIG option adds more combinations that
+> > need testing, or more likely don't get well tested.
+> > 
+> > But I don't have a good feel for what could break if we turn it on, so
+> > honestly I don't really know.
+> > 
+> > Also I do most of my 32-bit testing on pmacs, which are not affected by
+> > the change.
 > 
->> +static int
->> +vfio_pci_core_pm_entry_with_wakeup(struct vfio_device *device, u32 flags,
->> +				   void __user *arg, size_t argsz)
+> It is because this change is incompatible with deprecated pci-OF-bus-map
+> which pmac uses. I do not have any pmac box for testing or development,
+> so I let this part as is.
 > 
-> This should be
->   struct vfio_device_low_power_entry_with_wakeup __user *arg
+> If one day pci-OF-bus-map would be possible to disable on pmac then this
+> pci bus number change can be enabled also for pmac.
+
+Hello! I have created this patch which allows to disable deprecated
+pci-OF-bus-map on powermac and allow to enable this new config option
+PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT also on powermac.
+
+So you can test this option too on your powermac boxes.
+
+I'm really not sure if that pci-OF-bus-map is required and for which
+platforms or software...
+
+Patch for allowing to disable pci-OF-bus-map is here:
+https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20220817163927.24453-1-pali@kernel.org/
+
+> > So I'll probably take the series as-is, and then we can do some more
+> > widespread testing and possibly flip the default to enabled, and then
+> > maybe remove the option entirely in future.
+> > 
+> > cheers
 > 
-
- Thanks Jason.
-
- I can update this.
-
- But if we look the existing code, for example
- (vfio_ioctl_device_feature_mig_device_state()), then there it still uses
- 'void __user *arg' only. Is this a new guideline which we need to take
- care ?
- 
->> @@ -1336,6 +1389,9 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
->>  		return vfio_pci_core_feature_token(device, flags, arg, argsz);
->>  	case VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY:
->>  		return vfio_pci_core_pm_entry(device, flags, arg, argsz);
->> +	case VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP:
->> +		return vfio_pci_core_pm_entry_with_wakeup(device, flags,
->> +							  arg, argsz);
->>  	case VFIO_DEVICE_FEATURE_LOW_POWER_EXIT:
->>  		return vfio_pci_core_pm_exit(device, flags, arg, argsz);
-> 
-> Best to keep these ioctls sorted
-> 
-> Jason
-
- Do we need to keep the IOCTL name alphabetically sorted in the case list.
- Currently, I have added in the order of IOCTL numbers.
-
- Regards,
- Abhishek
+> I have tested it on P2020 board with 3 PCIe devices, each on own bus
+> where each bus is connected to different PCIe controller / domain and it
+> works correctly. Every PCIe device is on bus 1 bus but on different
+> domains.
