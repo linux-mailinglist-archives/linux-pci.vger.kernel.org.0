@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF51D596631
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 01:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25A445966A3
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Aug 2022 03:25:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237855AbiHPX6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Aug 2022 19:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
+        id S237643AbiHQBZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Aug 2022 21:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237839AbiHPX6z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 19:58:55 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7204B923E6
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 16:58:54 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id d71so10619992pgc.13
-        for <linux-pci@vger.kernel.org>; Tue, 16 Aug 2022 16:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=zcVcSBUYWoFWjcfEXcoAiD7y86Ff1CMvGHRV3ofuKE8=;
-        b=oYPogaVIhlWq1V0gz8+5Wzm9ZHEqqbefaHWf0sUHjVAvzPfG6cop6Y0bujJ1uZ3po/
-         bRT28HyO5U2+6gQFUx6IqHO+ONhxGemJoEO18KdVHOvNDbC8FLzEwf74Ax8Msep2JYgX
-         oTOeFv2cGB9mBZ2jDO2kW5CWBcjj0l+0s6ffk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=zcVcSBUYWoFWjcfEXcoAiD7y86Ff1CMvGHRV3ofuKE8=;
-        b=QV0oeykBtZXYYwpd3UnToiufm6sy59TNFq7JL+sQN6GbJI17SE9cHyYUipoJawZkVf
-         aeEVwd3L7h2A/XjJOSYktL/3zR0pFT3dEcGpVfFIkmJHuKUuPuwyFq+SVKpUsMjNsi5L
-         2J10xC02rPaYXHrx1EufS1UUwc6+me+GzstWO1ERkyE1E0m8p+9WLXvG+1QcO3jkouLy
-         fp+xZU3nXQDkwDhRiwKOFYWgYYAGRb0rVE24p22o8yCpt1uCVpW+usTuMhRM468uikSc
-         GJlvINSNXXXYbUmMaBNS2zkGE/UhbgFNftiXby5aDTihqP+jefhDgQazQpY3SGflN3ip
-         pIRQ==
-X-Gm-Message-State: ACgBeo3i2ZDOFpqvpxAykuzcDd8N5TiKbMt4uRIQuHhBR/YRGlDwZz8m
-        ZF/HPRC3Rd915iSu9BVSN9L77A==
-X-Google-Smtp-Source: AA6agR5vBDpmlJG43ZGfk02juh52ek5LdtdS1/UQe4X2qPAuGW1mGzkq1W3VmRCCtO8GuSQCOtl3Aw==
-X-Received: by 2002:aa7:96d5:0:b0:52e:e2a:9c79 with SMTP id h21-20020aa796d5000000b0052e0e2a9c79mr23395515pfq.55.1660694333888;
-        Tue, 16 Aug 2022 16:58:53 -0700 (PDT)
-Received: from localhost ([2620:15c:11a:202:f730:6f91:6154:bee4])
-        by smtp.gmail.com with UTF8SMTPSA id l7-20020a170903120700b001709e3c750dsm9712094plh.194.2022.08.16.16.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Aug 2022 16:58:53 -0700 (PDT)
-Date:   Tue, 16 Aug 2022 16:58:51 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     William McVicker <willmcvicker@google.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
-        Sajid Dalvi <sdalvi@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] PCI/PM: Switch D3Hot delay to use usleep_range
-Message-ID: <YvwvOyB38aCGitpk@google.com>
-References: <20220811184001.2512121-1-willmcvicker@google.com>
- <YvwGvmWPrIQ557C+@google.com>
- <YvwXe1k6uRSTFuKR@google.com>
+        with ESMTP id S234362AbiHQBZv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Aug 2022 21:25:51 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5FF7549B;
+        Tue, 16 Aug 2022 18:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660699549; x=1692235549;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vEIXVCXCOH8jRR5XjiAAeqFwnkSWL0SnDjLS9lcgWBU=;
+  b=lWTIBjEEZApdoJjhoORxAwkU2kLha5R8PPYcrP4U+IeaMxKDHztrm1YS
+   Mv9fQ20mWL6M3gV4PB+2mHWihja++P0spYGml64Qh6HdLzwAhMRrjibMy
+   wJnKcH6kAfIoIDTYwB3tDGRgZl0pr5hypawGPwM8g+jowXdISHdb/osYZ
+   8DKwNL7++RfU5afuiKDFXakbGNIJ7jE2RapaFnDRVpKYY7QWr4/gPU+8Y
+   vN+De9VdvlWS0kIPZaw4xmPXBKzOjQ4mLE6wVaKsOhXmVWVNmblhFVt5x
+   e3BC2cGz3vvNMaZ0rhc/dIt97SvZswoKXl+4n/f2BoLXE1Sls9kBxh33K
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10441"; a="291126249"
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="291126249"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 18:25:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="696587835"
+Received: from allen-box.sh.intel.com ([10.239.159.48])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Aug 2022 18:25:45 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>, Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v11 00/13] iommu: SVA and IOPF refactoring
+Date:   Wed, 17 Aug 2022 09:20:11 +0800
+Message-Id: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YvwXe1k6uRSTFuKR@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,53 +69,191 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 10:17:31PM +0000, William McVicker wrote:
-> On 08/16/2022, Matthias Kaehlcke wrote:
-> > On Thu, Aug 11, 2022 at 06:40:01PM +0000, Will McVicker wrote:
-> > > From: Sajid Dalvi <sdalvi@google.com>
-> > > 
-> > > Since the PCI spec requires a 10ms D3Hot delay (defined by
-> > > PCI_PM_D3HOT_WAIT) and a few of the PCI quirks update the D3Hot delay up
-> > > to 20ms, let's switch from msleep to usleep_range to improve the delay
-> > > accuracy.
-> > > 
-> > > This patch came from Sajid Dalvi <sdalvi@google.com> in the Pixel 6
-> > > kernel tree [1]. Testing on a Pixel 6, found that the 10ms delay for
-> > > the Exynos PCIe device was on average delaying for 19ms when the spec
-> > > requires 10ms. Switching from msleep to uslseep_delay therefore
-> > > decreases the resume time on a Pixel 6 on average by 9ms.
-> > > 
-> > > [1] https://android.googlesource.com/kernel/gs/+/18a8cad68d8e6d50f339a716a18295e6d987cee3
-> > > 
-> > > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-> > > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > > ---
-> > >  drivers/pci/pci.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 95bc329e74c0..5ae5b3c4dc9b 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -72,7 +72,8 @@ static void pci_dev_d3_sleep(struct pci_dev *dev)
-> > >  		delay = pci_pm_d3hot_delay;
-> > >  
-> > >  	if (delay)
-> > > -		msleep(delay);
-> > > +		usleep_range(delay * USEC_PER_MSEC,
-> > > +			     (delay + 2) * USEC_PER_MSEC);
-> > 
-> > You could also use fsleep(), which ends up calling usleep_range()
-> > for (usecs > 10 && usecs <= 20000).
-> 
-> Thanks for the suggestion. I see fsleep() uses 2 * usec for the upper range
-> which I think is a bit much for this optimization. The documentation says
-> in the worse case an interrupt will be triggered for the upper bound, but
-> I'm not entirely sure how often that'd be. Thoughts?
+Hi folks,
 
-Ah, I misread 'delay + 2' in your patch as 'delay * 2', which would result in
-the same. Agreed, in the spirit of your optimization it probably doesn't make
-sense to use fsleep().
+The former part of this series introduces the IOMMU interfaces to attach
+or detach an iommu domain to/from a pasid of a device, and refactors the
+exsiting IOMMU SVA implementation by assigning an SVA type of iommu
+domain to a shared virtual address and replacing sva_bind/unbind iommu
+ops with a set_dev_pasid domain ops.
 
-The range of 2us is really narroy, you could consider making it something
-like 10 or 20% of 'delay'.
+The latter part changes the existing I/O page fault handling framework
+from only serving SVA to a generic one. Any driver or component could
+handle the I/O page faults for its domain in its own way by installing
+an I/O page fault handler.
+
+This series has been functionally tested on an x86 machine and compile
+tested for all architectures.
+
+This series is also available on github:
+[2] https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v11
+
+Please review and suggest.
+
+Best regards,
+baolu
+
+Change log:
+v11:
+ - [PATCH 04/13] PCI: Allow PASID only when ACS enforced on upstreaming path
+   - new patch
+ - [PATCH 05/13] iommu: Add attach/detach_dev_pasid iommu interface
+   - Remove block_dev_pasid domain ops and use setting group blocking
+     domain instead.
+   - Remove iommu_group_immutable_singleton(). Move the PCI/ACS
+     requirement into the pci_enable_pasid(). All devices in an iommu
+     group share a same iommu domain for each pasid.
+ - [PATCH 06/13] iommu: Add IOMMU SVA domain support
+   - Add a refcount for SVA multiple bindings.
+ - [PATCH 07/13] iommu/vt-d: Add SVA domain support
+   - Use set_dev_pasid for both domain attaching and detaching.
+ - [PATCH 08/13] arm-smmu-v3/sva: Add SVA domain support
+   - Use set_dev_pasid for both domain attaching and detaching.
+ - [PATCH 09/13] iommu/sva: Refactoring iommu_sva_bind/unbind_device()
+   - Remove the refcount of iommu_sva::users.
+   - Add iommu_sva::domain.
+ - [PATCH 11/13] iommu: Prepare IOMMU domain for IOPF
+   - Remove unnecessary check of IS_ERR_OR_NULL(mm).
+ - [Overall]
+   - Rebase to v6.0-rc1.
+   - Remove previous Test-by's as some APIs are changed.
+   - Polishing of various codes and comments.
+
+v10:
+ - https://lore.kernel.org/linux-iommu/20220705050710.2887204-1-baolu.lu@linux.intel.com/
+ - Rebase on next branch of iommu tree.
+ - Split attach/detach_device_pasid interfaces and SVA domain extensions
+   to different patches.
+ - Handle the return error of xa_cmpxchg() gracefully.
+ - Directly pass mm in as the SVA fault data.
+ - Rename iopf_handle_group() to iopf_handler().
+ - Some commit message and code comment refinement.
+ - Add Tested-by's from Zhangfei and Tony.
+
+v9:
+ - https://lore.kernel.org/linux-iommu/20220621144353.17547-1-baolu.lu@linux.intel.com/
+ - Some minor changes on comments and function names.
+ - Simplify dev_iommu_get_max_pasids().
+
+v8:
+ - https://lore.kernel.org/linux-iommu/20220607014942.3954894-1-baolu.lu@linux.intel.com/
+ - Add support for calculating the max pasids that a device could
+   consume.
+ - Replace container_of_safe() with container_of.
+ - Remove iommu_ops->sva_domain_ops and make sva support through the
+   generic domain_alloc/free() interfaces.
+ - [Robin] It would be logical to pass IOMMU_DOMAIN_SVA to the normal
+   domain_alloc call, so that driver-internal stuff like context
+   descriptors can be still be hung off the domain as usual (rather than
+   all drivers having to implement some extra internal lookup mechanism
+   to handle all the SVA domain ops).
+ - [Robin] I'd just stick the mm pointer in struct iommu_domain, in a
+   union with the fault handler stuff those are mutually exclusive with
+   SVA.
+ - https://lore.kernel.org/linux-iommu/f3170016-4d7f-e78e-db48-68305f683349@arm.com/
+
+v7:
+ - https://lore.kernel.org/linux-iommu/20220519072047.2996983-1-baolu.lu@linux.intel.com/
+ - Remove duplicate array for sva domain.
+ - Rename detach_dev_pasid to block_dev_pasid.
+ - Add raw device driver interfaces for iommufd.
+ - Other misc refinements and patch reorganization.
+ - Drop "dmaengine: idxd: Separate user and kernel pasid enabling" which
+   has been picked for dmaengine tree.
+
+v6:
+ - https://lore.kernel.org/linux-iommu/20220510061738.2761430-1-baolu.lu@linux.intel.com/
+ - Refine the SVA basic data structures.
+   Link: https://lore.kernel.org/linux-iommu/YnFv0ps0Ad8v+7uH@myrica/
+ - Refine arm smmuv3 sva domain allocation.
+ - Fix a possible lock issue.
+   Link: https://lore.kernel.org/linux-iommu/YnFydE8j8l7Q4m+b@myrica/
+
+v5:
+ - https://lore.kernel.org/linux-iommu/20220502014842.991097-1-baolu.lu@linux.intel.com/
+ - Address review comments from Jean-Philippe Brucker. Very appreciated!
+ - Remove redundant pci aliases check in
+   device_group_immutable_singleton().
+ - Treat all buses except PCI as static in immutable singleton check.
+ - As the sva_bind/unbind() have already guaranteed sva domain free only
+   after iopf_queue_flush_dev(), remove the unnecessary domain refcount.
+ - Move domain get() out of the list iteration in iopf_handle_group().
+
+v4:
+ - https://lore.kernel.org/linux-iommu/20220421052121.3464100-1-baolu.lu@linux.intel.com/
+ - Solve the overlap with another series and make this series
+   self-contained.
+ - No objection to the abstraction of data structure during v3 review.
+   Hence remove the RFC subject prefix.
+ - Refine the immutable singleton group code according to Kevin's
+   comments.
+
+v3:
+ - https://lore.kernel.org/linux-iommu/20220410102443.294128-1-baolu.lu@linux.intel.com/
+ - Rework iommu_group_singleton_lockdown() by adding a flag to the group
+   that positively indicates the group can never have more than one
+   member, even after hot plug.
+ - Abstract the data structs used for iommu sva in a separated patches to
+   make it easier for review.
+ - I still keep the RFC prefix in this series as above two significant
+   changes need at least another round review to be finalized.
+ - Several misc refinements.
+
+v2:
+ - https://lore.kernel.org/linux-iommu/20220329053800.3049561-1-baolu.lu@linux.intel.com/
+ - Add sva domain life cycle management to avoid race between unbind and
+   page fault handling.
+ - Use a single domain for each mm.
+ - Return a single sva handler for the same binding.
+ - Add a new helper to meet singleton group requirement.
+ - Rework the SVA domain allocation for arm smmu v3 driver and move the
+   pasid_bit initialization to device probe.
+ - Drop the patch "iommu: Handle IO page faults directly".
+ - Add mmget_not_zero(mm) in SVA page fault handler.
+
+v1:
+ - https://lore.kernel.org/linux-iommu/20220320064030.2936936-1-baolu.lu@linux.intel.com/
+ - Initial post.
+
+Lu Baolu (13):
+  iommu: Add max_pasids field in struct iommu_device
+  iommu: Add max_pasids field in struct dev_iommu
+  iommu: Remove SVM_FLAG_SUPERVISOR_MODE support
+  PCI: Allow PASID only when ACS enforced on upstreaming path
+  iommu: Add attach/detach_dev_pasid iommu interface
+  iommu: Add IOMMU SVA domain support
+  iommu/vt-d: Add SVA domain support
+  arm-smmu-v3/sva: Add SVA domain support
+  iommu/sva: Refactoring iommu_sva_bind/unbind_device()
+  iommu: Remove SVA related callbacks from iommu ops
+  iommu: Prepare IOMMU domain for IOPF
+  iommu: Per-domain I/O page fault handling
+  iommu: Rename iommu-sva-lib.{c,h}
+
+ include/linux/intel-svm.h                     |  13 -
+ include/linux/iommu.h                         | 110 +++++---
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  19 +-
+ drivers/iommu/intel/iommu.h                   |  13 +-
+ .../iommu/{iommu-sva-lib.h => iommu-sva.h}    |  14 +-
+ drivers/dma/idxd/cdev.c                       |   3 +-
+ drivers/dma/idxd/init.c                       |  25 +-
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   | 119 +++++---
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   9 +-
+ drivers/iommu/intel/dmar.c                    |   7 +
+ drivers/iommu/intel/iommu.c                   |   7 +-
+ drivers/iommu/intel/svm.c                     | 150 +++++-----
+ drivers/iommu/io-pgfault.c                    |  77 ++----
+ drivers/iommu/iommu-sva-lib.c                 |  71 -----
+ drivers/iommu/iommu-sva.c                     | 233 ++++++++++++++++
+ drivers/iommu/iommu.c                         | 259 +++++++++++-------
+ drivers/misc/uacce/uacce.c                    |   2 +-
+ drivers/pci/ats.c                             |   5 +
+ drivers/iommu/Makefile                        |   2 +-
+ 19 files changed, 680 insertions(+), 458 deletions(-)
+ rename drivers/iommu/{iommu-sva-lib.h => iommu-sva.h} (83%)
+ delete mode 100644 drivers/iommu/iommu-sva-lib.c
+ create mode 100644 drivers/iommu/iommu-sva.c
+
+-- 
+2.25.1
+
