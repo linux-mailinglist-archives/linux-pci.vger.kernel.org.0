@@ -2,127 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32960598E01
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 22:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95DD3598E28
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 22:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346043AbiHRU1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 16:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
+        id S230399AbiHRUiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 16:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346007AbiHRU1f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 16:27:35 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E2E12D09;
-        Thu, 18 Aug 2022 13:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-        Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-        In-Reply-To:References; bh=pYW7sT3jh29AWNhJvTI8IlA/O24S5q/YAiEWOzJFAt8=; b=LB
-        OZg4+L7ld0yvUo5vbEosaxy60S2JN+n31F0W6bAtTFxLs6MQHJpgBz+L31v9WbvWlpUf41AMDwhhO
-        XYWuUBnJkNcFq8kiK1vx0Jh6LC0lDUoHRL5aQkgtR97Kc66Rn6kcDbYfQVzbLwD8fwFAnvozum9Dv
-        LGhS1mJtgGWliC0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1oOm6u-00DqE5-L3; Thu, 18 Aug 2022 22:27:24 +0200
-Date:   Thu, 18 Aug 2022 22:27:24 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] PCI: mvebu: Implement support for interrupts on
- emulated bridge
-Message-ID: <Yv6grNn5BDFjctFP@lunn.ch>
-References: <20220817230036.817-1-pali@kernel.org>
- <20220817230036.817-3-pali@kernel.org>
- <Yv6YOZ2FuTn8D5qS@lunn.ch>
- <20220818200737.7w2wqh62arfrskks@pali>
+        with ESMTP id S1344916AbiHRUiT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 16:38:19 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D5CE0D2
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:38:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E39AFB82216
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 20:38:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672B3C433C1;
+        Thu, 18 Aug 2022 20:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660855094;
+        bh=6Lsy0QaxfV6sD1O8kfNMv6jWWiIgfjbYjaUEeiQnpZU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=GHqlOIcqhocdbmY56+RBw2wUFa+XU+/RQhpmBU3iNw0GCy/D/PO6cTivwW30rUOpq
+         8QZuT5OINLUWYQ7/NK0GiYMiO9/5ohREqvLPLXcw3lMvTx89My7rN3zi++cGAL2nud
+         4o5HBR1ZTDttkXXxSGlgukaAYEQt4MFWQxnTU+zZjY9lGo/PE7JDCU3Q2l+suqrWDf
+         Er6IONkOrkpDE+kNaEdmDV0m6IJr2Pd/3TgjtXlQe2zaYDuYWTwauJiS7ZNGK2fsU5
+         oF7Z9DpqlgY6j4CkkMV9tqrPrOaWvQ9C6yHCchFqgol7HozQrWwv9+fTmKFNXO0qkd
+         kDfbhLnGf4l2A==
+Date:   Thu, 18 Aug 2022 15:38:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Xinhui Pan <Xinhui.Pan@amd.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Tom Seewald <tseewald@gmail.com>, Stefan Roese <sr@denx.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        regressions@lists.linux.dev, linux-pci@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Message-ID: <20220818203812.GA2381243@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220818200737.7w2wqh62arfrskks@pali>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <bug-216373-41252@https.bugzilla.kernel.org/>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 10:07:37PM +0200, Pali Rohár wrote:
-> On Thursday 18 August 2022 21:51:21 Andrew Lunn wrote:
-> > > -static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
-> > > +static irqreturn_t mvebu_pcie_error_irq_handler(int irq, void *arg)
-> > > +{
-> > > +	struct mvebu_pcie_port *port = arg;
-> > > +	struct device *dev = &port->pcie->pdev->dev;
-> > > +	u32 cause, unmask, status;
-> > > +
-> > > +	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
-> > > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > +	status = cause & unmask;
-> > > +
-> > > +	/* "error" interrupt handler does not process INTX interrupts */
-> > > +	status &= ~(PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
-> > > +		    PCIE_INT_INTX(2) | PCIE_INT_INTX(3));
-> > 
-> > Just for my understanding...
-> > 
-> > There are two interrupts
-> 
-> yes
-> 
-> > but the status information what those
-> > interrupts actually mean are all packed into one register?
-> 
-> yes
-> 
-> for masking individual interrupt events there is just one shared
-> register for both "intx" and "error" interrupt source.
-> 
-> and also there is also just one shared "cause" register which says which
-> individual interrupt events happened.
-> 
-> > I assume reading the clause register does not clear set bits?
-> 
-> yes, reading does not clear any interrupt event.
-> 
-> > Otherwise there
-> > would be a race condition.
-> 
-> > Are these actually level interrupts
-> 
-> yes
-> 
-> > and in order to clear them you need to poke some other register?
-> 
-> to clear individual interrupt event you have to write corresponding 1b
-> bit into that cause register.
-> 
-> so if interrupts events BIT(24), BIT(16) and BIT(17) happened and
-> BIT(24), BIT(25), BIT(26), BIT(27) and BIT(16) are unmasked then CPU
-> receives two interrupts (one for intx:24-27 and one for err:16). kernel
-> will call interrupt handlers for both intx and err (possible also in
-> parallel if it unmasked on different CPUs) and each handler just clears
-> events which process. So writing BIT(16) into cause register clears only
-> event 16 and all other (24-27, 17) are still active. And level interrupt
-> (the correct one intx or err) is then triggered again.
+[Adding amdgpu folks]
 
-Thanks for the explanation.
+On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> 
+>             Bug ID: 216373
+>            Summary: Uncorrected errors reported for AMD GPU
+>     Kernel Version: v6.0-rc1
+>         Regression: No
+> ...
 
-I don't know enough about PCI to be able to give a meaningful
-Reviewed-by, so i will leave that to the PCI maintainer. But the DT
-bits look good to me.
+I marked this as a regression in bugzilla.
 
-     Andrew
+> Hardware:
+> CPU: Intel i7-12700K (Alder Lake)
+> GPU: AMD RX 6700 XT [1002:73df]
+> Motherboard: ASUS Prime Z690-A
+> 
+> Problem:
+> After upgrading to v6.0-rc1 the kernel is now reporting uncorrected PCI errors
+> for my GPU.
+
+Thank you very much for the report and for taking the trouble to
+bisect it and test Kai-Heng's patch!
+
+I suspect that booting with "pci=noaer" should be a temporary
+workaround for this issue.  If it, can you add that to the bugzilla
+for anybody else who trips over this?
+
+> I have bisected this issue to: [8795e182b02dc87e343c79e73af6b8b7f9c5e635]
+> PCI/portdrv: Don't disable AER reporting in get_port_device_capability()
+> Reverting that commit causes the errors to cease.
+
+I suspect the errors still occur, but we just don't notice and log
+them.
+
+> I have also tried Kai-Heng Feng's patch[1] which seems to resolve a similar
+> problem, but it did not fix my issue.
+> 
+> [1]
+> https://lore.kernel.org/linux-pci/20220706123244.18056-1-kai.heng.feng@canonical.com/
+>
+> dmesg snippet:
+> 
+> pcieport 0000:00:01.0: AER: Multiple Uncorrected (Non-Fatal) error received:
+> 0000:03:00.0
+> amdgpu 0000:03:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal),
+> type=Transaction Layer, (Requester ID)
+> amdgpu 0000:03:00.0:   device [1002:73df] error status/mask=00100000/00000000
+> amdgpu 0000:03:00.0:    [20] UnsupReq               (First)
+> amdgpu 0000:03:00.0: AER:   TLP Header: 40000001 0000000f 95e7f000 00000000
+
+I think the TLP header decodes to:
+
+  0x40000001 = 0100 0000 ... 0000 0001 binary
+  0x0000000f = 0000 0000 ... 0000 1111 binary
+
+  Fmt           010b                 3 DW header with data
+  Type          0000b  010 0 0000    MWr Memory Write Request
+  Length        00 0000 0001b        1 DW
+  Requester ID  0x0000               00:00.0
+  Tag           0x00
+  Last DW BE    0000b                must be zero for 1 DW write
+  First DW BE   1111b                all 4 bytes in DW enabled
+  Address       0x95e7f000
+  Data          0x00000000
+
+So I think this is a 32-bit write of zero to PCI bus address
+0x95e7f000.
+
+Your dmesg log says:
+
+  pci 0000:02:00.0: PCI bridge to [bus 03]
+  pci 0000:02:00.0:   bridge window [mem 0x95e00000-0x95ffffff]
+  pci 0000:03:00.0: reg 0x24: [mem 0x95e00000-0x95efffff]
+  [drm] register mmio base: 0x95E00000
+
+So this looks like a write to the device's BAR 5.  I don't see a PCI
+reason why this should fail.  Maybe there's some amdgpu reason?
+
+Bjorn
