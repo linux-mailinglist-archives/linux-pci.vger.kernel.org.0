@@ -2,69 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D4CA5988F1
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 18:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CF5759890A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 18:39:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243702AbiHRQce (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 12:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
+        id S241954AbiHRQiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 12:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344796AbiHRQcd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 12:32:33 -0400
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36976CF59;
-        Thu, 18 Aug 2022 09:32:32 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id c4so661654iof.3;
-        Thu, 18 Aug 2022 09:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=BgmefGHfNSq1le+mHfAfzq3gcacHjAI6qbIlu87XEfY=;
-        b=hAbcMkRXJdu6k7RU8jo6cexIEdOoB042c0gORAecbMqtXOsjQMqMlHDuPiasJSj3nC
-         Sjq+yzlO87tTCT/XcI/4qNIX+kpIj/fGuBOoPYkIMtbSGMIyHJO65Vz4PguAGNqnz++y
-         aZie8ULPpVzRdsXarCPJU4zXNDPyLDF/2/eP3ksi134VNvRs7nVuLlnZYm9cZrVgMMSm
-         z6dvIvDKCCvJT5gEvdMxAiagUmFiKCV5PnLBAGyukBCUnINwCdqJS/CPQ21gPAexBts4
-         4LcTh+8RHnHluzT3IdnqUnj8moHOrRD0/g43JWyM8HpnNE0wDK6ZOC/3KLatRKvSB1mb
-         pM4w==
-X-Gm-Message-State: ACgBeo0+fdGOPvR7lnQsv88TKTv4lcAJhYyaILA0jaeKsZ4k2hZsD5Px
-        nyY0zpVGkYTHSVIBp2f1fA==
-X-Google-Smtp-Source: AA6agR71fMBrlLxza/+6/LYQ2Qf/v/19ZNs76TujF14zmKhVMzM76/ArJr4ojTVsmMcK66HubfDODg==
-X-Received: by 2002:a02:c9cb:0:b0:347:47b:659c with SMTP id c11-20020a02c9cb000000b00347047b659cmr1012124jap.72.1660840351994;
-        Thu, 18 Aug 2022 09:32:31 -0700 (PDT)
-Received: from robh.at.kernel.org ([2607:fb90:647:4ff2:3529:f8cd:d6cd:ac54])
-        by smtp.gmail.com with ESMTPSA id b11-20020a92c84b000000b002ddc8e785desm799023ilq.15.2022.08.18.09.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 09:32:31 -0700 (PDT)
-Received: (nullmailer pid 1990521 invoked by uid 1000);
-        Thu, 18 Aug 2022 16:32:27 -0000
-Date:   Thu, 18 Aug 2022 10:32:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: mvebu: Update information about
- error interrupt
-Message-ID: <20220818163227.GA1978870-robh@kernel.org>
-References: <20220817230036.817-1-pali@kernel.org>
- <20220817230036.817-2-pali@kernel.org>
+        with ESMTP id S244557AbiHRQiB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 12:38:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C908BD1FE;
+        Thu, 18 Aug 2022 09:38:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE01D615E6;
+        Thu, 18 Aug 2022 16:38:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2553C433C1;
+        Thu, 18 Aug 2022 16:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660840680;
+        bh=VW8K1mvPZ7SyPQLEyZKedWfXCdz3ufIQB1jTJflM0Qc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U2S9UobrcB5GYkBgLGRacrpNp5tPyIHF9asfLL+g1hAEqvD+vbFK5UsHaoBN6qaBw
+         P3VISmCIi4seWDg+ACUG7tWs4dEACj6yzRuco9XCPT4U1xdKBP0npdSyumuq4y7PNG
+         1U9EX7wXu5jeydv7ind2ova39+xGBMT0VCRfkKOxwExe4OJBgXLcrqLUaEihSZe4Ft
+         WZEgHjbuG/SngIga+tBHLXCGcI7PcNx7JNDrWiOS7XMhJ1ClktiAeBcUbisGLcgQwl
+         D9C6/vcptywUyzqCZ+c0VBQ2NkzeyftJ3FoYuBonDJ99L1L/30PFKze/kKUeFNmv4R
+         PFEAXfG9mqMOQ==
+Received: by pali.im (Postfix)
+        id 00D04622; Thu, 18 Aug 2022 18:37:56 +0200 (CEST)
+Date:   Thu, 18 Aug 2022 18:37:56 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Assign PCI domain by ida_alloc()
+Message-ID: <20220818163756.qmyopspdn5xywe5s@pali>
+References: <20220702204737.7719-1-pali@kernel.org>
+ <20220714184130.5436-1-pali@kernel.org>
+ <20220818135009.zlivavgw6547hh4s@pali>
+ <Yv5T1dcIIOPy3KvB@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220817230036.817-2-pali@kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <Yv5T1dcIIOPy3KvB@lunn.ch>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,13 +62,18 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 01:00:33AM +0200, Pali Rohár wrote:
-> mvebu error interrupt is triggered by any non-intx event, which is mainly
-> some pcie error.
+On Thursday 18 August 2022 16:59:33 Andrew Lunn wrote:
+> On Thu, Aug 18, 2022 at 03:50:09PM +0200, Pali RohÃ¡r wrote:
+> > PING?
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pci/mvebu-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Pretty much anything sent during the merge window, and just before the
+> merge window gets thrown away. Please rebase onto the current pci tree
+> and repost.
+> 
+>     Andrew
+>  
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please write it pretty clear that you are not interested in those
+patches, and not hiding this info behind asking me after month of
+waiting for another work of rebase with sending them at eight o'clock
+during full moon. It is pretty ridiculous how to say "go away". Thanks.
