@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DDA05984C8
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 15:53:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 175975984D3
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 15:53:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245311AbiHRNwF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 09:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47220 "EHLO
+        id S245314AbiHRNwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 09:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245313AbiHRNwC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 09:52:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8916172B
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 06:52:01 -0700 (PDT)
+        with ESMTP id S245274AbiHRNwF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 09:52:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5F06170F
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 06:52:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 47C24616DC
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:52:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475CEC433D7;
-        Thu, 18 Aug 2022 13:51:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C1508B82179
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:52:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207B4C433C1;
+        Thu, 18 Aug 2022 13:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660830720;
-        bh=ftDwjJuJM+DkNC+0FTyMWCZEExUs1HVzpUV1moRdYIY=;
+        s=k20201202; t=1660830722;
+        bh=HbKz24Nfhn6/cZiuUPLYNM9zdj4uhadCwjvhLdFM3nA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5qRu244x3gmBpOTSglilkSDjxheuXCv6Hf2GUBjZWje/wjR5fPZK4u07TR/W9xzi
-         sBOcsRuXe9JErxzLW0KTlLrS9AmrxaP4tFKF8MLrLEgwsClDpeZ7CU6flRJ8ZG6kNh
-         DQW8Vc08a6/kqM7QjhV1tXdTw5Y7UZwWZGOAAIquFGyClT/vSJyjU2DL6Ue6h7Knuv
-         GUrIY+2Q6asuQ37OtLYH1q6dVAvEVOhb++BXRf4LH3QsjBVbx+egUtIT6VWoLdBs/p
-         f3VSvkPVHElMYborDtZ7c10pzXEid0yuCFt3ehz4OwdPhcJRPbZuJMt6jBdfheTSYt
-         Q3ecT9Ql6ok0g==
+        b=vIj9yTawYe15eFIn/SasT5q9CtieZbV3xFGVfraiKRr3ohpvteKHYHl2RCpla0N3Q
+         evprTZZW/rOqaFTkz1/BUl4ydzNeMZcECjvQJWOtd6TTEshExtzpPOim2/rltHX4bj
+         E0+kxqlyFEkj2j1ut/1wFvvsd/AIXNtC1sNC0PXbdDco/K7mNdmutgZ+4YjnxSty2q
+         +ZtrLRZDXajllxWjGbHqVyKbLdFyxyAR/35bxxP1JGmNIxmT6pSeQT7IREIXunvo/O
+         EPXBuKeugFWXxnqJKaRZX5NVDKIk0tcgfbDiFlXk56x4p59x/vX2sNxEW9tgAsKXXO
+         zV2xV9b7/fiAg==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <helgaas@kernel.org>
@@ -38,9 +38,9 @@ Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         pali@kernel.org, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 08/11] PCI: aardvark: Replace custom PCIE_CORE_ERR_CAPCTL_* macros by linux/pci_regs.h macros
-Date:   Thu, 18 Aug 2022 15:51:37 +0200
-Message-Id: <20220818135140.5996-9-kabel@kernel.org>
+Subject: [PATCH 09/11] PCI: aardvark: Don't write read-only bits explicitly in PCI_ERR_CAP register
+Date:   Thu, 18 Aug 2022 15:51:38 +0200
+Message-Id: <20220818135140.5996-10-kabel@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220818135140.5996-1-kabel@kernel.org>
 References: <20220818135140.5996-1-kabel@kernel.org>
@@ -57,48 +57,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+The bits PCI_ERR_CAP_ECRC_GENC and PCI_ERR_CAP_ECRC_CHKC are read only,
+reporting the capability of ECRC. Don't write them explicitly, instead
+read the register (where they are set), and add the bits that enable
+these features.
 
-Kernel already has these macros defined under different names.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index e30a33a4ecc6..4855ac733484 100644
+index 4855ac733484..e816ab726f66 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -37,11 +37,7 @@
- #define PCIE_CORE_DEV_REV_REG					0x8
- #define PCIE_CORE_PCIEXP_CAP					0xc0
- #define PCIE_CORE_PCIERR_CAP					0x100
--#define PCIE_CORE_ERR_CAPCTL_REG				0x118
--#define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
--#define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
--#define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK			BIT(7)
--#define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV			BIT(8)
-+
- /* PIO registers base address and register offsets */
- #define PIO_BASE_ADDR				0x4000
- #define PIO_CTRL				(PIO_BASE_ADDR + 0x0)
-@@ -589,11 +585,9 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+@@ -584,9 +584,9 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
  	advk_writel(pcie, reg, PCIE_CORE_CMD_STATUS_REG);
  
- 	/* Set Advanced Error Capabilities and Control PF0 register */
--	reg = PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX |
--		PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN |
--		PCIE_CORE_ERR_CAPCTL_ECRC_CHCK |
--		PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV;
--	advk_writel(pcie, reg, PCIE_CORE_ERR_CAPCTL_REG);
-+	reg = PCI_ERR_CAP_ECRC_GENC | PCI_ERR_CAP_ECRC_GENE |
-+	      PCI_ERR_CAP_ECRC_CHKC | PCI_ERR_CAP_ECRC_CHKE;
-+	advk_writel(pcie, reg, PCIE_CORE_PCIERR_CAP + PCI_ERR_CAP);
+-	/* Set Advanced Error Capabilities and Control PF0 register */
+-	reg = PCI_ERR_CAP_ECRC_GENC | PCI_ERR_CAP_ECRC_GENE |
+-	      PCI_ERR_CAP_ECRC_CHKC | PCI_ERR_CAP_ECRC_CHKE;
++	/* Enable generation and checking of ECRC on Root Bridge */
++	reg = advk_readl(pcie, PCIE_CORE_PCIERR_CAP + PCI_ERR_CAP);
++	reg |= PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE;
+ 	advk_writel(pcie, reg, PCIE_CORE_PCIERR_CAP + PCI_ERR_CAP);
  
  	/* Set PCIe Device Control register */
- 	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
 -- 
 2.35.1
 
