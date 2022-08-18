@@ -2,85 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FB82598056
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 10:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E6EA5980B7
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 11:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238978AbiHRIvM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 18 Aug 2022 04:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
+        id S235145AbiHRJUe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 05:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238536AbiHRIvM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 04:51:12 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D357B0286
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 01:51:11 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1oObEu-0000wW-8J; Thu, 18 Aug 2022 10:50:56 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1oObEs-000Teu-1b; Thu, 18 Aug 2022 10:50:54 +0200
-Received: from pza by lupine with local (Exim 4.94.2)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1oObEr-0002qn-Co; Thu, 18 Aug 2022 10:50:53 +0200
-Message-ID: <ddbcd90419e9bb4ce7c5b7b3055ee3227c179321.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/6] reset: imx7: Add the iMX8MP PCIe PHY PERST
- support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        shawnguo@kernel.org, vkoul@kernel.org,
-        alexander.stein@ew.tq-group.com, marex@denx.de
+        with ESMTP id S230506AbiHRJUd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 05:20:33 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336A47F082;
+        Thu, 18 Aug 2022 02:20:32 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 1A36484889;
+        Thu, 18 Aug 2022 11:20:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1660814430;
+        bh=20C+wP6RLvGXbBd56waFCzKOUBParbX3x6QwIv4oHS0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ayUWVnAzMVp/7f2uTUIeUhejcYHkGaDQtAi5WC2REd0FNKzPVxGAWQuTcEMxU72dn
+         wl2NKbMPVENpdmV5SdnFbdrbqgB3IsaN4oXVF4npk9yv0IoIcwJMy0K5nSyMw6VzvG
+         ZoZxpJUD5gnFJSzKDcSE2yGvmEIQHZ+pVKvWoCOpAlGEIfSO3CSVe7kAwVzWp3QrRQ
+         SL4LVFTQ9yLhjGNdF1QRfWtzDlqvIXFPjOMox9upujX5FJyYCpgE+GCUTht6kE9jPg
+         QQA6LgvfAv6ytUS6Gw33uk4l1HwVMeipnBwUSHdNiyu8kMeEDRXq8Tqaq+tXWurqAk
+         XXqvaV8StsQuw==
+Message-ID: <2afdb802-9a86-8313-ebfa-9f2fee7e0023@denx.de>
+Date:   Thu, 18 Aug 2022 11:20:28 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v3 0/6] Add the iMX8MP PCIe support
+Content-Language: en-US
+To:     Richard Zhu <hongxing.zhu@nxp.com>, p.zabel@pengutronix.de,
+        l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, shawnguo@kernel.org,
+        vkoul@kernel.org, alexander.stein@ew.tq-group.com
 Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Date:   Thu, 18 Aug 2022 10:50:53 +0200
-In-Reply-To: <1660806153-29001-2-git-send-email-hongxing.zhu@nxp.com>
 References: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
-         <1660806153-29001-2-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.38.3-1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
-
-On Do, 2022-08-18 at 15:02 +0800, Richard Zhu wrote:
-> On i.MX7/iMX8MM/iMX8MQ, the initialized default value of PERST bit(BIT3)
-> of SRC_PCIEPHY_RCR is 1b'1.
-> But i.MX8MP has one inversed default value 1b'0 of PERST bit.
+On 8/18/22 09:02, Richard Zhu wrote:
+> Based on the 6.0-rc1 of the pci/next branch.
+> This series adds the i.MX8MP PCIe support and had been tested on i.MX8MP
+> EVK board when one PCIe NVME device is used.
 > 
-> And the PERST bit should be kept 1b'1 after power and clocks are stable.
-> So add the i.MX8MP PCIe PHY PERST support here.
+> - i.MX8MP PCIe has reversed initial PERST bit value refer to i.MX8MQ/i.MX8MM.
+>    Add the PHY PERST explicitly for i.MX8MP PCIe PHY.
+> - Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+>    And share as much as possible codes with i.MX8MM PCIe PHY.
+> - Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+>    driver.
+> 
+> Main changes v2-->v3:
+> - Fix the schema checking error in the PHY dt-binding patch.
+> - Inspired by Lucas, the PLL configurations might not required when
+>    external OSC is used as PCIe referrence clock. It's true. Remove all
+>    the HSIO PLL bit manipulations, and PCIe works fine on i.MX8MP EVK board
+>    with one NVME device is used.
+> - Drop the #4 patch of v2, since it had been applied by Rob.
+> 
+> Main changes v1-->v2:
+> - It's my fault forget including Vinod, re-send v2 after include Vinod
+>    and linux-phy@lists.infradead.org.
+> - List the basements of this patch-set. The branch, codes changes and so on.
+> - Clean up some useless register and bit definitions in #3 patch.
+> 
+> Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  16 +++++++--
+> arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  53 +++++++++++++++++++++++++++++
+> arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  46 ++++++++++++++++++++++++-
+> drivers/pci/controller/dwc/pci-imx6.c                        |  17 +++++++++-
+> drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 150 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------
+> drivers/reset/reset-imx7.c                                   |   1 +
+> 6 files changed, 232 insertions(+), 51 deletions(-)
 
-the description is good now. It would be nice if this could also be
-mentioned in the Reference Manual.
+For the entire series:
 
-Please replace "add" with "fix" in the subject, as I requested earlier:
-"reset: imx7: Fix i.MX8MP PCIe PHY PERST support".
+Tested-by: Marek Vasut <marex@denx.de>
 
-And add a fixes line:
-
-Fixes: e08672c03981 ("reset: imx7: Add support for i.MX8MP SoC")
-
-With those two changes,
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+Thanks !
