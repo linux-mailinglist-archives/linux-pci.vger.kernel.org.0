@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFCF598707
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 17:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C00259871A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 17:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245730AbiHRPME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 11:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
+        id S1344129AbiHRPMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 11:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344109AbiHRPL5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 11:11:57 -0400
+        with ESMTP id S245462AbiHRPMB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 11:12:01 -0400
 Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2044.outbound.protection.outlook.com [40.107.22.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F5ABE4F0;
-        Thu, 18 Aug 2022 08:11:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7236BE4FA;
+        Thu, 18 Aug 2022 08:11:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=byNOOTI1lEswpaJSWNeN8XEomafr0DR5y924QVwCW3nPH+qQ6aK+1ybT7mBm5rJniyKYQsYc3Ct0nQEEhQ4wfjkwwwpLdpIVOROURsrvly/8LLs2kU4nZlCk/j01IFYVQuHq8ixgE20zz5MBdL/Jijb3EEfeqmjeBTwmjS7uEOaGSN9OoNvqlrf35q+tSF5IfBD5xgw35+VVhf8Cbo2W711j9Q/tApHeqvgy6N/VUchP9tNQU54DYRrR+LaSmGSXw5xuS9zr+m0SRl4J6Qn6JbqRMq3CXIcZqcIr4CQhWaUO2gfyLtX+D6FYiYA53LNfBdpDN6zJzhG18ITblHyFYA==
+ b=FilaJm8WJ4mv8K7SkKAnTzQCdvO8KB974EEYb18SnExW3Kr2/c8KtA7jwTnLvoRp6X4zKZH9fLLyyhw9ek1+rp719oWS6An6OGGf0dfHi9CVjf936F0VqIv7nNjPeoik/oerqLQgOKLaCR56V1G1uup9l73Mh4IQLA/z8bw5zqJbZxpgGVq9J1NRssWBrvDVhNj4VYzgTT6WPkseEENNE6P6ULrlu35jVq0HTUiLv1d7IKRs+lo4AvQqjD4J0z0CpRj1XZ2ADrwGigNdd2ApMXIvwK7iywi3/TJeFGoiV7Qi6NUerOkYldFV6x6eCKBQu7+/FnR1kahXuTDLOg7oug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NtMpNVplILGZi2u/dVsX903we9+baZrIzJYTfXjWhUk=;
- b=W7OaBtk1BhWxXHVJuB686zbPWPwUuPsKVgLx5ERz+jFyJKVLj3W4TAW2qRhK42bx1ERWtVuUwTQV+SmInjYjITmcAViFBvMsns2qG/UO6/d0PqJ9PQmYLXIwWG/6DZkbTkAD5/dCtD+4Kw8G2+0yd1NIHVX8InbxVLNY45sYRipMoGZTJUBNVzIdOj27yI2x8T/n0wAPBaEiGJY1MdSJEiVWuIhZ5DqS8A+KiU2EdpWo5hMVCpof2AroJXsUocvtGPn1HhJScmzOv+cW9/5boio8p7g4LyVKEo27gUZNv4YD4CaEmPINIoTYKnl+Zxh1RdiROK28zcME6dU8ai0B8Q==
+ bh=PxyZmoQ4HPxt9JAZN3QVzBllZWpIazPpqniEWrzTllw=;
+ b=BprdSuTI+P64SOqeTQzWn/O+FrdrqbR5bcNvLLtsq80lt/lyxqdTo+QiN+aVhRywr2kPZSNk3fwQYKupVI/xmRyh2GmP3IWtXz+Fuq20bEDpfg/tvmXeu6p2Wyes+VQVk73QTH9/IZlttHpQQL7/gcWd1ZgKrG1SYm8+TPqN2fXbKkGg5UTxG7lGfbXTLiI+nrGzAkfllVNeyChBTvC74OYHsweoIpDcLgefFjpd8lpR8oTaKeJA1hq5jDC07YwAQleNhMG/DQyff2PZ8etGGK06v+xF4fcDHnoqrFQgwdfYkb+10l5j2tx0q3oAuIZK6QOwj0fn8f13wtwyCEij0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NtMpNVplILGZi2u/dVsX903we9+baZrIzJYTfXjWhUk=;
- b=WJoqDI3o8ocAv0UzWeDhYs0Axc/Pnojebb6J6q9zp0UzbZ18yvqNTfyuAhmgkicDl2qsAWAJh65xW+JlpbEBcfI2qGqFJXX7NOC3SjD9OF/EC3lz+uPV2cJ2tGkDKOHHpU/bKAh1aPDx6pqHkxwictj39YLpuj+VdmFGbiKQXRU=
+ bh=PxyZmoQ4HPxt9JAZN3QVzBllZWpIazPpqniEWrzTllw=;
+ b=JqOYbackT+upKDF5Qbg15kkR77MfoYd0HVJPnnS0YH8eMAFx0fu8kAwAMHlNVM6nuHwfIvknSuAj13jCihQNyxuGqq/Ilq90SmFLcydGAirjtPbQMjTWNrZUHuIDeR/SPNjhGyaxFOPqMMrzC/Myc3Tr45+G7czLweLDeBjOZGc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
  by AM0PR04MB5713.eurprd04.prod.outlook.com (2603:10a6:208:125::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.16; Thu, 18 Aug
- 2022 15:11:48 +0000
+ 2022 15:11:53 +0000
 Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
  ([fe80::40a9:93e4:75d4:f73c]) by PAXPR04MB9186.eurprd04.prod.outlook.com
  ([fe80::40a9:93e4:75d4:f73c%3]) with mapi id 15.20.5546.016; Thu, 18 Aug 2022
- 15:11:48 +0000
+ 15:11:53 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
@@ -49,71 +49,64 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
         lznuaa@gmail.com
-Subject: [PATCH v6 0/4] PCI EP driver support MSI doorbell from host
-Date:   Thu, 18 Aug 2022 10:11:23 -0500
-Message-Id: <20220818151127.2449064-1-Frank.Li@nxp.com>
+Subject: [PATCH v6 1/4] irqchip: allow pass down .pm field at IRQCHIP_PLATFORM_DRIVER_END
+Date:   Thu, 18 Aug 2022 10:11:24 -0500
+Message-Id: <20220818151127.2449064-2-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.35.1
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20220818151127.2449064-1-Frank.Li@nxp.com>
+References: <20220818151127.2449064-1-Frank.Li@nxp.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SJ0PR13CA0141.namprd13.prod.outlook.com
  (2603:10b6:a03:2c6::26) To PAXPR04MB9186.eurprd04.prod.outlook.com
  (2603:10a6:102:232::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e5e39ade-f509-42e2-a94c-08da812bf862
+X-MS-Office365-Filtering-Correlation-Id: 7e208eae-693c-42e4-9a3a-08da812bfb8d
 X-MS-TrafficTypeDiagnostic: AM0PR04MB5713:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rwa7EjpSWXS2S/ESv3m/AGXPxJUlAQz56i44Wp1GGyYVSROll6vXeKR/e+IYzTo8Mc8RM2NnfrDTjpY6abk2eOiLunJDNO0XX32HFWL4f6ELjff/Sa2eo80BTK1HPRa1xAnPYkljpa+F+AucdUHTv0yXpAHvTZbC3fTM+Ds8tQFK6X/KWh0UEoeXW2ebij5FIRenCvehMf8E1S9yM7uVWmgf3eebpO2s3wc5EJjfriw6I3u7Mf2KoJuOonhZY4bQSj4rTmDwWJwwROzGSTRF5aMa5JB/33k07E6wwnBSp8JXfiL4XYa1nWJOZVL02ro9S3Ybs11aWZa72THxyRG7JLnfqiLyl0xmW7+AIEZWU62ZlcADTf3/8JgLTruEu1h0JIE7EW617gXZCwHHFRp01ykqCiK7ux1TYNuzuU5RO411J4IBiGHYaO+su5h6d6GFKR9b3BeIarlVo/C5Rh9axbj3/eTyUFd6LGZG+3IlyDf6A7dFMrUoS8aQ+lRoxvQookpzccX8O2Pzu0Q+EcveC65g+RayyPrqerYQJGpAAo427DFDBD9C5CB6EdhLrt1/IdlwostJhahz8UGjGzXv05sYtnY2IBuZHhti5wYnbSFeKVMpjmB62Et7ZKv5QJE3AAWtFkUmM3K2BwkV1SP7M5Zd1ahZJ5sbd0xDw4KD9dgoxRhSHbEuGjMo8S9+FjbT+w8fGv0+SPykVszGIvZ3nBrFvHNnD55K+9YgtT5RR+zTVbQjlqK3KdF9W23Z4hrDqCn6HyaLn3kGjD/OiXRyipHxzcyY2IFmEXjmrc6Q2/c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(366004)(376002)(39860400002)(396003)(2616005)(316002)(1076003)(186003)(83380400001)(36756003)(38350700002)(38100700002)(6506007)(52116002)(4326008)(66946007)(66476007)(66556008)(2906002)(966005)(8676002)(6486002)(86362001)(6512007)(41300700001)(478600001)(26005)(6666004)(8936002)(5660300002)(7416002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: bvfwWvBA5amL9yHYFfkpE1WDS7ibdl1vEbbL9hWOH0tBFiWlHoV21qL5yGR0mQLbk/BqW2JIFW3YZTY0SMd/eWt3fRjXEefEWwGBBotCtcfKpa0dTXOdvN5jmeOTXQpZoVWu1ZyBK4W45QhUpwgsVEg0vrK1qVKlC1LYSTAdsaYvYyHHOuGor+rLY69CSV/JFGV0dh3CqcoR2sv1CilZDlXNK0M0/lia2xhxVOt9SGmqp7bYpYLbqwkmAVEA74ya6Z3ysEafZPbIMYJNDmRMzOZJdGckGgih62oZj8Ky1kQBM68U0NqvT/4ww2VhsBvMbkvk7hua8ZaN7ha+CyF7qP3vTpJT5ls7frw5j5noGgN0bHdHipiNs1SxDaaHFWSuUJwWs+bmLwCL+0fPv8zM0U3kHOhZU/QT7Ks1z0N0Nq0lBXhx+1GWYvJTzwPeb8jkYM0O5VoUeUcL6rRnHpPqNr76Fm94aIqBWoDi8M4XDnzZEoAxBgNSaBQ/8ZXzxP2z2TvLTEpzH6TRAJy9/sJvL2t9UYol0fDpYGhRU0qieA61yttryd3gt0esnmtED1PaGQkRWr/G7g89LmOXfLxmotUqQe5wfiMbwc42IMIEdw11O4InGoAWT6GwjwScMuXucOj+NhEi1S0J9B/SalR9PqmdOKaBZnuA03gmFKTj9idbj1xBhw+JIfBHUIbBf1L6TOJMjrWgkbszrjZgb9aFOVNQWxreR1Z1bVIwYtHmw2mvkyzzZQORfnAvlZHe5dkPJSseLOzI7B+tYcazWiLOfw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(366004)(376002)(39860400002)(396003)(2616005)(316002)(1076003)(186003)(83380400001)(36756003)(38350700002)(38100700002)(6506007)(52116002)(4326008)(66946007)(66476007)(66556008)(2906002)(8676002)(6486002)(86362001)(6512007)(41300700001)(478600001)(26005)(6666004)(8936002)(5660300002)(7416002)(142923001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TWpSZXFVR3pBbHdTYmFWcGtrQTBCZkxYQllFbVhzM2g1ZzJ5Kzk2TGF0Z09h?=
- =?utf-8?B?c1lHY0RzU2tJQndvc1FQZlFmTEdsV2o4Nkg3akF0VDRmeGtCL2lUdjRGNmd0?=
- =?utf-8?B?WjhDTjNPdnJydllHV0gwZ3JnRE02aUZYNWFWR2laT2VMVndNVDFkMXdxblVR?=
- =?utf-8?B?aUh0VUh1MjYzRjdvQlR4Ti82Y1RQZnFkQ2RMQVlSaTNFZTd5cGpObDhQZ29x?=
- =?utf-8?B?ekUrRGJOdFpqaVpPUElZOVg0SVZBdjdUc0RjWTBDcjdqOUtnWHlnS2ZsSzU5?=
- =?utf-8?B?YUFhbExGdktLc1B6UGdDZkxpRjBUeUMreWRTTEcvSTBpbnRLenR3T2FKenFm?=
- =?utf-8?B?RDFQWUJVK1BOVzVhUVFtbWVVWFZBejZUQ29VVFROcW5qS2lDQWdSSDh1YWtG?=
- =?utf-8?B?cExjRW9LOGpkS003Q0hWR0kxS2QzVUI0UGw1WjRjUGFCb2JQdS9YSXQxRVh2?=
- =?utf-8?B?S3luWU5iK1dNSG9JM1JpNjdkT1NmdTdEREtXY0NEUEx1TFBpeTNTcjZjVGxW?=
- =?utf-8?B?UzFrWG9PU2syQWhaWkNBWU91NmI5SDdhazV3T3BLQm5BUlgxSGh3TnVnNWVV?=
- =?utf-8?B?SFRKTjJ4NmlmbjRxSXJFeXNURmZ1Z1dpaHVUbUp3SW8vdjdyTGREQVNjTCtU?=
- =?utf-8?B?ZWxuNFJIamswUDkrNDF2NkovaE5ja09iZWNXbUtTM1kwd0QySEFkdzhNbnpp?=
- =?utf-8?B?bzRDMjRHZ2EwS21LSjh5QmRZY3ZROGczaVVUQlNuaEtDVW9ibUFIZEdyTktn?=
- =?utf-8?B?aVlwbzBaZlVPdXM3TVFlZm5xNXJwNEY5YnNXbnd6WEZxRVhYWGdCcjAvczFq?=
- =?utf-8?B?QmdubU5FSStxd0xzdUsxUkoxQ3NUL1QxT21FL1BwOUROWmFIL1orTDFFVC8w?=
- =?utf-8?B?bmZoOHpvYmEzODlpbE9CYUlRU0VVdW9XaFMwLzhnbk9hRUdUT0VxY05lSHhm?=
- =?utf-8?B?S1RtWlZvY0M0NERqckVBNUp2WnZkMWdEMjVDUVRkZWpEQzlPMHJnM0kwdHQx?=
- =?utf-8?B?U0VEbXd6ZUFGcVMyZmQ5OHNQNjN6T2F5STNIcUUycjRjRVNPbHdINGRYS2RQ?=
- =?utf-8?B?eDJZS04xYUZ0eXNZYStKUnd5Q1VhdmlNMi9pUjRBaWovcWg5SXRSOVk5UVln?=
- =?utf-8?B?emdRTllsQUtFNzZlMFc0dE9BaFpBdEdHbG12Q3hkckpuWkZjQXBUNFRCNDlG?=
- =?utf-8?B?THhNYUpFSmdlL0tmNjY3UG1NRVNRRUM5dzhLc0tzQ0Rzdk1BZEdGMXZCVXdj?=
- =?utf-8?B?TUJFWUlaNkdnYW1DTTZSUmJMVHE3WDJSV0V4Zkk4SXRSUmplbFQ1b2JXQWp5?=
- =?utf-8?B?elc0bHVqQXFPZDYzYnBIYkVNT3l5MzR5V1IrZHpMZVNEZWQrQU1JT0pNamZk?=
- =?utf-8?B?eDlWaDQ1c3E4V0h6eDdaZnlTb1ZwQ1c3SVVNTXFFWVpEUmw1eWYyNEdXcjMy?=
- =?utf-8?B?T0lnSWVBa3FFWDBBZjFoVE5qdTM1ME02STR3ejVZMHRLWHhGYmhYdUdnbksw?=
- =?utf-8?B?TEQrQkJiOGpiVFpIcDdXOGVuUnNCTFdEaTg1VGwvRFFITHYraG0ydUl1VTlu?=
- =?utf-8?B?Sk9QZHdmQmJkQzcwUUdMR1hBNS9HMHlvc2NtZVlYQmIraVN0cC9jdHlMRFEz?=
- =?utf-8?B?Q0hOK3kwMVJEajdrbW1kNnFYMzRPbU85cE1PTkxORm1IaytYaHZEbVVoTnpj?=
- =?utf-8?B?ZmVXR2o3TllEZWlaYzRzTmNScitXb3c3Nnk3TE10SDQyWC9ydzhKUzJpZG4y?=
- =?utf-8?B?Mk0rT1o3bEpEZ2V0eWtsSWpmV0ZONFBmMUJBQWU0VVZKOHMzampEakVYeUN3?=
- =?utf-8?B?U3VLOFJHQmo4Z2ZscU9VL3lyQmZBNGVSWVpmVDZ1cjR0UlhUS2hUUHhrb2kr?=
- =?utf-8?B?djRaVEZuTXVQajNRTDFSV2labnRqTzM0d1d4dW5rcVI3VllqdER4blZOU2Iw?=
- =?utf-8?B?eVNVRzAyeEppRk9TTE9aWndKSk5RYVA4REozWGFOMDUzdzh2emNuNDVTV3N3?=
- =?utf-8?B?RjNhbnEwU0hLcHZOb0ttVmpQRk54eG95Qjc0V0ZiMGg1TDFVL3J1T255enJG?=
- =?utf-8?B?aGJwU09qSFcyaCtuRUdWTWV3ZGFid08rcnBlcjMyYWZCOTM2Uys5eE9BSEdE?=
- =?utf-8?Q?mF0Q=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PrJHPDQliS87q+bg9R7PHgtQ2fJtToVoan0SFxHjojiiV/YvfAbKt8nAkGmR?=
+ =?us-ascii?Q?2wYedH/dnH2Pao4bS0+bAUut1hvPazRRrAX8Z3X/SVZ5AtVXAj85GS5jrH82?=
+ =?us-ascii?Q?dgSTDHUbG7qhzfGXnIk3vJcQJKQ5lMGCfMy2VLAX7sxQczhGwJfMuWZ0hhNZ?=
+ =?us-ascii?Q?t0CyK/PwRjYumuXjfzrlXh50G6TwavpoHojz77x8MGe714UIrMah17kFYeEt?=
+ =?us-ascii?Q?+mt5eeicl3eFdpQpxzCG+Fd3rcarmkYwg27jh3sYvhTp5cWGcOPFqoedfZM2?=
+ =?us-ascii?Q?FxNpSVsLvBZdkWvnZpPWzMiyKku8mP7cj3gXhETKXUNFL5+T/hKh6iSdFPdk?=
+ =?us-ascii?Q?m9R2e0eK4Dpdr7/SwgBAtvgYHgAQQCc+p7SDyLxTkCPSfStbtxWCmk6WfNJ7?=
+ =?us-ascii?Q?fDdrVJSem7Ugv+vcdZmRJtqXqsC7LoDT812iCQHxSTHDqhJVExVcbj6rsrA6?=
+ =?us-ascii?Q?pY+1cKuzB0qB4WwuRMWbNYRXeUjLuUtUu7WfEdzYPvOGRKQ0JImnkxLQ0jDn?=
+ =?us-ascii?Q?CUNo3c6OxO7yp/IrxciQS+8pUWKA7bvewuX63aw2IKfg6d45C+7Byyts4mb0?=
+ =?us-ascii?Q?IjVOH6cqxDCgCEzwWhXxD3hZ9sLENEHzTFJcYGUXOFo9kXQDDTDM5q7Udq1H?=
+ =?us-ascii?Q?Al2YUua2f4eE/0w1xJfPxMEkjrs8f8PettE7O+BifDXV9WLjSCDH2G8i5NQj?=
+ =?us-ascii?Q?bTMjJxE1GVspYfq5Xo5CTWSCpwBdwuYR9UuAo2H3ARIDYTLRKZbmwsxFPNj5?=
+ =?us-ascii?Q?tagA4Vmz/a4iQIejH11xWH57cLG+27tLgL62LWlwi6WEWYo79a43edLRgM/Y?=
+ =?us-ascii?Q?1XMK5tbpUnUCo0Fz3OjCQ2cJkyXbpXZoNEwtCXO3J2ARrf/vuVdy2RMStW9a?=
+ =?us-ascii?Q?OlFK02MpD0gnItOrBQDaDH4WsSyyK38EEZRQjLl0JV91EIB5Eoc6pR5xioR7?=
+ =?us-ascii?Q?1j70maHQtBGBXBRhzOiRudLy1P0Ynbku9yGeOi4F1neIXnHfodMk/C7vKimc?=
+ =?us-ascii?Q?K+FquAaf0vJnqAa1zFgKI6vkQ3Ntg7JjqSJDRsQTxmUfLcHTsMkpsxA1L3PM?=
+ =?us-ascii?Q?bZGcOnNkN/qK7VLdh0rQpKFqg7tG16D4OyubHFAXm+YKBZZ0L0uvsjR54leo?=
+ =?us-ascii?Q?SOPfn0ONlRvDXc6FYv/89uzLYAD7U95WbH8u/j7wdq9SdxzEgI4gFG21Ujp6?=
+ =?us-ascii?Q?8zliUCvRKkHvFqJNjHL3NGZ9ZD7jyBAgFfgK0sXCTw3nMx6TNgFsCiAXcNGr?=
+ =?us-ascii?Q?Ax61LjGKDnQytCVuoZZuwdkAqastvJaTofj0LWXyUjJWb76w6+0tAr0whl/P?=
+ =?us-ascii?Q?WUTrrCiQz9AXhWoGNqgdl2QbClKCgsv9i4HehHlSta7W/eHJAIWOUN5h6zNK?=
+ =?us-ascii?Q?tycTHZuZDTiMGzWkFFaneiJkd5GNh5o41X8jxpPCD46bVcKDdomxvlaedkEG?=
+ =?us-ascii?Q?h+EHu8N6y1tZ6IuCt1K5/178dt/2iN0xWQpzhy3/fCnbLZE8R0c8Z4OUSF8u?=
+ =?us-ascii?Q?SdHhQR9fsnVwZ7LBZQ+CknEDHzQvWq1Rmq5fb1rl+3iL6Em39mkmoYmDyD9y?=
+ =?us-ascii?Q?z96tNbR2BrYuzZqqhdE=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5e39ade-f509-42e2-a94c-08da812bf862
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e208eae-693c-42e4-9a3a-08da812bfb8d
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2022 15:11:47.9794
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2022 15:11:53.4971
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /UHUOvq4jDxB6UOVnCPPmfZWhir5zpMVg0uf5vYdzjqf1osklMi6h36uOtGnscg5X2pkaCxivpyEedDRLFYZjQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4jobOm0K/E/a/JCE+0jARUIrdM3wjIzW8CELUJ6HOQMOMXyGj6IOjdQMLsQs7PsGHF/Gt8VvlpGXLD/oxzG9aA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5713
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -125,139 +118,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+IRQCHIP_PLATFORM_DRIVER_* compilation define platform_driver
+for irqchip. But can't set .pm field of platform_driver.
+Added variadic macros to set .pm field or other field if need.
 
-                  ┌───────┐          ┌──────────┐
-                  │       │          │          │
-┌─────────────┐   │       │          │ PCI Host │
-│ MSI         │◄┐ │       │          │          │
-│ Controller  │ │ │       │          │          │
-└─────────────┘ └─┼───────┼──────────┼─Bar0     │
-                  │ PCI   │          │ Bar1     │
-                  │ Func  │          │ Bar2     │
-                  │       │          │ Bar3     │
-                  │       │          │ Bar4     │
-                  │       ├─────────►│          │
-                  └───────┘          └──────────┘
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ include/linux/irqchip.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Many PCI controllers provided Endpoint functions.
-Generally PCI endpoint is hardware, which is not running a rich OS,
-like linux.
-
-But Linux also supports endpoint functions.  PCI Host write BAR<n> space
-like write to memory. The EP side can't know memory changed by the Host
-driver. 
-
-PCI Spec has not defined a standard method to do that.  Only define
-MSI(x) to let EP notified RC status change. 
-
-The basic idea is to trigger an IRQ when PCI RC writes to a memory
-address. That's what MSI controller provided.  EP drivers just need to
-request a platform MSI interrupt, struct MSI_msg *msg will pass down a
-memory address and data.  EP driver will map such memory address to
-one of PCI BAR<n>.  Host just writes such an address to trigger EP side
-IRQ.
-
-If system have gic-its, only need update PCI EP side driver. But i.MX
-have not chip support gic-its yet. So we have to use MU to simulate a
-MSI controller. Although only 4 MSI IRQs are simulated, it matched
-vntb(pci-epf-vntb) network requirement.
-
-After enable MSI, ping delay reduce < 1ms from ~8ms
-
-IRQchip: imx mu worked as MSI controller: 
-     let imx mu worked as MSI controllers. Although IP is not design
-as MSI controller, we still can use it if limited IRQ number to 4.
-
-pcie: endpoint: pci-epf-vntb: add endpoint MSI support
-	 Based on ntb-next branch. https://github.com/jonmason/ntb/commits/ntb-next
-	 Using MSI as door bell registers
-	 This patch is totally independent on previous on. It can be
-applied to ntb-next seperately.
-
-i.MX EP function driver is upstreaming by Richard Zhu.
-Some dts change missed at this patches. below is reference dts change
-
---- a/arch/arm64/boot/dts/freescale/imx8-ss-hsio.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-hsio.dtsi
-@@ -160,5 +160,6 @@ pcieb_ep: pcie_ep@5f010000 {
-                num-ib-windows = <6>;
-                num-ob-windows = <6>;
-                status = "disabled";
-+               MSI-parent = <&lsio_mu12>;
-        };
-
---- a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-@@ -172,6 +172,19 @@ lsio_mu6: mailbox@5d210000 {
-                status = "disabled";
-        };
-
-+       lsio_mu12: mailbox@5d270000 {
-+               compatible = "fsl,imx6sx-mu-MSI";
-+               msi-controller;
-+               interrupt-controller;
-+               reg = <0x5d270000 0x10000>,     /* A side */
-+                     <0x5d300000 0x10000>;     /* B side */
-+               reg-names = "a", "b";
-+               interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+               power-domains = <&pd IMX_SC_R_MU_12A>,
-+                               <&pd IMX_SC_R_MU_12B>;
-+               power-domain-names = "a", "b";
-+       };
+diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+index 3a091d0710ae1..d5e6024cb2a8c 100644
+--- a/include/linux/irqchip.h
++++ b/include/linux/irqchip.h
+@@ -44,7 +44,8 @@ static const struct of_device_id drv_name##_irqchip_match_table[] = {
+ #define IRQCHIP_MATCH(compat, fn) { .compatible = compat,		\
+ 				    .data = typecheck_irq_init_cb(fn), },
+ 
+-#define IRQCHIP_PLATFORM_DRIVER_END(drv_name)				\
 +
-
-Change Log
-- Change from v5 to v6
-  Fixed build error found by kernel test robot
-
-- Change from v4 to v5
-  Fixed dt-binding document
-        add msi-cell
-        add interrupt max number
-	update naming reg-names and power-domain-names.
-  Fixed irqchip-Add-IMX-MU-MSI-controller-driver.patch
-        rework commit message
-        remove some field in struct imx_mu_dcfg
-	error handle when link power domain failure.
-	add irq_domain_update_bus_token
-
-- Change from v3 to v4
-  Fixed dt-binding document according to Krzysztof Kozlowski's feedback
-  Fixed irqchip-imx-mu-worked-as-msi-controller according to Marc Zyngier's
-        comments.
-
-	There are still two important points, which I am not sure.
-	1. clean irq_set_affinity after platform_msi_create_irq_domain.
-	   Some function, like platform_msi_write_msg() is static.
-	   so I have to set MSI_FLAG_USE_DEF_CHIP_OPS flags, which will
-	   set irq_set_affinity to default one.
-	2. about comments
-
-	> +	msi_data->msi_domain = platform_msi_create_irq_domain(
-	> +				of_node_to_fwnode(msi_data->pdev->dev.of_node),
-	> +				&imx_mu_msi_domain_info,
-	> +				msi_data->parent);
-
-	"And you don't get an error due to the fact that you use the same
-	fwnode for both domains without overriding the domain bus token?"
-
- 	I did not understand yet. 
-
-  Fixed static check warning, reported by Dan Carpenter
-	pcie: endpoint: pci-epf-vntb: add endpoint MSI support
-
-- Change from v2 to v3
-  Fixed dt-binding docment check failure
-  Fixed typo a cover letter.
-  Change according Bjorn's comments at patch 
-	pcie: endpoint: pci-epf-vntb: add endpoint MSI support
-	 
-
-- from V1 to V2
-  Fixed fsl,mu-msi.yaml's problem
-  Fixed irq-imx-mu-msi.c problem according Marc Zyngier's feeback 
-  Added a new patch to allow pass down .pm by IRQCHIP_PLATFORM_DRIVER_END
-
++#define IRQCHIP_PLATFORM_DRIVER_END(drv_name, ...)			\
+ 	{},								\
+ };									\
+ MODULE_DEVICE_TABLE(of, drv_name##_irqchip_match_table);		\
+@@ -56,6 +57,7 @@ static struct platform_driver drv_name##_driver = {			\
+ 		.owner = THIS_MODULE,					\
+ 		.of_match_table = drv_name##_irqchip_match_table,	\
+ 		.suppress_bind_attrs = true,				\
++		__VA_ARGS__						\
+ 	},								\
+ };									\
+ builtin_platform_driver(drv_name##_driver)
 -- 
 2.35.1
 
