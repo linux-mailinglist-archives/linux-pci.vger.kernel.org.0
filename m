@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 175975984D3
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 15:53:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9512E5984D2
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 15:53:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245314AbiHRNwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 09:52:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
+        id S245274AbiHRNwH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 09:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245274AbiHRNwF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 09:52:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5F06170F
+        with ESMTP id S245313AbiHRNwG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 09:52:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEE761B28
         for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 06:52:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C1508B82179
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:52:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207B4C433C1;
-        Thu, 18 Aug 2022 13:52:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05E6661615
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:52:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003EFC433B5;
+        Thu, 18 Aug 2022 13:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660830722;
-        bh=HbKz24Nfhn6/cZiuUPLYNM9zdj4uhadCwjvhLdFM3nA=;
+        s=k20201202; t=1660830724;
+        bh=tSjcRHzwdwDzj8PfrZEsmRIyZScrpL96WWWx0UfyT9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIj9yTawYe15eFIn/SasT5q9CtieZbV3xFGVfraiKRr3ohpvteKHYHl2RCpla0N3Q
-         evprTZZW/rOqaFTkz1/BUl4ydzNeMZcECjvQJWOtd6TTEshExtzpPOim2/rltHX4bj
-         E0+kxqlyFEkj2j1ut/1wFvvsd/AIXNtC1sNC0PXbdDco/K7mNdmutgZ+4YjnxSty2q
-         +ZtrLRZDXajllxWjGbHqVyKbLdFyxyAR/35bxxP1JGmNIxmT6pSeQT7IREIXunvo/O
-         EPXBuKeugFWXxnqJKaRZX5NVDKIk0tcgfbDiFlXk56x4p59x/vX2sNxEW9tgAsKXXO
-         zV2xV9b7/fiAg==
+        b=csGn5pEa56RauNN1l07VvOwdgMijpg+cXax+BegtJH73GQ+fK/IX046x+/f4V3jyf
+         14zwznu5vwWZ7TZFqnw0xbRfcpSsy7BxAiKvYOvlDb0/de1ErksgPZnEODLvcf47SK
+         uGkTIk5gzxZgmKaISdYmRPo6LLyveR82/Z2IZLdLx54P35bt1o/HVLDayzFflK2ivG
+         Fjc4ix7bSAFM41XyL8NUWHRmEeGgynj1f1A4QiT1ROGoiLga0QbfVvhkSy3+cuzT/c
+         pnSmSEjPGqq3IK64ml653K6Un3Trh4DO3IGQ+324pSSs1ciDfr/Rg+BAkt5WseWzqu
+         xecQbZYHZAqoA==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <helgaas@kernel.org>
@@ -38,9 +38,9 @@ Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         pali@kernel.org, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 09/11] PCI: aardvark: Don't write read-only bits explicitly in PCI_ERR_CAP register
-Date:   Thu, 18 Aug 2022 15:51:38 +0200
-Message-Id: <20220818135140.5996-10-kabel@kernel.org>
+Subject: [PATCH 10/11] PCI: aardvark: Explicitly disable Marvell strict ordering
+Date:   Thu, 18 Aug 2022 15:51:39 +0200
+Message-Id: <20220818135140.5996-11-kabel@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220818135140.5996-1-kabel@kernel.org>
 References: <20220818135140.5996-1-kabel@kernel.org>
@@ -57,33 +57,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The bits PCI_ERR_CAP_ECRC_GENC and PCI_ERR_CAP_ECRC_CHKC are read only,
-reporting the capability of ECRC. Don't write them explicitly, instead
-read the register (where they are set), and add the bits that enable
-these features.
+Instead of implicitly disabling BIT(5) (STRICT_ORDER_ENABLE bit) of the
+CORE_CTRL2 by writing PCIE_CORE_CTRL2_RESERVED |
+PCIE_CORE_CTRL2_TD_ENABLE to it, disable it explicitly, with
+read-modify-write.
 
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 4855ac733484..e816ab726f66 100644
+index e816ab726f66..73a604f70f06 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -584,9 +584,9 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
- 	advk_writel(pcie, reg, PCIE_CORE_CMD_STATUS_REG);
+@@ -600,8 +600,8 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
  
--	/* Set Advanced Error Capabilities and Control PF0 register */
--	reg = PCI_ERR_CAP_ECRC_GENC | PCI_ERR_CAP_ECRC_GENE |
--	      PCI_ERR_CAP_ECRC_CHKC | PCI_ERR_CAP_ECRC_CHKE;
-+	/* Enable generation and checking of ECRC on Root Bridge */
-+	reg = advk_readl(pcie, PCIE_CORE_PCIERR_CAP + PCI_ERR_CAP);
-+	reg |= PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE;
- 	advk_writel(pcie, reg, PCIE_CORE_PCIERR_CAP + PCI_ERR_CAP);
+ 	/* Program PCIe Control 2 to disable strict ordering */
+-	reg = PCIE_CORE_CTRL2_RESERVED |
+-		PCIE_CORE_CTRL2_TD_ENABLE;
++	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
++	reg &= ~PCIE_CORE_CTRL2_STRICT_ORDER_ENABLE;
+ 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
  
- 	/* Set PCIe Device Control register */
+ 	/* Set lane X1 */
 -- 
 2.35.1
 
