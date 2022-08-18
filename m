@@ -2,51 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95DD3598E28
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 22:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 706E7598F8F
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 23:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230399AbiHRUiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 16:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
+        id S239690AbiHRVay (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 17:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344916AbiHRUiT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 16:38:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D5CE0D2
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 13:38:17 -0700 (PDT)
+        with ESMTP id S231771AbiHRVaq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 17:30:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA91272D;
+        Thu, 18 Aug 2022 14:30:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E39AFB82216
-        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 20:38:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672B3C433C1;
-        Thu, 18 Aug 2022 20:38:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2000E616BE;
+        Thu, 18 Aug 2022 21:30:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D943C433C1;
+        Thu, 18 Aug 2022 21:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660855094;
-        bh=6Lsy0QaxfV6sD1O8kfNMv6jWWiIgfjbYjaUEeiQnpZU=;
+        s=k20201202; t=1660858244;
+        bh=PLUDvTC4dLxPvqujmb5K46XCmpAPihywS8euFcK5Hxw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GHqlOIcqhocdbmY56+RBw2wUFa+XU+/RQhpmBU3iNw0GCy/D/PO6cTivwW30rUOpq
-         8QZuT5OINLUWYQ7/NK0GiYMiO9/5ohREqvLPLXcw3lMvTx89My7rN3zi++cGAL2nud
-         4o5HBR1ZTDttkXXxSGlgukaAYEQt4MFWQxnTU+zZjY9lGo/PE7JDCU3Q2l+suqrWDf
-         Er6IONkOrkpDE+kNaEdmDV0m6IJr2Pd/3TgjtXlQe2zaYDuYWTwauJiS7ZNGK2fsU5
-         oF7Z9DpqlgY6j4CkkMV9tqrPrOaWvQ9C6yHCchFqgol7HozQrWwv9+fTmKFNXO0qkd
-         kDfbhLnGf4l2A==
-Date:   Thu, 18 Aug 2022 15:38:12 -0500
+        b=XiXDeT5rsu12iCf36PVjtoQJnaL6Iiz6rp3e5+IiOey3Dul9XCyZQrxHpE9tTg6la
+         HmLskfl+MxPLTSH02OVzxUZcsaBr9BwkQO8OhqgqOgfKUlUK/BL4QRKkEIRxUJsLzZ
+         z00Yxoc3/wU1+++b+/b8zWRs3CfnGJJWsUa6ShaFnydkANjdS0uDUj+kmMGbecWi5Z
+         CTLWHMRzSwbNVVTuBnvdfbf2S2RBeG+Eys4ZVawL4tM5JBBbfo90mQT2rmhRa5ZLZn
+         yfwc/KAWlw4Bdr95N6UvMmUgd/wVoUOwg0EIKGKxcrHZ6TRpa5RaG4B0ZI1g6l/rwQ
+         r3XQcBuiNmoWw==
+Date:   Thu, 18 Aug 2022 16:30:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Xinhui Pan <Xinhui.Pan@amd.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Tom Seewald <tseewald@gmail.com>, Stefan Roese <sr@denx.de>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        regressions@lists.linux.dev, linux-pci@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
-Message-ID: <20220818203812.GA2381243@bhelgaas>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com
+Subject: Re: [PATCH v6 4/4] pcie: endpoint: pci-epf-vntb: add endpoint MSI
+ support
+Message-ID: <20220818213042.GA2394869@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bug-216373-41252@https.bugzilla.kernel.org/>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220818151127.2449064-5-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,84 +61,199 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Adding amdgpu folks]
+Please pay attention to the style of previous subject lines and copy
+them:
 
-On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216373
+  $ git log --oneline drivers/pci/endpoint/functions/pci-epf-vntb.c | cat
+  b8c0aa9b16bb NTB: EPF: Tidy up some bounds checks
+  3305f43cb6a8 NTB: EPF: Fix error code in epf_ntb_bind()
+  ae9f38adac26 PCI: endpoint: pci-epf-vntb: reduce several globals to statics
+  8e4bfbe644a6 PCI: endpoint: pci-epf-vntb: fix error handle in epf_ntb_mw_bar_init()
+  7b14a5e96128 NTB: EPF: set pointer addr to null using NULL rather than 0
+  e35f56bb0330 PCI: endpoint: Support NTB transfer between RC and EP
+
+Nobody has paid much attention to consistency here in the past, but we
+will in the future.
+
+Maybe "PCI: endpoint: Add NTB MSI support" or similar?
+
+On Thu, Aug 18, 2022 at 10:11:27AM -0500, Frank Li wrote:
+>                         ┌───────┐          ┌──────────┐
+>                         │       │          │          │
+>       ┌─────────────┐   │       │          │ PCI Host │
+>       │ MSI         │◄┐ │       │          │          │
+>       │ Controller  │ │ │       │          │          │
+>       └─────────────┘ └─┼───────┼──────────┼─BAR0     │
+>                         │ PCI   │          │ BAR1     │
+>                         │ Func  │          │ BAR2     │
+>                         │       │          │ BAR3     │
+>                         │       │          │ BAR4     │
+>                         │       ├─────────►│          │
+>                         └───────┘          └──────────┘
 > 
->             Bug ID: 216373
->            Summary: Uncorrected errors reported for AMD GPU
->     Kernel Version: v6.0-rc1
->         Regression: No
-> ...
+> Linux supports endpoint functions. PCI Host write BAR<n> space like write
+> to memory. The EP side can't know memory changed by the host driver.
 
-I marked this as a regression in bugzilla.
+The diagram is pretty but I don't quite understand what this is
+telling me.  I assume "PCI Func" is the "EP side"?  If so, label it
+appropriately.
 
-> Hardware:
-> CPU: Intel i7-12700K (Alder Lake)
-> GPU: AMD RX 6700 XT [1002:73df]
-> Motherboard: ASUS Prime Z690-A
+Is "PCI Host" referring to a host CPU?  I guess not, since you include
+BARs in the box.
+
+What are the arrows?  I assume one is an MMIO write to a BAR, since
+you mention that below.
+
+> PCI Spec has not defined a standard method to do that. Only define MSI(x)
+> to let EP notified RC status change.
 > 
-> Problem:
-> After upgrading to v6.0-rc1 the kernel is now reporting uncorrected PCI errors
-> for my GPU.
+> The basic idea is to trigger an IRQ when PCI RC writes to a memory
+> address. That's what MSI controller provided. EP drivers just need to
+> request a platform MSI interrupt, struct msi_msg *msg will pass down a
+> memory address and data. EP driver will map such memory address to one of
+> PCI BAR<n>.  Host just writes such an address to trigger EP side irq.
 
-Thank you very much for the report and for taking the trouble to
-bisect it and test Kai-Heng's patch!
+I think "PCI RC writes to memory" and "Host writes such an address"
+are referring to the same write.  If so, use the same words both
+times, not "PCI RC" once and "host" the other.
 
-I suspect that booting with "pci=noaer" should be a temporary
-workaround for this issue.  If it, can you add that to the bugzilla
-for anybody else who trips over this?
+s/irq/IRQ/, as you did above.  I don't want to have to figure out
+whether "irq" is the same as "IRQ", so spell it the same way all the
+time.
 
-> I have bisected this issue to: [8795e182b02dc87e343c79e73af6b8b7f9c5e635]
-> PCI/portdrv: Don't disable AER reporting in get_port_device_capability()
-> Reverting that commit causes the errors to cease.
+> Add MSI support for pci-epf-vntb. pci-epf-vntb driver query if system
+> have MSI controller. Setup doorbell address according to struct msi_msg.
 
-I suspect the errors still occur, but we just don't notice and log
-them.
+s/pci-epf-vntb driver query/Query/
+s/have/has an/
+s/Setup/Set up/
 
-> I have also tried Kai-Heng Feng's patch[1] which seems to resolve a similar
-> problem, but it did not fix my issue.
-> 
-> [1]
-> https://lore.kernel.org/linux-pci/20220706123244.18056-1-kai.heng.feng@canonical.com/
->
-> dmesg snippet:
-> 
-> pcieport 0000:00:01.0: AER: Multiple Uncorrected (Non-Fatal) error received:
-> 0000:03:00.0
-> amdgpu 0000:03:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal),
-> type=Transaction Layer, (Requester ID)
-> amdgpu 0000:03:00.0:   device [1002:73df] error status/mask=00100000/00000000
-> amdgpu 0000:03:00.0:    [20] UnsupReq               (First)
-> amdgpu 0000:03:00.0: AER:   TLP Header: 40000001 0000000f 95e7f000 00000000
+> So PCIe host can write this doorbell address to triger EP side's irq.
 
-I think the TLP header decodes to:
+I guess "PCIe host" is something else that means the same as "PCI RC"
+or "host" above?  Use consistent terminology.  This doesn't seem like
+something specific to PCIe.  If it's not, use "PCI" to be generic or
+omit it altogether.
 
-  0x40000001 = 0100 0000 ... 0000 0001 binary
-  0x0000000f = 0000 0000 ... 0000 1111 binary
+s/triger/trigger/
+s/irq/IRQ/ again
 
-  Fmt           010b                 3 DW header with data
-  Type          0000b  010 0 0000    MWr Memory Write Request
-  Length        00 0000 0001b        1 DW
-  Requester ID  0x0000               00:00.0
-  Tag           0x00
-  Last DW BE    0000b                must be zero for 1 DW write
-  First DW BE   1111b                all 4 bytes in DW enabled
-  Address       0x95e7f000
-  Data          0x00000000
+> If no MSI controller exist, fall back to software polling.
 
-So I think this is a 32-bit write of zero to PCI bus address
-0x95e7f000.
+s/exist/exists/
 
-Your dmesg log says:
+> @@ -253,7 +256,7 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
+>  
+>  	ntb = container_of(work, struct epf_ntb, cmd_handler.work);
+>  
+> -	for (i = 1; i < ntb->db_count; i++) {
+> +	for (i = 1; i < ntb->db_count && !ntb->epf_db_phy; i++) {
 
-  pci 0000:02:00.0: PCI bridge to [bus 03]
-  pci 0000:02:00.0:   bridge window [mem 0x95e00000-0x95ffffff]
-  pci 0000:03:00.0: reg 0x24: [mem 0x95e00000-0x95efffff]
-  [drm] register mmio base: 0x95E00000
+This loop condition is hard to read.  It would be simpler as:
 
-So this looks like a write to the device's BAR 5.  I don't see a PCI
-reason why this should fail.  Maybe there's some amdgpu reason?
+  if (!ntb->epf_db_phy) {
+    for (i = 1; i < ntb->db_count; i++) {
+      ...
+    }
+  }
 
-Bjorn
+> @@ -520,35 +543,33 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
+>  	struct device *dev = &ntb->epf->dev;
+>  	int ret;
+>  	struct pci_epf_bar *epf_bar;
+> -	void __iomem *mw_addr;
+> +	void __iomem *mw_addr = NULL;
+>  	enum pci_barno barno;
+> -	size_t size = 4 * ntb->db_count;
+> +	size_t size;
+>  
+>  	epc_features = pci_epc_get_features(ntb->epf->epc,
+>  					    ntb->epf->func_no,
+>  					    ntb->epf->vfunc_no);
+>  	align = epc_features->align;
+> -
+> -	if (size < 128)
+> -		size = 128;
+> -
+> -	if (align)
+> -		size = ALIGN(size, align);
+> -	else
+> -		size = roundup_pow_of_two(size);
+> +	size = epf_ntb_db_size(ntb);
+>  
+>  	barno = ntb->epf_ntb_bar[BAR_DB];
+> +	epf_bar = &ntb->epf->bar[barno];
+>  
+> -	mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
+> -	if (!mw_addr) {
+> -		dev_err(dev, "Failed to allocate OB address\n");
+> -		return -ENOMEM;
+> +	if (!ntb->epf_db_phy) {
+> +		mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
+> +		if (!mw_addr) {
+> +			dev_err(dev, "Failed to allocate OB address\n");
+> +			return -ENOMEM;
+> +		}
+> +	} else {
+> +		epf_bar->phys_addr = ntb->epf_db_phy;
+> +		epf_bar->barno = barno;
+> +		epf_bar->size = size;
+
+I think inverted tests are hard to read, and setting mw_addr here
+instead of at the declaration will make the cases more parallel, so
+maybe omit the initialization above and do this:
+
+  if (ntb->epf_db_phy) {
+    mw_addr = NULL;
+    epf_bar->phys_addr = ntb->epf_db_phy;
+    ...
+  } else {
+    mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
+    ...
+  }
+
+> +static void epf_ntb_epc_msi_init(struct epf_ntb *ntb)
+> +{
+> +	struct device *dev = &ntb->epf->dev;
+> +	struct irq_domain *domain;
+> +	int virq;
+> +	int ret;
+> +	int i;
+> +
+> +	domain = dev_get_msi_domain(ntb->epf->epc->dev.parent);
+> +	if (!domain)
+> +		return;
+> +
+> +	dev_set_msi_domain(dev, domain);
+> +
+> +	if (platform_msi_domain_alloc_irqs(&ntb->epf->dev,
+> +		ntb->db_count,
+> +		epf_ntb_write_msi_msg)) {
+> +		dev_info(dev, "Can't allocate MSI, fall back to poll mode\n");
+> +		return;
+> +	}
+> +
+> +	dev_info(dev, "vntb use MSI as doorbell\n");
+> +
+> +	for (i = 0; i < ntb->db_count; i++) {
+> +		virq = msi_get_virq(dev, i);
+> +		ret = devm_request_irq(dev, virq,
+> +			       epf_ntb_interrupt_handler, 0,
+> +			       "ntb", ntb);
+> +
+> +		if (ret)
+> +			dev_err(dev, "devm_request_irq() failure\n");
+
+You don't return anything to indicate success or failure.  Does the
+caller care if this fails?  A message is only for debugging; it's not
+a way to tell the caller anything.
+
+> +
+> +		if (!i)
+> +			ntb->msi_virqbase = virq;
+
+I don't understand what you're doing here, but it looks weird to set
+ntb->msi_virqbase even if devm_request_irq() fails.
+
+> +	}
+> +}
