@@ -2,45 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ADC6597F26
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 09:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48E57597FDC
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Aug 2022 10:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243838AbiHRHT5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Aug 2022 03:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32948 "EHLO
+        id S237775AbiHRIMD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Aug 2022 04:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243818AbiHRHTr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 03:19:47 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 089898E9BC;
-        Thu, 18 Aug 2022 00:19:46 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 87A481A0673;
-        Thu, 18 Aug 2022 09:19:44 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 275F81A0669;
-        Thu, 18 Aug 2022 09:19:44 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 48B101820F56;
-        Thu, 18 Aug 2022 15:19:42 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        shawnguo@kernel.org, vkoul@kernel.org,
-        alexander.stein@ew.tq-group.com, marex@denx.de
-Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v3 6/6] PCI: imx6: Add the iMX8MP PCIe support
-Date:   Thu, 18 Aug 2022 15:02:33 +0800
-Message-Id: <1660806153-29001-7-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S231430AbiHRIMD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Aug 2022 04:12:03 -0400
+Received: from mail.fadrush.pl (mail.fadrush.pl [54.37.225.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1FF861DD
+        for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 01:12:02 -0700 (PDT)
+Received: by mail.fadrush.pl (Postfix, from userid 1002)
+        id 68DD422CB8; Thu, 18 Aug 2022 08:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fadrush.pl; s=mail;
+        t=1660810321; bh=bD6j9gIFU6CLTaCGl0Ow9oeIxtirvTfMeNZSfLEZQ+I=;
+        h=Date:From:To:Subject:From;
+        b=RylqFKQR7Zs84HkswQGBIlp7njnKg73K3sbEtBmtVd53aq6VakOLVm3ke6rKoOoUF
+         YxjyqEsgKfm2hbw/+DXNK2l9z0YQDVM8sSfLPeJTDsbHJOPfRoS0l8Nc8h1Q8meWPl
+         gtlaZTVMIe2/eXoSm+5kCMDHSyLaFeMeBHZxkr3TzYwSGHmx6wivVifjqCNXzZzpQr
+         H+cREU0bS+dl1o4y9hji1aevXGO2h7b3+rHl+NUpwZ1ut0fDq96xHuGKHIbawziHfx
+         TrfHduEPaFmhxMs6cLoanls46TyvDpo5Vc+CVVjGcvLl0yFI9Sq5HtRhVvKruqmhgc
+         bQC9qn1EFB4zQ==
+Received: by mail.fadrush.pl for <linux-pci@vger.kernel.org>; Thu, 18 Aug 2022 08:11:03 GMT
+Message-ID: <20220818064500-0.1.13.59js.0.15r5bl364i@fadrush.pl>
+Date:   Thu, 18 Aug 2022 08:11:03 GMT
+From:   "Jakub Olejniczak" <jakub.olejniczak@fadrush.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?UTF-8?Q?Zwi=C4=99kszenie_p=C5=82ynno=C5=9Bci_finansowej?=
+X-Mailer: mail.fadrush.pl
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,118 +45,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the i.MX8MP PCIe support.
+Dzie=C5=84 dobry,
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, poniewa=C5=BC chcia=C5=82bym za=
+proponowa=C4=87 wygodne rozwi=C4=85zanie, kt=C3=B3re umo=C5=BCliwi Pa=C5=84=
+stwa firmie stabilny rozw=C3=B3j.=20
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6e5debdbc55b..786f5737ca6a 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -51,6 +51,7 @@ enum imx6_pcie_variants {
- 	IMX7D,
- 	IMX8MQ,
- 	IMX8MM,
-+	IMX8MP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -150,7 +151,8 @@ struct imx6_pcie {
- static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
- {
- 	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
--		imx6_pcie->drvdata->variant != IMX8MM);
-+		imx6_pcie->drvdata->variant != IMX8MM &&
-+		imx6_pcie->drvdata->variant != IMX8MP);
- 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
- }
- 
-@@ -301,6 +303,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- {
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MM:
-+	case IMX8MP:
- 		/*
- 		 * The PHY initialization had been done in the PHY
- 		 * driver, break here directly.
-@@ -558,6 +561,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
- 		if (ret) {
- 			dev_err(dev, "unable to enable pcie_aux clock\n");
-@@ -602,6 +606,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		clk_disable_unprepare(imx6_pcie->pcie_aux);
- 		break;
- 	default:
-@@ -669,6 +674,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 		reset_control_assert(imx6_pcie->pciephy_reset);
- 		fallthrough;
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	case IMX6SX:
-@@ -744,6 +750,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX6Q:		/* Nothing to do */
- 	case IMX8MM:
-+	case IMX8MP:
- 		break;
- 	}
- 
-@@ -793,6 +800,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_deassert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -812,6 +820,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -1179,6 +1188,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		}
- 		break;
- 	case IMX8MM:
-+	case IMX8MP:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux))
- 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-@@ -1320,6 +1330,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.variant = IMX8MM,
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 	},
-+	[IMX8MP] = {
-+		.variant = IMX8MP,
-+		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+	},
- };
- 
- static const struct of_device_id imx6_pcie_of_match[] = {
-@@ -1329,6 +1343,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
- 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
- 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
-+	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
- 	{},
- };
- 
--- 
-2.25.1
+Konkurencyjne otoczenie wymaga ci=C4=85g=C5=82ego ulepszania i poszerzeni=
+a oferty, co z kolei wi=C4=85=C5=BCe si=C4=99 z konieczno=C5=9Bci=C4=85 i=
+nwestowania. Brak odpowiedniego kapita=C5=82u powa=C5=BCnie ogranicza tem=
+po rozwoju firmy.
 
+Od wielu lat z powodzeniem pomagam firmom w uzyskaniu najlepszej formy fi=
+nansowania z banku oraz UE. Mam sta=C5=82ych Klient=C3=B3w, kt=C3=B3rzy n=
+adal ch=C4=99tnie korzystaj=C4=85 z moich us=C5=82ug, a tak=C5=BCe poleca=
+j=C4=85 je innym.
+
+Czy chcieliby Pa=C5=84stwo skorzysta=C4=87 z pomocy wykwalifikowanego i d=
+o=C5=9Bwiadczonego doradcy finansowego?
+
+
+Pozdrawiam
+Jakub Olejniczak
