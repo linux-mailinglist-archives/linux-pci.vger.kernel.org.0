@@ -2,75 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 470B159A940
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Aug 2022 01:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C01DD59A999
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Aug 2022 01:52:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241363AbiHSXOj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Aug 2022 19:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
+        id S240454AbiHSXt5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Aug 2022 19:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242246AbiHSXOe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 19:14:34 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DF3D2EAA
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 16:14:33 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id r16so6720809wrm.6
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 16:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=1zyqHrnqjTNMymEC/TbLOlsscOLg5SkRYxlyH7Tu2Ms=;
-        b=Y8AD7r5Epuf9MXQ2+jv+dlo+KisSknvBlpvGlf/D+IiD9iTBxDKQ5D0kGW2ZkDBfJK
-         TyKvVRquHMBJjPepEwyh7xDrU0VoGL94RietZ1RYfzka1+goKyIru/tmRTNC9ubgswY2
-         7C+4K1MwwgAzWNLHphJlqXVL5a4rZqVQVlMOGYmmLzuhs1ZKtPsWUEDGofFP1sHIH/wY
-         m95dlsgCLOt9UOfnchFoIXKKzh3nKQwdQkSWmwPvf2cOmUR3QNQAGQ3UwyDoWUSAvv7i
-         9UY485pjhWoHEbFbH6nxyy8pgKz2+3vm2gTryx5AF6pby/lIBfQgg5AGPutVWiRKVOm1
-         PhKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=1zyqHrnqjTNMymEC/TbLOlsscOLg5SkRYxlyH7Tu2Ms=;
-        b=4+jhJG1+VLYChX8ZsNAMkwmKUApv4xHiCJ5P3oaXHnjZNviSdf6onOsOBkQN+SEe3O
-         1rYZpmFfwmXIPGOj4qJ/4rjjKDf5vkA9fFDayyb4fM+Huk/c46dlsQYwxBnaGH5L3qw3
-         0Iw9Uk1WUVH7fAKIv3gP5Ljv1pMrvnt+rr/BndHpSSXmmykVZCXMSqQceUgtRHagYmNR
-         2D6eXhsK/Igy6o5BbKLFsq0qRIdliC0pyhFake2syZ0LyWPLerbpq28G0yxa5KzFq+yi
-         UfZG0JAJ0/GjVTUokEG70hUK7R0p3Vq4nnXMT08KoipbTeisVl3brnEr/JdXfXJEVQOk
-         fR9A==
-X-Gm-Message-State: ACgBeo1ZJaqd9+6AYXfyasl0WYqDREWeRFkx4l4lu83B1BC0Dopwfh33
-        NiwLIDdpsZvlFG567BPzYA6DeA==
-X-Google-Smtp-Source: AA6agR4jJTOrQBvLUsU3COfZPaxQ1oU8l4Hl4SO0D5oMAjRdbWZOcdKruN9mdEbg+eLcUTkfChoGKQ==
-X-Received: by 2002:a5d:404c:0:b0:225:1a39:d69f with SMTP id w12-20020a5d404c000000b002251a39d69fmr5405015wrp.576.1660950872099;
-        Fri, 19 Aug 2022 16:14:32 -0700 (PDT)
-Received: from henark71.. ([109.76.58.63])
-        by smtp.gmail.com with ESMTPSA id g17-20020a5d46d1000000b0020fff0ea0a3sm5198522wrs.116.2022.08.19.16.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Aug 2022 16:14:31 -0700 (PDT)
-From:   Conor Dooley <mail@conchuod.ie>
-To:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH v3 7/7] riscv: dts: microchip: mpfs: remove pci axi address translation property
-Date:   Sat, 20 Aug 2022 00:14:16 +0100
-Message-Id: <20220819231415.3860210-8-mail@conchuod.ie>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220819231415.3860210-1-mail@conchuod.ie>
-References: <20220819231415.3860210-1-mail@conchuod.ie>
+        with ESMTP id S237975AbiHSXt4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 19:49:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBC7108B0E;
+        Fri, 19 Aug 2022 16:49:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1870B829B2;
+        Fri, 19 Aug 2022 23:49:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6527CC433C1;
+        Fri, 19 Aug 2022 23:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660952991;
+        bh=r032yi5f7jSvbtPWAQ6XRmRvaeTLytXl9zlKYBzY9rs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TbghKOwdHLO3or8iW71wr2VfXoLtSiENChNAl0NVe6bAk9fKFDX1qC3phJOB9kawa
+         GnqdFEWsHDQ+yQnEbHG77tP15/xwjoaq99jjeNwjKgvzTwweE2oBRi+YXQn2bEhYMU
+         Y4b1+WL3VgxS2DY+Y7WRDK+oL0R5L3o3uVlDXXyCFAQYybVOJKiFoH1dqzV3HBxG4v
+         zvcMMqpByrV0ZHx9IoEhmAz8wdAEnVeu0EQ04UlAM/KKxyy8l5XP4no+NFM80UKEuP
+         5iFZ6xJQEBhEbGAukNuEApFquiVcWcXLMi3UmHbYMjt6Sibxp7siScgzYuL2QwqpGv
+         RRrJWcoipOSgQ==
+Date:   Fri, 19 Aug 2022 18:49:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
+        koba.ko@canonical.com,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Disable upstream port PTM during suspend
+Message-ID: <20220819234949.GA2515897@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220706123244.18056-1-kai.heng.feng@canonical.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,33 +56,185 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Wed, Jul 06, 2022 at 08:32:44PM +0800, Kai-Heng Feng wrote:
+> On Intel Alder Lake platforms, Thunderbolt entering D3cold can cause
+> some errors reported by AER:
 
-An AXI master address translation table property was inadvertently
-added to the device tree & this was not caught by dtbs_check at the
-time. Remove the property - it should not be in mpfs.dtsi anyway as
-it would be more suitable in -fabric.dtsi nor does it actually apply
-to the version of the reference design we are using for upstream.
+What's the connection with Thunderbolt?  I see "thunderbolt
+0000:0a:00.0" in dmesg, but I think we see that message only because
+0a:00.0 happens to be in the hierarchy below the 00:1d.0 Root Port,
+not specifically because it's a Thunderbolt device.
 
-Link: https://www.microsemi.com/document-portal/doc_download/1245812-polarfire-fpga-and-polarfire-soc-fpga-pci-express-user-guide # Section 1.3.3
-Fixes: 528a5b1f2556 ("riscv: dts: microchip: add new peripherals to icicle kit device tree")
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- arch/riscv/boot/dts/microchip/mpfs.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Here's the hierarchy:
 
-diff --git a/arch/riscv/boot/dts/microchip/mpfs.dtsi b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-index e69322f56516..a1176260086a 100644
---- a/arch/riscv/boot/dts/microchip/mpfs.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-@@ -485,7 +485,6 @@ pcie: pcie@2000000000 {
- 			ranges = <0x3000000 0x0 0x8000000 0x20 0x8000000 0x0 0x80000000>;
- 			msi-parent = <&pcie>;
- 			msi-controller;
--			microchip,axi-m-atr0 = <0x10 0x0>;
- 			status = "disabled";
- 			pcie_intc: interrupt-controller {
- 				#address-cells = <0>;
--- 
-2.37.1
+  0000:00:1d.0 Root Port              to [bus 08-71]
+  0000:08:00.0 Switch Upstream Port   to [bus 09-71]
+  0000:09:00.0 Switch Downstream Port to [bus 0a]
+  0000:0a:00.0 Endpoint (USB controller)
+  0000:09:01.0 Switch Downstream Port to [bus 0b-3d]
+  0000:09:02.0 Switch Downstream Port to [bus 3e]
+  0000:3e:00.0 Endpoint (USB controller)
+  0000:09:03.0 Switch Downstream Port to [bus 3f-71]
 
+The error logged by 00:1d.0 is an Unsupported Request with Requester
+ID 08:00.0.
+
+I think the only relevant thing is that 08:00.0 has PTM enabled and
+00:1d.0 has PTM disabled because pci_prepare_to_sleep() only disables
+PTM for Root Ports.  The same thing could happen if 08:00.0 were an
+Endpoint or a non-Thunderbolt Switch Upstream Port.
+
+Is entering D3cold relevant here?  I don't know how to tell from dmesg
+that we're entering D3cold.  If we actually put 08:00.0 in D3cold, I
+don't think we would see the Unsupported Request because 08:00.0 can't
+send PTM requests from D3cold.
+
+> pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
+> pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
+> pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
+> pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
+> thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
+> xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
+> pcieport 0000:00:1d.0: AER: device recovery failed
+> 
+> In addition to that, it can also block system from suspending when
+> a Thunderbolt dock is attached to the same system.
+
+
+> The original approach [1] is to disable AER and DPC when link is in
+> L2/L3 Ready, L2 and L3, but Bjorn identified the root cause is the Unsupported
+> Request:
+>   - 08:00.0 sent a PTM Request Message (a Posted Request)
+>   - 00:1d.0 received the PTM Request Message
+>   - The link transitioned to DL_Down
+>   - Per sec 2.9.1, 00:1d.0 discarded the Request and reported an
+>     Unsupported Request
+>   - Or, per sec 6.21.3, if 00:1d.0 received a PTM Request when its
+>     own PTM Enable was clear, it would also be treated as an
+>     Unsupported Request
+> 
+> And further: 'David did something like this [1], but just for Root Ports. That
+> looks wrong to me because sec 6.21.3 says we should not have PTM enabled in an
+> Upstream Port (i.e., in a downstream device like 08:00.0) unless it is already
+> enabled in the Downstream Port (i.e., in the Root Port 00:1d.0).'
+> 
+> So also disable upstream port PTM to make the PCI driver conform to the spec
+> and solve the issue.
+> 
+> [1] https://lore.kernel.org/all/20220408153159.106741-1-kai.heng.feng@canonical.com/
+> [2] https://lore.kernel.org/all/20220422222433.GA1464120@bhelgaas/
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216210
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/pci.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index cfaf40a540a82..8ba8a0e12946e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2717,7 +2717,8 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
+>  	 * port to enter a lower-power PM state and the SoC to reach a
+>  	 * lower-power idle state as a whole.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+>  		pci_disable_ptm(dev);
+>  
+>  	pci_enable_wake(dev, target_state, wakeup);
+> @@ -2775,7 +2776,8 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
+>  	 * port to enter a lower-power PM state and the SoC to reach a
+>  	 * lower-power idle state as a whole.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+>  		pci_disable_ptm(dev);
+>  
+>  	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
+
+What do you think of the following possible rework?  I think it's
+functionally the same except that it disables PTM on Endpoints as well
+as Switch Upstream Ports.
+
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 95bc329e74c0..96487a9ce5bf 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2707,14 +2707,19 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
+ 		return -EIO;
+ 
+ 	/*
+-	 * There are systems (for example, Intel mobile chips since Coffee
+-	 * Lake) where the power drawn while suspended can be significantly
+-	 * reduced by disabling PTM on PCIe root ports as this allows the
+-	 * port to enter a lower-power PM state and the SoC to reach a
+-	 * lower-power idle state as a whole.
++	 * We want to disable PTM on Root Ports because that allows some
++	 * chips, e.g., Intel mobile chips since Coffee Lake, to enter a
++	 * lower-power PM state.
++	 *
++	 * PCIe r6.0, sec 2.2.8, strongly recommends that functions support
++	 * generation of messages in non-D0 states, so we assume Switch
++	 * Upstream Ports or Endpoints may send PTM Requests while in D1,
++	 * D2, and D3hot.  A PTM message received by a Downstream Port
++	 * (including a Root Port) with PTM disabled must be treated as an
++	 * Unsupported Request (sec 6.21.3).  To prevent this error,
++	 * disable PTM in *all* devices, not just Root Ports.
+ 	 */
+-	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+-		pci_disable_ptm(dev);
++	pci_disable_ptm(dev);
+ 
+ 	pci_enable_wake(dev, target_state, wakeup);
+ 
+@@ -2764,15 +2769,8 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
+ 	if (target_state == PCI_POWER_ERROR)
+ 		return -EIO;
+ 
+-	/*
+-	 * There are systems (for example, Intel mobile chips since Coffee
+-	 * Lake) where the power drawn while suspended can be significantly
+-	 * reduced by disabling PTM on PCIe root ports as this allows the
+-	 * port to enter a lower-power PM state and the SoC to reach a
+-	 * lower-power idle state as a whole.
+-	 */
+-	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+-		pci_disable_ptm(dev);
++	/* See rationale above for disabling PTM */
++	pci_disable_ptm(dev);
+ 
+ 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
+ 
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 368a254e3124..ec338470d13f 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -31,12 +31,18 @@ static void pci_ptm_info(struct pci_dev *dev)
+ 
+ void pci_disable_ptm(struct pci_dev *dev)
+ {
+-	int ptm;
++	int type, ptm;
+ 	u16 ctrl;
+ 
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
++	type = pci_pcie_type(dev);
++	if (!(type == PCI_EXP_TYPE_ROOT_PORT ||
++	      type == PCI_EXP_TYPE_UPSTREAM ||
++	      type == PCI_EXP_TYPE_ENDPOINT))
++		return;
++
+ 	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+ 	if (!ptm)
+ 		return;
