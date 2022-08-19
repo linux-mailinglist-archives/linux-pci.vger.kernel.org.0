@@ -2,254 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40256599DDA
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 16:58:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1A7599DDF
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 16:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349663AbiHSOuy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Aug 2022 10:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
+        id S1349610AbiHSOxE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Aug 2022 10:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349658AbiHSOuv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 10:50:51 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038CEEEF06
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 07:50:50 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id w11-20020a17090a380b00b001f73f75a1feso7759969pjb.2
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 07:50:49 -0700 (PDT)
+        with ESMTP id S1349607AbiHSOxD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 10:53:03 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9221EF006
+        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 07:53:02 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id m2so4351562pls.4
+        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 07:53:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=fm7QTBEvZYoh+uEnOcc/Xv3rhrfE/CRJJFQjFwf7qiE=;
-        b=kTGHznXS4z9k9KSMxh2zmGsSAbQq549AyrNmdgNpiushumZ0U5Dxj6DmkhmutuPc5U
-         VCqR9K4edCyQXiPQ+FigDGtWxQsuWB0OKEIv2oqxey/1NNe/0Vp1q98z+LiBjNwgezh1
-         T85aAXYXQgK3FV3Z6zdmhJUyrau0IUdjB/8Y7hYR7GBtwBLW17T7q6TudNBQV1D8jmLa
-         7zMTAV6cIITTjgGDqOUzUHTjgP/hvl6fRFRpiKXeQDniWQEV34AuK4y6Zgj7wXyx6SUs
-         /uORDfVxdJZr8pG7YQ3tiC5wCYwpLmSOOxqZFU0t60j3sIjAUt4yIMB6upMwFpzeOaxj
-         sThw==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=OzfFfFOXDbyq5fs5hSj2kLJvkNmpW2kv11TMrs1o44s=;
+        b=kPekV3MDzzZBzMgPueWnJ/sdMwKerG+8weiirSFULhmGyTjStpvtX0UJoqYgDAn4R8
+         E++4p2lYEJ4xU8RqzVFWs3UPaAd9EA/5N9vqIRLJBmcW0NoqQ072500CWE0Cy34pe9S/
+         y70jUTQZC1tkwPrgM9/CJsv+TRbK+jMiWLr3NM2E+4fz2/08InzUOqlLin5SvGwQ/RSt
+         wf12H91qTB6RmaTA3qxymwE4E8fiGPtr6bqeT0N7iR9IL2xDiDraVDtfCqm8WyZZ7Swl
+         AX2oPnPi8NszsJSOrVImRh2zCkelmUPQLU0dWYeJuIxfhwhtr1xXIU6JxFZZUfvDI88L
+         Smvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=fm7QTBEvZYoh+uEnOcc/Xv3rhrfE/CRJJFQjFwf7qiE=;
-        b=iPXOjJP7XIo9lQZZkpYz6dogHfGIWrUOXL4lGcDVtgbM/y+0cVUupcew5FbgQFg6mc
-         mHtNs+9sfyG+SECuo57s30QFKDNto1amaVCDkVT8QwdBKZdg95F/1cO0JeckN+GICYqZ
-         D6MbysNt0/5TCeDrHnpXdDX6GDZRUGbzc09oLl3znhq+CSS6yGtMD3UQ+7OgnzvtwroV
-         3TLAriASDCRGhtTomHso9V1pKOaDK02GjWUTIBi1Bb9sE78g6F9gP4NDbrjXLe7Yq9RH
-         DjGwdL4RM+ssisEOBEqsi27fF1rAK4cgKzGGaF2H0F9YilzGxbrTL5pGH44FY/gAB7CY
-         UlBw==
-X-Gm-Message-State: ACgBeo1mpV+EsVJWtLjLmn7Jvf83/r/XW/YAa3ibNCmDktTFlRLgxjYd
-        ccbGBBmxKq1NTnEiyZA2xajt
-X-Google-Smtp-Source: AA6agR4WqLDdcp7eFf5epnHlvSLLcn/RdBV0PTQWnRxZD+k4r5blFdID/lUqi3LNfdQB0Rkh2y4Dhg==
-X-Received: by 2002:a17:902:e5cc:b0:16f:1153:c519 with SMTP id u12-20020a170902e5cc00b0016f1153c519mr7883043plf.151.1660920649485;
-        Fri, 19 Aug 2022 07:50:49 -0700 (PDT)
-Received: from localhost.localdomain ([117.217.188.127])
-        by smtp.gmail.com with ESMTPSA id x24-20020a17090a789800b001f312e7665asm3268380pjk.47.2022.08.19.07.50.45
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=OzfFfFOXDbyq5fs5hSj2kLJvkNmpW2kv11TMrs1o44s=;
+        b=Bj5deW1LM/3VGeZvLvTaRvn74KW31xHi0RCtqwwykJPYwCBIwshZr3uthVDq/KaIBS
+         s5SYD8zzEV6hxAkHCqRy4KuCsb36M/XYnd6Fck4XwDJ26H55UsXkf3shicf9BM5FeFml
+         foo+/iEVie5jo0x/GD/CrevpPX2Bh+5kr+MEAXF82EU0rpXE8JoWUz3E76oUlTm/5m8v
+         1J6701zNkCU2wm2Rx7kEFnvqukACWtXXs4P8PjNLWDRSyxmvHgsVs0H4RJrTCNZK6CA+
+         Uj4jNxxagzumiiZDbqlnezjDFX5/FAjgpQw8w9uBnliOCzeHwWD3wL5oFarWPSS9XDBv
+         2Xrg==
+X-Gm-Message-State: ACgBeo3K/Fa9LZyS6fZ6XbU7uF+BNGQVjR8azbIHIl9ctOv9yt1h/9tf
+        FJy234+cb3A4xbhWgwUHejpV
+X-Google-Smtp-Source: AA6agR7F+3kzjmmug6+gBvxH7857Gj60mhCrlHxSeiYw2b/Xb0puZlAyDhMP3BEkdn9A3poYN/1xVg==
+X-Received: by 2002:a17:90b:605:b0:1fa:b5c5:3449 with SMTP id gb5-20020a17090b060500b001fab5c53449mr13359463pjb.103.1660920782295;
+        Fri, 19 Aug 2022 07:53:02 -0700 (PDT)
+Received: from thinkpad ([117.217.188.127])
+        by smtp.gmail.com with ESMTPSA id 22-20020a630d56000000b0041c66a66d41sm2923485pgn.45.2022.08.19.07.52.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Aug 2022 07:50:49 -0700 (PDT)
+        Fri, 19 Aug 2022 07:53:01 -0700 (PDT)
+Date:   Fri, 19 Aug 2022 20:22:53 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, gregkh@linuxfoundation.org, lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mie@igel.co.jp, kw@linux.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] Documentation: PCI: endpoint: Use the correct return value of pcitest.sh
-Date:   Fri, 19 Aug 2022 20:20:18 +0530
-Message-Id: <20220819145018.35732-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220819145018.35732-1-manivannan.sadhasivam@linaro.org>
-References: <20220819145018.35732-1-manivannan.sadhasivam@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Shunsuke Mie <mie@igel.co.jp>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Fix
+ pci_endpoint_test_{copy,write,read}() panic
+Message-ID: <20220819145253.GA35978@thinkpad>
+References: <20220816100617.90720-1-mie@igel.co.jp>
+ <YvtxAN7E4nmZmL/X@kroah.com>
+ <Yvuvpd9n59mp96p0@lpieralisi>
+ <695ab9b3-8385-e8bd-0095-14b07de66b15@ti.com>
+ <YvzNg5ROnxEApDgS@kroah.com>
+ <632f447c-fe1a-e6aa-2fda-73669964fc92@ti.com>
+ <20220819105255.GD215264@thinkpad>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220819105255.GD215264@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
-        autolearn=no autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pcitest.sh now reports SUCCESS and FAILED instead of OKAY and NOT_OKAY.
+On Fri, Aug 19, 2022 at 04:23:03PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Aug 19, 2022 at 04:08:13PM +0530, Kishon Vijay Abraham I wrote:
+> > +Mani
+> > 
+> > On 17/08/22 16:44, Greg Kroah-Hartman wrote:
+> > > On Wed, Aug 17, 2022 at 02:18:58PM +0530, Kishon Vijay Abraham I wrote:
+> > >> Hi Lorenzo,
+> > >>
+> > >> On 16/08/22 20:24, Lorenzo Pieralisi wrote:
+> > >>> On Tue, Aug 16, 2022 at 12:27:12PM +0200, Greg Kroah-Hartman wrote:
+> > >>>> On Tue, Aug 16, 2022 at 07:06:17PM +0900, Shunsuke Mie wrote:
+> > >>>>> Although dma_map_single() doesn't permit zero length mapping, the each
+> > >>>>> test functions called the function without zero checking.
+> > >>>>>
+> > >>>>> A panic was reported on arm64:
+> > >>>>>
+> > >>>>> [   60.137988] ------------[ cut here ]------------
+> > >>>>> [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+> > >>>>> [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > >>>>> [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+> > >>>>> 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+> > >>>>> c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+> > >>>>> [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
+> > >>>>> [   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> > >>>>> [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > >>>>> [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+> > >>>>> [   60.213149] lr : swiotlb_map+0x88/0x1f0
+> > >>>>> [   60.216982] sp : ffff80000a883bc0
+> > >>>>> [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
+> > >>>>> [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
+> > >>>>> [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
+> > >>>>> [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
+> > >>>>> [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
+> > >>>>> [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
+> > >>>>> [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+> > >>>>> [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
+> > >>>>> [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
+> > >>>>> [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
+> > >>>>> [   60.291658] Call trace:
+> > >>>>> [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+> > >>>>> [   60.298629]  swiotlb_map+0x88/0x1f0
+> > >>>>> [   60.302115]  dma_map_page_attrs+0x188/0x230
+> > >>>>> [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
+> > >>>>> [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+> > >>>>> [   60.316583]  invoke_syscall+0x44/0x108
+> > >>>>> [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+> > >>>>> [   60.325038]  do_el0_svc+0x2c/0xb8
+> > >>>>> [   60.328351]  el0_svc+0x2c/0x88
+> > >>>>> [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+> > >>>>> [   60.335587]  el0t_64_sync+0x18c/0x190
+> > >>>>> [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
+> > >>>>> [   60.345344] ---[ end trace 0000000000000000 ]---
+> > >>>>>
+> > >>>>> To fix it, this patch adds checkings the payload length if it is zero.
+> > >>>>>
+> > >>>>> Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
+> > >>>>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > >>>>> ---
+> > >>>>>  drivers/misc/pci_endpoint_test.c | 6 +++---
+> > >>>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >>>>>
+> > >>>>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> > >>>>> index 8f786a225dcf..d45426a73396 100644
+> > >>>>> --- a/drivers/misc/pci_endpoint_test.c
+> > >>>>> +++ b/drivers/misc/pci_endpoint_test.c
+> > >>>>> @@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+> > >>>>>  	}
+> > >>>>>  
+> > >>>>>  	size = param.size;
+> > >>>>> -	if (size > SIZE_MAX - alignment)
+> > >>>>> +	if (size > SIZE_MAX - alignment || !size)
+> > >>>>>  		goto err;
+> > >>>>
+> > >>>> Can we test size first?  And do it in the ioctl handler in one place so
+> > >>>> you don't have to add it everywhere?
+> > >>>>
+> > >>>> Or have a "validate all parameters" function that you do it in one
+> > >>>> place?
+> > >>>>
+> > >>>> Also, all of these ioctl handlers are wrong, they are returning "0" to
+> > >>>> userspace if they fail, which is not correct at all.
+> > >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/pci/pcitest.c
+> > >>> This is bad, thanks Greg for spotting it.
+> > >>>
+> > >>> @Kishon, we have to fix it asap, please let me know if you
+> > >>> can post a patch promptly.
+> > >>
+> > >> The userspace tool (pcitest [1]) that calls these IOCTLS prints "NOT
+> > >> OKAY" on 0 and "OKAY" for 1.
+> > >>
+> > >> I'll change to negative value for error and still keep '0' for data
+> > >> mismatch error?
+> > > 
+> > > No, 0 as a return value from a system call means "success".  You can not
+> > > redefine it to mean something else for a tiny single kernel driver,
+> > > otherwise so much for consistency.
+> > > 
+> > > 0 is success, -ERROR_NUMBER is an error, please read the ioctl man page.
+> > 
+> > Thanks Greg!
+> > 
+> > Mani, Would you be able to post a patch fixing it? If not I'll post it
+> > mid next week.
+> > 
+> 
+> Will do!
+> 
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/PCI/endpoint/pci-test-howto.rst | 152 +++++++++---------
- 1 file changed, 76 insertions(+), 76 deletions(-)
+Done! But I haven't fixed the size issue that _this_ patch fixes. I'll leave it
+up to Shunsuke.
 
-diff --git a/Documentation/PCI/endpoint/pci-test-howto.rst b/Documentation/PCI/endpoint/pci-test-howto.rst
-index 909f770a07d6..3bc43b9f9856 100644
---- a/Documentation/PCI/endpoint/pci-test-howto.rst
-+++ b/Documentation/PCI/endpoint/pci-test-howto.rst
-@@ -144,92 +144,92 @@ pcitest.sh Output
- 	# pcitest.sh
- 	BAR tests
- 
--	BAR0:           OKAY
--	BAR1:           OKAY
--	BAR2:           OKAY
--	BAR3:           OKAY
--	BAR4:           NOT OKAY
--	BAR5:           NOT OKAY
-+	BAR0:           SUCCESS
-+	BAR1:           SUCCESS
-+	BAR2:           SUCCESS
-+	BAR3:           SUCCESS
-+	BAR4:           FAILED
-+	BAR5:           FAILED
- 
- 	Interrupt tests
- 
--	SET IRQ TYPE TO LEGACY:         OKAY
--	LEGACY IRQ:     NOT OKAY
--	SET IRQ TYPE TO MSI:            OKAY
--	MSI1:           OKAY
--	MSI2:           OKAY
--	MSI3:           OKAY
--	MSI4:           OKAY
--	MSI5:           OKAY
--	MSI6:           OKAY
--	MSI7:           OKAY
--	MSI8:           OKAY
--	MSI9:           OKAY
--	MSI10:          OKAY
--	MSI11:          OKAY
--	MSI12:          OKAY
--	MSI13:          OKAY
--	MSI14:          OKAY
--	MSI15:          OKAY
--	MSI16:          OKAY
--	MSI17:          NOT OKAY
--	MSI18:          NOT OKAY
--	MSI19:          NOT OKAY
--	MSI20:          NOT OKAY
--	MSI21:          NOT OKAY
--	MSI22:          NOT OKAY
--	MSI23:          NOT OKAY
--	MSI24:          NOT OKAY
--	MSI25:          NOT OKAY
--	MSI26:          NOT OKAY
--	MSI27:          NOT OKAY
--	MSI28:          NOT OKAY
--	MSI29:          NOT OKAY
--	MSI30:          NOT OKAY
--	MSI31:          NOT OKAY
--	MSI32:          NOT OKAY
--	SET IRQ TYPE TO MSI-X:          OKAY
--	MSI-X1:         OKAY
--	MSI-X2:         OKAY
--	MSI-X3:         OKAY
--	MSI-X4:         OKAY
--	MSI-X5:         OKAY
--	MSI-X6:         OKAY
--	MSI-X7:         OKAY
--	MSI-X8:         OKAY
--	MSI-X9:         NOT OKAY
--	MSI-X10:        NOT OKAY
--	MSI-X11:        NOT OKAY
--	MSI-X12:        NOT OKAY
--	MSI-X13:        NOT OKAY
--	MSI-X14:        NOT OKAY
--	MSI-X15:        NOT OKAY
--	MSI-X16:        NOT OKAY
-+	SET IRQ TYPE TO LEGACY:         SUCCESS
-+	LEGACY IRQ:     FAILED
-+	SET IRQ TYPE TO MSI:            SUCCESS
-+	MSI1:           SUCCESS
-+	MSI2:           SUCCESS
-+	MSI3:           SUCCESS
-+	MSI4:           SUCCESS
-+	MSI5:           SUCCESS
-+	MSI6:           SUCCESS
-+	MSI7:           SUCCESS
-+	MSI8:           SUCCESS
-+	MSI9:           SUCCESS
-+	MSI10:          SUCCESS
-+	MSI11:          SUCCESS
-+	MSI12:          SUCCESS
-+	MSI13:          SUCCESS
-+	MSI14:          SUCCESS
-+	MSI15:          SUCCESS
-+	MSI16:          SUCCESS
-+	MSI17:          FAILED
-+	MSI18:          FAILED
-+	MSI19:          FAILED
-+	MSI20:          FAILED
-+	MSI21:          FAILED
-+	MSI22:          FAILED
-+	MSI23:          FAILED
-+	MSI24:          FAILED
-+	MSI25:          FAILED
-+	MSI26:          FAILED
-+	MSI27:          FAILED
-+	MSI28:          FAILED
-+	MSI29:          FAILED
-+	MSI30:          FAILED
-+	MSI31:          FAILED
-+	MSI32:          FAILED
-+	SET IRQ TYPE TO MSI-X:          SUCCESS
-+	MSI-X1:         SUCCESS
-+	MSI-X2:         SUCCESS
-+	MSI-X3:         SUCCESS
-+	MSI-X4:         SUCCESS
-+	MSI-X5:         SUCCESS
-+	MSI-X6:         SUCCESS
-+	MSI-X7:         SUCCESS
-+	MSI-X8:         SUCCESS
-+	MSI-X9:         FAILED
-+	MSI-X10:        FAILED
-+	MSI-X11:        FAILED
-+	MSI-X12:        FAILED
-+	MSI-X13:        FAILED
-+	MSI-X14:        FAILED
-+	MSI-X15:        FAILED
-+	MSI-X16:        FAILED
- 	[...]
--	MSI-X2047:      NOT OKAY
--	MSI-X2048:      NOT OKAY
-+	MSI-X2047:      FAILED
-+	MSI-X2048:      FAILED
- 
- 	Read Tests
- 
--	SET IRQ TYPE TO MSI:            OKAY
--	READ (      1 bytes):           OKAY
--	READ (   1024 bytes):           OKAY
--	READ (   1025 bytes):           OKAY
--	READ (1024000 bytes):           OKAY
--	READ (1024001 bytes):           OKAY
-+	SET IRQ TYPE TO MSI:            SUCCESS
-+	READ (      1 bytes):           SUCCESS
-+	READ (   1024 bytes):           SUCCESS
-+	READ (   1025 bytes):           SUCCESS
-+	READ (1024000 bytes):           SUCCESS
-+	READ (1024001 bytes):           SUCCESS
- 
- 	Write Tests
- 
--	WRITE (      1 bytes):          OKAY
--	WRITE (   1024 bytes):          OKAY
--	WRITE (   1025 bytes):          OKAY
--	WRITE (1024000 bytes):          OKAY
--	WRITE (1024001 bytes):          OKAY
-+	WRITE (      1 bytes):          SUCCESS
-+	WRITE (   1024 bytes):          SUCCESS
-+	WRITE (   1025 bytes):          SUCCESS
-+	WRITE (1024000 bytes):          SUCCESS
-+	WRITE (1024001 bytes):          SUCCESS
- 
- 	Copy Tests
- 
--	COPY (      1 bytes):           OKAY
--	COPY (   1024 bytes):           OKAY
--	COPY (   1025 bytes):           OKAY
--	COPY (1024000 bytes):           OKAY
--	COPY (1024001 bytes):           OKAY
-+	COPY (      1 bytes):           SUCCESS
-+	COPY (   1024 bytes):           SUCCESS
-+	COPY (   1025 bytes):           SUCCESS
-+	COPY (1024000 bytes):           SUCCESS
-+	COPY (1024001 bytes):           SUCCESS
+Thanks,
+Mani
+
+> Thanks,
+> Mani
+> 
+> > Regards,
+> > Kishon
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
