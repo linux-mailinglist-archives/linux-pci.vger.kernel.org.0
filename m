@@ -2,50 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E546D59A6F3
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 22:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAC0259A7CE
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 23:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348895AbiHSUT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Aug 2022 16:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S234449AbiHSViR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Aug 2022 17:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350392AbiHSUT6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 16:19:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EFC107D99
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 13:19:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DE87616D4
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 20:19:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E914C433D6;
-        Fri, 19 Aug 2022 20:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660940396;
-        bh=olPohxwuB8nScx7nJ7uyU6IDjTcA7hHC2u3+ajo7ux4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GbKvB1fj75mIAXCJYa4PXJtLbhHltip+GDS6Vdt7samXxjTaaBqrEXtlW5S7z44rE
-         VVHBKCTlhovnkeWyF5b0QSXXW2cCNJ8f5+eeYvaDXkEQBbQ/nhACFZw8W4SHzjQN5X
-         xsPcS1VhvyDbJaEluAfXp2esCybyo31LXlJ0cIGebsEjh2g2bq9CmwFD2r+67eP/+g
-         Y0OVwjSMyNAqp4i5s9F76TYiU8wUXYNjl3ni1XEOUXr5tT0hxX44l+bWOiM6+DAn0Q
-         rPcoY5lRYmyhRgO4Xmh1TPz+MbmxLNb6A2NHU8K8hozuqYQc0DQS6uzwNDLGj5Rgic
-         s69uMqWY3meUg==
-Date:   Fri, 19 Aug 2022 15:19:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Russell Currey <ruscur@russell.cc>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-pci@vger.kernel.org,
-        benh@kernel.crashing.org
-Subject: Re: [PATCH] MAINTAINERS: Remove myself as EEH maintainer
-Message-ID: <20220819201955.GA2503063@bhelgaas>
+        with ESMTP id S230366AbiHSViQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 17:38:16 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2EB5FD8
+        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 14:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660945094; x=1692481094;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h4m6M3il1qXZr5ZsZGfOEzn1l1QroOlxg2k78/bpxoE=;
+  b=OweYYWzpTeljlTar4F1G1GwsvkGMfcOBv14DcEUWKj/DcsO2CetosfQQ
+   84OBxKaHaOuRrzSAUhYdQslFvXGklz9hxtXINO37v3JL9qwrZ9wX9p+5P
+   7YWzAErGbLymUqcSwBJVyzKTU+/nnGyEcLdvTwv16ULJV5WyIw8E1ym2J
+   W1b+fofuDO5KQmT4mm1mpDtkV3/IE7OQrTm1YGKdbnnDM0okDdUGtfzWG
+   J8GoDlVWR+LPZqihsW0vtEOBvNRo1UzqDS43JKX9AtOuAEtVPlruC3k1c
+   UAF7AQaWm3gti3o/knnw/dsstRPN9nQSZqAjpv+jbAB+LdiFVcBnu31K7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10444"; a="294376911"
+X-IronPort-AV: E=Sophos;i="5.93,249,1654585200"; 
+   d="scan'208";a="294376911"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2022 14:38:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,249,1654585200"; 
+   d="scan'208";a="584800724"
+Received: from lkp-server01.sh.intel.com (HELO 44b6dac04a33) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 19 Aug 2022 14:38:12 -0700
+Received: from kbuild by 44b6dac04a33 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oP9gy-0001q3-0n;
+        Fri, 19 Aug 2022 21:38:12 +0000
+Date:   Sat, 20 Aug 2022 05:37:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/qcom] BUILD SUCCESS
+ 46bafd187104dc3ea85c73b85df020cd83e3e67b
+Message-ID: <63000292.SNrKEc2Yf0LI4Vgj%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220806085301.25142-1-ruscur@russell.cc>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,67 +62,129 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 06, 2022 at 06:53:01PM +1000, Russell Currey wrote:
-> I haven't touched EEH in a long time I don't have much knowledge of the
-> subsystem at this point either, so it's misleading to have me as a
-> maintainer.
-> 
-> I remain grateful to Oliver for picking up my slack over the years.
-> 
-> Signed-off-by: Russell Currey <ruscur@russell.cc>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a9f77648c107..dfe6081fa0b3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15639,7 +15639,6 @@ F:	drivers/pci/endpoint/
->  F:	tools/pci/
->  
->  PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC
-> -M:	Russell Currey <ruscur@russell.cc>
->  M:	Oliver O'Halloran <oohall@gmail.com>
->  L:	linuxppc-dev@lists.ozlabs.org
->  S:	Supported
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/qcom
+branch HEAD: 46bafd187104dc3ea85c73b85df020cd83e3e67b  PCI: qcom: Sort device-id table
 
-I was thinking along these lines, but if you want to take this,
-Michael, I'll drop it:
+elapsed time: 726m
 
+configs tested: 107
+configs skipped: 2
 
-commit 92ea781689d1 ("MAINTAINERS: Add Mahesh J Salgaonkar as EEH maintainer")
-Author: Russell Currey <ruscur@russell.cc>
-Date:   Sat Aug 6 18:53:01 2022 +1000
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-    MAINTAINERS: Add Mahesh J Salgaonkar as EEH maintainer
-    
-    Update EEH entry:
-    
-      - Russell: lacks time to maintain EEH.
-    
-      - Oliver: lacks time & hardware to do actual maintenance, but happy to
-        field questions and review things.
-    
-      - Mahesh: glad to take over EEH maintenance.
-    
-    [bhelgaas: commit log, add Mahesh, make Oliver reviewer]
-    Link: https://lore.kernel.org/r/20220806085301.25142-1-ruscur@russell.cc
-    Signed-off-by: Russell Currey <ruscur@russell.cc>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                             allyesconfig
+i386                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arm                             rpc_defconfig
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+arm                      footbridge_defconfig
+powerpc                   motionpro_defconfig
+sh                           se7712_defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                  iss476-smp_defconfig
+parisc                generic-32bit_defconfig
+arc                        vdk_hs38_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                           corgi_defconfig
+arm                          badge4_defconfig
+mips                    maltaup_xpa_defconfig
+openrisc                  or1klitex_defconfig
+arm                         at91_dt_defconfig
+powerpc                      tqm8xx_defconfig
+openrisc                            defconfig
+sh                          lboxre2_defconfig
+i386                          randconfig-c001
+loongarch                           defconfig
+loongarch                         allnoconfig
+riscv                randconfig-r042-20220820
+s390                 randconfig-r044-20220820
+arc                  randconfig-r043-20220820
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+powerpc                    amigaone_defconfig
+arm                         lpc18xx_defconfig
+arm                          iop32x_defconfig
+arm                        mini2440_defconfig
+microblaze                          defconfig
+powerpc                 linkstation_defconfig
+arm                             ezx_defconfig
+ia64                                defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+arm                           u8500_defconfig
+ia64                        generic_defconfig
+powerpc                  storcenter_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                 mpc834x_itx_defconfig
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f60dfac7661c..51def5ac9462 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15696,8 +15696,8 @@ F:	drivers/pci/endpoint/
- F:	tools/pci/
- 
- PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC
--M:	Russell Currey <ruscur@russell.cc>
--M:	Oliver O'Halloran <oohall@gmail.com>
-+M:	Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-+R:	Oliver O'Halloran <oohall@gmail.com>
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Supported
- F:	Documentation/PCI/pci-error-recovery.rst
+clang tested configs:
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+riscv                randconfig-r042-20220819
+s390                 randconfig-r044-20220819
+hexagon              randconfig-r045-20220819
+hexagon              randconfig-r041-20220819
+arm                                 defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+arm                         hackkit_defconfig
+arm                      tct_hammer_defconfig
+powerpc                      ppc44x_defconfig
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+powerpc                      ppc64e_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                        omega2p_defconfig
+mips                          malta_defconfig
+powerpc                    gamecube_defconfig
+arm                         orion5x_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
