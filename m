@@ -2,257 +2,248 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F20C4599789
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 10:49:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906B65997B3
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 10:49:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347695AbiHSIhH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Aug 2022 04:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        id S1347328AbiHSIh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Aug 2022 04:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347203AbiHSIgq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 04:36:46 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A97457239
-        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 01:34:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RRrG6S+D8B1lD3t2B7mRVPFRrmc+WLT8RlcDZW1VoxRA3QggBs+02meX9EeA8a2WIVoIL5bs9Z92CrlcmUo+cqoL1i6Y2RvrDG9g51WfH77MO1PC4dytHBXYRHb/YP3P4YDqdbhu1D6NvXzOkG8iVA7KcZFEijYPa+UfBBGnoSs1aav2eXLqVc9WVmjUDczVExhbavPD7RoHHvAnpgCEkHfgU2DdmAzpRKutDS9HE+SZmxRsnMuaCOWoepJrOXa+hLZQAP46+xvIVjHMj3ySmf0poHSeEf7DSaPfNvn+18wRBEA0CSZNhYOLUR0MsiUxBjMhDCsKxzsCHkTe5f3xGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UaFL2Mj+unXNZUwlHaZeg9ReB5iQJrAkmzI7D5goiJs=;
- b=Zsm6IbPFl2xg961AweRYTX+P+oIwIfwD4H+mL7u7UoD/+Y9NTBsksfLaAnhrLcb/fQq9HmDsO9K+inzW2Fga2qjxHJPO3zIU6xqW1A0vRkRuymoCqU/+XNB82eBcucXXVTD/DJhpZNQ9I6IrtKlRaAwXhh6Bslds8Dz8HY9MEiilO7lU8Ymnn4JxCzQaoY43W8G2hpCYUvyvTQBjYjk/HAsPmxJnQP2IAcBNgFaOiyZV+bMwY+PwH+7ZO5u0ohE0n7UVcFYrHdNzT7Eltcu+yq6SGAjiEI5D0DMQIVN+ZkVVU2fgDA9qanLtbsALY9EBEON/C6ilWoPSweN9zoHpgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UaFL2Mj+unXNZUwlHaZeg9ReB5iQJrAkmzI7D5goiJs=;
- b=ArocNPzmgq0SOM7EMNa5+pzhUCQ3sI81cxj7klKTZkFNValEWBHRb28fINfsk36rmddXQRrqkBiL1JAuBgjuN5G9sbM+OL28lYQBLNPuspYT3QgM2zG2bwLg3yPaCE1LKLP5X9gMHvZ3K/jbHq950rXLlPgKk7/FFbdjCo7t8tU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
- by DM6PR12MB3002.namprd12.prod.outlook.com (2603:10b6:5:117::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Fri, 19 Aug
- 2022 08:34:16 +0000
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::4195:ca0b:381f:7900]) by BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::4195:ca0b:381f:7900%4]) with mapi id 15.20.5546.016; Fri, 19 Aug 2022
- 08:34:15 +0000
-Message-ID: <fc036a10-5c13-fdd7-9d98-2b5f0f8af383@amd.com>
-Date:   Fri, 19 Aug 2022 14:03:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
-Content-Language: en-US
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        with ESMTP id S1346985AbiHSIhT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 04:37:19 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322F8EEF09
+        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 01:35:52 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id r14-20020a17090a4dce00b001faa76931beso6937504pjl.1
+        for <linux-pci@vger.kernel.org>; Fri, 19 Aug 2022 01:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=QqmEKIFzHAXTFm3nLmoojS/pMmtd2oRkzT9dCGl8OZA=;
+        b=KQ3U7FTXxenS+f3Dlniw65UAFkZujmauHkuWxWyD153F65mpDvn8msgcjRm/5yK3gK
+         TXF9xexHG28nUlb5RyVjsLOKxIogCCbJOccKvEuDZIcHgXVCwFrSx72tDBIDEENLVjmx
+         hIcL72VUa7PuMZdsKoB5EJLNh9Zm92WfPqk08WLLIMsFSDVl6NdgDNgp+KCcjqt/Lx1e
+         EkMi+hhAKXwGcvc2O822gJBHYleidNaaW5ErYfPuSRw8KHy25JUXTlytRhG7Zadbwew6
+         pKdKUX8RRVeROm6p7CmV0L4RYIVha0+dWU5ZIuJgZzAyU/IuQDhyJO2K9SNeiBYNwPmT
+         dEdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=QqmEKIFzHAXTFm3nLmoojS/pMmtd2oRkzT9dCGl8OZA=;
+        b=oU8bQW1BSxktx7Furt7ZvDAv0CoclzvE4r6AchVylyn2j05yc0UqwdZ9HfiTaoMQSk
+         VsR2hxJ/BAoXHqAhMb1cdJjUPXfanQdGlwKqp3w+u3BwOsYnLMRggrx6sC63LDGPxkhe
+         rdd2vqXaER8eRJLZBLMBbChgP8004eCcNbY/zREWtowcMyYRKf+IFO9d6eGgKVLWnEqi
+         fUzegJNd+7mGJtoHk1IyiZer6VTshGvixm3uk/Zeg2uNkGOVFk1F8EF2w1nNiot3iX8w
+         JVOtOfB2mBGa+NKVdwXMarGTkZq4M1pBJucmf7JdQmFzfZzNc0eONeQvvnTk2uWUidey
+         GRjQ==
+X-Gm-Message-State: ACgBeo3eIFEa8nN7lSb45byQPs/ZSTp8pT1aMkmHROnvmVEJ/OLfp8eU
+        hyVTa/mJ5T1uZD3oiCbjXl8t
+X-Google-Smtp-Source: AA6agR77D90sJTcBkFusO14uw8jiPP6rbN3f/CGnflS/R3U6NqQHXp1Xg4HkMnMXbQS7M8oLS71giA==
+X-Received: by 2002:a17:90a:318a:b0:1fa:c68c:aa03 with SMTP id j10-20020a17090a318a00b001fac68caa03mr7774546pjb.172.1660898151402;
+        Fri, 19 Aug 2022 01:35:51 -0700 (PDT)
+Received: from thinkpad ([117.193.212.74])
+        by smtp.gmail.com with ESMTPSA id d135-20020a621d8d000000b0052d4b0d0c74sm2949697pfd.70.2022.08.19.01.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Aug 2022 01:35:50 -0700 (PDT)
+Date:   Fri, 19 Aug 2022 14:05:41 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Xinhui Pan <Xinhui.Pan@amd.com>
-Cc:     regressions@lists.linux.dev, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Tom Seewald <tseewald@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Stefan Roese <sr@denx.de>
-References: <20220818203812.GA2381243@bhelgaas>
- <c1a4da18-a6e1-c633-a585-1b4940a5de59@amd.com>
-From:   "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <c1a4da18-a6e1-c633-a585-1b4940a5de59@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0185.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::12) To BYAPR12MB4614.namprd12.prod.outlook.com
- (2603:10b6:a03:a6::22)
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krishna Thota <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        sagar.tv@gmail.com, Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH V1] PCI: designware-ep: Fix DBI access before core init
+Message-ID: <20220819083541.GB215264@thinkpad>
+References: <051a3baf-b4dd-7764-2e61-03584cefb4d3@nvidia.com>
+ <20220729224404.GA478920@bhelgaas>
+ <20220730145025.GA4005@thinkpad>
+ <CAL_Jsq+tnLMcKGxzTJODQjCUTXU1yoMS2yF3WxEEfMmfgRt5uQ@mail.gmail.com>
+ <20220802072426.GA2494@thinkpad>
+ <20220802140738.GA115652@thinkpad>
+ <YvumZJdDAqo7DfBe@lpieralisi>
+ <5d9f537b-a7a3-b8ae-8779-9ffc15fd11bb@nvidia.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 27edcbb0-651b-49a0-709c-08da81bd99b0
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3002:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h+z6jrJ8VC4xIFHNgh9uz2Pj9/wlh7CJ8xehV7cKJ5sR7CbsuOkDA+3paubg5v+r9mVmceaNQ2TL1QX8DWUlVBBaQc3JDK/jm9/Wq+unqyqTL8ZzlOpuWiwVZAEnOzpRx2UytnD3hbvz20NaJsVkKc6vw9JeuCCIjoZfz0fjp/itAGCHEPpbud7azGXKdWdkmc2NK3BwngYLywJdKcOX03JigaFEncsCRu2Xbz/48uKsL3iJQXAKbeHgTecnIU2FCz2OsHBpARoBGqfeesJK7YkCs8mq6RBxRlKJkJ4LCWPgu7wP0nO8lTPnOMrj3cuqPyPeSmwvfx3efbDugnvqwDFT6wiy0Fs2Qj0JUF1QuJe6AVCW+ABcRPdHT7d0wOWCbunBEFmoW2EWt6sOHnIGnsBdXOsmP1AplBgYkNUEBcLfpLPHrnYvWxk/Pi5BApj3qq3+f3j5iyyUXiu7AkrEx/v2fv3mNZtft6QcDhy2FQryoDkx+Y83jMkpgcE07zVVSjTtmRVbQ6ZQKr9azR47+WdKEKEqgeUWBwFbK/GMNwF1lXsvzeDsFwTyS7DUySWk3Wi+RGJ7jhhGkFh8w1zvc3mBFDfT0kgrUJn1opA6WAgeSivM7sz0WeIYUZcpoW6oSQvllDbOv2/jo0/Y0FDoTMoN03/tD0S4z7pvTSqLqKXnXkiQVHd2WnI/EtJle0vMZUgfOlBQwKF6jCjVieA0iuc5oR2xaHBB9bogpTaPUKMWqwGY/gBFChNBlp1NNSjnxHOy9uK8NQvr/Fw75xB3yX9VJGRJUMk9fw/1LLNbxB8ClKop5Us2gpw/NGjEnIczAqzw1DoGaI0VGUrsXINx3UA1rQcaKeZM5HP2oov+RZ0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(83380400001)(86362001)(66574015)(2616005)(38100700002)(8936002)(2906002)(31696002)(186003)(4326008)(66556008)(66946007)(8676002)(110136005)(45080400002)(6486002)(966005)(6512007)(41300700001)(478600001)(31686004)(316002)(26005)(6506007)(6666004)(53546011)(54906003)(5660300002)(36756003)(66476007)(6636002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QTg2cHBJVVBoSGpLWGJCZjl1WVlhNFJQdHBNYSttM05PQWxoK0tSRG5FeWZs?=
- =?utf-8?B?UGRUQWdtNm5KbDVDQjdtb0NNNmFRbERvMGZaUCtpSGtGY3BZZjVlMUVXZWZL?=
- =?utf-8?B?SmpDYzhuazk5NmJzeXY1aUpSV3R2WFBFS1JpbERkQldNWFRQVnZUcnN0TjJk?=
- =?utf-8?B?S0g4dFBocU4zaCtEV2luUkZyenNSWlByZVdnTjFKTTRBWDRJbHNYTXJGdlgx?=
- =?utf-8?B?VXlsdFo1OCtVaFkya3hER0Foc2FNMzV6NnhLanVQTVVxZjlOVTBMYjBvT0Nh?=
- =?utf-8?B?L0E4UlhYdnBLRTlXNzJmQVlKTUtZWjBrRVpyWUtWV09Hd0puQVY5a0FpOEJx?=
- =?utf-8?B?RTZ2M1k2OW5rTXhPQktLUHBJSTEySWpWa0tmZFloWDBCb28xM3BrbkFXOWxo?=
- =?utf-8?B?akRldVRQbFR1RkppdldjZ0F4SjdZakt3Rm02LzJWQU52ZCtFME5ISVRUb1hF?=
- =?utf-8?B?RDRPNWVOb1pCUUdRd3JGdkVJTitINXJiTWFjUjg2UFFIdyswYmxzbXlscUd6?=
- =?utf-8?B?WFNHVUt4VzZpR1o4YXBSMVhDeTc0VVNWQ2RNa0l0dFpGWDhETUdNSSt2VURS?=
- =?utf-8?B?VUhNaUplSjBZMUo4dDk5RFhNR28vUG5kMlVwYk04OENjRnloNzBBd250dlU2?=
- =?utf-8?B?OE9OSm04T1VDQ3JBUW1JV0VDWVQ5WXVtcmFXU254KzRMd0wyR05UZ1dSQzg4?=
- =?utf-8?B?NE5jRmxCYkd2MHZIazh3TzR3NVZvVnlrQUczQ1RIakVqOG9TZGJJbHBrVkV6?=
- =?utf-8?B?VDNvWmd0V1B2SWZVYThsK2MwWXh5MHlqa001dXZsamxoYmpTSmVISzZHZmR4?=
- =?utf-8?B?NC81Q3hwZVRFK1d1NzBZRkpZM0pEclNURXdmL1RYK3k4KzVYMGVWMndmT2Iw?=
- =?utf-8?B?RVFVLzZWdDBmem5vTDVOZEczZ3A3NTlIOXZDZnhtVUR3Q0NqL3lobVM4dG1m?=
- =?utf-8?B?UmFQVEhTdjRaVWNoL0RITEpqamlvMDQ3RC9uT1EvZHJFNFZuTHVyOU9uRjJv?=
- =?utf-8?B?dEVwVVFFRzZ3Y09LMGdKOTMvNm9EbytwYnkrWDRJaHFtd0NvSG5YNmNRdkxx?=
- =?utf-8?B?U1VOeHlyemg0ZzZud1g2VVhtNmJUZFcxOHREaVJVUjZoc1hWU1FTamNWUldL?=
- =?utf-8?B?YTB3REpXZWg3NHVRVUlsMll4Y1NYMVhHL3JRL0drYWlzaE11allINFNvckc1?=
- =?utf-8?B?YThTZ1BWNzNqWElNWW83Z1JYb096TW0wbU5wR3lqU2NoRWphWGh3WnJKaGc0?=
- =?utf-8?B?QmIyNVhLMDNQQ0w2d1ozNTlYSDcySlhKaTVaR3RPMTUyRWVESzBzbno4azNU?=
- =?utf-8?B?V0VWNjBvSzJyWUs4d3hJWUR6QWRhdldWT1dGVUgvdTlmN0FqK3QwbnAvOFRJ?=
- =?utf-8?B?d0dDdXFnWTFtdnBvR3FoMFFkdForVlMzb3pucXVFTHl0VXQwWWUzTFM2SGV1?=
- =?utf-8?B?bHgzbnVUWnFsV25FYmxybzZWSkk5cWJ0cFJuK2I5N25VNUZvZDJjNkQ1Q2FY?=
- =?utf-8?B?LzlRbEE3NGtaM3pjVjNObDl0OFVTaXZKcmwzOTBCSUlzMTgxL1JmOWxQblpQ?=
- =?utf-8?B?Y3RuanRldVhBS1pHeXoyVkZNMXloWTA0NXlOVXZpNjBQUDhJZVM5Yk5MM2dt?=
- =?utf-8?B?MGkzQ3RBcGttTlZ0UVVlZWtMdGNJNFlFd1F0dzBRTDRTZlhwNUdseGp2NURT?=
- =?utf-8?B?Z1lDYUFudDhFYVZJQnRIYVoxV2t2RW5LMXdSQlFmN1FyNmgydVI2aXFsSVVq?=
- =?utf-8?B?Sy96by9Lc1BhbmF6ZHF2bGpKb2ZPbGtrOGJjYm1IbWptWHVLb0Q5QnR2TDBY?=
- =?utf-8?B?aVE3Yzh2WC9TL3pYVjBldnVPNVZLNlFmRGk5alE2MHJOM2pNalM3SDVoQUZL?=
- =?utf-8?B?Q0xOUjRDWkErRGNjZTdkbGhCY2NOMWV4OUVrN0NaUS9MWUlGcTRGcGpZWlpU?=
- =?utf-8?B?ZTJJMjh2akZQTUtibm1nTkc0b2d3ZUNsMEczMFJXVVd6MTlNVW83SFBPTEQ1?=
- =?utf-8?B?R2VVZDdlR3hjVEVOT1QxQ2N5TStvUy80aklkcGtxSmhCa2swZmV0VVBxTXJn?=
- =?utf-8?B?a0tOZEtiekZJYWJoWGxoUTBRYmJuNmNBbGNmRXBjV1ExMnFRc1UwK1g2UzJN?=
- =?utf-8?Q?xGwhrgjnUs/FIhjge3lohLdlT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27edcbb0-651b-49a0-709c-08da81bd99b0
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2022 08:34:15.6906
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GrGtEiZhtBT1AnQ+vlBJip+A3vqL5mR/pSyDrxTvDqdmhub1IfihwY1jsbgWEW8Z
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3002
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d9f537b-a7a3-b8ae-8779-9ffc15fd11bb@nvidia.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Aug 16, 2022 at 08:05:08PM +0530, Vidya Sagar wrote:
+> 
+> 
+> On 8/16/2022 7:45 PM, Lorenzo Pieralisi wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Tue, Aug 02, 2022 at 07:37:38PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Aug 02, 2022 at 12:54:37PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Mon, Aug 01, 2022 at 02:27:14PM -0600, Rob Herring wrote:
+> > > > > On Sat, Jul 30, 2022 at 8:50 AM Manivannan Sadhasivam
+> > > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > > > 
+> > > > > > On Fri, Jul 29, 2022 at 05:44:04PM -0500, Bjorn Helgaas wrote:
+> > > > > > > [+cc Xiaowei (author of 6bfc9c3a2c70), Hou (author of 8bcca2658558)]
+> > > > > > > 
+> > > > > > > On Thu, Jul 28, 2022 at 05:56:28PM +0530, Vidya Sagar wrote:
+> > > > > > > > On 7/28/2022 3:44 AM, Bjorn Helgaas wrote:
+> > > > > > > > > On Wed, Jun 22, 2022 at 09:31:33AM +0530, Vidya Sagar wrote:
+> > > > > > > > > > Platforms that cannot support their core initialization without the
+> > > > > > > > > > reference clock from the host, implement the feature 'core_init_notifier'
+> > > > > > > > > > to indicate the DesignWare sub-system about when their core is getting
+> > > > > > > > > > initialized. Any accesses to the core (Ex:- DBI) would result in system
+> > > > > > > > > > hang in such systems (Ex:- tegra194). This patch moves any access to the
+> > > > > > > > > > core to dw_pcie_ep_init_complete() API which is effectively called only
+> > > > > > > > > > after the core initialization.
+> > > > > 
+> > > > > > >    6) What's going on with the CORE_INIT and LINK_UP notifiers?
+> > > > > > >       dw_pcie_ep_init_notify() is only called by qcom and tegra.
+> > > > > > >       dw_pcie_ep_linkup() is only called by dra7xx, qcom, and tegra.
+> > > > > > >       As far as I can tell, nobody at all registers to handle those
+> > > > > > >       events except a test.  I think it's pointless to have that code
+> > > > > > >       if nobody uses it.
+> > > > > > > 
+> > > > > > 
+> > > > > > I have submitted an actual driver that makes use of these notifiers:
+> > > > > > https://lore.kernel.org/lkml/20220502060611.58987-9-manivannan.sadhasivam@linaro.org/
+> > > > > 
+> > > > > Notifiers aren't the best interface in the kernel. I think they are
+> > > > > best used if there's no real linkage between the sender and receiver.
+> > > > > For an EPC and EPF that's a fixed interface, so define a proper
+> > > > > interface.
+> > > > > 
+> > > > 
+> > > > Fair point! The use of notifiers also suffer from an issue where the notifier
+> > > > chain in EPC is atomic but the EPF calls some of the functions like
+> > > > pci_epc_write_header() could potentially sleep.
+> > > > 
+> > > > I'll try to come up with an interface.
+> > > > 
+> > > 
+> > > I thought about using a new set of callbacks that define the EPC events and
+> > > have the EPF drivers populate them during probe time. Like below,
+> > > 
+> > > ```
+> > > diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> > > index e03c57129ed5..45247802d6f7 100644
+> > > --- a/include/linux/pci-epf.h
+> > > +++ b/include/linux/pci-epf.h
+> > > @@ -74,6 +74,20 @@ struct pci_epf_ops {
+> > >                                          struct config_group *group);
+> > >   };
+> > > 
+> > > +/**
+> > > + * struct pci_epf_events - Callbacks for capturing the EPC events
+> > > + * @init_complete: Callback for the EPC initialization complete event
+> > > + * @link_up: Callback for the EPC link up event
+> > > + */
+> > > +struct pci_epc_events {
+> > > +       void (*init_complete)(struct pci_epf *epf);
+> > > +       void (*link_up)(struct pci_epf *epf);
+> > > +};
+> > > +
+> > >   /**
+> > >    * struct pci_epf_driver - represents the PCI EPF driver
+> > >    * @probe: ops to perform when a new EPF device has been bound to the EPF driver
+> > > @@ -172,6 +186,7 @@ struct pci_epf {
+> > >          unsigned int            is_vf;
+> > >          unsigned long           vfunction_num_map;
+> > >          struct list_head        pci_vepf;
+> > > +       struct pci_epc_events   *events;
+> > >   };
+> > > 
+> > >   /**
+> > > ```
+> > > 
+> > > When each of the event is received by the EPC driver, it will use the EPC API
+> > > to call the relevant event callback for _each_ EPF. Like below:
+> > > 
+> > > ```
+> > > diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> > > index 6ad9b38b63a9..4b0b30b91403 100644
+> > > --- a/drivers/pci/endpoint/pci-epc-core.c
+> > > +++ b/drivers/pci/endpoint/pci-epc-core.c
+> > > @@ -724,10 +724,15 @@ EXPORT_SYMBOL_GPL(pci_epc_linkdown);
+> > >    */
+> > >   void pci_epc_init_notify(struct pci_epc *epc)
+> > >   {
+> > > +       struct pci_epf *epf;
+> > > +
+> > >          if (!epc || IS_ERR(epc))
+> > >                  return;
+> > > 
+> > > -       blocking_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
+> > > +       list_for_each_entry(epf, &epc->pci_epf, list) {
+> > > +               if (epf->events->init_complete)
+> > > +                       epf->events->init_complete(epf);
+> > > +       }
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(pci_epc_init_notify);
+> > > ```
+> > > 
+> > > Does this look good to you? I can spin up an RFC series, but wanted to check the
+> > > interface design beforehand.
+> > 
+> > I am resuming patch reviews, have you posted a follow up ?
+> > 
+> > Just to understand where we are with this thread and start reviewing
+> > from there, I will update patchwork accordingly (you should add
+> > a Link: to this thread anyway in the new series).
+> 
+> Manivannan posted a new patch set at
+> https://patchwork.kernel.org/project/linux-pci/list/?series=666818 to
+> address concerns with the notifier mechanism.
+> 
+> I would be sending a follow-up patch for the current patch soon.
+> 
 
-
-On 8/19/2022 12:35 PM, Christian König wrote:
-> Hi Bjorn,
-> 
-> Am 18.08.22 um 22:38 schrieb Bjorn Helgaas:
->> [Adding amdgpu folks]
->>
->> On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org 
->> wrote:
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216373&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C59322ae65b814f132a7e08da81b14a95%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637964895716218989%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=tSdOYv7x%2BO6Rm01OFSDV0j3gevlhTF9lOq9pY2AixRM%3D&amp;reserved=0 
->>>
->>>
->>>              Bug ID: 216373
->>>             Summary: Uncorrected errors reported for AMD GPU
->>>      Kernel Version: v6.0-rc1
->>>          Regression: No
->>> ...
->> I marked this as a regression in bugzilla.
->>
->>> Hardware:
->>> CPU: Intel i7-12700K (Alder Lake)
->>> GPU: AMD RX 6700 XT [1002:73df]
->>> Motherboard: ASUS Prime Z690-A
->>>
->>> Problem:
->>> After upgrading to v6.0-rc1 the kernel is now reporting uncorrected 
->>> PCI errors
->>> for my GPU.
->> Thank you very much for the report and for taking the trouble to
->> bisect it and test Kai-Heng's patch!
->>
->> I suspect that booting with "pci=noaer" should be a temporary
->> workaround for this issue.  If it, can you add that to the bugzilla
->> for anybody else who trips over this?
->>
->>> I have bisected this issue to: 
->>> [8795e182b02dc87e343c79e73af6b8b7f9c5e635]
->>> PCI/portdrv: Don't disable AER reporting in get_port_device_capability()
->>> Reverting that commit causes the errors to cease.
->> I suspect the errors still occur, but we just don't notice and log
->> them.
->>
->>> I have also tried Kai-Heng Feng's patch[1] which seems to resolve a 
->>> similar
->>> problem, but it did not fix my issue.
->>>
->>> [1]
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-pci%2F20220706123244.18056-1-kai.heng.feng%40canonical.com%2F&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C59322ae65b814f132a7e08da81b14a95%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637964895716218989%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=7U52%2BsKIHHn1%2B%2F40dbPS38IGBrBYgBxCXAoFKcrTVGU%3D&amp;reserved=0 
->>>
->>>
->>> dmesg snippet:
->>>
->>> pcieport 0000:00:01.0: AER: Multiple Uncorrected (Non-Fatal) error 
->>> received:
->>> 0000:03:00.0
->>> amdgpu 0000:03:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal),
->>> type=Transaction Layer, (Requester ID)
->>> amdgpu 0000:03:00.0:   device [1002:73df] error 
->>> status/mask=00100000/00000000
->>> amdgpu 0000:03:00.0:    [20] UnsupReq               (First)
->>> amdgpu 0000:03:00.0: AER:   TLP Header: 40000001 0000000f 95e7f000 
->>> 00000000
->> I think the TLP header decodes to:
->>
->>    0x40000001 = 0100 0000 ... 0000 0001 binary
->>    0x0000000f = 0000 0000 ... 0000 1111 binary
->>
->>    Fmt           010b                 3 DW header with data
->>    Type          0000b  010 0 0000    MWr Memory Write Request
->>    Length        00 0000 0001b        1 DW
->>    Requester ID  0x0000               00:00.0
->>    Tag           0x00
->>    Last DW BE    0000b                must be zero for 1 DW write
->>    First DW BE   1111b                all 4 bytes in DW enabled
->>    Address       0x95e7f000
->>    Data          0x00000000
->>
->> So I think this is a 32-bit write of zero to PCI bus address
->> 0x95e7f000.
->>
->> Your dmesg log says:
->>
->>    pci 0000:02:00.0: PCI bridge to [bus 03]
->>    pci 0000:02:00.0:   bridge window [mem 0x95e00000-0x95ffffff]
->>    pci 0000:03:00.0: reg 0x24: [mem 0x95e00000-0x95efffff]
->>    [drm] register mmio base: 0x95E00000
->>
->> So this looks like a write to the device's BAR 5.  I don't see a PCI
->> reason why this should fail.  Maybe there's some amdgpu reason?
-> 
-> Well I have seen a couple of boards where stuff like that happened, but 
-> from my experience this always has some hardware problem as background.
-> 
->  From my understanding what essentially happens is that a write doesn't 
-> make it to the device (e.g. transmission errors can't be corrected).
-> 
-> It's quite likely that the write is then either dropped and doesn't 
-> matter that much (just clearing the framebuffer for example) or repeated 
-> and because of this everything still seems to work fine.
-> 
-> Either way I suggest to try this with some other hartdware 
-> configuration. E.g. put the GPU in another system and see if it still 
-> gives the same issues or put another GPU into this system.
-> 
-
-Or, it could be amdgpu or some other software component -
-
-register mmio base: 0x95E00000
-Address       0x95e7f000
-
-0x95e7f000 indicates access from CPU to a register offset 0x7FE000. This 
-doesn't look like a valid register offset for this chip (device 
-[1002:73df]). Any other clues in dmesg?
+While posting the new revision, please move dw_pcie_edma_detect() and ep_init()
+to init_complete function. They also perform DBI access.
 
 Thanks,
-Lijo
+Mani
 
+> Thanks,
+> Vidya Sagar
+> 
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Thanks,
+> > > Mani
+> > > 
+> > > > Thanks,
+> > > > Mani
+> > > > 
+> > > > > Rob
+> > > > 
+> > > > --
+> > > > மணிவண்ணன் சதாசிவம்
+> > > 
+> > > --
+> > > மணிவண்ணன் சதாசிவம்
 
-> Regards,
-> Christian.
-> 
-> 
->>
->> Bjorn
-> 
+-- 
+மணிவண்ணன் சதாசிவம்
