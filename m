@@ -2,64 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27BB6599E33
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 17:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C2559A127
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Aug 2022 18:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349186AbiHSP1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Aug 2022 11:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44998 "EHLO
+        id S1350816AbiHSQCj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Aug 2022 12:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349704AbiHSP12 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 11:27:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC5AFAC53;
-        Fri, 19 Aug 2022 08:27:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A0E12615B0;
-        Fri, 19 Aug 2022 15:27:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA5FC433C1;
-        Fri, 19 Aug 2022 15:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1660922847;
-        bh=TVSnyBkAa8N3fNZeD8W6C9YN5G3keWy7HS55wvxIhzk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JA3/MYCi8aKQI5FCRVhTdn+ixn3NBhsnoDJTw67CciTWaHQsveUteYI5WYTGcJ1+3
-         DaIEBkklvSV7vaWfbjBY9ZNFfqm/w119As80OZGIa1hqGrC5tobRCQWoVFxorplNMe
-         yn18eFS/sziqUMeMsZTqdEMdinpy7pn8uc5d5SXs=
-Date:   Fri, 19 Aug 2022 17:27:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     kishon@ti.com, lpieralisi@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mie@igel.co.jp, kw@linux.com
-Subject: Re: [PATCH 3/5] tools: PCI: Fix parsing the return value of IOCTLs
-Message-ID: <Yv+r3BwBel8X/8gE@kroah.com>
-References: <20220819145018.35732-1-manivannan.sadhasivam@linaro.org>
- <20220819145018.35732-4-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S1351334AbiHSQBU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Aug 2022 12:01:20 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269ED6555F;
+        Fri, 19 Aug 2022 08:53:15 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id r16so5659297wrm.6;
+        Fri, 19 Aug 2022 08:53:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=sxgN3UpSGxFCTDm8l7AkBbvt36WRpMvVU8huEaNlcOs=;
+        b=krMD8u17JLUs7BC7T89T+rrc9DGrJZxxZO1IEYiBVt6sjxFOZMRmcwm7D8ubrcK7ni
+         Ed0Mlaic95bguHMxOg6+RpMEkgCJ2RCm7VRevKIfYzkgCsWbOXgGzouNU1BB2cmqzlHd
+         TgwB8c28BD4iumsUVeM9C7A7hUXtzqQ1+k8rlJiZgVqmyY/rgI8jCBrILdSsgKAyNKvo
+         tyZ5HULWC44kXKjyVqj1Rj6WyOlYIF6AN/EexmD7mDbeC2zN1Egmw41+JymTX3uHuaEH
+         0DkQUoOa14SXz6Bw0CmoEgTaRlOp0NstT3zMModZVKSPJQsCHWeflaFDE9NnT5LPgvpK
+         C/7g==
+X-Gm-Message-State: ACgBeo02tuVb5NKUH+J7AlbnRgx6Tjhc8kkbmwl6Wikue9MCiCXpUDif
+        bjiQiodSz8mgSdt0t+QdKZ8=
+X-Google-Smtp-Source: AA6agR5TsuC+RQkNW3QES9UmlM4mewKq8N5myFw6BuEs9uWD/uzR+muUu/Xrq5C9HCu4xndgmWD2Fw==
+X-Received: by 2002:a5d:6da6:0:b0:225:385a:7071 with SMTP id u6-20020a5d6da6000000b00225385a7071mr2224863wrs.351.1660924365060;
+        Fri, 19 Aug 2022 08:52:45 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m16-20020a05600c4f5000b003a603f96db7sm12280373wmq.36.2022.08.19.08.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Aug 2022 08:52:44 -0700 (PDT)
+Date:   Fri, 19 Aug 2022 15:52:42 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, quic_jhugo@quicinc.com,
+        wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        robh@kernel.org, kw@linux.com, alex.williamson@redhat.com,
+        boqun.feng@gmail.com, Boqun.Feng@microsoft.com,
+        Carl Vanderlip <quic_carlv@quicinc.com>
+Subject: Re: [PATCH] PCI: hv: Fix the definiton of vector in
+ hv_compose_msi_msg()
+Message-ID: <20220819155242.w32vcwobt4ucvpyv@liuwe-devbox-debian-v2>
+References: <20220815185505.7626-1-decui@microsoft.com>
+ <20220815203545.GA1971949@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220819145018.35732-4-manivannan.sadhasivam@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220815203545.GA1971949@bhelgaas>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 08:20:16PM +0530, Manivannan Sadhasivam wrote:
-> "pci_endpoint_test" driver now returns 0 for success and negative error
-> code for failure. So adapt to the change by reporting FAILURE if the
-> return value is < 0, and SUCCESS otherwise.
+On Mon, Aug 15, 2022 at 03:35:45PM -0500, Bjorn Helgaas wrote:
+> s/definiton/definition/ in subject
+> (only if you have other occasion to repost this)
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> On Mon, Aug 15, 2022 at 11:55:05AM -0700, Dexuan Cui wrote:
+> > The local variable 'vector' must be u32 rather than u8: see the
+> > struct hv_msi_desc3.
+> > 
+> > 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
+> > hv_msi_desc2 and hv_msi_desc3.
+> > 
+> > Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> > Cc: Carl Vanderlip <quic_carlv@quicinc.com>
+> 
+> Looks like Wei has been applying most changes to pci-hyperv.c, so I
+> assume the same will happen here.
 
-Fixes: tag and cc: stable?
+I can take care of this one via hyperv-fixes, but ...
 
-thanks,
+> 
+> > ---
+> > 
+> > The patch should be appplied after the earlier patch:
+> >     [PATCH] PCI: hv: Only reuse existing IRTE allocation for Multi-MSI
+> >     https://lwn.net/ml/linux-kernel/20220804025104.15673-1-decui%40microsoft.com/
+> > 
 
-greg k-h
+... this patch looks to be rejected.
+
+Thanks,
+Wei.
