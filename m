@@ -2,52 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B45E59ADAA
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Aug 2022 13:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6885859ADC6
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Aug 2022 14:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345729AbiHTLvd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Aug 2022 07:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
+        id S1346036AbiHTMBZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Aug 2022 08:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345327AbiHTLvc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 Aug 2022 07:51:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509C39E136;
-        Sat, 20 Aug 2022 04:51:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 12225B8013A;
-        Sat, 20 Aug 2022 11:51:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D6AC433D6;
-        Sat, 20 Aug 2022 11:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660996288;
-        bh=Vj6nj5sawIYuwYfgAEZmjkahlR/5Zp1Ma3yQSqvSWjs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iFY0nygdd6IAogWPWqKWP5XoqHCJ5azIpvjhO+zIuIQuLJVxXV3+Xo5GvNceWRjtf
-         rU4k4V1JSwG677uBGHnLtI1rFPjw+dIH6rk3/7RZEgciXvCJP9/3P38M5iy420Kn13
-         15lu9c3h/at5oPvOmG3Qwr22zNDd/4CFqpfI0VMDTMLOooYHVBYHwKYxISPCPRgrm/
-         oJr1Btx10CaTL8bzRpjQkkmvf5ybGr9FHtBZLnrvwMOTYgybcqsEI0JpUYVDRfl0xA
-         H7oxMGuSgRwjwjiORdzM+7RAO48Mg8a5c7EZF7zGTgdoJSITwE5a6Xh7zuqYmO0AUT
-         o5V/b3Q0xEs+g==
-Received: by pali.im (Postfix)
-        id 7040E5D0; Sat, 20 Aug 2022 13:51:25 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/pci: Enable PCI domains in /proc when PCI bus numbers are not unique
-Date:   Sat, 20 Aug 2022 13:51:13 +0200
-Message-Id: <20220820115113.30581-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S242181AbiHTMBY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 Aug 2022 08:01:24 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D2EA3478
+        for <linux-pci@vger.kernel.org>; Sat, 20 Aug 2022 05:01:24 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id s206so5650116pgs.3
+        for <linux-pci@vger.kernel.org>; Sat, 20 Aug 2022 05:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=lDEkY/yeMPXbQUNcvN1NJWGfIdYQRwGMibZPIx8rNuw=;
+        b=PQbYi3anFSf+45hPdBCKJK8rMdAyTHn3vksXRezHdYXy4Ju6EhM33xwKuqR/Bw+yif
+         1I7Bx+XheCGL01YnU9FIzj8XRqH/kVTDaWknGLTkAUu3ojmTqYJg1KV+oh+LUbOby79D
+         9JJbeALKZ5aMAAbmmCPTMDWU3sZHor4SIRC4itru1T8WjBwKmE3WGMFDtNxRCXzBEl9p
+         BGbohuFK78kogdV9PNMCgcV1S1iNELVaIzvcTV8VFppSZBbVzxb5I9UvlpHXcuDMXIKH
+         igVtmtfNKTJltVmSkNNpKwpYBGZcdptysIaJYfvQ34rViJ4QXpUiV7qRpdAyqkCuDT6n
+         yXiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=lDEkY/yeMPXbQUNcvN1NJWGfIdYQRwGMibZPIx8rNuw=;
+        b=MVBteiOh9/qMP0eF56i92gcwcchwBDnrWc5GNLXw51nHvstLUS04la8D1fDqgRqJAT
+         fOcCu6K8BeMsCkai3teTsTTCJS+qk0Hsn3sGwb+SaXZB/C4pXDGUc0x+KfS1BwmXc8uJ
+         5rC6/t/zGR+ByQQCkDcU5XSRc91+/rlPZAQHOBqrLWUrfwkndUpQ30OkCg6uwNCcUVTO
+         r1psHFC2ALxliEpOoHWzeHGh4L+CZXPjx6ujX/wA/phaA/076B5Cf0k7MiG8zcqVVB/0
+         a5sTdVsaVVkfhxuCjsjWgkmsA4zn3ge8ZQ2R0jttjD00WOvd/rGApCQMNMzMASCT5c7m
+         Ba4w==
+X-Gm-Message-State: ACgBeo0LtCYz6dN49Y0fCuVk0Eium3dCn8SQz7AryO0/FsFUiHZgTz8k
+        xOV7oxGuQ03H9JIdT+Y0/oxsO5NYZTtK
+X-Google-Smtp-Source: AA6agR7W75/oj+IheQfbyZ1gnRavn2Zy8YNefMFAJ7psKM8Kj/rmfwB0yx38hsZSgs04M5GS/z839Q==
+X-Received: by 2002:a05:6a00:a81:b0:530:2967:dc48 with SMTP id b1-20020a056a000a8100b005302967dc48mr12275238pfl.38.1660996883517;
+        Sat, 20 Aug 2022 05:01:23 -0700 (PDT)
+Received: from thinkpad ([220.158.158.232])
+        by smtp.gmail.com with ESMTPSA id 2-20020a630c42000000b004129741dd9dsm4251913pgm.51.2022.08.20.05.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Aug 2022 05:01:22 -0700 (PDT)
+Date:   Sat, 20 Aug 2022 17:31:16 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     kishon@ti.com, lpieralisi@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mie@igel.co.jp, kw@linux.com
+Subject: Re: [PATCH 2/5] misc: pci_endpoint_test: Fix the return value of
+ IOCTL
+Message-ID: <20220820120116.GC3151@thinkpad>
+References: <20220819145018.35732-1-manivannan.sadhasivam@linaro.org>
+ <20220819145018.35732-3-manivannan.sadhasivam@linaro.org>
+ <Yv+rTZ1u7HXmS5Qk@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <Yv+rTZ1u7HXmS5Qk@kroah.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,81 +75,183 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 32-bit powerpc systems with more PCIe controllers and more PCI domains,
-where on more PCI domains are same PCI numbers, when kernel is compiled
-with CONFIG_PROC_FS=y and CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT=y
-options, kernel prints "proc_dir_entry 'pci/01' already registered" error
-message.
+On Fri, Aug 19, 2022 at 05:25:01PM +0200, Greg KH wrote:
+> On Fri, Aug 19, 2022 at 08:20:15PM +0530, Manivannan Sadhasivam wrote:
+> > IOCTLs are supposed to return 0 for success and negative error codes for
+> > failure. Currently, this driver is returning 0 for failure and 1 for
+> > success, that's not correct. Hence, fix it!
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/misc/pci_endpoint_test.c | 163 ++++++++++++++-----------------
+> >  1 file changed, 76 insertions(+), 87 deletions(-)
+> > 
+> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> > index db0458039d7d..bbf903c5a5bd 100644
+> > --- a/drivers/misc/pci_endpoint_test.c
+> > +++ b/drivers/misc/pci_endpoint_test.c
+> > @@ -174,13 +174,12 @@ static void pci_endpoint_test_free_irq_vectors(struct pci_endpoint_test *test)
+> >  	test->irq_type = IRQ_TYPE_UNDEFINED;
+> >  }
+> >  
+> > -static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+> > +static int pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+> >  						int type)
+> >  {
+> > -	int irq = -1;
+> > +	int irq = -EINVAL;
+> >  	struct pci_dev *pdev = test->pdev;
+> >  	struct device *dev = &pdev->dev;
+> > -	bool res = true;
+> >  
+> >  	switch (type) {
+> >  	case IRQ_TYPE_LEGACY:
+> > @@ -202,15 +201,16 @@ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+> >  		dev_err(dev, "Invalid IRQ type selected\n");
+> >  	}
+> >  
+> > +	test->irq_type = type;
+> > +
+> >  	if (irq < 0) {
+> > -		irq = 0;
+> > -		res = false;
+> > +		test->num_irqs = 0;
+> > +		return irq;
+> 
+> Why are you setting the type if there is an error?
+> 
 
-  [    1.708861] ------------[ cut here ]------------
-  [    1.713429] proc_dir_entry 'pci/01' already registered
-  [    1.718595] WARNING: CPU: 0 PID: 1 at fs/proc/generic.c:377 proc_register+0x1a8/0x1ac
-  [    1.726361] Modules linked in:
-  [    1.729404] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W         5.19.0-rc5-0caacb197b677410bdac81bc34f05235+ #109
-  [    1.740183] NIP:  c02846e8 LR: c02846e8 CTR: c0015154
-  [    1.745225] REGS: c146fc90 TRAP: 0700   Tainted: G        W          (5.19.0-rc5-0caacb197b677410bdac81bc34f05235+)
-  [    1.755657] MSR:  00029000 <CE,EE,ME>  CR: 28000822  XER: 00000000
-  [    1.761829]
-  [    1.761829] GPR00: c02846e8 c146fd80 c14a8000 0000002a 3fffefff c146fc40 c146fc38 00000000
-  [    1.761829] GPR08: 3fffefff 00000000 00000000 c10ac04c 24000824 00000000 c0004548 00000000
-  [    1.761829] GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007
-  [    1.761829] GPR24: c10000d0 c167da54 c167da00 c1120000 c167dd6c c10b4abc c167dc58 c167dd00
-  [    1.796707] NIP [c02846e8] proc_register+0x1a8/0x1ac
-  [    1.801663] LR [c02846e8] proc_register+0x1a8/0x1ac
-  [    1.806532] Call Trace:
-  [    1.808966] [c146fd80] [c02846e8] proc_register+0x1a8/0x1ac (unreliable)
-  [    1.815659] [c146fdb0] [c028481c] _proc_mkdir+0x78/0xa4
-  [    1.820875] [c146fdd0] [c05a92e4] pci_proc_attach_device+0x11c/0x168
-  [    1.827221] [c146fe10] [c101f7a4] pci_proc_init+0x80/0x98
-  [    1.832611] [c146fe30] [c0004150] do_one_initcall+0x80/0x284
-  [    1.838262] [c146fea0] [c10011a8] kernel_init_freeable+0x1f4/0x2a0
-  [    1.844434] [c146fee0] [c000456c] kernel_init+0x24/0x150
-  [    1.849737] [c146ff00] [c001326c] ret_from_kernel_thread+0x5c/0x64
-  [    1.855910] Instruction dump:
-  [    1.858866] 83810020 83a10024 83c10028 83e1002c 38210030 4e800020 809a0064 3c60c0a8
-  [    1.866602] 7f85e378 3863af28 4cc63182 4bdb8155 <0fe00000> 9421ffe0 39200000 7c0802a6
-  [    1.874513] ---[ end trace 0000000000000000 ]---
+This was the original behaviour, so I kept it as it is. If it needs to be
+changed, then it should be done in a separate patch I believe.
 
-This regression started appearing after commit 566356813082 ("powerpc/pci:
-Add config option for using all 256 PCI buses") in case in each mPCIe slot
-is connected PCIe card and therefore PCI bus 1 is populated in for every
-PCIe controller / PCI domain.
+> 
+> >  	}
+> >  
+> > -	test->irq_type = type;
+> >  	test->num_irqs = irq;
+> >  
+> > -	return res;
+> > +	return 0;
+> >  }
+> >  
+> >  static void pci_endpoint_test_release_irq(struct pci_endpoint_test *test)
+> > @@ -225,7 +225,7 @@ static void pci_endpoint_test_release_irq(struct pci_endpoint_test *test)
+> >  	test->num_irqs = 0;
+> >  }
+> >  
+> > -static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
+> > +static int pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
+> >  {
+> >  	int i;
+> >  	int err;
+> > @@ -240,7 +240,7 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
+> >  			goto fail;
+> >  	}
+> >  
+> > -	return true;
+> > +	return 0;
+> >  
+> >  fail:
+> >  	switch (irq_type) {
+> > @@ -260,10 +260,10 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
+> >  		break;
+> >  	}
+> >  
+> > -	return false;
+> > +	return err;
+> >  }
+> >  
+> > -static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+> > +static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+> >  				  enum pci_barno barno)
+> >  {
+> >  	int j;
+> > @@ -272,7 +272,7 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+> >  	struct pci_dev *pdev = test->pdev;
+> >  
+> >  	if (!test->bar[barno])
+> > -		return false;
+> > +		return -ENOMEM;
+> 
+> How is this no memory?
+>
 
-The reason is that PCI procfs code expects that when PCI bus numbers are
-not unique across all PCI domains, function pci_proc_domain() returns true
-for domain dependent buses.
-
-Fix this issue by setting PCI_ENABLE_PROC_DOMAINS and PCI_COMPAT_DOMAIN_0
-flags for 32-bit powerpc code when CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
-is enabled. Same approach is already implemented for 64-bit powerpc code
-(where PCI bus numbers are always domain dependent).
-
-Fixes: 566356813082 ("powerpc/pci: Add config option for using all 256 PCI buses")
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- arch/powerpc/kernel/pci_32.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/powerpc/kernel/pci_32.c b/arch/powerpc/kernel/pci_32.c
-index ffc4e1928c80..8acbc9592ebb 100644
---- a/arch/powerpc/kernel/pci_32.c
-+++ b/arch/powerpc/kernel/pci_32.c
-@@ -249,6 +249,15 @@ static int __init pcibios_init(void)
+No bar means a failure in pci_ioremap_bar() during probe. And that implies a
+failure while mapping the device's BAR in host memory. So -ENOMEM seems to be
+the apt error no.
  
- 	printk(KERN_INFO "PCI: Probing PCI hardware\n");
- 
-+#ifdef CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
-+	/*
-+	 * Enable PCI domains in /proc when PCI bus numbers are not unique
-+	 * across all PCI domains to prevent conflicts. And keep PCI domain 0
-+	 * backward compatible in /proc for video cards.
-+	 */
-+	pci_add_flags(PCI_ENABLE_PROC_DOMAINS | PCI_COMPAT_DOMAIN_0);
-+#endif
-+
- 	if (pci_has_flag(PCI_REASSIGN_ALL_BUS))
- 		pci_assign_all_buses = 1;
- 
+> Shouldn't this not even get here if the allocation failed?
+> 
+
+No, the driver tries to map PCI_STD_NUM_BARS which is 6 and if some of them are
+not available except BAR_0 then it just logs an error and continues. So it is
+not fatal.
+
+> >  
+> >  	size = pci_resource_len(pdev, barno);
+> >  
+> > @@ -285,13 +285,13 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+> >  	for (j = 0; j < size; j += 4) {
+> >  		val = pci_endpoint_test_bar_readl(test, barno, j);
+> >  		if (val != 0xA0A0A0A0)
+> > -			return false;
+> > +			return -EINVAL;
+> 
+> Is this really an invalid value sent to the ioctl?
+> 
+> 
+> >  	}
+> >  
+> > -	return true;
+> > +	return 0;
+> >  }
+> >  
+> > -static bool pci_endpoint_test_legacy_irq(struct pci_endpoint_test *test)
+> > +static int pci_endpoint_test_legacy_irq(struct pci_endpoint_test *test)
+> >  {
+> >  	u32 val;
+> >  
+> > @@ -303,12 +303,12 @@ static bool pci_endpoint_test_legacy_irq(struct pci_endpoint_test *test)
+> >  	val = wait_for_completion_timeout(&test->irq_raised,
+> >  					  msecs_to_jiffies(1000));
+> >  	if (!val)
+> > -		return false;
+> > +		return -ETIMEDOUT;
+> >  
+> > -	return true;
+> > +	return 0;
+> >  }
+> >  
+> > -static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
+> > +static int pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
+> >  				       u16 msi_num, bool msix)
+> >  {
+> >  	u32 val;
+> > @@ -324,19 +324,18 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
+> >  	val = wait_for_completion_timeout(&test->irq_raised,
+> >  					  msecs_to_jiffies(1000));
+> >  	if (!val)
+> > -		return false;
+> > +		return -ETIMEDOUT;
+> >  
+> > -	if (pci_irq_vector(pdev, msi_num - 1) == test->last_irq)
+> > -		return true;
+> > +	if (pci_irq_vector(pdev, msi_num - 1) != test->last_irq)
+> > +		return -EINVAL;
+> 
+> Again, is this an invalid value passed to the ioctl?
+> 
+> Same for other places you are doing something and then returning this
+> error value, are you sure that is correct?
+> 
+> -EINVAL should be "the values you sent me was incorrect", not "something
+> bad happened based on what you gave me".
+> 
+
+Okay. Will revisit all of them.
+
+Thanks,
+Mani
+
 -- 
-2.20.1
-
+மணிவண்ணன் சதாசிவம்
