@@ -2,69 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AEDD59BFA9
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 14:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9889E59BFC4
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 14:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233504AbiHVMp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 08:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51278 "EHLO
+        id S235230AbiHVMxK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 08:53:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233652AbiHVMp6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 08:45:58 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1893341B;
-        Mon, 22 Aug 2022 05:45:57 -0700 (PDT)
+        with ESMTP id S235227AbiHVMxF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 08:53:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C772D2E9D7;
+        Mon, 22 Aug 2022 05:53:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C9FB1CE1284;
-        Mon, 22 Aug 2022 12:45:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0170FC433D6;
-        Mon, 22 Aug 2022 12:45:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 382D66114E;
+        Mon, 22 Aug 2022 12:53:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987DEC433C1;
+        Mon, 22 Aug 2022 12:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661172354;
-        bh=ZuieiRPC9CArVV1OmJfFIGJRDuSJ/3o0U41DRi5sjzw=;
+        s=k20201202; t=1661172780;
+        bh=rj/ycRt2QVeN81Z/fUk7ab6KMGPqZAW+nMcstsfmS8Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VyTdz2y9jkLcaoPI+W0iipfxB7MXxlXcqRUyJZgw6Uw22bty4Qtu0DsSRZ+dUv9Jp
-         YJbdqXq0LrNxG7ax3OUcofawTlUJ11gxMuEUnOv2IovZYYHKcsk+UVe3itqHQegJU1
-         aYNADCYblwqFo90YWta3ilHTs/ef+++PlmPBfdMEw+zG+TqQv2UC6GhOYQNqmlUpnN
-         eU6cwH3i8QiDCvGoyoOco+egYFA2GQ9tFSzXLllsFQDBq+Lj6klcpE/IMH0FdCLr8F
-         1DZb3TdPPUAuTTysn1UFzfm587koMS4kV1/WNEuzgeEDoOYUKiE1cBmj+1CbkbLhFO
-         utuGUZCzs61Uw==
+        b=oVWokBz+DX+bapA0CYvYHbyKforLuOEsTLIjEyTcJWhMTk1ALS7rCB+gVZQJZZ/BW
+         6DMS1MWpYd2fS9o0r4X03up8Szz8YdDdiVQGHFEUXmTBg1FQBwUafpEmOHH51x69DY
+         3nfhTUd1BWhTf5Ex4tmTKOCcjv2RvVwLeyvrRbQ8UoClAT1djSqJczB8p0D7Ugqjg3
+         T5I/LmUSKdJ20a1VPqIDyDvUA0ufaklbS7j1hUMmTfBxDgzWR76GZbE0CEvrgTtuIx
+         cB8TW2TLO4AF1hZrIO747uCVmtjLZwDwwZbFcwcPARHV4X1a8yB9cq+Xjavw/qUN+D
+         6vHWX+tMizN5A==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1oQ6oR-0001kf-4V; Mon, 22 Aug 2022 14:45:51 +0200
-Date:   Mon, 22 Aug 2022 14:45:51 +0200
+        id 1oQ6vJ-0001ob-64; Mon, 22 Aug 2022 14:52:57 +0200
+Date:   Mon, 22 Aug 2022 14:52:57 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Andrew Halaney <ahalaney@redhat.com>,
-        Brian Masney <bmasney@redhat.com>,
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
         Johan Hovold <johan+linaro@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        devicetree@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] PCI: qcom: Sort device-id table
-Message-ID: <YwN6f+xOJIW0liGu@hovoldconsulting.com>
+        Andy Gross <agross@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH v2 0/8] PCI: qcom: Add support for SC8280XP and SA8540P
+Message-ID: <YwN8KR5GMZzkcMck@hovoldconsulting.com>
 References: <20220714071348.6792-1-johan+linaro@kernel.org>
- <20220714071348.6792-9-johan+linaro@kernel.org>
- <YtAny03L/RLk9nv6@xps13>
- <YtEaqHT7NdXPhK+y@hovoldconsulting.com>
- <YvvAfQJChCVX4cPH@lpieralisi>
- <20220818200530.lab2zlcaetekcclq@halaneylaptop>
- <Yv8/6x7pgrBhzdbQ@lpieralisi>
+ <166089832025.262926.4406465315336249603.b4-ty@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yv8/6x7pgrBhzdbQ@lpieralisi>
+In-Reply-To: <166089832025.262926.4406465315336249603.b4-ty@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -75,39 +68,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 09:46:51AM +0200, Lorenzo Pieralisi wrote:
-> On Thu, Aug 18, 2022 at 03:05:30PM -0500, Andrew Halaney wrote:
-> > Hi Lorenzo,
+On Fri, Aug 19, 2022 at 10:40:49AM +0200, Lorenzo Pieralisi wrote:
+> On Thu, 14 Jul 2022 09:13:40 +0200, Johan Hovold wrote:
+> > This series adds support for the PCIe controllers found on SC8280XP and
+> > SA8540P.
 > > 
-> > On Tue, Aug 16, 2022 at 06:06:21PM +0200, Lorenzo Pieralisi wrote:
-> > > On Fri, Jul 15, 2022 at 09:43:36AM +0200, Johan Hovold wrote:
-
-> > > > Perhaps Bjorn H can fix that up when applying unless I'll be sending a
-> > > > v3 for some other reason. This series still depends on the MSI rework to
-> > > > be applied first.
-> > > 
-> > > I can do it while applying. A link to the lore archive for the MSI
-> > > rework please (I don't think it was merged for v6.0) ? I was away for
-> > > two months, catching up with threads.
+> > Included are also three patches that clean up the way the driver handles
+> > different IP revisions (e.g. by modelling optional clocks as being truly
+> > optional).
 > > 
-> > I don't see a reply to this, so here I am following up out of interest
-> > for getting this in mainline for my x13s laptop to use.
-> > 
-> > It appears the MSI rework[0] (which is in the cover letter here so I
-> > know I grabbed the right thing) was applied in 6.0:
-> > 
-> >     ahalaney@halaneylaptop ~/git/linux (git)-[remotes/upstream/HEAD] % git log --oneline --abbrev=12 --grep=2436629 v6.0-rc1 -- drivers/pci/controller/dwc/ 
-> >     cd761378e62c PCI: dwc: Handle MSIs routed to multiple GIC interrupts
-> >     db388348acff PCI: dwc: Convert struct pcie_port.msi_irq to an array
-> >     226ec087497a PCI: dwc: Split MSI IRQ parsing/allocation to a separate function
-> >     3c62f878a969 PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
-> >     ahalaney@halaneylaptop ~/git/linux (git)-[remotes/upstream/HEAD] %
-> > 
-> > Just a friendly FYI, hope that helps!
+> > [...]
 > 
-> Thanks for the heads-up, I will merge this series then.
+> I tweaked commits as-per thread discussion (please check them, I had
+> to fix minor rebase conflicts) and applied to pci/qcom, thanks!
 
-I was out-of-office last week so thanks for digging out that link,
-Andrew.
+Not sure if you missed that Stanimir had acked the whole series:
+
+	https://lore.kernel.org/all/aa11b2ec-7196-7423-151c-1797966d0cd2@mm-sol.com/
+
+Looks good, otherwise. Thanks!
 
 Johan
