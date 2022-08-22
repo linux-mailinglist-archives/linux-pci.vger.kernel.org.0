@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D0D59C70A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 20:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 697E959C6FC
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 20:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237609AbiHVSss (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 14:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55358 "EHLO
+        id S237745AbiHVSsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 14:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237580AbiHVSsF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 14:48:05 -0400
+        with ESMTP id S235741AbiHVSrx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 14:47:53 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30C2E4BD0F;
-        Mon, 22 Aug 2022 11:47:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B14302FFE3;
+        Mon, 22 Aug 2022 11:47:30 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id DB94DDA3;
-        Mon, 22 Aug 2022 21:50:38 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com DB94DDA3
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 9957EDA4;
+        Mon, 22 Aug 2022 21:50:39 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 9957EDA4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1661194238;
-        bh=KlSil6SKW/eoQmA86KcLMfY0iynWgUhalPbWBX9Hbsc=;
+        d=baikalelectronics.ru; s=mail; t=1661194239;
+        bh=xw4tcsZGlerRHC6sUiGj+e4nI8SaDAiUtYiOl9eCi58=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=HDxRRi86TTBKZuUraqt2eaew7XvtAfa7eR7ON32BymOiBCik8s1j9X9XV49eMfq5u
-         rdiRh8GI4TD/gt15wplUTOKoYOlUfvvCDp/IQW2pvcpnRE+tPnvt6+CA+1uKVU+gId
-         lsUCZfE8gRv6YWsrULft7Ed4N93ndTSQsDLTlTLY=
+        b=c5wx+8ZCd/c5V3+mDT89VdvVmE3/YqbQN2xm0dUQFJJhGtDt3+qOJggyihDmRjPck
+         Z0zkxDpzxjayDM956wyPZ6ZEq8c7uXG2mKJ4J57R0mC4vx82Rrr8U18xCVx72YE0ho
+         yObPYjKX7iZ4csFMg0lyaP7nASZUkXNT5dHZxzX0=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 22 Aug 2022 21:47:24 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 22 Aug 2022 21:47:25 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -34,13 +34,7 @@ To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -51,9 +45,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v5 01/20] dt-bindings: imx6q-pcie: Fix clock names for imx6sx and imx8mq
-Date:   Mon, 22 Aug 2022 21:46:42 +0300
-Message-ID: <20220822184701.25246-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 02/20] dt-bindings: visconti-pcie: Fix interrupts array max constraints
+Date:   Mon, 22 Aug 2022 21:46:43 +0300
+Message-ID: <20220822184701.25246-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -70,15 +64,14 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Originally as it was defined the legacy bindings the pcie_inbound_axi and
-pcie_aux clock names were supposed to be used in the fsl,imx6sx-pcie and
-fsl,imx8mq-pcie devices respectively. But the bindings conversion has been
-incorrectly so now the fourth clock name is defined as "pcie_inbound_axi
-for imx6sx-pcie, pcie_aux for imx8mq-pcie", which is completely wrong.
-Let's fix that by conditionally apply the clock-names constraints based on
-the compatible string content.
+In accordance with the way the device DT-node is actually defined in
+arch/arm64/boot/dts/toshiba/tmpv7708.dtsi and the way the device is probed
+by the DW PCIe driver there are two IRQs it actually has. It's MSI IRQ the
+DT-bindings lack. Let's extend the interrupts property constraints then
+and fix the schema example so one would be acceptable by the actual device
+DT-bindings.
 
-Fixes: 751ca492f131 ("dt-bindings: PCI: imx6: convert the imx pcie controller to dtschema")
+Fixes: 17c1b16340f0 ("dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
 ---
@@ -86,74 +79,34 @@ Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Changelog v5:
 - This is a new patch added on the v5 release of the patchset.
 ---
- .../bindings/pci/fsl,imx6q-pcie.yaml          | 47 +++++++++++++++++--
- 1 file changed, 42 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/pci/toshiba,visconti-pcie.yaml     | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-index 376e739bcad4..ebfe75f1576e 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-@@ -16,6 +16,47 @@ description: |+
+diff --git a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+index 30b6396d83c8..aea0e2bcdd77 100644
+--- a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+@@ -36,7 +36,7 @@ properties:
+       - const: mpu
  
- allOf:
-   - $ref: /schemas/pci/snps,dw-pcie.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,imx6sx-pcie
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pcie
-+            - const: pcie_bus
-+            - const: pcie_phy
-+            - const: pcie_inbound_axi
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,imx8mq-pcie
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pcie
-+            - const: pcie_bus
-+            - const: pcie_phy
-+            - const: pcie_aux
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              enum:
-+                - fsl,imx6sx-pcie
-+                - fsl,imx8mq-pcie
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pcie
-+            - const: pcie_bus
-+            - const: pcie_phy
+   interrupts:
+-    maxItems: 1
++    maxItems: 2
  
- properties:
-   compatible:
-@@ -57,11 +98,7 @@ properties:
- 
-   clock-names:
-     minItems: 3
--    items:
--      - const: pcie
--      - const: pcie_bus
--      - const: pcie_phy
--      - const: pcie_inbound_axi for imx6sx-pcie, pcie_aux for imx8mq-pcie
-+    maxItems: 4
- 
-   num-lanes:
-     const: 1
+   clocks:
+     items:
+@@ -94,8 +94,9 @@ examples:
+             #interrupt-cells = <1>;
+             ranges = <0x81000000 0 0x40000000 0 0x40000000 0 0x00010000>,
+                      <0x82000000 0 0x50000000 0 0x50000000 0 0x20000000>;
+-            interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
+-            interrupt-names = "intr";
++            interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "msi", "intr";
+             interrupt-map-mask = <0 0 0 7>;
+             interrupt-map =
+                 <0 0 0 1 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
 -- 
 2.35.1
 
