@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C5B259B7E1
+	by mail.lfdr.de (Postfix) with ESMTP id E795559B7E2
 	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 05:20:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbiHVDSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Aug 2022 23:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36326 "EHLO
+        id S231694AbiHVDTg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Aug 2022 23:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiHVDSa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Aug 2022 23:18:30 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB58563F3
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 20:18:25 -0700 (PDT)
+        with ESMTP id S229453AbiHVDTf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Aug 2022 23:19:35 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C253B193E3
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 20:19:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661138306; x=1692674306;
+  t=1661138373; x=1692674373;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=4zJdV7Q8eF0NPXAe1yazB/BGl9bcH+DbuRFmktyqOG0=;
-  b=eMg1WNsanSw/imIvwdhyveg+5gZWvhdCpJ7b3nOOyPwybwUwdZuI1vVR
-   IENCDXnLSgTaWc9JYYRo6ZhNNDcufDAre0cC7Adkb9JSbAdJMFTd9pCZ+
-   an/6F/VdDfFbqVviRNGuxc5Srqyy+lJ6Ut2Yt8fdQuq9hVjI3MyATLXWq
-   jWHIyW6NbzfutyWlsL2fjREbAumbrrxrtVdBAQM7jXreJXSsNQq5kcCzw
-   Jj3npsbTjeQRC6Xv4zJK3/XcOalu3A/ch0yjzBmbc4siGYYaB0Vzi6cI3
-   GkZ/MDQprOEPR7pWMlt/BaW02fHWMtscTEX8nmwA+Ss6jtZIeGDIK/ogp
+  bh=RHdIPABHm5G4mxoBbM8iezH5AMduC3yy6QaMW/fwXhc=;
+  b=G/u2lzDdE4PWsHUbrPjOpA/dInfqolzS9FKT7A03NIQFiBUMuzGcJ0/N
+   aftoBw6AAR/DZoOsIxuMMmRe/bWUxLxixmkHYq2K6O2qYHLQnxvYBaQgo
+   4Sad9Qqp0/CAAiS5mCNNBmJjOlDy2iLz108a8JVNJpcjkM7ej1RL1vI0a
+   lwKPwJbuB/CWiIZi8j5ZBTy5Pl3x8mfIhbC104rn7AQRM4w/BNINusrIP
+   qGsRoIWSbGw2a7Jtp71rdSgIBjJBguAdUM98yuWLdW+wBFxxS46XzyU1s
+   xE/CA/FXX0OMtxxK4nsSMBRd7V86QAA9q/dppv4EqTEMC/I9OyqB2257K
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10446"; a="357292315"
+X-IronPort-AV: E=McAfee;i="6500,9779,10446"; a="273066172"
 X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
-   d="scan'208";a="357292315"
+   d="scan'208";a="273066172"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 20:18:24 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 20:19:33 -0700
 X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
-   d="scan'208";a="734955119"
+   d="scan'208";a="734955237"
 Received: from sravindr-mobl1.amr.corp.intel.com (HELO [10.212.173.200]) ([10.212.173.200])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 20:18:23 -0700
-Message-ID: <23d91d47-b3c5-45bd-0190-5585d7fbea32@linux.intel.com>
-Date:   Sun, 21 Aug 2022 20:18:23 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2022 20:19:32 -0700
+Message-ID: <af6097d5-52f0-1152-a1a9-b84c0cdf6ccb@linux.intel.com>
+Date:   Sun, 21 Aug 2022 20:19:32 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
@@ -57,7 +57,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
+Hi,
 
 On 8/16/22 3:20 AM, Mika Westerberg wrote:
 > There is a BIOS bug on Intel Tiger Lake and Alder Lake systems that
