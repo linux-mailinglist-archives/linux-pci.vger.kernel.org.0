@@ -2,60 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A731659B81B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 05:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92FA659B836
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 06:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231851AbiHVDny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Aug 2022 23:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        id S231440AbiHVEH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 00:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbiHVDnw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Aug 2022 23:43:52 -0400
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933B9DF60
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 20:43:49 -0700 (PDT)
-Received: by mail-pl1-f180.google.com with SMTP id c2so8801862plo.3
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 20:43:49 -0700 (PDT)
+        with ESMTP id S229984AbiHVEH0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 00:07:26 -0400
+X-Greylist: delayed 384 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Aug 2022 21:07:24 PDT
+Received: from gw.atmark-techno.com (gw.atmark-techno.com [13.115.124.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95323205C2
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:07:24 -0700 (PDT)
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+        by gw.atmark-techno.com (Postfix) with ESMTPS id ABE3461BE0
+        for <linux-pci@vger.kernel.org>; Mon, 22 Aug 2022 13:00:59 +0900 (JST)
+Received: by mail-pj1-f72.google.com with SMTP id z24-20020a17090ab11800b001fb2f53eeddso1044708pjq.3
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:00:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=HFVw3jVUKJbSkeKcqcD2AtVfVExg7SHFd1qgEtX/JNg=;
-        b=Q92aITiEhGaedkYzGgvXZO7wRd9JsukUpQVdHCMM8OZFQ+aIt2i3HOqj27upb7+KDK
-         ezj5Xsl+qWPNsBJwCLRlOnH70gci5JtwSI9T5ibqslK3WCQ90GyqWZncukOchgoxgjMs
-         eXt6Bx7vCQPtKdWdH7w0Kzqn8n43/r4pg6GfrTCwb3T6KzJ/koV02Mw0FpdvKWTDSZNN
-         n7ODWRQyjH1ccWuT/3KTehMmtDtnmw6nQywXqwDlbVN4to2LBkhxi1pH6c0FM0MsDK+n
-         QO7Nm7wewTHXxwBIBJL+s+J/48GC8ynZZns9FK1JWyqV6JQck4p18sN0eZb0yNc/1nxL
-         oLHg==
-X-Gm-Message-State: ACgBeo38CyXb69OHNvOA5HCHLISRnJdCpLJ/qZCUcIG+wMfSnwwyQvXV
-        60D0cEquQ0H7wkOP8tKuNkM=
-X-Google-Smtp-Source: AA6agR7WyLeUKwY9WxRSa2+mGLewxHJd0Ynj3gJEQDDfZ0+D5kLj3MggBv+mKTGBvduq/9kFdapcZg==
-X-Received: by 2002:a17:90b:4d89:b0:1fb:1cf5:e23d with SMTP id oj9-20020a17090b4d8900b001fb1cf5e23dmr5638939pjb.133.1661139829047;
-        Sun, 21 Aug 2022 20:43:49 -0700 (PDT)
-Received: from rocinante (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id i5-20020a655b85000000b0042a5e8486a1sm3799909pgr.42.2022.08.21.20.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Aug 2022 20:43:48 -0700 (PDT)
-Date:   Mon, 22 Aug 2022 12:43:44 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>, oohall@gmail.com,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] PCI/DPC: Quirk PIO log size for certain Intel PCIe root
- ports
-Message-ID: <YwL7cOM0o/VA+e6l@rocinante>
-References: <20220816102042.69125-1-mika.westerberg@linux.intel.com>
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc;
+        bh=DQxh0MwUfh2ZTk23/KcBcsAnm1po7PSzlQSQYwwgR9w=;
+        b=dBAuyolQZuxg0egnWmphxYpHu0rwzz6oXWvGpqyJW2fWMSky9KX644HUDh4yOTOr19
+         eKDfWmF6912wo2KBI8OaShZbF4ZCcyv7hz0Ud9hQJCJ/to8l4WgbZac6veju+MLSXE5a
+         oW8EYVN1dFsNKH86T8uKbLhhYAtriI1hwxq4DVHoCeqJp4DAnpqTewyOyoxfjllv7uqo
+         cINKk+6ZdD9tdeFEqxkyDhs4TftJ3zGnj4AdFZySjOeNHBVRwY7HAkivOzoGqWtnIg7Y
+         wwWI5BJwn6XheRyOH/+fI0IIbttP8ohgtrItfUHkZl7Paswe7lGC3aLsxu3U1qiEaSui
+         sMBw==
+X-Gm-Message-State: ACgBeo0tWQlyB+LciJutRTYD61VFQDYTJDgnTOWmnC6GV920XQzEFwIQ
+        NiL/gYyAg3D4uevbo6VMzwDANvbyuSaGOAmU1Bh1hjTIqM8AqYVkOTimopeDXIIoS4/RCe1bppQ
+        cltMDfzBa/eAjSC6rlndz7ONt
+X-Received: by 2002:a17:902:b697:b0:172:65f9:d681 with SMTP id c23-20020a170902b69700b0017265f9d681mr18184745pls.137.1661140858643;
+        Sun, 21 Aug 2022 21:00:58 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR56XsCJxhYfrqqudJBoKUoZ+ZJoanVEi+UGapCseoCGveY2D2CSCSCEIWhxb+W4d1Ga7XlW+g==
+X-Received: by 2002:a17:902:b697:b0:172:65f9:d681 with SMTP id c23-20020a170902b69700b0017265f9d681mr18184724pls.137.1661140858311;
+        Sun, 21 Aug 2022 21:00:58 -0700 (PDT)
+Received: from pc-zest.atmarktech (35.112.198.104.bc.googleusercontent.com. [104.198.112.35])
+        by smtp.gmail.com with ESMTPSA id c9-20020a170902d48900b0016db43e5212sm7246195plg.175.2022.08.21.21.00.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Aug 2022 21:00:57 -0700 (PDT)
+Received: from martinet by pc-zest.atmarktech with local (Exim 4.96)
+        (envelope-from <martinet@pc-zest>)
+        id 1oPycS-008hCz-1u;
+        Mon, 22 Aug 2022 13:00:56 +0900
+Date:   Mon, 22 Aug 2022 13:00:46 +0900
+From:   Dominique Martinet <dominique.martinet@atmark-techno.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Hinko Kocevar <hinko.kocevar@ess.eu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
+Subject: Re: [PATCH 5.10 480/545] PCI/ERR: Add pci_walk_bridge() to
+ pcie_do_recovery()
+Message-ID: <YwL/brvUP1aiwo93@atmark-techno.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220816102042.69125-1-mika.westerberg@linux.intel.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+In-Reply-To: <20220819153850.911668266@linuxfoundation.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,21 +75,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Adding Sasha for visibility]
+Greg Kroah-Hartman wrote on Fri, Aug 19, 2022 at 05:44:10PM +0200:
+> From: Sean V Kelley <sean.v.kelley@intel.com>
+> 
+> [ Upstream commit 05e9ae19ab83881a0f33025bd1288e41e552a34b ]
+> 
+> Consolidate subordinate bus checks with pci_walk_bus() into
+> pci_walk_bridge() for walking below potentially AER affected bridges.
+> 
+> Link: https://lore.kernel.org/r/20201121001036.8560-10-sean.v.kelley@intel.com
+> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # non-native/no RCEC
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pci/pcie/err.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 931e75f2549d..8b53aecdb43d 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> [...]
+> @@ -165,23 +182,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	else
+>  		bridge = pci_upstream_bridge(dev);
+>  
+> -	bus = bridge->subordinate;
+>  	pci_dbg(bridge, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		pci_walk_bridge(bridge, report_frozen_detected, &status);
+>  		status = reset_subordinates(bridge);
+>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(bridge, "subordinate device reset failed\n");
+>  			goto failed;
+>  		}
 
-Hi Mika,
+A local conflict merging this made me notice a later commit:
+-----
+commit 387c72cdd7fb6bef650fb078d0f6ae9682abf631
+Author: Keith Busch <kbusch@kernel.org>
+Date:   Mon Jan 4 15:02:58 2021 -0800
 
-> There is a BIOS bug on Intel Tiger Lake and Alder Lake systems that
-> accidentally clears the root port PIO log size even though it should be 4.
-> Fix the affected root ports by forcing the log size to be 4 if it is set
-> to 0. The BIOS for the next generation CPUs should have this fixed.
+PCI/ERR: Retain status from error notification
 
-Thank you for the fix!
+Overwriting the frozen detected status with the result of the link reset
+loses the NEED_RESET result that drivers are depending on for error
+handling to report the .slot_reset() callback. Retain this status so
+that subsequent error handling has the correct flow.
 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=209943
+Link: https://lore.kernel.org/r/20210104230300.1277180-4-kbusch@kernel.org
+Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
+Tested-by: Hedi Berriche <hedi.berriche@hpe.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Sean V Kelley <sean.v.kelley@intel.com>
+Acked-by: Hedi Berriche <hedi.berriche@hpe.com>
 
-I've added Sasha, as there is probably a lot of the 11th and 12th
-generation of Intel hardware out there that might warrant a backport
-to stable kernels.
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index a84f0bf4c1e2..b576aa890c76 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -198,8 +198,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(bridge, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bridge(bridge, report_frozen_detected, &status);
+-		status = reset_subordinates(bridge);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+ 			pci_warn(bridge, "subordinate device reset failed\n");
+ 			goto failed;
+ 		}
+-----
 
-	Krzysztof
+Since this (commit I reply to) has been picked up, I think it'd make
+sense to also include this (commit I just listed) in a later 5.10 tag.
+It cherry-picks without error but would you like me to resend?
+(I have added in Cc all involved people to this mail)
+
+Digging through the mails the patch came with seem to imply approval for
+stable merges; but it didn't make sense until pci_walk_bridge() had been
+added just now. Now it's here we probably want both:
+https://lore.kernel.org/all/d9ee4151-b28d-a52a-b5be-190a75e0e49b@intel.com/
+
+
+(I noticed because the NXP kernel we are provided includes a different
+"fix" for what I believe to be the same issue, previously discussed here:
+https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+
+I haven't actually encountered any of the problems discribed, so this is
+purely theorical for me; it just looks a bit weird.)
+
+
+Thanks,
+--
+Dominique
