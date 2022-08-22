@@ -2,172 +2,245 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92FA659B836
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 06:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE4959B83B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 06:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231440AbiHVEH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 00:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
+        id S230469AbiHVELT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 00:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbiHVEH0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 00:07:26 -0400
-X-Greylist: delayed 384 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Aug 2022 21:07:24 PDT
-Received: from gw.atmark-techno.com (gw.atmark-techno.com [13.115.124.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95323205C2
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:07:24 -0700 (PDT)
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-        by gw.atmark-techno.com (Postfix) with ESMTPS id ABE3461BE0
-        for <linux-pci@vger.kernel.org>; Mon, 22 Aug 2022 13:00:59 +0900 (JST)
-Received: by mail-pj1-f72.google.com with SMTP id z24-20020a17090ab11800b001fb2f53eeddso1044708pjq.3
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:00:59 -0700 (PDT)
+        with ESMTP id S229581AbiHVELS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 00:11:18 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E5913D41
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:11:16 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id s1so10783648lfp.6
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=YYEY3HoesRJZtmoDYsjk2PeXO/8ic8daNq/Rhp63QXE=;
+        b=nMxd/KKAfmi9hX+XxVxfkxX5iYtyBEtMc5poYZWipGZYRuOhGFCmzQgS4HbdfEOsNz
+         sZCPtah+HiPjQgjkFNVh5fKMo8Jy+GKaPqGHO3qmXrAef8K+FmbBrUn7r/iEhMHHuUGu
+         DdPrzk2u+JXQBr2JQ8JQe1BlB7vdYPBbmSVwNthmQBXWPEEcqngFN/SuQr2mFObuRfNL
+         kahVGqa/blCUuu9ixofWB+4+/m34dmYh5o3AicoBJhVU5eaoLJmVgCKyoDc6ma/V0IZ3
+         2KDF8eC7lfHHDsCS9mdRaiwVCtQduukPcHja09S1LWspz6e4yCyep31dr9Ja0HVbLuwQ
+         OnFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc;
-        bh=DQxh0MwUfh2ZTk23/KcBcsAnm1po7PSzlQSQYwwgR9w=;
-        b=dBAuyolQZuxg0egnWmphxYpHu0rwzz6oXWvGpqyJW2fWMSky9KX644HUDh4yOTOr19
-         eKDfWmF6912wo2KBI8OaShZbF4ZCcyv7hz0Ud9hQJCJ/to8l4WgbZac6veju+MLSXE5a
-         oW8EYVN1dFsNKH86T8uKbLhhYAtriI1hwxq4DVHoCeqJp4DAnpqTewyOyoxfjllv7uqo
-         cINKk+6ZdD9tdeFEqxkyDhs4TftJ3zGnj4AdFZySjOeNHBVRwY7HAkivOzoGqWtnIg7Y
-         wwWI5BJwn6XheRyOH/+fI0IIbttP8ohgtrItfUHkZl7Paswe7lGC3aLsxu3U1qiEaSui
-         sMBw==
-X-Gm-Message-State: ACgBeo0tWQlyB+LciJutRTYD61VFQDYTJDgnTOWmnC6GV920XQzEFwIQ
-        NiL/gYyAg3D4uevbo6VMzwDANvbyuSaGOAmU1Bh1hjTIqM8AqYVkOTimopeDXIIoS4/RCe1bppQ
-        cltMDfzBa/eAjSC6rlndz7ONt
-X-Received: by 2002:a17:902:b697:b0:172:65f9:d681 with SMTP id c23-20020a170902b69700b0017265f9d681mr18184745pls.137.1661140858643;
-        Sun, 21 Aug 2022 21:00:58 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR56XsCJxhYfrqqudJBoKUoZ+ZJoanVEi+UGapCseoCGveY2D2CSCSCEIWhxb+W4d1Ga7XlW+g==
-X-Received: by 2002:a17:902:b697:b0:172:65f9:d681 with SMTP id c23-20020a170902b69700b0017265f9d681mr18184724pls.137.1661140858311;
-        Sun, 21 Aug 2022 21:00:58 -0700 (PDT)
-Received: from pc-zest.atmarktech (35.112.198.104.bc.googleusercontent.com. [104.198.112.35])
-        by smtp.gmail.com with ESMTPSA id c9-20020a170902d48900b0016db43e5212sm7246195plg.175.2022.08.21.21.00.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Aug 2022 21:00:57 -0700 (PDT)
-Received: from martinet by pc-zest.atmarktech with local (Exim 4.96)
-        (envelope-from <martinet@pc-zest>)
-        id 1oPycS-008hCz-1u;
-        Mon, 22 Aug 2022 13:00:56 +0900
-Date:   Mon, 22 Aug 2022 13:00:46 +0900
-From:   Dominique Martinet <dominique.martinet@atmark-techno.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Hinko Kocevar <hinko.kocevar@ess.eu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-Subject: Re: [PATCH 5.10 480/545] PCI/ERR: Add pci_walk_bridge() to
- pcie_do_recovery()
-Message-ID: <YwL/brvUP1aiwo93@atmark-techno.com>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=YYEY3HoesRJZtmoDYsjk2PeXO/8ic8daNq/Rhp63QXE=;
+        b=O5YMmXJw4l30tjWyc6/B/3pKnB79zqok1bQxNFx3iGCwVzhM25JEL0hiTM66/UrK+U
+         TufBtY95hGnXsmL3NxjscrcuJtQDOWwC6kg7SIHQ6m4ySbkYClJy314GfgwaAYsW+JIQ
+         vizABSXY9YRgybxA+iTb8oMbX/8mdKxy4xESDHBL2uAwKVuFsdGoSfp1C/yHHnL3KEck
+         PElPMzHgg68JPDFB6FPRwmdnnAdwiksvwAiH0XUixKt2N6d7SvsosKV06NDrrjjl7P4M
+         rCH2pAqt3YBGaiIF7fJ90b8c9ffFxCRaIu12b1r/5Ujp5/gPZS2+eIBUdK1zq/iSUgF6
+         UnaA==
+X-Gm-Message-State: ACgBeo1A/a0eP5ca+rt2mNs+qwPLfgWUPOcDzPdUsKDF26EOtFu4TFTt
+        Xq2RF4tewbhBoM+2+rCECNCF85dk0R+FfU1gfHei2Q==
+X-Google-Smtp-Source: AA6agR5sp7USyoNUU/Gd0/0ibra+Svt9ZC65OIwCGbgcFub0pqBtOl3i/uVsHxppsnK6R4p6FbZE0sVR3vMiG5PBuXg=
+X-Received: by 2002:a05:6512:3c87:b0:492:d161:c014 with SMTP id
+ h7-20020a0565123c8700b00492d161c014mr3803885lfv.490.1661141474717; Sun, 21
+ Aug 2022 21:11:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220819153850.911668266@linuxfoundation.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220816100617.90720-1-mie@igel.co.jp> <YvtxAN7E4nmZmL/X@kroah.com>
+ <Yvuvpd9n59mp96p0@lpieralisi> <695ab9b3-8385-e8bd-0095-14b07de66b15@ti.com>
+ <YvzNg5ROnxEApDgS@kroah.com> <632f447c-fe1a-e6aa-2fda-73669964fc92@ti.com>
+ <20220819105255.GD215264@thinkpad> <20220819145253.GA35978@thinkpad>
+In-Reply-To: <20220819145253.GA35978@thinkpad>
+From:   Shunsuke Mie <mie@igel.co.jp>
+Date:   Mon, 22 Aug 2022 13:10:58 +0900
+Message-ID: <CANXvt5oKUeBS5GdcUeV-A7sk+C=SGWSf83qTkxOti4zsXuCXjA@mail.gmail.com>
+Subject: Re: [PATCH] misc: pci_endpoint_test: Fix pci_endpoint_test_{copy,write,read}()
+ panic
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greg Kroah-Hartman wrote on Fri, Aug 19, 2022 at 05:44:10PM +0200:
-> From: Sean V Kelley <sean.v.kelley@intel.com>
-> 
-> [ Upstream commit 05e9ae19ab83881a0f33025bd1288e41e552a34b ]
-> 
-> Consolidate subordinate bus checks with pci_walk_bus() into
-> pci_walk_bridge() for walking below potentially AER affected bridges.
-> 
-> Link: https://lore.kernel.org/r/20201121001036.8560-10-sean.v.kelley@intel.com
-> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # non-native/no RCEC
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/pci/pcie/err.c | 30 +++++++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 931e75f2549d..8b53aecdb43d 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> [...]
-> @@ -165,23 +182,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	else
->  		bridge = pci_upstream_bridge(dev);
->  
-> -	bus = bridge->subordinate;
->  	pci_dbg(bridge, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
-> -		pci_walk_bus(bus, report_frozen_detected, &status);
-> +		pci_walk_bridge(bridge, report_frozen_detected, &status);
->  		status = reset_subordinates(bridge);
->  		if (status != PCI_ERS_RESULT_RECOVERED) {
->  			pci_warn(bridge, "subordinate device reset failed\n");
->  			goto failed;
->  		}
+2022=E5=B9=B48=E6=9C=8819=E6=97=A5(=E9=87=91) 23:53 Manivannan Sadhasivam <=
+manivannan.sadhasivam@linaro.org>:
+>
+> On Fri, Aug 19, 2022 at 04:23:03PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Aug 19, 2022 at 04:08:13PM +0530, Kishon Vijay Abraham I wrote:
+> > > +Mani
+> > >
+> > > On 17/08/22 16:44, Greg Kroah-Hartman wrote:
+> > > > On Wed, Aug 17, 2022 at 02:18:58PM +0530, Kishon Vijay Abraham I wr=
+ote:
+> > > >> Hi Lorenzo,
+> > > >>
+> > > >> On 16/08/22 20:24, Lorenzo Pieralisi wrote:
+> > > >>> On Tue, Aug 16, 2022 at 12:27:12PM +0200, Greg Kroah-Hartman wrot=
+e:
+> > > >>>> On Tue, Aug 16, 2022 at 07:06:17PM +0900, Shunsuke Mie wrote:
+> > > >>>>> Although dma_map_single() doesn't permit zero length mapping, t=
+he each
+> > > >>>>> test functions called the function without zero checking.
+> > > >>>>>
+> > > >>>>> A panic was reported on arm64:
+> > > >>>>>
+> > > >>>>> [   60.137988] ------------[ cut here ]------------
+> > > >>>>> [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
+> > > >>>>> [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > > >>>>> [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simp=
+le_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
+> > > >>>>> 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_te=
+st videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
+> > > >>>>> c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authen=
+c libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
+> > > >>>>> [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-=
+rc1rpci-dev+ #237
+> > > >>>>> [   60.193387] Hardware name: Renesas Salvator-X 2nd version bo=
+ard based on r8a77951 (DT)
+> > > >>>>> [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT =
+-SSBS BTYPE=3D--)
+> > > >>>>> [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
+> > > >>>>> [   60.213149] lr : swiotlb_map+0x88/0x1f0
+> > > >>>>> [   60.216982] sp : ffff80000a883bc0
+> > > >>>>> [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27:=
+ 0000000000000000
+> > > >>>>> [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24:=
+ ffff80000a1f77c0
+> > > >>>>> [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21:=
+ 000000007a000000
+> > > >>>>> [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18:=
+ 0000000000000000
+> > > >>>>> [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15:=
+ ffff0006ff7b9180
+> > > >>>>> [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12:=
+ 0000000000000000
+> > > >>>>> [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 :=
+ 0000000000000000
+> > > >>>>> [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 :=
+ 0000000000000000
+> > > >>>>> [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 :=
+ 0000000000000001
+> > > >>>>> [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 :=
+ 0000000040000010
+> > > >>>>> [   60.291658] Call trace:
+> > > >>>>> [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
+> > > >>>>> [   60.298629]  swiotlb_map+0x88/0x1f0
+> > > >>>>> [   60.302115]  dma_map_page_attrs+0x188/0x230
+> > > >>>>> [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoi=
+nt_test]
+> > > >>>>> [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
+> > > >>>>> [   60.316583]  invoke_syscall+0x44/0x108
+> > > >>>>> [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
+> > > >>>>> [   60.325038]  do_el0_svc+0x2c/0xb8
+> > > >>>>> [   60.328351]  el0_svc+0x2c/0x88
+> > > >>>>> [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
+> > > >>>>> [   60.335587]  el0t_64_sync+0x18c/0x190
+> > > >>>>> [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210=
+000)
+> > > >>>>> [   60.345344] ---[ end trace 0000000000000000 ]---
+> > > >>>>>
+> > > >>>>> To fix it, this patch adds checkings the payload length if it i=
+s zero.
+> > > >>>>>
+> > > >>>>> Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some int=
+eger overflows")
+> > > >>>>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > > >>>>> ---
+> > > >>>>>  drivers/misc/pci_endpoint_test.c | 6 +++---
+> > > >>>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > >>>>>
+> > > >>>>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pc=
+i_endpoint_test.c
+> > > >>>>> index 8f786a225dcf..d45426a73396 100644
+> > > >>>>> --- a/drivers/misc/pci_endpoint_test.c
+> > > >>>>> +++ b/drivers/misc/pci_endpoint_test.c
+> > > >>>>> @@ -364,7 +364,7 @@ static bool pci_endpoint_test_copy(struct p=
+ci_endpoint_test *test,
+> > > >>>>>       }
+> > > >>>>>
+> > > >>>>>       size =3D param.size;
+> > > >>>>> -     if (size > SIZE_MAX - alignment)
+> > > >>>>> +     if (size > SIZE_MAX - alignment || !size)
+> > > >>>>>               goto err;
+> > > >>>>
+> > > >>>> Can we test size first?  And do it in the ioctl handler in one p=
+lace so
+> > > >>>> you don't have to add it everywhere?
+> > > >>>>
+> > > >>>> Or have a "validate all parameters" function that you do it in o=
+ne
+> > > >>>> place?
+> > > >>>>
+> > > >>>> Also, all of these ioctl handlers are wrong, they are returning =
+"0" to
+> > > >>>> userspace if they fail, which is not correct at all.
+> > > >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t/tree/tools/pci/pcitest.c
+> > > >>> This is bad, thanks Greg for spotting it.
+> > > >>>
+> > > >>> @Kishon, we have to fix it asap, please let me know if you
+> > > >>> can post a patch promptly.
+> > > >>
+> > > >> The userspace tool (pcitest [1]) that calls these IOCTLS prints "N=
+OT
+> > > >> OKAY" on 0 and "OKAY" for 1.
+> > > >>
+> > > >> I'll change to negative value for error and still keep '0' for dat=
+a
+> > > >> mismatch error?
+> > > >
+> > > > No, 0 as a return value from a system call means "success".  You ca=
+n not
+> > > > redefine it to mean something else for a tiny single kernel driver,
+> > > > otherwise so much for consistency.
+> > > >
+> > > > 0 is success, -ERROR_NUMBER is an error, please read the ioctl man =
+page.
+> > >
+> > > Thanks Greg!
+> > >
+> > > Mani, Would you be able to post a patch fixing it? If not I'll post i=
+t
+> > > mid next week.
+> > >
+> >
+> > Will do!
+> >
+>
+> Done! But I haven't fixed the size issue that _this_ patch fixes. I'll le=
+ave it
+> up to Shunsuke.
+I'll do that.
 
-A local conflict merging this made me notice a later commit:
------
-commit 387c72cdd7fb6bef650fb078d0f6ae9682abf631
-Author: Keith Busch <kbusch@kernel.org>
-Date:   Mon Jan 4 15:02:58 2021 -0800
-
-PCI/ERR: Retain status from error notification
-
-Overwriting the frozen detected status with the result of the link reset
-loses the NEED_RESET result that drivers are depending on for error
-handling to report the .slot_reset() callback. Retain this status so
-that subsequent error handling has the correct flow.
-
-Link: https://lore.kernel.org/r/20210104230300.1277180-4-kbusch@kernel.org
-Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
-Tested-by: Hedi Berriche <hedi.berriche@hpe.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Sean V Kelley <sean.v.kelley@intel.com>
-Acked-by: Hedi Berriche <hedi.berriche@hpe.com>
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index a84f0bf4c1e2..b576aa890c76 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -198,8 +198,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(bridge, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bridge(bridge, report_frozen_detected, &status);
--		status = reset_subordinates(bridge);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
- 			pci_warn(bridge, "subordinate device reset failed\n");
- 			goto failed;
- 		}
------
-
-Since this (commit I reply to) has been picked up, I think it'd make
-sense to also include this (commit I just listed) in a later 5.10 tag.
-It cherry-picks without error but would you like me to resend?
-(I have added in Cc all involved people to this mail)
-
-Digging through the mails the patch came with seem to imply approval for
-stable merges; but it didn't make sense until pci_walk_bridge() had been
-added just now. Now it's here we probably want both:
-https://lore.kernel.org/all/d9ee4151-b28d-a52a-b5be-190a75e0e49b@intel.com/
-
-
-(I noticed because the NXP kernel we are provided includes a different
-"fix" for what I believe to be the same issue, previously discussed here:
-https://lore.kernel.org/linux-pci/12115.1588207324@famine/
-
-I haven't actually encountered any of the problems discribed, so this is
-purely theorical for me; it just looks a bit weird.)
-
+> Thanks,
+> Mani
+>
+> > Thanks,
+> > Mani
+> >
+> > > Regards,
+> > > Kishon
+> >
+> > --
+> > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
+=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
+=AE=E0=AF=8D
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
 Thanks,
---
-Dominique
+Shunsuke
