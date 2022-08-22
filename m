@@ -2,84 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9918C59B88D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 06:49:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D7DD59B8F6
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 08:06:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231519AbiHVEtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 00:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
+        id S230119AbiHVGGa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 02:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231469AbiHVEtV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 00:49:21 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F6CE1EEC9
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:49:20 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id y141so9235225pfb.7
-        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 21:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-language:content-transfer-encoding:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc;
-        bh=dz0eDoI9Fm2huCzymSoFjXyBRequkEKf77GU02TCpJg=;
-        b=RsIfUWsSxHJb4qyOMDo7RSBNTBGsCvAIuCsedLI9rb8AYt+57z/oEh5/+DYmyGeZWI
-         W+8gKvSiD4RQV+KftMAmCPAoqzc3HfD6qnT4EGbr7MaSauh/cEpQsHf3+y9m/iBhReLh
-         hfjYadiAVocBHeck75BFwS38YukmKokJgEW6ah3V+fzlfr62gkldHInq1VH6e2meyUUo
-         b+vy6+DSi+pr90hcoYHKfk/XHGMZO7Hb3gfilTebse2Dhu2b9S078/0bapWSprhkFzhc
-         VESpdNvwX76tBVMUxjzx5YfKEQS3HOVn3G+D7mtZEQtO4cuquhOAschWIscA4UlYwyiU
-         gVCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-language:content-transfer-encoding:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc;
-        bh=dz0eDoI9Fm2huCzymSoFjXyBRequkEKf77GU02TCpJg=;
-        b=ychIK+2HkPS14tMoCUi7p9mXGFPg2AMxpu9vbJhTS42+zRRS/gGTlAjUrX3QL4xlDy
-         5zRtUmZADVlf6yVAo+IUTqrXsNHb6JHuvwlTfKetZv74DEX21efydS/gqYDFhz3wh29X
-         S6pQgwHoAzZLA+oGVohuARuSA/p3FYz06Hz9QcINJoNDwmLl9d/ryh/6fhhUxCEosFBp
-         9jXk6xA6qEYk5atAZdhmD/8sQUZc/mmTXBn/I/N1VUnUv4tjdxEy0LBme4t58OwRz2Pf
-         jC9vA41Ey1NSBHB8zSrb0gGEPdjNvAx9kf4SPo/j7kHdPJyCurby/xxv5RGRlwHEiltG
-         +dng==
-X-Gm-Message-State: ACgBeo37CHyRu3TQeX3KUE72/kwrPjB3X9a9fJptH7BGH9/4KfHSKHUI
-        FrUd5YRIOYOoSznItfsP5urGsQ==
-X-Google-Smtp-Source: AA6agR5Pto6O2hn+/T8fBSD4xUC2PEFnt4pycOkWtUdbLvcxAEKqIzPx+I5jR5lX3nfb3zKy7kV0KQ==
-X-Received: by 2002:a63:2bcc:0:b0:40c:95b5:46a4 with SMTP id r195-20020a632bcc000000b0040c95b546a4mr15468612pgr.535.1661143759926;
-        Sun, 21 Aug 2022 21:49:19 -0700 (PDT)
-Received: from [10.191.0.6] ([199.101.192.185])
-        by smtp.gmail.com with ESMTPSA id il10-20020a17090b164a00b001f21646d1a4sm14254198pjb.1.2022.08.21.21.49.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Aug 2022 21:49:19 -0700 (PDT)
-Subject: Re: [PATCH v11 00/13] iommu: SVA and IOPF refactoring
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Eric Auger <eric.auger@redhat.com>, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <890a99fe-1e9b-85bd-e4bc-b746ae17b827@linaro.org>
-Date:   Mon, 22 Aug 2022 12:49:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S229840AbiHVGG3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 02:06:29 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE5820BD6;
+        Sun, 21 Aug 2022 23:06:28 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27M66BLL095517;
+        Mon, 22 Aug 2022 01:06:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1661148371;
+        bh=wtcORBkLFKuLF/Y7L8i/MMlzJo9cWQHz5pZAexxzLto=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=m2MkllkuPI892qsMVGBQB5NHMkpL03mcFWciSp4lFma4bboTv5gSZQWSdPv5lAkyD
+         OPc+QUkvOeN4LMhEZqzMB147lmMb7+Xt1SkJWqTbTg8TfELlx2JNUkPeCXAlbiLx9e
+         bUU+lEPQcrWU6bta6PZr0SBBNUY+ePHEKEBJmF6g=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27M66BTF004894
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Aug 2022 01:06:11 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Mon, 22
+ Aug 2022 01:06:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Mon, 22 Aug 2022 01:06:11 -0500
+Received: from [172.24.147.145] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27M6685L040211;
+        Mon, 22 Aug 2022 01:06:09 -0500
+Message-ID: <63d2bd69-2e94-a987-aec3-554ce5af6594@ti.com>
+Date:   Mon, 22 Aug 2022 11:36:07 +0530
 MIME-Version: 1.0
-In-Reply-To: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] MAINTAINERS: Add myself as the reviewer for PCI Endpoint
+ Subsystem
 Content-Language: en-US
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>
+References: <20220819200555.GA2502055@bhelgaas>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <20220819200555.GA2502055@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -88,28 +70,43 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2022/8/17 上午9:20, Lu Baolu wrote:
-> Hi folks,
->
-> The former part of this series introduces the IOMMU interfaces to attach
-> or detach an iommu domain to/from a pasid of a device, and refactors the
-> exsiting IOMMU SVA implementation by assigning an SVA type of iommu
-> domain to a shared virtual address and replacing sva_bind/unbind iommu
-> ops with a set_dev_pasid domain ops.
->
-> The latter part changes the existing I/O page fault handling framework
-> from only serving SVA to a generic one. Any driver or component could
-> handle the I/O page faults for its domain in its own way by installing
-> an I/O page fault handler.
->
-> This series has been functionally tested on an x86 machine and compile
-> tested for all architectures.
->
-> This series is also available on github:
-> [2] https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v11
->
-> Please review and suggest.
-Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-On arm64 (Kunpeng920) with uacce.
+On 20/08/22 01:35, Bjorn Helgaas wrote:
+> On Fri, Aug 19, 2022 at 07:38:17AM +0530, Manivannan Sadhasivam wrote:
+>> I've been reviewing the patches related to PCI Endpoint Subsystem for
+>> some time. So I'd like to add myself as the reviewer to get immediate
+>> attention to the patches.
+>>
+>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Thanks, applied to for-linus for v6.0.
+> 
+> Updated subject line to:
+> 
+>   MAINTAINERS: Add Manivannan Sadhasivam as PCI Endpoint reviewer
+> 
+> since "add myself" doesn't mean anything without reading the whole
+> commit log.
 
-Thanks
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+> 
+>> ---
+>>  MAINTAINERS | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 21081f72776d..58a163c2e5dc 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15682,6 +15682,7 @@ PCI ENDPOINT SUBSYSTEM
+>>  M:	Kishon Vijay Abraham I <kishon@ti.com>
+>>  M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
+>>  R:	Krzysztof Wilczyński <kw@linux.com>
+>> +R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>  L:	linux-pci@vger.kernel.org
+>>  S:	Supported
+>>  Q:	https://patchwork.kernel.org/project/linux-pci/list/
+>> -- 
+>> 2.25.1
+>>
