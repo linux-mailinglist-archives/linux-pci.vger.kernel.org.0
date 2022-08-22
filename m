@@ -2,111 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7DD59B8F6
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 08:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E65059B987
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Aug 2022 08:33:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbiHVGGa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 02:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
+        id S233160AbiHVGcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 02:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbiHVGG3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 02:06:29 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE5820BD6;
-        Sun, 21 Aug 2022 23:06:28 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27M66BLL095517;
-        Mon, 22 Aug 2022 01:06:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1661148371;
-        bh=wtcORBkLFKuLF/Y7L8i/MMlzJo9cWQHz5pZAexxzLto=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=m2MkllkuPI892qsMVGBQB5NHMkpL03mcFWciSp4lFma4bboTv5gSZQWSdPv5lAkyD
-         OPc+QUkvOeN4LMhEZqzMB147lmMb7+Xt1SkJWqTbTg8TfELlx2JNUkPeCXAlbiLx9e
-         bUU+lEPQcrWU6bta6PZr0SBBNUY+ePHEKEBJmF6g=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27M66BTF004894
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Aug 2022 01:06:11 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Mon, 22
- Aug 2022 01:06:11 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Mon, 22 Aug 2022 01:06:11 -0500
-Received: from [172.24.147.145] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27M6685L040211;
-        Mon, 22 Aug 2022 01:06:09 -0500
-Message-ID: <63d2bd69-2e94-a987-aec3-554ce5af6594@ti.com>
-Date:   Mon, 22 Aug 2022 11:36:07 +0530
+        with ESMTP id S233093AbiHVGcN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 02:32:13 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD94286C7
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 23:32:09 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id r16so11902330wrm.6
+        for <linux-pci@vger.kernel.org>; Sun, 21 Aug 2022 23:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
+        b=FrYubPa5iRhzf+WrRPsmiY5vXh9yxeGqcT0p84Sdu/VMPFizo2ximY48tx9ylUHZED
+         mPTBYvFdQSWyQvZFeiwO+ZxRcjtLQByT4adG/DoNeZBMtMz8P1WBGCNUfwXOknCVageC
+         gOsO411NxXs0bFn/r4hWP6vZOvFFR4JKHsjmj17OEFnj3UyoPLJL3/F0BAPtvb3VrkKu
+         kt20y5+o7H2J6gAggdKUcj8w21Ihg/D6nYx+sWVa7eEOorpRHZwPseeMvJY9pUuIFhbk
+         K7EW0i+70qlXOgawP99bZ1X3czl9u7y6nzREE0Ep8RS/WLsefyESE2bvTvChiDPA3pa9
+         MIHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc;
+        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
+        b=1n2OT2yIN3CUUTGVeIWPCpm29puvxb+WXebMIGFNHiHY80pim4gJS4/Ij7S9FDkkss
+         tDcXLUVlbL04OKkUmwtEjzXHZABhlPMxu+G1WXha5x0QKSIjXDaoLzayN/GyNdYzb8kL
+         6kynLqt/S312dHh3Znyn1b7BT4cofdKH07uVo2Nbt7/p36JqE+eN7BqdUB0HKLcgdm3W
+         U3yY5FL8hNT4Dv5pZVutZvuEczHq5jqxFEXtDQYvijNKUeuwC16lppXYgV53GWHnUFyG
+         wWa4A+SU8lyKhGO1I65J+wQ3x0eWKi6Y023rWJNGmzRsu3w/jptnG8u7h/F82tfzvefo
+         KX9g==
+X-Gm-Message-State: ACgBeo3yhGue0vzcbw0k05CCLT4QbLllsZ0osmB/2pJ3jBxQ98CeKycA
+        hYay/qtACfBoDgwzxe/yvv07FocDSbczYZ1PC6A=
+X-Google-Smtp-Source: AA6agR6NTSbaljBeT6nBHwpsZV+iFEjaf84R55z0GxoNRdmBRntcrfv1xOl7luJnB44WOhlEhx6CPLwQoMYUPfF5qd0=
+X-Received: by 2002:a5d:4ad2:0:b0:225:285e:3ec1 with SMTP id
+ y18-20020a5d4ad2000000b00225285e3ec1mr9924326wrs.24.1661149927923; Sun, 21
+ Aug 2022 23:32:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] MAINTAINERS: Add myself as the reviewer for PCI Endpoint
- Subsystem
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kw@linux.com>
-References: <20220819200555.GA2502055@bhelgaas>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-In-Reply-To: <20220819200555.GA2502055@bhelgaas>
+Received: by 2002:a5d:5444:0:0:0:0:0 with HTTP; Sun, 21 Aug 2022 23:32:07
+ -0700 (PDT)
+Reply-To: maddahabdwabbo@gmail.com
+From:   Abd-jaafari Maddah <sheishenalyeshmanbetovichu@gmail.com>
+Date:   Sun, 21 Aug 2022 23:32:07 -0700
+Message-ID: <CALX-7+0_G-U-D9doENGdbc90dSeV5o=VML+dqaJkbMJ9UiPshQ@mail.gmail.com>
+Subject: Why No Response Yet?
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 20/08/22 01:35, Bjorn Helgaas wrote:
-> On Fri, Aug 19, 2022 at 07:38:17AM +0530, Manivannan Sadhasivam wrote:
->> I've been reviewing the patches related to PCI Endpoint Subsystem for
->> some time. So I'd like to add myself as the reviewer to get immediate
->> attention to the patches.
->>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Thanks, applied to for-linus for v6.0.
-> 
-> Updated subject line to:
-> 
->   MAINTAINERS: Add Manivannan Sadhasivam as PCI Endpoint reviewer
-> 
-> since "add myself" doesn't mean anything without reading the whole
-> commit log.
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-> 
->> ---
->>  MAINTAINERS | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 21081f72776d..58a163c2e5dc 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15682,6 +15682,7 @@ PCI ENDPOINT SUBSYSTEM
->>  M:	Kishon Vijay Abraham I <kishon@ti.com>
->>  M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
->>  R:	Krzysztof Wilczyński <kw@linux.com>
->> +R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>  L:	linux-pci@vger.kernel.org
->>  S:	Supported
->>  Q:	https://patchwork.kernel.org/project/linux-pci/list/
->> -- 
->> 2.25.1
->>
+-- 
+Dear,
+I had sent you a mail but i don't think you received it that's why am writing
+you again,it's important we discuss.
+Am waiting,
+Abd-Jafaari Maddah
