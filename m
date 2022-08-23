@@ -2,64 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDA459CD4D
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Aug 2022 02:46:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF5B859CE4B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Aug 2022 04:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238512AbiHWAq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Aug 2022 20:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
+        id S239483AbiHWCH3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Aug 2022 22:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238413AbiHWAqZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 20:46:25 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448154B4BF;
-        Mon, 22 Aug 2022 17:46:23 -0700 (PDT)
+        with ESMTP id S239468AbiHWCH2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Aug 2022 22:07:28 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9031811C10;
+        Mon, 22 Aug 2022 19:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661215583; x=1692751583;
+  t=1661220447; x=1692756447;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=k4k4gsNd5k3zq1HDQ+xAymdp/CfQzCncB8UUoV7WRQw=;
-  b=FFNOzbxUQ58HC+wTgqDroaFV2yMgfI+3jMwV8bSlsMDzTpr1xsquy4CX
-   kqr0uBQ6v1jTPY3H97AgYnMYWDrWd1n03HCf4oDwm2vk4pkDxki/M5PAr
-   sQNE5AHRMiB/KBLulBhWtMZdpNJ6oU1Ig4TRnIIncFGP9beRjHrkO2FAf
-   LYLiKvHKFd63bsHqPMtHCWhOgZswDrW1KtpalQ0vCV1dQrYjfVMhe/TG5
-   Qeemuxrz9eSViWxHxyDbhK8k0uEfdd/LesRZX+BdohCiDGA5mT9JqFQ4c
-   w0Z/8E3toxtI/7Z6KWnit34pNSDVW/d+7CFedYfGBOXpaz4RMF4x2tf92
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="357538089"
-X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
-   d="scan'208";a="357538089"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 17:46:22 -0700
+  bh=4cmZW6Vu98JaUut+RBH8civw9HwCH7BhKgrjabJJBRo=;
+  b=L8UpMC4VqWZA4FSBImjHRXH3ychD4rNc4f1CWqZQ0q0igLuG6lcnV6ag
+   PmHQzEIfrju+6edMQXORTECgHXJFYnWI/3JSaiWDwNC9CtES5jf+spEQx
+   0JfRnKTNHgXhed8OL3uEQqg8a2FhV+fZochFKg5zawKjnvgRfi3mX0ERp
+   rn+7BlLmGYqZrVH3tYfbqyJH8Qepn+jx8R9thrCS5R1qAgmeY5nLLdrPI
+   A9ECU7bNn92htWQ/7VAxtVDzidVAiBBFs0PwR+btLd4I2QDQMslRiZ8Cd
+   dOmSeA2+dqw8c5/hOJAvr2U8B47lV+lGlluEHVD0jMG/0F4vavavDErJJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="379858758"
+X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
+   d="scan'208";a="379858758"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 19:07:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
-   d="scan'208";a="751491576"
+   d="scan'208";a="698506673"
 Received: from lkp-server01.sh.intel.com (HELO dd9b29378baa) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2022 17:46:18 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2022 19:07:23 -0700
 Received: from kbuild by dd9b29378baa with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oQI3d-0000vD-12;
-        Tue, 23 Aug 2022 00:46:17 +0000
-Date:   Tue, 23 Aug 2022 08:45:38 +0800
+        id 1oQJK6-00012F-2y;
+        Tue, 23 Aug 2022 02:07:22 +0000
+Date:   Tue, 23 Aug 2022 10:07:19 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Frank Li <Frank.Li@nxp.com>, maz@kernel.org, tglx@linutronix.de,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com,
-        bhelgaas@google.com
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com,
-        jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        ntb@lists.linux.dev, lznuaa@gmail.com
-Subject: Re: [PATCH v7 4/4] PCI: endpoint: Add NTB MSI support
-Message-ID: <202208230844.D25Fw8sg-lkp@intel.com>
-References: <20220822155130.2491006-5-Frank.Li@nxp.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     kbuild-all@lists.01.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 17/20] PCI: dwc: Introduce generic resources getter
+Message-ID: <202208230934.dgkY2hhH-lkp@intel.com>
+References: <20220822184701.25246-18-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220822155130.2491006-5-Frank.Li@nxp.com>
+In-Reply-To: <20220822184701.25246-18-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -70,111 +76,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Frank,
+Hi Serge,
 
-I love your patch! Perhaps something to improve:
+I love your patch! Yet something to improve:
 
-[auto build test WARNING on jonmason-ntb/ntb-next]
-[also build test WARNING on robh/for-next linus/master v6.0-rc2 next-20220822]
-[cannot apply to tip/irq/core]
+[auto build test ERROR on helgaas-pci/next]
+[also build test ERROR on robh/for-next linus/master v6.0-rc2 next-20220822]
+[cannot apply to krzk-dt/for-next]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220822-235323
-base:   https://github.com/jonmason/ntb ntb-next
-config: s390-randconfig-s053-20220821 (https://download.01.org/0day-ci/archive/20220823/202208230844.D25Fw8sg-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 12.1.0
-reproduce:
+url:    https://github.com/intel-lab-lkp/linux/commits/Serge-Semin/PCI-dwc-Add-generic-resources-and-Baikal-T1-support/20220823-025041
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+config: openrisc-randconfig-r001-20220821 (https://download.01.org/0day-ci/archive/20220823/202208230934.dgkY2hhH-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/d98704aefa5b57814d7b9b1b40160df34977b2b6
+        # https://github.com/intel-lab-lkp/linux/commit/224f55689ef22eddaeb641cf793de934a60e1be9
         git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220822-235323
-        git checkout d98704aefa5b57814d7b9b1b40160df34977b2b6
+        git fetch --no-tags linux-review Serge-Semin/PCI-dwc-Add-generic-resources-and-Baikal-T1-support/20220823-025041
+        git checkout 224f55689ef22eddaeb641cf793de934a60e1be9
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=s390 SHELL=/bin/bash drivers/pci/endpoint/functions/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=openrisc SHELL=/bin/bash drivers/pci/controller/dwc/
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/endpoint/functions/pci-epf-vntb.c:567:25: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __iomem *[assigned] mw_addr @@     got void * @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:567:25: sparse:     expected void [noderef] __iomem *[assigned] mw_addr
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:567:25: sparse:     got void *
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:600:41: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void *addr @@     got void [noderef] __iomem *epf_db @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:600:41: sparse:     expected void *addr
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:600:41: sparse:     got void [noderef] __iomem *epf_db
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1201:33: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *base @@     got struct epf_ntb_ctrl *reg @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1201:33: sparse:     expected void [noderef] __iomem *base
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1201:33: sparse:     got struct epf_ntb_ctrl *reg
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1212:33: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *base @@     got struct epf_ntb_ctrl *reg @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1212:33: sparse:     expected void [noderef] __iomem *base
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1212:33: sparse:     got struct epf_ntb_ctrl *reg
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1223:33: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *base @@     got struct epf_ntb_ctrl *reg @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1223:33: sparse:     expected void [noderef] __iomem *base
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1223:33: sparse:     got struct epf_ntb_ctrl *reg
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1235:33: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *base @@     got struct epf_ntb_ctrl *reg @@
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1235:33: sparse:     expected void [noderef] __iomem *base
-   drivers/pci/endpoint/functions/pci-epf-vntb.c:1235:33: sparse:     got struct epf_ntb_ctrl *reg
+All errors (new ones prefixed by >>):
 
-vim +567 drivers/pci/endpoint/functions/pci-epf-vntb.c
+   drivers/pci/controller/dwc/pcie-designware-ep.c: In function 'dw_pcie_ep_init':
+>> drivers/pci/controller/dwc/pcie-designware-ep.c:734:35: error: 'np' undeclared (first use in this function); did you mean 'ep'?
+     734 |         ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+         |                                   ^~
+         |                                   ep
+   drivers/pci/controller/dwc/pcie-designware-ep.c:734:35: note: each undeclared identifier is reported only once for each function it appears in
 
-d98704aefa5b578 Frank Li 2022-08-22  536  
-e35f56bb03304ab Frank Li 2022-02-22  537  /**
-e35f56bb03304ab Frank Li 2022-02-22  538   * epf_ntb_db_bar_init() - Configure Doorbell window BARs
-e35f56bb03304ab Frank Li 2022-02-22  539   * @ntb: NTB device that facilitates communication between HOST and vHOST
-e35f56bb03304ab Frank Li 2022-02-22  540   */
-e35f56bb03304ab Frank Li 2022-02-22  541  static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
-e35f56bb03304ab Frank Li 2022-02-22  542  {
-e35f56bb03304ab Frank Li 2022-02-22  543  	const struct pci_epc_features *epc_features;
-e35f56bb03304ab Frank Li 2022-02-22  544  	u32 align;
-e35f56bb03304ab Frank Li 2022-02-22  545  	struct device *dev = &ntb->epf->dev;
-e35f56bb03304ab Frank Li 2022-02-22  546  	int ret;
-e35f56bb03304ab Frank Li 2022-02-22  547  	struct pci_epf_bar *epf_bar;
-e35f56bb03304ab Frank Li 2022-02-22  548  	void __iomem *mw_addr;
-e35f56bb03304ab Frank Li 2022-02-22  549  	enum pci_barno barno;
-d98704aefa5b578 Frank Li 2022-08-22  550  	size_t size;
-e35f56bb03304ab Frank Li 2022-02-22  551  
-e35f56bb03304ab Frank Li 2022-02-22  552  	epc_features = pci_epc_get_features(ntb->epf->epc,
-e35f56bb03304ab Frank Li 2022-02-22  553  					    ntb->epf->func_no,
-e35f56bb03304ab Frank Li 2022-02-22  554  					    ntb->epf->vfunc_no);
-e35f56bb03304ab Frank Li 2022-02-22  555  	align = epc_features->align;
-d98704aefa5b578 Frank Li 2022-08-22  556  	size = epf_ntb_db_size(ntb);
-e35f56bb03304ab Frank Li 2022-02-22  557  
-e35f56bb03304ab Frank Li 2022-02-22  558  	barno = ntb->epf_ntb_bar[BAR_DB];
-d98704aefa5b578 Frank Li 2022-08-22  559  	epf_bar = &ntb->epf->bar[barno];
-e35f56bb03304ab Frank Li 2022-02-22  560  
-d98704aefa5b578 Frank Li 2022-08-22  561  	if (ntb->epf_db_phy) {
-d98704aefa5b578 Frank Li 2022-08-22  562  		mw_addr = NULL;
-d98704aefa5b578 Frank Li 2022-08-22  563  		epf_bar->phys_addr = ntb->epf_db_phy;
-d98704aefa5b578 Frank Li 2022-08-22  564  		epf_bar->barno = barno;
-d98704aefa5b578 Frank Li 2022-08-22  565  		epf_bar->size = size;
-d98704aefa5b578 Frank Li 2022-08-22  566  	} else {
-e35f56bb03304ab Frank Li 2022-02-22 @567  		mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
-e35f56bb03304ab Frank Li 2022-02-22  568  		if (!mw_addr) {
-e35f56bb03304ab Frank Li 2022-02-22  569  			dev_err(dev, "Failed to allocate OB address\n");
-e35f56bb03304ab Frank Li 2022-02-22  570  			return -ENOMEM;
-e35f56bb03304ab Frank Li 2022-02-22  571  		}
-d98704aefa5b578 Frank Li 2022-08-22  572  	}
-e35f56bb03304ab Frank Li 2022-02-22  573  
-e35f56bb03304ab Frank Li 2022-02-22  574  	ntb->epf_db = mw_addr;
-e35f56bb03304ab Frank Li 2022-02-22  575  
-e35f56bb03304ab Frank Li 2022-02-22  576  	ret = pci_epc_set_bar(ntb->epf->epc, ntb->epf->func_no, ntb->epf->vfunc_no, epf_bar);
-e35f56bb03304ab Frank Li 2022-02-22  577  	if (ret) {
-e35f56bb03304ab Frank Li 2022-02-22  578  		dev_err(dev, "Doorbell BAR set failed\n");
-e35f56bb03304ab Frank Li 2022-02-22  579  			goto err_alloc_peer_mem;
-e35f56bb03304ab Frank Li 2022-02-22  580  	}
-e35f56bb03304ab Frank Li 2022-02-22  581  	return ret;
-e35f56bb03304ab Frank Li 2022-02-22  582  
-e35f56bb03304ab Frank Li 2022-02-22  583  err_alloc_peer_mem:
-e35f56bb03304ab Frank Li 2022-02-22  584  	pci_epc_mem_free_addr(ntb->epf->epc, epf_bar->phys_addr, mw_addr, epf_bar->size);
-e35f56bb03304ab Frank Li 2022-02-22  585  	return -1;
-e35f56bb03304ab Frank Li 2022-02-22  586  }
-e35f56bb03304ab Frank Li 2022-02-22  587  
+
+vim +734 drivers/pci/controller/dwc/pcie-designware-ep.c
+
+e966f7390da935e drivers/pci/controller/dwc/pcie-designware-ep.c Vidya Sagar            2020-02-17  678  
+e966f7390da935e drivers/pci/controller/dwc/pcie-designware-ep.c Vidya Sagar            2020-02-17  679  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+e966f7390da935e drivers/pci/controller/dwc/pcie-designware-ep.c Vidya Sagar            2020-02-17  680  {
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  681  	int ret;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  682  	void *addr;
+47a062609a30d82 drivers/pci/controller/dwc/pcie-designware-ep.c Xiaowei Bao            2020-09-18  683  	u8 func_no;
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  684  	struct resource *res;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  685  	struct pci_epc *epc;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  686  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  687  	struct device *dev = pci->dev;
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  688  	struct platform_device *pdev = to_platform_device(dev);
+e966f7390da935e drivers/pci/controller/dwc/pcie-designware-ep.c Vidya Sagar            2020-02-17  689  	const struct pci_epc_features *epc_features;
+47a062609a30d82 drivers/pci/controller/dwc/pcie-designware-ep.c Xiaowei Bao            2020-09-18  690  	struct dw_pcie_ep_func *ep_func;
+47a062609a30d82 drivers/pci/controller/dwc/pcie-designware-ep.c Xiaowei Bao            2020-09-18  691  
+47a062609a30d82 drivers/pci/controller/dwc/pcie-designware-ep.c Xiaowei Bao            2020-09-18  692  	INIT_LIST_HEAD(&ep->func_list);
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  693  
+224f55689ef22ed drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-08-22  694  	ret = dw_pcie_get_resources(pci);
+224f55689ef22ed drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-08-22  695  	if (ret)
+224f55689ef22ed drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-08-22  696  		return ret;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  697  
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  698  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  699  	if (!res)
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  700  		return -EINVAL;
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  701  
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  702  	ep->phys_base = res->start;
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  703  	ep->addr_size = resource_size(res);
+a0fd361db8e508b drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  704  
+13e9d3900c20247 drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-06-24  705  	dw_pcie_version_detect(pci);
+13e9d3900c20247 drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-06-24  706  
+e3dc79adfac96d7 drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-06-24  707  	dw_pcie_iatu_detect(pci);
+e3dc79adfac96d7 drivers/pci/controller/dwc/pcie-designware-ep.c Serge Semin            2022-06-24  708  
+6be6f8529bd7f3e drivers/pci/controller/dwc/pcie-designware-ep.c Christophe JAILLET     2022-07-09  709  	ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  710  					       GFP_KERNEL);
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  711  	if (!ep->ib_window_map)
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  712  		return -ENOMEM;
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  713  
+6be6f8529bd7f3e drivers/pci/controller/dwc/pcie-designware-ep.c Christophe JAILLET     2022-07-09  714  	ep->ob_window_map = devm_bitmap_zalloc(dev, pci->num_ob_windows,
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  715  					       GFP_KERNEL);
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  716  	if (!ep->ob_window_map)
+ad4a5becc689c3f drivers/pci/dwc/pcie-designware-ep.c            Niklas Cassel          2017-12-14  717  		return -ENOMEM;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  718  
+9ca17af552bcd28 drivers/pci/controller/dwc/pcie-designware-ep.c Rob Herring            2020-11-05  719  	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  720  			    GFP_KERNEL);
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  721  	if (!addr)
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  722  		return -ENOMEM;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  723  	ep->outbound_addr = addr;
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  724  
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  725  	epc = devm_pci_epc_create(dev, &epc_ops);
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  726  	if (IS_ERR(epc)) {
+b4a8a51caf7de47 drivers/pci/dwc/pcie-designware-ep.c            Gustavo Pimentel       2018-05-14  727  		dev_err(dev, "Failed to create epc device\n");
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  728  		return PTR_ERR(epc);
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  729  	}
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27  730  
+4e965ede1856ed6 drivers/pci/controller/dwc/pcie-designware-ep.c Gustavo Pimentel       2018-07-19  731  	ep->epc = epc;
+4e965ede1856ed6 drivers/pci/controller/dwc/pcie-designware-ep.c Gustavo Pimentel       2018-07-19  732  	epc_set_drvdata(epc, ep);
+4e965ede1856ed6 drivers/pci/controller/dwc/pcie-designware-ep.c Gustavo Pimentel       2018-07-19  733  
+f8aed6ec624fb43 drivers/pci/dwc/pcie-designware-ep.c            Kishon Vijay Abraham I 2017-03-27 @734  	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
 
 -- 
 0-DAY CI Kernel Test Service
