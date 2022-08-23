@@ -2,74 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3CF659D1C6
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Aug 2022 09:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF86659D1CF
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Aug 2022 09:15:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240615AbiHWHKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Aug 2022 03:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
+        id S240907AbiHWHL0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Aug 2022 03:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240869AbiHWHKT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Aug 2022 03:10:19 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D7961D44;
-        Tue, 23 Aug 2022 00:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661238613; x=1692774613;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=s3CaB7J/QzCxWJHKyGoSrb3mqar/OfGRLx0AuZA3drA=;
-  b=eic8Vc52VkulvsAwGWVaZ28U+cMIc0BXnJBNpGVPkFoNVOZ1Yp6hoIcV
-   DPiPn5e34QBQgSKxJQ/PmqtVFVhFqpZXg5jlHgrjCnOk4ERbkawzI+B7N
-   KBWhO5Ymb4bgmPPQu/odnyAU/922S48LknBKbcZPOf9x61iQ3+g8sYT4/
-   Dlbv822FELN1WaBkVIGTIXksJUuz61TsG8C7I5yD3EQLOegVU1KAeFJsE
-   gkZYdi7ylWFnnzs3V6aj2MtTNrTrmRVUHW9urEJ4qSKNZVG23wbzn0L3p
-   aNTbPtCI6UVawG/ghH68kPEv4cyoxkERTY2z24Iux4XYvEPkgYT2LxCwt
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="292352744"
-X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
-   d="scan'208";a="292352744"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 00:10:13 -0700
-X-IronPort-AV: E=Sophos;i="5.93,256,1654585200"; 
-   d="scan'208";a="642337729"
-Received: from xujinlon-mobl.ccr.corp.intel.com (HELO [10.254.211.102]) ([10.254.211.102])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 00:10:02 -0700
-Message-ID: <2ac74c62-1e2a-3758-6da8-a59f452e7799@linux.intel.com>
-Date:   Tue, 23 Aug 2022 15:10:00 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Christoph Hellwig <hch@infradead.org>,
+        with ESMTP id S240880AbiHWHLT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Aug 2022 03:11:19 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0862361D59;
+        Tue, 23 Aug 2022 00:11:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9F627B801C0;
+        Tue, 23 Aug 2022 07:11:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA25C433D6;
+        Tue, 23 Aug 2022 07:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1661238675;
+        bh=vMiL6tXO64IX78O0F1aZDGjmvXqzBiRZfMNOvY56/yc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sAXFQaKxAKlCaC7NX2XtYskIX7HQAcGV2PhFFxMovv9H01hIZnB8HG2j3roNk9mn9
+         0Qh1nhXLd9lFMfUaEw+6kXC3Q3qdnWkXtkBOMxILre+GO8H2gJsMsCEylYnxdg7BNT
+         aW0K0lA5C0AzHIztQaBAlSxyc88eSbIQthX8qP7Y=
+Date:   Tue, 23 Aug 2022 09:11:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dominique Martinet <dominique.martinet@atmark-techno.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 04/13] PCI: Allow PASID only when ACS enforced on
- upstreaming path
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-References: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
- <20220817012024.3251276-5-baolu.lu@linux.intel.com>
- <Yv440MU1UeD9u67g@nvidia.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <Yv440MU1UeD9u67g@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Sasha Levin <sashal@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Hinko Kocevar <hinko.kocevar@ess.eu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
+Subject: Re: [PATCH 5.10 480/545] PCI/ERR: Add pci_walk_bridge() to
+ pcie_do_recovery()
+Message-ID: <YwR9kFH3UqhkV4d0@kroah.com>
+References: <20220819153850.911668266@linuxfoundation.org>
+ <YwL/brvUP1aiwo93@atmark-techno.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YwL/brvUP1aiwo93@atmark-techno.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,51 +59,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/8/18 21:04, Jason Gunthorpe wrote:
-> On Wed, Aug 17, 2022 at 09:20:15AM +0800, Lu Baolu wrote:
->> Some configurations of the PCI fabric will route device originated TLP
->> packets based on the memory addresses. These configurations are
->> incompatible with PASID as the PASID packets form a distinct address
->> space. For instance, any configuration where switches are present
->> without ACS enabled is incompatible.
->>
->> This enhances the pci_enable_pasid() interface by requiring the ACS to
->> support Source Validation, Request Redirection, Completer Redirection,
->> and Upstream Forwarding. This effectively means that devices cannot
->> spoof their requester ID, requests and completions cannot be redirected,
->> and all transactions are forwarded upstream, even as it passes through a
->> bridge where the target device is downstream.
->>
->> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
->> Suggested-by: Kevin Tian<kevin.tian@intel.com>
->> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->> ---
->>   drivers/pci/ats.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->> index c967ad6e2626..0715e48e7973 100644
->> --- a/drivers/pci/ats.c
->> +++ b/drivers/pci/ats.c
->> @@ -382,6 +382,11 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
->>   	if (!pasid)
->>   		return -EINVAL;
->>   
->> +	if (!pci_acs_path_enabled(pdev, NULL,
->> +				  PCI_ACS_SV | PCI_ACS_RR |
->> +				  PCI_ACS_CR | PCI_ACS_UF))
-> I think we only need RR and UF here?
+On Mon, Aug 22, 2022 at 01:00:46PM +0900, Dominique Martinet wrote:
+> Greg Kroah-Hartman wrote on Fri, Aug 19, 2022 at 05:44:10PM +0200:
+> > From: Sean V Kelley <sean.v.kelley@intel.com>
+> > 
+> > [ Upstream commit 05e9ae19ab83881a0f33025bd1288e41e552a34b ]
+> > 
+> > Consolidate subordinate bus checks with pci_walk_bus() into
+> > pci_walk_bridge() for walking below potentially AER affected bridges.
+> > 
+> > Link: https://lore.kernel.org/r/20201121001036.8560-10-sean.v.kelley@intel.com
+> > Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # non-native/no RCEC
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  drivers/pci/pcie/err.c | 30 +++++++++++++++++++++++-------
+> >  1 file changed, 23 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index 931e75f2549d..8b53aecdb43d 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > [...]
+> > @@ -165,23 +182,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  	else
+> >  		bridge = pci_upstream_bridge(dev);
+> >  
+> > -	bus = bridge->subordinate;
+> >  	pci_dbg(bridge, "broadcast error_detected message\n");
+> >  	if (state == pci_channel_io_frozen) {
+> > -		pci_walk_bus(bus, report_frozen_detected, &status);
+> > +		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> >  		status = reset_subordinates(bridge);
+> >  		if (status != PCI_ERS_RESULT_RECOVERED) {
+> >  			pci_warn(bridge, "subordinate device reset failed\n");
+> >  			goto failed;
+> >  		}
 > 
-> Source Validation causes the switch to validate the requestor RID in
-> each TLP which has nothing to do with address based routing
+> A local conflict merging this made me notice a later commit:
+> -----
+> commit 387c72cdd7fb6bef650fb078d0f6ae9682abf631
+> Author: Keith Busch <kbusch@kernel.org>
+> Date:   Mon Jan 4 15:02:58 2021 -0800
 > 
-> Completion Redirect changes how RID routing works, and has nothing to
-> do with address based routing.
+> PCI/ERR: Retain status from error notification
 > 
-> Yes, both of those are usually set for virtualization scenarios but we
-> shouldn't check it here as a basic requirement to enable PASID.
+> Overwriting the frozen detected status with the result of the link reset
+> loses the NEED_RESET result that drivers are depending on for error
+> handling to report the .slot_reset() callback. Retain this status so
+> that subsequent error handling has the correct flow.
+> 
+> Link: https://lore.kernel.org/r/20210104230300.1277180-4-kbusch@kernel.org
+> Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
+> Tested-by: Hedi Berriche <hedi.berriche@hpe.com>
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Acked-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Acked-by: Hedi Berriche <hedi.berriche@hpe.com>
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index a84f0bf4c1e2..b576aa890c76 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -198,8 +198,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(bridge, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> -		status = reset_subordinates(bridge);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(bridge, "subordinate device reset failed\n");
+>  			goto failed;
+>  		}
+> -----
+> 
+> Since this (commit I reply to) has been picked up, I think it'd make
+> sense to also include this (commit I just listed) in a later 5.10 tag.
+> It cherry-picks without error but would you like me to resend?
+> (I have added in Cc all involved people to this mail)
+> 
+> Digging through the mails the patch came with seem to imply approval for
+> stable merges; but it didn't make sense until pci_walk_bridge() had been
+> added just now. Now it's here we probably want both:
+> https://lore.kernel.org/all/d9ee4151-b28d-a52a-b5be-190a75e0e49b@intel.com/
+> 
+> 
+> (I noticed because the NXP kernel we are provided includes a different
+> "fix" for what I believe to be the same issue, previously discussed here:
+> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+> 
+> I haven't actually encountered any of the problems discribed, so this is
+> purely theorical for me; it just looks a bit weird.)
 
-Yes. Here only requires RR and UF.
+I've queued up the commit you referenced above now, thanks!
 
-Best regards,
-baolu
+greg k-h
