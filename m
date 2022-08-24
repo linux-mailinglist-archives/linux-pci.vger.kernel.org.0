@@ -2,133 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E4A359FDDE
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 17:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F2C59FF5A
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 18:21:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238106AbiHXPHM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Aug 2022 11:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37048 "EHLO
+        id S239335AbiHXQVE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Aug 2022 12:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237980AbiHXPHK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 11:07:10 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8D88C003
-        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 08:07:08 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id w29so11197367pfj.3
-        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 08:07:08 -0700 (PDT)
+        with ESMTP id S238838AbiHXQVB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 12:21:01 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE8287694
+        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 09:20:59 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id z16so2598858wrh.10
+        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 09:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=en5fJioWb1/tYEyOYyeymC+F2mSt5gCOg/3YQO22W/s=;
-        b=kmCU1wRgOodNOCpDQZjRxGbuZn9IFI1hLbQdaa4sSq5wQ9RROkfwkRrG/Rp/8n83lb
-         rc00wtM8LXLy9/SA2AIkJwV5ORHesIwyVxoK5HRzXziJETcKR23ORwxKipF1UGglYVpm
-         mL1HEdU4h9uiX6F5dhtaz1Ni7e2FB/ZzORfCWPJKyrp4dlBaRfG4dXQdoEmS0VxSicRm
-         Yyzdmn3iMplldGN2NooCN8di1J1LMBoBfuwEf+bmtdbZiXqgiGqWVkxSVAUzfVINE4z9
-         /T6JsvjbjCVTszRlwuHZnaLWOX0s1uxD2ksoNU5+bez5Utccbtx+QyHUtlnMZq1tMbx7
-         OLkQ==
+        d=conchuod.ie; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=S2tBbgrx+25RpWaqCl+haIdlbySiWC0Xb4SRnNTuZLo=;
+        b=CaBBfJ6zzlzSH8t+T5KGfrvMzLAi5AI0eoDZAVk0yw3cSoKl5RoetN0lKoKeWRh6hP
+         r5P8edcEbxW/Ad8FhnLpgrcKO9nzODroDxn0URodX5a9zfEmMBvyQNrmKmfKBYVQHrWN
+         TOX3+urD81gS9Ih4cs9hl7+KIvMTFFBJQlmcNWfGci8wUyo2NUiyTmh4MCkSTbDEhalM
+         ccAX+7RJgQlxRHJ90k2FI02f6/m0gmf3lK0EziSkKN8eoc85597K8AE4NAwEifpHvNgV
+         APwCV35SmUdKYbIxqZ2tLbzCVxnjNZX4poPem4awdsY1nLjYErALPj0Bk98N1GnJdR3t
+         cNdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=en5fJioWb1/tYEyOYyeymC+F2mSt5gCOg/3YQO22W/s=;
-        b=ZniUTxCnx3fJncKAvxK6hBVkECyIPBAty24EF/zqrPx1nKGa/3i2vU6xMjY2ItF+Y3
-         NJ0UBf8aP4xj9nFvX+DHFETlT1FMktGm77N4ctdX/5tv+xl/yVCrZi7fPeaXGtFGuuEV
-         FdTRz0eBhxuKGau/pOZ+/iVSCwcf6p9FugMoLsmBMQdjCMnL64ReqOgzauMJRJEbmKa8
-         c15CRDIrj63Ezx4Lh5wxIV2F3QbAN519EJLLMg8DPoJVkwkyif8SXc0QzLbqhEklTw8r
-         +S1yVSua6xmhJ0ldu/Z0zKaoNntiEnFXOTYgONvS8lJk5pMYgQQj84BTJVTMXnQwtg7a
-         2WWg==
-X-Gm-Message-State: ACgBeo3wmv0UiE6QjkwCt+Mt+lNnZJFmCRlP7BMC2kHh9sGbc936Vdx8
-        EXEGKkX7f2bT/EEFzwLXx25A
-X-Google-Smtp-Source: AA6agR4I9qbzYAiGbI+cKiSPz6vV8dLS8BKWrwUL0WyVPYcNCgprOjlUILqDhdnHLbLF43532+mQ7w==
-X-Received: by 2002:a65:6cc7:0:b0:42a:4d40:8dc1 with SMTP id g7-20020a656cc7000000b0042a4d408dc1mr19894592pgw.321.1661353628331;
-        Wed, 24 Aug 2022 08:07:08 -0700 (PDT)
-Received: from thinkpad ([117.207.24.28])
-        by smtp.gmail.com with ESMTPSA id q4-20020aa79604000000b005367a03d566sm7673082pfg.112.2022.08.24.08.07.02
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=S2tBbgrx+25RpWaqCl+haIdlbySiWC0Xb4SRnNTuZLo=;
+        b=L6gPwV65HvFRrSIkhu/ez1lf1Wn1VILIChZiYqgmCdhmOztTW4IpRK+DQ1sW3kVGM+
+         ltAEPAsvZpuorSbbOazGTn8ibMjqTFqOsUE3IJCGKKS7B6O/6p85+AyUt/+SQx06zO95
+         9gkbv67O9+uG/xxD04+wsZshPbbLg61MTcBB3RZS6uT0rT9kCkgYz89Wu0SFuM/zh5a6
+         xZX379Lvvwe8FBNc16+BI7pSdYntr0SHp1D81/aSLuNYXdYTeLFdQpNI9cySiSR+OdsD
+         qhR/kdcHDEKVgSmTQvmgogy8LWjMXolR2kZfeBGhdLcwbYHlCLUWtl+qmlBhEuTYAaEg
+         Uujw==
+X-Gm-Message-State: ACgBeo155zja6VW39acRkEGItpRJJWbvC4W9m0U6S1Ho7Sa2ZG672E1E
+        xwDHmagstPKIlh1uNPu/yVwp/w==
+X-Google-Smtp-Source: AA6agR4/6nKKtxFMnoCc84DqrjQsVm+cjtB+x8R9A0ftf1MIYOg7bI7gO59Np7Of33NfYpXfhEp05Q==
+X-Received: by 2002:a05:6000:221:b0:225:464d:b096 with SMTP id l1-20020a056000022100b00225464db096mr24122wrz.32.1661358058303;
+        Wed, 24 Aug 2022 09:20:58 -0700 (PDT)
+Received: from henark71.. ([51.37.149.245])
+        by smtp.gmail.com with ESMTPSA id l6-20020a05600c4f0600b003a690f704absm1903582wmq.4.2022.08.24.09.20.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 08:07:07 -0700 (PDT)
-Date:   Wed, 24 Aug 2022 20:36:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v1 3/4] PCI: qcom: Setup PHY to work in RC mode
-Message-ID: <20220824150658.GG4767@thinkpad>
-References: <20220726203401.595934-1-dmitry.baryshkov@linaro.org>
- <20220726203401.595934-4-dmitry.baryshkov@linaro.org>
- <20220824145748.GF4767@thinkpad>
+        Wed, 24 Aug 2022 09:20:57 -0700 (PDT)
+From:   Conor Dooley <mail@conchuod.ie>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Conor Dooley <mail@conchuod.ie>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: (subset) [PATCH v3 0/7] Fix RISC-V/PCI dt-schema issues with dt-schema v2022.08
+Date:   Wed, 24 Aug 2022 17:19:44 +0100
+Message-Id: <166135795510.3741278.5608627370699269871.b4-ty@microchip.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220819231415.3860210-1-mail@conchuod.ie>
+References: <20220819231415.3860210-1-mail@conchuod.ie>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220824145748.GF4767@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 24, 2022 at 08:27:58PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Jul 26, 2022 at 11:34:00PM +0300, Dmitry Baryshkov wrote:
-> > Call phy_set_mode_ext() to notify the PHY driver that the PHY is being
-> > used in the RC mode.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Thanks,
-> Mani
-> 
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 93d75cda4b04..f85f2579c087 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -1485,6 +1485,10 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > +	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, 0);
-> > +	if (ret)
-> > +		return err_deinit;
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Oops... Missed this one. Should be goto err_deinit;
+On Sat, 20 Aug 2022 00:14:09 +0100, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Hey all,
+> 
+> Got a few fixes for PCI dt-bindings that I noticed after upgrading my
+> dt-schema to v2022.08.
+> 
+> [...]
+
+Applied to dt-fixes, RISC-V should be back to 0 warnings in the next
+linux-next. Thanks!
+
+[4/7] riscv: dts: microchip: mpfs: fix incorrect pcie child node name
+      https://git.kernel.org/conor/c/3f67e6997603
+[5/7] riscv: dts: microchip: mpfs: remove ti,fifo-depth property
+      https://git.kernel.org/conor/c/72a05748cbd2
+[6/7] riscv: dts: microchip: mpfs: remove bogus card-detect-delay
+      https://git.kernel.org/conor/c/2b55915d27dc
+[7/7] riscv: dts: microchip: mpfs: remove pci axi address translation property
+      https://git.kernel.org/conor/c/e4009c5fa77b
 
 Thanks,
-Mani
-
-> > +
-> >  	ret = phy_power_on(pcie->phy);
-> >  	if (ret)
-> >  		goto err_deinit;
-> > -- 
-> > 2.35.1
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
-
--- 
-மணிவண்ணன் சதாசிவம்
+Conor.
