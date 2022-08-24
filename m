@@ -2,89 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D42F5A02BB
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 22:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B587C5A0492
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 01:24:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240386AbiHXUaA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Aug 2022 16:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34136 "EHLO
+        id S229577AbiHXXYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Aug 2022 19:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239786AbiHXU35 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 16:29:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFE3B4B4;
-        Wed, 24 Aug 2022 13:29:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 09125B826A7;
-        Wed, 24 Aug 2022 20:29:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAD1C433D6;
-        Wed, 24 Aug 2022 20:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661372991;
-        bh=dqhGz/nLmt6yUPkMB5rA5qXpiQ+1w7dwGL2hqByBBRc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CpSScSEG6uPmSMHRKF5GulWRgs49MlGGCa/mmee7+PVobFiXEEjj4s7NNsjL7lbyk
-         sEL/ZYKh9RndBrk8yJQPBgbwjbl3t/FxGq99v0LWW1+M1BIw9A2GwHbuR1kYNFeCv3
-         7LNxCL4lRDjNIQtnNuiyQZoKfVF2EEfsSBJXP6w88OT8OAjB6zeDlFRz5auauDO94f
-         0H1KudDibhtwJJle3OaUhrgiDyEKeSIfPH5vjCHjWFvaSIuGCpiDOKe58WWAeEaDjo
-         uffmTJp21NhSVL5j69Tz+aWReWv4wBODbf+VA9WIjMVQjA3yq1OGqOp0tvGWSATDAS
-         qs62ngq64V1oQ==
-Date:   Wed, 24 Aug 2022 15:29:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v5 0/3] PCI: Restrict pci transactions after pci suspend
-Message-ID: <20220824202949.GA2805069@bhelgaas>
+        with ESMTP id S229570AbiHXXYx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 19:24:53 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F6224F31;
+        Wed, 24 Aug 2022 16:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661383493; x=1692919493;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eJ8YUYE0KUuxnWEswmWESNkqPfeWZ5Rhr0ubNvs1qZs=;
+  b=KeKzEoJPdoq5gh4Lwedoeo5ThaxT9bN2fvHVSiLU/9reNibgHYsddA6D
+   +AG4wJrnrSP7bDQI2yJt116PhxyRvvDuf7Bn0SB0+vHM8xs55VNJmn1qm
+   NlZDs/EHcU2YkAiwptYWtxtIL8zzQBWwr7vEHyHqp9G6vkXuct94LcDB+
+   av8TIFmibhfuXGqT/PcoNiK/tiEVEGirxd0KQW/vqGFiEaxTg/naPKXJI
+   Gtia9W1nEGnz4nkBuArnHjjW4xCPUz6BhfPxQOxWHtHhs0l825ZePmkYJ
+   PWoCFlGfz08QQ4i69N45npuiN6xwnG+HBtOf5vhfT8s27xlpB8sWSTyaB
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="380391307"
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="380391307"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:24:52 -0700
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="752265584"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.42.187])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 16:24:52 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH V2 0/2] CXL: Taint user access to DOE mailbox config space
+Date:   Wed, 24 Aug 2022 16:24:48 -0700
+Message-Id: <20220824232450.723179-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 03, 2022 at 04:58:51PM +0530, Krishna chaitanya chundru wrote:
-> If the endpoint device state is D0 and irq's are not freed, then
-> kernel try to mask interrupts in system suspend path by writing in to
-> the vector table (for MSIX interrupts) and config space (for MSI's).
+From: Ira Weiny <ira.weiny@intel.com>
 
-If clocks are being turned off while the PCI core is still accessing
-the device, I think that means qcom suspend is not implemented
-correctly.
+Changes from V1
+	Incorporate feedback from Dan and Greg.
 
-> These transactions are initiated in the pm suspend after pcie clocks got
-> disabled as part of platform driver pm  suspend call. Due to it, these
-> transactions are resulting in un-clocked access and eventually to crashes.
-> 
-> So added a logic in qcom driver to restrict these unclocked access.
-> And updated the logic to check the link state before masking
-> or unmasking the interrupts.
-> 
-> And some devices are taking time to settle the link in L1ss, so added a
-> retry logic in the suspend ops.
-> 
-> Krishna chaitanya chundru (3):
->   PCI: qcom: Add system PM support
->   PCI: qcom: Restrict pci transactions after pci suspend
->   PCI: qcom: Add retry logic for link to be stable in L1ss
-> 
->  drivers/pci/controller/dwc/pcie-designware-host.c |  14 ++-
->  drivers/pci/controller/dwc/pcie-qcom.c            | 117 +++++++++++++++++++++-
->  2 files changed, 127 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+PCI config space access from user space has traditionally been unrestricted
+with writes being an understood risk for device operation.
+
+Unfortunately, device breakage or odd behavior from config writes lacks
+indicators that can leave driver writers confused when evaluating failures.
+This is especially true with the new PCIe Data Object Exchange (DOE) mailbox
+protocol where backdoor shenanigans from user space through things such as
+vendor defined protocols may affect device operation without complete breakage.
+
+Even though access should not be restricted it would be nice for driver writers
+to be able to flag critical parts of the config space such that interference
+from user space can be detected.
+
+Introduce pci_request_config_region_exclusive() and use it in the CXL driver
+for DOE config space.
+
+Ira Weiny (2):
+  PCI: Allow drivers to request exclusive config regions
+  cxl/doe: Request exclusive DOE access
+
+ drivers/cxl/pci.c             |  5 +++++
+ drivers/pci/pci-sysfs.c       |  7 +++++++
+ drivers/pci/probe.c           |  6 ++++++
+ include/linux/ioport.h        |  2 ++
+ include/linux/pci.h           | 33 +++++++++++++++++++++++++--------
+ include/uapi/linux/pci_regs.h |  1 +
+ kernel/resource.c             | 13 ++++++++-----
+ 7 files changed, 54 insertions(+), 13 deletions(-)
+
+
+base-commit: 1cd8a2537eb07751d405ab7e2223f20338a90506
+-- 
+2.37.2
+
