@@ -2,85 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC97D59F8B2
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 13:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5807759F9FC
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 14:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233796AbiHXLkS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Aug 2022 07:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60572 "EHLO
+        id S237389AbiHXMa3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Aug 2022 08:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbiHXLkR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 07:40:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402314E607;
-        Wed, 24 Aug 2022 04:40:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CAA4961964;
-        Wed, 24 Aug 2022 11:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2560C433D6;
-        Wed, 24 Aug 2022 11:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661341216;
-        bh=nAChmvsQjvtcSVy62sD3IXOHSXzowoeX589gEndadc4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5LaXsQk2IVr92x+ZZ4emyhdpasxXMD6OezvzajgXW0YQ3XtDXtrHuxJ+SR9a/iH4
-         gXk7ShBQ2RuEifLicqFoGdHAWrozlxYN2WPwLJvEZA/CZ+g2eGR7mKF8SwniZHYTrt
-         kowuWv07npmbFo2q5Y/plj8zI8C2KK+qvUFm04QhpHhhGH/wZFYePjk1j92EvQVO/s
-         cb06W5zIAsezCVg/Vk/9mbWhkvP66HB5XvTM7VZ9zt2kohIYfTT6k/2Y0z7UepPp1c
-         O6SHYTf9yUca2uiAbAF8qkEUe1R9+BaDbIdi+NCPCZZCYI4anvsTUtbPUKR0tfIYF0
-         IZxMBkhAVL2+A==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <mail@conchuod.ie>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 0/7] Fix RISC-V/PCI dt-schema issues with dt-schema v2022.08
-Date:   Wed, 24 Aug 2022 13:40:07 +0200
-Message-Id: <166134118410.100046.14129524978971500704.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220819231415.3860210-1-mail@conchuod.ie>
-References: <20220819231415.3860210-1-mail@conchuod.ie>
+        with ESMTP id S237253AbiHXMaV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 08:30:21 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C143DF21
+        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 05:30:19 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id m15so8835581pjj.3
+        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 05:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=lTq05bQ1OKgNVfwpDwHO25M6SddSlDeTyGdeeuSYq38=;
+        b=WyIluVrrWEn0m/dxKECPZMN1MjW96MEQ6xtJw5kNo8GII3mlN9wXxjQtk3PdhhaxQW
+         xKyi7HsXS36xIqfZ/mmgjKAxY3MTOUvntjjxHwrTjd9kgvbAVWhyRZwGfbYtObWsUD2r
+         r2SXCYIELN7Jc/YgtBLEWKp/LQjAxZJaxFSgFozwOsR5Y+YSN9gn4bs8EYXOjaPjkGcg
+         PxCamYjPckL5Akc36wPkha+b7Zv3GLrgUXLtdlOPO11Kwngn+OGr95XilNwnsfUAYsZb
+         juAXjm0Of3/QiuLd33Ou9EZl5tx9w+uOrS/HEidBDdDSYe2e98U8uuN5Yq+7XI05ifCc
+         Htog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=lTq05bQ1OKgNVfwpDwHO25M6SddSlDeTyGdeeuSYq38=;
+        b=aCOfw8Vw9woYm5Fij01pNt8KbTbKDnV5LwpG5+Onv3gKudljYzymVuVEspLOBOEElM
+         bX+/3VCO38iaaEnkbEz93T0o5mt7zX2kaglks4V+2Q55M+hgUIdDB5DrrOcwyQj1XeHX
+         uFfRiw11bfKcYNPle06INdfo72DSjLoph6ZWh+gk8XJ38kB+pxJhrOqwo1ce5KKS4aZJ
+         DLD+6RLIIR3Ck2b2QUVQGAtTKB8SLLxldfvrEFP6Z9op0F37T4bvJ133sEt0gPH9DTO6
+         r4or0eJPWUfyeCjFhwHvMqrlhoGkCbBMWBY3fe49Lf45XveRbnmz8agSpplmz/xjyULZ
+         bPTw==
+X-Gm-Message-State: ACgBeo2CFhiVvxlWB60IIEXwvA5gNZYkJ77ZovWQ6oK7L8wBA0Q3Fr/H
+        czkWMezHD790YRVWWpsnVYjv
+X-Google-Smtp-Source: AA6agR77/hmpgiMkWbIPOaXWY41ErdUJYXUbD6I5NF8OpqnxJZASur5kkaI6mV2CcfVbJ/+u4ItHuA==
+X-Received: by 2002:a17:902:6542:b0:172:95d8:a777 with SMTP id d2-20020a170902654200b0017295d8a777mr28453985pln.61.1661344219362;
+        Wed, 24 Aug 2022 05:30:19 -0700 (PDT)
+Received: from localhost.localdomain ([117.207.24.28])
+        by smtp.gmail.com with ESMTPSA id b3-20020a1709027e0300b00173031308fdsm3539220plm.158.2022.08.24.05.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Aug 2022 05:30:18 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     kishon@ti.com, gregkh@linuxfoundation.org, lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mie@igel.co.jp, kw@linux.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/5] pci_endpoint_test: Fix the return value of IOCTLs
+Date:   Wed, 24 Aug 2022 18:00:05 +0530
+Message-Id: <20220824123010.51763-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 20 Aug 2022 00:14:09 +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Hey all,
-> 
-> Got a few fixes for PCI dt-bindings that I noticed after upgrading my
-> dt-schema to v2022.08.
-> 
-> [...]
+During the review of a patch for pci_endpoint_test driver [1], Greg spotted
+the wrong usage of the return value of IOCTLs in the driver. This series
+fixes that by returning 0 for success and negative error code for failure.
+Relevant change is also made to the userspace tool and the Documentation.
 
-Applied to pci/dt, thanks!
+Along with those, there are couple more patches fixing other small issues
+I noted.
 
-[1/7] dt-bindings: PCI: fu740-pci: fix missing clock-names
-      https://git.kernel.org/lpieralisi/pci/c/b408fad61d34
-[2/7] dt-bindings: PCI: microchip,pcie-host: fix missing clocks properties
-      https://git.kernel.org/lpieralisi/pci/c/05a5741019a5
-[3/7] dt-bindings: PCI: microchip,pcie-host: fix missing dma-ranges
-      https://git.kernel.org/lpieralisi/pci/c/1a7966b33b5b
+NOTE: I have just compile tested this series. So it'd be good if someone
+can test it on the PCI endpoint setup.
 
 Thanks,
-Lorenzo
+Mani
+
+[1] https://lore.kernel.org/all/20220816100617.90720-1-mie@igel.co.jp/
+
+Changes in v2:
+
+* Fixed the error numbers in pci_endpoint_test
+* Added Fixes tag and CCed stable list for relevant patches. The patches
+  should get backported until 5.10 kernel only. Since for the LTS kernels
+  before that, the pci_endpoint_test driver was not supporting all commands.
+
+Manivannan Sadhasivam (5):
+  misc: pci_endpoint_test: Fix the return value of IOCTL
+  tools: PCI: Fix parsing the return value of IOCTLs
+  Documentation: PCI: endpoint: Use the correct return value of
+    pcitest.sh
+  misc: pci_endpoint_test: Remove unnecessary WARN_ON
+  tools: PCI: Fix memory leak
+
+ Documentation/PCI/endpoint/pci-test-howto.rst | 152 ++++++++--------
+ drivers/misc/pci_endpoint_test.c              | 167 ++++++++----------
+ tools/pci/pcitest.c                           |  48 ++---
+ 3 files changed, 179 insertions(+), 188 deletions(-)
+
+-- 
+2.25.1
+
