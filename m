@@ -2,66 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0254759FA09
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 14:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3245559FA27
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Aug 2022 14:43:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237525AbiHXMbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Aug 2022 08:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55666 "EHLO
+        id S235946AbiHXMn0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Aug 2022 08:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237574AbiHXMaq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 08:30:46 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430975D0F4
-        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 05:30:39 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id s3-20020a17090a2f0300b001facfc6fdbcso1322613pjd.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 05:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=uAW+kjtQa+80IfCy6IL5kC5fYW/7yUQfz0e6h9eDx6U=;
-        b=sg+4drdGaUY0LXCOCdgTnN/ZEnFNJJMEUKPl/nG8dXzi/wXDo0Cy9Qcs0OZWYXWujr
-         ANjd3KDHuAwF03KxA/R0ZkrhVe8EJskcMxn217hk4RFVNkwcRaf2i3OMk71GWXrBC7GI
-         tAjBBv5Uf4jQoopGGauAR7XBmBY9loYhnvKpqTYh4lJSWMqJONSmQAu3MCF2oXI9U3Ma
-         E3MT1K7nrp3gAK6js2fYyPaK5gLHjhL1NDXs1NGry2v5B6MuS2bQNJdeFV7ol4c8yDnx
-         xhYT/BqjxBvf0ttvlVkMIAOs+okRT3NOO+K9dqu33H/a5XttQLO14caGiIfzJegCfVha
-         aD9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=uAW+kjtQa+80IfCy6IL5kC5fYW/7yUQfz0e6h9eDx6U=;
-        b=e6lKvwmYkKXJRFWJ23plD4ybr0qdywmFMMhPesEHFfKJrNXGSiomgunsfqgXOQG6J8
-         9iGLBqRiJzzV/DVxmrN/027hUmlInWbMdBn77JqzyD2Tme99snVz/BWD7uDcq5zxG81J
-         F2C2yEZlN3L25K///lIA14VPH/EHyOs1xZK8xl4RqZOuV5m68zHI7cyMm2S+o7KilYrL
-         GJz5E7KNOTVRF6e+qcYMYX8hwPAyJetI+1YtLHHjsH4g0SLTwz76/gPcMeVp1DTnAs2A
-         rJPp0jw1omMsSQs4ZYAzxbbCO8+oISZvtW0AMYlfeCkvVACfUPIE3QyRhMgl0EhDFU7L
-         E2Zw==
-X-Gm-Message-State: ACgBeo0ZXzITisjQm1hcG9fCyBQqBih+SFHGbeIlhk5yrahTZHvWgk41
-        Y0etKbrXfzszVOSdH7xkQzzG
-X-Google-Smtp-Source: AA6agR5czQel5mWzZi3n+4qNkTWGh/vvxmu8AqiAYTsY5T9G0kG5EozYuvL3RIFF7LCc1/tkLt0KNg==
-X-Received: by 2002:a17:90b:1d10:b0:1fb:e7b:270f with SMTP id on16-20020a17090b1d1000b001fb0e7b270fmr8180054pjb.192.1661344238634;
-        Wed, 24 Aug 2022 05:30:38 -0700 (PDT)
-Received: from localhost.localdomain ([117.207.24.28])
-        by smtp.gmail.com with ESMTPSA id b3-20020a1709027e0300b00173031308fdsm3539220plm.158.2022.08.24.05.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 05:30:38 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, gregkh@linuxfoundation.org, lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mie@igel.co.jp, kw@linux.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 5/5] tools: PCI: Fix memory leak
-Date:   Wed, 24 Aug 2022 18:00:10 +0530
-Message-Id: <20220824123010.51763-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220824123010.51763-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S235074AbiHXMnZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Aug 2022 08:43:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B1A696C6;
+        Wed, 24 Aug 2022 05:43:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E49B4B823EE;
+        Wed, 24 Aug 2022 12:43:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392B9C433C1;
+        Wed, 24 Aug 2022 12:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1661345001;
+        bh=eUDEcyDSoKd3iXeAYc6HrNZyJVRX0GLyiR77eO5bfhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LMQeii5kpZ6oVSzn0mobOeiGb2XIN5zTEyAnYQj5i4fWMsUxN2YjnWXrGulcUiiTV
+         xID+H0L+3ungwiKO6z2C9xKdxYQd9zIRYUaBZuzlPA4nruWKJybzbieQhZQ8aTVxQ6
+         7OSyIEUmkeXhRpPmBNlL5b5Q8kt28dkne5MDc5lk=
+Date:   Wed, 24 Aug 2022 14:43:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     kishon@ti.com, lpieralisi@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mie@igel.co.jp, kw@linux.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] misc: pci_endpoint_test: Fix the return value of
+ IOCTL
+Message-ID: <YwYc5kcdv+5RQDsK@kroah.com>
 References: <20220824123010.51763-1-manivannan.sadhasivam@linaro.org>
+ <20220824123010.51763-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220824123010.51763-2-manivannan.sadhasivam@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,37 +53,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Memory allocated for "test" needs to be freed at the end of the main().
+On Wed, Aug 24, 2022 at 06:00:06PM +0530, Manivannan Sadhasivam wrote:
+> IOCTLs are supposed to return 0 for success and negative error codes for
+> failure. Currently, this driver is returning 0 for failure and 1 for
+> success, that's not correct. Hence, fix it!
+> 
+> Cc: stable@vger.kernel.org #5.10
+> Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Fixes: 3f2ed8134834 ("tools: PCI: Add a userspace tool to test PCI endpoint")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- tools/pci/pcitest.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index a4e5b17cc3b5..a416a66802f3 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -157,7 +157,7 @@ static int run_test(struct pci_test *test)
- 
- int main(int argc, char **argv)
- {
--	int c;
-+	int c, ret;
- 	struct pci_test *test;
- 
- 	test = calloc(1, sizeof(*test));
-@@ -249,5 +249,8 @@ int main(int argc, char **argv)
- 		return -EINVAL;
- 	}
- 
--	return run_test(test);
-+	ret = run_test(test);
-+	free(test);
-+
-+	return ret;
- }
--- 
-2.25.1
+> ---
+>  drivers/misc/pci_endpoint_test.c | 163 ++++++++++++++-----------------
+>  1 file changed, 76 insertions(+), 87 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 8f786a225dcf..a7d8ae9730f6 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -174,13 +174,12 @@ static void pci_endpoint_test_free_irq_vectors(struct pci_endpoint_test *test)
+>  	test->irq_type = IRQ_TYPE_UNDEFINED;
+>  }
+>  
+> -static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+> +static int pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+>  						int type)
+>  {
+> -	int irq = -1;
+> +	int irq = -ENOSPC;
 
+No need to set this if you:
+
+>  	struct pci_dev *pdev = test->pdev;
+>  	struct device *dev = &pdev->dev;
+> -	bool res = true;
+>  
+>  	switch (type) {
+>  	case IRQ_TYPE_LEGACY:
+> @@ -202,15 +201,16 @@ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
+>  		dev_err(dev, "Invalid IRQ type selected\n");
+
+This should now return -EINVAL;
+
+
+>  	}
+>  
+> +	test->irq_type = type;
+
+Again, do not make a change to the kernel state if there is an error
+above.  That's wrong to do, and yes, the current code is incorrect,
+don't keep that bug here as well when it's so easy to fix up
+automatically.
+
+
+I stopped reviewing here...
+
+thanks,
+
+greg k-h
