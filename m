@@ -2,129 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FF75A0860
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 07:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D42895A0910
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 08:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232366AbiHYFQW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 01:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        id S229510AbiHYGql (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 02:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbiHYFQV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 01:16:21 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C3E9E699;
-        Wed, 24 Aug 2022 22:16:19 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id w22so3378143ljg.7;
-        Wed, 24 Aug 2022 22:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=73A3PA1tNcUNvJjHON3380nOXGx0PNBXSH7q3EuDDnc=;
-        b=MSOUpNVA4XHFH69NPXNfDD+PzQipjFZJrr6m+fuMun0+uboEjchC3kOVMlWTsy+Nil
-         99XY2GTd+zwb27lqrzHWlzYlmHTXNzk21iUcvhPVqnwPCViwBwrV3a6jUC1GJlmYeluo
-         8LFr4j/Npd1AoQ6uzX5NbyMnq5bVkotv/FW4+2Q2SV0WbS7H7f3PfvYvz2ZKW2jqwWZ6
-         wNz+KFldLjcTQzrkQZN785gLo32i9kdf6RLCPxlQh/2XNBLB7JHwEnRRwaNjctvBNLFE
-         cprJEue28HKS9YftmFVyU63/LukdVWVoi1O/bKwdh2C5GCxruiN20iB1X7FXknXryKco
-         tAhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=73A3PA1tNcUNvJjHON3380nOXGx0PNBXSH7q3EuDDnc=;
-        b=ou28Sgf3O9CMrWL9TO54TS0Pr4jbc5bakVafEok+LCO+TzyLmrWlHpVBfu4ULesE4E
-         nLkUYfx8/2CKhqh8JqVWGC0BWqsZM3hP5IlLmv9ZvUw+GQ1N9JFzTUswbP9AknVNHSpS
-         7TuAFsSgm+g6IUSSKe0yImYrbbPmgAL+fAw+kHP9wy0AkT5ibKYIqNThKna8C8+KldHP
-         KfYDMQScFyyLh5Tb8RhVDsinW/KmIUHNEAmgnkWAg1W8SsAhV81d8ph4kQL0f/IcAKMw
-         EtuSouuacSd7RpA4oo0DcDc531C5sZB0whkHXmSP7+GU54HzLVzUsB1G53kolzGUOtQ2
-         4GDw==
-X-Gm-Message-State: ACgBeo3qwA1w+T8qqcqwtQSvz7sVHD8NsMxYeP4S6Q/fnyqcQfkBY9Cl
-        tFU96YwncP5trrsr7s7zeMw=
-X-Google-Smtp-Source: AA6agR4WRI0UJiBuMep34NFqjfH/hvCWrJ7Fr7Y1Rn+iMfWxh60aGcJMk8I9GiGN2sPUGumxU5TD/w==
-X-Received: by 2002:a2e:a587:0:b0:25f:e6ac:c287 with SMTP id m7-20020a2ea587000000b0025fe6acc287mr548687ljp.416.1661404577724;
-        Wed, 24 Aug 2022 22:16:17 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id s9-20020ac24649000000b0048b03d1ca4asm292529lfo.161.2022.08.24.22.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 22:16:17 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 08:16:14 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 24/24] PCI: dwc: Add DW eDMA engine support
-Message-ID: <20220825051614.kfify5fbqlhurvdn@mobilestation>
-References: <20220824181319.wkj4256a5jp2xjlp@mobilestation>
- <20220824181754.GA2794837@bhelgaas>
+        with ESMTP id S229909AbiHYGqh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 02:46:37 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 24 Aug 2022 23:46:36 PDT
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:101:465::107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C06040E21
+        for <linux-pci@vger.kernel.org>; Wed, 24 Aug 2022 23:46:36 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4MCtcx08q6z9sTZ;
+        Thu, 25 Aug 2022 08:40:17 +0200 (CEST)
+Message-ID: <68f140f8-1877-6077-0992-e435fb9a94e7@denx.de>
+Date:   Thu, 25 Aug 2022 08:40:15 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220824181754.GA2794837@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Content-Language: en-US
+To:     Tom Seewald <tseewald@gmail.com>,
+        "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, regressions@lists.linux.dev,
+        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+        Xinhui Pan <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20220819190725.GA2499154@bhelgaas>
+ <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
+ <CAARYdbhVwD1m1rAzbR=K60O=_A3wFsb1ya=zRV_bmF8s3Kb02A@mail.gmail.com>
+ <30671d88-85a1-0cdf-03db-3a77d6ef96e9@amd.com>
+ <CAARYdbhdR0v=V82WnQOGBNrcth8z6F_61SxG9OTzgNpgg3xx7A@mail.gmail.com>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <CAARYdbhdR0v=V82WnQOGBNrcth8z6F_61SxG9OTzgNpgg3xx7A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4MCtcx08q6z9sTZ
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NEUTRAL,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 24, 2022 at 01:17:54PM -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 24, 2022 at 09:13:19PM +0300, Serge Semin wrote:
-> > On Wed, Aug 24, 2022 at 11:51:18AM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Aug 22, 2022 at 09:53:32PM +0300, Serge Semin wrote:
+On 24.08.22 16:45, Tom Seewald wrote:
+> On Wed, Aug 24, 2022 at 12:11 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
+>> Unfortunately, I don't have any NV platforms to test. Attached is an
+>> 'untested-patch' based on your trace logs.
+>>
+>> Thanks,
+>> Lijo
 > 
-> > > > +	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> > > > +	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> > > > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> > > > +
-> > > > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > > > +	} else if (val != 0xFFFFFFFF) {
-> > > 
-> > 
-> > > Consider PCI_POSSIBLE_ERROR() as an annotation about the meaning of
-> > > 0xFFFFFFFF and something to grep for.
-> > 
-> > In this case FFs don't mean an error but a special value, which
-> > indicates that the eDMA is mapped via the unrolled CSRs space. The
-> > similar approach has been implemented for the iATU legacy/unroll setup
-> > auto-detection. So I don't see much reasons to have it grepped, so as
-> > to have a macro-based parametrization since the special value will
-> > unluckily change while having the explicit literal utilized gives a
-> > better understanding of the way the algorithm works.
-> 
+> Thank you for the patch. It applied cleanly to v6.0-rc2 and after
+> booting that kernel I no longer see any messages about PCI errors. I
+> have uploaded a dmesg log to the bug report:
+> https://bugzilla.kernel.org/attachment.cgi?id=301642
 
-> If 0xFFFFFFFF is the result of a successful PCIe Memory Read,
+I did not follow this thread in depth, but FWICT the bug is solved now
+with this patch. So is it correct, that the now fully enabled AER
+support in the PCI subsystem in v6.0 helped detecting a bug in the AMD
+GPU driver?
 
-Right. It is.
-
-> and not
-> something synthesized by the host bridge when it handles an
-> Unsupported Request completion,
-
-No it isn't. To be clear 0xFFs don't indicate some PCIe bus/controller
-malfunction, but they are a result of reading the
-DMA_CTRL_VIEWPORT_OFF register which doesn't exist. The manual
-explicitly says: "Note - When register does not exist, value is fixed
-to 32'hFFFF_FFFF". The register doesn't exist if either eDMA is
-unavailable or the eDMA CSRs are mapped via the unrolled state. That
-logic is used to auto-detect the eDMA availability and the way of it's
-CSRs mapping.
-
-> I'm fine with keeping it as is.
-
-Ok. Thanks.
-
--Sergey
+Thanks,
+Stefan
