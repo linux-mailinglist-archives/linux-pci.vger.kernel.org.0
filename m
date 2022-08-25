@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EF95A1597
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 17:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37F205A15B2
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 17:26:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233935AbiHYPY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 11:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34568 "EHLO
+        id S241862AbiHYPYz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 11:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241961AbiHYPYp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 11:24:45 -0400
+        with ESMTP id S241906AbiHYPYo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 11:24:44 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5257CB99DE;
-        Thu, 25 Aug 2022 08:24:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B4DB99CD;
+        Thu, 25 Aug 2022 08:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
-        :references:content-disposition:in-reply-to;
-        bh=g3XDA94v59dAId+VCT21K3CqqFYOQAY4xEZRniu4BfM=; b=XCtmLgBIKjcsXvDqzCKuqQL1p0
-        Kwi9VCS0IBQPYm/0K/UUyBXFORRZe1FYcoKVh84+mAB7dtCZQrSnRwRsxkrMH2tzIz+JgpM5SGlBY
-        SG+BPAfLy2+Zv52MHX7Wd/phN/9eqWLxhCGu0qoZqoutEbNvF+WtZWZvLMxryxO81L+whZWQ7vWlh
-        4j5At+Q3ZufRbidAw0d/DKFCe2hcx3aUee6gyfhX71tZTH+8mEO2ZAhB9UrPP9zqabfWu4n1ts4Pv
-        Au7XaqgSjun1Lc1/HPMBP2WFCRpiDhoR7eBy0yWdcqWCvVjvARAewmA/sKBK/KpjEe5rxKKG9IM0O
-        Wx/OOoKw==;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Cc:To:From:content-disposition;
+        bh=bxGrkGTTo43LTZ3Nm3zOWeDThYeDqrWiHdm9e0oQNtA=; b=kaCDplg1OtHM0O9TJKdP6tqye0
+        iCd6ssgN+loS7aD1+RS5HH/D/rM4BLjTvajFn813m4lsxD+O+Ek4zi+rZTHtuV58HvPV93K/HPRmv
+        pEFdRa8OZIovbUc+urFK9Te6Py/uNojEQw1d+1K4uLXWMRkpHL96ZwVzgvy4yPbVQwZIJkO/cuNkN
+        UA4ThK12k/0QDNvrphI0wQyJw3yMRn/IU4hBw8wrQacTuz/b6mE7Ah5KqfwbpIkoarZ7fslwWdOse
+        zx3IIUBKsWxl1xBiEDOuD0qBbzxHqz2P2JUNN+FQA7oWNXiLDV9/VpPiUGiDPcOjomfOezHtajKbP
+        sbBleevA==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1oREij-0086M8-QV; Thu, 25 Aug 2022 09:24:39 -0600
+        id 1oREij-0086M9-QV; Thu, 25 Aug 2022 09:24:38 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1oREid-0001eT-Pd; Thu, 25 Aug 2022 09:24:31 -0600
+        id 1oREid-0001eV-VM; Thu, 25 Aug 2022 09:24:32 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -56,9 +56,11 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 25 Aug 2022 09:24:17 -0600
-Message-Id: <20220825152425.6296-1-logang@deltatee.com>
+Date:   Thu, 25 Aug 2022 09:24:18 -0600
+Message-Id: <20220825152425.6296-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220825152425.6296-1-logang@deltatee.com>
+References: <20220825152425.6296-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
@@ -71,93 +73,99 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH v9 0/8] Userspace P2PDMA with O_DIRECT NVMe devices
+Subject: [PATCH v9 1/8] mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+GUP Callers that expect PCI P2PDMA pages can now set FOLL_PCI_P2PDMA to
+allow obtaining P2PDMA pages. If GUP is called without the flag and a
+P2PDMA page is found, it will return an error.
 
-This is the latest P2PDMA userspace patch set. Since the last full
-posting[1] the first half of the series[2] has made it into v6.0-rc1.
+FOLL_PCI_P2PDMA cannot be set if FOLL_LONGTERM is set.
 
-This version of the patchset also switches to using a sysfs binary
-file instead of mmapping the nvme char device directly. This
-removes the need for the anonymous inode as well as the numerous
-hooks into the nvme driver. The file to mmap will be found in
-/sys/<pci_device>/p2pmem/allocate. The latest version of this patch
-set is much smaller as a result of these simplifications.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/mm.h |  1 +
+ mm/gup.c           | 22 +++++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-This patch set enables userspace P2PDMA by allowing userspace to mmap()
-allocated chunks of the CMB. The resulting VMA can be passed only
-to O_DIRECT IO on NVMe backed files or block devices. A flag is added
-to GUP() in Patch 1, then Patches 2 through 6 wire this flag up based
-on whether the block queue indicates P2PDMA support. Patches 7
-creates the sysfs resource that can hand out the VMAs and Patch 8
-adds brief documentation for the new interface.
-
-Feedback welcome.
-
-This series is based on v6.0-rc2. A git branch is available here:
-
-  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v9
-
-Thanks,
-
-Logan
-
-[1] https://lkml.kernel.org/r/20220615161233.17527-1-logang@deltatee.com
-[2] https://lkml.kernel.org/r/20220708165104.5005-1-logang@deltatee.com
-
---
-
-Changes since v7:
-  - Rebase onto v6.0-rc2, included reworking the iov_iter patch
-    due to changes there
-  - Drop the char device mmap implementation in favour of a sysfs
-    based interface. (per Christoph)
-
-Changes since v6:
-  - Rebase onto v5.19-rc1
-  - Rework how the pages are stored in the VMA per Jason's suggestion
-
-Changes since v5:
-  - Rebased onto v5.18-rc1 which includes Christophs cleanup to
-    free_zone_device_page() (similar to Ralph's patch).
-  - Fix bug with concurrent first calls to pci_p2pdma_vma_fault()
-    that caused a double allocation and lost p2p memory. Noticed
-    by Andrew Maier.
-  - Collected a Reviewed-by tag from Chaitanya.
-  - Numerous minor fixes to commit messages
-
-
---
-
-Logan Gunthorpe (8):
-  mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
-  iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
-  block: add check when merging zone device pages
-  lib/scatterlist: add check when merging zone device pages
-  block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
-  block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
-  PCI/P2PDMA: Allow userspace VMA allocations through sysfs
-  ABI: sysfs-bus-pci: add documentation for p2pmem allocate
-
- Documentation/ABI/testing/sysfs-bus-pci |  12 ++-
- block/bio.c                             |  12 ++-
- block/blk-map.c                         |   7 +-
- drivers/pci/p2pdma.c                    | 124 ++++++++++++++++++++++++
- include/linux/mm.h                      |   1 +
- include/linux/mmzone.h                  |  24 +++++
- include/linux/uio.h                     |   6 ++
- lib/iov_iter.c                          |  40 +++++++-
- lib/scatterlist.c                       |  25 +++--
- mm/gup.c                                |  22 ++++-
- 10 files changed, 254 insertions(+), 19 deletions(-)
-
-
-base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
---
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 3bedc449c14d..37a3e91e6e77 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2891,6 +2891,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+ #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
+ #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
+ #define FOLL_FAST_ONLY	0x80000	/* gup_fast: prevent fall-back to slow gup */
++#define FOLL_PCI_P2PDMA	0x100000 /* allow returning PCI P2PDMA pages */
+ 
+ /*
+  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
+diff --git a/mm/gup.c b/mm/gup.c
+index 732825157430..79aea452619e 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -566,6 +566,12 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 		goto out;
+ 	}
+ 
++	if (unlikely(!(flags & FOLL_PCI_P2PDMA) &&
++		     is_pci_p2pdma_page(page))) {
++		page = ERR_PTR(-EREMOTEIO);
++		goto out;
++	}
++
+ 	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
+ 		       !PageAnonExclusive(page), page);
+ 
+@@ -1015,6 +1021,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+ 		return -EOPNOTSUPP;
+ 
++	if ((gup_flags & FOLL_LONGTERM) && (gup_flags & FOLL_PCI_P2PDMA))
++		return -EOPNOTSUPP;
++
+ 	if (vma_is_secretmem(vma))
+ 		return -EFAULT;
+ 
+@@ -2359,6 +2368,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+ 
++		if (unlikely(!(flags & FOLL_PCI_P2PDMA) &&
++			     is_pci_p2pdma_page(page)))
++			goto pte_unmap;
++
+ 		folio = try_grab_folio(page, 1, flags);
+ 		if (!folio)
+ 			goto pte_unmap;
+@@ -2438,6 +2451,12 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 			undo_dev_pagemap(nr, nr_start, flags, pages);
+ 			break;
+ 		}
++
++		if (!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
++			undo_dev_pagemap(nr, nr_start, flags, pages);
++			break;
++		}
++
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		if (unlikely(!try_grab_page(page, flags))) {
+@@ -2926,7 +2945,8 @@ static int internal_get_user_pages_fast(unsigned long start,
+ 
+ 	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
+ 				       FOLL_FORCE | FOLL_PIN | FOLL_GET |
+-				       FOLL_FAST_ONLY | FOLL_NOFAULT)))
++				       FOLL_FAST_ONLY | FOLL_NOFAULT |
++				       FOLL_PCI_P2PDMA)))
+ 		return -EINVAL;
+ 
+ 	if (gup_flags & FOLL_PIN)
+-- 
 2.30.2
+
