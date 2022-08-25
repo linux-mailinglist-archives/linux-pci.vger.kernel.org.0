@@ -2,162 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0C35A17AC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 19:06:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 482685A1821
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 19:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241950AbiHYRGg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 13:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
+        id S242278AbiHYRsu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 13:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241798AbiHYRGd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 13:06:33 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE18AE9EE;
-        Thu, 25 Aug 2022 10:06:32 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id l1so28539284lfk.8;
-        Thu, 25 Aug 2022 10:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=R5iHqEtZr00erkxX3NB+2OL0weXC8cEtJ06yqZDqDa0=;
-        b=WD8YxMU9hiV91Sw7idRjtjgBMWjDgN0X0lwPAf6/1qCaZoEQDnU2+YhQ6belvwFPE6
-         UmvjxOuhr6N4++sVYaKkc/bsfk5Ef3MLg8DHpO4s/xRns8nzwqI9fO4kuQJnkNQt1oTV
-         SzWy55K8pRC6jjccpYH6OeP8/LWyZ5Z4Ynr2nU/5lQkgypbLyZfSfY67ShcwBCQs1rad
-         xUQXd480pOYMuW1nbPH+LgMCCqk4x9Nw6Ac1I8QnxgTpMDF2a5L0hJNSJT3ThaFG6RJ7
-         9IWxrqharq6KkF6/qL5/qapwlUovJGeKzT8w5TiSFsffbrbs554q76QmPKPw2D0X6YJ8
-         y1nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=R5iHqEtZr00erkxX3NB+2OL0weXC8cEtJ06yqZDqDa0=;
-        b=mBjoO3cJJYcGbAGTi/YxY9DKSbS1AEishB29+dsljMAyFbkWEea2zqWsczyB5HeLFg
-         1aoBZ7ev9JVXcRZ9qhyEi3NZ1wCgCamlpoSURYrsfBdeD9EwTdvUKRZU2InZDuIRQwWp
-         8HX9mR0atSFqls5lOc0bXATPkUsbtlOJbEU4LviNaAFoRo+MZG2GFNLP+Nb8CEOQ3qPJ
-         GZC5UuRs0hHhxQYLwnx4we35SNzX5+FRwm30Ar6FFEpK5cfs4xT7qegtG067LxWfTL13
-         XDjjzwmusedJw1RuFkpGf191ERZdZG07J/KFlbXqvGwskP67KkF+Eo9Q7lHS1DrZ/zUa
-         /5fA==
-X-Gm-Message-State: ACgBeo280WspulAuLIpk2macXWrGWXLbB6tcmh14mH1pNvWtKihOJTG4
-        FHoZKL8VZIiQsLBVFwCGAI8=
-X-Google-Smtp-Source: AA6agR5V/OoZyKFWfn0mqWqYNTWrkAZEQLeBy+FOZPvZlRdGy4gUOqmqIRSabWb8hdBkEzy79Kw6ag==
-X-Received: by 2002:a05:6512:2609:b0:491:10ba:31f0 with SMTP id bt9-20020a056512260900b0049110ba31f0mr1361412lfb.334.1661447189542;
-        Thu, 25 Aug 2022 10:06:29 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id l20-20020ac24314000000b00492dbb3b74fsm586761lfh.145.2022.08.25.10.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 10:06:28 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 20:06:26 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 24/24] PCI: dwc: Add DW eDMA engine support
-Message-ID: <20220825170626.fnqmw636tqgrqdqc@mobilestation>
-References: <20220825051614.kfify5fbqlhurvdn@mobilestation>
- <20220825160443.GA2854084@bhelgaas>
+        with ESMTP id S241514AbiHYRst (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 13:48:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35764B99F9
+        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 10:48:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A131961CCB
+        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 17:48:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D01A7C433D6;
+        Thu, 25 Aug 2022 17:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661449728;
+        bh=MuO0G7kA4cdfTUAOgzrWCmVBOK+fExAHtWKQ1fba/FM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XNfU30dcGEujUTlo4b1cyYc5VAQijYBRJCYtibn4j6Dn/x1S4RJv91HAXJz2BhDET
+         UpClEATz25bH8nU2xmdLLjO7okVTmf9thb9exVYF8ZFyOj7ff7xMnhf8Gcy8qhgzKR
+         OUNVs9ikRDfz/EqApJ+Qn50J6CuCXGjSKPgB14JWqz5qG4r+Z3h4po0VuBdL8UzU7X
+         a9KtKw9xqkHHKxmAn8X4IbjRjmy23wZ3hrsOYUJbgjTwtYI5cfFI1O7PdPmlEgEYKB
+         WlQJ3OmzpNf8gode1DwpF6jqSR1KDyEgefgr5u09woXg0AxkW8rkUmNfRyBRAXtcdf
+         bYXW1reThzqKg==
+Date:   Thu, 25 Aug 2022 12:48:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     "Lazar, Lijo" <lijo.lazar@amd.com>, Stefan Roese <sr@denx.de>,
+        Tom Seewald <tseewald@gmail.com>, regressions@lists.linux.dev,
+        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+        Xinhui Pan <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Message-ID: <20220825174845.GA2857385@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220825160443.GA2854084@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0444020d-e7e6-2fe9-e94e-413c8d3bab38@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 25, 2022 at 11:04:43AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 25, 2022 at 08:16:14AM +0300, Serge Semin wrote:
-> > On Wed, Aug 24, 2022 at 01:17:54PM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Aug 24, 2022 at 09:13:19PM +0300, Serge Semin wrote:
-> > > > On Wed, Aug 24, 2022 at 11:51:18AM -0500, Bjorn Helgaas wrote:
-> > > > > On Mon, Aug 22, 2022 at 09:53:32PM +0300, Serge Semin wrote:
+On Thu, Aug 25, 2022 at 10:18:28AM +0200, Christian König wrote:
+> Am 25.08.22 um 09:54 schrieb Lazar, Lijo:
+> > On 8/25/2022 1:04 PM, Christian König wrote:
+> > > Am 25.08.22 um 08:40 schrieb Stefan Roese:
+> > > > On 24.08.22 16:45, Tom Seewald wrote:
+> > > > > On Wed, Aug 24, 2022 at 12:11 AM Lazar, Lijo
+> > > > > <lijo.lazar@amd.com> wrote:
+> > > > > > Unfortunately, I don't have any NV platforms to test. Attached is an
+> > > > > > 'untested-patch' based on your trace logs.
+> > > > > ...
+> > > > 
+> > > > I did not follow this thread in depth, but FWICT the bug is solved now
+> > > > with this patch. So is it correct, that the now fully enabled AER
+> > > > support in the PCI subsystem in v6.0 helped detecting a bug in the AMD
+> > > > GPU driver?
 > > > 
-> > > > > > +	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> > > > > > +	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> > > > > > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> > > > > > +
-> > > > > > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > > > > > +	} else if (val != 0xFFFFFFFF) {
-> > > > > 
-> > > > 
-> > > > > Consider PCI_POSSIBLE_ERROR() as an annotation about the meaning of
-> > > > > 0xFFFFFFFF and something to grep for.
-> > > > 
-> > > > In this case FFs don't mean an error but a special value, which
-> > > > indicates that the eDMA is mapped via the unrolled CSRs space. The
-> > > > similar approach has been implemented for the iATU legacy/unroll setup
-> > > > auto-detection. So I don't see much reasons to have it grepped, so as
-> > > > to have a macro-based parametrization since the special value will
-> > > > unluckily change while having the explicit literal utilized gives a
-> > > > better understanding of the way the algorithm works.
+> > > It looks like it, but I'm not 100% sure about the rational behind it.
+> > > 
+> > > Lijo can you explain more on this?
 > > 
-> > > If 0xFFFFFFFF is the result of a successful PCIe Memory Read,
+> > From the trace, during gmc hw_init it takes this route -
 > > 
-> > Right. It is.
+> > gart_enable -> amdgpu_gtt_mgr_recover -> amdgpu_gart_invalidate_tlb ->
+> > amdgpu_device_flush_hdp -> amdgpu_asic_flush_hdp (non-ring based HDP
+> > flush)
 > > 
-> > > and not
-> > > something synthesized by the host bridge when it handles an
-> > > Unsupported Request completion,
+> > HDP flush is done using remapped offset which is MMIO_REG_HOLE_OFFSET
+> > (0x80000 - PAGE_SIZE)
 > > 
-> > No it isn't. To be clear 0xFFs don't indicate some PCIe bus/controller
-> > malfunction, but they are a result of reading the
-> > DMA_CTRL_VIEWPORT_OFF register which doesn't exist. The manual
-> > explicitly says: "Note - When register does not exist, value is fixed
-> > to 32'hFFFF_FFFF". The register doesn't exist if either eDMA is
-> > unavailable or the eDMA CSRs are mapped via the unrolled state.
+> > WREG32_NO_KIQ((adev->rmmio_remap.reg_offset +
+> > KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL) >> 2, 0);
+> > 
+> > However, the remapping is not yet done at this point. It's done at a
+> > later point during common block initialization. Access to the unmapped
+> > offset '(0x80000 - PAGE_SIZE)' seems to come back as unsupported request
+> > and reported through AER.
 > 
-
-> OK.  I don't think that's worded very well in the manual.  A register
-> that does not exist does not have a value, and attempts to read it
-> should fail.
-
-No. The manual explicitly says that this particular CSR
-(DMA_CTRL_VIEWPORT_OFF) value is tied to 32'hFFFF_FFFF if the register
-doesn't exist. There is no such text mentioned for any other
-non-existing CSR.
-
-> If they want to say the register always exists and
-> contains 0xFFFFFFFF for versions earlier than X, that would make
-> sense.  Wouldn't be the first time a manual is ambiguous ;)
-
-They say, that the register doesn't exist if either eDMA isn't
-available or it's mapped via the unrolled CSR space. There is no
-reference to the IP-core version.
-
-Anyway basically you are right they indeed imply that the register
-always exists.
-
+> That's interesting behavior. So far AER always indicated some kind of
+> transmission error.
 > 
-> If the device itself, i.e., not the Root Complex, is fabricating this
-> 0xFFFFFFFF value, reading it should not cause any AER or other error
-> status bits to be set.
-> 
-> If the Root Complex fabricates 0xFFFFFFFF upon receipt of a Completion
-> with Unsupported Request status, I would expect bits like Received
-> Master Abort to be set in the Root Port's Secondary Status register.
+> When that happens as well on unmapped areas of the MMIO BAR then we need to
+> keep that in mind.
 
-The device CSRs are accessed by means of the controller DBI-interface.
-Even though the whole CSRs space do look as the extended PCIe config
-space, the DBI-based access isn't tracked by the standard PCIe
-capabilities like AER. So in case of the eDMA auto-detection procedure
-introduced in this patch (and iATU auto-detection, which is already
-available in the DW PCIe driver ) we won't have any bus error status
-raised.
+AER can log many different kinds of errors, some related to hardware
+issues and some related to software.
 
--Sergey
+PCI writes are normally posted and get no response, so AER is the main
+way to find out about writes to unimplemented addresses.
+
+Reads do get a response, of course, and reads to unimplemented
+addresses cause errors that most hardware turns into a ~0 data return
+(in addition to reporting via AER if enabled).
+
+Bjorn
