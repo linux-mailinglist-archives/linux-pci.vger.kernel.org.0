@@ -2,163 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D65705A0F0E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 13:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA27C5A104B
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 14:23:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241555AbiHYL2v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 07:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42070 "EHLO
+        id S241230AbiHYMXS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 08:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241510AbiHYL2u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 07:28:50 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F99A8978;
-        Thu, 25 Aug 2022 04:28:48 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id bq23so18756522lfb.7;
-        Thu, 25 Aug 2022 04:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=ce6nbuCEQkfDUN004ii4WQCVHmiLgyyRaVFZyhqjD80=;
-        b=Z5zrUdyT8aCtiaWzVuW0/mSNNWZwRt4C5ygbVemwyhfyWrRA6KwPgSF784ayIdPGFX
-         O+EqBuPLfkom08Me3zq8LdmYRkhqUUMFv3M7NPUkYtLIZ2pcdE9LtUOXNaUXYQWwkiYS
-         M4eoFMVF2qi6VfDFsEguUFH7BDeKm0qPunCOcKmxm5HNgyJVRmsF68KwTipUYVUIA0EO
-         g38wy0gy01bhTWjlzLulUHxhrt8jMHgxCP7+8pUJzPD5ii8OcUR1WNh3/VDY95Z3cslh
-         DG6SCsc5BWtg9RtorlDk0XJZ9CP3VPKDkEZApsMu+dTpE5v4huxa4UcMfkG6XVFgGggL
-         4vOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=ce6nbuCEQkfDUN004ii4WQCVHmiLgyyRaVFZyhqjD80=;
-        b=MdTl2AAopA2cTz1qyW140wGDNqq0wVykmDwhj4SM8VcAhWfmbF8/iMU+3Tp6MFFDk7
-         WP1p5GXxFO/D8oKWVHBzYa/zNb93puEstNsU+ns3Y6yKd7QyYPOfdHHhoJb9bi14Vp3W
-         mskjsd0mQCPiM4/mleXXyb6Twb4GCida72M9vBg8uarUrE8ixRtJeIS3um3cMK3hF4kf
-         fLo6yYIbIF1dDP4AEVnv5VnS5cQHr9zkuaHiTYO/TvuI8PK7QF64pq3dTCi26C+1kNUa
-         xgL4JsHtjyfXNC+f0QKQafRkWg9GknS10XLNHLqYegtY/rwnbB1XgjFvjwf6Ak/8imzX
-         4sTQ==
-X-Gm-Message-State: ACgBeo2QrJOb6pz4AVfX0buAcWImvdle20MRUiX0PGzebaa1kIk5/gup
-        M2MI3XNu3awRrE/9yuuQJ2g=
-X-Google-Smtp-Source: AA6agR40HbbQdfBfjFN4McJl9CrRGzhMvWOmm1n4M5QZIGManIpram1mvaS3rvXVfII0Up+MajzCSw==
-X-Received: by 2002:a05:6512:3f4:b0:492:f088:45d0 with SMTP id n20-20020a05651203f400b00492f08845d0mr960600lfq.283.1661426926031;
-        Thu, 25 Aug 2022 04:28:46 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id p3-20020ac24ec3000000b0048aeafde9b8sm452718lfr.108.2022.08.25.04.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 04:28:45 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 14:28:43 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <20220825112843.4pbh37x6wemsdmmp@mobilestation>
-References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
- <20220823154526.GB6371@thinkpad>
- <20220824140759.7gg7t53z2xi7jxaj@mobilestation>
- <Ywb9r3f+wSkpk7gY@matsya>
- <20220825050457.esxb4oc6yht5kw6o@mobilestation>
- <Ywc2dOk3ChH8M460@matsya>
+        with ESMTP id S241553AbiHYMXM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 08:23:12 -0400
+Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101AEB1B96;
+        Thu, 25 Aug 2022 05:23:07 -0700 (PDT)
+Date:   Thu, 25 Aug 2022 14:23:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1661430184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TArGzTdThvhYzdQovAUE+8bQSNufrXIWdNrfxHDA2tc=;
+        b=hk4vCoyD497ddsP26DG6/KNanWkk6tEZq04o+hfYJI5e5Z5F5uix7gwjVe6TGkVMNfGQLi
+        Msx8gXHnifznr9DWJ0ToR1pGPV4r2LZ0ZMOPfEu2KFZIgs5GJu7ToRxls2QMm2vpCDy9o7
+        5TF6d4p8U1LhXJGkHsYi/Vn1RCGB4Ks=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Richard Leitner <richard.leitner@linux.dev>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, vkoul@kernel.org,
+        alexander.stein@ew.tq-group.com, marex@denx.de,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v3 0/6] Add the iMX8MP PCIe support
+Message-ID: <Ywdpps9B3PCno6wK@skidata.com>
+References: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Ywc2dOk3ChH8M460@matsya>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 25, 2022 at 02:14:36PM +0530, Vinod Koul wrote:
-> On 25-08-22, 08:04, Serge Semin wrote:
-> > On Thu, Aug 25, 2022 at 10:12:23AM +0530, Vinod Koul wrote:
-> > > On 24-08-22, 17:07, Serge Semin wrote:
-> > > > On Tue, Aug 23, 2022 at 09:15:26PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Mon, Aug 22, 2022 at 09:53:08PM +0300, Serge Semin wrote:
-> > > 
-> > > > > I've tested this series on Qualcomm SM8450 SoC based dev board. So,
-> > > > > 
-> > > > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > 
-> > > > 
-> > > > Thanks.
-> > > > 
-> > > > > Not sure what is the merging strategy for this one but this series should get
-> > > > > merged into a single tree. Since the PCI patch is touching the designware
-> > > > > driver, merging the series into dmaengine tree might result in conflict later.
-> > > > 
-> > > > Right, the series
-> > > > [PATCH v5 00/20] PCI: dwc: Add generic resources and Baikal-T1 support
-> > > > is supposed to be merged in first. Then this one will get to be
-> > > > applied with no conflicts. That's what I imply in the head of the
-> > > > cover-letter.
-> > > 
-> > 
-> > > I dont see a dependency of dma patches with PCIe patches? I guess they
-> > > could go thru the respective trees now..?
-> > 
-> > There is a backward dependency: the PCIe patch in this series depends
-> > on the eDMA patches and the patches in the patchset #3. So should you
+Hi Richard,
+
+On Thu, Aug 18, 2022 at 03:02:27PM +0800, Richard Zhu wrote:
+> Based on the 6.0-rc1 of the pci/next branch. 
+> This series adds the i.MX8MP PCIe support and had been tested on i.MX8MP
+> EVK board when one PCIe NVME device is used.
 > 
-
-> What is the dependency...? Looking at the patches there does not seem to
-> be one...
-
-[PATCH RESEND v5 24/24] PCI: dwc: Add DW eDMA engine support:
-|
-+-> depends on the modifications done in the framework DW eDMA driver
-| patchset, for instance the changes introduced in the patch
-| [PATCH RESEND v5 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
-| make sure the dma-ranges property isn't taken into account for the
-| Local CPU/Application setup (See it makes the DW_EDMA_CHIP_LOCAL flag
-| used which is enabled for the eDMA embedded into the DW PCIe EP/RP).
-| All the DebugFS-related and channels join updates are also required to
-| make the DW eDMA driver working in the framework of the DW PCIe RP/EP
-| device.
-|
-+-> at the very least depends on the changes introduced in the patchset #3:
-| [PATCH v5 16/20] PCI: dwc: Introduce generic controller capabilities interface
-| [PATCH v5 17/20] PCI: dwc: Introduce generic resources getter
-| The patch at consideration adds CSR region request procedure in the
-| method created and updated in these two patches.
-
-There might be some other dependencies, but what I cited above must be
-enough not to split the patchsets up between different branches
-otherwise besides not properly working DW PCIe driver you'll have merge
-conflicts.
-
--Sergey
-
+> - i.MX8MP PCIe has reversed initial PERST bit value refer to i.MX8MQ/i.MX8MM.
+>   Add the PHY PERST explicitly for i.MX8MP PCIe PHY.
+> - Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+>   And share as much as possible codes with i.MX8MM PCIe PHY.
+> - Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+>   driver.
 > 
-> > merge the eDMA patches via your tree, the later patch in this series
-> > and the patchset #3 would have needed to be applied in there too. So
-> > the patches can't be split up between different branches. Seeing all
-> > the changes (including the DW eDMA part) concern the PCIe device (DW
-> > eDMA is a part of either DW PCIe End-point or Root Port) and we
-> > already agreed to merge all the changes via the PCIe tree, I would
-> > stick to the previous settled agreement.
-> > 
-> > -Sergey
-> > 
-> > > 
-> > > -- 
-> > > ~Vinod
+> Main changes v2-->v3:
+> - Fix the schema checking error in the PHY dt-binding patch.
+> - Inspired by Lucas, the PLL configurations might not required when
+>   external OSC is used as PCIe referrence clock. It's true. Remove all
+>   the HSIO PLL bit manipulations, and PCIe works fine on i.MX8MP EVK board
+>   with one NVME device is used.
+> - Drop the #4 patch of v2, since it had been applied by Rob.
 > 
-> -- 
-> ~Vinod
+> Main changes v1-->v2:
+> - It's my fault forget including Vinod, re-send v2 after include Vinod
+>   and linux-phy@lists.infradead.org.
+> - List the basements of this patch-set. The branch, codes changes and so on.
+> - Clean up some useless register and bit definitions in #3 patch.
+> 
+> Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  16 +++++++--
+> arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  53 +++++++++++++++++++++++++++++
+> arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  46 ++++++++++++++++++++++++-
+> drivers/pci/controller/dwc/pci-imx6.c                        |  17 +++++++++-
+> drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 150 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------
+> drivers/reset/reset-imx7.c                                   |   1 +
+> 6 files changed, 232 insertions(+), 51 deletions(-)
+> 
+>  [PATCH v3 1/6] reset: imx7: Add the iMX8MP PCIe PHY PERST support
+>  [PATCH v3 2/6] dt-binding: phy: Add iMX8MP PCIe PHY binding
+>  [PATCH v3 3/6] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
+>  [PATCH v3 4/6] arm64: dts: imx8mp: add the iMX8MP PCIe support
+>  [PATCH v3 5/6] arm64: dts: imx8mp-evk: Add PCIe support
+>  [PATCH v3 6/6] PCI: imx6: Add the iMX8MP PCIe support
+
+Thanks for this series!
+I've just tested this on our custom i.MX8MP based board with an M.2 SSD
+and it seems to work!
+
+Therefore please feel free to add:
+
+Tested-by: Richard Leitner <richard.leitner@skidata.com>
+
+I don't know if it's interesting to you, but here's the dmesg output:
+
+[    0.060405] PCI: CLS 0 bytes, default 64
+[    1.252523] ehci-pci: EHCI PCI platform driver
+[    1.268608] ohci-pci: OHCI PCI platform driver
+[    1.750913] imx6q-pcie 33800000.pcie: host bridge /soc@0/pcie@33800000 ranges:
+[    1.758221] imx6q-pcie 33800000.pcie: Parsing ranges property...
+[    1.765479] imx6q-pcie 33800000.pcie:       IO 0x001ff80000..0x001ff8ffff -> 0x0000000000
+[    1.773695] imx6q-pcie 33800000.pcie:      MEM 0x0018000000..0x001fefffff -> 0x0018000000
+[    1.999331] phy phy-32f00000.pcie-phy.1: phy_power_on was called before phy_init
+[    2.007562] imx6q-pcie 33800000.pcie: Using 32 MSI vectors
+[    2.007626] imx6q-pcie 33800000.pcie: iATU unroll: enabled
+[    2.013124] imx6q-pcie 33800000.pcie: iATU regions: 4 ob, 4 ib, align 64K, limit 16G
+[    2.120921] imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up
+[    2.226533] imx6q-pcie 33800000.pcie: PCIe Gen.3 x1 link up
+[    2.235492] imx6q-pcie 33800000.pcie: Link up, Gen3
+[    2.240380] imx6q-pcie 33800000.pcie: PCIe Gen.3 x1 link up
+[    2.246066] imx6q-pcie 33800000.pcie: PCI host bridge to bus 0000:00
+[    2.252437] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    2.257937] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+[    2.264134] pci_bus 0000:00: root bus resource [mem 0x18000000-0x1fefffff]
+[    2.271019] pci_bus 0000:00: scanning bus
+[    2.271045] pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+[    2.277070] pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x000fffff]
+[    2.283349] pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
+[    2.293834] pci 0000:00:00.0: supports D1
+[    2.301828] pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
+[    2.308195] pci 0000:00:00.0: PME# disabled
+[    2.308348] pci 0000:00:00.0: vgaarb: pci_notify
+[    2.310109] pci_bus 0000:00: fixups for bus
+[    2.310117] pci 0000:00:00.0: scanning [bus 01-ff] behind bridge, pass 0
+[    2.310178] pci_bus 0000:01: scanning bus
+[    2.310244] pci 0000:01:00.0: [126f:2263] type 00 class 0x010802
+[    2.316325] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+[    2.323535] pci 0000:01:00.0: 7.876 Gb/s available PCIe bandwidth, limited by 8.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
+[    2.338620] pci 0000:01:00.0: vgaarb: pci_notify
+[    2.347400] pci_bus 0000:01: fixups for bus
+[    2.347411] pci_bus 0000:01: bus scan returning with max=01
+[    2.347422] pci 0000:00:00.0: scanning [bus 01-ff] behind bridge, pass 1
+[    2.347435] pci_bus 0000:00: bus scan returning with max=ff
+[    2.347455] pci 0000:00:00.0: BAR 0: assigned [mem 0x18000000-0x180fffff]
+[    2.354259] pci 0000:00:00.0: BAR 14: assigned [mem 0x18100000-0x181fffff]
+[    2.361146] pci 0000:00:00.0: BAR 6: assigned [mem 0x18200000-0x1820ffff pref]
+[    2.368383] pci 0000:01:00.0: BAR 0: assigned [mem 0x18100000-0x18103fff 64bit]
+[    2.375728] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+[    2.380965] pci 0000:00:00.0:   bridge window [mem 0x18100000-0x181fffff]
+[    2.387853] pcieport 0000:00:00.0: vgaarb: pci_notify
+[    2.387921] pcieport 0000:00:00.0: assign IRQ: got 206
+[    2.387984] imx6q-pcie 33800000.pcie: msi#0 address_hi 0x0 address_lo 0x42587000
+[    2.388095] pcieport 0000:00:00.0: PME: Signaling with IRQ 207
+[    2.394218] pcieport 0000:00:00.0: AER: enabled with IRQ 207
+[    2.399963] pcieport 0000:00:00.0: saving config space at offset 0x0 (reading 0xabcd16c3)
+[    2.399972] pcieport 0000:00:00.0: saving config space at offset 0x4 (reading 0x100507)
+[    2.399979] pcieport 0000:00:00.0: saving config space at offset 0x8 (reading 0x6040001)
+[    2.399985] pcieport 0000:00:00.0: saving config space at offset 0xc (reading 0x10000)
+[    2.399992] pcieport 0000:00:00.0: saving config space at offset 0x10 (reading 0x18000000)
+[    2.399998] pcieport 0000:00:00.0: saving config space at offset 0x14 (reading 0x0)
+[    2.400005] pcieport 0000:00:00.0: saving config space at offset 0x18 (reading 0xff0100)
+[    2.400011] pcieport 0000:00:00.0: saving config space at offset 0x1c (reading 0xf0)
+[    2.400018] pcieport 0000:00:00.0: saving config space at offset 0x20 (reading 0x18101810)
+[    2.400024] pcieport 0000:00:00.0: saving config space at offset 0x24 (reading 0xfff0)
+[    2.400031] pcieport 0000:00:00.0: saving config space at offset 0x28 (reading 0x0)
+[    2.400037] pcieport 0000:00:00.0: saving config space at offset 0x2c (reading 0x0)
+[    2.400043] pcieport 0000:00:00.0: saving config space at offset 0x30 (reading 0x0)
+[    2.400049] pcieport 0000:00:00.0: saving config space at offset 0x34 (reading 0x40)
+[    2.400056] pcieport 0000:00:00.0: saving config space at offset 0x38 (reading 0x0)
+[    2.400062] pcieport 0000:00:00.0: saving config space at offset 0x3c (reading 0x201ce)
+[    2.400091] pcieport 0000:00:00.0: vgaarb: pci_notify
+[    2.400192] nvme 0000:01:00.0: vgaarb: pci_notify
+[    2.400230] nvme 0000:01:00.0: assign IRQ: got 206
+[    2.400431] nvme nvme0: pci function 0000:01:00.0
+[    2.405166] nvme 0000:01:00.0: vgaarb: pci_notify
+[    2.405178] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+[    2.410959] nvme 0000:01:00.0: enabling bus mastering
+[    2.411068] imx6q-pcie 33800000.pcie: msi#1 address_hi 0x0 address_lo 0x42587000
+[    2.411132] nvme 0000:01:00.0: saving config space at offset 0x0 (reading 0x2263126f)
+[    2.411142] nvme 0000:01:00.0: saving config space at offset 0x4 (reading 0x100406)
+[    2.411151] nvme 0000:01:00.0: saving config space at offset 0x8 (reading 0x1080203)
+[    2.411162] nvme 0000:01:00.0: saving config space at offset 0xc (reading 0x0)
+[    2.411172] nvme 0000:01:00.0: saving config space at offset 0x10 (reading 0x18100004)
+[    2.411184] nvme 0000:01:00.0: saving config space at offset 0x14 (reading 0x0)
+[    2.411194] nvme 0000:01:00.0: saving config space at offset 0x18 (reading 0x0)
+[    2.411205] nvme 0000:01:00.0: saving config space at offset 0x1c (reading 0x0)
+[    2.411216] nvme 0000:01:00.0: saving config space at offset 0x20 (reading 0x0)
+[    2.411226] nvme 0000:01:00.0: saving config space at offset 0x24 (reading 0x0)
+[    2.411237] nvme 0000:01:00.0: saving config space at offset 0x28 (reading 0x0)
+[    2.411247] nvme 0000:01:00.0: saving config space at offset 0x2c (reading 0x22631dee)
+[    2.411258] nvme 0000:01:00.0: saving config space at offset 0x30 (reading 0x0)
+[    2.411269] nvme 0000:01:00.0: saving config space at offset 0x34 (reading 0x40)
+[    2.411280] nvme 0000:01:00.0: saving config space at offset 0x38 (reading 0x0)
+[    2.411290] nvme 0000:01:00.0: saving config space at offset 0x3c (reading 0x1ce)
+[    2.415562] nvme nvme0: missing or invalid SUBNQN field.
+[    2.428381] nvme nvme0: allocated 64 MiB host memory buffer.
+[    2.436360] imx6q-pcie 33800000.pcie: msi#1 address_hi 0x0 address_lo 0x42587000
+[    2.436415] imx6q-pcie 33800000.pcie: msi#2 address_hi 0x0 address_lo 0x42587000
+[    2.436453] imx6q-pcie 33800000.pcie: msi#3 address_hi 0x0 address_lo 0x42587000
+[    2.436491] imx6q-pcie 33800000.pcie: msi#4 address_hi 0x0 address_lo 0x42587000
+[    2.436529] imx6q-pcie 33800000.pcie: msi#5 address_hi 0x0 address_lo 0x42587000
+[    2.442960] nvme nvme0: 4/0/0 default/read/poll queues
+[    2.452699] nvme nvme0: Ignoring bogus Namespace Identifiers
+[    2.459882]  nvme0n1: p1
+
+regards;rl
