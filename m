@@ -2,59 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E95015A1295
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 15:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE0B5A12C1
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 15:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239383AbiHYNno (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 09:43:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32796 "EHLO
+        id S240526AbiHYNxY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 09:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242394AbiHYNnm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 09:43:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE78B5E5F;
-        Thu, 25 Aug 2022 06:43:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 511D7B81DF1;
-        Thu, 25 Aug 2022 13:43:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236F8C433C1;
-        Thu, 25 Aug 2022 13:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661435016;
-        bh=5JLuURgLlHoOj/DTpUcWL0Zj4664Y5H4qqY395xv84I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eN8HSXcwzOCSExYnG2xLUQnzQDZFDjDENE81beqrGQ8goxw8Iz6pu4s0WSHK2xCku
-         cxgbjCymkVE1AG1slxA3/gYaTsoTMAxM74p1gyOkFSqnzipl0qvzfqayBb6DczfHc8
-         NBljR2eDw4ooez0L3PDy0+qMGFwvoS2LprzspSAgh66tugm55TUSZc1IKOSVQPsOuI
-         zQiZo9XIeKOyuXFkSzMGbzM6sjpErYlAsnAoxttp+vhLEF6I/TPQ56Vhd/dE1h7gG+
-         1T6qO4/WvPJ2Pgr+cMIdCMbwn38BLMR3/1nbUemRHF2pCmdsIupX6+vqaUfWyGBj5d
-         djaQzxQDvhSOA==
-Date:   Thu, 25 Aug 2022 15:43:28 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
- domain
-Message-ID: <Ywd8gDMdQJwhkeKo@lpieralisi>
-References: <20220808184418.brjntz26kalathig@pali>
- <20220809020042.GA1260418@bhelgaas>
- <20220809133911.hqi7eyskcq2sojia@pali>
+        with ESMTP id S234338AbiHYNxW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 09:53:22 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CBEEE2C;
+        Thu, 25 Aug 2022 06:53:20 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27PBLoIQ019568;
+        Thu, 25 Aug 2022 13:53:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=gLiJXg7HxscLu/sgE1hOrw4nNxedOO1yMWb7EkeVab4=;
+ b=MAKIA7iJjFvC0GB0JBgZ4MEmsbIemtFEMOJuPErHhh9B7FvqL7QS03aeb2bOjyvdgNgF
+ 1pVrQd/QdLQEcLdqY1+GK9Og/QQgd4QnWdo9HIK/6lB58/gSqFpTd2H8L8AXZIJ1TuIk
+ qoTIO+Byr5H2ObeLYr60ydTUlNJC7uPhFX9sW32OvNh2Wbfm1/OwXuwkXKHCk3kcq2KG
+ FiqoxfNrgSYBdd/tj+R+VNbmAo74hGxtXXcIB6HtGmUMS+vUrAt7+C0FZMVIIUYm+IQj
+ mJXjQGOrjVRBfwuXbL7gpd7szi8tGSVzLwnpUp9l0o7wy6yZ93Hj/VZ5++gPR+Kp0VRn GQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3j64mm977j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Aug 2022 13:53:10 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 27PDr8dN003652
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Aug 2022 13:53:08 GMT
+Received: from [10.216.34.62] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 25 Aug
+ 2022 06:52:51 -0700
+Message-ID: <81dcbf72-92bb-093a-da48-89a73ead820e@quicinc.com>
+Date:   Thu, 25 Aug 2022 19:22:43 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v5 2/3] PCI: qcom: Restrict pci transactions after pci
+ suspend
+Content-Language: en-US
+To:     Stephen Boyd <swboyd@chromium.org>, <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
+        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, Jingoo Han <jingoohan1@gmail.com>,
+        "Gustavo Pimentel" <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+References: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
+ <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
+ <CAE-0n500y-n+ZjasYQRAa3JgamQG1c+Aqn0YiX-i0L-w6C4dbQ@mail.gmail.com>
+ <3d052733-3600-b6eb-baf3-d8806a150af3@quicinc.com>
+ <CAE-0n53oMnnn7rOPEiibc=XM52z9THDc9jYhe3x3C_AsLtmARQ@mail.gmail.com>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <CAE-0n53oMnnn7rOPEiibc=XM52z9THDc9jYhe3x3C_AsLtmARQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220809133911.hqi7eyskcq2sojia@pali>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: W9E_gB_wZxb5Qv82HXYkWf9NnnBR47fU
+X-Proofpoint-ORIG-GUID: W9E_gB_wZxb5Qv82HXYkWf9NnnBR47fU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-25_05,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ adultscore=0 bulkscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2208250053
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,211 +95,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Marc]
 
-On Tue, Aug 09, 2022 at 03:39:11PM +0200, Pali Roh�r wrote:
+On 8/24/2022 10:50 PM, Stephen Boyd wrote:
+> Quoting Krishna Chaitanya Chundru (2022-08-23 20:37:59)
+>> On 8/9/2022 12:42 AM, Stephen Boyd wrote:
+>>> Quoting Krishna chaitanya chundru (2022-08-03 04:28:53)
+>>>> If the endpoint device state is D0 and irq's are not freed, then
+>>>> kernel try to mask interrupts in system suspend path by writing
+>>>> in to the vector table (for MSIX interrupts) and config space (for MSI's).
+>>>>
+>>>> These transactions are initiated in the pm suspend after pcie clocks got
+>>>> disabled as part of platform driver pm  suspend call. Due to it, these
+>>>> transactions are resulting in un-clocked access and eventually to crashes.
+>>> Why are the platform driver pm suspend calls disabling clks that early?
+>>> Can they disable clks in noirq phase, or even later, so that we don't
+>>> have to check if the device is clocking in the irq poking functions?
+>>> It's best to keep irq operations fast, so that irq control is fast given
+>>> that these functions are called from irq flow handlers.
+>> We are registering the pcie pm suspend ops as noirq ops only. And this
+>> msix and config
+>>
+>> access is coming at the later point of time that is reason we added that
+>> check.
+>>
+> What is accessing msix and config? Can you dump_stack() after noirq ops
+> are called and figure out what is trying to access the bus when it is
+> powered down?
 
-[...]
+The msix and config space is being accessed to mask interrupts. The 
+access is coming at the end of the suspend
 
-> > Then we'll need either a strong argument that this is safe even if
-> > drivers for endpoints below fail to dispose of their IRQ info
-> > correctly, or an argument that the benefit of making the PCI
-> > controller drivers removable outweighs that risk.
-> > 
-> > I haven't been paying close attention recently, so I may have missed
-> > the details here, but my superficial opinion is that removability of
-> > PCI controller drivers is primarily useful to developers, not to end
-> > users.
-> 
-> For developers it is strong need. Hajo needed this patch for debugging
-> SATA related issue.
-> 
-> For end-users in more cases it is also needed because cards, card
-> drivers or controller drivers can be buggy and calling rmmod && modprobe
-> is the way how to reload PCIe bus with controller without need to reboot
-> whole machine. This approach is lot of times suggested by admins and
-> also on user forums, because it really helps.
-> 
-> In my opinion, if hotplug capable kernel driver (for what ever reasons)
-> leaks resources on unbind procedure, it is an big issue. It basically
-> disallow proper next bind procedure; which is required for hotplug
-> capable drivers and buses, which PCIe is. memory and interrupts are just
-> example of resources which drivers use lot of.
-> 
-> So I consider a bug if driver does not release resource properly and
-> "parent" driver should not expect that something like it is normal.
-> 
-> This particular patch was tested at least by two people that is really
-> fixes resource-free issue with more endpoint drivers.
-> 
-> I think that in this case for pci-mvebu.c it is safe because: At the
-> first step of unbind procedure is called unregistraction of PCIe bus
-> with all devices bound on it. This ensures that all PCIe endpoint
-> drivers are unbind, devices removed and no new driver or device and
-> appear. After that there should not be any remaining usage of PCIe
-> resources (if there is then whole PCIe hotplug code is broken and we
-> have other and bigger issue...). Next pci-mvebu.c manually disposes all
-> remaining legacy interrupts (which PCI core code does not because legacy
-> interrupts are shared and it does not know if they are used or not).
-> This is safe because at these stage there are no PCI drivers bound,
-> there is no PCI device for that controller registered. And after that is
-> removed IRQ domain (which has finally disposed all interrupts).
-> If you see there some logical issue, please let me know.
-> 
-> Note that allowing doing device unbind and disallowing rmmod is useless
-> as the whole issue happens during unbind, not during rmmod. So the
-> discussion should have been about device unbinding, not rmmoding.
-> 
-> I see very big benefit for both developers and end users to allow doing
-> unbind procedure as explained above.
-> 
-> But if you decide that unbind should be disallowed, then doing it
-> properly should probably imply to also disallow doing PCIe hog-unplug.
-> As unplugging device means to unbind endpoint card drivers. And I think
-> hot-plug and hot-unplug is a PCIe feature which could be supported. But
-> well, this is decision for you as maintainer.
+and near CPU disable. We tried to dump the stack there but the call 
+stack is not coming as it is near cpu disable.
 
-I think that this is the right thing to do - CC'ed Marc here
-in case I am missing something - I think this ought to be fixed,
-for this controller and all others that are missing the
-irq_dispose_mapping() call.
+But we got dump at resume please have look at it
 
-Lorenzo
+[   54.946268] Enabling non-boot CPUs ...
+[   54.951182] CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 5.15.41 #105 
+43491e4414b1db8a6f59d56b617b520d92a9498e
+[   54.961122] Hardware name: Qualcomm Technologies, Inc. sc7280 IDP 
+SKU2 platform (DT)
+[   54.969088] Call trace:
+[   54.971612]  dump_backtrace+0x0/0x200
+[   54.975399]  show_stack+0x20/0x2c
+[   54.978826]  dump_stack_lvl+0x6c/0x90
+[   54.982614]  dump_stack+0x18/0x38
+[   54.986043]  dw_msi_unmask_irq+0x2c/0x58
+[   54.990096]  irq_enable+0x58/0x90
+[   54.993522]  __irq_startup+0x68/0x94
+[   54.997216]  irq_startup+0xf4/0x140
+[   55.000820]  irq_affinity_online_cpu+0xc8/0x154
+[   55.005491]  cpuhp_invoke_callback+0x19c/0x6e4
+[   55.010077]  cpuhp_thread_fun+0x11c/0x188
+[   55.014216]  smpboot_thread_fn+0x1ac/0x30c
+[   55.018445]  kthread+0x140/0x30c
+[   55.021788]  ret_from_fork+0x10/0x20
+[   55.028243] CPU1 is up
 
-> > Bjorn
-> > 
-> > > On Saturday 09 July 2022 18:18:58 Pali Roh�r wrote:
-> > > > Documentation for irq_domain_remove() says that all mapping within the
-> > > > domain must be disposed prior to domain remove.
-> > > > 
-> > > > Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
-> > > > which cause that kernel crashes after unloading driver and trying to read
-> > > > /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
-> > > > 
-> > > > Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-> > > > Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-> > > > Signed-off-by: Pali Roh�r <pali@kernel.org>
-> > > > ---
-> > > > Depends on patch:
-> > > > https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
-> > > > 
-> > > > Here is the captured kernel crash which happens without this patch:
-> > > > 
-> > > > $ cat /sys/kernel/debug/irq/irqs/64
-> > > > [  301.571370] 8<--- cut here ---
-> > > > [  301.574496] Unable to handle kernel paging request at virtual address 0a00002a
-> > > > [  301.581736] [0a00002a] *pgd=00000000
-> > > > [  301.585323] Internal error: Oops: 80000005 [#1] SMP ARM
-> > > > [  301.590560] Modules linked in:
-> > > > [  301.593621] CPU: 1 PID: 4641 Comm: cat Not tainted 5.16.0-rc1+ #192
-> > > > [  301.599905] Hardware name: Marvell Armada 380/385 (Device Tree)
-> > > > [  301.605836] PC is at 0xa00002a
-> > > > [  301.608896] LR is at irq_debug_show+0x210/0x2d4
-> > > > [  301.613440] pc : [<0a00002a>]    lr : [<c018ca40>]    psr: 200000b3
-> > > > [  301.619721] sp : c797fdd8  ip : 0000000b  fp : 0a00002b
-> > > > [  301.624957] r10: c0d9a364  r9 : 00000001  r8 : 00000000
-> > > > [  301.630192] r7 : c18fee18  r6 : c0da2a74  r5 : c18fee00  r4 : c66ec050
-> > > > [  301.636734] r3 : 00000001  r2 : c18fee18  r1 : 00000000  r0 : c66ec050
-> > > > [  301.643275] Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
-> > > > [  301.650689] Control: 10c5387d  Table: 0790c04a  DAC: 00000051
-> > > > [  301.656446] Register r0 information: slab seq_file start c66ec050 pointer offset 0
-> > > > [  301.664040] Register r1 information: NULL pointer
-> > > > [  301.668755] Register r2 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-> > > > [  301.677480] Register r3 information: non-paged memory
-> > > > [  301.682543] Register r4 information: slab seq_file start c66ec050 pointer offset 0
-> > > > [  301.690133] Register r5 information: slab kmalloc-256 start c18fee00 pointer offset 0 size 256
-> > > > [  301.698770] Register r6 information: non-slab/vmalloc memory
-> > > > [  301.704442] Register r7 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-> > > > [  301.713165] Register r8 information: NULL pointer
-> > > > [  301.717879] Register r9 information: non-paged memory
-> > > > [  301.722941] Register r10 information: non-slab/vmalloc memory
-> > > > [  301.728699] Register r11 information: non-paged memory
-> > > > [  301.733848] Register r12 information: non-paged memory
-> > > > [  301.738997] Process cat (pid: 4641, stack limit = 0xf591166e)
-> > > > [  301.744756] Stack: (0xc797fdd8 to 0xc7980000)
-> > > > [  301.749123] fdc0:                                                       0000000a 830d3f3e
-> > > > [  301.757321] fde0: c1004f48 c0d9a374 c7a9cc10 c66ec050 00000000 c88af900 c797fe80 7ffff000
-> > > > [  301.765518] fe00: 00400cc0 c66ec068 00000001 c02c5cb8 00000000 00000000 c66ec078 c797fe68
-> > > > [  301.773715] fe20: c1cdf6c0 c7a9cc10 ffffffea c88af900 00000010 00000000 00000000 c88af900
-> > > > [  301.781911] fe40: c1004f48 c797ff78 00001000 00004004 c03efcb8 c02c6100 00001000 00000000
-> > > > [  301.790108] fe60: bec73e04 00001000 00000000 00000000 00001000 c797fe60 00000001 00000000
-> > > > [  301.798304] fe80: c88af900 00000000 00000000 00000000 00000000 00000000 00000000 40040000
-> > > > [  301.806501] fea0: 00000000 00000000 c1004f48 830d3f3e c88af900 c02c6018 c1c7a770 bec73e04
-> > > > [  301.814697] fec0: 00001000 c797ff78 00000001 c03efd0c 00001000 c88af900 00000000 bec73e04
-> > > > [  301.822894] fee0: c1004f48 c797ff78 00000001 c029c728 c887ca20 01100cca 0000004f 0045f000
-> > > > [  301.831091] ff00: 00000254 c790c010 c790c010 00000000 00000000 00000000 c5f6117c eeece9b8
-> > > > [  301.839288] ff20: 00000000 830d3f3e 00000000 c797ffb0 c79fc000 80000007 0045f5b8 00000254
-> > > > [  301.847484] ff40: c79fc040 00000004 c887ca20 830d3f3e 00000000 c1004f48 c88af900 00000000
-> > > > [  301.855681] ff60: 00000000 c88af900 bec73e04 00001000 00000000 c029cd68 00000000 00000000
-> > > > [  301.863877] ff80: 00000000 830d3f3e 00000000 00000000 01000000 00000003 c0100284 c1b8abc0
-> > > > [  301.872074] ffa0: 00000003 c0100060 00000000 00000000 00000003 bec73e04 00001000 00000000
-> > > > [  301.880270] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-> > > > [  301.888468] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410 60000010 00000003 00000000 00000000
-> > > > [  301.896666] [<c018ca40>] (irq_debug_show) from [<c02c5cb8>] (seq_read_iter+0x1a4/0x504)
-> > > > [  301.904700] [<c02c5cb8>] (seq_read_iter) from [<c02c6100>] (seq_read+0xe8/0x12c)
-> > > > [  301.912117] [<c02c6100>] (seq_read) from [<c03efd0c>] (full_proxy_read+0x54/0x70)
-> > > > [  301.919623] [<c03efd0c>] (full_proxy_read) from [<c029c728>] (vfs_read+0xa0/0x2c8)
-> > > > [  301.927214] [<c029c728>] (vfs_read) from [<c029cd68>] (ksys_read+0x58/0xd0)
-> > > > [  301.934195] [<c029cd68>] (ksys_read) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
-> > > > [  301.941785] Exception stack(0xc797ffa8 to 0xc797fff0)
-> > > > [  301.946849] ffa0:                   00000000 00000000 00000003 bec73e04 00001000 00000000
-> > > > [  301.955045] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-> > > > [  301.963241] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410
-> > > > [  301.968304] Code: bad PC value
-> > > > [  301.971365] ---[ end trace fe25fd26d042b605 ]---
-> > > > [  301.975992] Kernel panic - not syncing: Fatal exception
-> > > > [  301.981229] CPU0: stopping
-> > > > [  301.983946] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D           5.16.0-rc1+ #192
-> > > > [  301.991884] Hardware name: Marvell Armada 380/385 (Device Tree)
-> > > > [  301.997817] [<c010e120>] (unwind_backtrace) from [<c010a170>] (show_stack+0x10/0x14)
-> > > > [  302.005587] [<c010a170>] (show_stack) from [<c0bbf108>] (dump_stack_lvl+0x40/0x4c)
-> > > > [  302.013179] [<c0bbf108>] (dump_stack_lvl) from [<c010c3f8>] (do_handle_IPI+0xf4/0x128)
-> > > > [  302.021117] [<c010c3f8>] (do_handle_IPI) from [<c010c444>] (ipi_handler+0x18/0x20)
-> > > > [  302.028707] [<c010c444>] (ipi_handler) from [<c0185c5c>] (handle_percpu_devid_irq+0x78/0x124)
-> > > > [  302.037256] [<c0185c5c>] (handle_percpu_devid_irq) from [<c017ffb8>] (generic_handle_domain_irq+0x44/0x88)
-> > > > [  302.046938] [<c017ffb8>] (generic_handle_domain_irq) from [<c05f051c>] (gic_handle_irq+0x74/0x88)
-> > > > [  302.055839] [<c05f051c>] (gic_handle_irq) from [<c0bc7ef8>] (generic_handle_arch_irq+0x34/0x44)
-> > > > [  302.064564] [<c0bc7ef8>] (generic_handle_arch_irq) from [<c0100b10>] (__irq_svc+0x50/0x68)
-> > > > [  302.072851] Exception stack(0xc1001f00 to 0xc1001f48)
-> > > > [  302.077916] 1f00: 000d6830 00000000 00000001 c0116be0 c1004f90 c1004fd4 00000001 00000000
-> > > > [  302.086114] 1f20: c1004f48 c0f5d2a8 c1009e80 00000000 00000000 c1001f50 c01076f4 c01076f8
-> > > > [  302.094309] 1f40: 60000013 ffffffff
-> > > > [  302.097804] [<c0100b10>] (__irq_svc) from [<c01076f8>] (arch_cpu_idle+0x38/0x3c)
-> > > > [  302.105223] [<c01076f8>] (arch_cpu_idle) from [<c0bcf3a0>] (default_idle_call+0x1c/0x2c)
-> > > > [  302.113338] [<c0bcf3a0>] (default_idle_call) from [<c015db34>] (do_idle+0x1c8/0x218)
-> > > > [  302.121106] [<c015db34>] (do_idle) from [<c015de40>] (cpu_startup_entry+0x18/0x20)
-> > > > [  302.128697] [<c015de40>] (cpu_startup_entry) from [<c0f00fec>] (start_kernel+0x650/0x694)
-> > > > [  302.136901] Rebooting in 3 seconds..
-> > > > ---
-> > > >  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
-> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> > > > index 31f53a019b8f..951030052358 100644
-> > > > --- a/drivers/pci/controller/pci-mvebu.c
-> > > > +++ b/drivers/pci/controller/pci-mvebu.c
-> > > > @@ -1713,8 +1713,15 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
-> > > >  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > > >  
-> > > >  		/* Remove IRQ domains. */
-> > > > -		if (port->intx_irq_domain)
-> > > > +		if (port->intx_irq_domain) {
-> > > > +			int virq, j;
-> > > > +			for (j = 0; j < PCI_NUM_INTX; j++) {
-> > > > +				virq = irq_find_mapping(port->intx_irq_domain, j);
-> > > > +				if (virq > 0)
-> > > > +					irq_dispose_mapping(virq);
-> > > > +			}
-> > > >  			irq_domain_remove(port->intx_irq_domain);
-> > > > +		}
-> > > >  
-> > > >  		/* Free config space for emulated root bridge. */
-> > > >  		pci_bridge_emul_cleanup(&port->bridge);
-> > > > -- 
-> > > > 2.20.1
-> > > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+So the same stack should be called at the suspend path while disabling CPU.
+
+If there is any other way to remove these calls can you please help us 
+point that way.
+
+Thanks & Regards,
+Krishna Chaitanya
+
