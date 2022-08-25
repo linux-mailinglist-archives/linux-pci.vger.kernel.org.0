@@ -2,90 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1649E5A114B
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 15:01:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8267A5A120B
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 15:28:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242083AbiHYNBM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 09:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37352 "EHLO
+        id S237360AbiHYN1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 09:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242119AbiHYNBL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 09:01:11 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F94D3AB2A;
-        Thu, 25 Aug 2022 06:01:10 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id bt10so15156794lfb.1;
-        Thu, 25 Aug 2022 06:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=HXz5r5nARBDUrWmq5bMXUBc88dL0Gf53fHnzPY0C8Cw=;
-        b=IjmH3eKJZsmSiWXRk8UD08OLLxfyc+keRxdrSyGSHQ8Kff1Q/6Sl/2/m8sqXaXtvht
-         UUxmjcry5A4cPm7BAu22lFkLN1r7vxyr73y7AZcakr+awqp3Vtwxo1ps50ip7cp1Y2hQ
-         QsAQ75lX1XILbbUqI2CIZCahqKuNRzapBWsPLLy6+Vo2KA0hqRVIWcbULMrxgJQwkSut
-         +2uqpY1fbk20Jsi/PEb3B87aqI6jrCMswf14s//6+KwYiHHZXN5zWZ1fsIzoIsaqCeAr
-         nCgEqb7tC+DzAPax4zjzPTuKIZBNOWj7REm3X00HpWgNa4COV+vcOiFkMbrz1ULx0+V3
-         ZlmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=HXz5r5nARBDUrWmq5bMXUBc88dL0Gf53fHnzPY0C8Cw=;
-        b=q3Owb7QEiybE61UNsuy5m7CYfzQeJJh5tVA40YM/fhIiJ2iCYNasFHml1aiNoh3dQx
-         ImzaDpL1Jcc95ZT+CfauF6poIItoX/yOvC7NFOQt+UKrQXsaqlgO7NDCvBQV3awP+PHd
-         mH5DhkbFvRognvfo776iqdLzpG2GFSWh6NIb7a42ohrpO8/QyyuBrNZF5ESeoMsbbsG5
-         6S38nbgK0zIzsxC98DHI/g/z+7kwSRuVDKNyWBtLpKUEeqvZiuPLHUPJthDx2mpKfdro
-         Qcc3Rr4wNm/cxrsRlFFNMw4BObTpG80gRrl4VqMN261VDNI5zURV94vaBr8w7CdEvc7X
-         pR5w==
-X-Gm-Message-State: ACgBeo3o1K9Npaq9GyqBBN+RiuGJcewOD8hy9uXrWnYBbvb2KfhBwlCW
-        ybcVZT4NbJvi/1/dRnRo9GA=
-X-Google-Smtp-Source: AA6agR5E2VLJ311lYr2Z6ZX+fqdNCc+e5s1M3RyjO6AfhBJqTxKKgSoQHjbqmVNivcVedLapoj+S1Q==
-X-Received: by 2002:a05:6512:c10:b0:492:d263:f918 with SMTP id z16-20020a0565120c1000b00492d263f918mr1092408lfu.501.1661432468639;
-        Thu, 25 Aug 2022 06:01:08 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id b9-20020ac25e89000000b00489e812f05asm497832lfq.21.2022.08.25.06.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 06:01:07 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 16:01:05 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/20] dt-bindings: imx6q-pcie: Fix clock names for
- imx6sx and imx8mq
-Message-ID: <20220825130105.s5lj3h3pqlntns2f@mobilestation>
-References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
- <20220822184701.25246-2-Sergey.Semin@baikalelectronics.ru>
- <8354660.EvYhyI6sBW@steina-w>
+        with ESMTP id S242640AbiHYN1o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 09:27:44 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44290AD98E;
+        Thu, 25 Aug 2022 06:27:42 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27PBLT7H020653;
+        Thu, 25 Aug 2022 13:27:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=KvYeiFfwD3KZEQv3gwW5SF2mESyYzWmyxXd2x9ii1/Y=;
+ b=a0lMObzE06xvmYISoTMrb8PwVlzzT0HxrLY3VCI8BdYQLxN0e4Vtdy16nhS8Fxcu1fcm
+ wj17jVpfiRxBcW8wd/C5mEY4yIVygPG0CuceOCEayMvxLwVh2LV7KscJZgF/SF5LxBZF
+ xrtdfXS46qFZ8eyaGM3XlLXkDtIP8TwYpI7IMm3E8K2ICaI0HHj/k77kybRPPAjDgowW
+ ewgJyGhTW8orls/mHdp91z7Ac3Htg0Q3O1m1RAU4upAb6uizsDyK32/t+olkE5d/Wzh7
+ X36YHL6IPjr2WKX3bfET+VCiZSKBuT99WPbBXAufo1wi4tDqXAb3xIRMqX7BJssDAQ/X 6Q== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3j5xcuhy6y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Aug 2022 13:27:37 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 27PDEOGw019448
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Aug 2022 13:14:24 GMT
+Received: from [10.216.34.62] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 25 Aug
+ 2022 06:14:18 -0700
+Message-ID: <dc976f67-20ad-4b8a-f16b-1a080db15d27@quicinc.com>
+Date:   Thu, 25 Aug 2022 18:44:13 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8354660.EvYhyI6sBW@steina-w>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v5 0/3] PCI: Restrict pci transactions after pci suspend
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
+        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>
+References: <20220824202949.GA2805069@bhelgaas>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220824202949.GA2805069@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Lz3kULzS5zM_UZBPUf2vQjECdk8RqvwB
+X-Proofpoint-ORIG-GUID: Lz3kULzS5zM_UZBPUf2vQjECdk8RqvwB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-25_05,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2208250051
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -93,146 +82,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alexander,
 
-On Thu, Aug 25, 2022 at 09:55:56AM +0200, Alexander Stein wrote:
-> Hello Serge,
-> 
-> Am Montag, 22. August 2022, 20:46:42 CEST schrieb Serge Semin:
-> > Originally as it was defined the legacy bindings the pcie_inbound_axi and
-> > pcie_aux clock names were supposed to be used in the fsl,imx6sx-pcie and
-> > fsl,imx8mq-pcie devices respectively. But the bindings conversion has been
-> > incorrectly so now the fourth clock name is defined as "pcie_inbound_axi
-> > for imx6sx-pcie, pcie_aux for imx8mq-pcie", which is completely wrong.
-> > Let's fix that by conditionally apply the clock-names constraints based on
-> > the compatible string content.
-> > 
-> > Fixes: 751ca492f131 ("dt-bindings: PCI: imx6: convert the imx pcie
-> > controller to dtschema")
-> > Signed-off-by: Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > ---
-> > 
-> > Changelog v5:
-> > - This is a new patch added on the v5 release of the patchset.
-> > ---
-> >  .../bindings/pci/fsl,imx6q-pcie.yaml          | 47 +++++++++++++++++--
-> >  1 file changed, 42 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml index
-> > 376e739bcad4..ebfe75f1576e 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > @@ -16,6 +16,47 @@ description: |+
-> > 
-> >  allOf:
-> >    - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: fsl,imx6sx-pcie
-> > +    then:
-> > +      properties:
-> > +        clock-names:
-> > +          items:
-> > +            - const: pcie
-> > +            - const: pcie_bus
-> > +            - const: pcie_phy
-> > +            - const: pcie_inbound_axi
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: fsl,imx8mq-pcie
-> > +    then:
-> > +      properties:
-> > +        clock-names:
-> > +          items:
-> > +            - const: pcie
-> > +            - const: pcie_bus
-> > +            - const: pcie_phy
-> > +            - const: pcie_aux
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          not:
-> > +            contains:
-> > +              enum:
-> > +                - fsl,imx6sx-pcie
-> > +                - fsl,imx8mq-pcie
-> 
-> I'm not so sure about this list essentially copying the (for now) two 
-> compatibles from above, but no hard from my side. I have a quite similar patch 
-> nesting the following structure:
+On 8/25/2022 1:59 AM, Bjorn Helgaas wrote:
+> On Wed, Aug 03, 2022 at 04:58:51PM +0530, Krishna chaitanya chundru wrote:
+>> If the endpoint device state is D0 and irq's are not freed, then
+>> kernel try to mask interrupts in system suspend path by writing in to
+>> the vector table (for MSIX interrupts) and config space (for MSI's).
+> If clocks are being turned off while the PCI core is still accessing
+> the device, I think that means qcom suspend is not implemented
+> correctly.
 
-> if imx6sx
-> then
->   <4 clocks including pcie_inbound_axi>
-> else if imx8mq
->   then
->     <4 clocks including pcie_aux> 
->   else
->     <3 clocks>
+we are registering the suspend and resume ops as NO_IRQ pm ops and in 
+those suspend ops we are disbaling clks there.
 
-The schema above looks a bit different in your case:
-+ if:
-+ then:
-+ else:
-+   if:
-+   then:
-+   else:
+NO_IRQ ops is the last the pm ops that are getting called. But we are 
+getting pcie access nearly at end of the suspend and near cpu disable.
 
-Anyway the main point is each new statement adds one more indentation
-level, which in case of updating the schema with new clocks setup will
-get to be even more right shifted. Note for that reason you'd need to
-fully update the last else block. So the corresponding patch will get
-to be bulky and less readable.
+The pcie access is nothing but the interrupts masks to endpoint to 
+disable the interrupts.
 
-Another point for my approach is that the if-else-if-else-etc
-statement much harder to read than just multiple if-statements
-combined in the allOf property.
-
-IMO that's why more often you get to see the allOf-if-if-etc pattern than
-the allOf-if-else-if-else one.
-
-> 
-> In the end I'm fine with both approaches, whatever DT bindings maintainer find 
-> superior.
-> Acked-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-Thanks.
-
--Sergey
-
-> 
-> 
-> > +    then:
-> > +      properties:
-> > +        clock-names:
-> > +          items:
-> > +            - const: pcie
-> > +            - const: pcie_bus
-> > +            - const: pcie_phy
-> > 
-> >  properties:
-> >    compatible:
-> > @@ -57,11 +98,7 @@ properties:
-> > 
-> >    clock-names:
-> >      minItems: 3
-> > -    items:
-> > -      - const: pcie
-> > -      - const: pcie_bus
-> > -      - const: pcie_phy
-> > -      - const: pcie_inbound_axi for imx6sx-pcie, pcie_aux for imx8mq-pcie
-> > +    maxItems: 4
-> > 
-> >    num-lanes:
-> >      const: 1
-> 
-> 
-> 
-> 
+>> These transactions are initiated in the pm suspend after pcie clocks got
+>> disabled as part of platform driver pm  suspend call. Due to it, these
+>> transactions are resulting in un-clocked access and eventually to crashes.
+>>
+>> So added a logic in qcom driver to restrict these unclocked access.
+>> And updated the logic to check the link state before masking
+>> or unmasking the interrupts.
+>>
+>> And some devices are taking time to settle the link in L1ss, so added a
+>> retry logic in the suspend ops.
+>>
+>> Krishna chaitanya chundru (3):
+>>    PCI: qcom: Add system PM support
+>>    PCI: qcom: Restrict pci transactions after pci suspend
+>>    PCI: qcom: Add retry logic for link to be stable in L1ss
+>>
+>>   drivers/pci/controller/dwc/pcie-designware-host.c |  14 ++-
+>>   drivers/pci/controller/dwc/pcie-qcom.c            | 117 +++++++++++++++++++++-
+>>   2 files changed, 127 insertions(+), 4 deletions(-)
+>>
+>> -- 
+>> 2.7.4
+>>
