@@ -2,254 +2,332 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71AE45A1AF5
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 23:22:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C32E5A1B56
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 23:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243374AbiHYVWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 17:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38314 "EHLO
+        id S234759AbiHYVmo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 17:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbiHYVWQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 17:22:16 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818BABB002
-        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 14:22:13 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id g189so4907918pgc.0
-        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 14:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=/e+LqK/q+u9symjBcWa/3jFlckMwfnMM7fu3ESMwHEY=;
-        b=oOR6OycOhqZc7h24pYx0QoNxrNViQHcvBeMfOOq5GMRHei0hTOAOK4FXVr35hK1KKA
-         m0hPNe3ivdhmKSwAd1iT09nYZVqtmaVTuQoTerM3vS971Y/hcVVAJDEA4ZxpBSTHs66g
-         JIgZPR64cDjEqcO4WjHHsvT3IyGb1oRDYxTmQtAcHaJi0k5MUzhyhCPpzLc68BQuZnFM
-         UhZKA8mroP/lQN0mggZv9j1UgyfMG9Zs8SjtuvRflNRAFema+mUXmQCJ0iEHzjk+L9Hc
-         cC482YIUg8UJX2GLZaZGlKRDM37XTe8IOTs36V0DF/1bdSTbE3Tg4oKmsamQHYvoxI+S
-         LNXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=/e+LqK/q+u9symjBcWa/3jFlckMwfnMM7fu3ESMwHEY=;
-        b=rL6zqVE29NknmnZ4tXCzeZQunU8m9qc9zP2MvCSZDfI7axQMdq031/0GACi47PHlL3
-         piUMnPZ2Pvx1ETvQX8dP7Eb6j1xZzB8LXFldjuwjmzbaouvMT5QL1/1EsxX4g9dorF3r
-         AvYKWK1pKC/vpRal/XA0LsDAWb89pN16loibtZ9be2PZ8SMU105mVYvUfH+5q4itcCUq
-         iyBU3Yyu7MCGWHb9dIx1XB5BwIHFdywgcxzA/jonpoQ8AcmzX3dDgsxezpFAVod2c2hk
-         nU7tsRxOrxFvrmKWQ9x6Gx/0PTofBwnG/xXgVKTDVqJdPwbsQ4HQLTv6e550itmnEjUg
-         Lb1g==
-X-Gm-Message-State: ACgBeo2+14JmnaY5QkXeChMg9s59aZkOuusXIMojIkJj6vQ2zKWhjQW2
-        NK57It61/wnD6VMxn6NCas1fUg==
-X-Google-Smtp-Source: AA6agR5owlY1ZLhzmSl+4AQ1Z9gsg76DHkAwCzaaIgigVu1g0uZf+YoR5I7tfyRkCUz6e0hV95pOjw==
-X-Received: by 2002:a05:6a00:1996:b0:52e:b0f7:8c67 with SMTP id d22-20020a056a00199600b0052eb0f78c67mr882853pfl.20.1661462532725;
-        Thu, 25 Aug 2022 14:22:12 -0700 (PDT)
-Received: from google.com (201.215.168.34.bc.googleusercontent.com. [34.168.215.201])
-        by smtp.gmail.com with ESMTPSA id q11-20020a170903204b00b001708b189c4asm22331pla.137.2022.08.25.14.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 14:22:12 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 21:22:08 +0000
-From:   William McVicker <willmcvicker@google.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 2/2] PCI: dwc: Add support for 64-bit MSI target
- address
-Message-ID: <YwfoAKorwSVooUY2@google.com>
-References: <20220825185026.3816331-1-willmcvicker@google.com>
- <20220825185026.3816331-3-willmcvicker@google.com>
- <335d730d-529e-7ce0-8bac-008a4daa6e3c@arm.com>
+        with ESMTP id S229519AbiHYVmn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 17:42:43 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60057.outbound.protection.outlook.com [40.107.6.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F0AC3F;
+        Thu, 25 Aug 2022 14:42:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Krq77M5Sw1wDb1/2AZdKOaOoWTVzYOTf2Ib+f5UFr3gWzVGsj035cpH424lJG6I1vYJHeiH3iY5dI8Y0PyyG+BQ+Ckr5mKUQ/a392X/ypzRINYlDehr1TACLbTlcyaCCFNt6tixyVFdm4k9gJAwf9vorWmaP0JTRW2eQUtT3dFELgpjNQ6XWIURTK3po0bkr2MN0jDagKgMny4e7EqOgmzIiL7ihtAROA6lAvYccDEQmVwtqD2iuR93mSuLKfjQ3WlrOnCpNrlzxNyyOQLBNrzsN7nhqKdXyfgfztyWbDwOLE/5NpxOclfk2GZRjSny4kdZ+v1U+VuDphVXM/AdbJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LAIdBKxY9Ma/vYVHjow9PCyhhxuc90zfP4QAGyNS/5w=;
+ b=NTP2ZR21+QeANhAYjGG3vVeYXxJ0GklWugp4260flCinbX0fkkB6MwGqcM7+Wbt35KOLYxmGccuOAsQ1UKJs2gHGicbvf1bjTVY2Vn2UxUWEFYhBtYA6mX29zq0dG0MgfF+WEZ/Z5Vry/5XdRF7+H8sA3neW8nMdpdiM0Q31bZy475iu6zIOEgd/SINeYl0hcfQza6Q61ONE6TRRQWd1Ls833D3DLY+u8k3n63a6XWJ7DJ/tDEyuge6k0TJj5XLsFpTBaU1iQhyVnkRakS9qBt/as9veJyBa10QGfWbhdeJLPj18dqTx7TuAFyOKIRurocLrbNW/47zRizXarYDyHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LAIdBKxY9Ma/vYVHjow9PCyhhxuc90zfP4QAGyNS/5w=;
+ b=M1cL+SZam4z9lIV94uK5IJPgfzCVxF0sqoOPEXXR61Gw0od9QYzIssN1nO2ezvXVaFlEpvPmSH3ir9Np6mODMG00L572a76GRD3rNObX/IEOcGVxkLLW8WeF5i51qJR0/LpFsFcocK+bVSdISV/1PVBgKqnZhx7bHVkCTGUsFdY=
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by PA4PR04MB9221.eurprd04.prod.outlook.com (2603:10a6:102:2a0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Thu, 25 Aug
+ 2022 21:42:38 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::85cb:614b:9f52:2dba]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::85cb:614b:9f52:2dba%6]) with mapi id 15.20.5566.015; Thu, 25 Aug 2022
+ 21:42:38 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "maz@kernel.org" <maz@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        "lznuaa@gmail.com" <lznuaa@gmail.com>
+Subject: RE: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as msi
+ controller
+Thread-Topic: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as
+ msi controller
+Thread-Index: AQHYtj8hCDDK+8gqVE2zOgMsKNOQwK3AJMoAgAAECGA=
+Date:   Thu, 25 Aug 2022 21:42:38 +0000
+Message-ID: <PAXPR04MB9186201A03037BA7DC74D52B88729@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220822155130.2491006-1-Frank.Li@nxp.com>
+ <20220822155130.2491006-4-Frank.Li@nxp.com>
+ <20220825212130.GA1705214-robh@kernel.org>
+In-Reply-To: <20220825212130.GA1705214-robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fdc53d8-e26a-4869-d3d0-08da86e2bb08
+x-ms-traffictypediagnostic: PA4PR04MB9221:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hcDkaSR7ZnpP1B6ehi3ESdId5Pd4OGSYBMSKVLHzXD3Ec4kkfsjw/rdNJ+sIz+QroAGiiroDBr17nb6rdpXdt7yYQuUelfdeLcdq2SfBtEnm0IQ2M1SzxJ+x0/kMWoQr3yH5LZbAdW6XF9flL+olDyi9e7mM+skvdaBXO7RLC2TFJIlm93bPqRqEDYGEyZgw7vyuvdFiiF4+Ez0WzZ0QJbTNF2l6UQSjqFUtA2H7DJN48Vq9U4I1d0cUPjCINbr5UvheWZoCFnNcsLSIBfsM1wTcCtDPtcPtkVYII37u0lNMKxps8yloOOiJf1gZ+Q+6veA80w26b5zdnHWx/mHdY9oGoC9vaVD+7kDaTaFwmx3K+9YomibKTLuWd1jcnnTY8vzutDeAQIkRyQDxSCr0bEwgGjcJ+kJ49jyCDJWiprsEtp0tupObwM20vBeeLTeAD1AY7vXsNomfK1zed6sLwRe/8NBbJ0C/PkNEPGnlVRWxYAkdpe5MWxU8IcmTi2Ev0tt/YW807JN8SYybYo0+lN+uRWHcqe5VJQqxrUMgr5zFxFTbUXO54/m+xdZw0Z8K5D+aPPrz+h3d49UmGSo6SzVV/ov6YFjG0S2nyEXN4gaiwDbQgp0ScYHW/ItIv2oVBZGVFou1oPNEXdm/+bntzEU/fxJImCYUUWG5EUqsEhAxkYiwx3eHOiqGp7+Go81kDmqAOq2z43AnWJXnQb527co1jhcUK9HeiwxyJGZIebLoej8THoW59sui+OvOw6/0Jd8vrJe/ydcGFceej0o4u3LExxX7R6rlsAmXsDHcwJg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(346002)(136003)(366004)(376002)(39860400002)(4326008)(53546011)(52536014)(86362001)(66946007)(9686003)(66556008)(55236004)(66446008)(76116006)(66476007)(7416002)(26005)(5660300002)(33656002)(38100700002)(478600001)(64756008)(7696005)(6506007)(55016003)(44832011)(8936002)(966005)(2906002)(8676002)(41300700001)(45080400002)(122000001)(186003)(6916009)(71200400001)(83380400001)(38070700005)(54906003)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?n8CAXA3tmRCZWI2mM59vyDtFwI6JZ4E6E70r1KdqmfZ7BFDZMLINFBzsjv1Z?=
+ =?us-ascii?Q?2KAp0grqtlD75PespqChUvGNKth/fYetz3q98OSWeZhuKKUvWglbQjT1nrTu?=
+ =?us-ascii?Q?e4M2xNFeQWtZDB+5zY1kORjUEeIxrCzIcxEMKGiagCeRztDSlWxdOIUmCd3b?=
+ =?us-ascii?Q?83Lu84AOwoVXNu4fjFJoGryhFf6tp5h/zTmUoCV0qsRXqO1piSIAVRohcUAc?=
+ =?us-ascii?Q?UfTI6ERMu8SkT1lcD+Mkc4sZDQ5lGWpRSQYfiWSmPlEF+/F3gxI8Ht/y1Hk5?=
+ =?us-ascii?Q?nW0iYbWqxj64o+K10UORq90Jrf7VgLxTV+xIAJwFHt8Y6+ERtibUivJuU8/B?=
+ =?us-ascii?Q?uDQPUQsDQece3FkK/r7eQsJBE+w+V9dJRwiWO11GDZ7lFTBUq8aqXz6++iR8?=
+ =?us-ascii?Q?TTgDZoEhOsLv4qDJvmPjGd1aZJ/Zp7qH6UNEi+ZGO7snbYDsvKgpVdrngrwU?=
+ =?us-ascii?Q?z2WtjNHR0mUap/h0OrmRoIyG1MitYXzFbTGGhoqU+CVXWlm3M3mVnEINDzbe?=
+ =?us-ascii?Q?4oEAbVdQq2yoLxx+udKE0JA/Gbub99ZTFCwPWCDWp3MvjLbZuvPJ7Pk6tyg4?=
+ =?us-ascii?Q?VrcD1eV2pCzbRvFfK5Z46MSZX44TqRaA+6z6C9J/09092VgdYD/WLyPTgaZe?=
+ =?us-ascii?Q?tMMufC6176JFT1HLbL3P2Ms3csrCfzHZPQbfycVTT+X/ZjNY68H6glxcI67q?=
+ =?us-ascii?Q?y3Vc3xTfWK2B1C2N8CITuySz34Gi12YITm1188HUHxT/O1cc4VpuaVbc8t8O?=
+ =?us-ascii?Q?jORYVDOekpB4YiWTTLvb/W68FyhDj+fLL/GJFGlK/LSGaK1iA4XOsSIqB2cK?=
+ =?us-ascii?Q?NIGTJ6KMc89prNNH30wOyyQr5yxDg1GLuklNEwI00Lm7Xdg772lgtqDZ+og7?=
+ =?us-ascii?Q?IzlhLwCmH9nZzTacA5amW+FytzmrDUTr5pNZhy+IQtVteK40t0Luem45qqGP?=
+ =?us-ascii?Q?urIbzkKDLG/6bxCzKY6W2j8AedDIOMIvTZFwcdLwcKBnavHSpdtYzbwEI1DO?=
+ =?us-ascii?Q?AIVt1EJLCH6+BZHVOJVotV8Gpfyu6oKcP2T3q1W9ua2ZUEr4cgf0xb0Wu757?=
+ =?us-ascii?Q?rUGbp3kWjKEXUCjqZs2/YhCT6X8z/EuGB2ase1OHy+uwPJjwzJUMTOlXRyan?=
+ =?us-ascii?Q?40Kb/DvpUkei62WcPZUCrKBR6eCMpS4OnqRljv+6dsadANCGu8iK+MM3QzUy?=
+ =?us-ascii?Q?SSLFFJ0pgja1+4PBRfQ4SegiugYFDhwHDWRPOr2YPWoHZoWIjDpU26d0Uz76?=
+ =?us-ascii?Q?zwM3YPEcOm4TMNGI0IRZ/6Zctg50wWnYasYdsPApF8Vna/ZoD63dH5lrpx0d?=
+ =?us-ascii?Q?r2ETWqZBbkIEAXjfQvPHkMrruaeszfjLn2t7csPd/v9/486h9J2Qau0gjxZM?=
+ =?us-ascii?Q?+xStwxZV4K7F8wAC29wTleQwXZ2sRvgHrWrfO+tgpvCqUkGHvP0NtSySVAl/?=
+ =?us-ascii?Q?b4PPsXP8d2wnUy9EgrijDQFtyT0fPYs31lMPT4pdXiTh4pKke35hPqF1HUod?=
+ =?us-ascii?Q?PMim4UQpw6sWmW0yWtoSqYQkC0OwY0LlXMXIo1kLnF84xh0IyNkuYTXwt9QO?=
+ =?us-ascii?Q?prWi+Cfrv2I83JFRmI0=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <335d730d-529e-7ce0-8bac-008a4daa6e3c@arm.com>
-X-Spam-Status: No, score=-12.5 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fdc53d8-e26a-4869-d3d0-08da86e2bb08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2022 21:42:38.4682
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7wvW9TaC9EM7GrxBFefviUF5JCCdfvYKYfWu/SDvjSLy5PkZAxRWfdY0YQ0VZHvSfipwHSYuNJu/eq04IPXcQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9221
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 08/25/2022, Robin Murphy wrote:
-> On 2022-08-25 19:50, Will McVicker wrote:
-> > Since not all devices require a 32-bit MSI address, add support to the
-> > PCIe host driver to allow setting the DMA mask to 64-bits if the 32-bit
-> > allocation fails. This allows kernels to disable ZONE_DMA32 and bounce
-> > buffering (swiotlb) without risking not being able to get a 32-bit address
-> > during DMA allocation.
-> > 
-> > Basically, in the slim chance that there are no 32-bit allocations
-> > available, the current PCIe host driver will fail to allocate the msi_msg
-> > page due to a DMA address overflow (seen in [1]). With this patch, the
-> > PCIe host can retry the allocation with a 64-bit DMA mask if the current
-> > PCIe device advertises 64-bit support via its MSI capabilities.
-> > 
-> > [1] https://lore.kernel.org/all/Yo0soniFborDl7+C@google.com/
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Jingoo Han <jingoohan1@gmail.com>
+
+
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Thursday, August 25, 2022 4:22 PM
+> To: Frank Li <frank.li@nxp.com>
+> Cc: maz@kernel.org; tglx@linutronix.de; krzysztof.kozlowski+dt@linaro.org=
+;
+> shawnguo@kernel.org; s.hauer@pengutronix.de; kw@linux.com;
+> bhelgaas@google.com; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> pci@vger.kernel.org; Peng Fan <peng.fan@nxp.com>; Aisheng Dong
+> <aisheng.dong@nxp.com>; jdmason@kudzu.us; kernel@pengutronix.de;
+> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; kishon@ti.com;
+> lorenzo.pieralisi@arm.com; ntb@lists.linux.dev; lznuaa@gmail.com
+> Subject: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as ms=
+i
+> controller
+>=20
+> Caution: EXT Email
+>=20
+> On Mon, Aug 22, 2022 at 10:51:29AM -0500, Frank Li wrote:
+> > I.MX mu support generate irq by write a register. Provide msi controlle=
+r
+> > support so other driver such as PCI EP can use it by standard msi
+> > interface as doorbell.
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > > ---
-> >   .../pci/controller/dwc/pcie-designware-host.c | 38 ++++++++++++++-----
-> >   drivers/pci/controller/dwc/pcie-designware.c  |  8 ++++
-> >   drivers/pci/controller/dwc/pcie-designware.h  |  1 +
-> >   3 files changed, 38 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 39f3b37d4033..8928a9a29d58 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -330,6 +330,9 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >   	u64 *msi_vaddr;
-> >   	int ret;
-> >   	u32 ctrl, num_ctrls;
-> > +	bool msi_64bit = false;
-> > +	bool retry_64bit = false;
-> > +	u16 msi_capabilities;
-> >   	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
-> >   		pp->irq_mask[ctrl] = ~0;
-> > @@ -367,16 +370,33 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >   						    dw_chained_msi_isr, pp);
-> >   	}
-> > -	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> > -	if (ret)
-> > -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> > +	msi_capabilities = dw_pcie_msi_capabilities(pci);
-> > +	if (msi_capabilities & PCI_MSI_FLAGS_ENABLE)
-> > +		msi_64bit = msi_capabilities & PCI_MSI_FLAGS_64BIT;
-> > -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > -					GFP_KERNEL);
-> > -	if (!msi_vaddr) {
-> > -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> > -		dw_pcie_free_msi(pp);
-> > -		return -ENOMEM;
-> > +	while (true) {
-> > +		dev_dbg(dev, "Setting MSI DMA mask to %s-bit.\n",
-> > +			retry_64bit ? "64" : "32");
-> 
-> If only we has some sort of "variable" that could could store a numerical
-> value, think of the possibilities... :)
-
-Sure, now that we're trying both 32- and 64-bit, I can do that. Thanks for the
-suggestion :)
-
-> 
-> > +		ret = dma_set_mask_and_coherent(dev, retry_64bit ?
-> > +						DMA_BIT_MASK(64) :
-> > +						DMA_BIT_MASK(32));
-> > +		if (ret)
-> > +			dev_warn(dev, "Failed to set DMA mask to %s-bit.\n",
-> > +				 retry_64bit ? "64" : "32");
-> 
-> Setting a 64-bit mask should never fail, since it represents having no
-> possible limitation whatsoever (I'm not sure if there are any platforms left
-> where setting a 32-bit mask can actually fail in practice either, but I have
-> no strong opinion on the fate of the existing warning).
-
-Yeah, I'm not sure how this could fail. So I just left the warning and edited
-the message. It's probably cleaner to just leave the warning unconditionally
-based on ret.
-
-> 
+> >  .../interrupt-controller/fsl,mu-msi.yaml      | 98 +++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-
+> controller/fsl,mu-msi.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl=
+,mu-
+> msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-
+> msi.yaml
+> > new file mode 100644
+> > index 0000000000000..ac07b138e24c0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-
+> msi.yaml
+> > @@ -0,0 +1,98 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
+t
+> ree.org%2Fschemas%2Finterrupt-controller%2Ffsl%2Cmu-
+> msi.yaml%23&amp;data=3D05%7C01%7CFrank.Li%40nxp.com%7Cbff8f186128d
+> 44209f4108da86dfc975%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
+> %7C637970592959950791%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj
+> AwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%
+> 7C%7C&amp;sdata=3DDHCOhmaJAhwb8Gl%2FEbPj32B6lR2zcIvyMY%2BTuPACb
+> zI%3D&amp;reserved=3D0
+> > +$schema:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
+t
+> ree.org%2Fmeta-
+> schemas%2Fcore.yaml%23&amp;data=3D05%7C01%7CFrank.Li%40nxp.com%7
+> Cbff8f186128d44209f4108da86dfc975%7C686ea1d3bc2b4c6fa92cd99c5c3016
+> 35%7C0%7C0%7C637970592959950791%7CUnknown%7CTWFpbGZsb3d8eyJ
+> WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> 7C3000%7C%7C%7C&amp;sdata=3DJ4znEXyHnMyQOssSUsoxE2Mlhe2qCDC%2F
+> 9WN6SKv69aM%3D&amp;reserved=3D0
 > > +
-> > +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > +						GFP_KERNEL);
-> > +		if (!msi_vaddr) {
-> > +			dev_err(dev, "Failed to alloc and map MSI data\n");
-> 
-> Possibly a mattrer of personal taste, but I'd say try to avoid dev_err() for
-> things that aren't actually fatal; if you're still able to continue on, at
-> best it's a warning, not an error. Especially if your use-case *expects* the
-> 32-bit allocation fail. There's nothing more offputting than booting a
-> typical vendor kernel and watching it scream tons of errors that look
-> EXTREMELY IMPORTANT yet are also apparently inconsequential.
-
-Failing a 32-bit allocation should be a rare case, but still possible. If it
-fails for both 32-bit and 64-bit, then it's very likely the PCIe device calling
-dw_pcie_host_init() will fail to probe. So I'll move this down to only report
-that error.
-
-> 
-> > +			if (msi_64bit && !retry_64bit) {
-> > +				retry_64bit = true;
-> > +				continue;
-> > +			}
+> > +title: Freescale/NXP i.MX Messaging Unit (MU) work as msi controller
 > > +
-> > +			dw_pcie_free_msi(pp);
-> > +			return -ENOMEM;
-> > +		}
-> > +		break;
-> 
-> TBH the whole loop design is a bit baroque for me, I'd have gone for a more
-> straightforward tweak to the existing flow, something like:
-> 
-> 	msi_vaddr = NULL;
-> 	ret = dma_set_mask(32);
-> 	if (!ret)
-> 		msi_vaddr = dma_alloc();
-> 	if (!msi_vaddr && msi_64bit) {
-> 		dev_warn();
-> 		dma_set_mask(64);
-> 		msi_vaddr = dma_alloc();
-> 	}
-> 	if (!msi_vaddr) {
-> 		dev_err();
-> 		return;
-> 	}
-> 		
-> However I'm happy that you've captured the important functional point, so
-> I'll leave the style matters up to Lorenzo.
-
-I was trying to avoid duplicating the allocation code, but if that's preferred,
-then I'm fine with it.
-
-> 
-> Thanks,
-> Robin.
-> 
-> >   	}
-> >   	return 0;
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index c6725c519a47..650a7f22f9d0 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -82,6 +82,14 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-> >   }
-> >   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-> > +u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
-> > +{
-> > +	u8 offset;
+> > +maintainers:
+> > +  - Frank Li <Frank.Li@nxp.com>
 > > +
-> > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-> > +	return dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
-> > +}
+> > +description: |
+> > +  The Messaging Unit module enables two processors within the SoC to
+> > +  communicate and coordinate by passing messages (e.g. data, status
+> > +  and control) through the MU interface. The MU also provides the abil=
+ity
+> > +  for one processor (A side) to signal the other processor (B side) us=
+ing
+> > +  interrupts.
 > > +
-> >   static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
-> >   					    u8 cap)
-> >   {
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index a871ae7eb59e..45fcdfc8c035 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -332,6 +332,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
-> >   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> >   u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-> > +u16 dw_pcie_msi_capabilities(struct dw_pcie *pci);
-> >   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
-> >   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> > +  Because the MU manages the messaging between processors, the MU
+> uses
+> > +  different clocks (from each side of the different peripheral buses).
+> > +  Therefore, the MU must synchronize the accesses from one side to the
+> > +  other. The MU accomplishes synchronization using two sets of matchin=
+g
+> > +  registers (Processor A-facing, Processor B-facing).
+> > +
+> > +  MU can work as msi interrupt controller to do doorbell
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,imx6sx-mu-msi
+> > +      - fsl,imx7ulp-mu-msi
+> > +      - fsl,imx8ulp-mu-msi
+> > +      - fsl,imx8ulp-mu-msi-s4
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: a side register base address
+> > +      - description: b side register base address
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: processor a-facing
+> > +      - const: processor b-facing
+>=20
+> Isn't 'a' and 'b' sufficient to distinguish? Personally, doesn't really
+> look like a case that benefits from -names at all.
+>=20
+> In any case, -names shouldn't have spaces.
 
-Thanks,
-Will
+I like "a" and "b".
+
+But Marc Zyngier suggested use above name.
+https://www.spinics.net/lists/linux-pci/msg128783.html
+
+@Marc Zyngier
+
+best regards
+Frank Li
+
+>=20
+> > +
+> > +  interrupts:
+> > +    description: a side interrupt number.
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  power-domains:
+> > +    items:
+> > +      - description: a side power domain
+> > +      - description: b side power domain
+> > +
+> > +  power-domain-names:
+> > +    items:
+> > +      - const: processor a-facing
+> > +      - const: processor b-facing
+>=20
+> Same here.
+>=20
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  msi-controller: true
+> > +
+> > +  "#msi-cells":
+> > +    const: 0
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-controller
+> > +  - msi-controller
+>=20
+> #msi-cells should be required.
+>=20
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/firmware/imx/rsrc.h>
+> > +
+> > +    msi-controller@5d270000 {
+> > +        compatible =3D "fsl,imx6sx-mu-msi";
+> > +        msi-controller;
+> > +        #msi-cells =3D <0>;
+> > +        interrupt-controller;
+> > +        reg =3D <0x5d270000 0x10000>,     /* A side */
+> > +              <0x5d300000 0x10000>;     /* B side */
+> > +        reg-names =3D "processor a-facing", "processor b-facing";
+> > +        interrupts =3D <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
+> > +        power-domains =3D <&pd IMX_SC_R_MU_12A>,
+> > +                        <&pd IMX_SC_R_MU_12B>;
+> > +        power-domain-names =3D "processor a-facing", "processor b-faci=
+ng";
+> > +    };
+> > --
+> > 2.35.1
+> >
+> >
