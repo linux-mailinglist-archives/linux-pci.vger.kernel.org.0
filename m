@@ -2,162 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 870F85A1535
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 17:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D5585A1550
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Aug 2022 17:13:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235857AbiHYPHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 11:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34676 "EHLO
+        id S237455AbiHYPNV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 11:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230072AbiHYPHG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 11:07:06 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389275EDE5;
-        Thu, 25 Aug 2022 08:07:02 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MD5nc4XV3z684th;
-        Thu, 25 Aug 2022 23:03:32 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 25 Aug 2022 17:07:00 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 25 Aug
- 2022 16:06:59 +0100
-Date:   Thu, 25 Aug 2022 16:06:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S230072AbiHYPNT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 11:13:19 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765DE5A3E4;
+        Thu, 25 Aug 2022 08:13:18 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id d8so16266685lfq.0;
+        Thu, 25 Aug 2022 08:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=X/HJjwysbwPY5lP7z2XNqzIAkb64JXray4RDUjSnQ/E=;
+        b=eqUAj/ulLGt9fKA9X2CPCHPQjf16XH6ZbfZynema2QyRMvKMwPMqa1nQf/nm/j0Yer
+         GaqnozYsFW7kX/T00PRfVhchF/6CMdCQ1kVqktnNEiTweJ/xbQ/efxECtWGsz2k6MH57
+         Q7BFrsZUYMEBmYVPtOQcPkDOZ4nCwv4mMFhhsoOw671PL+gmQEKVBXH3kfvhF0M0zpuO
+         5l5A6lG/iLRbAHHcqkI44HNnVUIV5t6SVeHTAQ77Bc2E8hKr9r+s0yUCM9Wyroa3Xym7
+         jET8lru2kRRlSonG2xONqxvPYYkeJm0sa7UD3gqhTRgpy8KrXhyqbEp/w+AM++IWu2Kn
+         nvKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=X/HJjwysbwPY5lP7z2XNqzIAkb64JXray4RDUjSnQ/E=;
+        b=v0X3dxlZvffChl14AnQ2Nx9Ohwj4Pgx8OTntD9gU7zjst+LvfuYoN7R5ThN+c+04VU
+         O9eP3OJffx3m1GsU1fw1OvU0ZpEs5UYIVv6xXu//X8PFELOmooEIp1acADEyfDoHsqEg
+         o2RY8dT73/IoBzIyJfQTHCCzpWSuZIDqMtcAEufNukwXArkvhV1OlfvtokaJG8niyoRs
+         GWh9uIM0y1p0tV2a6EKoZ8B5ei6TTh50WCZ4EKWoV006lYpNYGTbSEX+fr0c3m9+2pya
+         IY+aRSWoQaxIe66WDRqSwtCSprIkxNGC27HaKqxvo2iRg3lIpgRxmQfyyu25KoXd7tP1
+         UHtA==
+X-Gm-Message-State: ACgBeo1itz09/9U9naasWsz6JHUpaDqVHAD44sWriywBrKsd1MkMH1zb
+        VM48swgcz/FnG0zeuJAr1R4=
+X-Google-Smtp-Source: AA6agR4h1iWUpc20LQ+4wYlO85M6Cr5yt6RX+MQK1HeajaoyfhxIAa55vq9Ftczgq4dODFiIrLVNHw==
+X-Received: by 2002:a05:6512:b9d:b0:48b:2567:4bad with SMTP id b29-20020a0565120b9d00b0048b25674badmr1325505lfv.9.1661440396732;
+        Thu, 25 Aug 2022 08:13:16 -0700 (PDT)
+Received: from mobilestation ([95.79.140.178])
+        by smtp.gmail.com with ESMTPSA id 19-20020a2eb953000000b00261d623d9ffsm297018ljs.134.2022.08.25.08.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Aug 2022 08:13:15 -0700 (PDT)
+Date:   Thu, 25 Aug 2022 18:13:13 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V2 1/2] PCI: Allow drivers to request exclusive config
- regions
-Message-ID: <20220825160658.000051a6@huawei.com>
-In-Reply-To: <20220824232450.723179-2-ira.weiny@intel.com>
-References: <20220824232450.723179-1-ira.weiny@intel.com>
-        <20220824232450.723179-2-ira.weiny@intel.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        Jingoo Han <jingoohan1@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Subject: Re: [PATCH v5 05/20] dt-bindings: PCI: dwc: Add phys/phy-names
+ common properties
+Message-ID: <20220825151313.lyjhc3g3udabvr2r@mobilestation>
+References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
+ <20220822184701.25246-6-Sergey.Semin@baikalelectronics.ru>
+ <1661205444.106003.931361.nullmailer@robh.at.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1661205444.106003.931361.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 24 Aug 2022 16:24:49 -0700
-ira.weiny@intel.com wrote:
+On Mon, Aug 22, 2022 at 04:57:24PM -0500, Rob Herring wrote:
+> On Mon, 22 Aug 2022 21:46:46 +0300, Serge Semin wrote:
+> > It's normal to have the DW PCIe RP/EP DT-nodes equipped with the explicit
+> > PHY phandle references. There can be up to 16 PHYs attach in accordance
+> > with the maximum number of supported PCIe lanes. Let's extend the common
+> > DW PCIe controller schema with the 'phys' and 'phy-names' properties
+> > definition. The PHY names are defined with the regexp pattern
+> > '^pcie([0-9]+|-?phy[0-9]*)?$' so to match the names currently supported by
+> > the DW PCIe platform drivers ("pcie": meson; "pciephy": qcom, imx6;
+> > "pcie-phy": uniphier, rockchip, spear13xx; "pcie": intel-gw; "pcie-phy%d":
+> > keystone, dra7xx; "pcie": histb, etc). Though the "pcie%d" format would
+> > the most preferable in this case.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch unpinned from the next one:
+> >   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
+> >   by the Rob' request. (@Rob)
+> > 
+> > Changelog v5:
+> > - Add a note about having line-based PHY phandles order. (@Rob)
+> > - Prefer 'pcie[0-9]+' PHY-names over the rest of the cases. (@Rob)
+> > ---
+> >  .../bindings/pci/snps,dw-pcie-common.yaml     | 19 +++++++++++++++++++
+> >  .../bindings/pci/snps,dw-pcie-ep.yaml         |  3 +++
+> >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  3 +++
+> >  3 files changed, 25 insertions(+)
+> > 
+> 
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> 
+> yamllint warnings/errors:
+> 
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> PCI config space access from user space has traditionally been
-> unrestricted with writes being an understood risk for device operation.
-> 
-> Unfortunately, device breakage or odd behavior from config writes lacks
-> indicators that can leave driver writers confused when evaluating
-> failures.  This is especially true with the new PCIe Data Object
-> Exchange (DOE) mailbox protocol where backdoor shenanigans from user
-> space through things such as vendor defined protocols may affect device
-> operation without complete breakage.
-> 
-> A prior proposal restricted read and writes completely.[1]  Greg and
-> Bjorn pointed out that proposal is flawed for a couple of reasons.
-> First, lspci should always be allowed and should not interfere with any
-> device operation.  Second, setpci is a valuable tool that is sometimes
-> necessary and it should not be completely restricted.[2]  Finally
-> methods exist for full lock of device access if required.
-> 
-> Even though access should not be restricted it would be nice for driver
-> writers to be able to flag critical parts of the config space such that
-> interference from user space can be detected.
-> 
-> Introduce pci_request_config_region_exclusive() to mark exclusive config
-> regions.  Such regions trigger a warning and kernel taint if accessed
-> via user space.
-> 
-> Create pci_warn_once() to restrict the user from spamming the log.
-> 
-> [1] https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
-> [2] https://lore.kernel.org/all/YF8NGeGv9vYcMfTV@kroah.com/
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-One comment inline.
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb: pcie@14180000: phy-names: 'oneOf' conditional failed, one must be fixed:
+> 	'p2u-0' does not match '^pcie[0-9]+$'
+> 	'p2u-0' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-1' does not match '^pcie[0-9]+$'
+> 	'p2u-1' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-2' does not match '^pcie[0-9]+$'
+> 	'p2u-2' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-3' does not match '^pcie[0-9]+$'
+> 	'p2u-3' does not match '^pcie(-?phy[0-9]*)?$'
 
-I'm not totally convinced of the necessity of this, but done this way
-it has very little impact so I'm fine with it.
+Right. I've missed the Nvidia Tegra194 phy-names. I'll mark them as
+deprecated too. Meanwhile @Rob could you review the rest of the
+series?
 
-Other than the comment about not realigning things...
+-Sergey
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb: pcie@14180000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'linux,pci-domain', 'num-lanes', 'ranges', 'supports-clkreq' were unexpected)
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb: pcie@14160000: phy-names: 'oneOf' conditional failed, one must be fixed:
+> 	'p2u-0' does not match '^pcie[0-9]+$'
+> 	'p2u-0' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-1' does not match '^pcie[0-9]+$'
+> 	'p2u-1' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-2' does not match '^pcie[0-9]+$'
+> 	'p2u-2' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-3' does not match '^pcie[0-9]+$'
+> 	'p2u-3' does not match '^pcie(-?phy[0-9]*)?$'
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb: pcie@14160000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'linux,pci-domain', 'num-lanes', 'num-viewport', 'ranges' were unexpected)
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: phy-names: 'oneOf' conditional failed, one must be fixed:
+> 	'p2u-0' does not match '^pcie[0-9]+$'
+> 	'p2u-0' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-1' does not match '^pcie[0-9]+$'
+> 	'p2u-1' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-2' does not match '^pcie[0-9]+$'
+> 	'p2u-2' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-3' does not match '^pcie[0-9]+$'
+> 	'p2u-3' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-4' does not match '^pcie[0-9]+$'
+> 	'p2u-4' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-5' does not match '^pcie[0-9]+$'
+> 	'p2u-5' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-6' does not match '^pcie[0-9]+$'
+> 	'p2u-6' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-7' does not match '^pcie[0-9]+$'
+> 	'p2u-7' does not match '^pcie(-?phy[0-9]*)?$'
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: Unevaluated properties are not allowed ('num-lanes' was unexpected)
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: phy-names: 'oneOf' conditional failed, one must be fixed:
+> 	'p2u-0' does not match '^pcie[0-9]+$'
+> 	'p2u-0' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-1' does not match '^pcie[0-9]+$'
+> 	'p2u-1' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-2' does not match '^pcie[0-9]+$'
+> 	'p2u-2' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-3' does not match '^pcie[0-9]+$'
+> 	'p2u-3' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-4' does not match '^pcie[0-9]+$'
+> 	'p2u-4' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-5' does not match '^pcie[0-9]+$'
+> 	'p2u-5' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-6' does not match '^pcie[0-9]+$'
+> 	'p2u-6' does not match '^pcie(-?phy[0-9]*)?$'
+> 	'p2u-7' does not match '^pcie[0-9]+$'
+> 	'p2u-7' does not match '^pcie(-?phy[0-9]*)?$'
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: Unevaluated properties are not allowed ('num-lanes' was unexpected)
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
 > 
-> ---
-> Changes from V1:
-> 	Greg and Dan:
-> 		Create and use pci_warn_once() to keep the user from spamming
-> 	Dan:
-> 		Clarify the warn message
+> doc reference errors (make refcheckdocs):
 > 
-> Changes from[1]:
-> 	Change name to pci_request_config_region_exclusive()
-> 	Don't flag reads at all.
-> 	Allow writes with a warn and taint of the kernel.
-> 	Update commit message
-> 	Forward port to latest tree.
-> ---
->  drivers/pci/pci-sysfs.c |  7 +++++++
->  drivers/pci/probe.c     |  6 ++++++
->  include/linux/ioport.h  |  2 ++
->  include/linux/pci.h     | 33 +++++++++++++++++++++++++--------
->  kernel/resource.c       | 13 ++++++++-----
->  5 files changed, 48 insertions(+), 13 deletions(-)
+> See https://patchwork.ozlabs.org/patch/
 > 
->  /* drivers/pci/bus.c */
->  void pci_add_resource(struct list_head *resources, struct resource *res);
->  void pci_add_resource_offset(struct list_head *resources, struct resource *res,
-> @@ -2486,14 +2502,15 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->  #define pci_printk(level, pdev, fmt, arg...) \
->  	dev_printk(level, &(pdev)->dev, fmt, ##arg)
->  
-> -#define pci_emerg(pdev, fmt, arg...)	dev_emerg(&(pdev)->dev, fmt, ##arg)
-> -#define pci_alert(pdev, fmt, arg...)	dev_alert(&(pdev)->dev, fmt, ##arg)
-> -#define pci_crit(pdev, fmt, arg...)	dev_crit(&(pdev)->dev, fmt, ##arg)
-> -#define pci_err(pdev, fmt, arg...)	dev_err(&(pdev)->dev, fmt, ##arg)
-> -#define pci_warn(pdev, fmt, arg...)	dev_warn(&(pdev)->dev, fmt, ##arg)
-> -#define pci_notice(pdev, fmt, arg...)	dev_notice(&(pdev)->dev, fmt, ##arg)
-> -#define pci_info(pdev, fmt, arg...)	dev_info(&(pdev)->dev, fmt, ##arg)
-> -#define pci_dbg(pdev, fmt, arg...)	dev_dbg(&(pdev)->dev, fmt, ##arg)
-> +#define pci_emerg(pdev, fmt, arg...)	 dev_emerg(&(pdev)->dev, fmt, ##arg)
-> +#define pci_alert(pdev, fmt, arg...)	 dev_alert(&(pdev)->dev, fmt, ##arg)
-> +#define pci_crit(pdev, fmt, arg...)	 dev_crit(&(pdev)->dev, fmt, ##arg)
-> +#define pci_err(pdev, fmt, arg...)	 dev_err(&(pdev)->dev, fmt, ##arg)
-> +#define pci_warn(pdev, fmt, arg...)	 dev_warn(&(pdev)->dev, fmt, ##arg)
-> +#define pci_warn_once(pdev, fmt, arg...) dev_warn_once(&(pdev)->dev, fmt, ##arg)
-> +#define pci_notice(pdev, fmt, arg...)	 dev_notice(&(pdev)->dev, fmt, ##arg)
-> +#define pci_info(pdev, fmt, arg...)	 dev_info(&(pdev)->dev, fmt, ##arg)
-> +#define pci_dbg(pdev, fmt, arg...)	 dev_dbg(&(pdev)->dev, fmt, ##arg)
-
-This realignment is a lot of noise.  Do we really care about one diffentlyu
-aligned entry? + if you are going to do it two tabs rather than a space
-following the tab (I think that's what you have here?)
-
->  
-
+> This check can fail if there are any dependencies. The base for a patch
+> series is generally the most recent rc1.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit.
+> 
