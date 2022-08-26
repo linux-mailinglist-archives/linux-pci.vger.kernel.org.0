@@ -2,109 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF40B5A20DC
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 08:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7B895A210B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 08:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244029AbiHZG0M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 02:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
+        id S238879AbiHZGpa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 02:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbiHZG0L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 02:26:11 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4665B05D;
-        Thu, 25 Aug 2022 23:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1661495169; x=1693031169;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ru/eWDImchhw6Kz9v2fJ5UGl0jpVy/CFCbFYw8iOmFs=;
-  b=g2wVjwKDywR5wUjU+WpROA4mswRyDGjrdlnyUWAB4WtNohrPLIxM1rfm
-   i8hHrlHOn8ru3vTH1xkTwa/yOCErRUQNdk0nxoDnulCe5l1TV9tZS7jke
-   fHPbrG+hc3t4eO21/9Ndhd2glWyhyar8+/9CSOTHajRR/zA1YedX6yCQj
-   uhctC/i6qj5xvtNwGGW7Vfd5xHdvsiZ84tw3rRTY8yIwA0CZTx3GSLPtp
-   xzorXS1qhltGQXD/qCHKCoXmQPLNcm7OYK8noM3HVbq5cfkBZHM9iNuDF
-   RMuWCv0l8Fen9aQP5xWdyL0hqQUyTg45kzYvpVn73ejKeqDAqtvqtBWdM
-   A==;
-X-IronPort-AV: E=Sophos;i="5.93,264,1654552800"; 
-   d="scan'208";a="25817877"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2022 08:26:08 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 26 Aug 2022 08:26:08 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 26 Aug 2022 08:26:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1661495168; x=1693031168;
-  h=from:to:cc:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding:subject;
-  bh=Ru/eWDImchhw6Kz9v2fJ5UGl0jpVy/CFCbFYw8iOmFs=;
-  b=GZlq0KSirEFrHnj29JRewBtdV51m86yAQ2aYucZ1AyNT5t+C/WnS0w0l
-   2KjJwivgu3XTmqwC6UdW4OGXj2gyb+R+GCCm4H1yGqXWuyg9hDY40VAkv
-   3BCMWM3gJQ3ASR7r89Em8RWLBrx3YxrAdbcCilr4DcqKWKUhw3XwxZXKX
-   VgopHAhotboPVEi01OdZ1/GtodJp9uLvhJBYsx/F2r+jjbE8dwU1NpBX/
-   5eIV4t+eSQCqLpj+mZ7a6JpDG5cPF/f4mfLfQh5vt6dQCuMDp5RKnKgI9
-   N/mmD1BD4fT6Ehqnz/ZLFTgKHJBHEMQPmnhfkcQCPBHfp1birUz7aXObO
-   w==;
-X-IronPort-AV: E=Sophos;i="5.93,264,1654552800"; 
-   d="scan'208";a="25817876"
-Subject: Re: [PATCH v1 0/2] Fix the wrong order of phy callbacks
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 26 Aug 2022 08:26:07 +0200
-Received: from steina-w.localnet (unknown [10.123.49.11])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        with ESMTP id S245102AbiHZGpa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 02:45:30 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC6BA61E3
+        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 23:45:27 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9E1C8280056;
-        Fri, 26 Aug 2022 08:26:07 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, vkoul@kernel.org,
-        marcel.ziswiler@toradex.com, kishon@ti.com,
-        linux-arm-kernel@lists.infradead.org, hongxing.zhu@nxp.com,
-        linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Date:   Fri, 26 Aug 2022 08:26:05 +0200
-Message-ID: <4054884.5fSG56mABF@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <1661173856-1192-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1661173856-1192-1-git-send-email-hongxing.zhu@nxp.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4MDVhQ0WRSz4x1G;
+        Fri, 26 Aug 2022 16:45:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1661496326;
+        bh=YdTNamzH/TUdshV3Q5FUH2pPsMLKLln71bBuYe/qFtg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=q+KGV/ycNrADBH4LtYQiCFy43yiKKEdbNSPJ8gHUbo6GGHkxFOpbzE4TJrCaqmC13
+         H7bYhRtpxdEHnQek3eNQvEQS32ymT4MpgrpavEL6E7osVTmjdCft6H3FUun39BKdx8
+         2rHMmRAn/VK7geoGcLglOYyhbY2Da6d+AFDF0jRyhiT5kaPGUdYCPdps7NzCBrZHn6
+         LGP5H0MBWF8m/8dSsnAQcep41RnVDhIr9X4QPIiyJuKRjqucVLzM34cMkRBxlA1kAu
+         wuNTp59e8G3u11QNGCic8wcE9hmDAQYnlCFx9vQ5f2wyJKi+B59XpDbcVSMKL3kr/e
+         QQGJA81xbruHQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Russell Currey <ruscur@russell.cc>, oohall@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Remove myself as EEH maintainer
+In-Reply-To: <20220825200310.GA2869783@bhelgaas>
+References: <20220825200310.GA2869783@bhelgaas>
+Date:   Fri, 26 Aug 2022 16:45:22 +1000
+Message-ID: <87tu5zjyf1.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Richard,
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Sat, Aug 20, 2022 at 10:17:41AM +1000, Michael Ellerman wrote:
+>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>> > On Sat, Aug 06, 2022 at 06:53:01PM +1000, Russell Currey wrote:
+>> >> I haven't touched EEH in a long time I don't have much knowledge of the
+>> >> subsystem at this point either, so it's misleading to have me as a
+>> >> maintainer.
+>> >> 
+>> >> I remain grateful to Oliver for picking up my slack over the years.
+>> >> 
+>> >> Signed-off-by: Russell Currey <ruscur@russell.cc>
+>> >> ---
+>> >>  MAINTAINERS | 1 -
+>> >>  1 file changed, 1 deletion(-)
+>> >> 
+>> >> diff --git a/MAINTAINERS b/MAINTAINERS
+>> >> index a9f77648c107..dfe6081fa0b3 100644
+>> >> --- a/MAINTAINERS
+>> >> +++ b/MAINTAINERS
+>> >> @@ -15639,7 +15639,6 @@ F:	drivers/pci/endpoint/
+>> >>  F:	tools/pci/
+>> >>  
+>> >>  PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC
+>> >> -M:	Russell Currey <ruscur@russell.cc>
+>> >>  M:	Oliver O'Halloran <oohall@gmail.com>
+>> >>  L:	linuxppc-dev@lists.ozlabs.org
+>> >>  S:	Supported
+>> >
+>> > I was thinking along these lines, but if you want to take this,
+>> > Michael, I'll drop it:
+>> 
+>> Hi Bjorn,
+>> 
+>> I was hoping one of the protagonists would send a patch :), but that
+>> looks perfect.
+>
+> Waiting for that patch would have been the *smart* thing to do, but I
+> added your ack and put it on for-linus for v6.0.  Thanks!
 
-Am Montag, 22. August 2022, 15:10:54 CEST schrieb Richard Zhu:
-> Refer [1], phy_init() must be called before phy_power_on().
-> This series used to fix the wrong order of the phy_init() and
-> phy_power_on(), introduced by commit 1aa97b002258 ("phy: freescale: pcie:
-> Initialize the imx8 pcie standalone phy driver") Tested on i.MX8MM EVK
-> board when one NVME device is used.
-> 
-> [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d
-> rivers/phy/phy-core.c?id=v5.19-rc1#n233
-> 
-> [PATCH v1 1/2] PCI: imx6: Fix the wrong order of phy_init() and
-> [PATCH v1 2/2] phy: freescale: imx8m-pcie: Fix the wrong order of
+:) Thanks.
 
-Together with your imx8mp patch series on TQMa8MPxl + MBa8MPxL:
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-Thanks again!
-Alexander
-
-
-
+cheers
