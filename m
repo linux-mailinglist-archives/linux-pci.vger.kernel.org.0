@@ -2,142 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67DFE5A2177
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 09:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA98A5A227D
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 09:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbiHZHLE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 03:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34480 "EHLO
+        id S245714AbiHZH7N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 03:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245215AbiHZHK5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 03:10:57 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C862E1EC57
-        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 00:10:55 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id k9so755003wri.0
-        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 00:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=Wk6ASekOjGWHwzdPH/KW6aUNU4MlaS+85Ve1j+puKOs=;
-        b=pRiDdYrLXUw1Ya7fKu91DJfxu/f9U+zY20DpJsAP/3OlSJYC5KaWEHNyJnaYzFQc48
-         z3flwYnJbt6bloYLLyVTw2Ipo84/gxMtoqih0/GUnQjXytzYpvhm0Pgcggw5puSUnssP
-         LHzIs0p6JVy+Z5jj3dVN77aXcPzmkb1iKGeNSdnhpnH6gmwFe91+GHsa2XOom7htPXHm
-         jx9d8dzp2w6LZy9JaitpKWCXoZh6OSGyVZ2XPaGAJjGJ1T/kMDTSqy+Wa+crMLIxNEe2
-         RN9pY2ASaJHZiMNYgV80Hjb1ep2B+y6xq9q2SsLA3Tc9zjnQoQVDokc5XQ7Q8f8IMrD3
-         VRDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Wk6ASekOjGWHwzdPH/KW6aUNU4MlaS+85Ve1j+puKOs=;
-        b=1EV2ar7cWZeBASCNTh3EaQXl6ij5WwiBWiEvwi1nlEfIfcRNl64Z8Bv+2HjXoDpGOa
-         ljEIu/eO1yXnqNmWK8HimU0vkHNp/YzMv+tnPFYnL45N5uObC8pDgED2H8/1B2UsHBS5
-         xxe8i1WCccSoq2AA15xFKEZEXdp1uYSzvUsprb2w0FO8EJie3M2kW9B4JfxHromFsrnL
-         VumkpZWnu1vdo+rOj9DJfZSg/CBcvurrKbIZIfcX/nyHQCl2qiRc2KoqyR+j2Y1HDWAP
-         rJqghbxZFWCeQ64LVlA27JJOnPT2ZfVsDq+DKXx5g9rcKmG+D2fLrNNaViYCpwy4X9NZ
-         B0Lw==
-X-Gm-Message-State: ACgBeo1ppfZzOxkxrU0GEsQi5fulru2nWC/wR+pzPk/Adt6HzcpMveeZ
-        UCbEbhIaOJr3+SIJJYEVYnA=
-X-Google-Smtp-Source: AA6agR6HYkDFzvv+DZYPIluooIiwsEdYN6WtA/pbVnK/YCeizt1B9gg4wJjGMCCGvF6VtOhek+08RA==
-X-Received: by 2002:a05:6000:2ce:b0:225:2c5f:3ba8 with SMTP id o14-20020a05600002ce00b002252c5f3ba8mr4205203wry.138.1661497854324;
-        Fri, 26 Aug 2022 00:10:54 -0700 (PDT)
-Received: from [192.168.178.21] (p4fc20ad4.dip0.t-ipconnect.de. [79.194.10.212])
-        by smtp.gmail.com with ESMTPSA id t63-20020a1c4642000000b003a673055e68sm8552519wma.0.2022.08.26.00.10.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Aug 2022 00:10:53 -0700 (PDT)
-Message-ID: <640aea69-963b-9846-8e71-959417b5615e@gmail.com>
-Date:   Fri, 26 Aug 2022 09:10:50 +0200
+        with ESMTP id S1343492AbiHZH7M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 03:59:12 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C61D475D
+        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 00:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661500751; x=1693036751;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ApjWP7dIgDq8Mu3zzfNgFZvVTuX2qCWlLo75JvTlpDM=;
+  b=av4NVOfdtaURYwbyC9ztDex/RMiSD6QkUJoSKsN+v2d+mYDuRGwshO6+
+   VwCTPRUJAxR7gsqbLvw5TQ04J/W7aZnoZa0S827oEJsY/P2NGwKHO3MRk
+   odKXYFL9q3FwXk7Y0nbNRR1WayuWsc2HSYHQfT4zuyJi2O9HheM8evru3
+   L0FHUwoujKPkbgbkgwYOZ/ZInwKaG6DLkOZ/uFmoW6/pPv79AWbVIt2vJ
+   +d69sl+MgQe0hZYEkUlLoBQ2pOSt4iQwZ5YGjiE4Wfbvahi8CfzoPFawS
+   D5NcjLYBasQxsXhizBM2c7Ms/YM7LNNcPoDRwyEBX4ftkEFVp2/gviwhk
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="274204007"
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="274204007"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 00:59:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="752795908"
+Received: from lkp-server02.sh.intel.com (HELO 34e741d32628) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2022 00:59:08 -0700
+Received: from kbuild by 34e741d32628 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oRUF9-0003eU-1K;
+        Fri, 26 Aug 2022 07:59:07 +0000
+Date:   Fri, 26 Aug 2022 15:58:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ c918c1a1408438a482baaa2768233222e820e979
+Message-ID: <63087d1f.8iSJ1Rs5P6ZPYnBr%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
-        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
-        "Lazar, Lijo" <lijo.lazar@amd.com>, amd-gfx@lists.freedesktop.org,
-        Tom Seewald <tseewald@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Stefan Roese <sr@denx.de>
-References: <20220825174845.GA2857385@bhelgaas>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20220825174845.GA2857385@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 25.08.22 um 19:48 schrieb Bjorn Helgaas:
-> On Thu, Aug 25, 2022 at 10:18:28AM +0200, Christian König wrote:
->> Am 25.08.22 um 09:54 schrieb Lazar, Lijo:
->>> On 8/25/2022 1:04 PM, Christian König wrote:
->>>> Am 25.08.22 um 08:40 schrieb Stefan Roese:
->>>>> On 24.08.22 16:45, Tom Seewald wrote:
->>>>>> On Wed, Aug 24, 2022 at 12:11 AM Lazar, Lijo
->>>>>> <lijo.lazar@amd.com> wrote:
->>>>>>> Unfortunately, I don't have any NV platforms to test. Attached is an
->>>>>>> 'untested-patch' based on your trace logs.
->>>>>> ...
->>>>> I did not follow this thread in depth, but FWICT the bug is solved now
->>>>> with this patch. So is it correct, that the now fully enabled AER
->>>>> support in the PCI subsystem in v6.0 helped detecting a bug in the AMD
->>>>> GPU driver?
->>>> It looks like it, but I'm not 100% sure about the rational behind it.
->>>>
->>>> Lijo can you explain more on this?
->>>  From the trace, during gmc hw_init it takes this route -
->>>
->>> gart_enable -> amdgpu_gtt_mgr_recover -> amdgpu_gart_invalidate_tlb ->
->>> amdgpu_device_flush_hdp -> amdgpu_asic_flush_hdp (non-ring based HDP
->>> flush)
->>>
->>> HDP flush is done using remapped offset which is MMIO_REG_HOLE_OFFSET
->>> (0x80000 - PAGE_SIZE)
->>>
->>> WREG32_NO_KIQ((adev->rmmio_remap.reg_offset +
->>> KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL) >> 2, 0);
->>>
->>> However, the remapping is not yet done at this point. It's done at a
->>> later point during common block initialization. Access to the unmapped
->>> offset '(0x80000 - PAGE_SIZE)' seems to come back as unsupported request
->>> and reported through AER.
->> That's interesting behavior. So far AER always indicated some kind of
->> transmission error.
->>
->> When that happens as well on unmapped areas of the MMIO BAR then we need to
->> keep that in mind.
-> AER can log many different kinds of errors, some related to hardware
-> issues and some related to software.
->
-> PCI writes are normally posted and get no response, so AER is the main
-> way to find out about writes to unimplemented addresses.
->
-> Reads do get a response, of course, and reads to unimplemented
-> addresses cause errors that most hardware turns into a ~0 data return
-> (in addition to reporting via AER if enabled).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: c918c1a1408438a482baaa2768233222e820e979  Merge branch 'remotes/lorenzo/pci/qcom'
 
-The issue is that previous hardware generations reported this through a 
-device specific interrupt.
+elapsed time: 721m
 
-It's nice to see that this is finally standardized. I'm just wondering 
-if we could retire our hardware specific interrupt handler for this as well.
+configs tested: 137
+configs skipped: 4
 
-Christian.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->
-> Bjorn
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+arm                                 defconfig
+i386                                defconfig
+x86_64                        randconfig-a004
+loongarch                         allnoconfig
+x86_64                        randconfig-a002
+arm64                            allyesconfig
+arm                              allyesconfig
+arc                                 defconfig
+loongarch                           defconfig
+alpha                               defconfig
+x86_64                        randconfig-a006
+arc                  randconfig-r043-20220824
+riscv                randconfig-r042-20220824
+s390                             allmodconfig
+alpha                            allyesconfig
+s390                                defconfig
+arc                              allyesconfig
+i386                             allyesconfig
+x86_64                              defconfig
+s390                             allyesconfig
+x86_64                        randconfig-a013
+powerpc                           allnoconfig
+s390                 randconfig-r044-20220824
+x86_64                        randconfig-a011
+powerpc                          allmodconfig
+i386                          randconfig-a014
+m68k                             allmodconfig
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                          randconfig-a001
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a003
+mips                             allyesconfig
+x86_64                        randconfig-a015
+x86_64                          rhel-8.3-func
+arc                  randconfig-r043-20220825
+m68k                             allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+sh                               allmodconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+i386                          randconfig-a005
+x86_64                           allyesconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+m68k                        m5407c3_defconfig
+arm                        mvebu_v7_defconfig
+powerpc                     mpc83xx_defconfig
+alpha                            alldefconfig
+arm                          pxa910_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                          randconfig-c001
+powerpc                 mpc85xx_cds_defconfig
+arm                          iop32x_defconfig
+mips                      fuloong2e_defconfig
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+xtensa                         virt_defconfig
+arm                       imx_v6_v7_defconfig
+ia64                        generic_defconfig
+arm                        spear6xx_defconfig
+mips                            gpr_defconfig
+sh                            shmin_defconfig
+mips                  decstation_64_defconfig
+ia64                             alldefconfig
+powerpc                 mpc8540_ads_defconfig
+mips                           gcw0_defconfig
+m68k                       bvme6000_defconfig
+m68k                       m5249evb_defconfig
+m68k                          multi_defconfig
+ia64                             allmodconfig
+powerpc                        warp_defconfig
+arm                           imxrt_defconfig
+mips                         bigsur_defconfig
+nios2                         3c120_defconfig
+sh                            hp6xx_defconfig
+m68k                           virt_defconfig
+arm                            qcom_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                      mgcoge_defconfig
+arm                           tegra_defconfig
+arm                           corgi_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                      pcm030_defconfig
+arm                        keystone_defconfig
+sh                          rsk7201_defconfig
+arm64                               defconfig
+arm                              allmodconfig
+m68k                                defconfig
+ia64                                defconfig
+mips                             allmodconfig
 
+clang tested configs:
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20220825
+i386                          randconfig-a013
+hexagon              randconfig-r045-20220825
+i386                          randconfig-a015
+x86_64                        randconfig-a014
+hexagon              randconfig-r041-20220824
+hexagon              randconfig-r045-20220824
+i386                          randconfig-a011
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+riscv                randconfig-r042-20220825
+s390                 randconfig-r044-20220825
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-k001
+mips                          rm200_defconfig
+arm                        multi_v5_defconfig
+mips                           rs90_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
