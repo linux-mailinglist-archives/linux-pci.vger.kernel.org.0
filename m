@@ -2,164 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0184F5A1D63
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 01:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D925A1D74
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 02:04:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244524AbiHYXyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Aug 2022 19:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
+        id S229990AbiHZAEF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Aug 2022 20:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244283AbiHYXyQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 19:54:16 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB11C59D6
-        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 16:54:14 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-33dbe61eed8so47102197b3.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 16:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc;
-        bh=vUz6Nust5yp1gNz4Uf4QGDc0k3EwgdmOYN4sE8meqr8=;
-        b=CtiHcgKrviWMX2NGBRZS+VHzmzJeYi1IOF/PRhdjReTqmrqfKTalpa5giNXz57jOEs
-         BDpLTR6o9NZ4FLZfd4EiKm9qk5MAnCkrolAfSryscZe0QkOuJ+IO72uNA1441vmtHXL5
-         Sla99irAya3PYuJ+MGxhQHK9Yh/DX9VN0DteGBje8rNSsy8d+pRB9LkYisJz6jG57ZE1
-         cUg/N4mgDmaB18+oLKTAHr3Zk6MVQhsFS5z+Vfkbsc9LAKkqom45Zg1fLgA5C8nbPTa3
-         Y+FOrtNZPkArsS84DRE8y3jUIJabboBOUyRavyx7VBcPqHNwYINKq+fPmDMQcW7jwC/l
-         W/Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc;
-        bh=vUz6Nust5yp1gNz4Uf4QGDc0k3EwgdmOYN4sE8meqr8=;
-        b=IgfuyoST7/YISibPK+RB5xjz78v80cLAZmHM6CgJcPmopujRoAeTybvj+zqowsUVub
-         an7TkkdrkpqBc4T+X3jjjtN8YCJEvPhvABuqIAw5IUSjNsNXSQE11mlnWg3dch86kPae
-         vmJV0hCxqu6SXRsOMvq/0IoTkTdEmQBVBFVqOgWuLoUMoGZT+DpEF5rIQU8rfqeRPNfl
-         67HrRUNXJ1NcCKKWgf3crjglgQF5HqF1C1Wvek3hjN5uSN5e6NaJnzOcBj0zmBnD+S3E
-         bKztqu3PbeBZ5yig3aep0ZWNRv/DwfxjQPwjYUtqr4TdKdK8sgDfLszQwJT8KatX45NK
-         PxwQ==
-X-Gm-Message-State: ACgBeo1ffsXrXaLXs0HKVBYADHDkQdyFFpgrk8ERX5XDS4byE5/Yr/nJ
-        dViod8UPiEC1suQPiIYBDnTXO472VBi444/nbQI=
-X-Google-Smtp-Source: AA6agR7iHLfntJEAqSMbg5WG2yYoh67fS0C1ycJi2Z3X+HvBvRFPJ3qx35cuYPmJAraW943ihfv/i4z791j6aUS2tTk=
-X-Received: from wmcvicker.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5ebe])
- (user=willmcvicker job=sendgmr) by 2002:a0d:cad1:0:b0:335:8273:e9fd with SMTP
- id m200-20020a0dcad1000000b003358273e9fdmr6347676ywd.154.1661471654046; Thu,
- 25 Aug 2022 16:54:14 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 23:54:03 +0000
-In-Reply-To: <20220825235404.4132818-1-willmcvicker@google.com>
-Mime-Version: 1.0
-References: <20220825235404.4132818-1-willmcvicker@google.com>
-X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Message-ID: <20220825235404.4132818-3-willmcvicker@google.com>
-Subject: [PATCH v6 2/2] PCI: dwc: Add support for 64-bit MSI target address
-From:   Will McVicker <willmcvicker@google.com>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Will McVicker <willmcvicker@google.com>
-Cc:     kernel-team@android.com, Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S229680AbiHZAEE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Aug 2022 20:04:04 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A50DC740A
+        for <linux-pci@vger.kernel.org>; Thu, 25 Aug 2022 17:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661472243; x=1693008243;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NcymGIgsrPOCurDV5G93a5z/Hs8BRT75pirQkNXv6fw=;
+  b=fG7xUHNDX0PuQH4fh5Wl1BZl5KKCo9pwplx4kBaPgqMhGhf5sPyGZXwh
+   Z93P31wNEzdEOYZRsfiei5QKaEKF7PEZJod1OVEaz25KLeAVMVgMvtoHF
+   VKcMMHYumrQbdODhDWaPmcWcRscM90cS3r9UE4dLHuy7j5qwgxX4PL7w3
+   qY2f/uEG78ukIcZ1605eeKzOFBPpGKm6qmtQ4O2A9zRkOJdEK2eWZf6ag
+   Kl3BpvDT8FJmT0dMG/Fj1In/DHu/dRjoJCmaVSV+aBSB6z+YAJkj5Vj+8
+   nSGzKsVrg6JGvbMfaiZgeQ74yijzzZra32gi5MPm/ntZVABuNskikfdzt
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="281355912"
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="281355912"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 17:04:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="671229687"
+Received: from lkp-server02.sh.intel.com (HELO 34e741d32628) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Aug 2022 17:04:01 -0700
+Received: from kbuild by 34e741d32628 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oRMpM-00036L-2G;
+        Fri, 26 Aug 2022 00:04:00 +0000
+Date:   Fri, 26 Aug 2022 08:03:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/bridge-emul] BUILD SUCCESS
+ 658aea35ab88deca19705413199933c2cef9bac8
+Message-ID: <63080dea.Nly0ScaDJ7DAcZ5g%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since not all devices require a 32-bit MSI address, add support to the
-PCIe host driver to allow setting the DMA mask to 64-bits if the 32-bit
-allocation fails. This allows kernels to disable ZONE_DMA32 and bounce
-buffering (swiotlb) without risking not being able to get a 32-bit address
-during DMA allocation.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/bridge-emul
+branch HEAD: 658aea35ab88deca19705413199933c2cef9bac8  PCI: pci-bridge-emul: Set position of PCI capabilities to real HW value
 
-Basically, in the slim chance that there are no 32-bit allocations
-available, the current PCIe host driver will fail to allocate the msi_msg
-page due to a DMA address overflow (seen in [1]). With this patch, the
-PCIe host can retry the allocation with a 64-bit DMA mask if the current
-PCIe device advertises 64-bit support via its MSI capabilities.
+elapsed time: 724m
 
-[1] https://lore.kernel.org/all/Yo0soniFborDl7+C@google.com/
+configs tested: 127
+configs skipped: 4
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Will McVicker <willmcvicker@google.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 19 ++++++++++++++++---
- drivers/pci/controller/dwc/pcie-designware.c  |  8 ++++++++
- drivers/pci/controller/dwc/pcie-designware.h  |  1 +
- 3 files changed, 25 insertions(+), 3 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 39f3b37d4033..7e0352861bcb 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -374,9 +374,22 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
- 					GFP_KERNEL);
- 	if (!msi_vaddr) {
--		dev_err(dev, "Failed to alloc and map MSI data\n");
--		dw_pcie_free_msi(pp);
--		return -ENOMEM;
-+		u16 msi_capabilities;
-+
-+		/* Retry the allocation with a 64-bit mask if supported. */
-+		msi_capabilities = dw_pcie_msi_capabilities(pci);
-+		if ((msi_capabilities & PCI_MSI_FLAGS_ENABLE) &&
-+		    (msi_capabilities & PCI_MSI_FLAGS_64BIT)) {
-+			dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64),
-+							&pp->msi_data,
-+							GFP_KERNEL);
-+		}
-+		if (!msi_vaddr) {
-+			dev_err(dev, "Failed to alloc and map MSI data\n");
-+			dw_pcie_free_msi(pp);
-+			return -ENOMEM;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index c6725c519a47..650a7f22f9d0 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -82,6 +82,14 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
- 
-+u16 dw_pcie_msi_capabilities(struct dw_pcie *pci)
-+{
-+	u8 offset;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-+	return dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
-+}
-+
- static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
- 					    u8 cap)
- {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index a871ae7eb59e..45fcdfc8c035 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -332,6 +332,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
- 
- u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
- u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-+u16 dw_pcie_msi_capabilities(struct dw_pcie *pci);
- 
- int dw_pcie_read(void __iomem *addr, int size, u32 *val);
- int dw_pcie_write(void __iomem *addr, int size, u32 val);
+gcc tested configs:
+arc                                 defconfig
+alpha                               defconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+s390                             allmodconfig
+s390                                defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+s390                             allyesconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+sh                               allmodconfig
+i386                                defconfig
+i386                             allyesconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+m68k                        m5272c3_defconfig
+arm                          iop32x_defconfig
+arm                          gemini_defconfig
+powerpc                     tqm8548_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+um                                  defconfig
+m68k                       m5249evb_defconfig
+microblaze                      mmu_defconfig
+arm                        realview_defconfig
+x86_64                        randconfig-a006
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+sh                          r7780mp_defconfig
+sh                        edosk7760_defconfig
+sh                           se7751_defconfig
+powerpc                      arches_defconfig
+m68k                        stmark2_defconfig
+riscv                randconfig-r042-20220824
+s390                 randconfig-r044-20220824
+arc                  randconfig-r043-20220824
+arc                  randconfig-r043-20220825
+i386                          randconfig-c001
+xtensa                         virt_defconfig
+arm                       imx_v6_v7_defconfig
+ia64                        generic_defconfig
+arm                        spear6xx_defconfig
+mips                            gpr_defconfig
+ia64                             alldefconfig
+powerpc                 mpc8540_ads_defconfig
+mips                           gcw0_defconfig
+m68k                       bvme6000_defconfig
+sh                            hp6xx_defconfig
+m68k                           virt_defconfig
+arm                            qcom_defconfig
+sparc                       sparc32_defconfig
+sh                           se7750_defconfig
+sh                         microdev_defconfig
+arc                     nsimosci_hs_defconfig
+arm64                               defconfig
+arm                              allmodconfig
+m68k                                defconfig
+ia64                                defconfig
+mips                             allmodconfig
+ia64                             allmodconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+
+clang tested configs:
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a005
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-k001
+hexagon              randconfig-r045-20220824
+hexagon              randconfig-r045-20220825
+hexagon              randconfig-r045-20220823
+riscv                randconfig-r042-20220823
+riscv                randconfig-r042-20220825
+hexagon              randconfig-r041-20220823
+hexagon              randconfig-r041-20220824
+hexagon              randconfig-r041-20220825
+s390                 randconfig-r044-20220825
+s390                 randconfig-r044-20220823
+mips                       lemote2f_defconfig
+arm                         socfpga_defconfig
+
 -- 
-2.37.2.672.g94769d06f0-goog
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
