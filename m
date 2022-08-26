@@ -2,107 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D017F5A1FB0
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 06:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A46F45A20D0
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 08:22:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244538AbiHZESN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 00:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55764 "EHLO
+        id S244818AbiHZGWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 02:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243720AbiHZESM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 00:18:12 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F2EBFC61;
-        Thu, 25 Aug 2022 21:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661487491; x=1693023491;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YsDHteRcq1xMbpE+Et5nCrI0+XEVYx8Ur9biKx/cQPU=;
-  b=eGCetfeBSSnCGgngDaksi+RjHlSDpCrcbb/juav78rlQFRp04wDXvV0M
-   bE7tKpTsUW7oF3RK3//O+HXqPCywRCmTRQkKMOuu6iNtNbI7pkF4k7+cW
-   dqsL87wWXCPvnUUwP6fsSwzLd1Agahxx3bXAVDaoDFsTggT315aXfHiPn
-   wRngBporDWxhLWEeOYxNJt1FK+/fcHCTrRXHUL01WH4bHt9LWpWFhTgmg
-   L76BOZK3bCEZ17Q5oAD4FxbYl193nqBzsAuY3vF6CplMZHZWp2+g4jBBD
-   ZFVR+rGZf7Dm4RNVIfRQushyMRvodqBG99dFThRMNaOgsRDfJRFm8MLUL
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="274171622"
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="274171622"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 21:17:15 -0700
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="587156893"
-Received: from xjing1-mobl1.ccr.corp.intel.com (HELO [10.254.211.48]) ([10.254.211.48])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 21:17:08 -0700
-Message-ID: <c160bb06-5739-d1bb-f9a9-722a24e567c7@linux.intel.com>
-Date:   Fri, 26 Aug 2022 12:17:06 +0800
+        with ESMTP id S229459AbiHZGWb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 02:22:31 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE52CEB00;
+        Thu, 25 Aug 2022 23:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1661494950; x=1693030950;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rBBrCz8xicVM3MADWVv4mCLziAZaOXVUZJrEM2LrFxU=;
+  b=CK6dv/n5USqr7nroISveGYk2sP5MRPh8RgXDIZwPHQq8tnq8gzm49lr/
+   SFwKMk7qgwUwH5iB/cc2wo678PC2tewQkY2sgkjt/2FRAAVU8+oXxxlL8
+   yaJD+DJqYIozUGZVejPV/JfN5YshXaVhWxVmqcR3C7eZlYHCuPSLSSNwL
+   9/Ncfi4ookG0kBmq5vOHsjD6tAFr/ncId5OwZLzCANuU2KajSld0zZl6S
+   oU8oxKL5F3gb4fvN8UKSa8uJyceyDMctBt20SuSDy1pUb58yUQmmpfku4
+   xZvA6h7jIJaeZjQYDioFjEQlnf3ZPDpPlSSxjy3cnKqw74WHKN8i36Lz5
+   w==;
+X-IronPort-AV: E=Sophos;i="5.93,264,1654552800"; 
+   d="scan'208";a="25817750"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2022 08:22:28 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 26 Aug 2022 08:22:28 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 26 Aug 2022 08:22:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1661494948; x=1693030948;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rBBrCz8xicVM3MADWVv4mCLziAZaOXVUZJrEM2LrFxU=;
+  b=I4mhAXZo/hlLyy8nA6ygIFW2lVoTfaf0Ek8oRCN5sZGonHScggVH8X2Z
+   7pQUFU3SVa2kXgpgMruqVXEbtdP3l6+AFmdrC9ZmJ4UCY5kNE1Q0iVc6A
+   DK8YVDirOkm2c7afsayhS32dx1aFr6h6JqGRimd0FC1mMMnQkDM6pj1Rs
+   oeWDtgYQtV+A2BYH1QtpXwNTZjYIN/o5ctgbO9eIv+xOIhJd8yHadygSq
+   25Yi5n42BakjrYhF4/OU7PSEc9AcixdDvEXHES/3Hq4nbW2dddyRel34Z
+   n6eAk/1O7TuE/+BzVXQa/Ss1RyvuO1Mw1AiHThvFN9xlEHBCDRx48Epji
+   w==;
+X-IronPort-AV: E=Sophos;i="5.93,264,1654552800"; 
+   d="scan'208";a="25817749"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 26 Aug 2022 08:22:28 +0200
+Received: from steina-w.localnet (unknown [10.123.49.11])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id CDCBD280056;
+        Fri, 26 Aug 2022 08:22:27 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, vkoul@kernel.org, marex@denx.de,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v3 0/6] Add the iMX8MP PCIe support
+Date:   Fri, 26 Aug 2022 08:22:25 +0200
+Message-ID: <4384717.iIbC2pHGDl@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
+References: <1660806153-29001-1-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Cc:     baolu.lu@linux.intel.com, Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 00/13] iommu: SVA and IOPF refactoring
-Content-Language: en-US
-To:     Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20220817012024.3251276-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/8/17 9:20, Lu Baolu wrote:
-> Hi folks,
+Am Donnerstag, 18. August 2022, 09:02:27 CEST schrieb Richard Zhu:
+> Based on the 6.0-rc1 of the pci/next branch.
+> This series adds the i.MX8MP PCIe support and had been tested on i.MX8MP
+> EVK board when one PCIe NVME device is used.
 > 
-> The former part of this series introduces the IOMMU interfaces to attach
-> or detach an iommu domain to/from a pasid of a device, and refactors the
-> exsiting IOMMU SVA implementation by assigning an SVA type of iommu
-> domain to a shared virtual address and replacing sva_bind/unbind iommu
-> ops with a set_dev_pasid domain ops.
+> - i.MX8MP PCIe has reversed initial PERST bit value refer to
+> i.MX8MQ/i.MX8MM. Add the PHY PERST explicitly for i.MX8MP PCIe PHY.
+> - Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+>   And share as much as possible codes with i.MX8MM PCIe PHY.
+> - Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+>   driver.
 > 
-> The latter part changes the existing I/O page fault handling framework
-> from only serving SVA to a generic one. Any driver or component could
-> handle the I/O page faults for its domain in its own way by installing
-> an I/O page fault handler.
+> Main changes v2-->v3:
+> - Fix the schema checking error in the PHY dt-binding patch.
+> - Inspired by Lucas, the PLL configurations might not required when
+>   external OSC is used as PCIe referrence clock. It's true. Remove all
+>   the HSIO PLL bit manipulations, and PCIe works fine on i.MX8MP EVK board
+>   with one NVME device is used.
+> - Drop the #4 patch of v2, since it had been applied by Rob.
 > 
-> This series has been functionally tested on an x86 machine and compile
-> tested for all architectures.
+> Main changes v1-->v2:
+> - It's my fault forget including Vinod, re-send v2 after include Vinod
+>   and linux-phy@lists.infradead.org.
+> - List the basements of this patch-set. The branch, codes changes and so on.
+> - Clean up some useless register and bit definitions in #3 patch.
 > 
-> This series is also available on github:
-> [2]https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v11
+> Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  16 +++++++--
+> arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  53
+> +++++++++++++++++++++++++++++ arch/arm64/boot/dts/freescale/imx8mp.dtsi    
+>                |  46 ++++++++++++++++++++++++-
+> drivers/pci/controller/dwc/pci-imx6.c                        |  17
+> +++++++++- drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   |
+> 150
+> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
+> ------- drivers/reset/reset-imx7.c                                   |   1 +
+> 6 files changed, 232 insertions(+), 51 deletions(-)
 > 
-> Please review and suggest.
+>  [PATCH v3 1/6] reset: imx7: Add the iMX8MP PCIe PHY PERST support
+>  [PATCH v3 2/6] dt-binding: phy: Add iMX8MP PCIe PHY binding
+>  [PATCH v3 3/6] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
+>  [PATCH v3 4/6] arm64: dts: imx8mp: add the iMX8MP PCIe support
+>  [PATCH v3 5/6] arm64: dts: imx8mp-evk: Add PCIe support
+>  [PATCH v3 6/6] PCI: imx6: Add the iMX8MP PCIe support
 
-Thank you all for review and test. I have updated this series and
-uploaded a new version at
+On TQMa8MPxl + MBa8MPxL:
+Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v12
 
-Zhangfei and Tony have tested it on real Intel and arm64 hardware.
 
-I will soon post it for further review.
-
-Best regards,
-baolu
