@@ -2,225 +2,274 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 095A65A240B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 11:19:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5F25A277A
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 14:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343492AbiHZJSX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 05:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
+        id S229917AbiHZMRV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 08:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343540AbiHZJSU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 05:18:20 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0E1D7422
-        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 02:18:19 -0700 (PDT)
+        with ESMTP id S229651AbiHZMRV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 08:17:21 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5CC517E03;
+        Fri, 26 Aug 2022 05:17:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661505499; x=1693041499;
-  h=date:from:to:cc:subject:message-id:mime-version:
+  t=1661516238; x=1693052238;
+  h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=4wUsbGq9x5+MLX9qHBxmdQL/iCUbAolO7jKMPDhwXAU=;
-  b=FET/OjlFCiEamEdx4So611SjyJuthFpFkvc1oIeTNsy3F7oItqXQ4Vq6
-   gFCGMYlCPY7VL8/VGOXya+BlVU0o/L2fltTsuXqZ6KYzyqKcnfyUW5a42
-   NY5mHyyjt6kYQEDjjvLBhPGnNb6d0IrIvG5pQDuHJyyMPbUKeecdUGSBc
-   Vz7vSsBbPLS7aoKvMcKBgTZ4XWUtUizGICNRryd0nFMk8CDRG6glFy+HJ
-   CK/WjGGa19uR2+w6buK+E0sxZqaqt/0rkN4PSGvthFgbJPr8dPPEyfSXE
-   a2aLA5HK7v3MpxfhKJxi/QihCdiNvfdFl+I9tzOTMeQ60J+/d1EGdFow8
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="294469210"
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="294469210"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 02:18:19 -0700
+  bh=MO0tvvrlbNTcgcasvKU2WmNROliMDlqgfs5fC3Hx/2Q=;
+  b=jczeQ5Dd3tenv+3NU65oUv+4TaqevhDqf0BpMd4dd1t14c6lMdPhe52G
+   fW8sofwCvUqB9WYCdAQsNhHD1PId/TK1VXNuH7zuZSrl5gvqR5VRcclam
+   myShtqlIdGZwrA2xOxhl6kpQlzfSRfFc0p1YriVfXL8Wm+8Cvm4J8Ihqo
+   w/qo3gH1KRokECUVJgoE3+TiI7EmY136Y6Q9xBs6TJSL7SejkG1103aYx
+   qZXS5HHdhipu9ghR/frtKVga/Hx+sAhTBgCPXApwQ3Q/cLSque7r3PF8d
+   kC4fbnfI9YOLWAvcqq4HFk3JcuKSjSna/jfr4Ac26vep9+EGT1sgdt5fL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="293234162"
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="293234162"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 05:17:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="671389776"
-Received: from lkp-server02.sh.intel.com (HELO 34e741d32628) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Aug 2022 02:18:18 -0700
-Received: from kbuild by 34e741d32628 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oRVTl-0003pE-2M;
-        Fri, 26 Aug 2022 09:18:17 +0000
-Date:   Fri, 26 Aug 2022 17:17:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- 0e1fa5155a364de7d3de770eb382980933376699
-Message-ID: <63088fa0.nZsNbMFURI7gmJGk%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="606747455"
+Received: from allen-box.sh.intel.com ([10.239.159.48])
+  by orsmga007.jf.intel.com with ESMTP; 26 Aug 2022 05:17:13 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>, Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v12 00/17] iommu: SVA and IOPF refactoring
+Date:   Fri, 26 Aug 2022 20:11:24 +0800
+Message-Id: <20220826121141.50743-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 0e1fa5155a364de7d3de770eb382980933376699  MAINTAINERS: Add Mahesh J Salgaonkar as EEH maintainer
+Hi folks,
 
-elapsed time: 724m
+The former part of this series introduces the IOMMU interfaces to attach
+or detach an iommu domain to/from a pasid of a device, and refactors the
+exsiting IOMMU SVA implementation by assigning an SVA type of iommu
+domain to a shared virtual address and replacing sva_bind/unbind iommu
+ops with a set_dev_pasid domain ops.
 
-configs tested: 144
-configs skipped: 4
+The latter part changes the existing I/O page fault handling framework
+from only serving SVA to a generic one. Any driver or component could
+handle the I/O page faults for its domain in its own way by installing
+an I/O page fault handler.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This series has been functionally tested by Tony Zhu on Intel hardware
+and Zhangfei Gao on arm64 (Kunpeng920) hardware. Thanks a lot for the
+efforts. 
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-loongarch                         allnoconfig
-loongarch                           defconfig
-s390                                defconfig
-s390                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a002
-arm                                 defconfig
-x86_64                        randconfig-a004
-arc                              allyesconfig
-x86_64                        randconfig-a006
-powerpc                          allmodconfig
-i386                             allyesconfig
-alpha                            allyesconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-x86_64                              defconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-arm                              allyesconfig
-x86_64                         rhel-8.3-kunit
-arm64                            allyesconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-i386                          randconfig-a014
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a012
-x86_64                               rhel-8.3
-i386                          randconfig-a016
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-x86_64                           allyesconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-arc                  randconfig-r043-20220823
-riscv                randconfig-r042-20220824
-s390                 randconfig-r044-20220824
-arc                  randconfig-r043-20220824
-arc                  randconfig-r043-20220825
-m68k                        m5407c3_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                     mpc83xx_defconfig
-alpha                            alldefconfig
-arm                          pxa910_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                          randconfig-c001
-powerpc                 mpc85xx_cds_defconfig
-arm                          iop32x_defconfig
-mips                      fuloong2e_defconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-xtensa                         virt_defconfig
-arm                       imx_v6_v7_defconfig
-ia64                        generic_defconfig
-arm                        spear6xx_defconfig
-mips                            gpr_defconfig
-sh                            shmin_defconfig
-mips                  decstation_64_defconfig
-ia64                             alldefconfig
-powerpc                 mpc8540_ads_defconfig
-mips                           gcw0_defconfig
-m68k                       bvme6000_defconfig
-m68k                       m5249evb_defconfig
-m68k                          multi_defconfig
-powerpc                        warp_defconfig
-arm                           imxrt_defconfig
-mips                         bigsur_defconfig
-nios2                         3c120_defconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-powerpc                          allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-sh                            hp6xx_defconfig
-m68k                           virt_defconfig
-arm                            qcom_defconfig
-sh                ecovec24-romimage_defconfig
-powerpc                      mgcoge_defconfig
-arm                           tegra_defconfig
-arm                           corgi_defconfig
-powerpc                 mpc837x_mds_defconfig
-ia64                             allmodconfig
-powerpc                      pcm030_defconfig
-arm                        keystone_defconfig
-sh                          rsk7201_defconfig
-arm64                               defconfig
-arm                              allmodconfig
-m68k                                defconfig
-ia64                                defconfig
-mips                             allmodconfig
-sparc                       sparc32_defconfig
-sh                           se7750_defconfig
-sh                         microdev_defconfig
-arc                     nsimosci_hs_defconfig
+This series is also available on github:
+https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v12
 
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a002
-i386                          randconfig-a015
-x86_64                        randconfig-a014
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-i386                          randconfig-a006
-hexagon              randconfig-r041-20220825
-hexagon              randconfig-r041-20220823
-hexagon              randconfig-r045-20220825
-riscv                randconfig-r042-20220825
-riscv                randconfig-r042-20220823
-hexagon              randconfig-r045-20220823
-s390                 randconfig-r044-20220823
-s390                 randconfig-r044-20220825
-x86_64                        randconfig-k001
-mips                          rm200_defconfig
-arm                        multi_v5_defconfig
-mips                           rs90_defconfig
+Please review and suggest.
+
+Best regards,
+baolu
+
+Change log:
+v12:
+ - Add blocking domain support in both vt-d and smmuv3 drivers and make
+   the set blocking domain through its own domain ops.
+ - Add a type parameter in iommu_get_domain_for_dev_pasid() to matach
+   the interested domain type.
+ - Only enforce ACS RR & UF in pci_enable_pasid() and refine the commit
+   messages according to Bjorn's suggestions.
+ - Misc code and comment refinement.
+
+v11:
+ - https://lore.kernel.org/linux-iommu/20220817012024.3251276-1-baolu.lu@linux.intel.com/
+ - [PATCH 04/13] PCI: Allow PASID only when ACS enforced on upstreaming path
+   - new patch
+ - [PATCH 05/13] iommu: Add attach/detach_dev_pasid iommu interface
+   - Remove block_dev_pasid domain ops and use setting group blocking
+     domain instead.
+   - Remove iommu_group_immutable_singleton(). Move the PCI/ACS
+     requirement into the pci_enable_pasid(). All devices in an iommu
+     group share a same iommu domain for each pasid.
+ - [PATCH 06/13] iommu: Add IOMMU SVA domain support
+   - Add a refcount for SVA multiple bindings.
+ - [PATCH 07/13] iommu/vt-d: Add SVA domain support
+   - Use set_dev_pasid for both domain attaching and detaching.
+ - [PATCH 08/13] arm-smmu-v3/sva: Add SVA domain support
+   - Use set_dev_pasid for both domain attaching and detaching.
+ - [PATCH 09/13] iommu/sva: Refactoring iommu_sva_bind/unbind_device()
+   - Remove the refcount of iommu_sva::users.
+   - Add iommu_sva::domain.
+ - [PATCH 11/13] iommu: Prepare IOMMU domain for IOPF
+   - Remove unnecessary check of IS_ERR_OR_NULL(mm).
+ - [Overall]
+   - Rebase to v6.0-rc1.
+   - Remove previous Test-by's as some APIs are changed.
+   - Polishing of various codes and comments.
+
+v10:
+ - https://lore.kernel.org/linux-iommu/20220705050710.2887204-1-baolu.lu@linux.intel.com/
+ - Rebase on next branch of iommu tree.
+ - Split attach/detach_device_pasid interfaces and SVA domain extensions
+   to different patches.
+ - Handle the return error of xa_cmpxchg() gracefully.
+ - Directly pass mm in as the SVA fault data.
+ - Rename iopf_handle_group() to iopf_handler().
+ - Some commit message and code comment refinement.
+ - Add Tested-by's from Zhangfei and Tony.
+
+v9:
+ - https://lore.kernel.org/linux-iommu/20220621144353.17547-1-baolu.lu@linux.intel.com/
+ - Some minor changes on comments and function names.
+ - Simplify dev_iommu_get_max_pasids().
+
+v8:
+ - https://lore.kernel.org/linux-iommu/20220607014942.3954894-1-baolu.lu@linux.intel.com/
+ - Add support for calculating the max pasids that a device could
+   consume.
+ - Replace container_of_safe() with container_of.
+ - Remove iommu_ops->sva_domain_ops and make sva support through the
+   generic domain_alloc/free() interfaces.
+ - [Robin] It would be logical to pass IOMMU_DOMAIN_SVA to the normal
+   domain_alloc call, so that driver-internal stuff like context
+   descriptors can be still be hung off the domain as usual (rather than
+   all drivers having to implement some extra internal lookup mechanism
+   to handle all the SVA domain ops).
+ - [Robin] I'd just stick the mm pointer in struct iommu_domain, in a
+   union with the fault handler stuff those are mutually exclusive with
+   SVA.
+ - https://lore.kernel.org/linux-iommu/f3170016-4d7f-e78e-db48-68305f683349@arm.com/
+
+v7:
+ - https://lore.kernel.org/linux-iommu/20220519072047.2996983-1-baolu.lu@linux.intel.com/
+ - Remove duplicate array for sva domain.
+ - Rename detach_dev_pasid to block_dev_pasid.
+ - Add raw device driver interfaces for iommufd.
+ - Other misc refinements and patch reorganization.
+ - Drop "dmaengine: idxd: Separate user and kernel pasid enabling" which
+   has been picked for dmaengine tree.
+
+v6:
+ - https://lore.kernel.org/linux-iommu/20220510061738.2761430-1-baolu.lu@linux.intel.com/
+ - Refine the SVA basic data structures.
+   Link: https://lore.kernel.org/linux-iommu/YnFv0ps0Ad8v+7uH@myrica/
+ - Refine arm smmuv3 sva domain allocation.
+ - Fix a possible lock issue.
+   Link: https://lore.kernel.org/linux-iommu/YnFydE8j8l7Q4m+b@myrica/
+
+v5:
+ - https://lore.kernel.org/linux-iommu/20220502014842.991097-1-baolu.lu@linux.intel.com/
+ - Address review comments from Jean-Philippe Brucker. Very appreciated!
+ - Remove redundant pci aliases check in
+   device_group_immutable_singleton().
+ - Treat all buses except PCI as static in immutable singleton check.
+ - As the sva_bind/unbind() have already guaranteed sva domain free only
+   after iopf_queue_flush_dev(), remove the unnecessary domain refcount.
+ - Move domain get() out of the list iteration in iopf_handle_group().
+
+v4:
+ - https://lore.kernel.org/linux-iommu/20220421052121.3464100-1-baolu.lu@linux.intel.com/
+ - Solve the overlap with another series and make this series
+   self-contained.
+ - No objection to the abstraction of data structure during v3 review.
+   Hence remove the RFC subject prefix.
+ - Refine the immutable singleton group code according to Kevin's
+   comments.
+
+v3:
+ - https://lore.kernel.org/linux-iommu/20220410102443.294128-1-baolu.lu@linux.intel.com/
+ - Rework iommu_group_singleton_lockdown() by adding a flag to the group
+   that positively indicates the group can never have more than one
+   member, even after hot plug.
+ - Abstract the data structs used for iommu sva in a separated patches to
+   make it easier for review.
+ - I still keep the RFC prefix in this series as above two significant
+   changes need at least another round review to be finalized.
+ - Several misc refinements.
+
+v2:
+ - https://lore.kernel.org/linux-iommu/20220329053800.3049561-1-baolu.lu@linux.intel.com/
+ - Add sva domain life cycle management to avoid race between unbind and
+   page fault handling.
+ - Use a single domain for each mm.
+ - Return a single sva handler for the same binding.
+ - Add a new helper to meet singleton group requirement.
+ - Rework the SVA domain allocation for arm smmu v3 driver and move the
+   pasid_bit initialization to device probe.
+ - Drop the patch "iommu: Handle IO page faults directly".
+ - Add mmget_not_zero(mm) in SVA page fault handler.
+
+v1:
+ - https://lore.kernel.org/linux-iommu/20220320064030.2936936-1-baolu.lu@linux.intel.com/
+ - Initial post.
+
+Lu Baolu (17):
+  iommu: Add max_pasids field in struct iommu_device
+  iommu: Add max_pasids field in struct dev_iommu
+  iommu: Remove SVM_FLAG_SUPERVISOR_MODE support
+  PCI: Enable PASID only when ACS RR & UF enabled on upstream path
+  iommu: Add attach/detach_dev_pasid iommu interface
+  iommu: Add IOMMU SVA domain support
+  iommu: Try to allocate blocking domain when probing device
+  iommu: Make free of iommu_domain_ops optional
+  iommu/vt-d: Add blocking domain support
+  iommu/vt-d: Add SVA domain support
+  arm-smmu-v3: Add blocking domain support
+  arm-smmu-v3/sva: Add SVA domain support
+  iommu/sva: Refactoring iommu_sva_bind/unbind_device()
+  iommu: Remove SVA related callbacks from iommu ops
+  iommu: Prepare IOMMU domain for IOPF
+  iommu: Per-domain I/O page fault handling
+  iommu: Rename iommu-sva-lib.{c,h}
+
+ include/linux/intel-svm.h                     |  13 -
+ include/linux/iommu.h                         | 112 +++++--
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  22 +-
+ drivers/iommu/intel/iommu.h                   |  17 +-
+ .../iommu/{iommu-sva-lib.h => iommu-sva.h}    |  14 +-
+ drivers/dma/idxd/cdev.c                       |   3 +-
+ drivers/dma/idxd/init.c                       |  25 +-
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   | 104 ++++---
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  45 ++-
+ drivers/iommu/intel/dmar.c                    |   7 +
+ drivers/iommu/intel/iommu.c                   |  48 ++-
+ drivers/iommu/intel/svm.c                     | 147 ++++-----
+ drivers/iommu/io-pgfault.c                    |  77 +----
+ drivers/iommu/iommu-sva-lib.c                 |  71 -----
+ drivers/iommu/iommu-sva.c                     | 239 ++++++++++++++
+ drivers/iommu/iommu.c                         | 294 +++++++++++-------
+ drivers/misc/uacce/uacce.c                    |   2 +-
+ drivers/pci/ats.c                             |   3 +
+ drivers/iommu/Makefile                        |   2 +-
+ 19 files changed, 769 insertions(+), 476 deletions(-)
+ rename drivers/iommu/{iommu-sva-lib.h => iommu-sva.h} (83%)
+ delete mode 100644 drivers/iommu/iommu-sva-lib.c
+ create mode 100644 drivers/iommu/iommu-sva.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.25.1
+
