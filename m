@@ -2,105 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E0F5A30E0
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 23:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6355A30DC
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 23:14:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344780AbiHZVNg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 17:13:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54894 "EHLO
+        id S231645AbiHZVOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 17:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344709AbiHZVNa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 17:13:30 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D7FE58B5
-        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 14:13:28 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-33da3a391d8so66650337b3.2
-        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 14:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=m9wcpsESPaJa1VNPZvMRevtD3fO7aWo1DGqnJTjQdjQ=;
-        b=dUjSt2JhZeZdIrq00TLEeit/tctmqKHFZoJNmUcTJPtsICUY1GXYNuw95UFOTpn97I
-         cxIkQ9LmdB+/msqIAqUuTHXP16BXs+SVOAHEElSa+QPaS2Cul7uUbf5RxcYlxaKVrnXM
-         kvp5X2VnPUs8+x5rwYvuB16Sd9EunWQ5Kl9GJ4mtfZQOQi9Kf4q2dsf2FA1T7CRuzu1S
-         YkGIPIGYHMPJ9CtGBpbI/ijYQFl6cQ1OG83/2UuMCf7xmiFuzA8eemRTX55YwZWgqYCv
-         LSafT6uWkaOixAJ/1kBYZGktOgjux/x6qYD081V0icPUCBRpQPYcpLWA9PLC+JJFyt8i
-         5M0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=m9wcpsESPaJa1VNPZvMRevtD3fO7aWo1DGqnJTjQdjQ=;
-        b=tQKqBqS4cmRS9vm/g1vVm5m/lkznMlDrjxj9VMIRmkcaGzANck0M4s1MqB+mXqBQTP
-         sB6MmfdQ8F/omcwLisqfPkiYCOVeDpWC20T+ILEctK+5p9oEKEuHdjDD/o9nwcptwBpp
-         AFRaesihUslqToUaLnDUmU2DJ8kiBOU6xGwdps3tL03PdaTJNR1eD9ebBrw+K8tq5wqS
-         4ZTWXn8dCPiN9lnlelnqX9mP8I4/iDH5zVtqn00Qmb4wPolU8WtohjKSw77U5gaRf4aR
-         pBU8Z8rrZSbXgeF8R7R0NutejWdrvrV6CuGvgI7CHQn4JnwaBYcJgoo6O2lnP5uL4Gln
-         WtcQ==
-X-Gm-Message-State: ACgBeo2Qo/LJF8f906bedaD/qCZc+QIkOAhM68AP9+4qPBwo9Ru9y29M
-        mS0UT+rsWM008HJ8jVSl6vcRD7mdXz6tJHmv7bc=
-X-Google-Smtp-Source: AA6agR7CaV/i5zSAdtvBkb/zUqRK0bcQuruE4Usyr0IT/7SKrITF6PjvL6MBfoZ0ajCschigjwys2yUJbuXBYebFiQI=
-X-Received: by 2002:a81:5957:0:b0:33d:d04a:40c9 with SMTP id
- n84-20020a815957000000b0033dd04a40c9mr1624804ywb.399.1661548407616; Fri, 26
- Aug 2022 14:13:27 -0700 (PDT)
+        with ESMTP id S231247AbiHZVOE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 17:14:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E562E58A9;
+        Fri, 26 Aug 2022 14:14:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 858B161F68;
+        Fri, 26 Aug 2022 21:14:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A498DC433C1;
+        Fri, 26 Aug 2022 21:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661548442;
+        bh=7azrnsiCu14tEupZXXCpNTjljV0a/zloctCANgEak44=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kjbW75aBgkj/vd6Em/TorngQ+aIIuyl75Eb8oCububNQSjqk5bAkw8bPWCIqMYZfs
+         09mAnflYPx+wM4D/DxksBBmfbTwIeyE4d36g3JSRF1V7qF+piTggxa2qdyhxNjejgQ
+         gByqr/PuEZUWmYej2JmeJz9UfMk0m0L02ljQZSOGOWstnPXjI1KDBnhOjQ9zPiHkXT
+         MRd4QcujuEV9qqi6F1jaSJ3cHHV69KNLkQbEVt4vnXTJPHmmsHVRQz/lT9lrSEv+vo
+         VNiz8SlsYFBgKDOCeOUfLXR5ZtpBhsTMYCpaQ1rNy1nXxLeld/UCTZLKA9NyJ6w7p9
+         JsxBDYm6A8Nmw==
+Date:   Fri, 26 Aug 2022 16:14:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH -next 1/3] PCI: fix double put_device() in error case in
+ pci_create_root_bus()
+Message-ID: <20220826211401.GA2959769@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a05:7000:4747:0:0:0:0 with HTTP; Fri, 26 Aug 2022 14:13:27
- -0700 (PDT)
-Reply-To: dysonb@legalprivilege.ch
-From:   Dyson Butler <acdjude@gmail.com>
-Date:   Fri, 26 Aug 2022 22:13:27 +0100
-Message-ID: <CAFEsaS+mq8sE2Zkbv51xMmqhSHcRoSrgwUQe6vbD0Fr7NrywWQ@mail.gmail.com>
-Subject: We are broker firm in London-UK,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.6 required=5.0 tests=BAYES_60,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825122753.1838930-1-yangyingliang@huawei.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Good Day
+[+cc Rob]
 
-We are broker firm in London-UK, we have direct Provider of BG/SBLC
-specifically for Lease, The provider is tested and trusted. We have
-been dealing with the company for paste 6 years. Interested
-Agent/Lessee should contact us for directives. We also give out a loan
-for project funding.
+On Thu, Aug 25, 2022 at 08:27:51PM +0800, Yang Yingliang wrote:
+> If device_add() fails in pci_register_host_bridge(), the brigde device will
+> be put once, and it will be put again in error path of pci_create_root_bus().
+> Move the put_device() from pci_create_root_bus() to pci_register_host_bridge()
+> to fix this problem. And use device_unregister() instead of del_device() and
+> put_device().
 
-We are one of the leading financial company, we have major's providers
-of Fresh Cut BG, SBLC, POF, MTN, Bonds and CDs that are registered
-with us and this financial instruments are specifically for lease and
-sale, our providers deliver in time and precision as Seth forth in the
-agreement. You are at liberty to engage our leased facilities into
-trade programs, project financing, Credit line enhancement, Corporate
-Loans (Business Start-up Loans or Business Expansion Loans), Equipment
-Procurement Loans (industrial equipment, air planes, ships, etc.) And
-many more , Our terms and Conditions are reasonable.
+s/brigde/bridge/
 
-DESCRIPTION OF INSTRUMENTS:
+> Fixes: 9885440b16b8 ("PCI: Fix pci_host_bridge struct device release/free handling")
 
-1. Instrument: Bank Guarantee (BG)/SBLC (Appendix A)
-2. Total Face Value: 10M MIN to 50B MAX USD or Euro
-3. Issuing Bank: HSBC, London or Deutsche Bank Frankfurt, UBS or any Top 25 .
-4. Age: One Year, One Day
-5. Leasing Price: 5+ 2%
-6. Sale Price: 38+2%
-7. Delivery SWIFT TO SWIFT.
-8. Payment: MT103-23
-9. Hard Copy: Bonded Courier within 7 banking days.
+If you're fixing a commit from somebody else, please always cc: the
+author because the author can help review the change.
 
-If you have need for corporate loans, international project funding,
-etc. or if you have a client who requires funding for his project or
-business, We are also affiliated to lenders who specialises on funding
-against financial instrument, such as BG, SBLC, POF or MTN, we fund
-100% of the face value of the financial instrument.Enquiries from
-agents/ brokers/ intermediaries are also welcomed; Please reply back
-if you are interested in any of our service.
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/pci/probe.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index c5286b027f00..e500eb9d6468 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1027,7 +1027,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  
+>  unregister:
+>  	put_device(&bridge->dev);
+> -	device_del(&bridge->dev);
+> +	device_unregister(&bridge->dev);
 
-Dyson Butler
+I don't understand this part.  device_unregister() looks like this:
+
+  void device_unregister(struct device *dev)
+  {
+    device_del(dev);
+    put_device(dev);
+  }
+
+So this calls put_device(&bridge->dev) twice, doesn't it?
+
+The "unregister" label looks poorly named.  We only get there if
+device_register() *failed*.  We shouldn't need to unregister anything
+in that case.
+
+>  free:
+>  	kfree(bus);
+> @@ -3037,13 +3037,9 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  
+>  	error = pci_register_host_bridge(bridge);
+>  	if (error < 0)
+> -		goto err_out;
+> +		return NULL;
+>  
+>  	return bridge->bus;
+> -
+> -err_out:
+> -	put_device(&bridge->dev);
+> -	return NULL;
+
+This part looks right to me.  The get_device() is in
+pci_register_host_bridge(), and if pci_register_host_bridge() returns
+failure, I think it should first do the corresponding put_device().
+
+>  }
+>  EXPORT_SYMBOL_GPL(pci_create_root_bus);
+>  
+> -- 
+> 2.25.1
+> 
