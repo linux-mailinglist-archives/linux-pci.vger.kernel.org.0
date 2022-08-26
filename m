@@ -2,47 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB6355A30DC
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 23:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16B75A313B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 23:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231645AbiHZVOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 17:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
+        id S239972AbiHZVo7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 17:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231247AbiHZVOE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 17:14:04 -0400
+        with ESMTP id S231629AbiHZVo5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 17:44:57 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E562E58A9;
-        Fri, 26 Aug 2022 14:14:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5064C193E6;
+        Fri, 26 Aug 2022 14:44:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 858B161F68;
-        Fri, 26 Aug 2022 21:14:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A498DC433C1;
-        Fri, 26 Aug 2022 21:14:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DBC8361211;
+        Fri, 26 Aug 2022 21:44:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3760CC433C1;
+        Fri, 26 Aug 2022 21:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661548442;
-        bh=7azrnsiCu14tEupZXXCpNTjljV0a/zloctCANgEak44=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kjbW75aBgkj/vd6Em/TorngQ+aIIuyl75Eb8oCububNQSjqk5bAkw8bPWCIqMYZfs
-         09mAnflYPx+wM4D/DxksBBmfbTwIeyE4d36g3JSRF1V7qF+piTggxa2qdyhxNjejgQ
-         gByqr/PuEZUWmYej2JmeJz9UfMk0m0L02ljQZSOGOWstnPXjI1KDBnhOjQ9zPiHkXT
-         MRd4QcujuEV9qqi6F1jaSJ3cHHV69KNLkQbEVt4vnXTJPHmmsHVRQz/lT9lrSEv+vo
-         VNiz8SlsYFBgKDOCeOUfLXR5ZtpBhsTMYCpaQ1rNy1nXxLeld/UCTZLKA9NyJ6w7p9
-         JsxBDYm6A8Nmw==
-Date:   Fri, 26 Aug 2022 16:14:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH -next 1/3] PCI: fix double put_device() in error case in
- pci_create_root_bus()
-Message-ID: <20220826211401.GA2959769@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220825122753.1838930-1-yangyingliang@huawei.com>
+        s=k20201202; t=1661550295;
+        bh=QbcjoAXjiFWU9vxCFk6C5gnBz0Q3lczFup9Tn77hNSQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n5hExFACqMdBH7Mswx/Mth6yD0o7SJLutKkZHYQ6mNaw4mDHeuSd2nH5Iv1arO5P5
+         zl/MA8SAuA5KUqWAPUhCRMbMHhgBJrlab2dLOSUdHj6GgU22fG6ig7lK7kUjAaHclF
+         YHCENsm1n24TZXAs+s7vkpR/YoBzcROCR/RQ4W4nVFCs+EzCLO8SbzBJQ3LvlK9JhT
+         JXZrsVqsBhj5lp68sbl5jq9RM1Yk/2esehnpFmmQx8q94OHRb/R2GJDaMDCa7F+c6F
+         k+AxRaDOIJTyNrGBu76ru3WXOeGy6PpVbw0cbbDb7aPFfArreG6GkL7A4/rGE3kLPz
+         GMsyCza7l0pXw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oRh8G-0063gX-TC;
+        Fri, 26 Aug 2022 22:44:53 +0100
+Date:   Fri, 26 Aug 2022 22:44:52 +0100
+Message-ID: <87zgfqvfvv.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        "lznuaa@gmail.com" <lznuaa@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as msi controller
+In-Reply-To: <PAXPR04MB918607281F6389092924EE6488759@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220822155130.2491006-1-Frank.Li@nxp.com>
+        <20220822155130.2491006-4-Frank.Li@nxp.com>
+        <20220825212130.GA1705214-robh@kernel.org>
+        <PAXPR04MB9186201A03037BA7DC74D52B88729@PAXPR04MB9186.eurprd04.prod.outlook.com>
+        <871qt2x38f.wl-maz@kernel.org>
+        <PAXPR04MB918607281F6389092924EE6488759@PAXPR04MB9186.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: frank.li@nxp.com, robh@kernel.org, tglx@linutronix.de, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,74 +91,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rob]
-
-On Thu, Aug 25, 2022 at 08:27:51PM +0800, Yang Yingliang wrote:
-> If device_add() fails in pci_register_host_bridge(), the brigde device will
-> be put once, and it will be put again in error path of pci_create_root_bus().
-> Move the put_device() from pci_create_root_bus() to pci_register_host_bridge()
-> to fix this problem. And use device_unregister() instead of del_device() and
-> put_device().
-
-s/brigde/bridge/
-
-> Fixes: 9885440b16b8 ("PCI: Fix pci_host_bridge struct device release/free handling")
-
-If you're fixing a commit from somebody else, please always cc: the
-author because the author can help review the change.
-
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/pci/probe.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+On Fri, 26 Aug 2022 19:59:44 +0100,
+Frank Li <frank.li@nxp.com> wrote:
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index c5286b027f00..e500eb9d6468 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1027,7 +1027,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  
->  unregister:
->  	put_device(&bridge->dev);
-> -	device_del(&bridge->dev);
-> +	device_unregister(&bridge->dev);
-
-I don't understand this part.  device_unregister() looks like this:
-
-  void device_unregister(struct device *dev)
-  {
-    device_del(dev);
-    put_device(dev);
-  }
-
-So this calls put_device(&bridge->dev) twice, doesn't it?
-
-The "unregister" label looks poorly named.  We only get there if
-device_register() *failed*.  We shouldn't need to unregister anything
-in that case.
-
->  free:
->  	kfree(bus);
-> @@ -3037,13 +3037,9 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  
->  	error = pci_register_host_bridge(bridge);
->  	if (error < 0)
-> -		goto err_out;
-> +		return NULL;
->  
->  	return bridge->bus;
-> -
-> -err_out:
-> -	put_device(&bridge->dev);
-> -	return NULL;
-
-This part looks right to me.  The get_device() is in
-pci_register_host_bridge(), and if pci_register_host_bridge() returns
-failure, I think it should first do the corresponding put_device().
-
->  }
->  EXPORT_SYMBOL_GPL(pci_create_root_bus);
->  
-> -- 
-> 2.25.1
+> > And I stand by my initial request. "a" doesn't convey any sort of
+> > useful information. Why not "I" and "II", while we're at it? Or
+> > something even funkier?
 > 
+> MU spec use term "a" and "b",  user have to map "I" an "II" to 
+> "a" and "b" when read MU spec and code. it is not straightforward.
+> 
+> I quote a part of spec. 
+> " The MU is connected as a peripheral under the Peripheral bus on both sides-on
+> the Processor A-side, the Processor A Peripheral Bus, and on the Processor B side,
+> the Processor B Peripheral Bus."
+> 
+> Rob Herring and Marc Zynginer:
+> I can change to any name, which you agree both. 
+> 
+> Some options:
+> 1. "a", "b"
+> 2. "a-side", "b-side"
+> 3. "a-facing", "b-facing"
+> 4. "I", "II"
+
+Use the wording indicated in the spec: "processor-a-side", and
+"processor-b-side". This is what I asked the first place.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
