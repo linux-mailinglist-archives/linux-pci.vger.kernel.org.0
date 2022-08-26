@@ -2,263 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F34035A2D09
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 19:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E1F5A2E25
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 20:19:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239029AbiHZRCF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 13:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46610 "EHLO
+        id S243853AbiHZSTh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 14:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344896AbiHZRBm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 13:01:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11238C0E44;
-        Fri, 26 Aug 2022 10:01:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C1B90B830A9;
-        Fri, 26 Aug 2022 17:01:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8FBC433D6;
-        Fri, 26 Aug 2022 17:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661533294;
-        bh=s3Pio/x7M41P3gfexHAfE/4/8npO2rspjdMaYq53YK8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nPqNXQeAMlTTXWvY/a7sCuZgcUFynYQBjuKpcG4OxNbV4vTFxxWW93zqofSKld0Hb
-         TI3UjJff695JkHYYXxHZr3I+NEaC8+r6QLE3zeTTZYAVDWNq+//FSNVapCn2PWSk8F
-         5Kf4NFfUqIuUQ+Ovxv2NNjT097GNlOQoEpVytXZn/yXUb1jY0wVNBmn9GU+I+WOkAb
-         bX6X47wn7vNrGg/1ih4urCwkJZGR6O+z6nQ8j7x3xV1D2Wgb1eqOpTVJBa2wyylGZ6
-         MTI/e3mS8l4Q8CfZBDW59y8p/EWfRVfWPxjV4D4YFFMdl+Om3TTJI94GdTScSHySjH
-         nRCWAwE1M3LeQ==
-Date:   Fri, 26 Aug 2022 12:01:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com,
-        michael.a.bottini@linux.intel.com, rafael@kernel.org,
-        me@adhityamohan.in, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 3/3] PCI: vmd: Configure PCIe ASPM and LTR
-Message-ID: <20220826170133.GA2933821@bhelgaas>
+        with ESMTP id S235523AbiHZSTg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 14:19:36 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30964D21C0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 11:19:35 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id v4so2052164pgi.10
+        for <linux-pci@vger.kernel.org>; Fri, 26 Aug 2022 11:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=rcABYEF+X05lTkf1vCRtoGVctLnQghu4RYAK8IcZhIE=;
+        b=L5MwBYt21+ofglYFFC6r3rcvDFB1cS2ZJunNikgx5awnPR94AzTmwty0Z+ZRroKo9K
+         rnZPq7W9GvU2zpUVpnRa7b0fUTRaaK998pLLcaZBNLhCuFm3Elmx9VNI9O2LGGsvGk1F
+         Dn6fBK7Ws+1ZcwtirlcFaXcFAL3UCoV363kAjs92NTTkcr/L3QivxUZHs8rrGwfVN7Yn
+         JRl9q1N9Qh0SD+5wpXk3Jyo/NPQOzb9dqeuJSOwbZF3hQGPRg0M5AukCjmNxyU/O4rgr
+         qNVjFFk8ohQq/zo6zJD77m09L9NE/6NAZXyiGqcCBe/2wD2voNQrQRTps1lZ0U/VZNTm
+         /jBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=rcABYEF+X05lTkf1vCRtoGVctLnQghu4RYAK8IcZhIE=;
+        b=orMDKg8+sTkW9ZdJZhPgNxRXY/W/Lo3ZytjFuFKn5KPV97l42/STl9bPS5/oUUwtCU
+         SiBJ8nPkM1Eo/j/i+0qrKyCgFkuCQi8M0dXcBpsLgfbDayxk0c2+eUbvZHoMpWY0QEqa
+         MFCtI2HNLy/yvlIWOORHfFzwqLaJoTOTBbldzh2Gaf1UF1CdOCGHATKfJbS9f8vIFBtl
+         i842Kigv2fsuLcYArErgHmRgu3suwh8L8ffkNCF1AWDvDezoOwLPggIfHhM56ueprHY+
+         6SxD23qkOe9VSHhaR1xJUK4QONuPHsPn89v2ofO+6uHF2mlmPw4gyDVaplbIFD3PE3QW
+         vkNw==
+X-Gm-Message-State: ACgBeo1w0p+Zha2od69rSDhCmxqV5kiZjkptsu5moFNzMdc6gn5hyiBn
+        FvVtGVuqAf+AY7gO00z5Oa5JKxNRbWSA
+X-Google-Smtp-Source: AA6agR5SIKVYXr6MKYnRycMvBY+Jm95emDpYcLsMNcP2o3dM/UE8N//22a3eUnNhpVPA4OO5Pxy3YA==
+X-Received: by 2002:a05:6a00:98a:b0:536:4469:12e6 with SMTP id u10-20020a056a00098a00b00536446912e6mr5108862pfg.9.1661537974604;
+        Fri, 26 Aug 2022 11:19:34 -0700 (PDT)
+Received: from localhost.localdomain ([117.193.214.147])
+        by smtp.gmail.com with ESMTPSA id s5-20020a170902b18500b00173368e9dedsm1881868plr.252.2022.08.26.11.19.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Aug 2022 11:19:34 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org
+Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@somainline.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+        dmitry.baryshkov@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 00/11] Improvements to the Qcom PCIe Endpoint driver
+Date:   Fri, 26 Aug 2022 23:49:12 +0530
+Message-Id: <20220826181923.251564-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220301041943.2935892-4-david.e.box@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 08:19:43PM -0800, David E. Box wrote:
-> PCIe ports reserved for VMD use are not visible to BIOS and therefore not
-> configured to enable PCIE ASPM.
+Hello,
 
-> Additionally, PCIE LTR values may be left unset since BIOS will set
-> a default maximum LTR value on endpoints to ensure that they don't
-> block SoC power management.
+This series contains improvements to the Qualcomm PCIe Endpoint controller
+driver. The major improvements are the addition of SM8450 SoC support and
+debugfs interface for exposing link transition counts.
 
-If the ports aren't visible to BIOS, I assume BIOS doesn't configure
-*anything*, including LTR.  This sentence seems like it has a little
-too much information; if BIOS doesn't see the ports, LTR, SoC power
-management, etc., is not relevant.
+This series has been tested on SM8450 based dev board.
 
-> Lack of this programming results in high power consumption on
-> laptops as reported in bugzilla [1].
+Thanks,
+Mani
 
-> For currently affected products, use pci_enable_default_link_state to set
-> the allowed link states for devices on the root ports.
+Manivannan Sadhasivam (11):
+  PCI: qcom-ep: Add kernel-doc for qcom_pcie_ep structure
+  PCI: qcom-ep: Do not use hardcoded clks in driver
+  PCI: qcom-ep: Make use of the cached dev pointer
+  PCI: qcom-ep: Add eDMA support
+  PCI: qcom-ep: Disable IRQs during driver remove
+  PCI: qcom-ep: Add debugfs support for expose link transition counts
+  dt-bindings: PCI: qcom-ep: Make PERST separation optional
+  PCI: qcom-ep: Make PERST separation optional
+  dt-bindings: PCI: qcom-ep: Define clocks per platform
+  dt-bindings: PCI: qcom-ep: Add support for SM8450 SoC
+  PCI: qcom-ep: Add support for SM8450 SoC
 
-"Currently affected products" makes me wonder about the *other*
-products?  Seems like we should handle *all* VMD devices the same way.
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml |  70 ++++++---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     | 140 ++++++++++++++----
+ 2 files changed, 159 insertions(+), 51 deletions(-)
 
-> Also set the LTR value to the maximum value needed for the SoC. Per
-> the VMD hardware team future products using VMD will enable BIOS
-> configuration of these capabilities. This solution is a workaround
-> for current products that mainly targets laptops.
+-- 
+2.25.1
 
-I guess the cover letter has a little more background on this,
-although I don't understand how talking to the Intel BIOS team can
-solve this for *all* vendors using these parts.
-
-> Support is not provided if a switch used nor for hotplug.
-
-What switch are you referring to?  What is the hotplug scenario?  Are
-VMD ports hot-pluggable?  I assumed they were built into the Root
-Complex and not hot-pluggable.
-
-s/PCIE/PCIe/ several times above so they're all consistent.
-
-s/pci_enable_default_link_state/pci_enable_default_link_state()/ so it
-looks like a function.
-
-That's a big block of text; maybe could be 2-3 paragraphs.
-
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=213717
-> 
-> Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  V6
->   - Set ASPM first before setting LTR. This is needed because some
->     devices may only have LTR set by BIOS and not ASPM
->   - Skip setting the LTR if the current LTR in non-zero.
->  V5
->   - Provide the LTR value as driver data.
->   - Use DWORD for the config space write to avoid PCI WORD access bug.
->   - Set ASPM links firsts, enabling all link states, before setting a
->     default LTR if the capability is present
->   - Add kernel message that VMD is setting the device LTR.
->  V4
->   - Refactor vmd_enable_apsm() to exit early, making the lines shorter
->     and more readable. Suggested by Christoph.
->  V3
->   - No changes
->  V2
->   - Use return status to print pci_info message if ASPM cannot be enabled.
->   - Add missing static declaration, caught by lkp@intel.com
-> 
->  drivers/pci/controller/vmd.c | 66 +++++++++++++++++++++++++++++++++---
->  1 file changed, 62 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index cde6e2cba210..8525bb8312f2 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -67,10 +67,19 @@ enum vmd_features {
->  	 * interrupt handling.
->  	 */
->  	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-> +
-> +	/*
-> +	 * Enable ASPM on the PCIE root ports and set the default LTR of the
-> +	 * storage devices on platforms where these values are not configured by
-> +	 * BIOS. This is needed for laptops, which require these settings for
-> +	 * proper power management of the SoC.
-> +	 */
-> +	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
->  };
->  
->  struct vmd_device_data {
->  	enum vmd_features features;
-> +	u16 ltr;
->  };
->  
->  static DEFINE_IDA(vmd_instance_ida);
-> @@ -714,6 +723,45 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->  	vmd_bridge->native_dpc = root_bridge->native_dpc;
->  }
->  
-> +/*
-> + * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-> + */
-> +static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> +{
-> +	struct vmd_device_data *info = userdata;
-> +	u32 ltr_reg;
-> +	int pos;
-> +
-> +	if (!(info->features & VMD_FEAT_BIOS_PM_QUIRK))
-> +		return 0;
-> +
-> +	pci_enable_default_link_state(pdev, PCIE_LINK_STATE_ALL);
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	/*
-> +	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-> +	 * so the LTR quirk is not needed.
-> +	 */
-> +	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-> +	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> +		return 0;
-> +
-> +	/*
-> +	 * Set the default values to the maximum required by the platform to
-> +	 * allow the deepest power management savings. Write as a DWORD where
-> +	 * the lower word is the max snoop latency and the upper word is the
-> +	 * max non-snoop latency.
-> +	 */
-> +	ltr_reg = (info->ltr << 16) | info->ltr;
-
-The fact that you have to hard-code the LTR values in the driver seems
-problematic because it requires updates for every new device.  I guess
-you have to update the driver anyway to add Device IDs.
-
-But surely there should be a firmware interface to discover this
-platform-specific information?  Does the _DSM for Latency Tolerance
-Reporting (PCI Firmware spec r3.3, sec 4.6.6) supply this? 
-
-We badly need generic support for that _DSM, but the documentation is
-somewhat lacking.
-
-> +	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> +	pci_info(pdev, "VMD: Default LTR set\n");
-> +
-> +	return 0;
-> +}
-> +
->  static int vmd_enable_domain(struct vmd_dev *vmd, struct vmd_device_data *info)
->  {
->  	struct pci_sysdata *sd = &vmd->sysdata;
-> @@ -867,6 +915,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, struct vmd_device_data *info)
->  		pci_reset_bus(child->self);
->  	pci_assign_unassigned_bus_resources(vmd->bus);
->  
-> +	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, info);
-> +
->  	/*
->  	 * VMD root buses are virtual and don't return true on pci_is_pcie()
->  	 * and will fail pcie_bus_configure_settings() early. It can instead be
-> @@ -1016,28 +1066,36 @@ static const struct pci_device_id vmd_ids[] = {
->  		(kernel_ulong_t)&(struct vmd_device_data) {
->  			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
-> -				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-> +				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-> +				    VMD_FEAT_BIOS_PM_QUIRK,
-> +			.ltr = 0x1003, /* 3145728 ns */
->  		},
->  	},
->  	{ PCI_VDEVICE(INTEL, 0x4c3d),
->  		(kernel_ulong_t)&(struct vmd_device_data) {
->  			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
-> -				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-> +				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-> +				    VMD_FEAT_BIOS_PM_QUIRK,
-> +			.ltr = 0x1003, /* 3145728 ns */
->  		},
->  	},
->  	{ PCI_VDEVICE(INTEL, 0xa77f),
->  		(kernel_ulong_t)&(struct vmd_device_data) {
->  			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
-> -				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-> +				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-> +				    VMD_FEAT_BIOS_PM_QUIRK,
-> +			.ltr = 0x1003, /* 3145728 ns */
->  		},
->  	},
->  	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
->  		(kernel_ulong_t)&(struct vmd_device_data) {
->  			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
-> -				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-> +				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-> +				    VMD_FEAT_BIOS_PM_QUIRK,
-> +			.ltr = 0x1003, /* 3145728 ns */
->  		},
->  	},
->  	{ }
-> -- 
-> 2.25.1
-> 
