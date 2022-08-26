@@ -2,85 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E16B75A313B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Aug 2022 23:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E04D35A321D
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Aug 2022 00:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239972AbiHZVo7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Aug 2022 17:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        id S235837AbiHZWiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Aug 2022 18:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231629AbiHZVo5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 17:44:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5064C193E6;
-        Fri, 26 Aug 2022 14:44:56 -0700 (PDT)
+        with ESMTP id S231216AbiHZWiP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Aug 2022 18:38:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A32E68D6;
+        Fri, 26 Aug 2022 15:38:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DBC8361211;
-        Fri, 26 Aug 2022 21:44:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3760CC433C1;
-        Fri, 26 Aug 2022 21:44:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7375AB83342;
+        Fri, 26 Aug 2022 22:38:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2097C433C1;
+        Fri, 26 Aug 2022 22:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661550295;
-        bh=QbcjoAXjiFWU9vxCFk6C5gnBz0Q3lczFup9Tn77hNSQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=n5hExFACqMdBH7Mswx/Mth6yD0o7SJLutKkZHYQ6mNaw4mDHeuSd2nH5Iv1arO5P5
-         zl/MA8SAuA5KUqWAPUhCRMbMHhgBJrlab2dLOSUdHj6GgU22fG6ig7lK7kUjAaHclF
-         YHCENsm1n24TZXAs+s7vkpR/YoBzcROCR/RQ4W4nVFCs+EzCLO8SbzBJQ3LvlK9JhT
-         JXZrsVqsBhj5lp68sbl5jq9RM1Yk/2esehnpFmmQx8q94OHRb/R2GJDaMDCa7F+c6F
-         k+AxRaDOIJTyNrGBu76ru3WXOeGy6PpVbw0cbbDb7aPFfArreG6GkL7A4/rGE3kLPz
-         GMsyCza7l0pXw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oRh8G-0063gX-TC;
-        Fri, 26 Aug 2022 22:44:53 +0100
-Date:   Fri, 26 Aug 2022 22:44:52 +0100
-Message-ID: <87zgfqvfvv.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Frank Li <frank.li@nxp.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-        "lznuaa@gmail.com" <lznuaa@gmail.com>
-Subject: Re: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as msi controller
-In-Reply-To: <PAXPR04MB918607281F6389092924EE6488759@PAXPR04MB9186.eurprd04.prod.outlook.com>
-References: <20220822155130.2491006-1-Frank.Li@nxp.com>
-        <20220822155130.2491006-4-Frank.Li@nxp.com>
-        <20220825212130.GA1705214-robh@kernel.org>
-        <PAXPR04MB9186201A03037BA7DC74D52B88729@PAXPR04MB9186.eurprd04.prod.outlook.com>
-        <871qt2x38f.wl-maz@kernel.org>
-        <PAXPR04MB918607281F6389092924EE6488759@PAXPR04MB9186.eurprd04.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: frank.li@nxp.com, robh@kernel.org, tglx@linutronix.de, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=k20201202; t=1661553492;
+        bh=2x8oP1av/GgT8wp1V9gUhZRtYrQh72Wv7er/tjyinjY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ALuZPJWezJXRb3tYWtqYGTLy6XeWMSS4Vq8DUkpHSm9lZPvL6w988PTfJN779hiKH
+         okGVloewqOtEkX2cE2Osvtrpc5LAAW8KXfswXk4m4mnKQzShUzD7me7KeLLrQx3feA
+         46cnW2wwoEABzc6ThPnVEk0aPXpB3K6vBiJcx+Im3YTEWpbZpeKFafeTNKrv7eFHiD
+         24rE1LRk2UcBxAOufVNnKZOLgXg9jI+hES0H8YYj9Q5sm6/uIj6cxzQ07zNVVrpUr7
+         XQZqK38+/pdBJmhaffDINEUB/yOju2oAKDVY/3ISuApnAYaMni5s9tGWA3zyxxgxzg
+         gkdKHyBd9rdOg==
+Date:   Fri, 26 Aug 2022 17:38:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH -next 2/3] PCI: fix possible memory leak in error case in
+ pci_register_host_bridge()
+Message-ID: <20220826223810.GA2961041@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825122753.1838930-2-yangyingliang@huawei.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -91,34 +54,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 26 Aug 2022 19:59:44 +0100,
-Frank Li <frank.li@nxp.com> wrote:
-> 
-> > And I stand by my initial request. "a" doesn't convey any sort of
-> > useful information. Why not "I" and "II", while we're at it? Or
-> > something even funkier?
-> 
-> MU spec use term "a" and "b",  user have to map "I" an "II" to 
-> "a" and "b" when read MU spec and code. it is not straightforward.
-> 
-> I quote a part of spec. 
-> " The MU is connected as a peripheral under the Peripheral bus on both sides-on
-> the Processor A-side, the Processor A Peripheral Bus, and on the Processor B side,
-> the Processor B Peripheral Bus."
-> 
-> Rob Herring and Marc Zynginer:
-> I can change to any name, which you agree both. 
-> 
-> Some options:
-> 1. "a", "b"
-> 2. "a-side", "b-side"
-> 3. "a-facing", "b-facing"
-> 4. "I", "II"
+[+cc Arnd, Rob]
 
-Use the wording indicated in the spec: "processor-a-side", and
-"processor-b-side". This is what I asked the first place.
+On Thu, Aug 25, 2022 at 08:27:52PM +0800, Yang Yingliang wrote:
+> If device_register() fails in pci_register_host_bridge(), the refcount
+> of bus device is leaked, so device name that set by dev_set_name() can
+> not be freed. Fix this by calling put_device() when device_register()
+> fails, so the device name will be freed in kobject_cleanup().
+>
+> Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/pci/probe.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index e500eb9d6468..292d9da146ce 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -948,8 +948,17 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  	name = dev_name(&bus->dev);
+>  
+>  	err = device_register(&bus->dev);
+> -	if (err)
+> -		goto unregister;
+> +	if (err) {
+> +		/*
+> +		 * release_pcibus_dev() will decrease the refcount of bridge
+> +		 * device and free the memory of bus.
+> +		 * The memory of bus device name will be freed when the refcount
+> +		 * get to zero.
+> +		 */
+> +		put_device(&bus->dev);
+> +		device_unregister(&bridge->dev);
+> +		return err;
+> +	}
 
-	M.
+Calling put_device(X) after device_register(X) returns failure doesn't
+need explanation because that's the standard pattern.  I think that
+was just missing before.
 
--- 
-Without deviation from the norm, progress is not possible.
+In this error case, we previously did called put_device() for the
+*bridge* instead of the bus.  That was likely a typo and seems like
+the important thing here.
+
+>  	pcibios_add_bus(bus);
+>  
+> @@ -1025,10 +1034,6 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  
+>  	return 0;
+>  
+> -unregister:
+> -	put_device(&bridge->dev);
+> -	device_unregister(&bridge->dev);
+> -
+>  free:
+>  	kfree(bus);
+>  	return err;
+> -- 
+> 2.25.1
+> 
