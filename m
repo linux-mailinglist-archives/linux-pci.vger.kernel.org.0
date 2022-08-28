@@ -2,100 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AF6D5A3DE5
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Aug 2022 15:57:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1D55A3DFF
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Aug 2022 16:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbiH1N53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Aug 2022 09:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
+        id S229533AbiH1OVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Aug 2022 10:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbiH1N52 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Aug 2022 09:57:28 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123C032D8A;
-        Sun, 28 Aug 2022 06:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661695048; x=1693231048;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y4cNfjDDXR16p7aBOCe2GLlX4JBhY0BsBXSjUlii/Og=;
-  b=RlBichpN+zQhXtoA6F2lMHFyog/ULZw5Lul/UXMaNEkFclETsPS3jRCx
-   3F4Fc6/ZLedbQl83gPOBDjyW8k0B/EVB/TM1Ipq7H2taKC9mmn8dNqReL
-   aatRPLUcaqnSjk67s5ySd2mF9amEyFfO02zwPVUQB5OrxkEraJl3O4i0H
-   ebbu4/n0VnYNf0E04je6v3TJc903FgkLS8lrJzMjNWj18tEAZtjpxjVPI
-   zHcesrMfze3G4+KT7lAjI6hdpSRN471YlhOhPDAxHBPceGemLSRRDG34o
-   qEB6/jrRaLyGcxD99xMWE+sIzSFe1RMGxVUwsyKkvbs677I9W9Scpn40/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10453"; a="296015609"
-X-IronPort-AV: E=Sophos;i="5.93,270,1654585200"; 
-   d="scan'208";a="296015609"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2022 06:57:27 -0700
-X-IronPort-AV: E=Sophos;i="5.93,270,1654585200"; 
-   d="scan'208";a="672065818"
-Received: from cyue-mobl1.ccr.corp.intel.com (HELO [10.254.209.98]) ([10.254.209.98])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2022 06:57:23 -0700
-Message-ID: <fe5c459e-9992-73b6-35b4-59ef815f1f9a@linux.intel.com>
-Date:   Sun, 28 Aug 2022 21:57:21 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH v12 12/17] arm-smmu-v3/sva: Add SVA domain support
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-References: <20220826121141.50743-1-baolu.lu@linux.intel.com>
- <20220826121141.50743-13-baolu.lu@linux.intel.com>
- <YwjfKsvKyXLdCJ/Z@nvidia.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <YwjfKsvKyXLdCJ/Z@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229581AbiH1OVW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Aug 2022 10:21:22 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9747D1928D;
+        Sun, 28 Aug 2022 07:21:21 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id 92-20020a9d0be5000000b0063946111607so4286226oth.10;
+        Sun, 28 Aug 2022 07:21:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc;
+        bh=rUI2VT6Iw56Sqt/jpeUDwdmczi3LF4N/g0TNbppEwFE=;
+        b=7oOwWB3SUOblS9nAI16fGA1buWYXAbGzts4KR4i6+MhqT4ICRPjKVZ45eJiDHGZVC6
+         DrtHOaFYxIlPqcQOfCR2kCAV/yuAjL8jtOfGgmJy9Ub0eieOaH56/ZnmsFvHIkm4drsx
+         8D5PL5irdTqcUFfkmmim4pPafGe/qEDyqdTKuSlN2d71lIL3u4/VVLBn9Q7fbDb/L7F0
+         W9zFTsUDKY0IqFlHXu/lYnSt0l5NUrJ8qhiADwH9NHKSHFpUo9SSJBKxkGB4031e+uPp
+         Z+bQKJFJvPGAx4bkHFyffvEERoajH9AJolL5E77lIEaluFppoKekeL0zId2D014GZ9KW
+         rpKA==
+X-Gm-Message-State: ACgBeo3GUrA0RwGuOSsAZjxXeRdovSe/NIzzvS9spwAG9FIOw8eIgost
+        USzQf3RK28YCyxv6Sh3Q06s8cnf2ug==
+X-Google-Smtp-Source: AA6agR7okA3F1K7VqQ8PLpFXR4j/yALNpclI5ZXmCYf1ZdhmmniWSGI8/eCGeOVDocPZwgNu2G3VLg==
+X-Received: by 2002:a9d:61d2:0:b0:639:31ca:87fe with SMTP id h18-20020a9d61d2000000b0063931ca87femr4782241otk.22.1661696480879;
+        Sun, 28 Aug 2022 07:21:20 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id q5-20020a4a88c5000000b0043540f7701esm3735892ooh.31.2022.08.28.07.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Aug 2022 07:21:19 -0700 (PDT)
+Received: (nullmailer pid 3159704 invoked by uid 1000);
+        Sun, 28 Aug 2022 14:21:16 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     devicetree@vger.kernel.org, kw@linux.com, bhelgaas@google.com,
+        andersson@kernel.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@somainline.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
+        dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org
+In-Reply-To: <20220826181923.251564-11-manivannan.sadhasivam@linaro.org>
+References: <20220826181923.251564-1-manivannan.sadhasivam@linaro.org> <20220826181923.251564-11-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 10/11] dt-bindings: PCI: qcom-ep: Add support for SM8450 SoC
+Date:   Sun, 28 Aug 2022 09:21:16 -0500
+Message-Id: <1661696476.862958.3159703.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/8/26 22:56, Jason Gunthorpe wrote:
-> On Fri, Aug 26, 2022 at 08:11:36PM +0800, Lu Baolu wrote:
+On Fri, 26 Aug 2022 23:49:22 +0530, Manivannan Sadhasivam wrote:
+> Add devicetree bindings support for SM8450 SoC. Only the clocks are
+> different on this platform, rest is same as SDX55.
 > 
->> +static const struct iommu_domain_ops arm_smmu_sva_domain_ops = {
->> +	.set_dev_pasid		= arm_smmu_sva_set_dev_pasid,
-> Do we want to permit drivers to not allow a SVA domain to be set on a
-> RID?
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 27 +++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 > 
-> It seems like a weird restriction to me
 
-Conceptually as long as the page table is compatible and user pages are
-pinned (or I/O page fault is supported), the device drivers are valid to
-set SVA domain to a RID. But I don't see a real use case as far as I can
-see.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-A reasonable use case is sharing EPT between KVM and IOMMU. That demands
-a new type of domain and implements its own .set_dev for page table
-attachment.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:15:5: [error] duplication of key "const" in mapping (key-duplicates)
 
-Best regards,
-baolu
+dtschema/dtc warnings/errors:
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts'
+Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:15:5: found duplicate key "const" with value "qcom,sm8450-pcie-ep" (original value: "qcom,sdx55-pcie-ep")
+make[1]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:15:5: found duplicate key "const" with value "qcom,sm8450-pcie-ep" (original value: "qcom,sdx55-pcie-ep")
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml: ignoring, error parsing file
+make: *** [Makefile:1420: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
