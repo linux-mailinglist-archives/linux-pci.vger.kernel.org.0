@@ -2,164 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B4E65A5325
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 19:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B87B65A5332
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 19:32:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiH2R3R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Aug 2022 13:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52902 "EHLO
+        id S231294AbiH2Rch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Aug 2022 13:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiH2R3R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 13:29:17 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EC88E472;
-        Mon, 29 Aug 2022 10:29:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V++QBO5/soMn5kDBaAbeb/NlTrEeQ/hLR/uT4b4VrwBTa8LikOOf9UNIG3shlctT8fwiW5C9tkw44ZM9wi//dqiHqWTMT1TIZmRzyEEIHyrnlIkPH/g6oR4ji5gm4Ti3IPh0R0DRXpWDsY+5i1XIQhwSZoN/pGmmAphWsVYvSuXBQCwP7iDyDfrYUUC/MS1Yi+6ZYe3DOdZvlSU2+mJRQ64zkthnxBsv6vh7LvmvJVmAfUT4DATzVv8swkypGLHwFrThf9Clo87URUktjT/HkDNbvP/uO5Edj02gunsptm1RC5+NMlXELvIekPP20XgUumTadzuDPz1Wsh3E3gvaXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M7y/CsujlvdgL19Mcl/0xjOOdLIMMaL0RwjVt2Ekn5U=;
- b=EhZxbzWU7uPUuqOvkOkASMTGI21g2Ckx7iqkNmuFvepp6ZCyeVWImCW3M1sBnrCtinW0G7KGHGF5sgu6lFC4Q4N0m0nOgZhb9HBG1i6u1QH6SaoK8MicDaJkMZkqftB0EaVDv8LpeBL8KGQ3A4JkLVygd6DhfUAlWUcQWkVNPpoaChfbNKLK4S7UbC7PDBQ9eeST0ZMO74B+q2jP/iq3p2/agQyMXdIb2TF5hgZVBoxReB8zFLm8D/tXx6o/HXoxJ+YomwY3JkirWCrrHJo+dxP7HBkWljp/BawoAgmAdbVQyfQwJ4SV58opxQHO9CWTFON94ftWt54JZ/ZIdiGbUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7y/CsujlvdgL19Mcl/0xjOOdLIMMaL0RwjVt2Ekn5U=;
- b=ZaD/iGoNDNBFnlbQdSkPr90bfEklzZONZDKMNs2QcyDt7CPlpBr4haW7qnZ2Myg1D/y2hB+a2yGn2OOKBqkdNQrsyuBiSxBTsNrQ4iTF7u4/eeaim38UtVOgUZaf7n2IRorZBPJw5oDF5H3W48WDrv+NhYgEzp3uaBN1NY45acTFc/AqdjP4/vs3FGDwnDw73j4FtuNBlxRwSUZMGYwGzaTSKhLW8R3ZE9ioL8asv3fSF2o3Ow2az/pP199TWX3F4EcbBp0IlClQkMevSCYv0gfNkzzBWCGZaWRD+mORIZsGw9hYgYne8XEi0NHtH1sBjSfDv8iR1qzKBUMM9YeJ9A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by DS0PR12MB7653.namprd12.prod.outlook.com (2603:10b6:8:13e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
- 2022 17:29:14 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::462:7fe:f04f:d0d5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::462:7fe:f04f:d0d5%8]) with mapi id 15.20.5566.021; Mon, 29 Aug 2022
- 17:29:14 +0000
-Date:   Mon, 29 Aug 2022 14:29:13 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH v12 12/17] arm-smmu-v3/sva: Add SVA domain support
-Message-ID: <Ywz3aQ57PthSYycN@nvidia.com>
-References: <20220826121141.50743-1-baolu.lu@linux.intel.com>
- <20220826121141.50743-13-baolu.lu@linux.intel.com>
- <YwjfKsvKyXLdCJ/Z@nvidia.com>
- <fe5c459e-9992-73b6-35b4-59ef815f1f9a@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe5c459e-9992-73b6-35b4-59ef815f1f9a@linux.intel.com>
-X-ClientProxiedBy: BL1P222CA0007.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:2c7::12) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S230307AbiH2Rcg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 13:32:36 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6466D97ED0;
+        Mon, 29 Aug 2022 10:32:35 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27TGbIlk027081;
+        Mon, 29 Aug 2022 17:32:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=XT+t/5IBt5GCT0Xj3zuko7cno64iPRqO+a+isR/kVHw=;
+ b=fx2M/SIHQ7Mr3mm1v6mdQmXL7y2KrwkOCm9Zl720wPaWk5G9wqWgu+BEZMcaXnm8SkcH
+ qvN8Qkb+krG8Uwkza6h64SJlw9YydfaoiTSDmHU2M66SouqJmn4mJ7l6Q1qOE7ff/dC7
+ U8GnLGIu3jmaHjMyrcq4yJQ34cjIBTDYENb4iELeq4rLz3rnXPpL8TBfJyVaFlmZ2qkY
+ S5Z+x+7gi+FbhPIYaVoxr/DxTrjqKxIGT5hQberktmxhHUt2jxoTDbGQjGtKbEJYvQGP
+ 5SyCYI78ugGNYFqqijTua6QnXApRLaHddAc1uENg6tBafguJs3wbuOnpzk4kKaqq8zV4 nQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3j8trtsg4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Aug 2022 17:32:11 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 27THW9Tm026048
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Aug 2022 17:32:09 GMT
+Received: from [10.216.51.151] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 29 Aug
+ 2022 10:32:01 -0700
+Message-ID: <a1b7c47c-9657-54bb-6b4e-1d98b3a65b91@quicinc.com>
+Date:   Mon, 29 Aug 2022 23:01:58 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3aab0213-456d-42ca-7ed2-08da89e3fe63
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7653:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /sf0895wcKNUgwlyHLqfugY9gfjOp0jxOjsIzEXJV24kfVK6YEwIkSHH2nRnOYBw8loKZ57D0TB0FF6+y4gdOE1sMjzZ4tg8UcFAtq1VTppycdrcTT832b0BRILGiIYTEvWIQ8boMHgGln7OE36g6gzj/msvEL+iNbTAxY5RH0BLht06ziV7vOOfnE+aaNyiAARN/z/2qBVpvANjkcIqHoS2zia8V7PBHHw0MgL36+5a4QJoxA85v/GkwAjqiIJh63I7euylAbdIIhTyBvpfIiTJYfq0dAzCOd4CfYm3RylRKQv6hzRpfID31p93oKhz07yq0dTSX+0kq8RdguZW6DjKVqnULc+/F97pjDOGjJzqmTKFTtB2kIDSUvTTPg3xfEig0K4kHdflXQQQvLtUrbz1BnaqBIbl75JHlpyhOXb7t4kth5YCcWy0CjQ3BtyOxUy0ruEQhPZSpmuvxHT1HfmTja8d9YUB0Z4vbPEV7vghePFd4+8130MzBHkf0wFk0qctqyS1D0nJ4Y8Chzz2WONqNRpd9Ph9IDb7SRULTI+tbaBdPRDNhrAlAB2LYmXq4gybeNzmevskxk+N2ZdnVw7d7HvxgnuCzp/GjDs4PJH3Dv7Y0vcoITiNHkW4/vZEM5yIppDnoJH0XoIy959Jz0w0A7D9CAiOP9BgylON9ic3ZIZy0F8+sABCYIYdD2ZElfE09xcAhlXm2nX10DXprA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(316002)(6916009)(54906003)(478600001)(36756003)(6486002)(66946007)(66556008)(38100700002)(4326008)(66476007)(8676002)(41300700001)(8936002)(7416002)(5660300002)(26005)(2906002)(53546011)(6506007)(186003)(2616005)(6512007)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D4OlJqgms+Jo7SPlFHieoR6dT/X7OjZbB/AqaO4oETBapMfdfKB5XAnpXAX0?=
- =?us-ascii?Q?L5+/NavDf+4kKVF8HzcHQyJQ3j8Wbs4fUD12puuw8hmAGhCFvdaPoUT0cIUr?=
- =?us-ascii?Q?rji85GBSDXm1IgbsQ3A1LXcyZe+NwzLOom8uvVAd8luvG8FATLV9BrncJcTu?=
- =?us-ascii?Q?eStIbVfTJScFYyJZ7EfnuNkGlQVGfSTINUznPunN1tznKD4bOykAZUSlXjqV?=
- =?us-ascii?Q?Sog2JxOPlhqO2cNocPX5R3A9cdDRnowdX4oJhPZD0wCXxWqDWZAoE8BoNJ7d?=
- =?us-ascii?Q?VLLiwl6cqWNi3nPWTpKDQvCtsKy9kVUvUUXP8zFSCXikC4qyrKvHnNoou3uF?=
- =?us-ascii?Q?jNn4KkdRtF9jK7H648Wx1O7wFC+d6YwIEml5dDYb+q2gs0NdMvkeRzdem7vJ?=
- =?us-ascii?Q?1lcFDoTfEr5Xqrbbtifh5BlVv5Q55Omx6RBsSy+a3uPUBRVh3xY7SuM33m+s?=
- =?us-ascii?Q?GoPV76XwBkwohbWjD6GrUYhlFrosuqmwdwd3nGPstQ5d6bLCxj0OrNud8u8O?=
- =?us-ascii?Q?K/Fbpoi862RdgZ/XMPGc6J2UCiTR3h4ThKDMZeVDrXn30RrY4r6wHUoliHL7?=
- =?us-ascii?Q?nl4SCVojpaqCeE1G1QPwUpVKeKo5pwecXbgM3otKTPNruXh+prQkIC67f+v+?=
- =?us-ascii?Q?Bti/hIcTqeTLJZoMdlCUqOm7DHAlfg0WQ9sgSgnkYhjnZ3sl911tapsUCrS2?=
- =?us-ascii?Q?QCjB55RJCO/DoYEL3vNohaFlesjCdy2IgRNnom0SrIxfwwysttFTdOlkv1ot?=
- =?us-ascii?Q?JDpdDk7QFoSjmpW1S1ERz7wpZqnIP9WhyYmXMEqXPz1HsG3eWkUvZI0SucOt?=
- =?us-ascii?Q?F7sgDwxRM0+eyWohSsjG0dkN7+0FVdc15r3C9EhOF/6WtYlmyU1zUaAmTZ05?=
- =?us-ascii?Q?TKKlvdGpyvqaXhxbjyBwuPYaOFcvT14Db4mToJ6gbeFs2g5IiEFbDeUm9OL4?=
- =?us-ascii?Q?mxfff2JC3rpMHunjisM8qHVYOY+/dcJEdtoFl//R3L5xhc7eNIk/ACx0eNnb?=
- =?us-ascii?Q?IZ3r3Fd/e0/unuft2b7uG0HJ62aRH5+V5UK4JckVM04R9cYFV1/Tc5IqHAjb?=
- =?us-ascii?Q?U5MU2JbHCQn0BAhSbO4g0Y6q2hM4p5qi7+6z7ETiZEWDgzDmC95PvitIFiB9?=
- =?us-ascii?Q?H2kcw/+kJw0o4yUqu1CXVHVZOYcklMWEJS7XgBqofRGu1fvtpvDwvBhWh3CO?=
- =?us-ascii?Q?7XN5bpZd3gnNEBJU0jsPqKEnig1vQCv6U80sQIdzauB+252MZakv2Dld2pnR?=
- =?us-ascii?Q?QU6DX/W8d5P82JOL5YzWum6Baoe1toZVx/ulCiTDnovR2UajdbQw2OvEm/7x?=
- =?us-ascii?Q?oBzkbK03AJYEzOhRwHT5tj0JK08zZfcLkQOp+JTjwVTRzq9N5rWoUJKGOpQo?=
- =?us-ascii?Q?B5FiBU72xB9K9q9PAVhpEQCbARfu6rSpCEI9bqydt6ggfgDnN0eWVlVKvvpZ?=
- =?us-ascii?Q?y+xXh5HqJg8T29FuoZjtmDjrSomMTEMZzdCsaeFEoxTNZw9dBEqCrlqnAVno?=
- =?us-ascii?Q?5N5AlhEBCmGJFJ8MwR+GctRGXpN6tJ4zZkyKuZLOGhDumcJUom6AdFNG8qjD?=
- =?us-ascii?Q?c2KVtI3YGRwQizjZyjC7T1It4QA7oIIKJ3Ek8E8S?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aab0213-456d-42ca-7ed2-08da89e3fe63
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2022 17:29:14.6423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2BavCGO4+KXNt7o/QKp85YJXrgIioczlgCVNi82Qm243Ow7Ort4qx6K6JQAtL6bY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7653
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v5 2/3] PCI: qcom: Restrict pci transactions after pci
+ suspend
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mka@chromium.org>, <quic_vbadigan@quicinc.com>,
+        <quic_hemantk@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>
+References: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
+ <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
+ <CAE-0n500y-n+ZjasYQRAa3JgamQG1c+Aqn0YiX-i0L-w6C4dbQ@mail.gmail.com>
+ <3d052733-3600-b6eb-baf3-d8806a150af3@quicinc.com>
+ <CAE-0n53oMnnn7rOPEiibc=XM52z9THDc9jYhe3x3C_AsLtmARQ@mail.gmail.com>
+ <81dcbf72-92bb-093a-da48-89a73ead820e@quicinc.com>
+ <CAE-0n50NRiBNDjK2UrA_wOoRz3+3cKb4uiUiCw4t1F19Kw9EhA@mail.gmail.com>
+ <20220827172655.GA14465@thinkpad>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220827172655.GA14465@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Zu-_wYIY5qU6jSCuxhc7wTRoiBmF3YVb
+X-Proofpoint-GUID: Zu-_wYIY5qU6jSCuxhc7wTRoiBmF3YVb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-29_09,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ clxscore=1011 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208290081
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 28, 2022 at 09:57:21PM +0800, Baolu Lu wrote:
-> On 2022/8/26 22:56, Jason Gunthorpe wrote:
-> > On Fri, Aug 26, 2022 at 08:11:36PM +0800, Lu Baolu wrote:
-> > 
-> > > +static const struct iommu_domain_ops arm_smmu_sva_domain_ops = {
-> > > +	.set_dev_pasid		= arm_smmu_sva_set_dev_pasid,
-> > Do we want to permit drivers to not allow a SVA domain to be set on a
-> > RID?
-> > 
-> > It seems like a weird restriction to me
-> 
-> Conceptually as long as the page table is compatible and user pages are
-> pinned (or I/O page fault is supported), the device drivers are valid to
-> set SVA domain to a RID. But I don't see a real use case as far as I can
-> see.
 
-It may be interesting for something like DPDK type applications where
-having the entire process address space mapped SVA to the device could
-be quite nice.
+On 8/27/2022 10:56 PM, Manivannan Sadhasivam wrote:
+> On Fri, Aug 26, 2022 at 03:23:00PM -0500, Stephen Boyd wrote:
+>> Quoting Krishna Chaitanya Chundru (2022-08-25 06:52:43)
+>>> On 8/24/2022 10:50 PM, Stephen Boyd wrote:
+>>>> Quoting Krishna Chaitanya Chundru (2022-08-23 20:37:59)
+>>>>> On 8/9/2022 12:42 AM, Stephen Boyd wrote:
+>>>>>> Quoting Krishna chaitanya chundru (2022-08-03 04:28:53)
+>>>>>>> If the endpoint device state is D0 and irq's are not freed, then
+>>>>>>> kernel try to mask interrupts in system suspend path by writing
+>>>>>>> in to the vector table (for MSIX interrupts) and config space (for MSI's).
+>>>>>>>
+>>>>>>> These transactions are initiated in the pm suspend after pcie clocks got
+>>>>>>> disabled as part of platform driver pm  suspend call. Due to it, these
+>>>>>>> transactions are resulting in un-clocked access and eventually to crashes.
+>>>>>> Why are the platform driver pm suspend calls disabling clks that early?
+>>>>>> Can they disable clks in noirq phase, or even later, so that we don't
+>>>>>> have to check if the device is clocking in the irq poking functions?
+>>>>>> It's best to keep irq operations fast, so that irq control is fast given
+>>>>>> that these functions are called from irq flow handlers.
+>>>>> We are registering the pcie pm suspend ops as noirq ops only. And this
+>>>>> msix and config
+>>>>>
+>>>>> access is coming at the later point of time that is reason we added that
+>>>>> check.
+>>>>>
+>>>> What is accessing msix and config? Can you dump_stack() after noirq ops
+>>>> are called and figure out what is trying to access the bus when it is
+>>>> powered down?
+>>> The msix and config space is being accessed to mask interrupts. The
+>>> access is coming at the end of the suspend
+>>>
+>>> and near CPU disable. We tried to dump the stack there but the call
+>>> stack is not coming as it is near cpu disable.
+>> That is odd that you can't get a stacktrace.
+>>
+>>> But we got dump at resume please have look at it
+>>>
+>>> [   54.946268] Enabling non-boot CPUs ...
+>>> [   54.951182] CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 5.15.41 #105
+>>> 43491e4414b1db8a6f59d56b617b520d92a9498e
+>>> [   54.961122] Hardware name: Qualcomm Technologies, Inc. sc7280 IDP
+>>> SKU2 platform (DT)
+>>> [   54.969088] Call trace:
+>>> [   54.971612]  dump_backtrace+0x0/0x200
+>>> [   54.975399]  show_stack+0x20/0x2c
+>>> [   54.978826]  dump_stack_lvl+0x6c/0x90
+>>> [   54.982614]  dump_stack+0x18/0x38
+>>> [   54.986043]  dw_msi_unmask_irq+0x2c/0x58
+>>> [   54.990096]  irq_enable+0x58/0x90
+>>> [   54.993522]  __irq_startup+0x68/0x94
+>>> [   54.997216]  irq_startup+0xf4/0x140
+>>> [   55.000820]  irq_affinity_online_cpu+0xc8/0x154
+>>> [   55.005491]  cpuhp_invoke_callback+0x19c/0x6e4
+>>> [   55.010077]  cpuhp_thread_fun+0x11c/0x188
+>>> [   55.014216]  smpboot_thread_fn+0x1ac/0x30c
+>>> [   55.018445]  kthread+0x140/0x30c
+>>> [   55.021788]  ret_from_fork+0x10/0x20
+>>> [   55.028243] CPU1 is up
+>>>
+>>> So the same stack should be called at the suspend path while disabling CPU.
+>> Sounds like you're getting hit by affinity changes while offlining CPUs
+>> during suspend (see irq_migrate_all_off_this_cpu()). That will happen
+>> after devices are suspended (all phases of suspend ops).
+> The affinity setting should not happen since DWC MSI controller doesn't support
+> setting IRQ affinity (hierarchial IRQ domain). In the migrate_one_irq()
+> function, there is a check for the existence of the irq_set_affinity()
+> callback, but the DWC MSI controller return -EINVAL in the callback. So this
+> is the reason the migration was still atempted?
+>
+> A quick check would be to test this suspend/resume with GIC ITS for MSI since
+> it supports settings IRQ affinity and resides in a separate domain.
+> Chaitanya, can you try that?
 
-You, currently, give up interrupts, but perhaps that is solvable in some
-way.
+Hi mani,
 
-So, IDK.. I wouldn't dismiss it entirely but I wouldn't do a bunch of
-work to support it either.
+I tried with gic its there also I see same behavior.
 
-> A reasonable use case is sharing EPT between KVM and IOMMU. That demands
-> a new type of domain and implements its own .set_dev for page table
-> attachment.
+The only which helps to comment out affinity in the following function.
 
-Not everything is virtualization :)
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 21b3ac2a29d2..042afec1cf9d 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -487,8 +487,9 @@ static int alloc_descs(unsigned int start, unsigned 
+int cnt, int node,
 
-Jason
+
+
+                if (affinity) {
+                         if (affinity->is_managed) {
+-                               flags = IRQD_AFFINITY_MANAGED |
+-                                       IRQD_MANAGED_SHUTDOWN;
++//                             flags = IRQD_AFFINITY_MANAGED |
++//                                     IRQD_MANAGED_SHUTDOWN;
++                               flags = 0;//IRQD_AFFINITY_MANAGED |
+                         }
+                         mask = &affinity->mask;
+                         node = cpu_to_node(cpumask_first(mask));
+
+>>> If there is any other way to remove these calls can you please help us
+>>> point that way.
+>> I'm not sure. I believe genirq assumes the irqchips are always
+>> accessible. There is some support to suspend irqchips. See how the
+>> struct irq_chip::irq_suspend() function is called by syscore ops in the
+>> generic irqchip 'irq_gc_syscore_ops' hooks. Maybe you could add a
+>> syscore suspend/resume hook to disable/enable the clks and power to the
+>> PCI controller. syscore ops run after secondary CPUs are hotplugged out
+>> during suspend.
+>>
+>> Or maybe setting the IRQCHIP_MASK_ON_SUSPEND flag can be used so that on
+>> irq migration nothing writes the irq hardware because it is already
+>> masked in the hardware earlier. I think the problem is that on resume
+>> we'll restart the irq from the first CPU online event, when you don't
+>> want to do that because it is too early.
+>>
+>> I have another question though, which is do MSIs support wakeup? I don't
+>> see how it works if the whole bus is effectively off during suspend. If
+>> wakeup needs to be supported then I suspect the bus can't be powered
+>> down during suspend.
+> Wake up should be handled by a dedicated side-band GPIO or in-band PME message.
+>
+> But I still wonder how the link stays in L1/L1ss when the clocks are disabled
+> and PHY is powered down. Maybe the link or phy is powered by a separate power
+> domain like MX that keeps the link active?
+We will come back to you on this.
+>
+> Thanks,
+> Mani
+>
+
