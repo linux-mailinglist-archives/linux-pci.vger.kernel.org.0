@@ -2,233 +2,595 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B87B65A5332
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 19:32:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21EAD5A532E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 19:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231294AbiH2Rch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Aug 2022 13:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
+        id S229944AbiH2Rce (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Aug 2022 13:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbiH2Rcg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 13:32:36 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6466D97ED0;
-        Mon, 29 Aug 2022 10:32:35 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27TGbIlk027081;
-        Mon, 29 Aug 2022 17:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=XT+t/5IBt5GCT0Xj3zuko7cno64iPRqO+a+isR/kVHw=;
- b=fx2M/SIHQ7Mr3mm1v6mdQmXL7y2KrwkOCm9Zl720wPaWk5G9wqWgu+BEZMcaXnm8SkcH
- qvN8Qkb+krG8Uwkza6h64SJlw9YydfaoiTSDmHU2M66SouqJmn4mJ7l6Q1qOE7ff/dC7
- U8GnLGIu3jmaHjMyrcq4yJQ34cjIBTDYENb4iELeq4rLz3rnXPpL8TBfJyVaFlmZ2qkY
- S5Z+x+7gi+FbhPIYaVoxr/DxTrjqKxIGT5hQberktmxhHUt2jxoTDbGQjGtKbEJYvQGP
- 5SyCYI78ugGNYFqqijTua6QnXApRLaHddAc1uENg6tBafguJs3wbuOnpzk4kKaqq8zV4 nQ== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3j8trtsg4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Aug 2022 17:32:11 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 27THW9Tm026048
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Aug 2022 17:32:09 GMT
-Received: from [10.216.51.151] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 29 Aug
- 2022 10:32:01 -0700
-Message-ID: <a1b7c47c-9657-54bb-6b4e-1d98b3a65b91@quicinc.com>
-Date:   Mon, 29 Aug 2022 23:01:58 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v5 2/3] PCI: qcom: Restrict pci transactions after pci
- suspend
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mka@chromium.org>, <quic_vbadigan@quicinc.com>,
-        <quic_hemantk@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S229531AbiH2Rcd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 13:32:33 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3431B97ED0
+        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 10:32:32 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id w88-20020a17090a6be100b001fbb0f0b013so9243864pjj.5
+        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 10:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=eplla/3TsPh9bHtBg3pkAMa+oDtxfhArNZX+yx7NqiU=;
+        b=mQP+TKag1QHY/MDMTVUlanJhZ2geUyjp2K+GwaPwum+nGl7uTEIgg2UL8PIfpfvDs8
+         wilq4qlHsuaUQpucdFfr7TAk+KYCxdZrFb6izlw407JEK3EX3QMw3c4xTvXAfvBaG9W8
+         JYzHvcwzoZXcD7e4296K9Tm5nF3CJwclPP4C+ypKtUwQMveua8nRFmJttaYGsUaDz5C7
+         QNqvHqEMYCCL/gALv2A/EbHQH6xi7/T1LvvHtbH7vXMUElfKqLblaw2SC0m6omO4Y8kY
+         /MsDX3k1Bamduvs/TzOmafNOK31nMKyCakJccqhoYzwrltRtsNbiCQmNLbj8oaX2arbg
+         sR3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=eplla/3TsPh9bHtBg3pkAMa+oDtxfhArNZX+yx7NqiU=;
+        b=hFSG2I/FYN7XhXjIhOllAkMITiX3QwrzAOxGdpANco3AsigNDyRT03jjBnnJ+TOG/Z
+         //QmrSkJGyGS93SeCkdAgi9DpijsWzF69AwWsgz9AMTsNnvWXdsVxvd4nvF4WjZZaTn0
+         IjPhQNPpUq+huIwBElrAlQkmGvG0Hjv+rUDKqJaHIS5qn4cJ57rQQJ2btX+0qjte4ocd
+         1OBYEgy8143sL9547QVcPQZop7Gfl0A3hdYiZtBf9zNRTWODzj+MeYjZVWmNRBUkVVI0
+         b/HV0igO6ULf8d4ddbNKAUE5laesGsvdxyeIbW/M6eG4e5I3SN0mcz80DgX7lQWW8eaB
+         V/eA==
+X-Gm-Message-State: ACgBeo2c2LFfHaq5qBLMNf8koEfT+mCh5+ues9i6XhBIj5UhIvvBYRJU
+        CGB21KmCZf0yDt6vI+b74Cwx5w==
+X-Google-Smtp-Source: AA6agR6L5KaLkUSjFN8ltTh5g8lLAeRiEz+tM07tjqh/cBrCQ+3L2bkc7++r1yYumdHPX80HprnLiA==
+X-Received: by 2002:a17:90a:a882:b0:1fd:8bc5:7b1a with SMTP id h2-20020a17090aa88200b001fd8bc57b1amr12739215pjq.10.1661794349785;
+        Mon, 29 Aug 2022 10:32:29 -0700 (PDT)
+Received: from google.com (201.215.168.34.bc.googleusercontent.com. [34.168.215.201])
+        by smtp.gmail.com with ESMTPSA id t13-20020a17090340cd00b00174923afa8asm4184090pld.3.2022.08.29.10.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Aug 2022 10:32:28 -0700 (PDT)
+Date:   Mon, 29 Aug 2022 17:32:24 +0000
+From:   William McVicker <willmcvicker@google.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-References: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
- <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
- <CAE-0n500y-n+ZjasYQRAa3JgamQG1c+Aqn0YiX-i0L-w6C4dbQ@mail.gmail.com>
- <3d052733-3600-b6eb-baf3-d8806a150af3@quicinc.com>
- <CAE-0n53oMnnn7rOPEiibc=XM52z9THDc9jYhe3x3C_AsLtmARQ@mail.gmail.com>
- <81dcbf72-92bb-093a-da48-89a73ead820e@quicinc.com>
- <CAE-0n50NRiBNDjK2UrA_wOoRz3+3cKb4uiUiCw4t1F19Kw9EhA@mail.gmail.com>
- <20220827172655.GA14465@thinkpad>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20220827172655.GA14465@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Zu-_wYIY5qU6jSCuxhc7wTRoiBmF3YVb
-X-Proofpoint-GUID: Zu-_wYIY5qU6jSCuxhc7wTRoiBmF3YVb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-29_09,2022-08-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0 malwarescore=0
- clxscore=1011 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208290081
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com
+Subject: Re: [PATCH v5 20/20] PCI: dwc: Add Baikal-T1 PCIe controller support
+Message-ID: <Ywz4KEkJwrE4yDBe@google.com>
+References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
+ <20220822184701.25246-21-Sergey.Semin@baikalelectronics.ru>
+ <YwzbARMkb/69+l2d@lpieralisi>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YwzbARMkb/69+l2d@lpieralisi>
+X-Spam-Status: No, score=-12.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 08/29/2022, Lorenzo Pieralisi wrote:
+> [+Robin, Will - please jump to DMA mask set-up]
+> 
+> On Mon, Aug 22, 2022 at 09:47:01PM +0300, Serge Semin wrote:
+> > Baikal-T1 SoC is equipped with DWC PCIe v4.60a host controller. It can be
+> > trained to work up to Gen.3 speed over up to x4 lanes. The host controller
+> > is attached to the DW PCIe 3.0 PCS via the PIPE-4 interface, which in its
+> > turn is connected to the DWC 10G PHY. The whole system is supposed to be
+> > fed up with four clock sources: DBI peripheral clock, AXI application
+> > clocks and external PHY/core reference clock generating the 100MHz signal.
+> > In addition to that the platform provide a way to reset each part of the
+> > controller: sticky/non-sticky bits, host controller core, PIPE interface,
+> > PCS/PHY and Hot/Power reset signal. The driver also provides a way to
+> > handle the GPIO-based PERST# signal.
+> > 
+> > Note due to the Baikal-T1 MMIO peculiarity we have to implement the DBI
+> > interface accessors which make sure the IO operations are dword-aligned.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Rename 'syscon' property to 'baikal,bt1-syscon'.
+> > 
+> > Changelog v3:
+> > - Use the clocks/resets handlers defined in the DW PCIe core descriptor.
+> >   (@Rob)
+> > - Redefine PCI host bridge config space accessors with the generic
+> >   pci_generic_config_read32() and pci_generic_config_write32() methods.
+> >   (@Rob)
+> > 
+> > Changelog v4:
+> > - Drop PCIBIOS_* macros usage. (@Rob)
+> > - Add "static const" to the dw_pcie_ops and dw_pcie_host_ops structure
+> >   instances. (@Bjorn)
+> > - Rename bt1_pcie_dw_ops to bt1_pcie_ops. (@Bjorn)
+> > - Rename bt1_pcie_ops to bt1_pci_ops. (@Bjorn)
+> > - Use start_link/stop_link suffixes in the corresponding callbacks.
+> >   (@Bjorn)
+> > - Change the get_res() method suffix to being get_resources(). (@Bjorn)
+> > - Change *_{add,del}_dw_port() method to *_{add,del}_port(). (@Bjorn)
+> > - Drop dma_coerce_mask_and_coherent() applied to the PCI host bridge
+> >   kernel device instance. (@Bjorn)
+> > - Add the comment above the dma_set_mask_and_coherent() method usage
+> >   regarding the controller eDMA feature. (@Bjorn)
+> > - Fix the comment above the core reset controls assertion. (@Bjorn)
+> > - Replace delays and timeout numeric literals with macros. (@Bjorn)
+> > ---
+> >  drivers/pci/controller/dwc/Kconfig    |   9 +
+> >  drivers/pci/controller/dwc/Makefile   |   1 +
+> >  drivers/pci/controller/dwc/pcie-bt1.c | 653 ++++++++++++++++++++++++++
+> >  3 files changed, 663 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-bt1.c
+> > 
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 62ce3abf0f19..771b8b146623 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -222,6 +222,15 @@ config PCIE_ARTPEC6_EP
+> >  	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+> >  	  endpoint mode. This uses the DesignWare core.
+> >  
+> > +config PCIE_BT1
+> > +	tristate "Baikal-T1 PCIe controller"
+> > +	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+> > +	depends on PCI_MSI_IRQ_DOMAIN
+> > +	select PCIE_DW_HOST
+> > +	help
+> > +	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
+> > +	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
+> > +
+> >  config PCIE_ROCKCHIP_DW_HOST
+> >  	bool "Rockchip DesignWare PCIe controller"
+> >  	select PCIE_DW
+> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> > index 8ba7b67f5e50..bf5c311875a1 100644
+> > --- a/drivers/pci/controller/dwc/Makefile
+> > +++ b/drivers/pci/controller/dwc/Makefile
+> > @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+> >  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+> >  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+> >  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+> > +obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
+> >  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+> >  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+> >  obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
+> > diff --git a/drivers/pci/controller/dwc/pcie-bt1.c b/drivers/pci/controller/dwc/pcie-bt1.c
+> > new file mode 100644
+> > index 000000000000..86b230575ddc
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/dwc/pcie-bt1.c
+> > @@ -0,0 +1,653 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2021 BAIKAL ELECTRONICS, JSC
+> > + *
+> > + * Authors:
+> > + *   Vadim Vlasov <Vadim.Vlasov@baikalelectronics.ru>
+> > + *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > + *
+> > + * Baikal-T1 PCIe controller driver
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bits.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/types.h>
+> > +
+> > +#include "pcie-designware.h"
+> > +
+> > +/* Baikal-T1 System CCU control registers */
+> > +#define BT1_CCU_PCIE_CLKC			0x140
+> > +#define BT1_CCU_PCIE_REQ_PCS_CLK		BIT(16)
+> > +#define BT1_CCU_PCIE_REQ_MAC_CLK		BIT(17)
+> > +#define BT1_CCU_PCIE_REQ_PIPE_CLK		BIT(18)
+> > +
+> > +#define BT1_CCU_PCIE_RSTC			0x144
+> > +#define BT1_CCU_PCIE_REQ_LINK_RST		BIT(13)
+> > +#define BT1_CCU_PCIE_REQ_SMLH_RST		BIT(14)
+> > +#define BT1_CCU_PCIE_REQ_PHY_RST		BIT(16)
+> > +#define BT1_CCU_PCIE_REQ_CORE_RST		BIT(24)
+> > +#define BT1_CCU_PCIE_REQ_STICKY_RST		BIT(26)
+> > +#define BT1_CCU_PCIE_REQ_NSTICKY_RST		BIT(27)
+> > +
+> > +#define BT1_CCU_PCIE_PMSC			0x148
+> > +#define BT1_CCU_PCIE_LTSSM_STATE_MASK		GENMASK(5, 0)
+> > +#define BT1_CCU_PCIE_LTSSM_DET_QUIET		0x00
+> > +#define BT1_CCU_PCIE_LTSSM_DET_ACT		0x01
+> > +#define BT1_CCU_PCIE_LTSSM_POLL_ACT		0x02
+> > +#define BT1_CCU_PCIE_LTSSM_POLL_COMP		0x03
+> > +#define BT1_CCU_PCIE_LTSSM_POLL_CONF		0x04
+> > +#define BT1_CCU_PCIE_LTSSM_PRE_DET_QUIET	0x05
+> > +#define BT1_CCU_PCIE_LTSSM_DET_WAIT		0x06
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_LNKWD_START	0x07
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_LNKWD_ACEPT	0x08
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_LNNUM_WAIT	0x09
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_LNNUM_ACEPT	0x0a
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_COMPLETE		0x0b
+> > +#define BT1_CCU_PCIE_LTSSM_CFG_IDLE		0x0c
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_LOCK		0x0d
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_SPEED		0x0e
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_RCVRCFG		0x0f
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_IDLE		0x10
+> > +#define BT1_CCU_PCIE_LTSSM_L0			0x11
+> > +#define BT1_CCU_PCIE_LTSSM_L0S			0x12
+> > +#define BT1_CCU_PCIE_LTSSM_L123_SEND_IDLE	0x13
+> > +#define BT1_CCU_PCIE_LTSSM_L1_IDLE		0x14
+> > +#define BT1_CCU_PCIE_LTSSM_L2_IDLE		0x15
+> > +#define BT1_CCU_PCIE_LTSSM_L2_WAKE		0x16
+> > +#define BT1_CCU_PCIE_LTSSM_DIS_ENTRY		0x17
+> > +#define BT1_CCU_PCIE_LTSSM_DIS_IDLE		0x18
+> > +#define BT1_CCU_PCIE_LTSSM_DISABLE		0x19
+> > +#define BT1_CCU_PCIE_LTSSM_LPBK_ENTRY		0x1a
+> > +#define BT1_CCU_PCIE_LTSSM_LPBK_ACTIVE		0x1b
+> > +#define BT1_CCU_PCIE_LTSSM_LPBK_EXIT		0x1c
+> > +#define BT1_CCU_PCIE_LTSSM_LPBK_EXIT_TOUT	0x1d
+> > +#define BT1_CCU_PCIE_LTSSM_HOT_RST_ENTRY	0x1e
+> > +#define BT1_CCU_PCIE_LTSSM_HOT_RST		0x1f
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_EQ0		0x20
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_EQ1		0x21
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_EQ2		0x22
+> > +#define BT1_CCU_PCIE_LTSSM_RCVR_EQ3		0x23
+> 
+> You could make this an enum and define only the states
+> that are actually used.
+> 
+> [...]
+> 
+> > +
+> > +/* Generic Baikal-T1 PCIe interface resources */
+> > +#define BT1_PCIE_NUM_APP_CLKS			ARRAY_SIZE(bt1_pcie_app_clks)
+> > +#define BT1_PCIE_NUM_CORE_CLKS			ARRAY_SIZE(bt1_pcie_core_clks)
+> > +#define BT1_PCIE_NUM_APP_RSTS			ARRAY_SIZE(bt1_pcie_app_rsts)
+> > +#define BT1_PCIE_NUM_CORE_RSTS			ARRAY_SIZE(bt1_pcie_core_rsts)
+> > +
+> > +/* PCIe bus setup delays and timeouts */
+> > +#define BT1_PCIE_RST_DELAY_MS			100
+> > +#define BT1_PCIE_RUN_DELAY_US			100
+> > +#define BT1_PCIE_REQ_DELAY_US			1
+> > +#define BT1_PCIE_REQ_TIMEOUT_US			1000
+> > +#define BT1_PCIE_LNK_DELAY_US			1000
+> > +#define BT1_PCIE_LNK_TIMEOUT_US			1000000
+> > +
+> > +static const enum dw_pcie_app_clk bt1_pcie_app_clks[] = {
+> > +	DW_PCIE_DBI_CLK, DW_PCIE_MSTR_CLK, DW_PCIE_SLV_CLK,
+> > +};
+> > +
+> > +static const enum dw_pcie_core_clk bt1_pcie_core_clks[] = {
+> > +	DW_PCIE_REF_CLK,
+> > +};
+> > +
+> > +static const enum dw_pcie_app_rst bt1_pcie_app_rsts[] = {
+> > +	DW_PCIE_MSTR_RST, DW_PCIE_SLV_RST,
+> > +};
+> > +
+> > +static const enum dw_pcie_core_rst bt1_pcie_core_rsts[] = {
+> > +	DW_PCIE_NON_STICKY_RST, DW_PCIE_STICKY_RST, DW_PCIE_CORE_RST,
+> > +	DW_PCIE_PIPE_RST, DW_PCIE_PHY_RST, DW_PCIE_HOT_RST, DW_PCIE_PWR_RST,
+> > +};
+> 
+> I wonder whether we could allocate the rst/clks in DWC dynamically,
+> by using these configuration arrays.
+> 
+> > +
+> > +struct bt1_pcie {
+> > +	struct dw_pcie dw;
+> > +	struct platform_device *pdev;
+> > +	struct regmap *sys_regs;
+> > +};
+> > +#define to_bt1_pcie(_dw) container_of(_dw, struct bt1_pcie, dw)
+> > +
+> > +/*
+> > + * Baikal-T1 MMIO space must be read/written by the dword-aligned
+> > + * instructions. Note the methods are optimized to have the dword operations
+> > + * performed with minimum overhead as the most frequently used ones.
+> > + */
+> > +static int bt1_pcie_read_mmio(void __iomem *addr, int size, u32 *val)
+> > +{
+> > +	unsigned int ofs = (uintptr_t)addr & 0x3;
+> > +
+> > +	if (!IS_ALIGNED((uintptr_t)addr, size))
+> > +		return -EINVAL;
+> > +
+> > +	*val = readl(addr - ofs) >> ofs * BITS_PER_BYTE;
+> 
+> Is it always safe to read more than requested ?
+> 
+> > +	if (size == 4) {
+> > +		return 0;
+> > +	} else if (size == 2) {
+> > +		*val &= 0xffff;
+> > +		return 0;
+> > +	} else if (size == 1) {
+> > +		*val &= 0xff;
+> > +		return 0;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static int bt1_pcie_write_mmio(void __iomem *addr, int size, u32 val)
+> > +{
+> > +	unsigned int ofs = (uintptr_t)addr & 0x3;
+> > +	u32 tmp, mask;
+> > +
+> > +	if (!IS_ALIGNED((uintptr_t)addr, size))
+> > +		return -EINVAL;
+> > +
+> > +	if (size == 4) {
+> > +		writel(val, addr);
+> > +		return 0;
+> > +	} else if (size == 2 || size == 1) {
+> > +		mask = GENMASK(size * BITS_PER_BYTE - 1, 0);
+> > +		tmp = readl(addr - ofs) & ~(mask << ofs * BITS_PER_BYTE);
+> > +		tmp |= (val & mask) << ofs * BITS_PER_BYTE;
+> > +		writel(tmp, addr - ofs);
+> > +		return 0;
+> > +	}
+> 
+> Same question read/modify/write, is it always safe to do it
+> regardless of size ?
+> 
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static u32 bt1_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> > +			     size_t size)
+> > +{
+> > +	int ret;
+> > +	u32 val;
+> > +
+> > +	ret = bt1_pcie_read_mmio(base + reg, size, &val);
+> > +	if (ret) {
+> > +		dev_err(pci->dev, "Read DBI address failed\n");
+> > +		return ~0U;
+> 
+> Is this a special magic value the DWC core is expecting ?
+> 
+> Does it clash with a _valid_ return value ?
+> 
+> > +	}
+> > +
+> > +	return val;
+> > +}
+> > +
+> > +static void bt1_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> > +			       size_t size, u32 val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = bt1_pcie_write_mmio(base + reg, size, val);
+> > +	if (ret)
+> > +		dev_err(pci->dev, "Write DBI address failed\n");
+> > +}
+> > +
+> > +static void bt1_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> > +				size_t size, u32 val)
+> > +{
+> > +	struct bt1_pcie *btpci = to_bt1_pcie(pci);
+> > +	int ret;
+> > +
+> > +	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
+> > +			   BT1_CCU_PCIE_DBI2_MODE, BT1_CCU_PCIE_DBI2_MODE);
+> > +
+> > +	ret = bt1_pcie_write_mmio(base + reg, size, val);
+> > +	if (ret)
+> > +		dev_err(pci->dev, "Write DBI2 address failed\n");
+> > +
+> > +	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
+> > +			   BT1_CCU_PCIE_DBI2_MODE, 0);
+> 
+> IIUC the regmap_update_bits() set up decoding for DBI2. Hopefully the
+> DBI/DBI2 writes are sequentialized, this is a question valid also
+> for other DWC controllers.
+> 
+> What I want to say is, the regmap update in this function sets the
+> DWC HW in a way that can decode DBI2 (please correct me if I am wrong),
+> between the two _update_bits() no DBI access should happen because
+> it just would not work.
+> 
+> It is a question.
+> 
+> > +static int bt1_pcie_host_init(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct bt1_pcie *btpci = to_bt1_pcie(pci);
+> > +	int ret;
+> > +
+> > +	ret = bt1_pcie_get_resources(btpci);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	bt1_pcie_full_stop_bus(btpci, true);
+> > +
+> > +	return bt1_pcie_cold_start_bus(btpci);
+> > +}
+> > +
+> > +static void bt1_pcie_host_deinit(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct bt1_pcie *btpci = to_bt1_pcie(pci);
+> > +
+> > +	bt1_pcie_full_stop_bus(btpci, false);
+> > +}
+> > +
+> > +static const struct dw_pcie_host_ops bt1_pcie_host_ops = {
+> > +	.host_init = bt1_pcie_host_init,
+> > +	.host_deinit = bt1_pcie_host_deinit,
+> > +};
+> > +
+> > +static struct bt1_pcie *bt1_pcie_create_data(struct platform_device *pdev)
+> > +{
+> > +	struct bt1_pcie *btpci;
+> > +
+> > +	btpci = devm_kzalloc(&pdev->dev, sizeof(*btpci), GFP_KERNEL);
+> > +	if (!btpci)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	btpci->pdev = pdev;
+> > +
+> > +	platform_set_drvdata(pdev, btpci);
+> > +
+> > +	return btpci;
+> > +}
+> > +
+> > +static int bt1_pcie_add_port(struct bt1_pcie *btpci)
+> > +{
+> > +	struct device *dev = &btpci->pdev->dev;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * DW PCIe Root Port controller is equipped with eDMA capable of
+> > +	 * working with the 64-bit memory addresses.
+> > +	 */
+> > +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> > +	if (ret)
+> > +		return ret;
+> 
+> Is this the right place to set the DMA mask for the host controller
+> embedded DMA controller (actually, the dev pointer is the _host_
+> controller device) ?
+> 
+> How this is going to play when combined with:
+> 
+> https://lore.kernel.org/linux-pci/1e63a581-14ae-b4b5-a5bf-ca8f09c33af6@arm.com
+> 
+> It is getting a bit confusing. I believe the code in the link
+> above sets the mask so that through the DMA API we are capable
+> of getting an MSI doorbell virtual address whose physical address
+> can be addressed by the endpoint; this through the DMA API.
+> 
+> This patch is setting the DMA mask for a different reason, namely
+> setting the host controller embedded DMA controller addressing
+> capabilities.
+> 
+> AFAICS - both approaches set the mask for the same device - now
+> the question is about which one is legitimate and how to handle
+> the other.
 
-On 8/27/2022 10:56 PM, Manivannan Sadhasivam wrote:
-> On Fri, Aug 26, 2022 at 03:23:00PM -0500, Stephen Boyd wrote:
->> Quoting Krishna Chaitanya Chundru (2022-08-25 06:52:43)
->>> On 8/24/2022 10:50 PM, Stephen Boyd wrote:
->>>> Quoting Krishna Chaitanya Chundru (2022-08-23 20:37:59)
->>>>> On 8/9/2022 12:42 AM, Stephen Boyd wrote:
->>>>>> Quoting Krishna chaitanya chundru (2022-08-03 04:28:53)
->>>>>>> If the endpoint device state is D0 and irq's are not freed, then
->>>>>>> kernel try to mask interrupts in system suspend path by writing
->>>>>>> in to the vector table (for MSIX interrupts) and config space (for MSI's).
->>>>>>>
->>>>>>> These transactions are initiated in the pm suspend after pcie clocks got
->>>>>>> disabled as part of platform driver pm  suspend call. Due to it, these
->>>>>>> transactions are resulting in un-clocked access and eventually to crashes.
->>>>>> Why are the platform driver pm suspend calls disabling clks that early?
->>>>>> Can they disable clks in noirq phase, or even later, so that we don't
->>>>>> have to check if the device is clocking in the irq poking functions?
->>>>>> It's best to keep irq operations fast, so that irq control is fast given
->>>>>> that these functions are called from irq flow handlers.
->>>>> We are registering the pcie pm suspend ops as noirq ops only. And this
->>>>> msix and config
->>>>>
->>>>> access is coming at the later point of time that is reason we added that
->>>>> check.
->>>>>
->>>> What is accessing msix and config? Can you dump_stack() after noirq ops
->>>> are called and figure out what is trying to access the bus when it is
->>>> powered down?
->>> The msix and config space is being accessed to mask interrupts. The
->>> access is coming at the end of the suspend
->>>
->>> and near CPU disable. We tried to dump the stack there but the call
->>> stack is not coming as it is near cpu disable.
->> That is odd that you can't get a stacktrace.
->>
->>> But we got dump at resume please have look at it
->>>
->>> [   54.946268] Enabling non-boot CPUs ...
->>> [   54.951182] CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 5.15.41 #105
->>> 43491e4414b1db8a6f59d56b617b520d92a9498e
->>> [   54.961122] Hardware name: Qualcomm Technologies, Inc. sc7280 IDP
->>> SKU2 platform (DT)
->>> [   54.969088] Call trace:
->>> [   54.971612]  dump_backtrace+0x0/0x200
->>> [   54.975399]  show_stack+0x20/0x2c
->>> [   54.978826]  dump_stack_lvl+0x6c/0x90
->>> [   54.982614]  dump_stack+0x18/0x38
->>> [   54.986043]  dw_msi_unmask_irq+0x2c/0x58
->>> [   54.990096]  irq_enable+0x58/0x90
->>> [   54.993522]  __irq_startup+0x68/0x94
->>> [   54.997216]  irq_startup+0xf4/0x140
->>> [   55.000820]  irq_affinity_online_cpu+0xc8/0x154
->>> [   55.005491]  cpuhp_invoke_callback+0x19c/0x6e4
->>> [   55.010077]  cpuhp_thread_fun+0x11c/0x188
->>> [   55.014216]  smpboot_thread_fn+0x1ac/0x30c
->>> [   55.018445]  kthread+0x140/0x30c
->>> [   55.021788]  ret_from_fork+0x10/0x20
->>> [   55.028243] CPU1 is up
->>>
->>> So the same stack should be called at the suspend path while disabling CPU.
->> Sounds like you're getting hit by affinity changes while offlining CPUs
->> during suspend (see irq_migrate_all_off_this_cpu()). That will happen
->> after devices are suspended (all phases of suspend ops).
-> The affinity setting should not happen since DWC MSI controller doesn't support
-> setting IRQ affinity (hierarchial IRQ domain). In the migrate_one_irq()
-> function, there is a check for the existence of the irq_set_affinity()
-> callback, but the DWC MSI controller return -EINVAL in the callback. So this
-> is the reason the migration was still atempted?
->
-> A quick check would be to test this suspend/resume with GIC ITS for MSI since
-> it supports settings IRQ affinity and resides in a separate domain.
-> Chaitanya, can you try that?
+Since the mask is being set before calling dw_pcie_host_init() and the
+msi_host_init op is not set, setting the mask here won't have any affect due to
+the fact that dw_pcie_msi_host_init() unconditionally sets the DMA mask. AFAIK,
+you don't technically need a 64-bit address, right? If your platform disables
+32-bit allocations, then you'll need to set the MSI capabilities flag to
+support a 64-bit allocation for when the 32-bit allocation fails in the host
+controller driver.
 
-Hi mani,
+Here is how I'm doing that with the Exynos PCIe driver during probe before
+calling dw_pcie_host_init():
 
-I tried with gic its there also I see same behavior.
+	dw_pcie_dbi_ro_wr_en(exynos_pcie->pci);
+	offset = dw_pcie_find_capability(exynos_pcie->pci, PCI_CAP_ID_MSI);
+	cap = dw_pcie_readw_dbi(exynos_pcie->pci, offset + PCI_MSI_FLAGS);
 
-The only which helps to comment out affinity in the following function.
+	/* Enable MSI with 64-bit support */
+	cap |= PCI_MSI_FLAGS_ENABLE | PCI_MSI_FLAGS_64BIT;
+	dw_pcie_writew_dbi(exynos_pcie->pci, offset + PCI_MSI_FLAGS, cap);
+	dw_pcie_dbi_ro_wr_dis(exynos_pcie->pci);
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 21b3ac2a29d2..042afec1cf9d 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -487,8 +487,9 @@ static int alloc_descs(unsigned int start, unsigned 
-int cnt, int node,
+I hope that helps!
 
+Regards,
+Will
 
-
-                if (affinity) {
-                         if (affinity->is_managed) {
--                               flags = IRQD_AFFINITY_MANAGED |
--                                       IRQD_MANAGED_SHUTDOWN;
-+//                             flags = IRQD_AFFINITY_MANAGED |
-+//                                     IRQD_MANAGED_SHUTDOWN;
-+                               flags = 0;//IRQD_AFFINITY_MANAGED |
-                         }
-                         mask = &affinity->mask;
-                         node = cpu_to_node(cpumask_first(mask));
-
->>> If there is any other way to remove these calls can you please help us
->>> point that way.
->> I'm not sure. I believe genirq assumes the irqchips are always
->> accessible. There is some support to suspend irqchips. See how the
->> struct irq_chip::irq_suspend() function is called by syscore ops in the
->> generic irqchip 'irq_gc_syscore_ops' hooks. Maybe you could add a
->> syscore suspend/resume hook to disable/enable the clks and power to the
->> PCI controller. syscore ops run after secondary CPUs are hotplugged out
->> during suspend.
->>
->> Or maybe setting the IRQCHIP_MASK_ON_SUSPEND flag can be used so that on
->> irq migration nothing writes the irq hardware because it is already
->> masked in the hardware earlier. I think the problem is that on resume
->> we'll restart the irq from the first CPU online event, when you don't
->> want to do that because it is too early.
->>
->> I have another question though, which is do MSIs support wakeup? I don't
->> see how it works if the whole bus is effectively off during suspend. If
->> wakeup needs to be supported then I suspect the bus can't be powered
->> down during suspend.
-> Wake up should be handled by a dedicated side-band GPIO or in-band PME message.
->
-> But I still wonder how the link stays in L1/L1ss when the clocks are disabled
-> and PHY is powered down. Maybe the link or phy is powered by a separate power
-> domain like MX that keeps the link active?
-We will come back to you on this.
->
+> 
+> > +
+> > +	btpci->dw.version = DW_PCIE_VER_460A;
+> > +	btpci->dw.dev = dev;
+> > +	btpci->dw.ops = &bt1_pcie_ops;
+> > +
+> > +	btpci->dw.pp.num_vectors = MAX_MSI_IRQS;
+> > +	btpci->dw.pp.ops = &bt1_pcie_host_ops;
+> > +
+> > +	dw_pcie_cap_set(&btpci->dw, REQ_RES);
+> > +
+> > +	ret = dw_pcie_host_init(&btpci->dw.pp);
+> > +	if (ret)
+> > +		dev_err_probe(dev, ret, "Failed to initialize DWC PCIe host\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void bt1_pcie_del_port(struct bt1_pcie *btpci)
+> > +{
+> > +	dw_pcie_host_deinit(&btpci->dw.pp);
+> > +}
+> > +
+> > +static int bt1_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct bt1_pcie *btpci;
+> > +
+> > +	btpci = bt1_pcie_create_data(pdev);
+> 
+> Do we really need a function for that ? I am not too
+> bothered but I think it is overkill.
+> 
 > Thanks,
-> Mani
->
-
+> Lorenzo
+> 
+> > +	if (IS_ERR(btpci))
+> > +		return PTR_ERR(btpci);
+> > +
+> > +	return bt1_pcie_add_port(btpci);
+> > +}
+> > +
+> > +static int bt1_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +	struct bt1_pcie *btpci = platform_get_drvdata(pdev);
+> > +
+> > +	bt1_pcie_del_port(btpci);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id bt1_pcie_of_match[] = {
+> > +	{ .compatible = "baikal,bt1-pcie" },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, bt1_pcie_of_match);
+> > +
+> > +static struct platform_driver bt1_pcie_driver = {
+> > +	.probe = bt1_pcie_probe,
+> > +	.remove = bt1_pcie_remove,
+> > +	.driver = {
+> > +		.name	= "bt1-pcie",
+> > +		.of_match_table = bt1_pcie_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(bt1_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Serge Semin <Sergey.Semin@baikalelectronics.ru>");
+> > +MODULE_DESCRIPTION("Baikal-T1 PCIe driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.35.1
+> > 
