@@ -2,212 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CAA75A5372
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 19:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F8145A53C4
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 20:09:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiH2RqK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Aug 2022 13:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
+        id S230056AbiH2SI5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Aug 2022 14:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbiH2RqI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 13:46:08 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FAE50189;
-        Mon, 29 Aug 2022 10:46:07 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27THTQBT032586;
-        Mon, 29 Aug 2022 17:45:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=qcULhw5na7WjnVO6idPF+u7elRJBnOtSnTWNF45lrK0=;
- b=MQG854inpk+i52c05fTdp6Dn9b5i50eF+AOAc94zwO+fmY7VziZl0fJN1kXA920vQ+CV
- /bceIzxfNWfaQGYDLj5QgnAwnJ90+tf2JECHXayBSExZiGDf7w5d0hgGpr9xsPBNwem9
- EeWZ3D8woz6luJZgFhDFkUN/2o4j3Qq7Z1qbkVtkux96NwRhFCpyQVozK2/8Bpt9e8Pg
- XPTdT1p2rhy1V1tzdr08ejf32sLlIV2T0H7+QailY3E6NPPZp3vZg+acZzrsOp+Cp3JA
- sQ9fo4sSL/oZXdBZzdgs8RDH33UirKEQtxJXacj4TAsiwxGVleoMbQ9grrxouO67tLrf Zw== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3j7bndwm2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Aug 2022 17:45:56 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 27THjtjv014865
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Aug 2022 17:45:55 GMT
-Received: from [10.216.51.151] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 29 Aug
- 2022 10:45:47 -0700
-Message-ID: <3dd98ae4-8b19-e241-3b64-fe24509d2cb4@quicinc.com>
-Date:   Mon, 29 Aug 2022 23:15:43 +0530
+        with ESMTP id S229850AbiH2SIy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 14:08:54 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E13D97EF8
+        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 11:08:52 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id c2so8781376plo.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 11:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=1CjHaWXJyBHtPBi2K/FlVmBWu0GfOoz/im+WiYsLat0=;
+        b=rpiEl9LnKwpk4GzBzAdq6LK9zK4MnFYsWT11M+cVYWqPCxdG5YQr2OviS8EqENg0Tt
+         FlpjDkR1KPn+YEFYg4bQ3FcQ9+7BKkKqaV+hiRbooAmHvR6GqQ0cNZvWpaImjnew5Rc1
+         fPMZOoOY20EAn2A+kEasaSBp+y340h0xFcW96hkzzL7esuxWGAvyZ2z4n0aOkBPvlTX9
+         dLrrXfnB0Dfu8xOmv+9wuPQfEH5JJTChZY+jjbRDWqLawz65hV+vQJbGwr4HTShDDBKw
+         3HZL1ZzwrHJj1jK/Fd/zgYJ8nkFDtWWZ9vZG3Wv9wb9DAp/Hwuqlri2Jc32Mj7Ctzgnh
+         9pAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=1CjHaWXJyBHtPBi2K/FlVmBWu0GfOoz/im+WiYsLat0=;
+        b=PUEHHKnCKlJ34RXcO/NVMyft9OsuUqNEq9f6C2bwNT8NIZpifJ8bs9/zHVSy9Iyb6C
+         AE5ugVDngAo8lnvW83ISAFIKLf0BLZqkic2QWCorbGZ+rCuE7WXLI3ifPHQCYVujo1xq
+         1GEoqCA7ixEVOfNR9xHlofOstEAeF7E9YiTJniLUOXj8GY1RStNUtWEZ0vINgSgJ33Qr
+         5zoZt7MdQdp/PzI/PYU6fvscD8xRidZ90L2yKYWpkFBjhEh758ekOyFGSel9jf9UKous
+         dfyJ8M5vx8603uBJAq9V/9RSwEfy8dZe4psMPSAtY3GId4Zfy9YQIy65jjlLAHMn/NIw
+         dQAg==
+X-Gm-Message-State: ACgBeo2Zhk7bKinYijOs6EfEMOd8ep1BraioMUz4oickUY9rw2bWA8qd
+        g2v6YKlu7O5NSmZMsqJ8AnIS2e6RfM40/A==
+X-Google-Smtp-Source: AA6agR736M5UZ+SEgVaavf+RxSstqF52isXKQJF2xEVMgKxGmu5LmJ4I/LbCGLii/UXmgY/mDMGWbQ==
+X-Received: by 2002:a17:902:da84:b0:173:195:5401 with SMTP id j4-20020a170902da8400b0017301955401mr17518320plx.28.1661796531789;
+        Mon, 29 Aug 2022 11:08:51 -0700 (PDT)
+Received: from google.com (201.215.168.34.bc.googleusercontent.com. [34.168.215.201])
+        by smtp.gmail.com with ESMTPSA id v66-20020a622f45000000b00536f0370db8sm7172457pfv.212.2022.08.29.11.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Aug 2022 11:08:51 -0700 (PDT)
+Date:   Mon, 29 Aug 2022 18:08:47 +0000
+From:   William McVicker <willmcvicker@google.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     kernel-team@android.com, Sajid Dalvi <sdalvi@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/PM: Switch D3Hot delay to also use usleep_range
+Message-ID: <Yw0Ar1DplE2h07gB@google.com>
+References: <20220817230821.47048-1-willmcvicker@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 2/3] dt-bindings: pci: QCOM Adding sc7280 aggre0,
- aggre1 clocks
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
-        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
-        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
- <1656691899-21315-1-git-send-email-quic_krichai@quicinc.com>
- <1656691899-21315-3-git-send-email-quic_krichai@quicinc.com>
- <1fb5f0c6-ff72-b9ba-175a-b5197ed658a7@linaro.org>
- <9de4c3a0-eb95-f4e9-b828-2343241fff41@quicinc.com>
- <75f8b257-7e0a-d871-ab30-37a72f7da56e@linaro.org>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <75f8b257-7e0a-d871-ab30-37a72f7da56e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: i5v9jAkoA5ZchZG-MAsPuuu2LDEWx41G
-X-Proofpoint-ORIG-GUID: i5v9jAkoA5ZchZG-MAsPuuu2LDEWx41G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-29_08,2022-08-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- mlxscore=0 malwarescore=0 bulkscore=0 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208290081
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220817230821.47048-1-willmcvicker@google.com>
+X-Spam-Status: No, score=-12.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 08/17/2022, Will McVicker wrote:
+> From: Sajid Dalvi <sdalvi@google.com>
+> 
+> Since the PCI spec requires a 10ms D3Hot delay (defined by
+> PCI_PM_D3HOT_WAIT) and a few of the PCI quirks update the D3Hot delay up
+> to 120ms, let's add support for both usleep_range and msleep based on
+> the delay time to improve the delay accuracy.
+> 
+> This patch is based off of a commit from Sajid Dalvi <sdalvi@google.com>
+> in the Pixel 6 kernel tree [1]. Testing on a Pixel 6, found that the
+> 10ms delay for the Exynos PCIe device was on average delaying for 19ms
+> when the spec requires 10ms. Switching from msleep to uslseep_range
+> therefore decreases the resume time on a Pixel 6 on average by 9ms.
+> 
+> [1] https://android.googlesource.com/kernel/gs/+/18a8cad68d8e6d50f339a716a18295e6d987cee3
+> 
+> Signed-off-by: Sajid Dalvi <sdalvi@google.com>
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  drivers/pci/pci.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> v3:
+>  * Use DIV_ROUND_CLOSEST instead of bit manipulation.
+>  * Minor refactor to use max() where relavant.
+> 
+> v2:
+>  * Update to use 20-25% upper bound
+>  * Update to use usleep_range() for <=20ms, else use msleep()
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 95bc329e74c0..cfa8386314f2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -66,13 +66,19 @@ struct pci_pme_device {
+>  
+>  static void pci_dev_d3_sleep(struct pci_dev *dev)
+>  {
+> -	unsigned int delay = dev->d3hot_delay;
+> +	unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
+>  
+> -	if (delay < pci_pm_d3hot_delay)
+> -		delay = pci_pm_d3hot_delay;
+> +	if (delay_ms) {
+> +		if (delay_ms <= 20) {
+> +			/* Use a 20% upper bound with 1ms minimum */
+> +			unsigned int upper = max(DIV_ROUND_CLOSEST(delay_ms, 5), 1U);
+>  
+> -	if (delay)
+> -		msleep(delay);
+> +			usleep_range(delay_ms * USEC_PER_MSEC,
+> +				     (delay_ms + upper) * USEC_PER_MSEC);
+> +		} else {
+> +			msleep(delay_ms);
+> +		}
+> +	}
+>  }
+>  
+>  bool pci_reset_supported(struct pci_dev *dev)
+> 
+> base-commit: 274a2eebf80c60246f9edd6ef8e9a095ad121264
+> -- 
+> 2.37.1.595.g718a3a8f04-goog
+> 
 
-On 7/6/2022 8:29 PM, Krzysztof Kozlowski wrote:
-> On 06/07/2022 13:55, Krishna Chaitanya Chundru wrote:
->> On 7/4/2022 1:54 PM, Krzysztof Kozlowski wrote:
->>> On 01/07/2022 18:11, Krishna chaitanya chundru wrote:
->>>> Adding aggre0 and aggre1 clock entries to PCIe node.
->>>>
->>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 6 ++++--
->>>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> index 0b69b12..8f29bdd 100644
->>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> @@ -423,8 +423,8 @@ allOf:
->>>>        then:
->>>>          properties:
->>>>            clocks:
->>>> -          minItems: 11
->>>> -          maxItems: 11
->>>> +          minItems: 13
->>>> +          maxItems: 13
->>>>            clock-names:
->>>>              items:
->>>>                - const: pipe # PIPE clock
->>>> @@ -437,6 +437,8 @@ allOf:
->>>>                - const: bus_slave # Slave AXI clock
->>>>                - const: slave_q2a # Slave Q2A clock
->>>>                - const: tbu # PCIe TBU clock
->>>> +            - const: aggre0 # Aggre NoC PCIe CENTER SF AXI clock
->>>> +            - const: aggre1 # Aggre NoC PCIe1 AXI clock
->>> You ignored my comments from v1 - please don't. This is not accepted.
->>>
->>> Also, please do not send new versions of patchset as reply to some other
->>> threads. It's extremely confusing to find it under something else.
->>>
->>> Best regards,
->>> Krzysztof
->> Hi
->>
->> Krzysztof,
->>
->> Sorry for confusion created which replying this patch.
->>
->> The only comment I got from v1 from you is to run make dtbs_check.
->>
->> I ran that command I found the errors and fixed them and I ran the make dtbs_check again
->> before on v2 and made sure there are no errors.
->>
->> Can you please tell me is there any steps I missed.
-> The comment was:
-> "This won't work. You need to update other entry."
->
-> and then a conditional: "If you test it with
-> `make dtbs_check` you will see the errors."
->
-> So let's run it together:
->
-> /home/krzk/dev/linux/linux/out/arch/arm64/boot/dts/qcom/sc7280-idp.dtb:
-> pci@1c08000: clocks: [[42, 55], [42, 56], [41, 0], [39, 0], [42, 50],
-> [42, 52], [42, 53], [42, 57], [42, 58], [42, 177], [42, 178], [42, 8],
-> [42, 21]] is too long
->
-> 	From schema:
-> /home/krzk/dev/linux/linux/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->
-> /home/krzk/dev/linux/linux/out/arch/arm64/boot/dts/qcom/sc7280-idp.dtb:
-> pci@1c08000: clock-names: ['pipe', 'pipe_mux', 'phy_pipe', 'ref', 'aux',
-> 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'tbu', 'aggre0',
-> 'aggre1', 'ddrss_sf_tbu'] is too long
->
->
-> clocks and clock-names can be maximum 12 items, as defined by schema in
-> "properties:" section. You cannot extend it in one place to 13 but leave
-> 12 in other, because both constraints are applicable.
->
-> If you test it, you will see the errors.
->
-> Best regards,
-> Krzysztof
+Hi Bjorn,
 
-Hi Krzysztof,
+I'm just checking up on this patch in case it got lost in your inbox. Please
+take a look and let me know if you have any concerns.
 
-Sorry for very late reply.
+And thanks again for the reviews Matthias!
 
-If we increase the common definitions of clocks properties to "13" it is 
-sufficient right.
-
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml 
-b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 92402f1..c9e268d 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -53,11 +53,11 @@ properties:
-    # Platform constraints are described later.
-    clocks:
-      minItems: 3
--    maxItems: 12
-+    maxItems: 13
-
-    clock-names:
-      minItems: 3
--    maxItems: 12
-+    maxItems: 13
-
-    resets:
-
-Thanks & Regards,
-
-Krishna Chaitanya.
-
+Regards,
+Will
