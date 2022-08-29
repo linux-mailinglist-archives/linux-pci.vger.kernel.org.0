@@ -2,280 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A515A4B04
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 14:06:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 286F55A4F8E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 16:48:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbiH2MGX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Aug 2022 08:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
+        id S230381AbiH2OsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Aug 2022 10:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiH2MGF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 08:06:05 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2051.outbound.protection.outlook.com [40.107.95.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DD58C02E;
-        Mon, 29 Aug 2022 04:51:03 -0700 (PDT)
+        with ESMTP id S230389AbiH2OsB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 10:48:01 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70080.outbound.protection.outlook.com [40.107.7.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267BA8D3D8;
+        Mon, 29 Aug 2022 07:47:59 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eccUwO146pp9KMpFXqLXs7E1QjqzJupJIU8rHZrH+hyxtp8D3N31wqFVvlyyWiYletUohBrQK8HRMFOPgVs1lSlhkTLLuHpa2tDPksD835tgBKZjUljcjI7ylUoYItIvObrwpYpojJJvLewgZ5rCaxho6Owgfl42UlG7AHKkae/4TQ8re6a9hIc7u/DqipqKHbouTZ717GRHgMQ38IIru9IE4WZdYGMnf8SAnowaDRLtGQylOMusGjE/xerRXQ+4gLiN7mKhoEDjFHLlCFJfWTZPmRFtJmQQCxzAb92zrHGvV8hM8EHVt/FiYNq1Zm5KyyOzbrw6RbkCcnqptQT2gQ==
+ b=gZgnvf+af7+I6boHC044C8EN6zpYBPPC1MrK8K5cKxgVAbZY1/j/f0CEOnuMQed1N1Cy/mOjO/NfFFawJKwNZPxY2N2orC1o5kWq275QuQ0Zph97vQ5nlY6wBK/OGPsMJ0c8kSN+ia3eT36pPyypU01ODYcyAIqQJ0+zMQoNlByJUVF86I2SeMHq6l6t7NPBtbmyUuw+WHWU71nwJNDsE0YuI3lEciLuncIlxSYLeh2iz/TSJSR/DvSm0Prr7jqa3i2nIH5731dvdDpAF5ApQfQZa28Gp6ECJq9WWWPdu3fdPt93FIXBpl8ALzD8v9/Jmul9S2MuFYP3pVqVS6PCBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VZ/zwXj4y/6VfaxgkC+vhiLKBJuygzeOHfNXVpjH/eY=;
- b=nSyvqoUE5uBGWh40Pyb3q1Gx8tJDAJ080Na0KF/GNS7E/YLKPAXT3kGiUTbeNeJuzwyPqSzkRJtgDqJwma98ZxuBKKzDQBzwlE5NblPzPZ6KKhkVMAWyAs/8W2k9Z76sz4TtQoto1L1kWrI2zJHyI1bguEy0tkpQNFqS4AHwneGj76dLh0qCgWG1ffwQlUISRzqZrO8oGCc3Oz2+wlcm6BYKyPuunOt4FL64uUBU57o5PKRESQxMC9ULNDSvC4FuQPUbB6BbOaGlF8CuQFEpOXb9avFmbd9e2C0a3Z0vD4B7Zb7EYfbFnN7L7VZVw4bzWT8bq/fhSwQiwFpJa43JyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=Nyv0iOmtvxzF1/mBX4FVqqJ6/4IMq+ncaeuUwuEFliA=;
+ b=IqrLrflRiR0h2IM7vv8AXHIQyCsw68wkf0HpQNOIEZ0KM7hu+fMguaV3LVtNlCUrdsT8qdVSpzBqpWe6CJIw5NVsmYksTrcTkF8qlbzB9PzAlvfatIu2GcpHPUkYCBtu9QuEkGHcL+9BswT82K7ayogJcwdlXks/E3v9zj9D188TMrHb/td89xLnpmYroWS0fjkCLEnH7NDpDBWITYS/dySmQcyUnqhChm96R7Xyb/cQz06YbdH9TQfIQURrU0vq5ysCnt0FLWi3/GrNO/ba+33YwH2CDpCJHTLb7tv8EbHOY8dgzpE1faFtin8JfLV9vSBaR2SFpxaGB1zyLjdp7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VZ/zwXj4y/6VfaxgkC+vhiLKBJuygzeOHfNXVpjH/eY=;
- b=t9CEtW7aCqKa0ZRa2Fu3TsUBST7e7SJwgyftSCUyjMA0O3Yx9pFopItB5nqRzR8U75wDwEfLsNWRiECICeYuh48Z/Wq5tyGyEB9PF7K7Jv1x53tksmVF8/PmPrdOXzekjLqk9iDj2rrBfclwXzJKQfJ9jEbOdmA97CuNgI4syFyYWt2qMVzjY9bDphNWj+Igf+W9K+xY3b9EuTJmUWVHTrR2OLs/WNjsDVd1J+e2zLuCMPHpuP4CBl8UhKF4Nztr3labTqvYHtajw9/qzkky+KXLTPDTEhlMtpjfUXTOZ+jzAIHc6PE/ATLVr02CHG/KOEyhZU/YnbzuX1CospdJIQ==
-Received: from BN9PR03CA0854.namprd03.prod.outlook.com (2603:10b6:408:13d::19)
- by CH2PR12MB4876.namprd12.prod.outlook.com (2603:10b6:610:67::10) with
+ bh=Nyv0iOmtvxzF1/mBX4FVqqJ6/4IMq+ncaeuUwuEFliA=;
+ b=sadbN0/eVJP/PpOsK3QCzjsg07EA8OEVbwkJ/3QGVquwK2a9QAbyzdBfv0O2mZX41xHF+h4rwE5JoG1v6JJVOWk8ER2TBaPxSVAZ16Z4dELKBeLJvksri8uc0fHWJlvlGUecQoT4cyQDBNvDnrxgIUvz98Hxxi6MHjK6lqFVEag=
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by DB8PR04MB6923.eurprd04.prod.outlook.com (2603:10a6:10:114::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
- 2022 11:49:31 +0000
-Received: from BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13d:cafe::e5) by BN9PR03CA0854.outlook.office365.com
- (2603:10b6:408:13d::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15 via Frontend
- Transport; Mon, 29 Aug 2022 11:49:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (12.22.5.235) by
- BN8NAM11FT030.mail.protection.outlook.com (10.13.177.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5566.15 via Frontend Transport; Mon, 29 Aug 2022 11:49:30 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.38; Mon, 29 Aug
- 2022 11:49:29 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 29 Aug
- 2022 04:49:28 -0700
-Received: from nvidia-abhsahu-1.nvidia.com (10.127.8.11) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server id 15.2.986.29 via Frontend
- Transport; Mon, 29 Aug 2022 04:49:23 -0700
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-CC:     Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Abhishek Sahu <abhsahu@nvidia.com>
-Subject: [PATCH v7 5/5] vfio/pci: Implement VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP
-Date:   Mon, 29 Aug 2022 17:18:50 +0530
-Message-ID: <20220829114850.4341-6-abhsahu@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220829114850.4341-1-abhsahu@nvidia.com>
-References: <20220829114850.4341-1-abhsahu@nvidia.com>
-X-NVConfidentiality: public
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.21; Mon, 29 Aug
+ 2022 14:47:55 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::85cb:614b:9f52:2dba]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::85cb:614b:9f52:2dba%5]) with mapi id 15.20.5566.021; Mon, 29 Aug 2022
+ 14:47:55 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        "lznuaa@gmail.com" <lznuaa@gmail.com>
+Subject: RE: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as msi
+ controller
+Thread-Topic: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work as
+ msi controller
+Thread-Index: AQHYtj8hCDDK+8gqVE2zOgMsKNOQwK3AJMoAgAAECGCAAV/WAIAAANrAgAA0JACABEI8MA==
+Date:   Mon, 29 Aug 2022 14:47:55 +0000
+Message-ID: <PAXPR04MB918622BAC0F686AB51BC505788769@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220822155130.2491006-1-Frank.Li@nxp.com>
+        <20220822155130.2491006-4-Frank.Li@nxp.com>
+        <20220825212130.GA1705214-robh@kernel.org>
+        <PAXPR04MB9186201A03037BA7DC74D52B88729@PAXPR04MB9186.eurprd04.prod.outlook.com>
+        <871qt2x38f.wl-maz@kernel.org>
+        <PAXPR04MB918607281F6389092924EE6488759@PAXPR04MB9186.eurprd04.prod.outlook.com>
+ <87zgfqvfvv.wl-maz@kernel.org>
+In-Reply-To: <87zgfqvfvv.wl-maz@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: robh@kernel.org
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d1f95039-61e6-4d7b-8948-08da89cd7579
+x-ms-traffictypediagnostic: DB8PR04MB6923:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4gUDz/69oFVdp/VGsd6VervIrpw5zeHegtEgINH07E1hbI/VxczEd2xE3/iuF7vn3SIwy08atKYL9FES9shzzwo/YgVlmQ59XCqId9rSFmmPRSO93OBwUgE2MDkko83spOz9GF9xJzAfJYAKgriujXNS2mz2vsGr+Qf2rKhp1ayPWRM/2R7kgByGgbuTv2Z1F66iErStJ8q5RftZ8ADwWttpuhfBpoI0MRxWlat4peG8ifCuF+lvgY8E96jt7Wtefg0bZyfPj6DtCSpo0Hz1KxiLAT7YP3QgQ/UeuAYiZK8MV1so7jPudAwQkGbjW+B/I4jzpCvritL7Lk7mBchsRc+4ekNztKml9GieGQoeSxAdb3RhW0hU/oAvhKaoehBaKbp8zl2sS8qqc4pfnYJMchg+arkyymy+Og4j7RyPwsxdIRPXTIa7enq9ZO9dTw4XCi9yX3rF263BYGnGpTCXyoXqVwz7veDsQE7UaQGRVecv3BOwqIz81LKNb7qD51AUVs14LtBUttitVDLYETrjzpp9828831iTz0KXcUZMLbdzOC2t59hl7X6BtjtVK1ScfG5bkC6lPEQLF+QxmyE7phqtfgTCrmQOqNIyFJBijKjlR2w6m/kPZQLMR7mbG202ZUYi/M9v4XE7mXHO0B7QHjhKfwv6q07A93BmvI5h933r3eWdmr2o1SowyBJa7jpjew95rI8P1oRLsHwaBfgk05CenxRKH+xW81+zxLUBhGwXRbg4zQDHyZs7zwrc76Zxn6FFErwNwbHpuX7ogxsiPA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(7416002)(26005)(41300700001)(478600001)(55236004)(6506007)(7696005)(53546011)(9686003)(71200400001)(83380400001)(186003)(66476007)(8936002)(44832011)(52536014)(5660300002)(2906002)(110136005)(55016003)(316002)(54906003)(4326008)(64756008)(66446008)(66556008)(8676002)(66946007)(76116006)(38070700005)(86362001)(122000001)(33656002)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?WtROjKW58Bd06oeceaCugIx+uOIvXLVhZDwjaU5hRuVOC58kbGQrb9rsW4LH?=
+ =?us-ascii?Q?c+UlUEcq9Y04TG0rJG+52GsO13aiXi8D7b9fBRFgbPqIOMLw3dhnmXbQsUJf?=
+ =?us-ascii?Q?ytlZ1JaHZarKJOLp/e5IdzvBd8btAHOZ+aHOBauf+WPStQ6uK4/8FRTiBB17?=
+ =?us-ascii?Q?fWT0QDVtOZB2CrdikSSTe9A4N8uRdAshr7K9M2QsM3dId1bmeoy8aJTJvtGZ?=
+ =?us-ascii?Q?TZQl+CYW1fPHtE8NQxQYnGzFUpBSDetIbPc1sItQQ7YR6X1qKHYdg4EStY29?=
+ =?us-ascii?Q?YuoZ6tEDmyESe6I7Qb8L8bAnoDQ7PtwpUdL0gMO9IHDDiXbLi7xkg1Irefnz?=
+ =?us-ascii?Q?Dag+jEfA48TicMPRmFTDe6AidXy2FghQK/XdCliwNyIUw/H+94pVo5JUP5UV?=
+ =?us-ascii?Q?Ho2bQ0xQNgI0ZH0DvIPtQyPgFwpg6gt5Cra4R5V1cfNH4ytnxxk4OFk/kU/2?=
+ =?us-ascii?Q?zakvWM7lVkz8r+3A9VZc07lS+bcYOnFGahb1x7mN6XZQyyA3E7wYs3LQVTlc?=
+ =?us-ascii?Q?ncoaWFDGUbBl6otK1woHoY3wYTNOVM+8rhNAYAVxWWpHJmMiQTIcEFiNk50P?=
+ =?us-ascii?Q?so28SjrImSPjKEff1Ikje9iBmsQhh2Cyo3GaPTXpBfv7HA9AbV3Mm2z5fhes?=
+ =?us-ascii?Q?UtepBscg74MPvHULA9+1Op9O/LgVmetZLlMwEX0bgVwnTEXODglnwETDSGQ9?=
+ =?us-ascii?Q?kQFgfakZ1+lXWLr/05Q+9Q0awsYlOMu31gDNAlKogHeX8uW5Jqq68UUMq2cd?=
+ =?us-ascii?Q?KKvXpUXWaE4RzZaRvMMUNQP4kHo08l1NaVlrG02wyiFIuhvcbhIEblEeLIl1?=
+ =?us-ascii?Q?9v/ZGETAm7k3itZbe2lX9Slg14xaEf87i9odM1ac1ZxPOd9k86GKSjuADrEi?=
+ =?us-ascii?Q?+LhBVQehAdBtsCLsE6ZOU7nRDFkPDqoh/G8lTC60LRvObVtwwLOEsDkKlcLl?=
+ =?us-ascii?Q?V6Kf70wgmLZQ9WMI1Y3Jivog0LvwVlUrPhmfvYbHhQ4jlilsSnSWLkB0cjQ7?=
+ =?us-ascii?Q?BYv25JllOrv09MCHhuBoyUwyzWTIEAqqwD00kaS/7HPzBA6aUReGd9Tog8/T?=
+ =?us-ascii?Q?qfNIHLOPrMLn49FrfAfyNflxkDYIrSBsgTlswRSLwigV5J8/Ctok1FrgJzSo?=
+ =?us-ascii?Q?LV6hEDOYGgTcPR69cnKKTl3HoFqED+VtMLwTRsmM66TJmU6N2bnmOOiangXH?=
+ =?us-ascii?Q?LOdt54duraFzxm1Y27kStgCLuAuNMnlbPoynUq5BhbpSM+UAP77+Ht4lTmyO?=
+ =?us-ascii?Q?vLSObqOaVE04EssYahU8zQHuO2vZOQ8wK4RfmnYMcTQo4N3nGXQ/pVw6Q7bz?=
+ =?us-ascii?Q?Mgn2kmz4nzWb2YfoZmgKAEhOi2l+GqHrMILXJNrhFs1r09xKmvjJ0UVA94U3?=
+ =?us-ascii?Q?MnDzDwyvVPHjCx9+R7ER2n5wiDNbrmmQVxturg8iOryO9vd8X1BvNKQMs+Vw?=
+ =?us-ascii?Q?AcYlJVoR1j857azqlBipTFzJC+na3nk0UC0wxkAwYR5/zbHOIq9IYNOv5kcA?=
+ =?us-ascii?Q?Wh3Re6kB9JbQpeciigP03DQZdO3UYp+gzOjLSYADcuyMO/gjRGhwPzQVnFpb?=
+ =?us-ascii?Q?Gea4B1px6CAW5oRgvo4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a5cdc856-2fae-428e-ad24-08da89b488e9
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4876:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J8utr+yg0pZi7JCGTaZlDK2oRfp35QtiWFg8Tb3TxFFaLOgBzU/YfqHP6Np7WWfdmRgrRpGRadlLipUliTo6lW+xabS1istGLxvzfZdqd2YjvLJW5EpdNddBiXuaWK/UjuGjZn/whdGdHqgxoWYL3NILCKHwZxWX6VdnR8LN8hoqOBAw1m7j+dUONwGrr6rpiey/eEgQuvI8raIGZ9YUnHObKEV2k229EgvIcgiPWS+ZMsvxhnsMmjlpfACljLovF0T7OSJFr1xNexaINmvEBWBs6JExkY0+bEhACErmvXGMg/C3eovZrJ8yGe4R3LZJIrBMXJg7KB5AxrlliSZ7X5svbwVJb3QLD8AByY+vWriaSFdg1XJwCyOei0b/FihSxOVQX2CBeibceacP0AgpoRZw8+AlIiRtksLALBNrmVVMNH5zVPkCiwxHpVFYE1G7kFqctM4Cax15JeOL3Gm63H1mWYpy7zhuvOF3a/c3T+u9zUVgy/UJBS4tgiKIjY5x4FaCe0USWuzd/4BCMaWHJzNhiAUJVuYhwTopOtsQZWuYRAT0eOqfg0lFABDiP/ZC0hTUNAQWnWp5XNnnlH8V2k6nfjocmHEYzIWZMGXr2sjT37FCC+Yr3vWMIkCVYrO7P4Dp/wZPsctVptW2VgqbwyAuqmKZrcuMX8KeG/DQ+x1JMqaMOXyXie8q/L9pJHuxnhus03BNbmYMvVXt39h87QZrPnrcMhMXe30C8fOrpqHbOKK/4zDLak9oFXzVuCZxwsw2/FNA8sQKUieVuoXT1AwUcspBc4clTHOy+Pz/fQiCJtg4gy2hKQSmbYp+1m6I
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(346002)(136003)(39860400002)(376002)(396003)(40470700004)(46966006)(36840700001)(2906002)(107886003)(26005)(82740400003)(6666004)(2616005)(82310400005)(426003)(40460700003)(40480700001)(336012)(47076005)(186003)(1076003)(36860700001)(83380400001)(110136005)(8676002)(54906003)(4326008)(70206006)(70586007)(7696005)(41300700001)(7416002)(5660300002)(81166007)(86362001)(8936002)(316002)(356005)(36756003)(478600001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2022 11:49:30.8762
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1f95039-61e6-4d7b-8948-08da89cd7579
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2022 14:47:55.7921
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5cdc856-2fae-428e-ad24-08da89b488e9
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4876
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E9f6GxEiGltlCrRmvIOGLRqpD+ymScmxO4QeBui/ZdzpgRt8iJSb3bajfiYr7vcTKs4bTB8/hA3/1ciuU8YWTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6923
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch implements VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP
-device feature. In the VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY, if there is
-any access for the VFIO device on the host side, then the device will
-be moved out of the low power state without the user's guest driver
-involvement. Once the device access has been finished, then the host
-can move the device again into low power state. With the low power
-entry happened through VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP,
-the device will not be moved back into the low power state and
-a notification will be sent to the user by triggering wakeup eventfd.
 
-vfio_pci_core_pm_entry() will be called for both the variants of low
-power feature entry so add an extra argument for wakeup eventfd context
-and store locally in 'struct vfio_pci_core_device'.
 
-For the entry happened without wakeup eventfd, all the exit related
-handling will be done by the LOW_POWER_EXIT device feature only.
-When the LOW_POWER_EXIT will be called, then the vfio core layer
-vfio_device_pm_runtime_get() will increment the usage count and will
-resume the device. In the driver runtime_resume callback, the
-'pm_wake_eventfd_ctx' will be NULL. Then vfio_pci_core_pm_exit()
-will call vfio_pci_runtime_pm_exit() and all the exit related handling
-will be done.
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: Friday, August 26, 2022 4:45 PM
+> To: Frank Li <frank.li@nxp.com>
+> Cc: Rob Herring <robh@kernel.org>; tglx@linutronix.de;
+> krzysztof.kozlowski+dt@linaro.org; shawnguo@kernel.org;
+> s.hauer@pengutronix.de; kw@linux.com; bhelgaas@google.com; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-pci@vger.kernel.org; Peng Fan
+> <peng.fan@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>;
+> jdmason@kudzu.us; kernel@pengutronix.de; festevam@gmail.com; dl-linux-
+> imx <linux-imx@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com;
+> ntb@lists.linux.dev; lznuaa@gmail.com
+> Subject: Re: [EXT] Re: [PATCH v7 3/4] dt-bindings: irqchip: imx mu work a=
+s
+> msi controller
+>=20
+> Caution: EXT Email
+>=20
+> On Fri, 26 Aug 2022 19:59:44 +0100,
+> Frank Li <frank.li@nxp.com> wrote:
+> >
+> > > And I stand by my initial request. "a" doesn't convey any sort of
+> > > useful information. Why not "I" and "II", while we're at it? Or
+> > > something even funkier?
+> >
+> > MU spec use term "a" and "b",  user have to map "I" an "II" to
+> > "a" and "b" when read MU spec and code. it is not straightforward.
+> >
+> > I quote a part of spec.
+> > " The MU is connected as a peripheral under the Peripheral bus on both
+> sides-on
+> > the Processor A-side, the Processor A Peripheral Bus, and on the Proces=
+sor
+> B side,
+> > the Processor B Peripheral Bus."
+> >
+> > Rob Herring and Marc Zynginer:
+> > I can change to any name, which you agree both.
+> >
+> > Some options:
+> > 1. "a", "b"
+> > 2. "a-side", "b-side"
+> > 3. "a-facing", "b-facing"
+> > 4. "I", "II"
+>=20
+> Use the wording indicated in the spec: "processor-a-side", and
+> "processor-b-side". This is what I asked the first place.
 
-For the entry happened with wakeup eventfd, in the driver resume
-callback, eventfd will be triggered and all the exit related handling will
-be done. When vfio_pci_runtime_pm_exit() will be called by
-vfio_pci_core_pm_exit(), then it will return early.
-But if the runtime suspend has not happened on the host side, then
-all the exit related handling will be done in vfio_pci_core_pm_exit()
-only.
+@Rob Herring:  Do you agree this name?
 
-Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
----
- drivers/vfio/pci/vfio_pci_core.c | 63 ++++++++++++++++++++++++++++++--
- include/linux/vfio_pci_core.h    |  1 +
- 2 files changed, 61 insertions(+), 3 deletions(-)
+[Frank Li]=20
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 9c612162653f..0d4b49f06b14 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -277,7 +277,8 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
- 	return ret;
- }
- 
--static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev)
-+static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev,
-+				     struct eventfd_ctx *efdctx)
- {
- 	/*
- 	 * The vdev power related flags are protected with 'memory_lock'
-@@ -290,6 +291,7 @@ static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev)
- 	}
- 
- 	vdev->pm_runtime_engaged = true;
-+	vdev->pm_wake_eventfd_ctx = efdctx;
- 	pm_runtime_put_noidle(&vdev->pdev->dev);
- 	up_write(&vdev->memory_lock);
- 
-@@ -313,7 +315,40 @@ static int vfio_pci_core_pm_entry(struct vfio_device *device, u32 flags,
- 	 * while returning from the ioctl and then the device can go into
- 	 * runtime suspended state.
- 	 */
--	return vfio_pci_runtime_pm_entry(vdev);
-+	return vfio_pci_runtime_pm_entry(vdev, NULL);
-+}
-+
-+static int vfio_pci_core_pm_entry_with_wakeup(
-+	struct vfio_device *device, u32 flags,
-+	struct vfio_device_low_power_entry_with_wakeup __user *arg,
-+	size_t argsz)
-+{
-+	struct vfio_pci_core_device *vdev =
-+		container_of(device, struct vfio_pci_core_device, vdev);
-+	struct vfio_device_low_power_entry_with_wakeup entry;
-+	struct eventfd_ctx *efdctx;
-+	int ret;
-+
-+	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_SET,
-+				 sizeof(entry));
-+	if (ret != 1)
-+		return ret;
-+
-+	if (copy_from_user(&entry, arg, sizeof(entry)))
-+		return -EFAULT;
-+
-+	if (entry.wakeup_eventfd < 0)
-+		return -EINVAL;
-+
-+	efdctx = eventfd_ctx_fdget(entry.wakeup_eventfd);
-+	if (IS_ERR(efdctx))
-+		return PTR_ERR(efdctx);
-+
-+	ret = vfio_pci_runtime_pm_entry(vdev, efdctx);
-+	if (ret)
-+		eventfd_ctx_put(efdctx);
-+
-+	return ret;
- }
- 
- static void __vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
-@@ -321,6 +356,11 @@ static void __vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
- 	if (vdev->pm_runtime_engaged) {
- 		vdev->pm_runtime_engaged = false;
- 		pm_runtime_get_noresume(&vdev->pdev->dev);
-+
-+		if (vdev->pm_wake_eventfd_ctx) {
-+			eventfd_ctx_put(vdev->pm_wake_eventfd_ctx);
-+			vdev->pm_wake_eventfd_ctx = NULL;
-+		}
- 	}
- }
- 
-@@ -348,7 +388,10 @@ static int vfio_pci_core_pm_exit(struct vfio_device *device, u32 flags,
- 
- 	/*
- 	 * The device is always in the active state here due to pm wrappers
--	 * around ioctls.
-+	 * around ioctls. If the device had entered a low power state and
-+	 * pm_wake_eventfd_ctx is valid, vfio_pci_core_runtime_resume() has
-+	 * already signaled the eventfd and exited low power mode itself.
-+	 * pm_runtime_engaged protects the redundant call here.
- 	 */
- 	vfio_pci_runtime_pm_exit(vdev);
- 	return 0;
-@@ -388,6 +431,17 @@ static int vfio_pci_core_runtime_resume(struct device *dev)
- {
- 	struct vfio_pci_core_device *vdev = dev_get_drvdata(dev);
- 
-+	/*
-+	 * Resume with a pm_wake_eventfd_ctx signals the eventfd and exit
-+	 * low power mode.
-+	 */
-+	down_write(&vdev->memory_lock);
-+	if (vdev->pm_wake_eventfd_ctx) {
-+		eventfd_signal(vdev->pm_wake_eventfd_ctx, 1);
-+		__vfio_pci_runtime_pm_exit(vdev);
-+	}
-+	up_write(&vdev->memory_lock);
-+
- 	if (vdev->pm_intx_masked)
- 		vfio_pci_intx_unmask(vdev);
- 
-@@ -1376,6 +1430,9 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
- 	switch (flags & VFIO_DEVICE_FEATURE_MASK) {
- 	case VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY:
- 		return vfio_pci_core_pm_entry(device, flags, arg, argsz);
-+	case VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP:
-+		return vfio_pci_core_pm_entry_with_wakeup(device, flags,
-+							  arg, argsz);
- 	case VFIO_DEVICE_FEATURE_LOW_POWER_EXIT:
- 		return vfio_pci_core_pm_exit(device, flags, arg, argsz);
- 	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index 1025d53fde0b..089b603bcfdc 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -85,6 +85,7 @@ struct vfio_pci_core_device {
- 	int			ioeventfds_nr;
- 	struct eventfd_ctx	*err_trigger;
- 	struct eventfd_ctx	*req_trigger;
-+	struct eventfd_ctx	*pm_wake_eventfd_ctx;
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
--- 
-2.17.1
-
+>=20
+>         M.
+>=20
+> --
+> Without deviation from the norm, progress is not possible.
