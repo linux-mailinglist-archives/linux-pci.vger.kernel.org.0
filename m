@@ -2,54 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F92F5A4688
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 11:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F22E25A46CF
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Aug 2022 12:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbiH2Jy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Aug 2022 05:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39476 "EHLO
+        id S229673AbiH2KJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Aug 2022 06:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbiH2Jy0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 05:54:26 -0400
+        with ESMTP id S229687AbiH2KJl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Aug 2022 06:09:41 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0BE5E32B;
-        Mon, 29 Aug 2022 02:54:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175635FAE2;
+        Mon, 29 Aug 2022 03:09:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6D1EB80E4D;
-        Mon, 29 Aug 2022 09:54:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CB2C433D7;
-        Mon, 29 Aug 2022 09:54:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A7789B80E4F;
+        Mon, 29 Aug 2022 10:09:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A021EC433C1;
+        Mon, 29 Aug 2022 10:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661766862;
-        bh=oWLurgdSKTB0vt6GSTZSrYv9689ZAcwK3zgfRifrLzc=;
+        s=k20201202; t=1661767774;
+        bh=9sKH2mSrNaQ7LI9aJ4fsaCG5CDcmGfP79u2J90WddVA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m+St8Rf7q5Qc/uUBzP9wcevzAHPshaX7kUdv4mAvQq5xIvY8dKA7zu7Dab9tg+4+Z
-         nbLNeVZ8lm4sMLKbXhXoVDm9WPEcnSg4jkmrgGFyNG7CNZNWP/RKq7US3kv8fjT5Gd
-         tfrJKAcqZU33M+7r0207lGuMWN3MRfn3OitCyQUK1p+MLYaJLDO9BX2n3YcUE3Kq/i
-         +AoG94M7uF/SlOsVJ13VKajhX2rdSvlrBCn8tTUZR9QvK7XeaprmevxcGlyFfAqnYl
-         TaJgXDG7YqdY68qKcgFU0DEIE3ldLkcpdcsEgDsQnthJQbn7GBc3fsXZstuFvR+gSw
-         vqiwPHuVX4bRg==
-Date:   Mon, 29 Aug 2022 11:54:15 +0200
+        b=Rno65nTxDVtYMgFdz8vao5f3j8OXd7ViF39CscvYdK+jVWPM91SYt4teT0adZIF12
+         hHzVklXYnsegVB1kkWLw5r1WOpkb1IDoNmMp6MMBL1Dafhn6tAjMCbiEhysjHdgvcg
+         qjXCh6TSGCWHGzAtpDjn76LUh7+YodAvwAoXFoOwiZw62tCGGCpzdJbLnPjviw1Ijt
+         4JH0CIkzEQ2dBYQOx1pfuWrVGfF8ScKjo7nmyYNrrTs1iZwgtTX+pf8cSh/Ur3wOGP
+         VICIa03kjUN78Q+ym/NVdpelWd829HOdy+AdVmrjzUI8C4aKnpqx6Gw6xGI+aLIHuQ
+         TlyuqQW4WtQIg==
+Date:   Mon, 29 Aug 2022 12:09:24 +0200
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
- domain
-Message-ID: <YwyMx+bncFkEtjlT@lpieralisi>
-References: <20220709161858.15031-1-pali@kernel.org>
+Subject: Re: [PATCH v5 00/20] PCI: dwc: Add generic resources and Baikal-T1
+ support
+Message-ID: <YwyQVAer0YRA406o@lpieralisi>
+References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220709161858.15031-1-pali@kernel.org>
+In-Reply-To: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,142 +67,180 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 09, 2022 at 06:18:58PM +0200, Pali Roh·r wrote:
-> Documentation for irq_domain_remove() says that all mapping within the
-> domain must be disposed prior to domain remove.
+On Mon, Aug 22, 2022 at 09:46:41PM +0300, Serge Semin wrote:
+> This patchset is a third one in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
 > 
-> Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
-> which cause that kernel crashes after unloading driver and trying to read
-> /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
+> [1: Done v5] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
+> Merged: kernel 6.0-rc1
+> [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
+> Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
+> Merged: kernel 6.0-rc1
+> [3: In-review v5] PCI: dwc: Add generic resources and Baikal-T1 support
+> Link: ---you are looking at it---
+> [4: Done v4] dmaengine: dw-edma: Add RP/EP local DMA support
+> Link: https://lore.kernel.org/linux-pci/20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru/
 > 
-> Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-> Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-> Signed-off-by: Pali Roh·r <pali@kernel.org>
-> ---
-> Depends on patch:
-> https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
-
-It does not look like the patch above will be merged therefore you
-need to rebase all dependent patches please.
-
-> Here is the captured kernel crash which happens without this patch:
+> Note it is very recommended to merge the patchsets in the same order as
+> they are listed in the set above in order to have them applied smoothly.
+> Nothing prevents them from being reviewed synchronously though.
 > 
-> $ cat /sys/kernel/debug/irq/irqs/64
-> [  301.571370] 8<--- cut here ---
-> [  301.574496] Unable to handle kernel paging request at virtual address 0a00002a
-> [  301.581736] [0a00002a] *pgd=00000000
-> [  301.585323] Internal error: Oops: 80000005 [#1] SMP ARM
-> [  301.590560] Modules linked in:
+> Originally the patches submitted in this patchset were a part of the series:
+> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> but due to the reviewers requests the series was expanded to about 30
+> patches which made it too bulky for a comfortable review. So I decided to
+> split it up into two patchsets: 2. and 3. in the table above.
+> 
+> Regarding the series content. This patchset is mainly about adding new DW
+> PCIe platform support - Baikal-T1 PCIe of DW PCIe v4.60a IP-core. But a
+> set of feature-reach preparations are done first. It starts from
+> converting the currently available DT-schema into a more flexible schemas
+> hierarchy with separately defined regs, clocks, resets and interrupts
+> properties. As a result the common schema can be easily re-used by all the
+> currently available platforms while the named properties above can be
+> either re-defined or used as is if the platforms support they. In the
+> framework of that modification we also suggest to add a set of generic
+> regs, clocks, resets and interrupts resource names in accordance with what
+> the DW PCIe hardware reference manual describes and what the DW PCIe core
+> driver already expects to be specified. Thus the new platform driver will
+> be able to re-use the common resources infrastructure.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Rename 'syscon' property to 'baikal,bt1-syscon'. (@Rob)
+> - Move the iATU region selection procedure into a helper function (@Rob).
+> - Rebase from kernel v5.17 onto v5.18-rc3 since the later kernel has
+>   already DT bindings converted. (@Rob)
+> - Use 'definitions' property instead of the '$defs' one. It fixes the
+>   dt-validate error: 'X is not of type array.'
+> - Drop 'interrupts' and 'interrupt-names' property from being required
+>   for the native DW PCIe host.
+> - Evaluate the 'snps,dw-pcie-common.yaml' schema in the
+>   'socionext,uniphier-pcie-ep.yaml' DT-bindings since the later has
+>   platform-specific names defined.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
+> Changelog v3:
+> - Split up the patch "dt-bindings: PCI: dwc: Define common and native DT
+>   bindings" into a series of modifications. (@Rob)
+> - Detach this series of the patches into a dedicated patchset.
+> - Add a new feature patch: "PCI: dwc: Introduce generic controller
+>   capabilities interface".
+> - Add a new feature patch: "PCI: dwc: Introduce generic resources getter".
+> - Add a new cleanup patch: "PCI: dwc: Combine iATU detection procedures".
+> - Add a method to at least request the generic clocks and resets. (@Rob)
+> - Add GPIO-based PERST# signal support to the core module.
+> - Redefine Baikal-T1 PCIe host bridge config space accessors with the
+>   pci_generic_config_read32() and pci_generic_config_write32() methods.
+>   (@Rob)
+> - Drop synonymous from the names list in the common DT-schema since the
+>   device sub-schemas create their own enumerations anyway.
+> - Rebase onto kernel v5.18.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v4:
+> - Drop PCIBIOS_* macros usage. (@Rob)
+> - Add "static const" to the dw_pcie_ops and dw_pcie_host_ops structure
+>   instances. (@Bjorn)
+> - Rename bt1_pcie_dw_ops to bt1_pcie_ops. (@Bjorn)
+> - Rename bt1_pcie_ops to bt1_pci_ops. (@Bjorn)
+> - Use start_link/stop_link suffixes in the Baikal-T1 PCIe
+>   start/stop link callbacks. (@Bjorn)
+> - Change the get_res() method suffix to being get_resources(). (@Bjorn)
+> - Change *_{add,del}_dw_port() method to *_{add,del}_port(). (@Bjorn)
+> - Drop dma_coerce_mask_and_coherent() applied to the PCI host bridge
+>   kernel device instance. (@Bjorn)
+> - Add the comment above the dma_set_mask_and_coherent() method usage
+>   regarding the controller eDMA feature. (@Bjorn)
+> - Fix the comment above the core reset controls assertion. (@Bjorn)
+> - Replace delays and timeout numeric literals with macros. (@Bjorn)
+> - Convert the method name from dw_pcie_get_res() to
+>   dw_pcie_get_resources(). (@Bjorn)
+> - Rebase onto the kernel v5.19-rcX.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220728143427.13617-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v5:
+> - Add a note about having line-based PHY phandles order. (@Rob)
+> - Prefer 'pcie[0-9]+' PHY-names over the rest of the cases. (@Rob)
+> - Drop generic fallback names from the Baikal-T1 compatible property
+>   constraints. (@Rob)
+> - Define ordered {reg,interrupt,clock,reset}-names Baikal-T1 PCIe
+>   properties. (@Rob)
+> - Drop minItems from the Baikal-T1 PCIe clocks and reset properties,
+>   since it equals to the maxItems for them.
+> - Drop num-ob-windows and num-ib-windows properties constraint from
+>   Baikal-T1 PCIe bindings. (@Rob)
+> - Add a note about having line-based PHY phandles order. (@Rob)
+> - Prefer 'pcie[0-9]+' PHY-names over the rest of the cases. (@Rob)
+> - Add platform-specific reg/interrupt/clock/reset names to the generic
+>   schema, but mark them as deprecated.
+> - Add new patches:
+>   dt-bindings: visconti-pcie: Fix interrupts array max constraints
+>   dt-bindings: imx6q-pcie: Fix clock names for imx6sx and imx8mq
 
-Timing information is not relevant, remove it.
+Are these two new patches linked to the remainder of the series ?
 
 Thanks,
 Lorenzo
 
-> [  301.593621] CPU: 1 PID: 4641 Comm: cat Not tainted 5.16.0-rc1+ #192
-> [  301.599905] Hardware name: Marvell Armada 380/385 (Device Tree)
-> [  301.605836] PC is at 0xa00002a
-> [  301.608896] LR is at irq_debug_show+0x210/0x2d4
-> [  301.613440] pc : [<0a00002a>]    lr : [<c018ca40>]    psr: 200000b3
-> [  301.619721] sp : c797fdd8  ip : 0000000b  fp : 0a00002b
-> [  301.624957] r10: c0d9a364  r9 : 00000001  r8 : 00000000
-> [  301.630192] r7 : c18fee18  r6 : c0da2a74  r5 : c18fee00  r4 : c66ec050
-> [  301.636734] r3 : 00000001  r2 : c18fee18  r1 : 00000000  r0 : c66ec050
-> [  301.643275] Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
-> [  301.650689] Control: 10c5387d  Table: 0790c04a  DAC: 00000051
-> [  301.656446] Register r0 information: slab seq_file start c66ec050 pointer offset 0
-> [  301.664040] Register r1 information: NULL pointer
-> [  301.668755] Register r2 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-> [  301.677480] Register r3 information: non-paged memory
-> [  301.682543] Register r4 information: slab seq_file start c66ec050 pointer offset 0
-> [  301.690133] Register r5 information: slab kmalloc-256 start c18fee00 pointer offset 0 size 256
-> [  301.698770] Register r6 information: non-slab/vmalloc memory
-> [  301.704442] Register r7 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-> [  301.713165] Register r8 information: NULL pointer
-> [  301.717879] Register r9 information: non-paged memory
-> [  301.722941] Register r10 information: non-slab/vmalloc memory
-> [  301.728699] Register r11 information: non-paged memory
-> [  301.733848] Register r12 information: non-paged memory
-> [  301.738997] Process cat (pid: 4641, stack limit = 0xf591166e)
-> [  301.744756] Stack: (0xc797fdd8 to 0xc7980000)
-> [  301.749123] fdc0:                                                       0000000a 830d3f3e
-> [  301.757321] fde0: c1004f48 c0d9a374 c7a9cc10 c66ec050 00000000 c88af900 c797fe80 7ffff000
-> [  301.765518] fe00: 00400cc0 c66ec068 00000001 c02c5cb8 00000000 00000000 c66ec078 c797fe68
-> [  301.773715] fe20: c1cdf6c0 c7a9cc10 ffffffea c88af900 00000010 00000000 00000000 c88af900
-> [  301.781911] fe40: c1004f48 c797ff78 00001000 00004004 c03efcb8 c02c6100 00001000 00000000
-> [  301.790108] fe60: bec73e04 00001000 00000000 00000000 00001000 c797fe60 00000001 00000000
-> [  301.798304] fe80: c88af900 00000000 00000000 00000000 00000000 00000000 00000000 40040000
-> [  301.806501] fea0: 00000000 00000000 c1004f48 830d3f3e c88af900 c02c6018 c1c7a770 bec73e04
-> [  301.814697] fec0: 00001000 c797ff78 00000001 c03efd0c 00001000 c88af900 00000000 bec73e04
-> [  301.822894] fee0: c1004f48 c797ff78 00000001 c029c728 c887ca20 01100cca 0000004f 0045f000
-> [  301.831091] ff00: 00000254 c790c010 c790c010 00000000 00000000 00000000 c5f6117c eeece9b8
-> [  301.839288] ff20: 00000000 830d3f3e 00000000 c797ffb0 c79fc000 80000007 0045f5b8 00000254
-> [  301.847484] ff40: c79fc040 00000004 c887ca20 830d3f3e 00000000 c1004f48 c88af900 00000000
-> [  301.855681] ff60: 00000000 c88af900 bec73e04 00001000 00000000 c029cd68 00000000 00000000
-> [  301.863877] ff80: 00000000 830d3f3e 00000000 00000000 01000000 00000003 c0100284 c1b8abc0
-> [  301.872074] ffa0: 00000003 c0100060 00000000 00000000 00000003 bec73e04 00001000 00000000
-> [  301.880270] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-> [  301.888468] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410 60000010 00000003 00000000 00000000
-> [  301.896666] [<c018ca40>] (irq_debug_show) from [<c02c5cb8>] (seq_read_iter+0x1a4/0x504)
-> [  301.904700] [<c02c5cb8>] (seq_read_iter) from [<c02c6100>] (seq_read+0xe8/0x12c)
-> [  301.912117] [<c02c6100>] (seq_read) from [<c03efd0c>] (full_proxy_read+0x54/0x70)
-> [  301.919623] [<c03efd0c>] (full_proxy_read) from [<c029c728>] (vfs_read+0xa0/0x2c8)
-> [  301.927214] [<c029c728>] (vfs_read) from [<c029cd68>] (ksys_read+0x58/0xd0)
-> [  301.934195] [<c029cd68>] (ksys_read) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
-> [  301.941785] Exception stack(0xc797ffa8 to 0xc797fff0)
-> [  301.946849] ffa0:                   00000000 00000000 00000003 bec73e04 00001000 00000000
-> [  301.955045] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-> [  301.963241] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410
-> [  301.968304] Code: bad PC value
-> [  301.971365] ---[ end trace fe25fd26d042b605 ]---
-> [  301.975992] Kernel panic - not syncing: Fatal exception
-> [  301.981229] CPU0: stopping
-> [  301.983946] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D           5.16.0-rc1+ #192
-> [  301.991884] Hardware name: Marvell Armada 380/385 (Device Tree)
-> [  301.997817] [<c010e120>] (unwind_backtrace) from [<c010a170>] (show_stack+0x10/0x14)
-> [  302.005587] [<c010a170>] (show_stack) from [<c0bbf108>] (dump_stack_lvl+0x40/0x4c)
-> [  302.013179] [<c0bbf108>] (dump_stack_lvl) from [<c010c3f8>] (do_handle_IPI+0xf4/0x128)
-> [  302.021117] [<c010c3f8>] (do_handle_IPI) from [<c010c444>] (ipi_handler+0x18/0x20)
-> [  302.028707] [<c010c444>] (ipi_handler) from [<c0185c5c>] (handle_percpu_devid_irq+0x78/0x124)
-> [  302.037256] [<c0185c5c>] (handle_percpu_devid_irq) from [<c017ffb8>] (generic_handle_domain_irq+0x44/0x88)
-> [  302.046938] [<c017ffb8>] (generic_handle_domain_irq) from [<c05f051c>] (gic_handle_irq+0x74/0x88)
-> [  302.055839] [<c05f051c>] (gic_handle_irq) from [<c0bc7ef8>] (generic_handle_arch_irq+0x34/0x44)
-> [  302.064564] [<c0bc7ef8>] (generic_handle_arch_irq) from [<c0100b10>] (__irq_svc+0x50/0x68)
-> [  302.072851] Exception stack(0xc1001f00 to 0xc1001f48)
-> [  302.077916] 1f00: 000d6830 00000000 00000001 c0116be0 c1004f90 c1004fd4 00000001 00000000
-> [  302.086114] 1f20: c1004f48 c0f5d2a8 c1009e80 00000000 00000000 c1001f50 c01076f4 c01076f8
-> [  302.094309] 1f40: 60000013 ffffffff
-> [  302.097804] [<c0100b10>] (__irq_svc) from [<c01076f8>] (arch_cpu_idle+0x38/0x3c)
-> [  302.105223] [<c01076f8>] (arch_cpu_idle) from [<c0bcf3a0>] (default_idle_call+0x1c/0x2c)
-> [  302.113338] [<c0bcf3a0>] (default_idle_call) from [<c015db34>] (do_idle+0x1c8/0x218)
-> [  302.121106] [<c015db34>] (do_idle) from [<c015de40>] (cpu_startup_entry+0x18/0x20)
-> [  302.128697] [<c015de40>] (cpu_startup_entry) from [<c0f00fec>] (start_kernel+0x650/0x694)
-> [  302.136901] Rebooting in 3 seconds..
-> ---
->  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> - Move the patch:
+>   PCI: dwc: Introduce dma-ranges property support for RC-host
+>   from the previous patchset in here. (@Bjorn)
+> - Rebase onto the kernel v6.0-rc2.
 > 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 31f53a019b8f..951030052358 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -1713,8 +1713,15 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
->  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
->  
->  		/* Remove IRQ domains. */
-> -		if (port->intx_irq_domain)
-> +		if (port->intx_irq_domain) {
-> +			int virq, j;
-> +			for (j = 0; j < PCI_NUM_INTX; j++) {
-> +				virq = irq_find_mapping(port->intx_irq_domain, j);
-> +				if (virq > 0)
-> +					irq_dispose_mapping(virq);
-> +			}
->  			irq_domain_remove(port->intx_irq_domain);
-> +		}
->  
->  		/* Free config space for emulated root bridge. */
->  		pci_bridge_emul_cleanup(&port->bridge);
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: "Krzysztof Wilczy≈Ñski" <kw@linux.com>
+> Cc: Frank Li <Frank.Li@nxp.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: linux-pci@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (20):
+>   dt-bindings: imx6q-pcie: Fix clock names for imx6sx and imx8mq
+>   dt-bindings: visconti-pcie: Fix interrupts array max constraints
+>   dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
+>   dt-bindings: PCI: dwc: Remove bus node from the examples
+>   dt-bindings: PCI: dwc: Add phys/phy-names common properties
+>   dt-bindings: PCI: dwc: Add max-link-speed common property
+>   dt-bindings: PCI: dwc: Apply generic schema for generic device only
+>   dt-bindings: PCI: dwc: Add max-functions EP property
+>   dt-bindings: PCI: dwc: Add interrupts/interrupt-names common
+>     properties
+>   dt-bindings: PCI: dwc: Add reg/reg-names common properties
+>   dt-bindings: PCI: dwc: Add clocks/resets common properties
+>   dt-bindings: PCI: dwc: Add dma-coherent property
+>   dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
+>   dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
+>   PCI: dwc: Introduce dma-ranges property support for RC-host
+>   PCI: dwc: Introduce generic controller capabilities interface
+>   PCI: dwc: Introduce generic resources getter
+>   PCI: dwc: Combine iATU detection procedures
+>   PCI: dwc: Introduce generic platform clocks and resets
+>   PCI: dwc: Add Baikal-T1 PCIe controller support
+> 
+>  .../bindings/pci/baikal,bt1-pcie.yaml         | 153 ++++
+>  .../bindings/pci/fsl,imx6q-pcie.yaml          |  47 +-
+>  .../bindings/pci/rockchip-dw-pcie.yaml        |   4 +-
+>  .../bindings/pci/snps,dw-pcie-common.yaml     | 327 +++++++++
+>  .../bindings/pci/snps,dw-pcie-ep.yaml         | 169 +++--
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 236 +++++--
+>  .../bindings/pci/toshiba,visconti-pcie.yaml   |   7 +-
+>  drivers/pci/controller/dwc/Kconfig            |   9 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-bt1.c         | 653 ++++++++++++++++++
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  30 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  47 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  | 262 +++++--
+>  drivers/pci/controller/dwc/pcie-designware.h  |  63 +-
+>  14 files changed, 1785 insertions(+), 223 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-bt1.c
+> 
 > -- 
-> 2.20.1
+> 2.35.1
 > 
