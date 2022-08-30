@@ -2,307 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB7655A6460
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 15:07:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0766B5A64BC
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 15:30:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbiH3NHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 09:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
+        id S229699AbiH3NaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 09:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiH3NHh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 09:07:37 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D5B101ED
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 06:07:34 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1oT0xX-00081U-Ii; Tue, 30 Aug 2022 15:07:15 +0200
-Message-ID: <06d256719a2ac5bf22ce80bb30b8320eec8fc1d9.camel@pengutronix.de>
-Subject: Re: [PATCH v5 6/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
- support
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, p.zabel@pengutronix.de,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        shawnguo@kernel.org, vkoul@kernel.org,
-        alexander.stein@ew.tq-group.com, marex@denx.de,
-        richard.leitner@linux.dev
-Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Date:   Tue, 30 Aug 2022 15:07:13 +0200
-In-Reply-To: <1661845564-11373-7-git-send-email-hongxing.zhu@nxp.com>
-References: <1661845564-11373-1-git-send-email-hongxing.zhu@nxp.com>
-         <1661845564-11373-7-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S230289AbiH3N35 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 09:29:57 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2079.outbound.protection.outlook.com [40.107.223.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D60CDA;
+        Tue, 30 Aug 2022 06:29:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aLD7X0TuU8C70y4Sa8IZiX3ro7fbWwH27L8xGNUzlVWLYOkN7XWsIecsgz9MvRZ8zZLsLSC9ceNpxzUUHiRolzU7FQwfjqIM4+xjPILu/8wrn2tvXAAosIQiv9073hQK9VHlIbr6t0D5Ufxqr9+bbkIFLw5JNvIPvVcN0Kdsx2hNWQk+helHlkh2n07DoWhC8ZYzIKPQrV8IqeYXqFedDuTpM0KT22Z8JJotKCJE1DQabo8v92BxlK9UnfcIJKwoUZGTi8raa6fhgHH9dYVN7cr+GuOfUkBZ7ILzIavK94BMYUNjhGV9AOFJ8QwCU45mMgdqkC+FbXkWqZq+z0kmhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x2BtLmgTXaH+t4jDVNPEslmtt/G3aaPQePI/FvtlAvY=;
+ b=ix29UnsVbHI4uW3f6gjRVS3P4XIJtPfFTHNaqTV0MRlxfDcT28PAn5Ql2p3BQc7Gca80tEJDItrkahPwAn1v8ErQQ8Bi+dWFoomuhkSBI/72eQmp47qxRBJg2BIZAVwBI+qor/IJm8wwXiFTpLeA/Pl350Yp80Cwxzd3ux+AezdBFyM3jKe6ey+c1HIb4nVYxxzy+RLby5WzCNQqBGRt2tuCyXkEcadSpXnho/6AyArPxI3tfwI3pMbt9L2Dx0n/X53hm2NWOqiN+aqHfQGu8kJW6pVyxs21nBsvFjiKyEsOWJbauTL7IGw6+M+N9hfYciQUgMshkZMUCn5UXFkGCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x2BtLmgTXaH+t4jDVNPEslmtt/G3aaPQePI/FvtlAvY=;
+ b=BfIITQSoTAfR/Nj3h9wQkixt2TrS1Riw+dfUtgvm2ZC+qHF/whlzu8wEQWq6vJ5TGwS1vG466H472CF4g1oVDUgSsm1QcXugOUTwAEf2sl/nhee5/+odcdcfBRG8nGvyEiwLj1SLMJVLqgpWC43adkZNNyxBJAI59BiUfNZnJJjI/7MUsqnDnHA6u/KiAbWC2PZIhj2pypDNZAquywuH6XYAqW/JRfLLtontnBkwAqXQcVJRQQUXkKBOFk/RjDN4sSsKNrAue41Uns16B7rcInnDyLHXb9FmkI3gSi+FV1IYkjNMOQEkD8wD7FvFaPdRkOzynTcU+fF3s+UTU1S5Ng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by BN6PR1201MB2467.namprd12.prod.outlook.com (2603:10b6:404:a7::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.21; Tue, 30 Aug
+ 2022 13:29:52 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5%8]) with mapi id 15.20.5566.021; Tue, 30 Aug 2022
+ 13:29:52 +0000
+Date:   Tue, 30 Aug 2022 10:29:50 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Baolu Lu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 07/17] iommu: Try to allocate blocking domain when
+ probing device
+Message-ID: <Yw4Qzif8W53ykR6K@nvidia.com>
+References: <20220826121141.50743-1-baolu.lu@linux.intel.com>
+ <20220826121141.50743-8-baolu.lu@linux.intel.com>
+ <YwjeL2SVmdRpoWb6@nvidia.com>
+ <316f6575-59ea-08e3-aaaf-bc1e4f42a574@linux.intel.com>
+ <Ywz3A3tHEzY+Sf7b@nvidia.com>
+ <c7d71936-ea06-3a71-d13a-cedd108413b5@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7d71936-ea06-3a71-d13a-cedd108413b5@linux.intel.com>
+X-ClientProxiedBy: BLAPR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:208:36e::28) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c3860882-9b1d-4573-7b25-08da8a8bb802
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB2467:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4QMVLFU0WHoS/DszF7EB54TwlnbqDUjZUIBx8ju5Zt8/D1mSTtownG2LxwA+qBLZZWY4zy3Pa3pAOAPH8JhGKNB8jiXE212898bfcgOO2o9bp0YpdtA1Ew3LphO5o3SO+WGpmW9MTC6aAztaCZFoOwR7LRxUfXTI0iNVlxtv+vU9OqC15D3srNhXDQHWq9jh57I4bZBbBDKg3XIVioiRPtLKB40QaF31bLYcQSH/Y7bO7Ut7zGH098SFyyaUrOBzInxoQq3lXeTGE73YdRQlkD4kSvlWcGw6q/J2sKx+px9uOneGtGtirI05cB94ogWeprNqg1czvqW6AsDOtnS8C8yxAk/UUs9oTaVVY8AAgf98DlcmIXiaeeLyrD6ZLUJj+pYtlTJ77WtWuAbsyYiSTfb9PpE68LzGczgxLPmYIRmKNQdMOmRUh2s84HoPQa/Z7zGJzdITnq66gpSm2T8zp1PYM68kvaYVt+JLjQc1vhRA9YD6ghXUeucmrSNgVf2oMtnkGEP+bd6XXqaKRnHNrBAO/IU0TrQYHwB3Zory2hCr4zYSnOTtjyeFCIX6JKfGFYegA4Og8SD4suhPhGQ6gmnKtFKFAYr/sX4Pe9VXIraItXioC5zvb1Dkrrzw683akhBgkyK4p2sIupnhpy+j4UBIqdaRY2Rn+LC61tHCa29s9A8PQZhgfSLF32aFkKFkq5ig0b7xQgn+Luk0kD1r+A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(186003)(8936002)(26005)(41300700001)(6506007)(53546011)(83380400001)(6512007)(2616005)(8676002)(7416002)(5660300002)(4326008)(2906002)(66946007)(66476007)(66556008)(54906003)(6486002)(478600001)(6916009)(316002)(86362001)(36756003)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aU7P8ygSAZoTQ6VF87kWyju4EJZsJ+ZZBI+6ZDbrZy8YPwcVp9NpTky9h++k?=
+ =?us-ascii?Q?mkFInbPHsZWkw34nKC/v2jsJ/Ys7z6x1hRDpeynXZtl4iWce1iHFcvw8KABK?=
+ =?us-ascii?Q?mqw2Iik8ePYk0uXGcCf/w6HlZCkA6DdIIdgzGIzgxr04p1WEr1bQgKY5dClg?=
+ =?us-ascii?Q?lLGCCgywuua5vFT05yK3MGG5MFwQDFAK5sEUnADN1j2rtX+zwbNWHolQZoUM?=
+ =?us-ascii?Q?X3Z24OqPHoFVlukQvrtoI2zzEqRkBCEu9Y8VXlq/iSqEPEAKgQenDNTUKwKP?=
+ =?us-ascii?Q?MDr7vSz8Gc9OVP0eigcGkOhUcXu81u2O4nRXp6dtMTFUo+CwTnA0pGAiJyqi?=
+ =?us-ascii?Q?PiQo5dXarsmuTc/uav0ADlC7NO62NZJFlosyQXchQnzWyQCfZLTFBoc/8sqg?=
+ =?us-ascii?Q?Ces0JxmZ/+1QgtZXHFQxxqR3U1flvQOUkXIwjOFCTF5vi6dGednsDQ1ZnIxd?=
+ =?us-ascii?Q?30B16Y2PGeahpECjk496sjdNWtc6p/d2Oz7SBfOgSC4ZHGA8o2Tc0PAS5mkt?=
+ =?us-ascii?Q?eOWkRwBAUUZuoXi02rk6sw7rndMH21Y2targIZ6EqjFZIm8bAiCd0Sj+w94Y?=
+ =?us-ascii?Q?KhYIwB6fIRko9G6pNJr+yBGuAAL/r/ClvupVdOYABdI3uc5UVNQxH68si7zN?=
+ =?us-ascii?Q?D1acjtbFfHns0bk2GIOxZfxdCCAlFMIFIBbM+1o5VXsy7fc4N0VGtxYVJrEq?=
+ =?us-ascii?Q?TlV3/BAG6VmKZ7uhA8gkS4ucZgTfzbSkKb8JCfQFd0TgW9CX6hcph/HQbPpE?=
+ =?us-ascii?Q?JzOs2Vohx4IKquuqD64bXZVKzL5RmclglCDNrF6MhZlIQC6yIOGrI7yE36hm?=
+ =?us-ascii?Q?bwViKL01AdJIzOhqc94PVhMDOP6TPUEO07K9Up8o06SXyonNUURXk2HNNqKM?=
+ =?us-ascii?Q?Zq2duErmgiujWgRuAKogR2+C/bOb9/Ta1p3jkLpJnvC15wl9ueCZ5ryrgRRW?=
+ =?us-ascii?Q?Z/enlB5fjx7dyRmo2m93vFtwLaJ4WGlDPmHlPyVmi8oy8tiOrxKKNRekQySS?=
+ =?us-ascii?Q?MD1UOc3SyLngNV1LB6E2qAqh1joGVWIMcAe0HShYzQJ63Ul6oYwYAXiBPEe0?=
+ =?us-ascii?Q?bpfS5p9tacN03MeOn+1iPn4I6opkJdRYIxizAqbiSF3sFWTQ5nMHRHfRL1cz?=
+ =?us-ascii?Q?p5Gst49dPjIGhIZvzN7VVUCuBA21Cqf2Xti8sWMHGBpfpzMmyEL6uBHvGLFT?=
+ =?us-ascii?Q?nhOC1wdqdUXk0cN2kLGOvFk9y6RFgvvgylP1ohOwQu+1MDQG24LeV8pzD7mL?=
+ =?us-ascii?Q?5fLRosj3ZIqOXe7Ziwq5+0TPiIGO4l0G9HL2Hlcz0J/JCTnZZ9/tKQB5WwTe?=
+ =?us-ascii?Q?dagmWInRND007CFSaI8kUHUU/uvuh/VDj84KcS3JBAxKCz/RMJXvzHrRQjIz?=
+ =?us-ascii?Q?4owWPQrnslp0l9h582bfs4XV1psQpZ7QVwwuXthEsDv2e9O2jDt1ME6Bm4ED?=
+ =?us-ascii?Q?fzGG/0CyYQ8alN7CNjGY0YF6jb+vR9FXdYIUqGRrsBWAmkBEqhQnrzmPeiPM?=
+ =?us-ascii?Q?8KAeVIm+xIslVZ68e8alUMMTU+VgoXnR+58zI1vcqMmLRDwRSt027SanXDwn?=
+ =?us-ascii?Q?7KaKGkIH0FbiJmg0BE+0GzqjDx7p02iwm+tWTI6C?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3860882-9b1d-4573-7b25-08da8a8bb802
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2022 13:29:52.0010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +JTCPHWmxhWtehUlUsk52DG/kWbllhqj0YktMo97/sfakAgmxDAa/qi52+Ch0oW/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB2467
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Dienstag, dem 30.08.2022 um 15:46 +0800 schrieb Richard Zhu:
-> Add i.MX8MP PCIe PHY support.
+On Tue, Aug 30, 2022 at 09:46:01AM +0800, Baolu Lu wrote:
+> On 2022/8/30 01:27, Jason Gunthorpe wrote:
+> > On Mon, Aug 29, 2022 at 11:40:24AM +0800, Baolu Lu wrote:
+> > > On 2022/8/26 22:52, Jason Gunthorpe wrote:
+> > > > On Fri, Aug 26, 2022 at 08:11:31PM +0800, Lu Baolu wrote:
+> > > > > Allocate the blocking domain when probing devices if the driver supports
+> > > > > blocking domain allocation. Otherwise, revert to the previous behavior,
+> > > > > that is, use UNMANAGED domain instead when the blocking domain is needed.
+> > > > > 
+> > > > > Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> > > > > Tested-by: Zhangfei Gao<zhangfei.gao@linaro.org>
+> > > > > Tested-by: Tony Zhu<tony.zhu@intel.com>
+> > > > > ---
+> > > > >    drivers/iommu/iommu.c | 29 +++++++++++++++++------------
+> > > > >    1 file changed, 17 insertions(+), 12 deletions(-)
+> > > > This seems like a lot of overhead to allocate these things for every
+> > > > group?
+> > > > 
+> > > > Why not add a simple refcount on the blocking domain instead and
+> > > > allocate the domain on the pasid attach like we do for ownership?
+> > > 
+> > > I am working towards implementing static instance of blocking domain for
+> > > each IOMMU driver, and then, there's no much overhead to allocate it in
+> > > the probing device path.
+> > 
+> > Well, I thought about that and I don't think we can get
+> > there in a short order.
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Tested-by: Marek Vasut <marex@denx.de>
-> Tested-by: Richard Leitner <richard.leitner@skidata.com>
-> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 137 +++++++++++++--------
->  1 file changed, 89 insertions(+), 48 deletions(-)
+> Yes. Fair enough.
 > 
-> diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> index ad7d2edfc414..c76e3a1a5f51 100644
-> --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> @@ -11,6 +11,9 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
->  #include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_device.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> @@ -31,12 +34,10 @@
->  #define IMX8MM_PCIE_PHY_CMN_REG065	0x194
->  #define  ANA_AUX_RX_TERM		(BIT(7) | BIT(4))
->  #define  ANA_AUX_TX_LVL			GENMASK(3, 0)
-> -#define IMX8MM_PCIE_PHY_CMN_REG75	0x1D4
-> -#define  PCIE_PHY_CMN_REG75_PLL_DONE	0x3
-> +#define IMX8MM_PCIE_PHY_CMN_REG075	0x1D4
-> +#define  ANA_PLL_DONE			0x3
->  #define PCIE_PHY_TRSV_REG5		0x414
-> -#define  PCIE_PHY_TRSV_REG5_GEN1_DEEMP	0x2D
->  #define PCIE_PHY_TRSV_REG6		0x418
-> -#define  PCIE_PHY_TRSV_REG6_GEN2_DEEMP	0xF
->  
->  #define IMX8MM_GPR_PCIE_REF_CLK_SEL	GENMASK(25, 24)
->  #define IMX8MM_GPR_PCIE_REF_CLK_PLL	FIELD_PREP(IMX8MM_GPR_PCIE_REF_CLK_SEL, 0x3)
-> @@ -47,16 +48,23 @@
->  #define IMX8MM_GPR_PCIE_SSC_EN		BIT(16)
->  #define IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE	BIT(9)
->  
-> +enum imx8_pcie_phy_type {
-> +	IMX8MM,
-> +	IMX8MP,
-> +};
+> > Would rather you progress this series without
+> > getting entangled in such a big adventure
+> 
+> Agreed. I will drop this patch and add below code in the iommu
+> interface:
+> 
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -3219,6 +3219,26 @@ int iommu_attach_device_pasid(struct iommu_domain
+> *domain,
+>                 return -ENODEV;
+> 
+>         mutex_lock(&group->mutex);
 > +
->  struct imx8_pcie_phy {
->  	void __iomem		*base;
->  	struct clk		*clk;
->  	struct phy		*phy;
->  	struct regmap		*iomuxc_gpr;
->  	struct reset_control	*reset;
-> +	struct reset_control	*perst;
->  	u32			refclk_pad_mode;
->  	u32			tx_deemph_gen1;
->  	u32			tx_deemph_gen2;
->  	bool			clkreq_unused;
-> +	enum imx8_pcie_phy_type	variant;
->  };
->  
->  static int imx8_pcie_phy_init(struct phy *phy)
-> @@ -68,31 +76,20 @@ static int imx8_pcie_phy_init(struct phy *phy)
->  	reset_control_assert(imx8_phy->reset);
->  
->  	pad_mode = imx8_phy->refclk_pad_mode;
-> -	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
-> -			   imx8_phy->clkreq_unused ?
-> -			   0 : IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE);
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_AUX_EN,
-> -			   IMX8MM_GPR_PCIE_AUX_EN);
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_POWER_OFF, 0);
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_SSC_EN, 0);
-> -
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> -			   pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ?
-> -			   IMX8MM_GPR_PCIE_REF_CLK_EXT :
-> -			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
-> -	usleep_range(100, 200);
-> -
-> -	/* Do the PHY common block reset */
-> -	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> -			   IMX8MM_GPR_PCIE_CMN_RST,
-> -			   IMX8MM_GPR_PCIE_CMN_RST);
-> -	usleep_range(200, 500);
-> +	switch (imx8_phy->variant) {
-> +	case IMX8MM:
-> +		/* Tune PHY de-emphasis setting to pass PCIe compliance. */
-> +		if (imx8_phy->tx_deemph_gen1)
-> +			writel(imx8_phy->tx_deemph_gen1,
-> +			       imx8_phy->base + PCIE_PHY_TRSV_REG5);
-> +		if (imx8_phy->tx_deemph_gen2)
-> +			writel(imx8_phy->tx_deemph_gen2,
-> +			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
-> +		break;
-> +	case IMX8MP:
-> +		reset_control_assert(imx8_phy->perst);
-> +		break;
-> +	}
->  
->  	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ||
->  	    pad_mode == IMX8_PCIE_REFCLK_PAD_UNUSED) {
-> @@ -120,20 +117,44 @@ static int imx8_pcie_phy_init(struct phy *phy)
->  		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG065);
->  	}
->  
-> -	/* Tune PHY de-emphasis setting to pass PCIe compliance. */
-> -	if (imx8_phy->tx_deemph_gen1)
-> -		writel(imx8_phy->tx_deemph_gen1,
-> -		       imx8_phy->base + PCIE_PHY_TRSV_REG5);
-> -	if (imx8_phy->tx_deemph_gen2)
-> -		writel(imx8_phy->tx_deemph_gen2,
-> -		       imx8_phy->base + PCIE_PHY_TRSV_REG6);
-> +	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
-> +			   imx8_phy->clkreq_unused ?
-> +			   0 : IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_AUX_EN,
-> +			   IMX8MM_GPR_PCIE_AUX_EN);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_POWER_OFF, 0);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_SSC_EN, 0);
+> +       /*
+> +        * The underlying IOMMU driver needs to support blocking domain
+> +        * allocation and the callback to block DMA transactions with a
+> +        * specific PASID.
+> +        */
+> +       if (!group->blocking_domain) {
+> +               group->blocking_domain = __iommu_domain_alloc(dev->bus,
+> +                               IOMMU_DOMAIN_BLOCKED);
+> +               if (!group->blocking_domain) {
+> +                       ret = -ENODEV;
+> +                       goto out_unlock;
+> +               }
+> +       }
 > +
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +			   pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ?
-> +			   IMX8MM_GPR_PCIE_REF_CLK_EXT :
-> +			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
-> +	usleep_range(100, 200);
+> +       if (!group->blocking_domain->ops->set_dev_pasid) {
+> +               ret = -EOPNOTSUPP;
+> +               goto out_unlock;
+> +       }
 > +
-> +	/* Do the PHY common block reset */
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_CMN_RST,
-> +			   IMX8MM_GPR_PCIE_CMN_RST);
->  
-> -	reset_control_deassert(imx8_phy->reset);
-> +	switch (imx8_phy->variant) {
-> +	case IMX8MP:
-> +		reset_control_deassert(imx8_phy->perst);
-> +		fallthrough;
-> +	case IMX8MM:
-> +		reset_control_deassert(imx8_phy->reset);
-> +		usleep_range(200, 500);
-> +		break;
-> +	}
->  
->  	/* Polling to check the phy is ready or not. */
-> -	ret = readl_poll_timeout(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG75,
-> -				 val, val == PCIE_PHY_CMN_REG75_PLL_DONE,
-> -				 10, 20000);
-> +	ret = readl_poll_timeout(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG075,
-> +				 val, val == ANA_PLL_DONE, 10, 20000);
->  	return ret;
->  }
->  
-> @@ -160,6 +181,13 @@ static const struct phy_ops imx8_pcie_phy_ops = {
->  	.owner		= THIS_MODULE,
->  };
->  
-> +static const struct of_device_id imx8_pcie_phy_of_match[] = {
-> +	{.compatible = "fsl,imx8mm-pcie-phy", .data = (void *)IMX8MM},
-> +	{.compatible = "fsl,imx8mp-pcie-phy", .data = (void *)IMX8MP},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
-> +
->  static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  {
->  	struct phy_provider *phy_provider;
-> @@ -172,6 +200,9 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  	if (!imx8_phy)
->  		return -ENOMEM;
->  
-> +	imx8_phy->variant =
-> +		(enum imx8_pcie_phy_type)of_device_get_match_data(dev);
-> +
->  	/* get PHY refclk pad mode */
->  	of_property_read_u32(np, "fsl,refclk-pad-mode",
->  			     &imx8_phy->refclk_pad_mode);
-> @@ -196,8 +227,16 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  	}
->  
->  	/* Grab GPR config register range */
-> -	imx8_phy->iomuxc_gpr =
-> -		 syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-> +	switch (imx8_phy->variant) {
-> +	case IMX8MM:
-> +		imx8_phy->iomuxc_gpr =
-> +			 syscon_regmap_lookup_by_compatible("fsl,imx8mm-iomuxc-gpr");
-> +		break;
-> +	case IMX8MP:
-> +		imx8_phy->iomuxc_gpr =
-> +			 syscon_regmap_lookup_by_compatible("fsl,imx8mp-iomuxc-gpr");
-> +		break;
-> +	}
+>         curr = xa_cmpxchg(&group->pasid_array, pasid, NULL, domain,
+> GFP_KERNEL);
+>         if (curr) {
+>                 ret = xa_err(curr) ? : -EBUSY;
+> 
+> Currently both ARM SMMUv3 and VT-d drivers use static blocking domain.
+> Hence I didn't use a refcount for blocking domain release here.
 
-Oh, I had a real phandle in DT in mind for this, but I see how this
-would be hard to introduce in a backward compatible manner for the 8MM.
-At least this way it is fully contained in the driver and doesn't leak
-into DT compatibles.
+I don't think that works in the general case, you can't just destroy
+what is in group->blocking_domain..
 
-Maybe we could make this a little nicer by just having an const array
-of iomux syscon compatibles indexed by imx8_phy->variant, to avoid the
-switch and the resulting code (almost-)duplication.
+Maybe all of this is just the good reason to go to a simple
+device->ops->remove_dev_pasid() callback and forget about blocking
+domain here.
 
-Regards,
-Lucas
-
->  	if (IS_ERR(imx8_phy->iomuxc_gpr)) {
->  		dev_err(dev, "unable to find iomuxc registers\n");
->  		return PTR_ERR(imx8_phy->iomuxc_gpr);
-> @@ -208,6 +247,14 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  		dev_err(dev, "Failed to get PCIEPHY reset control\n");
->  		return PTR_ERR(imx8_phy->reset);
->  	}
-> +	if (imx8_phy->variant == IMX8MP) {
-> +		imx8_phy->perst =
-> +			devm_reset_control_get_exclusive(dev, "perst");
-> +		if (IS_ERR(imx8_phy->perst)) {
-> +			dev_err(dev, "Failed to get PCIE PHY PERST control\n");
-> +			return PTR_ERR(imx8_phy->perst);
-> +		}
-> +	}
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	imx8_phy->base = devm_ioremap_resource(dev, res);
-> @@ -225,12 +272,6 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  	return PTR_ERR_OR_ZERO(phy_provider);
->  }
->  
-> -static const struct of_device_id imx8_pcie_phy_of_match[] = {
-> -	{.compatible = "fsl,imx8mm-pcie-phy",},
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
-> -
->  static struct platform_driver imx8_pcie_phy_driver = {
->  	.probe	= imx8_pcie_phy_probe,
->  	.driver = {
-
-
+Jason
