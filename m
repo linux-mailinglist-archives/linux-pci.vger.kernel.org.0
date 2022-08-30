@@ -2,109 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 657395A6113
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 12:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C175A6115
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 12:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbiH3KtS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 06:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50450 "EHLO
+        id S229794AbiH3KtT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 06:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiH3KtR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 06:49:17 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937E4DDB62;
-        Tue, 30 Aug 2022 03:49:15 -0700 (PDT)
+        with ESMTP id S229775AbiH3KtS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 06:49:18 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDB4DF4C2;
+        Tue, 30 Aug 2022 03:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661856555; x=1693392555;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nccjUybTT96SnZWYYYafTO6dYVit851GuJJi+EmcEcc=;
-  b=loffASku4lKNkvE9ieqVTa/vJFjjqaCwcLBs9e9B7sQqcwGVJMW3/8/R
-   uS5p5CVd8fO0OXJhQd9fIG/FTSxe6htgeqV9/zwTMs46cD/YCl7DVHSF5
-   lod+GQ0n2mgcIdb3XK9PWbfNQro0iHAz3Evk3O94T5z6DyP+mZKrMxw/7
-   nENGrn/4UVJk5uP+Imu8vRBGxqG6RRSKHe4rCjSTXo1ONz/8/bwlm5YGE
-   +MYn+prfauoPd+7lVrw/aw98aDRxhqDT8c3eq6yxI8M+UzhOjKRZ0NJYS
-   6vkNAmluxMYSFojkUFbC+albUx6hTMlZGkNqAWaYe8cJDY5vmtIGmoYVg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="274891524"
+  t=1661856556; x=1693392556;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=TUQ7avMuLxhf37gvjWMg7acpWzikzJL0j5/UqprSQsU=;
+  b=asj4GmMeODMHhG6VJQAf4xzI3RmH/Temr/drCTi9YVraDXsfpENwcKCq
+   JTKkvi+XpqXTJH80gVCtLU11WWCGb3I9tWzX4UhKkmZHpR9R98APbqmJo
+   3wM0bvAfbbgierXJPl+tb4FXQUHKJJV7hn4ccQB/TCj28IKzN1B1D8XMf
+   KqfxHcXIkikK8hSdA+09prU7HUGpRYMKDKVIvwAFXsfP2behE+jSBAtwC
+   j3sJjnBPHtHd2AWvLdxarfIrNbT8EgV4AFlbfbdCFYas6cUcywo69ACDL
+   DBRcVLdemPKOKnvlYfsX9uLv/QPlLnZYMB199hWQmNGQcKMJaR3UU9R6V
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="278160876"
 X-IronPort-AV: E=Sophos;i="5.93,274,1654585200"; 
-   d="scan'208";a="274891524"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 03:49:15 -0700
+   d="scan'208";a="278160876"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 03:49:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,274,1654585200"; 
-   d="scan'208";a="787453477"
+   d="scan'208";a="607795711"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 30 Aug 2022 03:49:14 -0700
+  by orsmga007.jf.intel.com with ESMTP; 30 Aug 2022 03:49:16 -0700
 Received: from rjingar-desk5.amr.corp.intel.com (bdsebast-mobl2.amr.corp.intel.com [10.209.149.131])
-        by linux.intel.com (Postfix) with ESMTP id A3268580871;
-        Tue, 30 Aug 2022 03:49:14 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 0BBCF5808F0;
+        Tue, 30 Aug 2022 03:49:16 -0700 (PDT)
 From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
 To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
 Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [RESEND PATCH v3 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
-Date:   Tue, 30 Aug 2022 03:49:12 -0700
-Message-Id: <20220830104913.1620539-1-rajvi.jingar@linux.intel.com>
+Subject: [RESEND PATCH v3 2/2] PCI/PTM: fix to maintain pci_dev->ptm_enabled
+Date:   Tue, 30 Aug 2022 03:49:13 -0700
+Message-Id: <20220830104913.1620539-2-rajvi.jingar@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220830104913.1620539-1-rajvi.jingar@linux.intel.com>
+References: <20220830104913.1620539-1-rajvi.jingar@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The state of the device is saved during pci_pm_suspend_noirq(), if it
-has not already been saved, regardless of the skip_bus_pm flag value. So
-skip_bus_pm check is removed before saving the device state.
+pci_dev->ptm_enabled needs to be maintained to reflect the current PTM
+state of the device. In pci_ptm_disable(), clear ptm_enabled from
+'struct pci_dev' on disabling PTM state for the device.
+In pci_restore_ptm_state(), set dev->ptm_enabled based on the restored
+PTM state of the device.
+
+In pci_ptm_disable(), perform ptm_enabled check to avoid config space
+access in case if PTM is already disabled for the device. ptm_enabled
+won't be set for non-PCIe devices so pci_is_pcie(dev) check is not
+needed anymore.
 
 Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- v1->v2: no change
- v2->v3: no change
+ v1->v2:
+   - add ptm_enabled check in pci_ptm_disable().
+   - set the dev->ptm_enabled value in pci_restore_ptm_state().
+ v2->v3:
+   - remove pci_is_pcie(dev) check in pci_ptm_disable().
+   - add Reviewed-by tag in commit message
 ---
- drivers/pci/pci-driver.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pci/pcie/ptm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 49238ddd39ee..1f64de3e5280 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -867,20 +867,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
- 		}
- 	}
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 368a254e3124..1ce241d4538f 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -34,7 +34,7 @@ void pci_disable_ptm(struct pci_dev *dev)
+ 	int ptm;
+ 	u16 ctrl;
  
--	if (pci_dev->skip_bus_pm) {
-+	if (!pci_dev->state_saved) {
-+		pci_save_state(pci_dev);
- 		/*
--		 * Either the device is a bridge with a child in D0 below it, or
--		 * the function is running for the second time in a row without
--		 * going through full resume, which is possible only during
--		 * suspend-to-idle in a spurious wakeup case.  The device should
--		 * be in D0 at this point, but if it is a bridge, it may be
--		 * necessary to save its state.
-+		 * If the device is a bridge with a child in D0 below it, it needs to
-+		 * stay in D0, so check skip_bus_pm to avoid putting it into a
-+		 * low-power state in that case.
- 		 */
--		if (!pci_dev->state_saved)
--			pci_save_state(pci_dev);
--	} else if (!pci_dev->state_saved) {
--		pci_save_state(pci_dev);
--		if (pci_power_manageable(pci_dev))
-+		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
- 	}
+-	if (!pci_is_pcie(dev))
++	if (!dev->ptm_enabled)
+ 		return;
  
+ 	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+@@ -44,6 +44,7 @@ void pci_disable_ptm(struct pci_dev *dev)
+ 	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
+ 	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
+ 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
++	dev->ptm_enabled = 0;
+ }
+ 
+ void pci_save_ptm_state(struct pci_dev *dev)
+@@ -83,6 +84,7 @@ void pci_restore_ptm_state(struct pci_dev *dev)
+ 
+ 	cap = (u16 *)&save_state->cap.data[0];
+ 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
++	dev->ptm_enabled = !!(*cap & PCI_PTM_CTRL_ENABLE);
+ }
+ 
+ void pci_ptm_init(struct pci_dev *dev)
 -- 
 2.25.1
 
