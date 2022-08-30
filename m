@@ -2,117 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DDE5A6645
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 16:27:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323C05A66DB
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 17:05:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiH3O1O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 10:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+        id S229968AbiH3PFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 11:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiH3O1N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 10:27:13 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68855BFC44
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 07:27:12 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id se27so14797249ejb.8
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 07:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date;
-        bh=VemgyqMjEaxGRFsa79+ERn9BrIYgjBTiK6GtMJc7m+8=;
-        b=oprAzxf9avqlXrCJQ0JgDHuxZld2YaxDeqoVzglmdzrwIU1M0NiYgQzn3CkIICucg8
-         Cue2m3U02fu5fsFeLwfPCp/Ywcft0ARYoj8S0/yvyjmCA8g0tZJXATkxLJnYwh+Vr4pw
-         ECFBkbwKtlntSOXGYep+DH61ubeH3vwtFI1b935aTkxmyMHcKv5hWLSCVfs1A6JgTlka
-         DTLlFOsU6Wvo1qoPznrdwKxYMHNoeKFjFe2/CRpLz26r3DipZzdzO9DBhUjWF3yVth5b
-         Ku9H+oxHxnALLl0RLOldSSZY4zBo/mam7SECUTkQPFRCDgS5Ms64dp8ZKQLuFsd88Onr
-         SA3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=VemgyqMjEaxGRFsa79+ERn9BrIYgjBTiK6GtMJc7m+8=;
-        b=BYt+Z+0/AhSe/4hRRuq94yGbSHLq8ZY/xMyzN5Q1DSx1MvwVI6LDcQpsLBMGTZEffr
-         XGcmJEV2df7oZGkY2SDV0B5yrnITxKOFU2CsYiM6/9CYYJ8oMgTSDl61WSN10orO6hEY
-         BlJB8uwoAd9gZzEA+TGrTr7qCAGw551EP0uCjIJwuKpXAllg+CUzZamBYRgNsi44SAYW
-         5HwkeKh/brA1dkvOqpV90F0egWPJftjhPFZzzG3FPnH9/vUKAJCTTB40g9zbdom+Oegv
-         iltr4rCmkI+BlyPYwsgC3s5VTREbykSFd8TQRAoEnIwrQXazIAsyGKwjDqNW8bj3VSnE
-         C7pA==
-X-Gm-Message-State: ACgBeo12wni7vI7yX1miiRbhDN3ZevJx7xZj5C8C9G0UHLcXeGuk71ff
-        LzVCA/gIm03Iq5x9hMxaPuUF8Cacmg7th09GFQvy2seZ3ToNqg==
-X-Google-Smtp-Source: AA6agR4q8SxiZqoIhss14EwpJ/NN9gpPfTNuyssgZxyaMW70eLTbcsYXQkFYVi+qMDjVKVnJFweY7nFktJj58C+lXpU=
-X-Received: by 2002:a17:906:ef90:b0:730:9af7:5702 with SMTP id
- ze16-20020a170906ef9000b007309af75702mr17729152ejb.107.1661869630485; Tue, 30
- Aug 2022 07:27:10 -0700 (PDT)
+        with ESMTP id S230171AbiH3PFk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 11:05:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5267B7A3;
+        Tue, 30 Aug 2022 08:05:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9EAF1B81C54;
+        Tue, 30 Aug 2022 15:05:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A785C433D6;
+        Tue, 30 Aug 2022 15:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661871936;
+        bh=yMaVy0x6QqxmuF5Wk/jBZfLlTnvPKV2GkJFqUxfyPTQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oj29NzCyRA3Onq0evlTicdnxULUjjD0s/EeZsq/WWy45JIzUgYar//6rwD9lalFDN
+         yqUVcMYXdW26CF2dFOn/yQ4wPRz5ZrNOlktJCFs3Lr6ydX73ALmZSpwXx8fsNaGZGh
+         /sBoIH7B4kHFt0LpNGHSQOMQookU2FuPV0d6vwwUZZD4G26yplQDE9a38YnuGXLI0B
+         fMnEGxGO1dHDHdU5FWrMhhUt/2JCtNFt8+m8iBm+TDit5PDnVOmfFjLuTBvVLcw/JF
+         RNh5AYyCvP+THZn32FqOeLD1XH4UD72CUOLydtnPkY3F7B51bom6aslz87wG+Ty+vb
+         BFOKuhKJg0zRw==
+Date:   Tue, 30 Aug 2022 10:05:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 0/2] Fix the wrong order of phy callbacks
+Message-ID: <20220830150534.GA97821@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a55:99c3:0:b0:1a4:4395:92e8 with HTTP; Tue, 30 Aug 2022
- 07:27:09 -0700 (PDT)
-Reply-To: mmaillingwan391@gmail.com
-From:   "Mrs Helen Robert." <rmrshelen101@gmail.com>
-Date:   Tue, 30 Aug 2022 15:27:09 +0100
-Message-ID: <CANfGfccV=boOq5xHJ6fGV1H9cjmE0gTQs_o7ndO4LsztNyB--A@mail.gmail.com>
-Subject: GOOD MORNING
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB86763A2187AED57CFD55625E8C799@AS8PR04MB8676.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:635 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5009]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [rmrshelen101[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mmaillingwan391[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [rmrshelen101[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Dear Friend,
+On Tue, Aug 30, 2022 at 07:50:55AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> > Sent: 2022年8月30日 15:16
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> > bhelgaas@google.com; lorenzo.pieralisi@arm.com; vkoul@kernel.org; Marcel
+> > Ziswiler <marcel.ziswiler@toradex.com>; kishon@ti.com
+> > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; dl-linux-imx
+> > <linux-imx@nxp.com>; kernel@pengutronix.de; linux-phy@lists.infradead.org;
+> > linux-arm-kernel@lists.infradead.org
+> > Subject: Re: [PATCH v1 0/2] Fix the wrong order of phy callbacks
 
-I warmly greet you
+The above quoting style makes it harder than necessary to follow
+conversation.  See hints at:
 
-Please forgive me if my plea sounds a bit strange or embarrassing to
-you I am 63 years old am suffering from protracted cancer of the
-lungs which has also affected part of my brain cells due to
-complications,from all indication my condition is really deteriorating
-and it is quite obvious according to my doctors that i may not live
-for the next few months,because my condition has gotten to a critical
-and life threatening stage
+  https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
+  https://people.kernel.org/tglx/notes-about-netiquette
 
-Regards to my situation as well as the doctors report i have decided
-to entrust my wealth and treasures to a trust worthy person Get back
-to me if you can be trusted for more details
+The ideal thing would be something like this, where there's a single
+line for each sender:
 
-Sincerely Your's
-Mrs. Helen Robert
+On Tue, Aug 30, 2022 at 07:50:55AM +0000, Hongxing Zhu wrote:
+> On Tue, Aug 30, 2022, at 03:16PM, Ahmad Fatoum wrote:
+> > On 30.08.22 05:47, Hongxing Zhu wrote:
+> > > Do you mean to squash this fix to the preview series?
+> > > I'm afraid that it's not easy to do that.
+> > > Because there are a lot of pci-imx6 code changes after
+> > > commit: 1aa97b002258 ("phy: freescale: pcie: Initialize the imx8 pcie
+> > > standalone phy driver").
+> >
+> > The way I understand it, if a bisect ends up between your two
+> > patches, i.MX8M PCIe will be broken, whereas it worked before. I
+> > thus wonder if we shouldn't instead squash this series here into a
+> > single patch.
+>
+> Yes, it's a possible case when do the bisect.
+> Since these changes are belong to different git repo.
+
+I don't understand the point about different git repos.  Patch 1/2
+touches drivers/pci/controller/dwc/pci-imx6.c, patch 2/2 touches
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c.  They're in different
+directories, of course, but are in the same Linux kernel source repo.
+
+They're maintained by different people, but we can easily deal with
+that by getting an ack from one and merging via the other.
+
+> It will bring maintain difficulties if these two patches are squashed into a
+>  single one.
+> It's difficult to make a choice.
+
+What maintenance difficulty do you see here?  I think it looks
+*easier* if these are squashed -- that would avoid the possibility of
+backporting one without the other, which would certainly be a problem.
+
+If a bisect lands after patch 1/2 but before 2/2, it looks like i.MX8M
+will break unnecessarily.
+
+I think Ahmad is right that patches 1/2 and 2/2 should be squashed
+into a single patch to avoid this bisection hole.
+
+Bjorn
