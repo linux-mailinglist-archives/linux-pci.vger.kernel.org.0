@@ -2,47 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD54C5A6E1B
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 22:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F7165A6E32
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 22:14:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiH3UHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 16:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54490 "EHLO
+        id S230518AbiH3UOj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 16:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230255AbiH3UHI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 16:07:08 -0400
+        with ESMTP id S230171AbiH3UOh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 16:14:37 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF469754B1;
-        Tue, 30 Aug 2022 13:07:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C16E57203;
+        Tue, 30 Aug 2022 13:14:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E34A617C9;
-        Tue, 30 Aug 2022 20:07:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24D5C433C1;
-        Tue, 30 Aug 2022 20:07:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 19FFA617AB;
+        Tue, 30 Aug 2022 20:14:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D7CC433D6;
+        Tue, 30 Aug 2022 20:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661890023;
-        bh=GjZuCVubdGfBGAy1tO+YfYRaULtpFbUgYBOf98neQH8=;
+        s=k20201202; t=1661890475;
+        bh=pWKzamfJyKPw2dxL9g9cP/ZEfKDskn5zPibQQz6Byb0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LlxBq1BhJaqq3JColJ2FFAgCSxP7PN23KPz697Ua2ozUObW+vt5V1qPnhYw1zLojr
-         /UkXw/AOuxfZLwtu3ZVBUSRxc1flHI1lry6T5hisnZaR/qPV1t7aRxGxkREPUyciLt
-         RRiYrH1xqsAPiplKMZzsWMgHcW1CNk2OTsIC4ODgiNPgl5XwlayP1Le/QHmlAsAOFL
-         c2WFXzjb+nlnlTK3JPLqdaDJaxZczuIa8vQJYxyDZGgWeerXzmYfny3LOfzHUR9qij
-         bz3JV31/Ui/lla/MV7rh0HAHuG52R/ayl6xlhI6YYh857DBD+fIIHvBA/DcF+PhyKu
-         2F+9niLoNLPFA==
-Date:   Tue, 30 Aug 2022 15:07:02 -0500
+        b=T32CpdMu/+sLFOl6BkC1NU/ggKMUaEcWguE3Y1XnoHPMYUSbLSzfY2bjPooVBr9iQ
+         C2Im91AvWFOgNuQeCLRHa5RCTjE0GBEnPFW8/MwY7e4yUnxXE4RixB9xkhbk15+txS
+         s8hI7mujODWX3Bj3DzrvB4a0uKdp9evv3htSm4mg113DTqRSDA2TlzUDLd8nfUiDLa
+         WHRL3So/5yqWmkz5nrnpRuvrYjSU68TEDn3iAhC2DKZGx4VXjhJ5DM9MF40OcjFMvt
+         c1Zk06eIw6hTTR3hcUgiPBTUXUygdGpb3buW/eSEtlh421OQQXEOqMsxE9hC6AVI5w
+         BODvMMvH7xiSQ==
+Date:   Tue, 30 Aug 2022 15:14:33 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven J Abner <pheonix.sja@att.net>, linux-kernel@vger.kernel.org,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: pcieport bug?
-Message-ID: <20220830200702.GA122616@bhelgaas>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND^2][PATCH v3] x86/PCI: Add support for the Intel
+ 82378ZB/82379AB (SIO/SIO.A) PIRQ router
+Message-ID: <20220830201433.GA123876@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd8fb085-76dc-f2b0-6101-f84c93b8a0af@infradead.org>
+In-Reply-To: <alpine.DEB.2.21.2208291916390.61470@angie.orcam.me.uk>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,137 +56,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 29, 2022 at 03:14:23PM -0700, Randy Dunlap wrote:
-> On 8/29/22 10:59, Steven J Abner wrote:
-> > Hi
-> > Building a kernel tailored for AMD 2400g on ASRock B450 using 5.18.12 as base, OS
-> > is Elementary 6.1 on top of Ubuntu 20.04.5.
-> > In a config I changed some which lead to this query,'cause not sure what it means.
-> > So up to you see if it is of concern. Notation igpu# refers to build sequence tests.
-> > Also note that pcieport may affect other drivers?
+On Mon, Aug 29, 2022 at 07:23:32PM +0100, Maciej W. Rozycki wrote:
+> The Intel 82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A) 
+> ISA bridges implement PCI interrupt steering with a PIRQ router[1][2] 
+> that is exactly the same as that of the PIIX and ICH southbridges (or 
+> actually the other way round, given that the SIO ASIC was there first).
+> 
+> An earlier version of the SIO, the 82378IB[3][4], does not implement PCI 
+> interrupt steering however, so we need to exclude it by checking the low 
+> nibble of the PCI Revision Identification Register[5][6] for being at 
+> least 3.
+> 
+> There is a note in the 82379AB specification update[7] saying that the 
+> device ID for that chip is 0x7, rather than 0x484 as stated in the 
+> datasheet[8].  It looks like a red herring however, for no report has 
+> been ever seen with that value quoted and it matches the documented 
+> default value of the PCI Command Register, which comes next after the 
+> PCI Device Identification Register, so it looks like a copy-&-paste 
+> editorial mistake.
+> 
+> NB the 82378ZB has been commonly used with smaller DEC Alpha systems 
+> with the contents of the Revision Identification Register reported as 
+> one of 0x3, 0x43, or 0x84, so the masking of the high nibble seems 
+> indeed right by empirical observation.  The value in the high nibble 
+> might be either random, or depend on the batch, or correspond to some 
+> other state such as reset straps.
+> 
+> References:
+> 
+> [1] "82378 System I/O (SIO)", Intel Corporation, Order Number: 
+>     290473-004, December 1994, Section 4.1.26 "PIRQ[3:0]#--PIRQ Route 
+>     Control Registers"
+> 
+> [2] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
+>     Intel Corporation, Order Number: 290571-001, March 1996, Section 
+>     3.1.25. "PIRQ[3:0]#--PIRQ Route Control Registers", p. 48
+> 
+> [3] "82378IB System I/O (SIO)", Intel Corporation, Order Number:
+>     290473-002, April 1993, Section 5.8.7.7 "Edge and Level Triggered
+>     Modes"
+> 
+> [4] "82378IB to 82378ZB Errata Fix and Feature Enhancement Conversion
+>     FOL933002-01",
+>     <https://web.archive.org/web/19990421045433/http://support.intel.com/support/chipsets/420/8511.htm>
+> 
+> [5] "82378 System I/O (SIO)", Intel Corporation, Order Number: 
+>     290473-004, December 1994, Section 4.1.5. "RID--Revision 
+>     Identification Register"
+> 
+> [6] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
+>     Intel Corporation, Order Number: 290571-001, March 1996, Section 
+>     3.1.5. "RID--Revision Identification Register", p. 34
+> 
+> [7] "Intel 82379AB (SIO.A) System I/O Component Specification Update", 
+>     Intel Corporation, Order Number: 297734-001, May, 1996, "Component 
+>     Identification via Programming Interface", p. 5
+> 
+> [8] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
+>     Intel Corporation, Order Number: 290571-001, March 1996, Section 
+>     3.1.2. "DID--Device Identification Register", p. 33
+> 
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> ---
+> Hi,
+> 
+>  This patch was dropped from x86/irq due to a bug in a follow-up patch and 
+> when resent it was not re-picked up along with the other patches for some 
+> reason, so resending verbatim again after another re-verification, against 
+> 6.0-rc2 as at yesterday (just before Linus's version bump).
 
-igpu32 is built with CONFIG_PCIEPORTBUS=y and igpu33 is built with
-CONFIG_PCIEPORTBUS not set.  Both are built from the same kernel
-version.  Right?
-
-And you see some lspci differences bewteen igpu32 and igpu33?
-
-Is there something that does not work as you expect it to work?
-
-Obviously with CONFIG_PCIEPORTBUS not set, we expect things that
-depend on PCIEPORTBUS will not work.  This includes AER, hotplug, PME,
-DPC, etc.
-
-If you're seeing something unexpected, can you collect the complete
-dmesg log and complete "sudo lspci -vv" output for both cases?  If
-they're too big for email, you can open a report at
-https://bugzilla.kernel.org and attach them there.
-
-> > config differences
-> > igpu33
-> > # CONFIG_PCIEPORTBUS is not set
-> > # CONFIG_PCI_IOV is not set
-> > # CONFIG_VGA_ARB is not set
-> > # CONFIG_HOTPLUG_PCI is not set
-> > igpu32
-> > CONFIG_PCIEPORTBUS=y
-> > CONFIG_HOTPLUG_PCI_PCIE=y
-> > CONFIG_PCIEAER=y
-> > # CONFIG_PCIEAER_INJECT is not set
-> > # CONFIG_PCIE_ECRC is not set
-> > CONFIG_PCIE_PME=y
-> > CONFIG_PCIE_DPC=y
-> > # CONFIG_PCIE_EDR is not set
-> > CONFIG_PCI_REALLOC_ENABLE_AUTO=y
-> > # CONFIG_PCI_PF_STUB is not set
-> > CONFIG_PCI_IOV=y
-> > CONFIG_VGA_ARB=y
-> > CONFIG_VGA_ARB_MAX_GPUS=16
-> > CONFIG_HOTPLUG_PCI=y
-> > CONFIG_HOTPLUG_PCI_ACPI=y
-> > # CONFIG_HOTPLUG_PCI_ACPI_IBM is not set
-> > CONFIG_HOTPLUG_PCI_CPCI=y
-> > # CONFIG_HOTPLUG_PCI_CPCI_ZT5550 is not set
-> > # CONFIG_HOTPLUG_PCI_CPCI_GENERIC is not set
-> > CONFIG_HOTPLUG_PCI_SHPC=y
-> > # CONFIG_RAPIDIO_TSI721 is not set
-> > # CONFIG_EEEPC_LAPTOP is not set
-> > 
-> > lspci differences:
-> > start with identical:
-> > 00:00.0 Host bridge
-> > 00:00.2 IOMMU
-> > 00:01.0 Host bridge
-> > 
-> > kernel builds after igpu33 stable flags, only irq differences
-> > kernel builds upto igpu32 flags differ including non-pcieport drivers,
-> > there was a few builds where flags matched out of 32 different builds
-> > I thought was normal that flags changed prior to 33-37 being very stable.
-> > 
-> > under 00:01.1 PCI bridge:
-> > igpu33
-> > Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-> > DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> > RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisible+
-> > Capabilities: [a0] MSI: Enable- Count=1/1 Maskable- 64bit+
-> >  Address: 0000000000000000 Data: 0000
-> > RootCmd: CERptEn- NFERptEn- FERptEn-
-> > 
-> > igpu32
-> > Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-> > Interrupt: pin ? routed to IRQ 26
-> > DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-> > RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
-> > Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-> >  Address: 00000000fee00000 Data: 0000
-> > RootCmd: CERptEn+ NFERptEn+ FERptEn+
-> > Kernel driver in use: pcieport
-> > 
-> > under these, nearly same readout as above (32vs33 use of pcieport)
-> > 00:01.6 PCI bridge
-> > 00:08.1 PCI bridge
-> > 00:08.2 PCI bridge
-> > 11:01.0 PCI bridge
-> > 11:02.0 PCI bridge
-> > 15:00.2 PCI bridge
-> > 1d:00.0 PCI bridge
-> > 1d:01.0 PCI bridge
-> > 1d:04.0 PCI bridge
-> > 1d:05.0 PCI bridge
-> > 1d:06.0 PCI bridge
-> > 1d:07.0 PCI bridge
-> > 
-> > on non-pcieport drivers minor differences in +- states
-> > on nvme added line:
-> > Physical Slot: 0
-> > but +- state can change like others
-> > 
-> > dmesg differences (alphabetical):
-> > igu33
-> > acpi PNP0A08:00: PCIe port services disabled; not requesting _OSC control
-> > igpu32
-> > acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
-> > acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
-> > acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
-> > amdgpu 0000:38:00.0: vgaarb: deactivate vga console
-> > pci 0000:38:00.0: vgaarb: bridge control possible
-> > pci 0000:38:00.0: vgaarb: setting as boot VGA device
-> > pci 0000:38:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
-> > pcieport 0000:00:01.1: AER: enabled with IRQ 26
-> > pcieport 0000:00:01.1: PME: Signaling with IRQ 26
-> > pcieport 0000:00:01.2: AER: enabled with IRQ 27
-> > pcieport 0000:00:01.2: PME: Signaling with IRQ 27
-> > pcieport 0000:00:01.6: AER: enabled with IRQ 28
-> > pcieport 0000:00:01.6: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise- Interlock- NoCompl+ IbPresDis- LLActRep+
-> > pcieport 0000:00:01.6: PME: Signaling with IRQ 28
-> > pcieport 0000:00:08.1: PME: Signaling with IRQ 29
-> > pcieport 0000:00:08.2: PME: Signaling with IRQ 30
-> > shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
-> > vgaarb: loaded
-> > 
-> > Steve
-> > 
-> > I wish to be personally CC'ed the answers/comments posted to the list
-> > in response to your posting, please.
-> -- 
-> ~Randy
+I don't know anything about these IRQ routers, and Thomas has applied 
+recent similar patches, so I assume he'll handle this.
