@@ -2,93 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D9E35A6286
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 13:55:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 096925A6292
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 13:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbiH3Lz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 07:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
+        id S230162AbiH3L46 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 07:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiH3Lz2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 07:55:28 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803614E85C
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 04:55:24 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id l3so10862248plb.10
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 04:55:24 -0700 (PDT)
+        with ESMTP id S229521AbiH3L4z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 07:56:55 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17141D99C1
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 04:56:50 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso17689369pjk.0
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 04:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc;
-        bh=fyFT8QYNTXAXuWa2luhizjn+sDYqI/fEqOEfOhP43Go=;
-        b=lOLC5rNnSUFiPL4SOwr2ytXsEZFRVUUpHGbgCOKoPj2miFeoURlvUj1yknB6xl1h/j
-         ah72aaCgp8ugpvrwn1EXouIO1NwWyKBY1J/vpNW2OcXuaCJdf8jexulLw7BBC6cpSids
-         bgnZcCWsYvU1jtXTF6vzt6Uz73cpR91PPGlNqB6iMtg/9rSKwkoy13K8xj6fX8XB+bXO
-         4pD7owWwkwoAJVvadJCdjF7gKHHys2w0iDhtt/cjKLRaBA9HlvyGF99qnDgSdFNUtMMR
-         JTLT10bsq69P3DZf9L91zWge4xEAi6gBkssDabwm1J9Of5LFwIjlVW2Ot49WsYSIB9Hx
-         2OTw==
+        bh=7yXaKsnP0ODtMHSK3xa0NyjfxvosTqnSzBxIBWoTewg=;
+        b=Bt82UCf8F8+6IR0fSl9Hq+ekNNU8enCID21or2aO9jzWwCCLyHWPiKl2F8Lo9k3q6R
+         pOC7miXL4WE7RsektcI0XwP5ucZquiXsdY+0H2ykinufOxw2XMT10ahC5XJj++nL0WkF
+         y7eBCgXgxukSrJzEHSDBGw34wmTl3TlYen8l1eQVNb3IUOJnMXGXaeAmJx4IIy1EAqmu
+         TFC/WO+mTVhDoe+d9Sh4no1DXfk/xL72BRC79Y8c8fgHJN+iSak8YZRp7hbjnqJlI/gx
+         K6xDjD7VnGHZqGU5SGRnoWuYzLAiXUeGfbsj68WktG1IVuA+aKId0fkufV2A6jsgkTsA
+         hVeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc;
-        bh=fyFT8QYNTXAXuWa2luhizjn+sDYqI/fEqOEfOhP43Go=;
-        b=LGjsfp58zyOxAEZjkub69ABE0FSVQCC+dhGkjU7MfVP71jBjb+G2RzsPNNfyHhBEz8
-         SUh+SMCMISmmXEPvU6z2mvZTM8rI7TnOgvJ4n8ZQnXV2PbNtyqrmPk9urLQ3nFdeyYn8
-         40hZEpczOYhfjXL+/pvLnTO6z9WeS7sohC6zTaqo3B1YY3Gy9ZZLP8/8sKOJgUuq9N7I
-         ULydfnnsi7ZrcJaaWR1ObModqmkFTO2twidYtUBk0cj31S11ZgeVwu5TuBsji6kob67n
-         0EuckR6qHgNFH2bFTP4AeFwWgpdHLQB57ZffGQlz+a+sV9svG19KpGUW/0nW/M7BhQbH
-         ZNUg==
-X-Gm-Message-State: ACgBeo1zVYBYYO32dUmTJLPAzFlIlS+1vTanVjzzc9BMNlidncthT5sU
-        dTzAgxACfqR6Cb8/HrO41uw+
-X-Google-Smtp-Source: AA6agR4nKp8fxJW7OsYF7nGW1wKJPM3RJj8PdqSwrgqEzo6hws6adwA09zAj/DOEBcmbHaoPNv8/QQ==
-X-Received: by 2002:a17:90a:d343:b0:1fd:b437:7ae9 with SMTP id i3-20020a17090ad34300b001fdb4377ae9mr12947467pjx.73.1661860523933;
-        Tue, 30 Aug 2022 04:55:23 -0700 (PDT)
+        bh=7yXaKsnP0ODtMHSK3xa0NyjfxvosTqnSzBxIBWoTewg=;
+        b=LVLoFV2B/5xeMcFtNshivJTD6AAOrfXkI2z9utr0jUxEbUPjORZF7J0vPxfwfagM2d
+         CqxRJVvY1UISbHaL8cLvAB7L21OoGCOPsvcv2a7MiyQrWYvuET3WK/HKYWKotEXJgyai
+         A7S6WQnT0sKV1w/RYHrtQCYOGME/x7ePFM8im6meWuvvO2xJCy31e0k0grIM7kTdAYnD
+         jxuHTuYnYVO5arhoDE131/TnqGhmFbW8jr6sz2YEInb8rr1Pv8JlCU3jiokEoStJrjQh
+         MiYj/nKd0ttpEndYw5iPdmBtwCaUQ75y1FJp7w8ajQ9Dy5coq2HS4t9F70XohGC7OMJD
+         +riQ==
+X-Gm-Message-State: ACgBeo3Y9JfBlP38bmjzHCryJ+NwYnsG/Iva2G3d/8DXGzvOQCzlV73p
+        m/lVFu/1PXQ3gerF321bT35k
+X-Google-Smtp-Source: AA6agR53rvKvchcIFuOoaSkHx7i/ftfAYGl03OXOxdaMHuD2/IxrisPpudtStL0yM7Ioz6h++XbVYQ==
+X-Received: by 2002:a17:902:c651:b0:174:36ce:49ce with SMTP id s17-20020a170902c65100b0017436ce49cemr20733934pls.87.1661860609266;
+        Tue, 30 Aug 2022 04:56:49 -0700 (PDT)
 Received: from thinkpad ([117.217.182.234])
-        by smtp.gmail.com with ESMTPSA id a6-20020a170902ecc600b0016ed5266a5csm9615538plh.170.2022.08.30.04.55.16
+        by smtp.gmail.com with ESMTPSA id z124-20020a626582000000b00537e328bc11sm7313942pfb.31.2022.08.30.04.56.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Aug 2022 04:55:23 -0700 (PDT)
-Date:   Tue, 30 Aug 2022 17:25:14 +0530
+        Tue, 30 Aug 2022 04:56:48 -0700 (PDT)
+Date:   Tue, 30 Aug 2022 17:26:42 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, dmitry.baryshkov@linaro.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v5 2/3] PCI: qcom: Restrict pci transactions after pci
- suspend
-Message-ID: <20220830115514.GD135982@thinkpad>
-References: <1659526134-22978-1-git-send-email-quic_krichai@quicinc.com>
- <1659526134-22978-3-git-send-email-quic_krichai@quicinc.com>
- <CAE-0n500y-n+ZjasYQRAa3JgamQG1c+Aqn0YiX-i0L-w6C4dbQ@mail.gmail.com>
- <3d052733-3600-b6eb-baf3-d8806a150af3@quicinc.com>
- <CAE-0n53oMnnn7rOPEiibc=XM52z9THDc9jYhe3x3C_AsLtmARQ@mail.gmail.com>
- <81dcbf72-92bb-093a-da48-89a73ead820e@quicinc.com>
- <CAE-0n50NRiBNDjK2UrA_wOoRz3+3cKb4uiUiCw4t1F19Kw9EhA@mail.gmail.com>
- <20220827172655.GA14465@thinkpad>
- <a1b7c47c-9657-54bb-6b4e-1d98b3a65b91@quicinc.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org,
+        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@somainline.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+        dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH 09/11] dt-bindings: PCI: qcom-ep: Define clocks per
+ platform
+Message-ID: <20220830115642.GE135982@thinkpad>
+References: <20220826181923.251564-1-manivannan.sadhasivam@linaro.org>
+ <20220826181923.251564-10-manivannan.sadhasivam@linaro.org>
+ <b188b3fe-cc35-f902-b316-0c1632893e9d@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a1b7c47c-9657-54bb-6b4e-1d98b3a65b91@quicinc.com>
+In-Reply-To: <b188b3fe-cc35-f902-b316-0c1632893e9d@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,157 +79,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 29, 2022 at 11:01:58PM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> On 8/27/2022 10:56 PM, Manivannan Sadhasivam wrote:
-> > On Fri, Aug 26, 2022 at 03:23:00PM -0500, Stephen Boyd wrote:
-> > > Quoting Krishna Chaitanya Chundru (2022-08-25 06:52:43)
-> > > > On 8/24/2022 10:50 PM, Stephen Boyd wrote:
-> > > > > Quoting Krishna Chaitanya Chundru (2022-08-23 20:37:59)
-> > > > > > On 8/9/2022 12:42 AM, Stephen Boyd wrote:
-> > > > > > > Quoting Krishna chaitanya chundru (2022-08-03 04:28:53)
-> > > > > > > > If the endpoint device state is D0 and irq's are not freed, then
-> > > > > > > > kernel try to mask interrupts in system suspend path by writing
-> > > > > > > > in to the vector table (for MSIX interrupts) and config space (for MSI's).
-> > > > > > > > 
-> > > > > > > > These transactions are initiated in the pm suspend after pcie clocks got
-> > > > > > > > disabled as part of platform driver pm  suspend call. Due to it, these
-> > > > > > > > transactions are resulting in un-clocked access and eventually to crashes.
-> > > > > > > Why are the platform driver pm suspend calls disabling clks that early?
-> > > > > > > Can they disable clks in noirq phase, or even later, so that we don't
-> > > > > > > have to check if the device is clocking in the irq poking functions?
-> > > > > > > It's best to keep irq operations fast, so that irq control is fast given
-> > > > > > > that these functions are called from irq flow handlers.
-> > > > > > We are registering the pcie pm suspend ops as noirq ops only. And this
-> > > > > > msix and config
-> > > > > > 
-> > > > > > access is coming at the later point of time that is reason we added that
-> > > > > > check.
-> > > > > > 
-> > > > > What is accessing msix and config? Can you dump_stack() after noirq ops
-> > > > > are called and figure out what is trying to access the bus when it is
-> > > > > powered down?
-> > > > The msix and config space is being accessed to mask interrupts. The
-> > > > access is coming at the end of the suspend
-> > > > 
-> > > > and near CPU disable. We tried to dump the stack there but the call
-> > > > stack is not coming as it is near cpu disable.
-> > > That is odd that you can't get a stacktrace.
-> > > 
-> > > > But we got dump at resume please have look at it
-> > > > 
-> > > > [   54.946268] Enabling non-boot CPUs ...
-> > > > [   54.951182] CPU: 1 PID: 21 Comm: cpuhp/1 Not tainted 5.15.41 #105
-> > > > 43491e4414b1db8a6f59d56b617b520d92a9498e
-> > > > [   54.961122] Hardware name: Qualcomm Technologies, Inc. sc7280 IDP
-> > > > SKU2 platform (DT)
-> > > > [   54.969088] Call trace:
-> > > > [   54.971612]  dump_backtrace+0x0/0x200
-> > > > [   54.975399]  show_stack+0x20/0x2c
-> > > > [   54.978826]  dump_stack_lvl+0x6c/0x90
-> > > > [   54.982614]  dump_stack+0x18/0x38
-> > > > [   54.986043]  dw_msi_unmask_irq+0x2c/0x58
-> > > > [   54.990096]  irq_enable+0x58/0x90
-> > > > [   54.993522]  __irq_startup+0x68/0x94
-> > > > [   54.997216]  irq_startup+0xf4/0x140
-> > > > [   55.000820]  irq_affinity_online_cpu+0xc8/0x154
-> > > > [   55.005491]  cpuhp_invoke_callback+0x19c/0x6e4
-> > > > [   55.010077]  cpuhp_thread_fun+0x11c/0x188
-> > > > [   55.014216]  smpboot_thread_fn+0x1ac/0x30c
-> > > > [   55.018445]  kthread+0x140/0x30c
-> > > > [   55.021788]  ret_from_fork+0x10/0x20
-> > > > [   55.028243] CPU1 is up
-> > > > 
-> > > > So the same stack should be called at the suspend path while disabling CPU.
-> > > Sounds like you're getting hit by affinity changes while offlining CPUs
-> > > during suspend (see irq_migrate_all_off_this_cpu()). That will happen
-> > > after devices are suspended (all phases of suspend ops).
-> > The affinity setting should not happen since DWC MSI controller doesn't support
-> > setting IRQ affinity (hierarchial IRQ domain). In the migrate_one_irq()
-> > function, there is a check for the existence of the irq_set_affinity()
-> > callback, but the DWC MSI controller return -EINVAL in the callback. So this
-> > is the reason the migration was still atempted?
+On Sun, Aug 28, 2022 at 06:20:21PM +0300, Krzysztof Kozlowski wrote:
+> On 26/08/2022 21:19, Manivannan Sadhasivam wrote:
+> > In preparation of adding the bindings for future SoCs, let's define the
+> > clocks per platform.
 > > 
-> > A quick check would be to test this suspend/resume with GIC ITS for MSI since
-> > it supports settings IRQ affinity and resides in a separate domain.
-> > Chaitanya, can you try that?
-> 
-> Hi mani,
-> 
-> I tried with gic its there also I see same behavior.
-> 
-
-Okay
-
-> The only which helps to comment out affinity in the following function.
-> 
-> diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-> index 21b3ac2a29d2..042afec1cf9d 100644
-> --- a/kernel/irq/irqdesc.c
-> +++ b/kernel/irq/irqdesc.c
-> @@ -487,8 +487,9 @@ static int alloc_descs(unsigned int start, unsigned int
-> cnt, int node,
-> 
-> 
-> 
->                if (affinity) {
->                         if (affinity->is_managed) {
-> -                               flags = IRQD_AFFINITY_MANAGED |
-> -                                       IRQD_MANAGED_SHUTDOWN;
-> +//                             flags = IRQD_AFFINITY_MANAGED |
-> +//                                     IRQD_MANAGED_SHUTDOWN;
-> +                               flags = 0;//IRQD_AFFINITY_MANAGED |
->                         }
->                         mask = &affinity->mask;
->                         node = cpu_to_node(cpumask_first(mask));
-> 
-
-The only solution I can think of is keeping the clocks related to DBI access
-active or switch to another clock source that consumes less power if available
-during suspend.
-
-But limiting the DBI access using hacks doesn't look good.
-
-Thanks,
-Mani
-
-> > > > If there is any other way to remove these calls can you please help us
-> > > > point that way.
-> > > I'm not sure. I believe genirq assumes the irqchips are always
-> > > accessible. There is some support to suspend irqchips. See how the
-> > > struct irq_chip::irq_suspend() function is called by syscore ops in the
-> > > generic irqchip 'irq_gc_syscore_ops' hooks. Maybe you could add a
-> > > syscore suspend/resume hook to disable/enable the clks and power to the
-> > > PCI controller. syscore ops run after secondary CPUs are hotplugged out
-> > > during suspend.
-> > > 
-> > > Or maybe setting the IRQCHIP_MASK_ON_SUSPEND flag can be used so that on
-> > > irq migration nothing writes the irq hardware because it is already
-> > > masked in the hardware earlier. I think the problem is that on resume
-> > > we'll restart the irq from the first CPU online event, when you don't
-> > > want to do that because it is too early.
-> > > 
-> > > I have another question though, which is do MSIs support wakeup? I don't
-> > > see how it works if the whole bus is effectively off during suspend. If
-> > > wakeup needs to be supported then I suspect the bus can't be powered
-> > > down during suspend.
-> > Wake up should be handled by a dedicated side-band GPIO or in-band PME message.
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 46 +++++++++++--------
+> >  1 file changed, 27 insertions(+), 19 deletions(-)
 > > 
-> > But I still wonder how the link stays in L1/L1ss when the clocks are disabled
-> > and PHY is powered down. Maybe the link or phy is powered by a separate power
-> > domain like MX that keeps the link active?
-> We will come back to you on this.
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > index b728ede3f09f..83a2cfc63bc1 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > @@ -9,9 +9,6 @@ title: Qualcomm PCIe Endpoint Controller binding
+> >  maintainers:
+> >    - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >  
+> > -allOf:
+> > -  - $ref: "pci-ep.yaml#"
+> > -
+> >  properties:
+> >    compatible:
+> >      const: qcom,sdx55-pcie-ep
+> > @@ -35,24 +32,12 @@ properties:
+> >        - const: mmio
+> >  
+> >    clocks:
+> > -    items:
+> > -      - description: PCIe Auxiliary clock
+> > -      - description: PCIe CFG AHB clock
+> > -      - description: PCIe Master AXI clock
+> > -      - description: PCIe Slave AXI clock
+> > -      - description: PCIe Slave Q2A AXI clock
+> > -      - description: PCIe Sleep clock
+> > -      - description: PCIe Reference clock
+> > +    minItems: 7
+> > +    maxItems: 7
+> >  
+> >    clock-names:
+> > -    items:
+> > -      - const: aux
+> > -      - const: cfg
+> > -      - const: bus_master
+> > -      - const: bus_slave
+> > -      - const: slave_q2a
+> > -      - const: sleep
+> > -      - const: ref
+> > +    minItems: 7
+> > +    maxItems: 7
+> >  
+> >    qcom,perst-regs:
+> >      description: Reference to a syscon representing TCSR followed by the two
+> > @@ -112,6 +97,29 @@ required:
+> >    - reset-names
+> >    - power-domains
+> >  
+> > +allOf:
+> > +  - $ref: "pci-ep.yaml#"
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - qcom,sdx55-pcie-ep
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 7
+> > +          maxItems: 7
+> 
+> One more thing - the previous way of describing items is more readable
+> instead of names followed by a comment, so I propose to keep it. This
+> applies also to patch 10.
+> 
 
 Okay.
 
 Thanks,
 Mani
 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> 
+> Best regards,
+> Krzysztof
 
 -- 
 மணிவண்ணன் சதாசிவம்
