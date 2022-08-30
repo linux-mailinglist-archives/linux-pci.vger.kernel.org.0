@@ -2,61 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D29DB5A5CBB
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 09:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A765A5CBF
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 09:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbiH3HSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 03:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
+        id S230034AbiH3HSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 03:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbiH3HSC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 03:18:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5D9C652F;
-        Tue, 30 Aug 2022 00:18:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39F6261495;
-        Tue, 30 Aug 2022 07:18:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB27C433C1;
-        Tue, 30 Aug 2022 07:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661843880;
-        bh=8YpYFHpRZlcXniKh+3stt8dUFwztey2Ae9xNZ/I5eLQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nEkvZandQOHZD9JTmh7WCNlH8uImDGJLbBBj/3+Vymv4FviUJtP0Lm/V66nUZaTTm
-         N+/ZtmJdwXsGyJEusxLDoF+Xqat/BaNe/RI3ji5U4bVStwvBfKKYKeEY/OyIp9irXO
-         PJLzu8GQ19Q/RY+Vo6FEiPBZpwGdk2IsVcNhraOZtK6BrdE2smqFN9ZiFD1wPghcEy
-         M8vZP+RMlcFurwLQL/P6Rm9s0U6ImRa2ptWYrY+h8aJsAyq+kpU7hGE+6dgje9ytVa
-         qUjXxtUXVJTHuoGgcxVuS25c1W+roYGmV34snPGdvu5LrLB6VwPr6wctiybGNmPPmS
-         qrTdzNGsXRJtw==
-Date:   Tue, 30 Aug 2022 12:47:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+        with ESMTP id S230154AbiH3HSh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 03:18:37 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6998EC59ED
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 00:18:36 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id p7so3160563lfu.3
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 00:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=W6h8dpQt+6IKb91NzEndI9mBuZUXBODe+03ODQBGbuI=;
+        b=ouJUOpHFwHOkE2h+N3/OkYo8R16gJe9AUl1TJBu3Ve9XfarXUnHlxq2cQEsM0t6k9A
+         o/2Wiz9VwDeICllVTfeeE2V9DR8jlFkm1bfJUVzYIkL6BzwhMwGWyt23wIMb5Y8H9Lan
+         xZfmvr2Ye60LpkpmUV7fv51Gf6dt5fyxELjFuH41TBCmgMz4nYRv/P7+Yh4fb8HJIANa
+         6zUYYbrPzw3jOQwlERzAihKpdDTawy68J60qkF4HyrpqeaPv3EjuiIeCtNFYPUF6Tx0N
+         0kMcx/uz5LAO1npL44UBbUBYah3i8Mtghps4jbeLES/nabrolJlikJ/Ba7okjt0q5MO7
+         RJoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=W6h8dpQt+6IKb91NzEndI9mBuZUXBODe+03ODQBGbuI=;
+        b=SdVFxohWxZ+9RlZqPnGzsjstZQhc8Qt5/m0TcKVvxEV5CQ8vqneInmnFBT8bo7Ilh8
+         70ZESYRrClx1YQK/CprNcTY+gYBnwfGXDG+ePzQJJXfEh9RGRSsCO9Syn1s3LCwr6Z7n
+         ZGKndtwZV77bwjq1hFJ/qXpKAv2HR4DBzZmMvi8JJTB3K8frZQXw27l8jcrVPcf4V8wP
+         q6su8znW+NRrUbysmpsUf0O/7xc4yGbMH1f722seQsDmlbVmYw8JiKusS6Yhdibq7bsv
+         /v7GhuF58ywqn034whova5AuyGrFG8NmX/jxBd8K88GyA68mGEeKUsREVOpayBh1eyAW
+         VEJw==
+X-Gm-Message-State: ACgBeo1xvbZKIZ5iNMYUk8olI/2ptA30MaQrFqe4AdYzVja84bPcyKrj
+        LJb9adc0VWQwV4/i6nb3WFTs3TaTuxLcmg==
+X-Google-Smtp-Source: AA6agR48RiXIlhOzRcxivMG+L0nFgg6LKn2aBbAPwcSmk2L+EVRO7FoiHFZXNQZiQkBklQnDl1kdYw==
+X-Received: by 2002:a05:6512:b89:b0:492:e4bf:adcf with SMTP id b9-20020a0565120b8900b00492e4bfadcfmr7032021lfv.203.1661843914714;
+        Tue, 30 Aug 2022 00:18:34 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id g15-20020a2eb5cf000000b0026455099704sm874135ljn.114.2022.08.30.00.18.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Aug 2022 00:18:34 -0700 (PDT)
+Message-ID: <a77a0a6a-b4cf-51d8-51be-70075d0e6601@linaro.org>
+Date:   Tue, 30 Aug 2022 10:18:33 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-pcie: split register tables into
+ primary and secondary part
+Content-Language: en-GB
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn@kryo.se>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
         Rob Herring <robh+dt@kernel.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 5/6] PCI: qcom-ep: Setup PHY to work in EP mode
-Message-ID: <Yw25pB6j5w6so8tx@matsya>
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
 References: <20220825105044.636209-1-dmitry.baryshkov@linaro.org>
- <20220825105044.636209-6-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220825105044.636209-6-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+ <20220825105044.636209-3-dmitry.baryshkov@linaro.org>
+ <Yw24sgVksGzvgr8Q@matsya>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <Yw24sgVksGzvgr8Q@matsya>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,36 +87,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25-08-22, 13:50, Dmitry Baryshkov wrote:
-> Call phy_set_mode_ext() to notify the PHY driver that the PHY is being
-> used in the EP mode.
+On 30/08/2022 10:13, Vinod Koul wrote:
+> On 25-08-22, 13:50, Dmitry Baryshkov wrote:
+>> SM8250 configuration tables are split into two parts: the common one and
+>> the PHY-specific tables. Make this split more formal. Rather than having
+>> a blind renamed copy of all QMP table fields, add separate struct
+>> qmp_phy_cfg_tables and add two instances of this structure to the struct
+>> qmp_phy_cfg. Later on this will be used to support different PHY modes
+>> (RC vs EP).
 > 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> This lgtm with once nit
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index ec99116ad05c..d17b255a909d 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -240,6 +240,10 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->  	if (ret)
->  		goto err_disable_clk;
->  
-> +	ret = phy_set_mode_ext(pcie_ep->phy, PHY_MODE_PCIE, 1);
+>>
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 141 +++++++++++++----------
+>>   1 file changed, 83 insertions(+), 58 deletions(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> index c84846020272..60cbd2eae346 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> @@ -1346,34 +1346,33 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
+>>   
+>>   struct qmp_phy;
+>>   
+>> -/* struct qmp_phy_cfg - per-PHY initialization config */
+>> -struct qmp_phy_cfg {
+>> -	/* phy-type - PCIE/UFS/USB */
+>> -	unsigned int type;
+>> -	/* number of lanes provided by phy */
+>> -	int nlanes;
+>> -
+>> -	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
+>> +struct qmp_phy_cfg_tables {
+>>   	const struct qmp_phy_init_tbl *serdes_tbl;
+>>   	int serdes_tbl_num;
+>> -	const struct qmp_phy_init_tbl *serdes_tbl_sec;
+>> -	int serdes_tbl_num_sec;
+>>   	const struct qmp_phy_init_tbl *tx_tbl;
+>>   	int tx_tbl_num;
+>> -	const struct qmp_phy_init_tbl *tx_tbl_sec;
+>> -	int tx_tbl_num_sec;
+>>   	const struct qmp_phy_init_tbl *rx_tbl;
+>>   	int rx_tbl_num;
+>> -	const struct qmp_phy_init_tbl *rx_tbl_sec;
+>> -	int rx_tbl_num_sec;
+>>   	const struct qmp_phy_init_tbl *pcs_tbl;
+>>   	int pcs_tbl_num;
+>> -	const struct qmp_phy_init_tbl *pcs_tbl_sec;
+>> -	int pcs_tbl_num_sec;
+>>   	const struct qmp_phy_init_tbl *pcs_misc_tbl;
+>>   	int pcs_misc_tbl_num;
+>> -	const struct qmp_phy_init_tbl *pcs_misc_tbl_sec;
+>> -	int pcs_misc_tbl_num_sec;
+>> +};
+>> +
+>> +/* struct qmp_phy_cfg - per-PHY initialization config */
+>> +struct qmp_phy_cfg {
+>> +	/* phy-type - PCIE/UFS/USB */
+>> +	unsigned int type;
+>> +	/* number of lanes provided by phy */
+>> +	int nlanes;
+>> +
+>> +	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
+>> +	struct qmp_phy_cfg_tables primary;
+>> +	/*
+>> +	 * Init sequence for PHY blocks, providing additional register
+>> +	 * programming. Unless required it can be left omitted.
+>> +	 */
+>> +	struct qmp_phy_cfg_tables secondary;
+> 
+> since this is optional but always defined, we would waste memory here,
+> can we make this a pointer and initialize to null when secondary is not
+> present
 
-please define 1 or 0, rather than magic values
+Ack.
 
-> +	if (ret)
-> +		goto err_phy_exit;
-> +
->  	ret = phy_power_on(pcie_ep->phy);
->  	if (ret)
->  		goto err_phy_exit;
-> -- 
-> 2.35.1
+
 
 -- 
-~Vinod
+With best wishes
+Dmitry
+
