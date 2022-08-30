@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 333EE5A67B8
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 17:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5571F5A67FB
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 18:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiH3Pwb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 11:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36204 "EHLO
+        id S230486AbiH3QRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 12:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiH3Pw3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 11:52:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7323DB5E7D;
-        Tue, 30 Aug 2022 08:52:28 -0700 (PDT)
+        with ESMTP id S229698AbiH3QRq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 12:17:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3CD9A965;
+        Tue, 30 Aug 2022 09:17:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AF7561656;
-        Tue, 30 Aug 2022 15:52:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3972FC433D6;
-        Tue, 30 Aug 2022 15:52:27 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 33964B81CD4;
+        Tue, 30 Aug 2022 16:17:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFCCC433C1;
+        Tue, 30 Aug 2022 16:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661874747;
-        bh=3ggh/iU+WYbUFzTX6WB/TTiiJnU4DQBdafBsx3kLGR0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ix2ZGWoE6eDItweoa/J+la02NwmllYakGrE2fD9MwEI19CMXn/FHI+wnmuga5n2oF
-         avPE6eQ4SQAcXxc7RMU3InIA7Id9piD/T18YR+Fwi34Z7+PPxVd0oXrMSOJkopuSb4
-         PcR2qkQMdUFmmIrKyrt4KPlg93LCb7bmZ6FM7x+LQNn6UbR9eREMpxVeK/10ggYKUn
-         GgAy5nBziHTGVJ35ZRzR4v5riDmD4bN/vJd5dmjjUOwReagroJqdKfmluQCmvXHeF4
-         rvkCaY1CJlXmDl8XHKwNuUgb+YkQnoFtpsvw4+Q5Ci11Oqsxqhk20zgKMeQkhnF4h+
-         /LgNgg6PX2A8w==
+        s=k20201202; t=1661876262;
+        bh=DSrVqL1VD3WM18Xm2UsNFG860qRy8Dj2FnWp76OHsZ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pjYn6czElsD94jyIbkijnC7xpBdqszyie5eTJWsdxwH4hXVGkAh4lkJbRPoWRwWqV
+         R3WwWajEbk/uJo+Nr2fBCDrHKRyQWk0oPq6XhsWDNpINX4PjTiZ8I6JrrUskXJZlap
+         XNX0wqhzibFIRfQLgSQ5pqhbs8/mHKrx54gHUc7TlA9ATD7V6STEL3Ipgb5KFUi6h2
+         T9SxrdZr5V8EoxrddAjdmR724ii7QJuglAUJ+vI1tuNoMh0D9tKaXPMi4GNNttzavU
+         daJCUHPk78+pFtYt+9CGgByExF10rzrAjFpxjC0KpoNWnVUVw9oXrBE9Xal78j17nX
+         C4W0d6MtGfifQ==
+Date:   Tue, 30 Aug 2022 11:17:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Disable PTM on Upstream Ports during suspend
-Date:   Tue, 30 Aug 2022 10:52:24 -0500
-Message-Id: <20220830155224.103907-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        David Box <david.e.box@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [RESEND PATCH v3 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+Message-ID: <20220830161741.GA105724@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hhc+n+WbLCxbJ2VPSWj0RAy4AM+pvqy8eiAJVtBecVWg@mail.gmail.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,127 +57,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Aug 30, 2022 at 01:44:43PM +0200, Rafael J. Wysocki wrote:
+> Hi Bjorn,
+> 
+> On Tue, Aug 30, 2022 at 12:49 PM Rajvi Jingar
+> <rajvi.jingar@linux.intel.com> wrote:
+> >
+> > The state of the device is saved during pci_pm_suspend_noirq(), if it
+> > has not already been saved, regardless of the skip_bus_pm flag value. So
+> > skip_bus_pm check is removed before saving the device state.
+> >
+> > Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> I have reviewed this and the [2/2] already and they are clear
+> improvements to me.
+> 
+> Do you have any concerns regarding any of them?
 
-During suspend, we want to disable PTM on Root Ports because that allows
-some chips, e.g., Intel mobile chips since Coffee Lake, to enter a
-lower-power PM state.
+Since the log doesn't mention fixing a problem, I guess this one is
+only a simplification, right?  It looks functionally equivalent to me.
 
-Previously we only disabled PTM for Root Ports, but PCIe r6.0, sec 2.2.8,
-strongly recommends that functions support generation of Messages in non-D0
-states, so we must assume that Switch Upstream Ports or Endpoints may send
-PTM Request Messages while in D1, D2, and D3hot.
+> If not, do you want me to pick them up or do you plan to take care of
+> them yourself?
 
-A PTM Message received by a Downstream Port, e.g., a Root Port, with PTM
-disabled must be treated as an Unsupported Request (sec 6.21.3).
+Let me take them; I want to at least wrap the comment to align with
+the rest of the file.
 
-With this topology:
+> > ---
+> >  v1->v2: no change
+> >  v2->v3: no change
 
-  0000:00:1d.0 Root Port              to [bus 08-71]
-  0000:08:00.0 Switch Upstream Port   to [bus 09-71]
+Why are we bumping the version numbers if there's truly no change?
 
-Kai-Heng reported errors like this:
-
-  pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-  pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-  pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-  pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-  pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-
-Decoding this (from PCIe r6.0, sec 2.2.1.1, 2.2.8.10) shows that 00:1d.0
-logged an Unsupported Request error when it received a PTM Request with
-Requester ID 08:00.0.
-
-To prevent this error, disable PTM when suspending Upstream Ports
-(including those on Endpoints), not just Root Ports.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216210
-Based-on: https://lore.kernel.org/r/20220706123244.18056-1-kai.heng.feng@canonical.com
-Based-on-patch-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: David E. Box <david.e.box@linux.intel.com>
-Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pci.c      | 30 ++++++++++++++----------------
- drivers/pci/pcie/ptm.c |  8 +++++++-
- 2 files changed, 21 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 95bc329e74c0..96487a9ce5bf 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2707,14 +2707,19 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
- 		return -EIO;
- 
- 	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
-+	 * We want to disable PTM on Root Ports because that allows some
-+	 * chips, e.g., Intel mobile chips since Coffee Lake, to enter a
-+	 * lower-power PM state.
-+	 *
-+	 * PCIe r6.0, sec 2.2.8, strongly recommends that functions support
-+	 * generation of messages in non-D0 states, so we assume Switch
-+	 * Upstream Ports or Endpoints may send PTM Requests while in D1,
-+	 * D2, and D3hot.  A PTM message received by a Downstream Port
-+	 * (including a Root Port) with PTM disabled must be treated as an
-+	 * Unsupported Request (sec 6.21.3).  To prevent this error,
-+	 * disable PTM in *all* devices, not just Root Ports.
- 	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_disable_ptm(dev);
-+	pci_disable_ptm(dev);
- 
- 	pci_enable_wake(dev, target_state, wakeup);
- 
-@@ -2764,15 +2769,8 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
- 
--	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
--	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_disable_ptm(dev);
-+	/* See rationale above for disabling PTM */
-+	pci_disable_ptm(dev);
- 
- 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
- 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 368a254e3124..ec338470d13f 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -31,12 +31,18 @@ static void pci_ptm_info(struct pci_dev *dev)
- 
- void pci_disable_ptm(struct pci_dev *dev)
- {
--	int ptm;
-+	int type, ptm;
- 	u16 ctrl;
- 
- 	if (!pci_is_pcie(dev))
- 		return;
- 
-+	type = pci_pcie_type(dev);
-+	if (!(type == PCI_EXP_TYPE_ROOT_PORT ||
-+	      type == PCI_EXP_TYPE_UPSTREAM ||
-+	      type == PCI_EXP_TYPE_ENDPOINT))
-+		return;
-+
- 	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
- 	if (!ptm)
- 		return;
--- 
-2.25.1
-
+> > ---
+> >  drivers/pci/pci-driver.c | 18 ++++++------------
+> >  1 file changed, 6 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 49238ddd39ee..1f64de3e5280 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -867,20 +867,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+> >                 }
+> >         }
+> >
+> > -       if (pci_dev->skip_bus_pm) {
+> > +       if (!pci_dev->state_saved) {
+> > +               pci_save_state(pci_dev);
+> >                 /*
+> > -                * Either the device is a bridge with a child in D0 below it, or
+> > -                * the function is running for the second time in a row without
+> > -                * going through full resume, which is possible only during
+> > -                * suspend-to-idle in a spurious wakeup case.  The device should
+> > -                * be in D0 at this point, but if it is a bridge, it may be
+> > -                * necessary to save its state.
+> > +                * If the device is a bridge with a child in D0 below it, it needs to
+> > +                * stay in D0, so check skip_bus_pm to avoid putting it into a
+> > +                * low-power state in that case.
+> >                  */
+> > -               if (!pci_dev->state_saved)
+> > -                       pci_save_state(pci_dev);
+> > -       } else if (!pci_dev->state_saved) {
+> > -               pci_save_state(pci_dev);
+> > -               if (pci_power_manageable(pci_dev))
+> > +               if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+> >                         pci_prepare_to_sleep(pci_dev);
+> >         }
+> >
+> > --
+> > 2.25.1
+> >
