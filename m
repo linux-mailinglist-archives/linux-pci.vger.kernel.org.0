@@ -2,91 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C9FF5A5BB0
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 08:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D7345A5CA6
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 09:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbiH3GXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 02:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52216 "EHLO
+        id S229655AbiH3HOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 03:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbiH3GXL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 02:23:11 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D8AE79632
-        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 23:23:08 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id bx38so10234281ljb.10
-        for <linux-pci@vger.kernel.org>; Mon, 29 Aug 2022 23:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=gjDGsH3K0hav1h9g3C72Xj3//qxC6le1H42uGY/mBiM=;
-        b=Pf/XffTBOaSOvmodI3nui/CvjpQihOA8COvcUp5kjW91REX+FKBaRP1Mzs6+TIj0KP
-         FsSod0D25SEuL8mzXy/Zr6/hQ/4DhiM3M4CPNMZGZ19aX6W3qH/Ctxe4YdGJA5TxoD6L
-         mBbtxBDyyXq7/5kuUo3VABPrkVzcUkQOJrZ8+d/evSJqq2lTivv91eaQmUYDktL/b1Pr
-         +C7rgoZLi+Wgb5VvgVrdm9dtzLx3np2a4XO1Pc/xtHhQPTPPEavmzntzEGGwoNu8sx0o
-         vrMP+PfhkPoVMoobUnHn4a1zKkDIMwPEj98zj8hSb2wBbJqqUzIF0FsG3uda+0jPqR+D
-         gmzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=gjDGsH3K0hav1h9g3C72Xj3//qxC6le1H42uGY/mBiM=;
-        b=FaPGIG+AIraR9q9atGUMqyuvIzkySPklyBWmn/iNATyNJDES8finEWcQPJgBEnsLOe
-         BUiSYa9pqHjD8WLWTlcq30jgOFW2QkiDihsoAN8rYIEtb9v7lxNzjjHmJjrmD3d0nAs4
-         JlRE9HvWEefpAnBe4IwuDXSYeYYL4qHw4E2SAD1dyMqsl1+8Baey5zIzoCyzKx8DhEuf
-         Dwb8mS5tsWLFGbYSv6pyj81NToA1Cn7YkFQ8kSa1zuR0Arx0F9o8MwWvnOazCRAX8lVR
-         gA3cQYOf22PDDsDmVATYQ3UfoeCiuG+81A1i8Vl4W1vXpubpwDPRGqc/zbq2YNpO2ELO
-         FuQA==
-X-Gm-Message-State: ACgBeo1udDNHBriV8Lt5X3VVmbgbcN+I5TjlI9ZXo4mr8oQ4Rtjd07mu
-        MeyX8QoKmNx58rNVjKwoQZODPg==
-X-Google-Smtp-Source: AA6agR7fe8InFzc2jm/fK/Xk2GRf49YPHz4tkTRjfGWj4cnI8Q9eDvrkyq/7cIRuQZLll6lXAz2T4g==
-X-Received: by 2002:a2e:954a:0:b0:264:9f50:a407 with SMTP id t10-20020a2e954a000000b002649f50a407mr2610512ljh.374.1661840586801;
-        Mon, 29 Aug 2022 23:23:06 -0700 (PDT)
-Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
-        by smtp.gmail.com with ESMTPSA id bk37-20020a05651c23a500b00261ca006158sm349288ljb.54.2022.08.29.23.23.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Aug 2022 23:23:05 -0700 (PDT)
-Message-ID: <dbbef6f3-cf47-a921-fd89-e940af3e2f85@linaro.org>
-Date:   Tue, 30 Aug 2022 09:23:04 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v2 2/3] dt-bindings: pci: QCOM Adding sc7280 aggre0,
- aggre1 clocks
-Content-Language: en-US
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S230441AbiH3HOD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 03:14:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F11DC2764;
+        Tue, 30 Aug 2022 00:14:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C326AB816AA;
+        Tue, 30 Aug 2022 07:14:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAB7C433C1;
+        Tue, 30 Aug 2022 07:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661843639;
+        bh=N85wQvT76zz3IeyCl0LFoWyoONSRnwCg16u5Giob5IM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ljuu/lqVPmhIsQODLZgymO4xqsRnujIozpGfe+s6+cV+brJoAdMKZRymPpsOGWZ8+
+         mH0/vmiD4szFDaMsDqO4cPQqu9YxHJM5aZ9CoggjWln8ZB90w+LO1iYxzrkaJqjQDB
+         tvkU5iPUdiJyJyniax6oury3naT5kv4uJByTHNLVKp3hDgrcom5DOxNwA6Hd9BieJa
+         ewUG4ValKx27i0hYI/8dLhLneKnXJ8mJngM8nKB0vLzk8d2J2kydUSQKbBd9j8O7nv
+         jmEEOFJ0wD32AXH3Bv1mDSenEQ9PC41fHOCxR8WJ2VJ7XdTiYffciMVHvQNYnsjf8V
+         EDn3H0kYVlycw==
+Date:   Tue, 30 Aug 2022 12:43:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn@kryo.se>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
- <1656691899-21315-1-git-send-email-quic_krichai@quicinc.com>
- <1656691899-21315-3-git-send-email-quic_krichai@quicinc.com>
- <1fb5f0c6-ff72-b9ba-175a-b5197ed658a7@linaro.org>
- <9de4c3a0-eb95-f4e9-b828-2343241fff41@quicinc.com>
- <75f8b257-7e0a-d871-ab30-37a72f7da56e@linaro.org>
- <3dd98ae4-8b19-e241-3b64-fe24509d2cb4@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <3dd98ae4-8b19-e241-3b64-fe24509d2cb4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-pcie: split register tables into
+ primary and secondary part
+Message-ID: <Yw24sgVksGzvgr8Q@matsya>
+References: <20220825105044.636209-1-dmitry.baryshkov@linaro.org>
+ <20220825105044.636209-3-dmitry.baryshkov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825105044.636209-3-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,32 +65,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 29/08/2022 20:45, Krishna Chaitanya Chundru wrote:
-> Sorry for very late reply.
-> 
-> If we increase the common definitions of clocks properties to "13" it is 
-> sufficient right.
-> 
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml 
-> b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index 92402f1..c9e268d 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -53,11 +53,11 @@ properties:
->     # Platform constraints are described later.
->     clocks:
->       minItems: 3
-> -    maxItems: 12
-> +    maxItems: 13
-> 
->     clock-names:
->       minItems: 3
-> -    maxItems: 12
-> +    maxItems: 13
-> 
+On 25-08-22, 13:50, Dmitry Baryshkov wrote:
+> SM8250 configuration tables are split into two parts: the common one and
+> the PHY-specific tables. Make this split more formal. Rather than having
+> a blind renamed copy of all QMP table fields, add separate struct
+> qmp_phy_cfg_tables and add two instances of this structure to the struct
+> qmp_phy_cfg. Later on this will be used to support different PHY modes
+> (RC vs EP).
 
-Yes.
+This lgtm with once nit
 
-Best regards,
-Krzysztof
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 141 +++++++++++++----------
+>  1 file changed, 83 insertions(+), 58 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> index c84846020272..60cbd2eae346 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> @@ -1346,34 +1346,33 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
+>  
+>  struct qmp_phy;
+>  
+> -/* struct qmp_phy_cfg - per-PHY initialization config */
+> -struct qmp_phy_cfg {
+> -	/* phy-type - PCIE/UFS/USB */
+> -	unsigned int type;
+> -	/* number of lanes provided by phy */
+> -	int nlanes;
+> -
+> -	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
+> +struct qmp_phy_cfg_tables {
+>  	const struct qmp_phy_init_tbl *serdes_tbl;
+>  	int serdes_tbl_num;
+> -	const struct qmp_phy_init_tbl *serdes_tbl_sec;
+> -	int serdes_tbl_num_sec;
+>  	const struct qmp_phy_init_tbl *tx_tbl;
+>  	int tx_tbl_num;
+> -	const struct qmp_phy_init_tbl *tx_tbl_sec;
+> -	int tx_tbl_num_sec;
+>  	const struct qmp_phy_init_tbl *rx_tbl;
+>  	int rx_tbl_num;
+> -	const struct qmp_phy_init_tbl *rx_tbl_sec;
+> -	int rx_tbl_num_sec;
+>  	const struct qmp_phy_init_tbl *pcs_tbl;
+>  	int pcs_tbl_num;
+> -	const struct qmp_phy_init_tbl *pcs_tbl_sec;
+> -	int pcs_tbl_num_sec;
+>  	const struct qmp_phy_init_tbl *pcs_misc_tbl;
+>  	int pcs_misc_tbl_num;
+> -	const struct qmp_phy_init_tbl *pcs_misc_tbl_sec;
+> -	int pcs_misc_tbl_num_sec;
+> +};
+> +
+> +/* struct qmp_phy_cfg - per-PHY initialization config */
+> +struct qmp_phy_cfg {
+> +	/* phy-type - PCIE/UFS/USB */
+> +	unsigned int type;
+> +	/* number of lanes provided by phy */
+> +	int nlanes;
+> +
+> +	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
+> +	struct qmp_phy_cfg_tables primary;
+> +	/*
+> +	 * Init sequence for PHY blocks, providing additional register
+> +	 * programming. Unless required it can be left omitted.
+> +	 */
+> +	struct qmp_phy_cfg_tables secondary;
+
+since this is optional but always defined, we would waste memory here,
+can we make this a pointer and initialize to null when secondary is not
+present
+
+-- 
+~Vinod
