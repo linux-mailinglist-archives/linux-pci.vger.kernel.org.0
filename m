@@ -2,204 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 381355A5F71
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 11:30:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A6145A5F85
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 11:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbiH3JaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 05:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43444 "EHLO
+        id S230194AbiH3Jdw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 05:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231880AbiH3J3v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 05:29:51 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B8D284
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 02:29:45 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id z29so6120794lfb.13
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 02:29:45 -0700 (PDT)
+        with ESMTP id S231891AbiH3Jct (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 05:32:49 -0400
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3258AE097C
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 02:32:30 -0700 (PDT)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-11eb44f520dso11115417fac.10
+        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 02:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=RGUqkEAMYcKdlxASVSFfqtFS0Ow4eDh7fj2KOS3N7cc=;
-        b=duvxjG2yG05W77RsYVgchCQxXXuysvwY/I0a7Tn/GslnycXVvQ6AQfWnIgUgZZ+K4g
-         SKJ+DurBhGQtpKl7C47uXbeGI0houeGHpZTzGBNEMxd+C4S/rXJF6j/d+Dt+X+VeOFsV
-         b1JWw6wOTkiq8uik9ki4DPVID9S5KN/yQg+ZFDFZtAIEQ9r0/F24+HbSlL7wf4oSZkOS
-         u1xsyVXESvALtYKjXf9Knooh+Jk5++CWWFb5AisvpI489RNNA6CiS8tNvh+Y49FA3Mgm
-         9PnCPfKhswxcvTLwYAO6Qr7CxJ6Rdcng0kFWBRfcJmVSSwA1pI/BXB1JYmw3Zl/n020f
-         jXqQ==
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=e/OUCbpppOCXkEP0VccElu5zr3Hk/CBS9pP79HrpXVw=;
+        b=cCmtq8G4ZzuuyGvIRd+OZjTfd4ttDfmOwDnDDnKgaOuymoSsdHfXq9LmaLnLz8gkuL
+         1mpHnZViW57orNpXev+zMqXxnY/Xzk4TbiOcg4T7RpIG18EK1m8J0fYAlGp80ubFbobB
+         Y4m2x8b1iiy1IP1oboFO6NTzQrCDc4BjFlL9PBu2fYZQbLuVMePjKSSiUlnKtoToD0MU
+         c/FG3ac1wfbcB/qut5BmYoRDpkVNJW1H+YqEr2FRTbcg1SeN9WoCnFPQYODMkH+diht1
+         iFcTSyFp7t1pdjdahfPC0UFfxQQgXKqB06ha++Mx8Phh1MVPiGQhy3k3cXlJ5PyZ2NBP
+         bneA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc;
-        bh=RGUqkEAMYcKdlxASVSFfqtFS0Ow4eDh7fj2KOS3N7cc=;
-        b=1vZhCBFKLa/EX72z1KrdzFN0k/dnxaY0CU1a5i+abxPaQaoIQDG6yZDzhVxYRP1svb
-         X9ighJOGnvCuZFeuTbMuC7HIfrffihyNHcP2z9YRGutSlBt7E38IBGeoflWeruCPWIqw
-         mFtAGz/Xa7iwTopAY5Y70KVqeRRACRFLCE2SsfmI+KLsaznkNX1VuCiMOWowXRal9rNt
-         v+k1scUaqadCwARfmfyLkoxsvq/PCLMLSL03j9fgEQ0P1uZjWjMBPx2mFixC2i0KLt54
-         BQgsGcV+urdaxFAhv6NLSE4VqixEeyiOf3WK1qFsAG5gLgUJ31wfeFihp55GU6jVbheG
-         BOEA==
-X-Gm-Message-State: ACgBeo0Aw+0BnALv+qkKWwP0ct3IF5UTYu7zB1wSxj3U0iKZkF3zfUqp
-        mgc3l6vgJQBR+1kAs3z63+rVww==
-X-Google-Smtp-Source: AA6agR4IWI7kP1cAa/pXkx98zqiF1r1A2zAWpv5R30sR9R2HKmZsVBdBLuRtOqzeUM+4p3ajRxdqLA==
-X-Received: by 2002:a05:6512:1527:b0:48b:99:f3ff with SMTP id bq39-20020a056512152700b0048b0099f3ffmr7439961lfb.81.1661851783238;
-        Tue, 30 Aug 2022 02:29:43 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id v11-20020a2ea60b000000b0025e00e0116esm1697453ljp.128.2022.08.30.02.29.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Aug 2022 02:29:42 -0700 (PDT)
-Message-ID: <9e428ef0-509c-eb09-0d4c-13cdd74fad8f@linaro.org>
-Date:   Tue, 30 Aug 2022 12:29:41 +0300
+        bh=e/OUCbpppOCXkEP0VccElu5zr3Hk/CBS9pP79HrpXVw=;
+        b=QzBzNoi7gghCI5U1cnpE9oX6zeBUOXR8PppdHxvxr3zCOQblTIqkJYJXEfN5v7wLRe
+         P8+LsTv6G1ouKCQTJFnV+Ve87nXAZwcNCn4qESGZuaGR+qesf1QnApgoYg9/5SopuwCu
+         jcS3nHbiQtFqljSOpvnF04OdKzD8K9So4oDAPs2i6kT3LE1/1wEsf6ZfPBnMKfwFI4bL
+         T8aavESW8hm5fD8jAedNXXQNHF8wSh4jmdXfxpvAlrpHGChNf9/wP3z5ZTKibduA2fnM
+         WIN1U/N8sjgBdjQPTncX18Q0K8AmsGLSbypV4/aeIi8cJvoeS9UqXDJXwNZ0EnmG8ygT
+         1jkw==
+X-Gm-Message-State: ACgBeo1VadyGYP0MqBxHd4nB6Bv4ZycYkisgzKdYRwOAiQo8ZVdex4Ob
+        yT5NplUuGhRIhRXDtdkDOsTQP1shoh4NIUV4370=
+X-Google-Smtp-Source: AA6agR6lcnUGeqsgFH+rdDeKay9dAeFaN2lFTKSLuIrgPQOCgpYlv9O7Ze6IwVb2TD8a7AlyvkZq5dxlptPDN3LqHkk=
+X-Received: by 2002:a05:6870:2402:b0:11c:eb96:77be with SMTP id
+ n2-20020a056870240200b0011ceb9677bemr10058357oap.67.1661851946240; Tue, 30
+ Aug 2022 02:32:26 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-pcie: split register tables into
- primary and secondary part
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn@kryo.se>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org
-References: <20220825105044.636209-1-dmitry.baryshkov@linaro.org>
- <20220825105044.636209-3-dmitry.baryshkov@linaro.org>
- <Yw2+aVbqBfMSUcWq@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <Yw2+aVbqBfMSUcWq@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6358:6584:b0:b2:b333:2bf8 with HTTP; Tue, 30 Aug 2022
+ 02:32:25 -0700 (PDT)
+Reply-To: mariandavies488@gmail.com
+From:   Marian Davies <abigailbamidele18@gmail.com>
+Date:   Tue, 30 Aug 2022 09:32:25 +0000
+Message-ID: <CANp45DtbYisP=hFVD27f4sLknV4hH=DgSgSS+n-xEHAkQBuAdQ@mail.gmail.com>
+Subject: Hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4996]
+        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2001:4860:4864:20:0:0:0:30 listed in]
+        [list.dnswl.org]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [abigailbamidele18[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mariandavies488[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [abigailbamidele18[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/08/2022 10:38, Johan Hovold wrote:
-> On Thu, Aug 25, 2022 at 01:50:40PM +0300, Dmitry Baryshkov wrote:
->> SM8250 configuration tables are split into two parts: the common one and
->> the PHY-specific tables. Make this split more formal. Rather than having
->> a blind renamed copy of all QMP table fields, add separate struct
->> qmp_phy_cfg_tables and add two instances of this structure to the struct
->> qmp_phy_cfg. Later on this will be used to support different PHY modes
->> (RC vs EP).
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 141 +++++++++++++----------
->>   1 file changed, 83 insertions(+), 58 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> index c84846020272..60cbd2eae346 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> @@ -1346,34 +1346,33 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
->>   
->>   struct qmp_phy;
->>   
->> -/* struct qmp_phy_cfg - per-PHY initialization config */
->> -struct qmp_phy_cfg {
->> -	/* phy-type - PCIE/UFS/USB */
->> -	unsigned int type;
->> -	/* number of lanes provided by phy */
->> -	int nlanes;
->> -
->> -	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
->> +struct qmp_phy_cfg_tables {
->>   	const struct qmp_phy_init_tbl *serdes_tbl;
->>   	int serdes_tbl_num;
->> -	const struct qmp_phy_init_tbl *serdes_tbl_sec;
->> -	int serdes_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *tx_tbl;
->>   	int tx_tbl_num;
->> -	const struct qmp_phy_init_tbl *tx_tbl_sec;
->> -	int tx_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *rx_tbl;
->>   	int rx_tbl_num;
->> -	const struct qmp_phy_init_tbl *rx_tbl_sec;
->> -	int rx_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *pcs_tbl;
->>   	int pcs_tbl_num;
->> -	const struct qmp_phy_init_tbl *pcs_tbl_sec;
->> -	int pcs_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *pcs_misc_tbl;
->>   	int pcs_misc_tbl_num;
->> -	const struct qmp_phy_init_tbl *pcs_misc_tbl_sec;
->> -	int pcs_misc_tbl_num_sec;
->> +};
->> +
->> +/* struct qmp_phy_cfg - per-PHY initialization config */
->> +struct qmp_phy_cfg {
->> +	/* phy-type - PCIE/UFS/USB */
->> +	unsigned int type;
->> +	/* number of lanes provided by phy */
->> +	int nlanes;
->> +
->> +	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
->> +	struct qmp_phy_cfg_tables primary;
->> +	/*
->> +	 * Init sequence for PHY blocks, providing additional register
->> +	 * programming. Unless required it can be left omitted.
->> +	 */
->> +	struct qmp_phy_cfg_tables secondary;
-> 
-> I haven't really had time to look at this series yet, but it seems the
-> way these structures are named and organised could be improved.
-> 
-> First, "primary" and "secondary" says nothing about what these
-> structures are and the names are also unnecessarily long.
-
-I started with 'pri'/'sec', but was asked to improve them. Any sensible 
-suggestion is welcomed here. 'main'/'aux'?
-
-Regarding 'saying nothing'. It's true, initially it just followed the 
-existing split for the sm8250. Then I added the `secondary_ep` table.
-
-> 
-> Second, once you add a containing structure, the "_tbl" suffixes could
-> be removed (e.g. in "pcs_misc_tbl").
-> 
-> Doing something like below should make the code cleaner:
-> 
-> 	struct qmp_phy_cfg_tables {
-> 		const struct qmp_phy_init_tbl *serdes;
-> 		const struct qmp_phy_init_tbl *tx;
-> 		...
-> 	};
-> 
-> 	struct qmp_phy_cfg {
-> 		struct qmp_phy_cfg_tables tbls1;
-> 		struct qmp_phy_cfg_tables tbls2;
-> 		...
-> 	};
-> 	
-> as the tables can be referred to as
-> 
-> 	cfg.tbls2.serdes
-> 
-> instead of
-> 	
-> 	cfg.secondary.serdes_tbl;
-
-Nice suggestion, I'll implement it for v3 if Vinod doesn't object.
-
-> 
-> Johan
-
 -- 
-With best wishes
-Dmitry
-
+Hello did you got my email
