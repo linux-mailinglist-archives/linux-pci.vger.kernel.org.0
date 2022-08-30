@@ -2,113 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95EBB5A5CAB
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 09:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D29DB5A5CBB
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Aug 2022 09:18:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbiH3HPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Aug 2022 03:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53500 "EHLO
+        id S230496AbiH3HSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Aug 2022 03:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbiH3HPq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 03:15:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6574C543DA
-        for <linux-pci@vger.kernel.org>; Tue, 30 Aug 2022 00:15:45 -0700 (PDT)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1oSvTF-0007FZ-08; Tue, 30 Aug 2022 09:15:37 +0200
-Message-ID: <d3625367-9f7a-c864-7908-0c819bf3f496@pengutronix.de>
-Date:   Tue, 30 Aug 2022 09:15:34 +0200
+        with ESMTP id S230469AbiH3HSC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Aug 2022 03:18:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5D9C652F;
+        Tue, 30 Aug 2022 00:18:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 39F6261495;
+        Tue, 30 Aug 2022 07:18:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB27C433C1;
+        Tue, 30 Aug 2022 07:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661843880;
+        bh=8YpYFHpRZlcXniKh+3stt8dUFwztey2Ae9xNZ/I5eLQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nEkvZandQOHZD9JTmh7WCNlH8uImDGJLbBBj/3+Vymv4FviUJtP0Lm/V66nUZaTTm
+         N+/ZtmJdwXsGyJEusxLDoF+Xqat/BaNe/RI3ji5U4bVStwvBfKKYKeEY/OyIp9irXO
+         PJLzu8GQ19Q/RY+Vo6FEiPBZpwGdk2IsVcNhraOZtK6BrdE2smqFN9ZiFD1wPghcEy
+         M8vZP+RMlcFurwLQL/P6Rm9s0U6ImRa2ptWYrY+h8aJsAyq+kpU7hGE+6dgje9ytVa
+         qUjXxtUXVJTHuoGgcxVuS25c1W+roYGmV34snPGdvu5LrLB6VwPr6wctiybGNmPPmS
+         qrTdzNGsXRJtw==
+Date:   Tue, 30 Aug 2022 12:47:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn@kryo.se>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 5/6] PCI: qcom-ep: Setup PHY to work in EP mode
+Message-ID: <Yw25pB6j5w6so8tx@matsya>
+References: <20220825105044.636209-1-dmitry.baryshkov@linaro.org>
+ <20220825105044.636209-6-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v1 0/2] Fix the wrong order of phy callbacks
-Content-Language: en-US
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "kishon@ti.com" <kishon@ti.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1661173856-1192-1-git-send-email-hongxing.zhu@nxp.com>
- <e6d5f688-f4c3-6094-91f6-a160b601c07d@pengutronix.de>
- <AS8PR04MB86767CFA73F8C639EDD16A298C799@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <AS8PR04MB86767CFA73F8C639EDD16A298C799@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825105044.636209-6-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Richard,
-
-On 30.08.22 05:47, Hongxing Zhu wrote:
->>> [PATCH v1 1/2] PCI: imx6: Fix the wrong order of phy_init() and [PATCH
->>> v1 2/2] phy: freescale: imx8m-pcie: Fix the wrong order of
->>
->> This introduces an intermittent breakage. Can you squash?
+On 25-08-22, 13:50, Dmitry Baryshkov wrote:
+> Call phy_set_mode_ext() to notify the PHY driver that the PHY is being
+> used in the EP mode.
 > 
-> Hi Ahmad:
-> Thanks for your comments.
-> Do you mean to squash this fix to the preview series?
-> I'm afraid that it's not easy to do that.
-> Because there are a lot of pci-imx6 code changes after 
-> commit: 1aa97b002258 ("phy: freescale: pcie: Initialize the imx8 pcie standalone phy driver").
-
-The way I understand it, if a bisect ends up between your two patches, i.MX8M
-PCIe will be broken, whereas it worked before. I thus wonder if we shouldn't
-instead squash this series here into a single patch.
-
-Cheers,
-Ahmad
-
-
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Best Regards
-> Richard Zhu
->>
->>>
->>>
->>
->>
->> --
->> Pengutronix e.K.                           |
->> |
->> Steuerwalder Str. 21                       |
->> https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.pe
->> ngutronix.de%2F&amp;data=05%7C01%7Chongxing.zhu%40nxp.com%7C3277
->> 61bac5b9407d977008da89886b15%7C686ea1d3bc2b4c6fa92cd99c5c30163
->> 5%7C0%7C0%7C637973516254656985%7CUnknown%7CTWFpbGZsb3d8eyJ
->> WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
->> C3000%7C%7C%7C&amp;sdata=hasOtX77%2Fea5yLbV8C7wOfdZStF5erHOL58
->> Zf6ZZbo4%3D&amp;reserved=0  |
->> 31137 Hildesheim, Germany                  | Phone:
->> +49-5121-206917-0    |
->> Amtsgericht Hildesheim, HRA 2686           | Fax:
->> +49-5121-206917-5555 |
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index ec99116ad05c..d17b255a909d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -240,6 +240,10 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
+>  	if (ret)
+>  		goto err_disable_clk;
+>  
+> +	ret = phy_set_mode_ext(pcie_ep->phy, PHY_MODE_PCIE, 1);
 
+please define 1 or 0, rather than magic values
+
+> +	if (ret)
+> +		goto err_phy_exit;
+> +
+>  	ret = phy_power_on(pcie_ep->phy);
+>  	if (ret)
+>  		goto err_phy_exit;
+> -- 
+> 2.35.1
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+~Vinod
