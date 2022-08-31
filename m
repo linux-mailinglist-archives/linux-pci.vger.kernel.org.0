@@ -2,67 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1865A880B
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Aug 2022 23:25:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 853A65A8811
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Aug 2022 23:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232229AbiHaVZW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Aug 2022 17:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        id S232084AbiHaV0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Aug 2022 17:26:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232215AbiHaVZV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Aug 2022 17:25:21 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9B255082;
-        Wed, 31 Aug 2022 14:25:20 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-11f4e634072so12976308fac.13;
-        Wed, 31 Aug 2022 14:25:20 -0700 (PDT)
+        with ESMTP id S231955AbiHaV0o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Aug 2022 17:26:44 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352D77B78B;
+        Wed, 31 Aug 2022 14:26:44 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso11146651otb.6;
+        Wed, 31 Aug 2022 14:26:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=3IO7QYOx3ovoZtkLdtuGfUPure2DXDjbSLg7kimkmnk=;
-        b=M9KTKOqS5jkSj+FIbaVsG5A0B/o+cHUCcat0CJuKK6flq7WPJnC/5ipTx7YwHG1GO4
-         faDv1w9S9O7KLeS2D9PioKjRMKIVvtdxRaMJ6bUPVQGacW5Qzyfx/NUkcIeMrn7Gu9Cx
-         w8/UwloFuOle+7iNzDdtYsAvBMWz5ZC5q/DsI6/yh2tyN9pyDs32sUTR4RNIaSU9ECmb
-         SlYJOGozX16ch/16cK/51IvooDcXMbnyRag9wByBjYda83Po6hDx1mXQkTgOpIfiDNB9
-         X6y5jsK5amE5nKEpwOqI11PoA/1L7TKNafPDN+fAVn3aKklzUDC0QJBCDR4A9O9wOBxE
-         T4bg==
-X-Gm-Message-State: ACgBeo3Yo8UVQX3ZtI5fCNfLAapFVQplnsprbg+/nTWrKuJRiqZ97r5b
-        0yj5fLyjOq/Ex4if3QtDcw==
-X-Google-Smtp-Source: AA6agR5FNzao4c+d5/VDOYcbN1vLGoZj2frgIS/RF/DPtMRtmJentWXzD/8RolZiTMlRjZR7NZI+KQ==
-X-Received: by 2002:a05:6808:f89:b0:344:cab1:14e9 with SMTP id o9-20020a0568080f8900b00344cab114e9mr2076886oiw.82.1661981119631;
-        Wed, 31 Aug 2022 14:25:19 -0700 (PDT)
+        bh=rIyadyeq6YLRftLRyrN0QiirUdnHJN+op5RTIIc+np8=;
+        b=luaXHk+xH0MfVZcIDVtf6jCniMVXtHxJ8UrbW3yaDth5ViJ4buBSNnmS8XKK9efFzD
+         po1fCRrxxz+g+YZbycuFvg2Zv7MRKm05Hw0doE6hOP+QwBoDbDYDOjRx+sBx9PHpGihn
+         vaA5Yk5yLdW5U8cExD3CfTvn8SnPfX7zJw68vDdKuB5JebxVfRzdaptv/9qts5jrH7ef
+         sBWxmlf74PLEzYN5q8EHaqMLZAW2Pa0UqqtUGGldWmrplpisQcYl7nyPOSoMD4XDTKHP
+         IVgIfsE3bOgW560iG7zlffs2USsoCnzrOVoLKwMLWZyZcCg9ZjgTdoT4kGtZD3Q8kl1H
+         yDXQ==
+X-Gm-Message-State: ACgBeo3vKqFoVQNDF7Llb03ZMJnYYJ712f6zysVDcH4lA08BQmte/0Bd
+        +Z/D72wFvCsXTCezZMQ5ZA==
+X-Google-Smtp-Source: AA6agR7h7g/4sGiJzr8LtSk06Zhc0E+hGHG6a643D5LCN9/i1HNmUyxP4sw3/5p5W25yVMpjgOueGw==
+X-Received: by 2002:a05:6830:929:b0:63b:25ba:dfe4 with SMTP id v41-20020a056830092900b0063b25badfe4mr8368108ott.311.1661981203420;
+        Wed, 31 Aug 2022 14:26:43 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id by6-20020a056830608600b00638e49d4cadsm9278246otb.36.2022.08.31.14.25.18
+        by smtp.gmail.com with ESMTPSA id o139-20020a4a2c91000000b00435ae9a836asm8623117ooo.15.2022.08.31.14.26.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Aug 2022 14:25:19 -0700 (PDT)
-Received: (nullmailer pid 277757 invoked by uid 1000);
-        Wed, 31 Aug 2022 21:25:18 -0000
-Date:   Wed, 31 Aug 2022 16:25:18 -0500
+        Wed, 31 Aug 2022 14:26:43 -0700 (PDT)
+Received: (nullmailer pid 279436 invoked by uid 1000);
+        Wed, 31 Aug 2022 21:26:31 -0000
+Date:   Wed, 31 Aug 2022 16:26:31 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        devicetree@vger.kernel.org,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
-        linux-kernel@vger.kernel.org,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 12/20] dt-bindings: PCI: dwc: Add dma-coherent property
-Message-ID: <20220831212518.GA277724-robh@kernel.org>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v5 13/20] dt-bindings: PCI: dwc: Apply common schema to
+ Rockchip DW PCIe nodes
+Message-ID: <20220831212631.GA277851-robh@kernel.org>
 References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
- <20220822184701.25246-13-Sergey.Semin@baikalelectronics.ru>
+ <20220822184701.25246-14-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220822184701.25246-13-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220822184701.25246-14-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
@@ -74,15 +78,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 22 Aug 2022 21:46:53 +0300, Serge Semin wrote:
-> DW PCIe EP/RP AXI- and TRGT1-master interfaces are responsible for the
-> application memory access. They are used by the RP/EP PCIe buses (MWr/MWr
-> TLPs emitted by the peripheral PCIe devices) and the eDMA block. Since all
-> of them mainly involve the system memory and basically mean DMA we can
-> expect the corresponding platforms can be designed in a way to make sure
-> the transactions are cache-coherent. As such the DW PCIe DT-nodes can have
-> the 'dma-coherent' property specified. Let's permit it in the DT-bindings
-> then.
+On Mon, Aug 22, 2022 at 09:46:54PM +0300, Serge Semin wrote:
+> As the DT-bindings description states the Rockchip PCIe controller is
+> based on the DW PCIe RP IP-core thus its DT-nodes are supposed to be
+> compatible with the common DW PCIe controller schema. Let's make sure they
+> are evaluated against it by referring to the snps,dw-pcie.yaml schema in
+> the allOf sub-schemas composition.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
@@ -90,9 +91,13 @@ On Mon, 22 Aug 2022 21:46:53 +0300, Serge Semin wrote:
 > 
 > Changelog v3:
 > - This is a new patch created on v3 lap of the series.
-> ---
->  Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml | 2 ++
->  1 file changed, 2 insertions(+)
 > 
+> Changelog v5:
+> - Apply snps,dw-pcie.yaml instead of the snps,dw-pcie-common.yaml schema.
+> ---
+>  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Shouldn't this come before/after patch 7?
 
 Reviewed-by: Rob Herring <robh@kernel.org>
