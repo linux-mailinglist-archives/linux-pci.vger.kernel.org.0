@@ -2,115 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC205A8C1A
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 05:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 825535A8CA1
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 06:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbiIADx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Aug 2022 23:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        id S232825AbiIAEaW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Sep 2022 00:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbiIADx7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Aug 2022 23:53:59 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB1D110887;
-        Wed, 31 Aug 2022 20:53:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4MJ6bm4QHPz4xFv;
-        Thu,  1 Sep 2022 13:53:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1662004436;
-        bh=ZIFUnm/QOVgs4khUf+2xFOsp57QlqBfQutIPzPII32Y=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=IpCATWbm1lkj72SyfOeWdRXfACjSZgkAouDM/JnI2Hl3LN2n6VjCbvFNL8g7qGIEL
-         M14U3clPm6so4DXJuekT/1U59h7Vva8hwMbJgzEG77iy0thgeC0ciPakp1b5r5DGk+
-         qnnhE/mj1Hk/FuW18IWmnCOBk/CLNpNMqtrSCo5wN8cFZIKRA3nsoN9Q28WZut5eos
-         A2BWQa1QYxS13fhV1DAcxo6fHIMQOhXnmDPLzRpTh+UAovxjXsCqQtaSEUH/xznvO/
-         yjoNkWbUUoKgZiqLJ52Jnu69QuthgAkP5MBUhfkqIgNQx4oAdeIM+73tIjvhzazDA1
-         s2ZVKHL/E9oow==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/pci: Enable PCI domains in /proc when PCI bus
- numbers are not unique
-In-Reply-To: <20220825083713.4glfivegmodluiun@pali>
-References: <20220820115113.30581-1-pali@kernel.org>
- <878rnclq47.fsf@mpe.ellerman.id.au> <20220825083713.4glfivegmodluiun@pali>
-Date:   Thu, 01 Sep 2022 13:53:56 +1000
-Message-ID: <87wnanu4vf.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232651AbiIAE3v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 00:29:51 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4298E0E7;
+        Wed, 31 Aug 2022 21:20:25 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A69631A4389;
+        Thu,  1 Sep 2022 06:20:23 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 702281A4371;
+        Thu,  1 Sep 2022 06:20:23 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9165E181D0CA;
+        Thu,  1 Sep 2022 12:20:21 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, vkoul@kernel.org,
+        alexander.stein@ew.tq-group.com, marex@denx.de,
+        richard.leitner@linux.dev
+Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: [PATCH v6 0/7] Add the iMX8MP PCIe support
+Date:   Thu,  1 Sep 2022 12:02:33 +0800
+Message-Id: <1662004960-14071-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
-> On Thursday 25 August 2022 17:49:28 Michael Ellerman wrote:
->> Pali Roh=C3=A1r <pali@kernel.org> writes:
->> > On 32-bit powerpc systems with more PCIe controllers and more PCI doma=
-ins,
->> > where on more PCI domains are same PCI numbers, when kernel is compiled
->> > with CONFIG_PROC_FS=3Dy and CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT=3Dy
->> > options, kernel prints "proc_dir_entry 'pci/01' already registered" er=
-ror
->> > message.
->>=20
->> Thanks, I'll pick this up.
->>=20
->> > This regression started appearing after commit 566356813082 ("powerpc/=
-pci:
->> > Add config option for using all 256 PCI buses") in case in each mPCIe =
-slot
->> > is connected PCIe card and therefore PCI bus 1 is populated in for eve=
-ry
->> > PCIe controller / PCI domain.
->> >
->> > The reason is that PCI procfs code expects that when PCI bus numbers a=
-re
->> > not unique across all PCI domains, function pci_proc_domain() returns =
-true
->> > for domain dependent buses.
->> >
->> > Fix this issue by setting PCI_ENABLE_PROC_DOMAINS and PCI_COMPAT_DOMAI=
-N_0
->> > flags for 32-bit powerpc code when CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPEN=
-DENT
->> > is enabled. Same approach is already implemented for 64-bit powerpc co=
-de
->> > (where PCI bus numbers are always domain dependent).
->>=20
->> We also have the same in ppc4xx_pci_find_bridges().
->>=20
->> And if we can eventually make CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
->> the standard behaviour on 32-bit then everything would behave the same
->> and we could simplify pci_proc_domain() to match what other arches do.
->
-> I sent two patches which do another steps to achieve it:
-> https://lore.kernel.org/linuxppc-dev/20220817163927.24453-1-pali@kernel.o=
-rg/t/#u
->
-> Main blocker is pci-OF-bus-map which is in direct conflict with
-> CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT and which used on chrp and pmac.
-> And I have no idea if pci-OF-bus-map is still needed or not.
+Based on the 6.0-rc1 of the pci/next branch. 
+This series adds the i.MX8MP PCIe support and tested on i.MX8MP
+EVK board when one PCIe NVME device is used.
 
-Yeah thanks, I saw those patches.
+- i.MX8MP PCIe has reversed initial PERST bit value refer to i.MX8MQ/i.MX8MM.
+  Add the PHY PERST explicitly for i.MX8MP PCIe PHY.
+- Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+  And share as much as possible codes with i.MX8MM PCIe PHY.
+- Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+  driver.
 
-I can't find any code that refers to pci-OF-bus-map, so I'm inclined to
-remove it entirely.
+Main changes v5-->v6:
+- To avoid code duplication when find the gpr syscon regmap, add the
+  gpr compatible into the drvdata.
+- Add one missing space before one curly brace in 3/7 of v5 series.
+- 4/7 of v5 had been applied by Phillipp, thanks. For ease of tests, still
+  keep it in v6.
 
-But I'll do some more searching to see if I can find any references to
-it in old code.
+Main changes v4-->v5:
+- Use Lucas' approach, let blk-ctrl driver do the hsio-mix resets.
+- Fetch the iomuxc-gpr regmap by the different phandles.
 
-cheers
+Main changes v3-->v4:
+- Regarding Phillipp's suggestions, add fix tag into the first commit.
+- Add Reviewed and Tested tags.
+
+Main changes v2-->v3:
+- Fix the schema checking error in the PHY dt-binding patch.
+- Inspired by Lucas, the PLL configurations might not required when
+  external OSC is used as PCIe referrence clock. It's true. Remove all
+  the HSIO PLL bit manipulations, and PCIe works fine on i.MX8MP EVK board
+  with one NVME device is used.
+- Drop the #4 patch of v2, since it had been applied by Rob.
+
+Main changes v1-->v2:
+- It's my fault forget including Vinod, re-send v2 after include Vinod
+  and linux-phy@lists.infradead.org.
+- List the basements of this patch-set. The branch, codes changes and so on.
+- Clean up some useless register and bit definitions in #3 patch.
+
+Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  16 ++++++++--
+arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  53 +++++++++++++++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  43 +++++++++++++++++++++++++
+drivers/pci/controller/dwc/pci-imx6.c                        |  27 ++++++++++++++--
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 143 +++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------
+drivers/reset/reset-imx7.c                                   |   1 +
+drivers/soc/imx/imx8mp-blk-ctrl.c                            |  10 ++++++
+7 files changed, 241 insertions(+), 52 deletions(-)
+
+
+ [PATCH v6 1/7] dt-binding: phy: Add iMX8MP PCIe PHY binding
+ [PATCH v6 2/7] arm64: dts: imx8mp: Add iMX8MP PCIe support
+ [PATCH v6 3/7] arm64: dts: imx8mp-evk: Add PCIe support
+ [PATCH v6 4/7] reset: imx7: Fix the iMX8MP PCIe PHY PERST support
+ [PATCH v6 5/7] soc: imx: imx8mp-blk-ctrl: handle PCIe PHY resets
+ [PATCH v6 6/7] phy: freescale: imx8m-pcie: Add i.MX8MP PCIe PHY
+ [PATCH v6 7/7] PCI: imx6: Add i.MX8MP PCIe support
