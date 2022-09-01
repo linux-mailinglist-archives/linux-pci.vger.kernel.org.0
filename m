@@ -2,93 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 786705A8D5C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 07:31:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A52C35A9032
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 09:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232975AbiIAFbV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Sep 2022 01:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
+        id S233958AbiIAH0s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Sep 2022 03:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232993AbiIAFbP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 01:31:15 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEAF1F622
-        for <linux-pci@vger.kernel.org>; Wed, 31 Aug 2022 22:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662010257; x=1693546257;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CTTCKAJylI52Ic59G9HR3omTN6wUC4oi1tgpY1Y6eKg=;
-  b=Z4ahNIqVDXy5oSxvCxFeIWLr5mjuoCrtAvPSpkKF/msmljyjC7C42hUB
-   BI/jR2LyvuiXQCKeDZJYyku8NxoyB9iyc2gsMxEf/UjknIN3pEtozqb1N
-   45G44MJAyJrSvUGet1b3iZ5uLyN4ue0fHaMUD/60ZHQKcIqsLFKza/vP8
-   u9oDGwRf06A0GiC6UBnWvIHMZH/56Io27SJ0ZZSjNEl67samQ/xfiOI4D
-   2A/MoUOJyA8pTplgA0fFNVwaq+c7bSVZAiR5pUGxuo9FrRl3KkUXl5/b8
-   aFgr34jpb25wDuDgmVyuAlbkeNO+jaZ3lso3TsrN8VQ6troojmT6Zx0Em
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="293198741"
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="293198741"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 22:30:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="857700676"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Aug 2022 22:30:55 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8E0B5101; Thu,  1 Sep 2022 08:31:10 +0300 (EEST)
-Date:   Thu, 1 Sep 2022 08:31:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/6] PCI: Allow for future resource expansion on initial
- root bus scan
-Message-ID: <YxBDnl9/Ium3EcNi@black.fi.intel.com>
-References: <20220816100740.68667-1-mika.westerberg@linux.intel.com>
- <Yw9uHmijqFUckyUr@smile.fi.intel.com>
+        with ESMTP id S233974AbiIAHZs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 03:25:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528821144B;
+        Thu,  1 Sep 2022 00:24:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91BA361D0B;
+        Thu,  1 Sep 2022 07:24:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC12FC433D6;
+        Thu,  1 Sep 2022 07:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662017093;
+        bh=stL9+yzK0zgdLie5xf0hjyraAlajedBKEBb65rMMvRw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Deo+YD+Qtg4Ei+JHnT2yXSe+uKnWw8TmyJIetCBkvgsk1Q7LlzsyoYoLTsOfoIi9H
+         OwhDTSuHW6wmK1UEXZdoB3V1y6jPaa6Gnl+RYAHD8O9Y3LVX5IfL7CRFiOeksw36Wm
+         EYmdTybxXyum1jTy27Dch3Ul5cE/l8TcGSQ6IV0XZkNiYbEcW7Nus1P8ePSG+R584J
+         ytYy7VQ/lm2hstwOzR4PGDiapbPxiRVClotXRc2TZgKCgbQB6oL7YeI8VElF+RKMDD
+         D5IhD/lqXpNx9SApSSGxj9pQdWDifYzzwY17Ei+NamHJpcHkmogcZb4K3wswvbiX13
+         GO2I5M6b6Bowg==
+Received: by pali.im (Postfix)
+        id E3E127B8; Thu,  1 Sep 2022 09:24:49 +0200 (CEST)
+Date:   Thu, 1 Sep 2022 09:24:49 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/pci: Enable PCI domains in /proc when PCI bus
+ numbers are not unique
+Message-ID: <20220901072449.hswlq5fpnqrhgvcf@pali>
+References: <20220820115113.30581-1-pali@kernel.org>
+ <878rnclq47.fsf@mpe.ellerman.id.au>
+ <20220825083713.4glfivegmodluiun@pali>
+ <87wnanu4vf.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Yw9uHmijqFUckyUr@smile.fi.intel.com>
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87wnanu4vf.fsf@mpe.ellerman.id.au>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 05:20:14PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 16, 2022 at 01:07:34PM +0300, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > The series works around an issue found on some Dell systems where
-> > booting with Thunderbolt/USB4 devices connected the BIOS leaves some of
-> > the PCIe devices unconfigured. If the connected devices that are not
-> > configured have PCIe hotplug ports as well the initial root bus scan
-> > only reserves the minimum amount of resources to them making any
-> > expansion happening later impossible.
-> > 
-> > We do already distribute the "spare" resources between hotplug ports on
-> > hot-add but we have not done that upon the initial scan. The first three
-> > patches make the initial root bus scan path to do the same.
-> > 
-> > The additional three patches are just a small cleanups that can be
-> > applied separately too.
-> > 
-> > The related bug: https://bugzilla.kernel.org/show_bug.cgi?id=216000.
+On Thursday 01 September 2022 13:53:56 Michael Ellerman wrote:
+> Pali Rohár <pali@kernel.org> writes:
+> > On Thursday 25 August 2022 17:49:28 Michael Ellerman wrote:
+> >> Pali Rohár <pali@kernel.org> writes:
+> >> > On 32-bit powerpc systems with more PCIe controllers and more PCI domains,
+> >> > where on more PCI domains are same PCI numbers, when kernel is compiled
+> >> > with CONFIG_PROC_FS=y and CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT=y
+> >> > options, kernel prints "proc_dir_entry 'pci/01' already registered" error
+> >> > message.
+> >> 
+> >> Thanks, I'll pick this up.
+> >> 
+> >> > This regression started appearing after commit 566356813082 ("powerpc/pci:
+> >> > Add config option for using all 256 PCI buses") in case in each mPCIe slot
+> >> > is connected PCIe card and therefore PCI bus 1 is populated in for every
+> >> > PCIe controller / PCI domain.
+> >> >
+> >> > The reason is that PCI procfs code expects that when PCI bus numbers are
+> >> > not unique across all PCI domains, function pci_proc_domain() returns true
+> >> > for domain dependent buses.
+> >> >
+> >> > Fix this issue by setting PCI_ENABLE_PROC_DOMAINS and PCI_COMPAT_DOMAIN_0
+> >> > flags for 32-bit powerpc code when CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+> >> > is enabled. Same approach is already implemented for 64-bit powerpc code
+> >> > (where PCI bus numbers are always domain dependent).
+> >> 
+> >> We also have the same in ppc4xx_pci_find_bridges().
+> >> 
+> >> And if we can eventually make CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+> >> the standard behaviour on 32-bit then everything would behave the same
+> >> and we could simplify pci_proc_domain() to match what other arches do.
+> >
+> > I sent two patches which do another steps to achieve it:
+> > https://lore.kernel.org/linuxppc-dev/20220817163927.24453-1-pali@kernel.org/t/#u
+> >
+> > Main blocker is pci-OF-bus-map which is in direct conflict with
+> > CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT and which used on chrp and pmac.
+> > And I have no idea if pci-OF-bus-map is still needed or not.
 > 
-> With split and squash or not, LGTM,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Yeah thanks, I saw those patches.
+> 
+> I can't find any code that refers to pci-OF-bus-map, so I'm inclined to
+> remove it entirely.
+> 
+> But I'll do some more searching to see if I can find any references to
+> it in old code.
+> 
+> cheers
 
-Thanks Andy!
-
-I will do the changes you suggested in v2.
+From the code itself I have feeling that some external programs or maybe
+some firmware can access or use this property. But I have really no idea.
