@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5E55A9ED2
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 20:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD4B5A9ED7
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 20:19:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234174AbiIASR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Sep 2022 14:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
+        id S233994AbiIASSO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Sep 2022 14:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234256AbiIASR4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 14:17:56 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E251E7B79B
-        for <linux-pci@vger.kernel.org>; Thu,  1 Sep 2022 11:17:54 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 78so3636240pgb.13
-        for <linux-pci@vger.kernel.org>; Thu, 01 Sep 2022 11:17:54 -0700 (PDT)
+        with ESMTP id S234392AbiIASSF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 14:18:05 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836367B79B
+        for <linux-pci@vger.kernel.org>; Thu,  1 Sep 2022 11:18:02 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id i7-20020a17090adc0700b001fd7ccbec3cso6256270pjv.0
+        for <linux-pci@vger.kernel.org>; Thu, 01 Sep 2022 11:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=zI/BTKFXJXbsFO1kxQzveFTmwvhlHGn8PgFA+S1jres=;
-        b=lbGN4Kp3lRbdgZAgZthVUQrgacQyY9T1ORf4+IRNyEdsR08hfaasoXVs5DtXtNjkTt
-         wTxeqEsp7RBY+UWH7L93OCDfVRg9a1qSh9cBwhtS4I6Er4mCMCBHZU5JSui19cnXXiig
-         44oPiVPAXmom3N3thvuWvMaOvOfbAWjPKiQSDzINje0Iw3JqQRthMh0s8MIbff5OnpvO
-         N9tS9ZKZ0SL5YyBB3QM4IjwgO1zAcad5VDu0Kunmmzc158kOPOqoqYiZnKQaU3pCner0
-         QYRlE7l5InBZMbljno6S49tduW45wREpYyIuNPHbDZ1EkbLBhOg8Xve56z8sFCfzHqVq
-         iV5w==
+        bh=3DXCPe1BdEtYuRHvCYZXZkquoUJcR5dxO1Uv98IS8Fo=;
+        b=Aehod6L+M3ml0QOxN7x+0w3h0/6goHcKiCZebMRRRooSJP64c5JGUMmT0Xs0eXcJQX
+         KAebQ+kqsEsjzxwwCuCi+sTSZ9ePGDRJ4Ke8LtzrvIc85ZUFTKXl6caEY+cTLN//OYSf
+         0QqAgptsvqA+mNuSroupv9lAYWD/oiajx3bhNgTGjKE+5FJqGpp5hl75V/YPuX9vsEwJ
+         H9pYqtwIfWdmAJsRJBDrKwHc/OkPFAj95m1JVMfBleKx9eJGlDea3htyn18Jqhle3msk
+         1aFF1ndcoISes5UYjaPU1OELeWO86cea/I3zJ3XNGnx8Nc3DA33tRGi9jv4uXcMiqB7J
+         p+zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=zI/BTKFXJXbsFO1kxQzveFTmwvhlHGn8PgFA+S1jres=;
-        b=dwsvULuiivFIN8cMqIBV12zWyRqz7iHLSEJimIRWB/GV0bkXcIyhEyO0FaA6dhAoC0
-         iHGyUnJFsx/ejsv4lSbxGe8o3dOY26wwTK0UL5etg8Mn9wVCS17yUHiriEljkCX8OPSC
-         DGKLMdyoXjsl1v5brsNED/YPhu3Zn4f44hMIbPbrMWy4FO6yLcu79RNwbkymwruSH2e9
-         gbKgyNTjJcnPvrB+a4or/W2qGkOba17NWhDmnUdlYloBcQ3fsGREsbuE00lQj884rtUc
-         M8+HEzAnnAU4KjvXEQPrDelre2ROKmIrTXVK4qGKf52sfXMfmQdw7r6TLBeWqUXLE48O
-         +WJQ==
-X-Gm-Message-State: ACgBeo3T4lJ/xhc4wHTKCv5woiKf8bwqlQIDcYuOK+NjeMI0v8NBjMgx
-        4WfX8MH6B6DWQklS7v5YqMuptA==
-X-Google-Smtp-Source: AA6agR7kM8iGzccwGQ6iMySe4S2grbdHOsy/itfUuKWXsnekyj0x05dNeHnyQVuTcw2HeZHUxsgADQ==
-X-Received: by 2002:a05:6a00:88a:b0:53a:b7a0:ea3a with SMTP id q10-20020a056a00088a00b0053ab7a0ea3amr9698501pfj.21.1662056274006;
-        Thu, 01 Sep 2022 11:17:54 -0700 (PDT)
+        bh=3DXCPe1BdEtYuRHvCYZXZkquoUJcR5dxO1Uv98IS8Fo=;
+        b=FE4HgLP0O4/M3Z0Ch5B79Kzcrq931Fch6CEEhv8JMuDdKVyZrwCHCclJeg7uf5qBRn
+         jCxObmebW7bWNiCiOyBU9BRrYQLlXRG39Q2/nZJE1IpY4LYjLFJPi/4h+2CEZ0PLuG91
+         AVicV62o0dy+KPoG1obG7I+yqGN/UAVpkcx7bt+CDqEZrvLhoixS3ugL4NPbJuDkNPBN
+         VfjLoPpiIkL+vsH0s8uff2wI7MgGPNDqC/xSdtWawk0AK40sS0xmiCfFqKN1mDarxg+T
+         wzWhGW0c/5rEGt5E/v1DA6Bp6cCLsIVcQebgLwaVediAuTfco1lC05Q6cyBh5U43ODMu
+         TEaA==
+X-Gm-Message-State: ACgBeo0MOyCDLpM8czV/GkSdkYG9kgMVlS/kPZH2zO09HlSCcv0OoZCk
+        q0HqsA4SEkCjqC+HsGNeBhqz8w==
+X-Google-Smtp-Source: AA6agR5k3r5xfxPxjuPBt32QIykPTxBunw1TVl9SKzFPTIijRtI9vvEivAH4/47P1EXXXpyDgDMWRQ==
+X-Received: by 2002:a17:903:32d2:b0:172:f62a:2f33 with SMTP id i18-20020a17090332d200b00172f62a2f33mr31495269plr.16.1662056281071;
+        Thu, 01 Sep 2022 11:18:01 -0700 (PDT)
 Received: from C02F63J9MD6R.bytedance.net ([61.120.150.77])
-        by smtp.gmail.com with ESMTPSA id b13-20020a170903228d00b0017519b86996sm6320538plh.218.2022.09.01.11.17.48
+        by smtp.gmail.com with ESMTPSA id b13-20020a170903228d00b0017519b86996sm6320538plh.218.2022.09.01.11.17.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Sep 2022 11:17:53 -0700 (PDT)
+        Thu, 01 Sep 2022 11:18:00 -0700 (PDT)
 From:   Zhuo Chen <chenzhuo.1@bytedance.com>
 To:     fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
         allenbh@gmail.com, bhelgaas@google.com, ruscur@russell.cc,
@@ -57,9 +57,9 @@ To:     fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
 Cc:     chenzhuo.1@bytedance.com, ntb@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org
-Subject: [PATCH 2/3] PCI/ERR: Clear fatal status in pcie_do_recovery()
-Date:   Fri,  2 Sep 2022 02:16:33 +0800
-Message-Id: <20220901181634.99591-3-chenzhuo.1@bytedance.com>
+Subject: [PATCH 3/3] PCI/AER: Use pci_aer_raw_clear_status() to clear root port's AER error status
+Date:   Fri,  2 Sep 2022 02:16:34 +0800
+Message-Id: <20220901181634.99591-4-chenzhuo.1@bytedance.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20220901181634.99591-1-chenzhuo.1@bytedance.com>
 References: <20220901181634.99591-1-chenzhuo.1@bytedance.com>
@@ -74,41 +74,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When state is pci_channel_io_frozen in pcie_do_recovery(),
-the severity is fatal and fatal status should be cleared.
-So we add pci_aer_clear_fatal_status().
-
-Since pcie_aer_is_native() in pci_aer_clear_fatal_status()
-and pci_aer_clear_nonfatal_status() contains the function of
-'if (host->native_aer || pcie_ports_native)', so we move them
-out of it.
+Statements clearing AER error status in aer_enable_rootport() has the
+same function as pci_aer_raw_clear_status(). So we replace them, which
+has no functional changes.
 
 Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
 ---
- drivers/pci/pcie/err.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/aer.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 0c5a143025af..e0a8ade4c3fe 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -243,10 +243,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	 * it is responsible for clearing this status.  In that case, the
- 	 * signaling device may not even be visible to the OS.
- 	 */
--	if (host->native_aer || pcie_ports_native) {
-+	if (host->native_aer || pcie_ports_native)
- 		pcie_clear_device_status(dev);
-+
-+	if (state == pci_channel_io_frozen)
-+		pci_aer_clear_fatal_status(dev);
-+	else
- 		pci_aer_clear_nonfatal_status(dev);
--	}
-+
- 	pci_info(bridge, "device recovery successful\n");
- 	return status;
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index d2996afa80f6..eb0193f279f2 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1287,12 +1287,7 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
+ 				   SYSTEM_ERROR_INTR_ON_MESG_MASK);
  
+ 	/* Clear error status */
+-	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
+-	pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS, reg32);
+-	pci_read_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, reg32);
++	pci_aer_raw_clear_status(pdev);
+ 
+ 	/*
+ 	 * Enable error reporting for the root port device and downstream port
 -- 
 2.30.1 (Apple Git-130)
 
