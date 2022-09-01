@@ -2,218 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C56EA5A8C9B
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 06:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 786705A8D5C
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 07:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbiIAEaH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Sep 2022 00:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38738 "EHLO
+        id S232975AbiIAFbV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Sep 2022 01:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232638AbiIAE3t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 00:29:49 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5F2AC2760;
-        Wed, 31 Aug 2022 21:20:37 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EC6132026B4;
-        Thu,  1 Sep 2022 06:20:35 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8BB272026B2;
-        Thu,  1 Sep 2022 06:20:35 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 5550A181D0CA;
-        Thu,  1 Sep 2022 12:20:33 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        shawnguo@kernel.org, vkoul@kernel.org,
-        alexander.stein@ew.tq-group.com, marex@denx.de,
-        richard.leitner@linux.dev
-Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v6 7/7] PCI: imx6: Add i.MX8MP PCIe support
-Date:   Thu,  1 Sep 2022 12:02:40 +0800
-Message-Id: <1662004960-14071-8-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1662004960-14071-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1662004960-14071-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232993AbiIAFbP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 01:31:15 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEAF1F622
+        for <linux-pci@vger.kernel.org>; Wed, 31 Aug 2022 22:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662010257; x=1693546257;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CTTCKAJylI52Ic59G9HR3omTN6wUC4oi1tgpY1Y6eKg=;
+  b=Z4ahNIqVDXy5oSxvCxFeIWLr5mjuoCrtAvPSpkKF/msmljyjC7C42hUB
+   BI/jR2LyvuiXQCKeDZJYyku8NxoyB9iyc2gsMxEf/UjknIN3pEtozqb1N
+   45G44MJAyJrSvUGet1b3iZ5uLyN4ue0fHaMUD/60ZHQKcIqsLFKza/vP8
+   u9oDGwRf06A0GiC6UBnWvIHMZH/56Io27SJ0ZZSjNEl67samQ/xfiOI4D
+   2A/MoUOJyA8pTplgA0fFNVwaq+c7bSVZAiR5pUGxuo9FrRl3KkUXl5/b8
+   aFgr34jpb25wDuDgmVyuAlbkeNO+jaZ3lso3TsrN8VQ6troojmT6Zx0Em
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="293198741"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="293198741"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 22:30:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="857700676"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 31 Aug 2022 22:30:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 8E0B5101; Thu,  1 Sep 2022 08:31:10 +0300 (EEST)
+Date:   Thu, 1 Sep 2022 08:31:10 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/6] PCI: Allow for future resource expansion on initial
+ root bus scan
+Message-ID: <YxBDnl9/Ium3EcNi@black.fi.intel.com>
+References: <20220816100740.68667-1-mika.westerberg@linux.intel.com>
+ <Yw9uHmijqFUckyUr@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yw9uHmijqFUckyUr@smile.fi.intel.com>
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MP PCIe support.
-To avoid codes duplication when find the syscon regmap, add the iomux
-gpr syscon compatible into drvdata.
+On Wed, Aug 31, 2022 at 05:20:14PM +0300, Andy Shevchenko wrote:
+> On Tue, Aug 16, 2022 at 01:07:34PM +0300, Mika Westerberg wrote:
+> > Hi,
+> > 
+> > The series works around an issue found on some Dell systems where
+> > booting with Thunderbolt/USB4 devices connected the BIOS leaves some of
+> > the PCIe devices unconfigured. If the connected devices that are not
+> > configured have PCIe hotplug ports as well the initial root bus scan
+> > only reserves the minimum amount of resources to them making any
+> > expansion happening later impossible.
+> > 
+> > We do already distribute the "spare" resources between hotplug ports on
+> > hot-add but we have not done that upon the initial scan. The first three
+> > patches make the initial root bus scan path to do the same.
+> > 
+> > The additional three patches are just a small cleanups that can be
+> > applied separately too.
+> > 
+> > The related bug: https://bugzilla.kernel.org/show_bug.cgi?id=216000.
+> 
+> With split and squash or not, LGTM,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Tested-by: Marek Vasut <marex@denx.de>
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Thanks Andy!
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6e5debdbc55b..3018f9d1c1b8 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -51,6 +51,7 @@ enum imx6_pcie_variants {
- 	IMX7D,
- 	IMX8MQ,
- 	IMX8MM,
-+	IMX8MP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -61,6 +62,7 @@ struct imx6_pcie_drvdata {
- 	enum imx6_pcie_variants variant;
- 	u32 flags;
- 	int dbi_length;
-+	char gpr[128];
- };
- 
- struct imx6_pcie {
-@@ -150,7 +152,8 @@ struct imx6_pcie {
- static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
- {
- 	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
--		imx6_pcie->drvdata->variant != IMX8MM);
-+		imx6_pcie->drvdata->variant != IMX8MM &&
-+		imx6_pcie->drvdata->variant != IMX8MP);
- 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
- }
- 
-@@ -301,6 +304,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- {
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MM:
-+	case IMX8MP:
- 		/*
- 		 * The PHY initialization had been done in the PHY
- 		 * driver, break here directly.
-@@ -558,6 +562,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
- 		if (ret) {
- 			dev_err(dev, "unable to enable pcie_aux clock\n");
-@@ -602,6 +607,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		clk_disable_unprepare(imx6_pcie->pcie_aux);
- 		break;
- 	default:
-@@ -669,6 +675,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 		reset_control_assert(imx6_pcie->pciephy_reset);
- 		fallthrough;
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	case IMX6SX:
-@@ -744,6 +751,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX6Q:		/* Nothing to do */
- 	case IMX8MM:
-+	case IMX8MP:
- 		break;
- 	}
- 
-@@ -793,6 +801,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_deassert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -812,6 +821,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -1179,6 +1189,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		}
- 		break;
- 	case IMX8MM:
-+	case IMX8MP:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux))
- 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-@@ -1216,7 +1227,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 
- 	/* Grab GPR config register range */
- 	imx6_pcie->iomuxc_gpr =
--		 syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-+		 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
- 	if (IS_ERR(imx6_pcie->iomuxc_gpr)) {
- 		dev_err(dev, "unable to find iomuxc registers\n");
- 		return PTR_ERR(imx6_pcie->iomuxc_gpr);
-@@ -1295,12 +1306,14 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
- 		.dbi_length = 0x200,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX6SX] = {
- 		.variant = IMX6SX,
- 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX6QP] = {
- 		.variant = IMX6QP,
-@@ -1308,17 +1321,26 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.dbi_length = 0x200,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX7D] = {
- 		.variant = IMX7D,
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx7d-iomuxc-gpr",
- 	},
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
-+		.gpr = "fsl,imx8mq-iomuxc-gpr",
- 	},
- 	[IMX8MM] = {
- 		.variant = IMX8MM,
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx8mm-iomuxc-gpr",
-+	},
-+	[IMX8MP] = {
-+		.variant = IMX8MP,
-+		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx8mp-iomuxc-gpr",
- 	},
- };
- 
-@@ -1329,6 +1351,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
- 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
- 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
-+	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
- 	{},
- };
- 
--- 
-2.25.1
-
+I will do the changes you suggested in v2.
