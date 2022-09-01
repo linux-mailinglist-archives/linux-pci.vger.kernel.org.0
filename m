@@ -2,95 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9182B5A8B81
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 04:36:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AC205A8C1A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 05:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232126AbiIACfL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Aug 2022 22:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
+        id S232007AbiIADx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Aug 2022 23:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232114AbiIACfK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Aug 2022 22:35:10 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020F45721D;
-        Wed, 31 Aug 2022 19:35:09 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id j6so12274144qkl.10;
-        Wed, 31 Aug 2022 19:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc;
-        bh=HvAnqh6oLQZyoeHCbOzg6Bi01dtZi6A0ssMqdIvSvXw=;
-        b=MNEBo+Zsxwbetrquwiayil07AvrTnYMSCBrvmU38nzsham4ud4J34GIxLB4AjenhSC
-         Ma2cGOmU6aWBguXvPY+e12cpy/e87kfuTb16KBtDJ+Yd1HxdDfObYhSKYmrB3dp7f1O4
-         DrGn5t9GIykC+JrHFu9bYJj5LtY0VW3LFe2G8c4gI3joQnR/PRft8687VHVSNyA0sTU7
-         RzEzuhuolx2LnhbHDg7QfJ8faMDn1x0erS3MSWTHHt85y8VAGTFbAg/5W9fBFGGuygbZ
-         n+udgfyQjwInwZhukqZn52WGg042RJqwZ+cjh1YQfyv/MolyeY37Ns/z/adUB4lKtseD
-         YoWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc;
-        bh=HvAnqh6oLQZyoeHCbOzg6Bi01dtZi6A0ssMqdIvSvXw=;
-        b=oMRTvFiV4XAXdFIpy5SepKRaz5Uq6RriFr9qer2tGnKDjJM3H6avzL0Akk0Q/xSs1F
-         H7TOVFR2d+pbDZrX9grPYpvrcSa9m49J+ztVVd9sJ0exbl8WS8L75cN2a07iBejJh2+h
-         CjAI8COKBmc1v3PiiuGDVDoLZQEZVV/YAeY583ZNS5QBwlU0GEO/7JSvvnIyExSf+lF9
-         BbuyRun1CHosyPqNdwGsIzh1ihKdJ7ujLeBB9gG1fjkhaFWUEn65qKxpvzjOcSDHXF9f
-         DCLrJn+XwQmyY0HXRiFcvbvSkglDawFMyJ8rjoORndufGa0hiVahtrvGPz0lm6780Gt+
-         gQmQ==
-X-Gm-Message-State: ACgBeo13FjPe4nzViXMqrC3On3aqi1z288/jBYzHpdiqh78AQcszgyOy
-        DvzF9cdI8C1UQaZh0KhWH5k=
-X-Google-Smtp-Source: AA6agR6KXYuUK62Dl1PGX+4IdTEpnv41poGFatJelFOad0HJkABM+PVXqMsd/jk/2Udq60jOOoRkNQ==
-X-Received: by 2002:a37:a84e:0:b0:6bb:bf0a:5be7 with SMTP id r75-20020a37a84e000000b006bbbf0a5be7mr17080767qke.213.1661999708126;
-        Wed, 31 Aug 2022 19:35:08 -0700 (PDT)
-Received: from smtpclient.apple ([87.249.134.31])
-        by smtp.gmail.com with ESMTPSA id k17-20020a05620a143100b006bb83e2e65fsm10502390qkj.42.2022.08.31.19.35.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Aug 2022 19:35:07 -0700 (PDT)
+        with ESMTP id S231447AbiIADx7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Aug 2022 23:53:59 -0400
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB1D110887;
+        Wed, 31 Aug 2022 20:53:58 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4MJ6bm4QHPz4xFv;
+        Thu,  1 Sep 2022 13:53:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1662004436;
+        bh=ZIFUnm/QOVgs4khUf+2xFOsp57QlqBfQutIPzPII32Y=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=IpCATWbm1lkj72SyfOeWdRXfACjSZgkAouDM/JnI2Hl3LN2n6VjCbvFNL8g7qGIEL
+         M14U3clPm6so4DXJuekT/1U59h7Vva8hwMbJgzEG77iy0thgeC0ciPakp1b5r5DGk+
+         qnnhE/mj1Hk/FuW18IWmnCOBk/CLNpNMqtrSCo5wN8cFZIKRA3nsoN9Q28WZut5eos
+         A2BWQa1QYxS13fhV1DAcxo6fHIMQOhXnmDPLzRpTh+UAovxjXsCqQtaSEUH/xznvO/
+         yjoNkWbUUoKgZiqLJ52Jnu69QuthgAkP5MBUhfkqIgNQx4oAdeIM+73tIjvhzazDA1
+         s2ZVKHL/E9oow==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/pci: Enable PCI domains in /proc when PCI bus
+ numbers are not unique
+In-Reply-To: <20220825083713.4glfivegmodluiun@pali>
+References: <20220820115113.30581-1-pali@kernel.org>
+ <878rnclq47.fsf@mpe.ellerman.id.au> <20220825083713.4glfivegmodluiun@pali>
+Date:   Thu, 01 Sep 2022 13:53:56 +1000
+Message-ID: <87wnanu4vf.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-From:   Rich Persaud <persaur@gmail.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] xen-pcifront: Handle missed Connected state
-Date:   Wed, 31 Aug 2022 22:35:06 -0400
-Message-Id: <31F127F6-A096-4991-9D4C-1B2E032689A1@gmail.com>
-References: <20220829151536.8578-1-jandryuk@gmail.com>
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <Oleksandr_Tyshchenko@epam.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20220829151536.8578-1-jandryuk@gmail.com>
-To:     Jason Andryuk <jandryuk@gmail.com>
-X-Mailer: iPad Mail (19G82)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Aug 29, 2022, at 11:16 AM, Jason Andryuk <jandryuk@gmail.com> wrote:
->=20
-> =EF=BB=BFAn HVM guest with linux stubdom and 2 PCI devices failed to start=
- as
-> libxl timed out waiting for the PCI devices to be added.  It happens
-> intermittently but with some regularity.  libxl wrote the two xenstore
-> entries for the devices, but then timed out waiting for backend state 4
-> (Connected) - the state stayed at 7 (Reconfiguring).  (PCI passthrough
-> to an HVM with stubdomain is PV passthrough to the stubdomain and then
-> HVM passthrough with the QEMU inside the stubdomain.)
->=20
-> The stubdom kernel never printed "pcifront pci-0: Installing PCI
-> frontend", so it seems to have missed state 4 which would have
-> called pcifront_try_connect -> pcifront_connect_and_init_dma
+Pali Roh=C3=A1r <pali@kernel.org> writes:
+> On Thursday 25 August 2022 17:49:28 Michael Ellerman wrote:
+>> Pali Roh=C3=A1r <pali@kernel.org> writes:
+>> > On 32-bit powerpc systems with more PCIe controllers and more PCI doma=
+ins,
+>> > where on more PCI domains are same PCI numbers, when kernel is compiled
+>> > with CONFIG_PROC_FS=3Dy and CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT=3Dy
+>> > options, kernel prints "proc_dir_entry 'pci/01' already registered" er=
+ror
+>> > message.
+>>=20
+>> Thanks, I'll pick this up.
+>>=20
+>> > This regression started appearing after commit 566356813082 ("powerpc/=
+pci:
+>> > Add config option for using all 256 PCI buses") in case in each mPCIe =
+slot
+>> > is connected PCIe card and therefore PCI bus 1 is populated in for eve=
+ry
+>> > PCIe controller / PCI domain.
+>> >
+>> > The reason is that PCI procfs code expects that when PCI bus numbers a=
+re
+>> > not unique across all PCI domains, function pci_proc_domain() returns =
+true
+>> > for domain dependent buses.
+>> >
+>> > Fix this issue by setting PCI_ENABLE_PROC_DOMAINS and PCI_COMPAT_DOMAI=
+N_0
+>> > flags for 32-bit powerpc code when CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPEN=
+DENT
+>> > is enabled. Same approach is already implemented for 64-bit powerpc co=
+de
+>> > (where PCI bus numbers are always domain dependent).
+>>=20
+>> We also have the same in ppc4xx_pci_find_bridges().
+>>=20
+>> And if we can eventually make CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT
+>> the standard behaviour on 32-bit then everything would behave the same
+>> and we could simplify pci_proc_domain() to match what other arches do.
+>
+> I sent two patches which do another steps to achieve it:
+> https://lore.kernel.org/linuxppc-dev/20220817163927.24453-1-pali@kernel.o=
+rg/t/#u
+>
+> Main blocker is pci-OF-bus-map which is in direct conflict with
+> CONFIG_PPC_PCI_BUS_NUM_DOMAIN_DEPENDENT and which used on chrp and pmac.
+> And I have no idea if pci-OF-bus-map is still needed or not.
 
-Is there a state machine doc/flowchart for LibXL and Xen PCI device passthro=
-ugh to Linux? This would be a valuable addition to Xen's developer docs, eve=
-n as a whiteboard photo in this thread.
+Yeah thanks, I saw those patches.
 
-Rich=
+I can't find any code that refers to pci-OF-bus-map, so I'm inclined to
+remove it entirely.
+
+But I'll do some more searching to see if I can find any references to
+it in old code.
+
+cheers
