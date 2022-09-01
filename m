@@ -2,117 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 850755A9EB9
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 20:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 342B05A9EC2
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Sep 2022 20:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233576AbiIASOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Sep 2022 14:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
+        id S233101AbiIASQ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Sep 2022 14:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbiIASOg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 14:14:36 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE71C4BA7C;
-        Thu,  1 Sep 2022 11:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=sWRKw2yHnva/fkslMEKIBYXYtsFYh9CE67WvtTKYh9o=; b=LUIvBgXNanbwZx0H1YeUvZgz+W
-        ul/GPgxn/izyWHImD9lqPZLOeLp2e5DPV9+wMaetQl9lN8rbG69efLBarhCWXjJEqFRIUZ/a89fuP
-        J2vlO4iHchGWdU3cW+ChfYCl/ChEYQKScgeFtoa49hZHGEdtT6Y85OqSzoLVMTuBGJioNmnxaH/y4
-        UCjYLZRzU+iuvnnVzftig3939k08pTGaZkFTrGdK4tP1yGmwfkBG1jNR1SuDAFuT/Zqv/GQSQO8S7
-        EQTKoaT6u/1UuhYU+UA+7NfA+KpWCAmFvy5SIcDH9GOZ2nun6awzVDrZFqUtbfU/RUz0nIA+/OJuT
-        aVwiAEMg==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1oToi1-00Dvye-Mb; Thu, 01 Sep 2022 12:14:34 -0600
-Message-ID: <cc9a24a8-dd3a-9d21-d9a7-5ee4b0ad7a57@deltatee.com>
-Date:   Thu, 1 Sep 2022 12:14:25 -0600
+        with ESMTP id S231447AbiIASQ4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 14:16:56 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8767755C
+        for <linux-pci@vger.kernel.org>; Thu,  1 Sep 2022 11:16:54 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id w2so17858305pld.0
+        for <linux-pci@vger.kernel.org>; Thu, 01 Sep 2022 11:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=UHJ+wNg6rHSLjNi/6t6DVtAkUVcspchblfn/eFkKqsw=;
+        b=HrJjbOMAscprcYO5PohMvHxByNRc1LKXTo6sQZuSzgC2XApf6bfM9LFErgYqRzoCgj
+         dxDAMu9X4lyR7NRhOF5reb+70GOQgQhspYNlzgiePz3BU2vBiOTc/wCgQOTBX1nvY3rl
+         gRAOXKbMZo6iWwdxi5XCFMyWAK0sm8241MmfzJSwrIHCME8q/lKFVw54cv+mMAQPeY+I
+         CceuLNc7YMKHS9J6H0rqi3cuooZ6w2KLQeRcyB+ueRMsAHpJMRLidojb13a8cxBWurte
+         4EKxdLd+1K5ihRfvnqll1rCH5Gk6uP70mqHUGIq9SNVjwOl+S/rBWIvlyRybEnmgp4Fk
+         MA/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=UHJ+wNg6rHSLjNi/6t6DVtAkUVcspchblfn/eFkKqsw=;
+        b=k6FUPgoZ3CP7nzxqNh7LHy8Xzoag6OAaaAh3DSLRoVvWx2hKnaSO3j9gQnRtmBWmOq
+         YkH5jVZ4yYN8GGdUIuZHFhnWPfBhmtuWViUFc3rHfXaK0nFIPEBdbIIZn781sTy7GvGy
+         n//vVm6PGNNpNH8D4/WSfCBs4qSwzNkAOy9ef157ZOF1495v5D/Bi+y+saHHQYhraxDv
+         psZYpqMR0AP2q8yr4R1wYVpEuNq1kGE73J416aRN1rxCKKo7BQiPoK1i45NDr1lEcIRh
+         FOxQIv411t/6BOjELGNhlJ3N0ck2mq5pFzZ8OQ9i89B2oymFbz0TmqnWVFug5Vb8d/mq
+         NGOQ==
+X-Gm-Message-State: ACgBeo1k0eOKPDcvCtp1IUWXlB3wsRCuPChjd4+YcavaA42FUwv2U/be
+        q3i55B6G7lTfZNJhuUqIHLj24Q==
+X-Google-Smtp-Source: AA6agR6b8r7oRaI6ROi7pyqAyUtxNINQwKB8079M56A+1+FEt2RYm/zemPHbg56SBzgLUP1mE90YiA==
+X-Received: by 2002:a17:903:22c7:b0:175:3682:9cf5 with SMTP id y7-20020a17090322c700b0017536829cf5mr11191184plg.150.1662056214062;
+        Thu, 01 Sep 2022 11:16:54 -0700 (PDT)
+Received: from C02F63J9MD6R.bytedance.net ([61.120.150.77])
+        by smtp.gmail.com with ESMTPSA id b13-20020a170903228d00b0017519b86996sm6320538plh.218.2022.09.01.11.16.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Sep 2022 11:16:53 -0700 (PDT)
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+To:     fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
+        allenbh@gmail.com, bhelgaas@google.com, ruscur@russell.cc,
+        oohall@gmail.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     chenzhuo.1@bytedance.com, ntb@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org
+Subject: [PATCH 0/3] PCI/AER: Fix and optimize usage of status clear api
+Date:   Fri,  2 Sep 2022 02:16:31 +0800
+Message-Id: <20220901181634.99591-1-chenzhuo.1@bytedance.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-CA
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20220825152425.6296-1-logang@deltatee.com>
- <20220825152425.6296-8-logang@deltatee.com> <YxDb2MyRx6o/wDAz@kroah.com>
- <4a4bca1e-bebf-768f-92d4-92eb8ae714e1@deltatee.com>
- <YxDhEO9ycZDTnbZm@kroah.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <YxDhEO9ycZDTnbZm@kroah.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH v9 7/8] PCI/P2PDMA: Allow userspace VMA allocations
- through sysfs
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello,
 
+This series contains some fixes and optimizations of aer api usage.
+We add some process to clear uncorrectable error status, then add
+distinction between fatal and nonfatal situations in pcie_do_recovery()
+and reduce some redundant code. The series involves pci driver and
+vendor driver.
 
+Thanks,
+Zhuo Chen
 
-On 2022-09-01 10:42, Greg Kroah-Hartman wrote:
-> On Thu, Sep 01, 2022 at 10:32:55AM -0600, Logan Gunthorpe wrote:
->> On 2022-09-01 10:20, Greg Kroah-Hartman wrote:
->>> On Thu, Aug 25, 2022 at 09:24:24AM -0600, Logan Gunthorpe wrote:
->>>> +	/*
->>>> +	 * Removing the alloc attribute from sysfs will call
->>>> +	 * unmap_mapping_range() on the inode, teardown any existing userspace
->>>> +	 * mappings and prevent new ones from being created.
->>>> +	 */
->>>> +	sysfs_remove_file_from_group(&pdev->dev.kobj, &p2pmem_alloc_attr.attr,
->>>> +				     p2pmem_group.name);
->>>
->>> Wait, why are you manually removing the sysfs file here?  It's part of
->>> the group, if you do this then it is gone for forever, right?  Why
->>> manually do this the sysfs core should handle this for you if the device
->>> is removed.
->>
->> We have to make sure the mappings are all removed before the cleanup of
->> devm_memremap_pages() which will wait for all the pages to be freed.
-> 
-> Then don't use devm_ functions.  Why not just use the manual functions
-> instead as you know when you want to tear this down.
+Zhuo Chen (3):
+  PCI/AER: Use pci_aer_clear_uncorrect_error_status() to clear
+    uncorrectable error status
+  PCI/ERR: Clear fatal status in pcie_do_recovery()
+  PCI/AER: Use pci_aer_raw_clear_status() to clear root port's AER error
+    status
 
-Well we haven't plugged in a remove call into p2pdma, that would be more
-work and more interfaces touching the PCI code. Note: this code isn't a
-driver but a set of PCI helpers available to other PCI drivers.
-Everything that's setup is using the devm interfaces and gets torn down
-with the same. So I don't really see the benefit of making the change
-you propose.
+ drivers/ntb/hw/idt/ntb_hw_idt.c |  4 ++--
+ drivers/pci/pci.h               |  2 ++
+ drivers/pci/pcie/aer.c          | 30 +++++++++++++++++++-----------
+ drivers/pci/pcie/dpc.c          |  3 +--
+ drivers/pci/pcie/err.c          |  8 ++++++--
+ drivers/scsi/lpfc/lpfc_attr.c   |  4 ++--
+ include/linux/aer.h             |  4 ++--
+ 7 files changed, 34 insertions(+), 21 deletions(-)
 
-Logan
+-- 
+2.30.1 (Apple Git-130)
+
