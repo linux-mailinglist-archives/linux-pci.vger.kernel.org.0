@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4012E5ABB48
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 01:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC4B5ABB4E
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 01:38:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbiIBXf6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Sep 2022 19:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
+        id S230093AbiIBXf5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 19:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229768AbiIBXfx (ORCPT
+        with ESMTP id S229742AbiIBXfx (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 19:35:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE44DF4C3;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECF02DF4C4;
         Fri,  2 Sep 2022 16:35:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E46A8B82E0A;
-        Fri,  2 Sep 2022 23:35:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80484C433C1;
-        Fri,  2 Sep 2022 23:35:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 357D461FCC;
+        Fri,  2 Sep 2022 23:35:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B40EC433C1;
+        Fri,  2 Sep 2022 23:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662161748;
-        bh=RT3RQzwcZmsdKMDfRVB08SNXYiMqaAszRBdVwIagBPc=;
+        s=k20201202; t=1662161750;
+        bh=+tv4zJBnBQ0b/SGi+DyVyUKXcJhST7fJ2n0JsNgjNls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTZt7uElIqBz6mNk1MqXtukLcbo3Q/pD/xTo92Z+6QLOleBITyDBTErabqb85N621
-         3LjOIyZHMkQDywjG9hRlmdk+Il+NSJt2hplMAALQAZ+xuKtHME4Ek8oqmW5CNYcqdo
-         hyX5nz4eBWGv0YNT8kJNz5REaBzAW657Tc4ZICjXQKz2fiAs4x9PYnNLgNNMy0/LbD
-         9rY6tPbaJUtJcWom8ZTko3Dcv58qdWOTRWi7T5AB99jY8Lz27AMqkE73ZDxXbiGAGn
-         BpVQxsmDnu7BYid1A1T2IgI6ViO+fR2irWNsyDi8XziMXNJtTxliJ2rL0gvFTrqCPE
-         tzVnKKliVvBow==
+        b=keoxqNIFb+voGD+du+d+lR8fPs6T37tWH5gTTC+flpPuFDRXoghju5zJdy0Et7j2b
+         m31+VKI1QDi//fwzEeclBtCYwo1s12zemZ4BlpEVaB1xtpHALHN4FyFGNdvp0TT+KD
+         2O+o26mYUeLBUFcapKnwBkPalsgkkOSFFzr5Im3CKCDOqpw2E2FOqY+MVkENhrpL04
+         PspuMWHr5HgV/WVqAkI40nNQ5h1pRs+CLi0J9luxtt7TYAqQokDk2oOpDNmc5778cz
+         nbuX1F/N4umiq3maunuoj32A/KyZX+U8aD5sCFWOu3A0o59mPIYcBzu02Z+eG3Pb6w
+         9GMDEiUik0LYg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Rajvi Jingar <rajvi.jingar@linux.intel.com>,
@@ -42,9 +42,9 @@ Cc:     Koba Ko <koba.ko@canonical.com>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 1/3] PCI/PTM: Preserve PTM Root Select
-Date:   Fri,  2 Sep 2022 18:35:41 -0500
-Message-Id: <20220902233543.390890-2-helgaas@kernel.org>
+Subject: [PATCH v2 2/3] PCI/PTM: Implement pci_enable_ptm() for Root Ports, Switch Upstream Ports
+Date:   Fri,  2 Sep 2022 18:35:42 -0500
+Message-Id: <20220902233543.390890-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220902233543.390890-1-helgaas@kernel.org>
 References: <20220902233543.390890-1-helgaas@kernel.org>
@@ -62,34 +62,73 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-When disabling PTM, there's no need to clear the Root Select bit.  We
-disable PTM during suspend, and we want to re-enable it during resume.
-Clearing Root Select here makes re-enabling more complicated.
-
-Per PCIe r6.0, sec 7.9.15.3, "When set, if the PTM Enable bit is also Set,
-this Time Source is the PTM Root," so if PTM Enable is cleared, the value
-of Root Select should be irrelevant.
-
-Preserve Root Select to simplify re-enabling PTM.
-
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/pci/pcie/ptm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/ptm.c | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 368a254e3124..b6a417247ce3 100644
+index b6a417247ce3..ad283818f37b 100644
 --- a/drivers/pci/pcie/ptm.c
 +++ b/drivers/pci/pcie/ptm.c
-@@ -42,7 +42,7 @@ void pci_disable_ptm(struct pci_dev *dev)
- 		return;
+@@ -167,11 +167,11 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+ 	if (!pos)
+ 		return -EINVAL;
  
- 	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
--	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
-+	ctrl &= ~PCI_PTM_CTRL_ENABLE;
- 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
- }
+-	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+-	if (!(cap & PCI_PTM_CAP_REQ))
+-		return -EINVAL;
+-
+ 	/*
++	 * Root Ports and Switch Upstream Ports have been configured
++	 * by pci_ptm_init(), so preserve their PCI_PTM_CTRL_ROOT and
++	 * granularity.
++	 *
+ 	 * For a PCIe Endpoint, PTM is only useful if the endpoint can
+ 	 * issue PTM requests to upstream devices that have PTM enabled.
+ 	 *
+@@ -179,19 +179,39 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+ 	 * device, so there must be some implementation-specific way to
+ 	 * associate the endpoint with a time source.
+ 	 */
+-	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT) {
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
++	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM) {
++		if (pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM) {
++			ups = pci_upstream_bridge(dev);
++			if (!ups || !ups->ptm_enabled)
++				return -EINVAL;
++		}
++
++		pci_read_config_dword(dev, pos + PCI_PTM_CTRL, &ctrl);
++		ctrl |= PCI_PTM_CTRL_ENABLE;
++	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT) {
++		pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
++		if (!(cap & PCI_PTM_CAP_REQ))
++			return -EINVAL;
++
+ 		ups = pci_upstream_bridge(dev);
+ 		if (!ups || !ups->ptm_enabled)
+ 			return -EINVAL;
+ 
+ 		dev->ptm_granularity = ups->ptm_granularity;
++		ctrl = PCI_PTM_CTRL_ENABLE;
++		ctrl |= dev->ptm_granularity << 8;
+ 	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
++		if (!(cap & PCI_PTM_CAP_REQ))
++			return -EINVAL;
++
+ 		dev->ptm_granularity = 0;
++		ctrl = PCI_PTM_CTRL_ENABLE;
++		ctrl |= dev->ptm_granularity << 8;
+ 	} else
+ 		return -EINVAL;
+ 
+-	ctrl = PCI_PTM_CTRL_ENABLE;
+-	ctrl |= dev->ptm_granularity << 8;
+ 	pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
+ 	dev->ptm_enabled = 1;
  
 -- 
 2.25.1
