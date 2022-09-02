@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 797405AAB0E
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 11:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDDB65AAB22
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 11:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236047AbiIBJOM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Sep 2022 05:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
+        id S236088AbiIBJQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 05:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235625AbiIBJOB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 05:14:01 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE5EC6B73;
-        Fri,  2 Sep 2022 02:13:57 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3AA89202ABC;
-        Fri,  2 Sep 2022 11:13:56 +0200 (CEST)
+        with ESMTP id S236139AbiIBJQD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 05:16:03 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DCA065803;
+        Fri,  2 Sep 2022 02:15:55 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 29DED1A2AEE;
+        Fri,  2 Sep 2022 11:15:54 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C6C632006B3;
-        Fri,  2 Sep 2022 11:13:55 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E25601A2AEB;
+        Fri,  2 Sep 2022 11:15:53 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id CD4381820F5D;
-        Fri,  2 Sep 2022 17:13:53 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 5A93C1820F78;
+        Fri,  2 Sep 2022 17:15:52 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
         bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
@@ -32,13 +32,11 @@ To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
 Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v6 7/7] PCI: imx6: Add i.MX8MP PCIe support
-Date:   Fri,  2 Sep 2022 16:55:58 +0800
-Message-Id: <1662108958-15800-8-git-send-email-hongxing.zhu@nxp.com>
+        linux-imx@nxp.com
+Subject: [PATCH v7 0/7] Add the iMX8MP PCIe support
+Date:   Fri,  2 Sep 2022 16:57:59 +0800
+Message-Id: <1662109086-15881-1-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1662108958-15800-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1662108958-15800-1-git-send-email-hongxing.zhu@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -49,171 +47,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MP PCIe support.
-To avoid codes duplication when find the syscon regmap, add the iomux
-gpr syscon compatible into drvdata.
+Based on the 6.0-rc1 of the pci/next branch. 
+This series adds the i.MX8MP PCIe support and tested on i.MX8MP
+EVK board when one PCIe NVME device is used.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Tested-by: Marek Vasut <marex@denx.de>
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+- i.MX8MP PCIe has reversed initial PERST bit value refer to i.MX8MQ/i.MX8MM.
+  Add the PHY PERST explicitly for i.MX8MP PCIe PHY.
+- Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+  And share as much as possible codes with i.MX8MM PCIe PHY.
+- Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+  driver.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6e5debdbc55b..3018f9d1c1b8 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -51,6 +51,7 @@ enum imx6_pcie_variants {
- 	IMX7D,
- 	IMX8MQ,
- 	IMX8MM,
-+	IMX8MP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -61,6 +62,7 @@ struct imx6_pcie_drvdata {
- 	enum imx6_pcie_variants variant;
- 	u32 flags;
- 	int dbi_length;
-+	char gpr[128];
- };
- 
- struct imx6_pcie {
-@@ -150,7 +152,8 @@ struct imx6_pcie {
- static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
- {
- 	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
--		imx6_pcie->drvdata->variant != IMX8MM);
-+		imx6_pcie->drvdata->variant != IMX8MM &&
-+		imx6_pcie->drvdata->variant != IMX8MP);
- 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
- }
- 
-@@ -301,6 +304,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- {
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MM:
-+	case IMX8MP:
- 		/*
- 		 * The PHY initialization had been done in the PHY
- 		 * driver, break here directly.
-@@ -558,6 +562,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
- 		if (ret) {
- 			dev_err(dev, "unable to enable pcie_aux clock\n");
-@@ -602,6 +607,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX8MM:
- 	case IMX8MQ:
-+	case IMX8MP:
- 		clk_disable_unprepare(imx6_pcie->pcie_aux);
- 		break;
- 	default:
-@@ -669,6 +675,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 		reset_control_assert(imx6_pcie->pciephy_reset);
- 		fallthrough;
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	case IMX6SX:
-@@ -744,6 +751,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX6Q:		/* Nothing to do */
- 	case IMX8MM:
-+	case IMX8MP:
- 		break;
- 	}
- 
-@@ -793,6 +801,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_deassert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -812,6 +821,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 	case IMX7D:
- 	case IMX8MQ:
- 	case IMX8MM:
-+	case IMX8MP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -1179,6 +1189,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		}
- 		break;
- 	case IMX8MM:
-+	case IMX8MP:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux))
- 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-@@ -1216,7 +1227,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 
- 	/* Grab GPR config register range */
- 	imx6_pcie->iomuxc_gpr =
--		 syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-+		 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
- 	if (IS_ERR(imx6_pcie->iomuxc_gpr)) {
- 		dev_err(dev, "unable to find iomuxc registers\n");
- 		return PTR_ERR(imx6_pcie->iomuxc_gpr);
-@@ -1295,12 +1306,14 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
- 		.dbi_length = 0x200,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX6SX] = {
- 		.variant = IMX6SX,
- 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX6QP] = {
- 		.variant = IMX6QP,
-@@ -1308,17 +1321,26 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.dbi_length = 0x200,
-+		.gpr = "fsl,imx6q-iomuxc-gpr",
- 	},
- 	[IMX7D] = {
- 		.variant = IMX7D,
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx7d-iomuxc-gpr",
- 	},
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
-+		.gpr = "fsl,imx8mq-iomuxc-gpr",
- 	},
- 	[IMX8MM] = {
- 		.variant = IMX8MM,
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx8mm-iomuxc-gpr",
-+	},
-+	[IMX8MP] = {
-+		.variant = IMX8MP,
-+		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-+		.gpr = "fsl,imx8mp-iomuxc-gpr",
- 	},
- };
- 
-@@ -1329,6 +1351,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
- 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
- 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
-+	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
- 	{},
- };
- 
--- 
-2.25.1
+Main changes v6-->v7:
+- Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" into first three
+  patches.
+- Use "const *char" to replace the static allocation.
 
+Main changes v5-->v6:
+- To avoid code duplication when find the gpr syscon regmap, add the
+  gpr compatible into the drvdata.
+- Add one missing space before one curly brace in 3/7 of v5 series.
+- 4/7 of v5 had been applied by Phillipp, thanks. For ease of tests, still
+  keep it in v6.
+
+Main changes v4-->v5:
+- Use Lucas' approach, let blk-ctrl driver do the hsio-mix resets.
+- Fetch the iomuxc-gpr regmap by the different phandles.
+
+Main changes v3-->v4:
+- Regarding Phillipp's suggestions, add fix tag into the first commit.
+- Add Reviewed and Tested tags.
+
+Main changes v2-->v3:
+- Fix the schema checking error in the PHY dt-binding patch.
+- Inspired by Lucas, the PLL configurations might not required when
+  external OSC is used as PCIe referrence clock. It's true. Remove all
+  the HSIO PLL bit manipulations, and PCIe works fine on i.MX8MP EVK board
+  with one NVME device is used.
+- Drop the #4 patch of v2, since it had been applied by Rob.
+
+Main changes v1-->v2:
+- It's my fault forget including Vinod, re-send v2 after include Vinod
+  and linux-phy@lists.infradead.org.
+- List the basements of this patch-set. The branch, codes changes and so on.
+- Clean up some useless register and bit definitions in #3 patch.
+
+Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  16 ++++++++--
+arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  53 +++++++++++++++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  43 +++++++++++++++++++++++++
+drivers/pci/controller/dwc/pci-imx6.c                        |  27 ++++++++++++++--
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 144 +++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------
+drivers/reset/reset-imx7.c                                   |   1 +
+drivers/soc/imx/imx8mp-blk-ctrl.c                            |  10 ++++++
+7 files changed, 241 insertions(+), 52 deletions(-)
+
+[PATCH v7 1/7] dt-binding: phy: Add iMX8MP PCIe PHY binding
+[PATCH v7 2/7] arm64: dts: imx8mp: Add iMX8MP PCIe support
+[PATCH v7 3/7] arm64: dts: imx8mp-evk: Add PCIe support
+[PATCH v7 4/7] reset: imx7: Fix the iMX8MP PCIe PHY PERST support
+[PATCH v7 5/7] soc: imx: imx8mp-blk-ctrl: handle PCIe PHY resets
+[PATCH v7 6/7] phy: freescale: imx8m-pcie: Add i.MX8MP PCIe PHY
+[PATCH v7 7/7] PCI: imx6: Add i.MX8MP PCIe support
