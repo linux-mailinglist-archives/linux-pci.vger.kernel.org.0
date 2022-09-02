@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D70BA5AAB0D
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 11:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C0A5AAB10
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 11:14:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235633AbiIBJN7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Sep 2022 05:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
+        id S235669AbiIBJOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 05:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235575AbiIBJNy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 05:13:54 -0400
+        with ESMTP id S235610AbiIBJN6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 05:13:58 -0400
 Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F30FC2E95;
-        Fri,  2 Sep 2022 02:13:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DB4C6B69;
+        Fri,  2 Sep 2022 02:13:54 -0700 (PDT)
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9CA37200697;
-        Fri,  2 Sep 2022 11:13:51 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D2A5200694;
+        Fri,  2 Sep 2022 11:13:53 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 615CF200694;
-        Fri,  2 Sep 2022 11:13:51 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D67FA200698;
+        Fri,  2 Sep 2022 11:13:52 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 5C2BB1820F5D;
-        Fri,  2 Sep 2022 17:13:49 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id D99CC181D0CA;
+        Fri,  2 Sep 2022 17:13:50 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
         bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
@@ -33,9 +33,9 @@ Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v6 4/7] reset: imx7: Fix the iMX8MP PCIe PHY PERST support
-Date:   Fri,  2 Sep 2022 16:55:55 +0800
-Message-Id: <1662108958-15800-5-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v6 5/7] soc: imx: imx8mp-blk-ctrl: handle PCIe PHY resets
+Date:   Fri,  2 Sep 2022 16:55:56 +0800
+Message-Id: <1662108958-15800-6-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1662108958-15800-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1662108958-15800-1-git-send-email-hongxing.zhu@nxp.com>
@@ -49,33 +49,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On i.MX7/iMX8MM/iMX8MQ, the initialized default value of PERST bit(BIT3)
-of SRC_PCIEPHY_RCR is 1b'1.
-But i.MX8MP has one inversed default value 1b'0 of PERST bit.
+From: Lucas Stach <l.stach@pengutronix.de>
 
-And the PERST bit should be kept 1b'1 after power and clocks are stable.
-So fix the i.MX8MP PCIe PHY PERST support here.
+Dessert the PHY reset when powering up the domain and put it back
+into reset when the domain is powered down.
 
-Fixes: e08672c03981 ("reset: imx7: Add support for i.MX8MP SoC")
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Tested-by: Marek Vasut <marex@denx.de>
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- drivers/reset/reset-imx7.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/imx/imx8mp-blk-ctrl.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 185a333df66c..d2408725eb2c 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -329,6 +329,7 @@ static int imx8mp_reset_set(struct reset_controller_dev *rcdev,
- 		break;
+diff --git a/drivers/soc/imx/imx8mp-blk-ctrl.c b/drivers/soc/imx/imx8mp-blk-ctrl.c
+index 4ca2ede6871b..6c939d68ba9a 100644
+--- a/drivers/soc/imx/imx8mp-blk-ctrl.c
++++ b/drivers/soc/imx/imx8mp-blk-ctrl.c
+@@ -18,6 +18,8 @@
+ #define GPR_REG0		0x0
+ #define  PCIE_CLOCK_MODULE_EN	BIT(0)
+ #define  USB_CLOCK_MODULE_EN	BIT(1)
++#define  PCIE_PHY_APB_RST	BIT(4)
++#define  PCIE_PHY_INIT_RST	BIT(5)
  
- 	case IMX8MP_RESET_PCIE_CTRL_APPS_EN:
-+	case IMX8MP_RESET_PCIEPHY_PERST:
- 		value = assert ? 0 : bit;
+ struct imx8mp_blk_ctrl_domain;
+ 
+@@ -75,6 +77,10 @@ static void imx8mp_hsio_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
+ 	case IMX8MP_HSIOBLK_PD_PCIE:
+ 		regmap_set_bits(bc->regmap, GPR_REG0, PCIE_CLOCK_MODULE_EN);
+ 		break;
++	case IMX8MP_HSIOBLK_PD_PCIE_PHY:
++		regmap_set_bits(bc->regmap, GPR_REG0,
++				PCIE_PHY_APB_RST | PCIE_PHY_INIT_RST);
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -90,6 +96,10 @@ static void imx8mp_hsio_blk_ctrl_power_off(struct imx8mp_blk_ctrl *bc,
+ 	case IMX8MP_HSIOBLK_PD_PCIE:
+ 		regmap_clear_bits(bc->regmap, GPR_REG0, PCIE_CLOCK_MODULE_EN);
+ 		break;
++	case IMX8MP_HSIOBLK_PD_PCIE_PHY:
++		regmap_clear_bits(bc->regmap, GPR_REG0,
++				  PCIE_PHY_APB_RST | PCIE_PHY_INIT_RST);
++		break;
+ 	default:
  		break;
  	}
 -- 
