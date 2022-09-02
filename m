@@ -2,65 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A19FC5AB9E3
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 23:11:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44FAE5ABAB3
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 00:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiIBVLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Sep 2022 17:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53250 "EHLO
+        id S229513AbiIBWNo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 18:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbiIBVLP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 17:11:15 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0BAD91C9;
-        Fri,  2 Sep 2022 14:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662153074; x=1693689074;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=a5+GIGbZMIwgtbXiPqaRrpL5Or/gY8wT5w0Zi+nQRuE=;
-  b=bX2Qw2YbGoDOzSSPoQRnNRnjNlWRIMIStVRKdAWSOE0mceCczc+jVKSA
-   ppdtBgcooM/a7btXFO44u6aAM4xduqvQlB9HoJxQL16gIb1WkDigPU3xo
-   sjBXy/0s6BFYvqCJIsb4uMyDlBdriXo9iO4H83YbOlRzkYK82gjHreIJI
-   2ETWhRPWIjaSDDxvO0UCAV8EzjcFk0pnfQDfXXxz4VhdYBqhR9NKpEaOj
-   nnGGBrdn7RLxowNbNM4lMGOljZRhaKCjK4zDv5Tvtqs34vEYlcGKCaU+v
-   +vmiguVT5/yMD6tI5wkLEzJKpFqxcPOIkmq+nlCKk4wePfyUuTxOO3xC/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="297380682"
-X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
-   d="scan'208";a="297380682"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 14:11:14 -0700
-X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
-   d="scan'208";a="674507798"
-Received: from cthornbr-mobl.amr.corp.intel.com (HELO [10.251.3.254]) ([10.251.3.254])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 14:11:13 -0700
-Message-ID: <44b33ce9-e0ed-976c-9a13-b154d32b200e@linux.intel.com>
-Date:   Fri, 2 Sep 2022 14:11:12 -0700
+        with ESMTP id S229650AbiIBWNn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 18:13:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD36CF54BB;
+        Fri,  2 Sep 2022 15:13:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67DB861E11;
+        Fri,  2 Sep 2022 22:13:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96031C433D6;
+        Fri,  2 Sep 2022 22:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662156821;
+        bh=AvGreharmcJ+vogcHFdK+UJeGQXyBTbk5vH6FPFTCcc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bNQY3+0sUZ6jnVPVe10HsxFTQXmRDJbWjSpR7paBbqrKe75zYIopT2iqDXxh3dKVM
+         ebltIMrTkO9DNqAyyoy33lDSusEclzJ2lr9WAb5sUDdLQIojMe0bDAQ/urlKUih4aU
+         mPbpm5WLw9FnWjetKvVMThN+LHHy8i64UlzTQiOwrfaxKNU+xq8MGBh6R3LonpTFza
+         fIRQIaH64mcp7+3KA+2+kIXmRDAo0XEiXP1DzcGA/9uFXnTZ/QOuo6yHR3BuiVCH4f
+         AkqZKk+3BX9vXCfbbmdJxjWshUJFPgZtOpQk/pdepxPiCt/iVvAaWSq/UmaI67moUL
+         uShulioYN/cFQ==
+Date:   Fri, 2 Sep 2022 17:13:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Will McVicker <willmcvicker@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
+        Sajid Dalvi <sdalvi@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/PM: Switch D3Hot delay to also use usleep_range
+Message-ID: <20220902221340.GA379310@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 1/4] PCI/PTM: Preserve PTM Root Select
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20220902203848.GA370638@bhelgaas>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220902203848.GA370638@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220817230821.47048-1-willmcvicker@google.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,97 +54,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-On 9/2/22 1:38 PM, Bjorn Helgaas wrote:
-> On Fri, Sep 02, 2022 at 10:24:05AM -0700, Sathyanarayanan Kuppuswamy wrote:
->> On 9/2/22 7:58 AM, Bjorn Helgaas wrote:
->>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>> When disabling PTM, there's no need to clear the Root Select bit.  We
->>> disable PTM during suspend, and we want to re-enable it during resume.
->>> Clearing Root Select here makes re-enabling more complicated.
->>
->> Currently, it looks like we disable PCI_PTM_CTRL_ROOT in pci_disable_ptm(),
->> but not enable it in pci_enable_ptm(). Do you know this did not trigger an
->> issue?
+On Wed, Aug 17, 2022 at 11:08:21PM +0000, Will McVicker wrote:
+> From: Sajid Dalvi <sdalvi@google.com>
 > 
-> For Root Ports and Switches, we enable PTM (and set Root Select when
-> appropriate) during enumeration in pci_ptm_init().  This is based on
-> the assumption that enabling PTM in Root Ports and Switches is a no-op
-> unless there's an Endpoint that generates PTM Requests.  (It turns out
-> that's not quite true, because Kai-Heng's bug report [1] shows the
-> 08:00.0 Switch sending PTM Requests even though no Endpoint even has a
-> PTM Capability.)
+> Since the PCI spec requires a 10ms D3Hot delay (defined by
+> PCI_PM_D3HOT_WAIT) and a few of the PCI quirks update the D3Hot delay up
+> to 120ms, let's add support for both usleep_range and msleep based on
+> the delay time to improve the delay accuracy.
 > 
-> If we didn't enable PTM in Root Ports and Switches during enumeration,
-> we'd have to walk the whole path and enable them when enabling PTM for
-> an Endpoint.
+> This patch is based off of a commit from Sajid Dalvi <sdalvi@google.com>
+> in the Pixel 6 kernel tree [1]. Testing on a Pixel 6, found that the
+> 10ms delay for the Exynos PCIe device was on average delaying for 19ms
+> when the spec requires 10ms. Switching from msleep to uslseep_range
+> therefore decreases the resume time on a Pixel 6 on average by 9ms.
+
+Add the "PCIe r6.0, sec 5.9" spec reference for the 10ms delay for
+transitions to or from D3hot.
+
+s/D3Hot/D3hot/ to match other usage (at least in Linux; the spec does
+use "D3Hot")
+
+s/uslseep_range/usleep_range/
+
+Add "()" after function names.
+
+In the subject, "Switch ... to *also* use usleep_range": what does the
+"also" mean?  It sounds like it's referring to some other place where
+we also use usleep_range()?
+
+> [1] https://android.googlesource.com/kernel/gs/+/18a8cad68d8e6d50f339a716a18295e6d987cee3
 > 
-> pci_enable_ptm() currently only works for Endpoints, which cannot be
-> PTM Roots, so it never has to set PCI_PTM_CTRL_ROOT.
+> Signed-off-by: Sajid Dalvi <sdalvi@google.com>
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  drivers/pci/pci.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
 > 
-> If we clear PCI_PTM_CTRL_ROOT in pci_disable_ptm(), it will never get
-> set again unless we re-enumerate the Root Port.
-
-Thanks for clarifying.
-
+> v3:
+>  * Use DIV_ROUND_CLOSEST instead of bit manipulation.
+>  * Minor refactor to use max() where relavant.
 > 
-> Thanks for asking this, because it reminds me why I didn't add
-> pci_enable_ptm() calls in the resume paths!  That would make them
-> parallel with the suspend paths, which would definitely be nice.  But
-> we would have to rework pci_enable_ptm() to work for Root Ports and
-> Switch Ports as well.  I think we *could* do that.  What do you think?
-
-IMO, the code will look better if we keep the suspend and resume paths in
-sync. Since we are calling pci_disable_ptm() in suspend path, it makes
-sense to call pci_enable_ptm() in resume path.
-
-Making the pci_enable_ptm() handle root and upstream ports should not
-be very complicated, right?
-
+> v2:
+>  * Update to use 20-25% upper bound
+>  * Update to use usleep_range() for <=20ms, else use msleep()
 > 
-> Regardless of that question, I think it's unnecessary to clear
-> PCI_PTM_CTRL_ROOT in pci_disable_ptm(), so we should leave it alone.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 95bc329e74c0..cfa8386314f2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -66,13 +66,19 @@ struct pci_pme_device {
+>  
+>  static void pci_dev_d3_sleep(struct pci_dev *dev)
+>  {
+> -	unsigned int delay = dev->d3hot_delay;
+> +	unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
+>  
+> -	if (delay < pci_pm_d3hot_delay)
+> -		delay = pci_pm_d3hot_delay;
+> +	if (delay_ms) {
+> +		if (delay_ms <= 20) {
+> +			/* Use a 20% upper bound with 1ms minimum */
+> +			unsigned int upper = max(DIV_ROUND_CLOSEST(delay_ms, 5), 1U);
+>  
+> -	if (delay)
+> -		msleep(delay);
+> +			usleep_range(delay_ms * USEC_PER_MSEC,
+> +				     (delay_ms + upper) * USEC_PER_MSEC);
+> +		} else {
+> +			msleep(delay_ms);
 
-I agree with you. We should not touch PCI_PTM_CTRL_ROOT in pci_disable_ptm().
+I hate the fact that we have to check for those ancient Intel chips at
+all, but having to read through the usleep_range() vs msleep() thing
+is just painful.  
 
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215453
-> 
->> Also, you mentioned that it is complicated to enable it, can you add some
->> details?
->>
->>> Per PCIe r6.0, sec 7.9.15.3, "When set, if the PTM Enable bit is also Set,
->>> this Time Source is the PTM Root," so if PTM Enable is cleared, the value
->>> of Root Select should be irrelevant.
->>>
->>> Preserve Root Select to simplify re-enabling PTM.
->>>
->>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: David E. Box <david.e.box@linux.intel.com>
->>> ---
->>>  drivers/pci/pcie/ptm.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
->>> index 368a254e3124..b6a417247ce3 100644
->>> --- a/drivers/pci/pcie/ptm.c
->>> +++ b/drivers/pci/pcie/ptm.c
->>> @@ -42,7 +42,7 @@ void pci_disable_ptm(struct pci_dev *dev)
->>>  		return;
->>>  
->>>  	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
->>> -	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
->>> +	ctrl &= ~PCI_PTM_CTRL_ENABLE;
->>>  	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
->>>  }
->>>  
->>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux Kernel Developer
+fsleep() would be much simpler, but I am sympathetic that the fsleep()
+range of 10-20ms probably wouldn't get the benefit you want.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I wish Documentation/timers/timers-howto.rst included a reason why we
+should use msleep() instead of usleep_range() for longer sleeps.  Is
+there a reason not to do this:
+
+   static void pci_dev_d3_sleep(struct pci_dev *dev)
+   {
+        unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
+        unsigned int upper;
+
+        if (delay_ms) {
+                /* 20% upper bound, 1ms minimum */
+                upper = max(DIV_ROUND_CLOSEST(delay_ms, 5), 1U)
+                usleep_range(delay_ms * USEC_PER_MSEC,
+                             (delay_ms + upper) * USEC_PER_MSEC);
+        }
+   }
+
+Since the Intel quirk is for 120ms, a 20% upper bound would make the
+range 120-144ms.  Would that be a problem?  Those chips are ancient;
+the list is untouched since it was added in 2006.  The point of
+usleep_range() is to allow the scheduler to coalesce the wakeup with
+other events, so it seems unlikely we'd ever wait the whole 144ms.  I
+vote for optimizing the readability over sleep/resume time for
+already-broken chips.
+
+Bjorn
