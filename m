@@ -2,53 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0C105AB988
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 22:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C53B95AB98B
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 22:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiIBUln (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Sep 2022 16:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
+        id S229849AbiIBUnZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 16:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbiIBUlm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 16:41:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED1EFBA40;
-        Fri,  2 Sep 2022 13:41:41 -0700 (PDT)
+        with ESMTP id S229490AbiIBUnY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 16:43:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A5A1F2CB;
+        Fri,  2 Sep 2022 13:43:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 02F1F61173;
-        Fri,  2 Sep 2022 20:41:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30202C433C1;
-        Fri,  2 Sep 2022 20:41:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 979C861128;
+        Fri,  2 Sep 2022 20:43:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D9FC433C1;
+        Fri,  2 Sep 2022 20:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662151300;
-        bh=6QlO4nz3EjJTiHZOSW3Y1nsOMZEgsGLzRZeWwqrgPwk=;
+        s=k20201202; t=1662151403;
+        bh=sFgwkZAnwk7QAgBhvDKCIIByUMBmnTm9+Fc7N749K5k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=laupyLzJHEyaAM+ILEF68RWgAeBDPfzLOzyKzZy8NKXhw2NeQjo2SGmWbGx0mUj3H
-         5nkLFvF0sbm9alfGdetu3nCgvNOqqkC1MwJI45swjOG613hs2kZkIHBqHsBSRjbnlA
-         qFIWmNzOQZo2pJ4e/tDe7nqJ3aXU9hRUlL0Q2VpkdW6z9nTVNJIirO/u7IB316MN38
-         g+PWfVu0EPvjC+3k80nYvDa/EJdEg2AxdoyhpGRSA8K24QZ/W2BbJt4qYoOaLvIByX
-         DOoOQAT4OeQoMOWJtBXxDJ2Ye9N9JzTQHoznKmT7qk/X8P/QplMUbQHjAWl5GfuLPe
-         rZuaTwewjAqDg==
-Date:   Fri, 2 Sep 2022 15:41:38 -0500
+        b=MgweByj5kxsiVit5F6RC8zyow6hXyNld89sh8GcHeoz3MHAPCD7Q64Q2ArSkPse5g
+         YRsn8z4bRW4iqo9nUTq4q7UcBHkwlXUeqiXh0ZStKvy+7K5VQbFr6sMR3/TgITNBgw
+         EZLN08zaKR49/Ug2Lgj9JyaH1GsKZ0h77dc3w5N1FiBDaa111YE1VhSDCfu2rs5u0a
+         Ix5hpyg/kRIq3w0Ct4mKWDcVYWg5v+LuChnLH402CKyAFflreL0dEtslm1Jocs5k4o
+         CpR+1Z5jtnRYLQb7IXoMYzj1nQHzxyArtXNb3ZaDAximrgUn10KtiG5s9dpRTeKX/Q
+         +rdKiSiAWdUnQ==
+Date:   Fri, 2 Sep 2022 15:43:21 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/4] PCI/PTM: Enable PTM when restoring state
-Message-ID: <20220902204138.GA357053@bhelgaas>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org,
+        frowand.list@gmail.com, clement.leger@bootlin.com,
+        max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
+        brian.xu@amd.com, stefano.stabellini@xilinx.com, trix@redhat.com
+Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devices
+Message-ID: <20220902204321.GA374266@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <be3a0ed4-c5d0-d4ba-79da-f346d9d7d08b@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,52 +56,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 02, 2022 at 10:25:54AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 9/2/22 7:58 AM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > The suspend path may disable PTM before saving config state, which means
-> > the PCI_PTM_CTRL_ENABLE bit in the saved state may be cleared even though
-> > we want PTM to be enabled when resuming.
+On Mon, Aug 29, 2022 at 02:43:35PM -0700, Lizhi Hou wrote:
+
+> Clément Léger (1):
+>   of: dynamic: add of_node_alloc()
 > 
-> If suspend is disabling PTM separately, why not enable it during the resume
-> operation? Why club it with PTM state restoration?
+> Lizhi Hou (1):
+>   pci: create device tree node for selected devices
 
-The long answer is in my previous reply [1].  The short answer is that
-pci_enable_ptm() only works with Endpoints, so if we enable PTM in the
-resume path, we need to rework it to handle Root Ports and Switch
-Ports as well.
-
-[1] https://lore.kernel.org/r/20220902203848.GA370638@bhelgaas
-
-> > If "dev->ptm_enabled" is set, it means PTM should be enabled, so make sure
-> > PCI_PTM_CTRL_ENABLE is set when restoring the PTM state.
-> > 
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/ptm.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index b6a417247ce3..3115601a85ef 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -82,6 +82,14 @@ void pci_restore_ptm_state(struct pci_dev *dev)
-> >  		return;
-> >  
-> >  	cap = (u16 *)&save_state->cap.data[0];
-> > +
-> > +	/*
-> > +	 * The suspend path may disable PTM before saving config state.
-> > +	 * Make sure PCI_PTM_CTRL_ENABLE is set if PTM should be enabled.
-> > +	 */
-> > +	if (dev->ptm_enabled)
-> > +		*cap |= PCI_PTM_CTRL_ENABLE;
-> > +
-> >  	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
-> >  }
-> >  
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
+Please capitalize both subject lines to match previous history of the
+files involved.
