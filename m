@@ -2,305 +2,701 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7D15AA541
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 03:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EA5E5AA763
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Sep 2022 07:49:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232855AbiIBBsJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Sep 2022 21:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        id S235223AbiIBFtZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Sep 2022 01:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232561AbiIBBsI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Sep 2022 21:48:08 -0400
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2079.outbound.protection.outlook.com [40.107.20.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455EEA8CD7;
-        Thu,  1 Sep 2022 18:48:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bYah4zj/COIILdeBgAObZRrrb3T3uXDjKHDhRuUQh2nEH1mhTPFDsuKJJr6MJN4VCsm/SqkAZHdeBU+LZmsDahq2xVByZgvqrTS5NSlpSd0kPPaEBW64OeRyCFCo0LDrKITODZSR/LYeHU4JtHvENWRi17gFn2+7WpXOKlQDsjcVepxz5BBtX2gKvoDFg87rEYF+C5Q5ctivJvIEiREiPIF4qd8pS88eQipakxz7Q1czY9VhzObKzy7Ppgz3BZCIqF7x34FcHTrYJgmiiNoRZwxgjlzbXnd8hpDIbfBqmP0prtzZHouZLj5woMxlHsTfwuUa4KIIasWatwOpUVnFAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hO6VOt9eI8qzKR2Vx6wHcrax87Q5UWXdt7QHG/8Yb3E=;
- b=Eqv6jzB+fRufrmlOoFZqRhxpJXjaklp9BWlrhfvSkXQa2aSbimcakd464m3jDrzXj0pzWzxYdmheeBAuBELUplY3aC66vCscEvBxbWlZMC6uQb7dAgswLMpvwagsU5Q55VBu9GJpdz/Daguld/xoI7ffbbYYd8GSDTmLv5OvYv1ErvQLa2NhackBD0QXrkXVVDgBdm0ttZxaOlaNa6EYI3kV4UQuXYT+0ieHrOzG9ZqgrDq0pMcQnfIeOXTjsBPveTF/wK6DLwp6PTggE4yJxk1IbVB7Obewpr8l9wiXX/vakq1vg913VUS6Yp8JLCotkGUeBZEfZKJMG5AGxGp5ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hO6VOt9eI8qzKR2Vx6wHcrax87Q5UWXdt7QHG/8Yb3E=;
- b=kfJKEwDPqeu3MB8eI8tZUnpvNHCgyZVfa5CEdQja9JgfnNWjhHcoV7qSuJNk7TZ1JVgmZ+rECykFSMtphVv4BCRzLt6ypLMyZ6gYUC8vf+HURFkT7paJj/QMHcsWOq+6NJw6uTVhZlZRLCF3oKTdsATDB1ows9bEQGjnpGB8jcA=
-Received: from AM9PR04MB8793.eurprd04.prod.outlook.com (2603:10a6:20b:408::22)
- by AM5PR0401MB2513.eurprd04.prod.outlook.com (2603:10a6:203:3a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.14; Fri, 2 Sep
- 2022 01:48:04 +0000
-Received: from AM9PR04MB8793.eurprd04.prod.outlook.com
- ([fe80::1c3e:36a0:1adc:beb]) by AM9PR04MB8793.eurprd04.prod.outlook.com
- ([fe80::1c3e:36a0:1adc:beb%8]) with mapi id 15.20.5588.015; Fri, 2 Sep 2022
- 01:48:04 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     "maz@kernel.org" <maz@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-        "lznuaa@gmail.com" <lznuaa@gmail.com>
-Subject: RE: [EXT] Re: [PATCH v6 4/4] pcie: endpoint: pci-epf-vntb: add
- endpoint MSI support
-Thread-Topic: [EXT] Re: [PATCH v6 4/4] pcie: endpoint: pci-epf-vntb: add
- endpoint MSI support
-Thread-Index: AQHYsxTj8ial5WQflUOYb2uoUuXnWa3I5nOAgABYdCCAAjRtAIAAAQyw
-Date:   Fri, 2 Sep 2022 01:48:03 +0000
-Message-ID: <AM9PR04MB87930B4EF3ED6BB5FE88A151887A9@AM9PR04MB8793.eurprd04.prod.outlook.com>
-References: <20220818151127.2449064-1-Frank.Li@nxp.com>
- <20220818151127.2449064-5-Frank.Li@nxp.com> <20220831104203.GD5076@thinkpad>
- <AM9PR04MB8793BEEC8B2F1713C252B4CA88789@AM9PR04MB8793.eurprd04.prod.outlook.com>
- <20220902013848.GA4935@thinkpad>
-In-Reply-To: <20220902013848.GA4935@thinkpad>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 84a0bbb5-0f72-43c9-5add-08da8c852d39
-x-ms-traffictypediagnostic: AM5PR0401MB2513:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wasfb5RV0xiXCtM6rEOyYnarxFBUbBFGj30Khn9xMyR5oR5pnzzMO4S0g8nRtuflz4IJvM20bjNrSx8VuWxIzhICln/wtZf7CsRl7wH1yjG/dAZ3VjZ3lbaeSePzlAyb53FajjVSgcrN0PigqbX7af4sZZfaPzEbdUHNOeLwdqhEouElslSmwp45HQZpJxO1w1NJV8APnFZ38wATyxRzoEm9j8vPuEJJryMCdkHSXidOocyE9kUHu0GO5XWqq5QqCvZBg4XUB0y+j51lvBthADmCTBsDVSMZb4zZsbZ0dyHb3jqxRGfHw2yG7bNhee/ZLJIZOb0qTjPbUsFPd89SvQ2Y3FdQ/hUKkGC+sK7YgsOgAUqTzIo4U3ouXJjSLMjcdcPQP4wsMc0NiiagLR8S6GReMFamSWvAfZfQ00QVXFHlsy2uDKyt4mwoXIQkKSD7TWbmlOOL4udYBhFZz4L9jXLzU26ApyyNNpOB1lL0dr7kXXTNUwi5wWky+vI/hqJPA0uiVgylfWJevTh+JDENiA23YPB0rCIhKGAK22Lxq+feVjiVNYc1V148wNmbBgmdMHW3F8t4ACdAHhREk13A5RHxt6s5MlXVrOGCi+k1bpT0kSsfKz/LN8R9gyt4h1JGpiChY1V5WaHfBxanHYz1hyvfm7Ic4yTBW2L1iHpB4xfq7FtDr32jhTESszTBFYcyQTkfqp+6SF3xXIgYMqJ0PYwydY8n4aneBdzX81Yohwd3Cbd4uO8tenYCrc0CaQW+smho4FVsx4Sz7LrHF4845Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8793.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(38070700005)(83380400001)(186003)(122000001)(66476007)(6916009)(54906003)(4326008)(478600001)(8676002)(76116006)(66556008)(66446008)(64756008)(66946007)(71200400001)(316002)(26005)(44832011)(9686003)(7416002)(41300700001)(8936002)(33656002)(52536014)(5660300002)(38100700002)(7696005)(6506007)(53546011)(55236004)(86362001)(2906002)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VkRYTG9hN1NVSGRpeW1oK0tzb2Z0M1k0ZGtEYnRHaGpyNFRaUlZQZHdlSWc2?=
- =?utf-8?B?NDFXV3BzRFlpMDMvMWVTWEpPT0psRTBVYWdRd1lCTGVQYXF4VXY5WFVJR2lM?=
- =?utf-8?B?T1ZTaEl0dlZUS1ZBV0hYYnFtVmtUT3VFMGR5Z1ZnMlNOakw5NDIrU0hTTTNL?=
- =?utf-8?B?RzdEcWFQWThhRDVmSlIwK3o2dUIrVTROczhhTlN0MGVVb21Rdk9HaDdNRDNM?=
- =?utf-8?B?VUNuVnFoU3c4S3Bkbi90R2twTGxLZS9ZdnNYZ0ZIOWh2K25YSk5LVERBTFVU?=
- =?utf-8?B?Uld4VUhvcFBYVTVhL2JodFZxYW9oK0MwRll5U24xMGY1TlQ2VTBwbGViYkw4?=
- =?utf-8?B?WkVPWWRGenJCQVU3QXdyTmQ2R0RybmNiWE8yVUpHNGlrR3JLd0I0cG8rNFZN?=
- =?utf-8?B?bXdnREJmQ0NwaGVJQ3RVV3NQNjM2VkhLaEdJRU5QYzVNTVNtNER3WC9oYU1C?=
- =?utf-8?B?Q3NtWEhBei96L3lUaDdiZ0ZnM2Y3YitMM3FqTDEwTXJGRllQSmtqNk12cHA1?=
- =?utf-8?B?cnBHL3I4TVQreWJqVHlMTVFvbGw2MmM2THhwTzN4Y3VzV21jR1R6TE5KYTU1?=
- =?utf-8?B?WnBNNHRIMjJMMy9rTGl5OE81NmNQdDVDK1NSMyt0ZnRBQUtSWUhUaVNZUVFX?=
- =?utf-8?B?RHlNWnUyQmpiSGgyZGx1N0VRbExsZmIydnFnZTRydThmdjQvN05PWnBvT0xh?=
- =?utf-8?B?bk52RUZEZjdZZS9iOVU3YmpZeHZxZnFWUXphTG9HQWd2eU1BS2pCemN2SStw?=
- =?utf-8?B?Q3FvdmV5SHB2RjJkL1M1T0dCOFVaSzFQTkdOK0pLUzhOblcyUnR6L0VQWm1j?=
- =?utf-8?B?eVUrK08yWmQ2bHUrMXVyM2ZnZVRXdFRJVEh5am1DRiszUGJ6UVl2ZloyZ2lE?=
- =?utf-8?B?NVVTVUJwaXMrSS9iWVJjWEg5TjV3MVVCb3YzelhuUW9ZRlVVbGlpeG9CR01a?=
- =?utf-8?B?QWFSNWZIUVd3MHBJN2dnTHZUS2NhaGw3V290SHpnampoQVRaT1VwMEkwVU9H?=
- =?utf-8?B?a1FxdDAvWlZGRlRHK0RhU2Y4TTl6Q2YxZlg0N05TTDUyZ3NvY0lNYWRsOWVv?=
- =?utf-8?B?QlJMRjI2Sm94ZWNBbUhWTlpmY0hZYlp4WVRtN0RKaXJiczZLRnJWZXN3SUI4?=
- =?utf-8?B?YUsvMjZiL1BVNVpic1RPcGZUcUhyWG9OUFFBcFZZYUI5ZXdTUmNUdU03RTJU?=
- =?utf-8?B?VXU5dlV3RFFROE0yZ3B3WHBEMURnd05FY01TTEdmVGw1YmthbElCK2VWdVhi?=
- =?utf-8?B?TmJmeXZ3a2svQjVzaUFKYlR4V0dtU1pCQ3VjZ1c2SmlpaW1pVmlOa0JINndk?=
- =?utf-8?B?aWR0bG9zUkpkTU9yeHl6MFA4aVV3Q0RWSVdaT3hKOTNObEh3SkZRWUNoK201?=
- =?utf-8?B?MExndmVqTGQyQUQxSEpPTGVCUmIyM2VrVXlMTjdlOUhBNVZ5dWJnU2VXWHl2?=
- =?utf-8?B?bmpWZHdKTjIrSG1iK2MrelpwWUhQU3ZmNE9WdmFSMlBQQjdqR0MvNGFuVENB?=
- =?utf-8?B?YmZadUNFczVWdW8yditNSExQQm4ycXlmaEZVVmVsQ24vN1Q0N2hMeGd4bncr?=
- =?utf-8?B?NDQxeEh6UnhZRDhTNkR2WVRpNlJROHZYUnNLSVlBWWw2RUo4Yk1vbHdPb2p4?=
- =?utf-8?B?R0FZcmdDSjJHNE9rdmVEMmttU3JDMHQ3L2ZpYnFPclFTZUtZQnF2ckIrbUJl?=
- =?utf-8?B?RjQ5enpDWXowaTRMRER4a1BVeXNtTWZWVU8yaEl1Vmp0TlEvUWU2SWlLU25L?=
- =?utf-8?B?dm1iQlZYUEk5TGtYR0dJQTFZZVY1dkdvUy9jYU82ZDltRS9TYUtxc2F3YW9q?=
- =?utf-8?B?dGo3bi91ZEdDYkVueVNkYzN4VUpXQzVES0NXbEw5SEpPYWdJbTFqM24wNjFT?=
- =?utf-8?B?dHFCSFBsRnFFelE0TmhpUlpTWDlOaXNGWW9SR1FwN1JCRnZzeWRrK0hOVGMv?=
- =?utf-8?B?WC9YNEt5WUk2dk1EaFliTkZUaUVZQUowQ2VCQi9nS1VWQWV0VW5xR2xXbDBO?=
- =?utf-8?B?NWc2RjJYYnp4Ri9IWCt2N3ZFTlFxVUlHV2M4dlROdnNMdGJ5Y3ltSDVlTEl6?=
- =?utf-8?B?ZEZzZmMxSTBwR2doV0hKaXdpZXl3UmpndzlZTFg5bmc4QytXR2hGUnhTclEw?=
- =?utf-8?Q?p4xY=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S230317AbiIBFtZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Sep 2022 01:49:25 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D8EB7EDF
+        for <linux-pci@vger.kernel.org>; Thu,  1 Sep 2022 22:49:22 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id o123so1051778vsc.3
+        for <linux-pci@vger.kernel.org>; Thu, 01 Sep 2022 22:49:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=BW7DdlSekgKI7bmU9+X6HIBy4PdrQiq5hvTK44Ywm3w=;
+        b=T7wdT/dQ3HtwAgevbbNs9ptd1PMTfAIw2peZGc7viP6g6yGrpwy77iJqmvy6Fh/i+O
+         rpD6/4X7pUJuUBREqGWK6nj3yyG2BlTnuOJ/FMWXvIYT7dimQDmzne974fxE/dJ9o5pg
+         KOVLR/Dpf1mzFKsE13o+cveS06eSyUN2Zna02oPMa6xCSllx03Usvfy1s8AQV1WcG979
+         rL4XNhGY0I22E+v5gTKMK/j7Zx6nH6nxWDz1UKq47jnpJyyyETakbLA7z1IaV8zEXNwL
+         5nujd6x0bMhm+ERnADAdbP4WMCZhSUvEE0I+mOAYpbZJo7LD3c3Btjjyw0elXDNfsrKB
+         NP1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=BW7DdlSekgKI7bmU9+X6HIBy4PdrQiq5hvTK44Ywm3w=;
+        b=bNBxmGKbIX+gYzCDLul7xxqyNar6gJjtTZrttwh+sFYdmoHftmB3AMduttgxqfezln
+         b4GBiAri8afcUZxZGI52jvV2E2ESHHxe7WLo/5zHWL61U5zITs3C4GPBNeY/KY4kQ0dI
+         fsThwPLoEj4Bm8Asaow6RUOemGNmvkvQnV5h3Xuwo63SZqIgy3Ln2HRtJRv72eNV5++q
+         HTywAbqD1pVrzts7S31FGHIC67B3yoSsj+5P8bMOMFg4nU8CR4azuLvxSEi5gf28RYLF
+         G/iCLGeV7cPwcArxpnP7OOwuSkMwksCMPn+UIBMLFTgY8bdbMBRNZYnSNirldUwHdK5M
+         TBqA==
+X-Gm-Message-State: ACgBeo3md9KICQW1+u1Gpq/TFDg6mS5hNejCTBAUeXD6GrBNAQ4t7FYO
+        H6y0F7ju4KtiSV/xNiXVfRtoKDaW1T8iDW/vLhiPRA==
+X-Google-Smtp-Source: AA6agR47XYxZu4TvD4ckKzlwD0Jdufz8AUfvO/eV0edopAR5lOYW6I5AzF+3igVcSOyjnoELWB2ffdi5qq2WegiF2MA=
+X-Received: by 2002:a67:ac44:0:b0:38a:b369:f562 with SMTP id
+ n4-20020a67ac44000000b0038ab369f562mr10696792vsh.14.1662097761634; Thu, 01
+ Sep 2022 22:49:21 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8793.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84a0bbb5-0f72-43c9-5add-08da8c852d39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2022 01:48:04.3306
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yUCeb6Xr5s4TvLtcX6gUtH9CwRGrXH/mObaTr16jqudmlZ1WP87ENctbqNR+hOpCyCBbaKe9uZXM563orhJtaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0401MB2513
+References: <20220722174212.GA1911979@bhelgaas> <86522aa5-2855-0f73-ddb2-a2b50b2fd1b7@nvidia.com>
+ <CACK8Z6FSr_ztkZ5+ULjHiDZ5L9qR=Ewtq1ZuDofzvJX=mW5WAQ@mail.gmail.com>
+ <CAFJ_xbpYrtFrt-hEd7M0jqyH7R9pOKA9884sgMvV2RZXycj7hA@mail.gmail.com>
+ <CAFJ_xbqyxJ591DgC=xQEzokip6i_j0mex5SDTBrwkOe=-8bikg@mail.gmail.com>
+ <8b36f97c-0cc4-3f4a-3b5b-49ad5786d9e9@nvidia.com> <CAFJ_xbr5NjoV1jC3P93N4UgooUuNdCRnrX7HuK=xLtPM5y7EjA@mail.gmail.com>
+ <d3228b1f-8d12-bfab-4cba-6d93a6869f20@nvidia.com> <CAFJ_xboyQyEaDeQ+pZH_YqN52-ALGNqzmmzeyNt6X_Cz-c1w9Q@mail.gmail.com>
+ <b841fe9f-6091-ff55-cd0f-76bc6b04ff46@nvidia.com> <CAAd53p7WWxyvvB54ADkFSZE1oJweaoNK25g6YNcNxCqkeWiVKg@mail.gmail.com>
+ <eb420ee1-424a-5688-8610-9d3e510d0327@nvidia.com> <CAFJ_xbpNLvnWe9uEFxSEPb3mch--Ukf24wUAS9b5kuCxSr8p5A@mail.gmail.com>
+ <1bacfad9-b90f-1d74-bd06-8f01bd2f9396@nvidia.com>
+In-Reply-To: <1bacfad9-b90f-1d74-bd06-8f01bd2f9396@nvidia.com>
+From:   Lukasz Majczak <lma@semihalf.com>
+Date:   Fri, 2 Sep 2022 07:49:10 +0200
+Message-ID: <CAFJ_xbqhQndqfOAbPizQ3Cuyi1WthbNN3DQuObvWYR3ky4C6DA@mail.gmail.com>
+Subject: Re: [PATCH V2] PCI/ASPM: Save/restore L1SS Capability for suspend/resume
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Ben Chuang <benchuanggli@gmail.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, refactormyself@gmail.com, kw@linux.com,
+        kenny@panix.com, treding@nvidia.com, jonathanh@nvidia.com,
+        abhsahu@nvidia.com, sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4NCj4gU2VudDogVGh1cnNk
-YXksIFNlcHRlbWJlciAxLCAyMDIyIDg6MzkgUE0NCj4gVG86IEZyYW5rIExpIDxmcmFuay5saUBu
-eHAuY29tPg0KPiBDYzogbWF6QGtlcm5lbC5vcmc7IHRnbHhAbGludXRyb25peC5kZTsgcm9iaCtk
-dEBrZXJuZWwub3JnOw0KPiBrcnp5c3p0b2Yua296bG93c2tpK2R0QGxpbmFyby5vcmc7IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGt3QGxpbnV4LmNvbTsg
-YmhlbGdhYXNAZ29vZ2xlLmNvbTsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBQZW5nIEZhbg0KPiA8cGVuZy5m
-YW5AbnhwLmNvbT47IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+Ow0KPiBqZG1h
-c29uQGt1ZHp1LnVzOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsg
-ZGwtbGludXgtDQo+IGlteCA8bGludXgtaW14QG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3Jl
-bnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBudGJAbGlzdHMubGludXguZGV2OyBsem51YWFAZ21h
-aWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIIHY2IDQvNF0gcGNpZTogZW5k
-cG9pbnQ6IHBjaS1lcGYtdm50YjogYWRkDQo+IGVuZHBvaW50IE1TSSBzdXBwb3J0DQo+IA0KPiBD
-YXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIFdlZCwgQXVnIDMxLCAyMDIyIGF0IDA0OjE5OjE3
-UE0gKzAwMDAsIEZyYW5rIExpIHdyb3RlOg0KPiA+DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5u
-YW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPg0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3Qg
-MzEsIDIwMjIgNTo0MiBBTQ0KPiA+ID4gVG86IEZyYW5rIExpIDxmcmFuay5saUBueHAuY29tPg0K
-PiA+ID4gQ2M6IG1hekBrZXJuZWwub3JnOyB0Z2x4QGxpbnV0cm9uaXguZGU7IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsNCj4gPiA+IGtyenlzenRvZi5rb3psb3dza2krZHRAbGluYXJvLm9yZzsgc2hhd25n
-dW9Aa2VybmVsLm9yZzsNCj4gPiA+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGt3QGxpbnV4LmNv
-bTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbGludXgtDQo+ID4gPiBrZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+ID4ga2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IFBlbmcgRmFu
-DQo+ID4gPiA8cGVuZy5mYW5AbnhwLmNvbT47IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54
-cC5jb20+Ow0KPiA+ID4gamRtYXNvbkBrdWR6dS51czsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBm
-ZXN0ZXZhbUBnbWFpbC5jb207IGRsLQ0KPiBsaW51eC0NCj4gPiA+IGlteCA8bGludXgtaW14QG54
-cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiA+ID4g
-bnRiQGxpc3RzLmxpbnV4LmRldjsgbHpudWFhQGdtYWlsLmNvbQ0KPiA+ID4gU3ViamVjdDogW0VY
-VF0gUmU6IFtQQVRDSCB2NiA0LzRdIHBjaWU6IGVuZHBvaW50OiBwY2ktZXBmLXZudGI6IGFkZA0K
-PiBlbmRwb2ludA0KPiA+ID4gTVNJIHN1cHBvcnQNCj4gPiA+DQo+ID4gPiBDYXV0aW9uOiBFWFQg
-RW1haWwNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIEF1ZyAxOCwgMjAyMiBhdCAxMDoxMToyN0FNIC0w
-NTAwLCBGcmFuayBMaSB3cm90ZToNCj4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAg4pSM
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQICAgICAgICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUkA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICDilIIgICAgICAg
-4pSCICAgICAgICAgIOKUgiAgICAgICAgICDilIINCj4gPiA+ID4gICAgICAg4pSM4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQICAg4pSCICAgICAgIOKUgiAgICAgICAg
-ICDilIIgUENJIEhvc3Qg4pSCDQo+ID4gPiA+ICAgICAgIOKUgiBNU0kgICAgICAgICDilILil4Ti
-lJAg4pSCICAgICAgIOKUgiAgICAgICAgICDilIIgICAgICAgICAg4pSCDQo+ID4gPiA+ICAgICAg
-IOKUgiBDb250cm9sbGVyICDilIIg4pSCIOKUgiAgICAgICDilIIgICAgICAgICAg4pSCICAgICAg
-ICAgIOKUgg0KPiA+ID4gPiAgICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilJgg4pSU4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSADQo+IOKU
-gA0KPiA+ID4g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSAQkFSMCAgICAg4pSCDQo+ID4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIOKUgiBQQ0kgICDilIIgICAgICAgICAg4pSCIEJBUjEg
-ICAgIOKUgg0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICDilIIgRnVuYyAg4pSCICAg
-ICAgICAgIOKUgiBCQVIyICAgICDilIINCj4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-4pSCICAgICAgIOKUgiAgICAgICAgICDilIIgQkFSMyAgICAg4pSCDQo+ID4gPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIOKUgiAgICAgICDilIIgICAgICAgICAg4pSCIEJBUjQgICAgIOKUgg0K
-PiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICDilIIgICAgICAg4pSc4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pa64pSCICAgICAgICAgIOKUgg0KPiA+ID4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilJggICAgICAgICAg4pSU4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gVGhpcyBk
-aWFncmFtIGRvZXNuJ3Qgc2F5IHdoaWNoIHNpZGUgaXMgaG9zdCBhbmQgd2hpY2ggb25lIGlzIGVu
-ZHBvaW50Lg0KPiA+ID4gQW5kIG5vdCBjb252ZXlpbmcgYW55IHVzZWZ1bCBpbmZvcm1hdGlvbi4N
-Cj4gPg0KPiA+IFtGcmFuayBMaV0gQXQgVjIgdmVyc2lvbiwgdGhpcyBkaWFncmFtIGlzIGluIGNv
-dmVyIGxldHRlci4gIEJqb3JuIHN1Z2dlc3QgbW92ZQ0KPiB0byBoZXJlLg0KPiA+IEkgdGhpbmsg
-eW91IGhhdmUgZ29vZCBiYWNrZ3JvdW5kIGtub3dsZWRnZS4gIEJ1dCBpdCBzaG91bGQgYmUgaGVs
-cGZ1bCBmb3INCj4gbmV3DQo+ID4gUGVvcGxlLCAgd2hvIGp1c3QgdG91Y2ggdGhpcyBhcmVhLg0K
-PiA+DQo+IA0KPiBIYXZpbmcgdGhlIGJsb2NrIGRpYWdyYW0gYWx3YXlzIGhlbHBzIGJ1dCBteSBw
-b2ludCBpcyB0aGF0IHRoaXMgZGlhZ3JhbQ0KPiBkb2Vzbid0DQo+IGNvbnZleSB0aGUgaW1tZWRp
-YXRlIGtub3dsZWRnZSB0aGF0IGl0IGlzIHN1cHBvc2VkIHRvIGRvIHNvLiBMaWtlIHRoZXJlIGlz
-IG5vDQo+IHBhcnRpdGlvbiBiZXR3ZWVuIGhvc3QgYW5kIGVuZHBvaW50IGFuZCB5b3UgZGlkIG5v
-dCBhZGQgYW55IGV4cGxhbmF0aW9uDQo+IGFib3V0DQo+IGl0IGluIHRoZSBiZWxvdyB0ZXh0LiBT
-byBpbiB2MiwgcGxlYXNlIGluY29ycG9yYXRlIHRob3NlLg0KPiANCj4gPiBJIGFscmVhZHkgbWFy
-ayAiUENJIEZ1bmMiIGFuZCAiUENJIEhvc3QiLg0KPiA+DQo+IA0KPiBTb3JyeSwgdGhhdCdzIG5v
-dCBoZWxwZnVsIGFuZCB5b3UgbmVlZCB0byBpbXByb3ZlIGl0Lg0KPiANCj4gPiA+DQo+ID4gPiA+
-IExpbnV4IHN1cHBvcnRzIGVuZHBvaW50IGZ1bmN0aW9ucy4gUENJIEhvc3Qgd3JpdGUgQkFSPG4+
-IHNwYWNlIGxpa2UNCj4gd3JpdGUNCj4gPiA+ID4gdG8gbWVtb3J5LiBUaGUgRVAgc2lkZSBjYW4n
-dCBrbm93IG1lbW9yeSBjaGFuZ2VkIGJ5IHRoZSBob3N0IGRyaXZlci4NCj4gPiA+ID4NCj4gPiA+
-DQo+ID4gPiBJIHRoaW5rIHlvdSBqdXN0IHNheSwgdGhhdCB0aGVyZSBpcyBubyBkZWZpbmVkIHdh
-eSBvZiByYWlzaW5nIElSUXMgYnkgaG9zdA0KPiA+ID4gdG8gdGhlIGVuZHBvaW50Lg0KPiA+ID4N
-Cj4gPiA+ID4gUENJIFNwZWMgaGFzIG5vdCBkZWZpbmVkIGEgc3RhbmRhcmQgbWV0aG9kIHRvIGRv
-IHRoYXQuIE9ubHkgZGVmaW5lDQo+IE1TSSh4KQ0KPiA+ID4gPiB0byBsZXQgRVAgbm90aWZpZWQg
-UkMgc3RhdHVzIGNoYW5nZS4NCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBNU0kgaXMgZnJvbSBFUCwg
-cmlnaHQ/IFRocm91Z2hvdXQgdGhlIGRyaXZlciB5b3Ugc2hvdWxkIGNhbGwgaXQgYXMNCj4gImRv
-b3JiZWxsIg0KPiA+ID4gYW5kIG5vdCBNU0kuDQo+ID4NCj4gPiBbRnJhbmsgTGldIFdoYXQncyBJ
-IHdhbnQgc2FpZCBpcyB0aGF0IFBDSSBzdGFuZGFyZCBkZWZpbmUgTVNJKHgpIHRvIGxldCBFUA0K
-PiBub3RpZnkgUkMuDQo+ID4gQnV0IHRoZXJlIGFyZSBub3Qgc3RhbmRhcmQgd2F5IGZvciByZXZl
-cnNlIGRpcmVjdGlvbi4gIE1TSSBzaG91bGQgYmUNCj4gY29ycmVjdCBoZXJlLg0KPiA+DQo+IA0K
-PiBSaWdodC4gQnV0IGFsc28gdXNlICJNU0kvTVNJLVgiIGluc3RlYWQgb2YgIk1TSSh4KSINCj4g
-DQo+ID4gPg0KPiA+ID4gPiBUaGUgYmFzaWMgaWRlYSBpcyB0byB0cmlnZ2VyIGFuIElSUSB3aGVu
-IFBDSSBSQyB3cml0ZXMgdG8gYSBtZW1vcnkNCj4gPiA+ID4gYWRkcmVzcy4gVGhhdCdzIHdoYXQg
-TVNJIGNvbnRyb2xsZXIgcHJvdmlkZWQuIEVQIGRyaXZlcnMganVzdCBuZWVkIHRvDQo+ID4gPiA+
-IHJlcXVlc3QgYSBwbGF0Zm9ybSBNU0kgaW50ZXJydXB0LCBzdHJ1Y3QgbXNpX21zZyAqbXNnIHdp
-bGwgcGFzcyBkb3duIGENCj4gPiA+ID4gbWVtb3J5IGFkZHJlc3MgYW5kIGRhdGEuIEVQIGRyaXZl
-ciB3aWxsIG1hcCBzdWNoIG1lbW9yeSBhZGRyZXNzIHRvDQo+IG9uZQ0KPiA+ID4gb2YNCj4gPiA+
-ID4gUENJIEJBUjxuPi4gIEhvc3QganVzdCB3cml0ZXMgc3VjaCBhbiBhZGRyZXNzIHRvIHRyaWdn
-ZXIgRVAgc2lkZSBpcnEuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gSUlVQyAoYnkgbG9va2luZyBh
-dCBvdGhlciBwYXRjaGVzIGluIHRoZSBzZXJpZXMpLCB0aGUgbWVtb3J5IGFzc2lnbmVkIGZvcg0K
-PiBCQVINCj4gPiA+IHJlZ2lvbiBieSB0aGUgUENJIGhvc3QgaXMgbWFwcGVkIHRvIHRoZSBwbGF0
-Zm9ybSBpbnRlcnJ1cHQgY29udHJvbGxlciBpbg0KPiA+ID4gUENJIEVuZHBvaW50LiBTdWNoIHRo
-YXQsIHdoZW5ldmVyIHRoZSBQQ0kgaG9zdCB3cml0ZXMgdG8gdGhlIEJBUiByZWdpb24sDQo+IGl0
-DQo+ID4gPiB3aWxsIHRyaWdnZXIgYW4gSVJRIGluIHRoZSBFbmRwb2ludC4NCj4gPiA+DQo+ID4g
-PiBUaGlzIGtpbmQgb2Ygc2V0dXAgaXMgYXZhaWxhYmxlIGluIG90aGVyIHBsYXRmb3JtcyBsaWtl
-IFF1YWxjb21tIHdoZXJlDQo+IHRoZQ0KPiA+ID4gbWFwcGluZyBvZiBhIHJlZ2lzdGVyIHJlZ2lv
-biBhdmFpbGFibGUgaW4gQkFSMCBhbmQgaW50ZXJydXB0IGNvbnRyb2xsZXIgaXMNCj4gPiA+IGRv
-bmUgaW4gdGhlIGhhcmR3YXJlIGl0c2VsZi4gU28gd2hlbmV2ZXIgdGhlIFBDSSBob3N0IHdyaXRl
-cyB0byB0aGF0DQo+IHJlZ2lzdGVyDQo+ID4gPiBpbiBCQVIwLCBhbiBJUlEgd2lsbCBiZSBkZWxp
-dmVyZWQgdG8gdGhlIGVuZHBvaW50Lg0KPiA+DQo+ID4gW0ZyYW5rIExpXSBZZXMsICBub3QgYWxs
-IHBsYXRmb3JtIGhhdmUgaXQuIEFuZCBFUCBkcml2ZXIgaGF2ZSBub3QgcHJvdmlkZSBhIEFQSQ0K
-PiA+IHRvIGdldCByZWdpc3RlciByZWdpb24uICBJIHRoaW5rIHBsYXRmb3JtIG1zaSBBUEkgaXMg
-cHJldHR5IGdvb2QgQVBJLg0KPiA+IE1hbnkgc3lzdGVtIGhhdmUgR0lDIElUUywgIHNvIEVQIGZ1
-bmN0aW9uIGRyaXZlciBjYW4gdXNlIGl0LiAgT3VyIHRlc3QNCj4gcGxhdGZvcm0NCj4gPiBoYXZl
-IG5vdCBJVFMgeWV0LCAgc28gd2UgYWRkZWQgYSBzaW1wbGUgTVUtTVNJIGRyaXZlciB0byBkbyBp
-dC4gSSB0aGluaw0KPiBxdWFsY29tbQ0KPiA+IHBsYXRmb3JtIGNhbiB1c2Ugc2ltaWxhciBtZXRo
-b2QuICBTbyBhbGwgRVAgZnVuY3Rpb24gZHJpdmVyIGNhbiB1c2UgY29tbW9uDQo+IG1ldGhvZA0K
-PiA+IHRvIGdldCBub3RpZmljYXRpb24gZnJvbSBQQ0kgaG9zdC4NCj4gPg0KPiANCj4gV2hhdCBp
-cyB0aGUgY29tbW9uIG1ldGhvZCBoZXJlPyBJZiB5b3Ugd2FudCB0byBtYWtlIHRoaXMgZG9vcmJl
-bGwgZmVhdHVyZQ0KPiBjb21tb24gYWNyb3NzIGFsbCBFUEYgZHJpdmVycywgdGhlbiB5b3UgbmVl
-ZCB0byBwcm92aWRlIEVQRiBBUElzLg0KDQpbRnJhbmsgTGldIEV4aXN0ZWQgTVNJIEFQSSBoYXZl
-IG1hdGNoZWQgcmVxdWlyZW1lbnQuICBFUEYganVzdCByZXVzZWQgaXQuDQpUaGlzIHBhdGNoIHBy
-b3ZpZGVkIGRlbW8gbWV0aG9kIHRvIHNob3cgaG93IHRvIHVzZSBwbGF0Zm9ybSBNU0kgQVBJIHRv
-IG1ha2UgdGhpcw0KRG9vcmJlbGwuIA0KDQo+IA0KPiA+ID4NCj4gPiA+ID4gQWRkIE1TSSBzdXBw
-b3J0IGZvciBwY2ktZXBmLXZudGIuIHBjaS1lcGYtdm50YiBkcml2ZXIgcXVlcnkgaWYgc3lzdGVt
-DQo+ID4gPiA+IGhhdmUgTVNJIGNvbnRyb2xsZXIuIFNldHVwIGRvb3JiZWxsIGFkZHJlc3MgYWNj
-b3JkaW5nIHRvIHN0cnVjdA0KPiBtc2lfbXNnLg0KPiA+ID4gPg0KPiA+ID4gPiBTbyBQQ0llIGhv
-c3QgY2FuIHdyaXRlIHRoaXMgZG9vcmJlbGwgYWRkcmVzcyB0byB0cmlnZXIgRVAgc2lkZSdzIGly
-cS4NCj4gPiA+ID4NCj4gPiA+ID4gSWYgbm8gTVNJIGNvbnRyb2xsZXIgZXhpc3QsIGZhbGwgYmFj
-ayB0byBzb2Z0d2FyZSBwb2xsaW5nLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBG
-cmFuayBMaSA8RnJhbmsuTGlAbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBkcml2ZXJz
-L3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvcGNpLWVwZi12bnRiLmMgfCAxMzQgKysrKysrKysrKysr
-KysrLQ0KPiAtLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDExMiBpbnNlcnRpb25zKCspLCAy
-MiBkZWxldGlvbnMoLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNp
-L2VuZHBvaW50L2Z1bmN0aW9ucy9wY2ktZXBmLXZudGIuYw0KPiA+ID4gYi9kcml2ZXJzL3BjaS9l
-bmRwb2ludC9mdW5jdGlvbnMvcGNpLWVwZi12bnRiLmMNCj4gDQo+IFsuLi5dDQo+IA0KPiA+ID4g
-PiArc3RhdGljIHZvaWQgZXBmX250Yl9lcGNfbXNpX2luaXQoc3RydWN0IGVwZl9udGIgKm50YikN
-Cj4gPiA+ID4gK3sNCj4gPiA+ID4gKyAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJm50Yi0+ZXBm
-LT5kZXY7DQo+ID4gPiA+ICsgICAgIHN0cnVjdCBpcnFfZG9tYWluICpkb21haW47DQo+ID4gPiA+
-ICsgICAgIGludCB2aXJxOw0KPiA+ID4gPiArICAgICBpbnQgcmV0Ow0KPiA+ID4gPiArICAgICBp
-bnQgaTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICBkb21haW4gPSBkZXZfZ2V0X21zaV9kb21h
-aW4obnRiLT5lcGYtPmVwYy0+ZGV2LnBhcmVudCk7DQo+ID4gPiA+ICsgICAgIGlmICghZG9tYWlu
-KQ0KPiA+ID4gPiArICAgICAgICAgICAgIHJldHVybjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAg
-ICBkZXZfc2V0X21zaV9kb21haW4oZGV2LCBkb21haW4pOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsg
-ICAgIGlmIChwbGF0Zm9ybV9tc2lfZG9tYWluX2FsbG9jX2lycXMoJm50Yi0+ZXBmLT5kZXYsDQo+
-ID4gPiA+ICsgICAgICAgICAgICAgbnRiLT5kYl9jb3VudCwNCj4gPiA+ID4gKyAgICAgICAgICAg
-ICBlcGZfbnRiX3dyaXRlX21zaV9tc2cpKSB7DQo+ID4gPiA+ICsgICAgICAgICAgICAgZGV2X2lu
-Zm8oZGV2LCAiQ2FuJ3QgYWxsb2NhdGUgTVNJLCBmYWxsIGJhY2sgdG8gcG9sbCBtb2RlXG4iKTsN
-Cj4gPiA+ID4gKyAgICAgICAgICAgICByZXR1cm47DQo+ID4gPiA+ICsgICAgIH0NCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArICAgICBkZXZfaW5mbyhkZXYsICJ2bnRiIHVzZSBNU0kgYXMgZG9vcmJlbGxc
-biIpOw0KPiA+ID4gPiArDQo+ID4gPg0KPiA+ID4gV2h5IGFyZSB5b3UgdXNpbmcgdGhlIGludGVy
-cnVwdCBjb250cm9sbGVyIGFzIHRoZSBNU0kgY29udHJvbGxlcj8gV2h5IG5vdA0KPiA+ID4ganVz
-dA0KPiA+ID4gYSBwbGFpbiBpbnRlcnJ1cHQgY29udHJvbGxlcj8NCj4gPg0KPiA+IFtGcmFuayBM
-aV0gd2hhdCdzIHlvdXIgbWVhbnM/ICAgSSB0aGluayBvbmx5IE1TSSBjb250cm9sbGVyIHN1cHBv
-cnQgd3JpdGUNCj4gbWVtb3J5IHRvIHRyaWdnZXIgaXJxLg0KPiA+DQo+IA0KPiBGcm9tIEVQRiBk
-cml2ZXIgcGVyc3BlY3RpdmUsIG9ubHkgdGhlIElSUXMgbmVlZCB0byBiZSByZXF1ZXN0ZWQsIHJp
-Z2h0PyBTbw0KPiB3aHkNCj4gY2Fubm90IHlvdSBleHBvc2UgTVUgYXMgYSBnZW5lcmljIGlycWNo
-aXAgZHJpdmVyLCBpbnN0ZWFkIG9mIGEgTVNJIGNvbnRyb2xsZXI/CQ0KDQpbRnJhbmsgTGldIE5v
-LiAgRVBGIG5lZWQgdHdvIGluZm9ybWF0aW9uLiANCjEuIElSUSBudW1iZXIuIA0KMi4gQSBwaHlz
-aWNhbCBhZGRyZXNzLCB3aGljaCBtYXAgc3VjaCBwaHlzaWNhbCBhZGRyZXNzIHRvIFBDSWUgQmFy
-LCBzbyBQQ0kgaG9zdCBjYW4gDQpXcml0ZSBpdCBhbmQgdHJpZ2dlciBFUCBzaWRlIElSUS4NCg0K
-PiANCj4gVGhhbmtzLA0KPiBNYW5pDQo+IA0KPiAtLQ0KPiDgrq7grqPgrr/grrXgrqPgr43grqPg
-rqngr40g4K6a4K6k4K6+4K6a4K6/4K614K6u4K+NDQo=
+wt., 30 sie 2022 o 16:02 Vidya Sagar <vidyas@nvidia.com> napisa=C5=82(a):
+>
+>
+>
+> On 8/30/2022 4:45 PM, Lukasz Majczak wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > pt., 26 sie 2022 o 15:00 Vidya Sagar <vidyas@nvidia.com> napisa=C5=82(a=
+):
+> >>
+> >>
+> >>
+> >> On 8/23/2022 8:25 PM, Kai-Heng Feng wrote:
+> >>> External email: Use caution opening links or attachments
+> >>>
+> >>>
+> >>> Hi Vidya,
+> >>>
+> >>> On Tue, Aug 9, 2022 at 12:17 AM Vidya Sagar <vidyas@nvidia.com> wrote=
+:
+> >>>>
+> >>>> Thanks Lukasz for the update.
+> >>>> I think confirms that there is no issue with the patch as such.
+> >>>> Bjorn, could you please define the next step for this patch?
+> >>>
+> >>> I think the L1SS cap went away _after_ L1SS registers are restored,
+> >>> since your patch already check the cap before doing any write:
+> >>> +       aspm_l1ss =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1S=
+S);
+> >>> +       if (!aspm_l1ss)
+> >>> +               return;
+> >>>
+> >>> That means it's more likely to be caused by the following change:
+> >>> +       pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++=
+);
+> >>> +       pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++=
+);
+> >>>
+> >>> So is it possible to clear PCI_L1SS_CTL1 before setting PCI_L1SS_CTL2=
+,
+> >>> like what aspm_calc_l1ss_info() does?
+> >>
+> >> I posted a new patch
+> >> https://patchwork.kernel.org/project/linux-pci/patch/20220826125526.28=
+859-1-vidyas@nvidia.com/
+> >> keeping L1.2 disabled while restoring the rest of the fields in
+> >> Control-1 register and restoring the L1.2 enable bits later. Could you
+> >> please try this new patch on your setup and update your observations?
+> >>
+> >> Thanks & Regards,
+> >> Vidya Sagar
+> >>
+> >>>
+> >>> Kai-Heng
+> >>>
+> >>>>
+> >>>> Thanks,
+> >>>> Vidya Sagar
+> >>>>
+> >>>> On 8/8/2022 7:37 PM, Lukasz Majczak wrote:
+> >>>>> External email: Use caution opening links or attachments
+> >>>>>
+> >>>>>
+> >>>>> =C5=9Br., 3 sie 2022 o 14:55 Vidya Sagar <vidyas@nvidia.com> napisa=
+=C5=82(a):
+> >>>>>>
+> >>>>>> Thanks Lukasz for the logs.
+> >>>>>> I still that the L1SS capability in the root port (00:14.0) disapp=
+eared
+> >>>>>> after resume.
+> >>>>>> I still don't understand how this patch can make the capability re=
+gister
+> >>>>>> itself disappear. Honestly, I still see this as a HW issue.
+> >>>>>> Bjorn, could you please throw some light on this?
+> >>>>>>
+> >>>>>> Thanks,
+> >>>>>> Vidya Sagar
+> >>>>>>
+> >>>>>> On 8/3/2022 5:34 PM, Lukasz Majczak wrote:
+> >>>>>>> External email: Use caution opening links or attachments
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> pt., 29 lip 2022 o 16:36 Vidya Sagar <vidyas@nvidia.com> napisa=
+=C5=82(a):
+> >>>>>>>>
+> >>>>>>>> Hi Lukasz,
+> >>>>>>>> Thanks for sharing your observations.
+> >>>>>>>>
+> >>>>>>>> Could you please also share the output of 'sudo lspci -vvvv' bef=
+ore and
+> >>>>>>>> after suspend-resume cycle with the latest linux-next?
+> >>>>>>>> Do we still see the L1SS capabilities getting disappeared post r=
+esume?
+> >>>>>>>>
+> >>>>>>>> Thanks,
+> >>>>>>>> Vidya Sagar
+> >>>>>>>>
+> >>>>>>>> On 7/29/2022 3:09 PM, Lukasz Majczak wrote:
+> >>>>>>>>> External email: Use caution opening links or attachments
+> >>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> wt., 26 lip 2022 o 09:20 Lukasz Majczak <lma@semihalf.com> napi=
+sa=C5=82(a):
+> >>>>>>>>>>
+> >>>>>>>>>> wt., 26 lip 2022 o 00:51 Rajat Jain <rajatja@google.com> napis=
+a=C5=82(a):
+> >>>>>>>>>>>
+> >>>>>>>>>>> Hello,
+> >>>>>>>>>>>
+> >>>>>>>>>>> On Sat, Jul 23, 2022 at 10:03 AM Vidya Sagar <vidyas@nvidia.c=
+om> wrote:
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Agree with Bjorn's observations.
+> >>>>>>>>>>>> The fact that the L1SS capability registers themselves disap=
+peared in
+> >>>>>>>>>>>> the root port post resume indicates that there seems to be s=
+omething
+> >>>>>>>>>>>> wrong with the BIOS itself.
+> >>>>>>>>>>>> Could you please check from that perspective?
+> >>>>>>>>>>>
+> >>>>>>>>>>> ChromeOS Intel platforms use S0ix (suspend-to-idle) for suspe=
+nd. This
+> >>>>>>>>>>> is a shallower sleep state that preserves more state than, fo=
+r e.g. S3
+> >>>>>>>>>>> (suspend-to-RAM). When we use S0ix, then BIOS does not come i=
+n picture
+> >>>>>>>>>>> at all. i.e. after the kernel runs its suspend routines, it j=
+ust puts
+> >>>>>>>>>>> the CPU into S0ix state. So I do not think there is a BIOS an=
+gle to
+> >>>>>>>>>>> this.
+> >>>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Thanks,
+> >>>>>>>>>>>> Vidya Sagar
+> >>>>>>>>>>>>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> On 7/22/2022 11:12 PM, Bjorn Helgaas wrote:
+> >>>>>>>>>>>>> External email: Use caution opening links or attachments
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> On Fri, Jul 22, 2022 at 11:41:14AM +0200, Lukasz Majczak wr=
+ote:
+> >>>>>>>>>>>>>> pt., 22 lip 2022 o 09:31 Kai-Heng Feng <kai.heng.feng@cano=
+nical.com> napisa=C5=82(a):
+> >>>>>>>>>>>>>>> On Fri, Jul 15, 2022 at 6:38 PM Ben Chuang <benchuanggli@=
+gmail.com> wrote:
+> >>>>>>>>>>>>>>>> On Tue, Jul 5, 2022 at 2:00 PM Vidya Sagar <vidyas@nvidi=
+a.com> wrote:
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> Previously ASPM L1 Substates control registers (CTL1 an=
+d CTL2) weren't
+> >>>>>>>>>>>>>>>>> saved and restored during suspend/resume leading to L1 =
+Substates
+> >>>>>>>>>>>>>>>>> configuration being lost post-resume.
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> Save the L1 Substates control registers so that the con=
+figuration is
+> >>>>>>>>>>>>>>>>> retained post-resume.
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> >>>>>>>>>>>>>>>>> Tested-by: Abhishek Sahu <abhsahu@nvidia.com>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> Hi Vidya,
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> I tested this patch on kernel v5.19-rc6.
+> >>>>>>>>>>>>>>>> The test device is GL9755 card reader controller on Inte=
+l i5-10210U RVP.
+> >>>>>>>>>>>>>>>> This patch can restore L1SS after suspend/resume.
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> The test results are as follows:
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> After Boot:
+> >>>>>>>>>>>>>>>> #lspci -d 17a0:9755 -vvv | grep -A5 "L1 PM Substates"
+> >>>>>>>>>>>>>>>>               Capabilities: [110 v1] L1 PM Substates
+> >>>>>>>>>>>>>>>>                       L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1=
++ ASPM_L1.2+
+> >>>>>>>>>>>>>>>> ASPM_L1.1+ L1_PM_Substates+
+> >>>>>>>>>>>>>>>>                                 PortCommonModeRestoreTim=
+e=3D255us
+> >>>>>>>>>>>>>>>> PortTPowerOnTime=3D3100us
+> >>>>>>>>>>>>>>>>                       L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.=
+1+ ASPM_L1.2+ ASPM_L1.1+
+> >>>>>>>>>>>>>>>>                                  T_CommonMode=3D0us LTR1=
+.2_Threshold=3D3145728ns
+> >>>>>>>>>>>>>>>>                       L1SubCtl2: T_PwrOn=3D3100us
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> After suspend/resume without this patch.
+> >>>>>>>>>>>>>>>> #lspci -d 17a0:9755 -vvv | grep -A5 "L1 PM Substates"
+> >>>>>>>>>>>>>>>>               Capabilities: [110 v1] L1 PM Substates
+> >>>>>>>>>>>>>>>>                       L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1=
++ ASPM_L1.2+
+> >>>>>>>>>>>>>>>> ASPM_L1.1+ L1_PM_Substates+
+> >>>>>>>>>>>>>>>>                                 PortCommonModeRestoreTim=
+e=3D255us
+> >>>>>>>>>>>>>>>> PortTPowerOnTime=3D3100us
+> >>>>>>>>>>>>>>>>                       L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.=
+1- ASPM_L1.2- ASPM_L1.1-
+> >>>>>>>>>>>>>>>>                                  T_CommonMode=3D0us LTR1=
+.2_Threshold=3D0ns
+> >>>>>>>>>>>>>>>>                       L1SubCtl2: T_PwrOn=3D10us
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> After suspend/resume with this patch.
+> >>>>>>>>>>>>>>>> #lspci -d 17a0:9755 -vvv | grep -A5 "L1 PM Substates"
+> >>>>>>>>>>>>>>>>               Capabilities: [110 v1] L1 PM Substates
+> >>>>>>>>>>>>>>>>                       L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1=
++ ASPM_L1.2+
+> >>>>>>>>>>>>>>>> ASPM_L1.1+ L1_PM_Substates+
+> >>>>>>>>>>>>>>>>                                 PortCommonModeRestoreTim=
+e=3D255us
+> >>>>>>>>>>>>>>>> PortTPowerOnTime=3D3100us
+> >>>>>>>>>>>>>>>>                       L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.=
+1+ ASPM_L1.2+ ASPM_L1.1+
+> >>>>>>>>>>>>>>>>                                  T_CommonMode=3D0us LTR1=
+.2_Threshold=3D3145728ns
+> >>>>>>>>>>>>>>>>                       L1SubCtl2: T_PwrOn=3D3100us
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> Tested-by: Ben Chuang <benchuanggli@gmail.com>
+> >>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>> Forgot to add mine:
+> >>>>>>>>>>>>>>> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> Best regards,
+> >>>>>>>>>>>>>>>> Ben Chuang
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> ---
+> >>>>>>>>>>>>>>>>> Hi,
+> >>>>>>>>>>>>>>>>> Kenneth R. Crudup <kenny@panix.com>, Could you please v=
+erify this patch
+> >>>>>>>>>>>>>>>>> on your laptop (Dell XPS 13) one last time?
+> >>>>>>>>>>>>>>>>> IMHO, the regression observed on your laptop with an ol=
+d version of the patch
+> >>>>>>>>>>>>>>>>> could be due to a buggy old version BIOS in the laptop.
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> Thanks,
+> >>>>>>>>>>>>>>>>> Vidya Sagar
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>        drivers/pci/pci.c       |  7 +++++++
+> >>>>>>>>>>>>>>>>>        drivers/pci/pci.h       |  4 ++++
+> >>>>>>>>>>>>>>>>>        drivers/pci/pcie/aspm.c | 44 +++++++++++++++++++=
+++++++++++++++++++++++
+> >>>>>>>>>>>>>>>>>        3 files changed, 55 insertions(+)
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >>>>>>>>>>>>>>>>> index cfaf40a540a8..aca05880aaa3 100644
+> >>>>>>>>>>>>>>>>> --- a/drivers/pci/pci.c
+> >>>>>>>>>>>>>>>>> +++ b/drivers/pci/pci.c
+> >>>>>>>>>>>>>>>>> @@ -1667,6 +1667,7 @@ int pci_save_state(struct pci_dev=
+ *dev)
+> >>>>>>>>>>>>>>>>>                       return i;
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>               pci_save_ltr_state(dev);
+> >>>>>>>>>>>>>>>>> +       pci_save_aspm_l1ss_state(dev);
+> >>>>>>>>>>>>>>>>>               pci_save_dpc_state(dev);
+> >>>>>>>>>>>>>>>>>               pci_save_aer_state(dev);
+> >>>>>>>>>>>>>>>>>               pci_save_ptm_state(dev);
+> >>>>>>>>>>>>>>>>> @@ -1773,6 +1774,7 @@ void pci_restore_state(struct pci=
+_dev *dev)
+> >>>>>>>>>>>>>>>>>                * LTR itself (in the PCIe capability).
+> >>>>>>>>>>>>>>>>>                */
+> >>>>>>>>>>>>>>>>>               pci_restore_ltr_state(dev);
+> >>>>>>>>>>>>>>>>> +       pci_restore_aspm_l1ss_state(dev);
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>               pci_restore_pcie_state(dev);
+> >>>>>>>>>>>>>>>>>               pci_restore_pasid_state(dev);
+> >>>>>>>>>>>>>>>>> @@ -3489,6 +3491,11 @@ void pci_allocate_cap_save_buffe=
+rs(struct pci_dev *dev)
+> >>>>>>>>>>>>>>>>>               if (error)
+> >>>>>>>>>>>>>>>>>                       pci_err(dev, "unable to allocate =
+suspend buffer for LTR\n");
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> +       error =3D pci_add_ext_cap_save_buffer(dev, PCI_=
+EXT_CAP_ID_L1SS,
+> >>>>>>>>>>>>>>>>> +                                           2 * sizeof(=
+u32));
+> >>>>>>>>>>>>>>>>> +       if (error)
+> >>>>>>>>>>>>>>>>> +               pci_err(dev, "unable to allocate suspen=
+d buffer for ASPM-L1SS\n");
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>>               pci_allocate_vc_save_buffers(dev);
+> >>>>>>>>>>>>>>>>>        }
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> >>>>>>>>>>>>>>>>> index e10cdec6c56e..92d8c92662a4 100644
+> >>>>>>>>>>>>>>>>> --- a/drivers/pci/pci.h
+> >>>>>>>>>>>>>>>>> +++ b/drivers/pci/pci.h
+> >>>>>>>>>>>>>>>>> @@ -562,11 +562,15 @@ void pcie_aspm_init_link_state(st=
+ruct pci_dev *pdev);
+> >>>>>>>>>>>>>>>>>        void pcie_aspm_exit_link_state(struct pci_dev *p=
+dev);
+> >>>>>>>>>>>>>>>>>        void pcie_aspm_pm_state_change(struct pci_dev *p=
+dev);
+> >>>>>>>>>>>>>>>>>        void pcie_aspm_powersave_config_link(struct pci_=
+dev *pdev);
+> >>>>>>>>>>>>>>>>> +void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+> >>>>>>>>>>>>>>>>> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+> >>>>>>>>>>>>>>>>>        #else
+> >>>>>>>>>>>>>>>>>        static inline void pcie_aspm_init_link_state(str=
+uct pci_dev *pdev) { }
+> >>>>>>>>>>>>>>>>>        static inline void pcie_aspm_exit_link_state(str=
+uct pci_dev *pdev) { }
+> >>>>>>>>>>>>>>>>>        static inline void pcie_aspm_pm_state_change(str=
+uct pci_dev *pdev) { }
+> >>>>>>>>>>>>>>>>>        static inline void pcie_aspm_powersave_config_li=
+nk(struct pci_dev *pdev) { }
+> >>>>>>>>>>>>>>>>> +static inline void pci_save_aspm_l1ss_state(struct pci=
+_dev *dev) { }
+> >>>>>>>>>>>>>>>>> +static inline void pci_restore_aspm_l1ss_state(struct =
+pci_dev *dev) { }
+> >>>>>>>>>>>>>>>>>        #endif
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>        #ifdef CONFIG_PCIE_ECRC
+> >>>>>>>>>>>>>>>>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie=
+/aspm.c
+> >>>>>>>>>>>>>>>>> index a96b7424c9bc..2c29fdd20059 100644
+> >>>>>>>>>>>>>>>>> --- a/drivers/pci/pcie/aspm.c
+> >>>>>>>>>>>>>>>>> +++ b/drivers/pci/pcie/aspm.c
+> >>>>>>>>>>>>>>>>> @@ -726,6 +726,50 @@ static void pcie_config_aspm_l1ss(=
+struct pcie_link_state *link, u32 state)
+> >>>>>>>>>>>>>>>>>                                       PCI_L1SS_CTL1_L1S=
+S_MASK, val);
+> >>>>>>>>>>>>>>>>>        }
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> +void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+> >>>>>>>>>>>>>>>>> +{
+> >>>>>>>>>>>>>>>>> +       int aspm_l1ss;
+> >>>>>>>>>>>>>>>>> +       struct pci_cap_saved_state *save_state;
+> >>>>>>>>>>>>>>>>> +       u32 *cap;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       if (!pci_is_pcie(dev))
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       aspm_l1ss =3D pci_find_ext_capability(dev, PCI_=
+EXT_CAP_ID_L1SS);
+> >>>>>>>>>>>>>>>>> +       if (!aspm_l1ss)
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       save_state =3D pci_find_saved_ext_cap(dev, PCI_=
+EXT_CAP_ID_L1SS);
+> >>>>>>>>>>>>>>>>> +       if (!save_state)
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       cap =3D (u32 *)&save_state->cap.data[0];
+> >>>>>>>>>>>>>>>>> +       pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS=
+_CTL2, cap++);
+> >>>>>>>>>>>>>>>>> +       pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS=
+_CTL1, cap++);
+> >>>>>>>>>>>>>>>>> +}
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+> >>>>>>>>>>>>>>>>> +{
+> >>>>>>>>>>>>>>>>> +       int aspm_l1ss;
+> >>>>>>>>>>>>>>>>> +       struct pci_cap_saved_state *save_state;
+> >>>>>>>>>>>>>>>>> +       u32 *cap;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       if (!pci_is_pcie(dev))
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       aspm_l1ss =3D pci_find_ext_capability(dev, PCI_=
+EXT_CAP_ID_L1SS);
+> >>>>>>>>>>>>>>>>> +       if (!aspm_l1ss)
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       save_state =3D pci_find_saved_ext_cap(dev, PCI_=
+EXT_CAP_ID_L1SS);
+> >>>>>>>>>>>>>>>>> +       if (!save_state)
+> >>>>>>>>>>>>>>>>> +               return;
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>> +       cap =3D (u32 *)&save_state->cap.data[0];
+> >>>>>>>>>>>>>>>>> +       pci_write_config_dword(dev, aspm_l1ss + PCI_L1S=
+S_CTL2, *cap++);
+> >>>>>>>>>>>>>>>>> +       pci_write_config_dword(dev, aspm_l1ss + PCI_L1S=
+S_CTL1, *cap++);
+> >>>>>>>>>>>>>>>>> +}
+> >>>>>>>>>>>>>>>>> +
+> >>>>>>>>>>>>>>>>>        static void pcie_config_aspm_dev(struct pci_dev =
+*pdev, u32 val)
+> >>>>>>>>>>>>>>>>>        {
+> >>>>>>>>>>>>>>>>>               pcie_capability_clear_and_set_word(pdev, =
+PCI_EXP_LNKCTL,
+> >>>>>>>>>>>>>>>>> --
+> >>>>>>>>>>>>>>>>> 2.17.1
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>
+> >>>>>>>>>>>>>> Hi,
+> >>>>>>>>>>>>>>
+> >>>>>>>>>>>>>> With this patch (and also mentioned
+> >>>>>>>>>>>>>> https://lore.kernel.org/all/20220509073639.2048236-1-kai.h=
+eng.feng@canonical.com/)
+> >>>>>>>>>>>>>> applied on 5.10 (chromeos-5.10) I am observing problems af=
+ter
+> >>>>>>>>>>>>>> suspend/resume with my WiFi card - it looks like whole com=
+munication
+> >>>>>>>>>>>>>> via PCI fails. Attaching logs (dmesg, lspci -vvv before su=
+spend/resume
+> >>>>>>>>>>>>>> and after) https://gist.github.com/semihalf-majczak-lukasz=
+/fb36dfa2eff22911109dfb91ab0fc0e3
+> >>>>>>>>>>>>>>
+> >>>>>>>>>>>>>> I played a little bit with this code and it looks like the
+> >>>>>>>>>>>>>> pci_write_config_dword() to the PCI_L1SS_CTL1 breaks it (d=
+on't know
+> >>>>>>>>>>>>>> why, not a PCI expert).
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Thanks a lot for testing this!  I'm not quite sure what to =
+make of the
+> >>>>>>>>>>>>> results since v5.10 is fairly old (Dec 2020) and I don't kn=
+ow what
+> >>>>>>>>>>>>> other changes are in chromeos-5.10.
+> >>>>>>>>>>>
+> >>>>>>>>>>> Lukasz: I assume you are running this on Atlas and are seeing=
+ this bug
+> >>>>>>>>>>> when uprev'ving it to 5.10 kernel. Can you please try it on a=
+ newer
+> >>>>>>>>>>> Intel platform that have the latest upstream kernel running a=
+lready
+> >>>>>>>>>>> and see if this can be reproduced there too?
+> >>>>>>>>>>> Note that the wifi PCI device is different on newer Intel pla=
+tforms,
+> >>>>>>>>>>> but platform design is similar enough that I suspect we shoul=
+d see
+> >>>>>>>>>>> similar bug on those too. The other option is to try the late=
+st
+> >>>>>>>>>>> ustream kernel on Atlas. Perhaps if we just care about wifi (=
+and
+> >>>>>>>>>>> ignore bringing up the graphics stack and GUI), it may come u=
+p
+> >>>>>>>>>>> sufficiently enough to try this patch?
+> >>>>>>>>>>>
+> >>>>>>>>>>> Thanks,
+> >>>>>>>>>>>
+> >>>>>>>>>>> Rajat
+> >>>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Random observations, no analysis below.  This from your dme=
+sg
+> >>>>>>>>>>>>> certainly looks like PCI reads failing and returning ~0:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>         Timeout waiting for hardware access (CSR_GP_CNTRL 0=
+xffffffff)
+> >>>>>>>>>>>>>         iwlwifi 0000:01:00.0: 00000000: ffffffff ffffffff f=
+fffffff ffffffff ffffffff ffffffff ffffffff ffffffff
+> >>>>>>>>>>>>>         iwlwifi 0000:01:00.0: Device gone - attempting remo=
+val
+> >>>>>>>>>>>>>         Hardware became unavailable upon resume. This could=
+ be a software issue prior to suspend or a hardware issue.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> And then we re-enumerate 01:00.0 and it looks like it may h=
+ave been
+> >>>>>>>>>>>>> reset (BAR is 0):
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>         pci 0000:01:00.0: [8086:095a] type 00 class 0x02800=
+0
+> >>>>>>>>>>>>>         pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00001=
+fff 64bit]
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> lspci diffs from before/after suspend:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>          00:14.0 PCI bridge: Intel Corporation Celeron N335=
+0/Pentium N4200/Atom E3900 Series PCI Express Port B #1 (rev fb) (prog-if 0=
+0 [Normal decode])
+> >>>>>>>>>>>>>            Bus: primary=3D00, secondary=3D01, subordinate=
+=3D01, sec-latency=3D64
+> >>>>>>>>>>>>>         -               DevSta: CorrErr- NonFatalErr+ Fatal=
+Err- UnsupReq+ AuxPwr+ TransPend-
+> >>>>>>>>>>>>>         +               DevSta: CorrErr+ NonFatalErr- Fatal=
+Err- UnsupReq- AuxPwr+ TransPend-
+> >>>>>>>>>>>>>         -               LnkCtl: ASPM L1 Enabled; RCB 64 byt=
+es, Disabled- CommClk+
+> >>>>>>>>>>>>>         +               LnkCtl: ASPM Disabled; RCB 64 bytes=
+, Disabled- CommClk+
+> >>>>>>>>>>>>>         -               LnkSta2: Current De-emphasis Level:=
+ -6dB, EqualizationComplete- EqualizationPhase1-
+> >>>>>>>>>>>>>         +               LnkSta2: Current De-emphasis Level:=
+ -3.5dB, EqualizationComplete- EqualizationPhase1-
+> >>>>>>>>>>>>>         -       Capabilities: [150 v0] Null
+> >>>>>>>>>>>>>         -       Capabilities: [200 v1] L1 PM Substates
+> >>>>>>>>>>>>>         -               L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+=
+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+> >>>>>>>>>>>>>         -                         PortCommonModeRestoreTime=
+=3D40us PortTPowerOnTime=3D10us
+> >>>>>>>>>>>>>         -               L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1=
++ ASPM_L1.2+ ASPM_L1.1+
+> >>>>>>>>>>>>>         -                          T_CommonMode=3D40us LTR1=
+.2_Threshold=3D98304ns
+> >>>>>>>>>>>>>         -               L1SubCtl2: T_PwrOn=3D60us
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> The DevSta differences might be BIOS bugs, probably not rel=
+evant.
+> >>>>>>>>>>>>> Interesting that ASPM is disabled, maybe didn't get enabled=
+ after
+> >>>>>>>>>>>>> re-enumerating 01:00.0?  Strange that the L1 PM Substates c=
+apability
+> >>>>>>>>>>>>> disappeared.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>          01:00.0 Network controller: Intel Corporation Wire=
+less 7265 (rev 59)
+> >>>>>>>>>>>>>                         LnkCtl: ASPM L1 Enabled; RCB 64 byt=
+es, Disabled- CommClk+
+> >>>>>>>>>>>>>         -                       ExtSynch- ClockPM+ AutWidDi=
+s- BWInt- AutBWInt-
+> >>>>>>>>>>>>>         +                       ExtSynch- ClockPM- AutWidDi=
+s- BWInt- AutBWInt-
+> >>>>>>>>>>>>>                 Capabilities: [154 v1] L1 PM Substates
+> >>>>>>>>>>>>>                         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+=
+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+> >>>>>>>>>>>>>                                   PortCommonModeRestoreTime=
+=3D30us PortTPowerOnTime=3D60us
+> >>>>>>>>>>>>>         -               L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1=
++ ASPM_L1.2+ ASPM_L1.1+
+> >>>>>>>>>>>>>         -                          T_CommonMode=3D0us LTR1.=
+2_Threshold=3D98304ns
+> >>>>>>>>>>>>>         +               L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1=
+- ASPM_L1.2- ASPM_L1.1-
+> >>>>>>>>>>>>>         +                          T_CommonMode=3D0us LTR1.=
+2_Threshold=3D0ns
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Dmesg claimed we reconfigured common clock config.  Maybe A=
+SPM didn't
+> >>>>>>>>>>>>> get reinitialized after re-enumeration?  Looks like we didn=
+'t restore
+> >>>>>>>>>>>>> L1SubCtl1.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Bjorn
+> >>>>>>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> Hi,
+> >>>>>>>>>>
+> >>>>>>>>>> Thank you all for the response and input! As Rajat mentioned I=
+'m using
+> >>>>>>>>>> chromebook - but not Atlas (Amberlake) - in this case it is Ba=
+bymega
+> >>>>>>>>>> (Apollolake)  - I will try to load most recent kernel and give=
+ it a
+> >>>>>>>>>> try once again.
+> >>>>>>>>>>
+> >>>>>>>>>> Best regards,
+> >>>>>>>>>> Lukasz
+> >>>>>>>>>
+> >>>>>>>>> Hi,
+> >>>>>>>>>
+> >>>>>>>>>       I have applied this patch on top of v5.19-rc7 (chromeos) =
+and I'm
+> >>>>>>>>> still getting same results:
+> >>>>>>>>> https://gist.github.com/semihalf-majczak-lukasz/4b716704c21a375=
+8d6711b2030ea34b9
+> >>>>>>>>>
+> >>>>>>>>> Best regards,
+> >>>>>>>>> Lukasz
+> >>>>>>>>>
+> >>>>>>> Hi Vidya,
+> >>>>>>>
+> >>>>>>> Sorry for the long delay, I have retested your patch on top of
+> >>>>>>> linux-next/master (next-20220802) - the results for my device rem=
+ain
+> >>>>>>> the same.
+> >>>>>>> Here are the logs (lspci -vvv before suspend, lspci -vvv after re=
+sume and dmesg)
+> >>>>>>> https://gist.github.com/semihalf-majczak-lukasz/c7bfd811359f23278=
+034056a8002b3ef
+> >>>>>>> Let me know if you need any more logs and/or tests.
+> >>>>>>>
+> >>>>>>> Best regards,
+> >>>>>>> Lukasz
+> >>>>>>>
+> >>>>> Hi Vidya,
+> >>>>>
+> >>>>> After your last email, I've re-tested my setup and (without your
+> >>>>> patch)  the capability register also disappears - so it looks there=
+ is
+> >>>>> - in fact - some problem in my setup and your patch just brings it =
+to
+> >>>>> the top as after resume tries to write to a register that is no lon=
+ger
+> >>>>> present. I'm very sorry for the confusion here and I've not notice
+> >>>>> that at the very beginning.
+> >>>>>
+> >>>>> Best regards,
+> >>>>> Lukasz
+> >>>>>
+> >
+> > Hi Vidya,
+> >
+> > For me (on Apollolake devices) the results remain the same, but as
+> > I've mentioned earlier - it looks very much related exactly to the
+> > Apollolake and is not directly related to your patch (e.g. I'm losing
+> > L1SS capabilities even without your patch).
+> > As a counter example, I don't  observe any issues with your patach
+> > (v3) on Amberlake devices - lspci -vvv before suspend and after resume
+> > are exactly the same.
+>
+> Thanks for the update Lukasz.
+> Anyway, i sent V3 fore review. Could you please review it and also test
+> it on your platform?
+>
+> Thanks,
+> Vidya Sagar
+>
+> >
+> > Best regards,
+> > Lukasz
+> >
+Hi Vidya,
+
+The results from my previous mail are for V3 of your patch;
+Amberlake - works fine
+Apollolake - still the same issue, but here it is not related to your
+changes (we are still working on this).
+
+Best regards,
+Lukasz
