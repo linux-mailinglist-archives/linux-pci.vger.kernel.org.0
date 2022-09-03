@@ -2,53 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4CD05ABCB9
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 06:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8455ABCC8
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 06:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230173AbiICEHw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Sep 2022 00:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
+        id S231448AbiICETx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Sep 2022 00:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231535AbiICEHv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Sep 2022 00:07:51 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1EA82F9D;
-        Fri,  2 Sep 2022 21:07:50 -0700 (PDT)
+        with ESMTP id S229520AbiICETw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Sep 2022 00:19:52 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD1B2E9C8;
+        Fri,  2 Sep 2022 21:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662178070; x=1693714070;
+  t=1662178790; x=1693714790;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=T+fPZphr6c6IlXiy2pembOOg+9Rn7WUe3VZoUGJMCJI=;
-  b=bNKesWMkEjinlSV2RrgbEFWBNJV7uAtIopoeNqlNN/7xaIBSABfFzmHe
-   ywmRHoCPNGT/rxibaTsE3gsC4cuTDh6UmipwEvojrAWbXd1Yfp4bkmBBV
-   Q9tAZTO6PNA5GvF/D3pMDh+EjcOICEJrcaQgMxjlswYV7fZm+C98QxqB0
-   jlAocylcmBbwxmDTaNB5j9uK6n1zvcZChtQ2sYtf86nq1nRKjgDVsWLQO
-   laSRchBMNWU3idkE5dUf5wXTK7hAWILQGmiEIOW8Np7garOLBrR2GLEwN
-   GiCXXUUcrOxTPFNCeLrBjQRvgPY1s7HxBdM/3CRDZuOjjzUVP041CjPLG
+  bh=/XdTWVITF6pH27tSJB4d8eknbMi4ORepldVdA6NqxSs=;
+  b=cAQF5blAtX5gKvj9+Ssl6UJapHuAbZA6mkz22731qQkDHzwFN2s4VzDn
+   N9pOE4cOyMRTwWGryu0zDshQ1pwRhwJUcRsq3auBHWKA0/UFkeORdy3B8
+   m4ltKFJfzc610TKv92q7SzQTY5qZU2cv0L33iZUuCUaCSSvp+25CUnmwE
+   xb5IIeqE0iOIz3FzwLzSZBJx7RWAASUGUjweNujiJdzYVZ5surqH4Jddn
+   ZDD6lYmAjOCXpTjT3Aw/8GQtk28bCzReCQSBx200XH+4bhrUf4WATeR32
+   i6ux2T+eNfDSfOwJhr5z5xD3pn5zeRzeg757ktXPFnkyWcD4/WcBITZCq
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="276527341"
+X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="360085431"
 X-IronPort-AV: E=Sophos;i="5.93,286,1654585200"; 
-   d="scan'208";a="276527341"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 21:07:50 -0700
+   d="scan'208";a="360085431"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 21:19:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,286,1654585200"; 
-   d="scan'208";a="590305618"
+   d="scan'208";a="702349342"
 Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 02 Sep 2022 21:07:47 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Sep 2022 21:19:47 -0700
 Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oUKRe-000123-1b;
-        Sat, 03 Sep 2022 04:07:46 +0000
-Date:   Sat, 3 Sep 2022 12:07:18 +0800
+        id 1oUKdG-00012f-2w;
+        Sat, 03 Sep 2022 04:19:46 +0000
+Date:   Sat, 3 Sep 2022 12:18:55 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Rajvi Jingar <rajvi.jingar@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Koba Ko <koba.ko@canonical.com>,
+Cc:     kbuild-all@lists.01.org, Koba Ko <koba.ko@canonical.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         Sathyanarayanan Kuppuswamy 
@@ -57,7 +56,7 @@ Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
 Subject: Re: [PATCH v2 3/3] PCI/PM: Always disable PTM for all devices during
  suspend
-Message-ID: <202209031120.PkNnRSt8-lkp@intel.com>
+Message-ID: <202209031256.McjuB8mz-lkp@intel.com>
 References: <20220902233543.390890-4-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -85,30 +84,27 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-PM-Always-disable-PTM-for-all-devices-during-suspend/20220903-073808
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: riscv-randconfig-r042-20220901 (https://download.01.org/0day-ci/archive/20220903/202209031120.PkNnRSt8-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project c55b41d5199d2394dd6cdb8f52180d8b81d809d4)
+config: x86_64-randconfig-a015 (https://download.01.org/0day-ci/archive/20220903/202209031256.McjuB8mz-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
 reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install riscv cross compiling tool for clang build
-        # apt-get install binutils-riscv64-linux-gnu
         # https://github.com/intel-lab-lkp/linux/commit/809e1c954b459ee37193c4ab9fa843243fbd7fa9
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Bjorn-Helgaas/PCI-PM-Always-disable-PTM-for-all-devices-during-suspend/20220903-073808
         git checkout 809e1c954b459ee37193c4ab9fa843243fbd7fa9
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/pci/
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
->> drivers/pci/pci-driver.c:1350:15: error: no member named 'ptm_enabled' in 'struct pci_dev'
-           if (pci_dev->ptm_enabled)
-               ~~~~~~~  ^
-   1 error generated.
+   drivers/pci/pci-driver.c: In function 'pci_pm_runtime_resume':
+>> drivers/pci/pci-driver.c:1350:22: error: 'struct pci_dev' has no member named 'ptm_enabled'; did you mean 'ats_enabled'?
+    1350 |         if (pci_dev->ptm_enabled)
+         |                      ^~~~~~~~~~~
+         |                      ats_enabled
 
 
 vim +1350 drivers/pci/pci-driver.c
