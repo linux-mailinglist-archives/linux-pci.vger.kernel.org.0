@@ -2,69 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C8455ABCC8
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 06:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A73A5ABD17
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 06:51:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbiICETx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Sep 2022 00:19:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
+        id S231709AbiICEu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Sep 2022 00:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiICETw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Sep 2022 00:19:52 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD1B2E9C8;
-        Fri,  2 Sep 2022 21:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662178790; x=1693714790;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/XdTWVITF6pH27tSJB4d8eknbMi4ORepldVdA6NqxSs=;
-  b=cAQF5blAtX5gKvj9+Ssl6UJapHuAbZA6mkz22731qQkDHzwFN2s4VzDn
-   N9pOE4cOyMRTwWGryu0zDshQ1pwRhwJUcRsq3auBHWKA0/UFkeORdy3B8
-   m4ltKFJfzc610TKv92q7SzQTY5qZU2cv0L33iZUuCUaCSSvp+25CUnmwE
-   xb5IIeqE0iOIz3FzwLzSZBJx7RWAASUGUjweNujiJdzYVZ5surqH4Jddn
-   ZDD6lYmAjOCXpTjT3Aw/8GQtk28bCzReCQSBx200XH+4bhrUf4WATeR32
-   i6ux2T+eNfDSfOwJhr5z5xD3pn5zeRzeg757ktXPFnkyWcD4/WcBITZCq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="360085431"
-X-IronPort-AV: E=Sophos;i="5.93,286,1654585200"; 
-   d="scan'208";a="360085431"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 21:19:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,286,1654585200"; 
-   d="scan'208";a="702349342"
-Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Sep 2022 21:19:47 -0700
-Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oUKdG-00012f-2w;
-        Sat, 03 Sep 2022 04:19:46 +0000
-Date:   Sat, 3 Sep 2022 12:18:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     kbuild-all@lists.01.org, Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 3/3] PCI/PM: Always disable PTM for all devices during
- suspend
-Message-ID: <202209031256.McjuB8mz-lkp@intel.com>
-References: <20220902233543.390890-4-helgaas@kernel.org>
+        with ESMTP id S231556AbiICEu4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Sep 2022 00:50:56 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968CACE440
+        for <linux-pci@vger.kernel.org>; Fri,  2 Sep 2022 21:50:53 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id q81so3193796iod.9
+        for <linux-pci@vger.kernel.org>; Fri, 02 Sep 2022 21:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=/jnxYgkJXMYsjbokKvcye0yiyfDXPFgpoek+6RNFmOY=;
+        b=QuehXOenSTMiMaQj0tjn4Spni2D8homjpALWifcjtPsiGMWKMY2EmxWmDYkSR86ckp
+         +HuAJyx2W78388wxCTArsrZroDS7KrIRg+JJe5Ev1E5tDbe4/eVZi15D+WCCXAnGoELi
+         SiQPejTgON+YFICm78hL3ENz4nNa5iTPT+6mEXSd0vBz5O/I7nIm+KQa85AP+KSjO/Fk
+         DnLFLKadfhCx/nTzM6Rf7Y1cD2htdHJRCaRGRVQKZ81ScAFG8yHtr19RZcHeEESF3mV6
+         O7nh4Bp/hkvyVD6SJsxHUQPLReMVNCvMLWsCYcRI1SCneUNk9MTnyhRRvpkdhqdY8AvD
+         MUrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=/jnxYgkJXMYsjbokKvcye0yiyfDXPFgpoek+6RNFmOY=;
+        b=ApeGcLJtQVAKfAbNrzV9fI0p/q+F93CubOtTgZQ49+xDxA/dVAOZM85gl2kCtmbHsc
+         YbLuWJaO6Exyg67N+DRlbwhj4Gqomgn0n4rWV0Yb1Pki9VXuwMc+mvUFfECw2ERZXxzL
+         B8FmIJ2s3zTPmKYowXikg7Uit1KvdGwtzngZxM/ur5Mi085wWXIGKd3nXCjc63sTPA1/
+         jeNQCOzo7tihw+UkhkljcdmQPsh4SRHLuFqOFJA7YKtzhJm8+d8u5S25NDBf0nxl1F3H
+         Aa9mYZSHdDX4elZPsTot8M01P3/QX1t0Xgf/9y1s/kP1Ot3vVgUO5LtZtR2euMO7IKIi
+         Qv/w==
+X-Gm-Message-State: ACgBeo04lHZa4HmmSFSoxDlhqJQogbUJHJ8OpDXsZ/SGxpCysEeFYCcG
+        WXsSywFphm1qcEyws+ue1lhFz9mD3bpLfvBrcI5JLgmh3U8=
+X-Google-Smtp-Source: AA6agR50vjC2thNmimLf9LoXeTpeGoEaFeFtpFxTFtQ1gxpGQVUa5ldvFpMS0otajwRFAQLEGKLNrGuYN7goA9W4f1s=
+X-Received: by 2002:a05:6638:2696:b0:344:f106:eff8 with SMTP id
+ o22-20020a056638269600b00344f106eff8mr21367471jat.89.1662180652972; Fri, 02
+ Sep 2022 21:50:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220902233543.390890-4-helgaas@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <1662171184-25211-1-git-send-email-quic_krichai@quicinc.com> <1662171184-25211-2-git-send-email-quic_krichai@quicinc.com>
+In-Reply-To: <1662171184-25211-2-git-send-email-quic_krichai@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Sat, 3 Sep 2022 07:50:42 +0300
+Message-ID: <CAA8EJppa3ZXr54BMNATZMdnk_VS8HmfXYQ_RovDEKE96ZcqQZw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Add sc7280 aggre0, aggre1 and ddr sf
+ tbu clocks in PCIe driver
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, quic_vbadigan@quicinc.com,
+        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,77 +77,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Sat, 3 Sept 2022 at 05:23, Krishna chaitanya chundru
+<quic_krichai@quicinc.com> wrote:
+>
+> Add missing aggre0, aggre1 and ddrs sf tbu clocks in PCIe driver.
+>
+> If these clocks are not presenti, the PCIe link goes down in system suspend
+> and resume.
+>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-I love your patch! Yet something to improve:
+This does not apply onto the linux-next. If this is a fix intended for
+the current master or for the linux-stable please state so.
 
-[auto build test ERROR on helgaas-pci/next]
-[also build test ERROR on linus/master v6.0-rc3 next-20220901]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 2ea1375..a7202f0 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1548,7 +1548,10 @@ static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
+>  static const struct qcom_pcie_cfg sc7280_cfg = {
+>         .ops = &ops_1_9_0,
+>         .has_tbu_clk = true,
+> +       .has_ddrss_sf_tbu_clk = true,
+>         .pipe_clk_need_muxing = true,
+> +       .has_aggre0_clk = true,
+> +       .has_aggre1_clk = true,
+>  };
+>
+>  static const struct qcom_pcie_cfg sc8180x_cfg = {
+> --
+> 2.7.4
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-PM-Always-disable-PTM-for-all-devices-during-suspend/20220903-073808
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: x86_64-randconfig-a015 (https://download.01.org/0day-ci/archive/20220903/202209031256.McjuB8mz-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/809e1c954b459ee37193c4ab9fa843243fbd7fa9
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Bjorn-Helgaas/PCI-PM-Always-disable-PTM-for-all-devices-during-suspend/20220903-073808
-        git checkout 809e1c954b459ee37193c4ab9fa843243fbd7fa9
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/pci-driver.c: In function 'pci_pm_runtime_resume':
->> drivers/pci/pci-driver.c:1350:22: error: 'struct pci_dev' has no member named 'ptm_enabled'; did you mean 'ats_enabled'?
-    1350 |         if (pci_dev->ptm_enabled)
-         |                      ^~~~~~~~~~~
-         |                      ats_enabled
-
-
-vim +1350 drivers/pci/pci-driver.c
-
-  1335	
-  1336	static int pci_pm_runtime_resume(struct device *dev)
-  1337	{
-  1338		struct pci_dev *pci_dev = to_pci_dev(dev);
-  1339		const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-  1340		pci_power_t prev_state = pci_dev->current_state;
-  1341		int error = 0;
-  1342	
-  1343		/*
-  1344		 * Restoring config space is necessary even if the device is not bound
-  1345		 * to a driver because although we left it in D0, it may have gone to
-  1346		 * D3cold when the bridge above it runtime suspended.
-  1347		 */
-  1348		pci_pm_default_resume_early(pci_dev);
-  1349	
-> 1350		if (pci_dev->ptm_enabled)
-  1351			pci_enable_ptm(pci_dev, NULL);
-  1352	
-  1353		if (!pci_dev->driver)
-  1354			return 0;
-  1355	
-  1356		pci_fixup_device(pci_fixup_resume_early, pci_dev);
-  1357		pci_pm_default_resume(pci_dev);
-  1358	
-  1359		if (prev_state == PCI_D3cold)
-  1360			pci_pm_bridge_power_up_actions(pci_dev);
-  1361	
-  1362		if (pm && pm->runtime_resume)
-  1363			error = pm->runtime_resume(dev);
-  1364	
-  1365		return error;
-  1366	}
-  1367	
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+With best wishes
+Dmitry
