@@ -2,178 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 797835AC054
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Sep 2022 19:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 754C05AC38F
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Sep 2022 11:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232187AbiICRm3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Sep 2022 13:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
+        id S231550AbiIDJJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Sep 2022 05:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232143AbiICRm1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Sep 2022 13:42:27 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3768250724;
-        Sat,  3 Sep 2022 10:42:25 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id p204so7433473yba.3;
-        Sat, 03 Sep 2022 10:42:25 -0700 (PDT)
+        with ESMTP id S229617AbiIDJJC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Sep 2022 05:09:02 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A967491D5;
+        Sun,  4 Sep 2022 02:09:01 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id e18so7906582edj.3;
+        Sun, 04 Sep 2022 02:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=O2typRxdzqsHfp2kEBOr4WNIbnu/ovQ09qqv/Hu1pIU=;
+        b=mEwv2YDOLkvyR5SAWvf1KvXxyVk/W4CM3FINHf0fPt6/1CATbsBeLTMvw7NAxBITnL
+         beIONGwUkW/Emdz3lnPVQxGohbnsuzOSZGy0nCqHiQH17U1lMP7Z2pN0JzcqlYz3PtUj
+         OO8z8KxVH1Fhbqz6ELFXF0nSOLhm34jt66kw6ypGQmUYPWk3UGNGhgsnMdY1/gp1nq38
+         0rOjQ/8mWEZl7TcIG+kLCBhjNqdgkJYjpRFA5YFWfcvXVK5i0uY35XmjhLL51T/HMO5x
+         GExGiQd6KOQEFt9dUqlOWWPDdWB6VOUA3yYd0eBYtMnUh8W1UVNzW1T/mTLg3GlKvt8d
+         YYDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=1Oh24JjJO3LtEF81yZui8vBF0ZiGpv8OhgBNhurKph4=;
-        b=FH2CsYiXibomipFA4EYuCzEgkeC8HtYPMzi+tpdJTN3+blXrCuY3xVpafDm1vmAw3A
-         nlXLrweTXemWU0HvINPyfnsIUiLq279t6NtBTjuD7M7+ybosHxhMGWDav3ifex+PjGV7
-         P6cIGlp869ioSQsZoJqfKShtoPjb6iEIwd5m3A3PQ03I+pMwVxzZPKd5panfAeWL12zf
-         +i8JDVmS2uNlh+wUBcX6r83LDeJf9HCUrV8e1IUr5PcmI9xkBxv9MX7BDDGFoGe7cHzp
-         st2su0jJMboncDKzgdswVDkyNLxpTCliMyimdfrz/RoqF8hXDRDHZ378ZOPZKd7Kjeo5
-         Xhhw==
-X-Gm-Message-State: ACgBeo0thODns2nJ+fSCGZVohqL1F8mVPMvnFdCXlbQzUh3Q3iMZmoBq
-        qgYeU7g7aiW0Sq83RHhKNq7dV83nVKDrq+1poW6k39N3
-X-Google-Smtp-Source: AA6agR46PFNH5PVO52b54ICBiP8sdJu9Fwr3ruyelbqhf0wAwMFXBgO3dIHlw9wt0aKF0pKyWPUhWvLtRgQJbEFmHwk=
-X-Received: by 2002:a25:2f0c:0:b0:6a8:f230:12ed with SMTP id
- v12-20020a252f0c000000b006a8f23012edmr288172ybv.633.1662226944425; Sat, 03
- Sep 2022 10:42:24 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=O2typRxdzqsHfp2kEBOr4WNIbnu/ovQ09qqv/Hu1pIU=;
+        b=tEznhUfTIFa17HiNm72KpBM/qBCqux3Y7FRfnVY5/5h/MQC5xFTMgpnbun1REFjTFi
+         YIvffqJo4G+tq2wQfE+YLCyiRYg2j9ZKScsVCu2DThEzhjmfccanMFSfV1fkLsOwEzv9
+         aLwU/AymUeIPomnWRk+6lKlkvrlAji9donRAl4sDyUDQXxp/3M7BGzOwaGYE4bmqKOh4
+         vSqS7GztIPVgM8gQzmhgyYhadd005N5w825fm3AcFaGvZJsmmgJaNouLdc5yOUCWaOBM
+         F0wfqHqDz7hZG34vPC+fdo0MRJOyTWGYHs0e2a/PfTfSGUj4Ski88wjlTuekcn/6nsFI
+         9Sag==
+X-Gm-Message-State: ACgBeo0CuoSAjenq9DFEQUfNgWhSvnVZSyyNUtvE2lhHqGTReC7XlNdo
+        4eWbvrmSOOf7OKNinGU8moOCzuzgfuA=
+X-Google-Smtp-Source: AA6agR4NJnx5sNg8PNykLl1mgRsJURuIQHjA9zZgAk1EeYC3FtDilwF6YINYFa0BfKPRxYHeSe0T6A==
+X-Received: by 2002:a05:6402:1f8c:b0:43e:8fab:76c with SMTP id c12-20020a0564021f8c00b0043e8fab076cmr38989547edc.126.1662282539472;
+        Sun, 04 Sep 2022 02:08:59 -0700 (PDT)
+Received: from masalkhi.. (p5ddb3241.dip0.t-ipconnect.de. [93.219.50.65])
+        by smtp.gmail.com with ESMTPSA id eg46-20020a05640228ae00b0044e7862ab3fsm447553edb.7.2022.09.04.02.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Sep 2022 02:08:59 -0700 (PDT)
+From:   Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To:     bhelgaas@google.com, makvihas@gmail.com, kw@linux.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+Subject: [PATCH] PCI: ibmphp: Convert a double pointer to single pointer parameter
+Date:   Sun,  4 Sep 2022 11:08:22 +0200
+Message-Id: <20220904090822.8083-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.29.0.rc1.dirty
 MIME-Version: 1.0
-References: <20220902233543.390890-1-helgaas@kernel.org> <20220902233543.390890-3-helgaas@kernel.org>
- <CAJZ5v0jV94TwifmoF2UfiDpXNP_Kgt6qNkQH7zwQjo=ZhyU-4A@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jV94TwifmoF2UfiDpXNP_Kgt6qNkQH7zwQjo=ZhyU-4A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 3 Sep 2022 19:42:13 +0200
-Message-ID: <CAJZ5v0jp2y=hKr0PG0qTtpVW5qOPLtKhMJDqsNFh2vV1=0Umtg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] PCI/PTM: Implement pci_enable_ptm() for Root
- Ports, Switch Upstream Ports
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 3, 2022 at 7:40 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Sat, Sep 3, 2022 at 1:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/ptm.c | 34 +++++++++++++++++++++++++++-------
-> >  1 file changed, 27 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index b6a417247ce3..ad283818f37b 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -167,11 +167,11 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
-> >         if (!pos)
-> >                 return -EINVAL;
-> >
-> > -       pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
-> > -       if (!(cap & PCI_PTM_CAP_REQ))
-> > -               return -EINVAL;
-> > -
-> >         /*
-> > +        * Root Ports and Switch Upstream Ports have been configured
-> > +        * by pci_ptm_init(), so preserve their PCI_PTM_CTRL_ROOT and
-> > +        * granularity.
-> > +        *
-> >          * For a PCIe Endpoint, PTM is only useful if the endpoint can
-> >          * issue PTM requests to upstream devices that have PTM enabled.
-> >          *
-> > @@ -179,19 +179,39 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
-> >          * device, so there must be some implementation-specific way to
-> >          * associate the endpoint with a time source.
-> >          */
-> > -       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT) {
-> > +       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > +           pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM) {
-> > +               if (pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM) {
-> > +                       ups = pci_upstream_bridge(dev);
-> > +                       if (!ups || !ups->ptm_enabled)
-> > +                               return -EINVAL;
-> > +               }
-> > +
-> > +               pci_read_config_dword(dev, pos + PCI_PTM_CTRL, &ctrl);
-> > +               ctrl |= PCI_PTM_CTRL_ENABLE;
-> > +       } else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT) {
-> > +               pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
-> > +               if (!(cap & PCI_PTM_CAP_REQ))
-> > +                       return -EINVAL;
-> > +
-> >                 ups = pci_upstream_bridge(dev);
-> >                 if (!ups || !ups->ptm_enabled)
-> >                         return -EINVAL;
-> >
-> >                 dev->ptm_granularity = ups->ptm_granularity;
-> > +               ctrl = PCI_PTM_CTRL_ENABLE;
-> > +               ctrl |= dev->ptm_granularity << 8;
-> >         } else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> > +               pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
-> > +               if (!(cap & PCI_PTM_CAP_REQ))
-> > +                       return -EINVAL;
-> > +
-> >                 dev->ptm_granularity = 0;
-> > +               ctrl = PCI_PTM_CTRL_ENABLE;
-> > +               ctrl |= dev->ptm_granularity << 8;
-> >         } else
-> >                 return -EINVAL;
->
-> I would do
->
-> if ((pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM || pci_pcie_type(dev)
-> == PCI_EXP_TYPE_ENDPOINT)) {
->         ups = pci_upstream_bridge(dev);
->         if (!ups || !ups->ptm_enabled)
->                 return -EINVAL;
->
->         dev->ptm_granularity = ups->ptm_granularity;
-> }
->
-> switch(pci_pcie_type(dev)) {
-> case PCI_EXP_TYPE_ROOT_PORT:
-> case PCI_EXP_TYPE_UPSTREAM:
->         pci_read_config_dword(dev, pos + PCI_PTM_CTRL, &ctrl);
->         ctrl |= PCI_PTM_CTRL_ENABLE;
->         break;
-> case PCI_EXP_TYPE_ENDPOINT:
-> case PCI_EXP_TYPE_RC_END:
+Convert the parameter of type 'struct slot **' to 'struct slot *' of
+ibmphp_init_devno() to improve code readability.
 
-I missed the cap check here, sorry.
+Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+---
+ drivers/pci/hotplug/TODO          |  3 ---
+ drivers/pci/hotplug/ibmphp.h      |  2 +-
+ drivers/pci/hotplug/ibmphp_core.c | 30 +++++++++++++++---------------
+ drivers/pci/hotplug/ibmphp_ebda.c |  2 +-
+ 4 files changed, 17 insertions(+), 20 deletions(-)
 
->         ctrl = PCI_PTM_CTRL_ENABLE;
->         break;
-> default:
->         return -EINVAL;
-> }
->
-> >
-> > -       ctrl = PCI_PTM_CTRL_ENABLE;
-> > -       ctrl |= dev->ptm_granularity << 8;
->
-> And I wouldn't remove the line above.
->
-> Note that for root ports dev->ptm_granularity must be set and reflect
-> the register setting or else the code wouldn't have worked for
-> downstream components.
->
-> >         pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
-> >         dev->ptm_enabled = 1;
-> >
-> > --
+diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
+index 88f217c82b4f..63a9fed407ed 100644
+--- a/drivers/pci/hotplug/TODO
++++ b/drivers/pci/hotplug/TODO
+@@ -30,9 +30,6 @@ ibmphp:
+   or ibmphp should store a pointer to its bus in struct slot.  Probably the
+   former.
+ 
+-* ibmphp_init_devno() takes a struct slot **, it could instead take a
+-  struct slot *.
+-
+ * The return value of pci_hp_register() is not checked.
+ 
+ * The various slot data structures are difficult to follow and need to be
+diff --git a/drivers/pci/hotplug/ibmphp.h b/drivers/pci/hotplug/ibmphp.h
+index 0399c60d2ec1..28fe92cf544a 100644
+--- a/drivers/pci/hotplug/ibmphp.h
++++ b/drivers/pci/hotplug/ibmphp.h
+@@ -734,7 +734,7 @@ struct controller {
+ 
+ /* Functions */
+ 
+-int ibmphp_init_devno(struct slot **);	/* This function is called from EBDA, so we need it not be static */
++int ibmphp_init_devno(struct slot *cur_slot);	/* This function is called from EBDA, so we need it not be static */
+ int ibmphp_do_disable_slot(struct slot *slot_cur);
+ int ibmphp_update_slot_info(struct slot *);	/* This function is called from HPC, so we need it to not be static */
+ int ibmphp_configure_card(struct pci_func *, u8);
+diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
+index 197997e264a2..107752b11f2c 100644
+--- a/drivers/pci/hotplug/ibmphp_core.c
++++ b/drivers/pci/hotplug/ibmphp_core.c
+@@ -109,7 +109,7 @@ static int __init get_max_slots(void)
+  * Parameters: struct slot
+  * Returns 0 or errors
+  */
+-int ibmphp_init_devno(struct slot **cur_slot)
++int ibmphp_init_devno(struct slot *cur_slot)
+ {
+ 	struct irq_routing_table *rtable;
+ 	int len;
+@@ -130,21 +130,21 @@ int ibmphp_init_devno(struct slot **cur_slot)
+ 		return -1;
+ 	}
+ 	for (loop = 0; loop < len; loop++) {
+-		if ((*cur_slot)->number == rtable->slots[loop].slot &&
+-		    (*cur_slot)->bus == rtable->slots[loop].bus) {
+-			(*cur_slot)->device = PCI_SLOT(rtable->slots[loop].devfn);
++		if (cur_slot->number == rtable->slots[loop].slot &&
++		    cur_slot->bus == rtable->slots[loop].bus) {
++			cur_slot->device = PCI_SLOT(rtable->slots[loop].devfn);
+ 			for (i = 0; i < 4; i++)
+-				(*cur_slot)->irq[i] = IO_APIC_get_PCI_irq_vector((int) (*cur_slot)->bus,
+-						(int) (*cur_slot)->device, i);
+-
+-			debug("(*cur_slot)->irq[0] = %x\n",
+-					(*cur_slot)->irq[0]);
+-			debug("(*cur_slot)->irq[1] = %x\n",
+-					(*cur_slot)->irq[1]);
+-			debug("(*cur_slot)->irq[2] = %x\n",
+-					(*cur_slot)->irq[2]);
+-			debug("(*cur_slot)->irq[3] = %x\n",
+-					(*cur_slot)->irq[3]);
++				cur_slot->irq[i] = IO_APIC_get_PCI_irq_vector((int) cur_slot->bus,
++						(int) cur_slot->device, i);
++
++			debug("cur_slot->irq[0] = %x\n",
++					cur_slot->irq[0]);
++			debug("cur_slot->irq[1] = %x\n",
++					cur_slot->irq[1]);
++			debug("cur_slot->irq[2] = %x\n",
++					cur_slot->irq[2]);
++			debug("cur_slot->irq[3] = %x\n",
++					cur_slot->irq[3]);
+ 
+ 			debug("rtable->exclusive_irqs = %x\n",
+ 					rtable->exclusive_irqs);
+diff --git a/drivers/pci/hotplug/ibmphp_ebda.c b/drivers/pci/hotplug/ibmphp_ebda.c
+index 7fb75401ad8a..5c7821ad9c2c 100644
+--- a/drivers/pci/hotplug/ibmphp_ebda.c
++++ b/drivers/pci/hotplug/ibmphp_ebda.c
+@@ -880,7 +880,7 @@ static int __init ebda_rsrc_controller(void)
+ 			if (rc)
+ 				goto error;
+ 
+-			rc = ibmphp_init_devno(&tmp_slot);
++			rc = ibmphp_init_devno(tmp_slot);
+ 			if (rc)
+ 				goto error;
+ 			tmp_slot->hotplug_slot.ops = &ibmphp_hotplug_slot_ops;
+-- 
+2.29.0.rc1.dirty
+
