@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD9B75AD06D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 12:44:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDC8E5AD0A5
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 12:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237435AbiIEKnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 06:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
+        id S237645AbiIEKsY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 06:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237017AbiIEKnC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 06:43:02 -0400
+        with ESMTP id S237610AbiIEKsT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 06:48:19 -0400
 Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D751A81B;
-        Mon,  5 Sep 2022 03:43:01 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id y18so5859628qtv.5;
-        Mon, 05 Sep 2022 03:43:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380424C63C;
+        Mon,  5 Sep 2022 03:48:18 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id cb8so5912944qtb.0;
+        Mon, 05 Sep 2022 03:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=GuGrKhvALB+DYbg9DByJZaidZTqMxf1dKNyNwmUzn6Y=;
-        b=hdRIxx5gYJprXyb7McPED88U6CjGFW4/o/oE2UEQDAnFQvuRdKTBrAbPBTxaUJ9avf
-         ZhONilidxc49jl4KtjO3UBa42TeRciWGfG7/aHWNdgw4HkempGiN+R8+n9bi+njwfvsf
-         u5vMv6wXB1Ye3Gbinm5yEMDUAfvTO2BfwcWFUoinJoVc2JXFHnCdTpKgEEuyojVrDzWD
-         W+9CAhZTdkGDNzhki05EKQP0hWG3s9bgvQRV731RyOIqcTlNyTSHFHR46gnhjmW/VUhN
-         vl25c1uxIRcxwJheohCT5s/0OzbaRy4WbiXoQTG++iLwB5P3a5Gf9fVcIKfh7m5uIR41
-         Lt4g==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=ocC0mA23fnRz/a4YbrfNwFrDwQYg+GSA5oW5v/yTckg=;
+        b=KeR2rGIjPnYKiKG2aILzh6gWMDTnViE8fXPWXXXixLovTbpx00/oSEAU+Q4L2OCzAK
+         GRraxIbhCS4mi4IuRHOlRDlrrUGLqMd7GLM+J1Hc2/d7WSNIQDHGywQYnYEyBYPDgjiz
+         uY13i1u0RDIQGheVM8QVFqtoKIkC9biCE4wbzSZrKtBJ1m2pvxKw60ny4f6bBZ/B8u0u
+         Zr23UPD2YvAu/KuN+tEjHJX9M8xugOLPnNs4g2YR3PzTM6X60zVPevAOqAjIm6WKdYct
+         vHLBCofCn+v7V2zJuE2kdbx3Wmz7GLi7XsxEmH7dNee6uir7hoWh+8c0e9HZN2r8BTuM
+         JH4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=GuGrKhvALB+DYbg9DByJZaidZTqMxf1dKNyNwmUzn6Y=;
-        b=0KTCgkOPfJGLo8UvnDOxHYj9//dODkVaZcqXgN/FMjRu5o97E4RZEI6s/utlVpj84V
-         9b/VTMPBSHpTYsGg69Gjeabjxgl1wPS5zddaa+pmsKYcgveposZ4bJWMg7oFTEBQkdHw
-         Lsl1cJLYXYHvMP6YGQUyKIwpOa8P6NBwkCCti7/ImiUFcDhnXpD7I0uTLziPq9l32vCq
-         7Rfp3Pr5F5Dm16Sv88O6l7n41wP0IA9qjvSxS+5yDkP13eS4PhvE9TsWkm0ieDPd0EGg
-         rYU9cMNrWmcFSBELu8Z+CaIFY0bsUXv6D/TF4Py6ut3UeVc5lWujIfzJRUpJkXFarfMB
-         55gQ==
-X-Gm-Message-State: ACgBeo3jcEgEfADTeeI/+R9TFrRNyqY8D29yC48pZzyScqVuKqXxwpDJ
-        6uUwqXz7tVwaUTV1MkZzpj3BINf7+1O8o9fxq2w=
-X-Google-Smtp-Source: AA6agR5J+1DJZPHd8O1DpA1QnLoQwr6drCn2l0fANuHmNbkAQyCPYj0H4aQjgFElwOjCvL9IFnO1bhj11LsfyBavbIE=
-X-Received: by 2002:a05:622a:491:b0:344:95bf:8f05 with SMTP id
- p17-20020a05622a049100b0034495bf8f05mr38933704qtx.61.1662374580142; Mon, 05
- Sep 2022 03:43:00 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=ocC0mA23fnRz/a4YbrfNwFrDwQYg+GSA5oW5v/yTckg=;
+        b=YvFX5RbjHPTBGm8Zh/+eZsYQzqZbr8OFmbjZvFPwMg64o6gKe5a7kLYKWU6rgB7YBD
+         eyFjVDyli9GUkr/wp1T9T9+fogQ/ADCJwnOIO26VNOVywMbln7Q26KNqHyYBw0G7Xx7B
+         XucJ5npZiUv6ondFcyoxhEb1X6cPEIL4Zw33M6fHkqZ+Veek1dBvctWMfdy0TNFIdLdX
+         /1bvwoQQdZPIy5x3qa4dWzVZTGmYSCZYwkVtbQiiQz/uAa4FPqszHY8MY6rwnb7ZNij1
+         aSe7T7W/dED94rv0AdYOoKFYVhprP15mY34GJ6IvHcLN7Ez+q80TzSK3Fvq8/Zs39XDM
+         hT3A==
+X-Gm-Message-State: ACgBeo3c6rMIfD3/rgmFdG9ulu+1F+ViIiQpx1ebr4guykm/2P3O+Rb6
+        QXBfUQ8jkCYeNaI/Xqy31/nF1S3PsYjfjzfUIw4=
+X-Google-Smtp-Source: AA6agR6PNo2Qc8lpj2itrEExN36xqc7ZpSaZEm3ZnHtwljImH3P9PTPtYv87hNYI8E9dEPcysm+pNwOsTzObwqbdpdc=
+X-Received: by 2002:ac8:5786:0:b0:343:3051:170d with SMTP id
+ v6-20020ac85786000000b003433051170dmr38497148qta.429.1662374897323; Mon, 05
+ Sep 2022 03:48:17 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-8-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-8-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-6-b29adfb27a6c@gmail.com> <20220905070046.46nlhczkck2ufr4x@pali>
+In-Reply-To: <20220905070046.46nlhczkck2ufr4x@pali>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 13:42:24 +0300
-Message-ID: <CAHp75Vfza3ubqwSDWnYidAjw52_zRp6sff6xhugXJNwHvRaXew@mail.gmail.com>
-Subject: Re: [PATCH v1 08/11] regulator: bd71815: switch to using devm_fwnode_gpiod_get()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+Date:   Mon, 5 Sep 2022 13:47:41 +0300
+Message-ID: <CAHp75VcFv7ipLqXmOwbXpY-_ccYNA9PgF0h4T8RY1Z-UNNpaTg@mail.gmail.com>
+Subject: Re: [PATCH v1 06/11] PCI: aardvark: switch to using devm_gpiod_get_optional()
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Matti Vaittinen <mazziesaccount@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -81,7 +83,6 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
         LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
         USB <linux-usb@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -93,6 +94,7 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -103,44 +105,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 9:33 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Mon, Sep 5, 2022 at 10:02 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> On Sunday 04 September 2022 23:30:58 Dmitry Torokhov wrote:
+> > I would like to stop exporting OF-specific devm_gpiod_get_from_of_node(=
+)
+> > so that gpiolib can be cleaned a bit, so let's switch to the generic
+> > device property API.
+> >
+> > I believe that the only reason the driver, instead of the standard
+> > devm_gpiod_get_optional(), used devm_gpiod_get_from_of_node() is
+> > because it wanted to set up a pretty consumer name for the GPIO,
 >
-> I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit, so let's switch to the generic
-> fwnode property API.
+> IIRC consumer name is not used at all.
 
-Special thanks for using dev_fwnode().
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-(Dunno if my suggestion about parent applies here)
+It's. The user space tools use it as a label. So, GPIO line can have
+"name" (this is provider specific) and "label" (which is consumer
+specific, i.o.w. how we use this line).
 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->
-> diff --git a/drivers/regulator/bd71815-regulator.c b/drivers/regulator/bd71815-regulator.c
-> index acaa6607898e..c2b8b8be7824 100644
-> --- a/drivers/regulator/bd71815-regulator.c
-> +++ b/drivers/regulator/bd71815-regulator.c
-> @@ -571,11 +571,10 @@ static int bd7181x_probe(struct platform_device *pdev)
->                 dev_err(&pdev->dev, "No parent regmap\n");
->                 return -ENODEV;
->         }
-> -       ldo4_en = devm_gpiod_get_from_of_node(&pdev->dev,
-> -                                             pdev->dev.parent->of_node,
-> -                                                "rohm,vsel-gpios", 0,
-> -                                                GPIOD_ASIS, "ldo4-en");
->
-> +       ldo4_en = devm_fwnode_gpiod_get(&pdev->dev,
-> +                                       dev_fwnode(pdev->dev.parent),
-> +                                       "rohm,vsel", GPIOD_ASIS, "ldo4-en");
->         if (IS_ERR(ldo4_en)) {
->                 ret = PTR_ERR(ldo4_en);
->                 if (ret != -ENOENT)
->
-> --
-> b4 0.10.0-dev-fc921
+...
+
+> > +             if (ret !=3D -EPROBE_DEFER)
+> > +                     dev_err(dev, "Failed to get reset-gpio: %i\n",
+> > +                             ret);
+> > +             return ret;
+
+I understand that in the input subsystem maintainer's hat you don't
+like dev_err_probe(), but it's a good case to have it here.
+
+...
+
+> > +     ret =3D gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
+> > +     if (ret) {
+> > +             dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
+> > +             return ret;
+> >       }
+
+Ditto.
 
 
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
