@@ -2,90 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 607115ACD5D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 10:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 101C45ACE0D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 10:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236462AbiIEIC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 04:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
+        id S238066AbiIEIks (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 04:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236504AbiIEICY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 04:02:24 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E1646DAD
-        for <linux-pci@vger.kernel.org>; Mon,  5 Sep 2022 01:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662364942; x=1693900942;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xCq71ILO/+9H+27+C5zeVh+nJ6cK6g+cPM0DPH8ZZt0=;
-  b=Vr3ne4/9caTocn0TTLLyJzovg5+aZVd0Gbct4TeyV2REiZGfgPIYhkC2
-   H7Uz2QYdk9ZRcfG1PJ9VGplCUJyhELSvVjfqywiYWwY/zIRaMhPang/ab
-   /iIcmPRAxPtrcHjRrMzpqvasUOWfmA1GAb6F1XsXrz0xfBeF7mvz0VL0D
-   x/73zjguXM6lwbcSZWliUxDATwCRKwD2sAFRYWQbePN9LqPp+RrIppRnc
-   dsSzZvyM9smDYzo93nZO1DWVd4+OYs574jko51V/XiwP+0FWmuMW6IS18
-   WLf31U+SLodJjM7SOmGsZASrpLiZK9vwYu5WPYiCiczMzHFAEoAZQ41YC
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="283328134"
-X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="283328134"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 01:02:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="564666880"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 05 Sep 2022 01:02:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E133919D; Mon,  5 Sep 2022 11:02:32 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 6/6] PCI: Fix typo in pci_scan_child_bus_extend()
-Date:   Mon,  5 Sep 2022 11:02:32 +0300
-Message-Id: <20220905080232.36087-7-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+        with ESMTP id S238051AbiIEIkZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 04:40:25 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824311403F;
+        Mon,  5 Sep 2022 01:39:44 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id w8so12059806lft.12;
+        Mon, 05 Sep 2022 01:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date;
+        bh=whKQuPxuNlc3vZdhtpMpbA8dF2eoaMeKKG4hpG8oBcM=;
+        b=G3VyjQclSxs/IijXYJTaubBQO3bYU0PLLCLmzT9wsXJuSGO8umrikYnfY6h7sWlpoi
+         87UGTNZVb5lDWS1Rkt6yKDAIeQtZOBE2UDjLXrVPK61z/GhZmU6K+wpLpfEahtKGUfHE
+         Ga+4eeyBRi1e9exxEuEpgXhxUalJIyGOSpybP3q3w/MLP3zyUr87dauIuUamGZeQ6N/Y
+         UoySAI8ljjQp7oPW2zRNOl0xkiUohsBZRO7xrEb7EdFyR7ME+DvX6usutFojdOt3mXvv
+         M8vFvJYL8MM7PmHspB/f+Vc844hhmJMG22dgEbTXt9kiByh/+rywjv5EihWm6HQCdMEw
+         0BHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=whKQuPxuNlc3vZdhtpMpbA8dF2eoaMeKKG4hpG8oBcM=;
+        b=yqamm/OX9IXe4pFdl1IJT7F0b+Z+RCyQ5ZH2RyPeMgfhnMdloTX/mf9gfSo665ZJNq
+         CbyXvyme/crIl6+etO4F22AkTXidqqcCNpR9J4dHqlXu9UxKKAN3T7KI13hzTh1WBJzK
+         D4U5oxkjQyTnafsbr7TyMxRsLnwOgrmMuO0WKKIGQ6E14mmzF/Cj72dmuakQvYkS6Idu
+         wQc8j/hMomFSdQdFiqOLJXoURGd1qfjlrNsLBhViYvFGD9I5tnXR06/EJbdBSF8QlDTv
+         NchOw6+TH31eSbY1o7r9ismhameuUzCnbzjvSUpKhhXKerqUexFvNqmN61OSMVM4oHX8
+         du7Q==
+X-Gm-Message-State: ACgBeo2HsMiLoAEB0daD2wupNxIwQ3VAUw6qZkxh784p+75TuP5xckDE
+        owwqWx6gu9s8knzKYfJNYSpoxh0J5L4=
+X-Google-Smtp-Source: AA6agR44ycbYeXR5cUT1iKr474kunWwJe7pC1Y1qR9XbJ6baC6OvIaai0+Y7yHNf+033tIXO/pB2Yw==
+X-Received: by 2002:a05:6512:304c:b0:494:8cd2:73bb with SMTP id b12-20020a056512304c00b004948cd273bbmr7270274lfb.207.1662367182157;
+        Mon, 05 Sep 2022 01:39:42 -0700 (PDT)
+Received: from [192.168.1.103] ([31.173.80.58])
+        by smtp.gmail.com with ESMTPSA id 25-20020ac25f59000000b004946a38be45sm1124636lfz.50.2022.09.05.01.39.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Sep 2022 01:39:41 -0700 (PDT)
+Subject: Re: [PATCH v5 07/12] PCI: dwc: Avoid reading a register to detect
+ whether eDMA exists
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, krzk+dt@kernel.org, geert+renesas@glider.be,
+        magnus.damm@gmail.com
+Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20220905071257.1059436-1-yoshihiro.shimoda.uh@renesas.com>
+ <20220905071257.1059436-8-yoshihiro.shimoda.uh@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <e615a35a-c052-aeff-8cfd-3efae677d48a@gmail.com>
+Date:   Mon, 5 Sep 2022 11:39:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220905071257.1059436-8-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Should be 'if' not 'of'. Fix this.
+Hello!
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 9/5/22 10:12 AM, Yoshihiro Shimoda wrote:
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 8f25deb6b763..b66fa42c4b1f 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2956,7 +2956,7 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
- 	/*
- 	 * Make sure a hotplug bridge has at least the minimum requested
- 	 * number of buses but allow it to grow up to the maximum available
--	 * bus number of there is room.
-+	 * bus number if there is room.
- 	 */
- 	if (bus->self && bus->self->is_hotplug_bridge) {
- 		used_buses = max_t(unsigned int, available_buses,
--- 
-2.35.1
+> Since reading value of PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL was
+> 0x00000000 on one of SoCs (R-Car S4-8), it cannot find the eDMA.
+> So, directly read the eDMA register if edma.red_base is not zero.
 
+   s/red/reg/?
+
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 72f9620a374d..08f91a6bbe4b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -844,8 +844,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+>  
+> -	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> +	if (pci->edma.reg_base) {
+>  		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+>  
+>  		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+[...]
+
+MBR, Sergey
