@@ -2,99 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 025D65ACC2B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 09:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8EDA5ACC66
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 09:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236836AbiIEHPD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 03:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
+        id S237570AbiIEHTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 03:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237050AbiIEHNQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 03:13:16 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DA841D3A;
-        Mon,  5 Sep 2022 00:08:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 19EB0B80ED0;
-        Mon,  5 Sep 2022 07:08:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CEBC433C1;
-        Mon,  5 Sep 2022 07:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1662361714;
-        bh=vYHfuWjCZoXX0Gw8KXiBoC4i4HN/XJ+fPiLchONGM5c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wG3gzO9Psb2hRlSqZ1vx7n8hLkY1e6xNNY+SQYmTOvVmGmyNNVsjd54+dCpyMs7aP
-         yCKVlkHm9E1H7UtjcmrvRGcwIgnm62t0dEEmNfrytaZ+Zuyi6+jguZ/KBOqPZ3dukT
-         anoJx+666aasH5ZH3x3yAeZCXbRYJumJ2nucWUpc=
-Date:   Mon, 5 Sep 2022 09:08:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 00/11] Get rid of [devm_]gpiod_get_from_of_node()
- public APIs
-Message-ID: <YxWgb7wCzQBvEW2h@kroah.com>
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+        with ESMTP id S236187AbiIEHSt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 03:18:49 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69E4A4CA3E;
+        Mon,  5 Sep 2022 00:14:00 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.93,290,1654527600"; 
+   d="scan'208";a="133728184"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 05 Sep 2022 16:13:08 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id CC4604004461;
+        Mon,  5 Sep 2022 16:13:08 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, krzk+dt@kernel.org, geert+renesas@glider.be,
+        magnus.damm@gmail.com
+Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 00/12] treewide: PCI: renesas: Add R-Car Gen4 PCIe support
+Date:   Mon,  5 Sep 2022 16:12:45 +0900
+Message-Id: <20220905071257.1059436-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        KHOP_HELO_FCRDNS,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 04, 2022 at 11:30:52PM -0700, Dmitry Torokhov wrote:
-> I would like to stop exporting OF-specific [devm_]gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit. We can do that by switching drivers
-> to use generic fwnode API ([devm_]fwnode_gpiod_get()). By doing so we open
-> the door to augmenting device tree and ACPI information through secondary
-> software properties (once we teach gpiolib how to handle those).
-> 
-> I hope that relevant maintainers will take patches through their trees and
-> then we could merge the last one some time after -rc1.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+To support them, modify PCIe DesignWare common codes.
 
-Nice work, I'll go add the USB ones to my tree now, thanks!
+Changes from v4:
+ https://lore.kernel.org/all/20220722110744.2274466-1-yoshihiro.shimoda.uh@renesas.com/
+ - Rebased on next-20220901.
+ -- And based on the following patches:
+    [PATCH v5 00/20] PCI: dwc: Add generic resources and Baikal-T1 support
+    https://lore.kernel.org/linux-pci/20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru/
+    [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+    https://lore.kernel.org/dmaengine/20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru/
+ - Notes that snps,dw-pcie-common.yaml modification seems under construction
+   so that dt-bindings of R-Car Gen4 is based on next-20220901.
 
-greg k-h
+Yoshihiro Shimoda (12):
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+  PCI: Add PCI_EXP_LNKCAP_MLW macros
+  PCI: controller: dwc: Expose dw_pcie_ep_exit() to module
+  PCI: dwc: Add ep_pre_init() callback to dw_pcie_ep_ops
+  PCI: dwc: Add reset_all_bars flag
+  PCI: dwc: Avoid reading a register to detect whether eDMA exists
+  PCI: renesas: Add R-Car Gen4 PCIe Host support
+  PCI: renesas: Add R-Car Gen4 PCIe Endpoint support
+  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+  arm64: dts: renesas: r8a779f0: Add PCIe Host and Endpoint nodes
+  arm64: dts: renesas: r8a779f0: spider: Enable PCIe Host ch0
+
+ .../bindings/pci/rcar-gen4-pci-ep.yaml        |  99 +++++++++
+ .../bindings/pci/rcar-gen4-pci-host.yaml      |  97 +++++++++
+ MAINTAINERS                                   |   1 +
+ .../boot/dts/renesas/r8a779f0-spider-cpu.dtsi |  39 ++++
+ arch/arm64/boot/dts/renesas/r8a779f0.dtsi     | 122 +++++++++++
+ drivers/pci/controller/dwc/Kconfig            |  18 ++
+ drivers/pci/controller/dwc/Makefile           |   4 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  14 ++
+ drivers/pci/controller/dwc/pcie-designware.c  |   4 +-
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 +
+ .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 182 ++++++++++++++++
+ .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 195 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 181 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  63 ++++++
+ include/uapi/linux/pci_regs.h                 |   7 +
+ 15 files changed, 1026 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
+
+-- 
+2.25.1
+
