@@ -2,252 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 312585ADB65
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 00:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685755ADB85
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 00:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231475AbiIEW1X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 18:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
+        id S229453AbiIEWuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 18:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbiIEW1W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 18:27:22 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47AA52FFD8;
-        Mon,  5 Sep 2022 15:27:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KIuZSN7bignulWmTYqMH/A8nW+rPgwPgSllIjEAhAe2AMij53ob3FxLS6wO04aegn9YklrGFBRCmwEamraQK5+Hx8g1PyeWrZaQFOyqmLDyosOtkkrpronC0uf/P1KaFhGXvvVhZRlDaV4x38yxZnPNATTkic4dbS+F/3k5XCRdSr2xgC24nrLrH4SNd6fgxsR95ecZ2Yy/5hSj9UvP6ZNmV7QiIcyQQVqatuNBzyB2zDlixABVTUDvXDAn+wrUuGw0yMd23GrE3Ap2fbjcs+QLEaBCwciMo9HfIaam2NDgc2QUp1gi+rU2bWhltBfW/donKY9d7OIsODLsZ8eEqgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9o+ZEsj4u+Mr2O36ppY/6DvuowU/2UX2TvICgOENCZk=;
- b=G/yWmNS4w9y1yixo5PXA0UWS7jShwYCgDa2H92aaQnJX7OjL5AWzIQ1q+bj9NPqaSVbIEBiEY4FOW9XikxnWXzwisTrcFjyrlPfZPQ4AXbNvUrRD2u1LCu7lrgGQtZskMDlAMASUW9FXYbAxBVyec9YLTKsaLqmo+nBU7KzVlXIKhx0TnLB7J45qQ+0dK8z9WPkv1h8ampaldpHXlUfb6GFFT5RN4sdfkW2jQJ1PrrH4iTxYZKyERECWq98YsvXB3D4yhX8Ma4gwlzTTvx10y12zmbowOx1vbthGCZpBX85w/tsaaBSTLQ6IAbThDMIZsY9SJ/OUlB3eK6ob5lcGvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9o+ZEsj4u+Mr2O36ppY/6DvuowU/2UX2TvICgOENCZk=;
- b=N28YYmEO1j39N0CIvDWW5AVRmfCyzG86ZKHTjSQziHPhryezJYo7Bck6aTLutdSSQAzGq8niYyVdyNr8T2rBxMfM9fadR/iLWnJXV1beYCEbczRdr/SEb6x9tiOJhMWa3tu4uetZcXng/M1pNs5/Qi8yWVqnxPMDH5oCAbvpiGMVvfY8q564dUyymNMQTNoPkp5I2SSoCfJ/GjY5YVCo2Fmo9Hfc4RsIbSVjDtcsXaatwwZO6b0h8zRe2dDTWFip5wgvJwF2h6+WblSX42P9MP/D7VSVpdm841COAxkOwxzIgLF4PCwHIlmpLWfuAjAIXDbuWfWTt3T2+2pMKESHTQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by PH8PR12MB6938.namprd12.prod.outlook.com (2603:10b6:510:1bd::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.11; Mon, 5 Sep
- 2022 22:27:19 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5%9]) with mapi id 15.20.5588.018; Mon, 5 Sep 2022
- 22:27:19 +0000
-Message-ID: <cb59ea58-062d-6a3f-c3f6-69d9cfff1484@nvidia.com>
-Date:   Mon, 5 Sep 2022 15:27:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v9 1/8] mm: introduce FOLL_PCI_P2PDMA to gate getting PCI
- P2PDMA pages
-Content-Language: en-US
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Christoph Hellwig <hch@lst.de>,
+        with ESMTP id S232444AbiIEWtv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 18:49:51 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594682CE18;
+        Mon,  5 Sep 2022 15:49:48 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id fa2so9483272pjb.2;
+        Mon, 05 Sep 2022 15:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=Nz+uqA7e4/P8W1+vztFIrzinPtJHEHUsBZrInKc0qlM=;
+        b=QV/OF44k3joZDZETl0+ZlAcG808nTpQ+6yaZoVIx1EasnMTt4l9JtEqbk6ylV1sjPH
+         CpsCnzKXD1yaRjJY8yjGFM/Rgnq9yiszyTc8TCHLEugHFhpgglTtFg/61iYR6lNKhfNX
+         n+f8CJcsIFbu92wir0N7hH/bTYw1QemkS4mo8z9i7RazUS8WbaVUlDCuaya5GJBZu9IE
+         QvA+bSBWFp0EO1XhWI8AaZpOPguSsXCXaTdXXwJTBB7rNsozxl6OvfDIM+wu5p0E19qV
+         /OGRMYL6CRqyQ5aXHZUHHnxJTRmKFDJXhnoU6eq51SznMODXDCf9krZ5aKy7RCOTOjHC
+         Ptlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=Nz+uqA7e4/P8W1+vztFIrzinPtJHEHUsBZrInKc0qlM=;
+        b=LevFqHsaCX0jtoBjPgrY+4f9HyEU1IaOKcwTIryijHGPv36tl/PeTX98Q/zlAat7Q2
+         FZGVDRUTFzWtVQ/Z0kaf9bIXJD48v+GuZsh/lkc4ZxUr/KacoM0SecYl2CiptDpBpS+j
+         i7QeJaov1VRUYoynqSSWf1iY9rBmWBhQ7GRcFDsgFcGETHnH7UUYOLeLcGBvFf+diHWg
+         qRqu0YerXewOhHOjfgWb8hsQP86gcFj1ZKyYer74tPGDOYnueuEAqywchRXoMcI/oSWP
+         /inqPBH/BlKsRmueIyGDV/jdKrJsAU470khVnJQiJJMcYpiiOvz+Y4x0sM84qYhDYA28
+         vm1g==
+X-Gm-Message-State: ACgBeo1W/TYni+exhOcn7oPMW+8KPWEddi+4/Ty2eBOqYD/5Ir7XVeqs
+        wZilEV+GQcAGxPGWZu9UbL4=
+X-Google-Smtp-Source: AA6agR4K6lIuAxsSdVJ0oNphFJqoDM1Qz4a/ewauw+FqqlvVaYz09d/58GCWTrClE39lnwuTI3+EHg==
+X-Received: by 2002:a17:902:d4c4:b0:172:f328:e474 with SMTP id o4-20020a170902d4c400b00172f328e474mr51321307plg.144.1662418187481;
+        Mon, 05 Sep 2022 15:49:47 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:1190:fbfa:ae95:111c])
+        by smtp.gmail.com with ESMTPSA id x10-20020a170902a38a00b0017300ec80b0sm8054511pla.308.2022.09.05.15.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Sep 2022 15:49:46 -0700 (PDT)
+Date:   Mon, 5 Sep 2022 15:49:42 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20220825152425.6296-1-logang@deltatee.com>
- <20220825152425.6296-2-logang@deltatee.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20220825152425.6296-2-logang@deltatee.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR07CA0063.namprd07.prod.outlook.com
- (2603:10b6:a03:60::40) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
+        Guenter Roeck <linux@roeck-us.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 01/11] PCI: tegra: switch to using
+ devm_fwnode_gpiod_get
+Message-ID: <YxZ9BkBnQOUpXt/O@google.com>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-1-b29adfb27a6c@gmail.com>
+ <20220905071902.fv4uozrsttk3mosu@pali>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c768b4b0-2eb2-4f06-d780-08da8f8dcafc
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6938:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pH/sOfCyCo7TS8tjhKGrfCuMPQAqHbdPFihOzpq90ZjRkSi7R0UAj1jPHEG9d/Q1d9Sy9HLx763RVKQ3CpYDbJhCqCBk0ZbDfJJDVLJtCJwSMNd+LSmNofP6+Xhz4SYzcAu4cmfKpISWxgNu2XNe6WqBE74SjbrabXvJqNYOqeQKdmdVAMOW6ntYceb6wvP4TzTH4OnJoE4/NqBuWJPKJrY50zB/Czh45lc01bsvKDxKV9kVENNubPNUOPlHf5Etnw/ikQhF7uslNbN37IcxsnXoGFo1miPekTvfbftg9GOTyRZvyLlPcbWZMdh9iViqO5Omp4WnhkAHV8hXoENWrLCwixH5gnwz1CekOR569jgXdT97rtIvNuMhSIYBnfpj76NKxUkFMHnfWquBbji/X3OhsGsO3X1D57/8INBXuIwIqLn1zDVlgK0OMemT9w8haEKzZMKUWtm6esDYcS7OTZqp+msF9iqDLAXYaiAITKGmlZoe3ax+UKggxqp8Qd/2qJI50piBMzaegPSbE33GArSglLqXjrDJrlvK0MiFvP1ZX/xLok6dZgRK4TzkttIA9B1bURrx4z82EDgbTp2QiXgb1wfzj79BJVPcvjQqMXTzrDtjPbSCJqUTogoasIHZe7NCFl0APjZPQfnTgv8iGaH9K/n2sJI02eLrgRHtD3HrKS2hLow6aiH3vH0w/9fH3HR10ph0j5kHXRhgDpF6tFK2CKJ2mGrvemKOmjsK4RBRGRpwt2FGo5ZIyCQVE/VMVPbj6NNGVAQJiX4dFFBujZhv+MqH72SAM1mr9UYI6mY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(8676002)(66946007)(54906003)(66556008)(7416002)(66476007)(8936002)(36756003)(31686004)(5660300002)(4326008)(6486002)(2906002)(316002)(478600001)(83380400001)(41300700001)(6506007)(26005)(6512007)(86362001)(6666004)(2616005)(53546011)(31696002)(186003)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eHpHTnZRQ1ljNEhFeGZ5YVRaT3lkeXFmZVcyQnp4ZlA4RzdBbzYyMUx3bU4y?=
- =?utf-8?B?bHlsUUgxN2gvRHlnTFkxSGJmOXpvSStWVndFVHY2ZnNXMW1UeGwwYzVwNHVj?=
- =?utf-8?B?ZGlrNXMxd0JHQUF1YUEzR1pEakg4V3Bwamt3TVVZUk04WTVPUysvZnhLbkVO?=
- =?utf-8?B?bXN4cEI1WEl2R2xQNlZ3NVNGUkpjbERKb3JGTFdXNDdhVUlSczZiS3hTWkg1?=
- =?utf-8?B?MW9uR3l5b3Bya0JrMGZHcFhqaEt0dnhTMW9XYzJjVmxIblA2WTJMZDNYMmJL?=
- =?utf-8?B?elVzNGhFRlNIUTA4SEd6ZmNSK0tzVjlnWFFSWGV5bE1qUzQ5Nlc0bWpRVk8v?=
- =?utf-8?B?VjlMMGthTUh4TDBhakZYbU93aXIyUVlGSkdVY0UxaVBqL3RnV0JLTHpTU2pC?=
- =?utf-8?B?V01YQ0lodlpmTHF2NlBQNmgybUR2bGpQQTF4MXJWbWVwbGQ2M0s1MkwwQ1Vp?=
- =?utf-8?B?L3ExMi9WWDlndlduWWtDeUZxUEsycDJtN0lQMTV4YUlWbVEvTWVRWWcwbFR1?=
- =?utf-8?B?SXVMZFEvTzdYalBiQjZZU0VkcWRwWTI0ay93TUp2V1dHNFJBanZ0ZnZZckZi?=
- =?utf-8?B?RXV4cGROMHpGejdFdFVKS0ljdTBWYlpXc3poYjBESU5xYzhQSVFoazlSa2l2?=
- =?utf-8?B?aVkvanBWbWlJakJYdWZUY3p5eVlrYVM2YnRmTTFoSmFQMGM5ZjBSSnNYc1Ni?=
- =?utf-8?B?RHpzMHRzTGx5aFNaM1NPYUgyTjc3QmJlbkN6ak9PWVh1Q3lVRWtTRG00dDVX?=
- =?utf-8?B?VENvNUF2UWovYUNmYWx4Zk5aSW1GK0VtYkhxMzAyTHB5enJ1WEhjZURtSW9K?=
- =?utf-8?B?aVhQNk9scHRoMUgrRVp2eVp5TGtoakk1TVdlNmYrUWtUVGN3TnNNdUYvZE5k?=
- =?utf-8?B?TDF0TVBOejFNOEEvd0NUUDh4SzI3UXI1bkZ6ZnRrR0JvcmFJUXNGcktXdEhQ?=
- =?utf-8?B?SEZPdGFiSDNncERtK3pNMGFXbWhvWHl0ZTRZSHIzdEw0K1VoVUc4cU40eFo0?=
- =?utf-8?B?bjRtOGd2blMvVVRla3ZOMks1Q2NhWnA5UDFEcjFCak1UQmhJQlAxUXdGdzY0?=
- =?utf-8?B?MDhValFNNXBCWDlUVEd6a0RRRitGQzJESDhVY09aTVU3d0w5RHJVRUZlenlx?=
- =?utf-8?B?WCtQTEFkUHphSkpVMDVNazlRdzkyTzlhYzRGb3ZUSjFmaDhJYWhnSWtFUk9h?=
- =?utf-8?B?eHFHdEJkOHpqZEN5ejQ3K3RmYjZ5d1hZS1B6TlpCMUorbjJOT3hjbENtQ3Vp?=
- =?utf-8?B?QkRBeDZyS2VTdE03MFg0T2YvcWwrRmpmaFlKUVBCa2tyTUFmeVBhZU5BNGVs?=
- =?utf-8?B?NHlDc0JtR2lMY0V0aFp3UGVNVnhHOTNnVzJOdm5Gd3JqZWhMeCtvVzg2SVk0?=
- =?utf-8?B?emcvKzArTW1VcktvVkNacGN0SjVTQWwwYU1FbG9vRmxNWm9ybXk1NHd4MmdG?=
- =?utf-8?B?UFpIMHFYcHJBM0crUGc1aXVJbHNEeWQ4SUlCQURpQnozQjVORUJvMEM2Rnlj?=
- =?utf-8?B?QzgyUHVPY0xUOUNac1FORVBFczdlTkhGTDQ0L3B6azVqRmZuT01VUWVMdEI3?=
- =?utf-8?B?cnBjbUc2NmJmQzl2Yi9hOGQyT0MvSWdzS0pHWHBBVGVJZEVpUGFsUEpsa0FN?=
- =?utf-8?B?VUN1UzZDc1FwRmtXaUZPU2hXMk0wVGpUaFdQUzRxSEhtK0VFQWc5L215bThJ?=
- =?utf-8?B?MU50T01JZWhXOWZSbDFHTkxWVk1uOUd2U2pIUHI1bDFYS3RXa3NxWndoYXBD?=
- =?utf-8?B?UkRPa1QrSmtTRUpkblF1Ynl1Y05qcGg1NFpIcTNRZGQvL0U5djN5cHVKTGFM?=
- =?utf-8?B?ZDNPOXRQclg1aEpDTkJmVDVRMHhucUxrY0tScS92V0pGVjJmbjdDZW1hWXhP?=
- =?utf-8?B?WHRVSUtabVB0ZjByUVkrSVQ5ZWNLMFpOdlZXM1BOZnZxQ0Y5VjFjL2VvV3pP?=
- =?utf-8?B?Q2tEOWRlbUt2QmZoMjYzcmxCUVdsNGpTY3RtQXlucFg0Zkc2L3JXZktKMXRT?=
- =?utf-8?B?MmZSa1RlVWcvTllyTlFZc3F5WlYyN0FXd3g4RGpSUTBNK3FKTEJZalF0Z0ZO?=
- =?utf-8?B?dFR3VDBQODNWUDhtYzVyN1dpY28wQ2VjT1FBL2xFZG9RYzB5LzlrbUszRHVp?=
- =?utf-8?Q?9L9HOAhRiyvzkcxox35G1ch8W?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c768b4b0-2eb2-4f06-d780-08da8f8dcafc
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2022 22:27:18.7106
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DXuFLw46o6h3Q2RJySBheOQfyH62aM44OOcLIK0SUMrZXe4rrimH5khc5SPk7mfDD499rELSnT5TTSrYNNUkYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6938
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220905071902.fv4uozrsttk3mosu@pali>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/25/22 08:24, Logan Gunthorpe wrote:
-> GUP Callers that expect PCI P2PDMA pages can now set FOLL_PCI_P2PDMA to
-> allow obtaining P2PDMA pages. If GUP is called without the flag and a
-> P2PDMA page is found, it will return an error.
+On Mon, Sep 05, 2022 at 09:19:02AM +0200, Pali Rohár wrote:
+> On Sunday 04 September 2022 23:30:53 Dmitry Torokhov wrote:
+> > I would like to limit (or maybe even remove) use of
+> > [devm_]gpiod_get_from_of_node in drivers so that gpiolib can be cleaned
+> > a bit, so let's switch to the generic device property API. It may even
+> > help with handling secondary fwnodes when gpiolib is taught to handle
+> > gpios described by swnodes.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> > index 8e323e93be91..929f9363e94b 100644
+> > --- a/drivers/pci/controller/pci-tegra.c
+> > +++ b/drivers/pci/controller/pci-tegra.c
+> > @@ -2202,10 +2202,11 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+> >  		 * and in this case fall back to using AFI per port register
+> >  		 * to toggle PERST# SFIO line.
+> >  		 */
+> > -		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
+> > -							     "reset-gpios", 0,
+> > -							     GPIOD_OUT_LOW,
+> > -							     label);
+> > +		rp->reset_gpio = devm_fwnode_gpiod_get(dev,
+> > +						       of_fwnode_handle(port),
+> > +						       "reset",
+> > +						       GPIOD_OUT_LOW,
+> > +						       label);
 > 
-> FOLL_PCI_P2PDMA cannot be set if FOLL_LONGTERM is set.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/mm.h |  1 +
->  mm/gup.c           | 22 +++++++++++++++++++++-
->  2 files changed, 22 insertions(+), 1 deletion(-)
-> 
+> Why in pci-aardvark.c for PERST# reset-gpio you have used
+> devm_gpiod_get_optional() and here in pci-tegra.c you have used
+> devm_fwnode_gpiod_get()? I think that PERST# logic is same in both
+> drivers.
 
-Looks good. And I see that Dan Williams' upcoming "Fix the DAX-gup
-mistake" series will remove the need for most (all?) of the
-undo_dev_pagemap() calls that you have to make here, so the end result
-will be even simpler.
+I believe Andy already answered that, but in this driver we can have
+several root ports described via subnodes of dev->of_node, and reset
+GPIOs are attached to those subnodes. We are forced to use
+devm_fwnode_gpiod_get() instead of devm_gpiod_get_optional() as we need
+to supply the exact fwnode we need to look up GPIO in, and can not infer
+it from the 'dev' parameter of devm_gpiod_get().
 
-
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-thanks,
+Thanks.
 
 -- 
-John Hubbard
-NVIDIA
-
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 3bedc449c14d..37a3e91e6e77 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2891,6 +2891,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
->  #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
->  #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
->  #define FOLL_FAST_ONLY	0x80000	/* gup_fast: prevent fall-back to slow gup */
-> +#define FOLL_PCI_P2PDMA	0x100000 /* allow returning PCI P2PDMA pages */
->  
->  /*
->   * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 732825157430..79aea452619e 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -566,6 +566,12 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  		goto out;
->  	}
->  
-> +	if (unlikely(!(flags & FOLL_PCI_P2PDMA) &&
-> +		     is_pci_p2pdma_page(page))) {
-> +		page = ERR_PTR(-EREMOTEIO);
-> +		goto out;
-> +	}
-> +
->  	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
->  		       !PageAnonExclusive(page), page);
->  
-> @@ -1015,6 +1021,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->  	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
->  		return -EOPNOTSUPP;
->  
-> +	if ((gup_flags & FOLL_LONGTERM) && (gup_flags & FOLL_PCI_P2PDMA))
-> +		return -EOPNOTSUPP;
-> +
->  	if (vma_is_secretmem(vma))
->  		return -EFAULT;
->  
-> @@ -2359,6 +2368,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
->  		page = pte_page(pte);
->  
-> +		if (unlikely(!(flags & FOLL_PCI_P2PDMA) &&
-> +			     is_pci_p2pdma_page(page)))
-> +			goto pte_unmap;
-> +
->  		folio = try_grab_folio(page, 1, flags);
->  		if (!folio)
->  			goto pte_unmap;
-> @@ -2438,6 +2451,12 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->  			undo_dev_pagemap(nr, nr_start, flags, pages);
->  			break;
->  		}
-> +
-> +		if (!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
-> +			undo_dev_pagemap(nr, nr_start, flags, pages);
-> +			break;
-> +		}
-> +
->  		SetPageReferenced(page);
->  		pages[*nr] = page;
->  		if (unlikely(!try_grab_page(page, flags))) {
-> @@ -2926,7 +2945,8 @@ static int internal_get_user_pages_fast(unsigned long start,
->  
->  	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
->  				       FOLL_FORCE | FOLL_PIN | FOLL_GET |
-> -				       FOLL_FAST_ONLY | FOLL_NOFAULT)))
-> +				       FOLL_FAST_ONLY | FOLL_NOFAULT |
-> +				       FOLL_PCI_P2PDMA)))
->  		return -EINVAL;
->  
->  	if (gup_flags & FOLL_PIN)
-
-
+Dmitry
