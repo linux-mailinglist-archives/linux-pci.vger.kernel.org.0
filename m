@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B80B5ACCAF
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 09:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF3295ACC44
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 09:28:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236070AbiIEHTj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 03:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
+        id S237314AbiIEHTi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 03:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237354AbiIEHTI (ORCPT
+        with ESMTP id S237324AbiIEHTI (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 03:19:08 -0400
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DDCE441D18;
-        Mon,  5 Sep 2022 00:14:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 393044BD08;
+        Mon,  5 Sep 2022 00:14:13 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.93,290,1654527600"; 
-   d="scan'208";a="131687304"
+   d="scan'208";a="131687307"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
   by relmlie5.idc.renesas.com with ESMTP; 05 Sep 2022 16:13:09 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 98E2F4004465;
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B6D184004465;
         Mon,  5 Sep 2022 16:13:09 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -28,9 +28,9 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 06/12] PCI: dwc: Add reset_all_bars flag
-Date:   Mon,  5 Sep 2022 16:12:51 +0900
-Message-Id: <20220905071257.1059436-7-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 07/12] PCI: dwc: Avoid reading a register to detect whether eDMA exists
+Date:   Mon,  5 Sep 2022 16:12:52 +0900
+Message-Id: <20220905071257.1059436-8-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220905071257.1059436-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20220905071257.1059436-1-yoshihiro.shimoda.uh@renesas.com>
@@ -45,55 +45,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some PCIe endpoint drivers reset all BARs in each ep_init() ops.
-So, we can reset the BARs into the common code if the flag is set.
+Since reading value of PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL was
+0x00000000 on one of SoCs (R-Car S4-8), it cannot find the eDMA.
+So, directly read the eDMA register if edma.red_base is not zero.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 10 ++++++++++
- drivers/pci/controller/dwc/pcie-designware.h    |  1 +
- 2 files changed, 11 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1b7e9e1b8d52..a79482824e74 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -83,6 +83,14 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
- 
-+static void dw_pcie_ep_reset_all_bars(struct dw_pcie *pci)
-+{
-+	enum pci_barno bar;
-+
-+	for (bar = BAR_0; bar < PCI_STD_NUM_BARS; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
-+}
-+
- static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
- 		u8 cap_ptr, u8 cap)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 72f9620a374d..08f91a6bbe4b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -844,8 +844,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
  {
-@@ -759,6 +767,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	u32 val;
  
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
-+	if (ep->reset_all_bars)
-+		dw_pcie_ep_reset_all_bars(pci);
+-	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+-	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
++	if (pci->edma.reg_base) {
+ 		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
  
- 	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
- 			       ep->page_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 9ed9621a12e4..0ad9ed77affb 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -353,6 +353,7 @@ struct dw_pcie_ep {
- 	void __iomem		*msi_mem;
- 	phys_addr_t		msi_mem_phys;
- 	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
-+	bool			reset_all_bars;
- };
+ 		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+@@ -853,6 +852,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+ 		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
  
- struct dw_pcie_ops {
+ 		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
++		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+ 	} else {
+ 		return -ENODEV;
+ 	}
 -- 
 2.25.1
 
