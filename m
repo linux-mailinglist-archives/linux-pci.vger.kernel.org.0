@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C545E5AD0F9
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9335E5AD121
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbiIEK5k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 06:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        id S238193AbiIELBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 07:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbiIEK5j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 06:57:39 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D1A4363A;
-        Mon,  5 Sep 2022 03:57:38 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id cr9so5845617qtb.13;
-        Mon, 05 Sep 2022 03:57:38 -0700 (PDT)
+        with ESMTP id S238194AbiIELA4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:00:56 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CA052FC0;
+        Mon,  5 Sep 2022 04:00:21 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id f4so6074068qkl.7;
+        Mon, 05 Sep 2022 04:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=SceFooGsQvk4/DBXpk/M7nv2E1Tqfm+MkuaSRZ3qev8=;
-        b=QgN1fKt4DP2kb7sAiv+5KFok8U8dxv0x5611ZTop3HKEETihbtz9RufJ5RUJvT6oy3
-         NsDYXvFgWk/79gT0t031cWuTJ9+0anNKT0/QMVUymrmw27VD2+Q9Fvf/a4F1TUNnaeSG
-         rqxNiZxP2226FfdS2mZJiVeLEcQ2F7NOQTCivGpJw3EJafbSCKZtnmajkVfO//JmwESc
-         OQ+A5m2uZ9uWB9V0ddapJ9/fH/JlBtRhD0Pv/BF1sgrOUoMmJeKFvXNsijHb3izSghCC
-         dWQbrWPcWtAWtUFpsLJaj3WsvtsNYlDXfe5EMqd/eXC/8JZqf2A/mHdQZ+FdhXMyXOQX
-         cbsA==
+        bh=ZeMo2PWVWCCE4kicxMFOEAyAOyDB4gnn7oyqH8IifhU=;
+        b=CTOoiLvwwBkvtH32c6w60zEVvHcTnoXO3ACu0Ys4kWjZ2v5rcWsBDH+vdDx4TQZ9hd
+         zoXITcV3yQclTjF5bSmp+qDBSGLQc9kK7p/Q6MVruLaf+yQ2ieawJUD0vtr6jFmlqqb5
+         VM0HxdCbbCyt9e3B0tD+nb2kHG9B39a4RXdVZ+gBaJ13JI/Bhg4cILs9FZoegyTQ+F+6
+         8fPJkAuVnPubU2LSPwAtno5IP1SguIVrVU1uTopFif2u8b6jICrnPWEduG2jMRNf+dw3
+         TOSVD6xw70ivt4BkffpLzGj1KiFTvRTD6M32zkdDHIex4lTV6wIEhedGMFPH+v+dK0yQ
+         6+JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=SceFooGsQvk4/DBXpk/M7nv2E1Tqfm+MkuaSRZ3qev8=;
-        b=GDkYK206D1NTUpXQXPtAGeJT8YJxC8XI6e4VXWkPrLsdM7NAmOA+B4fB/IODN1qCL0
-         dGgFnuI+ru876fJ5/pZot4/4yLeZHYbsvLI3/wZuojabqf6F93xkGnMWtHr0HBxB/Mr3
-         fHUrHHpMyfpgzi+ywxaJz94cFtHrOBE6bsJ70lXPY4g2kZcUotLA7DfzF1LgqzDXR009
-         lrFxBLOCmZOhlZABZGIwd/Yb5bTzcfUnuAae78pBHgRGT2wiAs951Nb608R8pjxrrPMs
-         ABedwI5QV+uLe9OiVoIB8vKI4aWrVkJHTV4RLjB+C2B1dEseBci9hPSyCDzat2OJSgUO
-         hfYQ==
-X-Gm-Message-State: ACgBeo0MNNxdvkE4hxd06zN6DTKQplCyvb/710rPR4rFFlmH6gdfTjJc
-        tgnS+lUR3HUvrKYmundjxarRpnQ94iQo8gQiglA=
-X-Google-Smtp-Source: AA6agR60W0s2Xg2TAEJ7W+zD52eGjGAMZEZ33WklScUG5wc6dHREuBxFFHnQsCibmN0jWps5VKuSjG68kRfEhV6Vu4I=
-X-Received: by 2002:a05:622a:40a:b0:343:77ba:727f with SMTP id
- n10-20020a05622a040a00b0034377ba727fmr39279991qtx.481.1662375457185; Mon, 05
- Sep 2022 03:57:37 -0700 (PDT)
+        bh=ZeMo2PWVWCCE4kicxMFOEAyAOyDB4gnn7oyqH8IifhU=;
+        b=ID92ImmyxY0COELUroDibC5SKWV7+XouiP+dUQ8KZU4XR4iRRmZ5L2mFhBHOrYTBev
+         c+/S8AHasfjjynWxAH+6quE6nKUVk+RMhNcBOKEZ7/hlr9xpzXoNz3wdrpsnIyWKsZ3H
+         aMnDtjcNlYFSKyk1IIAVOn7reJVoaK2qfRHozwoWs5r+lww3Eq9AeLasXd9cphc9A/AB
+         vkfDE9MWlrHfC12CThsgnnMtgwR6PqoYSmhkRPaZ7h9/jVHw84ccBlgmlh3SsVezrJJq
+         fqqNNNRStmWa49v/MUZmfPeuPakS2QrO0D+38W35gguIZPhK6yqvRtd1Z3GVQEhPNuuA
+         MX1w==
+X-Gm-Message-State: ACgBeo0wQw6Q+I300V/d4+Y5eAH1s6TPLkKdnwspDkpJk/vrBt1JznS+
+        yutQ5fd/PS2bULzANnZM+DrmEZBWPqXipJpkAcU=
+X-Google-Smtp-Source: AA6agR5QfYlB3faOXg1Xo9fT2kr66lBEoMt1tUwQEmf4Hjj69mFUh3WyFYB6EU5cllnnLi+qXnfCb/Dp4e9d3zghof0=
+X-Received: by 2002:a05:620a:288a:b0:6b8:fcfe:db02 with SMTP id
+ j10-20020a05620a288a00b006b8fcfedb02mr32736370qkp.504.1662375620030; Mon, 05
+ Sep 2022 04:00:20 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-2-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-2-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
+In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 13:57:01 +0300
-Message-ID: <CAHp75Vc4yfh0JcY0B-vNawHTay5QNuhd7GAm86QZZZvUnQaMzQ@mail.gmail.com>
-Subject: Re: [PATCH v1 02/11] drm/tegra: switch to using devm_fwnode_gpiod_get
+Date:   Mon, 5 Sep 2022 13:59:44 +0300
+Message-ID: <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
+Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using devm_gpiod_get()
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -106,17 +106,33 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
 <dmitry.torokhov@gmail.com> wrote:
 >
-> I would like to limit (or maybe even remove) use of
-> [devm_]gpiod_get_from_of_node in drivers so that gpiolib can be cleaned
-> a bit, so let's switch to the generic device property API.
+> I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
+> so that gpiolib can be cleaned a bit, so let's switch to the generic
+> device property API.
+>
+> I believe that the only reason the driver, instead of the standard
+> devm_gpiod_get(), used devm_gpiod_get_from_of_node() is because it
+> wanted to set up a pretty consumer name for the GPIO, and we now have
+> a special API for that.
 
-> It may even
-> help with handling secondary fwnodes when gpiolib is taught to handle
-> gpios described by swnodes.
+...
 
-I would remove this sentence from all commit messages since it's a
-debatable thing and might even not happen, so the above is a pure
-speculation.
+> -               gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
+> -                                                   "nvidia,phy-reset-gpio",
+> -                                                   0, GPIOD_OUT_HIGH,
+> -                                                   "ulpi_phy_reset_b");
+> +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
+> +                                      GPIOD_OUT_HIGH);
+>                 err = PTR_ERR_OR_ZERO(gpiod);
+
+What does _OR_ZERO mean now?
+
+>                 if (err) {
+>                         dev_err(&pdev->dev,
+>                                 "Request failed for reset GPIO: %d\n", err);
+>                         return err;
+>                 }
+
 
 
 -- 
