@@ -2,51 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D538E5AD31B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 14:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF7785AD328
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 14:51:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238307AbiIEMme (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 08:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
+        id S238339AbiIEMmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 08:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235747AbiIEMmT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 08:42:19 -0400
+        with ESMTP id S238305AbiIEMmb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 08:42:31 -0400
 Received: from sender4-op-o18.zoho.com (sender4-op-o18.zoho.com [136.143.188.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCBF57549
-        for <linux-pci@vger.kernel.org>; Mon,  5 Sep 2022 05:36:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1662381369; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F05D6052D
+        for <linux-pci@vger.kernel.org>; Mon,  5 Sep 2022 05:37:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1662381448; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=jzwSuOh6IJATZwHuNsL2y3mE66WyyVuUFp3OBkhdI3/nlNbi6vC3BJ4xysnolbAVJE6FC8ZFSsK/WCc/KxcJAXYA346F+1a+V7XPBiywyHt1sNguJipYrz2DP4PQQYc7KXTrE+lRE9WQ2Kysm8GGXFpvg4CSYqZI9dTSonpmurw=
+        b=IbJUiBFOs3gsxBVxYTc17nUX6xMg6bVIqxfB0QQdvENdXwe1Ek3sVSSQf1fTBxcOCznMn8kgR+Mnc6VXeNsBoJuQmdqIE/GXSLoEssdC0HFRmR5/h8emP2gqop1T+KUIE292brUzYfjwZZF0fl2MYZm4oizsJzaTykOQouygYPo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1662381369; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=3BFTEIuXaBmXMdXcV1jx9dIUHzC/SjpIjDhf75BBcss=; 
-        b=MoQyPoRt/+e/Rlk/cODfKJwXeKlCZHiGZBQuw8xxmxgiSUcC+13XFfXt7kujQqSWyalCYUeQeJCnWdAJi50GnG6OfejymNVb03fdLVUBQlxQWV3o93TEWgxbfNJPQEp2QDxAFPFqu0ONkJtAO2yhCv8FHay3L+49CdRHouKgl0A=
+        t=1662381448; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=qwdtaNPJ7CpnHPyO3312RrwKuu4DnM5l7GBP2xaGiP8=; 
+        b=ak4dr4HvEjl8kFk0Pi8H8XQySrLCGyifGWtZ+5LLl3vtX7wt0SwZhYIt1XyLyXfl4F0WvFsNIMdO8foBpY+uPzF1wTzYeOQ9t80FlFEsNHmDXeXe9VcsXTh1vDqCFVfYOgiZweirRiCaD5MQKYH7jG/HlGiuweZy+W5GKLX1bGc=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=linux.beauty;
         spf=pass  smtp.mailfrom=me@linux.beauty;
         dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1662381369;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1662381448;
         s=zmail; d=linux.beauty; i=me@linux.beauty;
         h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=3BFTEIuXaBmXMdXcV1jx9dIUHzC/SjpIjDhf75BBcss=;
-        b=d7t/G9DcrAMChGDU4exE8mGZ8EeyRCprpzJkpLTmoQ9Ntg207btUiAZpZWuIojcq
-        48WY1MDgab2CynJC9KFPgF1K5DABeMHFXQu22B+gFfY0Puy6Bkk1njBE61rW1+IpOE6
-        QXwmjhYURp4BfDJbuuJSR6G3+Gw9Du0BLf3l+CVU=
+        bh=qwdtaNPJ7CpnHPyO3312RrwKuu4DnM5l7GBP2xaGiP8=;
+        b=PD+m2VqSc+UZLAnhEqgfnx4WKRxMCL2fztFXwh8mWXStK1YA3B+gxXWF1pxgzlci
+        tXIUfVJVYx2RcG/7L5msqDz26SnRC8UfRDubbYfsUnm9gP39B16kcqNZVAtWqWhWBLO
+        epRJj21Jf/bX1gekDab+yBHz8JNJEsfQAun3FFck=
 Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1662381368410660.5514011608086; Mon, 5 Sep 2022 05:36:08 -0700 (PDT)
-Date:   Mon, 05 Sep 2022 14:36:08 +0200
+        with SMTP id 1662381446042942.12690892832; Mon, 5 Sep 2022 05:37:26 -0700 (PDT)
+Date:   Mon, 05 Sep 2022 14:37:26 +0200
 From:   Li Chen <me@linux.beauty>
-To:     "Kishon Vijay Abraham I" <kishon@ti.com>
-Cc:     "Li Chen" <lchen@ambarella.com>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
+To:     "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
+Cc:     "Li Chen" <lchen@ambarella.com>, "Rob Herring" <robh@kernel.org>,
         =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
         "Bjorn Helgaas" <bhelgaas@google.com>,
         "linux-pci" <linux-pci@vger.kernel.org>
-Message-ID: <1830da6a447.105bbdc74249232.3098870178344058001@linux.beauty>
-In-Reply-To: <1830da34e6e.f4f852ec248192.8946829485125284701@linux.beauty>
-References: <1830da34e6e.f4f852ec248192.8946829485125284701@linux.beauty>
-Subject: Re: [PATCH] PCI: j721e: remove redundant error message
+Message-ID: <1830da7d38a.bb0e7f41249614.5963135252161347223@linux.beauty>
+In-Reply-To: <20220905033702.905-1-me@linux.beauty>
+References: <20220905033702.905-1-me@linux.beauty>
+Subject: Re: [PATCH] PCI: cadence: remove unused cdns_plat_pcie->is_rc
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -65,47 +63,61 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 + linux-pci
 
- ---- On Mon, 05 Sep 2022 14:32:29 +0200  Li Chen  wrote ---=20
+ ---- On Mon, 05 Sep 2022 05:37:03 +0200  Li Chen  wrote ---=20
  > From: Li Chen lchen@ambarella.com>
  >=20
- > This error message will also be reported by
- > j721e_pcie_ctrl_init when check j721e_pcie_set_mode
- > return value, so remove it.
+ > We already have cdns_plat_pcie_of_data->is_rc.
  >=20
  > Signed-off-by: Li Chen lchen@ambarella.com>
  > ---
- >  drivers/pci/controller/cadence/pci-j721e.c | 7 +------
- >  1 file changed, 1 insertion(+), 6 deletions(-)
+ >  drivers/pci/controller/cadence/pcie-cadence-plat.c | 5 -----
+ >  1 file changed, 5 deletions(-)
  >=20
- > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/co=
-ntroller/cadence/pci-j721e.c
- > index a82f845cc4b5..360a3cc1fae3 100644
- > --- a/drivers/pci/controller/cadence/pci-j721e.c
- > +++ b/drivers/pci/controller/cadence/pci-j721e.c
- > @@ -169,16 +169,11 @@ static int j721e_pcie_set_mode(struct j721e_pcie *=
-pcie, struct regmap *syscon,
- >  =C2=A0=C2=A0=C2=A0=C2=A0u32 mask =3D J721E_MODE_RC;
- >  =C2=A0=C2=A0=C2=A0=C2=A0u32 mode =3D pcie->mode;
- >  =C2=A0=C2=A0=C2=A0=C2=A0u32 val =3D 0;
- > -=C2=A0=C2=A0=C2=A0=C2=A0int ret =3D 0;
+ > diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/driver=
+s/pci/controller/cadence/pcie-cadence-plat.c
+ > index bac0541317c1..e091fef9c919 100644
+ > --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+ > +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+ > @@ -18,12 +18,9 @@
+ >  /**
+ >   * struct cdns_plat_pcie - private data for this PCIe platform driver
+ >   * @pcie: Cadence PCIe controller
+ > - * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
+ > - *         if 0 it is in Endpoint mode.
+ >   */
+ >  struct cdns_plat_pcie {
+ >  =C2=A0=C2=A0=C2=A0=C2=A0struct cdns_pcie        *pcie;
+ > -=C2=A0=C2=A0=C2=A0=C2=A0bool is_rc;
+ >  };
  > =20
- >  =C2=A0=C2=A0=C2=A0=C2=A0if (mode =3D=3D PCI_MODE_RC)
- >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D J721E_MODE_RC;
+ >  struct cdns_plat_pcie_of_data {
+ > @@ -77,7 +74,6 @@ static int cdns_plat_pcie_probe(struct platform_device=
+ *pdev)
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rc->pcie.dev =3D dev;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rc->pcie.ops =3D &cdns_=
+plat_ops;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cdns_plat_pcie->pcie =
+=3D &rc->pcie;
+ > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cdns_plat_pcie->is_rc =
+=3D is_rc;
  > =20
- > -=C2=A0=C2=A0=C2=A0=C2=A0ret =3D regmap_update_bits(syscon, offset, mask=
-, val);
- > -=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
- > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(dev, "failed to=
- set pcie mode\n");
- > -
- > -=C2=A0=C2=A0=C2=A0=C2=A0return ret;
- > +=C2=A0=C2=A0=C2=A0=C2=A0return regmap_update_bits(syscon, offset, mask,=
- val);
- >  }
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D cdns_pcie_init_=
+phy(dev, cdns_plat_pcie->pcie);
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret) {
+ > @@ -105,7 +101,6 @@ static int cdns_plat_pcie_probe(struct platform_devi=
+ce *pdev)
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ep->pcie.dev =3D dev;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ep->pcie.ops =3D &cdns_=
+plat_ops;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cdns_plat_pcie->pcie =
+=3D &ep->pcie;
+ > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cdns_plat_pcie->is_rc =
+=3D is_rc;
  > =20
- >  static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D cdns_pcie_init_=
+phy(dev, cdns_plat_pcie->pcie);
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret) {
  > --=20
  > 2.37.2
- >=20
  >=20
  >=20
