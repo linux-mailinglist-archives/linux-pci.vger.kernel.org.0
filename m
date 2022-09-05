@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE4C5ACAD2
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 08:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0810D5ACADA
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 08:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236837AbiIEGbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 02:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41486 "EHLO
+        id S236857AbiIEGb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 02:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236726AbiIEGb2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 02:31:28 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470D82DA9F;
-        Sun,  4 Sep 2022 23:31:27 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id q63so7285577pga.9;
-        Sun, 04 Sep 2022 23:31:27 -0700 (PDT)
+        with ESMTP id S236764AbiIEGba (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 02:31:30 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE9E326E3;
+        Sun,  4 Sep 2022 23:31:29 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id t70so1478847pgc.5;
+        Sun, 04 Sep 2022 23:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=ynLt5at1fPNx8OKjwAxE9TZqe0qSgR0LfMKd2/ukQyE=;
-        b=o0c6aYKNJPicMxZzE1PkKtIkQSLJsOwJFh3bcl+LYHEmHr5TaY61x79o0SD+ivoxZk
-         DPf8vEmv/G+sAfYEywkQmzYS8TqIgrCK6wSXSLFwKEAK7Cbw08AkpqBT96rMRzPEVa0T
-         aMMtmW+0f9glO6/cQ8keV15iEPs13h8fVonila+4g/ocL46xIqfFx7rDdBBE/MrAjqtO
-         5sl8bIgqi3+F/6v0vHcDrNJ1k/oQaqO7VkvMD/DoMztr6Me8/am6pi66ZHOCMZneRwid
-         Zb3n7NhsZprL3d7KX03DatOFU7DvGf4H7pflgVDpxL0aWedJ+FcdT7hgq54vmCH9Sgv5
-         7z2Q==
+        bh=G2Q8X3FWNy+Mum1KFhHHSQCIItKgzpZiSb8mAdu3vck=;
+        b=FBPmWKbk3BWYF+J3K1WZ+Ol82sdIUCowS0WjoBoeLJwP+LR5gAz/hqHX1gjYAVa5om
+         NIgH7Qk6N5rigD1eJP5EuzqqWeBUI8rxO6FNbumER8jIOtzxax/MwNFhpzGpMzlxKr9x
+         KHJ7i9RRjxYVABvDu4w+I2WlJTjEqjc2B4kijfECmGBvAZhSZMXJefbYqeLIph3SF4qn
+         3n1+0jSFCH68oN7ImYI32e/dUNgIUelohNCH+XyjOKvH1oHWOKxSKn7Uxut1MpeOF0oa
+         OMMldcVIUk/MvfKw67fTrKU0zEyg6YlcDYcuroJpaBs56j1Djz+Q6Fl7tyyophfaU0TY
+         Hgkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=ynLt5at1fPNx8OKjwAxE9TZqe0qSgR0LfMKd2/ukQyE=;
-        b=P7waYVewIyop/JqOVDLJkNHGBoIaiNzfAnCEMVgldNM4L8z+7WE5eQL4QSNXYAT7cA
-         +z49eKo++0qBkhTn4uC9YL7oQaTWpwDz3fKrxB25ycS6wroOm5ROKYXUbvE37HdJiiwI
-         gg7k0DWPKrJ6bJBPVDDMTfbfTC0Inhoukt2sMAIVdQaevqWCxv1VnjHs27bSWZ9POkAu
-         LNMksSx6mpZRcD4o5VvjIWw4xHtzN8KA+7i0Ii4g+aml1wX69ItHftaHzdtKFk5lSYgT
-         4gcRGtBYFjVOgf+E9uN7y5ZAdpBin3G9QCe1W0WbMF7rJAuGS5XeL5wQ53n0Rnw1qja1
-         nrtA==
-X-Gm-Message-State: ACgBeo3JpXTV7CY5kAdpJgokPJkCl6TOQ9bPZg4C6frsIH7Mrqh/xTA+
-        gVERTlUIr8plWquHjFSyLDk=
-X-Google-Smtp-Source: AA6agR6nqqurcOlRTW5MwumdR49aUTj5edmtMHpG5pntto/Ic3d6LDisTkJ/i3KAH13zMjWGur9aVA==
-X-Received: by 2002:a63:62c3:0:b0:434:2b09:6f62 with SMTP id w186-20020a6362c3000000b004342b096f62mr6851828pgb.374.1662359486505;
-        Sun, 04 Sep 2022 23:31:26 -0700 (PDT)
+        bh=G2Q8X3FWNy+Mum1KFhHHSQCIItKgzpZiSb8mAdu3vck=;
+        b=c2lRBaATcbKjjJm/bzzl9zyWe2XDe6LOWe0bKB13Wy65h5RLz4TT9DVcVGY7ZFy2h5
+         qZnnzeMhFp15BmLQ4iI6FiFCGCrfh4aVSRHEpa6JG1bWTrtjvuZmdkIsBLQuyitqQIdT
+         qqekh6phUmtRJRiGq93eEg9Pt4SwuBMecZ1+kiL8KEhuRa+KsxKSb23av9pyuT+jbc9e
+         8qydHmtoJR/YBXpvDn6/gqmfi1k4CRF6FlaO8rckaR9ffcaDiLBKRpNteQ58wS6JUm1L
+         xUIlnL/L1dHuLTsjYlGSi01OOBbcNIlpYFlbSEwNO6ttFMS0/yn2HydS/GSSTZd37+bK
+         cv8w==
+X-Gm-Message-State: ACgBeo1MPeFZ+70ld6je2dEYjupEGbr09HjpHWhCJcjdUplnPWDP2t3o
+        bmct8jxeXTl3JcUXVfDDi7o=
+X-Google-Smtp-Source: AA6agR5x3Cd2bUFdFVhQSgyMvYn8olPbDNMNhdGlpAAhOjZvTLjZqt1otHo2lVL9RBMjcQPiw4Cbsg==
+X-Received: by 2002:a05:6a00:10c7:b0:53b:5eb3:4648 with SMTP id d7-20020a056a0010c700b0053b5eb34648mr13563922pfu.67.1662359488945;
+        Sun, 04 Sep 2022 23:31:28 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:7332:f188:2984:5930])
-        by smtp.gmail.com with ESMTPSA id d197-20020a6336ce000000b0042254fce5e7sm5710653pga.50.2022.09.04.23.31.24
+        by smtp.gmail.com with ESMTPSA id d197-20020a6336ce000000b0042254fce5e7sm5710653pga.50.2022.09.04.23.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Sep 2022 23:31:26 -0700 (PDT)
+        Sun, 04 Sep 2022 23:31:28 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -84,9 +84,9 @@ Cc:     linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v1 07/11] PCI: apple: switch to using fwnode_gpiod_get_index()
-Date:   Sun,  4 Sep 2022 23:30:59 -0700
-Message-Id: <20220903-gpiod_get_from_of_node-remove-v1-7-b29adfb27a6c@gmail.com>
+Subject: [PATCH v1 08/11] regulator: bd71815: switch to using devm_fwnode_gpiod_get()
+Date:   Sun,  4 Sep 2022 23:31:00 -0700
+Message-Id: <20220903-gpiod_get_from_of_node-remove-v1-8-b29adfb27a6c@gmail.com>
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
 References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
@@ -104,27 +104,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I would like to stop exporting OF-specific gpiod_get_from_of_node()
+I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
 so that gpiolib can be cleaned a bit, so let's switch to the generic
 fwnode property API.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index a2c3c207a04b..d83817d3ff86 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -516,8 +516,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 	u32 stat, idx;
- 	int ret, i;
+diff --git a/drivers/regulator/bd71815-regulator.c b/drivers/regulator/bd71815-regulator.c
+index acaa6607898e..c2b8b8be7824 100644
+--- a/drivers/regulator/bd71815-regulator.c
++++ b/drivers/regulator/bd71815-regulator.c
+@@ -571,11 +571,10 @@ static int bd7181x_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent regmap\n");
+ 		return -ENODEV;
+ 	}
+-	ldo4_en = devm_gpiod_get_from_of_node(&pdev->dev,
+-					      pdev->dev.parent->of_node,
+-						 "rohm,vsel-gpios", 0,
+-						 GPIOD_ASIS, "ldo4-en");
  
--	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
--				       GPIOD_OUT_LOW, "PERST#");
-+	reset = fwnode_gpiod_get_index(of_fwnode_handle(np),
-+				       "reset", 0, GPIOD_OUT_LOW, "PERST#");
- 	if (IS_ERR(reset))
- 		return PTR_ERR(reset);
- 
++	ldo4_en = devm_fwnode_gpiod_get(&pdev->dev,
++					dev_fwnode(pdev->dev.parent),
++					"rohm,vsel", GPIOD_ASIS, "ldo4-en");
+ 	if (IS_ERR(ldo4_en)) {
+ 		ret = PTR_ERR(ldo4_en);
+ 		if (ret != -ENOENT)
 
 -- 
 b4 0.10.0-dev-fc921
