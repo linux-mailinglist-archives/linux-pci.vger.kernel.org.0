@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9335E5AD121
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D02635AD167
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:18:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238193AbiIELBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 07:01:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
+        id S237712AbiIELJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 07:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238194AbiIELA4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:00:56 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CA052FC0;
-        Mon,  5 Sep 2022 04:00:21 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id f4so6074068qkl.7;
-        Mon, 05 Sep 2022 04:00:21 -0700 (PDT)
+        with ESMTP id S236361AbiIELJr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:09:47 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75DE411C24;
+        Mon,  5 Sep 2022 04:09:46 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id u5so1861496qvv.3;
+        Mon, 05 Sep 2022 04:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=ZeMo2PWVWCCE4kicxMFOEAyAOyDB4gnn7oyqH8IifhU=;
-        b=CTOoiLvwwBkvtH32c6w60zEVvHcTnoXO3ACu0Ys4kWjZ2v5rcWsBDH+vdDx4TQZ9hd
-         zoXITcV3yQclTjF5bSmp+qDBSGLQc9kK7p/Q6MVruLaf+yQ2ieawJUD0vtr6jFmlqqb5
-         VM0HxdCbbCyt9e3B0tD+nb2kHG9B39a4RXdVZ+gBaJ13JI/Bhg4cILs9FZoegyTQ+F+6
-         8fPJkAuVnPubU2LSPwAtno5IP1SguIVrVU1uTopFif2u8b6jICrnPWEduG2jMRNf+dw3
-         TOSVD6xw70ivt4BkffpLzGj1KiFTvRTD6M32zkdDHIex4lTV6wIEhedGMFPH+v+dK0yQ
-         6+JA==
+        bh=ZD4YC1HXrtSaQEFJiBqrgz0UPEGxSAaPa+lNAJ8WZi0=;
+        b=W0LYg/x6oLLMVr5A9MMBVb+TxN0pk4+3xuh3Q/ipfqH1hrq5kvR4C13ZGg+8+DEqSd
+         gi1J5ByiQnS+4NrTCIvUT/kKaXn5hL9zW9YV18N0SnlPLU0irWOq7beGGmmV2it9I/V8
+         TSz0IwHJZsNw1mnLJ+EmjO0aVsfTD6x8QeroaNTk/ISAjEimxSO9AuqJQS/RTnqxI8me
+         UqWOiBI+Wn0HCU5QQ9nYXLzwM0PBRWriqZaCP3K1erw3D5FZR6d/x6x4b60TAHtECET6
+         J6AxXbDHgN6gXzpMM9fNWwiGiQLT2KqoyWZt7c52eyHpDdJ+EY+BURgwhcI9q/0V9kVd
+         TT/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ZeMo2PWVWCCE4kicxMFOEAyAOyDB4gnn7oyqH8IifhU=;
-        b=ID92ImmyxY0COELUroDibC5SKWV7+XouiP+dUQ8KZU4XR4iRRmZ5L2mFhBHOrYTBev
-         c+/S8AHasfjjynWxAH+6quE6nKUVk+RMhNcBOKEZ7/hlr9xpzXoNz3wdrpsnIyWKsZ3H
-         aMnDtjcNlYFSKyk1IIAVOn7reJVoaK2qfRHozwoWs5r+lww3Eq9AeLasXd9cphc9A/AB
-         vkfDE9MWlrHfC12CThsgnnMtgwR6PqoYSmhkRPaZ7h9/jVHw84ccBlgmlh3SsVezrJJq
-         fqqNNNRStmWa49v/MUZmfPeuPakS2QrO0D+38W35gguIZPhK6yqvRtd1Z3GVQEhPNuuA
-         MX1w==
-X-Gm-Message-State: ACgBeo0wQw6Q+I300V/d4+Y5eAH1s6TPLkKdnwspDkpJk/vrBt1JznS+
-        yutQ5fd/PS2bULzANnZM+DrmEZBWPqXipJpkAcU=
-X-Google-Smtp-Source: AA6agR5QfYlB3faOXg1Xo9fT2kr66lBEoMt1tUwQEmf4Hjj69mFUh3WyFYB6EU5cllnnLi+qXnfCb/Dp4e9d3zghof0=
-X-Received: by 2002:a05:620a:288a:b0:6b8:fcfe:db02 with SMTP id
- j10-20020a05620a288a00b006b8fcfedb02mr32736370qkp.504.1662375620030; Mon, 05
- Sep 2022 04:00:20 -0700 (PDT)
+        bh=ZD4YC1HXrtSaQEFJiBqrgz0UPEGxSAaPa+lNAJ8WZi0=;
+        b=wgLBpPrCJtmuZyoijHMihtDHYBEW+ru+RpIM5l52k2AICyBfqCvug8AXnCI+zl+cOU
+         824F4rle26spkOdSyQogcWIjYp6zprOu0XpQM3OuMn2lIPTfSko2ek6tH0VtV6fqZeFO
+         iTSM1UOHdgdp//z6Au/vn/DjgkHgnBajR+RAzTQBZslY2g5FBaEeEEUHrRv8SeG9LFjd
+         yzMcJSObkjlTivsPW/kb0xq85xLQyEM3Od9rFGmQjZpOM1M0t2RF2j7+OyeH4unLMjZB
+         t2X8C3ySFPAFcVShz9PHY4vcoCj/fW39i2MbjKcw8yl7e1nN9eH3mgQxfBa+FGImkuV4
+         3Tsw==
+X-Gm-Message-State: ACgBeo3uOVs6S9ovaZb+/NCbe+gy+Nqg5i4hC9Hw4w6w8anUqJIx7+Hf
+        tOjbXRSrHn5MDp5fzWhCuXLWekXve1GAaCOjPY4=
+X-Google-Smtp-Source: AA6agR5jCq5/GjKb+apw06fa/2t9tC05H0ZPM5KdsjnljOtEm1B4hEVBpVM1iH3NQHKg14ReUnIBjf+3AuFTQfBZ7lg=
+X-Received: by 2002:a0c:e24b:0:b0:4a1:d41b:e280 with SMTP id
+ x11-20020a0ce24b000000b004a1d41be280mr5474897qvl.11.1662376185481; Mon, 05
+ Sep 2022 04:09:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
+In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 13:59:44 +0300
-Message-ID: <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
-Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using devm_gpiod_get()
+Date:   Mon, 5 Sep 2022 14:09:09 +0300
+Message-ID: <CAHp75Vd35EOy=mP25=9fmYfqQnbafgotHw1fxk-TdGk6Oc8g8Q@mail.gmail.com>
+Subject: Re: [PATCH v1 10/11] watchdog: bd9576_wdt: switch to using devm_fwnode_gpiod_get()
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -103,37 +103,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
+On Mon, Sep 5, 2022 at 9:33 AM Dmitry Torokhov
 <dmitry.torokhov@gmail.com> wrote:
 >
 > I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
 > so that gpiolib can be cleaned a bit, so let's switch to the generic
-> device property API.
+> fwnode property API.
 >
-> I believe that the only reason the driver, instead of the standard
-> devm_gpiod_get(), used devm_gpiod_get_from_of_node() is because it
-> wanted to set up a pretty consumer name for the GPIO, and we now have
-> a special API for that.
+> While at it switch the rest of the calls to read properties in
+
+it, switch
+
+> bd9576_wdt_probe() to the generic device property API as well.
 
 ...
 
-> -               gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
-> -                                                   "nvidia,phy-reset-gpio",
-> -                                                   0, GPIOD_OUT_HIGH,
-> -                                                   "ulpi_phy_reset_b");
-> +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
-> +                                      GPIOD_OUT_HIGH);
->                 err = PTR_ERR_OR_ZERO(gpiod);
+>         struct device *dev = &pdev->dev;
 
-What does _OR_ZERO mean now?
+struct device *parent = dev->parent;
 
->                 if (err) {
->                         dev_err(&pdev->dev,
->                                 "Request failed for reset GPIO: %d\n", err);
->                         return err;
->                 }
+can make your code slightly neater.
 
+...
 
+> +       count = device_property_count_u32(dev->parent, "rohm,hw-timeout-ms");
+> +       if (count < 0 && count != -EINVAL)
+> +               return count;
+> +
+> +       if (count > 0) {
+
+> +               if (count > ARRAY_SIZE(hw_margin))
+> +                       return -EINVAL;
+
+Why double check? You may move it out of the (count > 0).
+
+...
+
+> -       if (ret == 1)
+> -               hw_margin_max = hw_margin[0];
+
+> +               ret = device_property_read_u32_array(dev->parent,
+> +                                                    "rohm,hw-timeout-ms",
+> +                                                    hw_margin, count);
+> +               if (ret < 0)
+> +                       return ret;
+
+So, only this needs the count > 0 check since below already has it implicitly.
+
+> -       if (ret == 2) {
+> -               hw_margin_max = hw_margin[1];
+> -               hw_margin_min = hw_margin[0];
+> +               if (count == 1)
+> +                       hw_margin_max = hw_margin[0];
+> +
+> +               if (count == 2) {
+> +                       hw_margin_max = hw_margin[1];
+> +                       hw_margin_min = hw_margin[0];
+> +               }
+>         }
 
 -- 
 With Best Regards,
