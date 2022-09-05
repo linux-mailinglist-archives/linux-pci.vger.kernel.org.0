@@ -2,51 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFB485AD945
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 20:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 407235AD996
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 21:25:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbiIESwS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 14:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37760 "EHLO
+        id S231962AbiIETZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 15:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232444AbiIESwR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 14:52:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEDF614C;
-        Mon,  5 Sep 2022 11:52:16 -0700 (PDT)
+        with ESMTP id S231453AbiIETZS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 15:25:18 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F98C1A814;
+        Mon,  5 Sep 2022 12:25:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 86D2661467;
-        Mon,  5 Sep 2022 18:52:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93853C433D6;
-        Mon,  5 Sep 2022 18:52:15 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id DF790CE13B1;
+        Mon,  5 Sep 2022 19:25:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE930C433D6;
+        Mon,  5 Sep 2022 19:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662403936;
-        bh=uYXn4ODMewN8FNKLW3ITPu9bWfeJ/vLE7EUtvluPaPc=;
+        s=k20201202; t=1662405914;
+        bh=fO/Wpv5YcoIkYZ8e/EM1T7nTT0WkvQ0tJJN+l68UVfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCKVrG6+DJD8gwdNjZb3JANtK+l84hxHKutZTIzGJOh9M22VuPsJndi5vzXac3M6a
-         NgIAGG3Rft51H7//DAyD+p0UQSvNze2kRV5D4fF/xQyqDt+3N2EjYVLCueTTlsPftk
-         FOvW/Zoz1AABIkj2q8whQVpeDmTdDCcwzHnemlwv1+YakCw5WGK4JqJry2N+s8OJnh
-         9AgfEkkKGB6JQ+2kv3j+BfgmUDJF+KVWey2xd6KaGv9uIgbP2c5YWdZ8vikRJa456N
-         d0SFBWy2rdGTwrQmKAd4R5FocJ1DVgveEBE/LpmAk3KtnCZCUjbQhSJ+gZHhkhtnCC
-         NgYbk4fduCP1Q==
+        b=OqF26oiIozeAHlSt/R2brCxL80bI3tHLkT5oMQIRgpa2FGqWNIXUGNh920b2bVz6R
+         CoqozJtZU9OJe9tWMLdlXY5nrTifi6CwSeJozAVkZ9u3Lzw2Pivs9oqtK84aIv6ILC
+         c1b1QdrGLyCZqgzT2YiQO4u9k7c1UtRFmS2YA/pcpjiCYFQptqkN1uEZ8YzSz7geZB
+         ESBsYwMJeJhk17cQ5AX8hBpmX5J4PPuUPq5CaoHwadk8u5IdyXdJ2o0omB3jSPpdHF
+         8RzQ0HSz+XvyPY4FIWuo17xaPMn/BSGCX1orNZN/b85WCegEdq8W3nAD7Q28wYIAAr
+         cWTWTUgZrAk8g==
 Received: by pali.im (Postfix)
-        id D863820B1; Mon,  5 Sep 2022 20:52:12 +0200 (CEST)
+        id 217687D7; Mon,  5 Sep 2022 21:25:11 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] PCI: mvebu: For consistency add _OFF suffix to all registers
-Date:   Mon,  5 Sep 2022 20:51:50 +0200
-Message-Id: <20220905185150.22220-2-pali@kernel.org>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/7] PCI: mvebu: add support for orion soc
+Date:   Mon,  5 Sep 2022 21:23:03 +0200
+Message-Id: <20220905192310.22786-1-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220905185150.22220-1-pali@kernel.org>
-References: <20220905185150.22220-1-pali@kernel.org>
+In-Reply-To: <20220718202843.6766-1-maukka@ext.kapsi.fi>
+References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,165 +66,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
-This patch depends on now accepted patch:
-"PCI: pci-bridge-emul: Set position of PCI capabilities to real HW value"
-https://lore.kernel.org/linux-pci/20220824112124.21675-1-pali@kernel.org/
----
- drivers/pci/controller/pci-mvebu.c | 40 +++++++++++++++---------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+Hello! This patch series add support for Orion PCIe controller into
+pci-mvebu.c driver. V3 version has completely rewritten pci-mvebu.c code
+to parse all physical addresses from device tree files according to
+mvebu-pci.txt documentation, allow access to all extended PCIe config
+space registers and use modern kernel API pci_remap_cfgspace() and
+mvebu_mbus_add_window_by_id() fir mapping PCIe config space.
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index c222dc189567..6ef8c1ee4cbb 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -34,7 +34,7 @@
- #define PCIE_BAR_LO_OFF(n)	(0x0010 + ((n) << 3))
- #define PCIE_BAR_HI_OFF(n)	(0x0014 + ((n) << 3))
- #define PCIE_SSDEV_ID_OFF	0x002c
--#define PCIE_CAP_PCIEXP		0x0060
-+#define PCIE_CAP_PCIEXP_OFF	0x0060
- #define PCIE_CAP_PCIERR_OFF	0x0100
- #define PCIE_BAR_CTRL_OFF(n)	(0x1804 + (((n) - 1) * 4))
- #define PCIE_WIN04_CTRL_OFF(n)	(0x1820 + ((n) << 4))
-@@ -83,8 +83,8 @@
- #define  PCIE_SSPL_SCALE_SHIFT		8
- #define  PCIE_SSPL_SCALE_MASK		GENMASK(9, 8)
- #define  PCIE_SSPL_ENABLE		BIT(16)
--#define PCIE_RC_RTSTA		0x1a14
--#define PCIE_DEBUG_CTRL         0x1a60
-+#define PCIE_RC_RTSTA_OFF	0x1a14
-+#define PCIE_DEBUG_CTRL_OFF	0x1a60
- #define  PCIE_DEBUG_SOFT_RESET		BIT(20)
- 
- struct mvebu_pcie_port;
-@@ -296,10 +296,10 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- 	 * be set to number of SerDes PCIe lanes (1 or 4). If this register is
- 	 * not set correctly then link with endpoint card is not established.
- 	 */
--	lnkcap = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
-+	lnkcap = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCAP);
- 	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
- 	lnkcap |= (port->is_x4 ? 4 : 1) << 4;
--	mvebu_writel(port, lnkcap, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
-+	mvebu_writel(port, lnkcap, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCAP);
- 
- 	/* Disable Root Bridge I/O space, memory space and bus mastering. */
- 	cmd = mvebu_readl(port, PCIE_CMD_OFF);
-@@ -690,11 +690,11 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 
- 	switch (reg) {
- 	case PCI_EXP_DEVCAP:
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_DEVCAP);
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCAP);
- 		break;
- 
- 	case PCI_EXP_DEVCTL:
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_DEVCTL);
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCTL);
- 		break;
- 
- 	case PCI_EXP_LNKCAP:
-@@ -704,13 +704,13 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 		 * Additionally enable Data Link Layer Link Active Reporting
- 		 * Capable bit as DL_Active indication is provided too.
- 		 */
--		*value = (mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP) &
-+		*value = (mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCAP) &
- 			  ~PCI_EXP_LNKCAP_CLKPM) | PCI_EXP_LNKCAP_DLLLARC;
- 		break;
- 
- 	case PCI_EXP_LNKCTL:
- 		/* DL_Active indication is provided via PCIE_STAT_OFF */
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL) |
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCTL) |
- 			 (mvebu_pcie_link_up(port) ?
- 			  (PCI_EXP_LNKSTA_DLLLA << 16) : 0);
- 		break;
-@@ -748,19 +748,19 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 		break;
- 
- 	case PCI_EXP_RTSTA:
--		*value = mvebu_readl(port, PCIE_RC_RTSTA);
-+		*value = mvebu_readl(port, PCIE_RC_RTSTA_OFF);
- 		break;
- 
- 	case PCI_EXP_DEVCAP2:
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_DEVCAP2);
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCAP2);
- 		break;
- 
- 	case PCI_EXP_DEVCTL2:
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_DEVCTL2);
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCTL2);
- 		break;
- 
- 	case PCI_EXP_LNKCTL2:
--		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL2);
-+		*value = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCTL2);
- 		break;
- 
- 	default:
-@@ -902,7 +902,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 
- 	switch (reg) {
- 	case PCI_EXP_DEVCTL:
--		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_DEVCTL);
-+		mvebu_writel(port, new, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCTL);
- 		break;
- 
- 	case PCI_EXP_LNKCTL:
-@@ -913,7 +913,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 		 */
- 		new &= ~PCI_EXP_LNKCTL_CLKREQ_EN;
- 
--		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL);
-+		mvebu_writel(port, new, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCTL);
- 		/*
- 		 * When dropping to Detect via Hot Reset, Disable Link
- 		 * or Loopback states, the Link Failure interrupt is not
-@@ -953,7 +953,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 
- 	case PCI_EXP_RTSTA:
- 		/*
--		 * PME Status bit in Root Status Register (PCIE_RC_RTSTA)
-+		 * PME Status bit in Root Status Register (PCIE_RC_RTSTA_OFF)
- 		 * is read-only and can be cleared only by writing 0b to the
- 		 * Interrupt Cause RW0C register (PCIE_INT_CAUSE_OFF). So
- 		 * clear PME via Interrupt Cause and also set port->pme_pending
-@@ -978,11 +978,11 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 		break;
- 
- 	case PCI_EXP_DEVCTL2:
--		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_DEVCTL2);
-+		mvebu_writel(port, new, PCIE_CAP_PCIEXP_OFF + PCI_EXP_DEVCTL2);
- 		break;
- 
- 	case PCI_EXP_LNKCTL2:
--		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL2);
-+		mvebu_writel(port, new, PCIE_CAP_PCIEXP_OFF + PCI_EXP_LNKCTL2);
- 		break;
- 
- 	default:
-@@ -1042,7 +1042,7 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
- 	u32 dev_id = mvebu_readl(port, PCIE_DEV_ID_OFF);
- 	u32 dev_rev = mvebu_readl(port, PCIE_DEV_REV_OFF);
- 	u32 ssdev_id = mvebu_readl(port, PCIE_SSDEV_ID_OFF);
--	u32 pcie_cap = mvebu_readl(port, PCIE_CAP_PCIEXP);
-+	u32 pcie_cap = mvebu_readl(port, PCIE_CAP_PCIEXP_OFF);
- 	u8 pcie_cap_ver = ((pcie_cap >> 16) & PCI_EXP_FLAGS_VERS);
- 
- 	bridge->conf.vendor = cpu_to_le16(dev_id & 0xffff);
-@@ -1103,7 +1103,7 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
- 	bridge->subsystem_vendor_id = ssdev_id & 0xffff;
- 	bridge->subsystem_id = ssdev_id >> 16;
- 	bridge->has_pcie = true;
--	bridge->pcie_start = PCIE_CAP_PCIEXP;
-+	bridge->pcie_start = PCIE_CAP_PCIEXP_OFF;
- 	bridge->data = port;
- 	bridge->ops = &mvebu_pci_bridge_emul_ops;
- 
+Most of Marvell device tree code in pci-mvebu.c is giant magic, but it was
+there because this change and it is de-facto API between dts files and
+kernel used for a long time. Note that it is misused according to PCI
+device tree bindings, but we have to follow this Marvell bindings to do
+not introduce backward incompatibility issues for other non-Orion
+platforms.
+
+Mauri tested these changes on DNS323 board with both DT and non-DT builds.
+PCIe AER is working too (one of the feature which proved that access to
+extended PCIe config registers is working fine).
+
+After this patch is accepted we are planning to look at existing Orion
+arch specific code and covert it to use this new DT based pci-mvebu.c
+code. Later this would allow to kill arch specific Orion PCIe code,
+which is in arch/arm/plat-orion/pcie.c and parts also in file
+arch/arm/mach-orion5x/pci.c (shared with old-PCI bus code).
+
+This patch series depends on another patches:
+https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+https://lore.kernel.org/linux-pci/20220817230036.817-3-pali@kernel.org/
+
+Mauri Sandberg (2):
+  bus: mvebu-mbus: add configuration space aperture
+  dt-bindings: PCI: mvebu: Add orion5x compatible
+
+Pali Rohár (5):
+  ARM: orion: Move PCIe mbus window mapping from orion5x_setup_wins() to
+    pcie_setup()
+  PCI: mvebu: Remove unused busn member
+  PCI: mvebu: Cleanup error handling in mvebu_pcie_probe()
+  PCI: mvebu: Add support for Orion PCIe controller
+  ARM: dts: orion5x: Add PCIe node
+
+ .../devicetree/bindings/pci/mvebu-pci.txt     |   4 +-
+ arch/arm/boot/dts/orion5x.dtsi                |  51 +++++
+ arch/arm/mach-orion5x/common.c                |  13 --
+ arch/arm/mach-orion5x/pci.c                   |  14 ++
+ drivers/bus/mvebu-mbus.c                      |  26 ++-
+ drivers/pci/controller/Kconfig                |   4 +-
+ drivers/pci/controller/pci-mvebu.c            | 202 ++++++++++++++----
+ include/linux/mbus.h                          |   1 +
+ 8 files changed, 256 insertions(+), 59 deletions(-)
+
 -- 
 2.20.1
 
