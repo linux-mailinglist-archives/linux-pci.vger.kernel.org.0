@@ -2,48 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D240D5AD198
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D538E5AD31B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 14:51:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237150AbiIELcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 07:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
+        id S238307AbiIEMme (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 08:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236134AbiIELcT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:32:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADEA9FC1;
-        Mon,  5 Sep 2022 04:32:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E39CA6123C;
-        Mon,  5 Sep 2022 11:32:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19055C433D6;
-        Mon,  5 Sep 2022 11:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662377537;
-        bh=VjE4ycZgbfe3Q/I0AbmHrmQfNBPSGNwpWyu6mRKHtFI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tyfrRR4QYNZIim1PWrQxwNIQRKY2Sladk6YXAB1GkqG4m6kE/0aPuHjRNQ5+WR6f8
-         uZuZfPUztVoVwDhgUboU4a+FOv7lC9wN1GL4xsMa8pdMkM4mGdSbSqNhfdXedvHBAI
-         3Q5zTK65f9vUv4x6aj1wzOJmv/yNg6GOTitXwMp6zG1Vw7tvom5fKmQKkCERwDBUdB
-         xSrvB7055UDQT2C4G0WsAfr+TOyfuLxixsttDjw19CxaWt9jN/zPVjBFDW65sdq73m
-         x61tlzWzk1qoEuIUOeXqWPcso9ThTRBQBC3SeudagalRBmgIC3sB9k3LOUQd7/ap8c
-         yePaXrGkmT3aA==
-Date:   Mon, 5 Sep 2022 06:32:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     a.dibacco.ks@gmail.com, Cornelia Huck <cohuck@redhat.com>,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [bugzilla-daemon@kernel.org: [Bug 216449] New: vfio-pci calls
- pci_bus_reset whenever a pci_release is triggered and refcnt is zero]
-Message-ID: <20220905113215.GA584198@bhelgaas>
+        with ESMTP id S235747AbiIEMmT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 08:42:19 -0400
+Received: from sender4-op-o18.zoho.com (sender4-op-o18.zoho.com [136.143.188.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCBF57549
+        for <linux-pci@vger.kernel.org>; Mon,  5 Sep 2022 05:36:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1662381369; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=jzwSuOh6IJATZwHuNsL2y3mE66WyyVuUFp3OBkhdI3/nlNbi6vC3BJ4xysnolbAVJE6FC8ZFSsK/WCc/KxcJAXYA346F+1a+V7XPBiywyHt1sNguJipYrz2DP4PQQYc7KXTrE+lRE9WQ2Kysm8GGXFpvg4CSYqZI9dTSonpmurw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1662381369; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=3BFTEIuXaBmXMdXcV1jx9dIUHzC/SjpIjDhf75BBcss=; 
+        b=MoQyPoRt/+e/Rlk/cODfKJwXeKlCZHiGZBQuw8xxmxgiSUcC+13XFfXt7kujQqSWyalCYUeQeJCnWdAJi50GnG6OfejymNVb03fdLVUBQlxQWV3o93TEWgxbfNJPQEp2QDxAFPFqu0ONkJtAO2yhCv8FHay3L+49CdRHouKgl0A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=linux.beauty;
+        spf=pass  smtp.mailfrom=me@linux.beauty;
+        dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1662381369;
+        s=zmail; d=linux.beauty; i=me@linux.beauty;
+        h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=3BFTEIuXaBmXMdXcV1jx9dIUHzC/SjpIjDhf75BBcss=;
+        b=d7t/G9DcrAMChGDU4exE8mGZ8EeyRCprpzJkpLTmoQ9Ntg207btUiAZpZWuIojcq
+        48WY1MDgab2CynJC9KFPgF1K5DABeMHFXQu22B+gFfY0Puy6Bkk1njBE61rW1+IpOE6
+        QXwmjhYURp4BfDJbuuJSR6G3+Gw9Du0BLf3l+CVU=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1662381368410660.5514011608086; Mon, 5 Sep 2022 05:36:08 -0700 (PDT)
+Date:   Mon, 05 Sep 2022 14:36:08 +0200
+From:   Li Chen <me@linux.beauty>
+To:     "Kishon Vijay Abraham I" <kishon@ti.com>
+Cc:     "Li Chen" <lchen@ambarella.com>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-pci" <linux-pci@vger.kernel.org>
+Message-ID: <1830da6a447.105bbdc74249232.3098870178344058001@linux.beauty>
+In-Reply-To: <1830da34e6e.f4f852ec248192.8946829485125284701@linux.beauty>
+References: <1830da34e6e.f4f852ec248192.8946829485125284701@linux.beauty>
+Subject: Re: [PATCH] PCI: j721e: remove redundant error message
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -52,23 +63,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
------ Forwarded message from bugzilla-daemon@kernel.org -----
++ linux-pci
 
-https://bugzilla.kernel.org/show_bug.cgi?id=216449
-
-I'm using vfio-pci to map an FPGA. I have an utility program that gets a file
-descriptor for the device and does an mmap to read and write registers.
-
-When I close the utility the FPGA is reset and all registers are gone. 
-I wonder if this is the correct behaviour, I understand that the
-vfio_pci_try_bus_reset is performed only when refcnt reaches zero but, in case
-of other drivers, like UIO the behaviour is different. 
-
-I expected to be able to close my utility and restart it and find the FPGA
-registers at the last configured value.
-
-The vfio_pci_try_bus_reset is in vfio_pci_disable that is called by
-pci_release.
-
-Probably even a module parameter to prevent calling vfio_pci_try_bus_reset
-could be useful.
+ ---- On Mon, 05 Sep 2022 14:32:29 +0200  Li Chen  wrote ---=20
+ > From: Li Chen lchen@ambarella.com>
+ >=20
+ > This error message will also be reported by
+ > j721e_pcie_ctrl_init when check j721e_pcie_set_mode
+ > return value, so remove it.
+ >=20
+ > Signed-off-by: Li Chen lchen@ambarella.com>
+ > ---
+ >  drivers/pci/controller/cadence/pci-j721e.c | 7 +------
+ >  1 file changed, 1 insertion(+), 6 deletions(-)
+ >=20
+ > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/co=
+ntroller/cadence/pci-j721e.c
+ > index a82f845cc4b5..360a3cc1fae3 100644
+ > --- a/drivers/pci/controller/cadence/pci-j721e.c
+ > +++ b/drivers/pci/controller/cadence/pci-j721e.c
+ > @@ -169,16 +169,11 @@ static int j721e_pcie_set_mode(struct j721e_pcie *=
+pcie, struct regmap *syscon,
+ >  =C2=A0=C2=A0=C2=A0=C2=A0u32 mask =3D J721E_MODE_RC;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0u32 mode =3D pcie->mode;
+ >  =C2=A0=C2=A0=C2=A0=C2=A0u32 val =3D 0;
+ > -=C2=A0=C2=A0=C2=A0=C2=A0int ret =3D 0;
+ > =20
+ >  =C2=A0=C2=A0=C2=A0=C2=A0if (mode =3D=3D PCI_MODE_RC)
+ >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val =3D J721E_MODE_RC;
+ > =20
+ > -=C2=A0=C2=A0=C2=A0=C2=A0ret =3D regmap_update_bits(syscon, offset, mask=
+, val);
+ > -=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
+ > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(dev, "failed to=
+ set pcie mode\n");
+ > -
+ > -=C2=A0=C2=A0=C2=A0=C2=A0return ret;
+ > +=C2=A0=C2=A0=C2=A0=C2=A0return regmap_update_bits(syscon, offset, mask,=
+ val);
+ >  }
+ > =20
+ >  static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+ > --=20
+ > 2.37.2
+ >=20
+ >=20
+ >=20
