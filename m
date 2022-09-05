@@ -2,121 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EDBF5AD152
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D240D5AD198
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Sep 2022 13:32:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238184AbiIELNu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Sep 2022 07:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
+        id S237150AbiIELcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Sep 2022 07:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236467AbiIELNr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:13:47 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821C05A832;
-        Mon,  5 Sep 2022 04:13:45 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id d1so6244264qvs.0;
-        Mon, 05 Sep 2022 04:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=7iAktJHc3w6rPsnzClYi6h63eWPfDzaVzHqTBIckRp4=;
-        b=R7t2Qcp1lBflY1vcWSAvFGDpL1wm70fCepnWH+zrAbiof4E0R0r6MaodmK99KC/uqU
-         lkRNi47VWEdS1Mh0Cq7rMIeuWmncJJ2cOty+OFE/rSCBYVUer1tDhNIt1xJajNoN+pha
-         9hYFjgcUDhUv9vg4Rsjx4Td0f/j+c8XAElCdXPkz1XbyGCnZFSRjvecB8Dt/V/2ytwns
-         pr0+QJCk5ml5PiGLXoq+OBMZT8nSbzyKkmBD4jlfWYYC6/a2AVD44sThrAdLIlOLbLDI
-         BjJuCJ4ppbMAAjAsrBVEK+NW8M6uu3+DQvsU1sl/6kNwDh7BxhDa793GpPoaKD+rDvK/
-         /Y2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7iAktJHc3w6rPsnzClYi6h63eWPfDzaVzHqTBIckRp4=;
-        b=0NK01ckdL5j08V3YQTtYIo+1OBWkYlmtcmdswdYO+H7A5QSouGw0BokAEpXPvOHI/j
-         9UR9Hu15qKJstZLHr0/Nw4/hSgsRwZLzaXeE/zi76ph9hAAna5w9VWLslzkw5gmqkeQJ
-         bM2Z+MPrDcDeUPQ0HefwQ0EZ1t1zsyJ8gnOtqEmgTpOa125/bf/JQiYwYY8vM/rIXY3T
-         SxTZhKLCs6m+pVM81zZfnzruyNJUogTqaYa21kzWlVxBiTwev3n9PVT+373wABUO4k44
-         kgVjMuMHVKqk2d6IdogMm2gjevbFOZ+ZIH0/u4N9ZJL+dHrlC//y7g3S1eUQ8ljKZiQI
-         MJDQ==
-X-Gm-Message-State: ACgBeo0u/g86km4ZaPLA5q6xuhhjOs7ZlRawnPW+dndLmH6gbLVU8ddI
-        OJHwG50ko/PlU8FAOLy7Sn7XcrZnsTAEe2jQtMY=
-X-Google-Smtp-Source: AA6agR7NrRmeK1sjqt1ZjgVXwez7kxeuRCTCLwTPPcAUxaHLOiRLXkVvjX6xUtf8npwaMKmSjSHhnRIt4pJmIe7SA1s=
-X-Received: by 2002:a05:6214:19cf:b0:4a9:4241:2399 with SMTP id
- j15-20020a05621419cf00b004a942412399mr1093930qvc.64.1662376424240; Mon, 05
- Sep 2022 04:13:44 -0700 (PDT)
+        with ESMTP id S236134AbiIELcT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Sep 2022 07:32:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADEA9FC1;
+        Mon,  5 Sep 2022 04:32:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E39CA6123C;
+        Mon,  5 Sep 2022 11:32:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19055C433D6;
+        Mon,  5 Sep 2022 11:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662377537;
+        bh=VjE4ycZgbfe3Q/I0AbmHrmQfNBPSGNwpWyu6mRKHtFI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tyfrRR4QYNZIim1PWrQxwNIQRKY2Sladk6YXAB1GkqG4m6kE/0aPuHjRNQ5+WR6f8
+         uZuZfPUztVoVwDhgUboU4a+FOv7lC9wN1GL4xsMa8pdMkM4mGdSbSqNhfdXedvHBAI
+         3Q5zTK65f9vUv4x6aj1wzOJmv/yNg6GOTitXwMp6zG1Vw7tvom5fKmQKkCERwDBUdB
+         xSrvB7055UDQT2C4G0WsAfr+TOyfuLxixsttDjw19CxaWt9jN/zPVjBFDW65sdq73m
+         x61tlzWzk1qoEuIUOeXqWPcso9ThTRBQBC3SeudagalRBmgIC3sB9k3LOUQd7/ap8c
+         yePaXrGkmT3aA==
+Date:   Mon, 5 Sep 2022 06:32:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     a.dibacco.ks@gmail.com, Cornelia Huck <cohuck@redhat.com>,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [bugzilla-daemon@kernel.org: [Bug 216449] New: vfio-pci calls
+ pci_bus_reset whenever a pci_release is triggered and refcnt is zero]
+Message-ID: <20220905113215.GA584198@bhelgaas>
 MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 14:13:08 +0300
-Message-ID: <CAHp75Vc5cEs6mPSL1fkHBT2hw-CbmbELFwkEGvwxkrdEVF2K_Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] Get rid of [devm_]gpiod_get_from_of_node()
- public APIs
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> I would like to stop exporting OF-specific [devm_]gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit. We can do that by switching drivers
-> to use generic fwnode API ([devm_]fwnode_gpiod_get()). By doing so we open
-> the door to augmenting device tree and ACPI information through secondary
-> software properties (once we teach gpiolib how to handle those).
->
-> I hope that relevant maintainers will take patches through their trees and
-> then we could merge the last one some time after -rc1.
+----- Forwarded message from bugzilla-daemon@kernel.org -----
 
-I'm in favour of the series, but some comments would be good to be addressed.
+https://bugzilla.kernel.org/show_bug.cgi?id=216449
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm using vfio-pci to map an FPGA. I have an utility program that gets a file
+descriptor for the device and does an mmap to read and write registers.
+
+When I close the utility the FPGA is reset and all registers are gone. 
+I wonder if this is the correct behaviour, I understand that the
+vfio_pci_try_bus_reset is performed only when refcnt reaches zero but, in case
+of other drivers, like UIO the behaviour is different. 
+
+I expected to be able to close my utility and restart it and find the FPGA
+registers at the last configured value.
+
+The vfio_pci_try_bus_reset is in vfio_pci_disable that is called by
+pci_release.
+
+Probably even a module parameter to prevent calling vfio_pci_try_bus_reset
+could be useful.
