@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FDEA5AF7E2
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 00:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 933F65AF7DD
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 00:24:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbiIFWYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 18:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
+        id S230129AbiIFWYi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 18:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbiIFWYN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 18:24:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB26ABF0E;
-        Tue,  6 Sep 2022 15:24:10 -0700 (PDT)
+        with ESMTP id S230061AbiIFWYR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 18:24:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2E6AB417;
+        Tue,  6 Sep 2022 15:24:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30606616F5;
-        Tue,  6 Sep 2022 22:24:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA26C433C1;
-        Tue,  6 Sep 2022 22:24:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D14361714;
+        Tue,  6 Sep 2022 22:24:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35126C433D6;
+        Tue,  6 Sep 2022 22:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662503048;
-        bh=GZ1t3eEPe9WAKIeqnRdMruDBNlk/eilfZ8AziF6/6PI=;
+        s=k20201202; t=1662503050;
+        bh=AvPvkozYP8lvZ3lyaRCBEZlCgNXntwO4lZojFieDtfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DeD/nKSAZsxT6ztAhrLodFx5OfRGCevqJTbqV9M0/SXRzVpdVIJkCYT9MOMs6v5rQ
-         9fgsbljrwM7837zZsdZsuYe0kfiNoZDsq1QyXojGodg+FmI7V7w1YEY5ntG4XF2HQz
-         yikQXO7zGnnqozfDYCVe0YZm5Dd0pThK1+kPO40FztEjlesNUPvM+W8wD5+zabncp7
-         DJuKd9X8qxaDiiemhtP6P4mdxplnjkZhjjcz0M+MlMt5SLMxw0+HuGY9go68I61/02
-         kx6z22rlodkosTtmoV/p0pAvpmyfhURIgG4ZYfHbOympDprTJJ6lV4B/2Lps/aMcIG
-         lHyeBSD3YLeVQ==
+        b=bmcv0F9Ft7fOIr0Upkvq3lgYPE3ClrJBD26uNzovQwCifO9S6MuQ+jYyQlVlZ/H1S
+         u47asImqLq1MnIYTGIQMAZw9LYscFev6hTLT6PIJ/EcMbzJOBkmnLhPsjtOwcEHp++
+         xirr5l1F3rHUdwcquIJ9wiYwH6PUEdwNwa3oCX0MPLXdHp7CQPawsSu8JTeX0VsyDw
+         TI4KXJ0sPwoB67qK9bApSQ7GNg9qffSMn6C0mXUMDsdjAS0+FvvZZdk6T15BnSFpY2
+         ftKc1f08d0KMKMBSCAMOCpf9Y1ACDHhkSiNcWfvZ5Ptyswk6fNq3xNSS0CyyfXyPRD
+         VFG0HdegCOj+A==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Rajvi Jingar <rajvi.jingar@linux.intel.com>,
@@ -42,9 +42,9 @@ Cc:     Koba Ko <koba.ko@canonical.com>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 07/10] PCI/PTM: Add suspend/resume
-Date:   Tue,  6 Sep 2022 17:23:48 -0500
-Message-Id: <20220906222351.64760-8-helgaas@kernel.org>
+Subject: [PATCH v3 08/10] PCI/PTM: Move pci_ptm_info() body into its only caller
+Date:   Tue,  6 Sep 2022 17:23:49 -0500
+Message-Id: <20220906222351.64760-9-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220906222351.64760-1-helgaas@kernel.org>
 References: <20220906222351.64760-1-helgaas@kernel.org>
@@ -62,78 +62,80 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
----
- drivers/pci/pci.c      |  4 ++--
- drivers/pci/pci.h      |  4 ++++
- drivers/pci/pcie/ptm.c | 15 +++++++++++++++
- 3 files changed, 21 insertions(+), 2 deletions(-)
+pci_ptm_info() is simple and is only called by pci_enable_ptm().  Move the
+entire body there.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 95bc329e74c0..83818f81577d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2714,7 +2714,7 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
- 	 * lower-power idle state as a whole.
- 	 */
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_disable_ptm(dev);
-+		pci_suspend_ptm(dev);
- 
- 	pci_enable_wake(dev, target_state, wakeup);
- 
-@@ -2772,7 +2772,7 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
- 	 * lower-power idle state as a whole.
- 	 */
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_disable_ptm(dev);
-+		pci_suspend_ptm(dev);
- 
- 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 91a465460d0f..ce4a277e3f41 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -507,9 +507,13 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
- #ifdef CONFIG_PCIE_PTM
- void pci_save_ptm_state(struct pci_dev *dev);
- void pci_restore_ptm_state(struct pci_dev *dev);
-+void pci_suspend_ptm(struct pci_dev *dev);
-+void pci_resume_ptm(struct pci_dev *dev);
- #else
- static inline void pci_save_ptm_state(struct pci_dev *dev) { }
- static inline void pci_restore_ptm_state(struct pci_dev *dev) { }
-+static inline void pci_suspend_ptm(struct pci_dev *dev) { }
-+static inline void pci_resume_ptm(struct pci_dev *dev) { }
- #endif
- 
- unsigned long pci_cardbus_resource_alignment(struct resource *);
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/pcie/ptm.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
+
 diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 4a9f045126ca..8ac844212436 100644
+index 8ac844212436..d65f5af9700d 100644
 --- a/drivers/pci/pcie/ptm.c
 +++ b/drivers/pci/pcie/ptm.c
-@@ -198,6 +198,21 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+@@ -9,26 +9,6 @@
+ #include <linux/pci.h>
+ #include "../pci.h"
+ 
+-static void pci_ptm_info(struct pci_dev *dev)
+-{
+-	char clock_desc[8];
+-
+-	switch (dev->ptm_granularity) {
+-	case 0:
+-		snprintf(clock_desc, sizeof(clock_desc), "unknown");
+-		break;
+-	case 255:
+-		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
+-		break;
+-	default:
+-		snprintf(clock_desc, sizeof(clock_desc), "%uns",
+-			 dev->ptm_granularity);
+-		break;
+-	}
+-	pci_info(dev, "PTM enabled%s, %s granularity\n",
+-		 dev->ptm_root ? " (root)" : "", clock_desc);
+-}
+-
+ static void __pci_disable_ptm(struct pci_dev *dev)
+ {
+ 	int ptm = dev->ptm_cap;
+@@ -183,6 +163,7 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+ {
+ 	int rc;
++	char clock_desc[8];
+ 
+ 	rc = __pci_enable_ptm(dev);
+ 	if (rc)
+@@ -190,10 +171,24 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+ 
+ 	dev->ptm_enabled = 1;
+ 
+-	pci_ptm_info(dev);
+-
+ 	if (granularity)
+ 		*granularity = dev->ptm_granularity;
++
++	switch (dev->ptm_granularity) {
++	case 0:
++		snprintf(clock_desc, sizeof(clock_desc), "unknown");
++		break;
++	case 255:
++		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
++		break;
++	default:
++		snprintf(clock_desc, sizeof(clock_desc), "%uns",
++			 dev->ptm_granularity);
++		break;
++	}
++	pci_info(dev, "PTM enabled%s, %s granularity\n",
++		 dev->ptm_root ? " (root)" : "", clock_desc);
++
+ 	return 0;
  }
  EXPORT_SYMBOL(pci_enable_ptm);
- 
-+/*
-+ * Disable PTM, but leave dev->ptm_enabled so we silently re-enable it on
-+ * resume.
-+ */
-+void pci_suspend_ptm(struct pci_dev *dev)
-+{
-+	__pci_disable_ptm(dev);
-+}
-+
-+void pci_resume_ptm(struct pci_dev *dev)
-+{
-+	if (dev->ptm_enabled)
-+		__pci_enable_ptm(dev);
-+}
-+
- bool pcie_ptm_enabled(struct pci_dev *dev)
- {
- 	if (!dev)
 -- 
 2.25.1
 
