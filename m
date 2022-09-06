@@ -2,129 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6215AE618
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 12:59:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92A435AE652
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 13:15:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233363AbiIFK7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 06:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35962 "EHLO
+        id S232456AbiIFLP5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 07:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233778AbiIFK7R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 06:59:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B91B73929;
-        Tue,  6 Sep 2022 03:59:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 158C9614AD;
-        Tue,  6 Sep 2022 10:59:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA64C433D7;
-        Tue,  6 Sep 2022 10:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1662461955;
-        bh=Y6ysaDQ8FK3MaBAYuWSY6YK+9wlf0Ci4KR8fqnRqWj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a7KISYojHZxYAlQqAeSY0HAdRMg/++JusOJ6DEHdXxQK5NDMXNZP3bU8sSO5t1CqH
-         2PMxn2DTMOj9QMEkB0mLOo+fA+cNBjRSx9wz1FLt/oWMkpCoCp+9ZfoaxZ6bp6j/Vq
-         bRPJfRaUhxp3LrsQ+TEMDNEKptZgALrMpqXrnxwU=
-Date:   Tue, 6 Sep 2022 12:59:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/2] misc: pci_endpoint_test: Fix
- pci_endpoint_test_{copy,write,read}() panic
-Message-ID: <YxcoAKrZzL1YEqwf@kroah.com>
-References: <20220906101555.106033-1-mie@igel.co.jp>
- <20220906101555.106033-2-mie@igel.co.jp>
+        with ESMTP id S230112AbiIFLP5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 07:15:57 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999B42127F;
+        Tue,  6 Sep 2022 04:15:55 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MMN8Z4w9Mz688p7;
+        Tue,  6 Sep 2022 19:15:10 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Tue, 6 Sep 2022 13:15:52 +0200
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 6 Sep 2022 12:15:52 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, Dan Williams <dan.j.williams@intel.com>,
+        "Adam Manzanares" <a.manzanares@samsung.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ben W <ben@bwidawsk.net>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        David E Box <david.e.box@intel.com>,
+        Chuck Lever <chuck.lever@oracle.com>, <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [RFC PATCH v3 0/4] PCI/CMA and SPDM Library - Device attestation etc.
+Date:   Tue, 6 Sep 2022 12:15:52 +0100
+Message-ID: <20220906111556.1544-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220906101555.106033-2-mie@igel.co.jp>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 07:15:55PM +0900, Shunsuke Mie wrote:
-> The dma_map_single() doesn't permit zero length mapping. It causes a follow
-> panic.
-> 
-> A panic was reported on arm64:
-> 
-> [   60.137988] ------------[ cut here ]------------
-> [   60.142630] kernel BUG at kernel/dma/swiotlb.c:624!
-> [   60.147508] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> [   60.152992] Modules linked in: dw_hdmi_cec crct10dif_ce simple_bridge rcar_fdp1 vsp1 rcar_vin videobuf2_vmalloc rcar_csi2 v4l
-> 2_mem2mem videobuf2_dma_contig videobuf2_memops pci_endpoint_test videobuf2_v4l2 videobuf2_common rcar_fcp v4l2_fwnode v4l2_asyn
-> c videodev mc gpio_bd9571mwv max9611 pwm_rcar ccree at24 authenc libdes phy_rcar_gen3_usb3 usb_dmac display_connector pwm_bl
-> [   60.186252] CPU: 0 PID: 508 Comm: pcitest Not tainted 6.0.0-rc1rpci-dev+ #237
-> [   60.193387] Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-> [   60.201302] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   60.208263] pc : swiotlb_tbl_map_single+0x2c0/0x590
-> [   60.213149] lr : swiotlb_map+0x88/0x1f0
-> [   60.216982] sp : ffff80000a883bc0
-> [   60.220292] x29: ffff80000a883bc0 x28: 0000000000000000 x27: 0000000000000000
-> [   60.227430] x26: 0000000000000000 x25: ffff0004c0da20d0 x24: ffff80000a1f77c0
-> [   60.234567] x23: 0000000000000002 x22: 0001000040000010 x21: 000000007a000000
-> [   60.241703] x20: 0000000000200000 x19: 0000000000000000 x18: 0000000000000000
-> [   60.248840] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0006ff7b9180
-> [   60.255977] x14: ffff0006ff7b9180 x13: 0000000000000000 x12: 0000000000000000
-> [   60.263113] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-> [   60.270249] x8 : 0001000000000010 x7 : ffff0004c6754b20 x6 : 0000000000000000
-> [   60.277385] x5 : ffff0004c0da2090 x4 : 0000000000000000 x3 : 0000000000000001
-> [   60.284521] x2 : 0000000040000000 x1 : 0000000000000000 x0 : 0000000040000010
-> [   60.291658] Call trace:
-> [   60.294100]  swiotlb_tbl_map_single+0x2c0/0x590
-> [   60.298629]  swiotlb_map+0x88/0x1f0
-> [   60.302115]  dma_map_page_attrs+0x188/0x230
-> [   60.306299]  pci_endpoint_test_ioctl+0x5e4/0xd90 [pci_endpoint_test]
-> [   60.312660]  __arm64_sys_ioctl+0xa8/0xf0
-> [   60.316583]  invoke_syscall+0x44/0x108
-> [   60.320334]  el0_svc_common.constprop.0+0xcc/0xf0
-> [   60.325038]  do_el0_svc+0x2c/0xb8
-> [   60.328351]  el0_svc+0x2c/0x88
-> [   60.331406]  el0t_64_sync_handler+0xb8/0xc0
-> [   60.335587]  el0t_64_sync+0x18c/0x190
-> [   60.339251] Code: 52800013 d2e00414 35fff45c d503201f (d4210000)
-> [   60.345344] ---[ end trace 0000000000000000 ]---
-> 
-> To fix it, this patch adds a checking the payload length if it is zero.
-> 
-> Fixes: 343dc693f7b7 ("misc: pci_endpoint_test: Prevent some integer overflows")
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
-> Changes in v2:
-> * Move a checking code to an introduced function in previous patch
-> ---
-> ---
->  drivers/misc/pci_endpoint_test.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3bd9f135cdac..a7193bf6a49f 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -335,6 +335,11 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
->  static int pci_endpoint_test_validate_xfer_params(struct device *dev,
->  		struct pci_endpoint_test_xfer_param *param, size_t alignment)
->  {
-> +	if (!param->size) {
-> +		dev_err(dev, "Data size is zero\n");
+Sharing now to provide some an example of what a fully in-kernel
+implementation looks like before the BoF session on this topic at Linux
+Plumbers. The big discussion there will probably be how much of this to
+do in userspace vs in the kernel.
 
-Again, do not allow userspace to spam the kernel log.
+https://lpc.events/event/16/contributions/1304/
 
-thanks,
+Changes since v2:
+ - Rebase on v6.0-rc2. DOE infrastructure now upstream so much smaller
+   series.
+ - SPDM 1.2 support. Fairly minor changes for attestation. Negotiation of
+   highest mutually supported version included with drivers using this
+   code specifying a minimum version they will accept.
+ - Various fixes in particular to correctly identify ECDSA x9.62 format
+   signature being passed to signature verify.
+ - Changes suggested by Lukas in his review of RFC v2.
+   Make spdm_state opaque outside of libspdm.c
+   Drop misleading _pl_
+   Drop non existent forwards definition of spdm_measurements_get()
+   Add spec link.
 
-greg k-h
+v2 was a rebase + fixed some files I missed in v1.
+
+v1 Cover letter:
+
+This is an RFC to start discussions about how we support the Component
+Measurement and Authentication (CMA) ECN (pcisig.com)
+
+CMA provides an adaptation of the data objects and underlying protocol
+defined in the DMTF SPDM specification to be used to authenticate and
+conduct run-time measurements of the state of PCI devices (kind of like
+IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
+protocol described in the ECN.
+
+The CMA ECN is available from the PCI SIG and SPDM can be found at
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
+
+CMA/SPDM is focused on establishing trust of the device by:
+1) Negotiate algorithms supported.
+2) Retrieve and check the certificate chain from the device against
+   a suitable signing certificate on the host.
+3) Issue a challenge to the device to verify it can sign with the private
+   key associated with the leaf certificate.
+4) (Request a measurement of device state)
+5) (Establish a secure channel for further measurements or other uses)
+6) (Mutual authentication)
+
+This RFC only does steps 1-3
+
+Testing of this patch set has been conducted against QEMU emulation of
+the device backed by openSPDM emulation of the SPDM protocol
+(rebased version to be sent shortly).
+
+Open questions are called out in the individual patches but the big ones are
+probably:
+
+1) Certificate management.
+   Current code uses a _cma keyring created by the kernel, into which a
+   suitable root certificate can be inserted from userspace.
+
+   A=$(keyctl search %:_cma  keyring _cma)
+   evmctl import ecdsaca.cert.der $A
+
+   Is this an acceptable way to load the root certificates for this purpose?
+
+   The root of the device provided certificate chain is then checked against
+   certificates on this keychain, but is itself (with the other certificates
+   in the chain) loaded into an SPDM instance specific keychain.  Currently
+   there is no safe cleanup of this which will need to be fixed.
+
+   Using the keychain mechanism provides a very convenient way to manage these
+   certificates and to allow userspace to read them for debug purpose etc, but
+   is this the right use model?
+
+   Finally the leaf certificate of this chain is used to check signatures of
+   the rest of the communications with the device.
+
+2) ASNL1 encoder for ECDSA signature
+   It seems from the openSPDM implementation that for these signatures,
+   the format is a simple pair of raw values.  The kernel implementation of
+   ECDSA signature verification assumes ASN1 encoding as seems to be used
+   in x509 certificates.  Currently I work around that by encoding the
+   signatures so that the ECDSA code can un-encode them again and use them.
+   This seems slightly silly, but it is minimum impact on current code.
+   Other suggestions welcome.
+
+3) Interface to present to drivers. Currently I'm providing just one exposed
+   function that wraps up all the exhanges until a challenge authentication
+   response from the device. This is done using one possible sequence.
+   I don't think it makes sense to expose the low level components due to the
+   underlying spdm_state updates and there only being a fixed set of valid
+   orderings.
+
+Future patches will raise questions around management of the measurements, but
+I'll leave those until I have some sort of implementation to shoot at.
+The 'on probe' use in the CXL driver is only one likely time when authentication
+would be needed.
+
+Note I'm new to a bunch of the areas of the kernel this touches, so have
+probably done things that are totally wrong.
+
+CC list is best effort to identify those who 'might' care.  Please share
+with anyone I've missed.
+
+Jonathan Cameron (4):
+  lib/asn1_encoder: Add a function to encode many byte integer values.
+  spdm: Introduce a library for DMTF SPDM
+  PCI/CMA: Initial support for Component Measurement and Authentication
+    ECN
+  cxl/pci: Add really basic CMA authentication support.
+
+ drivers/cxl/Kconfig          |    1 +
+ drivers/cxl/core/pci.c       |   47 ++
+ drivers/cxl/cxlpci.h         |    1 +
+ drivers/cxl/port.c           |    1 +
+ drivers/pci/Kconfig          |   13 +
+ drivers/pci/Makefile         |    1 +
+ drivers/pci/cma.c            |  117 +++
+ include/linux/asn1_encoder.h |    3 +
+ include/linux/pci-cma.h      |   21 +
+ include/linux/spdm.h         |   81 +++
+ lib/Kconfig                  |    3 +
+ lib/Makefile                 |    2 +
+ lib/asn1_encoder.c           |   54 ++
+ lib/spdm.c                   | 1333 ++++++++++++++++++++++++++++++++++
+ 14 files changed, 1678 insertions(+)
+ create mode 100644 drivers/pci/cma.c
+ create mode 100644 include/linux/pci-cma.h
+ create mode 100644 include/linux/spdm.h
+ create mode 100644 lib/spdm.c
+
+-- 
+2.32.0
+
