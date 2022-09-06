@@ -2,78 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3F3E5AF6BD
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 23:26:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CF2C5AF6CB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 23:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiIFV0j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 17:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
+        id S229905AbiIFV2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 17:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiIFV0i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 17:26:38 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4EDB08BE;
-        Tue,  6 Sep 2022 14:26:36 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso16309091pjk.0;
-        Tue, 06 Sep 2022 14:26:36 -0700 (PDT)
+        with ESMTP id S229921AbiIFV2M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 17:28:12 -0400
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A034DBB016
+        for <linux-pci@vger.kernel.org>; Tue,  6 Sep 2022 14:27:52 -0700 (PDT)
+Received: by mail-qk1-x72c.google.com with SMTP id c9so9195491qkk.6
+        for <linux-pci@vger.kernel.org>; Tue, 06 Sep 2022 14:27:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=cY0dA7NTrnBDKCwwHO063u9MDnaKebMrdSPsmytPTS4=;
-        b=Oyq1k7hEQu7PHNNqzRvhH1N/D98ZvJOMLXtyV1meo6F0ZVYOQ4qI1M8+9aFj0KDMJh
-         Vo/UTpMomeF6SX8U5t4CfCferZ3isMoONuaHOhfX+gxsjOaJOVcpptAzDp/AiXn+d5jg
-         2zcGf+a2WxBG67+CvJl+EuXpgC0/VN0Giv6oQPuN2ivzwvahKEbesIgEcltbZdr4NfB4
-         Rgqf9sGvQANJwcLvhRtI3W61DXfE6djFhiY2NRQ5wJaqR3hm8mzvVMOZYkD6u7osLLJt
-         jD6DOnLau8WdASq6H8CTIR6c2RCQfXdg2oNfbApH1UsD4EYLzrvgDDcmI/cs0CUsTk76
-         lBTA==
+        d=broadcom.com; s=google;
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date;
+        bh=KsOCPRXDRHK5nRKpATtL3Rnp6F3rseCjeEvSvgvj8SM=;
+        b=ZEuEvUSAPVLEla+pXFqqfJhTjqeLikZhP8PWno/bpiqVucg4psVeP84piPWbI/RcTj
+         rrT4f7xit6wDesFm6m/ywVpc51P9yj9G1X0zvQHFXPe7/iKfEI1UObodAtV6/YP7lBxg
+         ySvW73yf3qHRlxEPdaX31gaY4iGLmSljqhMJU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=cY0dA7NTrnBDKCwwHO063u9MDnaKebMrdSPsmytPTS4=;
-        b=FLfGbNqwCMk3zV9giutOk9d/9GWhfOa4vLHj1bO390z3oyBh9LxaYNeaCA4VqHnb+t
-         mgM+i5qIy6q9lacDCSNoe3k/qoerwWEnF9NvpzpbNKYRCPYugJ7Fe5f0tj8vqXv3Grtp
-         Yrp9qSc5J4qJ/F05shxK3hDHNNq7yglsysjt7CQ6mIrcV6zs4y+3ERO6PvFnMO0ykCPr
-         2p3gc+SZ1gR+yjKixkfX6HaA6PUFapmGw4k7eYplY6k3vEuC1M4AqJ6lm/a5H456TZ1D
-         +yykiZ18i6HScENdYTLbXEmu5pfIrKu5b+2quc7X9weDDQUBl0LZCGmsFYS7YghI7K5d
-         Dm9A==
-X-Gm-Message-State: ACgBeo1R2enMlJSWo/zeHqEhVZJtDd8YFpa0ZE90XytTG/r4EkNIWrEz
-        7cIVphBgvkW0HyyN2uu4oGw=
-X-Google-Smtp-Source: AA6agR7jpSDz8yhWV2rYovKCfP7SO0Nd0qXv7A5NLmOWP68qSPfxBINaKNFP5S447hhXGHR/Kp+G4g==
-X-Received: by 2002:a17:902:7d86:b0:170:a752:cbd1 with SMTP id a6-20020a1709027d8600b00170a752cbd1mr250537plm.17.1662499595887;
-        Tue, 06 Sep 2022 14:26:35 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:abc4:5d24:5a73:a96b])
-        by smtp.gmail.com with ESMTPSA id v28-20020aa799dc000000b00537ab89c66csm11137493pfi.143.2022.09.06.14.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 14:26:35 -0700 (PDT)
-Date:   Tue, 6 Sep 2022 14:26:32 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Shawn Guo <shawn.guo@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
-Message-ID: <Yxe7CJnIT5AiUilL@google.com>
-References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
- <20220906204301.3736813-2-dmitry.torokhov@gmail.com>
- <20220906211628.6u4hbpn4shjcvqel@pali>
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date;
+        bh=KsOCPRXDRHK5nRKpATtL3Rnp6F3rseCjeEvSvgvj8SM=;
+        b=BfkgDPcVpgaoUOmhcFWJYZAv5v8m6IQ3ZuC+6bDMlA0rYZV8OGM9e4RVSFxyuZp7Vb
+         K0fAjnRfWgKbmU9Q2V3PzO/umUBG6K1LGemygIN+3bcDXKP9/7dz2mxzDxn8vsExAxtu
+         U2KHxdWs8YATx4kvRPFCOW/73zGcd9gwTZwfJZO3PJ4BMn+MFjoE1g5c8ZFd4XisY4Nc
+         TCU+PgI7JcJYBTVZVWcLgnd/czeAtB0nMxfxph58MrD4S2uqJb76GiVLtkCp3OYZkqlV
+         stc/ivDfI7NGuTm/NpV/ZlvMzyFeVjXNyRM10xGNzroiSVczb8r6egnkAiYupL2Tw1xo
+         UtXQ==
+X-Gm-Message-State: ACgBeo1gXLfqOwRooJRfcwjA52n/8ugChYnAGyLyeTkAHxYTgD8lQ/Pw
+        BR4SkK4d5PtLWK0wQNFRtur02Q==
+X-Google-Smtp-Source: AA6agR5ZqP2lxkK9KNcVO8ft77CGP0fnzuZbdC/Tdci2N56IFwgvfBMoBIk+TGSVnVzCp/XnI08+EA==
+X-Received: by 2002:a05:620a:2444:b0:6bb:3397:556b with SMTP id h4-20020a05620a244400b006bb3397556bmr535485qkn.336.1662499671134;
+        Tue, 06 Sep 2022 14:27:51 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.161.248])
+        by smtp.gmail.com with ESMTPSA id r1-20020a05620a298100b006b98315c6fbsm13068316qkp.1.2022.09.06.14.27.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Sep 2022 14:27:50 -0700 (PDT)
+Message-ID: <5cbe247d-f9a3-4770-1ca7-5ba5097451ba@broadcom.com>
+Date:   Tue, 6 Sep 2022 14:27:46 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220906211628.6u4hbpn4shjcvqel@pali>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH linux-next] PCI: iproc: Remove the unneeded result
+ variable
+To:     Bjorn Helgaas <helgaas@kernel.org>, cgel.zte@gmail.com
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+References: <20220906212520.GA45166@bhelgaas>
+From:   Scott Branden <scott.branden@broadcom.com>
+In-Reply-To: <20220906212520.GA45166@bhelgaas>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000005b25a305e808de8c"
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,125 +73,112 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Pali,
+--0000000000005b25a305e808de8c
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 06, 2022 at 11:16:28PM +0200, Pali Rohár wrote:
-> Hello!
+
+
+On 2022-09-06 14:25, Bjorn Helgaas wrote:
+> On Tue, Sep 06, 2022 at 07:16:36AM +0000, cgel.zte@gmail.com wrote:
+>> From: ye xingchen <ye.xingchen@zte.com.cn>
+>>
+>> Return the value iproc_pcie_setup_ib() directly instead of storing it in
+>> another redundant variable.
+>>
+>> Reported-by: Zeal Robot <zealci@zte.com.cn>
+>> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 > 
-> On Tuesday 06 September 2022 13:43:01 Dmitry Torokhov wrote:
-> > This patch switches the driver away from legacy gpio/of_gpio API to
-> > gpiod API, and removes use of of_get_named_gpio_flags() which I want to
-> > make private to gpiolib.
+> This patch itself is fine,
+Does the patch serve any real use though?
+
+  but was posted by cgel.zte@gmail.com, not by
+> "ye xingchen <ye.xingchen@zte.com.cn>", so it needs another signoff
+> and full name so the chain is complete.  For more details see:
 > 
-> There are many pending pci-mvebu.c patches waiting for review and merge,
-> so I would suggest to wait until all other mvebu patches are processed
-> and then process this one... longer waiting period :-(
-
-OK, it is not super urgent. OTOH it is a very simple patch :)
-
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.18#n363
 > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/pci/controller/pci-mvebu.c | 48 +++++++++---------------------
-> >  1 file changed, 14 insertions(+), 34 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> > index 1ced73726a26..a54beb8f611c 100644
-> > --- a/drivers/pci/controller/pci-mvebu.c
-> > +++ b/drivers/pci/controller/pci-mvebu.c
-> > @@ -11,14 +11,13 @@
-> >  #include <linux/bitfield.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/delay.h>
-> > -#include <linux/gpio.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/init.h>
-> >  #include <linux/mbus.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> > -#include <linux/of_gpio.h>
-> >  #include <linux/of_pci.h>
-> >  #include <linux/of_platform.h>
-> >  
-> > @@ -1261,9 +1260,8 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
-> >  	struct mvebu_pcie_port *port, struct device_node *child)
-> >  {
-> >  	struct device *dev = &pcie->pdev->dev;
-> > -	enum of_gpio_flags flags;
-> >  	u32 slot_power_limit;
-> > -	int reset_gpio, ret;
-> > +	int ret;
-> >  	u32 num_lanes;
-> >  
-> >  	port->pcie = pcie;
-> > @@ -1327,40 +1325,22 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
-> >  			 port->name, child);
-> >  	}
-> >  
-> > -	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
-> > -	if (reset_gpio == -EPROBE_DEFER) {
-> > -		ret = reset_gpio;
-> > +	port->reset_name = devm_kasprintf(dev, GFP_KERNEL, "%s-reset",
-> > +					  port->name);
-> > +	if (!port->reset_name) {
-> > +		ret = -ENOMEM;
-> >  		goto err;
-> >  	}
-> >  
-> > -	if (gpio_is_valid(reset_gpio)) {
-> > -		unsigned long gpio_flags;
-> > -
-> > -		port->reset_name = devm_kasprintf(dev, GFP_KERNEL, "%s-reset",
-> > -						  port->name);
-> > -		if (!port->reset_name) {
-> > -			ret = -ENOMEM;
-> > +	port->reset_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(child),
-> > +						 "reset", GPIOD_OUT_HIGH,
-> 
-> What does it mean that there is a new GPIOD_OUT_HIGH flag passed to the
-> devm_fwnode_gpiod_get() function?
+> Bjorn
 
-This means that we drive the line as "active" as soon as we successfully
-grab GPIO. This is the same as we had with devm_gpio_request_one(), but
-we do not need to figure out actual polarity.
+--0000000000005b25a305e808de8c
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> 
-> > +						 port->name);
-> > +	ret = PTR_ERR_OR_ZERO(port->reset_gpio);
-> > +	if (ret) {
-> > +		if (ret	!= -ENOENT)
-> >  			goto err;
-> > -		}
-> > -
-> > -		if (flags & OF_GPIO_ACTIVE_LOW) {
-> > -			dev_info(dev, "%pOF: reset gpio is active low\n",
-> > -				 child);
-> > -			gpio_flags = GPIOF_ACTIVE_LOW |
-> > -				     GPIOF_OUT_INIT_LOW;
-> > -		} else {
-> > -			gpio_flags = GPIOF_OUT_INIT_HIGH;
-> > -		}
-> > -
-> > -		ret = devm_gpio_request_one(dev, reset_gpio, gpio_flags,
-> > -					    port->reset_name);
-> > -		if (ret) {
-> > -			if (ret == -EPROBE_DEFER)
-> > -				goto err;
-> > -			goto skip;
-> > -		}
-> > -
-> > -		port->reset_gpio = gpio_to_desc(reset_gpio);
-> > +		/* reset gpio is optional */
-> > +		port->reset_gpio = NULL;
-> 
-> Maybe you can also release port->reset_name as it is not used at this
-> stage?
-
-OK, I figured it was just a few bytes, but sure, I'll add devm_kfree().
-
-Thanks for the review.
-
--- 
-Dmitry
+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
+cRe0CRXA7ypOJSgxO/nOOyQoaJxT7CGg1npOeSpPjEuc3fE4xum3l0nvU85hj6MlKZu43hokdBh0
+D0nLyyhEwlR3AC/msdff/UGbM/JR9vk812RP4m/aNWZFJwIDAQABo4IB2zCCAdcwDgYDVR0PAQH/
+BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9i
+YWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUF
+BzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAy
+MDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xv
+YmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRw
+Oi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAlBgNV
+HREEHjAcgRpzY290dC5icmFuZGVuQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAf
+BgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUOhjEpl04Sz9dh5MI82E1
+V39lM/owDQYJKoZIhvcNAQELBQADggEBAA7Rlypx/esz/iq1yA4+KW7uwV/aBY344BWcXt6I+SNK
+VwFBgFWfLj5vaEud9TVv2fPSiaHJo0umemOJk+43QD+bsoqmgcFXd21PrOt7Jjs+jjVED9VC5kJq
+S4NNKUkS+BqijJwSegtVygrc/atrIlJbjI21q4qpemUo5fgwqCNm++BmBGTI8yA09vtGSNDRN42k
+lLX9hl3iEj5SBgkQqCbbnoE+ZjjKfqt7ED166WhgyQWNrl39yLcvLj+JRUB3RuvXKZjH0NQEEBII
+wZBDSkyneykLt3CBNIhSCTxKM6OWxVp936ALSa5K9FNy00TeWSpokR6NmzaW8VD/EjTgvqAxggJt
+MIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYD
+VQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgx9oXSJpKniO4dS
+Gk8wDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIN7HPSTI0xAzHBY23bS9Qqy6p6W5
+gbSTttpmuLNZRxxfMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIy
+MDkwNjIxMjc1MVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
+CWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFl
+AwQCATANBgkqhkiG9w0BAQEFAASCAQBCa2+nOonK7mcEfdz09spOpGSEZGoucgBK5S8d8UDP/+qf
+rCSQUxO8HOZ91ciOPVcho6HoQR1QQ9DlL4smr3qIpjFCzHGQAv3BBFQnYcsME8UlSpRSdhO3HBSc
+ig9mqGC9s3Q23WBxIh6uFPwx8+NdRcMKjtm1XJ/QRkG5yYN98p2yRcp6LtC/f5gjQWY39CcIYoqA
+hNDG9IDYeVGL0uY+CkR+LjKF/b92P0kooLJVx9QB7NO1jTPuncUdA+VALpd8cxh41C3vYGTSN1fY
+nZrk6uT2QBA6bsvLXHbMePXjIsZbFq2rpGLTLxf1iYixSCLmHxixoy0HCQL3/WGR2Obs
+--0000000000005b25a305e808de8c--
