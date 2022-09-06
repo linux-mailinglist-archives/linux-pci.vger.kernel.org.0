@@ -2,159 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 763875AE70D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 14:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32D8D5AE828
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 14:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233864AbiIFL77 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 07:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        id S239919AbiIFMbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 08:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234098AbiIFL7z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 07:59:55 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F2E3DF00;
-        Tue,  6 Sep 2022 04:59:54 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MMP3V693zz6HJTR;
-        Tue,  6 Sep 2022 19:55:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 6 Sep 2022 13:59:52 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 6 Sep
- 2022 12:59:51 +0100
-Date:   Tue, 6 Sep 2022 12:59:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Adam Manzanares <a.manzanares@samsung.com>
-CC:     Lukas Wunner <lukas@wunner.de>, Ira Weiny <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        hchkuo <hchkuo@avery-design.com.tw>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Message-ID: <20220906125950.00006e4f@huawei.com>
-In-Reply-To: <20220629160149.GA1039216@bgt-140510-bm01>
-References: <20220609124702.000037b0@Huawei.com>
-        <YqICCSd/6Vxidu+v@iweiny-desk3>
-        <20220617112124.00002296@Huawei.com>
-        <20220620165217.GA18451@wunner.de>
-        <20220622124638.00004456@Huawei.com>
-        <20220624120830.00002eef@Huawei.com>
-        <20220624141531.GA32171@wunner.de>
-        <CGME20220624143249uscas1p1ae96e45ccb5b3b4f22a5b863c7a6fc9f@uscas1p1.samsung.com>
-        <20220624153241.000055e2@Huawei.com>
-        <20220629160149.GA1039216@bgt-140510-bm01>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S239968AbiIFMaz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 08:30:55 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E144E275C2;
+        Tue,  6 Sep 2022 05:27:46 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6500,9779,10461"; a="296579839"
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="296579839"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:45 -0700
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="565074197"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1oVXfv-00975d-2X;
+        Tue, 06 Sep 2022 15:27:31 +0300
+Date:   Tue, 6 Sep 2022 15:27:31 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using
+ devm_gpiod_get()
+Message-ID: <Yxc8s8IfzElm/mjS@smile.fi.intel.com>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
+ <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
+ <YxZQj8bwJCx5rqDv@google.com>
+ <CAHp75VdHJS4YgrTK15OuY5sxodxKObUtzturL+YPXFQ3_wpxig@mail.gmail.com>
+ <YxZTS3Nl1YaMGoBC@google.com>
+ <CAHp75VeNajcf-Y6xvDDVwZijg6U53ggg1HQox1AZ74=wRut+1Q@mail.gmail.com>
+ <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+On Mon, Sep 05, 2022 at 03:07:48PM -0700, Guenter Roeck wrote:
+> On 9/5/22 12:55, Andy Shevchenko wrote:
+> > On Mon, Sep 5, 2022 at 10:51 PM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > > On Mon, Sep 05, 2022 at 10:41:40PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Sep 5, 2022 at 10:40 PM Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > On Mon, Sep 05, 2022 at 01:59:44PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
+> > > > > > <dmitry.torokhov@gmail.com> wrote:
 
-The BoF has been accepted though not scheduled yet.
-https://lpc.events/event/16/contributions/1304/
+...
 
-Updated RFC of kernel based cert handling with SPDM 1.2 support:
-https://lore.kernel.org/linux-pci/20220906111556.1544-1-Jonathan.Cameron@huawei.com/
-Applies cleanly to current mainline.  As it's an RFC I've been lazy
-in a few places, but it should convey what an in kernel only solution might
-look like.
-
-The old QEMU emulation should work fine with this (against new
-spdm-emu). https://gitlab.com/jic23/qemu/-/commits/cxl-next
-
-I might push out a rebased CXL QEMU tree with it on later this week if
-I get time and resist hacking too much on another plumbers related PoC :)
-
-Thanks all and look forward to talking to people about this next week.
-
-Jonathan
-
-p.s. Chris / Huai-Cheng Kuo.  I'd completely forgotten you were interested in this
-topic from emulation side of things.  Not sure if you care about what Linux does
-with it however but your QEMU work is still proving very useful.
-
-
-On Wed, 29 Jun 2022 16:01:57 +0000
-Adam Manzanares <a.manzanares@samsung.com> wrote:
-
-> On Fri, Jun 24, 2022 at 03:32:41PM +0100, Jonathan Cameron wrote:
-> > On Fri, 24 Jun 2022 16:15:31 +0200
-> > Lukas Wunner <lukas@wunner.de> wrote:
-> >   
-> > > On Fri, Jun 24, 2022 at 12:08:30PM +0100, Jonathan Cameron wrote:  
-> > > > I've put this in for now:    
+> > > > > > > +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
+> > > > > > > +                                      GPIOD_OUT_HIGH);
+> > > > > > >                  err = PTR_ERR_OR_ZERO(gpiod);
+> > > > > > 
+> > > > > > What does _OR_ZERO mean now?
+> > > > > 
+> > > > > This converts a pointer to an error code if a pointer represents
+> > > > > ERR_PTR() encoded error, or 0 to indicate success.
+> > > > 
+> > > > Yes, I know that. My point is, how is it useful now (or even before)?
+> > > > I mean that devm_gpio_get() never returns NULL, right?
 > > > 
-> > > Perfect!  For me as a non-native English speaker, it would have been
-> > > a lot more difficult to write up such an excellent description,
-> > > so thanks for doing this.  
+> > > What does returning NULL have to do with anything.
 > > 
-> > It always feels a bit like cheating when you get to write these
-> > things in your first language!  
-> > >   
-> > > > Hence this proposal for a BoF rather than session in 
-> > > > either PCI or CXL uconf.    
-> > >   
+> > It has to do with a dead code. If defm_gpiod_get() does not return
+> > NULL, then why do we even bother to check?
 > 
-> I am planning to be attending plumbers in person and am quite interested in 
-> this BOF.
+> PTR_ERR_OR_ZERO() converts into an error code (if the pointer is an
+> ERR_PTR) or 0 if it is a real pointer. Its purpose is not to convert
+> NULL into 0, its purpose is to convert a pointer either into an error
+> code or 0. That is what is done here, and it is done all over the place
+> in the kernel. I don't see your problem with it. Care to explain ?
 > 
-
-
+> > > It converts a pointer
+> > > to a "classic" return code, with negative errors and 0 on success.
+> > > 
+> > > It allows to not use multiple IS_ERR/PTR_ERR in the code (I'd need 1
+> > > IS_ERR and 2 PTR_ERR, one in dev_err() and another to return).
+> > 
+> > I don't see how this is relevant.
 > 
-> > > I think this has overlap with the Confidential Computing uconf as well,
-> > > so that might be another potentially interested audience.
-> > > 
-> > > (Link encryption is by its very nature "confidential computing",
-> > > and attestation is explicitly mentioned on the CC uconf page:
-> > > https://urldefense.com/v3/__https://protect2.fireeye.com/v1/url?k=10369d39-71bd8872-10371676-74fe485fb305-1ce6f2197c6a68d6&q=1&e=6639a8eb-2d66-432f-a3d9-760b3e8def9f&u=https*3A*2F*2Flpc.events*2Fevent*2F16*2Fcontributions*2F1143*2F__;JSUlJSUlJSU!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu9GUb9ld$  )
-> > > 
-> > > Thanks,
-> > > 
-> > > Lukas
-> > >   
-> > 
-> > Good point. That is an area in which we need dance around what we
-> > can an can't say (i.e. what is public from various standards orgs) but they 
-> > may well still be interested.
-> > 
-> > Added 
-> > - Confidential compute community
-> > to list of people who might be interested.
-> > 
-> > +CC Joerg so he knows this proposal exists and can perhaps drag in anyone
-> > else who might be interested.
-> > 
-> > https://urldefense.com/v3/__https://lore.kernel.org/all/20220624120830.00002eef@Huawei.com/__;!!EwVzqGoTKBqv-0DWAJBm!UGKGabNBEqfdQU-FrF-bEnhwu9mRW4PRGa1LoMvehedU3XRfsZzuoHGUZUVWHVD3p26pNa-le6OwJPQwMs7wV4kiu68CJwlU$ 
-> > for abstract.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >  
+> You lost me. Really, please explain your problem with PTR_ERR_OR_ZERO().
+
+I don't know what I was thinking about... You, guys, are right, sorry for
+my noise.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
