@@ -2,56 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C7AA5AF728
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 23:42:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20ABF5AF72B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 23:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbiIFVll (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 17:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37752 "EHLO
+        id S229569AbiIFVm1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 17:42:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbiIFVl3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 17:41:29 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049F09CCE1;
-        Tue,  6 Sep 2022 14:41:24 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id pj10so2203717pjb.2;
-        Tue, 06 Sep 2022 14:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=KXWoT9EuSbOt9nePjiUUdf0oshHpDWDtGCi8pF2h50U=;
-        b=L/ZW1aQIc7XbaIj/P2WsdtKQeUZstgyo46isMATHBR3E3MqQvPC7yPtIVGzFDYqqqx
-         6EFL5KIgCXLe6zm1oKyQbiHxz5YDJvct4VS1H0VYbBJ7Csil4/yKKvQ08PljHOlG2XEC
-         kFRMbcYNIfwum6pp6BgryfSBaof3oNoRry95NgzwDMvTtjh5LFV9iVWYDOoLHYwOxOmc
-         BC6hDD32EFH4+Wvi9LLzMOfL4Io0jLT3E9zJ0YfBquFpfR78RXBt0M7TFnTpU2MsxACy
-         ygOJqCRZZslXIbA50dkkY29KCBmu5hpHV4mQBpWf5lg2ddoB8toR23cEZrX/RrJ58G/m
-         yS7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=KXWoT9EuSbOt9nePjiUUdf0oshHpDWDtGCi8pF2h50U=;
-        b=u35zl9QSgchMzhwLuMNbZmFL8x86vxep42EsIpOCpQ6xy2k/kNv+1ka+OUphdyNsnZ
-         E15ZPgWHkIiwL9uXqu3n1atnKOi15Arc65/Ftaey8BwfnEXzvgS6MQ3RmsqL+gC1TnoP
-         wVKnue15ohpnGl4HzHmoTGLtg3W1/sljFKryrFl284d3XG2KtpOnotM52AL3XWteufx8
-         5W8HB5EnieGyFyB2PCvc46ikk6gSqTNBRY82nxqKI+7mcFfh7CQSV+r799v9lZo3PrYS
-         cpOnenX8TKlFOhC7vH9Q2RFcxua8FRrlOgK/OaFaQWe0RkOZ5w91tEsix/IJjOdAOt9c
-         E5Aw==
-X-Gm-Message-State: ACgBeo3hCw6LdQJo++SsO/pWe4LcXA52pVYcO6vDTNdr5RnjsFDdr02A
-        aspcHFgTqhOcbfCARizFHf8=
-X-Google-Smtp-Source: AA6agR7xRMfCeJ8pXahcgMxPoFOWsnEGzC98sW+t/jWKHmRwoTPEsvKLL1qsbs4pGkus/FeiFWqGog==
-X-Received: by 2002:a17:903:248b:b0:172:a790:3206 with SMTP id p11-20020a170903248b00b00172a7903206mr465623plw.139.1662500483979;
-        Tue, 06 Sep 2022 14:41:23 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:abc4:5d24:5a73:a96b])
-        by smtp.gmail.com with ESMTPSA id w13-20020a1709027b8d00b0016c0eb202a5sm10392565pll.225.2022.09.06.14.41.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 14:41:23 -0700 (PDT)
-Date:   Tue, 6 Sep 2022 14:41:20 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+        with ESMTP id S229491AbiIFVmT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 17:42:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC518670C;
+        Tue,  6 Sep 2022 14:42:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7029A616ED;
+        Tue,  6 Sep 2022 21:42:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DB0C433C1;
+        Tue,  6 Sep 2022 21:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662500537;
+        bh=c+ClokW/ttPFEFYMhrFMsQpYEe0Gv0ApefG2N4w/Hcw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BWmyNKH/Z14CW9MBaCiaJSG+K6d/MCOjbRYB22GWuqMAWn3PCMnkem/+ob+S9QpQ9
+         LBbeMJhQ06JkIGtghTu7Kk9jV/4c0rRw0o669UZV4SSe5aRBl1VrpAq8hRPcwdoUqI
+         77zHmUSPpiKizfzZ8yFT4DbRZv2J0M7PyRgd/CQFxcPbFMn9AQONClMLVihax09RMp
+         RVHM6YGJAd4gtLKQY39bAZ651bv+DVxtYo8AqOhs9mj70amQaOsCrgrVL3Jytyf8gE
+         IiIRw8i6ooiAmA3biX+agc/zSMfAa/NFPO/k3t+K1Bj+nw6+Wy8Y5HehqU/2Xy7WgB
+         wZ0JlQwQ1Xa8g==
+Received: by pali.im (Postfix)
+        id 819C6742; Tue,  6 Sep 2022 23:42:15 +0200 (CEST)
+Date:   Tue, 6 Sep 2022 23:42:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Shawn Guo <shawn.guo@linaro.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -61,48 +45,49 @@ Cc:     Shawn Guo <shawn.guo@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: histb: switch to using gpiod API
-Message-ID: <Yxe+gPl5qeqJuC4Z@google.com>
+Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+Message-ID: <20220906214215.7hmt5vpk2yzxdm2e@pali>
 References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
- <20220906210811.5kzdq66eeeauk2d3@pali>
+ <20220906204301.3736813-2-dmitry.torokhov@gmail.com>
+ <20220906211628.6u4hbpn4shjcvqel@pali>
+ <Yxe7CJnIT5AiUilL@google.com>
+ <Yxe+P27mwZQMZK+5@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220906210811.5kzdq66eeeauk2d3@pali>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Yxe+P27mwZQMZK+5@google.com>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 11:08:11PM +0200, Pali Rohár wrote:
-> On Tuesday 06 September 2022 13:43:00 Dmitry Torokhov wrote:
-> > +	ret = gpiod_set_consumer_name(hipcie->reset_gpio,
-> > +				      "PCIe device power control");
+On Tuesday 06 September 2022 14:40:15 Dmitry Torokhov wrote:
+> On Tue, Sep 06, 2022 at 02:26:32PM -0700, Dmitry Torokhov wrote:
+> > Hi Pali,
+> > 
+> > On Tue, Sep 06, 2022 at 11:16:28PM +0200, Pali RohÃ¡r wrote:
+> > > Hello!
+> > > 
+> > > On Tuesday 06 September 2022 13:43:01 Dmitry Torokhov wrote:
+> > > > This patch switches the driver away from legacy gpio/of_gpio API to
+> > > > gpiod API, and removes use of of_get_named_gpio_flags() which I want to
+> > > > make private to gpiolib.
+> > > 
+> > > There are many pending pci-mvebu.c patches waiting for review and merge,
+> > > so I would suggest to wait until all other mvebu patches are processed
+> > > and then process this one... longer waiting period :-(
+> > 
+> > OK, it is not super urgent. OTOH it is a very simple patch :)
 > 
-> Just unrelated thing, I know it was there before, but I saw it just now
-> and have to comment it: This is absolute nonsense name. "reset-gpios"
-> device tree property specifies PERST# signal pin (PciE ReSeT) as defined
-> in PCIe CEM (Card ElectroMagnetic) specification and it has absolute
-> nothing with PCIe power control.
-> 
-> My suggestion for maintainers would be to remove this critic name at
-> all as it would just mislead other people reading that code.
+> By the way, do the pending patches address soft-leaking of reset GPIO
+> when the driver fails to acquire clock for a port (I called it
+> soft-leaking since devm will free it on unbind)?
 
-I can respin the patch is you suggest a more sensible label...
-
-> 
-> > +	if (ret) {
-> > +		dev_err(dev, "unable to set reset gpio name: %d\n", ret);
-> > +		return ret;
-> >  	}
-
-Thanks.
-
--- 
-Dmitry
+I think no, because there is not any patch related to GPIO reset.
