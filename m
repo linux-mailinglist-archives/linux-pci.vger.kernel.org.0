@@ -2,108 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A468C5AE0C7
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 09:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C445AE51B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 12:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238807AbiIFHRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 03:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60052 "EHLO
+        id S234013AbiIFKQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 06:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238825AbiIFHRM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 03:17:12 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324A37390F;
-        Tue,  6 Sep 2022 00:17:11 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d12so10441316plr.6;
-        Tue, 06 Sep 2022 00:17:11 -0700 (PDT)
+        with ESMTP id S231154AbiIFKQI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 06:16:08 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C452CDF7
+        for <linux-pci@vger.kernel.org>; Tue,  6 Sep 2022 03:16:02 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id 65so638947pfx.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Sep 2022 03:16:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=EuJPPf3+gOQ+Mj3XihQl7kx9QMOj/0MzDv+3h+Kjp/Y=;
-        b=PxQfsJliUlBvt2c0ZZOHUHv1vw/zQ7b+Wouxon5GDThKnQ0jvdI1QQnAJSojGKWgaw
-         ly8mqnZf8QbUG5FrMXyvdLg+9BBlhSs3KJGDN8P/KyB9a1iPpqKiHKBTipJC3tjdyqxY
-         W//n46TaRVSo2E9o8VSYtZ/CdjK58o7B/HV6bsBtaCDAjhdhpTd/Fq5IZb+M3B/KcfeL
-         EGsvXAKbYa38C/hSa8M49CpOtzo4+ZnLcRGVAFz4PPLiQlrJE9dOvUVl2daScKrfIXqF
-         rt/ayV+Cs1ytUsYK9p+ZWKfjKN6315u6YyjBbAflmG/MZEdCD8FMuUejU+TRNOYB4u7C
-         BK5A==
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=hXiNAyvQQWIBJxUajZXg5TzJhz9BDXjhOqmjIrcqoMg=;
+        b=U/WzBdX6suz8BGPmr7TORZNTIMN2KAe/OX9ejIWK4DHDWoUKD57SIvvoc5Q+rp+Iry
+         VK4z4Ohy08BiYvvsKuxlgkIPZKvoxmEpZTV1mgUfMLmjjiZxch4F9IZcc9fCcqomXMEz
+         +tRzS1/Kgn4fsuGpBM8IxXrmn4mfYgNMteMPs/pgonR+h2QKob+Oz0S8nh5PgzJvoOTa
+         j9lfKECe5c2FQ1qimcKaHRzUU9N5C207+Sw/XntYgjclSYappwPuH39+olrz66fIvGDg
+         QAH9M9tlXojbDsSUYBWbQB/wX6qq1+Li6LRG+9nb/KewYxm5/NvE15oH5W81FZs/GJ2Q
+         +NzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=EuJPPf3+gOQ+Mj3XihQl7kx9QMOj/0MzDv+3h+Kjp/Y=;
-        b=28b0IXkeQ69gIspJv6k/pKEg6f7pctkQYIt4M/326TqxvvfeizHR2XGlIwkEggtI0f
-         4srPm7/AIGwUCAzagU6lSQFPYPG55BiG9AW8j4vfUy9TzqEjq9UqLQr7JlQbhsQqZjQ4
-         osSLbY6t99rHNHT5YLeNYFNgNasnxTfpmGwqiSQypuzpzVB5d8eQlOpW6KxbmsPI7MGs
-         tgEK2ybpWpdCzFMgJMcW2faa2z/P+c7ARzKKvdWWHX0Ca4+F0DED54pF+lN+WbGovOaS
-         V9S++71VlDEnOiVisxukhpo8jC7Pn+esklaKtgtx4B4dM95C46sXGAcPAmJZthpnsbkQ
-         3xOg==
-X-Gm-Message-State: ACgBeo2HtwxLzfAqpMa0g1rz23SEwcQntwDY9wz+yfKY/JkpNTWPws4X
-        DVX30YGUNLSIM5m3TBXzKmQ=
-X-Google-Smtp-Source: AA6agR65jqq3t8Zmu7CpHTfJo9N0eRp5i4URxyb20PgzmvVUM1yYO3wrPbMWYW9k5NhTCJOALAux2Q==
-X-Received: by 2002:a17:90b:1645:b0:1fe:b8d:307c with SMTP id il5-20020a17090b164500b001fe0b8d307cmr23532316pjb.185.1662448630627;
-        Tue, 06 Sep 2022 00:17:10 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id b130-20020a621b88000000b0052dbad1ea2esm9216700pfb.6.2022.09.06.00.17.07
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=hXiNAyvQQWIBJxUajZXg5TzJhz9BDXjhOqmjIrcqoMg=;
+        b=MkuIAHRpZHdtRSRCcesl6mFqAbP0T85IkYCk0y3Pay4UUcE9a3sKdW9TQdg7XD78qp
+         UcTRbJOI1pC0KIG7O161dCMtZTeOHCu6sagUJwOqM8M6ffXIpeCPvCOgs/aLjgijjET8
+         CuSmTNOQlFxCQyTgUW77s+avwjrQa8c0ZZZnfw7ardX+WZHc+Cx7e+lu6bzhxFn7zZgO
+         ytAZT4RQ9HCu7PoKzMKvQ5x9U1orgH3p5jLKvt9LHS54vyuow4RiCqsJTX+H0jvywukI
+         DJzbM2uaF98TZKIB/yxKS2XR+On90FujDJcxvRyKRz8pa0+vu3Wtl0GOHYIVJxafX+oS
+         REQA==
+X-Gm-Message-State: ACgBeo16FfC9TdokWcST99jamZDyKFOJvXhjSip+3KvOnEOy6Dlxx6xK
+        qAtsgrRvjMG6uNqldlU8eC/uqMIknKhBlg==
+X-Google-Smtp-Source: AA6agR4m4gRunsr3jfo/GCmmk67043I3g7JZJEcZcymFDtndOfjg56AhgkfRNBaWFwAl2vHUCnz0GA==
+X-Received: by 2002:a05:6a00:1894:b0:537:2e86:c7df with SMTP id x20-20020a056a00189400b005372e86c7dfmr54511206pfh.18.1662459361496;
+        Tue, 06 Sep 2022 03:16:01 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id f62-20020a625141000000b0053b723a74f7sm7914151pfb.90.2022.09.06.03.15.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 00:17:10 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ye.xingchen@zte.com.cn
-To:     lpieralisi@kernel.org
-Cc:     robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] PCI: iproc: Remove the unneeded result variable
-Date:   Tue,  6 Sep 2022 07:16:36 +0000
-Message-Id: <20220906071636.336853-1-ye.xingchen@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 06 Sep 2022 03:16:00 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shunsuke Mie <mie@igel.co.jp>
+Subject: [RFC PATCH v2 1/2] misc: pci_endpoint_test: Aggregate params checking for xfer
+Date:   Tue,  6 Sep 2022 19:15:54 +0900
+Message-Id: <20220906101555.106033-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: ye xingchen <ye.xingchen@zte.com.cn>
+Each transfer test functions have same parameter checking code. This patch
+unites those to an introduced function.
 
-Return the value iproc_pcie_setup_ib() directly instead of storing it in
-another redundant variable.
-
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
 ---
- drivers/pci/controller/pcie-iproc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Changes in v2:
+* New patch
+---
+---
+ drivers/misc/pci_endpoint_test.c | 35 ++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 2519201b0e51..bd32929ab265 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1244,7 +1244,6 @@ static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
- 
- static int iproc_pcie_paxb_v2_msi_steer(struct iproc_pcie *pcie, u64 msi_addr)
- {
--	int ret;
- 	struct resource_entry entry;
- 
- 	memset(&entry, 0, sizeof(entry));
-@@ -1254,8 +1253,7 @@ static int iproc_pcie_paxb_v2_msi_steer(struct iproc_pcie *pcie, u64 msi_addr)
- 	entry.res->start = msi_addr;
- 	entry.res->end = msi_addr + SZ_32K - 1;
- 
--	ret = iproc_pcie_setup_ib(pcie, &entry, IPROC_PCIE_IB_MAP_IO);
--	return ret;
-+	return iproc_pcie_setup_ib(pcie, &entry, IPROC_PCIE_IB_MAP_IO);
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 8f786a225dcf..3bd9f135cdac 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -332,6 +332,17 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
+ 	return false;
  }
  
- static void iproc_pcie_paxc_v2_msi_steer(struct iproc_pcie *pcie, u64 msi_addr,
++static int pci_endpoint_test_validate_xfer_params(struct device *dev,
++		struct pci_endpoint_test_xfer_param *param, size_t alignment)
++{
++	if (param->size > SIZE_MAX - alignment) {
++		dev_err(dev, "Maximum transfer data size exceeded\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 				   unsigned long arg)
+ {
+@@ -363,9 +374,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 		return false;
+ 	}
+ 
++	err = pci_endpoint_test_validate_xfer_params(dev, &param, alignment);
++	if (err) {
++		dev_err(dev, "Invalid parameter\n");
++		return false;
++	}
++
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
+-		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+ 	if (use_dma)
+@@ -497,9 +512,13 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
+ 		return false;
+ 	}
+ 
++	err = pci_endpoint_test_validate_xfer_params(dev, &param, alignment);
++	if (err) {
++		dev_err(dev, "Invalid parameter\n");
++		return false;
++	}
++
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
+-		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+ 	if (use_dma)
+@@ -595,9 +614,13 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 		return false;
+ 	}
+ 
++	err = pci_endpoint_test_validate_xfer_params(dev, &param, alignment);
++	if (err) {
++		dev_err(dev, "Invalid parameter\n");
++		return false;
++	}
++
+ 	size = param.size;
+-	if (size > SIZE_MAX - alignment)
+-		goto err;
+ 
+ 	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+ 	if (use_dma)
 -- 
-2.25.1
+2.17.1
+
