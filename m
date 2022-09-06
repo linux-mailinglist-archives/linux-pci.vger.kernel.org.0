@@ -2,78 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9645AE092
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 09:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E39195AE0B3
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Sep 2022 09:14:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233427AbiIFHJS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 03:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44736 "EHLO
+        id S238241AbiIFHOE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 03:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232746AbiIFHJP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 03:09:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8376E2FB;
-        Tue,  6 Sep 2022 00:09:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S233502AbiIFHOD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 03:14:03 -0400
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DF25EDD9;
+        Tue,  6 Sep 2022 00:14:02 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBAA161355;
-        Tue,  6 Sep 2022 07:09:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAA1C433D6;
-        Tue,  6 Sep 2022 07:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662448153;
-        bh=OpnXg2yp5D94aJOko6Ai/kddMC46J9TfMxvX+Yijsho=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sSEWmu58xpxNoda7Jv8czDVQBvtwuupoctAaitgDLD+59eUrSNElAnMgyF9oa/yph
-         aYqmZ5gqJ8VfXenlZum4JHyiSN9vS470g1/c/Ok+5mhq1gsKx/TRszvVdp1d9imRpu
-         +bE9LF9mxDpUyDxRy2Zt/1P+jeReHRW2C6fD5FzQobHlK8m+6Ma9tWZimdngNcY6Qk
-         PkL5xnQ7jirlmlJijeSF1w+yEfW2kkob7K/v6pY4rI+XAAmgYiPwGWC/Xc9YY75Nkr
-         rg7dYPIbpy9B5WwA8e3dXRF8WlfNpptGmmR7MUP2fPnc+LYhhfQXNwrponYC6LXChw
-         3Ud+To4SJqUyA==
-Received: from 82-132-232-76.dab.02.net ([82.132.232.76] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oVShq-008Exn-S5;
-        Tue, 06 Sep 2022 08:09:11 +0100
-Date:   Tue, 06 Sep 2022 08:09:14 +0100
-Message-ID: <87mtbdq8rp.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 45FC2424EB;
+        Tue,  6 Sep 2022 07:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+        t=1662448440; bh=0nUWl89mjqQ5K31+h2G4hNBO/2+SnGSjnZ+TdSHB9e8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=ZoXYswq0HIX0U7DUE3HhgoIat+FrZQJmJZN5Qkuv9B9QlHGflmeOrVJVtI2rh/Pug
+         eB/LcOM6VlZeg89arq1wH9Jb3/7G7D3g7lPaM83BhcnSCeZKVrUHQkK0O2mWWi2NE4
+         O6hwwHI4IkN3qlS9piY5O+JryIer8/GnZSzsFQdJxeC2zUZP3Mnvlks6wwTjkT40in
+         bFABA/rPAF8Vmhuj2Q/jTtKvAlfcgzmEfbybd86A0bnAzt0r5qFiwRTOfoXwW43fPq
+         hZKq6nU2NRsLcGChvypsO0P6PEkbaijBAbzVSf+3qs1SgLdgkLDb6SM7HhhpmbARiB
+         9V7gRx8x5B+hA==
+Message-ID: <bbae73e7-9c9b-d86d-c34d-018cb9ef4540@marcan.st>
+Date:   Tue, 6 Sep 2022 16:13:56 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] PCI: apple: do not leak reset GPIO on unbind/unload/error
+Content-Language: es-ES
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Hector Martin <marcan@marcan.st>,
         Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: apple: do not leak reset GPIO on unbind/unload/error
-In-Reply-To: <YxatO5OaI2RpxQ2M@google.com>
 References: <YxatO5OaI2RpxQ2M@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.232.76
-X-SA-Exim-Rcpt-To: dmitry.torokhov@gmail.com, alyssa@rosenzweig.io, lpieralisi@kernel.org, robh@kernel.org, kw@linux.com, bhelgaas@google.com, marcan@marcan.st, sven@svenpeter.dev, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Hector Martin <marcan@marcan.st>
+In-Reply-To: <YxatO5OaI2RpxQ2M@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 06 Sep 2022 03:15:23 +0100,
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> 
+On 06/09/2022 11.15, Dmitry Torokhov wrote:
 > The driver allocates reset GPIO in apple_pcie_setup_port() but neither
 > releases the resource, nor uses devm API to have it released
 > automatically.
@@ -84,10 +72,37 @@ Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 > 
 > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
 > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> 
+> This patch has been pulled out of the series
+> https://lore.kernel.org/all/20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com/
+> with updated justification (leak fix vs pure API deprecation).
+> 
+>  drivers/pci/controller/pcie-apple.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index a2c3c207a04b..66f37e403a09 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -516,8 +516,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	u32 stat, idx;
+>  	int ret, i;
+>  
+> -	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
+> -				       GPIOD_OUT_LOW, "PERST#");
+> +	reset = devm_fwnode_gpiod_get(pcie->dev, of_fwnode_handle(np), "reset",
+> +				      GPIOD_OUT_LOW, "PERST#");
+>  	if (IS_ERR(reset))
+>  		return PTR_ERR(reset);
+>  
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Hector Martin <marcan@marcan.st>
 
-	M.
+I actually caught this one a while back, just didn't get around to
+submitting it yet since it's part of my WIP PCIe power management branch
+(that I'm getting back to next week or so!) :)
 
--- 
-Without deviation from the norm, progress is not possible.
+https://github.com/AsahiLinux/linux/commit/04f5628fc73ea0369f66c83ba473cb6f8187d2b3
+
+- Hector
