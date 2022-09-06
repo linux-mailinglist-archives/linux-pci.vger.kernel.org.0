@@ -2,218 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF6615AF7EC
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 00:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762B25AF80B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 00:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbiIFWYr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 18:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
+        id S229851AbiIFWl2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 18:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbiIFWY0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 18:24:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE80AE86F;
-        Tue,  6 Sep 2022 15:24:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A378861713;
-        Tue,  6 Sep 2022 22:24:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAE96C433C1;
-        Tue,  6 Sep 2022 22:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662503054;
-        bh=8zBtTybYX8wofqg/4M5b5Eesn1tmGcj3alXYa5B6SS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTF2mls+dk/XL02WdDwayJCVNRSAdDhBURu3wckxOru9a5/wQKNLb4P6TPbmkSIKh
-         bzQb8xJ/qYcu56kRUVpLaWHZLUwzo8iFfG6qZ6etUMrP0R7idmfxLO/yxpNEAlPebj
-         XgEpTnQgLZDegIE+t+qwm5vozzOLCSlS7KORLibCFL8GZ+0czg7iQEr+fqKN5GtM7N
-         wgCtCDsDJE5DdbD6/kaEQGCUhhXaJLnXULnB2hZ8xqYMHZ/OD9rZagdEY7ZfdeqPJ0
-         INRsniFzvKiQE7cXiouUc4v7XEW7341ma0ApVVjqFnw0ZAt5kDLcTajzAXGTxd7GMA
-         YRVqMpdEIuKyw==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 10/10] PCI/PM: Always disable PTM for all devices during suspend
-Date:   Tue,  6 Sep 2022 17:23:51 -0500
-Message-Id: <20220906222351.64760-11-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220906222351.64760-1-helgaas@kernel.org>
-References: <20220906222351.64760-1-helgaas@kernel.org>
+        with ESMTP id S229564AbiIFWl2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 18:41:28 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409C3792F6;
+        Tue,  6 Sep 2022 15:41:27 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id z9-20020a17090a468900b001ffff693b27so11504666pjf.2;
+        Tue, 06 Sep 2022 15:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=7NpfrCk+6A3z0LsR2jUu08sOxiRJrMwnOcQCIaNlAQE=;
+        b=fnZfa2SY63h0To/ZunyJoMLSLzjEHx8OFYvv/mdfiWDX1CkKIxHgVViAFQfzkqMAV9
+         lLRW+Fo7zuecm+NsXbCE0/nnjPh7t4U183741qgpCAr84bWLsNln5w8UoNKfWSETFJ4S
+         fPWwnPK6LNJGug7UqJotGixvVrS4N8U6B3R0i1y64jLuO1mMUmdSt5FL9cHfyTlIeNDb
+         vPM3i5kDgjE4ZDZd87JANfVa8mqWu/umTmzGwJctpD3CgV12LaEy00V5/rTtG/LjDA3X
+         3ZzgmubtffFxtC7sTLbAO82ZkYErMmBwd0g5NBk5dy8NtZW0qtkk2mfRJ4bgax0T0+GS
+         upSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=7NpfrCk+6A3z0LsR2jUu08sOxiRJrMwnOcQCIaNlAQE=;
+        b=GHm82gu0+EhVOkyqz0j1CK3D7+z4SUIEq9oH9SZDtSYDx9IJIPQmT6GpUl7JSCR27D
+         Tpyn1pccZPuDhF+hWaNP0l+ajyq92P06AQ3nfiroHWz2hn0UsDohWdS6ggyMJQrEXDcf
+         1pxNjdwolY0F7bSST03YCx19jxUjwF1iPz5BFvk0fMl6T8kaMeH3caJ0+ciT3HjZy8sD
+         +zQ04F5Mh/eq6ppGb+BdDCEdUqZmubWiLRfCMnq0NrbXAmaEx6QDzfxOAB61crgrjS5N
+         wlXUx5U0dqAyR1N4fIBqDx4nybaEIWL3isI/p98oMCGBPhutLNqgabTOZJ1EBcqsSZYH
+         qbng==
+X-Gm-Message-State: ACgBeo0+Y0lAffh0ywjXiNvQv53Gi2OBoer8D2jRAsfblJmj+3BKgdQz
+        U2C/TxKJboMZaT6wHjbLAo4=
+X-Google-Smtp-Source: AA6agR7a3kLQBMn0Ka4nspJdGDzNm+jwOaTDY1aD+Liwcp05OMgI6xyBv+MKXF+LwG5VWq27jisE6w==
+X-Received: by 2002:a17:902:f686:b0:175:44a:c707 with SMTP id l6-20020a170902f68600b00175044ac707mr732672plg.62.1662504086502;
+        Tue, 06 Sep 2022 15:41:26 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:abc4:5d24:5a73:a96b])
+        by smtp.gmail.com with ESMTPSA id r12-20020aa7988c000000b0053612ec8859sm10689315pfl.209.2022.09.06.15.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 15:41:26 -0700 (PDT)
+Date:   Tue, 6 Sep 2022 15:41:23 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+Message-ID: <YxfMkzW+5W3Hm1dU@google.com>
+References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
+ <20220906204301.3736813-2-dmitry.torokhov@gmail.com>
+ <20220906211628.6u4hbpn4shjcvqel@pali>
+ <Yxe7CJnIT5AiUilL@google.com>
+ <20220906214114.vj3v32dzwxz6uqik@pali>
+ <YxfBKkqce/IQQLk9@google.com>
+ <20220906220901.p2c44we7i4c35uvx@pali>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220906220901.p2c44we7i4c35uvx@pali>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Sep 07, 2022 at 12:09:01AM +0200, Pali Rohár wrote:
+> On Tuesday 06 September 2022 14:52:42 Dmitry Torokhov wrote:
+> > On Tue, Sep 06, 2022 at 11:41:14PM +0200, Pali Rohár wrote:
+> > > On Tuesday 06 September 2022 14:26:32 Dmitry Torokhov wrote:
 
-We want to disable PTM on Root Ports because that allows some chips, e.g.,
-Intel mobile chips since Coffee Lake, to enter a lower-power PM state.
+> > > would not be such easy as during startup we need to reset endpoint card.
+> > > Normally just putting it from reset, but if card was not reset state
+> > > prior probing driver then it is needed to first put it into reset...
+> > > 
+> > > I would fix it this issue after your patch is merged to prevent any
+> > > other merge conflicts.
+> > > 
+> > > How to tell devm_fwnode_gpiod_get() function that caller is not
+> > > interested in changing signal line? Just by changing GPIOD_OUT_HIGH to 0?
+> > 
+> > I think there are 2 options:
+> > 
+> > 1. Start with GPIOD_OUT_LOW (i.e. reset is explicitly deasserted), and
+> > then in powerup/powerdown you do explicit on/off transitions with proper
+> > timings.
+> 
+> PERST# is active-low. So deasserting means to put it into high state.
+> But device tree can specify if line is active-high as on some board
+> designs is GPIO output connected to inverter (or to level shifter with
+> additional logic of signal inversion). So what [GPIOD_]OUT_LOW means in
+> this context? Just it is needed that from driver point of view always
+> value 1 means reset active and 0 means reset inactive, independently of
+> double (triple?) inversions.
 
-That means we also have to disable PTM on downstream devices.  PCIe r6.0,
-sec 2.2.8, recommends that functions support generation of messages in
-non-D0 states, so we have to assume Switch Upstream Ports or Endpoints may
-send PTM Requests while in D1, D2, and D3hot.  A PTM message received by a
-Downstream Port (including a Root Port) with PTM disabled must be treated
-as an Unsupported Request (sec 6.21.3).
+Think of GPIOD_OUT_LOW and GPIOD_OUT_HIGH as logical off and on, or
+logical deactivate/activate. Gpiolib will take into account declared
+polarity of the line when it drives the output, so for lines marked as
+GPIO_ACTIVE_HIGH GPIO_OUT_HIGH will result in line driven HIGH, whereas
+for lines marked as GPIO_ACTIVE_LOW GPIO_OUT_HIGH will result in the
+line being driven LOW.
 
-PTM was previously disabled only for Root Ports, and it was disabled in
-pci_prepare_to_sleep(), which is not called at all if a driver supports
-legacy PM or does its own state saving.
+Linus, do you think we should introduce GPIOD_OUT_INACTIVE /
+GPIOD_OUT_ACTIVE or GPIOD_OUT_DEASSERTED / GPIOD_OUT_ASSERTED and
+deprecate existing GPIOD_OUT_LOW and GPIO_OUT_HIGH?
 
-Instead, disable PTM early in pci_pm_suspend() and pci_pm_runtime_suspend()
-so we do it in all cases.
+Thanks.
 
-Previously PTM was disabled *after* saving device state, so the state
-restore on resume automatically re-enabled it.  Since we now disable PTM
-*before* saving state, we must explicitly re-enable it in pci_pm_resume()
-and pci_pm_runtime_resume().
-
-Here's a sample of errors that occur when PTM is disabled only on the Root
-Port.  With this topology:
-
-  0000:00:1d.0 Root Port            to [bus 08-71]
-  0000:08:00.0 Switch Upstream Port to [bus 09-71]
-
-Kai-Heng reported errors like this:
-
-  pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-  pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-
-Decoding TLP header 0x34...... (0011 0100b) and 0x08000052:
-
-  Fmt                         001b  4 DW header, no data
-  Type                     1 0100b  Msg (Local - Terminate at Receiver)
-  Requester ID  0x0800              Bus 08 Devfn 00.0
-  Message Code    0x52  0101 0010b  PTM Request
-
-The 00:1d.0 Root Port logged an Unsupported Request error when it received
-a PTM Request with Requester ID 08:00.0.
-
-Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216210
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci-driver.c | 11 +++++++++++
- drivers/pci/pci.c        | 28 ++--------------------------
- 2 files changed, 13 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 2815922ac525..107d77f3c846 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -774,6 +774,12 @@ static int pci_pm_suspend(struct device *dev)
- 
- 	pci_dev->skip_bus_pm = false;
- 
-+	/*
-+	 * Disabling PTM allows some systems, e.g., Intel mobile chips
-+	 * since Coffee Lake, to enter a lower-power PM state.
-+	 */
-+	pci_suspend_ptm(pci_dev);
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
- 
-@@ -982,6 +988,8 @@ static int pci_pm_resume(struct device *dev)
- 	if (pci_dev->state_saved)
- 		pci_restore_standard_config(pci_dev);
- 
-+	pci_resume_ptm(pci_dev);
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume(dev);
- 
-@@ -1269,6 +1277,8 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 	pci_power_t prev = pci_dev->current_state;
- 	int error;
- 
-+	pci_suspend_ptm(pci_dev);
-+
- 	/*
- 	 * If pci_dev->driver is not set (unbound), we leave the device in D0,
- 	 * but it may go to D3cold when the bridge above it runtime suspends.
-@@ -1330,6 +1340,7 @@ static int pci_pm_runtime_resume(struct device *dev)
- 	 * D3cold when the bridge above it runtime suspended.
- 	 */
- 	pci_pm_default_resume_early(pci_dev);
-+	pci_resume_ptm(pci_dev);
- 
- 	if (!pci_dev->driver)
- 		return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 83818f81577d..107afa0a5b03 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2706,24 +2706,12 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
- 
--	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
--	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_suspend_ptm(dev);
--
- 	pci_enable_wake(dev, target_state, wakeup);
- 
- 	error = pci_set_power_state(dev, target_state);
- 
--	if (error) {
-+	if (error)
- 		pci_enable_wake(dev, target_state, false);
--		pci_restore_ptm_state(dev);
--	}
- 
- 	return error;
- }
-@@ -2764,24 +2752,12 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
- 
--	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
--	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_suspend_ptm(dev);
--
- 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
- 
- 	error = pci_set_power_state(dev, target_state);
- 
--	if (error) {
-+	if (error)
- 		pci_enable_wake(dev, target_state, false);
--		pci_restore_ptm_state(dev);
--	}
- 
- 	return error;
- }
 -- 
-2.25.1
-
+Dmitry
