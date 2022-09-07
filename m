@@ -2,139 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E24C15AF965
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 03:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D0895AF992
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 03:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiIGB1k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Sep 2022 21:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45104 "EHLO
+        id S229547AbiIGB7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Sep 2022 21:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiIGB1i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 21:27:38 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106F211A32;
-        Tue,  6 Sep 2022 18:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662514058; x=1694050058;
-  h=message-id:date:mime-version:cc:to:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=ZV1q+JgdPyql58iLRG4rBR7Tp9YEX2NHtfBPjMsBF2E=;
-  b=AMUA9Pv+WSO6P8ndU0QMVF4Uys+zrhjiksCqk6SjEfJY8gj/9T5210oO
-   vcg8nuW7vbvCyPyYPOrSp4WUcSM1UHpCvHk4gdWqXsF7NFTXamZHBUgN+
-   smrnqMNof3Lli/KZ76KnbH3UQ5PWuhaZ9DhnDcMRK5sRF5BGRC9o0VnQ8
-   z2HGVKhJvtzpCzarYS8OhCW5OGNkRLbq+GgNa8I5tnyyOt1zxYlC7L0Gf
-   OZ+SuzBFL5XDzUqP17uiNjg1LANumuLjo44yVhNYRxRLhnLdFUDxBNVgi
-   SHEc2HCPYEf3vKjqTWRnYtt7iCJ8SsCqD5zGDpkKw/zIskZTG1qqrQR7A
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="295486690"
-X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="295486690"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 18:27:37 -0700
-X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="591491033"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.214.40]) ([10.254.214.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 18:27:32 -0700
-Message-ID: <682d8922-200d-8c89-7142-83e7b3754b8d@linux.intel.com>
-Date:   Wed, 7 Sep 2022 09:27:30 +0800
+        with ESMTP id S229472AbiIGB72 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Sep 2022 21:59:28 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDC626F7
+        for <linux-pci@vger.kernel.org>; Tue,  6 Sep 2022 18:59:26 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id m15so509025lfl.9
+        for <linux-pci@vger.kernel.org>; Tue, 06 Sep 2022 18:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=EFy/QSO0F4j4Apu6RDsR6WCOc7oRq8bSTcHPqIPG7Ts=;
+        b=CCb3YOlFRGWWKGrdlvaf62RkHUFHvgRy9Pl9Rd5dpb7MJ1mMzrDvjPIFfvyJGxq521
+         HLL2gwDh9W9SZJY07tUIEXxkzko4IKHaUexEgGUbock7JFGJgk+c4+zs+ethDsttKJnY
+         Cre2ZzqRNPSSsrPTR4DL8YcPz26qn7efBPg/zkVnaxZmdOhYBiVhTRpxr4GnqiCY3YGJ
+         OMPGf2KDNvlMBdDnInQqa2lLDl+mU0OYpsPdblH6WJafSsaPhsF3OwuIuAVR9jzK6Hlo
+         6lJ2qANjOJosL8cVbuKIBu87cnBuGSV/KdwBRcffz4+QXJVmy/yCLoPNO8vP3GbByP6H
+         CxEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=EFy/QSO0F4j4Apu6RDsR6WCOc7oRq8bSTcHPqIPG7Ts=;
+        b=7LG2WywzOrk0TbCA5DT1ZD7ZMC8Gk598u3G0L82mzySG0ej7F4gEro2+LdkkzIGqx8
+         xSs7BjCZWNQo6VRUj30iT1swEVw/mCBCMKNhoYJraCImLygm174Klv7YT2D5AuLn/DlM
+         7aSC6KKPKvpqoGzYJa1HEQJPRc03a5XJc8DK8M6+aibKtTCGeY6++6ZCVcIRnWPmY/nx
+         IgVs+pU0EwNFCUC0bK2aXMHtW3fwLdcUnUNbT6jWpHqVgXcSplNFo5CtPsJI6Xu+innH
+         /gpYpDDPqfQOZi2mo5LwTVT8ss3eW60uMqaf4v929Bk2kHQtAJc3e5j7MX29EPkbK3/y
+         R+pg==
+X-Gm-Message-State: ACgBeo0QA6YBk1g0D7BoAIRYpNB4GFDinsts2+P54hcoqutDVcmCeMvR
+        eCzxZ3Qq5uulHkm8YKCPVEt/Q9BFu2Pp28K1LcUV+Q==
+X-Google-Smtp-Source: AA6agR62TnWZqZ0eQ9BI+5r4ExFk6NfXVb5ER+iX5GutywvNPeAGme2Hie99tf6Po3ksGbjEiGX0TE6PEACqxBFgm5c=
+X-Received: by 2002:a05:6512:3f05:b0:497:9e06:255b with SMTP id
+ y5-20020a0565123f0500b004979e06255bmr355206lfa.175.1662515964784; Tue, 06 Sep
+ 2022 18:59:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20220906124458.46461-1-baolu.lu@linux.intel.com>
- <20220906124458.46461-10-baolu.lu@linux.intel.com> <Yxd2+d/VOjdOgrR2@myrica>
-Content-Language: en-US
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v13 09/13] iommu/sva: Refactoring
- iommu_sva_bind/unbind_device()
-In-Reply-To: <Yxd2+d/VOjdOgrR2@myrica>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220906101555.106033-1-mie@igel.co.jp> <Yxcn4CPN3BkC9xg7@kroah.com>
+In-Reply-To: <Yxcn4CPN3BkC9xg7@kroah.com>
+From:   Shunsuke Mie <mie@igel.co.jp>
+Date:   Wed, 7 Sep 2022 10:59:13 +0900
+Message-ID: <CANXvt5ouQ72R3q=G3W-N77ecmu8k86c4FwpEq4eMaCG-pt=G_Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] misc: pci_endpoint_test: Aggregate params
+ checking for xfer
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+2022=E5=B9=B49=E6=9C=886=E6=97=A5(=E7=81=AB) 19:58 Greg Kroah-Hartman <greg=
+kh@linuxfoundation.org>:
+>
+> On Tue, Sep 06, 2022 at 07:15:54PM +0900, Shunsuke Mie wrote:
+> > Each transfer test functions have same parameter checking code. This pa=
+tch
+> > unites those to an introduced function.
+> >
+> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > ---
+> > Changes in v2:
+> > * New patch
+> > ---
+> > ---
+> >  drivers/misc/pci_endpoint_test.c | 35 ++++++++++++++++++++++++++------
+> >  1 file changed, 29 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoi=
+nt_test.c
+> > index 8f786a225dcf..3bd9f135cdac 100644
+> > --- a/drivers/misc/pci_endpoint_test.c
+> > +++ b/drivers/misc/pci_endpoint_test.c
+> > @@ -332,6 +332,17 @@ static bool pci_endpoint_test_msi_irq(struct pci_e=
+ndpoint_test *test,
+> >       return false;
+> >  }
+> >
+> > +static int pci_endpoint_test_validate_xfer_params(struct device *dev,
+> > +             struct pci_endpoint_test_xfer_param *param, size_t alignm=
+ent)
+> > +{
+> > +     if (param->size > SIZE_MAX - alignment) {
+> > +             dev_err(dev, "Maximum transfer data size exceeded\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+> >                                  unsigned long arg)
+> >  {
+> > @@ -363,9 +374,13 @@ static bool pci_endpoint_test_copy(struct pci_endp=
+oint_test *test,
+> >               return false;
+> >       }
+> >
+> > +     err =3D pci_endpoint_test_validate_xfer_params(dev, &param, align=
+ment);
+> > +     if (err) {
+> > +             dev_err(dev, "Invalid parameter\n");
+>
+> Also, you just printed 2 errors for the same error.  Not needed.
+I see. I'll also change to using the dev_dbg() in the next version.
 
-On 2022/9/7 0:36, Jean-Philippe Brucker wrote:
-> On Tue, Sep 06, 2022 at 08:44:54PM +0800, Lu Baolu wrote:
->> +/**
->> + * iommu_sva_bind_device() - Bind a process address space to a device
->> + * @dev: the device
->> + * @mm: the mm to bind, caller must hold a reference to mm_users
->> + *
->> + * Create a bond between device and address space, allowing the device to access
->> + * the mm using the returned PASID. If a bond already exists between @device and
->> + * @mm, it is returned and an additional reference is taken. Caller must call
->> + * iommu_sva_unbind_device() to release each reference.
-> This isn't true anymore. How about storing handle in the domain?
-
-Yes, agreed. How about making the comments like this:
-
-/**
-  * iommu_sva_bind_device() - Bind a process address space to a device
-  * @dev: the device
-  * @mm: the mm to bind, caller must hold a reference to mm_users
-  *
-  * Create a bond between device and address space, allowing the device to
-  * access the mm using the pasid returned by iommu_sva_get_pasid(). If a
-  * bond already exists between @device and @mm, an additional internal
-  * reference is taken. The reference will be released when the caller calls
-  * iommu_sva_unbind_device().
-
-Storing the handle in the domain looks odd. Conceptually an iommu domain
-represents a hardware page table and the SVA handle represents a
-relationship between device and the page table for a consumer. It's
-better to make them separated.
-
-In a separated series, probably we can discuss the possibility of
-removing handle from the driver APIs. Just simply return the sva domain
-instead.
-
-struct iommu_domain *iommu_sva_bind_device(struct device *dev,
-                                            struct mm_struct *mm);
-void iommu_sva_unbind_device(struct device *dev,
-                              struct iommu_domain *domain);
-u32 iommu_sva_get_pasid(struct iommu_domain *domain);
-
-If you think it's appropriate, I can send out the code for discussion.
-
-> 
-> (Maybe also drop my Reviewed-by tags since this has changed significantly,
-> I tend to ignore patches that have them)
-
-I am sorry that after your review, the SVA domain and attach/detach
-device pasid interfaces have undergone some changes. They mainly exist
-in the following patches. Can you please help to take a look.
-
-iommu/sva: Refactoring iommu_sva_bind/unbind_device()
-arm-smmu-v3/sva: Add SVA domain support
-iommu: Add IOMMU SVA domain support
-iommu: Add attach/detach_dev_pasid iommu interfaces
-
-Best regards,
-baolu
+Thanks,
+Shunsuke
