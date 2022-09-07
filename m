@@ -2,113 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 905C65B06DC
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 16:33:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D0635B0850
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 17:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230291AbiIGOdD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Sep 2022 10:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
+        id S230362AbiIGPUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Sep 2022 11:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbiIGOcO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 10:32:14 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8AEB0B0A
-        for <linux-pci@vger.kernel.org>; Wed,  7 Sep 2022 07:32:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b16so20032105edd.4
-        for <linux-pci@vger.kernel.org>; Wed, 07 Sep 2022 07:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date;
-        bh=UTPjlhWN0j/3cl0uibj9IdU3K9tIHCNTd74bAPWV+BQ=;
-        b=F9yMmaIgSJ7x+iStBVtJEVNXfuHmNuRwH0oeGQZVEKjdO6DhdtNMd/isOm61Mbr/sg
-         xfKr3XSywaIr4UtWLvFYPLTvFzJ7h/Hm2dTXLAIBAXs8GSUGrRcaGfrF44kItgvLNssI
-         mdCrrU6xo0k06TKggYMVy8FOcAbkBgo1wC5PjqDsVEhsblNCO7wJZs+Uz3UyfKMq66jc
-         LBZlB+02LZPjcLDn2rXew+EJosOoyYb0qI+DEdM9Q7gGpQpAuWFiAiGu2xaPJNPE8Z0z
-         1dPz+Ukvd+R1N2c6VsiSc8mvEG74skD4zo8WmW09cr/Ve033R6BY3xgueFtUzfnE1WmC
-         UQAw==
+        with ESMTP id S230180AbiIGPUJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 11:20:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F10F1EEF6
+        for <linux-pci@vger.kernel.org>; Wed,  7 Sep 2022 08:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662564005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CHNdLB0NEs0hPJCPuKfDS5PXO0uKkxor3QlPHHKcdWM=;
+        b=eO1pjAiBcATknSb0PaZfYCnysEh5OgJKH2NMhVCcSbzoIG8sYVg43MKfYw3h8a3LUxWJ2T
+        cjwyURrL0yHuyRtZBUj7qyS68vruKkXHDIdSWzMEeSopspsCZ0fWJ9wFZJcLzHmt4kf28s
+        svDE67/wj6bcWtIsF6gQzaAJsxmuZOc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-630-HWiTiXyTMG-KUWAGipIGLQ-1; Wed, 07 Sep 2022 11:20:04 -0400
+X-MC-Unique: HWiTiXyTMG-KUWAGipIGLQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 203-20020a1c02d4000000b003a5f5bce876so10399977wmc.2
+        for <linux-pci@vger.kernel.org>; Wed, 07 Sep 2022 08:20:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=UTPjlhWN0j/3cl0uibj9IdU3K9tIHCNTd74bAPWV+BQ=;
-        b=mnRIn94I9lsNdvsXoibnszRevlGkCb7l+uJ5YmoAn8mDs2I2UhHRyZNVW07BXQTLo3
-         bZ/9ol4gtkWGo5iPnHpgICDEAFoAUjnSArT7jdVhrQEjQbyRq1DEQG2xrKEipbtWGzyq
-         AodPUpkJ5KF+Hf2FAh1LkzH3mQai1m3iETZglhe/S14O7TUSQfO8il3Z6wcgA06qtNmC
-         NThEDTLgS9nrnfxqOkQFzqksYnBMLh0tHjFLhLTGfaGpz7/Zmnvo7yz8duxje6cB6IzC
-         eRvttjkSPSpisLhQPSD7dfx9Jx0jDBsb1q/Nm1BY2w9W2gzOIOCOTn0ZTZs3LQvyQXrq
-         QB+Q==
-X-Gm-Message-State: ACgBeo3xRz/RnB8SP0xsihottJ9j/StFsoCtlgmpZxs/sSHZjf+d+cO6
-        DzOlAKVJ9BDR/cAG7Blo4WkpMkpnsu0eZ1xUmPc=
-X-Google-Smtp-Source: AA6agR4uPOOUp+ayJg7njU0xYMAyBPmGFYJGRdL33Bi7R249qZwUmqVQ08qkjiR05GuTGJWJL9HGuiFQ37xnsFlHbf4=
-X-Received: by 2002:aa7:db8b:0:b0:44e:5ce1:f29a with SMTP id
- u11-20020aa7db8b000000b0044e5ce1f29amr3424831edt.109.1662561128989; Wed, 07
- Sep 2022 07:32:08 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=CHNdLB0NEs0hPJCPuKfDS5PXO0uKkxor3QlPHHKcdWM=;
+        b=z1Xb8wVJTnZJ2bgPWyp0pqNZTwq0MaTPuTyD4AZwMcNZ7jDqbTFYg1jEiv7PfKzLLn
+         d0RJ3+VssyBWRHIC+Up3bVgkeo2AhvI4myoogfnZqf7JZh6x2HgpAwuLZrG3wtasqrq1
+         a69Vug15tQB1kvWDVfHnc7aD87yITFv+EJ+sAMGnznc+0jmeERvdIeCE52vrLIz2AVv1
+         H8IPAjcfHCKrMsjDG1+lZ/FQEeaA6fIsyc90AQsvrETJDBQHUlUqEiUbS6SYGC4fI5R0
+         kzydiRR+n2BccDfJLSzo12bwH7LCYMbY7SbPGZt4+zhJTUPjUkbjRo/9yO49/6BWstXn
+         TT4A==
+X-Gm-Message-State: ACgBeo3+1evsM1fYf2tIFQQsqVlOvD1SZM3u16MUIu0nYZtxtnN7vulh
+        CWx6xJK+7RHk7SQooIILFFQodsO6k/BFDMT+KRRXc0T7HO68vStyQGj4Vdj6ZebRqUacrov4p0a
+        8xaTN8FYWTlg24Kxtscs/
+X-Received: by 2002:a5d:59ab:0:b0:228:28df:9193 with SMTP id p11-20020a5d59ab000000b0022828df9193mr2471688wrr.323.1662564003269;
+        Wed, 07 Sep 2022 08:20:03 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR756qiCLKEbLM1iNnFKS+9y7GWIyNG66GDmPAE9ydBmmICwjU+sxM3SEVFU1scSKoLlwTZJ6g==
+X-Received: by 2002:a5d:59ab:0:b0:228:28df:9193 with SMTP id p11-20020a5d59ab000000b0022828df9193mr2471659wrr.323.1662564002953;
+        Wed, 07 Sep 2022 08:20:02 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id f25-20020a1c6a19000000b003a840690609sm29360122wmc.36.2022.09.07.08.20.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Sep 2022 08:20:02 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     x86@kernel.org, hpa@zytor.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        vsirnapalli@vmware.com, er.ajay.kaher@gmail.com,
+        willy@infradead.org, namit@vmware.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        jailhouse-dev@googlegroups.com, xen-devel@lists.xenproject.org,
+        acrn-dev@lists.projectacrn.org, helgaas@kernel.org,
+        bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com
+Subject: Re: [PATCH v2] x86/PCI: Prefer MMIO over PIO on VMware hypervisor
+In-Reply-To: <1662448117-10807-1-git-send-email-akaher@vmware.com>
+References: <1662448117-10807-1-git-send-email-akaher@vmware.com>
+Date:   Wed, 07 Sep 2022 17:20:00 +0200
+Message-ID: <8735d3rz33.fsf@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a54:3fc4:0:0:0:0:0 with HTTP; Wed, 7 Sep 2022 07:32:07 -0700 (PDT)
-Reply-To: lumar.casey@outlook.com
-From:   LUMAR CASEY <miriankushrat@gmail.com>
-Date:   Wed, 7 Sep 2022 16:32:07 +0200
-Message-ID: <CAO4StN3iFKypeHLByNWR98VPw-8s6UHDJYgBRpLm-4kdPR=60w@mail.gmail.com>
-Subject: ATTENTION/PROPOSAL
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.8 required=5.0 tests=ADVANCE_FEE_4_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM,UNDISC_MONEY,UPPERCASE_75_100 autolearn=no
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:544 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [miriankushrat[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 UPPERCASE_75_100 message body is 75-100% uppercase
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.0 ADVANCE_FEE_4_NEW_MONEY Advance Fee fraud and lots of money
-X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ATTENTION
+Ajay Kaher <akaher@vmware.com> writes:
 
-BUSINESS PARTNER,
+> During boot-time there are many PCI config reads, these could be performed
+> either using Port IO instructions (PIO) or memory mapped I/O (MMIO).
+>
+> PIO are less efficient than MMIO, they require twice as many PCI accesses
+> and PIO instructions are serializing. As a result, MMIO should be preferr=
+ed
+> when possible over PIO.
+>
+> Virtual Machine test result using VMware hypervisor
+> 1 hundred thousand reads using raw_pci_read() took:
+> PIO: 12.809 seconds
+> MMIO: 8.517 seconds (~33.5% faster then PIO)
+>
+> Currently, when these reads are performed by a virtual machine, they all
+> cause a VM-exit, and therefore each one of them induces a considerable
+> overhead.
+>
+> This overhead can be further improved, by mapping MMIO region of virtual
+> machine to memory area that holds the values that the =E2=80=9Cemulated h=
+ardware=E2=80=9D
+> is supposed to return. The memory region is mapped as "read-only=E2=80=9D=
+ in the
+> NPT/EPT, so reads from these regions would be treated as regular memory
+> reads. Writes would still be trapped and emulated by the hypervisor.
+>
+> Virtual Machine test result with above changes in VMware hypervisor
+> 1 hundred thousand read using raw_pci_read() took:
+> PIO: 12.809 seconds
+> MMIO: 0.010 seconds
+>
+> This helps to reduce virtual machine PCI scan and initialization time by
+> ~65%. In our case it reduced to ~18 mSec from ~55 mSec.
+>
+> MMIO is also faster than PIO on bare-metal systems, but due to some bugs
+> with legacy hardware and the smaller gains on bare-metal, it seems prudent
+> not to change bare-metal behavior.
 
-I AM LUMAR CASEY WORKING WITH AN INSURANCE FINANCIAL INSTITUTE, WITH
-MY POSITION AND PRIVILEGES I WAS ABLE TO SOURCE OUT AN OVER DUE
-PAYMENT OF 12.8 MILLION POUNDS THAT IS NOW SECURED WITH A SHIPPING
-DIPLOMATIC OUTLET.
+Out of curiosity, are we sure MMIO *always* works for other hypervisors
+besides Vmware? Various Hyper-V version can probably be tested (were
+they?) but with KVM it's much harder as PCI is emulated in VMM and
+there's certainly more than 1 in existence...
 
-I AM SEEKING YOUR PARTNERSHIP TO RECEIVE THIS CONSIGNMENT AS AS MY
-PARTNER TO INVEST THIS FUND INTO A PROSPEROUS INVESTMENT VENTURE IN
-YOUR COUNTRY.
+>
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> ---
+> v1 -> v2:
+> Limit changes to apply only to VMs [Matthew W.]
+> ---
+>  arch/x86/pci/common.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index ddb7986..1e5a8f7 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/pci_x86.h>
+>  #include <asm/setup.h>
+>  #include <asm/irqdomain.h>
+> +#include <asm/hypervisor.h>
+>=20=20
+>  unsigned int pci_probe =3D PCI_PROBE_BIOS | PCI_PROBE_CONF1 | PCI_PROBE_=
+CONF2 |
+>  				PCI_PROBE_MMCONF;
+> @@ -57,14 +58,58 @@ int raw_pci_write(unsigned int domain, unsigned int b=
+us, unsigned int devfn,
+>  	return -EINVAL;
+>  }
+>=20=20
+> +#ifdef CONFIG_HYPERVISOR_GUEST
+> +static int vm_raw_pci_read(unsigned int domain, unsigned int bus, unsign=
+ed int devfn,
+> +						int reg, int len, u32 *val)
+> +{
+> +	if (raw_pci_ext_ops)
+> +		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
+> +	if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+> +		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
+> +	return -EINVAL;
+> +}
+> +
+> +static int vm_raw_pci_write(unsigned int domain, unsigned int bus, unsig=
+ned int devfn,
+> +						int reg, int len, u32 val)
+> +{
+> +	if (raw_pci_ext_ops)
+> +		return raw_pci_ext_ops->write(domain, bus, devfn, reg, len, val);
+> +	if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+> +		return raw_pci_ops->write(domain, bus, devfn, reg, len, val);
+> +	return -EINVAL;
+> +}
 
-I AWAIT YOUR REPLY TO ENABLE US PROCEED WITH THIS BUSINESS PARTNERSHIP TOGETHER.
+These look exactly like raw_pci_read()/raw_pci_write() but with inverted
+priority. We could've added a parameter but to be more flexible, I'd
+suggest we add a 'priority' field to 'struct pci_raw_ops' and make
+raw_pci_read()/raw_pci_write() check it before deciding what to use
+first. To be on the safe side, you can leave raw_pci_ops's priority
+higher than raw_pci_ext_ops's by default and only tweak it in
+arch/x86/kernel/cpu/vmware.c=20
 
-REGARDS,
+> +#endif /* CONFIG_HYPERVISOR_GUEST */
+> +
+>  static int pci_read(struct pci_bus *bus, unsigned int devfn, int where, =
+int size, u32 *value)
+>  {
+> +#ifdef CONFIG_HYPERVISOR_GUEST
+> +	/*
+> +	 * MMIO is faster than PIO, but due to some bugs with legacy
+> +	 * hardware, it seems prudent to prefer MMIO for VMs and PIO
+> +	 * for bare-metal.
+> +	 */
+> +	if (!hypervisor_is_type(X86_HYPER_NATIVE))
+> +		return vm_raw_pci_read(pci_domain_nr(bus), bus->number,
+> +					 devfn, where, size, value);
+> +#endif /* CONFIG_HYPERVISOR_GUEST */
+> +
+>  	return raw_pci_read(pci_domain_nr(bus), bus->number,
+>  				 devfn, where, size, value);
+>  }
+>=20=20
+>  static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,=
+ int size, u32 value)
+>  {
+> +#ifdef CONFIG_HYPERVISOR_GUEST
+> +	/*
+> +	 * MMIO is faster than PIO, but due to some bugs with legacy
+> +	 * hardware, it seems prudent to prefer MMIO for VMs and PIO
+> +	 * for bare-metal.
+> +	 */
+> +	if (!hypervisor_is_type(X86_HYPER_NATIVE))
+> +		return vm_raw_pci_write(pci_domain_nr(bus), bus->number,
+> +					  devfn, where, size, value);
+> +#endif /* CONFIG_HYPERVISOR_GUEST */
+> +
+>  	return raw_pci_write(pci_domain_nr(bus), bus->number,
+>  				  devfn, where, size, value);
+>  }
 
-LUMAR CASEY
+--=20
+Vitaly
+
