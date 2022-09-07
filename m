@@ -2,250 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D58A85B0DE0
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 22:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE5BB5B0DE2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 22:15:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbiIGUOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Sep 2022 16:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
+        id S229884AbiIGUPQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Sep 2022 16:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiIGUOb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 16:14:31 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5844212AEB
-        for <linux-pci@vger.kernel.org>; Wed,  7 Sep 2022 13:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662581670; x=1694117670;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OBgEdw9JLiyZ8doAXTJcS22trDDC7BTWIxGwrSM8ff8=;
-  b=kRBxCW1iYaTwWRRhm7biHQXxUXdp4yL7QvF5b4I9p27oAkKNn8C9yEuG
-   0xFA/NxtrXdbZCNmC2/v9VXCmcjCg0eDSXrYTZp7WuWEs4zNf17qD6dqC
-   FZzIuQTecA/HGGdRpR6QXBznhObGAh+XYFFhiDwT28ZgK2y+AvRHt++wD
-   mdaMvd74Y38sI9MtYiSPwueNekPmQO/fXTtWSG8m2y0E0/uIGJmyzk5wa
-   Zr500LJQrH2nsNY0a8xlDABViMvKx6t9X223a7aUQQo33DnUB3VpmNkyK
-   7VtDo2HXCu+j658JZB4LT3Oze7cdGTd5bG0lQxQri1gdz8Re9CsPXejSE
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="297792755"
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="297792755"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 13:14:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="943047450"
-Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Sep 2022 13:14:28 -0700
-Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oW1RL-0006vN-39;
-        Wed, 07 Sep 2022 20:14:27 +0000
-Date:   Thu, 08 Sep 2022 04:14:18 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/pm-bjorn] BUILD SUCCESS
- 07c2204ab0f36ec4f43367e9734a0e4a82134e49
-Message-ID: <6318fb9a.md7d0VJ1lO+2xGHt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229445AbiIGUPP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 16:15:15 -0400
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCF1796B5;
+        Wed,  7 Sep 2022 13:15:13 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id g5so23196848ybg.11;
+        Wed, 07 Sep 2022 13:15:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=1oJyEVeDSMEzU8mzJzLtsZkHAbB0NAogPRJviWs53mc=;
+        b=JaJuAW/zkO0BRLKkPQRVTpT8NHx5QbwjP/4m43UyXk75ppo+Oc2Qh0rC2Htsc5sUoX
+         Idf9iPLSfVfo2En4tOq0H2KTEhZxHYC/Is25vET9zxPlMSckP0zVnUkpIUjHsG2rpk1e
+         tiQSk2pLZ7AgFytWsJYNLi28PQp147TSF9VG+WTtnGu05packMeV5wm7ShvlCfheB3y5
+         m3BKGp9eLlOILOTrwDZS+nyI2rFaH4rz63EuibsrciCXPFRSnso/QU+UtLkTSqwFJCZA
+         4lr5jb4LmRX673b1zH9mcl8KJABEY/y3786nNw6Cu8UvgYKsVwPl64M/jqCFu2Nwerdp
+         RJaQ==
+X-Gm-Message-State: ACgBeo2js93oxAwrkLMVfxOwR2+vFFy1dpkV40fjQhYpLm/I0qmsexsh
+        hYkHNTnuEL03YSSM1ewwJyLDqC0uafFLpKSeNnpCW1It
+X-Google-Smtp-Source: AA6agR44k1MSykjRc0dv3X/leHDX8g+Y7u/O6ESkT5tUgej3zmngZDIeUCzr+Ye5tXhbkv5OnZ2zgWF0pQQbsH2s4GY=
+X-Received: by 2002:a25:2785:0:b0:69b:b1d2:fd05 with SMTP id
+ n127-20020a252785000000b0069bb1d2fd05mr4364345ybn.81.1662581712858; Wed, 07
+ Sep 2022 13:15:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220831081603.3415-7-rrichter@amd.com> <20220907183709.GA136851@bhelgaas>
+In-Reply-To: <20220907183709.GA136851@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 7 Sep 2022 22:15:01 +0200
+Message-ID: <CAJZ5v0jvxJT4B8GQ0O5AcEkn_KUH2qh=vKOONVJ-cd+1r-KoCw@mail.gmail.com>
+Subject: Re: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Robert Richter <rrichter@amd.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm-bjorn
-branch HEAD: 07c2204ab0f36ec4f43367e9734a0e4a82134e49  PCI/PM: Always disable PTM for all devices during suspend
+On Wed, Sep 7, 2022 at 8:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Aug 31, 2022 at 10:15:54AM +0200, Robert Richter wrote:
+> > A lookup of a host bridge's corresponding acpi device (struct
+> > acpi_device) is not possible, for example:
+> >
+> >       adev = ACPI_COMPANION(&host_bridge->dev);
+> >
+> > This could be useful to find a host bridge's fwnode handle and to
+> > determine and call additional host bridge ACPI parameters and methods
+> > such as HID/CID or _UID.
+> >
+> > Make this work by linking the host bridge to its ACPI fw node.
+>
+> s/acpi device/ACPI device/ to match other "ACPI" usage
+> s/fw node/fwnode/ (if it should match "fwnode handle" above)
+>
+> I guess this patch makes ACPI_COMPANION() work where it didn't before,
+> right?  E.g., the two ACPI_COMPANION() uses added by this series
+> (cxl_find_next_rch() and cxl_restricted_host_probe()).
+>
+> I'm not really clear on the strategy of when we should use acpi_device
+> vs acpi_handle,
 
-elapsed time: 1252m
+acpi_handle should be used for interactions with the ACPICA code, like
+when AML is evaluated, and acpi_device for pretty much everything
+else.
 
-configs tested: 169
-configs skipped: 4
+> but does this mean there's code in places like
+> pci_root.c that should be reworked to take advantage of this?  That
+> code evaluates _DSM and _OSC, but I think it currently uses
+> acpi_handle for that.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-arc                              allyesconfig
-powerpc                    adder875_defconfig
-sh                        dreamcast_defconfig
-sh                   sh7770_generic_defconfig
-sh                          lboxre2_defconfig
-sh                               allmodconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-m68k                             allmodconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-m68k                             allyesconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-x86_64                        randconfig-a006
-i386                             allyesconfig
-i386                                defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-sh                          r7780mp_defconfig
-sparc                       sparc64_defconfig
-parisc64                            defconfig
-powerpc                 canyonlands_defconfig
-arm                           viper_defconfig
-xtensa                  nommu_kc705_defconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-loongarch                           defconfig
-loongarch                         allnoconfig
-powerpc                mpc7448_hpc2_defconfig
-alpha                               defconfig
-arm                           sama5_defconfig
-powerpc                     tqm8548_defconfig
-riscv                randconfig-r042-20220906
-arc                  randconfig-r043-20220906
-s390                 randconfig-r044-20220906
-i386                          randconfig-c001
-arm                          iop32x_defconfig
-mips                           ip32_defconfig
-powerpc                    amigaone_defconfig
-arm                        cerfcube_defconfig
-sparc                            allyesconfig
-sh                           se7705_defconfig
-csky                             alldefconfig
-m68k                                defconfig
-powerpc                     pq2fads_defconfig
-xtensa                          iss_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-sh                            titan_defconfig
-sh                     sh7710voipgw_defconfig
-sh                          rsk7264_defconfig
-m68k                        mvme16x_defconfig
-sh                 kfr2r09-romimage_defconfig
-s390                             allmodconfig
-parisc                generic-32bit_defconfig
-riscv             nommu_k210_sdcard_defconfig
-xtensa                              defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc                           allyesconfig
-powerpc                 mpc837x_mds_defconfig
-m68k                          hp300_defconfig
-sh                   sh7724_generic_defconfig
-nios2                         10m50_defconfig
-powerpc                  storcenter_defconfig
-powerpc                      tqm8xx_defconfig
-sh                  sh7785lcr_32bit_defconfig
-openrisc                            defconfig
-arm                            mps2_defconfig
-s390                                defconfig
-arc                                 defconfig
-s390                             allyesconfig
-m68k                          atari_defconfig
-powerpc                 mpc85xx_cds_defconfig
-sh                      rts7751r2d1_defconfig
-sh                          landisk_defconfig
-arm                           u8500_defconfig
-ia64                             alldefconfig
-powerpc                    sam440ep_defconfig
-m68k                          amiga_defconfig
-m68k                        stmark2_defconfig
-sh                                  defconfig
-mips                     loongson1b_defconfig
-xtensa                         virt_defconfig
-ia64                         bigsur_defconfig
-arm                        keystone_defconfig
-m68k                          multi_defconfig
-arm                             pxa_defconfig
-arc                          axs103_defconfig
-mips                           gcw0_defconfig
-parisc64                         alldefconfig
-sparc                               defconfig
-sparc                             allnoconfig
-powerpc                      arches_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                     asp8347_defconfig
-sparc                            alldefconfig
-arm                          pxa3xx_defconfig
-arm                         s3c6400_defconfig
-powerpc                     stx_gp3_defconfig
-arm64                            alldefconfig
-sh                           se7722_defconfig
-i386                             alldefconfig
-powerpc                     ep8248e_defconfig
-m68k                        m5272c3_defconfig
-arm                          exynos_defconfig
-sh                             sh03_defconfig
-sh                           se7750_defconfig
-xtensa                       common_defconfig
-sh                          r7785rp_defconfig
-powerpc                     mpc83xx_defconfig
-xtensa                generic_kc705_defconfig
-ia64                             allmodconfig
-
-clang tested configs:
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-hexagon              randconfig-r041-20220906
-hexagon              randconfig-r045-20220906
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-k001
-powerpc                     akebono_defconfig
-powerpc                   lite5200b_defconfig
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-arm                       spear13xx_defconfig
-mips                      malta_kvm_defconfig
-arm                    vt8500_v6_v7_defconfig
-arm                     davinci_all_defconfig
-arm                              alldefconfig
-powerpc                        icon_defconfig
-powerpc                      obs600_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                     mpc512x_defconfig
-arm                           spitz_defconfig
-riscv                randconfig-r042-20220907
-hexagon              randconfig-r041-20220907
-hexagon              randconfig-r045-20220907
-s390                 randconfig-r044-20220907
-powerpc                     tqm8540_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+That's fine.
