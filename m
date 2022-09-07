@@ -2,53 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6948B5B0EF3
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 23:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906675B0F18
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Sep 2022 23:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbiIGVMK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Sep 2022 17:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
+        id S229469AbiIGV0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Sep 2022 17:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiIGVMJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 17:12:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64255B5A7A;
-        Wed,  7 Sep 2022 14:12:08 -0700 (PDT)
+        with ESMTP id S229696AbiIGV0y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Sep 2022 17:26:54 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64ECB2769;
+        Wed,  7 Sep 2022 14:26:53 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E861561AA6;
-        Wed,  7 Sep 2022 21:12:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E7EC433D6;
-        Wed,  7 Sep 2022 21:12:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6488CB81ED5;
+        Wed,  7 Sep 2022 21:26:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2EE4C433D6;
+        Wed,  7 Sep 2022 21:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662585127;
-        bh=+6pupswLT/5KMqoUVG/++x6soH6vXGFxtdFjR4zc48o=;
+        s=k20201202; t=1662586011;
+        bh=6pTepJ3oeIprLS4jKNueGfIkkF3Dt0U1u/bTrZo1byA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=j1U0pDn67U4M2WDDIAFvV5uy8PC8N8RDxNh3grnUPADeAOzuPwKSLLDchTNa58vrk
-         thqTWKOM316PnE4oALrDBqBOa/X8yRvq+DiFY+CqI563xm1csr/YW1Q23GqBKgGLs3
-         K5ccTPx18GnCvYjiUP0UDoy9xfMD7K/c77xhicx7ZCQ+Uc+JxKQbTffRlzI1ILWTBD
-         DE6jyM73/2qmYhA9YrCf1dxb0c6owNsSQenwOvx6ye8DgwBcqGcLl2tu8rE9+Hy1yf
-         i9n+c8MUS4gcZ32aPkQLUfp7qZ98BIwT+BLTnd5dEZdRjYmuaoM6e6fic+R+5M6i6q
-         6Wg137N6szTVw==
-Date:   Wed, 7 Sep 2022 16:12:05 -0500
+        b=NlQKyVswE4LE9ey6AEdaLIXxDgZifJE6y4KB48xeTuD2qFTy7lDbTzJIA+/bEA5BZ
+         fUHMlNhKlTNysc+rtS1rRMla1MdpLtoABCtBvtGYfgzX7zms8vHxCG3Hf9wX4RoQ1n
+         EiaYTA3G3ODyL2cVNpNgYcexysW388boWGDK9b01sf6c2XBTRCItQwqhLnywHFl137
+         zjBFuBW+fm9HecdJr6VgA2kGT/9ooq9qPU0c6d577VXlA/iO4KsOAX//LiaF3Q/C72
+         tCEWiGH6/jsej1oaYo7j93akwsKSomtANh4BrC5HFKnx70yb5uG7DqepVVuo4x4PF5
+         UMSHU/SbVfx8A==
+Date:   Wed, 7 Sep 2022 16:26:49 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Koba Ko <koba.ko@canonical.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 05/10] PCI/PTM: Add pci_disable_ptm() wrapper
-Message-ID: <20220907211205.GA119516@bhelgaas>
+To:     William McVicker <willmcvicker@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
+        Sajid Dalvi <sdalvi@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/PM: Switch D3Hot delay to also use usleep_range
+Message-ID: <20220907212649.GA152425@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YxgsCwOeFJVvItVO@black.fi.intel.com>
+In-Reply-To: <Yxfgp9DgYc3XU602@google.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,33 +54,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 08:28:43AM +0300, Mika Westerberg wrote:
-> On Tue, Sep 06, 2022 at 05:23:46PM -0500, Bjorn Helgaas wrote:
-> > @@ -42,6 +42,13 @@ void pci_disable_ptm(struct pci_dev *dev)
-> >  	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
-> >  }
+On Wed, Sep 07, 2022 at 12:07:03AM +0000, William McVicker wrote:
+> On 09/02/2022, Bjorn Helgaas wrote:
+
+> >    static void pci_dev_d3_sleep(struct pci_dev *dev)
+> >    {
+> >         unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
+> >         unsigned int upper;
+> > 
+> >         if (delay_ms) {
+> >                 /* 20% upper bound, 1ms minimum */
+> >                 upper = max(DIV_ROUND_CLOSEST(delay_ms, 5), 1U)
+> >                 usleep_range(delay_ms * USEC_PER_MSEC,
+> >                              (delay_ms + upper) * USEC_PER_MSEC);
+> >         }
+> >    }
+> > 
+> > Since the Intel quirk is for 120ms, a 20% upper bound would make the
+> > range 120-144ms.  Would that be a problem?  Those chips are ancient;
+> > the list is untouched since it was added in 2006.  The point of
+> > usleep_range() is to allow the scheduler to coalesce the wakeup with
+> > other events, so it seems unlikely we'd ever wait the whole 144ms.  I
+> > vote for optimizing the readability over sleep/resume time for
+> > already-broken chips.
 > 
-> Since you export these, I suggest adding kernel-doc to explain how these
-> are supposed to be used in drivers (pre-conditions etc.).
+> I'm totally fine with this, but I don't really know what the impact
+> would be to those old Intel chips.
 
-Currently there really aren't any preconditions, so kernel-doc would
-repeat the function name and parameters without adding any real
-information, but I think it would be good to add a few explanatory
-comments.  It always seems obvious when writing it, but it's never so
-obvious without all the context ;)
-
-> > +void pci_disable_ptm(struct pci_dev *dev)
-> > +{
-> > +	__pci_disable_ptm(dev);
-> > +	dev->ptm_enabled = 0;
-> > +}
-> > +EXPORT_SYMBOL(pci_disable_ptm);
-> 
-> EXPORT_SYMBOL_GPL()?
-
-I don't feel strongly either way, but am inclined to do the same as
-pci_enable_ptm() and pcie_ptm_enabled(), which are both EXPORT_SYMBOL.
-We could change all of them at once if it's worthwhile.  Currently
-there's only one caller (igc) in the tree.
+Worst-case, a few more ms to wakeup.  Since we're starting with a huge
+120ms *per device* delay, I think that's acceptable.  Let's do this.
 
 Bjorn
