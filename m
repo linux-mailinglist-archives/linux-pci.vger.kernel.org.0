@@ -2,149 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABED75B1C40
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 14:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 385A25B1C83
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 14:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbiIHMIm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 08:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
+        id S230349AbiIHMM4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 08:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbiIHMIl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 08:08:41 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9527AF7756
-        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 05:08:37 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id bj12so37462214ejb.13
-        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 05:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date;
-        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
-        b=HtgKNuSMlm36EUZXIQjvg66VG4Cf9KG9o7TXw54X62EKPmk+Ub/rVrVF7Jzl7Ds7kO
-         UCH679hMgBDNwFLGGeHb/2LN8HSMepKYQ4XHZWOYz2pfFTRTo10jgM61feW0CtIH9wTs
-         cWDVplksOqYnCDhQZqLWKFvC/ITbZV1SE7ZOJKNcvW/zr6YWejyvShHr4HqV1XqqLKSi
-         aHWzLSbuPSm4DXlJKfkx9cjhQ8ly/i7YVPOUpfNC3SpdRtbgdpYeqV+sVkApZCZesmsU
-         GaR5lECUziqJ61lt1CqsdCA5x5rBiwWkFcCMmQ9iK1vrrbk84so4bGOLELfaa0Dt/Xs0
-         /qWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
-        b=17dGH93zNlDoAns/rFRKbb2d52f/TMQmY04EIUfaO2O1SvROrRHZGoIOGGMqgEsXXx
-         HCAlmCODvTGFbf1uCAHAOvwOmHcfGPNxkevZbj6q24r7kanldQcP+xKJHvxDRnqB7PZD
-         mVb14wTzHfNRotfpN1Jpu4GtyUYOmryE0URPPh8+aF6FHy1hXZy+MZcj292j0f1/O8QU
-         JByaN/BzRyxht2IgOUNMhk8Pb/xOEffSlolilbK8MAFAnE53aKf/BG1INGJmqXZ+9iHL
-         xHdbMPJU4GXqlprxfg/guKxWXLbjAaOtqoIZYObBlG9tFhBzz7sScQfB36oWEGxlveIw
-         ZZbw==
-X-Gm-Message-State: ACgBeo13XvTVQJW18WMaHWwOuwDep9+5Ffou6fWHYb0frI8LD/faVfp7
-        lz9Q/PvwUvQMzMrk2SOSWSfaC2WmUIFG775zhww=
-X-Google-Smtp-Source: AA6agR4faGLlknEVHCd7paYi7uHizUiDAwBUfsO6+JblJj9xGRNmTX1c8O11BeMjUhyh3saGVevsRUjxGHHK3sBQAxs=
-X-Received: by 2002:a17:907:6e18:b0:73d:63d9:945f with SMTP id
- sd24-20020a1709076e1800b0073d63d9945fmr5985318ejc.12.1662638916092; Thu, 08
- Sep 2022 05:08:36 -0700 (PDT)
+        with ESMTP id S229943AbiIHMMy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 08:12:54 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2468895F6
+        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 05:12:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 2BE6ECE1F1B
+        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 12:12:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92570C433C1;
+        Thu,  8 Sep 2022 12:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662639169;
+        bh=/R0CREhYsB8ovqHQV72g6/yEs8h6aqnDsP3z+cPrH3Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WaJAcdvebR3foRP6Hu9RhSpw1xO8RtJrdgeUo3VH1qdlahzbBbdQ7eVnaI06fQQNN
+         Ax0N+yHA0g1akWDerfwMTV1NzKSIECz1w4E744sbKo6Nk5gFOaWYpWiaIl0nsjTlMG
+         V44EEu6HDacxUNpbPuYGztwNAU3xd1cL/+AzC/LcBuKcbO7vHzj/QaO+o8xc69zfit
+         ZVTlNDShLah6xv9fBtAx71DY+7nzF0+17k/zciquG4HeMSzkeL1w9guFK/5rY0jWqq
+         PELUFRz02IajyWlttaPQn5o3f65Xa10XJGwXqMRcS3pYivAlHvelcZ4JYHw5hCYFPh
+         osc73TJjh+dBQ==
+Date:   Thu, 8 Sep 2022 07:12:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Gomez <daniel@qtec.com>
+Cc:     linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: PCI/MSI: kernel NULL pointer dereference
+Message-ID: <20220908121248.GA190779@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a17:906:749d:b0:743:2e24:e8cd with HTTP; Thu, 8 Sep 2022
- 05:08:35 -0700 (PDT)
-Reply-To: mrtonyelumelu98@gmail.com
-From:   "Mrs. Cristalina Georgieva" <nastyanastya88889@gmail.com>
-Date:   Thu, 8 Sep 2022 13:08:35 +0100
-Message-ID: <CADsX60CBiVvwN+F4ym_2zFH_MaVo9i9qaarXjBKw+YCBOGqM=w@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH1Ww+TS2sdQc4PewxYjGNp94=uGWjh0Z13cjLbVhSWQMOij0w@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-2LXZhtiv2YjZgiDYp9mE2YbZgtivINin2YTYr9mI2YTZiiAoSS5NLkYpDQrYtNi52KjYqSDYpdiv
-2KfYsdipINin2YTYr9mK2YjZhiDYp9mE2K/ZiNmE2YrYqSDYjA0KIyAxOTAwINiMINi02KfYsdi5
-INin2YTYsdim2YrYsw0KDQrZhdix2K3YqNmL2Kcg2KjZg9mFINmB2Yog2LnZhtmI2KfZhiDYp9mE
-2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNix2LPZhdmKINmE2YTZhdiv2YrYsSBJ
-Lk0uRi4g2YPYsdmK2LPYqtin2YTZitmG2Kcg2KzZiNix2KzZitmB2KcNCg0KDQrYudiy2YrYstmK
-INin2YTZhdiz2KrZgdmK2K8hDQoNCtmE2YLYryDYs9mF2K0g2YTZhtinINmI2LLZitixINin2YTY
-rtiy2KfZhtipINin2YTZhdi52YrZhiDYrdiv2YrYq9mL2Kcg2YjYp9mE2YfZitim2Kkg2KfZhNit
-2KfZg9mF2Kkg2YTZhNiz2YTYt9ipINin2YTZhtmC2K/ZitipDQrZhNmE2KPZhdmFINin2YTZhdiq
-2K3Yr9ipINio2YHYrdi1INin2YTYo9mF2YjYp9mEINin2YTYqtmKINmE2YUg2KrYqtmFINin2YTZ
-hdi32KfZhNio2Kkg2KjZh9inINmI2KfZhNiq2Yog2YTYt9in2YTZhdinINmD2KfZhtiqDQrZhdiv
-2YrZhtipINmE2K3Zg9mI2YXYqSDYp9mE2KPZhdmFINin2YTZhdiq2K3Yr9ipINiMINmE2LDZhNmD
-INiq2YUg2KfYqtmH2KfZhSDZhdin2YTZg9mK2YfYpyDYqNin2YTYp9it2KrZitin2YQuDQrYp9mE
-2YXYrdiq2KfZhNmI2YYg2KfZhNiw2YrZhiDZitiz2KrYrtiv2YXZiNmGINin2LPZhSDYp9mE2KPZ
-hdmFINin2YTZhdiq2K3Yr9ipINiMINmI2YHZgtmL2Kcg2YTYs9is2YQg2KrYrtiy2YrZhiDYp9mE
-2KjZitin2YbYp9iqDQrZhdi5INi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix
-2YjZhtmKINmE2YbYuNin2YXZhtinINij2KvZhtin2KEg2KfZhNiq2K3ZgtmK2YIg2KfZhNiw2Yog
-2KPYrNix2YrZhtin2Ycg2Iwg2YHYpdmGDQrYr9mB2LnYqtmDINmF2K/Ysdis2Kkg2YHZiiDZgtin
-2KbZhdipINiq2LbZhSAxNTAg2YXYs9iq2YHZitiv2YvYpyDZgdmKINin2YTZgdim2KfYqiDYp9mE
-2KrYp9mE2YrYqTog2LXZhtiv2YjZgiDZitin2YbYtdmK2KgNCti62YrYsSDZhdmP2LPZhNmO2ZHZ
-hSAvINi12YbYr9mI2YIg2YrYp9mG2LXZitioINi62YrYsSDZhdiv2YHZiNi5IC8g2YjYsdin2KvY
-qSDZhtmC2YQg2LrZitixINmF2YPYqtmF2YTYqSAvINij2YXZiNin2YQNCtin2YTYudmC2K8uDQoN
-CtmC2KfZhSDZhdiz2KTZiNmE2Ygg2KfZhNio2YbZgyDYp9mE2YHYp9iz2K8g2Iwg2KfZhNiw2YrZ
-hiDYp9ix2KrZg9io2YjYpyDYp9mE2YHYs9in2K8g2YXZhiDYo9is2YQg2KfZhNin2K3YqtmK2KfZ
-hCDYudmE2YkNCtij2YXZiNin2YTZgyDYjCDYqNiq2KPYrtmK2LEg2K/Zgdi52YMg2KjYtNmD2YQg
-2LrZitixINmF2LnZgtmI2YQg2Iwg2YXZhdinINij2K/ZiSDYpdmE2Ykg2KrYrdmF2YTZgyDYp9mE
-2YPYq9mK2LEg2YXZhg0K2KfZhNiq2YPYp9mE2YrZgSDZiNiq2KPYrtmK2LEg2LrZitixINmF2LnZ
-gtmI2YQg2YHZiiDZgtio2YjZhCDZhdiv2YHZiNi52KfYqtmDLiDYp9iu2KrYp9ix2Kog2KfZhNij
-2YXZhSDYp9mE2YXYqtit2K/YqQ0K2YjYtdmG2K/ZiNmCINin2YTZhtmC2K8g2KfZhNiv2YjZhNmK
-IChJTUYpINiv2YHYuSDYrNmF2YrYuSDYp9mE2KrYudmI2YrYttin2Kog2YTZgCAxNTAg2YXYs9iq
-2YHZitiv2YvYpyDYqNin2LPYqtiu2K/Yp9mFDQrYqNi32KfZgtin2KogVmlzYSBBVE0g2YXZhiDY
-o9mF2LHZitmD2Kcg2KfZhNi02YXYp9mE2YrYqSDZiNij2YXYsdmK2YPYpyDYp9mE2KzZhtmI2KjZ
-itipINmI2KfZhNmI2YTYp9mK2KfYqiDYp9mE2YXYqtit2K/YqQ0K2YjYo9mI2LHZiNio2Kcg2YjY
-otiz2YrYpyDZiNit2YjZhCDYp9mE2LnYp9mE2YUg2Iwg2K3ZitirINiq2KrZiNmB2LEg2KrZgtmG
-2YrYqSDYp9mE2K/Zgdi5INin2YTYudin2YTZhdmK2Kkg2YfYsNmHDQrZhNmE2YXYs9iq2YfZhNmD
-2YrZhiDZiNin2YTYtNix2YPYp9iqINmI2KfZhNmF2KTYs9iz2KfYqiDYp9mE2YXYp9mE2YrYqS4g
-2YjZitiz2YXYrSDZhNmE2K3Zg9mI2YXYp9iqINio2KfYs9iq2K7Yr9in2YUg2KfZhNi52YXZhNin
-2KoNCtin2YTYsdmC2YXZitipINio2K/ZhNin2Ysg2YXZhiDYp9mE2YbZgtivINmI2KfZhNi02YrZ
-g9in2KouDQoNCtmE2YLYryDZgtmF2YbYpyDYqNin2YTYqtix2KrZitioINmE2LPYr9in2K8g2YXY
-r9mB2YjYudin2KrZgyDYqNin2LPYqtiu2K/Yp9mFINio2LfYp9mC2KkgVmlzYSBBVE0g2YjYs9mK
-2KrZhSDYpdi12K/Yp9ix2YfYpw0K2YTZgyDZiNil2LHYs9in2YTZh9inINmF2KjYp9i02LHYqdmL
-INil2YTZiSDYudmG2YjYp9mG2YMg2LnYqNixINij2Yog2K7Yr9mF2KfYqiDYqNix2YrYryDYs9ix
-2YrYuSDZhdiq2KfYrdipLiDYqNi52K8NCtin2YTYp9iq2LXYp9mEINio2YbYpyDYjCDYs9mK2KrZ
-hSDYqtit2YjZitmEINmF2KjZhNi6IDHYjDUwMNiMMDAwLjAwINiv2YjZhNin2LEg2KPZhdix2YrZ
-g9mKINil2YTZiSDYqNi32KfZgtipIFZpc2ENCkFUTSDYjCDZiNin2YTYqtmKINiz2KrYs9mF2K0g
-2YTZgyDYqNiz2K3YqCDYo9mF2YjYp9mE2YMg2LnZhiDYt9ix2YrZgiDYs9it2Kgg2YXYpyDZhNin
-INmK2YLZhCDYudmGIDEw2IwwMDAg2K/ZiNmE2KfYsQ0K2KPZhdix2YrZg9mKINmB2Yog2KfZhNmK
-2YjZhSDZhdmGINij2Yog2YXYp9mD2YrZhtipINi12LHYp9mBINii2YTZiiDZgdmKINio2YTYr9mD
-LiDYqNmG2KfYodmLINi52YTZiSDYt9mE2KjZgyDYjCDZitmF2YPZhtmDDQrYstmK2KfYr9ipINin
-2YTYrdivINil2YTZiSAyMNiMMDAwLjAwINiv2YjZhNin2LEg2YHZiiDYp9mE2YrZiNmFLiDZgdmK
-INmH2LDYpyDYp9mE2LXYr9ivINiMINmK2KzYqCDYudmE2YrZgw0K2KfZhNin2KrYtdin2YQg2KjY
-pdiv2KfYsdipINin2YTZhdiv2YHZiNi52KfYqiDZiNin2YTYqtit2YjZitmE2KfYqiDYp9mE2K/Z
-iNmE2YrYqSDZiNiq2YLYr9mK2YUg2KfZhNmF2LnZhNmI2YXYp9iqINin2YTZhdi32YTZiNio2KkN
-CtmF2YYg2K7ZhNin2YQ6DQoNCjEuINin2LPZhdmDINin2YTZg9in2YXZhCAuLi4uLi4uLi4uLi4u
-Lg0KMi4g2LnZhtmI2KfZhtmDINin2YTZg9in2YXZhCAuLi4NCjMuINin2YTYrNmG2LPZitipIC4u
-Li4uLi4uLi4uLi4uLi4NCjQuINiq2KfYsdmK2K4g2KfZhNmF2YrZhNin2K8gLyDYp9mE2KzZhtiz
-IC4uLi4uLi4uLg0KNS4g2KfZhNiq2K7Ytdi1IC4uLg0KNi4g2LHZgtmFINin2YTZh9in2KrZgSAu
-Li4uLi4uLi4NCjcuINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix2YjZhtmK
-INmE2LTYsdmD2KrZgyAuLi4uLi4NCjguINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE
-2YPYqtix2YjZhtmKINin2YTYtNiu2LXZiiAuLi4uLi4NCg0KDQrZhNiq2K3Yr9mK2K8g2YfYsNin
-INin2YTYsdmF2LIgKNin2YTYsdin2KjYtzogQ0xJRU5ULTk2Ni8xNikg2Iwg2KfYs9iq2K7Yr9mF
-2Ycg2YPZhdmI2LbZiNi5INmE2YTYqNix2YrYrw0K2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNiu
-2KfYtSDYqNmDINmI2K3Yp9mI2YQg2KrZgtiv2YrZhSDYp9mE2YXYudmE2YjZhdin2Kog2KfZhNmF
-2LDZg9mI2LHYqSDYo9i52YTYp9mHINil2YTZiSDYp9mE2YXZiNi42YHZitmGDQrYp9mE2KrYp9mE
-2YrZitmGINmE2KXYtdiv2KfYsSDZiNiq2LPZhNmK2YUg2KjYt9in2YLYqSBWaXNhIEFUTSDYmw0K
-DQrZhtmI2LXZitmDINio2YHYqtitINi52YbZiNin2YYg2KjYsdmK2K8g2KXZhNmD2KrYsdmI2YbZ
-iiDYtNiu2LXZiiDYqNix2YLZhSDYrNiv2YrYryDZhNmE2LPZhdin2K0g2YTZiNmD2YrZhCDYp9mE
-2KjZhtmDINio2KrYqtio2LkNCtmH2LDZhyDYp9mE2YXYr9mB2YjYudin2Kog2YjYqtio2KfYr9mE
-INin2YTYsdiz2KfYptmEINmE2YXZhti5INin2YTZhdiy2YrYryDZhdmGINin2YTYqtij2K7Zitix
-INij2Ygg2KfZhNiq2YjYrNmK2Ycg2KfZhNiu2KfYt9imDQrZhNij2YXZiNin2YTZgy4g2KfYqti1
-2YQg2KjZiNmD2YrZhCDYp9mE2KjZhtmDINin2YTYpdmB2LHZitmC2Yog2KfZhNmF2KrYrdivINin
-2YTYotmGINio2KfYs9iq2K7Yr9in2YUg2YXYudmE2YjZhdin2KoNCtin2YTYp9iq2LXYp9mEINij
-2K/Zhtin2Yc6DQoNCtin2YTYtNiu2LUg2KfZhNmF2LPYpNmI2YQ6INin2YTYs9mK2K8g2KrZiNmG
-2Yog2KXZhNmI2YXZitmE2YgNCtil2K/Yp9ix2Kkg2KrYrdmI2YrZhCDYo9mF2YjYp9mEINin2YTY
-qti52YjZiti22KfYqiDYjCDYrNmH2Kkg2KfZhNin2KrYtdin2YQg2KjYp9mE2KjYsdmK2K8g2KfZ
-hNil2YTZg9iq2LHZiNmG2Yog2YTYqNmG2YMNCtil2YHYsdmK2YLZitinINin2YTZhdiq2K3Yrzog
-KG1ydG9ueWVsdW1lbHU5OEBnbWFpbC5jb20pDQoNCtmG2K3Yqtin2Kwg2KXZhNmJINix2K8g2LPY
-sdmK2Lkg2LnZhNmJINmH2LDYpyDYp9mE2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2YTY
-qtis2YbYqCDYp9mE2YXYstmK2K8g2YXZhiDYp9mE2KrYo9iu2YrYsS4NCg0K2LXYr9mK2YLZgyDY
-p9mE2YXYrtmE2LUNCtin2YTYs9mR2YrYr9ipLiDZg9ix2YrYs9iq2KfZhNmK2YbYpyDYrNmI2LHY
-rNmK2YHYpw0K
+On Thu, Sep 08, 2022 at 12:41:00PM +0200, Daniel Gomez wrote:
+> Hi,
+> 
+> I have the following error whenever I remove the fglrx module from the
+> latest 6.0-rc4.
+
+You bisected to 93296cd1325d; I don't see a commit with a "Fixes:"
+that references that.  If you can reproduce this with an in-tree
+driver, we can certainly fix it, but it's harder for an out-of-tree
+driver.
+
+I cc'd some AMD graphics folks in case they have a pointer for where
+to get fglrx support.
+
+> Logs:
+> /mnt/raid0/krops/workspace/sources/fglrx-module/module/firegl_public.c:1674
+> KCL_SetPageCache_Array
+> <6>[fglrx] IRQ 37 Disabled
+> BUG: kernel NULL pointer dereference, address: 0000000000000010
+> #PF: supervisor write access in kernel mode
+> #PF: error_code(0x0002) - not-present page
+> PGD 0 P4D 0
+> Oops: 0002 [#1] SMP NOPTI
+> CPU: 1 PID: 254 Comm: rmmod Tainted: G        W  O
+> 6.0.0-rc4-qtec-standard #2
+> Hardware name: QTechnology QT5022/QT5022, BIOS PM_2.1.0.309 X64 09/27/2013
+> RIP: 0010:mutex_lock+0x2a/0x40
+> Code: 0f 1f 44 00 00 53 be 1b 01 00 00 48 89 fb 48 c7 c7 08 81 3d 82 e8 46 2c 52
+>  ff e8 01 d7 ff ff 31 c0 65 48 8b 14 25 00 ad 01 00 <f0> 48 0f b1 13 74 06 48 89
+>  df 5b eb b9 5b c3 0f 1f 80 00 00 00 00
+> RSP: 0018:ffffc90000b07dd8 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
+> RDX: ffff888116aabb00 RSI: 000000000000011b RDI: ffffffff823d8108
+> RBP: ffff8881148d20d0 R08: 0000000000000000 R09: ffffffffa053537b
+> R10: ffff888149365cc0 R11: ffffea00052c5048 R12: 0000000000000000
+> R13: ffff88813877c000 R14: 0000000000000000 R15: 0000000000000000
+> FS:  00007f6f90b3cb80(0000) GS:ffff88815b300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000010 CR3: 000000011e4c8000 CR4: 00000000000006e0
+> Call Trace:
+>  <TASK>
+>  pci_disable_msi+0x34/0xe0
+>  irqmgr_wrap_shutdown+0x165/0x190 [fglrx]
+>  ? firegl_takedown+0x841/0x950 [fglrx]
+>  ? kobject_put+0xa6/0x220
+>  ? cleanup_device+0x299/0x2a0 [fglrx]
+>  ? pci_unregister_driver+0x42/0xa0
+>  ? firegl_cleanup_device_heads+0x65/0xa0 [fglrx]
+>  ? firegl_cleanup_module+0x84/0x11c [fglrx]
+>  ? __x64_sys_delete_module+0x11b/0x210
+>  ? get_vtime_delta+0xe/0x40
+>  ? vtime_user_exit+0x1c/0x60
+>  ? __ct_user_exit+0x68/0xb0
+>  ? do_syscall_64+0x3c/0x80
+>  ? entry_SYSCALL_64_after_hwframe+0x63/0xcd
+>  </TASK>
+> Modules linked in: amdgpu fglrx(O-) ath9k ath9k_common mfd_core gpu_sched
+> drm_buddy drm_ttm_helper ath9k_hw ttm drm_display_helper drm_kms_helper ath
+> sp5100_tco syscopyarea sysfillrect sysimgblt fb_sys_fops video drm backlight
+> ipv6
+> CR2: 0000000000000010
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:mutex_lock+0x2a/0x40
+> Code: 0f 1f 44 00 00 53 be 1b 01 00 00 48 89 fb 48 c7 c7 08 81 3d 82 e8 46 2c 52
+>  ff e8 01 d7 ff ff 31 c0 65 48 8b 14 25 00 ad 01 00 <f0> 48 0f b1 13 74 06 48 89
+>  df 5b eb b9 5b c3 0f 1f 80 00 00 00 00
+> RSP: 0018:ffffc90000b07dd8 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
+> RDX: ffff888116aabb00 RSI: 000000000000011b RDI: ffffffff823d8108
+> RBP: ffff8881148d20d0 R08: 0000000000000000 R09: ffffffffa053537b
+> R10: ffff888149365cc0 R11: ffffea00052c5048 R12: 0000000000000000
+> R13: ffff88813877c000 R14: 0000000000000000 R15: 0000000000000000
+> FS:  00007f6f90b3cb80(0000) GS:ffff88815b300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000010 CR3: 000000011e4c8000 CR4: 00000000000006e0
+> 
+> Steps:
+> insmod fglrx.ko
+> clinfo
+> MatrixMultiplication
+> rmmod fglrx.ko
+> 
+> I know this is an out of tree driver from AMD but we still need that driver
+> for some products because of the OpenCL stack support on it.
+> 
+> Note: The open-source upstream radeon does not support OpenCL.
+> 
+> So, doing git-bisect I found the issue is provoked by this commit [1].
+> Unfortunately, I cannot revert it for testing as if I do it the system hangs
+> on boot because of this other commit [2].
+> 
+> I understand, the driver might have some issues but shouldn't the kernel
+> prevent this crash at pci_disable_msi function? Do we have a mutex
+> problem here provoked by the fglrx driver?
+> Does anyone have any suggestions on how we can/should proceed with this?
+> 
+> Thanks in advance,
+> Daniel
+> 
+> [1] Commit 93296cd1325d1d9afede60202d8833011c9001f2:
+> 93296cd1325d 2021-12-15 PCI/MSI: Allocate MSI device data on first use
+> [2] Commit ffd84485e6beb9cad3e5a133d88201b995298c33:
+> ffd84485e6be 2021-12-10 PCI/MSI: Let the irq code handle sysfs groups
