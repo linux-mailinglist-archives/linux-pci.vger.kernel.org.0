@@ -2,154 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A83C95B145E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 08:05:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 310555B14C2
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 08:37:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbiIHGF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 02:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S229624AbiIHGhU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 02:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230150AbiIHGFZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 02:05:25 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50852A407A;
-        Wed,  7 Sep 2022 23:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662617124; x=1694153124;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KqQMMCJBnQIsFl6WQv4mbaw7aImXH+WW/xBBT+njNGc=;
-  b=etoMXKcMbSSrNFSuXGfgfg28e/hA8tQly9jVIAXb35EvW6h1XFCgGzh2
-   glMP60OCu72dEAfCwx76NcDXrjD4jHKVXKBwZzaYju5F1BhgrMUqVf5vS
-   wAtDEwebevYxrBYOLLh+SLdhUc2izcZuTISFbkdzSNlaGDzBFeiIQhXIh
-   Sx29YXWWasZAdMhq7mMT3WGEMy5EPXdWmVMsKEiGaH79drzE2IEUc29Sr
-   OIG8hXIwnSLZvIAyl02ElUkxsRWaCMZr8OHfFCYUmuW0VoZmPR0PzdLNh
-   gKCLEcKfoBImT4+Mt0WyKF2l51ImOoKb2ZcFF+2unU6YwWfpzDf9H0/EP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="294661679"
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="294661679"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 23:05:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="943203453"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Sep 2022 23:05:16 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 7 Sep 2022 23:05:16 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 7 Sep 2022 23:05:16 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Wed, 7 Sep 2022 23:05:16 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Wed, 7 Sep 2022 23:05:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gcGwSPToLJ/y459PqUVpJSvOntMbAo2JA+M6LIJ+YitMrq6hRpGyRFxT4X4qqSEYLgBtjfK9Nyo6rnTO2pvouwm5igHn61QhFISb6nvreN4+x6uDjtZhoF8DfYmZQAILNlcqQxTDhEZK9aNvB03jYSImrGbmglAHgMJRg41tMTCjU17HRtiPfrIsM6NaGICla8xHOnVE0OqdbUIuUVHdO26waoglGgJ2jlI4i96hQN8oZGyW0Z/cP71kZ7sJD49sRKrl+AWen46ApHRI+uQfCfzc85ffrmYv377d/Yhr7K68NFrhasOAVEyRT+ptiNKoGDBEHlvMyUPXVMI99TkJyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PoGdvXhJwPYzbmC22sksnPm4FBxvZwogn/bpeuK3ms8=;
- b=iYLrxNGtPyLCNXoZ0SV3MVIR3NFGb//hEGlcTaSg/LtYmirY6paVVs1KoIVTxJCs1314QIw90RTpfhTVRzqLtzIzUm/Ce6weEsHz4Z67IICBO1GKSctWeaRNdavlAfrpXpmXlEkc8BV3+hOHue0bKV1/xM79+BNOKQ013hG9u1we2+vmM690IEDApeOcfp+075SZmfI6wGfnjmsW5B3JaTcVeMuXyH+e9pTEpW9AnY8FfBvCqS7otTVzSwRyB2DlTdeagUUmwDIqslI4qDCbxzdNGmSZsNHOk+WP912dlLRVH+f8mzFswNFyRe2jT/I3Wxwm8dpV1Ih68UniEgJXNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by IA1PR11MB6100.namprd11.prod.outlook.com
- (2603:10b6:208:3d4::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.18; Thu, 8 Sep
- 2022 06:05:14 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5588.017; Thu, 8 Sep 2022
- 06:05:14 +0000
-Date:   Wed, 7 Sep 2022 23:05:11 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>, Robert Richter <rrichter@amd.com>,
-        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
-Message-ID: <63198617c7854_5801629450@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20220831081603.3415-1-rrichter@amd.com>
- <20220831081603.3415-7-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220831081603.3415-7-rrichter@amd.com>
-X-ClientProxiedBy: BYAPR11CA0038.namprd11.prod.outlook.com
- (2603:10b6:a03:80::15) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S229716AbiIHGhT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 02:37:19 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAE0C0BF9;
+        Wed,  7 Sep 2022 23:37:17 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2885iNxf013094;
+        Thu, 8 Sep 2022 06:37:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=nXVYlg3xTpD+OOFGG59ExVDCnz5VM9+NKgHes4yM1z0=;
+ b=ksbYRtEWVUmevEIKeYZCM5umOkz+X2GAYlUEtMhRezk2RxGT/h9XlFLIgVwidmKR4a7N
+ tCncaA/vP0fSkBL2zkxPW/G5Ni5zjSM+FNOfdU2swhcQPFphx1Agk43w9mNFrxNBXOuV
+ xdUuPIcqkw2DowdjPtGnGKU18sO8n4XFwRGc/dYQUWowuh4LOCzXwhVjOjKl+uqUXxw9
+ GhLBUBiIFWVaK2WsHcTng4oP76hnZsp8ggeVEek9QYg4d/zEXYsnLfYGfzKjChFIewJR
+ INk/pYYBqdMKboqiLa4CuR2YVYW5Aj0t1gDiSCJ4UZEuhRwqGUb2Dxup0t2CSoZbN/q0 qw== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jerdpbma3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Sep 2022 06:37:02 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2886b1ON025512
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 8 Sep 2022 06:37:01 GMT
+Received: from [10.216.34.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Wed, 7 Sep 2022
+ 23:36:54 -0700
+Message-ID: <723916b2-7939-a41d-2b0f-421868c581dd@quicinc.com>
+Date:   Thu, 8 Sep 2022 12:06:51 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ecbc5975-f070-4df8-2a68-08da91601892
-X-MS-TrafficTypeDiagnostic: IA1PR11MB6100:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y9JrYKeZ9RsM4wJIC52x48mctSM4JoFNqcH8Q1fwkLYRWT5aqkELz+cZ8Qa+NLQLKAmsiS1pobhcTCjYGlldnihJf3p7V3GAaCz3P9/Xwz8BD0X5OjPQEwJ/edS03q1VZDzUNdWBvetN22jMp6l2+gDCTe25/cmDyHWovuJuQcEMPGIV8i0RpU+KPO930waXzacaE//rKYwwkSMFi72EHJOtv6jjrbtWFeIvc40Z6IBBoKEpXElihgFwKZvsakXkS0xx8/wKArpr6sjqnp1Ymn8O/VytwMEBoOTr0Af6+istcWkTXTblLvhleNx3Nxclr+pQHMDaWrkdQG9X09eplb2fj/hJHb1busvOm3Szc1wuhpb3CqNhlnmJ3Kh2jdivgeK/I0B73tUEYCO+qble2ak7UzUHRyBsHYTjrdehtLb70UWdbexlvctwbkLIdhJHHRzf8yVLAEd72djwfEDguK+B9kCi1sAZ2GR7WoZnH9TOxkQAwzJaxxywvF/8oLP82FOkDDv1mePTtCEvlf32vS1LL2uuEaqOucUUk9Vi1S6NMuMhl3ZomCWqZOTMzS87dscM6d3Co/aHfdCwnfE8tifEvxzRG+GheCkZ3CNczAOP3fW5aYJzldXO4VbQ1UX22YrUCwN11+fUPWxbbSXtKk2yTyOojJ38uICn7P0/rS6/x16Z/1OKWOwdq6yBoOhFegodRYA4yLDQ07OpyefTuQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(136003)(366004)(396003)(39860400002)(110136005)(6486002)(54906003)(9686003)(41300700001)(6506007)(186003)(26005)(478600001)(6512007)(66476007)(6666004)(66556008)(86362001)(38100700002)(66946007)(4326008)(8676002)(2906002)(5660300002)(82960400001)(316002)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OpU5Vxh+Edz15cHyRzOijV6iRq+vyu4VgH16/kt8clxqT29w7/HCpvIv2PKb?=
- =?us-ascii?Q?D2F+AjbMA9Lm9KlqCo9FPkM5x8X70/33Kyh01nPsNm0/FjtDvnMUzkggCTbd?=
- =?us-ascii?Q?6agXxWISr1hAsDIMQAyNDbdi87hundFonQs9/nLqyGsYEZwFivr5AtdtUsJ5?=
- =?us-ascii?Q?zRZtBWEBJqWT6c5XKl56jLYa/tLQ5ePBx12QpoX2y+d5LvLC2WOV0Ksu3UaI?=
- =?us-ascii?Q?AfzpDj/2IgZWwZAJWoXuXOXRToMTRyQB8h+Adz+1VahNEnME/z/KdB6tWQYH?=
- =?us-ascii?Q?j+YS2Wf+BwKi+JoQ7hK/jN4YqywGWNGDESdDVSYTQt6bslyCPhvIaM4Y5xdr?=
- =?us-ascii?Q?1SDpnRIrfy21mXvdJZnmC09CGHETFYmrOFNfTZEhJf19UcVlYpEaR+kz4hHz?=
- =?us-ascii?Q?216mW9o+3w12dzoU25zYvFzfCnJG/nHKnAtdPNwTOqa8XOQWhePxQYkPp0et?=
- =?us-ascii?Q?rwEHl+G9xinEp7Q8fu2DFM1Vf9VVNDae2Lvas8LLV8uu+RSefG6jY5VplY12?=
- =?us-ascii?Q?pRjk0xiArnZqrBhy8zOpy1K6cc4zFkgEdq//gMHMipn6/3Iu1x4pxcfA4WKY?=
- =?us-ascii?Q?UzPyArTN3rxRCbZ4kKA0nyi27eZpLAKKpD20QCd+Lwo4+dwNBRq7fHSWJCKU?=
- =?us-ascii?Q?T6SfWItT634H0i65ZMuh89d40D81U4RGdL/pr1gDhsHz+Z6m+rJZc7hT8n8F?=
- =?us-ascii?Q?4ZASLROlqO7FwGs1QJO950VEPI8zjyD7GdESAZR7pYzOl117oO3g5Dh3AmIW?=
- =?us-ascii?Q?gVotYvtNSpvbVzK+AftE5S6eIAyhOwh9//AWdiF2N+YRQlvd8ULHAhgWW9m8?=
- =?us-ascii?Q?kjmhrhUMSyXBbjOf/j7b6itbxYdhyo+hnwXU30cch12MbQ4kHvlg2vtOkAjW?=
- =?us-ascii?Q?F0hsgrTKcxP4xpkqgY0MflPeXLJZgujAtP0ALnFJGlks3XUErN1gYHNqUdeE?=
- =?us-ascii?Q?8gICUb6WDsyWa9Sl2Hh9kgH2EGsyrBthFRKKH7yi2lxro0Sm53jurnv73AwF?=
- =?us-ascii?Q?GG4sfeG49SvX6EXBp+UzU2/FtPqj/TL4LzfJi5PkDm/muyY1k/8b+uRjLU2/?=
- =?us-ascii?Q?zgS21mEJbX1QNnxpGj+5icMQlGFaXaVzDfJ+jLEDlrKNAiNZgnyRT4vqazL3?=
- =?us-ascii?Q?rmJLBLNC3Y/gVlLgLD1zJMjuXfFbzdyf1XxmdZ4zpndr0xY3P6QDjAKAWUbU?=
- =?us-ascii?Q?oMQQ3fxYhexQ1hnmrg3AhygfwPyr+GNGSO3IGHpUK4a5PYabcIRYY5P6x4aF?=
- =?us-ascii?Q?WOo3kbktT83qNxWcYnp9Jh7U30yMEZZLmFXFY4npBLaZmyfXX/emB3+MG2r7?=
- =?us-ascii?Q?o2R8/eX5RDpV2pIhndq1P8fWhodcqwVifkHmIRIBWNVpZ79IcvHZw3dVCS6A?=
- =?us-ascii?Q?E6P3whgv9Pl1sICEtPmj5c9XAOIf6QsCGyt4SOOHvCeah9pk+D27tfEuCC8S?=
- =?us-ascii?Q?hFr0/UiII0d/XwOGYHSnk+6CKLNnYmJzOyaf9phsbvRPQN9pxMtwRlzNj6P+?=
- =?us-ascii?Q?QVY89ANJLzMBFlMUetV0roM17EILZZGUg14agHI3fQvEI1zz2UcirfGqv/ov?=
- =?us-ascii?Q?jaKRm8xqmkycf0/2XF6e99bQ8szoN3nN3uj6E555QEsd3jNBHLAyGugWD9Qr?=
- =?us-ascii?Q?wQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecbc5975-f070-4df8-2a68-08da91601892
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2022 06:05:14.2872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8mrVbt0iYhiGWR9+jaa5qUgASVAM/K59svgHyLFwlN5QVOJ4s03F0VPW3d4FhHkFrJuA1a/Ga+TaWv3wBMtBePXuHctMu+THMhZEqTlOFUM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6100
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Add sc7280 aggre0, aggre1 and ddr sf
+ tbu clocks in PCIe driver
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
+        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220907184437.GA137711@bhelgaas>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220907184437.GA137711@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5vHG0CipMuQfHpCVmSqwsMesmrqkPRUb
+X-Proofpoint-ORIG-GUID: 5vHG0CipMuQfHpCVmSqwsMesmrqkPRUb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-08_04,2022-09-07_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
+ adultscore=0 spamscore=0 bulkscore=0 mlxlogscore=870 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209080023
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -157,41 +90,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Robert Richter wrote:
-> A lookup of a host bridge's corresponding acpi device (struct
-> acpi_device) is not possible, for example:
-> 
-> 	adev = ACPI_COMPANION(&host_bridge->dev);
-> 
-> This could be useful to find a host bridge's fwnode handle and to
-> determine and call additional host bridge ACPI parameters and methods
-> such as HID/CID or _UID.
 
-When is this explicitly needed. "Could be useful" is interesting, but it
-needs to have a practical need.
+On 9/8/2022 12:14 AM, Bjorn Helgaas wrote:
+> On Sat, Sep 03, 2022 at 07:43:02AM +0530, Krishna chaitanya chundru wrote:
+>> Add missing aggre0, aggre1 and ddrs sf tbu clocks in PCIe driver.
+>>
+>> If these clocks are not presenti, the PCIe link goes down in system suspend
+>> and resume.
+> s/presenti/present/
+>
+> But the hardware clocks are present regardless of this driver change.
+>
+> I suspect the point of this is really that if the driver doesn't
+> clk_get() these clocks to increase the reference count, we don't know
+> that the clocks are in use, and since they appear unused, they get
+> turned off during suspend.
 
-> 
-> Make this work by linking the host bridge to its ACPI fw node.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/acpi/pci_root.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index d57cf8454b93..846c979e4c29 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -1083,6 +1083,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  		goto out_release_info;
->  
->  	host_bridge = to_pci_host_bridge(bus->bridge);
-> +	host_bridge->dev.fwnode = acpi_fwnode_handle(device);
->  	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
->  		host_bridge->native_pcie_hotplug = 0;
->  	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
-> -- 
-> 2.30.2
-> 
+Yes, these are present in the hardware. As we are not voting for these 
+clocks from
 
+our driver in the system suspend these clocks can be turn off.
 
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 2ea1375..a7202f0 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1548,7 +1548,10 @@ static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
+>>   static const struct qcom_pcie_cfg sc7280_cfg = {
+>>   	.ops = &ops_1_9_0,
+>>   	.has_tbu_clk = true,
+>> +	.has_ddrss_sf_tbu_clk = true,
+>>   	.pipe_clk_need_muxing = true,
+>> +	.has_aggre0_clk = true,
+>> +	.has_aggre1_clk = true,
+>>   };
+>>   
+>>   static const struct qcom_pcie_cfg sc8180x_cfg = {
+>> -- 
+>> 2.7.4
+>>
