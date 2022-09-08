@@ -2,88 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 672935B14D5
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 08:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 457715B1549
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 09:02:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230441AbiIHGjS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 02:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        id S230006AbiIHHCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 03:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiIHGjB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 02:39:01 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73447C7BAE;
-        Wed,  7 Sep 2022 23:38:40 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2886Q4lK025050;
-        Thu, 8 Sep 2022 06:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=LPgzPBamNRKA4KxAW8ALy4x4jbE4Kt2EiNmgCKQYneg=;
- b=d6wgSCVYo0O3nlKxcIiakYVxajL5ZG3zOY1iXxBXbWzIpSmVPeqK23dxrL4uZGYLY3Ut
- hK53jDNF5CYdAB6PV+LpMgwxmLnFT1MFM6TGW/ARTKRtBZXgbew2nBciTrgP7FNax97e
- JxFs3m2cozhrpgUQcmKSZEDGXWHrilNmgYmKBv7Ft2Omkz+C+FW0oQ1kdxNWYldnEEWb
- pE6xO1lwzI+ykATPtVe1l5Oj0edDu2LJgbnF2/3KtNkjYxQQv6f6rNNB3SIDFcYpveIm
- U8GwpNbT0AK0WQaSIB2DY1kVrnmrjrLn5Vwzu/RwufMkGvbAqQ6XTIAzi8ROARM1HD1i YA== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jequfkmrs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Sep 2022 06:38:34 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2886cXHZ021247
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 8 Sep 2022 06:38:33 GMT
-Received: from [10.216.34.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Wed, 7 Sep 2022
- 23:38:26 -0700
-Message-ID: <9609ade9-da03-6c3e-4d1a-80e97ac3b692@quicinc.com>
-Date:   Thu, 8 Sep 2022 12:08:23 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sc7280: Add missing aggre0,
- aggre1 clocks
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
-        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
-        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1662171184-25211-1-git-send-email-quic_krichai@quicinc.com>
- <1662171184-25211-4-git-send-email-quic_krichai@quicinc.com>
- <cc00fad3-08fb-462a-12ac-73143aa4206f@linaro.org>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <cc00fad3-08fb-462a-12ac-73143aa4206f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9tovZ1LiDMIuOSwd9RYarpfoggFYj1RV
-X-Proofpoint-ORIG-GUID: 9tovZ1LiDMIuOSwd9RYarpfoggFYj1RV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-08_04,2022-09-07_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
- malwarescore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2209080023
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        with ESMTP id S229490AbiIHHCg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 03:02:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BE298368;
+        Thu,  8 Sep 2022 00:02:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F50061B48;
+        Thu,  8 Sep 2022 07:02:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AAD0C433C1;
+        Thu,  8 Sep 2022 07:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662620554;
+        bh=Gm+sGNQ+RJ0tASk19i0LleLPN2IbLouV8NSUpzr4EPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gsubcowMXY6bB8TPFUzRpc48Nme+r27SGi/8DVjthxoyz5MsPLaGFDzXgUD/mWLvZ
+         GsWE9Xt4wR7nNlBgGkRhKtbLxK5LlZO5Z1cTkIbY/1TnvLdX5PPBcar2x6E9Ct0Poi
+         VY2kUVIfOmqdpuWQQqoV3LC2Oo3oh3vDiMj5/VMOjyIOi9I9O2F2WYSzsg95XV11Km
+         U9IH2HqaRKik5UCW5Wyc6k2sbSaOd2cY/Ye8S58p6ivZppljx+5pq1OcjIj8S3fQRJ
+         7va7/5sGThTs1n07OO3AEFLxMIewHHkPNkMrbeyu1gJAczSOU6ZgWeSPL98f0VTLcA
+         Ti6cWTLi37Wkw==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oWBYV-008pnl-S8;
+        Thu, 08 Sep 2022 08:02:32 +0100
+Date:   Thu, 08 Sep 2022 08:02:23 +0100
+Message-ID: <87h71iqrgg.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     kernel test robot <lkp@intel.com>, Frank Li <Frank.Li@nxp.com>
+Cc:     tglx@linutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com,
+        jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller driver
+In-Reply-To: <202209080757.hQMfrrfm-lkp@intel.com>
+References: <20220907034856.3101570-3-Frank.Li@nxp.com>
+        <202209080757.hQMfrrfm-lkp@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: lkp@intel.com, Frank.Li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, kbuild-all@lists.01.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev, manivannan.sadhasivam@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -92,39 +74,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Frank,
 
-On 9/7/2022 5:52 PM, Krzysztof Kozlowski wrote:
-> On 03/09/2022 04:13, Krishna chaitanya chundru wrote:
->> Add missing aggre0, aggre1 clocks.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> index e66fc67..a5ce095 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> @@ -2043,6 +2043,8 @@
->>   				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
->>   				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
->>   				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
->> +				 <&gcc GCC_AGGRE_NOC_PCIE_CENTER_SF_AXI_CLK>,
->> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
->>   				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
->>   
->>   			clock-names = "pipe",
->> @@ -2055,6 +2057,8 @@
->>   				      "bus_slave",
->>   				      "slave_q2a",
->>   				      "tbu",
->> +				      "aggre0",
->> +				      "aggre1",
->>   				      "ddrss_sf_tbu";
->>   
-> Same as binding - adding entries in the middle causes ABI issues.
->
-> Best regards,
-> Krzysztof
-Ok I will change the order as suggested.
+On Thu, 08 Sep 2022 01:03:27 +0100,
+kernel test robot <lkp@intel.com> wrote:
+> 
+> Hi Frank,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on jonmason-ntb/ntb-next]
+> [also build test ERROR on robh/for-next linus/master v6.0-rc4 next-20220907]
+> [cannot apply to tip/irq/core]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220907-115114
+> base:   https://github.com/jonmason/ntb ntb-next
+> config: s390-randconfig-s033-20220907 (https://download.01.org/0day-ci/archive/20220908/202209080757.hQMfrrfm-lkp@intel.com/config)
+> compiler: s390-linux-gcc (GCC) 12.1.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # apt-get install sparse
+>         # sparse version: v0.6.4-39-gce1a6720-dirty
+>         # https://github.com/intel-lab-lkp/linux/commit/c1f079e633c10b4f2f1f3c8f52e447d13fda8ddb
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220907-115114
+>         git checkout c1f079e633c10b4f2f1f3c8f52e447d13fda8ddb
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=s390 SHELL=/bin/bash
+> 
+> If you fix the issue, kindly add following tag where applicable
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    s390-linux-ld: drivers/irqchip/irq-imx-mu-msi.o: in function `imx_mu_of_init':
+> >> drivers/irqchip/irq-imx-mu-msi.c:316: undefined reference to `devm_platform_ioremap_resource_byname'
+
+This is about the 4th time this breakage gets reported. You keep
+reposting this series without addressing it. What is it going to take
+for you to finally fix it? Clearly, I'm not going to bother taking a
+series that has pending build breakages.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
