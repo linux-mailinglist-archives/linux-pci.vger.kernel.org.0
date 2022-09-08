@@ -2,58 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23FAB5B1A3D
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 12:41:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD9685B1A7F
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 12:52:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230240AbiIHKlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 06:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
+        id S229445AbiIHKwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 06:52:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231274AbiIHKlP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 06:41:15 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9B8E127D
-        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 03:41:13 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id u18so14714727lfo.8
-        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 03:41:12 -0700 (PDT)
+        with ESMTP id S229536AbiIHKwm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 06:52:42 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EA1F5C6A
+        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 03:52:40 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id p5so6365128ljc.13
+        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 03:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=+WZJZ1W/sQN5fQuU6zp10+/1N9w1VnXR7/OGM0RzXaw=;
-        b=X5w8mMNdyDsB9piTHgvg90OakYFPt5IF+SQ36P3MZjvwXkETEm6GDJWvMU9oCqT14y
-         zebS6hOthhRGTk7JekkhWBIPr6Ca2so+0Rgl6eO47bNH4QL0sAJAcJ0IYgxV08nrXxoT
-         GOuDGGVr7DlcxF+B7v5P7RezvAn4lvi9K35bB9uZv6yKvXh0jAa4YChSHmc4dwLslb49
-         cOGseaBr6qJYmWyaS2IL3Gdgz23jNh+ZsjLhdwns7YHoAm8DIIajebm2lSHXhX61HGnO
-         VJuYhLBXk4XSFvO3fSkDIxSa1GOQbzYZwVniF80P9ldhePJROAPIIBKQCshPWS3ks8JR
-         lltg==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=vVTBzK9B05XGZ/xpSwgV5tjebiNQ+EY1RJ0k0CE1o6c=;
+        b=DzWFPekGUBniXrt3Ux6czjGmubm1EMzTGihec6QlyHO6VhNBHiJd9hXiiwGNC0aeki
+         9hEIeHr6P+C0KHmMnSJGh+L7xW0rX4xbEwSW1D3dAu09XUM+AQUR/TuM2sX+HN0Xui1r
+         BPcq7wDRrhpOkcW0Jj8RSoshsUYNo7cCCVyFkArctfxMod0iRChZ9443r/10V74RlPd1
+         Uf95UXyK7FuCr5eX/S5l+coQtGvO4NJveb/0VZ1mLC+1oCDIsDXSNcx2LASsY6UPvcib
+         +ZQWL/raksilwWS/GxYaXJ02KtcUcCke/iDjFhGQFqrKBIpLdM1F11JcPt5Hq510pKxc
+         pUGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=+WZJZ1W/sQN5fQuU6zp10+/1N9w1VnXR7/OGM0RzXaw=;
-        b=XP2ncDi6/bIBXYJgGKXb7Id/9uSrbQQHbHSqie05BUxSK8g++7xjssoJX2vDQKHGV3
-         vNaXeXu2cbMcto50oT4lmiYdeeowVumUsZs1j/52XBtJjsUroYqIkhXW1wZbbEcxSwob
-         qJqBQUAQ9jMVT7qBq+NSYRDFmAS6ITlcWBYakt/QSYX8XroyJHEYrXJ0cvtb5hG3tgMS
-         bqAKi/RDwffm374wFj9+NoHAdH0uKLdGoSwGc8fNxbGat2VgHC4wRz+IM82bwcHBb1Mj
-         PHrE+JGPWeu9uTJm+MIxbUQKtCh0mi1FJMCTEBFXBcryd2HNNyz8g67+PAYIemSS05G1
-         VJBw==
-X-Gm-Message-State: ACgBeo3gjxH+s/VJUm9rnoyd3Sb47t+due2uDnZEYnzdmGDnCPrKaVnY
-        OwwudPc5f7egGWQy4uxNGdPy10cW4iBN4fB7nsWCqX448eXzkMOx
-X-Google-Smtp-Source: AA6agR55mBPoonaHA9VW+WkfWUlXzSLgwcIXZdrHWzMykPIH2z+xlaGL4oQ9jCpsNGPG53GfvPPDixpFCseS5qoApaA=
-X-Received: by 2002:ac2:4f03:0:b0:496:272:625d with SMTP id
- k3-20020ac24f03000000b004960272625dmr2409431lfr.303.1662633670990; Thu, 08
- Sep 2022 03:41:10 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=vVTBzK9B05XGZ/xpSwgV5tjebiNQ+EY1RJ0k0CE1o6c=;
+        b=nG5BnXHeHK4qarQK0WiCEo2azj0mXLaj7kf5SHqbxwmyoLSkJFkpHHdc8iC2PYZSJa
+         unFz5NHuoYLQ8fe1D3tyTDaBoIXrayRliFmy59ecQK8CYQM8bn9QcBmPSrpwA5+ERKKh
+         YHwyGAGAdFCF1+Sq/2O/LUHX+DmrRr/HvAt5EeynIDL4WRAW+RpFDOD0VmpcotcF8/Hj
+         0WzR3m4i+Ubf0sU34C/ZdttdAkpgWJMhUMyXAq8eV+AtBnQehaTvE7NIAuEkB123C9rH
+         dkjISMECecxnrkpREOG8II3Eeva4TddE1DtEMHDlKe+Yq+14vkU+J5JKHCVSkpG8auTK
+         wFoA==
+X-Gm-Message-State: ACgBeo3KK9N1TGe7XYh3RK2mOO7gkC57kfF3jJlN6bPNqZBwIi8+TJQT
+        uoNPL56JGKqIyTqltdg0T9sUhQ==
+X-Google-Smtp-Source: AA6agR4BKBhBADZe3TEbKzB0AHQ2b0+NvKfM32FRZkMwBfcJNEw/5gAzkz+kAcf2cJHwI7syEEl7UA==
+X-Received: by 2002:a2e:98ca:0:b0:26a:9856:6c92 with SMTP id s10-20020a2e98ca000000b0026a98566c92mr2189184ljj.146.1662634359206;
+        Thu, 08 Sep 2022 03:52:39 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id j10-20020ac2454a000000b0048b23c609c9sm2995196lfm.102.2022.09.08.03.52.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Sep 2022 03:52:38 -0700 (PDT)
+Message-ID: <01b4d522-ffd8-5a25-10f3-11bf6e0d08dd@linaro.org>
+Date:   Thu, 8 Sep 2022 12:52:37 +0200
 MIME-Version: 1.0
-From:   Daniel Gomez <daniel@qtec.com>
-Date:   Thu, 8 Sep 2022 12:41:00 +0200
-Message-ID: <CAH1Ww+TS2sdQc4PewxYjGNp94=uGWjh0Z13cjLbVhSWQMOij0w@mail.gmail.com>
-Subject: PCI/MSI: kernel NULL pointer dereference
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v4 2/2] dt-bindings: pci: QCOM Add missing sc7280 aggre0,
+ aggre1 clocks
+Content-Language: en-US
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <1662626776-19636-1-git-send-email-quic_krichai@quicinc.com>
+ <1662626776-19636-3-git-send-email-quic_krichai@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1662626776-19636-3-git-send-email-quic_krichai@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,98 +90,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On 08/09/2022 10:46, Krishna chaitanya chundru wrote:
+> Add missing aggre0 and aggre1 clocks.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+> changes since v3:
+> 	- Changed the order of the clocks.
 
-I have the following error whenever I remove the fglrx module from the
-latest 6.0-rc4.
 
-Logs:
-/mnt/raid0/krops/workspace/sources/fglrx-module/module/firegl_public.c:1674
-KCL_SetPageCache_Array
-<6>[fglrx] IRQ 37 Disabled
-BUG: kernel NULL pointer dereference, address: 0000000000000010
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 0 P4D 0
-Oops: 0002 [#1] SMP NOPTI
-CPU: 1 PID: 254 Comm: rmmod Tainted: G        W  O
-6.0.0-rc4-qtec-standard #2
-Hardware name: QTechnology QT5022/QT5022, BIOS PM_2.1.0.309 X64 09/27/2013
-RIP: 0010:mutex_lock+0x2a/0x40
-Code: 0f 1f 44 00 00 53 be 1b 01 00 00 48 89 fb 48 c7 c7 08 81 3d 82 e8 46 2c 52
- ff e8 01 d7 ff ff 31 c0 65 48 8b 14 25 00 ad 01 00 <f0> 48 0f b1 13 74 06 48 89
- df 5b eb b9 5b c3 0f 1f 80 00 00 00 00
-RSP: 0018:ffffc90000b07dd8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
-RDX: ffff888116aabb00 RSI: 000000000000011b RDI: ffffffff823d8108
-RBP: ffff8881148d20d0 R08: 0000000000000000 R09: ffffffffa053537b
-R10: ffff888149365cc0 R11: ffffea00052c5048 R12: 0000000000000000
-R13: ffff88813877c000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007f6f90b3cb80(0000) GS:ffff88815b300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000011e4c8000 CR4: 00000000000006e0
-Call Trace:
- <TASK>
- pci_disable_msi+0x34/0xe0
- irqmgr_wrap_shutdown+0x165/0x190 [fglrx]
- ? firegl_takedown+0x841/0x950 [fglrx]
- ? kobject_put+0xa6/0x220
- ? cleanup_device+0x299/0x2a0 [fglrx]
- ? pci_unregister_driver+0x42/0xa0
- ? firegl_cleanup_device_heads+0x65/0xa0 [fglrx]
- ? firegl_cleanup_module+0x84/0x11c [fglrx]
- ? __x64_sys_delete_module+0x11b/0x210
- ? get_vtime_delta+0xe/0x40
- ? vtime_user_exit+0x1c/0x60
- ? __ct_user_exit+0x68/0xb0
- ? do_syscall_64+0x3c/0x80
- ? entry_SYSCALL_64_after_hwframe+0x63/0xcd
- </TASK>
-Modules linked in: amdgpu fglrx(O-) ath9k ath9k_common mfd_core gpu_sched
-drm_buddy drm_ttm_helper ath9k_hw ttm drm_display_helper drm_kms_helper ath
-sp5100_tco syscopyarea sysfillrect sysimgblt fb_sys_fops video drm backlight
-ipv6
-CR2: 0000000000000010
----[ end trace 0000000000000000 ]---
-RIP: 0010:mutex_lock+0x2a/0x40
-Code: 0f 1f 44 00 00 53 be 1b 01 00 00 48 89 fb 48 c7 c7 08 81 3d 82 e8 46 2c 52
- ff e8 01 d7 ff ff 31 c0 65 48 8b 14 25 00 ad 01 00 <f0> 48 0f b1 13 74 06 48 89
- df 5b eb b9 5b c3 0f 1f 80 00 00 00 00
-RSP: 0018:ffffc90000b07dd8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
-RDX: ffff888116aabb00 RSI: 000000000000011b RDI: ffffffff823d8108
-RBP: ffff8881148d20d0 R08: 0000000000000000 R09: ffffffffa053537b
-R10: ffff888149365cc0 R11: ffffea00052c5048 R12: 0000000000000000
-R13: ffff88813877c000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007f6f90b3cb80(0000) GS:ffff88815b300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000011e4c8000 CR4: 00000000000006e0
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Steps:
-insmod fglrx.ko
-clinfo
-MatrixMultiplication
-rmmod fglrx.ko
 
-I know this is an out of tree driver from AMD but we still need that driver
-for some products because of the OpenCL stack support on it.
-
-Note: The open-source upstream radeon does not support OpenCL.
-
-So, doing git-bisect I found the issue is provoked by this commit [1].
-Unfortunately, I cannot revert it for testing as if I do it the system hangs
-on boot because of this other commit [2].
-
-I understand, the driver might have some issues but shouldn't the kernel
-prevent this crash at pci_disable_msi function? Do we have a mutex
-problem here provoked by the fglrx driver?
-Does anyone have any suggestions on how we can/should proceed with this?
-
-Thanks in advance,
-Daniel
-
-[1] Commit 93296cd1325d1d9afede60202d8833011c9001f2:
-93296cd1325d 2021-12-15 PCI/MSI: Allocate MSI device data on first use
-
-[2] Commit ffd84485e6beb9cad3e5a133d88201b995298c33:
-ffd84485e6be 2021-12-10 PCI/MSI: Let the irq code handle sysfs groups
+Best regards,
+Krzysztof
