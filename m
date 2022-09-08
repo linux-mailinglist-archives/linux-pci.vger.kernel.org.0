@@ -2,93 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A44705B175E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 10:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E42735B1789
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 10:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbiIHImy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 04:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        id S231745AbiIHIq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 04:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiIHImx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 04:42:53 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B67D112B01
-        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 01:42:52 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id r17so9011623ejy.9
-        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 01:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=mHQSSgNhDkCOub491AbEBE7T5spa2DJLZtfO6t6+O/A=;
-        b=yqn6NPkic3xE35zdfAsS1MeaHM57cjrz+j7qNGgMi12rgcIQS7rcb/cF4kPuIdq5sU
-         6S7Eh8WhmM3y0PR7hSOfvIyXqGG2QvJvDiwYdEi+ige8inRADkf2BwQp3wjiS06G0gZk
-         pDE5To0lxIzYA8cLvVkLa+8UFgE1g/C9AUd7Zezx2tU/oz4PA/TSM3zxyreZgdKk383D
-         nVv8rtfczJ4dVNQkG2go9nwd8F8GIAnyp2KYh4LE2Q/hUP63otPGmNrusiFIJ9ucbCNL
-         jhB/uKWSzb6Bd7oV8TMwwQSTy6iT30dvhDHXtf9AZEclAEMxUJ6SYZYjxbA3GDiJbEyB
-         cLTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=mHQSSgNhDkCOub491AbEBE7T5spa2DJLZtfO6t6+O/A=;
-        b=M8HubM1RqwFDSPcS1rwKZUNadb1VImLR3UkMfpOBL4svN7aQdDJqqqcF3EnvD4LM9v
-         MGCjuqQJY1QATPsAIIQUpewpmSRq+o+yXZp5mDap99WlT5ijROrlNrSnEBFsiVX/U5wf
-         nFaEaoW/XQ+LdsRjvDDpwkHOaOmpyW+2DgJgj3JVXvZ9xENdyB5JfWd9sVZWb/pID0V0
-         4tMCfZWHephKb9RbZTsc2lZnZGSQCV+ILVe18klYJDHZnz8dLInNJwrr0MwgStpnRwFK
-         8BKBm+Dha2Z2W6Mx4PSaU2rhIfpcdfUdswcDjvmEI0brgAxWhfy9S7H0KEvfHDCuW6RF
-         72SA==
-X-Gm-Message-State: ACgBeo1XqCe0oZHknIUADytJ1EAEsQX0CVREEzVToQZl4oE+oSARW4O4
-        jmaj4nlXITs6opH2BP5UdEIj05h63GudWIRZ356VCg==
-X-Google-Smtp-Source: AA6agR6+9iRUrEemUzwPpukwFryEqyHQQbUVBor9maor4rQNOJdvVLTNYDLuIH9ifvicN//eR+7p98ksvS2lWYSUNK0=
-X-Received: by 2002:a17:907:1690:b0:770:80d4:ec4c with SMTP id
- hc16-20020a170907169000b0077080d4ec4cmr4651626ejc.690.1662626571261; Thu, 08
- Sep 2022 01:42:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
- <20220906204301.3736813-2-dmitry.torokhov@gmail.com> <20220906211628.6u4hbpn4shjcvqel@pali>
-In-Reply-To: <20220906211628.6u4hbpn4shjcvqel@pali>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:42:39 +0200
-Message-ID: <CACRpkdbG6gzYjkgW=3w33Mvmc3gdS6Wz-9t71JQti-AJ5aZRFA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231700AbiIHIqq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 04:46:46 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078D611CD4E;
+        Thu,  8 Sep 2022 01:46:28 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 288877Ms013349;
+        Thu, 8 Sep 2022 08:46:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=qfj+h3J2L519bE2HtjD5kab2cVsVAeOaLIzlggd6yJA=;
+ b=o+ngamKDD1lBAjhUqT0YhVvWWsRGTLK2h/oHHj2HhRhe2NpIsC6Ue4+kfEk+26qHLwyC
+ an8VuWRYR9KLEHozjmTYuVFmnXdGTACD8ZXTQbNFHvv5wBit5xuqTkC3+XhnPtq7wuo+
+ FbGLN0viajQYxEtkZmUcO3qgVHtarKRswizJmhvKlB49RCeATEYaWU+DotEaDsZAek5t
+ AhAoeTcRIRcuqnJkxVSaFnzHcgtbxRTCGvUtRZyZudEkOcdbqZJt3Fq0W9eb/Qf2iY7e
+ GP9ERZssaupy0O0X9O7H8UAJxPLxu7a1ma/kxpoKC+gqPF28KCms8uShX/DIn9zXaG0v Ig== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jf1swsbfu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Sep 2022 08:46:23 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 2888i2uW011862;
+        Thu, 8 Sep 2022 08:46:19 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3jc00m3e0y-1;
+        Thu, 08 Sep 2022 08:46:19 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2888gNm4008440;
+        Thu, 8 Sep 2022 08:46:19 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 2888kJqV014053;
+        Thu, 08 Sep 2022 08:46:19 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 81DDE449C; Thu,  8 Sep 2022 14:16:18 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v4 0/2] PCI: qcom: sc7280: add missing aggre0 and aggre1 clocks
+Date:   Thu,  8 Sep 2022 14:16:14 +0530
+Message-Id: <1662626776-19636-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QS6wUPq5p-QWY6KvVv4i-Zr9fbq_e8BT
+X-Proofpoint-ORIG-GUID: QS6wUPq5p-QWY6KvVv4i-Zr9fbq_e8BT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-08_06,2022-09-07_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 malwarescore=0 clxscore=1015 mlxlogscore=416
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209080031
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 11:16 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> On Tuesday 06 September 2022 13:43:01 Dmitry Torokhov wrote:
+Add missing aggre0 and aggre1 clocks supports to PCIe node.
 
-> > This patch switches the driver away from legacy gpio/of_gpio API to
-> > gpiod API, and removes use of of_get_named_gpio_flags() which I want to
-> > make private to gpiolib.
->
-> There are many pending pci-mvebu.c patches waiting for review and merge,
-> so I would suggest to wait until all other mvebu patches are processed
-> and then process this one... longer waiting period :-(
+Without voting these clocks, PCIe link is going down when system is
+suspended as these clocks can get turned off as no-one is voting for them.
 
-What about the MVEBU maintainers create a git branch and pile up
-all patches and send a pull request to Bjorn then?
-This usually works.
+Krishna chaitanya chundru (2):
+  arm64: dts: qcom: sc7280: Add missing aggre0, aggre1 clocks
+  dt-bindings: pci: QCOM Add missing sc7280 aggre0, aggre1 clocks
 
-Yours,
-Linus Walleij
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 10 ++++++----
+ arch/arm64/boot/dts/qcom/sc7280.dtsi                 |  8 ++++++--
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
+
