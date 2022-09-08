@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 457715B1549
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 09:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7682F5B15D0
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 09:40:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiIHHCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 03:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58152 "EHLO
+        id S229688AbiIHHkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 03:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbiIHHCg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 03:02:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BE298368;
-        Thu,  8 Sep 2022 00:02:35 -0700 (PDT)
+        with ESMTP id S229624AbiIHHkY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 03:40:24 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5604F5A2C3;
+        Thu,  8 Sep 2022 00:40:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F50061B48;
-        Thu,  8 Sep 2022 07:02:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AAD0C433C1;
-        Thu,  8 Sep 2022 07:02:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E6A1DB81F78;
+        Thu,  8 Sep 2022 07:40:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BB7C433D6;
+        Thu,  8 Sep 2022 07:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662620554;
-        bh=Gm+sGNQ+RJ0tASk19i0LleLPN2IbLouV8NSUpzr4EPY=;
+        s=k20201202; t=1662622819;
+        bh=/yqgJJ5uMK1h6c2CgnSMPpgINloP07AxiagPnKlv0B8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gsubcowMXY6bB8TPFUzRpc48Nme+r27SGi/8DVjthxoyz5MsPLaGFDzXgUD/mWLvZ
-         GsWE9Xt4wR7nNlBgGkRhKtbLxK5LlZO5Z1cTkIbY/1TnvLdX5PPBcar2x6E9Ct0Poi
-         VY2kUVIfOmqdpuWQQqoV3LC2Oo3oh3vDiMj5/VMOjyIOi9I9O2F2WYSzsg95XV11Km
-         U9IH2HqaRKik5UCW5Wyc6k2sbSaOd2cY/Ye8S58p6ivZppljx+5pq1OcjIj8S3fQRJ
-         7va7/5sGThTs1n07OO3AEFLxMIewHHkPNkMrbeyu1gJAczSOU6ZgWeSPL98f0VTLcA
-         Ti6cWTLi37Wkw==
+        b=T8zzCfRAivY4zDIql8rWhtAybmQCHOH2GdXmCoGk/xs4ezqHhHKrMbFUWKsf8WX54
+         5giQu2ipQOkSiyRRcp4iJBrj4FKbd1zLu59a9d1Cf4e1CgCAJUMcVbYmKDQQqKUxED
+         89dpeKD7W36Ry//02PH1veGR8/dihQZmsTIFrc50RzCNuga8OiJoiPLpXzjNIXJxxn
+         0sK+pNzk7Hgcf+wTPv0mxLTUaGu1Ah51UAfg2PVWDCKWA0ziaVDbZDsixEWF1IRnCT
+         pj6MYqGiartRvogorFXdiuKy7eFvKvL59Nlo72a2BlPJB0S3ARXzr4XGGWmNj7iKty
+         AX9lNVV9r7WNA==
 Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1oWBYV-008pnl-S8;
-        Thu, 08 Sep 2022 08:02:32 +0100
-Date:   Thu, 08 Sep 2022 08:02:23 +0100
-Message-ID: <87h71iqrgg.wl-maz@kernel.org>
+        id 1oWC8z-008q9F-Pv;
+        Thu, 08 Sep 2022 08:40:17 +0100
+Date:   Thu, 08 Sep 2022 08:39:47 +0100
+Message-ID: <87fsh2qpq4.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
-To:     kernel test robot <lkp@intel.com>, Frank Li <Frank.Li@nxp.com>
+To:     Frank Li <Frank.Li@nxp.com>
 Cc:     tglx@linutronix.de, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com,
-        jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com, imx@lists.linux.dev,
         manivannan.sadhasivam@linaro.org
 Subject: Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller driver
-In-Reply-To: <202209080757.hQMfrrfm-lkp@intel.com>
-References: <20220907034856.3101570-3-Frank.Li@nxp.com>
-        <202209080757.hQMfrrfm-lkp@intel.com>
+In-Reply-To: <20220907034856.3101570-3-Frank.Li@nxp.com>
+References: <20220907034856.3101570-1-Frank.Li@nxp.com>
+        <20220907034856.3101570-3-Frank.Li@nxp.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: lkp@intel.com, Frank.Li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, kbuild-all@lists.01.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev, manivannan.sadhasivam@linaro.org
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev, manivannan.sadhasivam@linaro.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -74,51 +74,503 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Frank,
+On Wed, 07 Sep 2022 04:48:54 +0100,
+Frank Li <Frank.Li@nxp.com> wrote:
+> 
+> The MU block found in a number of Freescale/NXP SoCs supports generating
+> IRQs by writing data to a register
+> 
+> This enables the MU block to be used as a MSI controller, by leveraging
+> the platform-MSI API
 
-On Thu, 08 Sep 2022 01:03:27 +0100,
-kernel test robot <lkp@intel.com> wrote:
-> 
-> Hi Frank,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on jonmason-ntb/ntb-next]
-> [also build test ERROR on robh/for-next linus/master v6.0-rc4 next-20220907]
-> [cannot apply to tip/irq/core]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220907-115114
-> base:   https://github.com/jonmason/ntb ntb-next
-> config: s390-randconfig-s033-20220907 (https://download.01.org/0day-ci/archive/20220908/202209080757.hQMfrrfm-lkp@intel.com/config)
-> compiler: s390-linux-gcc (GCC) 12.1.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.4-39-gce1a6720-dirty
->         # https://github.com/intel-lab-lkp/linux/commit/c1f079e633c10b4f2f1f3c8f52e447d13fda8ddb
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Frank-Li/PCI-EP-driver-support-MSI-doorbell-from-host/20220907-115114
->         git checkout c1f079e633c10b4f2f1f3c8f52e447d13fda8ddb
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=s390 SHELL=/bin/bash
-> 
-> If you fix the issue, kindly add following tag where applicable
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    s390-linux-ld: drivers/irqchip/irq-imx-mu-msi.o: in function `imx_mu_of_init':
-> >> drivers/irqchip/irq-imx-mu-msi.c:316: undefined reference to `devm_platform_ioremap_resource_byname'
+Missing full stop after each sentence.
 
-This is about the 4th time this breakage gets reported. You keep
-reposting this series without addressing it. What is it going to take
-for you to finally fix it? Clearly, I'm not going to bother taking a
-series that has pending build breakages.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/irqchip/Kconfig          |   9 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-imx-mu-msi.c | 451 +++++++++++++++++++++++++++++++
+>  3 files changed, 461 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-mu-msi.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 5e4e50122777d..e04c6521dce55 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -470,6 +470,15 @@ config IMX_INTMUX
+>  	help
+>  	  Support for the i.MX INTMUX interrupt multiplexer.
+>  
+> +config IMX_MU_MSI
+> +	bool "i.MX MU work as MSI controller"
+
+Why bool? Doesn't it also work as a module?
+
+> +	default y if ARCH_MXC
+
+Why would this be selected by default?
+
+> +	select IRQ_DOMAIN
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	help
+> +	  MU work as MSI controller to do general doorbell
+
+I'm not sure this is that generic. It really is limited to CPU-to-CPU
+interrupts.
+
+> +
+>  config LS1X_IRQ
+>  	bool "Loongson-1 Interrupt Controller"
+>  	depends on MACH_LOONGSON32
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 5d8e21d3dc6d8..870423746c783 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -98,6 +98,7 @@ obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
+>  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+>  obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+>  obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
+> +obj-$(CONFIG_IMX_MU_MSI)		+= irq-imx-mu-msi.o
+>  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-msi.c
+> new file mode 100644
+> index 0000000000000..82b55f6d87266
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-mu-msi.c
+> @@ -0,0 +1,451 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Freescale MU worked as MSI controller
+
+s/worked/used/
+
+> + *
+> + * Copyright (c) 2018 Pengutronix, Oleksij Rempel <o.rempel@pengutronix.de>
+> + * Copyright 2022 NXP
+> + *	Frank Li <Frank.Li@nxp.com>
+> + *	Peng Fan <peng.fan@nxp.com>
+> + *
+> + * Based on drivers/mailbox/imx-mailbox.c
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/dma-iommu.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/pm_domain.h>
+
+Keep this list in alphabetical order.
+
+> +
+> +
+> +#define IMX_MU_CHANS            4
+> +
+> +enum imx_mu_xcr {
+> +	IMX_MU_GIER,
+> +	IMX_MU_GCR,
+> +	IMX_MU_TCR,
+> +	IMX_MU_RCR,
+> +	IMX_MU_xCR_MAX,
+
+What is this last enum used for?
+
+> +};
+> +
+> +enum imx_mu_xsr {
+> +	IMX_MU_SR,
+> +	IMX_MU_GSR,
+> +	IMX_MU_TSR,
+> +	IMX_MU_RSR,
+> +};
+> +
+> +enum imx_mu_type {
+> +	IMX_MU_V1 = BIT(0),
+
+This is never used. Why?
+
+> +	IMX_MU_V2 = BIT(1),
+> +	IMX_MU_V2_S4 = BIT(15),
+
+Same thing.
+
+> +};
+> +
+> +/* Receive Interrupt Enable */
+> +#define IMX_MU_xCR_RIEn(data, x) ((data->cfg->type) & IMX_MU_V2 ? BIT(x) : BIT(24 + (3 - (x))))
+> +#define IMX_MU_xSR_RFn(data, x) ((data->cfg->type) & IMX_MU_V2 ? BIT(x) : BIT(24 + (3 - (x))))
+> +
+> +struct imx_mu_dcfg {
+> +	enum imx_mu_type type;
+> +	u32     xTR;            /* Transmit Register0 */
+> +	u32     xRR;            /* Receive Register0 */
+> +	u32     xSR[4];         /* Status Registers */
+> +	u32     xCR[4];         /* Control Registers */
+> +};
+> +
+> +struct imx_mu_msi {
+> +	spinlock_t			lock;
+> +	raw_spinlock_t			reglock;
+
+Why two locks? Isn't one enough to protect both MSI allocation (which
+happens once in a blue moon) and register access?
+
+Also, where are these locks initialised?
+
+> +	struct irq_domain		*msi_domain;
+> +	void __iomem			*regs;
+> +	phys_addr_t			msiir_addr;
+> +	const struct imx_mu_dcfg	*cfg;
+> +	unsigned long			used;
+> +	struct clk			*clk;
+> +};
+> +
+> +static void imx_mu_write(struct imx_mu_msi *msi_data, u32 val, u32 offs)
+> +{
+> +	iowrite32(val, msi_data->regs + offs);
+> +}
+> +
+> +static u32 imx_mu_read(struct imx_mu_msi *msi_data, u32 offs)
+> +{
+> +	return ioread32(msi_data->regs + offs);
+> +}
+> +
+> +static u32 imx_mu_xcr_rmw(struct imx_mu_msi *msi_data, enum imx_mu_xcr type, u32 set, u32 clr)
+> +{
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	raw_spin_lock_irqsave(&msi_data->reglock, flags);
+> +	val = imx_mu_read(msi_data, msi_data->cfg->xCR[type]);
+> +	val &= ~clr;
+> +	val |= set;
+> +	imx_mu_write(msi_data, val, msi_data->cfg->xCR[type]);
+> +	raw_spin_unlock_irqrestore(&msi_data->reglock, flags);
+> +
+> +	return val;
+> +}
+> +
+> +static void imx_mu_msi_parent_mask_irq(struct irq_data *data)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +	imx_mu_xcr_rmw(msi_data, IMX_MU_RCR, 0, IMX_MU_xCR_RIEn(msi_data, data->hwirq));
+> +}
+> +
+> +static void imx_mu_msi_parent_unmask_irq(struct irq_data *data)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +	imx_mu_xcr_rmw(msi_data, IMX_MU_RCR, IMX_MU_xCR_RIEn(msi_data, data->hwirq), 0);
+> +}
+> +
+> +static void imx_mu_msi_parent_ack_irq(struct irq_data *data)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +
+> +	imx_mu_read(msi_data, msi_data->cfg->xRR + data->hwirq * 4);
+> +}
+> +
+> +static struct irq_chip imx_mu_msi_irq_chip = {
+> +	.name = "MU-MSI",
+> +	.irq_ack = irq_chip_ack_parent,
+> +};
+> +
+> +static struct msi_domain_ops imx_mu_msi_irq_ops = {
+> +};
+> +
+> +static struct msi_domain_info imx_mu_msi_domain_info = {
+> +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+> +	.ops	= &imx_mu_msi_irq_ops,
+> +	.chip	= &imx_mu_msi_irq_chip,
+> +};
+> +
+> +static void imx_mu_msi_parent_compose_msg(struct irq_data *data,
+> +					  struct msi_msg *msg)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data);
+> +	u64 addr = msi_data->msiir_addr + 4 * data->hwirq;
+> +
+> +	msg->address_hi = upper_32_bits(addr);
+> +	msg->address_lo = lower_32_bits(addr);
+> +	msg->data = data->hwirq;
+> +}
+> +
+> +static int imx_mu_msi_parent_set_affinity(struct irq_data *irq_data,
+> +				   const struct cpumask *mask, bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static struct irq_chip imx_mu_msi_parent_chip = {
+> +	.name		= "MU",
+> +	.irq_mask	= imx_mu_msi_parent_mask_irq,
+> +	.irq_unmask	= imx_mu_msi_parent_unmask_irq,
+> +	.irq_ack	= imx_mu_msi_parent_ack_irq,
+> +	.irq_compose_msi_msg	= imx_mu_msi_parent_compose_msg,
+> +	.irq_set_affinity = imx_mu_msi_parent_set_affinity,
+> +};
+> +
+> +static int imx_mu_msi_domain_irq_alloc(struct irq_domain *domain,
+> +					unsigned int virq,
+> +					unsigned int nr_irqs,
+> +					void *args)
+> +{
+> +	struct imx_mu_msi *msi_data = domain->host_data;
+> +	unsigned long flags;
+> +	int pos, err = 0;
+> +
+> +	WARN_ON(nr_irqs != 1);
+> +
+> +	spin_lock_irqsave(&msi_data->lock, flags);
+> +	pos = find_first_zero_bit(&msi_data->used, IMX_MU_CHANS);
+> +	if (pos < IMX_MU_CHANS)
+> +		__set_bit(pos, &msi_data->used);
+> +	else
+> +		err = -ENOSPC;
+> +	spin_unlock_irqrestore(&msi_data->lock, flags);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	irq_domain_set_info(domain, virq, pos,
+> +			    &imx_mu_msi_parent_chip, msi_data,
+> +			    handle_edge_irq, NULL, NULL);
+> +	return 0;
+> +}
+> +
+> +static void imx_mu_msi_domain_irq_free(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> +	struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&msi_data->lock, flags);
+> +	__clear_bit(d->hwirq, &msi_data->used);
+> +	spin_unlock_irqrestore(&msi_data->lock, flags);
+> +}
+> +
+> +static const struct irq_domain_ops imx_mu_msi_domain_ops = {
+> +	.alloc	= imx_mu_msi_domain_irq_alloc,
+> +	.free	= imx_mu_msi_domain_irq_free,
+> +};
+> +
+> +static void imx_mu_msi_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct imx_mu_msi *msi_data = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	u32 status;
+> +	int i;
+> +
+> +	status = imx_mu_read(msi_data, msi_data->cfg->xSR[IMX_MU_RSR]);
+> +
+> +	chained_irq_enter(chip, desc);
+> +	for (i = 0; i < IMX_MU_CHANS; i++) {
+> +		if (status & IMX_MU_xSR_RFn(msi_data, i))
+> +			generic_handle_domain_irq(msi_data->msi_domain, i);
+> +	}
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int imx_mu_msi_domains_init(struct imx_mu_msi *msi_data, struct device *dev)
+> +{
+> +	struct fwnode_handle *fwnodes = dev_fwnode(dev);
+> +	struct irq_domain *parent;
+> +
+> +	/* Initialize MSI domain parent */
+> +	parent = irq_domain_create_linear(fwnodes,
+> +					    IMX_MU_CHANS,
+> +					    &imx_mu_msi_domain_ops,
+> +					    msi_data);
+> +	if (!parent) {
+> +		dev_err(dev, "failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+> +
+> +	msi_data->msi_domain = platform_msi_create_irq_domain(
+> +				fwnodes,
+> +				&imx_mu_msi_domain_info,
+> +				parent);
+
+nit: move the first argument after the opening bracket (longer lines
+are fine).
+
+> +
+> +	if (!msi_data->msi_domain) {
+> +		dev_err(dev, "failed to create MSI domain\n");
+> +		irq_domain_remove(parent);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	irq_domain_set_pm_device(msi_data->msi_domain, dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Register offset of different version MU IP */
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
+
+Why doesn't this have a type?
+
+> +	.xTR    = 0x0,
+> +	.xRR    = 0x10,
+> +	.xSR    = {0x20, 0x20, 0x20, 0x20},
+
+Since you defined enums for all the register offsets, please be
+consistent and use them everywhere:
+
+	.xSR = {
+		[IMX_MU_SR]	= 0x20,
+		[IMX_MU_GSR]	= 0x20,
+		[...]
+	},
+
+> +	.xCR    = {0x24, 0x24, 0x24, 0x24},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
+> +	.xTR    = 0x20,
+> +	.xRR    = 0x40,
+> +	.xSR    = {0x60, 0x60, 0x60, 0x60},
+> +	.xCR    = {0x64, 0x64, 0x64, 0x64},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp = {
+> +	.type   = IMX_MU_V2,
+> +	.xTR    = 0x200,
+> +	.xRR    = 0x280,
+> +	.xSR    = {0xC, 0x118, 0x124, 0x12C},
+> +	.xCR    = {0x110, 0x114, 0x120, 0x128},
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp_s4 = {
+> +
+> +	.type   = IMX_MU_V2 | IMX_MU_V2_S4,
+> +	.xTR    = 0x200,
+> +	.xRR    = 0x280,
+> +	.xSR    = {0xC, 0x118, 0x124, 0x12C},
+> +	.xCR    = {0x110, 0x114, 0x120, 0x128},
+> +};
+> +
+> +static int __init imx_mu_of_init(struct device_node *dn,
+> +				 struct device_node *parent,
+> +				 const struct imx_mu_dcfg *cfg
+> +				)
+
+Move closing bracket after 'cfg'.
+
+> +{
+> +	struct platform_device *pdev = of_find_device_by_node(dn);
+> +	struct device_link *pd_link_a;
+> +	struct device_link *pd_link_b;
+> +	struct imx_mu_msi *msi_data;
+> +	struct resource *res;
+> +	struct device *pd_a;
+> +	struct device *pd_b;
+> +	struct device *dev;
+> +	int ret;
+> +	int irq;
+> +
+> +	if (!pdev)
+> +		return -ENODEV;
+
+How can that happen?
+
+> +
+> +	dev = &pdev->dev;
+> +
+> +	msi_data = devm_kzalloc(&pdev->dev, sizeof(*msi_data), GFP_KERNEL);
+> +	if (!msi_data)
+> +		return -ENOMEM;
+> +
+> +	msi_data->cfg = cfg;
+> +
+> +	msi_data->regs = devm_platform_ioremap_resource_byname(pdev, "processor-a-side");
+> +	if (IS_ERR(msi_data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize 'regs'\n");
+> +		return PTR_ERR(msi_data->regs);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "processor-b-side");
+> +	if (!res)
+> +		return -EIO;
+> +
+> +	msi_data->msiir_addr = res->start + msi_data->cfg->xTR;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq <= 0)
+> +		return -ENODEV;
+> +
+> +	platform_set_drvdata(pdev, msi_data);
+> +
+> +	msi_data->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(msi_data->clk)) {
+> +		if (PTR_ERR(msi_data->clk) != -ENOENT)
+> +			return PTR_ERR(msi_data->clk);
+> +
+> +		msi_data->clk = NULL;
+
+Why is it acceptable to continue with no clock?
+
+> +	}
+> +
+> +	pd_a = dev_pm_domain_attach_by_name(dev, "processor-a-side");
+> +	if (IS_ERR(pd_a))
+> +		return PTR_ERR(pd_a);
+> +
+> +	pd_b = dev_pm_domain_attach_by_name(dev, "processor-b-side");
+> +	if (IS_ERR(pd_b))
+> +		return PTR_ERR(pd_b);
+> +
+> +	pd_link_a = device_link_add(dev, pd_a,
+> +			DL_FLAG_STATELESS |
+> +			DL_FLAG_PM_RUNTIME |
+> +			DL_FLAG_RPM_ACTIVE);
+> +
+> +	if (!pd_link_a) {
+> +		dev_err(dev, "Failed to add device_link to mu a.\n");
+> +		goto err_pd_a;
+> +	}
+> +
+> +	pd_link_b = device_link_add(dev, pd_b,
+> +			DL_FLAG_STATELESS |
+> +			DL_FLAG_PM_RUNTIME |
+> +			DL_FLAG_RPM_ACTIVE);
+> +
+> +
+> +	if (!pd_link_b) {
+> +		dev_err(dev, "Failed to add device_link to mu a.\n");
+> +		goto err_pd_b;
+> +	}
+> +
+> +	ret = imx_mu_msi_domains_init(msi_data, dev);
+> +	if (ret)
+> +		goto err_dm_init;
+> +
+> +	irq_set_chained_handler_and_data(irq,
+> +					 imx_mu_msi_irq_handler,
+> +					 msi_data);
+> +
+> +	pm_runtime_enable(dev);
+
+Shouldn't you enable the device PM before registering the chained
+handler?
 
 	M.
 
