@@ -2,193 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 797255B13DC
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 07:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A83C95B145E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 08:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbiIHFMa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 01:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        id S230163AbiIHGF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 02:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230048AbiIHFMR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 01:12:17 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB554BA142
-        for <linux-pci@vger.kernel.org>; Wed,  7 Sep 2022 22:12:00 -0700 (PDT)
+        with ESMTP id S230150AbiIHGFZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 02:05:25 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50852A407A;
+        Wed,  7 Sep 2022 23:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662617124; x=1694153124;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KqQMMCJBnQIsFl6WQv4mbaw7aImXH+WW/xBBT+njNGc=;
+  b=etoMXKcMbSSrNFSuXGfgfg28e/hA8tQly9jVIAXb35EvW6h1XFCgGzh2
+   glMP60OCu72dEAfCwx76NcDXrjD4jHKVXKBwZzaYju5F1BhgrMUqVf5vS
+   wAtDEwebevYxrBYOLLh+SLdhUc2izcZuTISFbkdzSNlaGDzBFeiIQhXIh
+   Sx29YXWWasZAdMhq7mMT3WGEMy5EPXdWmVMsKEiGaH79drzE2IEUc29Sr
+   OIG8hXIwnSLZvIAyl02ElUkxsRWaCMZr8OHfFCYUmuW0VoZmPR0PzdLNh
+   gKCLEcKfoBImT4+Mt0WyKF2l51ImOoKb2ZcFF+2unU6YwWfpzDf9H0/EP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="294661679"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="294661679"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 23:05:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="943203453"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Sep 2022 23:05:16 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 7 Sep 2022 23:05:16 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 7 Sep 2022 23:05:16 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Wed, 7 Sep 2022 23:05:16 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Wed, 7 Sep 2022 23:05:15 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZoiezgJWhe62fC7yke2+bL72MZTlYKS+RTARLZJc6yVzwLNlJUC0OE/48rwlKIDc+9uT2bMPG9PiSCD2/MthmUZD+fyUWTZCsOt8zkL0+Qcj3lYuu9mXyCOfiRgfbKkIgKPy+8+9NKh01jw1k+ZV3OZPtkEePCCEPj4O+O1M0BOlUDetaKrtQpftjH/+FfdSfNsoDstHavq2gHh2sc+iWsD8FILuHblJYDIyMnU/hTU+paNCo/alGXUd6Fuir+jKPdqID//EwOJUjgJrpxd96CxBMlm6Asb6ZCwZFmOPuvI3Awe9IjFFhuwJWRhvnRqoWE/48yphYlWxdwGUc51NNg==
+ b=gcGwSPToLJ/y459PqUVpJSvOntMbAo2JA+M6LIJ+YitMrq6hRpGyRFxT4X4qqSEYLgBtjfK9Nyo6rnTO2pvouwm5igHn61QhFISb6nvreN4+x6uDjtZhoF8DfYmZQAILNlcqQxTDhEZK9aNvB03jYSImrGbmglAHgMJRg41tMTCjU17HRtiPfrIsM6NaGICla8xHOnVE0OqdbUIuUVHdO26waoglGgJ2jlI4i96hQN8oZGyW0Z/cP71kZ7sJD49sRKrl+AWen46ApHRI+uQfCfzc85ffrmYv377d/Yhr7K68NFrhasOAVEyRT+ptiNKoGDBEHlvMyUPXVMI99TkJyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XPvFV+FRoM22G6HWCDDSUDdsmJvqJfLZiaT6Ok8YwZE=;
- b=iogYR7UAk/E3+SDaGLWpDsOErwzKVcgzDbHuvboaBERy/tKNeR2Zf6YIAp7eT3eV8BBTRmSSALv4P9Uw54yxskaWpUBENuEjwJgtj54jqEEJO515Vnaqwn7ce2FBDZwlg0ICL1QU6tuv0HFevb2naW8fouVh4VT9h9zZgIEnEKj8xwLwqd9Va76ohzqdGfLTxf60d5DTLcLiLqy/i3qqe2j7MB3doFeIlkZ7g42dFbdFNN7bhTLeESV/gqRQNYErpuUwSL3+MK1nKyW/x5lGIPoS9UbrVva1Z7s3Z7iElgwUWfvytHS+wDyKk7MPMgqt2FfMutPMDXEYYs8p+F70jw==
+ bh=PoGdvXhJwPYzbmC22sksnPm4FBxvZwogn/bpeuK3ms8=;
+ b=iYLrxNGtPyLCNXoZ0SV3MVIR3NFGb//hEGlcTaSg/LtYmirY6paVVs1KoIVTxJCs1314QIw90RTpfhTVRzqLtzIzUm/Ce6weEsHz4Z67IICBO1GKSctWeaRNdavlAfrpXpmXlEkc8BV3+hOHue0bKV1/xM79+BNOKQ013hG9u1we2+vmM690IEDApeOcfp+075SZmfI6wGfnjmsW5B3JaTcVeMuXyH+e9pTEpW9AnY8FfBvCqS7otTVzSwRyB2DlTdeagUUmwDIqslI4qDCbxzdNGmSZsNHOk+WP912dlLRVH+f8mzFswNFyRe2jT/I3Wxwm8dpV1Ih68UniEgJXNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPvFV+FRoM22G6HWCDDSUDdsmJvqJfLZiaT6Ok8YwZE=;
- b=VhT6qv1zEdTf+uoACF9dQSO/O6Aen7rvKOdqVdITOhEy0ykUwt6yTWQt7k7R1uY0cJYfk3ntV9xpHUvdbtBWGUNAr/UwMEu2XlHMEWuGZ4kNx3Wlmnii2yF7ot2r6QEVTRSZORNiBneRnTxFk1FnLEzEj/sPStnhDFh5xeeXVwo=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
- by MW4PR12MB5601.namprd12.prod.outlook.com (2603:10b6:303:168::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Thu, 8 Sep
- 2022 05:11:45 +0000
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::2925:100a:f0b9:9ad8]) by BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::2925:100a:f0b9:9ad8%3]) with mapi id 15.20.5612.014; Thu, 8 Sep 2022
- 05:11:45 +0000
-Message-ID: <4148adb1-2181-efa4-672c-defb45abe0e8@amd.com>
-Date:   Thu, 8 Sep 2022 10:41:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH 1/2] drm/amdgpu: make sure to init common IP before gmc
-Content-Language: en-US
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, helgaas@kernel.org
-Cc:     regressions@lists.linux.dev, airlied@linux.ie,
-        linux-pci@vger.kernel.org, tseewald@gmail.com,
-        kai.heng.feng@canonical.com, daniel@ffwll.ch, sr@denx.de
-References: <20220908040821.5786-1-alexander.deucher@amd.com>
-From:   "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <20220908040821.5786-1-alexander.deucher@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0067.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::12) To BYAPR12MB4614.namprd12.prod.outlook.com
- (2603:10b6:a03:a6::22)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by IA1PR11MB6100.namprd11.prod.outlook.com
+ (2603:10b6:208:3d4::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.18; Thu, 8 Sep
+ 2022 06:05:14 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::9847:345e:4c5b:ca12%6]) with mapi id 15.20.5588.017; Thu, 8 Sep 2022
+ 06:05:14 +0000
+Date:   Wed, 7 Sep 2022 23:05:11 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Robert Richter <rrichter@amd.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>, Robert Richter <rrichter@amd.com>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH 06/15] PCI/ACPI: Link host bridge to its ACPI fw node
+Message-ID: <63198617c7854_5801629450@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20220831081603.3415-1-rrichter@amd.com>
+ <20220831081603.3415-7-rrichter@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220831081603.3415-7-rrichter@amd.com>
+X-ClientProxiedBy: BYAPR11CA0038.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::15) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB4614:EE_|MW4PR12MB5601:EE_
-X-MS-Office365-Filtering-Correlation-Id: 782f0b91-da09-49fb-9de1-08da91589fbf
+X-MS-Office365-Filtering-Correlation-Id: ecbc5975-f070-4df8-2a68-08da91601892
+X-MS-TrafficTypeDiagnostic: IA1PR11MB6100:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8k24mZNpNLwq63rADvgCixJNCIKpk7LyK0MRZHkuMRETw4Zz/rDdjgCrj9Wkm4BtAd4vM8RZRt2TAx3z6ohxWgjC/3lnX57FevTlv1Cy/bXDZzJFjG+CLk9qTKRqSVUpkiXMD7qiZbUvyOIFR+xax8pAiOLjBCSB47TobwVetGlSjIYqC8h4H/IC/6pyaSnBJfc9JD8LGH5zwmdtcFx+VfEjuROfpsxtGI3XPJk7tp/kVPsuaBOBfJ//ACIkEQIxht0YLeWve2FEl1An5cHEL2R/9a7FbAnKdd4xWE3kbzXGmLFk8TKx54S8UTOTuAUehqQld5EIGj9ia+SFnvqozIg4TJz60mWrMjWp92D8L7/ALzBTMQhVn3SSIUm3OQUl+oZAK0PiN0bKXnaGJVvLcSTkVijBx8MSNpCMKYAjq6S4MrbWyOmufFjcD+8JCafvK78E1KIzjNDcBmXIfOMdjKud5EUwxiWjSEg+6WYuO+B5yqv7jhCmouWbSJP9AA+yBweIpN4SZVfBa7Z3k9ATui19Bz5jJ07+XmCyCZswBxXQ0fEGYTkfRnIFK5aVRX/iZRYyDSUeXXeOQ+BwECB947Db657z33h8j0JluAZ4pyQkWmZ0NHniLS5ItTwL6j4ALk9yCmPsyjMvd0uWbY1CJxW0Ko78YdIbiimeQaQA+lLT6d6hZ98TWJwHbsJ2cb3KRDF4vEJsPF5mXWBi5Ev7XPjEU59zkkEBcdh0/RiLRsLKAPNC08CFaec5/8lfkoVvAlV6i38C1uTZFK2MFrrRVJrx9BpkysSXM1Zr9/FceErB3E/u+5xpn5+8T4fp3K0/bc1eNzMsCU8WqcrrTkeXKg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(39860400002)(346002)(376002)(366004)(396003)(66946007)(8936002)(966005)(6486002)(66476007)(86362001)(316002)(31696002)(5660300002)(478600001)(66556008)(38100700002)(26005)(6666004)(8676002)(31686004)(2616005)(2906002)(53546011)(36756003)(6506007)(41300700001)(186003)(4326008)(6512007)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: y9JrYKeZ9RsM4wJIC52x48mctSM4JoFNqcH8Q1fwkLYRWT5aqkELz+cZ8Qa+NLQLKAmsiS1pobhcTCjYGlldnihJf3p7V3GAaCz3P9/Xwz8BD0X5OjPQEwJ/edS03q1VZDzUNdWBvetN22jMp6l2+gDCTe25/cmDyHWovuJuQcEMPGIV8i0RpU+KPO930waXzacaE//rKYwwkSMFi72EHJOtv6jjrbtWFeIvc40Z6IBBoKEpXElihgFwKZvsakXkS0xx8/wKArpr6sjqnp1Ymn8O/VytwMEBoOTr0Af6+istcWkTXTblLvhleNx3Nxclr+pQHMDaWrkdQG9X09eplb2fj/hJHb1busvOm3Szc1wuhpb3CqNhlnmJ3Kh2jdivgeK/I0B73tUEYCO+qble2ak7UzUHRyBsHYTjrdehtLb70UWdbexlvctwbkLIdhJHHRzf8yVLAEd72djwfEDguK+B9kCi1sAZ2GR7WoZnH9TOxkQAwzJaxxywvF/8oLP82FOkDDv1mePTtCEvlf32vS1LL2uuEaqOucUUk9Vi1S6NMuMhl3ZomCWqZOTMzS87dscM6d3Co/aHfdCwnfE8tifEvxzRG+GheCkZ3CNczAOP3fW5aYJzldXO4VbQ1UX22YrUCwN11+fUPWxbbSXtKk2yTyOojJ38uICn7P0/rS6/x16Z/1OKWOwdq6yBoOhFegodRYA4yLDQ07OpyefTuQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(136003)(366004)(396003)(39860400002)(110136005)(6486002)(54906003)(9686003)(41300700001)(6506007)(186003)(26005)(478600001)(6512007)(66476007)(6666004)(66556008)(86362001)(38100700002)(66946007)(4326008)(8676002)(2906002)(5660300002)(82960400001)(316002)(8936002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVNPQWxPZnFxMVNEanc0eUxUS0ZndzZGbkFEU01ROUxZMDBqOHp1K3pOc0tZ?=
- =?utf-8?B?WDJ5ZmUyVXl0L1F4V09saGNuNzRWY3dWS1crSi84S0FSeTNMREZRdm5hTU1k?=
- =?utf-8?B?VGZWanJHY1pwNU55Zk1ESDkzM2JIdDkwWkNicW10ZVZ4SWNmU2YzMUpqRkI5?=
- =?utf-8?B?S201cVFqdlUxaStSKzJPZllmSHFnNm9lTkpTMGhJTXpXZVlVUk5NZmJlbXBI?=
- =?utf-8?B?SXI3bFBGVHhiN1E2K1JQR3FQVFRjVlQ1ZGRHRmowckI4UlRLaHhUaDI4YnNF?=
- =?utf-8?B?ek90Qmd2K0ljbC9UTkdKVjlrVW4rM0NJSVpOYkxNVmsrYmRFQ0N0enZ6bWhu?=
- =?utf-8?B?djk3b0xveVVUbFZaM2NFYm1FVFZNOG9TQXlQODFVQTZETGRSYjg0ZGROSXJO?=
- =?utf-8?B?K1NBN1NBUUdieERLVVdpbmhGeHV0NkFOTUF6NjNxMEZDVTc2dUE3K0Z5djlM?=
- =?utf-8?B?R1dPN0dSbGRNS3lwOHBaUnhnZlhRdWZhZlV5VkVtN1grVUpHQzAxNHRiSFVo?=
- =?utf-8?B?cW1kazZYT1BIdTRNdFlQM1h2U3RMcjgyYlEwamtCN2gxM0Y3N2pWa1c3bTNM?=
- =?utf-8?B?emxhS3FIMkI0eDFWU2puZlNKc05ycG0zejd1L3FKVjBoL2EwVEpJWnYzd1o1?=
- =?utf-8?B?WTVmVzUwT3ZoeFNJWkREUnFneElLZi82cmRRMmcwenpFNzZWUEN3bm9FNnUz?=
- =?utf-8?B?UW9RbllIVXVGbkpCUVdKSDZWTm9ob2kzcStXMEYvME0yQ25FMWJweVRXZWxU?=
- =?utf-8?B?RWFXa3FsYzZGVFlsbmJ5ZFhzQVBjY0ptQ2EvOGNkd0ZzbUN6a0RYcnM4Y2tR?=
- =?utf-8?B?QWNJU0RZZzFsMUo1V04xVnhHdkU1WlhGSm5MemJRdm9WNXVTZVNxMjFIKzI2?=
- =?utf-8?B?OE5vWUx6bUViZCtVNjM2ZFBkVHJKemFTL0JoQ2Mzd09uTGNRN2MyQ0FRSGMx?=
- =?utf-8?B?NTE5VW1DQ1lxcmRhZWl5b1dTZnVBV1FTK3FQVVAxTnRHQ3dzQ0FxUy9KMzRW?=
- =?utf-8?B?OTAxcUtKR21VK09kMFdtaHIvaFpVWFJpRng0MTdiZ1dTd2Z0Rit2M0ltbjJ6?=
- =?utf-8?B?WEtYTWhUQ0k5MnNLMEhhRUlpaDJZNnNpQmhKTlZYYUN2bkJNU2w2dmNERnhE?=
- =?utf-8?B?amZYRGpKLysvdjZhZ1FLdzBTdFhjMHZZdzNmUTBmVzMzZEVUbFpEZ0V2dE4w?=
- =?utf-8?B?RGdnWEVCTUgzdEk1aVExelk3Z29SeXo0Ti90citPVlhqSEloeUhDblJNeE5M?=
- =?utf-8?B?V0RtVkVTVDN3NG95a1ljVzNYb3hMRi9kSHNNaEJyZC9YMkN0cno1eVl3N1B2?=
- =?utf-8?B?VlZnZ2xtNlgyN0kwaDg4NXZJbmVzWjFjQWdpVXZLeU1UUkhJdkdrcmtpdDFj?=
- =?utf-8?B?TktjelVIaXNqQzNOU0FDeHVWR2R4WU1maHBKaktzckhoRjJybEs0WGN5UTlQ?=
- =?utf-8?B?Wk95L1d3aUJFeFM2aENISU12STAzU2FKVVR4Tk1neDJoYWdrRGF0dmNMNXlX?=
- =?utf-8?B?WEdXaDZLSFBIMjgxSjF5TEloaVBucm9VcEZ3djlubzJ4SmZIU2Fjbm8yVzNl?=
- =?utf-8?B?d0pqTGJIeU5MeHBBYzVYNzg3dHl1YWFSNXp5QnA4SjR0cStQL250YUIrRlhS?=
- =?utf-8?B?OC84NEo1cis2YTg1ZGZ3RXM4SHB0TDArekFHaE9ETklEQUxlVGxIU0xpMjA1?=
- =?utf-8?B?QjJjWlh5SkpuVnBFOHpuY3JXTmF6Y09SeGtaZmZ2UWVnU1Qvd1pDUXN4cmM5?=
- =?utf-8?B?SnJ0T2lGUGtWMHVKNzg1WENHajk5eXVvL3ZMcHptelhXTS9HRHkrck0rY2lY?=
- =?utf-8?B?VVdRZnJpRDYzSHpLZm43TldJVldMWEpyTCtXWTZsZm9qTXhXWGJPK3JLckpv?=
- =?utf-8?B?QzlZczFKWHpmVkVHckM2QkhXZ0cxR1A0Um9xNGpzTWgzMTB5YjhjNWJHUkJw?=
- =?utf-8?B?eTU2anhxSTROZkVyL0MvOEJyWVF5K1RVWWhOdFdVakxBWEgrZXQ4N3ZyVmZs?=
- =?utf-8?B?Nit6UEFQbmlrYlM3dkREREowc0hWOFRoakJMWDhBbHRDWUovTXRxMjNRb3NR?=
- =?utf-8?B?bDdIenNOM1NDQzZZNFd5aW91OG43VThMcFo2dldLdC84TFVyRWpuOU1DS2tB?=
- =?utf-8?Q?8at5XgkbnRJH+UVBZPnd2BJy+?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 782f0b91-da09-49fb-9de1-08da91589fbf
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OpU5Vxh+Edz15cHyRzOijV6iRq+vyu4VgH16/kt8clxqT29w7/HCpvIv2PKb?=
+ =?us-ascii?Q?D2F+AjbMA9Lm9KlqCo9FPkM5x8X70/33Kyh01nPsNm0/FjtDvnMUzkggCTbd?=
+ =?us-ascii?Q?6agXxWISr1hAsDIMQAyNDbdi87hundFonQs9/nLqyGsYEZwFivr5AtdtUsJ5?=
+ =?us-ascii?Q?zRZtBWEBJqWT6c5XKl56jLYa/tLQ5ePBx12QpoX2y+d5LvLC2WOV0Ksu3UaI?=
+ =?us-ascii?Q?AfzpDj/2IgZWwZAJWoXuXOXRToMTRyQB8h+Adz+1VahNEnME/z/KdB6tWQYH?=
+ =?us-ascii?Q?j+YS2Wf+BwKi+JoQ7hK/jN4YqywGWNGDESdDVSYTQt6bslyCPhvIaM4Y5xdr?=
+ =?us-ascii?Q?1SDpnRIrfy21mXvdJZnmC09CGHETFYmrOFNfTZEhJf19UcVlYpEaR+kz4hHz?=
+ =?us-ascii?Q?216mW9o+3w12dzoU25zYvFzfCnJG/nHKnAtdPNwTOqa8XOQWhePxQYkPp0et?=
+ =?us-ascii?Q?rwEHl+G9xinEp7Q8fu2DFM1Vf9VVNDae2Lvas8LLV8uu+RSefG6jY5VplY12?=
+ =?us-ascii?Q?pRjk0xiArnZqrBhy8zOpy1K6cc4zFkgEdq//gMHMipn6/3Iu1x4pxcfA4WKY?=
+ =?us-ascii?Q?UzPyArTN3rxRCbZ4kKA0nyi27eZpLAKKpD20QCd+Lwo4+dwNBRq7fHSWJCKU?=
+ =?us-ascii?Q?T6SfWItT634H0i65ZMuh89d40D81U4RGdL/pr1gDhsHz+Z6m+rJZc7hT8n8F?=
+ =?us-ascii?Q?4ZASLROlqO7FwGs1QJO950VEPI8zjyD7GdESAZR7pYzOl117oO3g5Dh3AmIW?=
+ =?us-ascii?Q?gVotYvtNSpvbVzK+AftE5S6eIAyhOwh9//AWdiF2N+YRQlvd8ULHAhgWW9m8?=
+ =?us-ascii?Q?kjmhrhUMSyXBbjOf/j7b6itbxYdhyo+hnwXU30cch12MbQ4kHvlg2vtOkAjW?=
+ =?us-ascii?Q?F0hsgrTKcxP4xpkqgY0MflPeXLJZgujAtP0ALnFJGlks3XUErN1gYHNqUdeE?=
+ =?us-ascii?Q?8gICUb6WDsyWa9Sl2Hh9kgH2EGsyrBthFRKKH7yi2lxro0Sm53jurnv73AwF?=
+ =?us-ascii?Q?GG4sfeG49SvX6EXBp+UzU2/FtPqj/TL4LzfJi5PkDm/muyY1k/8b+uRjLU2/?=
+ =?us-ascii?Q?zgS21mEJbX1QNnxpGj+5icMQlGFaXaVzDfJ+jLEDlrKNAiNZgnyRT4vqazL3?=
+ =?us-ascii?Q?rmJLBLNC3Y/gVlLgLD1zJMjuXfFbzdyf1XxmdZ4zpndr0xY3P6QDjAKAWUbU?=
+ =?us-ascii?Q?oMQQ3fxYhexQ1hnmrg3AhygfwPyr+GNGSO3IGHpUK4a5PYabcIRYY5P6x4aF?=
+ =?us-ascii?Q?WOo3kbktT83qNxWcYnp9Jh7U30yMEZZLmFXFY4npBLaZmyfXX/emB3+MG2r7?=
+ =?us-ascii?Q?o2R8/eX5RDpV2pIhndq1P8fWhodcqwVifkHmIRIBWNVpZ79IcvHZw3dVCS6A?=
+ =?us-ascii?Q?E6P3whgv9Pl1sICEtPmj5c9XAOIf6QsCGyt4SOOHvCeah9pk+D27tfEuCC8S?=
+ =?us-ascii?Q?hFr0/UiII0d/XwOGYHSnk+6CKLNnYmJzOyaf9phsbvRPQN9pxMtwRlzNj6P+?=
+ =?us-ascii?Q?QVY89ANJLzMBFlMUetV0roM17EILZZGUg14agHI3fQvEI1zz2UcirfGqv/ov?=
+ =?us-ascii?Q?jaKRm8xqmkycf0/2XF6e99bQ8szoN3nN3uj6E555QEsd3jNBHLAyGugWD9Qr?=
+ =?us-ascii?Q?wQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecbc5975-f070-4df8-2a68-08da91601892
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2022 05:11:45.2912
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2022 06:05:14.2872
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VekpPPG4LJRFgLMccg0rZc/Qc4f861nmte69SX4qykHPxnFPVq/0lnVZYO1tGpUv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5601
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8mrVbt0iYhiGWR9+jaa5qUgASVAM/K59svgHyLFwlN5QVOJ4s03F0VPW3d4FhHkFrJuA1a/Ga+TaWv3wBMtBePXuHctMu+THMhZEqTlOFUM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6100
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 9/8/2022 9:38 AM, Alex Deucher wrote:
-> Common is mainly golden register setting and HDP register
-> remapping, it shouldn't allocate any GPU memory.  Make sure
-> common happens before gmc so that the HDP registers are
-> remapped before gmc attempts to access them.
+Robert Richter wrote:
+> A lookup of a host bridge's corresponding acpi device (struct
+> acpi_device) is not possible, for example:
 > 
-> This fixes the Unsupported Request error reported through
-> AER during driver load. The error happens as a write happens
-> to the remap offset before real remapping is done.
+> 	adev = ACPI_COMPANION(&host_bridge->dev);
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
-> 
-> The error was unnoticed before and got visible because of the commit
-> referenced below. This doesn't fix anything in the commit below, rather
-> fixes the issue in amdgpu exposed by the commit. The reference is only
-> to associate this commit with below one so that both go together.
-> 
-> Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
-> 
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> This could be useful to find a host bridge's fwnode handle and to
+> determine and call additional host bridge ACPI parameters and methods
+> such as HID/CID or _UID.
 
-Series is:
-	Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+When is this explicitly needed. "Could be useful" is interesting, but it
+needs to have a practical need.
 
-Thanks,
-Lijo
-
+> 
+> Make this work by linking the host bridge to its ACPI fw node.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 14 +++++++++++---
->   1 file changed, 11 insertions(+), 3 deletions(-)
+>  drivers/acpi/pci_root.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 899564ea8b4b..4da85ce9e3b1 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -2375,8 +2375,16 @@ static int amdgpu_device_ip_init(struct amdgpu_device *adev)
->   		}
->   		adev->ip_blocks[i].status.sw = true;
->   
-> -		/* need to do gmc hw init early so we can allocate gpu mem */
-> -		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-> +		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_COMMON) {
-> +			/* need to do common hw init early so everything is set up for gmc */
-> +			r = adev->ip_blocks[i].version->funcs->hw_init((void *)adev);
-> +			if (r) {
-> +				DRM_ERROR("hw_init %d failed %d\n", i, r);
-> +				goto init_failed;
-> +			}
-> +			adev->ip_blocks[i].status.hw = true;
-> +		} else if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-> +			/* need to do gmc hw init early so we can allocate gpu mem */
->   			/* Try to reserve bad pages early */
->   			if (amdgpu_sriov_vf(adev))
->   				amdgpu_virt_exchange_data(adev);
-> @@ -3062,8 +3070,8 @@ static int amdgpu_device_ip_reinit_early_sriov(struct amdgpu_device *adev)
->   	int i, r;
->   
->   	static enum amd_ip_block_type ip_order[] = {
-> -		AMD_IP_BLOCK_TYPE_GMC,
->   		AMD_IP_BLOCK_TYPE_COMMON,
-> +		AMD_IP_BLOCK_TYPE_GMC,
->   		AMD_IP_BLOCK_TYPE_PSP,
->   		AMD_IP_BLOCK_TYPE_IH,
->   	};
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d57cf8454b93..846c979e4c29 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1083,6 +1083,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  		goto out_release_info;
+>  
+>  	host_bridge = to_pci_host_bridge(bus->bridge);
+> +	host_bridge->dev.fwnode = acpi_fwnode_handle(device);
+>  	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+>  		host_bridge->native_pcie_hotplug = 0;
+>  	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+> -- 
+> 2.30.2
 > 
+
+
