@@ -2,54 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5764B5B238C
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 18:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E085B23C5
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 18:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbiIHQZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 12:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33910 "EHLO
+        id S230220AbiIHQls (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 12:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbiIHQZj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 12:25:39 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED86895D0
-        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 09:25:38 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id n12so3105242wru.6
-        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 09:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=dpvUUBmrVBJXdXzTGjJjQlhI+WRTTf8cffEB6shyZ4E=;
-        b=T0Ych89KMD5a2BAiaAlBK4ZBCijC8Z91doILrAPNvwn9BJo7ejCp64NSQwp7fjTwt3
-         2fV0SHmJVtKdkIpy8+k0pcn1ItjtRqaYR99HoHpkwNUkvDaJvg9cFnUopcCUprV2EeSV
-         4fpYZyqJZVbF8BSkoyyPEAJxTCF7Jn4qF0HLoMrUHXd4/vghiFW3+HPxED6lP5EhfN2k
-         W5q2N9MzOWlINfCXFVKksy1vuS7OPcPROonLgw/P04iXTgr5Gt8JQUe7KpdBeq7UHMsW
-         VO0p8fUZKzUG4itNhw98hWnqReawCckwg4BXk/EYFIbVZJVLw7j5AGAYnOtO37e8JYBH
-         pKoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=dpvUUBmrVBJXdXzTGjJjQlhI+WRTTf8cffEB6shyZ4E=;
-        b=7JZcrjpqUWICC/3u1SohompfhC2/eu9rYbPqloONt+PiuCKM3w6Xg2AuTN5IXrBdf5
-         fTclRqDyNKDmDbw4wK2MnUsPxP2cTSGPBkKsmBqZMLbubH0shP0YrJZ2DCsh3+GvCHzR
-         +nB18MOd8Y0DCS86DyLQ/sdSC92xGjwLAGqrSvmfK6cLyN0uJcM3B3vfxk4wZHsUSxgJ
-         YVGkdUh3SZvL7yZDNA5hQrpWNzOk/xBnKswB+03eBNAAWEh16n0rICvVN/P7uAjeXUMn
-         R8KpX/L6XtEIYh0aNWx5txiCB+ZyZignOMxh5y/szQUAvOvm56i61kP7/s8C44nQcN9Y
-         q/EQ==
-X-Gm-Message-State: ACgBeo3PvTcGQs4cNsPgX0aG/BAmkZUQvA4Xg6ybLye945UY6W0fVedK
-        FDtvafa822QKpOT07tLsv0UxNg==
-X-Google-Smtp-Source: AA6agR5g8DYaRh95kPvbGxbmrld5Zfa4WOcxY6LHIW8pnzKAjQJiOkA37+1+hiydlpRdIQ7Fb7pZSw==
-X-Received: by 2002:a5d:5887:0:b0:220:81c9:8ab7 with SMTP id n7-20020a5d5887000000b0022081c98ab7mr5606176wrf.702.1662654336709;
-        Thu, 08 Sep 2022 09:25:36 -0700 (PDT)
-Received: from myrica (cpc92880-cmbg19-2-0-cust679.5-4.cable.virginm.net. [82.27.106.168])
-        by smtp.gmail.com with ESMTPSA id e13-20020a05600c4e4d00b003a60f0f34b7sm3102445wmq.40.2022.09.08.09.25.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 09:25:35 -0700 (PDT)
-Date:   Thu, 8 Sep 2022 17:25:32 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        with ESMTP id S230474AbiIHQlr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 12:41:47 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2060.outbound.protection.outlook.com [40.107.100.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A8DF7571;
+        Thu,  8 Sep 2022 09:41:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hmSAZVdYdpOuKLnBGWQGFN8msuGXOUqqDXYvaaaa5a0oRCm0zcIvGtFotuon6lH+Q30eXjkC4DMC+RCsAWVXV+T4ajmudaMfRRkay+sSTxbFVwTxUBSt2jFQkDV8H5piuS15f9ld7m3jb+g67ShLqMJq+648KFMn9x7QgRo+6GXu3cQ6X2ZStBfCEn0phmC2SjNAgxA+of/5yShK/738t2mM1sdGixd29lkCku1aGLXgWSxYU3WnDVW+g0N9EwivnS25cjbo9M8O4FGEGXQ6dXyr6ZJxUnExzXWgJA47qKhvpL8l0FPXsV17f9iyDEmZnYbkgkAmXYW4yqA/ouDhMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=77J2XpoI9MoQ5XPrsEwzFDFzURRiP1RHX3dcwirxNAo=;
+ b=a4buYFb7PdWm5E8o4cqXcEJJ8WciE+3e9oIVweKuTr31Dsb8Ad/GGn1UPQ+a/kvAu2rYUED638A97GqjxapHQZy5bQ3VxIr1WXjGpZsZTJFnKeRiJwf1OaiNVwFIyBO0Rwn6JmxICemSxgepjoYAHuVL17jRmdvwrdoW5Db2Ykc5oVahB91WhZiOkUXwIzAu4jLrilfgvvvmwvKTWRwEDPI9IrG/qZYxYwCOm8cX8pZMQLcP31GSxOg6U++VPQFLX2A0cHhL0Jy9bEaHJi4Tedkvr6nVp+7lgl9Ze3UC5ZKveppBvWBzLycvaUbGcgJNHnz4aYI3/Fdb4tqiOfF4cQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=77J2XpoI9MoQ5XPrsEwzFDFzURRiP1RHX3dcwirxNAo=;
+ b=KM5Ckr3VT53FaaIEkuJu00tdBSQ/FSrQGkzgPfEwRsqfdTYSWj3ber6zDY3+kpIO1ZAzrY7l0N+DalZby39hCVeSabGweP31mpBFFNOfUdEX1xdTbVtElr+yh8Z5H+F4JlmOqZcNBS4vj4g4MROyst3Wk6hx9/FMBjjjUKz0gE6qXNL4rwly5kQSllJamfG2nO+DkDcMESSKaZ9++nJJddLDIuHpyAkgb3zXP5taJpqhXLF5zHWDAwNFmRCjQ/2YZHypN7iACsER36pk4uOtnSWyS9hvbbXMvdgCsRGcRhmrejHbiFfGcQBljU0lMYQGr2UaYhC+sqeplrRMvtLazA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by SJ0PR12MB5469.namprd12.prod.outlook.com (2603:10b6:a03:37f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14; Thu, 8 Sep
+ 2022 16:41:44 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5%7]) with mapi id 15.20.5612.019; Thu, 8 Sep 2022
+ 16:41:44 +0000
+Date:   Thu, 8 Sep 2022 13:41:43 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
         Joerg Roedel <joro@8bytes.org>,
         Christoph Hellwig <hch@infradead.org>,
@@ -69,100 +62,130 @@ Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v13 09/13] iommu/sva: Refactoring
  iommu_sva_bind/unbind_device()
-Message-ID: <YxoXfCQcD3yC5ppn@myrica>
+Message-ID: <YxobR/brG9VlxPvX@nvidia.com>
 References: <20220906124458.46461-1-baolu.lu@linux.intel.com>
  <20220906124458.46461-10-baolu.lu@linux.intel.com>
  <Yxd2+d/VOjdOgrR2@myrica>
  <682d8922-200d-8c89-7142-83e7b3754b8d@linux.intel.com>
  <YxhqbhMmWLeFS512@myrica>
  <YxjV1y/FF0nCI/WO@nvidia.com>
-MIME-Version: 1.0
+ <YxoXfCQcD3yC5ppn@myrica>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YxjV1y/FF0nCI/WO@nvidia.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YxoXfCQcD3yC5ppn@myrica>
+X-ClientProxiedBy: BL0PR01CA0012.prod.exchangelabs.com (2603:10b6:208:71::25)
+ To MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4192:EE_|SJ0PR12MB5469:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb4c9828-f1d7-476e-ee8f-08da91b90389
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hG+Wou3V3Q8FXDOLBfwnEST4g5CxKjA/5EyNDP4UmaAAg20ZzL8NFvvi74yG1Hl9B6g7YXark9elgyUQeVF2/bGVQiedcUo6hXkqaC63Ejb913yPVb+Utza+yrQvdrpeaojCYhRTGz2td7uiGY04ehAMLm53cQzc1bjdVL0IQUQk1nzTkD/9kAHTgbaLIuzMHD0XMCiaEHFAFcPrpo+kjYd8V/TUgq54DIxUozrgVDUvx8LcYmz/0RPsuMk07W4wEwCcAIiMe98snOEoEJCsuSmE4wuPXqyks9uXmkUGECSlycsuq6yO2FmtxNyhz9DKEjmsM2QmJ/tddBoPUivZz9GtiwfIU2rrVwQMT+wf8ivemI+4qBeXAZBKceQXJmt0cCQax8yKTGWYKYhsM55z8zR5tNoPf3rHghNjKPqskmNpJOgxi8Pl6XdmmK42H6lctI4Q3oeWJ+F7ZaMUHi23yNrg68m9Kd/NtzIqJSFTzBjNYQTL5Y0ZYLFD1nERL0KFtrWLDjadoSVqAzReR12F4/1mxNMYFm7L9ZUDoUlaMzRCFnZyqiRg1O5Hkvec3y+gWJVkGJKfGYvmTPmd751sU19ys0unvJigP0QpyU1HB/IgaPSmtc5pXITIkY9p8eVHOscDPxojwODLJddO5AAsNju950u9onoEGFBjAl83wgeoSjceagwgd+6S5I6R3+IwZwDzrtqNiegmHrxIdyyoGA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(39860400002)(366004)(376002)(396003)(136003)(38100700002)(2616005)(36756003)(54906003)(6916009)(186003)(316002)(66946007)(6512007)(26005)(478600001)(7416002)(6486002)(66556008)(8676002)(4326008)(66476007)(2906002)(6506007)(86362001)(5660300002)(41300700001)(8936002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DHsVugHe0+BtMBQNLWeD4ley8yFxzOv9Gv4P8HyC34eereYDoWFpdg/1odXh?=
+ =?us-ascii?Q?W0TqWXvS8nt5V9nVQZFNHcoYshLr1OX4qtaheMCQ96vythXcGD2XsKhtwKeD?=
+ =?us-ascii?Q?RtAqhY17kxFsUG2tIoSROn1F4Rh7HlPV9fBW5DFud1fVOgTFvbHaWkYCU0x5?=
+ =?us-ascii?Q?ECisT4S7nLosbX2LC8EuCBg959QQupfeH+BWrE/GXQaVa0r19PBXT5Yw/pHb?=
+ =?us-ascii?Q?971iHo8Wmk/TG/XWQY+yLYNSrTHua48D9NHrgqaql/lonnbpb1U/wecVxh3Z?=
+ =?us-ascii?Q?WgxmdfZHpUa0nxVu8tgKhpDpOurHxyNLAxTXwaNyFkLJLf/NvYau3QehPRzw?=
+ =?us-ascii?Q?ecsxERL43yXILhjjqtKB28WxX2RxUqWmBlOJLOZmdK5dvuwtp3utirI6UkRb?=
+ =?us-ascii?Q?yk2Y4xWWjqUNdgt3zuL6OGugcxFyXnxAvzYghMuJYByqmz2CuiQMY31dJZkz?=
+ =?us-ascii?Q?+Kjt0MmDc1tSea7dNSHg1ArxSFfHzCTu5jo8H97ql77dmE7/Q1/GpJsHZ9Aq?=
+ =?us-ascii?Q?rPZHrVPcNl37dzyvXu7Wq2fJ7xepFtqlKRUqgJt4UD8peRgsG44SEEpjNqIs?=
+ =?us-ascii?Q?KcWTRJtuFW27AYeqKyjV8DYY4AusHGJRof0wAWyvSNyRbxb+rcxL+O97JgT0?=
+ =?us-ascii?Q?9COKrKFJWxfI812GgoQrTmEB+rn/omGSI2Sw0VeBUWBG0pCfhXqzMJaah0e2?=
+ =?us-ascii?Q?wSraJYhShyjtbMOVJAaHcXPkOnpCEdpCxKsJS95LrnUPbvRvuptuQanTqnVW?=
+ =?us-ascii?Q?PV6C5ZzBvL+yryjCJDmSJK83YS48J+3ScRyxLJL5sUzmYGLjWhGHxbGTrFse?=
+ =?us-ascii?Q?GL1AayLEfHJg9NecAQh2sGbQR+1h940hBd1tbAM6k/0btMk1F7S0IxR++0pU?=
+ =?us-ascii?Q?+fWjBn8GzY6s2Mt+QOF2n7SdfTh2P8YBcvc5MgrvHtWj6v9K3v8THS8NIFT+?=
+ =?us-ascii?Q?SUZKBmk2XX3rDrFDExQexPlW1vxqt4gvYHLUKsPsxI/T9cQOwiMuL0Z2DHW9?=
+ =?us-ascii?Q?L3ZcxU6ft+PMVeeOKArpSbB1XNmNw8kOVuUYq5PgVODlfKT6Ao6znPy1w3UP?=
+ =?us-ascii?Q?maWF1Nj2aOEheXITlP67+vBXQ0Z9wqysfMsrXrY8sPi7XALyvV+s7dDlxWHk?=
+ =?us-ascii?Q?UDTXbLUbQ0WZJzptf9bsxeVgIFvCm3jY80vbdO/5j/nIdqDQOw2im4NcDreX?=
+ =?us-ascii?Q?EW8CHPjsM8AaZzJEUUibkfL8xSfoOf/XfMQHq2wpDNwt0sf526Yxxuz49eVQ?=
+ =?us-ascii?Q?+S6KwlTgStBryZKRJjA3qcX0Kc/07AB3Fjp8qfpAlgNdfPQutDwfSD0DrFmP?=
+ =?us-ascii?Q?23ox75Km51HJk84RFUmY31dBJ79J3ZXXjqCKughYRSHxuVcHRhZqrCIc0yZp?=
+ =?us-ascii?Q?WxVbT4b+yMPx83pAVArgX87+mOMjB3B0HRuwkwoGv9W+2CW3vEgaFItoS8yg?=
+ =?us-ascii?Q?gu3STeQUALCZ/O+fhVE+KqmtvYnwRNmj8CE9VBwLxdFK7GkxZU/8Nzmx98Of?=
+ =?us-ascii?Q?rkyPEK69eoQIfRNbmdDP4fNrqk1y1MGK0r29HJOETAoAwEK7bnTMVwHACMIV?=
+ =?us-ascii?Q?sSzqopkifSbWyTFV3msZLiai+6+XcZCVPDvZNmFO?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb4c9828-f1d7-476e-ee8f-08da91b90389
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2022 16:41:44.2725
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sbyGZ3M/NNxnWa/tumbV75WpaJZNz6ggCrwIyzhyDUeDIXtVaGHruDe9QNv1Oa4s
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5469
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 02:33:11PM -0300, Jason Gunthorpe wrote:
-> On Wed, Sep 07, 2022 at 10:54:54AM +0100, Jean-Philippe Brucker wrote:
-> 
-> > Is iommu_domain still going to represent both a device context (whole
-> > PASID table) and individual address spaces, or are you planning to move
-> > away from that?  What happens when a driver does:
+On Thu, Sep 08, 2022 at 05:25:32PM +0100, Jean-Philippe Brucker wrote:
+> On Wed, Sep 07, 2022 at 02:33:11PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Sep 07, 2022 at 10:54:54AM +0100, Jean-Philippe Brucker wrote:
 > > 
-> >   d1 = iommu_domain_alloc()
-> >   iommu_attach_device(d1)
-> >   d2 = iommu_sva_bind_device()
-> >   iommu_detach_device(d1)
+> > > Is iommu_domain still going to represent both a device context (whole
+> > > PASID table) and individual address spaces, or are you planning to move
+> > > away from that?  What happens when a driver does:
+> > > 
+> > >   d1 = iommu_domain_alloc()
+> > >   iommu_attach_device(d1)
+> > >   d2 = iommu_sva_bind_device()
+> > >   iommu_detach_device(d1)
+> > > 
+> > > Does detach
+> > > (a) only disable the non-PASID address space?
+> > > (b) disable everything?
+> > > (c) fail because the driver didn't unbind first?
 > > 
-> > Does detach
-> > (a) only disable the non-PASID address space?
-> > (b) disable everything?
-> > (c) fail because the driver didn't unbind first?
+> > I think it must be (a), considering how everything is defined and the
+> > needs for vIOMMU emulation.
 > 
-> I think it must be (a), considering how everything is defined and the
-> needs for vIOMMU emulation.
+> Yes (a) is probably better. The SMMU driver currently implements (c) to
+> ensure that you can't switch device driver without unbinding everything
+> first, and we should keep that check somewhere
 
-Yes (a) is probably better. The SMMU driver currently implements (c) to
-ensure that you can't switch device driver without unbinding everything
-first, and we should keep that check somewhere
+Yes, the owner stuff is a logical place to put that, when ownership
+is all released the PASID table of the group must be empty. Lu?
 
+> > Otherwise everything blows up if you attach an iommu_domain to two
+> > RIDs - the API demands that every RID gets its own PASID mapping, even
+> > if the RID shares iommu_domains. We do not have an API to share PASID
+> > tables.
 > 
-> If it is any other option then we have a problem of what to do if the
-> guest VM asks to change the page table associated with the RID while a
-> PASID is attached.
->  
-> > I'm asking because the SMMU driver is still using smmu_domain to represent
-> > all address spaces + the non-PASID one, and using the same type
-> > "iommu_domain" for the new object makes things unreadable. I think
-> > internally we'll want to use distinct variable names, something like
-> > "domain" and "address_space". If (a) is not the direction you're going,
-> > then it may be worth renaming the API as well.
-> > 
-> > I'm also not sure why set_dev_pasid() is a domain_ops of the SVA domain,
-> > but acts on the parent domain which contains the PASID table. Shouldn't it
-> > be an IOMMU op like remove_dev_pasid(), or on the parent domain?
-> 
-> There is no "parent domain"
-> 
-> PASID or RID+PASID are completely equal concepts for binding.
-> 
-> If you are thinking "parent domain" because SMMU is storing the PASID
-> table in the RID's iommu_domain, then I think that is a misplacement
-> in the SMMU driver...
-> 
-> The PASID table belongs in the iommu driver's per-group data
-> structure. The iommu domain should only have the actual IOPTEs.
-> 
-> Otherwise everything blows up if you attach an iommu_domain to two
-> RIDs - the API demands that every RID gets its own PASID mapping, even
-> if the RID shares iommu_domains. We do not have an API to share PASID
-> tables.
+> Well, we still do since SMMU implements it. Changing the API is fine, but
+> someone will need to rework the SMMU driver to align with the new meaning
+> of iommu_domain. I can take a stab if no one volunteers but probably not
+> before next year.
 
-Well, we still do since SMMU implements it. Changing the API is fine, but
-someone will need to rework the SMMU driver to align with the new meaning
-of iommu_domain. I can take a stab if no one volunteers but probably not
-before next year.
+I think given the current progression it is OK for this series to
+leave the SMMU driver with a bit of a different view of how the API
+should work. The main target here is the in-kernel drivers and they
+won't trigger these cases.
 
-Thanks,
-Jean
+As we extend things into userspace PASID support we may want to block
+SMMU PASID support through iommfd/vfio until it is updated.
 
-> 
-> Thus the PASID table is NOT part of the iommu_domain.
-> 
-> The exception will be for nested translation where we will have a
-> special ARM iommu_domain that contains the PASID table in userspace
-> memory. When this domain is attached it will logically claim the RID
-> and every PASID and thus disable the PASID API for that RID.
-> 
-> Remember also that an UNMANAGED iommu_domain should be attachable to
-> many PASID's and RID's concurrently.
-> 
-> Jason
+I've been thinking on and off about this - we likely need to have a
+conformance test suite as part of iommufd that is specifically for
+checking that the iommu driver meets the API. So it would do things
+like exercise scenario (a), attaching domains to all sorts of
+combinations, and so on.
+
+We know this from other driver subsystems that drivers can implement
+the uAPI incorrectly and it causes a lot of pain for userspace.
+
+Jason
