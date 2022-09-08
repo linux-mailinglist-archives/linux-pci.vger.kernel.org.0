@@ -2,267 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DD5A5B226C
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 17:35:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5764B5B238C
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Sep 2022 18:25:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbiIHPfb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 11:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46566 "EHLO
+        id S231194AbiIHQZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 12:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230350AbiIHPf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 11:35:29 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80040.outbound.protection.outlook.com [40.107.8.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E059752B;
-        Thu,  8 Sep 2022 08:35:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X1O6EFeNKvjvGoeTzcsp3QdNjhct0uIwjxCiEy85kWFb/mjdKE02JRYRMz19rUkK+AT+jtxlUZYGdAUZKKOyLVIIq6lnSgGlXrHM+MhZbyoXUPj74vn0K6WgycBnkRVeUzZDTiIVHrSO8shCi2yD2YpDTXA++n+HUInKaYS6VdJqd7iuP2NLjKhBQCQAOhltVcmPu/7DOJ9ZeRKg0/Aao/PI2ON6HMVWSuRcCPeK1b8JvOhZQju+eZyXOrDRVqSfatHAtBV3X/oBVgzA1uA/FNA/5sLyVHRkpcKICV9Wjp3YjC5XNnv2SsdlyLChrnJXYYYNF4Ow9y4/i9Z3V/vtUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lFzAeXDhemK6UHU/FfXl8argJ8PW8y/LSdy1nAZ+zR8=;
- b=ZftO0Glm4SYeCa8+buJjKg1NSw9nII4jGvkh9r6TR/95ZV85XT2NirAgVwOeYoapOhJhCbb9jx/Y3sLGnCjjAJjmlgKI8Cvt7bjVf/x7tdPiKE3rJs4cHutFvHVQF8WNxVh4bHslaR9EkvZ2u7RpqIdhvGpUhJnEvw2NwIsDQ+SzyTQWT0g/L4aM9TjFUZftIzGHd2J6CN6Np2GurMq3PPK21hlWSWiFTWlP22hh3jZkNEthq3UoKWN4gRZxdaL4wZeEzpSgYjXLq9dSflVaRtwzbpHaPanKcLiMi3aqoP6dTA7p8ZpZ8V694A2PQmIrzxACjcMVTuMlfpVbBOVo+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lFzAeXDhemK6UHU/FfXl8argJ8PW8y/LSdy1nAZ+zR8=;
- b=j1fzW5d09/7fFtfIf/sFvPHhHbq6euMnpixcmg9mztddkRB1R8iQOjMJg+GAPcRmjEhP3fzioCZR0i4EJ4o9JhDFvg/OpRRTyUqaCSP7/ihB0n7yyL5C6T+eR8X4Jgp0EDXjoajk6+qSqATMaw/taPICtjGq4yzljIGvgfj0Sbc=
-Received: from AM9PR04MB8793.eurprd04.prod.outlook.com (2603:10a6:20b:408::22)
- by AM0PR0402MB3585.eurprd04.prod.outlook.com (2603:10a6:208:1c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.16; Thu, 8 Sep
- 2022 15:35:21 +0000
-Received: from AM9PR04MB8793.eurprd04.prod.outlook.com
- ([fe80::1c3e:36a0:1adc:beb]) by AM9PR04MB8793.eurprd04.prod.outlook.com
- ([fe80::1c3e:36a0:1adc:beb%9]) with mapi id 15.20.5612.012; Thu, 8 Sep 2022
- 15:35:20 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-        "lznuaa@gmail.com" <lznuaa@gmail.com>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Subject: RE: [EXT] Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller
- driver
-Thread-Topic: [EXT] Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller
- driver
-Thread-Index: AQHYwmzT0d5rWoxlpEiRJzxdVpfwVa3VJ32AgABtNnCAAAtoAIAAAWig
-Date:   Thu, 8 Sep 2022 15:35:20 +0000
-Message-ID: <AM9PR04MB8793CE5AAAB281CE628845AC88409@AM9PR04MB8793.eurprd04.prod.outlook.com>
-References: <20220907034856.3101570-1-Frank.Li@nxp.com>
-        <20220907034856.3101570-3-Frank.Li@nxp.com>     <87fsh2qpq4.wl-maz@kernel.org>
-        <AM9PR04MB879338D6D4B55A74CD002E6D88409@AM9PR04MB8793.eurprd04.prod.outlook.com>
- <877d2dvs0d.wl-maz@kernel.org>
-In-Reply-To: <877d2dvs0d.wl-maz@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM9PR04MB8793:EE_|AM0PR0402MB3585:EE_
-x-ms-office365-filtering-correlation-id: fd29796d-ea1c-4c03-ed60-08da91afbd5d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HxXTQOaxv1D0P20De0ngugp27/5qfpZI430PuBW1TZVuEcOv9Dj8f8t0mUCgRojmpvdPLsmG4u9tdDxgTSHmI0YsV5ei81c8Nt5cCxyy4jqnXT41qYbXwCigDpHtXVuICyK5nFLK9dLhBvZee+66lKx9N9Rp7cbl518bzZt5i7RnwmEz3Vnnko6G/C5IFO/mRdwDXy39ltB8BnouqXEjNRVbNhBZ/sNQ/58KtLqT04zS67YsrlN/8DD8oVBLnC4cRfYyZUsP+Pj1HJD8KuDOV640qZAAOExYUxXxHf8bWVgxBkGuMOY52e25fX1L8dBFE8h/QKJI1ncKyKBC5fOHqLSSuwOnvL1M8FmU3Mc5ll4vSyfah2/z72IWqCeUIXZ12gfnNunAqgLizabirdKCQ0U5NqHJKz6W4mt0/2HmSU0ZM8dFIFtrNehUzkCPxqu/kk640ZzdkAqXKuuCanPBbMyADZEHLfgq4sSbHfI+QnmnOVouQymcNgB2qHg1f77mnBlYSzQKAMIUwCQyqxwalecF+uyE/R5d0DBLLyq3WJDjyw13XNccPRrNuKuhotdgnAU8AKJka8/N73y1RwESi1k4/6GQrsXIMUFBPIV820uhu5yTn2MqielwsAvHDmZwFsy89IbEokmx5RNKzRIyZ+2qoZcrxPwjUbuKQrh4kFP0fzz4YqYTf3dr6mwDWG+suOnsLO1jo8eglCmICvLmzvG48rR5He/5Ovi+s5kIrisEghpm2J03+Yqo5fzIezdvSci0gn7Gh9ppc4TggW5Lyg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8793.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(346002)(39860400002)(136003)(376002)(4326008)(7416002)(52536014)(33656002)(5660300002)(53546011)(26005)(9686003)(71200400001)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(55016003)(8936002)(2906002)(44832011)(38100700002)(6506007)(55236004)(316002)(54906003)(8676002)(6916009)(7696005)(83380400001)(86362001)(186003)(122000001)(38070700005)(41300700001)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cB+NIIiM2rGnPRgXCkhJkXzvc5NuYd1HXB3fQLbGohLgwSnTzZqETahrL+o7?=
- =?us-ascii?Q?33HDAfWVd/O9OqCl2d/CapiauOhXCbbo/0f/LPdHgXONTnO1LD+/VcAfG6Zn?=
- =?us-ascii?Q?2913dFARvWZjNZc7zO5HSa/DJbWEJIIxH0D17yZiQMcLgv4EcI+fVUAl4hj6?=
- =?us-ascii?Q?4uflq+y/H3n2jT0nUpAzHqA5QnAvnpLJhA0vfCFrqQJBYO3iTtaGhLMmJQQv?=
- =?us-ascii?Q?qoAqwS5CBQbaF8mYhNAiyMNB+x9dmHJ9MOx0at7MjcmV3bK4DO6Y/FisOJr4?=
- =?us-ascii?Q?dSQ7lStuhVPHbNtN8lhdYk+GeFhWEPORsEF5dZIpMhhC4oUpZSZEepVLE7zI?=
- =?us-ascii?Q?65PvdB8HzTqZfljBrntDAnH0Ah5se3YoK1YbVhHUAYxM1Xy3vu1DKpR1PGGh?=
- =?us-ascii?Q?ZcR1f2WQ/qRSQw+T2ij4cH2L3eyhbcL/4Y+0xlGOhgXHidnvFaI55SB3fgtX?=
- =?us-ascii?Q?G6JzikLNTJQE6oQFgI1TlKMnSoP711mExdCSPnrlTibpfE/c+js4sFPBurxD?=
- =?us-ascii?Q?ghHPrK87+BbyXnWeU/F9XFMgFhaUuC/vTmcXN7YOzua/JmjLMHwQKV0sGmmM?=
- =?us-ascii?Q?mIUCrw8bUWR3Zx2QzJ9OpspL1eV1CoM8l0hckZUmKZ7EowrcfkCNXXFJa70w?=
- =?us-ascii?Q?wxC2BvDDqOJYlG4q/yq7JN+roMpRsXEppaunhJcFLwA8g3bKC5xxZ8bsPvpT?=
- =?us-ascii?Q?/rwCuZjVuoHgWRSo8o2olEtNBqmBztfK2pnGvFcCLUW7z5uXIsg1NL7BfNpL?=
- =?us-ascii?Q?wSdyLSLF0/xPrv8e1+oeiExYsdKzHus+wPdT3EcFwwvyG2DxIvxU7p1jvC1A?=
- =?us-ascii?Q?o3djBQDci46ql91DrcoylqiN9NNd/+sHtKtQF/Dn63kohdu9sMyr5nSfS99J?=
- =?us-ascii?Q?zGUWSTc8yMfIATcIlZ5WbgR+TTHdFOX4WgFTgWh+Rsr1n2V0Ux3qLrnu87aa?=
- =?us-ascii?Q?SpTCxbjonBO0NEuVaDVO0yrgC/DUMqxIRr6+IaacYk/hwYFUpfCpMRHC4sSM?=
- =?us-ascii?Q?9o6dEU2i1EY445KnhFNrQCHg9elnaX6hYdPk/b5uhyHgMMMOrJGc0nf3U/Ng?=
- =?us-ascii?Q?c9UZ1Ym9H63B5Y/2uYhIEDrbDWAaKEv471j6WbRY2baU3L1L0e7SECmuroiM?=
- =?us-ascii?Q?7nGDPuxASFM5FkmxhTFJ0owzc1tL9Nrj+MUV03eGEaEJk7uU3LeXMuwbLQ2C?=
- =?us-ascii?Q?jDvQNMQBkbsdXu/fP21irP2jOU6wZKaVpluKkXSIXWlAogUDWm3NwV//LcI4?=
- =?us-ascii?Q?A/6BGDA1OjaryQh2B80JXeHHVwnwBv+wZt5A3uYlpiMtHnd2W7iApL6h62MM?=
- =?us-ascii?Q?yc3uoAVkFFgPgSP/NfExcZwUB/oKgQsILwDefnbSyAgRZPdlGfgT5SMvOjAB?=
- =?us-ascii?Q?IwwNpSicoTQwyFkumZLmWZl/x+OspRs3I+AefkfXQwt5zfljEQB69ooKmGFm?=
- =?us-ascii?Q?PQapuSQDw4mO34AOKNYIQofkT/ukosB9IrsYHjt/9iU1AZAUZAdqKRhBw/jz?=
- =?us-ascii?Q?uOSKamERjeE7PRyPYyQyNPDfDfNcOqBicftKg23DUZfrRJSySxaRU27CvNKi?=
- =?us-ascii?Q?s3noV9i3Ao+y8KgSaz4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230303AbiIHQZj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 12:25:39 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED86895D0
+        for <linux-pci@vger.kernel.org>; Thu,  8 Sep 2022 09:25:38 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id n12so3105242wru.6
+        for <linux-pci@vger.kernel.org>; Thu, 08 Sep 2022 09:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=dpvUUBmrVBJXdXzTGjJjQlhI+WRTTf8cffEB6shyZ4E=;
+        b=T0Ych89KMD5a2BAiaAlBK4ZBCijC8Z91doILrAPNvwn9BJo7ejCp64NSQwp7fjTwt3
+         2fV0SHmJVtKdkIpy8+k0pcn1ItjtRqaYR99HoHpkwNUkvDaJvg9cFnUopcCUprV2EeSV
+         4fpYZyqJZVbF8BSkoyyPEAJxTCF7Jn4qF0HLoMrUHXd4/vghiFW3+HPxED6lP5EhfN2k
+         W5q2N9MzOWlINfCXFVKksy1vuS7OPcPROonLgw/P04iXTgr5Gt8JQUe7KpdBeq7UHMsW
+         VO0p8fUZKzUG4itNhw98hWnqReawCckwg4BXk/EYFIbVZJVLw7j5AGAYnOtO37e8JYBH
+         pKoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=dpvUUBmrVBJXdXzTGjJjQlhI+WRTTf8cffEB6shyZ4E=;
+        b=7JZcrjpqUWICC/3u1SohompfhC2/eu9rYbPqloONt+PiuCKM3w6Xg2AuTN5IXrBdf5
+         fTclRqDyNKDmDbw4wK2MnUsPxP2cTSGPBkKsmBqZMLbubH0shP0YrJZ2DCsh3+GvCHzR
+         +nB18MOd8Y0DCS86DyLQ/sdSC92xGjwLAGqrSvmfK6cLyN0uJcM3B3vfxk4wZHsUSxgJ
+         YVGkdUh3SZvL7yZDNA5hQrpWNzOk/xBnKswB+03eBNAAWEh16n0rICvVN/P7uAjeXUMn
+         R8KpX/L6XtEIYh0aNWx5txiCB+ZyZignOMxh5y/szQUAvOvm56i61kP7/s8C44nQcN9Y
+         q/EQ==
+X-Gm-Message-State: ACgBeo3PvTcGQs4cNsPgX0aG/BAmkZUQvA4Xg6ybLye945UY6W0fVedK
+        FDtvafa822QKpOT07tLsv0UxNg==
+X-Google-Smtp-Source: AA6agR5g8DYaRh95kPvbGxbmrld5Zfa4WOcxY6LHIW8pnzKAjQJiOkA37+1+hiydlpRdIQ7Fb7pZSw==
+X-Received: by 2002:a5d:5887:0:b0:220:81c9:8ab7 with SMTP id n7-20020a5d5887000000b0022081c98ab7mr5606176wrf.702.1662654336709;
+        Thu, 08 Sep 2022 09:25:36 -0700 (PDT)
+Received: from myrica (cpc92880-cmbg19-2-0-cust679.5-4.cable.virginm.net. [82.27.106.168])
+        by smtp.gmail.com with ESMTPSA id e13-20020a05600c4e4d00b003a60f0f34b7sm3102445wmq.40.2022.09.08.09.25.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 09:25:35 -0700 (PDT)
+Date:   Thu, 8 Sep 2022 17:25:32 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 09/13] iommu/sva: Refactoring
+ iommu_sva_bind/unbind_device()
+Message-ID: <YxoXfCQcD3yC5ppn@myrica>
+References: <20220906124458.46461-1-baolu.lu@linux.intel.com>
+ <20220906124458.46461-10-baolu.lu@linux.intel.com>
+ <Yxd2+d/VOjdOgrR2@myrica>
+ <682d8922-200d-8c89-7142-83e7b3754b8d@linux.intel.com>
+ <YxhqbhMmWLeFS512@myrica>
+ <YxjV1y/FF0nCI/WO@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8793.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd29796d-ea1c-4c03-ed60-08da91afbd5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 15:35:20.8231
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZGae8Oy0IcUeLNBs6817A5X8BvpVMxYGcPhdRLw/5Jw/GcSTc8C2kvOXcA3bCibv9F+hUR0m6IUii7D3iNdTMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3585
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YxjV1y/FF0nCI/WO@nvidia.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Sep 07, 2022 at 02:33:11PM -0300, Jason Gunthorpe wrote:
+> On Wed, Sep 07, 2022 at 10:54:54AM +0100, Jean-Philippe Brucker wrote:
+> 
+> > Is iommu_domain still going to represent both a device context (whole
+> > PASID table) and individual address spaces, or are you planning to move
+> > away from that?  What happens when a driver does:
+> > 
+> >   d1 = iommu_domain_alloc()
+> >   iommu_attach_device(d1)
+> >   d2 = iommu_sva_bind_device()
+> >   iommu_detach_device(d1)
+> > 
+> > Does detach
+> > (a) only disable the non-PASID address space?
+> > (b) disable everything?
+> > (c) fail because the driver didn't unbind first?
+> 
+> I think it must be (a), considering how everything is defined and the
+> needs for vIOMMU emulation.
 
+Yes (a) is probably better. The SMMU driver currently implements (c) to
+ensure that you can't switch device driver without unbinding everything
+first, and we should keep that check somewhere
 
-> -----Original Message-----
-> From: Marc Zyngier <maz@kernel.org>
-> Sent: Thursday, September 8, 2022 9:52 AM
-> To: Frank Li <frank.li@nxp.com>
-> Cc: tglx@linutronix.de; robh+dt@kernel.org;
-> krzysztof.kozlowski+dt@linaro.org; shawnguo@kernel.org;
-> s.hauer@pengutronix.de; kw@linux.com; bhelgaas@google.com; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-pci@vger.kernel.org; Peng Fan
-> <peng.fan@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>;
-> jdmason@kudzu.us; kernel@pengutronix.de; festevam@gmail.com; dl-linux-
-> imx <linux-imx@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com;
-> ntb@lists.linux.dev; lznuaa@gmail.com; imx@lists.linux.dev;
-> manivannan.sadhasivam@linaro.org
-> Subject: Re: [EXT] Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller
-> driver
->=20
-> Caution: EXT Email
->=20
-> On Thu, 08 Sep 2022 15:23:53 +0100,
-> Frank Li <frank.li@nxp.com> wrote:
-> >
-> > >
-> > > On Wed, 07 Sep 2022 04:48:54 +0100,
-> > > Frank Li <Frank.Li@nxp.com> wrote:
-> > > >
-> > > > The MU block found in a number of Freescale/NXP SoCs supports
-> > > generating
-> > > > IRQs by writing data to a register
-> > > >
-> > > > This enables the MU block to be used as a MSI controller, by levera=
-ging
-> > > > the platform-MSI API
-> > >
-> > > Missing full stop after each sentence.
-> >
-> > [Frank Li] Do you means missed "."?
->=20
-> Yes.
->=20
-> > > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > > > index 5e4e50122777d..e04c6521dce55 100644
-> > > > --- a/drivers/irqchip/Kconfig
-> > > > +++ b/drivers/irqchip/Kconfig
-> > > > @@ -470,6 +470,15 @@ config IMX_INTMUX
-> > > >       help
-> > > >         Support for the i.MX INTMUX interrupt multiplexer.
-> > > >
-> > > > +config IMX_MU_MSI
-> > > > +     bool "i.MX MU work as MSI controller"
-> > >
-> > > Why bool? Doesn't it also work as a module?
-> >
-> > [Frank Li] I remember you said that irq-chip can't be removed.
-> > So I am not sure why need build as module.
->=20
-> Not being removed doesn't mean it cannot be built as a module and
-> loaded on demand. Why should I be forced to have this driver built-in
-> if my kernel is used on a variety of systems, only one of them having
-> this device?
->=20
-> > > > +
-> > > > +struct imx_mu_msi {
-> > > > +     spinlock_t                      lock;
-> > > > +     raw_spinlock_t                  reglock;
-> > >
-> > > Why two locks? Isn't one enough to protect both MSI allocation (which
-> > > happens once in a blue moon) and register access?
-> >
-> > [Frank Li] Previously your comment, ask me to use raw_spinlock for
-> > read\write register access.  I don't think raw_spinlock is good for
-> > MSI allocation.
->=20
-> Why wouldn't it be good enough? I'd really like to know.[Frank Li] '
+> 
+> If it is any other option then we have a problem of what to do if the
+> guest VM asks to change the page table associated with the RID while a
+> PASID is attached.
+>  
+> > I'm asking because the SMMU driver is still using smmu_domain to represent
+> > all address spaces + the non-PASID one, and using the same type
+> > "iommu_domain" for the new object makes things unreadable. I think
+> > internally we'll want to use distinct variable names, something like
+> > "domain" and "address_space". If (a) is not the direction you're going,
+> > then it may be worth renaming the API as well.
+> > 
+> > I'm also not sure why set_dev_pasid() is a domain_ops of the SVA domain,
+> > but acts on the parent domain which contains the PASID table. Shouldn't it
+> > be an IOMMU op like remove_dev_pasid(), or on the parent domain?
+> 
+> There is no "parent domain"
+> 
+> PASID or RID+PASID are completely equal concepts for binding.
+> 
+> If you are thinking "parent domain" because SMMU is storing the PASID
+> table in the RID's iommu_domain, then I think that is a misplacement
+> in the SMMU driver...
+> 
+> The PASID table belongs in the iommu driver's per-group data
+> structure. The iommu domain should only have the actual IOPTEs.
+> 
+> Otherwise everything blows up if you attach an iommu_domain to two
+> RIDs - the API demands that every RID gets its own PASID mapping, even
+> if the RID shares iommu_domains. We do not have an API to share PASID
+> tables.
 
-[Frank Li] According to my understand, raw_spinlock skip some lockdep
-/debug feature to get better performance, which should be used when
-Frequently call, such as irq handle\polling thread.=20
+Well, we still do since SMMU implements it. Changing the API is fine, but
+someone will need to rework the SMMU driver to align with the new meaning
+of iommu_domain. I can take a stab if no one volunteers but probably not
+before next year.
 
-Spinlock have DEBUG feature to check wrong use lock.  Allocate MSI generall=
-y
-only is call once when driver probe. =20
+Thanks,
+Jean
 
-The basic principle,  lock should be used only when necessary.  Access reg =
-and
-Allocate msi is totally independence events.
-
-For this case, it is not big detail. =20
-
-1.  change spin_lock to raw_spin_lock at allocate msi function.
-
-2.  kept define spinlock_t lock;
-     In register modify function using
-	Raw_spin_lock(spinlock_check(lock), flags).
-
->=20
-> >
-> > >
-> > > Also, where are these locks initialised?
-> > >
-> >
-> > [Frank Li] struct imx_mu_msi is fill zero when allocated.
-> > Does it still need additional initialization for spinlock?
->=20
-> Have you heard of lockdep? Or CONFIG_DEBUG_SPINLOCK?  Maybe you
-> should
-> try it.
->=20
-> > > > +     if (!pdev)
-> > > > +             return -ENODEV;
-> > >
-> > > How can that happen?
-> > >
-> > [Frank Li] Not sure, many driver check as it.
->=20
-> And? Just because someone does something pointless, you have to
-> imitate them?
->=20
->         M.
->=20
-> --
-> Without deviation from the norm, progress is not possible.
+> 
+> Thus the PASID table is NOT part of the iommu_domain.
+> 
+> The exception will be for nested translation where we will have a
+> special ARM iommu_domain that contains the PASID table in userspace
+> memory. When this domain is attached it will logically claim the RID
+> and every PASID and thus disable the PASID API for that RID.
+> 
+> Remember also that an UNMANAGED iommu_domain should be attachable to
+> many PASID's and RID's concurrently.
+> 
+> Jason
