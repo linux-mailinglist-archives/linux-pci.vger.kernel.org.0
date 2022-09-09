@@ -2,85 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD9535B2BCB
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 03:45:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF7CC5B2BE0
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 03:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbiIIBny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Sep 2022 21:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51950 "EHLO
+        id S229566AbiIIByS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Sep 2022 21:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbiIIBny (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 21:43:54 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6951A1D70;
-        Thu,  8 Sep 2022 18:43:48 -0700 (PDT)
-Received: by mail-ot1-f48.google.com with SMTP id l7-20020a056830154700b0065563d564dfso190665otp.0;
-        Thu, 08 Sep 2022 18:43:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=kgAGirvJfdV3oB1r2QFilMXE0qgu9JtE1NsMjf6XFLY=;
-        b=HlXNPYy77skSLLlW3UTRziORBMcE2Ve018T9cGWi5pa44jemfQrZso5MWWC3jtUpBM
-         HoW/DDVM1B1PbOJozSlqS6BWG+VNSYlVeioh39Vh4CvK7tB9YDzZb9nlTGkgJIa3GM8H
-         0+Unop6fNs3N2C5hthowFIt5aMXxt/MIWvKvtZMhERVUgc03bZIZgYE9VWkHOkggsbo2
-         ASw9BRY6d3Pkapru/whyvkTTkw/ykq0UeICcWcN/9kty7CThOsPYE2pNPorQoGV5C/Lp
-         vNb9vtMwsIcUumJiykTfdwMh18M1Hbqh7Z8c0ZcsPIDxZ4FtI7FYw8qaDVH7F/uLMUSY
-         JI2g==
-X-Gm-Message-State: ACgBeo3rbnTNrKp3ecvIbiPCFk8oZAHoX8unSswXRNzZFmhwpNhD8Zw4
-        jglZ5iEaYP5W/SaMGicbvA==
-X-Google-Smtp-Source: AA6agR5i2t4iZ8enK9UJxaM3KxuW+PQOhJgW4tqlPDGLyRN8vJfn+FxaRNRJx75tuZ0LmnK4pAh3Gw==
-X-Received: by 2002:a05:6830:1bfa:b0:637:1491:2ac7 with SMTP id k26-20020a0568301bfa00b0063714912ac7mr4569354otb.9.1662687828152;
-        Thu, 08 Sep 2022 18:43:48 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e7-20020a056870c34700b0012696ac05d5sm483842oak.19.2022.09.08.18.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 18:43:47 -0700 (PDT)
-Received: (nullmailer pid 3745755 invoked by uid 1000);
-        Fri, 09 Sep 2022 01:43:46 -0000
-Date:   Thu, 8 Sep 2022 20:43:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        maz@kernel.org, ntb@lists.linux.dev, robh+dt@kernel.org,
-        kishon@ti.com, imx@lists.linux.dev, bhelgaas@google.com,
-        festevam@gmail.com, peng.fan@nxp.com, jdmason@kudzu.us,
-        manivannan.sadhasivam@linaro.org, kw@linux.com,
-        aisheng.dong@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org,
-        linux-imx@nxp.com, krzysztof.kozlowski+dt@linaro.org,
-        s.hauer@pengutronix.de, devicetree@vger.kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, lznuaa@gmail.com
-Subject: Re: [PATCH v9 3/4] dt-bindings: irqchip: imx mu work as msi
- controller
-Message-ID: <20220909014346.GA3745691-robh@kernel.org>
-References: <20220907034856.3101570-1-Frank.Li@nxp.com>
- <20220907034856.3101570-4-Frank.Li@nxp.com>
+        with ESMTP id S230118AbiIIByP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Sep 2022 21:54:15 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0A7A50F9;
+        Thu,  8 Sep 2022 18:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662688455; x=1694224455;
+  h=message-id:date:mime-version:cc:to:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=V8rWhGS1JBuyEKj5MooRa936Kyq13co5hPOuxZW39vo=;
+  b=jHfzaO81jgHc6/5uJglCGPcyTEIgqS2UZSXShlrEF7xfLvrO6RbFJk+P
+   IQTGVVDBZxbmPtWaLKElAEbkMwyQpVbt0xsi1qLJNHTwfuoB4vrwCjODf
+   xfoWYjubHKmRv4oShe0o5NwBXxGPZnGeoM3cDwI5FjxnEX4YALTPtXfUz
+   PwWP/A4LNItQuwt/PK5pS9aWoMQVArCFoEUdKmZi+6Bb+T6xKiN9XNssx
+   t4DDqG26b23yg+xAGDNUH8XyC+ftp/dFtHDU9hER6Dc+YRFEF+2TTabRS
+   B8zwLQ/iairKPZqWcddazd+9b01TC0uYCYD+pxqN+Tc+ZZVnmcor4napB
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="277760452"
+X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
+   d="scan'208";a="277760452"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 18:54:14 -0700
+X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
+   d="scan'208";a="676961624"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.214.159]) ([10.254.214.159])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 18:54:09 -0700
+Message-ID: <a4402d04-0920-59ff-5dd3-a374c84d64b0@linux.intel.com>
+Date:   Fri, 9 Sep 2022 09:54:07 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220907034856.3101570-4-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Zhu Tony <tony.zhu@intel.com>, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20220906124458.46461-1-baolu.lu@linux.intel.com>
+ <20220906124458.46461-10-baolu.lu@linux.intel.com> <Yxd2+d/VOjdOgrR2@myrica>
+ <682d8922-200d-8c89-7142-83e7b3754b8d@linux.intel.com>
+ <YxhqbhMmWLeFS512@myrica> <YxjV1y/FF0nCI/WO@nvidia.com>
+ <YxoXfCQcD3yC5ppn@myrica> <YxobR/brG9VlxPvX@nvidia.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v13 09/13] iommu/sva: Refactoring
+ iommu_sva_bind/unbind_device()
+In-Reply-To: <YxobR/brG9VlxPvX@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 06 Sep 2022 22:48:55 -0500, Frank Li wrote:
-> I.MX mu support generate irq by write a register. Provide msi controller
-> support so other driver such as PCI EP can use it by standard msi
-> interface as doorbell.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../interrupt-controller/fsl,mu-msi.yaml      | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
-> 
+On 2022/9/9 0:41, Jason Gunthorpe wrote:
+> On Thu, Sep 08, 2022 at 05:25:32PM +0100, Jean-Philippe Brucker wrote:
+>> On Wed, Sep 07, 2022 at 02:33:11PM -0300, Jason Gunthorpe wrote:
+>>> On Wed, Sep 07, 2022 at 10:54:54AM +0100, Jean-Philippe Brucker wrote:
+>>>
+>>>> Is iommu_domain still going to represent both a device context (whole
+>>>> PASID table) and individual address spaces, or are you planning to move
+>>>> away from that?  What happens when a driver does:
+>>>>
+>>>>    d1 = iommu_domain_alloc()
+>>>>    iommu_attach_device(d1)
+>>>>    d2 = iommu_sva_bind_device()
+>>>>    iommu_detach_device(d1)
+>>>>
+>>>> Does detach
+>>>> (a) only disable the non-PASID address space?
+>>>> (b) disable everything?
+>>>> (c) fail because the driver didn't unbind first?
+>>> I think it must be (a), considering how everything is defined and the
+>>> needs for vIOMMU emulation.
+>> Yes (a) is probably better. The SMMU driver currently implements (c) to
+>> ensure that you can't switch device driver without unbinding everything
+>> first, and we should keep that check somewhere
+> Yes, the owner stuff is a logical place to put that, when ownership
+> is all released the PASID table of the group must be empty. Lu?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I agree. The ownership is about the whole device (more precisely,
+group), including the RID and PASIDs. When the ownership is converted,
+the pasid array must be empty. I will add code in this series to enforce
+this. Thanks for pointing out this.
+
+Best regards,
+baolu
