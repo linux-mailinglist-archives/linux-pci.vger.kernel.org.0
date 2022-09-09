@@ -2,130 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DB05B42D2
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 01:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 581325B4315
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 01:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbiIIXGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 19:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48520 "EHLO
+        id S230165AbiIIXiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 19:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231551AbiIIXGt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 19:06:49 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F1D117481;
-        Fri,  9 Sep 2022 16:06:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NMP7fZIhE3oKDKPKIgVM3LH2UsZXNXrcQnibrM/2fPkiHJVxnMIdL90sE8QSULcVo2ZL7gdAR466ygB4h7xiXTvpwlB4dDKS50dN3MOE007W1Gs6PdBOeVVvRRUgDTreaBIaWJtOW5qaaUDlGWclxzrKfgRuKL3sStCYyMXtrDylfQ8NhoZHLst1yT9jKGGy0AHlmqBA1KifTa/YEP3+2f0FBjK73GDKPAfha57eySszQLHV4J7F3Xn1wzj8WcNp4tezI7Onujh5FOxZxir/SOxH+nch1E3cqx6vvc72OgC1Vw7xu56x2cmWS4LorpQlD4J75SwCMlZ/1x5ki2v+Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+rdubbjsfJIERrpbFNGgEnP2fgpS9htunGRKkwJ441I=;
- b=XjRM13p3W+FTmX+gMgkHtTsojmDb+Lte8JAn9ienkcRrMh57S6lApZDihnedFHr8KGbUBfn5vP9QrhwCwXgaKWXPuO7EUn8ZnGw/SgruIdkNME4oGbu3NMuTlQce+2G+9iBvax985FMpm16xk9LwnueQmSddTv9Oos1fRPwQUyiLSeDy74aHRp9L26a73D+kYTeuuidlCSN2ERbk7ma2aJjMO5sqUokbIvL8YX1AHYbA8zjouwpMv0VJB2czTu9OIvemmilLxOI3SDEHkJwlbxuJPMqMuAocNqjyMscXB3kwetytQmlztbwx9QSXjICUOXUfv92SEhaYwNMQTkNguA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+rdubbjsfJIERrpbFNGgEnP2fgpS9htunGRKkwJ441I=;
- b=pB8CgZRaYM7odkrtpyyUE7h7bhS5853BJ2yLUQEOl12g1TfB0h1eCglVcAZ/e6eacI9gB0M/jDdpfWMIqQ1NWnbrszN4C+kZjNuvN+U1n3X0iMmJ8JXVp597xTsElNgKCuSNOkZSIYSj2ORjAhf5KSkBdPR+DDDrm/aIu8Z1eds=
-Received: from DM6PR10CA0024.namprd10.prod.outlook.com (2603:10b6:5:60::37) by
- BY5PR12MB5015.namprd12.prod.outlook.com (2603:10b6:a03:1db::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19; Fri, 9 Sep
- 2022 23:06:43 +0000
-Received: from DS1PEPF0000B077.namprd05.prod.outlook.com
- (2603:10b6:5:60:cafe::98) by DM6PR10CA0024.outlook.office365.com
- (2603:10b6:5:60::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.15 via Frontend
- Transport; Fri, 9 Sep 2022 23:06:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0000B077.mail.protection.outlook.com (10.167.17.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5612.12 via Frontend Transport; Fri, 9 Sep 2022 23:06:43 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 9 Sep
- 2022 18:06:41 -0500
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
- Transport; Fri, 9 Sep 2022 18:06:40 -0500
-Message-ID: <12c4d5cc-f764-b4f9-331d-634533703076@amd.com>
-Date:   Fri, 9 Sep 2022 16:06:40 -0700
+        with ESMTP id S229953AbiIIXiH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 19:38:07 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C901E27B36;
+        Fri,  9 Sep 2022 16:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662766686; x=1694302686;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ILRHn3MKvB8RyQjvMGsntlXVH8r+Xk52Vw/Er5hMxqY=;
+  b=YOc8dShIQ1i8BnM57/zp/laQPHfJzd827wepfIsHvDslYpwuO+tI3nAQ
+   CgoF3RunLDwHn+5lRdbTYgofpL8gpOYaBxcU2oTxQNmER7fobqI5LZngH
+   hhNmr9h4UcGk7UUqLjUMl0nxaF2xHxK7XFFBD12vraDNOuTS786UL6rxr
+   JvoV9RPR/j/8V9RklVhJ6341cvtMfkCQBZIVbD+koGX7ympA9ib0LyFDE
+   OHoSl5Qubrmfmzxy45rr78/UE/NOg6D9Qmxu/fYf5AsjP7k+TGqKqRwZz
+   RVtFoldWrHXq/XswcrYv1g2eidc/Jqdfp3ZBYkDvvmQa1xQXE/i8eKnqd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10465"; a="280611409"
+X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
+   d="scan'208";a="280611409"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:38:06 -0700
+X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
+   d="scan'208";a="677363673"
+Received: from gtpedreg-mobl.amr.corp.intel.com (HELO [10.209.57.19]) ([10.209.57.19])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:38:05 -0700
+Message-ID: <05208cb8-32a7-dd58-1d01-ce07c815bd64@linux.intel.com>
+Date:   Fri, 9 Sep 2022 16:38:05 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devices
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH v4 1/9] PCI/PTM: Cache PTM Capability offset
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
-        <frowand.list@gmail.com>, <clement.leger@bootlin.com>,
-        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>, <stefano.stabellini@xilinx.com>,
-        <trix@redhat.com>
-References: <20220902204321.GA374266@bhelgaas>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <20220902204321.GA374266@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0000B077:EE_|BY5PR12MB5015:EE_
-X-MS-Office365-Filtering-Correlation-Id: d925f010-af63-479d-6561-08da92b7f611
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hpXLFDq0/w0O2rhw56zGiApgBv8swP3+azC5aRKoAriBaQZntqej2qnPzkpc2fBTioIN6EzaAlD1qKzgVj5aRHUmZUFaBTUoLQyLon/T4jdFnLbg6qVyKbHtWZSOZgAVO8tCcx0SpNzaDVSKiI3dvh8tscTOX1SrnVVeREabMhjek8+DVy1jTOHbBwqE9xbl5dDZNJZN1km1Q15TXqulYEC50Bi2aUlvrk+E0CHiu9+lXMxXaV+zwD9Yt8g8j2j/jys4S8RnYU1xVBDs/bVdPuHR6WHIaUjBQLGiDvEbpgDdFC+TBpVMTB2g9rGHsngiNh+pn+hEYbfCnlvE33FaHB56yIrpe2QFERqyvoe+Xe+6simN6JjFLg54pL1crcmGoVgLDasrdfvynhwsmhp23sgY3C3mqFSEh7+5H18iEcBvJB7aHWlKnXerMkKO5fIMVOJHNATJhIyFI5PaHxHRBIMvjOygKEjT0uIx4UWYWgB2fP7GSavGcevoBhQRhwZzH+4dznlOw2eqElnW82rG65/gYtY3jxjcdwV/gJ5OkDbfaD5z9x/JBbCAT6b6VXHuK47LEbSWCJy1uc3y/vuBUOdfwO/1rM3/p9/wGlPyfpsga2W5fTFLjxm5zea47xvBy4Kysfd1k9zk8xI9Uy0n6fAvPiac+MK6p8BkPQpcwbQLHykwylToibwZA1eO8g9s+1tw7oDmx4ULXzpvm6PABeQ/X8WWKXTWJMwC4gNd7eG4XTZ22bqSx8onYn5fPjKha4QMY2eNcVvk1nuqrRwjC8rAss9YV1e8aAfO1s8msE3E97Qg5HReepkkEORbr2M/qLK2MWCno9GGKCHHKvqe5g==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(396003)(346002)(39860400002)(376002)(40470700004)(36840700001)(46966006)(82310400005)(53546011)(26005)(356005)(41300700001)(81166007)(40480700001)(478600001)(36756003)(82740400003)(40460700003)(36860700001)(2616005)(186003)(426003)(70586007)(336012)(31686004)(8676002)(70206006)(47076005)(31696002)(4326008)(316002)(16576012)(6916009)(54906003)(5660300002)(2906002)(4744005)(44832011)(8936002)(86362001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 23:06:43.0258
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d925f010-af63-479d-6561-08da92b7f611
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000B077.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5015
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     Koba Ko <koba.ko@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20220909202505.314195-1-helgaas@kernel.org>
+ <20220909202505.314195-2-helgaas@kernel.org>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20220909202505.314195-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi,
 
+On 9/9/22 1:24 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Cache the PTM Capability offset instead of searching for it every time we
+> enable/disable PTM or save/restore PTM state.  No functional change
+> intended.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-On 9/2/22 13:43, Bjorn Helgaas wrote:
-> On Mon, Aug 29, 2022 at 02:43:35PM -0700, Lizhi Hou wrote:
->
->> Clément Léger (1):
->>    of: dynamic: add of_node_alloc()
->>
->> Lizhi Hou (1):
->>    pci: create device tree node for selected devices
-> Please capitalize both subject lines to match previous history of the
-> files involved.
+Looks good to me.
 
-Sure. Does this subject format look ok?
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-of: dynamic: Add of_node_alloc()
+> ---
+>  drivers/pci/pcie/ptm.c | 41 +++++++++++++++++------------------------
+>  include/linux/pci.h    |  1 +
+>  2 files changed, 18 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index 368a254e3124..85382c135885 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -31,13 +31,9 @@ static void pci_ptm_info(struct pci_dev *dev)
+>  
+>  void pci_disable_ptm(struct pci_dev *dev)
+>  {
+> -	int ptm;
+> +	u16 ptm = dev->ptm_cap;
+>  	u16 ctrl;
+>  
+> -	if (!pci_is_pcie(dev))
+> -		return;
+> -
+> -	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+>  	if (!ptm)
+>  		return;
+>  
+> @@ -48,14 +44,10 @@ void pci_disable_ptm(struct pci_dev *dev)
+>  
+>  void pci_save_ptm_state(struct pci_dev *dev)
+>  {
+> -	int ptm;
+> +	u16 ptm = dev->ptm_cap;
+>  	struct pci_cap_saved_state *save_state;
+>  	u16 *cap;
+>  
+> -	if (!pci_is_pcie(dev))
+> -		return;
+> -
+> -	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+>  	if (!ptm)
+>  		return;
+>  
+> @@ -69,16 +61,15 @@ void pci_save_ptm_state(struct pci_dev *dev)
+>  
+>  void pci_restore_ptm_state(struct pci_dev *dev)
+>  {
+> +	u16 ptm = dev->ptm_cap;
+>  	struct pci_cap_saved_state *save_state;
+> -	int ptm;
+>  	u16 *cap;
+>  
+> -	if (!pci_is_pcie(dev))
+> +	if (!ptm)
+>  		return;
+>  
+>  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
+> -	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> -	if (!save_state || !ptm)
+> +	if (!save_state)
+>  		return;
+>  
+>  	cap = (u16 *)&save_state->cap.data[0];
+> @@ -87,7 +78,7 @@ void pci_restore_ptm_state(struct pci_dev *dev)
+>  
+>  void pci_ptm_init(struct pci_dev *dev)
+>  {
+> -	int pos;
+> +	u16 ptm;
+>  	u32 cap, ctrl;
+>  	u8 local_clock;
+>  	struct pci_dev *ups;
+> @@ -117,13 +108,14 @@ void pci_ptm_init(struct pci_dev *dev)
+>  		return;
+>  	}
+>  
+> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> -	if (!pos)
+> +	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> +	if (!ptm)
+>  		return;
+>  
+> +	dev->ptm_cap = ptm;
+>  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_PTM, sizeof(u16));
+>  
+> -	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+> +	pci_read_config_dword(dev, ptm + PCI_PTM_CAP, &cap);
+>  	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+>  
+>  	/*
+> @@ -148,7 +140,7 @@ void pci_ptm_init(struct pci_dev *dev)
+>  	}
+>  
+>  	ctrl |= dev->ptm_granularity << 8;
+> -	pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
+> +	pci_write_config_dword(dev, ptm + PCI_PTM_CTRL, ctrl);
+>  	dev->ptm_enabled = 1;
+>  
+>  	pci_ptm_info(dev);
+> @@ -156,18 +148,19 @@ void pci_ptm_init(struct pci_dev *dev)
+>  
+>  int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+>  {
+> -	int pos;
+> +	u16 ptm;
+>  	u32 cap, ctrl;
+>  	struct pci_dev *ups;
+>  
+>  	if (!pci_is_pcie(dev))
+>  		return -EINVAL;
+>  
+> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> -	if (!pos)
+> +	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> +	if (!ptm)
+>  		return -EINVAL;
+>  
+> -	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+> +	dev->ptm_cap = ptm;
+> +	pci_read_config_dword(dev, ptm + PCI_PTM_CAP, &cap);
+>  	if (!(cap & PCI_PTM_CAP_REQ))
+>  		return -EINVAL;
+>  
+> @@ -192,7 +185,7 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+>  
+>  	ctrl = PCI_PTM_CTRL_ENABLE;
+>  	ctrl |= dev->ptm_granularity << 8;
+> -	pci_write_config_dword(dev, pos + PCI_PTM_CTRL, ctrl);
+> +	pci_write_config_dword(dev, ptm + PCI_PTM_CTRL, ctrl);
+>  	dev->ptm_enabled = 1;
+>  
+>  	pci_ptm_info(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 060af91bafcd..54be939023a3 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -475,6 +475,7 @@ struct pci_dev {
+>  	unsigned int	broken_cmd_compl:1;	/* No compl for some cmds */
+>  #endif
+>  #ifdef CONFIG_PCIE_PTM
+> +	u16		ptm_cap;		/* PTM Capability */
+>  	unsigned int	ptm_root:1;
+>  	unsigned int	ptm_enabled:1;
+>  	u8		ptm_granularity;
 
-PCI: Create device tree node for selected devices
-
-
-Thanks,
-
-Lizhi
-
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
