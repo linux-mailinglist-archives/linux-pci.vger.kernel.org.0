@@ -2,218 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD3F45B4091
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 22:26:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A6BF5B4157
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 23:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232193AbiIIU0N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 16:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52288 "EHLO
+        id S230386AbiIIVSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 17:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232196AbiIIUZn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 16:25:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEE2BA9D4;
-        Fri,  9 Sep 2022 13:25:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229949AbiIIVSw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 17:18:52 -0400
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F0D129C66;
+        Fri,  9 Sep 2022 14:18:50 -0700 (PDT)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
+ id c0f8f35c6b42e9b1; Fri, 9 Sep 2022 23:18:48 +0200
+Received: from kreacher.localnet (89-77-51-84.dynamic.chello.pl [89.77.51.84])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 434F8B82640;
-        Fri,  9 Sep 2022 20:25:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE45C433D7;
-        Fri,  9 Sep 2022 20:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662755127;
-        bh=8zBtTybYX8wofqg/4M5b5Eesn1tmGcj3alXYa5B6SS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jeIu3qAD1lwY8KuAeHTvssYZ5PrI5Yowr19tmBaoj5V/Vk9KqGP3KpJjN38y7CkJ/
-         S9clAWIX2LaEbuEW3FPrKMqXVeGkPdI/aDOEFTOz4oZUE7Lpgjh5R4vj+Kuj1DfZAa
-         0CyEtiWjNCHdhcTIKtsc3w9Bnl6DXbsuQGy2v3bWH14qJcpSrpOHEIeaCed7SoGF1d
-         Lg2oMcm4zrr7j/sSWxgod3dtKNMqXIfhx/+d8p9g7sIYRWyPZClY/P+XQWCW7XSlX1
-         ACCucboD+erc1S2vS477SyPWj15f9ItTGowECmF8VrFkpwwW1q6hmSlDReYzN1Luk8
-         Q9iPZav0ekLCg==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v4 9/9] PCI/PM: Always disable PTM for all devices during suspend
-Date:   Fri,  9 Sep 2022 15:25:05 -0500
-Message-Id: <20220909202505.314195-10-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220909202505.314195-1-helgaas@kernel.org>
-References: <20220909202505.314195-1-helgaas@kernel.org>
+        by v370.home.net.pl (Postfix) with ESMTPSA id C10E166D48A;
+        Fri,  9 Sep 2022 23:18:47 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        whitehat002 <hackyzh002@gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: do not reference a pci device after it has been released
+Date:   Fri, 09 Sep 2022 23:18:46 +0200
+Message-ID: <5870387.lOV4Wx5bFT@kreacher>
+In-Reply-To: <YxrufXoPZnKCxqRP@kroah.com>
+References: <20220428142854.1065953-1-gregkh@linuxfoundation.org> <CAJZ5v0hfdnRg0EqG2Zcp9=Kjq+P1NC45iudatisVL_G=QjOC+A@mail.gmail.com> <YxrufXoPZnKCxqRP@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 89.77.51.84
+X-CLIENT-HOSTNAME: 89-77-51-84.dynamic.chello.pl
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrfedthedgudeifecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepkeelrdejjedrhedurdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrjeejrdehuddrkeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+ vghlrdhorhhgpdhrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrtghkhiiihhdttddvsehgmhgrihhlrdgtohhm
+X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Friday, September 9, 2022 9:42:53 AM CEST Greg Kroah-Hartman wrote:
+> On Mon, Jun 27, 2022 at 06:37:06PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Jun 27, 2022 at 5:07 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Thu, Apr 28, 2022 at 10:30:38PM +0200, Rafael J. Wysocki wrote:
+> > > > On Thu, Apr 28, 2022 at 10:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Apr 28, 2022 at 6:22 PM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 28, 2022 at 10:58:58AM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Thu, Apr 28, 2022 at 04:28:53PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > > > In acpi_get_pci_dev(), the debugging message for when a PCI bridge is
+> > > > > > > > not found uses a pointer to a pci device whose reference has just been
+> > > > > > > > dropped.  The chance that this really is a device that is now been
+> > > > > > > > removed from the system is almost impossible to happen, but to be safe,
+> > > > > > > > let's print out the debugging message based on the acpi root device
+> > > > > > > > which we do have a valid reference to at the moment.
+> > > > > > >
+> > > > > > > This code was added by 497fb54f578e ("ACPI / PCI: Fix NULL pointer
+> > > > > > > dereference in acpi_get_pci_dev() (rev. 2)").  Not sure if it's worth
+> > > > > > > a Fixes: tag.
+> > > > > >
+> > > > > > Can't hurt, I'll add it for the v2 based on this review.
+> > > > > >
+> > > > > > >
+> > > > > > > acpi_get_pci_dev() is used by only five callers, three of which are
+> > > > > > > video/backlight related.  I'm always skeptical of one-off interfaces
+> > > > > > > like this, but I don't know enough to propose any refactoring or other
+> > > > > > > alternatives.
+> > > > > > >
+> > > > > > > I'll leave this for Rafael, but if I were applying I would silently
+> > > > > > > touch up the subject to match convention:
+> > > > > > >
+> > > > > > >   PCI/ACPI: Do not reference PCI device after it has been released
+> > > > > >
+> > > > > > Much simpler, thanks.
+> > > > > >
+> > > > > > >
+> > > > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > > > > > > Cc: Len Brown <lenb@kernel.org>
+> > > > > > > > Cc: linux-pci@vger.kernel.org
+> > > > > > > > Cc: linux-acpi@vger.kernel.org
+> > > > > > > > Reported-by: whitehat002 <hackyzh002@gmail.com>
+> > > > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > > > ---
+> > > > > > > >  drivers/acpi/pci_root.c | 3 ++-
+> > > > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > > > > > > > index 6f9e75d14808..ecda378dbc09 100644
+> > > > > > > > --- a/drivers/acpi/pci_root.c
+> > > > > > > > +++ b/drivers/acpi/pci_root.c
+> > > > > > > > @@ -303,7 +303,8 @@ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
+> > > > > > > >              * case pdev->subordinate will be NULL for the parent.
+> > > > > > > >              */
+> > > > > > > >             if (!pbus) {
+> > > > > > > > -                   dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > > > > > > > +                   dev_dbg(&root->device->dev,
+> > > > > > > > +                           "dev %d, function %d is not a PCI-to-PCI bridge\n", dev, fn);
+> > > > > > >
+> > > > > > > This should use "%02x.%d" to be consistent with the dev_set_name() in
+> > > > > > > pci_setup_device().
+> > > > > >
+> > > > > > Ah, missed that, will change it and send out a new version tomorrow.
+> > > > >
+> > > > > I would make the change below (modulo the gmail-induced wthite space
+> > > > > breakage), though.
+> > > >
+> > > > That said ->
+> > > >
+> > > > > ---
+> > > > >  drivers/acpi/pci_root.c |    5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > Index: linux-pm/drivers/acpi/pci_root.c
+> > > > > ===================================================================
+> > > > > --- linux-pm.orig/drivers/acpi/pci_root.c
+> > > > > +++ linux-pm/drivers/acpi/pci_root.c
+> > > > > @@ -295,8 +295,6 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> > > > >              break;
+> > > > >
+> > > > >          pbus = pdev->subordinate;
+> > > > > -        pci_dev_put(pdev);
+> > > > > -
+> > > > >          /*
+> > > > >           * This function may be called for a non-PCI device that has a
+> > > > >           * PCI parent (eg. a disk under a PCI SATA controller).  In that
+> > > > > @@ -304,9 +302,12 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> > > > >           */
+> > > > >          if (!pbus) {
+> > > > >              dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > > > > +            pci_dev_put(pdev);
+> > > > >              pdev = NULL;
+> > > > >              break;
+> > > > >          }
+> > > > > +
+> > > > > +        pci_dev_put(pdev);
+> > > >
+> > > > -> we are going to use pbus after this and it is pdev->subordinate
+> > > > which cannot survive without pdev AFAICS.
+> > > >
+> > > > Are we not concerned about this case?
+> > >
+> > > Good point.
+> > >
+> > > whitehat002, any ideas?  You found this issue but it really looks like
+> > > it is not anything that can ever be hit, so how far do you want to go to
+> > > unwind it?
+> > 
+> > I have an idea, sorry for the delay here.
+> > 
+> > I should be ready to post something tomorrow.
+> 
+> Was this ever posted?
 
-We want to disable PTM on Root Ports because that allows some chips, e.g.,
-Intel mobile chips since Coffee Lake, to enter a lower-power PM state.
+No, it wasn't.  Sorry for the glacial pace here.
 
-That means we also have to disable PTM on downstream devices.  PCIe r6.0,
-sec 2.2.8, recommends that functions support generation of messages in
-non-D0 states, so we have to assume Switch Upstream Ports or Endpoints may
-send PTM Requests while in D1, D2, and D3hot.  A PTM message received by a
-Downstream Port (including a Root Port) with PTM disabled must be treated
-as an Unsupported Request (sec 6.21.3).
+So the idea is based on the observation that the PCI device returned by the current
+code in acpi_get_pci_dev() needs to be registered, so if it corresponds to an ACPI
+device object, the struct acpi_device representing it must be registered too and,
+moreover, it should be the ACPI companion of that PCI device.  Thus it should be
+sufficient to look for it in the ACPI device object's list of physical nodes
+corresponding to it.  Hence, the patch below.
 
-PTM was previously disabled only for Root Ports, and it was disabled in
-pci_prepare_to_sleep(), which is not called at all if a driver supports
-legacy PM or does its own state saving.
+I actually can't test it right now (or even compile it for that matter), but
+I'll put it in order tomorrow.
 
-Instead, disable PTM early in pci_pm_suspend() and pci_pm_runtime_suspend()
-so we do it in all cases.
-
-Previously PTM was disabled *after* saving device state, so the state
-restore on resume automatically re-enabled it.  Since we now disable PTM
-*before* saving state, we must explicitly re-enable it in pci_pm_resume()
-and pci_pm_runtime_resume().
-
-Here's a sample of errors that occur when PTM is disabled only on the Root
-Port.  With this topology:
-
-  0000:00:1d.0 Root Port            to [bus 08-71]
-  0000:08:00.0 Switch Upstream Port to [bus 09-71]
-
-Kai-Heng reported errors like this:
-
-  pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-  pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-
-Decoding TLP header 0x34...... (0011 0100b) and 0x08000052:
-
-  Fmt                         001b  4 DW header, no data
-  Type                     1 0100b  Msg (Local - Terminate at Receiver)
-  Requester ID  0x0800              Bus 08 Devfn 00.0
-  Message Code    0x52  0101 0010b  PTM Request
-
-The 00:1d.0 Root Port logged an Unsupported Request error when it received
-a PTM Request with Requester ID 08:00.0.
-
-Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216210
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pci-driver.c | 11 +++++++++++
- drivers/pci/pci.c        | 28 ++--------------------------
- 2 files changed, 13 insertions(+), 26 deletions(-)
+ drivers/acpi/pci_root.c |   82 +++++++++---------------------------------------
+ 1 file changed, 16 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 2815922ac525..107d77f3c846 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -774,6 +774,12 @@ static int pci_pm_suspend(struct device *dev)
- 
- 	pci_dev->skip_bus_pm = false;
- 
-+	/*
-+	 * Disabling PTM allows some systems, e.g., Intel mobile chips
-+	 * since Coffee Lake, to enter a lower-power PM state.
-+	 */
-+	pci_suspend_ptm(pci_dev);
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
- 
-@@ -982,6 +988,8 @@ static int pci_pm_resume(struct device *dev)
- 	if (pci_dev->state_saved)
- 		pci_restore_standard_config(pci_dev);
- 
-+	pci_resume_ptm(pci_dev);
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume(dev);
- 
-@@ -1269,6 +1277,8 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 	pci_power_t prev = pci_dev->current_state;
- 	int error;
- 
-+	pci_suspend_ptm(pci_dev);
-+
- 	/*
- 	 * If pci_dev->driver is not set (unbound), we leave the device in D0,
- 	 * but it may go to D3cold when the bridge above it runtime suspends.
-@@ -1330,6 +1340,7 @@ static int pci_pm_runtime_resume(struct device *dev)
- 	 * D3cold when the bridge above it runtime suspended.
- 	 */
- 	pci_pm_default_resume_early(pci_dev);
-+	pci_resume_ptm(pci_dev);
- 
- 	if (!pci_dev->driver)
- 		return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 83818f81577d..107afa0a5b03 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2706,24 +2706,12 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
- 
--	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
--	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_suspend_ptm(dev);
+Index: linux-pm/drivers/acpi/pci_root.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/pci_root.c
++++ linux-pm/drivers/acpi/pci_root.c
+@@ -312,76 +312,26 @@ struct acpi_handle_node {
+  */
+ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
+ {
+-	int dev, fn;
+-	unsigned long long adr;
+-	acpi_status status;
+-	acpi_handle phandle;
+-	struct pci_bus *pbus;
+-	struct pci_dev *pdev = NULL;
+-	struct acpi_handle_node *node, *tmp;
+-	struct acpi_pci_root *root;
+-	LIST_HEAD(device_list);
 -
- 	pci_enable_wake(dev, target_state, wakeup);
- 
- 	error = pci_set_power_state(dev, target_state);
- 
--	if (error) {
-+	if (error)
- 		pci_enable_wake(dev, target_state, false);
--		pci_restore_ptm_state(dev);
--	}
- 
- 	return error;
- }
-@@ -2764,24 +2752,12 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
- 
 -	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
+-	 * Walk up the ACPI CA namespace until we reach a PCI root bridge.
 -	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_suspend_ptm(dev);
+-	phandle = handle;
+-	while (!acpi_is_root_bridge(phandle)) {
+-		node = kzalloc(sizeof(struct acpi_handle_node), GFP_KERNEL);
+-		if (!node)
+-			goto out;
 -
- 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
- 
- 	error = pci_set_power_state(dev, target_state);
- 
--	if (error) {
-+	if (error)
- 		pci_enable_wake(dev, target_state, false);
--		pci_restore_ptm_state(dev);
+-		INIT_LIST_HEAD(&node->node);
+-		node->handle = phandle;
+-		list_add(&node->node, &device_list);
+-
+-		status = acpi_get_parent(phandle, &phandle);
+-		if (ACPI_FAILURE(status))
+-			goto out;
 -	}
+-
+-	root = acpi_pci_find_root(phandle);
+-	if (!root)
+-		goto out;
+-
+-	pbus = root->bus;
+-
+-	/*
+-	 * Now, walk back down the PCI device tree until we return to our
+-	 * original handle. Assumes that everything between the PCI root
+-	 * bridge and the device we're looking for must be a P2P bridge.
+-	 */
+-	list_for_each_entry(node, &device_list, node) {
+-		acpi_handle hnd = node->handle;
+-		status = acpi_evaluate_integer(hnd, "_ADR", NULL, &adr);
+-		if (ACPI_FAILURE(status))
+-			goto out;
+-		dev = (adr >> 16) & 0xffff;
+-		fn  = adr & 0xffff;
+-
+-		pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
+-		if (!pdev || hnd == handle)
+-			break;
+-
+-		pbus = pdev->subordinate;
+-		pci_dev_put(pdev);
+-
+-		/*
+-		 * This function may be called for a non-PCI device that has a
+-		 * PCI parent (eg. a disk under a PCI SATA controller).  In that
+-		 * case pdev->subordinate will be NULL for the parent.
+-		 */
+-		if (!pbus) {
+-			dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+-			pdev = NULL;
++	struct acpi_device *adev = acpi_fetch_acpi_dev(handle);
++	struct acpi_device_physical_node *pn;
++	struct device *pci_dev = NULL;
++
++	if (!adev)
++		return NULL;
++
++	mutex_lock(&adev->physical_node_lock);
++
++	list_for_each_entry(pn, &acpi_dev->physical_node_list, node) {
++		if (dev_is_pci(pn->dev)) {
++			pci_dev = to_pci_dev(pn->dev);
+ 			break;
+ 		}
++			
+ 	}
+-out:
+-	list_for_each_entry_safe(node, tmp, &device_list, node)
+-		kfree(node);
  
- 	return error;
+-	return pdev;
++	mutex_unlock(&adev->physical_node_lock);
++
++	return pci_dev;
  }
--- 
-2.25.1
+ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+ 
+
+
 
