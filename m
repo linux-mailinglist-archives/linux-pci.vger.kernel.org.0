@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A885B4080
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 22:25:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68F735B4084
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 22:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiIIUZ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 16:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51266 "EHLO
+        id S232179AbiIIUZh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 16:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231347AbiIIUZY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 16:25:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36ACC9E2F0;
+        with ESMTP id S232065AbiIIUZ0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 16:25:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFE0B5E58;
         Fri,  9 Sep 2022 13:25:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E7EE6B8263B;
-        Fri,  9 Sep 2022 20:25:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CBD0C433C1;
-        Fri,  9 Sep 2022 20:25:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 28E51620D8;
+        Fri,  9 Sep 2022 20:25:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DD4C433D6;
+        Fri,  9 Sep 2022 20:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662755119;
-        bh=ObX4WKvSP1zWADS1BUQmuFfP7uJh4RJ/d8LngQndkIk=;
+        s=k20201202; t=1662755121;
+        bh=gCTTUyJFlkhMjMmtwMVdlaO1Gacl19G9VgV01rTVCXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVd1Uwt/Eww9jEhzK/ulXzQpGU2JD2gLm7mFE6ORhFDpPP79lxyjcNBlZJr+6KmkR
-         oLQVAIC2kulaOIy+KSR2kDrtq7r8poa6UrE6pY4EJ3Ch1C6aG/i3mL9V3OxafMXBP7
-         WS5a1mEaU+EbiBKUc28x9zIfdXWb0IX6YJcJIOTjsF2bJnYJfdp/8pVjoQBteq2C4G
-         Pz1N+bc7Snq0JvUOLZZg/k4izCqXXRdnZU8Qrv1UMdIPtV7tg6dRIBaQcHt8kb+uSa
-         EQ49NgSkBIgt4YVr2kDOEBQ8dKNT7HHHh87U2tM8LK+99lXhCT7fT0fU8RqGIJHj7B
-         IknN9xaahGXqA==
+        b=t7M0P30jMkBdmRH4hy74hPm+jIw/qPzmn5wLoc0x0DP0XXvxTCB9FTv0ZREty8DsB
+         5dRQUv4ngfX4cnwx7FdEiLiu3/9gfJEabW8fKuPq0fmFkEEqPHc64ggN1bzDkltdQu
+         Jf6N+/zSfusH9Ke5efmwYwoBN6/k9ZPGxNtaI6P/kGbVfMrBSE6vE2qeiS9i8VeG0Y
+         m//uHdAsQv0Ue+TBm/r1I+ap/hjmQA52hNdOqDSRu99X13IDplWATkgus62oWRR38u
+         Hidolb639QpBSSwwetsrfJulcMUybLClHRAcXgi1LZXuGqXJtU1uA/w7m7diLs5po0
+         cyTi7Lt5xAd9A==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Rajvi Jingar <rajvi.jingar@linux.intel.com>,
@@ -42,9 +42,9 @@ Cc:     Koba Ko <koba.ko@canonical.com>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v4 5/9] PCI/PTM: Move pci_ptm_info() body into its only caller
-Date:   Fri,  9 Sep 2022 15:25:01 -0500
-Message-Id: <20220909202505.314195-6-helgaas@kernel.org>
+Subject: [PATCH v4 6/9] PCI/PTM: Preserve RsvdP bits in PTM Control register
+Date:   Fri,  9 Sep 2022 15:25:02 -0500
+Message-Id: <20220909202505.314195-7-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220909202505.314195-1-helgaas@kernel.org>
 References: <20220909202505.314195-1-helgaas@kernel.org>
@@ -62,79 +62,101 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-pci_ptm_info() is simple and is only called by pci_enable_ptm().  Move the
-entire body there.  No functional change intended.
+Even though only the low 16 bits of PTM Control are currently defined, the
+register is 32 bits wide and the unused bits are RsvdP ("Reserved and
+Preserved"), so software must preserve the values of those bits when
+writing the register.
+
+Update PTM Control reads and writes to use 32-bit accesses and preserve the
+reserved bits on writes.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/ptm.c | 38 +++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+ drivers/pci/pcie/ptm.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 70a28b74e721..fc296b352fe2 100644
+index fc296b352fe2..5b8598b222b0 100644
 --- a/drivers/pci/pcie/ptm.c
 +++ b/drivers/pci/pcie/ptm.c
-@@ -9,26 +9,6 @@
- #include <linux/pci.h>
- #include "../pci.h"
- 
--static void pci_ptm_info(struct pci_dev *dev)
--{
--	char clock_desc[8];
--
--	switch (dev->ptm_granularity) {
--	case 0:
--		snprintf(clock_desc, sizeof(clock_desc), "unknown");
--		break;
--	case 255:
--		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
--		break;
--	default:
--		snprintf(clock_desc, sizeof(clock_desc), "%uns",
--			 dev->ptm_granularity);
--		break;
--	}
--	pci_info(dev, "PTM enabled%s, %s granularity\n",
--		 dev->ptm_root ? " (root)" : "", clock_desc);
--}
--
+@@ -12,14 +12,14 @@
  static void __pci_disable_ptm(struct pci_dev *dev)
  {
  	u16 ptm = dev->ptm_cap;
-@@ -213,16 +193,32 @@ static int __pci_enable_ptm(struct pci_dev *dev)
- int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
- {
- 	int rc;
-+	char clock_desc[8];
+-	u16 ctrl;
++	u32 ctrl;
  
- 	rc = __pci_enable_ptm(dev);
- 	if (rc)
- 		return rc;
+ 	if (!ptm)
+ 		return;
  
- 	dev->ptm_enabled = 1;
--	pci_ptm_info(dev);
- 
- 	if (granularity)
- 		*granularity = dev->ptm_granularity;
-+
-+	switch (dev->ptm_granularity) {
-+	case 0:
-+		snprintf(clock_desc, sizeof(clock_desc), "unknown");
-+		break;
-+	case 255:
-+		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
-+		break;
-+	default:
-+		snprintf(clock_desc, sizeof(clock_desc), "%uns",
-+			 dev->ptm_granularity);
-+		break;
-+	}
-+	pci_info(dev, "PTM enabled%s, %s granularity\n",
-+		 dev->ptm_root ? " (root)" : "", clock_desc);
-+
- 	return 0;
+-	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
++	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
+ 	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
+-	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
++	pci_write_config_dword(dev, ptm + PCI_PTM_CTRL, ctrl);
  }
- EXPORT_SYMBOL(pci_enable_ptm);
+ 
+ /**
+@@ -41,7 +41,7 @@ void pci_save_ptm_state(struct pci_dev *dev)
+ {
+ 	u16 ptm = dev->ptm_cap;
+ 	struct pci_cap_saved_state *save_state;
+-	u16 *cap;
++	u32 *cap;
+ 
+ 	if (!ptm)
+ 		return;
+@@ -50,15 +50,15 @@ void pci_save_ptm_state(struct pci_dev *dev)
+ 	if (!save_state)
+ 		return;
+ 
+-	cap = (u16 *)&save_state->cap.data[0];
+-	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
++	cap = (u32 *)&save_state->cap.data[0];
++	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, cap);
+ }
+ 
+ void pci_restore_ptm_state(struct pci_dev *dev)
+ {
+ 	u16 ptm = dev->ptm_cap;
+ 	struct pci_cap_saved_state *save_state;
+-	u16 *cap;
++	u32 *cap;
+ 
+ 	if (!ptm)
+ 		return;
+@@ -67,8 +67,8 @@ void pci_restore_ptm_state(struct pci_dev *dev)
+ 	if (!save_state)
+ 		return;
+ 
+-	cap = (u16 *)&save_state->cap.data[0];
+-	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
++	cap = (u32 *)&save_state->cap.data[0];
++	pci_write_config_dword(dev, ptm + PCI_PTM_CTRL, *cap);
+ }
+ 
+ /*
+@@ -112,7 +112,7 @@ void pci_ptm_init(struct pci_dev *dev)
+ 		return;
+ 
+ 	dev->ptm_cap = ptm;
+-	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_PTM, sizeof(u16));
++	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_PTM, sizeof(u32));
+ 
+ 	pci_read_config_dword(dev, ptm + PCI_PTM_CAP, &cap);
+ 	dev->ptm_granularity = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+@@ -170,7 +170,10 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ 			return -EINVAL;
+ 	}
+ 
+-	ctrl = PCI_PTM_CTRL_ENABLE;
++	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
++
++	ctrl |= PCI_PTM_CTRL_ENABLE;
++	ctrl &= ~PCI_PTM_GRANULARITY_MASK;
+ 	ctrl |= dev->ptm_granularity << 8;
+ 	if (dev->ptm_root)
+ 		ctrl |= PCI_PTM_CTRL_ROOT;
 -- 
 2.25.1
 
