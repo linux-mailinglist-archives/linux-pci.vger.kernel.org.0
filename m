@@ -2,51 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA815B3F29
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 20:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B86435B4001
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 21:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiIIS7S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 14:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        id S232010AbiIITmE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 15:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiIIS7Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 14:59:16 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 09 Sep 2022 11:59:14 PDT
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.148])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4893A134C25
-        for <linux-pci@vger.kernel.org>; Fri,  9 Sep 2022 11:59:13 -0700 (PDT)
-Received: (wp-smtpd smtp.tlen.pl 30323 invoked from network); 9 Sep 2022 20:52:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1662749551; bh=rhc+jh270C6y48dYxDcsrTYB2Su6SjfOeGKqnqcbuxM=;
-          h=From:To:Cc:Subject;
-          b=EcMbmoAfRb0BLxxLWXTvPuBPCFAcDSLnwUK9esK3ofezJyq5X4mf7l40X6QBtA0eG
-           jRr8r0IZggaIw4u56Cbx7wDxg77rZWkUpbM2n6pcB22niYgcZQEH+Y9Fxri2tUA7af
-           +v3BAwqW3OOt0y2/6B9oCPDIptGcaZzjdq0b7EhQ=
-Received: from aafh243.neoplus.adsl.tpnet.pl (HELO localhost.localdomain) (mat.jonczyk@o2.pl@[83.4.137.243])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with SMTP
-          for <linux-kernel@vger.kernel.org>; 9 Sep 2022 20:52:30 +0200
-From:   =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
+        with ESMTP id S231966AbiIITlo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 15:41:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C1D14A52D;
+        Fri,  9 Sep 2022 12:38:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 491B7B82607;
+        Fri,  9 Sep 2022 19:38:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8206C433D6;
+        Fri,  9 Sep 2022 19:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662752331;
+        bh=FfmmzxqN9ZwNiKXNw6xZkYm5SglV5tc8WW01IPrgjjE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=GBl8qdIiDq7a6c2Lbkg2rb7uclYEGiTF7VTz6I1qIVqGwnpo4N4s827gGekGOdia3
+         w6cYxtJewhn1XW4bND8xj+uTgYKx5SHf9XW3kYFPWHL6czBduNxZI2SoyCiUEHnYQD
+         oPP4vW5prswPdAVBAqQEyJzJIBCdITuSW1sTNJC0qVTHXO16w9ofTZPqXsnKVdr2Pl
+         VS/p4JPb2iqcBqQV/4oZvuApMWceC34WCbS+V+FMhdpwmzzhf4GU/sXgzsSlieALzh
+         VOcbmZwEk0lx1BiZvlfC8/4c1DTfLg4p5nkrAmw3ZQQ64N+QNXLEXqehiOwJ9cxd5R
+         6z+yPL8ou8W2g==
+Date:   Fri, 9 Sep 2022 14:38:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc:     vkuznets@redhat.com, Deepak Rawat <drawat.floss@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Helge Deller <deller@gmx.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH] acpi,pci: handle duplicate IRQ routing entries returned from _PRT
-Date:   Fri,  9 Sep 2022 20:51:52 +0200
-Message-Id: <20220909185152.1102948-1-mat.jonczyk@o2.pl>
-X-Mailer: git-send-email 2.25.1
+        Easwar Hariharan <easwar.hariharan@microsoft.com>,
+        Colin Ian King <colin.i.king@googlemail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "open list:DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE" 
+        <linux-hyperv@vger.kernel.org>,
+        "open list:DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] pci_ids: Add the various Microsoft PCI device IDs
+Message-ID: <20220909193849.GA309868@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 81955f944ecd7771366ceed4b99a02a3
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [AXMU]                               
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1662749425-3037-3-git-send-email-eahariha@linux.microsoft.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,253 +73,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On some platforms, the ACPI _PRT function returns duplicate interrupt
-routing entries. Linux uses the first matching entry, but sometimes the
-second matching entry contains the correct interrupt vector.
+Please follow the PCI subject line conventions.  Discover it with
+"git log --oneline include/linux/pci_ids.h".
 
-This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
-SMBus controller. This controller was nonfunctional unless its interrupt
-usage was disabled (using the "disable_features=0x10" module parameter).
+On Fri, Sep 09, 2022 at 11:50:25AM -0700, Easwar Hariharan wrote:
+> From: Easwar Hariharan <easwar.hariharan@microsoft.com>
+> 
 
-After investigation, it turned out that the driver was using an
-incorrect interrupt vector: in lspci output for this device there was:
-        Interrupt: pin B routed to IRQ 19
-but after running i2cdetect (without using any i2c-i801 module
-parameters) the following was logged to dmesg:
+Needs a commit log, even if it is nothing more than the subject line.
 
-        [...]
-        [  132.248657] i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
-        [  132.248669] i801_smbus 0000:00:1f.3: Transaction timeout
-        [  132.452649] i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
-        [  132.452662] i801_smbus 0000:00:1f.3: Transaction timeout
-        [  132.467682] irq 17: nobody cared (try booting with the "irqpoll" option)
+Also read the top of include/linux/pci_ids.h, because it looks like
+some of these are only used in one driver and hence do not need to be
+in pci_ids.h.
 
-The existence of duplicate entries returned from _PRT was confirmed in
-the ACPI DSTD table, which contains:
-
-	Name (API0, Package (0x1D)
-	{
-		Package (0x04)
-		{
-		0x001FFFFF,
-		0x01,
-		0x00,
-		0x13
-		},
-
-		Package (0x04)
-		{
-		0x001FFFFF,
-		0x00,
-		0x00,
-		0x10
-		},
-
-		Package (0x04)
-		{
-		0x001FFFFF,
-		0x01,
-		0x00,
-		0x11
-		},
-
-		[...]
-	})
-	Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
-	{
-		Local0 = API0 /* \_SB_.PCI0.API0 */
-		If (!GPIC)
-		{
-		Local0 = PIC0 /* \_SB_.PCI0.PIC0 */
-		}
-
-		Return (Local0)
-	}
-
-Linux used the first matching entry, which was incorrect. In order not
-to disrupt existing systems, use the first matching entry unless the
-pci=prtlast kernel parameter is used or a Dell Latitude E6500 laptop is
-detected.
-
-Disclaimer: there is nothing really interesting connected to the SMBus
-controller on this laptop, but this change may help other systems.
-
-Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
----
- .../admin-guide/kernel-parameters.txt         |  8 ++
- drivers/acpi/pci_irq.c                        | 89 ++++++++++++++++++-
- drivers/pci/pci.c                             |  9 ++
- 3 files changed, 102 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 426fa892d311..2ff351db10b8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4190,6 +4190,14 @@
- 				bridge windows. This is the default on modern
- 				hardware. If you need to use this, please report
- 				a bug to <linux-pci@vger.kernel.org>.
-+		prtlast		If the _PRT ACPI method returns duplicate
-+				IRQ routing entries, use the last matching entry
-+				for a given device. If the platform may be
-+				affected by this problem, an error message is
-+				printed to dmesg - this parameter is
-+				ineffective otherwise. If you need to use this,
-+				please report a bug to
-+				<linux-pci@vger.kernel.org>.
- 		routeirq	Do IRQ routing for all PCI devices.
- 				This is normally done in pci_enable_device(),
- 				so this option is a temporary workaround
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index 08e15774fb9f..5cead840de0b 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -196,12 +196,73 @@ static int acpi_pci_irq_check_entry(acpi_handle handle, struct pci_dev *dev,
- 	return 0;
- }
- 
-+extern bool pci_prtlast;
-+
-+static const struct dmi_system_id pci_prtlast_dmi[] = {
-+	{
-+		.ident = "Dell Latitude E6500",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude E6500"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static bool acpi_pci_prt_use_last(struct acpi_prt_entry *curr,
-+				  const char *current_source,
-+				  const char *previous_match_source,
-+				  int previous_match_index)
-+{
-+	bool ret;
-+	const struct dmi_system_id *id;
-+	const int msg_bufsize = 512;
-+	char *msg = kmalloc(msg_bufsize, GFP_KERNEL);
-+
-+	if (!msg)
-+		return false;
-+
-+	snprintf(msg, msg_bufsize,
-+		 FW_BUG
-+		 "ACPI _PRT returned duplicate IRQ routing entries for PCI device "
-+		 "%04x:%02x:%02x[INT%c]: %s[%d] and %s[%d]. ",
-+		 curr->id.segment, curr->id.bus, curr->id.device,
-+		 pin_name(curr->pin),
-+		 previous_match_source, previous_match_index,
-+		 current_source, curr->index);
-+
-+	id = dmi_first_match(pci_prtlast_dmi);
-+
-+	if (id) {
-+		pr_warn("%s%s detected, using last entry.\n",
-+			msg, id->ident);
-+
-+		ret = true;
-+	} else if (pci_prtlast) {
-+		pr_err(
-+"%sUsing last entry, as directed on the command line. If this helps, report a bug.\n",
-+		       msg);
-+
-+		ret = true;
-+	} else {
-+		pr_err("%sIf necessary, use \"pci=prtlast\" and report a bug.\n",
-+		       msg);
-+
-+		ret = false;
-+	}
-+
-+	kfree(msg);
-+	return ret;
-+}
-+
- static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
--			  int pin, struct acpi_prt_entry **entry_ptr)
-+			  int pin, struct acpi_prt_entry **entry_ptr_out)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_pci_routing_table *entry;
-+	struct acpi_prt_entry *match = NULL;
-+	const char *match_source = NULL;
- 	acpi_handle handle = NULL;
- 
- 	if (dev->bus->bridge)
-@@ -219,13 +280,33 @@ static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
- 
- 	entry = buffer.pointer;
- 	while (entry && (entry->length > 0)) {
--		if (!acpi_pci_irq_check_entry(handle, dev, pin,
--						 entry, entry_ptr))
--			break;
-+		struct acpi_prt_entry *curr;
-+
-+		if (!acpi_pci_irq_check_entry(handle, dev, pin, entry, &curr)) {
-+			if (!match) {
-+				// first match
-+				match = curr;
-+				match_source = entry->source;
-+			} else if (!acpi_pci_prt_use_last(curr,
-+							  entry->source,
-+							  match_source,
-+							  match->index)) {
-+				// duplicates found, use first entry
-+				kfree(curr);
-+			} else {
-+				// duplicates found, use last entry
-+				kfree(match);
-+				match = curr;
-+				match_source = entry->source;
-+			}
-+		}
-+
- 		entry = (struct acpi_pci_routing_table *)
- 		    ((unsigned long)entry + entry->length);
- 	}
- 
-+	*entry_ptr_out = match;
-+
- 	kfree(buffer.pointer);
- 	return 0;
- }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 95bc329e74c0..a14a2e4e4197 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -155,6 +155,11 @@ static bool pci_bridge_d3_disable;
- /* Force bridge_d3 for all PCIe ports */
- static bool pci_bridge_d3_force;
- 
-+#ifdef CONFIG_ACPI
-+/* Use the last matching entry from the table returned by the _PRT ACPI method. */
-+bool pci_prtlast;
-+#endif
-+
- static int __init pcie_port_pm_setup(char *str)
- {
- 	if (!strcmp(str, "off"))
-@@ -6896,6 +6901,10 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+#ifdef CONFIG_ACPI
-+			} else if (!strncmp(str, "prtlast", 7)) {
-+				pci_prtlast = true;
-+#endif
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-
-base-commit: 7e18e42e4b280c85b76967a9106a13ca61c16179
--- 
-2.25.1
-
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@microsoft.com>
+> ---
+>  drivers/gpu/drm/hyperv/hyperv_drm_drv.c         | 2 +-
+>  drivers/net/ethernet/microsoft/mana/gdma.h      | 3 ---
+>  drivers/net/ethernet/microsoft/mana/gdma_main.c | 6 +++---
+>  drivers/video/fbdev/hyperv_fb.c                 | 4 ++--
+>  include/linux/pci_ids.h                         | 4 +++-
+>  5 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> index f84d397..24c2def 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> @@ -51,7 +51,7 @@ static void hyperv_pci_remove(struct pci_dev *pdev)
+>  static const struct pci_device_id hyperv_pci_tbl[] = {
+>  	{
+>  		.vendor = PCI_VENDOR_ID_MICROSOFT,
+> -		.device = PCI_DEVICE_ID_HYPERV_VIDEO,
+> +		.device = PCI_DEVICE_ID_MICROSOFT_HYPERV_VIDEO,
+>  	},
+>  	{ /* end of list */ }
+>  };
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma.h b/drivers/net/ethernet/microsoft/mana/gdma.h
+> index 4a6efe6..9d3a9f7 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma.h
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma.h
+> @@ -476,9 +476,6 @@ struct gdma_eqe {
+>  
+>  #define GDMA_SRIOV_REG_CFG_BASE_OFF	0x108
+>  
+> -#define MANA_PF_DEVICE_ID 0x00B9
+> -#define MANA_VF_DEVICE_ID 0x00BA
+> -
+>  struct gdma_posted_wqe_info {
+>  	u32 wqe_size_in_bu;
+>  };
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 00d8198..18cf168 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -1333,7 +1333,7 @@ static void mana_gd_cleanup(struct pci_dev *pdev)
+>  
+>  static bool mana_is_pf(unsigned short dev_id)
+>  {
+> -	return dev_id == MANA_PF_DEVICE_ID;
+> +	return dev_id == PCI_DEVICE_ID_MICROSOFT_MANA_PF;
+>  }
+>  
+>  static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+> @@ -1466,8 +1466,8 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
+>  }
+>  
+>  static const struct pci_device_id mana_id_table[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, MANA_PF_DEVICE_ID) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, MANA_VF_DEVICE_ID) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, PCI_DEVICE_ID_MICROSOFT_MANA_PF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, PCI_DEVICE_ID_MICROSOFT_MANA_VF) },
+>  	{ }
+>  };
+>  
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> index b58b445..118e244 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -997,7 +997,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+>  
+>  	if (!gen2vm) {
+>  		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+> -			PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+> +			PCI_DEVICE_ID_MICROSOFT_HYPERV_VIDEO, NULL);
+>  		if (!pdev) {
+>  			pr_err("Unable to find PCI Hyper-V video\n");
+>  			return -ENODEV;
+> @@ -1311,7 +1311,7 @@ static int hvfb_resume(struct hv_device *hdev)
+>  static const struct pci_device_id pci_stub_id_table[] = {
+>  	{
+>  		.vendor      = PCI_VENDOR_ID_MICROSOFT,
+> -		.device      = PCI_DEVICE_ID_HYPERV_VIDEO,
+> +		.device      = PCI_DEVICE_ID_MICROSOFT_HYPERV_VIDEO,
+>  	},
+>  	{ /* end of list */ }
+>  };
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 15b49e6..fe3517f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2080,7 +2080,9 @@
+>  #define PCI_DEVICE_ID_VT1724		0x1724
+>  
+>  #define PCI_VENDOR_ID_MICROSOFT		0x1414
+> -#define PCI_DEVICE_ID_HYPERV_VIDEO	0x5353
+> +#define PCI_DEVICE_ID_MICROSOFT_HYPERV_VIDEO	0x5353
+> +#define PCI_DEVICE_ID_MICROSOFT_MANA_PF  	0x00B9
+> +#define PCI_DEVICE_ID_MICROSOFT_MANA_VF  	0x00BA
+>  
+>  #define PCI_VENDOR_ID_OXSEMI		0x1415
+>  #define PCI_DEVICE_ID_OXSEMI_12PCI840	0x8403
+> -- 
+> 1.8.3.1
+> 
