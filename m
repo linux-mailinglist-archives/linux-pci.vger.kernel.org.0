@@ -2,46 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AD6B5B431B
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 01:38:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A75AA5B4328
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 01:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbiIIXiw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 19:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53300 "EHLO
+        id S230070AbiIIXpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 19:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbiIIXiv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 19:38:51 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6452BAD9AD;
-        Fri,  9 Sep 2022 16:38:50 -0700 (PDT)
+        with ESMTP id S229986AbiIIXpF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 19:45:05 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7B64F3B9;
+        Fri,  9 Sep 2022 16:45:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662766730; x=1694302730;
+  t=1662767102; x=1694303102;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=UM+CsFuyHR7XmPwPWS7xh878miaRhvzSVRFt/J7CgIA=;
-  b=a/+OxBl55lv8elEXHX4firw/ySj/VujLIOQN/l2FA0Sc5cSKYNupwyBt
-   eMWwSf3Fef/A9EqqKao14XUjUNh3dViI56JrFKsaBajTHO2WSXXWMeOi9
-   BzNFTwzUfXDSre8g/8GDxCeUKSqeTBakx/deSwGd58Y9ZdaJy1+UoX+Fh
-   2880PYSF1fOEFK/PEzSpqQaUbngcusexRqlJ/VBSf2xXU20JQXi3HgVU3
-   kDh2cT90jJy5YoTgrIjRe/65mhx6/+BbUJu0iNxXATUKpOthwaVZn7lOu
-   i2T0b9s7YFKhSseqi7whi+lLaV/JJs+UOcbJXvGJJw49B52VPu5WkeOW2
+  bh=qibUas8M4LKstHIxFpwhzFLKeKh7lGdHjYN36A8LgWY=;
+  b=EizHyk2OHTmVCPUYmfPcFN6hLKeuFP29LHPCVxiDiAyZX2anCR4FcIpD
+   jbg27NPcvkDkmPjEMVn1ZI1JfJ5MwK5jKQ0av29evw1EwvJF0ve005nok
+   4UmSX6W1XrSqnqWTKllA3dQNLZ7IcltoiPOKLSyHC0blxVPvfpK/igwG/
+   Bo04GrnpWgtA30n7dyjVAIcBsa5CWZ1PQ4RpC0bOQXmEpf3Z7/Lf7rOYH
+   BOurE2qXMkIVQjK47umiJCptbiNk6lRrC3GoWYRoiA2DyQwDHYWJPXgJs
+   n4cw2nkIShYLx2xtCzBX0rks4m6oAjjt3RqXktmFjv75njjmXG3wu3ubE
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10465"; a="361545041"
+X-IronPort-AV: E=McAfee;i="6500,9779,10465"; a="359316113"
 X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
-   d="scan'208";a="361545041"
+   d="scan'208";a="359316113"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:38:49 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:44:55 -0700
 X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
-   d="scan'208";a="677363744"
+   d="scan'208";a="677365338"
 Received: from gtpedreg-mobl.amr.corp.intel.com (HELO [10.209.57.19]) ([10.209.57.19])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:38:42 -0700
-Message-ID: <21de0e12-5e3d-c27a-d857-23ad3e83dd1c@linux.intel.com>
-Date:   Fri, 9 Sep 2022 16:38:42 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 16:44:54 -0700
+Message-ID: <e64438cf-16f1-227d-188a-56d6e7fea47b@linux.intel.com>
+Date:   Fri, 9 Sep 2022 16:44:53 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v4 2/9] PCI/PTM: Add pci_upstream_ptm() helper
+Subject: Re: [PATCH v4 4/9] PCI/PTM: Add pci_suspend_ptm() and
+ pci_resume_ptm()
 Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
@@ -53,10 +54,10 @@ Cc:     Koba Ko <koba.ko@canonical.com>,
         linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
 References: <20220909202505.314195-1-helgaas@kernel.org>
- <20220909202505.314195-3-helgaas@kernel.org>
+ <20220909202505.314195-5-helgaas@kernel.org>
 From:   Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220909202505.314195-3-helgaas@kernel.org>
+In-Reply-To: <20220909202505.314195-5-helgaas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -71,102 +72,239 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 9/9/22 1:24 PM, Bjorn Helgaas wrote:
+On 9/9/22 1:25 PM, Bjorn Helgaas wrote:
 > From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> PTM requires an unbroken path of PTM-supporting devices between the PTM
-> Root and the ultimate PTM Requester, but if a Switch supports PTM, only the
-> Upstream Port can have a PTM Capability; the Downstream Ports do not.
+> We disable PTM during suspend because that allows some Root Ports to enter
+> lower-power PM states, which means we also need to disable PTM for all
+> downstream devices.  Add pci_suspend_ptm() and pci_resume_ptm() for this
+> purpose.
 > 
-> Previously we copied the PTM configuration from the Switch Upstream Port to
-> the Downstream Ports so dev->ptm_enabled for any device implied that all
-> the upstream devices support PTM.
+> pci_enable_ptm() and pci_disable_ptm() are for drivers to use to enable or
+> disable PTM.  They use dev->ptm_enabled to keep track of whether PTM should
+> be enabled.
 > 
-> Instead of making it look like Downstream Ports have their own PTM config,
-> add pci_upstream_ptm(), which returns the upstream device that has a PTM
-> Capability (either a Root Port or a Switch Upstream Port).
+> pci_suspend_ptm() and pci_resume_ptm() are PCI core-internal functions to
+> temporarily disable PTM during suspend and (depending on dev->ptm_enabled)
+> re-enable PTM during resume.
+> 
+> Enable/disable/suspend/resume all use internal __pci_enable_ptm() and
+> __pci_disable_ptm() functions that only update the PTM Control register.
+> Outline:
+> 
+>   pci_enable_ptm(struct pci_dev *dev)
+>   {
+>      __pci_enable_ptm(dev);
+>      dev->ptm_enabled = 1;
+>      pci_ptm_info(dev);
+>   }
+> 
+>   pci_disable_ptm(struct pci_dev *dev)
+>   {
+>      if (dev->ptm_enabled) {
+>        __pci_disable_ptm(dev);
+>        dev->ptm_enabled = 0;
+>      }
+>   }
+> 
+>   pci_suspend_ptm(struct pci_dev *dev)
+>   {
+>      if (dev->ptm_enabled)
+>        __pci_disable_ptm(dev);
+>   }
+> 
+>   pci_resume_ptm(struct pci_dev *dev)
+>   {
+>      if (dev->ptm_enabled)
+>        __pci_enable_ptm(dev);
+>   }
+> 
+> Nothing currently calls pci_resume_ptm(); the suspend path saves the PTM
+
+Is semicolon intentional ?
+
+> state before disabling PTM, so the PTM state restore in the resume path
+> implicitly re-enables it.  A future change will use pci_resume_ptm() to fix
+> some problems with this approach.
 > 
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/pci/pcie/ptm.c | 39 +++++++++++++++++++++++++--------------
->  1 file changed, 25 insertions(+), 14 deletions(-)
+>  drivers/pci/pci.c      |  4 +--
+>  drivers/pci/pci.h      |  6 ++--
+>  drivers/pci/pcie/ptm.c | 71 +++++++++++++++++++++++++++++++++---------
+>  include/linux/pci.h    |  2 ++
+>  4 files changed, 65 insertions(+), 18 deletions(-)
 > 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 95bc329e74c0..83818f81577d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2714,7 +2714,7 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
+>  	 * lower-power idle state as a whole.
+>  	 */
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> -		pci_disable_ptm(dev);
+> +		pci_suspend_ptm(dev);
+>  
+>  	pci_enable_wake(dev, target_state, wakeup);
+>  
+> @@ -2772,7 +2772,7 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
+>  	 * lower-power idle state as a whole.
+>  	 */
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> -		pci_disable_ptm(dev);
+> +		pci_suspend_ptm(dev);
+>  
+>  	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 785f31086313..ce4a277e3f41 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -507,11 +507,13 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
+>  #ifdef CONFIG_PCIE_PTM
+>  void pci_save_ptm_state(struct pci_dev *dev);
+>  void pci_restore_ptm_state(struct pci_dev *dev);
+> -void pci_disable_ptm(struct pci_dev *dev);
+> +void pci_suspend_ptm(struct pci_dev *dev);
+> +void pci_resume_ptm(struct pci_dev *dev);
+>  #else
+>  static inline void pci_save_ptm_state(struct pci_dev *dev) { }
+>  static inline void pci_restore_ptm_state(struct pci_dev *dev) { }
+> -static inline void pci_disable_ptm(struct pci_dev *dev) { }
+> +static inline void pci_suspend_ptm(struct pci_dev *dev) { }
+> +static inline void pci_resume_ptm(struct pci_dev *dev) { }
+>  #endif
+>  
+>  unsigned long pci_cardbus_resource_alignment(struct resource *);
 > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> index 85382c135885..0df6cdfe38b4 100644
+> index ba1d50c965fa..70a28b74e721 100644
 > --- a/drivers/pci/pcie/ptm.c
 > +++ b/drivers/pci/pcie/ptm.c
-> @@ -76,6 +76,29 @@ void pci_restore_ptm_state(struct pci_dev *dev)
->  	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
+> @@ -29,7 +29,7 @@ static void pci_ptm_info(struct pci_dev *dev)
+>  		 dev->ptm_root ? " (root)" : "", clock_desc);
 >  }
 >  
-> +/*
-> + * If the next upstream device supports PTM, return it; otherwise return
-> + * NULL.  PTM Messages are local, so both link partners must support it.
+> -void pci_disable_ptm(struct pci_dev *dev)
+> +static void __pci_disable_ptm(struct pci_dev *dev)
+>  {
+>  	u16 ptm = dev->ptm_cap;
+>  	u16 ctrl;
+> @@ -42,6 +42,21 @@ void pci_disable_ptm(struct pci_dev *dev)
+>  	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
+>  }
+>  
+> +/**
+> + * pci_disable_ptm() - Disable Precision Time Measurement
+> + * @dev: PCI device
+> + *
+> + * Disable Precision Time Measurement for @dev.
 > + */
-> +static struct pci_dev *pci_upstream_ptm(struct pci_dev *dev)
+> +void pci_disable_ptm(struct pci_dev *dev)
 > +{
-> +	struct pci_dev *ups = pci_upstream_bridge(dev);
+> +	if (dev->ptm_enabled) {
+> +		__pci_disable_ptm(dev);
+> +		dev->ptm_enabled = 0;
+> +	}
+> +}
+> +EXPORT_SYMBOL(pci_disable_ptm);
 > +
-> +	/*
-> +	 * Switch Downstream Ports are not permitted to have a PTM
-> +	 * capability; their PTM behavior is controlled by the Upstream
-> +	 * Port (PCIe r5.0, sec 7.9.16), so if the upstream bridge is a
-> +	 * Switch Downstream Port, look up one more level.
-> +	 */
-> +	if (ups && pci_pcie_type(ups) == PCI_EXP_TYPE_DOWNSTREAM)
-> +		ups = pci_upstream_bridge(ups);
-> +
-> +	if (ups && ups->ptm_cap)
-> +		return ups;
-> +
-> +	return NULL;
+>  void pci_save_ptm_state(struct pci_dev *dev)
+>  {
+>  	u16 ptm = dev->ptm_cap;
+> @@ -151,18 +166,8 @@ void pci_ptm_init(struct pci_dev *dev)
+>  		pci_enable_ptm(dev, NULL);
+>  }
+>  
+> -/**
+> - * pci_enable_ptm() - Enable Precision Time Measurement
+> - * @dev: PCI device
+> - * @granularity: pointer to return granularity
+> - *
+> - * Enable Precision Time Measurement for @dev.  If successful and
+> - * @granularity is non-NULL, return the Effective Granularity.
+> - *
+> - * Return: zero if successful, or -EINVAL if @dev lacks a PTM Capability or
+> - * is not a PTM Root and lacks an upstream path of PTM-enabled devices.
+> - */
+> -int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+> +/* Enable PTM in the Control register if possible */
+> +static int __pci_enable_ptm(struct pci_dev *dev)
+>  {
+>  	u16 ptm = dev->ptm_cap;
+>  	struct pci_dev *ups;
+> @@ -191,8 +196,29 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+>  		ctrl |= PCI_PTM_CTRL_ROOT;
+>  
+>  	pci_write_config_dword(dev, ptm + PCI_PTM_CTRL, ctrl);
+> +	return 0;
 > +}
 > +
->  void pci_ptm_init(struct pci_dev *dev)
->  {
->  	u16 ptm;
-> @@ -95,19 +118,6 @@ void pci_ptm_init(struct pci_dev *dev)
->  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
->  		return;
->  
-> -	/*
-> -	 * Switch Downstream Ports are not permitted to have a PTM
-> -	 * capability; their PTM behavior is controlled by the Upstream
-> -	 * Port (PCIe r5.0, sec 7.9.16).
-> -	 */
-> -	ups = pci_upstream_bridge(dev);
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-> -	    ups && ups->ptm_enabled) {
-> -		dev->ptm_granularity = ups->ptm_granularity;
-> -		dev->ptm_enabled = 1;
-> -		return;
-> -	}
+> +/**
+> + * pci_enable_ptm() - Enable Precision Time Measurement
+> + * @dev: PCI device
+> + * @granularity: pointer to return granularity
+> + *
+> + * Enable Precision Time Measurement for @dev.  If successful and
+> + * @granularity is non-NULL, return the Effective Granularity.
+> + *
+> + * Return: zero if successful, or -EINVAL if @dev lacks a PTM Capability or
+> + * is not a PTM Root and lacks an upstream path of PTM-enabled devices.
+> + */
+> +int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+> +{
+> +	int rc;
+> +
+> +	rc = __pci_enable_ptm(dev);
+> +	if (rc)
+> +		return rc;
+> +
+>  	dev->ptm_enabled = 1;
 > -
->  	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
->  	if (!ptm)
->  		return;
-> @@ -124,6 +134,7 @@ void pci_ptm_init(struct pci_dev *dev)
->  	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
->  	 * furthest upstream Time Source as the PTM Root.
->  	 */
-> +	ups = pci_upstream_ptm(dev);
->  	if (ups && ups->ptm_enabled) {
->  		ctrl = PCI_PTM_CTRL_ENABLE;
->  		if (ups->ptm_granularity == 0)
-> @@ -173,7 +184,7 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
->  	 * associate the endpoint with a time source.
->  	 */
->  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT) {
-> -		ups = pci_upstream_bridge(dev);
-> +		ups = pci_upstream_ptm(dev);
->  		if (!ups || !ups->ptm_enabled)
->  			return -EINVAL;
+>  	pci_ptm_info(dev);
 >  
+>  	if (granularity)
+> @@ -201,6 +227,23 @@ int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+>  }
+>  EXPORT_SYMBOL(pci_enable_ptm);
+>  
+> +/*
+> + * Disable PTM, but preserve dev->ptm_enabled so we silently re-enable it on
+> + * resume if necessary.
+> + */
+> +void pci_suspend_ptm(struct pci_dev *dev)
+> +{
+> +	if (dev->ptm_enabled)
+> +		__pci_disable_ptm(dev);
+> +}
+> +
+> +/* If PTM was enabled before suspend, re-enable it when resuming */
+> +void pci_resume_ptm(struct pci_dev *dev)
+> +{
+> +	if (dev->ptm_enabled)
+> +		__pci_enable_ptm(dev);
+> +}
+> +
+>  bool pcie_ptm_enabled(struct pci_dev *dev)
+>  {
+>  	if (!dev)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 54be939023a3..cb5f796e3319 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1678,10 +1678,12 @@ bool pci_ats_disabled(void);
+>  
+>  #ifdef CONFIG_PCIE_PTM
+>  int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
+> +void pci_disable_ptm(struct pci_dev *dev);
+>  bool pcie_ptm_enabled(struct pci_dev *dev);
+>  #else
+>  static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
+>  { return -EINVAL; }
+> +static inline void pci_disable_ptm(struct pci_dev *dev) { }
+>  static inline bool pcie_ptm_enabled(struct pci_dev *dev)
+>  { return false; }
+>  #endif
 
 -- 
 Sathyanarayanan Kuppuswamy
