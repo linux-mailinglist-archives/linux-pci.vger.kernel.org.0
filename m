@@ -2,187 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABE5D5B3A58
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 16:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24C5A5B3B08
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Sep 2022 16:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbiIIOEf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Sep 2022 10:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        id S232211AbiIIOrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Sep 2022 10:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232233AbiIIOEJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 10:04:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E8914A500
-        for <linux-pci@vger.kernel.org>; Fri,  9 Sep 2022 07:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662732102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mmurUuPfY4CSsGXMopu3kXzx5e5l7+stCxGfg5MZbeg=;
-        b=hsm99hw1afdrSnTKRdeuLEzm4lXmpJvxctp6d6Eap0S9/bk2F5P2Bb3YZ5lFNQO+PCJVz/
-        Ksra4to1tgw3th0fKy2W6AKtFGITFa2XLjGRvYVRDIWT/xE4zO8/Vfu7d+ag+14DACmjKV
-        AotnPUWEgPlupJfxuWjtC3gwxiuKNkA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-9-SVJ5xQihOImaPiO2eWI_5w-1; Fri, 09 Sep 2022 10:01:42 -0400
-X-MC-Unique: SVJ5xQihOImaPiO2eWI_5w-1
-Received: by mail-ed1-f72.google.com with SMTP id y12-20020a056402358c00b00448898f1c33so1336554edc.7
-        for <linux-pci@vger.kernel.org>; Fri, 09 Sep 2022 07:01:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=mmurUuPfY4CSsGXMopu3kXzx5e5l7+stCxGfg5MZbeg=;
-        b=BWnoXqVj3pTCj8Fdi1+AKQnTXrIFOCEdLhxXbNrJdApYybTm9L+Ax4POIBpDUoqaQW
-         XfuL+89KYSvBt9M94JfpmODJ7zqAoWS2cw1wNN/rV0Hnd5DXihnArS4VBYq8uX3teF6u
-         2QtGGZ0fGhacYVfTRXuyVyILeiodtKn7jntDNm7rwUKv1w6Hd5+pkxYjaM9iKLp0zgB7
-         RZVPMSgMDthJhWtLnhb6EIbViO0jaZxkf8eiyf7Y8OX4c+itHZVoeaBAIvaDz3wsHnfg
-         mXEUyxUc8xnwmjj7xOYL4i9jta0566XUoJvTZODrlP0MzBSSjNmtqb1t6zDYniecU6y5
-         0/Yg==
-X-Gm-Message-State: ACgBeo3tW703+/bVG66vKi/Zlqg6OslhBpDPh+yeA39RA2f1jzHJ0tni
-        vHcHSxPO8K7Ze9tDY+ZPAscTvnu5uLMW6AvtiZ0Njm8izpzglQLCh9Fah6gk8hk3jigOqVBwIpP
-        srPF2830lYeIBO2LWkKSb9zUvGuwdGqqzD5QMIWIJkJWGKpzlwSY4vJ1ZeeK9ThqWyTBjVamx
-X-Received: by 2002:a17:906:846b:b0:770:82e5:1519 with SMTP id hx11-20020a170906846b00b0077082e51519mr9690617ejc.221.1662732100745;
-        Fri, 09 Sep 2022 07:01:40 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5cRBPXdEZPFZlONtBxXbkVKluQAB+eqr/N7QwxhdMBwFCwN/QJRPkdLZUifQ+2NbWPIwNn1Q==
-X-Received: by 2002:a17:906:846b:b0:770:82e5:1519 with SMTP id hx11-20020a170906846b00b0077082e51519mr9690572ejc.221.1662732100345;
-        Fri, 09 Sep 2022 07:01:40 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f4-20020a17090631c400b0073d6093ac93sm353806ejf.16.2022.09.09.07.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 07:01:39 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     eahariha@linux.microsoft.com
-Cc:     Deepak Rawat <drawat.floss@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Helge Deller <deller@gmx.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Easwar Hariharan <easwar.hariharan@microsoft.com>,
-        Colin Ian King <colin.i.king@googlemail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "open list:DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE" 
-        <linux-hyperv@vger.kernel.org>,
-        "open list:DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/3] pci_ids: Add Microsoft PCI Vendor ID, and remove
- redundant definitions
-In-Reply-To: <1662674757-31945-2-git-send-email-eahariha@linux.microsoft.com>
-References: <1662674757-31945-1-git-send-email-eahariha@linux.microsoft.com>
- <1662674757-31945-2-git-send-email-eahariha@linux.microsoft.com>
-Date:   Fri, 09 Sep 2022 16:01:37 +0200
-Message-ID: <87leqsr6im.fsf@redhat.com>
+        with ESMTP id S232216AbiIIOr2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Sep 2022 10:47:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519711282C5;
+        Fri,  9 Sep 2022 07:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MKCJGQImC5rNFm8xlhIZtRyfnfFLIWT7YCm6bd8rOy4=; b=V7t/u3J6Ot1dGFxPwqjtFrioG5
+        aUDXOgBEA02JPaFLQCHpjqxuZAGyjvQkosJgcg5ACNNRnoUFC/Fga9SOrlzxWVduOtTEZSBA4r7Mc
+        /HpVXTbhmPdCFKOIFGSPxxwPC48OmjgvkqVwpNBpsumxcWpvdG93Borp8oTaN+i0TOgBMG0/FNIgC
+        LZQRe83Je4zqxMmJxL4UNrI4tVdw2NIWOTkw2RsHgkL0PGWHu+VNm8forptW6CQPEuNhznIwNF4uQ
+        g1ijujJNiwIJkz/Nba/NjyfkYvoFOrrmC4zJ8+EyBWtCzPscUliqQbvynCmtrGuPeGq5WPthzMuBk
+        AotoV87Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oWfHo-00GqRQ-01; Fri, 09 Sep 2022 14:47:16 +0000
+Date:   Fri, 9 Sep 2022 07:47:15 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Will McVicker <willmcvicker@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 2/2] PCI: dwc: Add support for 64-bit MSI target
+ address
+Message-ID: <YxtR8/X4fb9wSYEo@infradead.org>
+References: <20220825185026.3816331-1-willmcvicker@google.com>
+ <20220825185026.3816331-3-willmcvicker@google.com>
+ <Yxs/zguOb52tY2C0@infradead.org>
+ <5bfd7d4d-d431-6321-89bc-663dcd36e930@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5bfd7d4d-d431-6321-89bc-663dcd36e930@arm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-eahariha@linux.microsoft.com writes:
+On Fri, Sep 09, 2022 at 02:47:19PM +0100, Robin Murphy wrote:
+> On 2022-09-09 14:29, Christoph Hellwig wrote:
+> > On Thu, Aug 25, 2022 at 06:50:25PM +0000, Will McVicker wrote:
+> > > Since not all devices require a 32-bit MSI address, add support to the
+> > > PCIe host driver to allow setting the DMA mask to 64-bits if the 32-bit
+> > > allocation fails. This allows kernels to disable ZONE_DMA32 and bounce
+> > > buffering (swiotlb) without risking not being able to get a 32-bit address
+> > > during DMA allocation.
+> > 
+> > Umm.  You can't just disable ZONE_DMA32.  Linux absolutely requires a
+> > 32-bit dma mask to work, it is in fact the implicit default.
+> 
+> Eh, it's behind CONFIG_EXPERT, which makes it enough of a "I think I know
+> what I'm doing and accept responsibility for picking up the pieces if it
+> breaks" thing.
 
-> From: Easwar Hariharan <easwar.hariharan@microsoft.com>
->
-> Move the Microsoft PCI Vendor ID from the various drivers to the pci_ids
-> file
->
-> Signed-off-by: Easwar Hariharan <easwar.hariharan@microsoft.com>
-> ---
->  drivers/gpu/drm/hyperv/hyperv_drm_drv.c         | 1 -
->  drivers/net/ethernet/microsoft/mana/gdma_main.c | 4 ----
->  drivers/video/fbdev/hyperv_fb.c                 | 3 ---
->  include/linux/pci_ids.h                         | 2 ++
->  4 files changed, 2 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> index 6d11e79..61083c7 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> @@ -23,7 +23,6 @@
->  #define DRIVER_MAJOR 1
->  #define DRIVER_MINOR 0
->  
-> -#define PCI_VENDOR_ID_MICROSOFT 0x1414
->  #define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
->  
->  DEFINE_DRM_GEM_FOPS(hv_fops);
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 5f92401..00d8198 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -1465,10 +1465,6 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
->  	pci_disable_device(pdev);
->  }
->  
-> -#ifndef PCI_VENDOR_ID_MICROSOFT
-> -#define PCI_VENDOR_ID_MICROSOFT 0x1414
-> -#endif
-> -
->  static const struct pci_device_id mana_id_table[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, MANA_PF_DEVICE_ID) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_MICROSOFT, MANA_VF_DEVICE_ID) },
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> index 886c564..a502c80 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -58,7 +58,6 @@
->  
->  #include <linux/hyperv.h>
->  
-> -
->  /* Hyper-V Synthetic Video Protocol definitions and structures */
->  #define MAX_VMBUS_PKT_SIZE 0x4000
->  
-> @@ -74,10 +73,8 @@
->  #define SYNTHVID_DEPTH_WIN8 32
->  #define SYNTHVID_FB_SIZE_WIN8 (8 * 1024 * 1024)
->  
-> -#define PCI_VENDOR_ID_MICROSOFT 0x1414
->  #define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
->  
-> -
->  enum pipe_msg_type {
->  	PIPE_MSG_INVALID,
->  	PIPE_MSG_DATA,
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 6feade6..c008fda 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2079,6 +2079,8 @@
->  #define PCI_DEVICE_ID_ICE_1712		0x1712
->  #define PCI_DEVICE_ID_VT1724		0x1724
->  
-> +#define PCI_VENDOR_ID_MICROSOFT  	0x1414
-> +
->  #define PCI_VENDOR_ID_OXSEMI		0x1415
->  #define PCI_DEVICE_ID_OXSEMI_12PCI840	0x8403
->  #define PCI_DEVICE_ID_OXSEMI_PCIe840		0xC000
-
-I've sent a similar patch recently:
-https://lore.kernel.org/linux-hyperv/20220827130345.1320254-2-vkuznets@redhat.com/
-
-which Wei has already queued to hyperv/fixes. Moving
-PCI_DEVICE_ID_MICROSOFT_MANA_PF/VF definitions to 'pci_ids.h' does make
-sense but please rebase first.
-
--- 
-Vitaly
-
+Seem like indeed on arm64 there is a way to disable it.  The x86 model
+is to just select it unconditionally, which I think is the right way
+if we don't want to get into completely random failures.
