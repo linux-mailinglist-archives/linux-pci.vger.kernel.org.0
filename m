@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CFD75B46D4
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 16:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CB015B46E5
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 16:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbiIJOgF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Sep 2022 10:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
+        id S229597AbiIJOkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Sep 2022 10:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiIJOgD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 10:36:03 -0400
+        with ESMTP id S229531AbiIJOkr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 10:40:47 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6D948CB4;
-        Sat, 10 Sep 2022 07:36:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE332714F;
+        Sat, 10 Sep 2022 07:40:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AC38760C62;
-        Sat, 10 Sep 2022 14:36:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEFAC433D6;
-        Sat, 10 Sep 2022 14:36:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B72360CD4;
+        Sat, 10 Sep 2022 14:40:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71C9C433D6;
+        Sat, 10 Sep 2022 14:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662820562;
-        bh=isySrLDgKP74ougWyw0149NHuWvGdizFdHM/yAEf9I0=;
+        s=k20201202; t=1662820831;
+        bh=yoLyrhPTFTvBgeQMrdTZ1aOP2pxInq6DJu6Ae8eysg0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PCUcvDSCunG77vPvOslvmxGpfK3UhNmV5cpJAVsOZUwQ7FR5kqI+ZDJbDFuuqPpgL
-         g8FiHQpEk5ViRbr8Dd3Zjr+TA5D/ANoBp6NQcuH/jQFqgg/2PVLcJHW7JE6F0OdFto
-         VYt38ft6h4vFGzQ7HOt12UYMh+ciFZGKBOJbMJ7m36jYCckND3HLHgk/pQlWgxuI5V
-         TbjLDskWS3Ypo4yFf9F8Eckt8DMA3jiDNdruiMeBGZg/I21ZfqqdGYAHpDXTdweZP+
-         UW69MgzjyeuZehxgQ6Bw/d0nMZFHNhF3ytGFYtHy9tdndOxfc3N+7oQsUgTbQtT+j2
-         vwrWObvr5RW7w==
+        b=kdpA6DJoqSDG8On3+fYzAcvlQQH2ovwvFFRtWCSP4W+O8kTwr3A9aTM2+JjrMoL2t
+         qECi7WfNNOgG7gv4KzTvbJgFCg8xD25AOdw7O79YuHJWT9yods0zdEVcL5ZgHO1CB5
+         To2sUNaMW9MHLarY7xtVShKufm1NFFNTa4y+rMMRxzWfOXNx2mrJtOCiCrpMaTSQZT
+         BnuFtfNkYD2aJOVZNBH59LcJ9b/9ZHl+FNzTH1Y3JBcywMKeCnZHmFJ8zfcYxsTw/k
+         N618MBrj+mCMUMBKRZTgStS6O7Kbh0zMLMFzKjdILtXldKY2iMPJ32j/ghIMew+MF7
+         o8rmoprpbiWlw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1oX1aR-009PXN-N5;
-        Sat, 10 Sep 2022 15:35:59 +0100
-Date:   Sat, 10 Sep 2022 15:35:59 +0100
-Message-ID: <87y1urpa9c.wl-maz@kernel.org>
+        id 1oX1en-009Pak-He;
+        Sat, 10 Sep 2022 15:40:29 +0100
+Date:   Sat, 10 Sep 2022 15:40:29 +0100
+Message-ID: <87wnabpa1u.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Frank Li <frank.li@nxp.com>
 Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
@@ -67,15 +67,11 @@ Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
         "imx@lists.linux.dev" <imx@lists.linux.dev>,
         "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
 Subject: Re: [EXT] Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller driver
-In-Reply-To: <AM9PR04MB8793746D9ECC6F07FD5B841888439@AM9PR04MB8793.eurprd04.prod.outlook.com>
+In-Reply-To: <AM9PR04MB879307CC53696BE7121AA26B88439@AM9PR04MB8793.eurprd04.prod.outlook.com>
 References: <20220907034856.3101570-1-Frank.Li@nxp.com>
         <20220907034856.3101570-3-Frank.Li@nxp.com>
         <87fsh2qpq4.wl-maz@kernel.org>
-        <AM9PR04MB879338D6D4B55A74CD002E6D88409@AM9PR04MB8793.eurprd04.prod.outlook.com>
-        <877d2dvs0d.wl-maz@kernel.org>
-        <AM9PR04MB8793CE5AAAB281CE628845AC88409@AM9PR04MB8793.eurprd04.prod.outlook.com>
-        <87edwkrbs4.wl-maz@kernel.org>
-        <AM9PR04MB8793746D9ECC6F07FD5B841888439@AM9PR04MB8793.eurprd04.prod.outlook.com>
+        <AM9PR04MB879307CC53696BE7121AA26B88439@AM9PR04MB8793.eurprd04.prod.outlook.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -95,36 +91,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 09 Sep 2022 15:59:01 +0100,
+On Fri, 09 Sep 2022 15:52:45 +0100,
 Frank Li <frank.li@nxp.com> wrote:
 > 
-> > >
-> > > [Frank Li] According to my understand, raw_spinlock skip some lockdep
-> > > /debug feature to get better performance, which should be used when
-> > > Frequently call, such as irq handle\polling thread.
+> > > +     select IRQ_DOMAIN
+> > > +     select IRQ_DOMAIN_HIERARCHY
+> > > +     select GENERIC_MSI_IRQ_DOMAIN
+> > > +     help
+> > > +       MU work as MSI controller to do general doorbell
 > > 
-> > I'm afraid you are terribly misguided. They both have the same debug
-> > features because they are both using the same core implementation, and
-> > the only difference is whether this is preemptible for RT purposes or
-> > not.
-> > 
-> > > Spinlock have DEBUG feature to check wrong use lock.  Allocate MSI
-> > generally
-> > > only is call once when driver probe.
-> > 
-> > Again, you should really read the code and the documentation and stop
-> > making things up.
+> > I'm not sure this is that generic. It really is limited to CPU-to-CPU
+> > interrupts.
 > 
-> [Frank Li] Thanks. You give me the correct direction. Some stackoverflow's
-> Doc was misleaded.  I double checked spin_lock implementation.  PREEMPT_RT
-> Kernel map spin_lock to rt_mutex.
-> 
-> I am curious  why exist spin_lock_irqsave and raw_spin_lock_irqsave before
-> PREEMTP_RT merge into kernel tree. 
+> [Frank Li] I think the only limitation is only 4 irq numbers. 
+> The principle CPU to CPU irq is the same as MSI.
 
-Because the RT merge has been going on for 10 years or so, long before
-CONFIG_RT was merged. Also, a mutex has a spin lock at its core, and
-it makes sense to have a single primitive for all these lock types.
+Not quite. Normal MSIs are device-to-CPU. CPU-to-CPU are normally
+IPIs, and this one falls in the middle.
+
+> What's  your preferred help description?
+
+<quote>
+	Provide a driver for the MU block used as a CPU-to-CPU MSI
+	controller. This requires a specially crafted DT to make use
+	of this driver.
+
+	If unsure, say N.
+</quote>
 
 	M.
 
