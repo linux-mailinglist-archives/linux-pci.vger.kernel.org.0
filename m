@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 247545B4481
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 08:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97EAF5B4486
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 08:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbiIJGbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Sep 2022 02:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45048 "EHLO
+        id S230134AbiIJGby (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Sep 2022 02:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbiIJGbi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 02:31:38 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14CDA032F
-        for <linux-pci@vger.kernel.org>; Fri,  9 Sep 2022 23:31:26 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id o25so6567941wrf.9
-        for <linux-pci@vger.kernel.org>; Fri, 09 Sep 2022 23:31:26 -0700 (PDT)
+        with ESMTP id S230130AbiIJGbp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 02:31:45 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D77A98CC
+        for <linux-pci@vger.kernel.org>; Fri,  9 Sep 2022 23:31:36 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id az6so3242672wmb.4
+        for <linux-pci@vger.kernel.org>; Fri, 09 Sep 2022 23:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=cXVSIoAXy4k6GvjO7JA/nhvOJMAK8QRnMR9+cTCkOGs=;
-        b=ECw17KQU5fd1P182eWwe2WjK11ZR/ga5Pqas65xaYuWCZ9T07rSRWRFjWbEMINIvm0
-         TJyee5BSulo6Hy1KpbwrAPfXW2lA5K/BlGbHTSCiLBUkA+XsLvXYYl8WNaxnXD+sjEF9
-         DkkqknpFFfbTmzSXbH4ILRcnWUt6USF3jtxfrcpihrnyBtdstvWU3xGP0axckbD5BSq0
-         2Lk5TV4wqFtYsxlz1PkZWe3VpYZylo8hHHkPkMON66ZNYH0tQIaKiEmjDJSjMtrY3Ly1
-         5g21PEY/pHjoRwP47YjDm8u7rhfL0TkIBoOzBEsFvKJZNTnh5oHV8SXsECvrR6QyxV5p
-         ELYw==
+        bh=xK6rQZk9RPmXG6rMhe5oBA83BpczBJE39eGNhUm9qAw=;
+        b=eHjhdwlNaM3iDfDgBXBBx+PyXZr7kSYejrsu9q8FBnSqpYtMid7K/vIwG7/k21BBoA
+         M8SL6UmG5Ni7yKPlneUTdRwnHWCHisGqM42VYzW/lYPgmrhRpNvI/ruXZJtt6XkZ39XU
+         3NXOlqLjlOLYNOae/TFwlMdMC9wnOjq7INOjwspT1oqK0H20MeGMR/RGAWwT9r0n/F7o
+         knNmH42ouvayRZ0YtT4GUHu9ITyWmQWa7Zr439JnSmi1yplH7LHG6zdZiWdMNSe3suhF
+         cgoPTKJRXvLVfNBQK1Q5nq9g8D2Fir+IDJJbZHSqua4Voa/y/QXtA3hOCimM+ivugJVA
+         PVvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=cXVSIoAXy4k6GvjO7JA/nhvOJMAK8QRnMR9+cTCkOGs=;
-        b=mu0EV4rMYN76m08ZEkdzbg4VrilB3tOjzCGB8LPVDfB+0w5DI8z7F//fvPJOxjWT4R
-         W1oWgCSDQAnPEYuv+sKznjk33Oc4VkhGF4G+BZznB4voqH2w/COeZ4jMh+hzgykBkYnV
-         dJ9rtz31bVSm+JcTLE2Gr6VYr9h6ooTP/nvXTy/v6i+U7bOGqlh0QmB0p1DMXlDhEpW/
-         jiCcehAEGJXSu2YZ5D78FfURUzviOPvkMrOrYaSwqTRrcsG+xdRMw6od4KntVmOlDKWC
-         /eZEScUMAP7DOiMLFejXIAyvRYqQRXe6yIfHj+Ty3T7zK+IuuJ+6fldAcHlJKrKY70P+
-         ySWg==
-X-Gm-Message-State: ACgBeo3GYvsc0saLBQrbiQ1poQadKwQOzJ0/mR01LTPOb793q914Pz/c
-        JRXZTxvxaEiAQORqp4PcmRfO
-X-Google-Smtp-Source: AA6agR7tCTVJQPQAPDEbga2FXfy0GbulLhHpjso7aUkjxDqxt4YyyF60wLA6SQrZqGxmo+pRxuDaTQ==
-X-Received: by 2002:adf:f94a:0:b0:225:7383:d755 with SMTP id q10-20020adff94a000000b002257383d755mr9652723wrr.348.1662791486108;
-        Fri, 09 Sep 2022 23:31:26 -0700 (PDT)
+        bh=xK6rQZk9RPmXG6rMhe5oBA83BpczBJE39eGNhUm9qAw=;
+        b=lkf0JFggcIiZRDlY9bddxgRctAUx8X9xgEbQ0ALH7TdvZZHOlVOdeD5sredCfojKbz
+         WiTxTEXxAFpAipempdA6FfANHppcQW1QYXvxVYGMRsHI0wpIVVAG0S8wtcvMLq/QvACw
+         lMDstHa8aDBYsFo/RhblEUExMB9/b+sIi/szM5hfECeA1upW1KdSxF1K/AiUvMaGvfc/
+         do/wyWzl9e+ktau5E8qaRE+wj4kt6N6/o0SskITfc60+43XorTnKfjB6YpsdgS9n92P1
+         jk8UiL1JQ75EXYxKgW9aot/zqnobWGE8bCvdgRP0sBl2Ws6L2BNAGZzzehMIzw7EpuEa
+         XSVw==
+X-Gm-Message-State: ACgBeo1SkWWUOoCXt8BqWCW3izWaUKqed+YfMLYjZQBgNwxW9f1rNwvx
+        x2MtOz2/xt/B+cw54U4OdSpO
+X-Google-Smtp-Source: AA6agR68lncY+aFp4U6cqVvoZhEMCSGQc2siFytS5rr+gQFU8QDTyr/EYgGqFlyF/rgaSEZVjOHahA==
+X-Received: by 2002:a05:600c:3487:b0:3a6:280b:bed1 with SMTP id a7-20020a05600c348700b003a6280bbed1mr7312534wmq.111.1662791493870;
+        Fri, 09 Sep 2022 23:31:33 -0700 (PDT)
 Received: from localhost.localdomain ([117.217.182.47])
-        by smtp.gmail.com with ESMTPSA id n16-20020a05600c4f9000b003a5c7a942edsm2828122wmq.28.2022.09.09.23.31.18
+        by smtp.gmail.com with ESMTPSA id n16-20020a05600c4f9000b003a5c7a942edsm2828122wmq.28.2022.09.09.23.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 23:31:25 -0700 (PDT)
+        Fri, 09 Sep 2022 23:31:33 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org
 Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
@@ -56,9 +56,9 @@ Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
         krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
         dmitry.baryshkov@linaro.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 03/12] PCI: qcom-ep: Make use of the cached dev pointer
-Date:   Sat, 10 Sep 2022 12:00:36 +0530
-Message-Id: <20220910063045.16648-4-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 04/12] PCI: qcom-ep: Disable IRQs during driver remove
+Date:   Sat, 10 Sep 2022 12:00:37 +0530
+Message-Id: <20220910063045.16648-5-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220910063045.16648-1-manivannan.sadhasivam@linaro.org>
 References: <20220910063045.16648-1-manivannan.sadhasivam@linaro.org>
@@ -74,36 +74,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the qcom_pcie_ep_get_resources() function, dev pointer is already
-cached in a local variable. So let's make use of it instead of getting
-the dev pointer again from pdev struct.
+Disable the Global and PERST IRQs during driver remove to avoid getting
+spurious IRQs after resource deallocation.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 34c498d581de..1e09eca5b3b2 100644
+index 1e09eca5b3b2..72eb6cacdb3a 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -483,7 +483,7 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
+@@ -585,11 +585,11 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+ {
+ 	int irq, ret;
  
- 	ret = qcom_pcie_ep_get_io_resources(pdev, pcie_ep);
- 	if (ret) {
--		dev_err(&pdev->dev, "Failed to get io resources %d\n", ret);
-+		dev_err(dev, "Failed to get io resources %d\n", ret);
- 		return ret;
- 	}
+-	irq = platform_get_irq_byname(pdev, "global");
+-	if (irq < 0)
+-		return irq;
++	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
++	if (pcie_ep->global_irq < 0)
++		return pcie_ep->global_irq;
  
-@@ -505,7 +505,7 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
- 	if (IS_ERR(pcie_ep->wake))
- 		return PTR_ERR(pcie_ep->wake);
+-	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
++	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->global_irq, NULL,
+ 					qcom_pcie_ep_global_irq_thread,
+ 					IRQF_ONESHOT,
+ 					"global_irq", pcie_ep);
+@@ -698,6 +698,9 @@ static int qcom_pcie_ep_remove(struct platform_device *pdev)
+ {
+ 	struct qcom_pcie_ep *pcie_ep = platform_get_drvdata(pdev);
  
--	pcie_ep->phy = devm_phy_optional_get(&pdev->dev, "pciephy");
-+	pcie_ep->phy = devm_phy_optional_get(dev, "pciephy");
- 	if (IS_ERR(pcie_ep->phy))
- 		ret = PTR_ERR(pcie_ep->phy);
++	disable_irq(pcie_ep->global_irq);
++	disable_irq(pcie_ep->perst_irq);
++
+ 	if (pcie_ep->link_status == QCOM_PCIE_EP_LINK_DISABLED)
+ 		return 0;
  
 -- 
 2.25.1
