@@ -2,134 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64CDC5B45B5
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 11:32:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF5735B4679
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 15:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbiIJJcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Sep 2022 05:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
+        id S229491AbiIJNXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Sep 2022 09:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiIJJcz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 05:32:55 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163327A525
-        for <linux-pci@vger.kernel.org>; Sat, 10 Sep 2022 02:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662802373; x=1694338373;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gpsogxegXXorIhRFpyOSt6sZ9FXlwZIRNkqA1d/oh78=;
-  b=HqbSPDiNhPEtnO0iRz/W5M9BF6HmmC6WFI+89iNJ6+gfrDPq+yxPltlD
-   XAp9Yr6F3ZO2vJ02GLI9CX/kF3I87Wwrx+euMrQOu6u0GWr26g6z8Um+4
-   F0yuBsxzzdBb/kwMzGPlKL1xGMbR3/oy+Z8NUlam1+U2Nuz7jB26UHxD3
-   CE5vdOt3ybIFl4LXRvY6HU7kyxw9yTMyVrrhX6rzzK26usD9gX7019fQm
-   pkWiOd7F5scCgiLnAuY4jRumNZiTwOF/AF2Ng4vUuJ3keWbVHI/lATj0w
-   80xGLbZzsUJCkKf68i/sT2zjPDR4rr9QBbtWy9iDvoMlxGxbnI1jmJ557
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10465"; a="298427672"
-X-IronPort-AV: E=Sophos;i="5.93,305,1654585200"; 
-   d="scan'208";a="298427672"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2022 02:32:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,305,1654585200"; 
-   d="scan'208";a="566632112"
-Received: from lkp-server02.sh.intel.com (HELO b2938d2e5c5a) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 10 Sep 2022 02:32:51 -0700
-Received: from kbuild by b2938d2e5c5a with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oWwr4-0002Ma-1E;
-        Sat, 10 Sep 2022 09:32:50 +0000
-Date:   Sat, 10 Sep 2022 17:32:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:wip/bjorn-pm-v4] BUILD SUCCESS
- 1495e5bcd9f11e1ff8f07994e0a4458e3f17c81b
-Message-ID: <631c59a1.kYt4gaTT5y+sW7J8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229459AbiIJNXx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 09:23:53 -0400
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873C83ECDA;
+        Sat, 10 Sep 2022 06:23:51 -0700 (PDT)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
+ id 5ccbad0bd51352a6; Sat, 10 Sep 2022 15:23:48 +0200
+Received: from kreacher.localnet (unknown [213.134.169.62])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 7D02166D4A0;
+        Sat, 10 Sep 2022 15:23:47 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH] ACPI: PCI: Rework acpi_get_pci_dev()
+Date:   Sat, 10 Sep 2022 15:23:46 +0200
+Message-ID: <2661914.mvXUDI8C0e@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 213.134.169.62
+X-CLIENT-HOSTNAME: 213.134.169.62
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrfedtjedgieehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppedvudefrddufeegrdduieelrdeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrdduieelrdeivddphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepgedprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-pm-v4
-branch HEAD: 1495e5bcd9f11e1ff8f07994e0a4458e3f17c81b  PCI/PM: Always disable PTM for all devices during suspend
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-elapsed time: 722m
+The PCI device returned by acpi_get_pci_dev() needs to be registered,
+so if it corresponds to an ACPI device object, the struct acpi_device
+representing that object must be registered too and, moreover, it
+should be the ACPI companion of the given PCI device.  Thus it should
+be sufficient to look for it in the ACPI device object's list of
+physical nodes associated with it.
 
-configs tested: 53
-configs skipped: 2
+Modify the code accordingly.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/pci_root.c |   81 ++++++++----------------------------------------
+ 1 file changed, 15 insertions(+), 66 deletions(-)
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-powerpc                           allnoconfig
-i386                                defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-sh                               allmodconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-arc                  randconfig-r043-20220907
-m68k                             allyesconfig
-x86_64                        randconfig-a015
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a005
-i386                             allyesconfig
-arm                                 defconfig
-x86_64                        randconfig-a006
-i386                          randconfig-a014
-i386                          randconfig-a012
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a016
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-arm64                            allyesconfig
-arm                              allyesconfig
-ia64                             allmodconfig
+Index: linux-pm/drivers/acpi/pci_root.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/pci_root.c
++++ linux-pm/drivers/acpi/pci_root.c
+@@ -312,76 +312,25 @@ struct acpi_handle_node {
+  */
+ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
+ {
+-	int dev, fn;
+-	unsigned long long adr;
+-	acpi_status status;
+-	acpi_handle phandle;
+-	struct pci_bus *pbus;
+-	struct pci_dev *pdev = NULL;
+-	struct acpi_handle_node *node, *tmp;
+-	struct acpi_pci_root *root;
+-	LIST_HEAD(device_list);
+-
+-	/*
+-	 * Walk up the ACPI CA namespace until we reach a PCI root bridge.
+-	 */
+-	phandle = handle;
+-	while (!acpi_is_root_bridge(phandle)) {
+-		node = kzalloc(sizeof(struct acpi_handle_node), GFP_KERNEL);
+-		if (!node)
+-			goto out;
+-
+-		INIT_LIST_HEAD(&node->node);
+-		node->handle = phandle;
+-		list_add(&node->node, &device_list);
+-
+-		status = acpi_get_parent(phandle, &phandle);
+-		if (ACPI_FAILURE(status))
+-			goto out;
+-	}
+-
+-	root = acpi_pci_find_root(phandle);
+-	if (!root)
+-		goto out;
+-
+-	pbus = root->bus;
+-
+-	/*
+-	 * Now, walk back down the PCI device tree until we return to our
+-	 * original handle. Assumes that everything between the PCI root
+-	 * bridge and the device we're looking for must be a P2P bridge.
+-	 */
+-	list_for_each_entry(node, &device_list, node) {
+-		acpi_handle hnd = node->handle;
+-		status = acpi_evaluate_integer(hnd, "_ADR", NULL, &adr);
+-		if (ACPI_FAILURE(status))
+-			goto out;
+-		dev = (adr >> 16) & 0xffff;
+-		fn  = adr & 0xffff;
+-
+-		pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
+-		if (!pdev || hnd == handle)
+-			break;
+-
+-		pbus = pdev->subordinate;
+-		pci_dev_put(pdev);
+-
+-		/*
+-		 * This function may be called for a non-PCI device that has a
+-		 * PCI parent (eg. a disk under a PCI SATA controller).  In that
+-		 * case pdev->subordinate will be NULL for the parent.
+-		 */
+-		if (!pbus) {
+-			dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+-			pdev = NULL;
++	struct acpi_device *adev = acpi_fetch_acpi_dev(handle);
++	struct acpi_device_physical_node *pn;
++	struct pci_dev *pci_dev = NULL;
++
++	if (!adev)
++		return NULL;
++
++	mutex_lock(&adev->physical_node_lock);
++
++	list_for_each_entry(pn, &adev->physical_node_list, node) {
++		if (dev_is_pci(pn->dev)) {
++			pci_dev = to_pci_dev(pn->dev);
+ 			break;
+ 		}
+ 	}
+-out:
+-	list_for_each_entry_safe(node, tmp, &device_list, node)
+-		kfree(node);
+ 
+-	return pdev;
++	mutex_unlock(&adev->physical_node_lock);
++
++	return pci_dev;
+ }
+ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+ 
 
-clang tested configs:
-hexagon              randconfig-r041-20220907
-hexagon              randconfig-r045-20220907
-s390                 randconfig-r044-20220907
-riscv                randconfig-r042-20220907
-x86_64                        randconfig-a014
-i386                          randconfig-a002
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-i386                          randconfig-a004
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a013
-i386                          randconfig-a006
-x86_64                        randconfig-a005
-i386                          randconfig-a011
-i386                          randconfig-a015
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+
