@@ -2,74 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11C365B4441
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 07:32:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C8765B444D
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Sep 2022 07:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbiIJFcf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Sep 2022 01:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
+        id S229607AbiIJFlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Sep 2022 01:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbiIJFce (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 01:32:34 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4B785FD1
-        for <linux-pci@vger.kernel.org>; Fri,  9 Sep 2022 22:32:31 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n23-20020a17090a091700b00202a51cc78bso1008633pjn.2
-        for <linux-pci@vger.kernel.org>; Fri, 09 Sep 2022 22:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=jopVdw1qVzMqLHMV5Kp3Rupq060qHXjQXADwkK30rz4=;
-        b=eeS/MEMm9J39rEErbUPkkXnO6ez1WJCIfr9Pzn/7oqs+SkKNmGk0RPDSxbAhyAv5l6
-         RS0j3nySz6wF1jKb+3TENiMFuXiJ6l2wC5f3+MIeZffgCw9rv2YSNUZ1LjUsnkilxu7x
-         Hsy0uiPtutJCDCD7j/jXxwC/R9djhJ6qwcIpvLr9JrGrTd6sYVUAcI5Y9RWySCAOHZ4O
-         rkRnucf299w/3lYJgFhE3JevVlSX5WGMRAyIxxF24VZXnQyaJO/OU2G74lhS9JVS/a+Q
-         rCDUaALXX7LLQxU8EgxbTDlYRm7PXTVX+aT1oFSJ8mOfbmWDIX/ufmP6YO602y+4Ev2N
-         RcLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=jopVdw1qVzMqLHMV5Kp3Rupq060qHXjQXADwkK30rz4=;
-        b=1aSJNinuUrtZb27JB/EB7UaIKt4qSEP18M3hP45hKCWWeKYfJOJZI8NsR/ZrIzlDj/
-         /76CN27d2dJ8bv0Y5jGi/7c6DfFzHFGGn5Ek8mNrGsXiA65l9TLxhPW0uoOeIuAogNdf
-         buL4OGf8hzcmcl4ueG5s3C+hJGPocyWqVOjEpx/pwFGiMt8QRVeYYQLr6PeCd6Zt3SdC
-         Y0Tza3Qw858pfwfVCSXKoIZ0akYOYoK9dA2jVK+WwedNwEXdliDlI8Dc0zwJueBwly9u
-         PeUI5kESiHlvDhlUH9jyZrFDQKYm/M82drpjRgjes104TLcZ57zd0FXECdPKgTx1Mf6x
-         u6mA==
-X-Gm-Message-State: ACgBeo2wlTkoZiz0nHMXLGT23jRaPpyH762XqtpcWI22gj657AStbqn7
-        QZhRkYEEeDImFfLX53iyOa2L
-X-Google-Smtp-Source: AA6agR6bv5hkoOm8hmADD807C9+UIEnADoVaBd5Fa8GNi3P+GB9022gFH/ArKkjuKaUH722GpF0bjw==
-X-Received: by 2002:a17:902:d2ce:b0:178:7b5:c070 with SMTP id n14-20020a170902d2ce00b0017807b5c070mr6317692plc.58.1662787950619;
-        Fri, 09 Sep 2022 22:32:30 -0700 (PDT)
-Received: from thinkpad ([117.217.182.47])
-        by smtp.gmail.com with ESMTPSA id s2-20020a625e02000000b00528c066678csm728570pfb.72.2022.09.09.22.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 22:32:30 -0700 (PDT)
-Date:   Sat, 10 Sep 2022 11:02:22 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org,
-        kbuild-all@lists.01.org, kw@linux.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, konrad.dybcio@somainline.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v2 04/11] PCI: qcom-ep: Add eDMA support
-Message-ID: <20220910053222.GA8299@thinkpad>
-References: <20220830165817.183571-5-manivannan.sadhasivam@linaro.org>
- <202209031046.rOZKOVqT-lkp@intel.com>
+        with ESMTP id S229546AbiIJFlm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Sep 2022 01:41:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD32697D57;
+        Fri,  9 Sep 2022 22:41:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 75F996097C;
+        Sat, 10 Sep 2022 05:41:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FAF0C433C1;
+        Sat, 10 Sep 2022 05:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1662788500;
+        bh=CCHuYQhbCtE8/FLBJOVSxRolZQXA1M6I2aBFGi0YGnw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E+hkF3DcoO3dh7l/wmOweKNZnmCqoh63s9KluOWS4idbzv9GvVcX/ToFfoYV9x0ir
+         BXA5ph+dXkB7tNw8RLiRst0O5qInlpKCgowfZKFdXuH9iXCWSbSxLQpFLfVMu45h7Q
+         AAyBNw+ZCnr3td5SJjf15sgzitRXMhaAVVoDCHEU=
+Date:   Sat, 10 Sep 2022 07:42:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        whitehat002 <hackyzh002@gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: do not reference a pci device after it has
+ been released
+Message-ID: <Yxwjq3PgEf60B9Vk@kroah.com>
+References: <20220428142854.1065953-1-gregkh@linuxfoundation.org>
+ <CAJZ5v0hfdnRg0EqG2Zcp9=Kjq+P1NC45iudatisVL_G=QjOC+A@mail.gmail.com>
+ <YxrufXoPZnKCxqRP@kroah.com>
+ <5870387.lOV4Wx5bFT@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202209031046.rOZKOVqT-lkp@intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+In-Reply-To: <5870387.lOV4Wx5bFT@kreacher>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,106 +60,137 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 03, 2022 at 10:36:53AM +0800, kernel test robot wrote:
-> Hi Manivannan,
+On Fri, Sep 09, 2022 at 11:18:46PM +0200, Rafael J. Wysocki wrote:
+> On Friday, September 9, 2022 9:42:53 AM CEST Greg Kroah-Hartman wrote:
+> > On Mon, Jun 27, 2022 at 06:37:06PM +0200, Rafael J. Wysocki wrote:
+> > > On Mon, Jun 27, 2022 at 5:07 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Thu, Apr 28, 2022 at 10:30:38PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Thu, Apr 28, 2022 at 10:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 28, 2022 at 6:22 PM Greg Kroah-Hartman
+> > > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > >
+> > > > > > > On Thu, Apr 28, 2022 at 10:58:58AM -0500, Bjorn Helgaas wrote:
+> > > > > > > > On Thu, Apr 28, 2022 at 04:28:53PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > > > > In acpi_get_pci_dev(), the debugging message for when a PCI bridge is
+> > > > > > > > > not found uses a pointer to a pci device whose reference has just been
+> > > > > > > > > dropped.  The chance that this really is a device that is now been
+> > > > > > > > > removed from the system is almost impossible to happen, but to be safe,
+> > > > > > > > > let's print out the debugging message based on the acpi root device
+> > > > > > > > > which we do have a valid reference to at the moment.
+> > > > > > > >
+> > > > > > > > This code was added by 497fb54f578e ("ACPI / PCI: Fix NULL pointer
+> > > > > > > > dereference in acpi_get_pci_dev() (rev. 2)").  Not sure if it's worth
+> > > > > > > > a Fixes: tag.
+> > > > > > >
+> > > > > > > Can't hurt, I'll add it for the v2 based on this review.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > acpi_get_pci_dev() is used by only five callers, three of which are
+> > > > > > > > video/backlight related.  I'm always skeptical of one-off interfaces
+> > > > > > > > like this, but I don't know enough to propose any refactoring or other
+> > > > > > > > alternatives.
+> > > > > > > >
+> > > > > > > > I'll leave this for Rafael, but if I were applying I would silently
+> > > > > > > > touch up the subject to match convention:
+> > > > > > > >
+> > > > > > > >   PCI/ACPI: Do not reference PCI device after it has been released
+> > > > > > >
+> > > > > > > Much simpler, thanks.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > > > > > > > Cc: Len Brown <lenb@kernel.org>
+> > > > > > > > > Cc: linux-pci@vger.kernel.org
+> > > > > > > > > Cc: linux-acpi@vger.kernel.org
+> > > > > > > > > Reported-by: whitehat002 <hackyzh002@gmail.com>
+> > > > > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/acpi/pci_root.c | 3 ++-
+> > > > > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > > > > > > > > index 6f9e75d14808..ecda378dbc09 100644
+> > > > > > > > > --- a/drivers/acpi/pci_root.c
+> > > > > > > > > +++ b/drivers/acpi/pci_root.c
+> > > > > > > > > @@ -303,7 +303,8 @@ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
+> > > > > > > > >              * case pdev->subordinate will be NULL for the parent.
+> > > > > > > > >              */
+> > > > > > > > >             if (!pbus) {
+> > > > > > > > > -                   dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > > > > > > > > +                   dev_dbg(&root->device->dev,
+> > > > > > > > > +                           "dev %d, function %d is not a PCI-to-PCI bridge\n", dev, fn);
+> > > > > > > >
+> > > > > > > > This should use "%02x.%d" to be consistent with the dev_set_name() in
+> > > > > > > > pci_setup_device().
+> > > > > > >
+> > > > > > > Ah, missed that, will change it and send out a new version tomorrow.
+> > > > > >
+> > > > > > I would make the change below (modulo the gmail-induced wthite space
+> > > > > > breakage), though.
+> > > > >
+> > > > > That said ->
+> > > > >
+> > > > > > ---
+> > > > > >  drivers/acpi/pci_root.c |    5 +++--
+> > > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > Index: linux-pm/drivers/acpi/pci_root.c
+> > > > > > ===================================================================
+> > > > > > --- linux-pm.orig/drivers/acpi/pci_root.c
+> > > > > > +++ linux-pm/drivers/acpi/pci_root.c
+> > > > > > @@ -295,8 +295,6 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> > > > > >              break;
+> > > > > >
+> > > > > >          pbus = pdev->subordinate;
+> > > > > > -        pci_dev_put(pdev);
+> > > > > > -
+> > > > > >          /*
+> > > > > >           * This function may be called for a non-PCI device that has a
+> > > > > >           * PCI parent (eg. a disk under a PCI SATA controller).  In that
+> > > > > > @@ -304,9 +302,12 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> > > > > >           */
+> > > > > >          if (!pbus) {
+> > > > > >              dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > > > > > +            pci_dev_put(pdev);
+> > > > > >              pdev = NULL;
+> > > > > >              break;
+> > > > > >          }
+> > > > > > +
+> > > > > > +        pci_dev_put(pdev);
+> > > > >
+> > > > > -> we are going to use pbus after this and it is pdev->subordinate
+> > > > > which cannot survive without pdev AFAICS.
+> > > > >
+> > > > > Are we not concerned about this case?
+> > > >
+> > > > Good point.
+> > > >
+> > > > whitehat002, any ideas?  You found this issue but it really looks like
+> > > > it is not anything that can ever be hit, so how far do you want to go to
+> > > > unwind it?
+> > > 
+> > > I have an idea, sorry for the delay here.
+> > > 
+> > > I should be ready to post something tomorrow.
+> > 
+> > Was this ever posted?
 > 
-> I love your patch! Yet something to improve:
+> No, it wasn't.  Sorry for the glacial pace here.
 > 
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on linus/master v6.0-rc3 next-20220901]
-> [cannot apply to helgaas-pci/next]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> So the idea is based on the observation that the PCI device returned by the current
+> code in acpi_get_pci_dev() needs to be registered, so if it corresponds to an ACPI
+> device object, the struct acpi_device representing it must be registered too and,
+> moreover, it should be the ACPI companion of that PCI device.  Thus it should be
+> sufficient to look for it in the ACPI device object's list of physical nodes
+> corresponding to it.  Hence, the patch below.
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/Improvements-to-the-Qcom-PCIe-Endpoint-driver/20220831-010315
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20220903/202209031046.rOZKOVqT-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/dec4c93b2077408cecddd53950905bf2411019b0
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Manivannan-Sadhasivam/Improvements-to-the-Qcom-PCIe-Endpoint-driver/20220831-010315
->         git checkout dec4c93b2077408cecddd53950905bf2411019b0
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
-> 
-> If you fix the issue, kindly add following tag where applicable
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/controller/dwc/pcie-qcom-ep.c: In function 'qcom_pcie_ep_probe':
-> >> drivers/pci/controller/dwc/pcie-qcom-ep.c:672:21: error: 'struct dw_pcie' has no member named 'edma'
->      672 |         pcie_ep->pci.edma.nr_irqs = 1;
+> I actually can't test it right now (or even compile it for that matter), but
+> I'll put it in order tomorrow.
 
-This patch depends on the eDMA series from Sergey (Sorry, I forgot to mention
-this in cover letter):
-[PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+The idea looks sane to me, let me know if testing works or not, thanks!
 
-But the eDMA series is still getting reviews and I don't hear any news about
-respin. So in the next revision I'm gonna drop this patch.
-
-Thanks,
-Mani
-
->          |                     ^
-> 
-> 
-> vim +672 drivers/pci/controller/dwc/pcie-qcom-ep.c
-> 
->    658	
->    659	static int qcom_pcie_ep_probe(struct platform_device *pdev)
->    660	{
->    661		struct device *dev = &pdev->dev;
->    662		struct qcom_pcie_ep *pcie_ep;
->    663		int ret;
->    664	
->    665		pcie_ep = devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
->    666		if (!pcie_ep)
->    667			return -ENOMEM;
->    668	
->    669		pcie_ep->pci.dev = dev;
->    670		pcie_ep->pci.ops = &pci_ops;
->    671		pcie_ep->pci.ep.ops = &pci_ep_ops;
->  > 672		pcie_ep->pci.edma.nr_irqs = 1;
->    673		platform_set_drvdata(pdev, pcie_ep);
->    674	
->    675		ret = qcom_pcie_ep_get_resources(pdev, pcie_ep);
->    676		if (ret)
->    677			return ret;
->    678	
->    679		ret = qcom_pcie_enable_resources(pcie_ep);
->    680		if (ret) {
->    681			dev_err(dev, "Failed to enable resources: %d\n", ret);
->    682			return ret;
->    683		}
->    684	
->    685		ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
->    686		if (ret) {
->    687			dev_err(dev, "Failed to initialize endpoint: %d\n", ret);
->    688			goto err_disable_resources;
->    689		}
->    690	
->    691		ret = qcom_pcie_ep_enable_irq_resources(pdev, pcie_ep);
->    692		if (ret)
->    693			goto err_disable_resources;
->    694	
->    695		return 0;
->    696	
->    697	err_disable_resources:
->    698		qcom_pcie_disable_resources(pcie_ep);
->    699	
->    700		return ret;
->    701	}
->    702	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://01.org/lkp
-
--- 
-மணிவண்ணன் சதாசிவம்
+greg k-h
