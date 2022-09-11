@@ -2,51 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A2C45B4E51
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Sep 2022 13:23:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 912885B4E70
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Sep 2022 13:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbiIKLXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Sep 2022 07:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
+        id S230245AbiIKLch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Sep 2022 07:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231245AbiIKLXH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Sep 2022 07:23:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F6ABE1C;
-        Sun, 11 Sep 2022 04:21:54 -0700 (PDT)
+        with ESMTP id S230207AbiIKLcf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Sep 2022 07:32:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD20357CB;
+        Sun, 11 Sep 2022 04:32:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F1D460F19;
-        Sun, 11 Sep 2022 11:21:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A256C43140;
-        Sun, 11 Sep 2022 11:21:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48B3460FE2;
+        Sun, 11 Sep 2022 11:32:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ABFFC433D6;
+        Sun, 11 Sep 2022 11:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662895313;
-        bh=N7owEzP5NvZJynNI25WOpOaC2G6rhimMiBnf+C0B694=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HlBYbiBxrmPCHTsiB2xysVnJRJcInnPGyfeEX9nm1//vS5/Iease/nIMxUilADOqE
-         LgQNxD47K4soa0/ZdNWkC1rwNCD+zKuFWhkY5n0A+PtUMK69IiFgZ0B/bujtVVTWIL
-         WzZ9GaRXYEe7kYKu+Q3Gpd6pge6TEsSZNYMVq9fetr7DkSypYl/pG+Budh9/GzOooN
-         TOPEjEYKyL+YN/wf7+m69jRNXhdVI+CmirPw0HPsSNrY0piSpp2lmxtJroahvgGpHr
-         Vcu3eUi58eNZpJ0FWoc5E6EfRk50oNdx9VclWb/I8VOotJQETJ8cTkj/oUDlB9od9R
-         EdOEBpo41BvBQ==
+        s=k20201202; t=1662895953;
+        bh=Xo8ZjPAefr5xIF2eSnRkQdGzjG+G5kaePxVrEO84Flo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ST9WkyZ2vYypzS6Q/4dQLgFTIGxehTWmo+1yid5Hbc+UMPZEBezLSlqBMfoRZsveu
+         amw67i+Q6VtauA3B/k+RZvwetNjyq/jthWVeTdRfhZ906ifwC5ceg1CTFe7tZuXsuW
+         Hylk+t7aeY6C2cPftk368sxQzIRxXuy/TihL3NYmoKTRyaC7NpX0T7xyd/Eec3OFh6
+         1b9KfU6GbhQ8O8KM3SL0kXvZUNfqA90cP/Js+jncE3P6qwnd4f9jcbXR2FCexTxcY2
+         Pp9V4ZA0p52mnBdAFimXwxEVC8vkCh/ehlNKjOvmjjJ0296KOP6Oy7oe8B4kgSo1z3
+         Ni3MR1rajQ30g==
 Received: by pali.im (Postfix)
-        id 13C16878; Sun, 11 Sep 2022 13:21:53 +0200 (CEST)
+        id E7335878; Sun, 11 Sep 2022 13:32:30 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [RFC PATCH 3/3] PCI: mt7621: Use PCI_CONF1_EXT_ADDRESS() macro
-Date:   Sun, 11 Sep 2022 13:20:24 +0200
-Message-Id: <20220911112024.14304-4-pali@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: Update comment about config space
+Date:   Sun, 11 Sep 2022 13:32:16 +0200
+Message-Id: <20220911113216.14892-1-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220911112024.14304-1-pali@kernel.org>
-References: <20220911112024.14304-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Simplify pcie-mt7621.c driver code and use new PCI_CONF1_EXT_ADDRESS()
-macro for accessing PCIe config space.
+Like many other ARM PCIe controllers, it uses old PCI Configuration
+Mechanism #1 from PCI Local Bus for accessing PCI config space.
+It is not PCIe ECAM in any case.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pcie-mt7621.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-index 33eb37a2225c..28cde116cd27 100644
---- a/drivers/pci/controller/pcie-mt7621.c
-+++ b/drivers/pci/controller/pcie-mt7621.c
-@@ -25,6 +25,7 @@
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
-+#include <linux/pci-conf1.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
-@@ -123,8 +124,7 @@ static inline void pcie_port_write(struct mt7621_pcie_port *port,
- static inline u32 mt7621_pcie_get_cfgaddr(unsigned int bus, unsigned int slot,
- 					 unsigned int func, unsigned int where)
- {
--	return (((where & 0xf00) >> 8) << 24) | (bus << 16) | (slot << 11) |
--		(func << 8) | (where & 0xfc) | 0x80000000;
-+	return PCI_CONF1_EXT_ADDRESS(bus, slot, func, where);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 8e323e93be91..5df90d183526 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -395,9 +395,11 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
  }
  
- static void __iomem *mt7621_pcie_map_bus(struct pci_bus *bus,
+ /*
+- * The configuration space mapping on Tegra is somewhat similar to the ECAM
+- * defined by PCIe. However it deviates a bit in how the 4 bits for extended
+- * register accesses are mapped:
++ * The configuration space mapping on Tegra is somewhat similar to the Intel
++ * PCI Configuration Mechanism #1 as defined in PCI Local Bus Specification.
++ * But it is mapped directly into physical address space as opposite of the
++ * CF8/CFC indirect access, bit 31 (enable) is unset and reserved bits [27:24]
++ * are used to access extended PCIe config space registers.
+  *
+  *    [27:24] extended register number
+  *    [23:16] bus number
 -- 
 2.20.1
 
