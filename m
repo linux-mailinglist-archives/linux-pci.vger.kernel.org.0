@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7200F5B4E52
+	by mail.lfdr.de (Postfix) with ESMTP id CB3FE5B4E53
 	for <lists+linux-pci@lfdr.de>; Sun, 11 Sep 2022 13:23:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbiIKLXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Sep 2022 07:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59544 "EHLO
+        id S230526AbiIKLXX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Sep 2022 07:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230174AbiIKLXH (ORCPT
+        with ESMTP id S230274AbiIKLXH (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Sep 2022 07:23:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E25772663;
-        Sun, 11 Sep 2022 04:21:53 -0700 (PDT)
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C68C4BE15;
+        Sun, 11 Sep 2022 04:21:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4639060E9B;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B93CB80B30;
+        Sun, 11 Sep 2022 11:21:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BEEC43470;
         Sun, 11 Sep 2022 11:21:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 719BBC433D6;
-        Sun, 11 Sep 2022 11:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662895312;
-        bh=i/8RNdF4fIf2jIET0PhL9Ssf48I1ZP8JWvmjfkVVEAw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=F75H1/HAwJwME7QOAlR+0f2q8aCbLVzTysODEfr9C0K7A/QVLWQsPE1RjnSctw9LJ
-         a1B6KA3vZ83ieVksPIUI1YEzsYgf2VjGx6duxcpjv95CrjMv5uTwjFHyETkhJMEyL+
-         Ob7U43Rkb80ERbRlSotGf5rAOLPOXHbRYSI5Jv2DIuFQqxDkfkQ0loT85UVGRxdyx6
-         17I6ByzKbO3gLTN0tizqj3aaERz/Mbc1hTSB3z+Pk3BHFvJF4z7xINXVpNuonZphBQ
-         pSactYYc6yVKOhQ9XBSSqIppt2SbOuLnHG6Oqvt5NgA/VMHcVRV9zeELV1QDBir5by
-         m0KHqaVDruNCA==
+        s=k20201202; t=1662895313;
+        bh=er6PPpsGMjDSr5/Bjluh+kJYhP3QEsmx3zX624mZfrc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GxAgF5KRpvyEOmdsPFSxAbqxhAje7fAm/vL/S1J1eG7vpsUfY/3vs4xRasKEDLKMo
+         kgWSMVOyj3HMYIbTJPXQb9DgLZ+4uL7aW/l6WeZXkoPUTIvucLJARCbpbVL5kBaJVM
+         wXvdS3navMSIariSS1SwkzrBPiMbTicnEOEL+N2Dy9MTe9EUflRWiqdijTHF9ekoBx
+         J0zu7o5Xaf3L9GVfSlHj8L7x267n1g8LwHqr+GiVB9Dt7R6oC8gb8/UuM26FfRbuxq
+         dWVNLBdZZgj6bhO7tMpZILv9ujeozzJDX3EWTq4wssaWjQKDWA+tEOzdvQsYq8eE78
+         cSQDqBi0eLuKQ==
 Received: by pali.im (Postfix)
-        id AB127878; Sun, 11 Sep 2022 13:21:49 +0200 (CEST)
+        id CCC83AB8; Sun, 11 Sep 2022 13:21:50 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -41,10 +41,12 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [RFC PATCH 0/3] PCI: Introduce new PCI_CONF1_ADDRESS() and PCI_CONF1_EXT_ADDRESS() macros
-Date:   Sun, 11 Sep 2022 13:20:21 +0200
-Message-Id: <20220911112024.14304-1-pali@kernel.org>
+Subject: [RFC PATCH 1/3] PCI: Add standard PCI Config Address macros
+Date:   Sun, 11 Sep 2022 13:20:22 +0200
+Message-Id: <20220911112024.14304-2-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220911112024.14304-1-pali@kernel.org>
+References: <20220911112024.14304-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,42 +60,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI controllers and lot of non-ECAM compliant PCIe controllers still use
-Intel PCI Configuration Mechanism #1 for accessing PCI config space.
+Lot of PCI and PCIe controllers are using standard Config Address for PCI
+Configuration Mechanism #1 (as defined inPCI Local Bus Specification) or
+its extended version.
 
-Native PCIe controller drivers invents its own macros which implements
-config space address calculation and in lof of cases it is just
-duplication of the same code.
+So introduce new macros PCI_CONF1_ADDRESS() and PCI_CONF1_EXT_ADDRESS() in
+new include file linux/pci-conf1.h which can be suitable for PCI and PCIe
+controllers which uses this type of access to PCI config space.
 
-PCIe ECAM address macro PCIE_ECAM_OFFSET() is already in include header
-file linux/pci-ecam.h and ECAM compliant drivers were already converted
-to use it.
-
-Do similar thing also for Intel PCI Configuration Mechanism #1.
-Introduce a new file linux/pci-conf1.h with PCI_CONF1_ADDRESS() and
-PCI_CONF1_EXT_ADDRESS() macros and convert two drivers pci-ftpci100.c
-and pcie-mt7621.c to use it.
-
-There are many more drivers which could be converted to this common
-macros. This is just RFC patch series and if you like it, I can look at
-conversion of other drivers.
-
-What do you think?
-
-Note that similar cleanup was applied for U-Boot PCI controller drivers:
-https://lore.kernel.org/u-boot/20211126104252.5443-1-pali@kernel.org/
-
-Pali Rohár (3):
-  PCI: Add standard PCI Config Address macros
-  PCI: ftpci100: Use PCI_CONF1_ADDRESS() macro
-  PCI: mt7621: Use PCI_CONF1_EXT_ADDRESS() macro
-
- drivers/pci/controller/pci-ftpci100.c | 22 +++---------
- drivers/pci/controller/pcie-mt7621.c  |  4 +--
- include/linux/pci-conf1.h             | 51 +++++++++++++++++++++++++++
- 3 files changed, 58 insertions(+), 19 deletions(-)
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ include/linux/pci-conf1.h | 51 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 include/linux/pci-conf1.h
 
+diff --git a/include/linux/pci-conf1.h b/include/linux/pci-conf1.h
+new file mode 100644
+index 000000000000..12d2c581a67f
+--- /dev/null
++++ b/include/linux/pci-conf1.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright 2022 Pali Rohár <pali@kernel.org> */
++#ifndef PCI_CONF1_H
++#define PCI_CONF1_H
++
++/*
++ * Config Address for PCI Configuration Mechanism #1
++ *
++ * See PCI Local Bus Specification, Revision 3.0,
++ * Section 3.2.2.3.2, Figure 3-2, p. 50.
++ */
++
++#define PCI_CONF1_BUS_SHIFT	16 /* Bus number */
++#define PCI_CONF1_DEV_SHIFT	11 /* Device number */
++#define PCI_CONF1_FUNC_SHIFT	8  /* Function number */
++
++#define PCI_CONF1_BUS_MASK	0xff
++#define PCI_CONF1_DEV_MASK	0x1f
++#define PCI_CONF1_FUNC_MASK	0x7
++#define PCI_CONF1_REG_MASK	0xfc /* Limit aligned offset to a maximum of 256B */
++
++#define PCI_CONF1_ENABLE	BIT(31)
++#define PCI_CONF1_BUS(x)	(((x) & PCI_CONF1_BUS_MASK) << PCI_CONF1_BUS_SHIFT)
++#define PCI_CONF1_DEV(x)	(((x) & PCI_CONF1_DEV_MASK) << PCI_CONF1_DEV_SHIFT)
++#define PCI_CONF1_FUNC(x)	(((x) & PCI_CONF1_FUNC_MASK) << PCI_CONF1_FUNC_SHIFT)
++#define PCI_CONF1_REG(x)	((x) & PCI_CONF1_REG_MASK)
++
++#define PCI_CONF1_ADDRESS(bus, dev, func, reg) \
++	(PCI_CONF1_ENABLE | \
++	 PCI_CONF1_BUS(bus) | \
++	 PCI_CONF1_DEV(dev) | \
++	 PCI_CONF1_FUNC(func) | \
++	 PCI_CONF1_REG(reg))
++
++/*
++ * Extension of PCI Config Address for accessing extended PCIe registers
++ *
++ * No standardized specification, but used on lot of non-ECAM-compliant ARM SoCs
++ * or on AMD Barcelona and new CPUs. Reserved bits [27:24] of PCI Config Address
++ * are used for specifying additional 4 high bits of PCI Express register.
++ */
++
++#define PCI_CONF1_EXT_REG_SHIFT	16
++#define PCI_CONF1_EXT_REG_MASK	0xf00
++#define PCI_CONF1_EXT_REG(x)	(((x) & PCI_CONF1_EXT_REG_MASK) << PCI_CONF1_EXT_REG_SHIFT)
++
++#define PCI_CONF1_EXT_ADDRESS(bus, dev, func, reg) \
++	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
++	 PCI_CONF1_EXT_REG(reg))
++
++#endif
 -- 
 2.20.1
 
