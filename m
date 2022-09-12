@@ -2,80 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F8BC5B5EC3
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 19:05:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 986E35B5EDD
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 19:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbiILRFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Sep 2022 13:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+        id S229981AbiILRIO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Sep 2022 13:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiILRFA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Sep 2022 13:05:00 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106D914007
-        for <linux-pci@vger.kernel.org>; Mon, 12 Sep 2022 10:04:59 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id d5so7570105wms.5
-        for <linux-pci@vger.kernel.org>; Mon, 12 Sep 2022 10:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=WSw0pG/esjCvtsqbCZ9krXSHuD6wI+jRIe9K2h4z8vE=;
-        b=M+3vZ3XYg3plZw4SCpqXxsMCFP0ST9C7W5K7z6MZpYYVMcxT+IUg/e6fUcHFz2osey
-         YF+Gv6HKoY8jTBAe6fewxh+f0iCDgtHVUMf3absPfnYtAAtubjczbpK1X+KfzE2NUjZ0
-         b2Wdo5D6cCJ0w9d6q4GjC36EX2pw7dMtmV3V0jcHdnGpDc9+lsPv/O3sMLY5wjErkFrs
-         nTWgTSLnjENbBX1QJv7RXL3gKZCsIeOt2vShbU3PfPaisCWQdT38SgY27Kt7QV2iGRNe
-         mnm3BEoSmHDK6m1j+EtsG1+4zDdih6yEoj7kwZVKQCo4abwBzVV4puZ1SvBJ85DP7Fdj
-         2/kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=WSw0pG/esjCvtsqbCZ9krXSHuD6wI+jRIe9K2h4z8vE=;
-        b=U3L8u194PJAFhWwqt7P82U9h8AHki76bPnWMaSRd7H49WyUCQv+yiCvJozT1crFFYz
-         259uh3WkgXujn/Gdmq5zDIESrT7gj9iMnuC43kaoZUNTN1JCsv7tO+iuHzS3MJ++zeki
-         /xMUMQKX9jegcbhlZK04YTgvaqrrj/iS2uf/m29Z5M9WKHpVu/yaBSf+P9nTEW6rNJiE
-         ZOTF56Q8xNO1z5D3CPhC7ypMP91yH+1DAjTKvMwq4SwN/wJGEs8EqMtOBdSEIaYx6Im9
-         jQrJ4KqTMVdAAZ5n5aDbQ+hAH7PKNqehpvG66ssXMBAswJfH2MRmY2EWvpTRVmE8m69Y
-         /3qw==
-X-Gm-Message-State: ACgBeo2BjdXdJRSdAUPnxYF6nJAA39ex7p8Wwse+yLvVxpmAB6QNz1Pi
-        5Bqk/f6KSLJ5wD/jopGlaIK1L2xIu3KyQHs=
-X-Google-Smtp-Source: AA6agR6+rS18XLjMNWEqzEBtmPWOlkpQZncpaLMjiQ4cZn4b5Bcr1Cs3YLzaJ4GensI/rkTvZup/wQ==
-X-Received: by 2002:a05:600c:22c7:b0:3b4:92ba:ff99 with SMTP id 7-20020a05600c22c700b003b492baff99mr1414325wmg.190.1663002297558;
-        Mon, 12 Sep 2022 10:04:57 -0700 (PDT)
-Received: from thinkpad ([117.202.184.122])
-        by smtp.gmail.com with ESMTPSA id p16-20020a05600c359000b003b486027c8asm5053277wmq.20.2022.09.12.10.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Sep 2022 10:04:56 -0700 (PDT)
-Date:   Mon, 12 Sep 2022 22:34:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        quic_rjendra@quicinc.com
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, quic_vbadigan@quicinc.com,
-        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v6 5/5] clk: qcom: Alwaya on pcie gdsc
-Message-ID: <20220912170437.GA36223@thinkpad>
-References: <1662713084-8106-1-git-send-email-quic_krichai@quicinc.com>
- <1662713084-8106-6-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S229980AbiILRIN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Sep 2022 13:08:13 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFF62127C;
+        Mon, 12 Sep 2022 10:08:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A2C1ACE0F22;
+        Mon, 12 Sep 2022 17:08:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71954C433C1;
+        Mon, 12 Sep 2022 17:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663002488;
+        bh=K49onmE+E2NcqJj4ukS7ZLgFzwR10wrL5ukkj1ASoOY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=q6Jmf5KBTtxkJRxCTHVLiXCCwsQvS8pGuKBKHH1VZfmD1xRn5vpY4KiPF10GNmrHZ
+         3VMq/cBUN9MRDtw3X6gG9MYBlX39681Xol0yAvdETTXhpNXLvtTrD6yDjuESnNrtrN
+         fYsSjvUrTfAXD6c4mY4IKu8IVK9RubbMXAVRRQnud1z7AXeGH/G4Fj0NOnimkUcqCw
+         zxZsJm1zePdRp4JyXpgTN5Wx3nrY37ifsNDsWkpkU/252Pi0KrFHeXOAQyyucaZNX4
+         aooA8s5d9t8BbBktQ4RMPu+ja56+vc2U+IIob/B/7nqVXFxBu6/WQq16EJ5ICRSGlx
+         CUN0nmM4K02Rg==
+Date:   Mon, 12 Sep 2022 12:08:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH v6 0/5] PCI: qcom: Add system suspend & resume support
+Message-ID: <20220912170806.GA512933@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1662713084-8106-6-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <af79fc4d-4996-bb2c-7388-2d9afd991e7a@quicinc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -84,46 +57,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+ Rajendra
-
-On Fri, Sep 09, 2022 at 02:14:44PM +0530, Krishna chaitanya chundru wrote:
-> Make GDSC always on to ensure controller and its dependent clocks
-> won't go down during system suspend.
+On Mon, Sep 12, 2022 at 09:40:30PM +0530, Krishna Chaitanya Chundru wrote:
+> On 9/10/2022 1:21 AM, Bjorn Helgaas wrote:
+> > On Fri, Sep 09, 2022 at 02:14:39PM +0530, Krishna chaitanya chundru wrote:
+> > > Add suspend and resume syscore ops.
+> > > 
+> > > When system suspends, and if the link is in L1ss, disable the clocks
+> > > and power down the phy so that system enters into low power state by
+> > > parking link in L1ss to save the maximum power. And when the system
+> > > resumes, enable the clocks back and power on phy if they are disabled
+> > > in the suspend path.
+> > > 
+> > > we are doing this only when link is in l1ss but not in L2/L3 as
+> > > nowhere we are forcing link to L2/L3 by sending PME turn off.
+> > > 
+> > > is_suspended flag indicates if the clocks are disabled in the suspend
+> > > path or not.
+> > > 
+> > > There is access to Ep PCIe space to mask MSI/MSIX after pm suspend ops
+> > > (getting hit by affinity changes while making CPUs offline during suspend,
+> > > this will happen after devices are suspended (all phases of suspend ops)).
+> > > When registered with pm ops there is a crash due to un-clocked access,
+> > > as in the pm suspend op clocks are disabled. So, registering with syscore
+> > > ops which will called after making CPUs offline.
+> > > 
+> > > Make GDSC always on to ensure controller and its dependent clocks
+> > > won't go down during system suspend.
+> > > 
+> > > Krishna chaitanya chundru (5):
+> > >    PCI: qcom: Add system suspend and resume support
+> > >    PCI: qcom: Add retry logic for link to be stable in L1ss
+> > >    phy: core: Add support for phy power down & power up
+> > >    phy: qcom: Add power down/up callbacks to pcie phy
+> > >    clk: qcom: Alwaya on pcie gdsc
+> >
+> > This seems fairly ugly because it doesn't fit nicely into the PM
+> > framework.  Why is this a qcom-specific thing?  What about other
+> > DWC-based controllers?
+>
+> We wanted to allow system S3 state by turning off all PCIe clocks
+> but at the same time retaining NVMe device in D0 state and PCIe link
+> in l1ss state.
+>
+> Here nothing really specific to DWC as PCIe controller remains intact.
 > 
+> And the Qcom PHY allows this scheme��(that is to retain the link
+> state in l1ss even though all pcie clocks are turned off).
 
-You need to mention the SoC name in subject, otherwise one cannot know for
-which platform this patch applies to.
+Is there somewhere in the PCIe spec I can read about how a link with
+clocks turned off can remain in L1.1 or L1.2?
 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/clk/qcom/gcc-sc7280.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/qcom/gcc-sc7280.c b/drivers/clk/qcom/gcc-sc7280.c
-> index 7ff64d4..2f781a2 100644
-> --- a/drivers/clk/qcom/gcc-sc7280.c
-> +++ b/drivers/clk/qcom/gcc-sc7280.c
-> @@ -3109,7 +3109,7 @@ static struct gdsc gcc_pcie_1_gdsc = {
->  		.name = "gcc_pcie_1_gdsc",
->  	},
->  	.pwrsts = PWRSTS_OFF_ON,
-> -	.flags = VOTABLE,
-> +	.flags = ALWAYS_ON,
+> Since clocks are completely managed by qcom platform driver, we are
+> trying to manage them during S3/S0 transitions with PM callbacks.
 
-Rajendra, should we also put PCIe GDSC into retention state as you have done for
-USB [1]?
+I'm looking at this text in PCIe r6.0, sec 5.4.1:
 
-Thanks,
-Mani
+  Components in the D0 state (i.e., fully active state) normally keep
+  their Upstream Link in the active L0 state, as defined in � Section
+  5.3.2 . ASPM defines a protocol for components in the D0 state to
+  reduce Link power by placing their Links into a low power state and
+  instructing the other end of the Link to do likewise. This
+  capability allows hardware-autonomous, dynamic Link power reduction
+  beyond what is achievable by software-only controlled (i.e., PCI-PM
+  software driven) power management.
 
-[1] https://lore.kernel.org/all/20220901101756.28164-2-quic_rjendra@quicinc.com/
+How does this qcom software management of clocks fit into this scheme?
+It seems to me that if you need software to turn clocks off and on,
+that is no longer ASPM.
 
->  };
->  
->  static struct gdsc gcc_ufs_phy_gdsc = {
-> -- 
-> 2.7.4
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bjorn
