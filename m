@@ -2,130 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A065B5F76
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 19:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF1B35B6140
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 20:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbiILRhv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Sep 2022 13:37:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        id S229670AbiILSp3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Sep 2022 14:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiILRhu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Sep 2022 13:37:50 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548D62A72C
-        for <linux-pci@vger.kernel.org>; Mon, 12 Sep 2022 10:37:49 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id s206so8953999pgs.3
-        for <linux-pci@vger.kernel.org>; Mon, 12 Sep 2022 10:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=rDSb8wBkava5eJX1NDUA2GSRdCj2vETP+h2CNX/Jsas=;
-        b=zid13Oa92HtzMnA32QRfh2V53dl3pMFmtq47ObgaNEWfIMYFalfim0e9lrFkJFYuu+
-         /G6U2No3QUsfUeJhSLinRAudXTDfo52ev29lh2uiP4FyZuKt0Xmg4WiPG9zAc+aLHyIF
-         uriKINcJ3tdoVNZeqKwpIHC8qiyreEcyJ+tAw2HkCsHu4qsetsVBKtmoa/2MX8ZHs5oe
-         Ciww/EJDUHkLBeHM41n9wKRCSrjQ5rRqSGIJvSt585itKEdLIiSmP3okgiWDsbQ0Dlkw
-         CKqMqMEsS4D5tzHDW4uxMAxnO8ZCi56RqnuTgXWCtvlrQM8qUNPeL45q/Hol8JmdYyk+
-         95Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=rDSb8wBkava5eJX1NDUA2GSRdCj2vETP+h2CNX/Jsas=;
-        b=TeEfM9f3oZ7cyrVMOsrkOTdoEN//UL1xcx5gciDhgZxrrIhEoe93yf+XN4DKkWQuAt
-         gGHfiAI8S4R+WFd2Mh+a5e7J30gCFOLO4FzXexbJ/IdftCKvpgcQq7ldUTct8MhZm2M9
-         vCxOHbJhhcdjT9cdym05AlEPO2LSoFkCmoqCqXqq/KWgkrGD6fkIBbMBVNpljy70QPjQ
-         uMnx3pc9i99RZ/e+bZvM9N11X5L7rqdbRZBAlWXXfY+rTo4Gicle+xV7kWZE68fCdw/J
-         53cJYwiria43DL7rrBxcmbs9BIoR4+NiqsNej4ECic3tKl5qKqaac3S5HR7naVxbclNB
-         kRUA==
-X-Gm-Message-State: ACgBeo2USD7bXe64L7QaFZMkE+2tzAuXloFS0+HBjj04OS8VduYAx3j4
-        q+d85gLc46V8K3QUb8yiWtZznRhWwyGuItg=
-X-Google-Smtp-Source: AA6agR4l3pM0O1E/J+Y4AXeoLROuvig+uKorFygfak4fjEPRdVYtXmMT6bcOpodc5WOyYIQWlBdH4Q==
-X-Received: by 2002:a65:6e0c:0:b0:438:a981:aea7 with SMTP id bd12-20020a656e0c000000b00438a981aea7mr12291165pgb.144.1663004268806;
-        Mon, 12 Sep 2022 10:37:48 -0700 (PDT)
-Received: from workstation ([117.202.184.122])
-        by smtp.gmail.com with ESMTPSA id y65-20020a62ce44000000b00536816c0d4asm6003024pfg.147.2022.09.12.10.37.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Sep 2022 10:37:47 -0700 (PDT)
-Date:   Mon, 12 Sep 2022 23:07:42 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, quic_vbadigan@quicinc.com,
-        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v6 0/5] PCI: qcom: Add system suspend & resume support
-Message-ID: <20220912173742.GC25849@workstation>
-References: <1662713084-8106-1-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S230187AbiILSp2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Sep 2022 14:45:28 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6193020BE1
+        for <linux-pci@vger.kernel.org>; Mon, 12 Sep 2022 11:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663008327; x=1694544327;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=/pbWiI69DvSPYXp1aeVlBCfp5yZ+Lmp+avJfk2jUYNA=;
+  b=G5mcuyu9xJLp8NPYJVdofImsA3lC8AnwyqWtrZYS6/f/x2662ZUQEhlh
+   4DYTVynGLWwhJKKMFR2gPO0r/Fxk0/J9AklOYnPYXCeujZiy6JzCwA06T
+   1ui7QSLpar3BpX5YeoMHh90TFpvqlN9iq/UU0Xw0XohXoGFSbm8dvToLc
+   tPHIZuQ71wdRcDn+NjY+7ewhnSKTBGkFDf1t6oeuLDu0eoazwUXXx6WZU
+   ZpmnVrVFUV9O51EBEqpOrs+7MbWtzrhZW0IdamX0TO+OfHQ4GNs1vrnWS
+   tqtTtQYdam3CL5f3VPqQ5mPvPK2aDs4eqkSLozuV4GO2S7AODVTbzFwE0
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="284962078"
+X-IronPort-AV: E=Sophos;i="5.93,310,1654585200"; 
+   d="scan'208";a="284962078"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2022 11:45:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,310,1654585200"; 
+   d="scan'208";a="567278712"
+Received: from lkp-server02.sh.intel.com (HELO 4011df4f4fd3) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 12 Sep 2022 11:45:25 -0700
+Received: from kbuild by 4011df4f4fd3 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oXoQu-0002kD-2X;
+        Mon, 12 Sep 2022 18:45:24 +0000
+Date:   Tue, 13 Sep 2022 02:45:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     kbuild-all@lists.01.org, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [lpieralisi-pci:pci/dwc 3/3]
+ drivers/pci/controller/dwc/pcie-kirin.c:373:15: error: implicit declaration
+ of function 'gpiod_count'
+Message-ID: <202209130205.CPp5dG1q-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1662713084-8106-1-git-send-email-quic_krichai@quicinc.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 09, 2022 at 02:14:39PM +0530, Krishna chaitanya chundru wrote:
-> Add suspend and resume syscore ops.
-> 
-> When system suspends, and if the link is in L1ss, disable the clocks
-> and power down the phy so that system enters into low power state by
-> parking link in L1ss to save the maximum power. And when the system
-> resumes, enable the clocks back and power on phy if they are disabled
-> in the suspend path.
-> 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
+head:   2023f9c9190e657b9853a442899a52b14253aea3
+commit: 2023f9c9190e657b9853a442899a52b14253aea3 [3/3] PCI: dwc: Replace of_gpio_named_count() by gpiod_count()
+config: xtensa-randconfig-r023-20220911 (https://download.01.org/0day-ci/archive/20220913/202209130205.CPp5dG1q-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?id=2023f9c9190e657b9853a442899a52b14253aea3
+        git remote add lpieralisi-pci https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+        git fetch --no-tags lpieralisi-pci pci/dwc
+        git checkout 2023f9c9190e657b9853a442899a52b14253aea3
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=xtensa SHELL=/bin/bash drivers/pci/controller/dwc/
 
-You need to mention that you are only turning off the PCIe controller
-clocks and PHY is still powered by a separate domain (MX) so the link
-statys intact.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-> we are doing this only when link is in l1ss but not in L2/L3 as
-> nowhere we are forcing link to L2/L3 by sending PME turn off.
-> 
-> is_suspended flag indicates if the clocks are disabled in the suspend
-> path or not.
-> 
-> There is access to Ep PCIe space to mask MSI/MSIX after pm suspend ops
-> (getting hit by affinity changes while making CPUs offline during suspend,
-> this will happen after devices are suspended (all phases of suspend ops)).
-> When registered with pm ops there is a crash due to un-clocked access,
-> as in the pm suspend op clocks are disabled. So, registering with syscore
-> ops which will called after making CPUs offline.
-> 
-> Make GDSC always on to ensure controller and its dependent clocks
-> won't go down during system suspend.
-> 
+All errors (new ones prefixed by >>):
 
-Where is the changelog? You seem to have added PHY and CLK patches to
-this series. You need to comment on that.
+   drivers/pci/controller/dwc/pcie-kirin.c: In function 'kirin_pcie_get_gpio_enable':
+>> drivers/pci/controller/dwc/pcie-kirin.c:373:15: error: implicit declaration of function 'gpiod_count' [-Werror=implicit-function-declaration]
+     373 |         ret = gpiod_count(dev, "hisilicon,clken");
+         |               ^~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-Thanks,
-Mani
 
-> Krishna chaitanya chundru (5):
->   PCI: qcom: Add system suspend and resume support
->   PCI: qcom: Add retry logic for link to be stable in L1ss
->   phy: core: Add support for phy power down & power up
->   phy: qcom: Add power down/up callbacks to pcie phy
->   clk: qcom: Alwaya on pcie gdsc
-> 
->  drivers/clk/qcom/gcc-sc7280.c            |   2 +-
->  drivers/pci/controller/dwc/pcie-qcom.c   | 156 ++++++++++++++++++++++++++++++-
->  drivers/phy/phy-core.c                   |  30 ++++++
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c |  50 ++++++++++
->  include/linux/phy/phy.h                  |  20 ++++
->  5 files changed, 256 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+vim +/gpiod_count +373 drivers/pci/controller/dwc/pcie-kirin.c
+
+   364	
+   365	static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
+   366					      struct platform_device *pdev)
+   367	{
+   368		struct device *dev = &pdev->dev;
+   369		char name[32];
+   370		int ret, i;
+   371	
+   372		/* This is an optional property */
+ > 373		ret = gpiod_count(dev, "hisilicon,clken");
+   374		if (ret < 0)
+   375			return 0;
+   376	
+   377		if (ret > MAX_PCI_SLOTS) {
+   378			dev_err(dev, "Too many GPIO clock requests!\n");
+   379			return -EINVAL;
+   380		}
+   381	
+   382		pcie->n_gpio_clkreq = ret;
+   383	
+   384		for (i = 0; i < pcie->n_gpio_clkreq; i++) {
+   385			pcie->gpio_id_clkreq[i] = of_get_named_gpio(dev->of_node,
+   386							    "hisilicon,clken-gpios", i);
+   387			if (pcie->gpio_id_clkreq[i] < 0)
+   388				return pcie->gpio_id_clkreq[i];
+   389	
+   390			sprintf(name, "pcie_clkreq_%d", i);
+   391			pcie->clkreq_names[i] = devm_kstrdup_const(dev, name,
+   392								    GFP_KERNEL);
+   393			if (!pcie->clkreq_names[i])
+   394				return -ENOMEM;
+   395		}
+   396	
+   397		return 0;
+   398	}
+   399	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
