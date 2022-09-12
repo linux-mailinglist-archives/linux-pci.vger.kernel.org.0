@@ -2,84 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3CF5B5239
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 02:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFB15B526B
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Sep 2022 03:24:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiILAZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Sep 2022 20:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
+        id S229558AbiILBYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Sep 2022 21:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiILAZ2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Sep 2022 20:25:28 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D8923BF2;
-        Sun, 11 Sep 2022 17:25:26 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id v6so8789224ljj.0;
-        Sun, 11 Sep 2022 17:25:26 -0700 (PDT)
+        with ESMTP id S229510AbiILBYe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Sep 2022 21:24:34 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33626E0B;
+        Sun, 11 Sep 2022 18:24:32 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id p5so8815935ljc.13;
+        Sun, 11 Sep 2022 18:24:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=h8W2MnZNp3EZmLKRR3GWmvgYqI8g8ANtG+giDN21Mqk=;
-        b=NNqmkuzUK6Nd6d3TWklj2yIflQbEKWrbIx+e8qxCgDx+ijBblJrZE8LbkSpQsjeBir
-         dOeevbJGBE0HJoQuwEftKsr8b3ofSFhXNQIlrCvb/5t0ZpoL26n3Y1IMvMtNnvcs3VSj
-         cJt0zVBGQuaFIrvgsBamWITds+4NK7XBgNikC7U0SjfSrMXUyc9Xrjg2RfLTQ1RhXd0+
-         Ku1OnLVJNkf+Di8r4ArtlCVB8gfdz1b5D5Vh40UTuUAh3BEboB6IHzleoQooLLCTw5xO
-         s7B1eWexM9w1jxota4iiMOovN43dHP3eDD29YImQ16CqSitnC2sasFQskhKZHcwbPk65
-         QVZA==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=L5Fh/joIDcg5b/gOBOrGumLyR4iznWiysgnN0ur4ZW4=;
+        b=OhwiIHp3Pj4CBhTeepPdzWcnpYVUE9VwYka9xsxcd6UQFOec9/LVRHpU/VwK+ysElf
+         cp793Cqb+zS2QlSSitB5ypMCrps0VlxmNjxI9GYYXLEPBY5s2jNXgHluT2LExQx909mQ
+         mFn1FyzutjLxGwDBTtQ+spMTdZsXSzoPcWVzi1rOThK7jHqPrFyrI6lWmj0F2K1nRPHK
+         jvoGe0PJi71svLXKXFMAfzK57QzinJ4K0S+kvXH/Pq3A0PqoSARtI8ffpn7iK5U6PVWV
+         WSKFy7p3bNaW6hwJm38ibg+lVlSpjQfY0mAskWgeXr2jk6AOdWjXZCfJ19PlP2vF/BK5
+         Jo7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=h8W2MnZNp3EZmLKRR3GWmvgYqI8g8ANtG+giDN21Mqk=;
-        b=rg07l2baPFjr4yjT8ujIa3UXg+9C7CVgNSKtsOLj3ZGTZ1H3kgxOTT6SsrBaMw1FhG
-         3G6oEeMOOTAb8/T1S6fc5bBBFfwIDrlyaJ4+12n8ylkCdaeP26ocmXe8oZj3gV5KdIch
-         797tSeXPYsCqOQM7CgqCPNWOpxOltcHbTYAf3yBZjJL0V0JCP/cQ1CDXjfeN8HpPE2sm
-         6Q04vh6+xadax12PP03QXCXwe97nEOzqQZOvFEVIozI4bxgdY8H8fI/L2bRzIqwASNJf
-         ZlubARWb0gBMOZ+BmuZE8+/hKQBO/iwdgQwFOGwmHMqhOwoF9lAUljWKXtSsxVhdV9na
-         sWEA==
-X-Gm-Message-State: ACgBeo1OKpQAW8FnvWO4r0ffyioVzID15FJNw0o05DT/lJoj1FmBXCse
-        IRm8mkFbd8pc3MbtswhjJ3o=
-X-Google-Smtp-Source: AA6agR6fWGbuq1oQIOBjg+4w4n6JqgNzTcJXHVGsGnK7wvUl3teiIllyKwXeUlece/Rd3BsQ6U3+3w==
-X-Received: by 2002:a05:651c:160c:b0:264:a5ae:7dd2 with SMTP id f12-20020a05651c160c00b00264a5ae7dd2mr7290892ljq.80.1662942324919;
-        Sun, 11 Sep 2022 17:25:24 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=L5Fh/joIDcg5b/gOBOrGumLyR4iznWiysgnN0ur4ZW4=;
+        b=jszOcQ3ey1kw4lTxFn9sAQ6AZ2SrRcz+yHUykngHbb2k9rFGPmbHtQS7yAqzvIozL0
+         FmsUYKfGjBDgX1y94wo61JoSvPRsikrbUFSf9TmJijFvtSv2tSTzSjrv3GTImrHnwrmW
+         10Lw0JQw6aOKKyoXuk4s8ox81sL0mVnDe7FpuDgZErC+phtCJ7NOHrIhW0XtyHt2eqw7
+         bAtgXVi2ry+h3bKSsgkn/+XryupObTo1LI0i5qJywY3fP+iPBvIEucSxPVsfmo6/MC1V
+         uxq2qhKQ9JRIn7E6RHEh4wrT4oxxhCliIRn95uZXJiRCohgvsc+X9tDDIejLcgAhxMtj
+         5icw==
+X-Gm-Message-State: ACgBeo18Ps1BUtWBqt2mMTcbaByvj+Ztn2+W50tfjDE4CVBv2xkvsddG
+        6uE6+i1njpFxYZRXS0YcLaQ=
+X-Google-Smtp-Source: AA6agR7WYKXi5FrvrZwo9YjKCKKzszbzfSMrE9s+S7hamuNKbPSroMGiE23ADZ01XN7Sk92JaLfYwQ==
+X-Received: by 2002:a2e:808f:0:b0:26a:b498:2c87 with SMTP id i15-20020a2e808f000000b0026ab4982c87mr7265597ljg.279.1662945870385;
+        Sun, 11 Sep 2022 18:24:30 -0700 (PDT)
 Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id z28-20020a2eb53c000000b0025fe7f33bc4sm820357ljm.49.2022.09.11.17.25.23
+        by smtp.gmail.com with ESMTPSA id t2-20020ac243a2000000b00497a8f04905sm780384lfl.251.2022.09.11.18.24.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Sep 2022 17:25:24 -0700 (PDT)
-Date:   Mon, 12 Sep 2022 03:25:22 +0300
+        Sun, 11 Sep 2022 18:24:29 -0700 (PDT)
+Date:   Mon, 12 Sep 2022 04:24:26 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willmcvicker@google.com
-Subject: Re: [PATCH v5 20/20] PCI: dwc: Add Baikal-T1 PCIe controller support
-Message-ID: <20220912002522.arx4vypiv363qcni@mobilestation>
-References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
- <20220822184701.25246-21-Sergey.Semin@baikalelectronics.ru>
- <YwzbARMkb/69+l2d@lpieralisi>
- <63a54a1b-66ba-9739-8217-13f75e602cd5@arm.com>
- <98179709-1ece-61ab-d43a-fc38a4fd3f67@arm.com>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH RESEND v5 22/24] dmaengine: dw-edma: Bypass dma-ranges
+ mapping for the local setup
+Message-ID: <20220912012426.xcg4tu6wzogbirp6@mobilestation>
+References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220822185332.26149-23-Sergey.Semin@baikalelectronics.ru>
+ <7a035b29-fca6-2650-c3c1-eedb3904c32d@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98179709-1ece-61ab-d43a-fc38a4fd3f67@arm.com>
+In-Reply-To: <7a035b29-fca6-2650-c3c1-eedb3904c32d@arm.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -90,57 +83,117 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 09:54:14AM +0100, Robin Murphy wrote:
-> On 2022-08-31 09:36, Robin Murphy wrote:
-> > On 2022-08-29 16:28, Lorenzo Pieralisi wrote:
-> > [...]
-> > > > +static int bt1_pcie_add_port(struct bt1_pcie *btpci)
-> > > > +{
-> > > > +    struct device *dev = &btpci->pdev->dev;
-> > > > +    int ret;
-> > > > +
-> > > > +    /*
-> > > > +     * DW PCIe Root Port controller is equipped with eDMA capable of
-> > > > +     * working with the 64-bit memory addresses.
-> > > > +     */
-> > > > +    ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> > > > +    if (ret)
-> > > > +        return ret;
-> > > 
-> > > Is this the right place to set the DMA mask for the host controller
-> > > embedded DMA controller (actually, the dev pointer is the _host_
-> > > controller device) ?
-> > > 
-> > > How this is going to play when combined with:
-> > > 
-> > > https://lore.kernel.org/linux-pci/1e63a581-14ae-b4b5-a5bf-ca8f09c33af6@arm.com
-> > > 
-> > > It is getting a bit confusing. I believe the code in the link
-> > > above sets the mask so that through the DMA API we are capable
-> > > of getting an MSI doorbell virtual address whose physical address
-> > > can be addressed by the endpoint; this through the DMA API.
-> > > 
-> > > This patch is setting the DMA mask for a different reason, namely
-> > > setting the host controller embedded DMA controller addressing
-> > > capabilities.
-> > > 
-> > > AFAICS - both approaches set the mask for the same device - now
-> > > the question is about which one is legitimate and how to handle
-> > > the other.
+On Wed, Aug 31, 2022 at 10:17:30AM +0100, Robin Murphy wrote:
+> On 2022-08-22 19:53, Serge Semin wrote:
+> > DW eDMA doesn't perform any translation of the traffic generated on the
+> > CPU/Application side. It just generates read/write AXI-bus requests with
+> > the specified addresses. But in case if the dma-ranges DT-property is
+> > specified for a platform device node, Linux will use it to map the CPU
+> > memory regions into the DMAable bus ranges. This isn't what we want for
+> > the eDMA embedded into the locally accessed DW PCIe Root Port and
+> > End-point. In order to work that around let's set the chan_dma_dev flag
+> > for each DW eDMA channel thus forcing the client drivers to getting a
+> > custom dma-ranges-less parental device for the mappings.
 > > 
-> > Assuming the dw-edma-pcie driver is the relevant one, that already sets
-> > its own masks on its own device, so I also don't see why this is here.
+> > Note it will only work for the client drivers using the
+> > dmaengine_get_dma_device() method to get the parental DMA device.
 > 
 
-> Ah, I just found the patch at [1], which further implies that this is indeed
-> completely bogus.
+> No, this is nonsense. If the DMA engine is on the host side of the bridge
+> then it should not have anything to do with the PCI device at all, it should
+> be associated with the platform device,
 
-Really? Elaborate please. What you said in the comment to that patch
-has nothing to do with the change you comment here.
+Well. The DMA-engine is embedded into the PCIe Root Port bus, is associated
+with the platform device it's embedded to, and it doesn't have
+anything to do with any particular PCI device.
+
+> and thus any range mapping on the bridge itself would be irrelevant anyway.
+
+Really? I find it otherwise. Please see the way the "dma-ranges"
+property is parsed and works during the device-specific memory ranges
+mapping when it's applicable for the PCIe Root Ports.
+
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Acked-By: Vinod Koul <vkoul@kernel.org>
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Fix the comment a bit to being clearer. (@Manivannan)
+> > 
+> > Changelog v3:
+> > - Conditionally set dchan->dev->device.dma_coherent field since it can
+> >    be missing on some platforms. (@Manivannan)
+> > - Remove Manivannan' rb and tb tags since the patch content has been
+> >    changed.
+> > ---
+> >   drivers/dma/dw-edma/dw-edma-core.c | 20 ++++++++++++++++++++
+> >   1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 6a8282eaebaf..4f56149dc8d8 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -716,6 +716,26 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+> >   	if (chan->status != EDMA_ST_IDLE)
+> >   		return -EBUSY;
+> > +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+> > +	 * controlled from the CPU/Application side since in that case
+> > +	 * the local memory address is left untranslated.
+> > +	 */
+> > +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> > +		dchan->dev->chan_dma_dev = true;
+> > +
+> > +#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+> > +    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+> > +    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+> > +		dchan->dev->device.dma_coherent = chan->dw->chip->dev->dma_coherent;
+> > +#endif
+> > +
+> > +		dma_coerce_mask_and_coherent(&dchan->dev->device,
+> > +					     dma_get_mask(chan->dw->chip->dev));
+> > +		dchan->dev->device.dma_parms = chan->dw->chip->dev->dma_parms;
+> > +	} else {
+> > +		dchan->dev->chan_dma_dev = false;
+> > +	}
+> 
+
+> NAK. Don't try to poke into DMA API internals and copy random partial pieces
+> between devices, it doesn't work properly (I can guess that your system
+> doesn't have an IOMMU...) and having to deal with ugly mess like this in
+> drivers just makes it harder for us to maintain the DMA API itself.
+
+Hold on with that angry tone. First of all I don't really see you
+fixing the drivers/dma/ti/k3-udma.c driver then. Second read more
+carefully the patch log. Judging by your comments you don't fully
+understand the problem.
+
+> 
+> Fair enough if you have good reason to create logical child devices to
+> represent individual DMA channels, but the correct way to handle that is to
+> keep the real parent device pointer around and use that for DMA API calls.
+
+That's what is in my patches. The problem is that the "dma-ranges"
+property specified for the parental PCIe Root Port device isn't
+applicable for the DMA-engine embedded into it. The "dma-ranges" is
+supposed to be used for the PCIe-bus peripheral devices since their
+MRw/MRd TLPs are translated by means of the Inbound iATU engine. The
+IO accesses generated by the PCIe controller itself aren't affected by
+iATU. So any mapping performed for the PCIe Root Port controller
+platform device mustn't take these DMA-ranges into account. That's why
+I need to enable the "chan_dma_dev" DMA-engine capability and just
+copy the main DMA-parts of the parental device except the
+"dma_range_map" data. If you have any better suggestion in mind
+please share, but what you've said so far definitely won't give us any
+explicit solution.
 
 -Sergey
 
 > 
 > Robin.
 > 
-> [1] https://lore.kernel.org/dmaengine/20220822185332.26149-23-Sergey.Semin@baikalelectronics.ru/
+> > +
+> >   	pm_runtime_get(chan->dw->chip->dev);
+> >   	return 0;
