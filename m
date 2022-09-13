@@ -2,52 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5222B5B7CCC
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 23:53:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2165F5B7CF4
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 00:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbiIMVxE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 17:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45386 "EHLO
+        id S229473AbiIMWTW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 18:19:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiIMVxE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 17:53:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6876D9FF;
-        Tue, 13 Sep 2022 14:53:03 -0700 (PDT)
+        with ESMTP id S229436AbiIMWTV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 18:19:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1688E1A38F;
+        Tue, 13 Sep 2022 15:19:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E9093615B0;
-        Tue, 13 Sep 2022 21:53:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FC5C433C1;
-        Tue, 13 Sep 2022 21:53:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C7C1AB810F4;
+        Tue, 13 Sep 2022 22:19:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E8FC433C1;
+        Tue, 13 Sep 2022 22:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663105982;
-        bh=Xxpeh83ghyVDcQZqEqOkPGke5vxRqIieah6+QXlXYMc=;
+        s=k20201202; t=1663107558;
+        bh=vOM7sqZItl/trS+7jw/NfA7mCPUKtLKs8p8juFEz1LQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=m8dxabHFp5ULuP6WVPkdHq/pklVKFakjrmD+SbtwbiclkVePpe6JtwAIIg9ofLhiE
-         aLCDo58f47IfpYxG1Dc/pYnE+HhT0q2Uq6w8zqZBo5gZ1Ycq/JPzvmri6zAk22eFE2
-         jRXu4hxSxF02khL3LBiUf/WEnXyzrsFD2Fw31SE9jUJYtBmUGTwbRke/fYoLfwiK8b
-         ADKQlfqRWd/BgsbHfAJ7Kw39MaxjfDe2llKNOR4iuz3REmytY75UhOUrUwrbVLNhhf
-         CYffVsOrkK5xQcJa43+ocqDG7FuzS7IlCZywBl4cOF5Dug/qcxtMGg7b4hYUgVJlu9
-         NyaSmZ8RPh8UQ==
-Date:   Tue, 13 Sep 2022 16:53:00 -0500
+        b=PqY2sMOHIFT9Hb81j94J0rf9pS4s4sfT4NMscI+2mfmuako+a2b4cqOx8dG/wawnr
+         Jh5hfF3unFix49Lcr+LmcEVF6JQ+zzbUJj/toSoRvoTw/5VVUpbrR+xLpAu3fZauyk
+         Rx8/zEI88uPJ/xbsGWJTH2tyyZ7PzfNw0miGbHeXfoVKCy50rqL7VeYow23AQUEnq4
+         n/hKChC9+JbfnKuz5cl04SNOvomK8erZlvC948pmx9bnHood+2BbE8a07mJ5/Ue7fe
+         LCJW18jHOZcHWunYifNqxyn1pYn/oFCUMLwPNzLJF4XSCJR4oIHlec/buR4H9G26Lo
+         cO2ze6p4tuRDw==
+Date:   Tue, 13 Sep 2022 17:19:16 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] PCI: Add standard PCI Config Address macros
-Message-ID: <20220913215300.GA626928@bhelgaas>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com, imx@lists.linux.dev,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v10 5/6] PCI: endpoint: makeup pci-epf-vntb.c
+Message-ID: <20220913221916.GA627631@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220913212421.yblwhgbd7zpdg5eo@pali>
+In-Reply-To: <20220913210957.3493826-6-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,58 +60,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 11:24:21PM +0200, Pali Rohár wrote:
-> On Tuesday 13 September 2022 16:11:43 Bjorn Helgaas wrote:
-> > On Sun, Sep 11, 2022 at 01:20:22PM +0200, Pali Rohár wrote:
-> > > Lot of PCI and PCIe controllers are using standard Config Address for PCI
-> > > Configuration Mechanism #1 (as defined inPCI Local Bus Specification) or
-> > > its extended version.
-> > > 
-> > > So introduce new macros PCI_CONF1_ADDRESS() and PCI_CONF1_EXT_ADDRESS() in
-> > > new include file linux/pci-conf1.h which can be suitable for PCI and PCIe
-> > > controllers which uses this type of access to PCI config space.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > ---
-> > >  include/linux/pci-conf1.h | 51 +++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 51 insertions(+)
-> > >  create mode 100644 include/linux/pci-conf1.h
-> > 
-> > This seems like a nice addition, but it would be nice if we could
-> > encapsulate it in drivers/pci.
-> > 
-> > I know it's parallel to the existing include/linux/pci-ecam.h.  I wish
-> > we could encapsulate *that* in drivers/pci, too.  For pci-ecam.h, I
-> > think the only things that prevent that are drivers/acpi/pci_mcfg.c,
-> > loongarch, and a few arm64 things.
-> 
-> As these macros describe original Intel x86 API, it can be used also in
-> arch/x86 PCI code.
+In subject, capitalize and change "makeup" to "Clean up":
 
-I would love to see that happen, too, and that could be a reason to
-put pci-conf.h in include/linux.  But this series doesn't include
-that.
+  PCI: endpoint: pci-epf-vntb: Clean up
 
-> > I guess that's a long-winded way of saying that I think maybe we could
-> > put this in drivers/pci/pci.h even though the parallel ECAM stuff is
-> > in include/linux/pci-ecam.h.
-> 
-> Well, if you like this change, let me know where to put those new
-> macros, into which file and in which subdirectory, and I can prepare a
-> new patch version.
+On Tue, Sep 13, 2022 at 04:09:56PM -0500, Frank Li wrote:
+> Remove unused field: epf_db_phy.
+> Remove __iomem before epf_db.
+> Remove dupicate check if (readl(ntb->epf_db + i * 4)).
+> Using readl_relaxed instead of readl.
+> Using marco ENTRY_SIZE instead of number 4 at all place.
 
-drivers/pci/pci.h
+Add "()" after function names.
 
-> But doing all those arm64, x86, ACPI cleanup is a huge cross-tree work
-> which I'm really not going to do...
+s/marco/macro/
 
-Of course not, I didn't suggest or expect that.  What I'm trying to
-point out is that I don't think we have very good reasons for
-pci-ecam.h to be public.  And therefore, I don't think we need
-pci-conf1.h to be next to it.
+It would be nice if "ENTRY_SIZE" had a hint about what kind of entry
+we're talking about.
 
-Unless you want to convert the arch/x86 code to use them as well.  I'm
-not asking you to do that either, just that if you *did* do that, it
-would be an argument for keeping the macros where you put them.
+Since this is a collection of random cleanups, I noticed a typo in
+epf_ntb_configure_interrupt() kernel-doc: s/capaiblity/capability/
+
+The struct epf_ntb_ctrl definition is also whitespace-damaged.  The
+members of struct epf_ntb_ctrl and struct epf_ntb should follow the
+same indentation style.  Some members of struct epf_ntb_ctrl are
+indented with a tab, others with space.  Either make them all tabs and
+indent struct epf_ntb similarly, or indent the struct epf_ntb_ctrl
+members with a single space.
+
+The comments in the file have a whole collection of ways to spell
+vhost: Virtual Host, VHOST, VHost, vHOST, vhost.  Make them all the
+same, please.  You can use "Virtual Host (VHOST)" or whatever the
+first time if you want to use the short version later.
+
+Same for host/HOST/etc.  I don't want to read things like this:
+
+  @ntb: NTB device that facilitates communication between HOST and vHOST2
+
+  Wrapper to initialize a particular EPC interface and start the
+  workqueue to check for commands from host.
+
+and wonder whether "host" is supposed to be the same as "HOST".  Also,
+why does that say "vHOST*2*"?
+
+There are several instances of "HOST1" and "HOST2" (and "vHOST2").
+Should those appear somewhere in the diagram at the top of the file?
+
+The diagram starts with "/**" which means it's kernel-doc, but the
+diagram is not kernel-doc.  Please run this:
+
+  scripts/kernel-doc -v -none drivers/pci/endpoint/functions/pci-epf-vntb.c
+
+and fix all the warnings.
 
 Bjorn
