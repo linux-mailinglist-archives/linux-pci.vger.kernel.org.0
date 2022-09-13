@@ -2,71 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14B7A5B78B4
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 19:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F128F5B78E1
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 19:54:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233621AbiIMRru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 13:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
+        id S232198AbiIMRw4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 13:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233549AbiIMRrX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 13:47:23 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C9E27154
-        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 09:44:45 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id p18so12393772plr.8
-        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 09:44:45 -0700 (PDT)
+        with ESMTP id S233622AbiIMRwg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 13:52:36 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16766B8CB
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 09:52:05 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id o70-20020a17090a0a4c00b00202f898fa86so2490998pjo.2
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 09:52:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=03a1aUyluFxRyNFgmls0Dhj57OlQZXnKGaEc/66Md1Y=;
-        b=HqYeZBhfFnNcG3qVw5Vf8NPJa76jsVVEBwMiJQuHJorB95c1g4Mx20X3OSFj7orHiR
-         PzoQjRicINpi8uWhP/FbUpkdQameu0KehoSgttSeHoa8sl2tGxWSV08BNrZjYwsQ6AeX
-         orURrRcGGa87A7/7TswiGxtVhO80OUNnylbmf9v1OzQk/Rbm3zIvO0JQHQ54HaQbBu2k
-         R7E16/Qm0VJzMlTPVHh7seONA3w/ydJdUyIMZD15dnpNzNQidg5DyEMRvdRs+Y9tEbgN
-         JyGLwwnLXs+yApZUuK38MAY7Y3HodK7ZOeMRj3l4+CG+AdSHCtsXTIq6xlnQ3sEf0d0p
-         8V7g==
+        bh=mOxAMUogtoyYUzgUNAUeU/aryd/IVil8/scHRPr/eFw=;
+        b=aarOS6S7gYd7JGHJjJgCzUOjml0HcNO0Qmcym4j8zO0MvyOYbMrv0NxMtO2a/biFeQ
+         o0Xqn+dWFXNJzrgeE2QE0cSXP23X8q+mc2+Y6jcWYs42+TLO57Qj5PF0GOfSZ+W3oDop
+         Hjd10pmYMHhG34tcVzS6yGrrZp3Jgsl5RznXwu3BH0iHpUWU+Bce0fwXz7z4e4xFEDuO
+         nGFvSS7r9yJdv+sDJ0OrxlFZKj9accAm479+GhXPR0rBu3//OAY6e+jcJ1GhJdtdGVpp
+         RqTSvPnZpP/tVL/Uljnzi5t/dbPPqTDnARrx5Om9TX8+H8yd08jvpc3rKWAzudTSlLp8
+         qvnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=03a1aUyluFxRyNFgmls0Dhj57OlQZXnKGaEc/66Md1Y=;
-        b=epC0It/i7LwgHBYvRVoJImHz+GXGVZfF21dPaDjxjW5xUt+aG+Gbs0lAlKPvS9Yt0S
-         FNC/B0B2UAIuxaS6mbbl6NYcgjvKAaxW82TUO33axyAgk/IrmNWUm3Fembsjz42mspQo
-         8F1EbOckudxDueGIQRXIPi5ErvqSpB7VyP8S4TgRKhGg8euFG7hQKfDj2UtBPhejltF6
-         Ka1bW/tSSIjZ/ATxrPlHdP0wsaH2683wfNwtiMUiJMKGIf0IHaCTzeEgsubOD0ujblJ3
-         1OTHkeCK0qxjAc1pq3Ul5LbKodHBb//v8rzn5RjEaVJA0IUoza/K+ZYUiguqtbsbldX1
-         jSLw==
-X-Gm-Message-State: ACrzQf0WdPFNEPlUnENc9wu4l+Molk23N62pZix4C4+3AeifZkvAJ48i
-        bHFCLVFVC4vg/PcBZujqgT62
-X-Google-Smtp-Source: AMsMyM6XC/lG30lxAC41YQ1c7e8p5Fr062WE06hfC0r071VKylK3r/IPBObe4aJgxfDZQzvLrN4bYw==
-X-Received: by 2002:a17:90a:988:b0:1f2:3dff:f1dd with SMTP id 8-20020a17090a098800b001f23dfff1ddmr188447pjo.150.1663087484938;
-        Tue, 13 Sep 2022 09:44:44 -0700 (PDT)
+        bh=mOxAMUogtoyYUzgUNAUeU/aryd/IVil8/scHRPr/eFw=;
+        b=AUJV8YHWCntgvGZ/C/Cx/0P5W47Gjedn4XPMN7/a9c3SpQP5DD0PiWLlDD6vaw5yso
+         bF733GbDs3pphQPddNw4zZS61G9W7mOlOhzKi6xXPAxaLJCzmz1QJ06NQWaMPY3vXPxb
+         EKg5KR6zl640yOvt0bgzrNUMsnpidPlyyWpWa6IcD6NWlh/s3x++MY778JFHA+uj67MZ
+         FGetkNVAqimASgoSPibedgi/Pv2IMSqLc7eAu2xyxV/h9w8zMLg/sxpwt3+UJmd3VJzY
+         kvvYaKj63xwMIfnYnEb7ixO7u1mbVrqNunOWDhOJr2btKnP4ZO3GOsyuac3NFc7xs/RP
+         lPWA==
+X-Gm-Message-State: ACgBeo3amSZBOTWNcWqg9O0JY5WL75MXnGtB8ph5aDGTvBV5uDP2p3xY
+        3po9cGzx22KShwwBoO9q5xWt
+X-Google-Smtp-Source: AA6agR5G8ywMFC6Ev8+ovqpgBABc21gMNzFuXa9i0WAbkzl9/zuBT2661JF0GnSjQQYvMlf9iMJogg==
+X-Received: by 2002:a17:903:186:b0:178:2ca7:fae5 with SMTP id z6-20020a170903018600b001782ca7fae5mr11829857plg.173.1663087925186;
+        Tue, 13 Sep 2022 09:52:05 -0700 (PDT)
 Received: from workstation ([117.202.184.122])
-        by smtp.gmail.com with ESMTPSA id k5-20020aa79725000000b0053e7293be0bsm8025332pfg.121.2022.09.13.09.44.39
+        by smtp.gmail.com with ESMTPSA id x1-20020a170902ec8100b0017854cee6ebsm335327plg.72.2022.09.13.09.52.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Sep 2022 09:44:43 -0700 (PDT)
-Date:   Tue, 13 Sep 2022 22:14:37 +0530
+        Tue, 13 Sep 2022 09:52:04 -0700 (PDT)
+Date:   Tue, 13 Sep 2022 22:21:59 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org
-Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v3 00/12] Improvements to the Qcom PCIe Endpoint driver
-Message-ID: <20220913164437.GG25849@workstation>
-References: <20220910063045.16648-1-manivannan.sadhasivam@linaro.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, treding@nvidia.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
+ logging
+Message-ID: <20220913165159.GH25849@workstation>
+References: <20220913101237.4337-1-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220910063045.16648-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20220913101237.4337-1-vidyas@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,56 +75,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 10, 2022 at 12:00:33PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This series contains improvements to the Qualcomm PCIe Endpoint controller
-> driver. The major improvements are the addition of SM8450 SoC support and
-> debugfs interface for exposing link transition counts.
-> 
-> This series has been tested on SM8450 based dev board.
+On Tue, Sep 13, 2022 at 03:42:37PM +0530, Vidya Sagar wrote:
+> Some of the platforms (like Tegra194 and Tegra234) have open slots and
+> not having an endpoint connected to the slot is not an error.
+> So, changing the macro from dev_err to dev_info to log the event.
 > 
 
-Lorenzo, since the bindings are ACKed, you should be able to merge the
-whole series via PCI tree.
+But the link up not happening is an actual error and -ETIMEDOUT is being
+returned. So I don't think the log severity should be changed.
 
 Thanks,
 Mani
 
-> Thanks,
-> Mani
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Changes in v3:
-> 
-> * Removed the maxItems property from "items" list
-> * Reworded the debugfs patch
-> * Dropped the eDMA patch since that depends on ongoing eDMA series from Sergey
-> * Added two new patches that helps in saving power during idle and low power
->   state
-> 
-> Changes in v2:
-> 
-> * Fixed the comments on bindings patches
-> * Added Ack from Krzysztof
-> 
-> Manivannan Sadhasivam (12):
->   PCI: qcom-ep: Add kernel-doc for qcom_pcie_ep structure
->   PCI: qcom-ep: Do not use hardcoded clks in driver
->   PCI: qcom-ep: Make use of the cached dev pointer
->   PCI: qcom-ep: Disable IRQs during driver remove
->   PCI: qcom-ep: Expose link transition counts via debugfs
->   PCI: qcom-ep: Gate Master AXI clock to MHI bus during L1SS
->   PCI: qcom-ep: Disable Master AXI Clock when there is no PCIe traffic
->   dt-bindings: PCI: qcom-ep: Make PERST separation optional
->   PCI: qcom-ep: Make PERST separation optional
->   dt-bindings: PCI: qcom-ep: Define clocks per platform
->   dt-bindings: PCI: qcom-ep: Add support for SM8450 SoC
->   PCI: qcom-ep: Add support for SM8450 SoC
-> 
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml |  86 +++++++---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 154 ++++++++++++++----
->  2 files changed, 188 insertions(+), 52 deletions(-)
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 650a7f22f9d0..25154555aa7a 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -456,7 +456,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>  	}
+>  
+>  	if (retries >= LINK_WAIT_MAX_RETRIES) {
+> -		dev_err(pci->dev, "Phy link never came up\n");
+> +		dev_info(pci->dev, "Phy link never came up\n");
+>  		return -ETIMEDOUT;
+>  	}
+>  
 > -- 
-> 2.25.1
+> 2.17.1
 > 
