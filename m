@@ -2,412 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 245A95B793B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 20:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 377865B7964
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 20:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230461AbiIMSQK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 14:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35378 "EHLO
+        id S232258AbiIMSZP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 14:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231723AbiIMSPu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 14:15:50 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377546261
-        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 10:24:28 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id ge9so490406pjb.1
-        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 10:24:28 -0700 (PDT)
+        with ESMTP id S232336AbiIMSYy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 14:24:54 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC667CAA0;
+        Tue, 13 Sep 2022 10:41:32 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id c11so9214180qtw.8;
+        Tue, 13 Sep 2022 10:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date;
-        bh=f3cAxQlpr9MhS7L+K6LHuUXyazd8km8sEFTCZsuiIvQ=;
-        b=fnJqn0M2B0RToDQUjjL1EmukHybpmMuK8fRRr2q+TZnOO9velXjw9L0tsaFiChol1x
-         HFmaPuPVRqD3bA5j1y45QlOKmv0E9zL29sDq5zlxQptQqAr95+yNmRNBkfgHTKN18Oq9
-         7VhYbBLoA+wgAA17xKfUP3OSQLW7Ww3VA7Bb+z207uDw8xCyLGgxovAXHA76HLCgKZIM
-         rnXirn6N7I9db4jbQ8RTN3dlz0EAKr6D8warBfQynfE43xeS5nzpHXoErneWK+1FoXFD
-         +YWEel/Rr+cNmBeEWbpeGdNUjWBSMj9xtonM3h4UHPJUgU/YAFHEEGoazJ4a5XRWP7Np
-         RVLg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=N8R0atdOLEWvc76kU0fgN1ovoaLrW08WX3jj0aJOZA4=;
+        b=HiR5n74+ff3SII0q7xXAEwsQRXpm98oDXr3ZoHBzxSrruIhCCTZofQ5CaPcxqqwOde
+         1QGnQQvmXlPKMEkMkQVyPFlMYC5VBYmMvU9lP+3txO4ZHNOErGmlLRtL2Jwz+Qv7AF/x
+         ntONk2hVXKkjyEOFXpxKFN1GXhHQSFAkvEjyPBpelvM/ExNHRVGhCYOUQiMCeLf/tlWK
+         Yw8djgk+Up56Y+I1K3UmIln/6BqVuZvaexctzXwaGd/4fZifiSDN8+FozclpCj+TFpb3
+         1TXSeLlc51l+LdEB1j1bH4H7zvuzcx+VglFfuznK/UkGINDqI5owREt0MTHS5rzG+3Cx
+         O0Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=f3cAxQlpr9MhS7L+K6LHuUXyazd8km8sEFTCZsuiIvQ=;
-        b=mhWRx6w3Ew54aAmSOczujNzkDoJ9zOE0IMZEx87RSQbsabNPYMU1EiDx2y719wRWGM
-         JqXBvbQEmkTeHANOmZFTrG7qYgeHiZeeRlj0zPRd5XsDG0yYbhFCoPnOaLOnjKm6JD7g
-         Y1GVSkWpBWQu1hHkk74R/ys0PvOHYAVWmKaZ1Hqwc+i6qCexKtVdQLDz0D5GZdKZKezY
-         tmzdyaAaJtZnqryRLNAw3XFCwxqykMfe3KbzMxvjVNmkKOZDPOlAsM0WP3DzTILSqToK
-         1aeSD65xqDQJgWOGxmRoUwg6et8sHrrPTkmYv3mqIYsuQ4XVhKg9CzRG3jl5WAUu4cmv
-         1dzg==
-X-Gm-Message-State: ACgBeo1JGkH9a206phd83uGQBF2u0Pqulx1TQBEL6QijLeoM9v0k0rqL
-        +06sdvEYMEFP+JNuUAjas9nL
-X-Google-Smtp-Source: AA6agR6ukeHUFbmmO6edAqgXbgWT6JjNXjHE/gxuAJ+TuicNIIQoj2Qr1icVvhmbbqft7T+tAYtj/A==
-X-Received: by 2002:a17:902:d58a:b0:177:f86c:4456 with SMTP id k10-20020a170902d58a00b00177f86c4456mr25523705plh.171.1663089860501;
-        Tue, 13 Sep 2022 10:24:20 -0700 (PDT)
-Received: from workstation ([117.202.184.122])
-        by smtp.gmail.com with ESMTPSA id 199-20020a6217d0000000b0053e3ed14419sm8169606pfx.48.2022.09.13.10.24.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Sep 2022 10:24:19 -0700 (PDT)
-Date:   Tue, 13 Sep 2022 22:54:11 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
-        lznuaa@gmail.com, imx@lists.linux.dev
-Subject: Re: [PATCH v9 4/4] PCI: endpoint: Add vNTB MSI support
-Message-ID: <20220913172411.GI25849@workstation>
-References: <20220907034856.3101570-1-Frank.Li@nxp.com>
- <20220907034856.3101570-5-Frank.Li@nxp.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=N8R0atdOLEWvc76kU0fgN1ovoaLrW08WX3jj0aJOZA4=;
+        b=rb3V2UsdEn+ffoAxrdtoxsVTZ7xZmHXWg74Krq94K4U5+8qyj+gT8sd3HW8yoGTjko
+         9/PqGmmtyXGCsT6L51Koww1IqAhp+OLSx3Sx6uNeJHzPuhN9c8G0thNw+CF8NFrEDs9Q
+         lyVOz1woAzE69bm7oetpOi6sKCuOj7b1auTJ+AmL7Auoab0NFW6+4yvtgYW1xeBQKbtL
+         BYrBK1Rcwq0JqFjPJSIfzpPBbms4U87KrMMsO0jF6bzlhkp6LDBzwgcVTc0I9CPExJWl
+         8LVZHhYz58CmrCyo/dJEjV4vQXNye9vNc6FLq2gY0fKW+ChWdGOXL0U9ysleC8SjGACm
+         GnBg==
+X-Gm-Message-State: ACgBeo3GD40RbRARi+NpG9JRPrYli+CE+X+An5t0QpE5NhLiQCmnysNP
+        mHETPl2O6Yb+LF56MRqryTM=
+X-Google-Smtp-Source: AA6agR7TsnDo7iBQEE3+/gCXWUzJNyaLxQosYBiLU/wQniPtDyfREYTSpS9q4YZCmjSvAQewzn/h+A==
+X-Received: by 2002:a05:622a:289:b0:344:9844:ba5b with SMTP id z9-20020a05622a028900b003449844ba5bmr30232448qtw.234.1663090890966;
+        Tue, 13 Sep 2022 10:41:30 -0700 (PDT)
+Received: from ?IPV6:2600:1700:2442:6db0:216d:1a77:16d6:2f68? ([2600:1700:2442:6db0:216d:1a77:16d6:2f68])
+        by smtp.gmail.com with ESMTPSA id az17-20020a05620a171100b006ce2c3c48ebsm5721454qkb.77.2022.09.13.10.41.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Sep 2022 10:41:30 -0700 (PDT)
+Message-ID: <78211af5-171c-ef4f-a8c2-17f63dc479bc@gmail.com>
+Date:   Tue, 13 Sep 2022 12:41:28 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devices
+Content-Language: en-US
+To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, helgaas@kernel.org
+Cc:     clement.leger@bootlin.com, max.zhen@amd.com, sonal.santan@amd.com,
+        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
+        trix@redhat.com
+References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
+ <1d9faa2e-e3fc-d104-c85f-4035233848d6@gmail.com>
+ <ca35a14d-501d-265e-b196-a87e1e994cd0@amd.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <ca35a14d-501d-265e-b196-a87e1e994cd0@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220907034856.3101570-5-Frank.Li@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 10:48:56PM -0500, Frank Li wrote:
->                       ┌───────┐                   ┌──────────┐
->                       │       │                   │          │
->     ┌─────────────┐   │ PCI   │                   │ PCI Host │
->     │ MSI         │◄┐ │ EP    │                   │          │
->     │ Controller  │ │ │       │ 3.MSI Write       │          │
->     └────────┬────┘ └─┼───────┼───────────────────┤          │
->       ▲      │        │       │                   ├─BAR_n    │
->       │      └────────┼───────┼──────────────────►│          │
->       │               │       │ 2.Call Back       │          │
->       │               │       │   write_msi_msg() │          │
->       │               │       │                   │          │
->       │               └───┬───┘                   └──────────┘
->       │                   │
->       └───────────────────┘
->       1.platform_msi_domain_alloc_irqs()
+On 9/13/22 12:10, Lizhi Hou wrote:
 > 
-> There is no defined way of raising IRQs by PCI host to the PCI endpoint.
-> Only define MSI/MSI-X to let EP notified RC status change.
+> On 9/13/22 00:00, Frank Rowand wrote:
+>> On 8/29/22 16:43, Lizhi Hou wrote:
+>>> This patch series introduces OF overlay support for PCI devices which
+>>> primarily addresses two use cases. First, it provides a data driven method
+>>> to describe hardware peripherals that are present in a PCI endpoint and
+>>> hence can be accessed by the PCI host. An example device is Xilinx/AMD
+>>> Alveo PCIe accelerators. Second, it allows reuse of a OF compatible
+>>> driver -- often used in SoC platforms -- in a PCI host based system. An
+>>> example device is Microchip LAN9662 Ethernet Controller.
+>>>
+>>> This patch series consolidates previous efforts to define such an
+>>> infrastructure:
+>>> https://lore.kernel.org/lkml/20220305052304.726050-1-lizhi.hou@xilinx.com/
+>>> https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+>>>
+>>> Normally, the PCI core discovers PCI devices and their BARs using the
+>>> PCI enumeration process. However, the process does not provide a way to
+>>> discover the hardware peripherals that are present in a PCI device, and
+>>> which can be accessed through the PCI BARs. Also, the enumeration process
+>>> does not provide a way to associate MSI-X vectors of a PCI device with the
+>>> hardware peripherals that are present in the device. PCI device drivers
+>>> often use header files to describe the hardware peripherals and their
+>>> resources as there is no standard data driven way to do so. This patch
+>>> series proposes to use flattened device tree blob to describe the
+>>> peripherals in a data driven way. Based on previous discussion, using
+>>> device tree overlay is the best way to unflatten the blob and populate
+>>> platform devices. To use device tree overlay, there are three obvious
+>>> problems that need to be resolved.
+>>>
+>>> First, we need to create a base tree for non-DT system such as x86_64. A
+>>> patch series has been submitted for this:
+>>> https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+>>> https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
+>>>
+>>> Second, a device tree node corresponding to the PCI endpoint is required
+>>> for overlaying the flattened device tree blob for that PCI endpoint.
+>>> Because PCI is a self-discoverable bus, a device tree node is usually not
+>>> created for PCI devices. This series adds support to generate a device
+>>> tree node for a PCI device which advertises itself using PCI quirks
+>>> infrastructure.
+>>>
+>>> Third, we need to generate device tree nodes for PCI bridges since a child
+>>> PCI endpoint may choose to have a device tree node created.
+>>>
+>>> This patch series is made up of two patches.
+>>>
+>>> The first patch is adding OF interface to allocate an OF node. It is copied
+>>> from:
+>>> https://lore.kernel.org/lkml/20220620104123.341054-5-clement.leger@bootlin.com/
+>>>
+>>> The second patch introduces a kernel option, CONFIG_PCI_OF. When the option
+>>> is turned on, the kernel will generate device tree nodes for all PCI
+>>> bridges unconditionally. The patch also shows how to use the PCI quirks
+>>> infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device tree node for
+>>> a device. Specifically, the patch generates a device tree node for Xilinx
+>>> Alveo U50 PCIe accelerator device. The generated device tree nodes do not
+>>> have any property. Future patches will add the necessary properties.
+>>>
+>>> Clément Léger (1):
+>>>    of: dynamic: add of_node_alloc()
+>>>
+>>> Lizhi Hou (1):
+>>>    pci: create device tree node for selected devices
+>>>
+>>>   drivers/of/dynamic.c        |  50 +++++++++++++----
+>>>   drivers/pci/Kconfig         |  11 ++++
+>>>   drivers/pci/bus.c           |   2 +
+>>>   drivers/pci/msi/irqdomain.c |   6 +-
+>>>   drivers/pci/of.c            | 106 ++++++++++++++++++++++++++++++++++++
+>>>   drivers/pci/pci-driver.c    |   3 +-
+>>>   drivers/pci/pci.h           |  16 ++++++
+>>>   drivers/pci/quirks.c        |  11 ++++
+>>>   drivers/pci/remove.c        |   1 +
+>>>   include/linux/of.h          |   7 +++
+>>>   10 files changed, 200 insertions(+), 13 deletions(-)
+>>>
+>> The patch description leaves out the most important piece of information.
+>>
+>> The device located at the PCI endpoint is implemented via FPGA
+>>     - which is programmed after Linux boots (or somewhere late in the boot process)
+>>        - (A) and thus can not be described by static data available pre-boot because
+>>              it is dynamic (and the FPGA program will often change while the Linux
+>>              kernel is already booted
+>>        - (B) can be described by static data available pre-boot because the FPGA
+>>              program will always be the same for this device on this system
+>>
+>> I am not positive what part of what I wrote above is correct and would appreciate
+>> some confirmation of what is correct or incorrect.
 > 
-> The memory assigned for BAR region by the PCI host is mapped to the
-> message address of platform msi interrupt controller in PCI Endpoint.
-> Such that, whenever the PCI host writes to the BAR region, it will
-> trigger an IRQ in the Endpoint.
+> There are 2 series devices rely on this patch:
 > 
-> Basic working follow as
-> 1. EP function driver call platform_msi_domain_alloc_irqs() alloc a
-> MSI irq from MSI controller with call back function write_msi_msg();
-> 2. write_msg_msg will config BAR and map to address defined in msi_msg;
-> 3. Host side trigger an IRQ in Endpoint by write to BAR region.
+>     1) Xilinx Alveo Accelerator cards (FPGA based device)
 > 
-> Add MSI support for pci-epf-vntb. Query if system has an MSI controller.
-> Set up doorbell address according to struct msi_msg.
+>     2) lan9662 PCIe card
 > 
-> So PCI RC can write this doorbell address to trigger EP side's IRQ.
+>           please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+
+Thanks.  Please include this information in future versions of the patch series.
+
+For device 2 I have strongly recommended using pre-boot apply of the overlay to the base
+device tree.  I realize that this suggestion is only a partial solution if one wants to
+use hotplug to change system configuration (as opposed to using hotplug only to replace
+an existing device (eg a broken device) with another instance of the same device).  I
+also realize that this increased the system administration overhead.  On the other hand
+an overlay based solution is likely to be fragile and possibly flaky.
+
 > 
-> If no MSI controller exists, fall back to software polling.
+> For Xilinx Alveo device, it is (A). The FPGA partitions can be programmed dynamically after boot.
+
+I looked at the Xilinx Alveo web page, and there are a variety of types of Alveo cards
+available.  So the answer to my next question may vary by type of card.
+
+Is it expected that the fpga program on a given card will change frequently (eg multiple
+times per day), where the changed program results in a new device that would require a
+different hardware description in the device tree?
+
+Or is the fpga program expected to change on an infrequent basis (eg monthly, quarterly,
+annually), in the same way as device firmware and operating systems are updated on a regular
+basis for bug fixes and new functionality?
+
+
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 155 +++++++++++++++---
->  1 file changed, 128 insertions(+), 27 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 1466dd1904175..426205b980a09 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -44,6 +44,7 @@
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
->  #include <linux/ntb.h>
-> +#include <linux/msi.h>
->  
->  static struct workqueue_struct *kpcintb_workqueue;
->  
-> @@ -136,13 +137,15 @@ struct epf_ntb {
->  
->  	struct epf_ntb_ctrl *reg;
->  
-> -	phys_addr_t epf_db_phy;
-> +	phys_addr_t epf_db_phys;
-
-This should be part of a separate patch.
-
->  	void __iomem *epf_db;
->  
->  	phys_addr_t vpci_mw_phy[MAX_MW];
->  	void __iomem *vpci_mw_addr[MAX_MW];
->  
->  	struct delayed_work cmd_handler;
-> +
-> +	int msi_virqbase;
->  };
->  
->  #define to_epf_ntb(epf_group) container_of((epf_group), struct epf_ntb, group)
-> @@ -253,13 +256,15 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
->  
->  	ntb = container_of(work, struct epf_ntb, cmd_handler.work);
->  
-> -	for (i = 1; i < ntb->db_count; i++) {
-> -		if (readl(ntb->epf_db + i * 4)) {
-> -			if (readl(ntb->epf_db + i * 4))
-> -				ntb->db |= 1 << (i - 1);
-> +	if (!ntb->epf_db_phys) {
-> +		for (i = 1; i < ntb->db_count; i++) {
-> +			if (readl(ntb->epf_db + i * 4)) {
-> +				if (readl(ntb->epf_db + i * 4))
-
-Why are you reading twice? And why cannot you use _relaxed() variant
-here and below?
-
-> +					ntb->db |= 1 << (i - 1);
->  
-> -			ntb_db_event(&ntb->ntb, i);
-> -			writel(0, ntb->epf_db + i * 4);
-> +				ntb_db_event(&ntb->ntb, i);
-> +				writel(0, ntb->epf_db + i * 4);
-> +			}
->  		}
->  	}
->  
-> @@ -454,11 +459,9 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
->  	ctrl->num_mws = ntb->num_mws;
->  	ntb->spad_size = spad_size;
->  
-> -	ctrl->db_entry_size = 4;
-> -
->  	for (i = 0; i < ntb->db_count; i++) {
->  		ntb->reg->db_data[i] = 1 + i;
-> -		ntb->reg->db_offset[i] = 0;
-> +		ntb->reg->db_offset[i] = 4 * i;
-
-4 should be defined as a macro of what it represents.
-
->  	}
->  
->  	return 0;
-> @@ -509,6 +512,28 @@ static int epf_ntb_configure_interrupt(struct epf_ntb *ntb)
->  	return 0;
->  }
->  
-> +static int epf_ntb_db_size(struct epf_ntb *ntb)
-> +{
-> +	const struct pci_epc_features *epc_features;
-> +	size_t size = 4 * ntb->db_count;
-
-Here also.
-
-> +	u32 align;
-> +
-> +	epc_features = pci_epc_get_features(ntb->epf->epc,
-> +					    ntb->epf->func_no,
-> +					    ntb->epf->vfunc_no);
-> +	align = epc_features->align;
-> +
-> +	if (size < 128)
-> +		size = 128;
-> +
-> +	if (align)
-> +		size = ALIGN(size, align);
-> +	else
-> +		size = roundup_pow_of_two(size);
-> +
-> +	return size;
-> +}
-> +
->  /**
->   * epf_ntb_db_bar_init() - Configure Doorbell window BARs
->   * @ntb: NTB device that facilitates communication between HOST and vHOST
-> @@ -522,33 +547,32 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
->  	struct pci_epf_bar *epf_bar;
->  	void __iomem *mw_addr;
->  	enum pci_barno barno;
-> -	size_t size = 4 * ntb->db_count;
-> +	size_t size;
->  
->  	epc_features = pci_epc_get_features(ntb->epf->epc,
->  					    ntb->epf->func_no,
->  					    ntb->epf->vfunc_no);
->  	align = epc_features->align;
-> -
-> -	if (size < 128)
-> -		size = 128;
-> -
-> -	if (align)
-> -		size = ALIGN(size, align);
-> -	else
-> -		size = roundup_pow_of_two(size);
-> +	size = epf_ntb_db_size(ntb);
->  
->  	barno = ntb->epf_ntb_bar[BAR_DB];
-> +	epf_bar = &ntb->epf->bar[barno];
->  
-> -	mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
-> -	if (!mw_addr) {
-> -		dev_err(dev, "Failed to allocate OB address\n");
-> -		return -ENOMEM;
-> +	if (ntb->epf_db_phys) {
-> +		mw_addr = NULL;
-> +		epf_bar->phys_addr = ntb->epf_db_phys;
-> +		epf_bar->barno = barno;
-> +		epf_bar->size = size;
-> +	} else {
-> +		mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
-> +		if (!mw_addr) {
-> +			dev_err(dev, "Failed to allocate door bell address\n");
-
-doorbell
-
-> +			return -ENOMEM;
-> +		}
->  	}
->  
->  	ntb->epf_db = mw_addr;
->  
-> -	epf_bar = &ntb->epf->bar[barno];
-> -
->  	ret = pci_epc_set_bar(ntb->epf->epc, ntb->epf->func_no, ntb->epf->vfunc_no, epf_bar);
->  	if (ret) {
->  		dev_err(dev, "Doorbell BAR set failed\n");
-> @@ -704,6 +728,82 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> +static void epf_ntb_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-> +{
-> +	struct epf_ntb *ntb = dev_get_drvdata(desc->dev);
-> +	struct epf_ntb_ctrl *reg = ntb->reg;
-> +	int size = epf_ntb_db_size(ntb);
-> +	u64 addr;
-> +
-> +	addr = msg->address_hi;
-> +	addr <<= 32;
-> +	addr |= msg->address_lo;
-> +
-> +	reg->db_data[desc->msi_index] = msg->data;
-> +
-> +	if (desc->msi_index == 0)
-
-if (!desc->msi_index)
-
-> +		ntb->epf_db_phys = round_down(addr, size);
-> +
-> +	reg->db_offset[desc->msi_index] = addr - ntb->epf_db_phys;
-> +}
-> +#endif
-> +
-> +static irqreturn_t epf_ntb_interrupt_handler(int irq, void *data)
-> +{
-> +	struct epf_ntb *ntb = data;
-> +	int index;
-> +
-> +	index = irq - ntb->msi_virqbase;
-> +	ntb->db |= 1 << (index - 1);
-> +	ntb_db_event(&ntb->ntb, index);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void epf_ntb_epc_msi_init(struct epf_ntb *ntb)
-
-Why cannot you guard this whole function with CONFIG_GENERIC_MSI_IRQ_DOMAIN?
-
-> +{
-> +	struct device *dev = &ntb->epf->dev;
-> +	struct irq_domain *domain;
-> +	int virq;
-> +	int ret;
-> +	int i;
-> +
-> +	domain = dev_get_msi_domain(ntb->epf->epc->dev.parent);
-> +	if (!domain)
-> +		return;
-> +
-> +	dev_set_msi_domain(dev, domain);
-> +
-> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> +	if (platform_msi_domain_alloc_irqs(&ntb->epf->dev,
-> +		ntb->db_count,
-> +		epf_ntb_write_msi_msg)) {
-> +		dev_info(dev, "Can't allocate MSI, fall back to poll mode\n");
-
-falling back to polling mode
-
-Should this be dev_err?
-
-> +		return;
-> +	}
-> +#else
-> +	return;
-> +#endif
-> +	dev_info(dev, "vntb use MSI as doorbell\n");
-
-Using MSI as a doorbell
-
-> +
-> +	for (i = 0; i < ntb->db_count; i++) {
-> +		virq = msi_get_virq(dev, i);
-> +		ret = devm_request_irq(dev, virq,
-> +			       epf_ntb_interrupt_handler, 0,
-> +			       "vntb", ntb);
-
-s/vntb/pci_epf_vntb
-
-> +
-> +		if (ret) {
-> +			dev_err(dev, "devm_request_irq() failure, fall back to poll mode\n");
-
-Failed to request doorbell IRQ! Falling back to polling mode
-
-> +			ntb->epf_db_phys = 0;
-> +			break;
-> +		}
-> +
-> +		if (!i)
-> +			ntb->msi_virqbase = virq;
-
-A comment here would be helpful
-
-Thanks,
-Mani
-
-> +	}
-> +}
-> +
->  /**
->   * epf_ntb_epc_init() - Initialize NTB interface
->   * @ntb: NTB device that facilitates communication between HOST and vHOST2
-> @@ -1299,14 +1399,15 @@ static int epf_ntb_bind(struct pci_epf *epf)
->  		goto err_bar_alloc;
->  	}
->  
-> +	epf_set_drvdata(epf, ntb);
-> +	epf_ntb_epc_msi_init(ntb);
-> +
->  	ret = epf_ntb_epc_init(ntb);
->  	if (ret) {
->  		dev_err(dev, "Failed to initialize EPC\n");
->  		goto err_bar_alloc;
->  	}
->  
-> -	epf_set_drvdata(epf, ntb);
-> -
->  	pci_space[0] = (ntb->vntb_pid << 16) | ntb->vntb_vid;
->  	pci_vntb_table[0].vendor = ntb->vntb_vid;
->  	pci_vntb_table[0].device = ntb->vntb_pid;
-> -- 
-> 2.35.1
+> Thanks,
 > 
+> Lzhi
+> 
+>>
+>> -Frank
+
