@@ -2,110 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E50225B6854
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 09:03:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B557B5B68B3
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 09:32:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbiIMHDO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 03:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60624 "EHLO
+        id S230380AbiIMHcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 03:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbiIMHDN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 03:03:13 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B58B2C132;
-        Tue, 13 Sep 2022 00:03:08 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id s13so8500082qvq.10;
-        Tue, 13 Sep 2022 00:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=zi/Hgax/DtCoSoa6AKPgDXly+a2EYtz9m5LdTuw4u9s=;
-        b=Hg6GLb1JJtkmFqD+lx8nxbPARFjPx4b3MQGCUOZWfvXHeioaOmVTEo2cNtxloqkJA1
-         2EqM2ebASEbg/4StWjn6lcA/nj+CM1aYpuH9fuqBd3dK/m0XpW8BrESElsoeFypxhPag
-         hIbHFSlNW764TTbfk0f36yX9QvgsDhfH5kI5aBXAYiOMVgOmigmT9yHUDeqZ5j/wIYz+
-         OoPdQfMqUtzacDVprTbdGR+jan6vi9aNFVYO2j3RA4cqlE3/GvmMlGmosP1qat3DyeBV
-         8VXEvC22FWP/8kchotmhrBQupaOD8bZ/pd7kF2el3bfkSzcJ81E1XS/37lv/fXIGjXho
-         SH2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=zi/Hgax/DtCoSoa6AKPgDXly+a2EYtz9m5LdTuw4u9s=;
-        b=VGlmTX+s4392ZvnzuvilC+BHdaPD4QB3GC1vQijmjjosYM276DNefd6LhuOHg8h6Nv
-         GVBPlZn2GTxh0yuGjCZXUOrcCbJE3eyPHzbLdYYDzcDQSAPcqqdE7Ue8lTd6NZy5U/XF
-         W00ZG6dyNOyAhH0udm3nChw8/1H/sIRLfoNR31ZyTVkcIJz3vsGzh+sob6xd8b+JEG31
-         uyRVPWuAmFVi+JRXFrKmZnQ19cNxZh5Vr7W9/Rio9i52rozF/tqLJ0WxuwQnW3EW0gsO
-         FYLV/I4sLuIVgkorwO6HkrM5TBHyP03PA0Df/hTZUqAnvEbhFzRXbM9P/DTEHA2IwuHw
-         bLJw==
-X-Gm-Message-State: ACgBeo3K318Nba0fa2T8HaR3sPLZJbodBmGDLyw4OJw5ddQJq79LktiK
-        J5eKdcTSOYYcQHPpgu86qsc=
-X-Google-Smtp-Source: AA6agR4d/qzUc7E3KbfN17eJqbHXKUGxio82mnsQ3zaMKVJqyPghez642srViMoQypoLWrp0HxPSMg==
-X-Received: by 2002:ad4:5c8b:0:b0:4aa:8a44:8810 with SMTP id o11-20020ad45c8b000000b004aa8a448810mr26399830qvh.4.1663052587666;
-        Tue, 13 Sep 2022 00:03:07 -0700 (PDT)
-Received: from ?IPV6:2600:1700:2442:6db0:216d:1a77:16d6:2f68? ([2600:1700:2442:6db0:216d:1a77:16d6:2f68])
-        by smtp.gmail.com with ESMTPSA id q7-20020a05620a0d8700b006bb9e4b96e6sm9445935qkl.24.2022.09.13.00.03.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 00:03:07 -0700 (PDT)
-Message-ID: <63c31198-ac4d-f3c7-9259-ea7dc6373b23@gmail.com>
-Date:   Tue, 13 Sep 2022 02:03:06 -0500
+        with ESMTP id S230476AbiIMHcB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 03:32:01 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A92558B63;
+        Tue, 13 Sep 2022 00:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xglz0vjqr0RitGgMnGnkfLMxC6SCl6nGd91QSpoaNaI=; b=o7TxC+At2Mo+ZS3vjfpbAZySLL
+        +4QjSd4wUUiVK0sp0IUeOKe/F7SKWYJl0wtwOsWlzf9kOkgMkN9OEfLRabuDwIvtMDWDGJbp+yZGq
+        5M2h0hXUUwvM1PsGhGpFnG3bk128hVOfsJ+Z6MRt+K+nBJpojyHhDEpXEPGkx4o+nNzrK0N3gmgHh
+        BtjAAedwtM/bPGovll4HLeWpGCqpeDdDlKl1/c6l/YFuMIVrbZ3vrsdheTrPXExgOS6YsPkaAojLX
+        EKXhG7F8MkXpdaCyOUGEGb6VKpn76YrNKwO6tM5v541igx3D2BITIn+t9XuHmTs1zX59ZcltfzONA
+        ndAr3sfA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34278)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oY0OU-0002Y5-FU; Tue, 13 Sep 2022 08:31:42 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oY0ON-0000UN-4W; Tue, 13 Sep 2022 08:31:35 +0100
+Date:   Tue, 13 Sep 2022 08:31:35 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        shawnguo@kernel.org, bhelgaas@google.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: imx6: Fix wrong check in imx6_pcie_attach_pd()
+Message-ID: <YyAx17VNvDMyvgBV@shell.armlinux.org.uk>
+References: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH RFC 2/2] pci: create device tree node for selected devices
-Content-Language: en-US
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helgaas@kernel.org,
-        clement.leger@bootlin.com, max.zhen@amd.com, sonal.santan@amd.com,
-        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
-        trix@redhat.com
-References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
- <1661809417-11370-3-git-send-email-lizhi.hou@amd.com>
- <20220902185403.GA173255-robh@kernel.org>
- <dd823b9c-fe7f-7c47-520c-bad5a798efc2@gmail.com>
-In-Reply-To: <dd823b9c-fe7f-7c47-520c-bad5a798efc2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/12/22 01:33, Frank Rowand wrote:
-> On 9/2/22 13:54, Rob Herring wrote:
->> On Mon, Aug 29, 2022 at 02:43:37PM -0700, Lizhi Hou wrote:
->>> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
->>> spaces from multiple hardware peripherals to its PCI BAR. Normally,
->>> the PCI core discovers devices and BARs using the PCI enumeration process.
->>> And the process does not provide a way to discover the hardware peripherals
->>> been mapped to PCI BARs.
-> 
-> < snip >
-> 
->>
->> The above bits aren't really particular to PCI, so they probably 
->> belong in the DT core code. Frank will probably have thoughts on what 
->> this should look like.
-> 
-> < snip >
-> 
-> I will try to look through this patch series later today (Monday 9/12
-> USA time - I will not be in Dublin for the conferences this week.)
-> 
-> -Frank
+On Tue, Sep 13, 2022 at 02:59:10PM +0800, Tang Bin wrote:
+> In the function imx6_pcie_attach_pd(),
+> dev_pm_domain_attach_by_name() may return NULL in some cases,
+> so IS_ERR() doesn't meet the requirements. Thus fix it.
 
-I have collected nearly 500 emails on the history behind this patch and
-also another set of patch series that has been trying to achieve some
-somewhat similar functionality.  Expect me to take a while to wade through
-all of this.
+NAK. You are clearly doing a mechanical search and replace, and then
+throwing out patches without a care in the world for other people to
+then decide whether the changes are in fact appropriate or not.
 
--Frank
+Please don't do that. Please read and understand the code before you
+waste reviewers and developers time - otherwise you will educate
+reviews and developers to ignore your efforts.
+
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 6619e3caf..65d6ebbba 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -337,8 +337,8 @@ static int imx6_pcie_attach_pd(struct device *dev)
+>  		return 0;
+>  
+>  	imx6_pcie->pd_pcie = dev_pm_domain_attach_by_name(dev, "pcie");
+> -	if (IS_ERR(imx6_pcie->pd_pcie))
+> -		return PTR_ERR(imx6_pcie->pd_pcie);
+> +	if (IS_ERR_OR_NULL(imx6_pcie->pd_pcie))
+> +		return PTR_ERR(imx6_pcie->pd_pcie) ? : -ENODATA;
+>  	/* Do nothing when power domain missing */
+>  	if (!imx6_pcie->pd_pcie)
+>  		return 0;
+
+Your change is incorrect, as can be seen by the following if()
+statement, which checks for NULL here. Clearly, the explicit
+intention is that if dev_pm_domain_attach_by_name() returns NULL,
+imx6_pcie_attach_pd() does _not_ fail.
+
+So you are likely creating a regression by your change. You are
+likely introducing a bug rather than fixing something. This is
+why you must always carefully review any mechanical change.
+
+> @@ -352,8 +352,8 @@ static int imx6_pcie_attach_pd(struct device *dev)
+>  	}
+>  
+>  	imx6_pcie->pd_pcie_phy = dev_pm_domain_attach_by_name(dev, "pcie_phy");
+> -	if (IS_ERR(imx6_pcie->pd_pcie_phy))
+> -		return PTR_ERR(imx6_pcie->pd_pcie_phy);
+> +	if (IS_ERR_OR_NULL(imx6_pcie->pd_pcie_phy))
+> +		return PTR_ERR(imx6_pcie->pd_pcie_phy) ? : -ENODATA;
+>  
+>  	link = device_link_add(dev, imx6_pcie->pd_pcie_phy,
+>  			DL_FLAG_STATELESS |
+
+This change is unnecessary. If dev_pm_domain_attach_by_name() returns
+Null, then device_link_add() will also return NULL, and the check for
+a NULL link will then succeed. So the NULL case is already cleanly
+handled.
+
+So overall, your patch is unnecessary and introduces a bug rather than
+fixing it. Therefore, you can discard the patch in its entirety.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
