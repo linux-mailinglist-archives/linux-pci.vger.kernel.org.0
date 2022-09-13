@@ -2,156 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3927A5B6E73
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 15:35:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AFF65B6E70
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 15:35:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230108AbiIMNf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 09:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41482 "EHLO
+        id S231439AbiIMNfD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 09:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231561AbiIMNf2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 09:35:28 -0400
-Received: from mail-m974.mail.163.com (mail-m974.mail.163.com [123.126.97.4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AEBFA1CB18;
-        Tue, 13 Sep 2022 06:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=U16LZwWLpP6lSvevS/
-        +MxEAX56p/rB2gXsgNI9JSmlA=; b=Jjc3nl8yoD3SdvdJaoZWQgc1oJ9jJFxh+n
-        HZllsfzPdf4qx3omA2tif9WgGjXTv/YyNYR0l2mrk6KL396ZpDu4Ct8ZFjd/9kKx
-        kzq1KqmDT+s8FBHwKIZm/Kt/28qDWjsimHhVZ0fRBV1e3uivSGa7tk+OiMOoPnbB
-        uSxxFjXUM=
-Received: from os-l3a203-yehs1-dev01.localdomain (unknown [103.244.59.1])
-        by smtp4 (Coremail) with SMTP id HNxpCgBHlobghiBjSmbecg--.6836S2;
-        Tue, 13 Sep 2022 21:34:24 +0800 (CST)
-From:   Xiaochun Lee <lixiaochun.2888@163.com>
-To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
-Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: [PATCH v1] PCI: Set no io resource for bridges that behind VMD controller
-Date:   Tue, 13 Sep 2022 21:24:45 +0800
-Message-Id: <1663075485-20591-1-git-send-email-lixiaochun.2888@163.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: HNxpCgBHlobghiBjSmbecg--.6836S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuryxCr1Dury8JryrKr4DJwb_yoWrZF4kpF
-        Wagw45Xr40qFy7tws3W3yxCFWFvan2yFWYyry7Xrnava18uFyUurnxAFy5XF4DJF1Dtw13
-        Xwn5Jrykua1DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U_sqAUUUUU=
-X-Originating-IP: [103.244.59.1]
-X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbioAF7QFjSPWUxggAAs7
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231740AbiIMNfC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 09:35:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8813E1928D
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 06:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663076099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vptXUYceNtwYVyKwfHyA3dKZqDg4HJHh7ydKyqgQ4H0=;
+        b=S4b3e69zJq8HEaY7lpGW8BZAdT8bF3g68oKSbO5j61ZdgoPK4J8wGW5Lq19dAPqv5ouP4S
+        tNRi+kFlUD/bcOVLKKpKN1uEHcDc2UDmWmYgwykDYYn5KIf8K+hYsC3WpbNuQXIPw9+77N
+        zIYxWv5WNt/aCqTegoe7FAG87SVeO18=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-530-jDoLI4neOamvpWS-NEF5_Q-1; Tue, 13 Sep 2022 09:34:54 -0400
+X-MC-Unique: jDoLI4neOamvpWS-NEF5_Q-1
+Received: by mail-ej1-f71.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso4565451ejb.14
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 06:34:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=vptXUYceNtwYVyKwfHyA3dKZqDg4HJHh7ydKyqgQ4H0=;
+        b=0M4WseD8L3bSfWBnRog1AO6qegsy82UPlTuDzELIVSJ8/CSCR3MSpwrFMVRwnqg/Mk
+         fM1CoOD52E8SlwJ4qdnN5bSZmvr1cACagM9BytrlxM/181uFUPIChn9jHgBpi+dHqLEQ
+         aHKlITTB1Cenm+9CbKSAUV/XXWIF5F2niJvu4D1jNdpOOQ47vlzHSeAF9ZfbNZQKyMSR
+         vIdYmZjGtvkTXDo+PbVqjqbKvcM+Zo0GFqLQ0tbFfSVkt9Dq/oPgmVCZFxEpTFnFZdg7
+         Ypg8Akh1YUQJSPLBqj+5lhP18Hs5eI7olc/oP0RPftzXyqSEEohPWmc5qYhB2EmwzG0c
+         CLzw==
+X-Gm-Message-State: ACgBeo1uwI34RrgsdDha1X1c31NLS9/ITbh9kbyAOCEIVKIMXQjXNCL+
+        mqDonzE8PhsGDn1jsDpFkc1xuaTredRC4j2mdhnMZD9Y9n2e+7Yf3968F8ah6DSrRAnh44h6Z9Y
+        OPRiFb5+if7jDfDzE0oIe
+X-Received: by 2002:a17:907:7f91:b0:77f:c4c7:9155 with SMTP id qk17-20020a1709077f9100b0077fc4c79155mr3137420ejc.476.1663076093151;
+        Tue, 13 Sep 2022 06:34:53 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6avRwtqutArvSmcEzg7QncTSscL/a0gwHDnK2tQKDnZWQ3sHpo7gh8eU4Pf6A1+IXk9R/ikw==
+X-Received: by 2002:a17:907:7f91:b0:77f:c4c7:9155 with SMTP id qk17-20020a1709077f9100b0077fc4c79155mr3137408ejc.476.1663076092870;
+        Tue, 13 Sep 2022 06:34:52 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 1-20020a170906218100b00730b61d8a5esm6099500eju.61.2022.09.13.06.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 06:34:51 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "jailhouse-dev@googlegroups.com" <jailhouse-dev@googlegroups.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "acrn-dev@lists.projectacrn.org" <acrn-dev@lists.projectacrn.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH v2] x86/PCI: Prefer MMIO over PIO on all hypervisor
+In-Reply-To: <9FEC6622-780D-41E6-B7CA-8D39EDB2C093@vmware.com>
+References: <9FEC6622-780D-41E6-B7CA-8D39EDB2C093@vmware.com>
+Date:   Tue, 13 Sep 2022 15:34:50 +0200
+Message-ID: <87zgf3pfd1.fsf@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+Ajay Kaher <akaher@vmware.com> writes:
 
-When enable VMDs on Intel CPUs, VMD controllers(8086:28c0) be
-recognized by VMD driver and there are many failed messages of
-BAR 13 when scan the bridges and assign IO resource behind it
-as listed below, the bridge wants to get 0x6000 as its IO
-resource, but there is no IO resources on the host bridge.
+> Note: Corrected the Subject.
+>
+>> =EF=BB=BFOn 07/09/22, 8:50 PM, "Vitaly Kuznetsov" <vkuznets@redhat.com> =
+wrote:
+>>
+>>> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+>>> index ddb7986..1e5a8f7 100644
+>>> --- a/arch/x86/pci/common.c
+>>> +++ b/arch/x86/pci/common.c
+>>> @@ -20,6 +20,7 @@
+>>>  #include <asm/pci_x86.h>
+>>>  #include <asm/setup.h>
+>>>  #include <asm/irqdomain.h>
+>>> +#include <asm/hypervisor.h>
+>>>
+>>>  unsigned int pci_probe =3D PCI_PROBE_BIOS | PCI_PROBE_CONF1 | PCI_PROB=
+E_CONF2 |
+>>>                               PCI_PROBE_MMCONF;
+>>> @@ -57,14 +58,58 @@ int raw_pci_write(unsigned int domain, unsigned int=
+ bus, unsigned int devfn,
+>>>       return -EINVAL;
+>>>  }
+>>>
+>>> +#ifdef CONFIG_HYPERVISOR_GUEST
+>>> +static int vm_raw_pci_read(unsigned int domain, unsigned int bus, unsi=
+gned int devfn,
+>>> +                                             int reg, int len, u32 *va=
+l)
+>>> +{
+>>> +     if (raw_pci_ext_ops)
+>>> +             return raw_pci_ext_ops->read(domain, bus, devfn, reg, len=
+, val);
+>>> +     if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+>>> +             return raw_pci_ops->read(domain, bus, devfn, reg, len, va=
+l);
+>>> +     return -EINVAL;
+>>> +}
+>>> +
+>>> +static int vm_raw_pci_write(unsigned int domain, unsigned int bus, uns=
+igned int devfn,
+>>> +                                             int reg, int len, u32 val)
+>>> +{
+>>> +     if (raw_pci_ext_ops)
+>>> +             return raw_pci_ext_ops->write(domain, bus, devfn, reg, le=
+n, val);
+>>> +     if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+>>> +             return raw_pci_ops->write(domain, bus, devfn, reg, len, v=
+al);
+>>> +     return -EINVAL;
+>>> +}
+>>
+>> These look exactly like raw_pci_read()/raw_pci_write() but with inverted
+>> priority. We could've added a parameter but to be more flexible, I'd
+>> suggest we add a 'priority' field to 'struct pci_raw_ops' and make
+>> raw_pci_read()/raw_pci_write() check it before deciding what to use
+>> first. To be on the safe side, you can leave raw_pci_ops's priority
+>> higher than raw_pci_ext_ops's by default and only tweak it in
+>> arch/x86/kernel/cpu/vmware.c
+>
+> Thanks Vitaly for your response.
+>
+> 1. we have multiple objects of struct pci_raw_ops, 2. adding 'priority' f=
+ield to struct pci_raw_ops
+> doesn't seems to be appropriate as need to take decision which object of =
+struct pci_raw_ops has
+> to be used, not something with-in struct pci_raw_ops.
 
-VMD host bridge resources:
-vmd 0000:64:00.5: PCI host bridge to bus 10000:80
-pci_bus 10000:80: root bus resource [bus 80-9f]
-pci_bus 10000:80: root bus resource [mem 0xe0000000-0xe1ffffff]
-pci_bus 10000:80: root bus resource [mem 0x24ffff02010-0x24fffffffff 64bit]
+I'm not sure I follow, you have two instances of 'struct pci_raw_ops'
+which are called 'raw_pci_ops' and 'raw_pci_ext_ops'. What if you do
+something like (completely untested):
 
-Failed messages of BAR#13:
-pci 10000:80:02.0: BAR 13: no space for [io  size 0x1000]
-pci 10000:80:02.0: BAR 13: failed to assign [io  size 0x1000]
-pci 10000:80:03.0: BAR 13: no space for [io  size 0x1000]
-pci 10000:80:03.0: BAR 13: failed to assign [io  size 0x1000]
+diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+index 70533fdcbf02..fb8270fa6c78 100644
+--- a/arch/x86/include/asm/pci_x86.h
++++ b/arch/x86/include/asm/pci_x86.h
+@@ -116,6 +116,7 @@ extern void (*pcibios_disable_irq)(struct pci_dev *dev);
+ extern bool mp_should_keep_irq(struct device *dev);
+=20
+ struct pci_raw_ops {
++       int rating;
+        int (*read)(unsigned int domain, unsigned int bus, unsigned int dev=
+fn,
+                                                int reg, int len, u32 *val);
+        int (*write)(unsigned int domain, unsigned int bus, unsigned int de=
+vfn,
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index ddb798603201..e9965fd11576 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -40,7 +40,8 @@ const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
+ int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
+                                                int reg, int len, u32 *val)
+ {
+-       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
++       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops &&
++           (!raw_pci_ext_ops || raw_pci_ext_ops->rating <=3D raw_pci_ops->=
+rating))
+                return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
+        if (raw_pci_ext_ops)
+                return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, =
+val);
+@@ -50,7 +51,8 @@ int raw_pci_read(unsigned int domain, unsigned int bus, u=
+nsigned int devfn,
+ int raw_pci_write(unsigned int domain, unsigned int bus, unsigned int devf=
+n,
+                                                int reg, int len, u32 val)
+ {
+-       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
++       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops &&
++           (!raw_pci_ext_ops || raw_pci_ext_ops->rating <=3D raw_pci_ops->=
+rating))
+                return raw_pci_ops->write(domain, bus, devfn, reg, len, val=
+);
+        if (raw_pci_ext_ops)
+                return raw_pci_ext_ops->write(domain, bus, devfn, reg, len,=
+ val);
 
-VMD-enabled root ports use
-Enhanced Configuration Access Mechanism (ECAM) access
-PCI Express configuration space, and offer VMD_CFGBAR as
-base of PCI Express configuration space for the bridges
-behind it. The configuration space includes IO resources,
-but these IO resources are not actually used on X86,
-especially the NVMes as device connected on this hot plug
-bridges, and it can result in BAR#13 assign IO resource
-failed. So we clear IO resources by setting an IO base value
-greater than limit to these bridges. Hence, we can leverage
-kernel parameter "pci=hpiosize=0KB" to avoid this failed
-messages show out.
+and then somewhere in Vmware hypervisor initialization code
+(arch/x86/kernel/cpu/vmware.c) you do
 
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
----
- drivers/pci/quirks.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ raw_pci_ext_ops->rating =3D 100;
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4944798..f8a37f0 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5956,3 +5956,60 @@ static void aspm_l1_acceptable_latency(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
- #endif
-+
-+#if defined(CONFIG_X86_64) || defined(CONFIG_X86)
-+/*
-+ * VMD-enabled root ports use Enhanced Configuration Access Mechanism (ECAM)
-+ * access PCI Express configuration space, and offer VMD_CFGBAR as
-+ * base of PCI Express configuration space for the bridges behind it.
-+ * The configuration space includes IO resources, but these IO
-+ * resources are not actually used on X86, especially the NVMes as
-+ * device connnected on this hot plug bridges, and it can result
-+ * in BAR#13 assign IO resource failed. So we clear IO resources
-+ * by setting an IO base value greater than limit to these bridges.
-+ * Hence, append kernel parameter "pci=hpiosize=0KB" can avoid
-+ * this BAR#13 failed messages show out.
-+ */
-+static void quirk_vmd_no_iosize(struct pci_dev *bridge)
-+{
-+	u8 io_base_lo, io_limit_lo;
-+	u16 io_low;
-+	u32 io_upper16;
-+	unsigned long io_mask,  base, limit;
-+
-+	io_mask = PCI_IO_RANGE_MASK;
-+	if (bridge->io_window_1k)
-+		io_mask = PCI_IO_1K_RANGE_MASK;
-+
-+	/* VMD Domain */
-+	if (is_vmd(bridge->bus) && bridge->is_hotplug_bridge) {
-+		pci_read_config_byte(bridge, PCI_IO_BASE, &io_base_lo);
-+		pci_read_config_byte(bridge, PCI_IO_LIMIT, &io_limit_lo);
-+		base = (io_base_lo & io_mask) << 8;
-+		limit = (io_limit_lo & io_mask) << 8;
-+		if (limit >= base) {
-+			/* if there are defined io ports behind the bridge on x86,
-+			 * we clear it, since there is only 64KB IO resource on it,
-+			 * beyond that, hotplug io bridges don't needs IO port resource,
-+			 * such as NVMes attach on it. So the corresponding range must be
-+			 * turned off by writing base value greater than limit to the
-+			 * bridge's base/limit registers.
-+			 */
-+
-+			/* Clear upper 16 bits of I/O base/limit */
-+			io_upper16 = 0;
-+			/* set base value greater than limit */
-+			io_low = 0x00f0;
-+
-+			/* Temporarily disable the I/O range before updating PCI_IO_BASE */
-+			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, 0x0000ffff);
-+			/* Update lower 16 bits of I/O base/limit */
-+			pci_write_config_word(bridge, PCI_IO_BASE, io_low);
-+			/* Update upper 16 bits of I/O base/limit */
-+			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, io_upper16);
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
-+		PCI_CLASS_BRIDGE_PCI, 8, quirk_vmd_no_iosize);
-+#endif
--- 
-1.8.3.1
+why wouldn't it work?=20
+
+(diclaimer: completely untested, raw_pci_ops/raw_pci_ext_ops
+initialization has to be checked so 'rating' is not garbage).
+
+>
+> It's a generic solution for all hypervisor (sorry for earlier wrong
+> Subject), not specific to VMware. Further looking for feedback if it's
+> impacting to any hypervisor.
+
+That's the tricky part. We can check modern hypervisor versions, but
+what about all other versions in existence? How can we know that there's
+no QEMU/Hyper-V/... version out there where MMIO path is broken? I'd
+suggest we limit the change to Vmware hypervisor, other hypervisors may
+use the same mechanism (like the one above) later (but the person
+suggesting the patch is always responsible for the research why it is
+safe to do so).
+
+--=20
+Vitaly
 
