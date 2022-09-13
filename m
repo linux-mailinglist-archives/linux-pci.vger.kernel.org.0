@@ -2,97 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 347955B68BE
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 09:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF145B68C6
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 09:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbiIMHgR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 03:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42890 "EHLO
+        id S229601AbiIMHj1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 03:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiIMHgN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 03:36:13 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623EF57E25;
-        Tue, 13 Sep 2022 00:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oRpmSruXXDfHHV5+EC0Xg5Uv67nyeQ6QmShePHfU9+0=; b=IF4akWGVqP4IVED+nVq/W/GkTw
-        m+f7J/3Z23ZFI1haNEvCDTQRepUmS7JDXVbdKrxkBsQ+IaewIYHz+VTa/Uva9J+PDaL3ZMt7v58g1
-        MwruXci7fOuKOOgiRU1uAFTaY6CoS4VrJU3FgQPrBEwzwtW72MJRVQkkhtuhXgApWb/+mB3//HazK
-        ZcTDJ3+GjRN7K7rLO+/QyhpJ8qtQsPOUTxlI21UtqwGjxlQk7OofmoPVg1ZOBCDd4APbMyp6GbBc2
-        0NHqojWwFTK+HZ9rfPus8ecj4WLFvj+j46ExUv542VGFBEjIYCb01HaHFZUifreDl+HeBNbPoADMc
-        6T36UCww==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34280)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oY0Si-0002Yj-0Q; Tue, 13 Sep 2022 08:36:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oY0Sg-0000UY-BY; Tue, 13 Sep 2022 08:36:02 +0100
-Date:   Tue, 13 Sep 2022 08:36:02 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
+        with ESMTP id S229513AbiIMHj1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 03:39:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF1F58097
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 00:39:24 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1oY0Vc-00046v-Sy; Tue, 13 Sep 2022 09:39:04 +0200
+Message-ID: <0660fff6d29c5f8251ac4f28d4badcfea91e6833.camel@pengutronix.de>
+Subject: Re: [PATCH] PCI: imx6: Fix wrong check in imx6_pcie_attach_pd()
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, hongxing.zhu@nxp.com,
         lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
         shawnguo@kernel.org, bhelgaas@google.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: imx6: Fix wrong check in imx6_pcie_attach_pd()
-Message-ID: <YyAy4iBUa5kByPwu@shell.armlinux.org.uk>
+Date:   Tue, 13 Sep 2022 09:39:03 +0200
+In-Reply-To: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
 References: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
- <YyAx17VNvDMyvgBV@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyAx17VNvDMyvgBV@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 08:31:35AM +0100, Russell King (Oracle) wrote:
-> On Tue, Sep 13, 2022 at 02:59:10PM +0800, Tang Bin wrote:
-> > In the function imx6_pcie_attach_pd(),
-> > dev_pm_domain_attach_by_name() may return NULL in some cases,
-> > so IS_ERR() doesn't meet the requirements. Thus fix it.
+Am Dienstag, dem 13.09.2022 um 14:59 +0800 schrieb Tang Bin:
+> In the function imx6_pcie_attach_pd(),
+> dev_pm_domain_attach_by_name() may return NULL in some cases,
+> so IS_ERR() doesn't meet the requirements. Thus fix it.
 > 
-> NAK. You are clearly doing a mechanical search and replace, and then
-> throwing out patches without a care in the world for other people to
-> then decide whether the changes are in fact appropriate or not.
+I don't like this added complexity in the driver. IHMO if there is a
+real issue, dev_pm_domain_attach_by_name() should just return a error
+code, instead of NULL. The fact that you need to pull a error code out
+of thin air in the driver is a big hint that this should be fixed in
+the called function, not in the return handling in the driver.
+
+A bit down the callstack genpd_dev_pm_attach_by_id() is called, which
+is documented like this "Returns the created virtual device if
+successfully attached PM domain, NULL when the device don't need a PM
+domain [...]". NULL is a valid return code, where the driver should
+_not_ stop probing, as the device should work without the power domain
+attached.
+
+Regards,
+Lucas
+
+> Fixes: 3f7cceeab895 ("PCI: imx: Add multi-pd support")
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Please don't do that. Please read and understand the code before you
-> waste reviewers and developers time - otherwise you will educate
-> reviews and developers to ignore your efforts.
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 6619e3caf..65d6ebbba 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -337,8 +337,8 @@ static int imx6_pcie_attach_pd(struct device *dev)
+>  		return 0;
+>  
+>  	imx6_pcie->pd_pcie = dev_pm_domain_attach_by_name(dev, "pcie");
+> -	if (IS_ERR(imx6_pcie->pd_pcie))
+> -		return PTR_ERR(imx6_pcie->pd_pcie);
+> +	if (IS_ERR_OR_NULL(imx6_pcie->pd_pcie))
+> +		return PTR_ERR(imx6_pcie->pd_pcie) ? : -ENODATA;
+>  	/* Do nothing when power domain missing */
+>  	if (!imx6_pcie->pd_pcie)
+>  		return 0;
+> @@ -352,8 +352,8 @@ static int imx6_pcie_attach_pd(struct device *dev)
+>  	}
+>  
+>  	imx6_pcie->pd_pcie_phy = dev_pm_domain_attach_by_name(dev, "pcie_phy");
+> -	if (IS_ERR(imx6_pcie->pd_pcie_phy))
+> -		return PTR_ERR(imx6_pcie->pd_pcie_phy);
+> +	if (IS_ERR_OR_NULL(imx6_pcie->pd_pcie_phy))
+> +		return PTR_ERR(imx6_pcie->pd_pcie_phy) ? : -ENODATA;
+>  
+>  	link = device_link_add(dev, imx6_pcie->pd_pcie_phy,
+>  			DL_FLAG_STATELESS |
 
-It is also highly likely that many of these changes are just plain
-broken.
 
-If you read the documentation for this function and the referred
-to function:
-
- * Returns the created virtual device if successfully attached PM domain, NULL
- * when the device don't need a PM domain, else an ERR_PTR() in case of
- * failures. If a power-domain exists for the device, but cannot be found or
- * turned on, then ERR_PTR(-EPROBE_DEFER) is returned to ensure that the device
- * is not probed and to re-try again later.
-
-So, NULL is *not* an error condition. It means that the device does not
-need a power domain, which is *not* a failure.
-
-You are probably causing more harm than good by trying to do this
-mechanical change all over the kernel.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
