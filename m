@@ -2,83 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5728D5B68DD
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 09:46:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F3495B6946
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 10:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231146AbiIMHqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 03:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54538 "EHLO
+        id S230521AbiIMINz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 04:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbiIMHqR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 03:46:17 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAD82B279;
-        Tue, 13 Sep 2022 00:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7R46dL5v/qAAceuZ423ZSM42+lTG5q+jzS8a0ZHd/yA=; b=G4HJswNfkvqvbqgOKeKi5WXj8O
-        JuEpK1sh7BVrm90ZMiDMwiCB3P2tVsIpxr0G2uo2fEOIkWmF+gBR61FBIk9kMY/nhTgANroSLAZsK
-        vwmMWfq1z1Wvd3Q//G3gSYr0U6Cm7ri+g/6VvKjJZCK8fI9g4+KSMZaet8hsr9/e7omVcehR5HIIk
-        OmUBpkhdCurtJjVThQDsEWjdLMnU9GZGEq7OyHdvC/8epR6czzdq5OAvYuMjD0TCJ81jIjEEOGMz+
-        YR4zt9V9DqxzeNwaIRLgIM/Iz6PObghcRWAxaXUqPYFBjGdNgZKgmQnLpuK8NexrTkw4AjL8whuZu
-        HnN+b4mw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34286)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oY0cS-0002aM-4j; Tue, 13 Sep 2022 08:46:08 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oY0cQ-0000Vo-RI; Tue, 13 Sep 2022 08:46:06 +0100
-Date:   Tue, 13 Sep 2022 08:46:06 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>, hongxing.zhu@nxp.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        shawnguo@kernel.org, bhelgaas@google.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: imx6: Fix wrong check in imx6_pcie_attach_pd()
-Message-ID: <YyA1PgoZLgRsbOkQ@shell.armlinux.org.uk>
-References: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
- <0660fff6d29c5f8251ac4f28d4badcfea91e6833.camel@pengutronix.de>
+        with ESMTP id S231357AbiIMINy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 04:13:54 -0400
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3845A883;
+        Tue, 13 Sep 2022 01:13:53 -0700 (PDT)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-3452214cec6so130678717b3.1;
+        Tue, 13 Sep 2022 01:13:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=9sLM6RJy6I6JLzRHcKSPJWKNKk6jtaeZF6Edx/6Pve0=;
+        b=XQq80t0mRs7BMUFpptwTiRk5uHA3ZvE5hGeH3oKUTdenbKqr0+9o0ZNZw09ptfSIUB
+         hUrAYFOoF9DplpkPh8SxTvSU29cxcK8Byw8ys9bfDg2W1anol1L7tAjT1UXzAjlmooGx
+         I5fZyxPJj3J0KDys8dKkp4vUvZmYNkgNV6zQDnOqIPjDm8B00EumQrA2Z4UW+6kjKwjW
+         E88HqMfrZQZMmZcPs6uFXsmdsNecNCLAQh6nimqTNoYlg2PM4Jn+zXWBlOeg9MS/uWaY
+         Etni99U+V556j4ZC5c/w8vyzRnZ37npENnDO0YTu5czZiXH/H//A18aP8s0KsMRUoVEa
+         Zv3g==
+X-Gm-Message-State: ACgBeo2NSnEpdSark038Sj+ppTUJruq430ilwUu9mxbnomVPX5FSBixi
+        U0+JHYrQqdw3mt1j1iIO2R/Nj3KVMNOd38BNg4I=
+X-Google-Smtp-Source: AA6agR5WgrB5LKptPjltFV5HyxgV+69DAbH09My27NgjzeNaXZIOdRzKMTvc3H0xqFCKSqucFzlUUG70Xy+qgJvpKsI=
+X-Received: by 2002:a81:9407:0:b0:345:6683:d757 with SMTP id
+ l7-20020a819407000000b003456683d757mr24666022ywg.326.1663056832590; Tue, 13
+ Sep 2022 01:13:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0660fff6d29c5f8251ac4f28d4badcfea91e6833.camel@pengutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <Yx6yl9jNu6S8xOJ+@black.fi.intel.com> <20220912203619.GA537411@bhelgaas>
+In-Reply-To: <20220912203619.GA537411@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 13 Sep 2022 10:13:41 +0200
+Message-ID: <CAJZ5v0g6EBwtT9B0tUNc05-N4XjMt0i0Cm2zO+uJAibV9FrxfQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] PCI/PM: Always disable PTM for all devices during suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Koba Ko <koba.ko@canonical.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 09:39:03AM +0200, Lucas Stach wrote:
-> Am Dienstag, dem 13.09.2022 um 14:59 +0800 schrieb Tang Bin:
-> > In the function imx6_pcie_attach_pd(),
-> > dev_pm_domain_attach_by_name() may return NULL in some cases,
-> > so IS_ERR() doesn't meet the requirements. Thus fix it.
-> > 
-> I don't like this added complexity in the driver. IHMO if there is a
-> real issue, dev_pm_domain_attach_by_name() should just return a error
-> code, instead of NULL.
+On Mon, Sep 12, 2022 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Sep 12, 2022 at 07:16:23AM +0300, Mika Westerberg wrote:
+> > On Fri, Sep 09, 2022 at 03:24:56PM -0500, Bjorn Helgaas wrote:
+> > > Bjorn Helgaas (9):
+> > >   PCI/PTM: Cache PTM Capability offset
+> > >   PCI/PTM: Add pci_upstream_ptm() helper
+> > >   PCI/PTM: Separate configuration and enable
+> > >   PCI/PTM: Add pci_suspend_ptm() and pci_resume_ptm()
+> > >   PCI/PTM: Move pci_ptm_info() body into its only caller
+> > >   PCI/PTM: Preserve RsvdP bits in PTM Control register
+> > >   PCI/PTM: Reorder functions in logical order
+> > >   PCI/PTM: Consolidate PTM interface declarations
+> > >   PCI/PM: Always disable PTM for all devices during suspend
+> >
+> > For the whole series,
+> >
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> Thank you very much, Mika, Kuppuswamy, and Rajvi for your effort in
+> reviewing and testing these.  I know that's a lot of work, and I
+> really appreciate it.
+>
+> I put these on pci/pm together with Rajvi's pci_pm_suspend_noirq()
+> simplification for v6.1.
 
-You've fallen into the trap that Tang Bin laid. It returns an error
-code for all cases where an error has happened. It returns NULL only
-when the device does not require a power domain. So, a NULL return is
-*not* an error condition, but merely an indication that "this device
-does not require this power domain".
-
-Mechanical changes like this are really quite harmful to the kernel.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Awesome, thanks!
