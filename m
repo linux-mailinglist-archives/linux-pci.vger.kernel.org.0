@@ -2,87 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24ACF5B7981
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 20:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9C35B7BFE
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 22:07:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230336AbiIMS06 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 14:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
+        id S229635AbiIMUHu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 16:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231797AbiIMS0j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 14:26:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62B7DF24;
-        Tue, 13 Sep 2022 10:44:41 -0700 (PDT)
+        with ESMTP id S229555AbiIMUHt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 16:07:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD07A61734;
+        Tue, 13 Sep 2022 13:07:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 63E21B81095;
-        Tue, 13 Sep 2022 17:44:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FC1C433D6;
-        Tue, 13 Sep 2022 17:44:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 617B66157F;
+        Tue, 13 Sep 2022 20:07:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8026DC433C1;
+        Tue, 13 Sep 2022 20:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663091079;
-        bh=hvvNtLef5JyDw6JZ44jNYYoGvekWe6nVJNHmLeq2uJE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fWaR1m7xBq1XesUNbibQzGM/xCuS7x6kez+gaPbU2sNuoLF5eW+3uodpOyNimt8BC
-         a6DWFDcszVOk57rDu+zx6uI5PF9aDJGjlSZSNrh3hdgMSK4j8RzWSf1m96TFYNhThe
-         kdUox2mo/VMSAlvQBhnxhXAqO1By0iTwyX8HrfFKt69z2+WaId8LSzcQjEOZgrlCuo
-         sRLMXgHX4QjznlvfOZsIAP8Q/LwwHymoBGXNg/G0Or9J2h+2wyUExx+QgMLgpP6Dc3
-         uthhf/6PeJ0OvcQnTKMD+cRSF3Q2008eCzG21K2eqAvvceeHKyce1eNb0eSY3QvN0Z
-         DFvVIefdMIM3g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oY9xc-00A1nz-SG;
-        Tue, 13 Sep 2022 18:44:36 +0100
-Date:   Tue, 13 Sep 2022 18:44:36 +0100
-Message-ID: <871qsfuq2j.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Frank Li <frank.li@nxp.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-        "lznuaa@gmail.com" <lznuaa@gmail.com>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Subject: Re: [EXT] Re: [PATCH v9 2/4] irqchip: Add IMX MU MSI controller driver
-In-Reply-To: <AM9PR04MB879393DEDC03A5C092C81DA888449@AM9PR04MB8793.eurprd04.prod.outlook.com>
-References: <20220907034856.3101570-1-Frank.Li@nxp.com>
-        <20220907034856.3101570-3-Frank.Li@nxp.com>
-        <87fsh2qpq4.wl-maz@kernel.org>
-        <AM9PR04MB879338D6D4B55A74CD002E6D88409@AM9PR04MB8793.eurprd04.prod.outlook.com>
-        <877d2dvs0d.wl-maz@kernel.org>
-        <AM9PR04MB879393DEDC03A5C092C81DA888449@AM9PR04MB8793.eurprd04.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: frank.li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev, manivannan.sadhasivam@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=k20201202; t=1663099667;
+        bh=G7Kj4Lg7b02kkVZ4u+0wkU9az0+7xB4DQEPp/0r+LDQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OY7+U86MXLmloWdiPJD1Acy0SWjH20Ow6X7t++XTDUUK+MTFo63KqhfMDgvoliSxp
+         P58W2G+eftA9ly4Z0gZgTGUCv+N7RxpbFbZG4HJDGsdY3K8rgPFecDnhfzuOgIoi0Z
+         TKZxy22ETxBNdqXB/XnTcZbhcOVOAO+IPpn2Vk1PN0dDhLCwcCgwMmd/IplKi5LRCe
+         QnMEa1Ocs+Nz2c0FsQFYpmoS3hoVjW3AJBpzWzWvCRfppmHChiHXCzgp2+gtf5qfZ6
+         PZNhDYPT+SvPXPWPErY6lfIsoH5jNTaQsW9N3uIn2Hv4aiPTtMjnlmzAWrnEZnuqfA
+         CdrJN0+mASWKA==
+Date:   Tue, 13 Sep 2022 15:07:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        treding@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
+ logging
+Message-ID: <20220913200746.GA619956@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1c243b0-2e6e-3254-eff0-a5276020a320@nvidia.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -93,27 +58,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 12 Sep 2022 16:53:40 +0100,
-Frank Li <frank.li@nxp.com> wrote:
-> 
-> > > [Frank Li] I remember you said that irq-chip can't be removed.
-> > > So I am not sure why need build as module.
+On Tue, Sep 13, 2022 at 06:00:30PM +0100, Jon Hunter wrote:
+> On 13/09/2022 17:51, Manivannan Sadhasivam wrote:
+> > On Tue, Sep 13, 2022 at 03:42:37PM +0530, Vidya Sagar wrote:
+> > > Some of the platforms (like Tegra194 and Tegra234) have open slots and
+> > > not having an endpoint connected to the slot is not an error.
+> > > So, changing the macro from dev_err to dev_info to log the event.
 > > 
-> > Not being removed doesn't mean it cannot be built as a module and
-> > loaded on demand. Why should I be forced to have this driver built-in
-> > if my kernel is used on a variety of systems, only one of them having
-> > this device?
+> > But the link up not happening is an actual error and -ETIMEDOUT is being
+> > returned. So I don't think the log severity should be changed.
 > 
-> [Frank Li] A problem, platform_msi_create_irq_domain have NOT export
-> to let module Call it.
-> https://elixir.bootlin.com/linux/latest/source/drivers/base/platform-msi.c#L122
+> Yes it is an error in the sense it is a timeout, but reporting an error
+> because nothing is attached to a PCI slot seems a bit noisy. Please note
+> that a similar change was made by the following commit and it also seems
+> appropriate here ...
 > 
-> Do you want to me add EXPORT_SYMBOL_GPL for it  OR keep "bool" here? 
+> commit 4b16a8227907118e011fb396022da671a52b2272
+> Author: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> Date:   Tue Jun 18 23:32:06 2019 +0530
+> 
+>     PCI: tegra: Change link retry log level to debug
+> 
+> 
+> BTW, we check for error messages in the dmesg output and this is a new error
+> seen as of Linux v6.0 and so this was flagged in a test. We can ignore the
+> error, but in this case it seem more appropriate to make this a info or
+> debug level print.
 
-Please add a patch exporting the missing symbols, and make the think
-modular.
+Can you tell whether there's a device present, e.g., via Slot Status
+Presence Detect?  If there's nothing in the slot, I don't know why we
+would print anything at all.  If a card is present but there's no
+link, that's probably worthy of dev_info() or even dev_err().
 
-	M.
+I guess if you can tell the slot is empty, there's no point in even
+trying to start the link, so you could avoid both the message and the
+timeout by not even calling dw_pcie_wait_for_link().
 
--- 
-Without deviation from the norm, progress is not possible.
+Bjorn
