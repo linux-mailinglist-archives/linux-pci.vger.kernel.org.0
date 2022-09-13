@@ -2,88 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5D3B5B69A0
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 10:35:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D102E5B69CF
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 10:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231395AbiIMIfx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 04:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35938 "EHLO
+        id S230462AbiIMIrA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 04:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbiIMIft (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 04:35:49 -0400
-X-Greylist: delayed 374 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 13 Sep 2022 01:35:48 PDT
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E3141984;
-        Tue, 13 Sep 2022 01:35:47 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 50155580C8B;
-        Tue, 13 Sep 2022 04:29:29 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 13 Sep 2022 04:29:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1663057769; x=1663061369; bh=xKaS3qcdyI
-        pLMDP6PxAbEzVODr2BdJywglsILCX5fgo=; b=LtCr8MPS+qDZ4VeZgJ48KDXBir
-        4YErqxguk+UXugHrUdWpH3OrsZaN0x+mpG6kcyx583QjKJ2KeEdQXCfo7ob23CNO
-        y7ZGeokdTOZyquVra1dWA923vL1CRpHLA+ryqPEDVUqc09/cn4ROhXnRFMkua8Bj
-        ZV8Goj3iBCLBkGwVlSflk/Q+LAhdWV4mAEeyUxJZiYbF/UM65VFt3b+RvJRPWCdS
-        uHK6zu3fgHCUzCVtjwEhFUy3YRlR/Pcz/aiAXuvyMIUCajHKngiAIoj/AgOggQmW
-        BZKnGEvFMk8h2fvy5aKycPcw9QjiT636M7BZHN6rTJ5J/8EQ0d2wIbf57WWw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; t=1663057769; x=1663061369; bh=xKaS3qcdyIpLMDP6PxAbEzVODr2B
-        dJywglsILCX5fgo=; b=vczuyfQxl4/I6U8nbllWGt2X7SK85Cz9Tj7oWiJcJNuM
-        Bhk+thM4forH6SU4bBB7vjdG5RoCGI+3nJI1noQuFfxRajxHG0zphEQHzn7HR83x
-        PWz9IM+UO9MZTD69cZu9pmPmOuvBgyArc8Rw+S73DUZ2AUPP1XD5VNIpHhMMr6Ts
-        2tnEHDNWUIgRxhB4f23KOaE5gQh6FTNJN7h31p3qVvm4iLsOaE4MONrR5yPVBGax
-        pXmi4uE2vRLOVP8fJUr+U4X6fyr7SEV9vtmdXHeMx2jrUpBNTAQHh3yTXDc86rqb
-        vXKZUBF3uoQ3xnOb/DRsd9oNi2PSiqSP7JMsAFV6Ew==
-X-ME-Sender: <xms:aD8gY2PKbvM7QVGR-135n_yNJmd9aI5EK2GZpIXUTn2FiH3kZsp3kg>
-    <xme:aD8gY086O-V-HOEukY-7V1X9QrYrkkUfct7A1AsTzHl4vi9qEpthfXUJTxBszbynS
-    GXeVBgfYmc8_5hANz4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfedugedgtdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:aD8gY9QlzworIgwfFLA80kv_q88lp_h1eXqzoO_9weGItu_iMtorwA>
-    <xmx:aD8gY2v_grI0heg7xHkko3P-jecq5b5ieLYq-x_8F_urxXaxJA0V2g>
-    <xmx:aD8gY-emKDANxGZvtJgUztZDD17ZX8eajKTk-S2upt_aMyzgDUAnsQ>
-    <xmx:aT8gY1_nRSWQ5yNSSQDIJICGBNlAZKTDBpd2DFSfPvLlvSjwBp1EPA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id B92E9B60086; Tue, 13 Sep 2022 04:29:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-929-g09f3e68182-fm-20220908.004-g09f3e681
-Mime-Version: 1.0
-Message-Id: <91244c88-d909-4e19-a058-b4f110e42ed7@www.fastmail.com>
-In-Reply-To: <YyAx17VNvDMyvgBV@shell.armlinux.org.uk>
-References: <20220913065910.15348-1-tangbin@cmss.chinamobile.com>
- <YyAx17VNvDMyvgBV@shell.armlinux.org.uk>
-Date:   Tue, 13 Sep 2022 10:29:08 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Russell King" <linux@armlinux.org.uk>,
-        "Tang Bin" <tangbin@cmss.chinamobile.com>
-Cc:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>, robh@kernel.org,
-        kw@linux.com, "Shawn Guo" <shawnguo@kernel.org>,
-        bhelgaas@google.com, "Sascha Hauer" <s.hauer@pengutronix.de>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        "Fabio Estevam" <festevam@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: imx6: Fix wrong check in imx6_pcie_attach_pd()
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        with ESMTP id S230327AbiIMIq7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 04:46:59 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE9F6474DF
+        for <linux-pci@vger.kernel.org>; Tue, 13 Sep 2022 01:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663058818; x=1694594818;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZlSeYN9NGBI+GDg5zKONOXejVX5qcoCaAB030FNbO6Y=;
+  b=It3aNkhn/npG3cNK377hqe67d17djpX/kIDv9vKVHb+X5QmrS8xvaNN0
+   lV9O/j60mtSVyYidxjOjuAcMAWciJKpUr7Wy1tvqbK7gzLiHl/6V+hCHP
+   dGUw2y9fORiTzMsAoBTsZ7wVkJo2vSVFjIYzEbaDdupcvcvbTWMWAD3Lb
+   4qrUAJI4BMLUiY9/CjWhOe7pC7zm66mXcS6upmvEIjPrjIxnYtOVGayGH
+   Gs6ZhPrQtLW7hd7b08uPrByM6GMVNvpGZtKE1YYhF7eY88BdRu2TFoPrj
+   1FfsT6dhmsoI2eqdipOfeg1o96JabnAX1MNPmRLnhueTBdbJ8ZqU3UHVU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="285104627"
+X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
+   d="scan'208";a="285104627"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 01:46:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
+   d="scan'208";a="616380384"
+Received: from lkp-server02.sh.intel.com (HELO 4011df4f4fd3) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 13 Sep 2022 01:46:56 -0700
+Received: from kbuild by 4011df4f4fd3 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oY1ZH-0003Pv-1O;
+        Tue, 13 Sep 2022 08:46:55 +0000
+Date:   Tue, 13 Sep 2022 16:46:46 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/pm] BUILD SUCCESS
+ 4c00cba122f3f3ae54aa5a3a1aec3afc7a2e6f94
+Message-ID: <63204376.rAXgIzvhOpaWOZoM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,40 +62,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 13, 2022, at 9:31 AM, Russell King (Oracle) wrote:
-> On Tue, Sep 13, 2022 at 02:59:10PM +0800, Tang Bin wrote:
->> @@ -352,8 +352,8 @@ static int imx6_pcie_attach_pd(struct device *dev)
->>  	}
->>  
->>  	imx6_pcie->pd_pcie_phy = dev_pm_domain_attach_by_name(dev, "pcie_phy");
->> -	if (IS_ERR(imx6_pcie->pd_pcie_phy))
->> -		return PTR_ERR(imx6_pcie->pd_pcie_phy);
->> +	if (IS_ERR_OR_NULL(imx6_pcie->pd_pcie_phy))
->> +		return PTR_ERR(imx6_pcie->pd_pcie_phy) ? : -ENODATA;
->>  
->>  	link = device_link_add(dev, imx6_pcie->pd_pcie_phy,
->>  			DL_FLAG_STATELESS |
->
-> This change is unnecessary. If dev_pm_domain_attach_by_name() returns
-> Null, then device_link_add() will also return NULL, and the check for
-> a NULL link will then succeed. So the NULL case is already cleanly
-> handled.
->
-> So overall, your patch is unnecessary and introduces a bug rather than
-> fixing it. Therefore, you can discard the patch in its entirety.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
+branch HEAD: 4c00cba122f3f3ae54aa5a3a1aec3afc7a2e6f94  PCI/PM: Simplify pci_pm_suspend_noirq()
 
-Agreed. On top of this, I would argue that any use of IS_ERR_OR_NULL()
-is an indication of a problem. If an interface requires using this,
-then we should generally fix the interface to have sane calling
-conventions, typically by ensuring that it consistently uses error
-pointers rather than NULL values to indicate an error.
+elapsed time: 721m
 
-Some interfaces like this one return NULL to indicate that there
-is no object to return but there is no error. This is a somewhat
-confusing interface design and users tend to get it wrong the same
-way. It is probably a good idea for someone to go through
-the users of IS_ERR_OR_NULL() and see how many are wrong, and
-improve the error handling, or if they can be expressed in
-a more readable way that avoids IS_ERR_OR_NULL().
+configs tested: 58
+configs skipped: 2
 
-     Arnd
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                 randconfig-a001-20220912
+powerpc                          allmodconfig
+i386                 randconfig-a002-20220912
+mips                             allyesconfig
+i386                                defconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20220912
+sh                               allmodconfig
+i386                 randconfig-a006-20220912
+i386                 randconfig-a005-20220912
+i386                 randconfig-a004-20220912
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64               randconfig-a001-20220912
+x86_64                          rhel-8.3-func
+x86_64               randconfig-a004-20220912
+x86_64                         rhel-8.3-kunit
+x86_64               randconfig-a002-20220912
+x86_64               randconfig-a005-20220912
+x86_64                           rhel-8.3-kvm
+x86_64               randconfig-a003-20220912
+x86_64                    rhel-8.3-kselftests
+x86_64               randconfig-a006-20220912
+i386                             allyesconfig
+x86_64                           allyesconfig
+x86_64                           rhel-8.3-syz
+alpha                            allyesconfig
+riscv                randconfig-r042-20220911
+arc                  randconfig-r043-20220912
+arm                                 defconfig
+arc                  randconfig-r043-20220911
+m68k                             allyesconfig
+s390                 randconfig-r044-20220911
+m68k                             allmodconfig
+arm64                            allyesconfig
+arc                              allyesconfig
+arm                              allyesconfig
+ia64                             allmodconfig
+
+clang tested configs:
+i386                 randconfig-a013-20220912
+i386                 randconfig-a011-20220912
+i386                 randconfig-a012-20220912
+i386                 randconfig-a014-20220912
+i386                 randconfig-a015-20220912
+i386                 randconfig-a016-20220912
+riscv                randconfig-r042-20220912
+hexagon              randconfig-r041-20220912
+hexagon              randconfig-r045-20220911
+hexagon              randconfig-r041-20220911
+hexagon              randconfig-r045-20220912
+s390                 randconfig-r044-20220912
+x86_64               randconfig-a014-20220912
+x86_64               randconfig-a011-20220912
+x86_64               randconfig-a012-20220912
+x86_64               randconfig-a013-20220912
+x86_64               randconfig-a016-20220912
+x86_64               randconfig-a015-20220912
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
