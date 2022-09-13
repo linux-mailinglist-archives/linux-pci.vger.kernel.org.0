@@ -2,51 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1421B5B7C0F
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 22:13:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 172395B7C53
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 22:54:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbiIMUND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 16:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
+        id S229503AbiIMUx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 16:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbiIMUNB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 16:13:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC99A642D3;
-        Tue, 13 Sep 2022 13:13:00 -0700 (PDT)
+        with ESMTP id S229473AbiIMUx6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 16:53:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCC8753B3;
+        Tue, 13 Sep 2022 13:53:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 77EC2B810B0;
-        Tue, 13 Sep 2022 20:12:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4B8C433D6;
-        Tue, 13 Sep 2022 20:12:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E3CF615A3;
+        Tue, 13 Sep 2022 20:53:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA438C433D6;
+        Tue, 13 Sep 2022 20:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663099978;
-        bh=OoU2B4RsRfA9DUfDB/pYptFOgRvPjtc5VBMN/lNgZk8=;
+        s=k20201202; t=1663102437;
+        bh=0O2LmCUyvqei0RPpnrAKX0X8sRRsI097LTK04EHg0l0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=On6Z8T7idhEC6JEh9I9R68lgW+Obr5rWb8751JQlKeY46BeQNrEgbAhtpa6CoEgTv
-         gkcByWe1rWPywL/+dH5TSp7UAVJdIgyFrGsopyfn99DZEZBJOenPdzLLDiJQjZ6o2H
-         fTpgOhke53ncQlfCsOiBxNNzgcQG96eRUgHZabVxxQDpNrcZeDxL7Dk6qojKoMH7RQ
-         9m+HmVKKnYoUGQNq6s1DndBz7ECuDE1ZGvf+8TBjqulo9Ao9IDe3jHUbKbmCo/F7qO
-         75c9OfSqyDHQ5Oi76JdBNw7wOgBipqUCirizynYfuGeEE9DPFX3Vpzxj0yzgUz1mrB
-         DWSCIy76s6L1g==
-Date:   Tue, 13 Sep 2022 15:12:56 -0500
+        b=JLecM6vmyABPSHuy0ZFBwuZstnfgkx9J0ThHLJvkGcFkBgo8Pjosxh4kkj9lo1R59
+         dQoAG3Ntvs7D7g3H1TKAgsZHAlQ64t4FKScAdnnpPMMRKh3rpLkhhxX6bht9RmOI2j
+         DgCUCvd3H5SB8QTIVh6edMb1rekJET/JQ5W+MEy4zu9+dpyMsQd6WvHM6HtdpinBeO
+         Ts01RFoTcEUY3a3uMGzJ9/ckmxV2rE7sorT6MNDkLFv2LDcDpJxvs7mpEqiVfs/hw6
+         PsFqdv7Tlrm951coz2z2Trm5L1cVqDGuDvuHojxeZyjaZdDcoMJ7dwheZHCTb0YwSS
+         q6f3a0X2/izJg==
+Date:   Tue, 13 Sep 2022 15:53:55 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org,
-        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v3 02/12] PCI: qcom-ep: Do not use hardcoded clks in
- driver
-Message-ID: <20220913201256.GA620427@bhelgaas>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: Dell XPS 13 9360/Dell DA300: USB Type-C: PCIe Bus Error:
+ severity=Corrected, type=Data Link Layer, (Receiver ID)
+Message-ID: <20220913205355.GA622822@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220910063045.16648-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <ae28dabe-d339-b56d-4a8e-ce4291c9b836@molgen.mpg.de>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,15 +54,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 10, 2022 at 12:00:35PM +0530, Manivannan Sadhasivam wrote:
-> Generally, device drivers should just rely on the platform data like
-> devicetree to supply the clocks required for the functioning of the
-> peripheral. There is no need to hardcode the clk info in the driver.
-> So get rid of the static clk info and obtain the platform supplied
-> clks.
+On Mon, Sep 12, 2022 at 03:36:09PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> On a Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, connect a Dell DA300
+> to the only USB Type-C port on the left side (with a network cable connect),
+> Linux logs the warnings below:
 
-Possibly reword the subject line to say what this does instead of what
-it does not do?  E.g., "Rely on devicetree 'clock-names' instead of
-hard-coding" or whatever.
+> Linux version 5.19.0-1-amd64 (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.3.0-5) 11.3.0, GNU ld (GNU Binutils for Debian) 2.38.90.20220713) #1 SMP PREEMPT_DYNAMIC Debian 5.19.6-1 (2022-09-01)
 
-Bjorn
+> [    5.710957] pci 0000:01:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+> [    5.710959] pci 0000:01:00.0:   device [8086:1576] error status/mask=00000080/00002000
+> [    5.710962] pci 0000:01:00.0:    [ 7] BadDLLP
+
+Your dmesg log has many (51!) BadDLLP errors (which are corrected) and
+one Replay Timer Timeout error (also corrected).  I'm not a hardware
+person, but I don't know how software could cause these errors.
+
+Unless this is a regression, I suspect a hardware issue like a bad
+cable or connector.
+
+> I created the bug report #216474 [1] with the output of `lspci -nn`, `lsusb`
+> and `dmesg`.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=216474
+>      "Bug 216474 - Dell XPS 13 9360/Dell DA300: USB Type-C: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)"
