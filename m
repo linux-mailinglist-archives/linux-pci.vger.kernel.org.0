@@ -2,61 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E195B67E3
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 08:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F0B5B6817
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 08:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230346AbiIMGZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 02:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
+        id S229968AbiIMGnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 02:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbiIMGZ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 02:25:58 -0400
-Received: from sender4-op-o18.zoho.com (sender4-op-o18.zoho.com [136.143.188.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606EDB2D;
-        Mon, 12 Sep 2022 23:25:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1663050340; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=SBbsnTF0mmIk8XctndvQxJ7VHgdEbI/tPfEWU27bVoLBmXEQ1mcZSPkYJkflOKnOs31vXhEUr6i5qZ47HDr8uP6ygj26RFj9jZo7RK04Mse0w28rjApGEcGLQQfGu7hlpeMmsuUg6Euo69QCAWTJSnSckgyErhRfVVFvqfwAhz8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1663050340; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Kt9GG+vFMkvYqRZ8Ba6A24wrF5ruQ3PEeYC0nAL8AF0=; 
-        b=fF8yhTQxmD8hswdcA9s4osNiN9x95LSBjBvmQRN3cKktd4Fzi/BvJr7Fw2zD/e/h6ITkJ8loTS3gq5Y12HuwrjYhdYiwTwJIA/pqZ/WBzWsIIT9DuIBwMWZSLuwMK2JkEcijDpPuIRGT+KArpPZz7acfEKYnBKZ4ovaq95tND0g=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=icenowy.me;
-        spf=pass  smtp.mailfrom=uwu@icenowy.me;
-        dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1663050340;
-        s=zmail; d=icenowy.me; i=uwu@icenowy.me;
-        h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=Kt9GG+vFMkvYqRZ8Ba6A24wrF5ruQ3PEeYC0nAL8AF0=;
-        b=XIbg26RYbDve31xqcdSLlTLc4fB04ecJeXlXhXk9jUKk++EA8Xc8DKwUGbXnXnww
-        Pt37fhHgHsisEl8IDkm8amvQyAUiOjzbiT0xYvo9vfSuXyjWEWbMhG4QdWXTXi71ODx
-        2ficgIY0Th29N3LbPZUC/RT/vkWFawX5FMpmS9l0=
-Received: from edelgard.icenowy.me (112.94.103.212 [112.94.103.212]) by mx.zohomail.com
-        with SMTPS id 1663050338560674.3690213218844; Mon, 12 Sep 2022 23:25:38 -0700 (PDT)
-Message-ID: <ebc846c11b22d14805682ded6436a6a0ef9c512a.camel@icenowy.me>
-Subject: Re: [PATCH] PCI: fu740: do not use clock name when requesting clock
-From:   Icenowy Zheng <uwu@icenowy.me>
-To:     Conor.Dooley@microchip.com, paul.walmsley@sifive.com,
-        greentime.hu@sifive.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Date:   Tue, 13 Sep 2022 14:25:33 +0800
-In-Reply-To: <752ea700-bdef-25ca-c922-fd79ea34c8af@microchip.com>
-References: <20220907054020.745672-1-uwu@icenowy.me>
-         <8d7b8514-efe0-d3e3-8458-f4f003f10154@microchip.com>
-         <b1a3f887fd037fd18c45ac020c6142cedba58ca7.camel@icenowy.me>
-         <752ea700-bdef-25ca-c922-fd79ea34c8af@microchip.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 
+        with ESMTP id S230487AbiIMGnC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 02:43:02 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993FC58DCA;
+        Mon, 12 Sep 2022 23:43:01 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28D2hVHK008767;
+        Tue, 13 Sep 2022 06:42:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=eXOZDRzg2RsNnXeweM+Pjekl64CFMxDYXgxSIun5DwQ=;
+ b=hJj+fqt/ICGitNsAQGYBR/x/coip63yTOGtVSKGz2cdh2m6ktszkuFHc2b4ofQ6APSdd
+ 3MpO3HoYnRIckEyA7c59qm0kyT0bnKucJEU8vc35xamupzxZ5LdtmYn3CuT8Dc2T2SF8
+ GPg77k9go81QT0IrBjk6aMt3gPbFQd078bGWXIjCAMicJ1ox6mJ6OhzvqCKtUu2CMHCj
+ MEtKPrGSAzoO+OVUojJlh3T0HPdXXbp/BWAQp1R4GgeZj/Re/7dsU1M44G2YZnqnjk/k
+ Q0f/esVeyoPlaUmqoam7ODlq0FHIbTqQ5T4k4GaT+ukJYGVrhgBgtp25NEEgt37qkM0M LA== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jjh9tgj7t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Sep 2022 06:42:50 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 28D6gn7H009087
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Sep 2022 06:42:49 GMT
+Received: from [10.216.15.227] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 12 Sep
+ 2022 23:42:43 -0700
+Message-ID: <49536ca8-ef98-9927-d1be-977ab5244c91@quicinc.com>
+Date:   Tue, 13 Sep 2022 12:12:32 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLACK autolearn=no
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v6 5/5] clk: qcom: Alwaya on pcie gdsc
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Krishna chaitanya chundru" <quic_krichai@quicinc.com>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mka@chromium.org>, <quic_vbadigan@quicinc.com>,
+        <quic_hemantk@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Andy Gross" <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+References: <1662713084-8106-1-git-send-email-quic_krichai@quicinc.com>
+ <1662713084-8106-6-git-send-email-quic_krichai@quicinc.com>
+ <20220912170437.GA36223@thinkpad>
+From:   Rajendra Nayak <quic_rjendra@quicinc.com>
+In-Reply-To: <20220912170437.GA36223@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: P7jDaIjVJ2jzB4fEydZBASyNAW6KdZ2q
+X-Proofpoint-GUID: P7jDaIjVJ2jzB4fEydZBASyNAW6KdZ2q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-13_02,2022-09-12_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ adultscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=878 spamscore=0
+ priorityscore=1501 clxscore=1011 bulkscore=0 impostorscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2209130029
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,130 +91,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-=E5=9C=A8 2022-09-12=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 10:13 +0000=EF=BC=
-=8CConor.Dooley@microchip.com=E5=86=99=E9=81=93=EF=BC=9A
-> On 12/09/2022 02:38, Icenowy Zheng wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> >=20
-> > =E5=9C=A8 2022-09-08=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 18:14 +0000=EF=
-=BC=8CConor.Dooley@microchip.com=E5=86=99=E9=81=93=EF=BC=9A
-> > > On 07/09/2022 06:40, Icenowy Zheng wrote:
-> > > > EXTERNAL EMAIL: Do not click links or open attachments unless
-> > > > you
-> > > > know the content is safe
-> > > >=20
-> > > > The DT binding of FU740 PCIe does not enforce a clock-names
-> > > > property,
-> > > > and there exist some device tree that has a clock name that
-> > > > does not
-> > > > stick to the one used by Linux DT (e.g. the one shipped with
-> > > > current
-> > > > U-Boot mainline).
-> > >=20
-> > > I recently added the missing enforcement:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/co=
-mmit/?h=3Dpci/dt&id=3Db408fad61d34c765c3e01895286332af2d50402a
-> >=20
-> > Unfortunately binding w/o clock-names enforcement has already
-> > entered a
-> > stable release (5.19), and the real clock name "pcie_aux" is never
-> > enforced before (there's a DT in U-Boot that uses "pcieaux"
-> > instead),
-> > should this be considered as breakage to stable DT binding?
->=20
-> Does anything in U-Boot actually use that clock name? The clock name
-> is
-> currently being relied on by both Linux and BSD (although BSD does
-> have
-> a fallback to the U-Boot provided name. There's only one clock so it
-> seems fine to me to stop using the name, but the DT in U-Boot should
-> be
-> fixed so that PCI works IMO.
 
-In fact, none.
+On 9/12/2022 10:34 PM, Manivannan Sadhasivam wrote:
+> + Rajendra
+> 
+> On Fri, Sep 09, 2022 at 02:14:44PM +0530, Krishna chaitanya chundru wrote:
+>> Make GDSC always on to ensure controller and its dependent clocks
+>> won't go down during system suspend.
+>>
+> 
+> You need to mention the SoC name in subject, otherwise one cannot know for
+> which platform this patch applies to.
+> 
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
+>>   drivers/clk/qcom/gcc-sc7280.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/qcom/gcc-sc7280.c b/drivers/clk/qcom/gcc-sc7280.c
+>> index 7ff64d4..2f781a2 100644
+>> --- a/drivers/clk/qcom/gcc-sc7280.c
+>> +++ b/drivers/clk/qcom/gcc-sc7280.c
+>> @@ -3109,7 +3109,7 @@ static struct gdsc gcc_pcie_1_gdsc = {
+>>   		.name = "gcc_pcie_1_gdsc",
+>>   	},
+>>   	.pwrsts = PWRSTS_OFF_ON,
+>> -	.flags = VOTABLE,
+>> +	.flags = ALWAYS_ON,
+> 
+> Rajendra, should we also put PCIe GDSC into retention state as you have done for
+> USB [1]?
 
-But the issue is that the clock name string is never enforced in DT
-binding, so at least we may support unnamed clocks as fallback if we
-are trying to allow a DT that sticks to previous 5.19 dt-bindings to
-work.
+Yes, it looks like we should handle this the same way as we did with usb.
+Why are we removing the VOTABLE flag anyway?
 
->=20
-> fwiw:
-> >=20
-> > Anyway, I had sent out a patch that synchorizes all FU740-related
-> > DT
-> > files to U-Boot, see [1].
-> >=20
-> > [1]
-> > https://lore.kernel.org/all/20220825081119.1694007-2-uwu@icenowy.me/
->=20
-> =C2=A0From that patch, should this be changed too?
->=20
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0[PRCI_CLK_PCIEAUX] {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0[FU740_PRCI_CLK_PCIE_AUX] {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "pcieaux",
-
-This is an internal name of the driver, I think.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0.parent_name =3D "",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0.ops =3D &sifive_fu740_prci_pcieaux_clk_ops,
->=20
-> >=20
-> > >=20
-> > > Since there's only one clock though, I'd imagine it makes little
-> > > to no
-> > > real difference if the check here is relaxed.
-> > >=20
-> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > >=20
-> > > >=20
-> > > > Drop the name in the clock request, instead just pass NULL
-> > > > (because
-> > > > this device should have only a single clock).
-> > > >=20
-> > > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> > > > ---
-> > > > =C2=A0 drivers/pci/controller/dwc/pcie-fu740.c | 2 +-
-> > > > =C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > index 0c90583c078b..edb218a37a4f 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > @@ -315,7 +315,7 @@ static int fu740_pcie_probe(struct
-> > > > platform_device *pdev)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dev_err_probe(dev, PTR_ERR(afp->pwren=
-),
-> > > > "unable to get pwren-gpios\n");
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Fetch clocks */
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 afp->pcie_aux =3D devm_clk_ge=
-t(dev, "pcie_aux");
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 afp->pcie_aux =3D devm_clk_ge=
-t(dev, NULL);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(afp->pc=
-ie_aux))
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dev_err_probe(dev, PTR_ERR(afp-
-> > > > >pcie_aux),
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "pcie_aux clock
-> > > > source
-> > > > missing or invalid\n");
-> > > > --
-> > > > 2.37.1
-> > > >=20
-> > >=20
-> >=20
-> >=20
->=20
-
-
+> 
+> Thanks,
+> Mani
+> 
+> [1] https://lore.kernel.org/all/20220901101756.28164-2-quic_rjendra@quicinc.com/
+> 
+>>   };
+>>   
+>>   static struct gdsc gcc_ufs_phy_gdsc = {
+>> -- 
+>> 2.7.4
+>>
+> 
