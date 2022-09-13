@@ -2,249 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F5DF5B6E3D
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 15:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DA7C5B6E41
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Sep 2022 15:18:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232312AbiIMNR2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 09:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
+        id S231819AbiIMNSo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 09:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232295AbiIMNQs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 09:16:48 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D190F31DDF;
-        Tue, 13 Sep 2022 06:16:35 -0700 (PDT)
+        with ESMTP id S232229AbiIMNSh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 09:18:37 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586CC18361;
+        Tue, 13 Sep 2022 06:18:33 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LIt3N7BxS/9imwYXwudBeTno5gn2d/G67Hn6Kib4EGJwmcy4tCOg9QgfDlNLAIYcRTQEPXzWTZaOUozYGK5HP3vnTI8qisBOAOc/hKfKSnufmprW198npc8QjxrEqY0TldA+4tdSR0fJ+0PkmSPyzuD/SsDs8VzXACgRgVU8AWK14sPzlhoIYnz0ujaJJBjEZL8C4SRz+ShWQijpObyi+pltVzYYwh6EEpGkh6I5+2pmYtJzCXxGd2YYw/0x0t10z5RVi6qT75IiFXYihdV+Wo2ZZ/AmQiXLk9RYIovfZ8G+C17n7jmZoANvtzfeBK6VfaBcfHnJtjoFJbXXQH9yfw==
+ b=RJom/FYcn73ZOiOxySrpjSnO+h5ugArkRPrPu8MaO/CWVcbCg7D8U3kXEuww8NnMMM+UUzSjSVxdgIVnT0dA1kdod4QO/nXuhfQ1sDf8m61+h+I1j3kQa+XvL7rchNaxgMzd5HxG2tTGRcSauouillYT1XZQZLceomdvsZloBwQchIUzq4a2JG8/PsVEMtYeHDCsw1z9qJDJ4PXmliG9FNtLRQMe1YbgVbQ3g+NJ4RhDypLRfqZPOwGqbTquyfNyacm++nX5BxvxEZiB/b9NjLb4NvsrWFrKd/MpS5zus85WJ8qt/xDMYk2OczeUDuGNckpYPl3A7IsmnGx53fmraw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vMWyY4ce/MorFi7JQTxip7XQojKwoA0c3My1XKTEsc4=;
- b=iJDhP268sCxyC+oUQtwiunQ1RO4zdvqGAoS74Cwtwrug65DydTI9AXzNSghsTXOQbXoPe8dE5S5TnGI1z99IiFm7bwZseOD76bUGT9MgVbKbcl/rXGu/9F1KnodMmyKUMu5C5gdN0M2fTHIu1nuOdFNSW62R4YZOF1/o/4XjHapKjCJPTRTinjHZUoIQ9qCtlWA1fQQ3VKmAWoccgRLk6AgUSR1IrY2hcyFi1iz/k0mBcoCoLltT3bHkr4rS3C0SaEc2wKi6rsrAnK6j4MUb+UuPuS4ytZ64eBG/ksRP8kDtoWIoVWB35DidfrYo+IAEQM3tRNeyJpLUTsr8d0bO1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
+ bh=VeOkBKuC3Gqsrflf4+BPLdi/zat8Oe/FCI8AzTiXVSU=;
+ b=I554o6+i9Pml9uORePgh089PBMubg2lVvOHHsvbzZAdn7nH5tY2+P98j1qMjca+4y674WxVDAAf0D8b0WWmDPQeAtJyt73jBIkHw51kGDOtxBucoBBv17tvGbkyUv6ehpbjshsuv7pkZpNguyb+kHY529M+8Pxot5f8VAU/9lYPzwGWHXtMMQPyZyahpJOE9hK7SCnCHuV7Ud08DFBkYMWE4zqebJbqQU/9ZrPDx52mFJ34riK5EU4ygtoIuoMULw/ib7lnYvhQamPicVQNDwZUl7TWPSEp4Rof2Q76vtSj/dr/bOhGEQKsieEz7rxvgD5YWxBX+VWb77OQ/21PCgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.236) smtp.rcpttodomain=linux.com smtp.mailfrom=nvidia.com; dmarc=pass
+ (p=reject sp=reject pct=100) action=none header.from=nvidia.com; dkim=none
+ (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vMWyY4ce/MorFi7JQTxip7XQojKwoA0c3My1XKTEsc4=;
- b=nHNeCUT7VhByPqJgUYRj89oM3AKq6Nj0HIanJeTAD0TXo65tOQGb87rPsEV1vTIpj5TZs8WpQwbePrTEzI1btYhJjYbp1wH1aR1SkT8Zsnx4RCz/tkT8SRtHblvOMg03yqFjV7Nd2dxLi01UQvVrSIFFn4Pejduqw8WT/gL5JKPejmd8HFrXwBNLqn4eAJkcECqQnBdTmX4jT6KZB8r009aM6GDo7dj2roufQALnLfTLL8v0iA08JnqBf2n7NwsPPNKjRLbmEHwfYKBKHTB2rxSBcQa0I75g8vYpneZFepqOEGelNjmROAabuZM0nl68USxS7yJW0PimswShp1dYDg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by DM4PR12MB5841.namprd12.prod.outlook.com (2603:10b6:8:64::13) with
+ bh=VeOkBKuC3Gqsrflf4+BPLdi/zat8Oe/FCI8AzTiXVSU=;
+ b=mMJqRFXKog33V9JSlH4aF8M/qjBbT4bxJWSviDWbbB414BkASP3L1zGDbrpI+iM12Ro8O6frq821CvpfPRaLu96Q/GV9L6zOIVt74otrzylVaSWpwTvfTCPtN7155UQzFTsbRhY4wozb3aS1ZhRZknHEPvUUKfklcxjFyW7edqj40aIFVxggIx7GSbNpGLMjTEi7yUz70XVMAo3uF6SvuIRpywOQIE6m2O3aAQm9pegnST5YJV2ic1xL3I+l5lWHyGTGYoAORHD2OXvOjeJtteHcT+dO5KHx9nPIfVb3tA88mMGNTk8ti07+MNzS232R+hgkDKtnIeI3Z21uMB9lug==
+Received: from DS7PR03CA0102.namprd03.prod.outlook.com (2603:10b6:5:3b7::17)
+ by IA1PR12MB7565.namprd12.prod.outlook.com (2603:10b6:208:42f::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.22; Tue, 13 Sep
- 2022 13:15:58 +0000
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::1d26:504d:7cde:3158]) by BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::1d26:504d:7cde:3158%7]) with mapi id 15.20.5612.022; Tue, 13 Sep 2022
- 13:15:58 +0000
-Message-ID: <b1933ca4-13a8-83a0-d9f3-1ecea467948d@nvidia.com>
-Date:   Tue, 13 Sep 2022 18:45:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH V3] PCI/ASPM: Save/restore L1SS Capability for
- suspend/resume
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        refactormyself@gmail.com, kw@linux.com, rajatja@google.com,
-        kenny@panix.com, kai.heng.feng@canonical.com, treding@nvidia.com,
-        jonathanh@nvidia.com, abhsahu@nvidia.com, sagupta@nvidia.com,
-        benchuanggli@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20220907210540.GA140988@bhelgaas>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19; Tue, 13 Sep
+ 2022 13:18:30 +0000
+Received: from DM6NAM11FT006.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b7:cafe::b2) by DS7PR03CA0102.outlook.office365.com
+ (2603:10b6:5:3b7::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14 via Frontend
+ Transport; Tue, 13 Sep 2022 13:18:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.236)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.236 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.236; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (12.22.5.236) by
+ DM6NAM11FT006.mail.protection.outlook.com (10.13.173.104) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5612.13 via Frontend Transport; Tue, 13 Sep 2022 13:18:30 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ DRHQMAIL109.nvidia.com (10.27.9.19) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.38; Tue, 13 Sep 2022 13:18:29 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.29; Tue, 13 Sep 2022 06:18:28 -0700
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.29 via Frontend
+ Transport; Tue, 13 Sep 2022 06:18:24 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20220907210540.GA140988@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0021.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::9) To BN8PR12MB2900.namprd12.prod.outlook.com
- (2603:10b6:408:69::18)
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <refactormyself@gmail.com>, <kw@linux.com>, <rajatja@google.com>,
+        <kenny@panix.com>, <kai.heng.feng@canonical.com>,
+        <abhsahu@nvidia.com>, <sagupta@nvidia.com>
+CC:     <treding@nvidia.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V4 0/2] PCI/ASPM: Save/restore L1SS Capability for suspend/resume
+Date:   Tue, 13 Sep 2022 18:48:20 +0530
+Message-ID: <20220913131822.16557-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|DM4PR12MB5841:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78e01790-c64e-4eb1-dafd-08da958a1886
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT006:EE_|IA1PR12MB7565:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c09f1f6-0947-4549-1527-08da958a73b7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0TxXQtEx33qUE4QQgsxeiYrDyjc4+sVcaWsvdXelHO3RL5Ue4TphwKiDbegqtz4wEyMy+Y956zfqCva5U9DF2UI5uhbU0pVzlkVWg4suDuQRev65LVI9WqWSLgveM7D2PDt0UHapxugOpVwpgsxSA21/dpGlOcU25SHfXVFEOT9F3uWeMUvRxAdLyj1p0uqkJlp3MpnTr2myx3d8CP+X4GjJ/2RAM0GFu6mXbVxEGN0Vi/ZOlup7D0/OHurzpHeLf7yUTvCzyza7mtOOsBVD5ZdlBV6wnURfDOUwX/l8LRhVIv+p+NxLzr7H19aH5aVVjsYqToKZuLxP5hKDFzRvS6ZcB3dlKkOcRnrL6USgwrxeUYhyUVbf6cv23cSgQTDY62+t7eXoRUIpJyco9nWwNbSSWrgkf7iL3cVP8RtS9zDHVp8YWElJBfFFqJZC1TSdAhKPC3ULoIWujUZllIbAbEcF52vKcsg18AcqIvS2UgI4GhTtEiApxORfVtABk2VAqpInP+0rFa2VYCmRU5o6Dot7zSNsNDmRbx6PH1/Wo+klmmXuuPzILpj7sXp8YE09Dax+hM5pxWXtHoDHi4r9TU7X4+pMFxBj2MG+0syElqj9b9jVL2Zr/azokY3CZur4KckkSrexxcpwsJDFKSDpQjNDo/WYrmmLJGTotvZzFBTK3cEg7szPKL5/yIkwrEevXDo3LQjjCBkOirDqaiQEhjbG9HfJB6p1C866v6FGymyj32krtx2gmZmz8P0bHgLldlx0vVhO1BRH7xMhBLKhue4+0FYZLOOPbo4q6rFHOyhBBQ1Xj5/A29k/3iD5WTLgubgzYdGrI1egwujDd3dzI1KTT36ozaVHJlvbk/TBZ/MxTV1aJTs0FR9fkIH9yqZNoCCOPAHwkVssNnE0Q3kFwRv4hCSvYHMZFScNraytbJEy3dp5TBo8AYTHeGkoG0Nk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(366004)(346002)(39860400002)(451199015)(6916009)(36756003)(8936002)(8676002)(7416002)(66556008)(66476007)(31696002)(478600001)(41300700001)(316002)(66946007)(966005)(53546011)(6506007)(6512007)(5660300002)(6666004)(15650500001)(6486002)(26005)(86362001)(2906002)(186003)(2616005)(83380400001)(31686004)(38100700002)(4326008)(32563001)(43740500002)(45980500001)(473944003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bTMyQVZDZmQzcExIQzN4dWVaM0luMmZpVU5URUx2NTUvMnhYOUlVcFNhQTky?=
- =?utf-8?B?RlpHeVJxT0lpaUVpdU5VM3NncVN6L21VMUpoN0Rlb3hKMUNNL0pNTm9rNnJT?=
- =?utf-8?B?SkwzZ3o2TFlvbkFOc0M3bXNiOUhaN0wyM0krbTl3cm1Bc0F6WGp2Qnl4M3FK?=
- =?utf-8?B?SU5WOGxxNktod3huTVh0b2FUY1M0MHhhUjZGcmt6UHdEeGtGVDNJYXJSN1kz?=
- =?utf-8?B?N3BjTjNOVTF1L3BhY2NRZWQ2elNzU01mQVlHemtuaHY4VmEwQ2tWOE5DVUR2?=
- =?utf-8?B?SUp5RHYyd2ZRVU5Fem1OZU03TEVTNlo0MElXZm5UT0doVzgzMEZ4WTJPQ3R4?=
- =?utf-8?B?Tmgwd2lDVFhIM2RHNzZ5a0dlNkg1b3dMcDlFRXpqN2NQM2FGRnYwRXlXUlc0?=
- =?utf-8?B?UHl3aDlVTjBIckdxNUxrYU5tZWZMeENQZWt1a0RObXBaSDV2a2tpbW5QNDZD?=
- =?utf-8?B?cDV0U3k0Sjl5SlNGdGticFdENlVUNVNMVjAyRGowYi9jT2ViTDExZ3doV3VP?=
- =?utf-8?B?L0dnY2ZVL2ovSkNWWXNrWnk3bmQwYmZPUG9HQkNCR21qTEtZMktQclJwRWp4?=
- =?utf-8?B?M1oxUjZxdkVMWm9rQXhtYmJMdHA3Z0Q2R1J0bkxEaHEzdkRUMGZ5VEJXek12?=
- =?utf-8?B?d1FZcldJQ25Va1Z3amRnUURLRlBVMEwwblJ1dUgxRnFRWHdWTm5KOHc3SU5a?=
- =?utf-8?B?RDN6QUEyN0VNYWJnYnBLUVZ6UDgwMUNxTzlWbzMrVDQvVEdUZG5NdmZWK2N6?=
- =?utf-8?B?NnBCREpRdzRndm52VjQvc2hiUXRzcGdjL1ZGV1pCQ1FCWjFDckF5L3NSMXd6?=
- =?utf-8?B?cUE0VW8vck1Kc24rN01zR3NRMU9HaE9pTHNlclB3TFlqRS9jQjV6aHNFMFBO?=
- =?utf-8?B?Rk5qejhLeXNNdlgzeHFtZmpXMDB3MFRrTy82R2FZQ0tFWTNBK3pqSmU3VHJL?=
- =?utf-8?B?ZTdTZmlFSTI2K2JxdWFaMHVTUVpLSm91VnIzeStlR0xEVFJPemdEclNOQ1Nu?=
- =?utf-8?B?cm81cmdJejZTRWZIUVZjcTgzakFEbVdBVThqSlljQVhPT29GR2NmQXQ1RjF3?=
- =?utf-8?B?VXR4ZzZyUGJlZFg4dXJoeVpVOUZzM2V2TkE3L0VhdGpRMnVOVXB4K3pPczZM?=
- =?utf-8?B?SjJ0bVNPb3lGUjEzOWNJSVlqTHpmblREVHltaWg4bVJEZUNxbzNBV0Rla1Ny?=
- =?utf-8?B?NVp3dGRJYWg2aTBvUkJnWnBNbzU0VTVxaE9VRG82VjVDakxJUnoxbkZtQWxQ?=
- =?utf-8?B?UkFhb3dMVlZSSkVQdmhJN2pSRGM3WjZGVEVxdGNjZXhLazYrdjlRanNKbzVE?=
- =?utf-8?B?dGkzUjd6aDQxNTQ4VmEydjhxdjJyV0FNRzNHUGVZQlRTQmMxazlMVnBZbGNT?=
- =?utf-8?B?MGJON0ZscWZUbEVkOExGS1l3UDFteEJFeUFBU29Uak13cVJTM1c2NGVyMTZl?=
- =?utf-8?B?YnZZMUhpTHJRTGo5U0dUOWpQRDFNZDFvOHcyOTZuUi94OWhTVldQNzhJUHhl?=
- =?utf-8?B?UDBXZlB2dkN5QzAxQXp6RWZwcFdOUG9mS3Q2MTMwZUdlWGFYeUZ6OFFaYVlF?=
- =?utf-8?B?MWZVc3QxZWppelVPZ0ZBdkhpdjRZRWJRTlhCcS9UL2FoU2lGNDdzUnczcjJ2?=
- =?utf-8?B?Y2g5ZVhXN2V5eTlZRFlPSHV2RW5oc3lDamVXemg0RVVkMXJqblRjSDZheUN2?=
- =?utf-8?B?VWkzTW9IK2ZReG5DckxqcFRDT011UHI3cXhnTE1qQlhtaXlLazdXeDJyeXJ1?=
- =?utf-8?B?ZWFWYnlTSzBhZ1ZaMVpXczZmT2F6Y3lTRWlDbzRMYTY0WFQyQnNTTXRnWTRh?=
- =?utf-8?B?M3p5WmZsOUpCL0xVMGVDOWFHalQyQUZJdzh3VCtPZUxiaVgxUjVzbk1MOXJ6?=
- =?utf-8?B?dC90dlEwUitFQ0oxZGlFUURWandVdGpFSUs2d0lVbG55SDB3TkNER2hTSkV2?=
- =?utf-8?B?N2xIWG1oWUlzS1luQkNZeC9HN3h1RHNTM1J6MkNUTTBlcC9vbFhpUlJvTU1H?=
- =?utf-8?B?bTZxNDR1dktIUmhobXRFa1huK0NJZVpwVTF1OEZUWktEYWtlRzBlT3ZIbkkv?=
- =?utf-8?B?eUtHeVVSTXFVd1g3YkRvS1VOSG5JZ3N5ZWgzVmVvOUlJdTdFTWRIRTgrWVhY?=
- =?utf-8?Q?jzbz6rcgpPqkf5CxRlw+dsDms?=
+X-Microsoft-Antispam-Message-Info: M9fuVtWNlpkvrbKNzqSbI77gOOLB4OKPb3MCyLAa9nRPcaSnRS6jNaooF7q+VsCci6dG8y0OZ53pzVQc3FnuBnOdtKexJkFje3JLIbM9gdrh/Xtr5v3FyjmeJTFSeevMkKP/4hwOHklhNZkTKnO0GXd+OPKKUzYss2KfnnqMISlIyUG9usctCT24OJ7JwQHFWEOfXTrcL/2ZCiGFVAD+jI2qJnW273G+IFl4gw5bz0FLwsT6eMdNifOHY7iap7D5CnJJj9nJWFDjD3c6WUP/4BWDBOEYSa2mvBAn+R5EezPQ0dZsHCQ32T2IIUu+L+0Yd4Q5PNzcqJzemlBkNmV6j/0ohjmXz5AabwD5vaJp0h5ozLxIWga/3JSwATH4CkJXI2AGzObC48z1s/kFrDTFXkoL2wFwLoCDtgaU0+mBzUW0HkzYTr/l/rxCCeDCfIR3cqPepxZDzh97ZoZ2p7pp/4/5jfq7afCD82p1iNezwRbQUNstMrt30y/xQXLV2SKfv+58dR9YT4QsUkDDE2HHoQ4xFaO1UjmVX7GxKPDZv4xwilY7Ag3tiLAsprDpM4+xltIrmzCbp2Hu9yMKC1dgKYpdF0kx9lIgaVpgd/QLwqa0bhy3oQrVLuwOLLjRiZP4I8QgR03vw54GmlrGKChZoLlj3IJ926Mnbwz779DW1MK8Tm7vjC+Y90lRxaFudEOHVhaa+r8OvhK8idiKqBfprp8DLapc++oPhR+MbieO2P5jwbINk+8YyZBl5QexlNZ9wlz9TM6+F4y4mOZOkZ7die+IKrS7fCqEmzShYIB8VKQK6sC3tX0ESjyaesw7/shjMBHn6E0iZLlbv7enhnmuwMLmtzzXSq0vr9iG1Ji1xYg=
+X-Forefront-Antispam-Report: CIP:12.22.5.236;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(376002)(39860400002)(136003)(451199015)(40470700004)(46966006)(36840700001)(6666004)(47076005)(8676002)(82310400005)(86362001)(70206006)(36756003)(1076003)(336012)(40480700001)(4326008)(81166007)(36860700001)(426003)(40460700003)(54906003)(70586007)(26005)(478600001)(110136005)(15650500001)(5660300002)(316002)(6636002)(2906002)(4744005)(7416002)(356005)(83380400001)(2616005)(186003)(7696005)(8936002)(41300700001)(82740400003)(32563001)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78e01790-c64e-4eb1-dafd-08da958a1886
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2022 13:15:58.1175
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2022 13:18:30.4344
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c09f1f6-0947-4549-1527-08da958a73b7
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w4E1PSynndHYacbtKvTX5RykPxNyE+GVEcTW53p9wJnbWVVAl5KUVGzJSInzdfvrqnszfx9dUk+wj811olHgdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5841
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.236];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT006.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7565
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This patch series saves and restores the ASPM L1SS capability registers
+during suspend/resume cycle of the system.
+First patch refactors the existing L1SS register programming code to
+take out the common code.
+Second patch adds support to save and restore of the L1SS registers using
+the common code extracted in the first patch to restore the registers.
 
+This patch is verified on Tegra194 and Tegra234 platforms.
 
-On 9/8/2022 2:35 AM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Fri, Aug 26, 2022 at 06:25:26PM +0530, Vidya Sagar wrote:
->> Previously ASPM L1 Substates control registers (CTL1 and CTL2) weren't
->> saved and restored during suspend/resume leading to L1 Substates
->> configuration being lost post-resume.
->>
->> Save the L1 Substates control registers so that the configuration is
->> retained post-resume.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> V3:
->> * Disabled L1.2 enable fields while restoring Control-1 register
-> 
-> This really looks promising!  Has somebody confirmed that the
-> disappearing L1SS capability problem doesn't happen here?
+Vidya Sagar (2):
+  PCI/ASPM: Refactor ASPM L1SS control register programming
+  PCI/ASPM: Save/restore L1SS Capability for suspend/resume
 
-Based on the update from Lukasz in 
-https://patchwork.kernel.org/project/linux-pci/patch/20220705060014.10050-1-vidyas@nvidia.com/ 
-(last update), the L1SS capability registers disappearing issue is not 
-due to this change and they are working on it seems.
+ drivers/pci/pci.c       |   7 +++
+ drivers/pci/pci.h       |   4 ++
+ drivers/pci/pcie/aspm.c | 106 +++++++++++++++++++++++++++-------------
+ 3 files changed, 83 insertions(+), 34 deletions(-)
 
-> 
->> +void pci_save_aspm_l1ss_state(struct pci_dev *dev)
->> +{
->> +     int aspm_l1ss;
->> +     struct pci_cap_saved_state *save_state;
->> +     u32 *cap;
->> +
->> +     if (!pci_is_pcie(dev))
->> +             return;
->> +
->> +     aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
->> +     if (!aspm_l1ss)
->> +             return;
-> 
-> Isn't it enough to check this?
+-- 
+2.17.1
 
-Yup. I'll address it in the next version.
-
-> 
->    if (!dev->l1ss)
->      return;
-> 
->> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
->> +{
->> +     int aspm_l1ss;
->> +     struct pci_cap_saved_state *save_state;
->> +     u32 *cap, l1_2_enable;
->> +
->> +     if (!pci_is_pcie(dev))
->> +             return;
->> +
->> +     aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
->> +     if (!aspm_l1ss)
->> +             return;
->> +
->> +     save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
->> +     if (!save_state)
->> +             return;
->> +
->> +     cap = (u32 *)&save_state->cap.data[0];
->> +     pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
->> +     /* Disable L1.2 while updating.  See PCIe r5.0, sec 5.5.4, 7.8.3.3 */
->> +     l1_2_enable = *cap & PCI_L1SS_CTL1_L1_2_MASK;
->> +     pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1,
->> +                            (*cap & ~PCI_L1SS_CTL1_L1_2_MASK));
->> +     if (l1_2_enable)
->> +             pci_clear_and_set_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, 0,
->> +                                     l1_2_enable);
->> +}
-> 
-> What if we did something like the following?  Then we wouldn't have to
-> duplicate the fancy logic in aspm_calc_l1ss_info() and
-> pci_restore_aspm_l1ss_state(), and we'd only need the big comment in
-> one place.
-
-I'll refactor the existing code accommodating this suggestion and push 
-L1SS save/restore change on top of it in the next version.
-
-Thanks for your review comments.
-
-> 
-> +static void aspm_program_l1ss(struct pci_dev *dev, u32 ctl1, u32 ctl2)
-> +{
-> +       u16 l1ss = dev->l1ss;
-> +       u32 l1_2_enable;
-> +
-> +       /*
-> +        * Per PCIe r6.0, sec 5.5.4, T_POWER_ON in PCI_L1SS_CTL2 must be
-> +        * programmed prior to setting the L1.2 enable bits in PCI_L1SS_CTL1.
-> +        */
-> +       pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL2, ctl2);
-> +
-> +       /*
-> +        * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD in
-> +        * PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
-> +        * enable bits, even though they're all in PCI_L1SS_CTL1.
-> +        */
-> +       l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-> +       ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
-> +
-> +       pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1, ctl1);
-> +       if (l1_2_enable)
-> +               pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1,
-> +                                      ctl1 | l1_2_enable);
-> +}
-> 
-> (This is somewhat simplified from what aspm_calc_l1ss_info() does
-> today.  It looks to me like aspm_calc_l1ss_info() does more config
-> reads than necessary.)
-> 
