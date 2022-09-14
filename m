@@ -2,56 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2165F5B7CF4
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 00:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955685B7E95
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 03:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbiIMWTW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Sep 2022 18:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        id S230022AbiINBqE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Sep 2022 21:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIMWTV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 18:19:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1688E1A38F;
-        Tue, 13 Sep 2022 15:19:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C7C1AB810F4;
-        Tue, 13 Sep 2022 22:19:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E8FC433C1;
-        Tue, 13 Sep 2022 22:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663107558;
-        bh=vOM7sqZItl/trS+7jw/NfA7mCPUKtLKs8p8juFEz1LQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PqY2sMOHIFT9Hb81j94J0rf9pS4s4sfT4NMscI+2mfmuako+a2b4cqOx8dG/wawnr
-         Jh5hfF3unFix49Lcr+LmcEVF6JQ+zzbUJj/toSoRvoTw/5VVUpbrR+xLpAu3fZauyk
-         Rx8/zEI88uPJ/xbsGWJTH2tyyZ7PzfNw0miGbHeXfoVKCy50rqL7VeYow23AQUEnq4
-         n/hKChC9+JbfnKuz5cl04SNOvomK8erZlvC948pmx9bnHood+2BbE8a07mJ5/Ue7fe
-         LCJW18jHOZcHWunYifNqxyn1pYn/oFCUMLwPNzLJF4XSCJR4oIHlec/buR4H9G26Lo
-         cO2ze6p4tuRDw==
-Date:   Tue, 13 Sep 2022 17:19:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
-        lznuaa@gmail.com, imx@lists.linux.dev,
-        manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v10 5/6] PCI: endpoint: makeup pci-epf-vntb.c
-Message-ID: <20220913221916.GA627631@bhelgaas>
+        with ESMTP id S229648AbiINBqD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Sep 2022 21:46:03 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D73D66A7C;
+        Tue, 13 Sep 2022 18:46:02 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28E1UBRN004564;
+        Wed, 14 Sep 2022 01:45:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=bRGK0vQLs/hcPSYsM/CdxI6H5+3Ppjl1vf7g1OOxl9I=;
+ b=csuO1OUcGFizCEK+/jKVTZSrcw7lExyr0cJnkJqcqIRPain+bSJaqPr/390K9lGbLitk
+ hUsgX6lDkeUsGlVK343ZNCa8i9iAhv4fDOhu8UhyzqkdQPjpXzRci7MTzswBPsVXf2Wv
+ q6zD3jDZX9YLa0NNKFlZu4gTH0TnRIDI3xIDjsnPHYAsL54Wmu6fMbUbx84cIC+rerH4
+ Pe6fB4ES38YbvSllWIpKPEACzcAoYGE7x36sYF2BRLqppMfZUCApg1GyBZvLEmF7ZuFb
+ nURM7dd2sacaA2o2lcEm6HYA8be1BqZGFV/atAmHmq8ZWyngyJ8pZpVSq6Jt/PONCZxk mQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jjy0b8p0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Sep 2022 01:45:48 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 28E1jkLs015412
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Sep 2022 01:45:46 GMT
+Received: from [10.216.1.65] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Tue, 13 Sep
+ 2022 18:45:39 -0700
+Message-ID: <51be0ae5-8f48-fc6e-0246-810018326594@quicinc.com>
+Date:   Wed, 14 Sep 2022 07:15:35 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220913210957.3493826-6-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v6 2/5] PCI: qcom: Add retry logic for link to be stable
+ in L1ss
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mka@chromium.org>, <quic_vbadigan@quicinc.com>,
+        <quic_hemantk@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        "Andy Gross" <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konrad.dybcio@somainline.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220909195000.GA310621@bhelgaas>
+ <7310fc0c-5f87-87a6-4484-d60970ce3285@quicinc.com>
+ <20220912173346.GB25849@workstation>
+ <e9c5d29a-f1a7-46c8-a456-6c75c129876f@quicinc.com>
+ <20220913163921.GE25849@workstation>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220913163921.GE25849@workstation>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aSOESEzz8gJnyI2oAG5cjt6AMgJKT1s7
+X-Proofpoint-ORIG-GUID: aSOESEzz8gJnyI2oAG5cjt6AMgJKT1s7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-13_12,2022-09-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 clxscore=1015 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2208220000 definitions=main-2209140006
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,57 +95,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject, capitalize and change "makeup" to "Clean up":
 
-  PCI: endpoint: pci-epf-vntb: Clean up
+On 9/13/2022 10:09 PM, Manivannan Sadhasivam wrote:
+> On Tue, Sep 13, 2022 at 07:54:22PM +0530, Krishna Chaitanya Chundru wrote:
+>> On 9/12/2022 11:03 PM, Manivannan Sadhasivam wrote:
+>>> On Mon, Sep 12, 2022 at 09:39:36PM +0530, Krishna Chaitanya Chundru wrote:
+>>>> On 9/10/2022 1:20 AM, Bjorn Helgaas wrote:
+>>>>> On Fri, Sep 09, 2022 at 02:14:41PM +0530, Krishna chaitanya chundru wrote:
+>>>>>> Some specific devices are taking time to settle the link in L1ss.
+>>>>>> So added a retry logic before returning from the suspend op.
+>>>>> "L1ss" is not a state.  If you mean "L1.1" or "L1.2", say that.  Also
+>>>>> in code comments below.
+>>>> Yes L1ss means L1.2 and L1.2 We will update it next patch
+>>>>> s/So added a/Add/
+>>>>>
+>>>>> What are these specific devices?  Is this a qcom controller defect?
+>>>>> An endpoint defect that should be addressed via some kind of generic
+>>>>> quirk?
+>>>> This is depending up on the endpoint devices and it varies to device to
+>>>> device.
+>>>>
+>>> Can we identify the source of the traffic? Is the NVMe driver not
+>>> flushing it's queues correctly?
+>> We found that it is not from nvme data, we are seeing some physical layer
+>> activity on the
+>>
+>> protocol analyzer.
+>>
+> Okay
+>
+>>>> We are thinking this is not a defect if there is some traffic in the link
+>>>> the link will
+>>>>
+>>>> not go to L1ss .
+>>>>
+>>> Is this hack still required even after switching to syscore ops?
+>>>
+>>> Thanks,
+>>> Mani
+>> Yes, mani it is still required. And just before this sycore ops there will
+>> be a pci transaction to
+>>
+>> mask msix interrupts.
+>>
+> Hmm. I'm getting slightly confused here. What really happens when you do
+> the resource teardown during suspend and the link has not entered L1SS?
+>
+> Since PHY is powered by MX domain, I'm wondering why we should wait for
+> the link to be in L1SS?
+>
+> Thanks,
+> Mani
 
-On Tue, Sep 13, 2022 at 04:09:56PM -0500, Frank Li wrote:
-> Remove unused field: epf_db_phy.
-> Remove __iomem before epf_db.
-> Remove dupicate check if (readl(ntb->epf_db + i * 4)).
-> Using readl_relaxed instead of readl.
-> Using marco ENTRY_SIZE instead of number 4 at all place.
+Mani, we need to turn off the link only after link entered in to L1ss. 
+If we do before that
 
-Add "()" after function names.
+some transactions will be disturbed and we see a link down.
 
-s/marco/macro/
+Mx power rail will control digital logic of the PHY and tries to retain 
+the link state only,
 
-It would be nice if "ENTRY_SIZE" had a hint about what kind of entry
-we're talking about.
+The analog logic is controlled by the CX rail only, so when the link is 
+in L1ss only we turn off
 
-Since this is a collection of random cleanups, I noticed a typo in
-epf_ntb_configure_interrupt() kernel-doc: s/capaiblity/capability/
+clks and phy.
 
-The struct epf_ntb_ctrl definition is also whitespace-damaged.  The
-members of struct epf_ntb_ctrl and struct epf_ntb should follow the
-same indentation style.  Some members of struct epf_ntb_ctrl are
-indented with a tab, others with space.  Either make them all tabs and
-indent struct epf_ntb similarly, or indent the struct epf_ntb_ctrl
-members with a single space.
-
-The comments in the file have a whole collection of ways to spell
-vhost: Virtual Host, VHOST, VHost, vHOST, vhost.  Make them all the
-same, please.  You can use "Virtual Host (VHOST)" or whatever the
-first time if you want to use the short version later.
-
-Same for host/HOST/etc.  I don't want to read things like this:
-
-  @ntb: NTB device that facilitates communication between HOST and vHOST2
-
-  Wrapper to initialize a particular EPC interface and start the
-  workqueue to check for commands from host.
-
-and wonder whether "host" is supposed to be the same as "HOST".  Also,
-why does that say "vHOST*2*"?
-
-There are several instances of "HOST1" and "HOST2" (and "vHOST2").
-Should those appear somewhere in the diagram at the top of the file?
-
-The diagram starts with "/**" which means it's kernel-doc, but the
-diagram is not kernel-doc.  Please run this:
-
-  scripts/kernel-doc -v -none drivers/pci/endpoint/functions/pci-epf-vntb.c
-
-and fix all the warnings.
-
-Bjorn
+>>>>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>>>> ---
+>>>>>>     drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++-----------
+>>>>>>     1 file changed, 25 insertions(+), 11 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> index 6e04d0d..15c2067 100644
+>>>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> @@ -1809,26 +1809,40 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>>>>>>     static int __maybe_unused qcom_pcie_pm_suspend(struct qcom_pcie *pcie)
+>>>>>>     {
+>>>>>>     	u32 val;
+>>>>>> +	ktime_t timeout, start;
+>>>>>>     	struct dw_pcie *pci = pcie->pci;
+>>>>>>     	struct device *dev = pci->dev;
+>>>>>>     	if (!pcie->cfg->supports_system_suspend)
+>>>>>>     		return 0;
+>>>>>> -	/* if the link is not active turn off clocks */
+>>>>>> -	if (!dw_pcie_link_up(pci)) {
+>>>>>> -		dev_info(dev, "Link is not active\n");
+>>>>>> -		goto suspend;
+>>>>>> -	}
+>>>>>> +	start = ktime_get();
+>>>>>> +	/* Wait max 200 ms */
+>>>>>> +	timeout = ktime_add_ms(start, 200);
+>>>>>> -	/* if the link is not in l1ss don't turn off clocks */
+>>>>>> -	val = readl(pcie->parf + PCIE20_PARF_PM_STTS);
+>>>>>> -	if (!(val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB)) {
+>>>>>> -		dev_warn(dev, "Link is not in L1ss\n");
+>>>>>> -		return 0;
+>>>>>> +	while (1) {
+>>>>>> +
+>>>>>> +		if (!dw_pcie_link_up(pci)) {
+>>>>>> +			dev_warn(dev, "Link is not active\n");
+>>>>>> +			break;
+>>>>>> +		}
+>>>>>> +
+>>>>>> +		/* if the link is not in l1ss don't turn off clocks */
+>>>>>> +		val = readl(pcie->parf + PCIE20_PARF_PM_STTS);
+>>>>>> +		if ((val & PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB)) {
+>>>>>> +			dev_dbg(dev, "Link enters L1ss after %d  ms\n",
+>>>>>> +					ktime_to_ms(ktime_get() - start));
+>>>>>> +			break;
+>>>>>> +		}
+>>>>>> +
+>>>>>> +		if (ktime_after(ktime_get(), timeout)) {
+>>>>>> +			dev_warn(dev, "Link is not in L1ss\n");
+>>>>>> +			return 0;
+>>>>>> +		}
+>>>>>> +
+>>>>>> +		udelay(1000);
+>>>>>>     	}
+>>>>>> -suspend:
+>>>>>>     	if (pcie->cfg->ops->suspend)
+>>>>>>     		pcie->cfg->ops->suspend(pcie);
+>>>>>> -- 
+>>>>>> 2.7.4
+>>>>>>
