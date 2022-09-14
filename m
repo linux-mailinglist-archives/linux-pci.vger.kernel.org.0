@@ -2,102 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F9D05B8940
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 15:37:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25F205B895E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 15:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiINNhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Sep 2022 09:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50896 "EHLO
+        id S229446AbiINNoS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Sep 2022 09:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiINNhI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 09:37:08 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFE0564DC
-        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 06:37:07 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id m1so22242798edb.7
-        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 06:37:07 -0700 (PDT)
+        with ESMTP id S229790AbiINNoL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 09:44:11 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A11E72FD0
+        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 06:44:10 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id f20-20020a9d7b54000000b006574e21f1b6so1848855oto.5
+        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 06:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=PkC8kFXO3jlM8WLLDky2O765UdWNM37n3pqNL4x9fvQ=;
-        b=ddAZngo0FdDKlKnJeSZ3XyxY8ns9ns3WyBhLdO2yZT1Cl3aLr7DQbNu7sAt1cLJWFn
-         Ty2M01ofHUhDycR3ahgDjtwMSGV3LYCCGd6DuI8FhVZaH721oPzV1jLg4E9kZzJrcq+M
-         3ZQnEZ+4k5tR8UXEd39xlNfjYlSA65qYvKfgkVUV39AjROoqQ1Yj10EnCAzAiQLZg1P5
-         7Sg6LJvqtz8FCBhO5RO9ZGB8B/s4wjrtVt65CIHcucudAoIOcjy4Rc/zCvLGZTTFAKoM
-         Z8SKerqiM3cyjzmSHBEU9gs6QHAgnm30YRHF+R1yTAk7c63poirc3gzplIv+4fQdEn/O
-         PCsQ==
+        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
+        b=E4BIeg3R3KxB4vs8m/L/Pu88tvq/dHT2vo5h9piTWPK/Kt8GbZjmoI/iM5xnK+GOu4
+         rbPaq2qFsjugwxPgG5nyUI3JJTx3bUdFkTVP0W5W4HN7Fxk2JU9QicKROwZkB+LlpbcJ
+         t3InAO14VvbdCRPb+OEmKY4tg6zAba9jhmRXa6dE225DKMbIjTmpgmr8IuPszWMW89S6
+         LewD9h2LK2dKvRUNv/CpZWoYkYjZdlZerYrt0Uaw/Ul0OXpx8mdjsLQkKdUbqyxYdUCK
+         TOCq55AK7EB4Gy70Ki3zcS/39tQZ1ED22dPDTrQsN4o0wsOaYqai5DNoSzilL6DRl6zc
+         E/ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=PkC8kFXO3jlM8WLLDky2O765UdWNM37n3pqNL4x9fvQ=;
-        b=W7/6r8FnIgtAZjpwwXQYAK3IKBEUiNeH+zhvaYNufW3ZNOwbGz2aubGy+9V8PSuB0c
-         EqBD1cH64FPqbpI669vgixrV1WprwLBttyv28X8UzGas3mDMqJm4Gh737QvxIDK1yLAt
-         R61hs68Ks+2FWUJtzJGTw5kGQ1q+oD9CNC4Tt5xRfgVPHALoJ3n53yW9ZaSSVC6hGsyz
-         jRF/xPf0XhNZixz/0YsTbez79FG4/JAIcu4SDGY3j5b5ZkpGKl9cWFjeVTM0xD2HA1Lx
-         OccC7hU18vDJ6yiOWEvLcBXGDynuJe4AHSA4Ne9s9pHa2yaVu+8+6Mp+M+CQz+o2/BVC
-         Hx2A==
-X-Gm-Message-State: ACgBeo19QMlyq/4YowoGNdUn/0RDHKV90xi8II3uEcPk2aX1/OwN6oqa
-        qtYaBgGmOf9aIj+fWZVfA1VvotVhbDPjJu5G5PvWtg==
-X-Google-Smtp-Source: AA6agR6zTJpXDs1mbNIDy3e6GHNIMO9LRrZLm8QHRCn3HOg5busq2bmEtje3trdhWeFhX7HAXczaoGjQJP8pkIAtdoQ=
-X-Received: by 2002:aa7:d6d9:0:b0:44d:e1b7:d905 with SMTP id
- x25-20020aa7d6d9000000b0044de1b7d905mr30714192edr.32.1663162626125; Wed, 14
- Sep 2022 06:37:06 -0700 (PDT)
+        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
+        b=x8cvGn+Ku/ZfNaEijQshzVhDy51P4XvQ8/vMYvXWZwE/01BKbtTzEp0s3i4hw7PBrD
+         ftZGweGldx7Mlq4BSLf+B3VsGznvKIWkqPCMGwG1/orLCMDFxgNq0Vfl8jCl28umlWz+
+         3syJ9uPIB3vq3+FSuWzoa4Sa2q0TAdJdS9myy0OKH+VhS6J6gsRY+K6Q66g3RHe846Aw
+         FtflZ6ZuCx0gh6oPGcqxzZowITx6n1p/vudUZXv/W4A1xYZbi10+Z97ajqa5JxFabpmF
+         cBeI836qNkA57WrbQr4YtzwlJw4bjmj910NKcx/k7FUWpjQa2gRfdv5f4onBahNHYq+G
+         Apng==
+X-Gm-Message-State: ACgBeo3x09dZ1xA/9p+zmkQTMA8AA9XMmFplSR2WeXe33/xQ6ptzVSOl
+        +b3qbTsyrMn+aFgydH74CQT3w3WdVQ931Xxd1fg=
+X-Google-Smtp-Source: AA6agR700U7geaGD9CLh6djLAoJ4cdFKbv5Amsm6BAhiWdDeS2O5OHW7eUqdxA5+yT1mSZyeVep86SmMaMDCfurhj5E=
+X-Received: by 2002:a9d:376:0:b0:655:b4bc:fd6e with SMTP id
+ 109-20020a9d0376000000b00655b4bcfd6emr10229584otv.233.1663163049690; Wed, 14
+ Sep 2022 06:44:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
- <20220906204301.3736813-2-dmitry.torokhov@gmail.com> <20220906211628.6u4hbpn4shjcvqel@pali>
- <Yxe7CJnIT5AiUilL@google.com> <20220906214114.vj3v32dzwxz6uqik@pali>
- <YxfBKkqce/IQQLk9@google.com> <20220906220901.p2c44we7i4c35uvx@pali>
- <YxfMkzW+5W3Hm1dU@google.com> <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
- <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com> <YyHQdN14bI4WeCKp@sol>
-In-Reply-To: <YyHQdN14bI4WeCKp@sol>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 14 Sep 2022 15:36:54 +0200
-Message-ID: <CACRpkda=BKafP7W4SPm5La2WtqdNvjcjHoLp9oD8Zq5PYHCweA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220913144832.2784012-1-alexander.deucher@amd.com>
+ <20220913144832.2784012-2-alexander.deucher@amd.com> <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
+In-Reply-To: <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 14 Sep 2022 09:43:58 -0400
+Message-ID: <CADnq5_M0mVZ1=wpWZD2c+CUrzqFwJmU7aadThcErUPf+tk0KmA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/amdgpu: move nbio ih_doorbell_range() into ih
+ code for vega
+To:     "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, helgaas@kernel.org,
+        regressions@lists.linux.dev, airlied@linux.ie,
+        linux-pci@vger.kernel.org, m.seyfarth@gmail.com,
+        tseewald@gmail.com, kai.heng.feng@canonical.com, daniel@ffwll.ch,
+        sr@denx.de
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 3:00 PM Kent Gibson <warthog618@gmail.com> wrote:
-
-> The key distinction is whether you are describing a physical or logical
-> value/state.
-> High/low should be reserved for physical.
-> Active/inactive describe logical.
+On Wed, Sep 14, 2022 at 3:05 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
 >
-> (I personally dislike "deassert" as it is a manufactured word that feels
-> very awkward.)
+>
+>
+> On 9/13/2022 8:18 PM, Alex Deucher wrote:
+> > This mirrors what we do for other asics and this way we are
+> > sure the ih doorbell range is properly initialized.
+> >
+> > There is a comment about the way doorbells on gfx9 work that
+> > requires that they are initialized for other IPs before GFX
+> > is initialized.  In this case IH is initialized before GFX,
+> > so there should be no issue.
+> >
+>
+> Not sure about the association of patch 1 and 2 with AER as in the
+> comment below. I thought the access would go through (PCIE errors may
+> not be reported) and the only side effect is doorbell won't be hit/routed.
+>
+> The comments may not be relevant to patches 1/2, apart from that -
 
-I would certainly trust anyone native Anglo-Saxon to say what is the
-best word here, so I will happily fold on this.
+Patches 1 and 2 don't fix the actual issue, but they are prerequisites
+for patch 3.  Without patches 1 and 2, patch 3 won't work on all
+cards.  Seemed prudent to just mark all 3, but I could clarify that 1
+and 2 are just prerequisites.
 
-> Changing gpiod_set_value() to gpiod_set_state(), while leaving
-> gpiod_set_raw_value() as is, does not reduce confusion - at least not for
-> me.
+Thanks,
 
-Sloppy of me, certainly these would need to be renamed
-too. The _raw being high/low and the logic accessors
-active/inactive.
+Alex
 
-Yours,
-Linus Walleij
+>
+> Series is:
+>         Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+>
+> Thanks,
+> Lijo
+>
+> > This fixes the Unsupported Request error reported through
+> > AER during driver load. The error happens as a write happens
+> > to the remap offset before real remapping is done.
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> >
+> > The error was unnoticed before and got visible because of the commit
+> > referenced below. This doesn't fix anything in the commit below, rather
+> > fixes the issue in amdgpu exposed by the commit. The reference is only
+> > to associate this commit with below one so that both go together.
+> >
+> > Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
+> >
+> > Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/soc15.c     | 3 ---
+> >   drivers/gpu/drm/amd/amdgpu/vega10_ih.c | 4 ++++
+> >   drivers/gpu/drm/amd/amdgpu/vega20_ih.c | 4 ++++
+> >   3 files changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > index 5188da87428d..e6a4002fa67d 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > @@ -1224,9 +1224,6 @@ static void soc15_doorbell_range_init(struct amdgpu_device *adev)
+> >                               ring->use_doorbell, ring->doorbell_index,
+> >                               adev->doorbell_index.sdma_doorbell_range);
+> >               }
+> > -
+> > -             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > -                                             adev->irq.ih.doorbell_index);
+> >       }
+> >   }
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > index 03b7066471f9..1e83db0c5438 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > @@ -289,6 +289,10 @@ static int vega10_ih_irq_init(struct amdgpu_device *adev)
+> >               }
+> >       }
+> >
+> > +     if (!amdgpu_sriov_vf(adev))
+> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > +                                                 adev->irq.ih.doorbell_index);
+> > +
+> >       pci_set_master(adev->pdev);
+> >
+> >       /* enable interrupts */
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > index 2022ffbb8dba..59dfca093155 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > @@ -340,6 +340,10 @@ static int vega20_ih_irq_init(struct amdgpu_device *adev)
+> >               }
+> >       }
+> >
+> > +     if (!amdgpu_sriov_vf(adev))
+> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > +                                                 adev->irq.ih.doorbell_index);
+> > +
+> >       pci_set_master(adev->pdev);
+> >
+> >       /* enable interrupts */
+> >
