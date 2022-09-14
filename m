@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA8425B828D
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 10:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33FE95B8291
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 10:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiINIBt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Sep 2022 04:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45554 "EHLO
+        id S229826AbiINIBu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Sep 2022 04:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiINIBs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 04:01:48 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A23443E4A;
-        Wed, 14 Sep 2022 01:01:46 -0700 (PDT)
+        with ESMTP id S229678AbiINIBt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 04:01:49 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3A7476C5;
+        Wed, 14 Sep 2022 01:01:47 -0700 (PDT)
 Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MSCRL1XLSzHnjB;
-        Wed, 14 Sep 2022 15:59:42 +0800 (CST)
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MSCQb1x0KznVC0;
+        Wed, 14 Sep 2022 15:59:03 +0800 (CST)
 Received: from localhost.localdomain (10.67.164.66) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 14 Sep 2022 16:01:43 +0800
+ 15.1.2375.31; Wed, 14 Sep 2022 16:01:44 +0800
 From:   Yicong Yang <yangyicong@huawei.com>
 To:     <acme@kernel.org>, <peterz@infradead.org>,
         <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
@@ -37,10 +37,12 @@ CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
         <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
         <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
         <liuqi6124@gmail.com>
-Subject: [RESEND PATCH v12 0/3] Add perf support for HiSilicon PCIe Tune and Trace device
-Date:   Wed, 14 Sep 2022 15:59:22 +0800
-Message-ID: <20220914075925.48549-1-yangyicong@huawei.com>
+Subject: [RESEND PATCH v12 1/3] perf tool: arm: Refactor event list iteration in auxtrace_record__init()
+Date:   Wed, 14 Sep 2022 15:59:23 +0800
+Message-ID: <20220914075925.48549-2-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220914075925.48549-1-yangyicong@huawei.com>
+References: <20220914075925.48549-1-yangyicong@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -57,50 +59,100 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+From: Qi Liu <liuqi115@huawei.com>
 
-This patchset adds the perf tool support for HiSilicon PCIe Tune and Trace
-device [1]. The device driver makes use of perf AUX trace for tracing
-TLP (Transaction Layer Packet) headers of PCIe. The trace can be used by
-`perf record` and the traced data can be decoded by `perf report` with
-this patchset. The detailed usage is documented in [1].
+Add find_pmu_for_event() and use to simplify logic in
+auxtrace_record_init(). find_pmu_for_event() will be
+reused in subsequent patches.
 
-This is split from the v11 series as suggested to send driver part and
-perf tool part separately. The perf tool part has no change since v11.
-The whole changelog can be found at [2].
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
 
-Wish to have perf support along with the PTT driver to enable the full
-support.
-
-[1] https://lore.kernel.org/lkml/20220816114414.4092-5-yangyicong@huawei.com/
-[2] https://lore.kernel.org/lkml/20220816114414.4092-1-yangyicong@huawei.com/
-
-Qi Liu (3):
-  perf tool: arm: Refactor event list iteration in
-    auxtrace_record__init()
-  perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
-  perf tool: Add support for parsing HiSilicon PCIe Trace packet
-
- tools/perf/arch/arm/util/auxtrace.c           | 116 +++++++++--
- tools/perf/arch/arm/util/pmu.c                |   3 +
- tools/perf/arch/arm64/util/Build              |   2 +-
- tools/perf/arch/arm64/util/hisi-ptt.c         | 188 +++++++++++++++++
- tools/perf/util/Build                         |   2 +
- tools/perf/util/auxtrace.c                    |   4 +
- tools/perf/util/auxtrace.h                    |   1 +
- tools/perf/util/hisi-ptt-decoder/Build        |   1 +
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 164 +++++++++++++++
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  31 +++
- tools/perf/util/hisi-ptt.c                    | 192 ++++++++++++++++++
- tools/perf/util/hisi-ptt.h                    |  19 ++
- 12 files changed, 703 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
- create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
- create mode 100644 tools/perf/util/hisi-ptt.c
- create mode 100644 tools/perf/util/hisi-ptt.h
-
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 5fc6a2a3dbc5..384c7cfda0fd 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+ 	return arm_spe_pmus;
+ }
+ 
++static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
++					   int pmu_nr, struct evsel *evsel)
++{
++	int i;
++
++	if (!pmus)
++		return NULL;
++
++	for (i = 0; i < pmu_nr; i++) {
++		if (evsel->core.attr.type == pmus[i]->type)
++			return pmus[i];
++	}
++
++	return NULL;
++}
++
+ struct auxtrace_record
+ *auxtrace_record__init(struct evlist *evlist, int *err)
+ {
+-	struct perf_pmu	*cs_etm_pmu;
++	struct perf_pmu	*cs_etm_pmu = NULL;
++	struct perf_pmu **arm_spe_pmus = NULL;
+ 	struct evsel *evsel;
+-	bool found_etm = false;
++	struct perf_pmu *found_etm = NULL;
+ 	struct perf_pmu *found_spe = NULL;
+-	struct perf_pmu **arm_spe_pmus = NULL;
++	int auxtrace_event_cnt = 0;
+ 	int nr_spes = 0;
+-	int i = 0;
+ 
+ 	if (!evlist)
+ 		return NULL;
+@@ -68,24 +84,23 @@ struct auxtrace_record
+ 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (cs_etm_pmu &&
+-		    evsel->core.attr.type == cs_etm_pmu->type)
+-			found_etm = true;
+-
+-		if (!nr_spes || found_spe)
+-			continue;
+-
+-		for (i = 0; i < nr_spes; i++) {
+-			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+-				found_spe = arm_spe_pmus[i];
+-				break;
+-			}
+-		}
++		if (cs_etm_pmu && !found_etm)
++			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
++
++		if (arm_spe_pmus && !found_spe)
++			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
+ 	}
++
+ 	free(arm_spe_pmus);
+ 
+-	if (found_etm && found_spe) {
+-		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
++	if (found_etm)
++		auxtrace_event_cnt++;
++
++	if (found_spe)
++		auxtrace_event_cnt++;
++
++	if (auxtrace_event_cnt > 1) {
++		pr_err("Concurrent AUX trace operation not currently supported\n");
+ 		*err = -EOPNOTSUPP;
+ 		return NULL;
+ 	}
 -- 
 2.24.0
 
