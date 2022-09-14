@@ -2,129 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7657A5B860D
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 12:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF4D25B8672
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Sep 2022 12:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbiINKO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Sep 2022 06:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
+        id S229692AbiINKfw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Sep 2022 06:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbiINKOs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 06:14:48 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D42F67
-        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 03:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663150486; x=1694686486;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n7QezhxgyKpu5uShpM89wBUYu5EilrYTl5h5s4OtZt4=;
-  b=LFoEb7TOh/ks8+FokwI9tNi4TJ+xO3Q6jG1yIJTYfgAVN31FajW5w4fc
-   KNPsaIxgPEghIQUPRwzshv64Fyzy/7iZmmREblI2WsYSily/tfZJsCsF+
-   4hfFQGgzOrbEqWLNkxGMt2FUPDWE98mnzC0tK4hZtkymWWjIAjRJFzwQu
-   /bgtugDAf0/IsjWWEREuLwp9xx0Qhc5f+Tebikbtt3ZcsrkKZvZuZnpl9
-   APCsrAUFh501vK0OFrn/aG/ThNqJvE1u3QzhXHEtFb3aqutodAd/9+SD8
-   6iCCf1mZ3uxVz9bFxKkHEvqhmxtFlHHa5H7pC4yz+kUUDhjbGbjrvjSBX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10469"; a="384684519"
-X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
-   d="scan'208";a="384684519"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 03:14:46 -0700
-X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
-   d="scan'208";a="759161937"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 03:14:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oYPPl-0029Io-2j;
-        Wed, 14 Sep 2022 13:14:41 +0300
-Date:   Wed, 14 Sep 2022 13:14:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [lpieralisi-pci:pci/dwc 3/3]
- drivers/pci/controller/dwc/pcie-kirin.c:373:15: error: implicit declaration
- of function 'gpiod_count'
-Message-ID: <YyGpkSMaRKcav1C7@smile.fi.intel.com>
-References: <202209130205.CPp5dG1q-lkp@intel.com>
- <YyGghUdcrOdrR0ep@smile.fi.intel.com>
- <CACRpkdYfLNr04Y_YUFeuerGokxB0GCqQeEQEgQB=OR3k8N9Jbw@mail.gmail.com>
- <YyGnZCscvI4eoePt@google.com>
+        with ESMTP id S229715AbiINKfu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 06:35:50 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84BE53D01
+        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 03:35:49 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id e18so21584552edj.3
+        for <linux-pci@vger.kernel.org>; Wed, 14 Sep 2022 03:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=9R4Qb6/eZoL08cSuhU5zbiGZtzfSBbdj1XMsqivoRDc=;
+        b=FeNv4kze+PUgBxeZ8u20xM7vWicI3MDzZN1ratQf5K6w2MATkfQjfgFdvM7/ZG2B2Q
+         6A6oZnJFpXAivJM8IM+ZWPMFPA8B9VhzWX5vnkNRqbbnQLoJGF5yFZ+gRiR7O3n8jYuY
+         3FuQmRa9wHuVbav7zdboUdF+ISLpFG3x2hNQGZ9veed2C3O9BEYZpQqQFRXX41LCHxsX
+         tYpgb80AHMFideH+lHoGtUPJAgX/MRI9FVRKqkqE79RYAn9EmnjmsJG1rQJ93q+SjHmu
+         0eqX5aEnACOVD1I3fEUCRU/5wKnubHbx9/R+v4XZuqwChr2/Kp6NWherCeBGqn8ZMre9
+         6Pag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=9R4Qb6/eZoL08cSuhU5zbiGZtzfSBbdj1XMsqivoRDc=;
+        b=yO54eWbJ4x/NSKGqHLndwh+C7k3dAzDciW1WUEwCQ3/VvAk3L6cllKUGEaQGAdq+J0
+         jbeBdvUFqsYhwmbKGTV3H4xhF2AC2anIauFlNdRQbgR7o2y5mSFISBxdoQLMFVDhIDwf
+         Pq1jTJmDb9YhT/a6q77cOUPXGeGPt133n3T0jSKyTNKE4Go0i54+vtfpY2h0NxbTdRg3
+         MRaahLmO64WeEKBER+wKcBCN63I692Ub5+QdpQaRLmdNMmUCpPqXra9dkBjtcVHpt+Y3
+         /YFzAoKbC2cwp2csfn8m/S0dIR1pMMdJ4MLCxqK2ej7GwPoKEbyjkojUMz/6euhkGyYq
+         gRag==
+X-Gm-Message-State: ACgBeo2JuKUWyQ1UjGO8+p5cgAAx60TftFBiAzDz/zzUuN236fxzSPb1
+        2rvW1NVPvl+q0evJNyV7mMupChVYniySq0s3wSTqEg==
+X-Google-Smtp-Source: AA6agR6ozhdIMePkvj6txPi/h/TnaiD7gHVJV++34/XV5xh2tnc5f+zK9Kf5UtfhMq+zusS28ejyMIOp44ZO6N+3S8w=
+X-Received: by 2002:a05:6402:2690:b0:452:3a85:8b28 with SMTP id
+ w16-20020a056402269000b004523a858b28mr7914423edd.158.1663151748276; Wed, 14
+ Sep 2022 03:35:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyGnZCscvI4eoePt@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
+ <20220906204301.3736813-2-dmitry.torokhov@gmail.com> <20220906211628.6u4hbpn4shjcvqel@pali>
+ <Yxe7CJnIT5AiUilL@google.com> <20220906214114.vj3v32dzwxz6uqik@pali>
+ <YxfBKkqce/IQQLk9@google.com> <20220906220901.p2c44we7i4c35uvx@pali> <YxfMkzW+5W3Hm1dU@google.com>
+In-Reply-To: <YxfMkzW+5W3Hm1dU@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 14 Sep 2022 12:35:36 +0200
+Message-ID: <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 03:05:24AM -0700, Dmitry Torokhov wrote:
-> On Wed, Sep 14, 2022 at 11:42:29AM +0200, Linus Walleij wrote:
-> > On Wed, Sep 14, 2022 at 11:38 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Tue, Sep 13, 2022 at 02:45:12AM +0800, kernel test robot wrote:
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
-> > > > head:   2023f9c9190e657b9853a442899a52b14253aea3
-> > > > commit: 2023f9c9190e657b9853a442899a52b14253aea3 [3/3] PCI: dwc: Replace of_gpio_named_count() by gpiod_count()
-> > > > config: xtensa-randconfig-r023-20220911 (https://download.01.org/0day-ci/archive/20220913/202209130205.CPp5dG1q-lkp@intel.com/config)
-> > > > compiler: xtensa-linux-gcc (GCC) 12.1.0
-> > > > reproduce (this is a W=1 build):
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         # https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?id=2023f9c9190e657b9853a442899a52b14253aea3
-> > > >         git remote add lpieralisi-pci https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
-> > > >         git fetch --no-tags lpieralisi-pci pci/dwc
-> > > >         git checkout 2023f9c9190e657b9853a442899a52b14253aea3
-> > > >         # save the config file
-> > > >         mkdir build_dir && cp config build_dir/.config
-> > > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=xtensa SHELL=/bin/bash drivers/pci/controller/dwc/
-> > > >
-> > > > If you fix the issue, kindly add following tag where applicable
-> > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > >
-> > > > All errors (new ones prefixed by >>):
-> > > >
-> > > >    drivers/pci/controller/dwc/pcie-kirin.c: In function 'kirin_pcie_get_gpio_enable':
-> > > > >> drivers/pci/controller/dwc/pcie-kirin.c:373:15: error: implicit declaration of function 'gpiod_count' [-Werror=implicit-function-declaration]
-> > > >      373 |         ret = gpiod_count(dev, "hisilicon,clken");
-> > > >          |               ^~~~~~~~~~~
-> > > >    cc1: some warnings being treated as errors
-> > >
-> > >
-> > > It's only possible if we miss to include gpio/consumer.h which is the case here
-> > > (at least on some architectures).
-> > >
-> > > Lorenzo, what do you want me to do? I can add the missed include, but looking
-> > > at the code it needs conversion to GPIO descriptors altogether.
-> > >
-> > > Linus, don't you have a patch for this driver already? (I don't remember
-> > > if I have seen a branch in your tree regarding this long-standing conversion
-> > > to GPIO descriptors all over the kernel.)
-> > 
-> > Not me, by Dmitry T sent some really nice PCI host GPIOD conversions
-> > recently, not this one though.
-> 
-> No, I do not have any outstanding changes for this driver. Maybe Andy
-> can finish the conversion to gpiod?
+On Wed, Sep 7, 2022 at 12:41 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-I can, but want to hear maintainer what is the best approach here.
-My scope of the changes is to get rid of of_gpio_named_count() in
-the exported namespace.
+> Linus, do you think we should introduce GPIOD_OUT_INACTIVE /
+> GPIOD_OUT_ACTIVE or GPIOD_OUT_DEASSERTED / GPIOD_OUT_ASSERTED and
+> deprecate existing GPIOD_OUT_LOW and GPIO_OUT_HIGH?
 
--- 
-With Best Regards,
-Andy Shevchenko
+They should rather be replaced everywhere in one go.
 
+I think it is just a half-measure unless we also add
+#define GPIOD_ASSERTED 1
+#define GPIOD_DEASSERTED 0
+to be used instead of 1/0 in gpiod_set_value().
 
+It would also imply changing the signature of the function
+gpiod_set_value() to gpiod_set_state() as we are not
+really setting a value but a state.
+
+I have thought about changing this, but the problem is that I felt
+it should be accompanied with a change fixing as many users
+as possible.
+
+I think this is one of those occasions where we should merge
+the new defines, and then send Linus Torvalds a sed script
+that he can run at the end of the merge window to change all
+gpiod_set_value(...., 1) -> gpiod_set_state(...., GPIOD_ASSERTED);
+everywhere.
+
+After all users are changed, the GPIOD_ASSERTED/DEASSERTED
+defined can be turned into an enum.
+
+That would be the silver bullet against a lot of confusion IMO.
+
+We would need Bartosz' input on this.
+
+Yours,
+Linus Walleij
