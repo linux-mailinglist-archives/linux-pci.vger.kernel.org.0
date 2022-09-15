@@ -2,140 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B837E5B976F
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 11:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A615B98CB
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 12:31:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiIOJaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Sep 2022 05:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49036 "EHLO
+        id S229625AbiIOKbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Sep 2022 06:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiIOJae (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 05:30:34 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B04C12A88;
-        Thu, 15 Sep 2022 02:30:32 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id q9so7670419pgq.8;
-        Thu, 15 Sep 2022 02:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=LSuUjN23nOfC/jh6HADsC6Jpj10f77UtFVq8cZc91gY=;
-        b=nFuQ7S/kLLD7RN+w5dvH+VYpygYmWNDwqiN1DARe3jLt0V41PSqikB0z16ejEA1TvF
-         dv5ZZIid8Qkyqedsvk5G60fqwlWEmOD6OsBVuNg63/+79Vo17t9hFK/vcai7lGiNdrDm
-         3QXzZKDzKzQNFWwryyu1HLBRy8FPChbeiIAX8wgy+z+TFtRQh8NMbwf3qiC8kBXo6LBR
-         NcIc0SJt4BaqHg+yP7MT1wnpNbDYUChgKgC9KNcEOKejpS5K/BICR8zUctRah61ABQ2F
-         LL1FLdOnN68TRP6es+UXjv3XYEFNRJHUFYvyv7ZhSVhKyRG3zTAPH8P62NN97oVM11FT
-         9Kvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=LSuUjN23nOfC/jh6HADsC6Jpj10f77UtFVq8cZc91gY=;
-        b=T93npBg1GI+cS4OThBm1pZHFOyf8qtR6XVet6iwcP/E76t1+zLNnFHwXgiNHEihkv2
-         cglbvZt3vUNE73w2svrgg2zUJNxzoJS+F02/aK1HH2+HQlGbtW9Z7egaEj5ic/MvHCmJ
-         jQ23gv1pc9ZPR1WVDCf/cREsFJPSbnZpYRljzbgE41zcvXg8DRhVmwcYweZeXvC4azLC
-         GBhMgB+Dy03gWbnAg77HB6QN2iPJhg7nm+8w+h8Lovd33rgSkWpZyx7ijkmyr8jhpkrS
-         6ndCQwf3njEHYEWbN1/whGz3LWMvNFj1Tqy1hjsE+t75bPNz3YE+Hh8Pe7jkjK0s4VPT
-         nV8w==
-X-Gm-Message-State: ACgBeo3TDfYq782Lhmiw0WYeHvdrnD82cNYv62UIEBbZKjFJBrY6P8f+
-        JALEmjr47BmNrAW3VeuATqg=
-X-Google-Smtp-Source: AA6agR7lu82NQj5MbTGXIwzV5MaOPSt9XzUkhpU+k6EgVsjpvNyQGHyheEedsv4ICnQdAbhroPmpvQ==
-X-Received: by 2002:a63:698a:0:b0:41c:8dfb:29cb with SMTP id e132-20020a63698a000000b0041c8dfb29cbmr35309895pgc.170.1663234231668;
-        Thu, 15 Sep 2022 02:30:31 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id h5-20020a170902f70500b0017555cef23asm12238859plo.232.2022.09.15.02.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Sep 2022 02:30:31 -0700 (PDT)
-Date:   Thu, 15 Sep 2022 17:30:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
-Message-ID: <YyLwsOBXv9jRw/+n@sol>
-References: <20220906211628.6u4hbpn4shjcvqel@pali>
- <Yxe7CJnIT5AiUilL@google.com>
- <20220906214114.vj3v32dzwxz6uqik@pali>
- <YxfBKkqce/IQQLk9@google.com>
- <20220906220901.p2c44we7i4c35uvx@pali>
- <YxfMkzW+5W3Hm1dU@google.com>
- <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
- <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com>
- <YyKMsyI961Mo1EQE@sol>
- <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
+        with ESMTP id S229591AbiIOKbE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 06:31:04 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB14589912
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 03:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663237861; x=1694773861;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DQJQKvT6z9gai7EFA5cXoBn0QAfbw3Kua5Rnar048T0=;
+  b=Wz6nbggyuXVJL9wAxN6QPgukW2cKNYxbK2OqyhL0Zb60jQLorwmox7B5
+   g3891YWX6Ud1dZyBmbRPzrNcnETCMByNYbefz3P9xgmwF5SInPoUdJWUB
+   HkYhC4a2dUO5lenLf5dAd7ZqUL68JIce8VpxQHO/ea+z+IkC6oCjHXsZq
+   DKMzajgpRYFZC1lIkfDdXF2IpupUFtjZceCBhsTlX19VZ5D9ABddanntn
+   zSBSKl/t8i/0tMAacH/PFa+riP3hNFwcSZv3v5xcb9m5wDEei+if7s2Yg
+   rxHS7HOLblUc6b3hmWDPykZ4wuc+U9DRrXGHHXgnR/cMujdh/kbAF3jpI
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10470"; a="324937338"
+X-IronPort-AV: E=Sophos;i="5.93,317,1654585200"; 
+   d="scan'208";a="324937338"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2022 03:31:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,317,1654585200"; 
+   d="scan'208";a="594765306"
+Received: from lkp-server02.sh.intel.com (HELO 41300c7200ea) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 15 Sep 2022 03:30:54 -0700
+Received: from kbuild by 41300c7200ea with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oYm8z-0000Nj-2a;
+        Thu, 15 Sep 2022 10:30:53 +0000
+Date:   Thu, 15 Sep 2022 18:30:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ c327b44793ae4197be69c8525871ed753b3c6f5f
+Message-ID: <6322fed8.23Vre9Kq8WeYBc2g%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 10:51:02AM +0200, Linus Walleij wrote:
-> On Thu, Sep 15, 2022 at 4:23 AM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > After sleeping on this, I'm even more in disagreement with renaming
-> > value to state.
-> 
-> OK let's not do that then.
-> 
-> > OTOH, I totally agree with the addition of GPIOD_ACTIVE/INACTIVE to be
-> > used for the logical cases, and even a script to apply it globally.
-> > Ideally that script would change both the calls to the logical functions
-> > to use ACTIVE/INACTIVE, and the physical to HIGH/LOW.
-> 
-> OK we have consensus on this.
-> 
-> > Introducing enums for those, and changing the function signatures to
-> > use those rather than int makes sense to me too.
-> 
-> Either they can be enum or defined to bool true/false. Not really
-> sure what is best. But intuitively enum "feels better" for me.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: c327b44793ae4197be69c8525871ed753b3c6f5f  Merge branch 'remotes/lorenzo/pci/qcom'
 
-Enums work for me - especially if the goal is to differentiate
-logical from physical - there should be a distinct enum for each.
+elapsed time: 727m
 
-> > Though I'm not sure
-> > why that has to wait until after all users are changed to the new macros.
-> > Would that generate lint warnings?
-> 
-> I rather want it all to happen at once. One preparatory commit
-> adding the new types and one sed script to refactor the whole
-> lot. Not gradual switchover.
-> 
-> The reason is purely administrative: we have too many refactorings
-> lagging behind, mainly the GPIO descriptors that have been
-> lagging behind for what is it? 5 years? 10? GPIO irqchips also dragged
-> out for way too long. We can't keep doing things gradually like
-> this, it takes too much time and effort.
-> 
-> I don't want any more "in-transition-indefinitely" stuff in the GPIO
-> subsystem if I can avoid it.
-> 
-> Therefore I would advice to switch it all over at the end of a merge
-> window and be done with it.
-> 
+configs tested: 58
+configs skipped: 2
 
-Agreed - do it all at once.  My question was specific to the change of the
-function signatures to using enums - what is to prevent us doing that
-before running the sed script, and have the script switch usage over to
-the enums?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Cheers,
-Kent.
+gcc tested configs:
+powerpc                           allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+s390                             allyesconfig
+x86_64                        randconfig-a004
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a002
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a001
+arc                              allyesconfig
+x86_64                           rhel-8.3-syz
+sh                               allmodconfig
+arm                                 defconfig
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a003
+x86_64                        randconfig-a013
+arc                  randconfig-r043-20220914
+x86_64                        randconfig-a011
+alpha                            allyesconfig
+m68k                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+mips                             allyesconfig
+i386                          randconfig-a005
+x86_64                        randconfig-a015
+powerpc                          allmodconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arm64                            allyesconfig
+arm                              allyesconfig
+i386                             allyesconfig
+ia64                             allmodconfig
+m68k                             allmodconfig
+
+clang tested configs:
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20220914
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+riscv                randconfig-r042-20220914
+x86_64                        randconfig-a012
+hexagon              randconfig-r045-20220914
+i386                          randconfig-a006
+x86_64                        randconfig-a014
+i386                          randconfig-a004
+s390                 randconfig-r044-20220914
+i386                          randconfig-a013
+x86_64                        randconfig-a003
+i386                          randconfig-a011
+i386                          randconfig-a015
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
