@@ -2,120 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D15FF5B9DC0
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 16:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F63C5B9F48
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 18:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbiIOOxC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Sep 2022 10:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
+        id S229786AbiIOQAB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Sep 2022 12:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiIOOxA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 10:53:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2117974DF6;
-        Thu, 15 Sep 2022 07:52:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D849B81EC0;
-        Thu, 15 Sep 2022 14:52:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44004C433D6;
-        Thu, 15 Sep 2022 14:52:50 +0000 (UTC)
-Date:   Thu, 15 Sep 2022 20:22:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
+        with ESMTP id S229769AbiIOP7i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 11:59:38 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294CB2BF5
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 08:59:32 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id h194so13448022iof.4
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 08:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=A9MuMr8sNFs+YY+FKNgKXQBhOWjKSVReOcYSP90Jf1A=;
+        b=Ik+US2xysLuHqA26EeZQtVLuRyrG1XfW58naE8RwKWA47z9umdBePuYBCKpZKOXQx4
+         rgcv2+ht9lY6mpF2IWDS8J5lHSbWLocG+63ouJKqeofiMEI+qGCL1wuXO8JcVNIqkayM
+         ONhxT72VMXODD1Zp7KHVGccZVVihwEO+OyYus=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=A9MuMr8sNFs+YY+FKNgKXQBhOWjKSVReOcYSP90Jf1A=;
+        b=y0cbZThx3Ccd5yVgb7amrAluAIy3mExlfTGR99psYWEK04d0jbD+PIT5a4Cg1B4LIp
+         Grdh7Hsvf+MjE5tIGdz9+wRnb5wg8mMH7jCSXaP/x7cW+ak8fiYee2uBMxdIdWvAJ/4Z
+         LRMSqhZmRpLVTLuPhw/qb8TG1FvPs2ggM0WrDCtLGIjhnHJJ7S5QlwDrGC4/IzuCvmTY
+         fekdiAD+l2vxq07c8Mrf0gVq9klUgtv/eJzkK5/Ryu01lROh+GthtZGGWlXHhzTpTVHx
+         sbmwiThkcKGtDF6fSEoIX/iZB5xqtBAHQ9fCEBu68yJYerzPzLlnpHBS8MridNgPNTH/
+         gUVg==
+X-Gm-Message-State: ACrzQf3AkeHFLdJlphpVdR29FCrJ6rVO8Gqk7SixnPexnJHY8W38G3ta
+        JM8WStLNrydacqCYArRwLlbUpg==
+X-Google-Smtp-Source: AMsMyM7gHn31ptChXvos9nZsLVhPP/4vq9KZDZObUsqXgzrJBDSZbL+iBuAH+HL42QzLb2tXWtp2SA==
+X-Received: by 2002:a05:6602:14c5:b0:689:5640:5b0f with SMTP id b5-20020a05660214c500b0068956405b0fmr170588iow.70.1663257571541;
+        Thu, 15 Sep 2022 08:59:31 -0700 (PDT)
+Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
+        by smtp.gmail.com with UTF8SMTPSA id cx14-20020a056638490e00b0034a036a9a1fsm1322866jab.48.2022.09.15.08.59.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Sep 2022 08:59:30 -0700 (PDT)
+Date:   Thu, 15 Sep 2022 15:59:30 +0000
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <treding@nvidia.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
- logging
-Message-ID: <20220915145241.GE4550@workstation>
-References: <b1c243b0-2e6e-3254-eff0-a5276020a320@nvidia.com>
- <20220913200746.GA619956@bhelgaas>
- <20220914062411.GD16459@workstation>
- <CAL_JsqLbr4O_BHb8s-Px4S0OOY23qhFkN32cKBctc_BFakSBzA@mail.gmail.com>
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Rajat Jain <rajatja@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [RESEND PATCH v6] PCI/ASPM: Update LTR threshold based upon
+ reported max latencies
+Message-ID: <YyNL4lwmh0mz5CcV@google.com>
+References: <1663216335-9311-1-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLbr4O_BHb8s-Px4S0OOY23qhFkN32cKBctc_BFakSBzA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1663216335-9311-1-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 09:16:27AM -0500, Rob Herring wrote:
-> On Wed, Sep 14, 2022 at 1:24 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Tue, Sep 13, 2022 at 03:07:46PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Sep 13, 2022 at 06:00:30PM +0100, Jon Hunter wrote:
-> > > > On 13/09/2022 17:51, Manivannan Sadhasivam wrote:
-> > > > > On Tue, Sep 13, 2022 at 03:42:37PM +0530, Vidya Sagar wrote:
-> > > > > > Some of the platforms (like Tegra194 and Tegra234) have open slots and
-> > > > > > not having an endpoint connected to the slot is not an error.
-> > > > > > So, changing the macro from dev_err to dev_info to log the event.
-> > > > >
-> > > > > But the link up not happening is an actual error and -ETIMEDOUT is being
-> > > > > returned. So I don't think the log severity should be changed.
-> > > >
-> > > > Yes it is an error in the sense it is a timeout, but reporting an error
-> > > > because nothing is attached to a PCI slot seems a bit noisy. Please note
-> > > > that a similar change was made by the following commit and it also seems
-> > > > appropriate here ...
-> > > >
-> > > > commit 4b16a8227907118e011fb396022da671a52b2272
-> > > > Author: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> > > > Date:   Tue Jun 18 23:32:06 2019 +0530
-> > > >
-> > > >     PCI: tegra: Change link retry log level to debug
-> > > >
-> > > >
-> > > > BTW, we check for error messages in the dmesg output and this is a new error
-> > > > seen as of Linux v6.0 and so this was flagged in a test. We can ignore the
-> > > > error, but in this case it seem more appropriate to make this a info or
-> > > > debug level print.
-> > >
-> > > Can you tell whether there's a device present, e.g., via Slot Status
-> > > Presence Detect?  If there's nothing in the slot, I don't know why we
-> > > would print anything at all.  If a card is present but there's no
-> > > link, that's probably worthy of dev_info() or even dev_err().
-> > >
-> >
-> > I don't think all form factors allow for the PRSNT pin to be wired up,
-> > so we cannot know if the device is actually present in the slot or not all
-> > the time. Maybe we should do if the form factor supports it?
-> >
-> > > I guess if you can tell the slot is empty, there's no point in even
-> > > trying to start the link, so you could avoid both the message and the
-> > > timeout by not even calling dw_pcie_wait_for_link().
-> >
-> > Right. There is an overhead of waiting for ~1ms during boot.
+Hi Krishna,
+
+Your patch doesn't apply on pci/next due to changes to aspm_calc_l1ss_info()
+from commit 1d46154eed48 ("PCI/ASPM: Refactor L1 PM Substates Control
+Register programming"). Please send a rebased version.
+
+Thanks
+
+Matthias
+
+On Thu, Sep 15, 2022 at 10:02:06AM +0530, Krishna chaitanya chundru wrote:
+> In ASPM driver, LTR threshold scale and value are updated based on
+> tcommon_mode and t_poweron values. In kioxia NVMe L1.2 is failing due to
+> LTR threshold scale and value are greater values than max snoop/non-snoop
+> value.
 > 
-> Async probe should mitigate that, right? Saravana is working toward
-> making that the default instead of opt in, but you could opt in now.
+> Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+> reported snoop/no-snoop values is greather than or equal to
+> LTR_L1.2_THRESHOLD value.
 > 
-
-No. The delay is due to the DWC core waiting for link up that depends on
-the PCIe device to be present on the slot. The driver probe order
-doesn't apply here.
-
-Thanks,
-Mani
-
-> Rob
+> Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> 
+> I am taking this patch forward as prasad is no more working with our org.
+> changes since v5:
+> 	- no changes, just reposting as standalone patch instead of reply to
+> 	  previous patch.
+> Changes since v4:
+> 	- Replaced conditional statements with min and max.
+> changes since v3:
+> 	- Changed the logic to include this condition "snoop/nosnoop
+> 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+> Changes since v2:
+> 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+> Changes since v1:
+> 	- Added missing variable declaration in v1 patch
+> ---
+>  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a96b742..676c03e 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -461,14 +461,36 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  {
+>  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+>  	u32 val1, val2, scale1, scale2;
+> +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+>  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+>  	u32 ctl1 = 0, ctl2 = 0;
+>  	u32 pctl1, pctl2, cctl1, cctl2;
+>  	u32 pl1_2_enables, cl1_2_enables;
+> +	u16 ltr;
+> +	u16 max_snoop_lat, max_nosnoop_lat;
+>  
+>  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+>  		return;
+>  
+> +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
+> +	if (!ltr)
+> +		return;
+> +
+> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
+> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
+> +
+> +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
+> +
+> +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
+> +
+> +	/* choose the greater max scale value between snoop and no snoop value*/
+> +	max_scale = max(max_snp_scale, max_nsnp_scale);
+> +
+> +	/* choose the greater max value between snoop and no snoop scales */
+> +	max_val = max(max_snp_val, max_nsnp_val);
+> +
+>  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+>  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+>  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> @@ -501,6 +523,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  	 */
+>  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+>  	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> +
+> +	/*
+> +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
+> +	 * snoop/no-snoop values are greather than or equal to LTR_L1.2_THRESHOLD value.
+> +	 */
+> +	scale = min(scale, max_scale);
+> +	value = min(value, max_val);
+> +
+>  	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
+>  
+>  	/* Some broken devices only support dword access to L1 SS */
+> -- 
+> 2.7.4
+> 
