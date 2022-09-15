@@ -2,177 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 562E55B93AD
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 06:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADD9B5B96A8
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 10:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbiIOEcp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Sep 2022 00:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53668 "EHLO
+        id S229961AbiIOIvS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Sep 2022 04:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiIOEcn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 00:32:43 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF458E4E4;
-        Wed, 14 Sep 2022 21:32:42 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28F46hSA018202;
-        Thu, 15 Sep 2022 04:32:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id; s=qcppdkim1;
- bh=iOyl1ZRSLD3l7RdXgKTCXz7qYTdfN8+bAFd8DLwJ2ws=;
- b=ijXPEVBqSBNagt4dqsDDW+MMepB36KZyXbSSewJ3bFRRjHW1RJlCN/ShQUFoD54tqr7C
- XhnI1wJqYwPHdgsnkaHHIbB8UloY7HMhFXK9z7qifd9vdXEN8/moFP0Uy0ZoNhmMDOwO
- /oXFARsgODGaW3v/pHgfq7EnB2n/BwQbdw8O19KsTyR/yy/AIDqGqsF+npcJVfkYfBPG
- Pa5r5rYc4ZIxRzyeMG60eRic7kzFBcy9tux4RZzZ083Lq+NjSrlf7GnTR7PxH26Koy81
- TzlN8wQPx2zi8V0pvDmCxH3PBLktQgGTYc7wHkU7xCGX08qWCpQ9SBtBhkTDccZnFmAN kg== 
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jkvr302fa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Sep 2022 04:32:34 +0000
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 28F4WTbd017055;
-        Thu, 15 Sep 2022 04:32:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3jh4506nwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 15 Sep 2022 04:32:29 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28F4WSXC017050;
-        Thu, 15 Sep 2022 04:32:29 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 28F4WSpS017048;
-        Thu, 15 Sep 2022 04:32:28 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 994E044C6; Thu, 15 Sep 2022 10:02:27 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        with ESMTP id S229984AbiIOIvR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 04:51:17 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B1F08A7C4
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 01:51:16 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id y3so40578641ejc.1
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 01:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=pVEAPr9uFJXoigY4S3Caia0V9hvOwsnD7u1cGE+06fg=;
+        b=lQ3J36OOZC+3AWHtJgFIWkMKS2XenwMASaLdlbMcfGiHgwBZPp4D7FdJA+OItxRkDb
+         Js/Q03BFOS1N3FBMZogWUbgVzYhdy0UremJzkm3RxoeVIKUJkg2XthrxPq8oquNl3MdN
+         0o8wYJ+w6/u8wZK9GhZeyvUkd3l+PklON2jOefy+wvlfK2xkABNacMpczhCkYQIrJkQD
+         labgVa0aoMtnvT62KbzBqwzSu4FkNyOOnVXnqYMYe7vkqZsfz9uysFTEbeZuqmK2EpwO
+         L6oBZ6RqC+bpKpYyRS6whdkA0bWnOUfLZ1pP1S4wpmj0HXEW9ogvtmRaXtV5ZUgqFrey
+         rKSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=pVEAPr9uFJXoigY4S3Caia0V9hvOwsnD7u1cGE+06fg=;
+        b=Au2A1E+vd26xdg66JtO3Og4Yo5mMYa4nZsHyvPCVIcL4JDKcU9ZVt7dZdTsWHY1/3h
+         dPROqiHaUpS9g6/WgUs8M/JGiC0JDNd+gOxVehmaMQsdDym0VUYtIowR7c58FONoE51s
+         p8PfNOSrndoybi2OY/EX3cfLGhA5nvjyU83Ea5ae20ZpdQVhVtYsorDsXODlatYc3vvr
+         iVePBkCZV/16GKT2ZbsHaSDxYzCOAd1tJ4m6hBh8vrft/fBLMQF4vo5pqrTexg9v28Qo
+         7VgnTmeOoMQzgNu3qCkV0C0tABNd/ksmuJlEWNF88XPYxunsoIGK+w8jb4d7fgyAj6FN
+         yOBw==
+X-Gm-Message-State: ACrzQf2B9JQfJ+EubRcnOTT27YqjKVewtUfE4BVr9rWS1rF8JIvUxK2F
+        ZogX4auWgmOn4LOug5Q+4CoqQB+xrOOXuEC0feMIOIg4ugDxOA==
+X-Google-Smtp-Source: AA6agR5IIQ8Zwh5tQ7qnWm4dlNi83Gdb5MN9DKY6CarxNu1pm/YdJDXGPnF2czFgQFPqDbWv3OpyIQ3aYY//Ztdh3zM=
+X-Received: by 2002:a17:907:7f19:b0:780:375d:61ec with SMTP id
+ qf25-20020a1709077f1900b00780375d61ecmr4696000ejc.203.1663231874698; Thu, 15
+ Sep 2022 01:51:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
+ <20220906204301.3736813-2-dmitry.torokhov@gmail.com> <20220906211628.6u4hbpn4shjcvqel@pali>
+ <Yxe7CJnIT5AiUilL@google.com> <20220906214114.vj3v32dzwxz6uqik@pali>
+ <YxfBKkqce/IQQLk9@google.com> <20220906220901.p2c44we7i4c35uvx@pali>
+ <YxfMkzW+5W3Hm1dU@google.com> <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
+ <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com> <YyKMsyI961Mo1EQE@sol>
+In-Reply-To: <YyKMsyI961Mo1EQE@sol>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Sep 2022 10:51:02 +0200
+Message-ID: <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [RESEND PATCH v6] PCI/ASPM: Update LTR threshold based upon reported max latencies
-Date:   Thu, 15 Sep 2022 10:02:06 +0530
-Message-Id: <1663216335-9311-1-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5LhTohYuskcrg8pzDVA8OK3mzoQ2ScXT
-X-Proofpoint-GUID: 5LhTohYuskcrg8pzDVA8OK3mzoQ2ScXT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-15_02,2022-09-14_04,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2208220000 definitions=main-2209150022
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In ASPM driver, LTR threshold scale and value are updated based on
-tcommon_mode and t_poweron values. In kioxia NVMe L1.2 is failing due to
-LTR threshold scale and value are greater values than max snoop/non-snoop
-value.
+On Thu, Sep 15, 2022 at 4:23 AM Kent Gibson <warthog618@gmail.com> wrote:
 
-Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
-reported snoop/no-snoop values is greather than or equal to
-LTR_L1.2_THRESHOLD value.
+> After sleeping on this, I'm even more in disagreement with renaming
+> value to state.
 
-Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
+OK let's not do that then.
 
-I am taking this patch forward as prasad is no more working with our org.
-changes since v5:
-	- no changes, just reposting as standalone patch instead of reply to
-	  previous patch.
-Changes since v4:
-	- Replaced conditional statements with min and max.
-changes since v3:
-	- Changed the logic to include this condition "snoop/nosnoop
-	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
-Changes since v2:
-	- Replaced LTRME logic with max snoop/no-snoop latencies check.
-Changes since v1:
-	- Added missing variable declaration in v1 patch
----
- drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> OTOH, I totally agree with the addition of GPIOD_ACTIVE/INACTIVE to be
+> used for the logical cases, and even a script to apply it globally.
+> Ideally that script would change both the calls to the logical functions
+> to use ACTIVE/INACTIVE, and the physical to HIGH/LOW.
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a96b742..676c03e 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -461,14 +461,36 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- {
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 	u32 val1, val2, scale1, scale2;
-+	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
- 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
- 	u32 ctl1 = 0, ctl2 = 0;
- 	u32 pctl1, pctl2, cctl1, cctl2;
- 	u32 pl1_2_enables, cl1_2_enables;
-+	u16 ltr;
-+	u16 max_snoop_lat, max_nosnoop_lat;
- 
- 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
- 		return;
- 
-+	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
-+
-+	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
-+
-+	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
-+
-+	/* choose the greater max scale value between snoop and no snoop value*/
-+	max_scale = max(max_snp_scale, max_nsnp_scale);
-+
-+	/* choose the greater max value between snoop and no snoop scales */
-+	max_val = max(max_snp_val, max_nsnp_val);
-+
- 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
- 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
- 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
-@@ -501,6 +523,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
-+
-+	/*
-+	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
-+	 * snoop/no-snoop values are greather than or equal to LTR_L1.2_THRESHOLD value.
-+	 */
-+	scale = min(scale, max_scale);
-+	value = min(value, max_val);
-+
- 	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
- 
- 	/* Some broken devices only support dword access to L1 SS */
--- 
-2.7.4
+OK we have consensus on this.
 
+> Introducing enums for those, and changing the function signatures to
+> use those rather than int makes sense to me too.
+
+Either they can be enum or defined to bool true/false. Not really
+sure what is best. But intuitively enum "feels better" for me.
+
+> Though I'm not sure
+> why that has to wait until after all users are changed to the new macros.
+> Would that generate lint warnings?
+
+I rather want it all to happen at once. One preparatory commit
+adding the new types and one sed script to refactor the whole
+lot. Not gradual switchover.
+
+The reason is purely administrative: we have too many refactorings
+lagging behind, mainly the GPIO descriptors that have been
+lagging behind for what is it? 5 years? 10? GPIO irqchips also dragged
+out for way too long. We can't keep doing things gradually like
+this, it takes too much time and effort.
+
+I don't want any more "in-transition-indefinitely" stuff in the GPIO
+subsystem if I can avoid it.
+
+Therefore I would advice to switch it all over at the end of a merge
+window and be done with it.
+
+Yours,
+Linus Walleij
