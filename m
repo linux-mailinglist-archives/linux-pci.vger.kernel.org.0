@@ -2,52 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBFDB5B9333
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 05:37:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A9F45B934C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Sep 2022 05:38:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230285AbiIODhQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Sep 2022 23:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        id S230377AbiIODhy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Sep 2022 23:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbiIODhO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 23:37:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8C492F6D;
-        Wed, 14 Sep 2022 20:37:12 -0700 (PDT)
+        with ESMTP id S230333AbiIODho (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Sep 2022 23:37:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECE793222;
+        Wed, 14 Sep 2022 20:37:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 10E55B81D8A;
-        Thu, 15 Sep 2022 03:37:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B686C433D7;
-        Thu, 15 Sep 2022 03:37:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 666CC6207E;
+        Thu, 15 Sep 2022 03:37:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE218C43144;
+        Thu, 15 Sep 2022 03:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663213029;
-        bh=Q1Vmh+7bOPQzSlAFsVhCx1QAcFuHH/ieRaqT8rSJNOI=;
+        s=k20201202; t=1663213040;
+        bh=30VmoIH2mojzRZCxxN09Bex8ueXFnh+raoeTk+4l268=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajrcOMnIXlOn/GvhkhU0de1jileDzs8rp+VF+V+TZdAjl+UlRLx1IqrjPgJilv9Vk
-         gTSEJQ5m/FpXmzEutHXEasjVOpkuKo47se6OTHYkqxTgiIlPJzzXeQZ8U0DC51g5aC
-         s01nfsWLF5oR9jqb2+mJ/hb6o/eoa0q/UxSxPEYo9DMnUjumbB3jrKtsDFruYAdCZo
-         m0Dpm4CnQecPWwVuRPSNk09362avsRLW41om5o88+fJIwZvX/hiZxqVasK5hea82Dg
-         DHaGrYSnN4yCDO89p31bA89pFCtNYWxluZnn5QHvz9rH35zq86Sds7PcU6AekCjKTp
-         as5ciBblHIdpw==
+        b=E36P+ppNiZ6lJ86ZmF3sxthTtcj82UQHeVw6uPafr9glHSI3wMvf2A0U2E8aXK2Ye
+         U9eeOAfqobE3tfasZfS4Q5Q4iNV/2IJmqcrRFnSWuU4tind5n+GEsMkqSfdXPceaPy
+         wrfS1i6xrTuAOHZWqI8LUPu4sQadsE+fBPiCrjInxv0eqJQBVUxD7lH2qb3kuw1zHq
+         fruw0mcOewCuWgere4s/UllVXkUophB6/xXJUT5sfuX7xu6ZZ0K33H/+bEUmo6soFf
+         eaEgVsDJxP6fX8l7xOrK+RXQE2n6IkONYdhahVakntap+l92DIdfdNdYbjFI0MKB+h
+         yBtV+FM1UIJXA==
 From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, jingoohan1@gmail.com,
-        konrad.dybcio@somainline.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        gustavo.pimentel@synopsys.com, dmitry.baryshkov@linaro.org,
-        svarbanov@mm-sol.com, robh+dt@kernel.org, bhelgaas@google.com,
-        krzysztof.kozlowski+dt@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Cc:     johan@kernel.org, vkoul@kernel.org, devicetree@vger.kernel.org,
+To:     quic_krichai@quicinc.com, helgaas@kernel.org
+Cc:     quic_skananth@quicinc.com, quic_hemantk@quicinc.com,
+        mka@chromium.org, swboyd@chromium.org, quic_ramkri@quicinc.com,
+        dmitry.baryshkov@linaro.org, quic_nitegupt@quicinc.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: (subset) [PATCH v17 0/6] PCI: dwc: Fix higher MSI vectors handling
-Date:   Wed, 14 Sep 2022 22:36:52 -0500
-Message-Id: <166321302057.788007.12231815201009656469.b4-ty@kernel.org>
+Subject: Re: [PATCH v4 0/2] PCI: qcom: sc7280: add missing aggre0 and aggre1 clocks
+Date:   Wed, 14 Sep 2022 22:37:02 -0500
+Message-Id: <166321302065.788007.14282428771934393064.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220707134733.2436629-1-dmitry.baryshkov@linaro.org>
-References: <20220707134733.2436629-1-dmitry.baryshkov@linaro.org>
+In-Reply-To: <1662626776-19636-1-git-send-email-quic_krichai@quicinc.com>
+References: <1662626776-19636-1-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -61,25 +58,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 7 Jul 2022 16:47:27 +0300, Dmitry Baryshkov wrote:
-> I have replied with my Tested-by to the patch at [2], which has landed
-> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
-> Add support for handling MSIs from 8 endpoints"). However lately I
-> noticed that during the tests I still had 'pcie_pme=nomsi', so the
-> device was not forced to use higher MSI vectors.
+On Thu, 8 Sep 2022 14:16:14 +0530, Krishna chaitanya chundru wrote:
+> Add missing aggre0 and aggre1 clocks supports to PCIe node.
 > 
-> After removing this option I noticed that hight MSI vectors are not
-> delivered on tested platforms. After additional research I stumbled upon
-> a patch in msm-4.14 ([1]), which describes that each group of MSI
-> vectors is mapped to the separate interrupt. Implement corresponding
-> mapping.
+> Without voting these clocks, PCIe link is going down when system is
+> suspended as these clocks can get turned off as no-one is voting for them.
+> 
+> Krishna chaitanya chundru (2):
+>   arm64: dts: qcom: sc7280: Add missing aggre0, aggre1 clocks
+>   dt-bindings: pci: QCOM Add missing sc7280 aggre0, aggre1 clocks
 > 
 > [...]
 
 Applied, thanks!
 
-[6/6] arm64: dts: qcom: sm8250: provide additional MSI interrupts
-      commit: f2819650aab5b037e5e730c88abcd971e96a1637
+[1/2] arm64: dts: qcom: sc7280: Add missing aggre0, aggre1 clocks
+      commit: aaf85b46aa4145f5ec7aa0a9bdf4a93b23474524
+[2/2] dt-bindings: pci: QCOM Add missing sc7280 aggre0, aggre1 clocks
+      commit: a672a9f4a6bba31f8dfb3a77714468ddb985ecf7
 
 Best regards,
 -- 
