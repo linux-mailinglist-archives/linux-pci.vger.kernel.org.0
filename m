@@ -2,91 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B9C85BA88B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 10:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D05C45BAD5E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 14:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbiIPIuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 04:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
+        id S230193AbiIPM0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 08:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbiIPIuG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 04:50:06 -0400
-Received: from m1564.mail.126.com (m1564.mail.126.com [220.181.15.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81B76422DD
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 01:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=KRxlD
-        bD3EEKTxPyCdCMnd1JDORZitZqDBpNFqUKk+vw=; b=EZbkZ36+b61ZuqBCJ6SyB
-        OeB6WPYc+Z6cFx/EX+yKaPR6QUp4yiS51Hg7zY7zGv6BDiQ4xy68upZMGC9fb/az
-        PjCA6GZwqRidbXU5QNlXc7nm1o+itMlyW/6Ce5hexbLjfqDaaX46AM6N0MVfUGOn
-        28tcI9A+yP3eQPSJsQn148=
-Received: from windhl$126.com ( [124.16.139.61] ) by ajax-webmail-wmsvr64
- (Coremail) ; Fri, 16 Sep 2022 16:49:22 +0800 (CST)
-X-Originating-IP: [124.16.139.61]
-Date:   Fri, 16 Sep 2022 16:49:22 +0800 (CST)
-From:   "Liang He" <windhl@126.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>, jgross@suse.com,
-        virtualization@lists.linux-foundation.org, wangkelin2023@163.com,
-        jan.kiszka@siemens.com, "Thomas Gleixner" <tglx@linutronix.de>,
-        jailhouse-dev@googlegroups.com, mark.rutland@arm.com,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        robh+dt@kernel.org, "Bjorn Helgaas" <bhelgaas@google.com>
-Subject: Re:Re: Re: Re: [PATCH] jailhouse: Hold reference returned from
- of_find_xxx API
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
- Copyright (c) 2002-2022 www.mailtech.cn 126com
-In-Reply-To: <CAHp75VfQHnt2YxuxbFo96tfDrHEZpEqSFKFV_D7ERe6uXEnvEQ@mail.gmail.com>
-References: <20220915022343.4001331-1-windhl@126.com>
- <f7316f94-433f-d191-0379-423c22bec129@csail.mit.edu>
- <89a1b1f.165e.18344069cab.Coremail.windhl@126.com>
- <CAHp75Vd-ZdHJfjdgob7=e3X_=NQR_chWZzTiSVU64S9eTiAY0g@mail.gmail.com>
- <7f9efc57.4645.183451f5b84.Coremail.windhl@126.com>
- <CAHp75VfQHnt2YxuxbFo96tfDrHEZpEqSFKFV_D7ERe6uXEnvEQ@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        with ESMTP id S229942AbiIPM0B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 08:26:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA66B0B17;
+        Fri, 16 Sep 2022 05:25:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 415DA62B5D;
+        Fri, 16 Sep 2022 12:25:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B902BC433C1;
+        Fri, 16 Sep 2022 12:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663331158;
+        bh=lL37u85+QQk/jFNlYuH18esUwapDxv4FZ5701Rpshi4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XPDYWDgGwWhfSS2pDaCoNoEnSpUTS5DR0sm8q+7Icv7DuF5RMqbAqO+Hl18skXKXL
+         EgonI+4BDX0BIITkT4UbaDDv80vrhl0FGBmd64frIUH285ZoUGpAcCS0ovg1mwzFj7
+         xCH/s076/T7WFx1+j7pJBZCHVqzhy0SGroVHR7O8x8LFjPnO5Zuheg5O1PdVKotdRb
+         NwukTdmKvi72JMJX3v/LSrfwQ4c6gbSmK8jb+BILT4WP1ExKuUp+dIsoxSQMjqFckT
+         RRKzjW+FU6M8zG9wgSh+FP64WtE2oL/LmDXTeVl1LARqcSqxSNhCU7psMyPRXgwceA
+         ZghJAwu/q7Ltg==
+Date:   Fri, 16 Sep 2022 14:25:51 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/7] PCI: mvebu: add support for orion soc
+Message-ID: <YyRrT7/EQWGM7r4l@lpieralisi>
+References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
+ <20220905192310.22786-1-pali@kernel.org>
 MIME-Version: 1.0
-Message-ID: <480230.5e6f.183457cfc63.Coremail.windhl@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: QMqowAC3v3OSOCRjZ6ZxAA--.63751W
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi7RV+F1pEAufFlAABs6
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220905192310.22786-1-pali@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CgoKCkF0IDIwMjItMDktMTYgMTY6NDY6MzYsICJBbmR5IFNoZXZjaGVua28iIDxhbmR5LnNoZXZj
-aGVua29AZ21haWwuY29tPiB3cm90ZToKPk9uIEZyaSwgU2VwIDE2LCAyMDIyIGF0IDEwOjA5IEFN
-IExpYW5nIEhlIDx3aW5kaGxAMTI2LmNvbT4gd3JvdGU6Cj4+IEF0IDIwMjItMDktMTYgMTM6Mzg6
-MzksICJBbmR5IFNoZXZjaGVua28iIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPiB3cm90ZToK
-Pj4gPk9uIEZyaSwgU2VwIDE2LCAyMDIyIGF0IDU6MDIgQU0gTGlhbmcgSGUgPHdpbmRobEAxMjYu
-Y29tPiB3cm90ZToKPj4gPj4gQXQgMjAyMi0wOS0xNiAwNzoyOTowNiwgIlNyaXZhdHNhIFMuIEJo
-YXQiIDxzcml2YXRzYUBjc2FpbC5taXQuZWR1PiB3cm90ZToKPj4gPj4gPk9uIDkvMTQvMjIgNzoy
-MyBQTSwgTGlhbmcgSGUgd3JvdGU6Cj4KPi4uLgo+Cj4+ID4+ID4+ICBzdGF0aWMgaW5saW5lIGJv
-b2wgamFpbGhvdXNlX3BhcmF2aXJ0KHZvaWQpCj4+ID4+ID4+ICB7Cj4+ID4+ID4+IC0gICAgcmV0
-dXJuIG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJqYWlsaG91c2UsY2VsbCIp
-Owo+PiA+PiA+PiArICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBvZl9maW5kX2NvbXBhdGli
-bGVfbm9kZShOVUxMLCBOVUxMLCAiamFpbGhvdXNlLGNlbGwiKTsKPj4gPj4gPj4gKwo+PiA+PiA+
-PiArICAgIG9mX25vZGVfcHV0KG5wKTsKPj4gPj4gPj4gKwo+PiA+PiA+PiArICAgIHJldHVybiBu
-cDsKPj4gPj4gPj4gIH0KPj4gPj4gPgo+PiA+PiA+VGhhbmsgeW91IGZvciB0aGUgZml4LCBidXQg
-cmV0dXJuaW5nIGEgcG9pbnRlciBmcm9tIGEgZnVuY3Rpb24gd2l0aCBhCj4+ID4+ID5ib29sIHJl
-dHVybiB0eXBlIGxvb2tzIG9kZC4gQ2FuIHdlIGFsc28gZml4IHRoYXQgdXAgcGxlYXNlPwo+PiA+
-Pgo+PiA+PiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBob3cgYWJvdXQgZm9sbG93aW5nIHBhdGNo
-Ogo+PiA+Pgo+PiA+PiAtICAgICAgIHJldHVybiBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxM
-LCBOVUxMLCAiamFpbGhvdXNlLGNlbGwiKTsKPj4gPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImphaWxob3VzZSxj
-ZWxsIik7Cj4+ID4+ICsKPj4gPj4gKyAgICAgICBvZl9ub2RlX3B1dChucCk7Cj4+ID4+ICsKPj4g
-Pj4gKyAgICAgICByZXR1cm4gKG5wPT1OVUxMKTsKPj4KPj4gPlRoaXMgd2lsbCBiZSBvcHBvc2l0
-ZSB0byB0aGUgYWJvdmUuIFBlcmhhcHMgeW91IHdhbnRlZAo+Pgo+PiBTb3JyeSwgSSB3YW50ZWQg
-dG8gdXNlICducCE9TlVMTCcKPj4KPj4gPiAgcmV0dXJuICAhIW5wOwo+PiA+Cj4+ID5BbHNvIHBv
-c3NpYmxlIChidXQgd2h5PykKPj4gPgo+PiA+ICByZXR1cm4gbnAgPyB0cnVlIDogZmFsc2U7Cj4+
-Cj4+IFNvLCBjYW4gSSBjaG9zZSAncmV0dXJuIG5wP3RydWU6IGZhbHNlOycgYXMgdGhlIGZpbmFs
-IHBhdGNoPwo+Cj5PZiBjb3Vyc2UgeW91IGNhbiwgaXQncyB1cCB0byB0aGUgbWFpbnRhaW5lcihz
-KSB3aGF0IHRvIGFjY2VwdC4KPgo+LS0gCj5XaXRoIEJlc3QgUmVnYXJkcywKPkFuZHkgU2hldmNo
-ZW5rbwoKVGhhbmtzLCBJIHdpbGwgZG8gaXQgbm93Lgo=
+On Mon, Sep 05, 2022 at 09:23:03PM +0200, Pali Rohár wrote:
+> Hello! This patch series add support for Orion PCIe controller into
+> pci-mvebu.c driver. V3 version has completely rewritten pci-mvebu.c code
+> to parse all physical addresses from device tree files according to
+> mvebu-pci.txt documentation, allow access to all extended PCIe config
+> space registers and use modern kernel API pci_remap_cfgspace() and
+> mvebu_mbus_add_window_by_id() fir mapping PCIe config space.
+> 
+> Most of Marvell device tree code in pci-mvebu.c is giant magic, but it was
+> there because this change and it is de-facto API between dts files and
+> kernel used for a long time. Note that it is misused according to PCI
+> device tree bindings, but we have to follow this Marvell bindings to do
+> not introduce backward incompatibility issues for other non-Orion
+> platforms.
+> 
+> Mauri tested these changes on DNS323 board with both DT and non-DT builds.
+> PCIe AER is working too (one of the feature which proved that access to
+> extended PCIe config registers is working fine).
+> 
+> After this patch is accepted we are planning to look at existing Orion
+> arch specific code and covert it to use this new DT based pci-mvebu.c
+> code. Later this would allow to kill arch specific Orion PCIe code,
+> which is in arch/arm/plat-orion/pcie.c and parts also in file
+> arch/arm/mach-orion5x/pci.c (shared with old-PCI bus code).
+> 
+> This patch series depends on another patches:
+> https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+> https://lore.kernel.org/linux-pci/20220817230036.817-3-pali@kernel.org/
+
+Can I rebase it on top of v6.0-rc1 ? I will not be able to pull it till
+-rc7 but I don't think there is a strict dependency so we should try to
+upstream it this cycle.
+
+Lorenzo
+
+> 
+> Mauri Sandberg (2):
+>   bus: mvebu-mbus: add configuration space aperture
+>   dt-bindings: PCI: mvebu: Add orion5x compatible
+> 
+> Pali Rohár (5):
+>   ARM: orion: Move PCIe mbus window mapping from orion5x_setup_wins() to
+>     pcie_setup()
+>   PCI: mvebu: Remove unused busn member
+>   PCI: mvebu: Cleanup error handling in mvebu_pcie_probe()
+>   PCI: mvebu: Add support for Orion PCIe controller
+>   ARM: dts: orion5x: Add PCIe node
+> 
+>  .../devicetree/bindings/pci/mvebu-pci.txt     |   4 +-
+>  arch/arm/boot/dts/orion5x.dtsi                |  51 +++++
+>  arch/arm/mach-orion5x/common.c                |  13 --
+>  arch/arm/mach-orion5x/pci.c                   |  14 ++
+>  drivers/bus/mvebu-mbus.c                      |  26 ++-
+>  drivers/pci/controller/Kconfig                |   4 +-
+>  drivers/pci/controller/pci-mvebu.c            | 202 ++++++++++++++----
+>  include/linux/mbus.h                          |   1 +
+>  8 files changed, 256 insertions(+), 59 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
