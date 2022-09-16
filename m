@@ -2,120 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A79AB5BA881
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 10:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B9C85BA88B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 10:52:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230359AbiIPIrQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 04:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51904 "EHLO
+        id S230429AbiIPIuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 04:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbiIPIrP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 04:47:15 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EBA7AC26
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 01:47:13 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id g12so15051357qts.1
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 01:47:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=YNQhhnLP2IaYIDCSrmAb0DLC6VTKZOy/Bj93eUvHKMk=;
-        b=FJi75foOExmtuxypz3Xi9WUQC6nNaftvRns2MPo2G93f2eM2BYttloXJJqWQtguebl
-         Gvnmgf1F5phEYtkc5x6Uk7yekktil/7IwfL3tD8Ae3j3i+ry7UOOtMaQZjwO5fnf3Nnn
-         /N09gMYBqX/F2c2VADdz+mdpqtdzqNXsywGoQZwueqQOi4cJSnyXV422IDrLjtHTlYiD
-         spIODoF9e4Uvg2fnzN/EyZzCRdIpwXH4eYsOOUeZODUyYqSRO4iAFC0zE0LGwKaClPyk
-         XedLOaCqIoFK0WMd0N+eDRwTK3H2zDC2DwSCqRZlIyzEaDp0Pd7LpaTNv49lZG2bOb1y
-         3gKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=YNQhhnLP2IaYIDCSrmAb0DLC6VTKZOy/Bj93eUvHKMk=;
-        b=5RxPetmYWYk7METgBEyV5o9EZxCXt77RdlHs7NSZMuOQF7NX0C/ZtFYDpl3ccLitHv
-         yfio5Um1rp3o6SKoIhiv771563ukgyhFLl+fmzMPtX7tRcGfzinqYq/awtEmq0pNyV93
-         9/wCDuQoXxGievXLCi5wFIaYQwcGf8dxGSWv6BDaLPB7D2uBacxl9cq+5fxMAcFGbtMT
-         FFnWXQISV9LhxenLV+H08qSYjsgDzJXh466yOOMVgSFQ55haNW2+PGCW/pUxYSpD1fJW
-         n9fMnFU5/z3EG+TeGzuc+t657Q6u81Hq/Gr0cz8fgm3Lid76U8UExkOxu/ED0CHL2Cvz
-         2q3A==
-X-Gm-Message-State: ACrzQf3M2M2r1iDC+JeeISsR9kV3LYxcXdGadqfZ1hvKwyh2E0xW27sn
-        27ojgIgOi9dEMwbaULMGqL9LS9gBFKQoMov7DlY=
-X-Google-Smtp-Source: AMsMyM4LfpNcDiSq3jKoQg4wR435CJgg/DKANzpsa2x3JtAo53BMy2C7x+xfuHj5zvAa7iOtFUx3GkcLs16oKGmKBnc=
-X-Received: by 2002:ac8:7f92:0:b0:344:8cd8:59a1 with SMTP id
- z18-20020ac87f92000000b003448cd859a1mr3479496qtj.384.1663318032278; Fri, 16
- Sep 2022 01:47:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220915022343.4001331-1-windhl@126.com> <f7316f94-433f-d191-0379-423c22bec129@csail.mit.edu>
- <89a1b1f.165e.18344069cab.Coremail.windhl@126.com> <CAHp75Vd-ZdHJfjdgob7=e3X_=NQR_chWZzTiSVU64S9eTiAY0g@mail.gmail.com>
- <7f9efc57.4645.183451f5b84.Coremail.windhl@126.com>
-In-Reply-To: <7f9efc57.4645.183451f5b84.Coremail.windhl@126.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 16 Sep 2022 11:46:36 +0300
-Message-ID: <CAHp75VfQHnt2YxuxbFo96tfDrHEZpEqSFKFV_D7ERe6uXEnvEQ@mail.gmail.com>
-Subject: Re: Re: Re: [PATCH] jailhouse: Hold reference returned from
- of_find_xxx API
-To:     Liang He <windhl@126.com>
+        with ESMTP id S229787AbiIPIuG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 04:50:06 -0400
+Received: from m1564.mail.126.com (m1564.mail.126.com [220.181.15.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81B76422DD
+        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 01:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=KRxlD
+        bD3EEKTxPyCdCMnd1JDORZitZqDBpNFqUKk+vw=; b=EZbkZ36+b61ZuqBCJ6SyB
+        OeB6WPYc+Z6cFx/EX+yKaPR6QUp4yiS51Hg7zY7zGv6BDiQ4xy68upZMGC9fb/az
+        PjCA6GZwqRidbXU5QNlXc7nm1o+itMlyW/6Ce5hexbLjfqDaaX46AM6N0MVfUGOn
+        28tcI9A+yP3eQPSJsQn148=
+Received: from windhl$126.com ( [124.16.139.61] ) by ajax-webmail-wmsvr64
+ (Coremail) ; Fri, 16 Sep 2022 16:49:22 +0800 (CST)
+X-Originating-IP: [124.16.139.61]
+Date:   Fri, 16 Sep 2022 16:49:22 +0800 (CST)
+From:   "Liang He" <windhl@126.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
 Cc:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>, jgross@suse.com,
         virtualization@lists.linux-foundation.org, wangkelin2023@163.com,
-        jan.kiszka@siemens.com, Thomas Gleixner <tglx@linutronix.de>,
+        jan.kiszka@siemens.com, "Thomas Gleixner" <tglx@linutronix.de>,
         jailhouse-dev@googlegroups.com, mark.rutland@arm.com,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        robh+dt@kernel.org, "Bjorn Helgaas" <bhelgaas@google.com>
+Subject: Re:Re: Re: Re: [PATCH] jailhouse: Hold reference returned from
+ of_find_xxx API
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
+ Copyright (c) 2002-2022 www.mailtech.cn 126com
+In-Reply-To: <CAHp75VfQHnt2YxuxbFo96tfDrHEZpEqSFKFV_D7ERe6uXEnvEQ@mail.gmail.com>
+References: <20220915022343.4001331-1-windhl@126.com>
+ <f7316f94-433f-d191-0379-423c22bec129@csail.mit.edu>
+ <89a1b1f.165e.18344069cab.Coremail.windhl@126.com>
+ <CAHp75Vd-ZdHJfjdgob7=e3X_=NQR_chWZzTiSVU64S9eTiAY0g@mail.gmail.com>
+ <7f9efc57.4645.183451f5b84.Coremail.windhl@126.com>
+ <CAHp75VfQHnt2YxuxbFo96tfDrHEZpEqSFKFV_D7ERe6uXEnvEQ@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
+MIME-Version: 1.0
+Message-ID: <480230.5e6f.183457cfc63.Coremail.windhl@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: QMqowAC3v3OSOCRjZ6ZxAA--.63751W
+X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi7RV+F1pEAufFlAABs6
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 10:09 AM Liang He <windhl@126.com> wrote:
-> At 2022-09-16 13:38:39, "Andy Shevchenko" <andy.shevchenko@gmail.com> wrote:
-> >On Fri, Sep 16, 2022 at 5:02 AM Liang He <windhl@126.com> wrote:
-> >> At 2022-09-16 07:29:06, "Srivatsa S. Bhat" <srivatsa@csail.mit.edu> wrote:
-> >> >On 9/14/22 7:23 PM, Liang He wrote:
-
-...
-
-> >> >>  static inline bool jailhouse_paravirt(void)
-> >> >>  {
-> >> >> -    return of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> >> >> +    struct device_node *np = of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> >> >> +
-> >> >> +    of_node_put(np);
-> >> >> +
-> >> >> +    return np;
-> >> >>  }
-> >> >
-> >> >Thank you for the fix, but returning a pointer from a function with a
-> >> >bool return type looks odd. Can we also fix that up please?
-> >>
-> >> Thanks for your review, how about following patch:
-> >>
-> >> -       return of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> >> +       struct device_node *np = of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> >> +
-> >> +       of_node_put(np);
-> >> +
-> >> +       return (np==NULL);
->
-> >This will be opposite to the above. Perhaps you wanted
->
-> Sorry, I wanted to use 'np!=NULL'
->
-> >  return  !!np;
-> >
-> >Also possible (but why?)
-> >
-> >  return np ? true : false;
->
-> So, can I chose 'return np?true: false;' as the final patch?
-
-Of course you can, it's up to the maintainer(s) what to accept.
-
--- 
-With Best Regards,
-Andy Shevchenko
+CgoKCkF0IDIwMjItMDktMTYgMTY6NDY6MzYsICJBbmR5IFNoZXZjaGVua28iIDxhbmR5LnNoZXZj
+aGVua29AZ21haWwuY29tPiB3cm90ZToKPk9uIEZyaSwgU2VwIDE2LCAyMDIyIGF0IDEwOjA5IEFN
+IExpYW5nIEhlIDx3aW5kaGxAMTI2LmNvbT4gd3JvdGU6Cj4+IEF0IDIwMjItMDktMTYgMTM6Mzg6
+MzksICJBbmR5IFNoZXZjaGVua28iIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPiB3cm90ZToK
+Pj4gPk9uIEZyaSwgU2VwIDE2LCAyMDIyIGF0IDU6MDIgQU0gTGlhbmcgSGUgPHdpbmRobEAxMjYu
+Y29tPiB3cm90ZToKPj4gPj4gQXQgMjAyMi0wOS0xNiAwNzoyOTowNiwgIlNyaXZhdHNhIFMuIEJo
+YXQiIDxzcml2YXRzYUBjc2FpbC5taXQuZWR1PiB3cm90ZToKPj4gPj4gPk9uIDkvMTQvMjIgNzoy
+MyBQTSwgTGlhbmcgSGUgd3JvdGU6Cj4KPi4uLgo+Cj4+ID4+ID4+ICBzdGF0aWMgaW5saW5lIGJv
+b2wgamFpbGhvdXNlX3BhcmF2aXJ0KHZvaWQpCj4+ID4+ID4+ICB7Cj4+ID4+ID4+IC0gICAgcmV0
+dXJuIG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJqYWlsaG91c2UsY2VsbCIp
+Owo+PiA+PiA+PiArICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBvZl9maW5kX2NvbXBhdGli
+bGVfbm9kZShOVUxMLCBOVUxMLCAiamFpbGhvdXNlLGNlbGwiKTsKPj4gPj4gPj4gKwo+PiA+PiA+
+PiArICAgIG9mX25vZGVfcHV0KG5wKTsKPj4gPj4gPj4gKwo+PiA+PiA+PiArICAgIHJldHVybiBu
+cDsKPj4gPj4gPj4gIH0KPj4gPj4gPgo+PiA+PiA+VGhhbmsgeW91IGZvciB0aGUgZml4LCBidXQg
+cmV0dXJuaW5nIGEgcG9pbnRlciBmcm9tIGEgZnVuY3Rpb24gd2l0aCBhCj4+ID4+ID5ib29sIHJl
+dHVybiB0eXBlIGxvb2tzIG9kZC4gQ2FuIHdlIGFsc28gZml4IHRoYXQgdXAgcGxlYXNlPwo+PiA+
+Pgo+PiA+PiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBob3cgYWJvdXQgZm9sbG93aW5nIHBhdGNo
+Ogo+PiA+Pgo+PiA+PiAtICAgICAgIHJldHVybiBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxM
+LCBOVUxMLCAiamFpbGhvdXNlLGNlbGwiKTsKPj4gPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImphaWxob3VzZSxj
+ZWxsIik7Cj4+ID4+ICsKPj4gPj4gKyAgICAgICBvZl9ub2RlX3B1dChucCk7Cj4+ID4+ICsKPj4g
+Pj4gKyAgICAgICByZXR1cm4gKG5wPT1OVUxMKTsKPj4KPj4gPlRoaXMgd2lsbCBiZSBvcHBvc2l0
+ZSB0byB0aGUgYWJvdmUuIFBlcmhhcHMgeW91IHdhbnRlZAo+Pgo+PiBTb3JyeSwgSSB3YW50ZWQg
+dG8gdXNlICducCE9TlVMTCcKPj4KPj4gPiAgcmV0dXJuICAhIW5wOwo+PiA+Cj4+ID5BbHNvIHBv
+c3NpYmxlIChidXQgd2h5PykKPj4gPgo+PiA+ICByZXR1cm4gbnAgPyB0cnVlIDogZmFsc2U7Cj4+
+Cj4+IFNvLCBjYW4gSSBjaG9zZSAncmV0dXJuIG5wP3RydWU6IGZhbHNlOycgYXMgdGhlIGZpbmFs
+IHBhdGNoPwo+Cj5PZiBjb3Vyc2UgeW91IGNhbiwgaXQncyB1cCB0byB0aGUgbWFpbnRhaW5lcihz
+KSB3aGF0IHRvIGFjY2VwdC4KPgo+LS0gCj5XaXRoIEJlc3QgUmVnYXJkcywKPkFuZHkgU2hldmNo
+ZW5rbwoKVGhhbmtzLCBJIHdpbGwgZG8gaXQgbm93Lgo=
