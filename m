@@ -2,124 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF5EF5BB10F
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 18:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1EF5BB269
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 20:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbiIPQXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 12:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39414 "EHLO
+        id S229964AbiIPSro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 14:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiIPQXI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 12:23:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A89B6569
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 09:23:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5348062CCA
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 16:23:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6358C433C1;
-        Fri, 16 Sep 2022 16:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663345386;
-        bh=v5HJNIOU5xWbCFd0rGpuOhpj9GLTczU7qj0YbyVeTpo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tHz69b0EPqA/WimaFqLFFTQ+ylfwduePCLEQylvlkZCKSlUvxgOk4iitsPD9H3EBZ
-         br6SWP1/qwzAPTSUqV8fZxrheZOwUNOxhKie8uiH+wytpma9M1nFUZZOZE2VLIHE9y
-         8gBnDTw3sIosn2GDwoROCD1YktyK9iHQhr0IOrROtUE1GqOU4szLKHo+jj0INiEXvY
-         5T0r2Qk3/Zg5+Xu9ciKQox9XOMewEYEaGyFSNF7kSX/XrNMQN15XNwXkEJLgsA+NyT
-         Aj+MhO+1X3AZCbep/o277DFVJmlerpl4cMpBDSu2WLW0EiPhm71V8Hv2jNusnDD4gt
-         rqxnJd+zuIoRg==
-Date:   Fri, 16 Sep 2022 18:23:02 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        pali@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-        tglx@linutronix.de
-Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug
- interrupt
-Message-ID: <20220916182302.4eba1b48@dellmb>
-In-Reply-To: <YxtUR0+dBZut8QZH@lpieralisi>
-References: <20220818135140.5996-1-kabel@kernel.org>
-        <20220818135140.5996-4-kabel@kernel.org>
-        <YxtUR0+dBZut8QZH@lpieralisi>
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S229913AbiIPSrn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 14:47:43 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098C9B8A6B;
+        Fri, 16 Sep 2022 11:47:43 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-11eab59db71so53315657fac.11;
+        Fri, 16 Sep 2022 11:47:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=jVuUrK9dbYpWhImD0AMyVwk622t4wxCeHcudfRIovfo=;
+        b=iJ/hKkAX5LXGFtEze3H/aZdYyUntAiKcpsMqivEWvv/ypqHG3NVJsvRrYpmh+4vTJp
+         kMexYDWqWHwZq91OdOowZWYEPobLM/GGNeGaFzb746mQ+comxRlQ3MreiXJyczmW8DHG
+         goZOuF32wOLLP4K1uSi7duWvEWs+JOSFjWwhgSczHcoMOM4dtacEU/Dzlyig0XQKEB3+
+         ktB2pGCvQrIzYqbhrUcDeI00RFzxLUhASIsmKFSpjhSR5A5aFgYEEMy0NdthtSrZFT6X
+         KjRhIoxAKl7URuTsYJSwm6HuzXjun5sFLORB4/ytWxeY0oDlc6PxwVIgwBDxeroS2F6F
+         MeCg==
+X-Gm-Message-State: ACgBeo2gSY6O09EKsvqmBI8vTTRx6XoQISdEw5hfl+nSdhq1paTers7T
+        XdSAEoOWPD49FM5t/7O/Lw==
+X-Google-Smtp-Source: AA6agR4suQVf0qCWUScIjOPKR6YSv2cnYkMDp4GpWNbqFIUEP9mK152MBoOq/hukIdk1UMOaNrK6wg==
+X-Received: by 2002:a05:6870:479a:b0:fe:3958:813e with SMTP id c26-20020a056870479a00b000fe3958813emr9373436oaq.279.1663354062216;
+        Fri, 16 Sep 2022 11:47:42 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g25-20020a9d5f99000000b006540dd3daa8sm710535oti.51.2022.09.16.11.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 11:47:41 -0700 (PDT)
+Received: (nullmailer pid 1059563 invoked by uid 1000);
+        Fri, 16 Sep 2022 18:47:41 -0000
+Date:   Fri, 16 Sep 2022 13:47:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] dt-bindings: pci: qcom,pcie-ep: correct qcom,perst-regs
+Message-ID: <20220916184741.GA1057850-robh@kernel.org>
+References: <20220911135547.23106-1-krzysztof.kozlowski@linaro.org>
+ <11e61fa5-f770-9c9f-23b9-3d1dcb205bc5@linaro.org>
+ <20220913152054.GA3736444-robh@kernel.org>
+ <d22ed818-1a8d-4af8-d41d-2268806f3dea@linaro.org>
+ <20220914014701.GA853152-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220914014701.GA853152-robh@kernel.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 9 Sep 2022 16:57:11 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Tue, Sep 13, 2022 at 08:47:01PM -0500, Rob Herring wrote:
+> On Tue, Sep 13, 2022 at 06:25:49PM +0200, Krzysztof Kozlowski wrote:
+> > On 13/09/2022 17:20, Rob Herring wrote:
+> > > On Sun, Sep 11, 2022 at 04:14:54PM +0200, Krzysztof Kozlowski wrote:
+> > >> On 11/09/2022 15:55, Krzysztof Kozlowski wrote:
+> > >>> qcom,perst-regs is an phandle array of one item with a phandle and its
+> > >>> arguments.
+> > >>>
+> > >>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > >>> ---
+> > >>>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 6 ++++--
+> > >>>  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >>>
+> > >>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > >>> index 3d23599e5e91..077e002b07d3 100644
+> > >>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > >>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> > >>> @@ -60,8 +60,10 @@ properties:
+> > >>>                   enable registers
+> > >>>      $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> > >>>      items:
+> > >>> -      minItems: 3
+> > >>> -      maxItems: 3
+> > >>> +      - items:
+> > >>> +          - description: Syscon to TCSR system registers
+> > >>> +          - description: Perst enable offset
+> > >>> +          - description: Perst separateion enable offset
+> > >>
+> > >> Unfortunately this still complains:
+> > >>
+> > >> qcom-sdx55-t55.dtb: pcie-ep@40000000: qcom,perst-regs:0: [28] is too short
+> > >>
+> > >>
+> > >> where 28 is the phandle...
+> > > 
+> > > Meaning the dt is wrong or there's a tooling issue?
+> > 
+> > I think tooling issue. I looked at this many times and code (schema and
+> > DTS) seems to be correct, but tool doesn't like it.
+> 
+> Okay, I found the issue. Will test it a bit more and apply it tomorrow.
 
-> [+Marc, Thomas - I can't merge this code without them reviewing it,
-> I am not sure at all you can mix the timer/IRQ code the way you do]
->=20
-> On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Beh=C3=BAn wrote:
-> > From: Pali Roh=C3=A1r <pali@kernel.org>
-> >=20
-> > Add support for Data Link Layer State Change in the emulated slot
-> > registers and hotplug interrupt via the emulated root bridge.
-> >=20
-> > This is mainly useful for when an error causes link down event. With
-> > this change, drivers can try recovery.
-> >=20
-> > Link down state change can be implemented because Aardvark supports Link
-> > Down event interrupt. Use it for signaling that Data Link Layer Link is
-> > not active anymore via Hot-Plug Interrupt on emulated root bridge.
-> >=20
-> > Link up interrupt is not available on Aardvark, but we check for whether
-> > link is up in the advk_pcie_link_up() function. By triggering Hot-Plug
-> > Interrupt from this function we achieve Link up event, so long as the
-> > function is called (which it is after probe and when rescanning).
-> > Although it is not ideal, it is better than nothing. =20
->=20
-> So before even coming to the code review: this patch does two things.
->=20
-> 1) It adds support for handling the Link down state
-> 2) It adds some code to emulate a Link-up event
->=20
-> Now, for (2). IIUC you are adding code to make sure that an HP
-> event is triggered if advk_pcie_link_up() is called and it
-> detects a Link-down->Link-up transition, that has to be notified
-> through an HP event.
->=20
-> If that's correct, you have to explain to me please what this is
-> actually achieving and a specific scenario where we want this to be
-> implemented, in fine details; then we add it to the commit log.
+This and some other cases are now fixed. There's a new release, 
+v2022.09.
 
-Hello Lorenzo, sorry for not replying earlier.
-
-Would something like this be sufficient?
-
-  DLLSC is needed by the pciehp driver, which handles hotplug, but also
-  link state change events. AFAIK no Aardvark devices support hotplug,
-  but link state change events are required for graceful driver
-  unbinding in case of link down event.
-
-  So with this change we achieve graceful driver unbind for example
-  when WiFi card PCIe link goes down (we've seen this with ath10k and
-  mt76 WiFi cards). Before the WiFi driver started spitting out errors,
-  or even taking the whole system down.
-
-  Since after link goes down, it can come back up if the WiFi card can
-  recover (or if reset pin is used to reset the card), we need to be
-  able to recognize link up event. Since AFAIK Aardvark does not have
-  interrupt for link up event, the best thing we can do is simulate it
-  - whenever we read the link state, find it is up, and have cached
-  value saying it is down, we trigger the link up event. We read link
-  state whenever the configuration space is read, for example by
-  writing 1 to /sys/bus/pci/rescan.
-
-Marek
+Rob
