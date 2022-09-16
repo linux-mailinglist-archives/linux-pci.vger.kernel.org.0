@@ -2,59 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D05C45BAD5E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 14:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 851EE5BAD63
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 14:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbiIPM0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 08:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34984 "EHLO
+        id S229531AbiIPM0y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 08:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbiIPM0B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 08:26:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA66B0B17;
-        Fri, 16 Sep 2022 05:25:59 -0700 (PDT)
+        with ESMTP id S229471AbiIPM0w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 08:26:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FDDAF0F2;
+        Fri, 16 Sep 2022 05:26:52 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 415DA62B5D;
-        Fri, 16 Sep 2022 12:25:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B902BC433C1;
-        Fri, 16 Sep 2022 12:25:54 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DCC24B82695;
+        Fri, 16 Sep 2022 12:26:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8ADC433C1;
+        Fri, 16 Sep 2022 12:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663331158;
-        bh=lL37u85+QQk/jFNlYuH18esUwapDxv4FZ5701Rpshi4=;
+        s=k20201202; t=1663331209;
+        bh=AW6TF25zOisYUbOOZkTVJzAVomJgQKWT2gCcg/cUS7A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XPDYWDgGwWhfSS2pDaCoNoEnSpUTS5DR0sm8q+7Icv7DuF5RMqbAqO+Hl18skXKXL
-         EgonI+4BDX0BIITkT4UbaDDv80vrhl0FGBmd64frIUH285ZoUGpAcCS0ovg1mwzFj7
-         xCH/s076/T7WFx1+j7pJBZCHVqzhy0SGroVHR7O8x8LFjPnO5Zuheg5O1PdVKotdRb
-         NwukTdmKvi72JMJX3v/LSrfwQ4c6gbSmK8jb+BILT4WP1ExKuUp+dIsoxSQMjqFckT
-         RRKzjW+FU6M8zG9wgSh+FP64WtE2oL/LmDXTeVl1LARqcSqxSNhCU7psMyPRXgwceA
-         ZghJAwu/q7Ltg==
-Date:   Fri, 16 Sep 2022 14:25:51 +0200
+        b=Tsxuq501+aB/6YwnSPXSvYKXkOY2FP4N1HJCXgpbMvAQqOEeKpB0490Ngi8RdqU4d
+         uzWOsi3chvT1t8Bijl+HJPoDjiKbv0mA5yUghmQjbO1risXyPzYk3Ouh7tZfHZhSX9
+         tqwnQI9dGBt1oF1lCrbrYq+Uqicyp1VBd5q1G64c0VbzeAGsMXMuMEAnFQUCJGFmm4
+         JuVeQPa5GQUwq+yvGS8da8mPJ22DrUbcgvShJQl3lwf4qGt4pEBzaga3wYd1z264YC
+         rdRexfnTJZZvXG8YR/W17Ga8S1mulbVMPI+N+PqvxewNQv05Erj4i1MQA4FqSU0FWH
+         eKF1qUVhkdXSA==
+Date:   Fri, 16 Sep 2022 14:26:43 +0200
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
 To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
+Cc:     Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Mauri Sandberg <maukka@ext.kapsi.fi>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/7] PCI: mvebu: add support for orion soc
-Message-ID: <YyRrT7/EQWGM7r4l@lpieralisi>
-References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
- <20220905192310.22786-1-pali@kernel.org>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] PCI: mvebu: use BIT() and GENMASK() macros instead
+ of hardcoded hex values
+Message-ID: <YyRrg8IZxK8aQSBE@lpieralisi>
+References: <20220905185150.22220-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220905192310.22786-1-pali@kernel.org>
+In-Reply-To: <20220905185150.22220-1-pali@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,64 +58,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 09:23:03PM +0200, Pali Rohár wrote:
-> Hello! This patch series add support for Orion PCIe controller into
-> pci-mvebu.c driver. V3 version has completely rewritten pci-mvebu.c code
-> to parse all physical addresses from device tree files according to
-> mvebu-pci.txt documentation, allow access to all extended PCIe config
-> space registers and use modern kernel API pci_remap_cfgspace() and
-> mvebu_mbus_add_window_by_id() fir mapping PCIe config space.
-> 
-> Most of Marvell device tree code in pci-mvebu.c is giant magic, but it was
-> there because this change and it is de-facto API between dts files and
-> kernel used for a long time. Note that it is misused according to PCI
-> device tree bindings, but we have to follow this Marvell bindings to do
-> not introduce backward incompatibility issues for other non-Orion
-> platforms.
-> 
-> Mauri tested these changes on DNS323 board with both DT and non-DT builds.
-> PCIe AER is working too (one of the feature which proved that access to
-> extended PCIe config registers is working fine).
-> 
-> After this patch is accepted we are planning to look at existing Orion
-> arch specific code and covert it to use this new DT based pci-mvebu.c
-> code. Later this would allow to kill arch specific Orion PCIe code,
-> which is in arch/arm/plat-orion/pcie.c and parts also in file
-> arch/arm/mach-orion5x/pci.c (shared with old-PCI bus code).
-> 
-> This patch series depends on another patches:
-> https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
-> https://lore.kernel.org/linux-pci/20220817230036.817-3-pali@kernel.org/
+On Mon, Sep 05, 2022 at 08:51:49PM +0200, Pali Rohár wrote:
 
-Can I rebase it on top of v6.0-rc1 ? I will not be able to pull it till
--rc7 but I don't think there is a strict dependency so we should try to
-upstream it this cycle.
+You must add a commit log, ditto for (2/2).
 
+Thanks,
 Lorenzo
 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Mauri Sandberg (2):
->   bus: mvebu-mbus: add configuration space aperture
->   dt-bindings: PCI: mvebu: Add orion5x compatible
-> 
-> Pali Rohár (5):
->   ARM: orion: Move PCIe mbus window mapping from orion5x_setup_wins() to
->     pcie_setup()
->   PCI: mvebu: Remove unused busn member
->   PCI: mvebu: Cleanup error handling in mvebu_pcie_probe()
->   PCI: mvebu: Add support for Orion PCIe controller
->   ARM: dts: orion5x: Add PCIe node
-> 
->  .../devicetree/bindings/pci/mvebu-pci.txt     |   4 +-
->  arch/arm/boot/dts/orion5x.dtsi                |  51 +++++
->  arch/arm/mach-orion5x/common.c                |  13 --
->  arch/arm/mach-orion5x/pci.c                   |  14 ++
->  drivers/bus/mvebu-mbus.c                      |  26 ++-
->  drivers/pci/controller/Kconfig                |   4 +-
->  drivers/pci/controller/pci-mvebu.c            | 202 ++++++++++++++----
->  include/linux/mbus.h                          |   1 +
->  8 files changed, 256 insertions(+), 59 deletions(-)
-> 
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 8bde4727aca4..c222dc189567 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -44,7 +44,7 @@
+>  #define PCIE_WIN5_BASE_OFF	0x1884
+>  #define PCIE_WIN5_REMAP_OFF	0x188c
+>  #define PCIE_CONF_ADDR_OFF	0x18f8
+> -#define  PCIE_CONF_ADDR_EN		0x80000000
+> +#define  PCIE_CONF_ADDR_EN		BIT(31)
+>  #define  PCIE_CONF_REG(r)		((((r) & 0xf00) << 16) | ((r) & 0xfc))
+>  #define  PCIE_CONF_BUS(b)		(((b) & 0xff) << 16)
+>  #define  PCIE_CONF_DEV(d)		(((d) & 0x1f) << 11)
+> @@ -70,13 +70,13 @@
+>  #define  PCIE_INT_ERR_MASK		(PCIE_INT_ERR_FATAL | PCIE_INT_ERR_NONFATAL | PCIE_INT_ERR_COR)
+>  #define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
+>  #define PCIE_CTRL_OFF		0x1a00
+> -#define  PCIE_CTRL_X1_MODE		0x0001
+> +#define  PCIE_CTRL_X1_MODE		BIT(0)
+>  #define  PCIE_CTRL_RC_MODE		BIT(1)
+>  #define  PCIE_CTRL_MASTER_HOT_RESET	BIT(24)
+>  #define PCIE_STAT_OFF		0x1a04
+> -#define  PCIE_STAT_BUS                  0xff00
+> -#define  PCIE_STAT_DEV                  0x1f0000
+>  #define  PCIE_STAT_LINK_DOWN		BIT(0)
+> +#define  PCIE_STAT_BUS			GENMASK(15, 8)
+> +#define  PCIE_STAT_DEV			GENMASK(20, 16)
+>  #define PCIE_SSPL_OFF		0x1a0c
+>  #define  PCIE_SSPL_VALUE_SHIFT		0
+>  #define  PCIE_SSPL_VALUE_MASK		GENMASK(7, 0)
 > -- 
 > 2.20.1
 > 
