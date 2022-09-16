@@ -2,142 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC4C5BA75E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 09:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA0F5BA7A1
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 09:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbiIPHXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 03:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
+        id S229515AbiIPH50 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 03:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbiIPHXM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 03:23:12 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52877A50DD
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:23:11 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id w28so6248877edi.7
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:23:11 -0700 (PDT)
+        with ESMTP id S230154AbiIPH5Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 03:57:25 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2246C74F
+        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:57:24 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id b21so20699349plz.7
+        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:57:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ROqLBReQE/7GkbmtaIhshZARplN5wkq7A//qiLQq9kA=;
-        b=nxgYfvnLNrk+I96j5O2yz93N3SfOABT5E9o6l1hADwyr3tOCILnrCPzEDFHTnDSP3W
-         YXTL8Ru8oR2hFRwtaKCfX3q71e6P5jfk12F4q6GgaNiOe5JHECDeqB8n35iEYxqjD2Tq
-         gBZjbEBBszCurcyPlLpx5skqBkBxFUMXZP75U4yy+zBHxOlEKQwrdDdYbPWqXowcHCLk
-         tyUHuUNDi4iLIGQkRfcKfVnm8oUmJZ83Eg3e8vKY7HNxhB25VFIJPr83CGLRs44c34VT
-         +um9qJeGlhsTtoGOcaZp9X7nDi1UuC8xvZVtrWkH0W+Uz+WZQ9/xUiRla8rZN91SEEFd
-         zjFA==
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=YuvBuqEBRJCl7zorVVAVVlmcoiWTc8c8OVPLn4Ys5UE=;
+        b=P6dmFhRycQyiwrMOwJkNsZ/BBg8kqPR9AYtgGpqG0fCqzoY37IK1RLuYdcNjzUZ1mS
+         maZaszqH8MsEkW3jg90SoSs73SkpUEg+y3d4NSnzq7lQCueWN2urDuMwAVA7bGzWLhYT
+         PqzvuNNlUFQ+SDGFk1PcrLvcMeaBug8oOl71yI4aU/VWrW1dQ3CvRFWYz4E759KusM4H
+         WMwJO2pJg7ZvEnclA/1addscjrgWNb1Vllmh5/yzQ8XnhG99etnim1ZPgJEHNSgu5dQt
+         rzke/AU2JFdSkBOLUm2YBUtky6Ipj44Iv/QhlikY0SDtDwUosMBbhndm0lJl2T26sx4s
+         54Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ROqLBReQE/7GkbmtaIhshZARplN5wkq7A//qiLQq9kA=;
-        b=l3xkMQGptKwNc2bjmWGOVkYTDITYilBVodOes0RyY+1UtNyr6Ma0GjcIblNhoZbwAS
-         J83NZqM8GWtOr1AdoGZSoGzD9mlEJGYyRHdzcLh6A1h18VNOLT/rCSnM5MAPnWRnRj8W
-         g68R+WsEXkX3Pughbu3cplnQqqgpgsByAQFqV0J+clx8z9ON3H6v8h69q33u9aCno12j
-         zzeFKOCCJCOZPPypPKOLCTIDB5CumKMPLQsKyfmjGQAS1yL8nrpckH8W5KsX6zi2v2KN
-         02n9kh2vayOLFuD2H4f2UKAXD6kSIBAu917WKNBaO7UueciQEpUM9U9wlj/UzdexxkUb
-         3L4g==
-X-Gm-Message-State: ACrzQf0U+oGvRxsRKEkwu9/4R/fyYo9SnFzlltlMSpoVRTr6P59yVcSX
-        ZEVnj6TG9AaVs6SCAGeB8b0ewPrI005sR7M6p7L4jA==
-X-Google-Smtp-Source: AMsMyM74RLbjFMtpNGct0Ozwlha2WJplFjDI0j00KfUxbeOXQV5fKwafkxSRCZBcwfMfUHTVYRXkledc1oWhwynzbD0=
-X-Received: by 2002:a05:6402:5243:b0:451:6d52:5928 with SMTP id
- t3-20020a056402524300b004516d525928mr2846752edd.328.1663312989854; Fri, 16
- Sep 2022 00:23:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220906211628.6u4hbpn4shjcvqel@pali> <Yxe7CJnIT5AiUilL@google.com>
- <20220906214114.vj3v32dzwxz6uqik@pali> <YxfBKkqce/IQQLk9@google.com>
- <20220906220901.p2c44we7i4c35uvx@pali> <YxfMkzW+5W3Hm1dU@google.com>
- <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
- <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com>
- <YyKMsyI961Mo1EQE@sol> <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
- <YyLwsOBXv9jRw/+n@sol>
-In-Reply-To: <YyLwsOBXv9jRw/+n@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 16 Sep 2022 09:22:59 +0200
-Message-ID: <CAMRc=MeF2uNmx_-mZikg=3nMV4aHK+bCUBEcLGEgJ6JY4jZ_Sg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=YuvBuqEBRJCl7zorVVAVVlmcoiWTc8c8OVPLn4Ys5UE=;
+        b=cxf1Kv+oD0ZRUzIDluljKdLXQYQVph1XLI9SXL1D0qaSRclL6wX9JV8TfYbTWhFoHb
+         mmYbYqcT2dfm73EKdlA6MMbyFkSkJWYHpK2LXV3mNcKLZ95FKSikrzCxiXzyU/wOwGzZ
+         kWCHqhGcBmdfbUiPPn0T10197cjXk5myzkpfXSkssyNQgTgFtJ0nxJhVFaHAfe3GHNKj
+         AKMnk3KBVAHX9by5JnksB3cvYirSntgP/GL5f9EHvBrbUD9dc7WxoYPsuQUstEPxb9pe
+         Xka4IjVdyOe04yoOULLKbIsbzw1Hr/tcw8/Lw30Nkq2pvfwwa23JxAKRw24WpPxVE7Yh
+         tUjg==
+X-Gm-Message-State: ACrzQf0sEzrji0vJBA8FHqMdZioGlPAUdNa0Mdm5NZCRhSUUO2CgIaY3
+        oiTsPYSuZ5gPyPETnMhJWRJdtg==
+X-Google-Smtp-Source: AMsMyM6luTj24P0sD683SpaOotadfC+IV3ZQEMuBb4fBCtTB5Ow6HhSJK2rfhpdTg/TKXxasRvWXFA==
+X-Received: by 2002:a17:902:f612:b0:172:cbb0:9b4f with SMTP id n18-20020a170902f61200b00172cbb09b4fmr3449108plg.142.1663315043503;
+        Fri, 16 Sep 2022 00:57:23 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id y28-20020aa79e1c000000b00543236e83e6sm11319867pfq.22.2022.09.16.00.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 00:57:22 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Jon Mason <jdmason@kudzu.us>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shunsuke Mie <mie@igel.co.jp>
+Subject: [PATCH] PCI: endpoint: pci-epf-{,v}ntb: fix a check for no epc alignment constraint
+Date:   Fri, 16 Sep 2022 16:56:51 +0900
+Message-Id: <20220916075651.64957-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.17.1
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 11:30 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Thu, Sep 15, 2022 at 10:51:02AM +0200, Linus Walleij wrote:
-> > On Thu, Sep 15, 2022 at 4:23 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > After sleeping on this, I'm even more in disagreement with renaming
-> > > value to state.
-> >
-> > OK let's not do that then.
-> >
-> > > OTOH, I totally agree with the addition of GPIOD_ACTIVE/INACTIVE to be
-> > > used for the logical cases, and even a script to apply it globally.
-> > > Ideally that script would change both the calls to the logical functions
-> > > to use ACTIVE/INACTIVE, and the physical to HIGH/LOW.
-> >
-> > OK we have consensus on this.
-> >
-> > > Introducing enums for those, and changing the function signatures to
-> > > use those rather than int makes sense to me too.
-> >
-> > Either they can be enum or defined to bool true/false. Not really
-> > sure what is best. But intuitively enum "feels better" for me.
-> >
->
-> Enums work for me - especially if the goal is to differentiate
-> logical from physical - there should be a distinct enum for each.
->
+Some pci endpoint controllers has not alignment constraint, and the
+epc_features->align becomes 0. In this case, IS_ALIGNED() in
+epf_ntb_config_spad_bar_alloc() doesn't work well. So this patch adds the 0
+checking before the IS_ALIGNED().
 
-We won't even have to change the function signatures if we go with
-enums - they already take an int and I'm in general against putting
-enum types into function signatures in C as they give you a false
-sense of a strong type.
+Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+---
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Bart
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index 9a00448c7e61..f74155ee8d72 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -1021,7 +1021,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb,
+ 	peer_size = peer_epc_features->bar_fixed_size[peer_barno];
+ 
+ 	/* Check if epc_features is populated incorrectly */
+-	if ((!IS_ALIGNED(size, align)))
++	if (align && (!IS_ALIGNED(size, align)))
+ 		return -EINVAL;
+ 
+ 	spad_count = ntb->spad_count;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 0ea85e1d292e..5e346c0a0f05 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -418,7 +418,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
+ 	size = epc_features->bar_fixed_size[barno];
+ 	align = epc_features->align;
+ 
+-	if ((!IS_ALIGNED(size, align)))
++	if (align && !IS_ALIGNED(size, align))
+ 		return -EINVAL;
+ 
+ 	spad_count = ntb->spad_count;
+-- 
+2.17.1
 
-> > > Though I'm not sure
-> > > why that has to wait until after all users are changed to the new macros.
-> > > Would that generate lint warnings?
-> >
-> > I rather want it all to happen at once. One preparatory commit
-> > adding the new types and one sed script to refactor the whole
-> > lot. Not gradual switchover.
-> >
-> > The reason is purely administrative: we have too many refactorings
-> > lagging behind, mainly the GPIO descriptors that have been
-> > lagging behind for what is it? 5 years? 10? GPIO irqchips also dragged
-> > out for way too long. We can't keep doing things gradually like
-> > this, it takes too much time and effort.
-> >
-> > I don't want any more "in-transition-indefinitely" stuff in the GPIO
-> > subsystem if I can avoid it.
-> >
-> > Therefore I would advice to switch it all over at the end of a merge
-> > window and be done with it.
-> >
->
-> Agreed - do it all at once.  My question was specific to the change of the
-> function signatures to using enums - what is to prevent us doing that
-> before running the sed script, and have the script switch usage over to
-> the enums?
->
-> Cheers,
-> Kent.
