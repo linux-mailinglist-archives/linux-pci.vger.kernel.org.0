@@ -2,65 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA0F5BA7A1
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 09:57:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF2B5BA7D2
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 10:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiIPH50 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Sep 2022 03:57:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
+        id S229515AbiIPIJm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Sep 2022 04:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbiIPH5Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 03:57:25 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2246C74F
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:57:24 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id b21so20699349plz.7
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 00:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=YuvBuqEBRJCl7zorVVAVVlmcoiWTc8c8OVPLn4Ys5UE=;
-        b=P6dmFhRycQyiwrMOwJkNsZ/BBg8kqPR9AYtgGpqG0fCqzoY37IK1RLuYdcNjzUZ1mS
-         maZaszqH8MsEkW3jg90SoSs73SkpUEg+y3d4NSnzq7lQCueWN2urDuMwAVA7bGzWLhYT
-         PqzvuNNlUFQ+SDGFk1PcrLvcMeaBug8oOl71yI4aU/VWrW1dQ3CvRFWYz4E759KusM4H
-         WMwJO2pJg7ZvEnclA/1addscjrgWNb1Vllmh5/yzQ8XnhG99etnim1ZPgJEHNSgu5dQt
-         rzke/AU2JFdSkBOLUm2YBUtky6Ipj44Iv/QhlikY0SDtDwUosMBbhndm0lJl2T26sx4s
-         54Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=YuvBuqEBRJCl7zorVVAVVlmcoiWTc8c8OVPLn4Ys5UE=;
-        b=cxf1Kv+oD0ZRUzIDluljKdLXQYQVph1XLI9SXL1D0qaSRclL6wX9JV8TfYbTWhFoHb
-         mmYbYqcT2dfm73EKdlA6MMbyFkSkJWYHpK2LXV3mNcKLZ95FKSikrzCxiXzyU/wOwGzZ
-         kWCHqhGcBmdfbUiPPn0T10197cjXk5myzkpfXSkssyNQgTgFtJ0nxJhVFaHAfe3GHNKj
-         AKMnk3KBVAHX9by5JnksB3cvYirSntgP/GL5f9EHvBrbUD9dc7WxoYPsuQUstEPxb9pe
-         Xka4IjVdyOe04yoOULLKbIsbzw1Hr/tcw8/Lw30Nkq2pvfwwa23JxAKRw24WpPxVE7Yh
-         tUjg==
-X-Gm-Message-State: ACrzQf0sEzrji0vJBA8FHqMdZioGlPAUdNa0Mdm5NZCRhSUUO2CgIaY3
-        oiTsPYSuZ5gPyPETnMhJWRJdtg==
-X-Google-Smtp-Source: AMsMyM6luTj24P0sD683SpaOotadfC+IV3ZQEMuBb4fBCtTB5Ow6HhSJK2rfhpdTg/TKXxasRvWXFA==
-X-Received: by 2002:a17:902:f612:b0:172:cbb0:9b4f with SMTP id n18-20020a170902f61200b00172cbb09b4fmr3449108plg.142.1663315043503;
-        Fri, 16 Sep 2022 00:57:23 -0700 (PDT)
-Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id y28-20020aa79e1c000000b00543236e83e6sm11319867pfq.22.2022.09.16.00.57.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Sep 2022 00:57:22 -0700 (PDT)
-From:   Shunsuke Mie <mie@igel.co.jp>
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S229483AbiIPIJl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Sep 2022 04:09:41 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B144213F4A;
+        Fri, 16 Sep 2022 01:09:39 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28G3oinI003897;
+        Fri, 16 Sep 2022 08:09:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=XWQt6XbmcvimFUoy52Add1s9OZBwCF4j/jqklaojP7k=;
+ b=md0VJWzb4YJJ5yxrDdlLgYmRfQ4Qv6IHbO/qnIKq8baF/vsJVxM/XAC3GuYMIGCkqP+W
+ OakNFASrRwgoATyJtKzTPZfVwUKL2w1mrL2VxY31eEKIwcFbAVYdpMPWKu8kT3ZbsG/P
+ 0o4R9LxIVbq9rVSEj1Ph79/eLZqEfFQ8R4dJ7Nd+KQJWZk1ocuKZJEbOWm11nh7ovTqa
+ pDh4lvXr/7jVogBFqa25qCeMldW9OtZbiV809X1gFtmcuDuAwT9FYown087BSxT3i6po
+ S+POP5jm0MLpljbd6xysXuTD7pK1x3X0f08s82+b7KOkUxFt3w72IpTmWSsjMAFw+YMd jA== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jm9m1a7j6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Sep 2022 08:09:22 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 28G89Ig6026002;
+        Fri, 16 Sep 2022 08:09:18 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3jh450cw34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 16 Sep 2022 08:09:18 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28G89IMh025997;
+        Fri, 16 Sep 2022 08:09:18 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 28G89Iod025996;
+        Fri, 16 Sep 2022 08:09:18 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 319D8112E; Fri, 16 Sep 2022 13:39:17 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shunsuke Mie <mie@igel.co.jp>
-Subject: [PATCH] PCI: endpoint: pci-epf-{,v}ntb: fix a check for no epc alignment constraint
-Date:   Fri, 16 Sep 2022 16:56:51 +0900
-Message-Id: <20220916075651.64957-1-mie@igel.co.jp>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported max latencies
+Date:   Fri, 16 Sep 2022 13:38:37 +0530
+Message-Id: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: rmdEVe21uGuM9xFrwc1XPWgodjLRIPX4
+X-Proofpoint-GUID: rmdEVe21uGuM9xFrwc1XPWgodjLRIPX4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-16_04,2022-09-14_04,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ phishscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209160060
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,43 +87,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some pci endpoint controllers has not alignment constraint, and the
-epc_features->align becomes 0. In this case, IS_ALIGNED() in
-epf_ntb_config_spad_bar_alloc() doesn't work well. So this patch adds the 0
-checking before the IS_ALIGNED().
+In ASPM driver, LTR threshold scale and value are updated based on
+tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
+LTR threshold scale and value are greater values than max snoop/non-snoop
+value.
 
-Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+reported snoop/no-snoop values is greater than or equal to
+LTR_L1.2_THRESHOLD value.
+
+Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-index 9a00448c7e61..f74155ee8d72 100644
---- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-@@ -1021,7 +1021,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb,
- 	peer_size = peer_epc_features->bar_fixed_size[peer_barno];
+I am taking this patch forward as prasad is no more working with our org.
+changes since v6:
+	- Rebasing with pci/next.
+changes since v5:
+	- no changes, just reposting as standalone patch instead of reply to
+	  previous patch.
+Changes since v4:
+	- Replaced conditional statements with min and max.
+changes since v3:
+	- Changed the logic to include this condition "snoop/nosnoop
+	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+Changes since v2:
+	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+Changes since v1:
+	- Added missing variable declaration in v1 patch
+---
+ drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 928bf64..2bb8470 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ {
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 	u32 val1, val2, scale1, scale2;
++	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+ 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+ 	u32 ctl1 = 0, ctl2 = 0;
+ 	u32 pctl1, pctl2, cctl1, cctl2;
++	u16 ltr;
++	u16 max_snoop_lat, max_nosnoop_lat;
  
- 	/* Check if epc_features is populated incorrectly */
--	if ((!IS_ALIGNED(size, align)))
-+	if (align && (!IS_ALIGNED(size, align)))
- 		return -EINVAL;
+ 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+ 		return;
  
- 	spad_count = ntb->spad_count;
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 0ea85e1d292e..5e346c0a0f05 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -418,7 +418,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- 	size = epc_features->bar_fixed_size[barno];
- 	align = epc_features->align;
++	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
++	if (!ltr)
++		return;
++
++	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
++	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
++
++	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
++	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
++
++	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
++	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
++
++	/* choose the greater max scale value between snoop and no snoop value*/
++	max_scale = max(max_snp_scale, max_nsnp_scale);
++
++	/* choose the greater max value between snoop and no snoop scales */
++	max_val = max(max_snp_val, max_nsnp_val);
++
+ 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+ 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+ 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+@@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 	 */
+ 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+ 	encode_l12_threshold(l1_2_threshold, &scale, &value);
++
++	/*
++	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
++	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
++	 */
++	scale = min(scale, max_scale);
++	value = min(value, max_val);
++
+ 	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
  
--	if ((!IS_ALIGNED(size, align)))
-+	if (align && !IS_ALIGNED(size, align))
- 		return -EINVAL;
- 
- 	spad_count = ntb->spad_count;
+ 	/* Some broken devices only support dword access to L1 SS */
 -- 
-2.17.1
+2.7.4
 
