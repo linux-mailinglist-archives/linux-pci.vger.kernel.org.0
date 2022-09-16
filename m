@@ -2,88 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7FB5BA4A2
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 04:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10ACD5BA50F
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Sep 2022 05:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiIPCcx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Sep 2022 22:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
+        id S229523AbiIPDNP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Sep 2022 23:13:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbiIPCcw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 22:32:52 -0400
-X-Greylist: delayed 1887 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Sep 2022 19:32:50 PDT
-Received: from m1550.mail.126.com (m1550.mail.126.com [220.181.15.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B429656B91
-        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 19:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=cy+LA
-        2w5x9ANkCDCsz88Hi3lIxJIOOYRtoFw6HjTG/s=; b=Wq9mJegFd3fx9ievPLVDw
-        g5DnaYUTbizeDErr4AdoIadZ28PqjXrio4fVhytDeScanR6G7awoDLUTSbcgyG3L
-        EIeDQdik4PkQ/CSZ9FAXWyAM6MURGA5s3ARJXeHIMcM8i8s2y4zbfuMqCrTICYPS
-        SzRUoCdx9rHUtf5KCclgGU=
-Received: from windhl$126.com ( [124.16.139.61, 14.29.82.34] ) by
- ajax-webmail-wmsvr50 (Coremail) ; Fri, 16 Sep 2022 10:00:27 +0800 (CST)
-X-Originating-IP: [124.16.139.61, 14.29.82.34]
-Date:   Fri, 16 Sep 2022 10:00:27 +0800 (CST)
-From:   "Liang He" <windhl@126.com>
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc:     jgross@suse.com, virtualization@lists.linux-foundation.org,
-        wangkelin2023@163.com, jan.kiszka@siemens.com,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        jailhouse-dev@googlegroups.com, mark.rutland@arm.com,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org,
-        "Bjorn Helgaas" <bhelgaas@google.com>
-Subject: Re:Re: [PATCH] jailhouse: Hold reference returned from of_find_xxx
- API
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
- Copyright (c) 2002-2022 www.mailtech.cn 126com
-In-Reply-To: <f7316f94-433f-d191-0379-423c22bec129@csail.mit.edu>
-References: <20220915022343.4001331-1-windhl@126.com>
- <f7316f94-433f-d191-0379-423c22bec129@csail.mit.edu>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        with ESMTP id S229544AbiIPDNO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Sep 2022 23:13:14 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0290E2F3BA
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 20:13:13 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id a2so9439416lfb.6
+        for <linux-pci@vger.kernel.org>; Thu, 15 Sep 2022 20:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=pCNbDOXv4cSAARuwg3WhKbwe2uD81YNGaP9zXa8XOR8=;
+        b=JKbHuhxA9NeFuoyrTD7av412zgd8fGxndzKlLW1u+2T+7WC8+PoqRJGSNsaVzwBBJd
+         +wjaR3keyr3+YfC6QJvi7f8vKpMf9unSE/4P10eRc8qrDxLsA97p7HnBCzdOkSFc9wqP
+         RSkktAO1FBuCeR2N/Sz2sxKZSWhW494SVnJHLRdHxS5RLZVGRuakC0NQWxHaFppcURvw
+         11CHpCjCiuX51nKvUlda8FxRvDH5mJ7C9Al50whYCRKTOul5q7BB9fesgorTbZZClEYr
+         BlJyRsEMMKpwCsTxiejLcqohtE/D1q4r8kH2a3oZ2kvJWgSnGGfeRPMkLz8wDH9Go3Zg
+         D7CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=pCNbDOXv4cSAARuwg3WhKbwe2uD81YNGaP9zXa8XOR8=;
+        b=hW4GH1bAWRHvC2xCMrYKBLnBF5LY8JZqegd1uhgwJwdq5QvIoBGyNkhFo2NDG91oQS
+         ZG6iVn2/mXovCOfr+ImWRNuBUqw7NmppBX9Dr9F0cnYXC8bVKnkvrMe8f3LgUvRXhpgL
+         M+ciWh2ep22tK5eEt3JnwsmDOS+fcGa8Dgejm9ibuH9oQ3aVL3WC1d8yIB4BWkF1f8VP
+         oLGUpXpI7GC+Sp+1CWCYuy/olcV6c8u/EavcMzGqf6wjAHxO/N0LCi8Eww0zl+Jv+n6y
+         5Z3YEiBgJmdw+yhtWTQiSyucMZcQvQ73v9qEpTKWYI1zqI6jNUfTS3X9fcp/q35bLiO1
+         m+TA==
+X-Gm-Message-State: ACrzQf2uQvneGrsG0DUrR1+g/HCj74em5ZTgpsBt2kwrbH7nBTGG+cQk
+        XdjaXNFo3DVQHjcfQkTrkLIwe85AyT7dgRb6vusleg==
+X-Google-Smtp-Source: AMsMyM5Hn6/ihaf0KUFiJNmziY5VtNGUTNPExlkU8W71tPXXeaoHrA1ehqJB4j+5ZAJajCvTM3CjQLrfh4eH3d4ptjM=
+X-Received: by 2002:ac2:454a:0:b0:49c:6212:c44d with SMTP id
+ j10-20020ac2454a000000b0049c6212c44dmr1036484lfm.430.1663297991313; Thu, 15
+ Sep 2022 20:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <89a1b1f.165e.18344069cab.Coremail.windhl@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: MsqowADnPPG82CNjwf1tAA--.52003W
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbiuAl+F2JVlaGGMgABsu
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.6
+References: <20220815025006.48167-1-mie@igel.co.jp> <20220815184142.GA1960338@bhelgaas>
+In-Reply-To: <20220815184142.GA1960338@bhelgaas>
+From:   Shunsuke Mie <mie@igel.co.jp>
+Date:   Fri, 16 Sep 2022 12:13:00 +0900
+Message-ID: <CANXvt5pYHDx=eneaRxZ0K=psQXsaLyp5dGA7OgoKYJaJ543mqQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: fix Kconfig indent style
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jon Mason <jdmason@kudzu.us>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ren Zhijie <renzhijie2@huawei.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CkF0IDIwMjItMDktMTYgMDc6Mjk6MDYsICJTcml2YXRzYSBTLiBCaGF0IiA8c3JpdmF0c2FAY3Nh
-aWwubWl0LmVkdT4gd3JvdGU6Cj4KPlsgQWRkaW5nIGF1dGhvciBhbmQgcmV2aWV3ZXJzIG9mIGNv
-bW1pdCA2MzMzOGEzOGRiOTUgXQo+Cj5PbiA5LzE0LzIyIDc6MjMgUE0sIExpYW5nIEhlIHdyb3Rl
-Ogo+PiBJbiBqYWlsaG91c2VfcGFyYXZpcnQoKSwgd2Ugc2hvdWxkIGhvbGQgdGhlIHJlZmVyZW5j
-ZSByZXR1cm5lZCBmcm9tCj4+IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKCkgd2hpY2ggaGFzIGlu
-Y3JlYXNlZCB0aGUgcmVmY291bnQgYW5kIHRoZW4KPj4gY2FsbCBvZl9ub2RlX3B1dCgpIHdpdGgg
-aXQgd2hlbiBkb25lLgo+PiAKPj4gRml4ZXM6IDYzMzM4YTM4ZGI5NSAoImphaWxob3VzZTogUHJv
-dmlkZSBkZXRlY3Rpb24gZm9yIG5vbi14ODYgc3lzdGVtcyIpCj4+IFNpZ25lZC1vZmYtYnk6IExp
-YW5nIEhlIDx3aW5kaGxAMTI2LmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogS2VsaW4gV2FuZyA8d2Fu
-Z2tlbGluMjAyM0AxNjMuY29tPgo+PiAtLS0KPj4gIGluY2x1ZGUvbGludXgvaHlwZXJ2aXNvci5o
-IHwgNiArKysrKy0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2h5cGVydmlzb3IuaCBiL2lu
-Y2x1ZGUvbGludXgvaHlwZXJ2aXNvci5oCj4+IGluZGV4IDllZmJjNTRlMzVlNS4uN2ZlMWU4YzYy
-MTFjIDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L2h5cGVydmlzb3IuaAo+PiArKysgYi9p
-bmNsdWRlL2xpbnV4L2h5cGVydmlzb3IuaAo+PiBAQCAtMjcsNyArMjcsMTEgQEAgc3RhdGljIGlu
-bGluZSB2b2lkIGh5cGVydmlzb3JfcGluX3ZjcHUoaW50IGNwdSkKPj4gIAo+PiAgc3RhdGljIGlu
-bGluZSBib29sIGphaWxob3VzZV9wYXJhdmlydCh2b2lkKQo+PiAgewo+PiAtCXJldHVybiBvZl9m
-aW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiamFpbGhvdXNlLGNlbGwiKTsKPj4gKwlz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVM
-TCwgImphaWxob3VzZSxjZWxsIik7Cj4+ICsKPj4gKwlvZl9ub2RlX3B1dChucCk7Cj4+ICsKPj4g
-KwlyZXR1cm4gbnA7Cj4+ICB9Cj4+ICAKPgo+VGhhbmsgeW91IGZvciB0aGUgZml4LCBidXQgcmV0
-dXJuaW5nIGEgcG9pbnRlciBmcm9tIGEgZnVuY3Rpb24gd2l0aCBhCj5ib29sIHJldHVybiB0eXBl
-IGxvb2tzIG9kZC4gQ2FuIHdlIGFsc28gZml4IHRoYXQgdXAgcGxlYXNlPwo+CgpUaGFua3MgZm9y
-IHlvdXIgcmV2aWV3LCBob3cgYWJvdXQgZm9sbG93aW5nIHBhdGNoOgoKLQlyZXR1cm4gb2ZfZmlu
-ZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImphaWxob3VzZSxjZWxsIik7CisJc3RydWN0
-IGRldmljZV9ub2RlICpucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJq
-YWlsaG91c2UsY2VsbCIpOworCisJb2Zfbm9kZV9wdXQobnApOworCisJcmV0dXJuIChucD09TlVM
-TCk7Cgo+Cj5SZWdhcmRzLAo+U3JpdmF0c2EKPlZNd2FyZSBQaG90b24gT1MK
+Hi Lorenzo,
+
+2022=E5=B9=B48=E6=9C=8816=E6=97=A5(=E7=81=AB) 3:41 Bjorn Helgaas <helgaas@k=
+ernel.org>:
+>
+> On Mon, Aug 15, 2022 at 11:50:06AM +0900, Shunsuke Mie wrote:
+> > Change to follow the Kconfig style guide. This patch fixes to use tab
+> > rather than space to indent, while help text is indented an additional
+> > two spaces.
+> >
+> > Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC an=
+d EP")
+> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+>
+> Thanks for doing this.  In the future make the subject line match the
+> history, e.g.,
+>
+>   $ git log --oneline drivers/pci/endpoint/functions/Kconfig
+>   556a2c7dca33 ("PCI: endpoint: Fix Kconfig dependency")
+>   e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
+>   8b821cf76150 ("PCI: endpoint: Add EP function driver to provide NTB fun=
+ctionality")
+>   98dbf5af4fdd ("PCI: endpoint: Select CRC32 to fix test build error")
+>   349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI=
+")
+>
+> Note that these are all capitalized ("Fix Kconfig indent style").
+>
+> Lorenzo will likely fix this up when applying, so no need to repost
+> for this.
+This is a gentle ping.
+>
+> > ---
+> >  drivers/pci/endpoint/functions/Kconfig | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpo=
+int/functions/Kconfig
+> > index 295a033ee9a2..9fd560886871 100644
+> > --- a/drivers/pci/endpoint/functions/Kconfig
+> > +++ b/drivers/pci/endpoint/functions/Kconfig
+> > @@ -27,13 +27,13 @@ config PCI_EPF_NTB
+> >         If in doubt, say "N" to disable Endpoint NTB driver.
+> >
+> >  config PCI_EPF_VNTB
+> > -        tristate "PCI Endpoint NTB driver"
+> > -        depends on PCI_ENDPOINT
+> > -        depends on NTB
+> > -        select CONFIGFS_FS
+> > -        help
+> > -          Select this configuration option to enable the Non-Transpare=
+nt
+> > -          Bridge (NTB) driver for PCIe Endpoint. NTB driver implements=
+ NTB
+> > -          between PCI Root Port and PCIe Endpoint.
+> > +     tristate "PCI Endpoint NTB driver"
+> > +     depends on PCI_ENDPOINT
+> > +     depends on NTB
+> > +     select CONFIGFS_FS
+> > +     help
+> > +       Select this configuration option to enable the Non-Transparent
+> > +       Bridge (NTB) driver for PCIe Endpoint. NTB driver implements NT=
+B
+> > +       between PCI Root Port and PCIe Endpoint.
+> >
+> > -          If in doubt, say "N" to disable Endpoint NTB driver.
+> > +       If in doubt, say "N" to disable Endpoint NTB driver.
+> > --
+> > 2.17.1
+> >
+thanks,
+Shunsuke
