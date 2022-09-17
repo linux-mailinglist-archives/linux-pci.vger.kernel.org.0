@@ -2,93 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 036D95BB681
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Sep 2022 07:25:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E8D85BB76A
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Sep 2022 11:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbiIQFZo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Sep 2022 01:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48978 "EHLO
+        id S229505AbiIQJIL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Sep 2022 05:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbiIQFZn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Sep 2022 01:25:43 -0400
-Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D6072870
-        for <linux-pci@vger.kernel.org>; Fri, 16 Sep 2022 22:25:40 -0700 (PDT)
-Received: from c-24-17-218-140.hsd1.wa.comcast.net ([24.17.218.140] helo=srivatsab-a02.vmware.com)
-        by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        with ESMTP id S229633AbiIQJIJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Sep 2022 05:08:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9153624967
+        for <linux-pci@vger.kernel.org>; Sat, 17 Sep 2022 02:08:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BF1E1B80D17
+        for <linux-pci@vger.kernel.org>; Sat, 17 Sep 2022 09:08:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B08C433D6;
+        Sat, 17 Sep 2022 09:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663405685;
+        bh=ZGkhUkWuk8O6FGtDo+ewloUu7qTFPamdLWHiwslNMJA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QNIPTr2at0/GdE15O+S2UO8yNVvBVal+rfgDYKEJyb/h58FQnOtll6mZv+QY8shNV
+         A4//TfMQZ47MOKWYOoLLfjAzUzI3z4hHYFh3OrGwUdzBj68DvhHSFzFFgNnKC1YFt2
+         3rfHsJzGCewyuOxcLJ1AKIf8ChyVOnypLso0wD3i/vnfbZ+sowqaV8PnIySYMITD2b
+         +hc4aDDYYdQQnfP+MSsj21bP9zBripdxfiTcY+nK1z67slRK3T8kGj07LWFUGg9fDS
+         SA623+rAtZKR+XE2zlUT59cUAgELH0Zf/7Z4A0gqLcyES9quyV9gtqBlpueRhGrX9N
+         kUoaSiTEfK8ig==
+Received: from 185-176-101-241.host.sccbroadband.ie ([185.176.101.241] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1oZQKc-001ohd-JP;
-        Sat, 17 Sep 2022 01:25:34 -0400
-Subject: Re: [PATCH v2] jailhouse: Hold reference returned from of_find_xxx
- API
-To:     Liang He <windhl@126.com>, jgross@suse.com,
-        virtualization@lists.linux-foundation.org
-Cc:     wangkelin2023@163.com, jailhouse-dev@googlegroups.com,
-        mark.rutland@arm.com, jan.kiszka@siemens.com,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20220916090051.4096328-1-windhl@126.com>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <0069849b-e6c7-5c9b-4b52-5aa6e4a328e4@csail.mit.edu>
-Date:   Fri, 16 Sep 2022 22:25:31 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.12.0
-MIME-Version: 1.0
-In-Reply-To: <20220916090051.4096328-1-windhl@126.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        (envelope-from <maz@kernel.org>)
+        id 1oZTly-00AlYk-PG;
+        Sat, 17 Sep 2022 10:08:03 +0100
+Date:   Sat, 17 Sep 2022 10:05:59 +0100
+Message-ID: <87r10al6a0.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        pali@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug interrupt
+In-Reply-To: <YxtUR0+dBZut8QZH@lpieralisi>
+References: <20220818135140.5996-1-kabel@kernel.org>
+        <20220818135140.5996-4-kabel@kernel.org>
+        <YxtUR0+dBZut8QZH@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.176.101.241
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, kabel@kernel.org, lorenzo.pieralisi@arm.com, helgaas@kernel.org, kw@linux.com, pali@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[ Adding author and reviewers of commit 63338a38db95 again ]
+Hi Lorenzo,
 
-On 9/16/22 2:00 AM, Liang He wrote:
-> In jailhouse_paravirt(), we should hold the reference returned from
-> of_find_compatible_node() which has increased the refcount and then
-> call of_node_put() with it when done.
-> 
-> Fixes: 63338a38db95 ("jailhouse: Provide detection for non-x86 systems")
-> Signed-off-by: Liang He <windhl@126.com>
-> Co-developed-by: Kelin Wang <wangkelin2023@163.com>
-> Signed-off-by: Kelin Wang <wangkelin2023@163.com>
+On Fri, 09 Sep 2022 15:57:11 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+>=20
+> [+Marc, Thomas - I can't merge this code without them reviewing it,
+> I am not sure at all you can mix the timer/IRQ code the way you do]
+>=20
+> On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Beh=C3=BAn wrote:
+> > From: Pali Roh=C3=A1r <pali@kernel.org>
+> >=20
+> > Add support for Data Link Layer State Change in the emulated slot
+> > registers and hotplug interrupt via the emulated root bridge.
+> >=20
+> > This is mainly useful for when an error causes link down event. With
+> > this change, drivers can try recovery.
+> >=20
+> > Link down state change can be implemented because Aardvark supports Link
+> > Down event interrupt. Use it for signaling that Data Link Layer Link is
+> > not active anymore via Hot-Plug Interrupt on emulated root bridge.
+> >=20
+> > Link up interrupt is not available on Aardvark, but we check for whether
+> > link is up in the advk_pcie_link_up() function. By triggering Hot-Plug
+> > Interrupt from this function we achieve Link up event, so long as the
+> > function is called (which it is after probe and when rescanning).
+> > Although it is not ideal, it is better than nothing.
+>=20
+> So before even coming to the code review: this patch does two things.
+>=20
+> 1) It adds support for handling the Link down state
+> 2) It adds some code to emulate a Link-up event
+>=20
+> Now, for (2). IIUC you are adding code to make sure that an HP
+> event is triggered if advk_pcie_link_up() is called and it
+> detects a Link-down->Link-up transition, that has to be notified
+> through an HP event.
+>=20
+> If that's correct, you have to explain to me please what this is
+> actually achieving and a specific scenario where we want this to be
+> implemented, in fine details; then we add it to the commit log.
+>=20
+> That aside, the interaction of the timer and the IRQ domain code
+> must be reviewed by Marc and Thomas to make sure this is not
+> a gross violation of the respective subsystems usage.
 
-Reviewed-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+I don't see anything being a "gross violation" here, at least from an
+interrupt subsystem perspective. In a way, this is synthesising an
+interrupt on the back of some other event, and as long as the context
+is somehow appropriate (something that looks like an interrupt when
+pretending there is one), this should be OK. Other subsystems such as
+i2c GPIO expanders do similar things.
 
-> ---
-> 
->  v2: use proper return type not the 'np' pointer
-> 
->  include/linux/hypervisor.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
-> index 9efbc54e35e5..f11eec57ea63 100644
-> --- a/include/linux/hypervisor.h
-> +++ b/include/linux/hypervisor.h
-> @@ -27,7 +27,11 @@ static inline void hypervisor_pin_vcpu(int cpu)
->  
->  static inline bool jailhouse_paravirt(void)
->  {
-> -	return of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> +	struct device_node *np = of_find_compatible_node(NULL, NULL, "jailhouse,cell");
-> +
-> +	of_node_put(np);
-> +
-> +	return np ? true : false;
->  }
->  
->  #endif /* !CONFIG_X86 */
->
+The one thing I'm dubious about is the frequency of the timer. Asking
+for a poll of the link every jiffy is bound to be expensive, and it
+would be good to relax this as much as possible, specially on low-end
+HW such as this, where every cycle counts. It is always going to be a
+"best effort" thing, and the commit message doesn't say what's the
+actual grace period to handle this (the spec probably has one).
 
-Regards,
-Srivatsa
-VMware Photon OS
+I guess this patch could do with being split between handling link
+down and link up events, but that's for you to decide.
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
