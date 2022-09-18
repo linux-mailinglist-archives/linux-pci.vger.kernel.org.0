@@ -2,97 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D48C25BBE7B
-	for <lists+linux-pci@lfdr.de>; Sun, 18 Sep 2022 16:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B04E25BC0BB
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 01:58:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbiIROiB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Sep 2022 10:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51534 "EHLO
+        id S229718AbiIRX6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 18 Sep 2022 19:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbiIROho (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Sep 2022 10:37:44 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE212559A
-        for <linux-pci@vger.kernel.org>; Sun, 18 Sep 2022 07:37:25 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id f20so33329900edf.6
-        for <linux-pci@vger.kernel.org>; Sun, 18 Sep 2022 07:37:24 -0700 (PDT)
+        with ESMTP id S229561AbiIRX6r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Sep 2022 19:58:47 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D50013F46;
+        Sun, 18 Sep 2022 16:58:46 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id o70-20020a17090a0a4c00b00202f898fa86so4557780pjo.2;
+        Sun, 18 Sep 2022 16:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Rlg0/ZYnRtBFDzMZxXf5GS6F9a3najBH1vMHMWoExj0=;
-        b=k9RNeF+avOEI2E4SLM1Bqmu/o8xiuXG0PsspBP3jZ9ZtKqaoZX4hD5f+viONmzsq8f
-         /rJuVgo9WDsioBHPQqImmPEbgBjXG1hiyfILZsrnkdWlud84P898eyiWCk0GEy9TRwTi
-         hfBFnJWZJsqjnxceuGLK+FJrpQwHr399zi33ei/iQsD1h9nCxOAD/W9O6iwSYmFz0Whp
-         EBri77hU9anSTlALAolse6UsiFQTxH92dsprae5Na/Ay37xmi8F+caxE+pHvEJ7qyl3k
-         wBn4DD5NNB0cnnRvum9+bRPRoe6RQZeVzexSLjptOQpxiH0mRjGBeuq2YmHUfGKHUe+R
-         fy4Q==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=nx+a1DvWCBo5ERwaVpW/CuMoX39dd2IN65mPeOU18nk=;
+        b=Htjm9zpZ8qet43rd+8hciEkngTT3Mf9gh89SN468HcXRk3ucOGAT1qqtAaMZEhnQ+5
+         HKO+dyYDDMbhTRmR9hOlUZiBKcCB5G0vFFFNhO2usZIIwCq/GpbIZ1mREUUbG/kdm4XB
+         UxUE5tOK0KIq7xMEdNi6auBBrWyHMhS4LBqq3mCSeeqyLbVhnpEd0YQo4v6MFY894bHM
+         VWFH8AE2DMrvKVROiH7xLpQBS9euYX87lvN5EMyugwHztkvEzA/j9PahLolBMAjWypAu
+         NI6xV55ezEdKYSo+kMyCRrRs3o7PeEUCSt4OF7VYnS4cLQbwWcHem9cjtg2IwW4K9/NS
+         O5Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Rlg0/ZYnRtBFDzMZxXf5GS6F9a3najBH1vMHMWoExj0=;
-        b=Kk0AcW2/KWAh8JdngaYEOPF3FgRmETkd/v3tB0hU1Bagq03V3MvMgYW30pMmEBp2gn
-         GPdsQsRjVn8vknqm3QyXdpJZQl3bRZleCCRGp5E3a8sURFrtBRImOyytBcDslF0xSyYG
-         6NxMBWAXAH5AbFljRcEW82gE4LmYQCOz/iPgU7QFggY31I2a+NMiqknMY36re8P7M9vh
-         qKbAbbcpJvcKRgSxPmT4eDQO+M8Bkyo/piJcCf7ZKfjk9a5XHHq3VD3xDqODmzKMJ3uD
-         7KYrKEuc0ctUiplEGTZ1okIqb/EGDrtcCG7jHodg/XHP+wn21AkBc8rsO3iAKhCfe/V7
-         wFLQ==
-X-Gm-Message-State: ACrzQf2ZrSxB3mQeOhFQv5/5g2qs4qr7XwGBw0YDmzszpx44/xY9g6kK
-        LPYHd241EiliG1xCdqamda+QlS42bXEZvX6gW2PVjQ==
-X-Google-Smtp-Source: AMsMyM5Wl8ZJ7WqDthqk4Br/EAT2b/keFxbgHyOWdYbcmMI9IUCSfXOex7sktdU3JLZ9Tt+TxuSeMHhazf1YKzoLTKU=
-X-Received: by 2002:a05:6402:2690:b0:452:3a85:8b28 with SMTP id
- w16-20020a056402269000b004523a858b28mr11451311edd.158.1663511843470; Sun, 18
- Sep 2022 07:37:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220906211628.6u4hbpn4shjcvqel@pali> <Yxe7CJnIT5AiUilL@google.com>
- <20220906214114.vj3v32dzwxz6uqik@pali> <YxfBKkqce/IQQLk9@google.com>
- <20220906220901.p2c44we7i4c35uvx@pali> <YxfMkzW+5W3Hm1dU@google.com>
- <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
- <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com>
- <YyKMsyI961Mo1EQE@sol> <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
- <YyLwsOBXv9jRw/+n@sol> <CAMRc=MeF2uNmx_-mZikg=3nMV4aHK+bCUBEcLGEgJ6JY4jZ_Sg@mail.gmail.com>
-In-Reply-To: <CAMRc=MeF2uNmx_-mZikg=3nMV4aHK+bCUBEcLGEgJ6JY4jZ_Sg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 18 Sep 2022 16:37:11 +0200
-Message-ID: <CACRpkdZWirbY9KRH4r3Q_SU0my-5BUDNkjEUei_May4=_yVZvw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=nx+a1DvWCBo5ERwaVpW/CuMoX39dd2IN65mPeOU18nk=;
+        b=WD5P5wmLbWIAwF/ob8uD7y3pEJIMLmA5+34GUqMtxpaYjAI/dZej1070Mg5ms4R97W
+         HWwVZ9WqsSfEx8vSK+w0ijMntKg0KmUQV63QCdw1WmVUp1DagEvChOznN4USrG4S5Qqt
+         7qKUG4zHBdrhLrO/wE3jjBYSn+WpH6/L3+6LQ0PtOn6IkVbHJR7Qtaqm3w3uXj6YOI+6
+         2/lu0HGp9Uh0iO/TstpsIRVsgAKwE1r8bb2akrMQ3LUrfWQCrhLi9eY9j18A+nu1d2uk
+         kxWTs00jsV5b9CQ1A6dyYisxx+yqZK62jg9+iP/g0oT0w7nvilBAa3VNRJtWYM3rKbLi
+         ABoQ==
+X-Gm-Message-State: ACrzQf1A52j9P2uISoFkEm9JeQ3XH+e2I5H7FHaGdNz6ZAuMTp+BVGP/
+        thWdEcK3dZgSlePQrbNFXBM=
+X-Google-Smtp-Source: AMsMyM5JrmjGJS75CgJbj2qzE8nX2qZTU6YGWXhtv3RzUnrmmUM4+ok+8STh+zELYZx4q+Rhpj5X6Q==
+X-Received: by 2002:a17:90b:1e0d:b0:202:91ec:e167 with SMTP id pg13-20020a17090b1e0d00b0020291ece167mr16593865pjb.174.1663545525697;
+        Sun, 18 Sep 2022 16:58:45 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id 75-20020a62164e000000b005499599ed30sm8113030pfw.10.2022.09.18.16.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Sep 2022 16:58:45 -0700 (PDT)
+Date:   Mon, 19 Sep 2022 07:58:38 +0800
+From:   Kent Gibson <warthog618@gmail.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
         Shawn Guo <shawn.guo@linaro.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 2/2] PCI: mvebu: switch to using gpiod API
+Message-ID: <Yyewrm+/viScefKC@sol>
+References: <20220906214114.vj3v32dzwxz6uqik@pali>
+ <YxfBKkqce/IQQLk9@google.com>
+ <20220906220901.p2c44we7i4c35uvx@pali>
+ <YxfMkzW+5W3Hm1dU@google.com>
+ <CACRpkdZh0BF1jjPB4FSTg12_=aOpK-kMiOFD+A8p5unr1+4+Ow@mail.gmail.com>
+ <CAMRc=MdrX5Pz1d-SM2PPikEYw0zJBe6GCdr4pEfgBLMi1J9PAQ@mail.gmail.com>
+ <YyKMsyI961Mo1EQE@sol>
+ <CACRpkdYB6dZf4TBhfXB2Z5E2PJ46ctAM_QKLiW-fykbCopcVGQ@mail.gmail.com>
+ <YyLwsOBXv9jRw/+n@sol>
+ <CAMRc=MeF2uNmx_-mZikg=3nMV4aHK+bCUBEcLGEgJ6JY4jZ_Sg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeF2uNmx_-mZikg=3nMV4aHK+bCUBEcLGEgJ6JY4jZ_Sg@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 9:23 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
+On Fri, Sep 16, 2022 at 09:22:59AM +0200, Bartosz Golaszewski wrote:
+> On Thu, Sep 15, 2022 at 11:30 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
 > > Enums work for me - especially if the goal is to differentiate
 > > logical from physical - there should be a distinct enum for each.
 > >
->
+> 
 > We won't even have to change the function signatures if we go with
 > enums - they already take an int and I'm in general against putting
 > enum types into function signatures in C as they give you a false
 > sense of a strong type.
+> 
 
-We are adding Rust to the kernel soon ;) then it's good for
-documentation of what it is actually expected to be.
+IMO it is far easier to remember that C doesn't range check enums than it
+is to remember what specific values are appropriate for a function
+accepting an enum as int.  A specified type is a strong hint, and unlike
+documentation is one that an IDE can parse and provide valid options for.
 
-But I get your point.
+Passing enums as int is the norm in the kernel, so fair enough to keep
+it that way, but that does contribute to the confusion that we are trying
+to address here.
 
-Yours,
-Linus Walleij
+Cheers,
+Kent.
+
