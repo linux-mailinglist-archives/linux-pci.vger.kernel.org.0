@@ -2,106 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 362955BD4F5
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 20:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDCA55BD666
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 23:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiISSzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Sep 2022 14:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57076 "EHLO
+        id S229698AbiISVem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Sep 2022 17:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiISSzt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 14:55:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536853206E;
-        Mon, 19 Sep 2022 11:55:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB11661645;
-        Mon, 19 Sep 2022 18:55:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31F2C433C1;
-        Mon, 19 Sep 2022 18:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663613747;
-        bh=fxrYj+SlLB8t+pk8TjlywB7jE7G0jb9b3YEkADAG/Ec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OixGiX1zzOPN6mg3SiNe/k4cJRLOWMGwkieahZOLsfsrCkX4AX8ynTYtSeFmCP1YV
-         ULh+5dCXo7x8HesmJd+khwvtQjWAazHTShDy8f39YCgtl/rRW5L4V6l2mruz8EHihR
-         xsL5+HdBLLodjHVIqj2Wn3ae4Nq4olM2qX1YIjcab6vtMlplW3esnBDffyLnqE0BIj
-         MrtPpt5o+Vs60Lf3i/hQh5WJ9AVw/RDuHdKNsb5nfzRrjqbhLf0d+l9UmbvdWJCrJw
-         Q4A5+O2yy+Tc3OZj7V+NceumqmbVeFkaESP36M36Q0dDPj/+s7Uz3W3LCP17QYSiC1
-         43xrkM7aciy5A==
-Date:   Mon, 19 Sep 2022 13:55:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-{,v}ntb: fix a check for no epc
- alignment constraint
-Message-ID: <20220919185545.GA1022691@bhelgaas>
+        with ESMTP id S229607AbiISVek (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 17:34:40 -0400
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3182421B5
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 14:34:36 -0700 (PDT)
+Received: by mail-ot1-x336.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso461847otb.6
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 14:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=GhlGF570/fMNse4ofDbeyEClP1h1fR6cANBtjl25epI=;
+        b=8GxuPNefYMuf0/s1o3Lvazl4obZV+mdgoLuUVPHKSFPb5+OMNRtsRkh8UKu7v3hfKz
+         92F8kDyd6gXFmQB7CeE2mSO2fV9poOXWrqAhsXrCxjSAQI08c2E9A+h0RcJhAjihLtg5
+         J4aH5ChFDHac+oIGo3rN3TS58JT5MfEhiFho41BHoL2BdvZ288OEJRaZl+R4VoCFCU74
+         gCM7/82clFkHSI0t4ZmGqs7c6loI2O2jpigZxDpMXTQ0vN1o1mfxG6fkM1g44StZq1yW
+         tYgGrKZ8vppf09969n4WSgt/WTGWmpoBEyDXmGuLX/6IDsFytV9IKnJJuNI7U5f6OYww
+         SE2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=GhlGF570/fMNse4ofDbeyEClP1h1fR6cANBtjl25epI=;
+        b=JMWAJsM43QrsYlgmzr8ltdmRf/tif7ne/xBOXztVYPQtBF8tiA3GVLirswEeKosh0X
+         EZ3/Q9nH8ol1Ce0MeM83rgJzCXE6T9cxZBalsvDrFeDJai6dOsGefbP+sqxU3UgL4oo8
+         XfxV6Cx++Wh+L39wR0ps2QhUTsViGa3jIm/620eetYciIDbx8BIwivq5BRtoAhSsP8qq
+         E9BZmIMHzlmKww2znauuff3+nudqUbM6TqgXUU9F0oFMidnIJtGZ1szXYNskXAHUn0nJ
+         L+xfAOpR/F2k+wpgUB5FEhUymGOb0CZ+HkHU9U5mIvUEaM2B2d0vmbyOFuC65KInOwTo
+         aUAQ==
+X-Gm-Message-State: ACrzQf0iAN7INExM6gE6gAWIS6Pl3DLiYyte3MD2VWPdhu49+hqbeZPG
+        yhE+h/FtaWWMIx9u9/9apSkptW6vKtajcEjaVxHMWA==
+X-Google-Smtp-Source: AMsMyM42FduJa4ir+xXvwJjSd6HCgTrvxI4AfniM3y4TROVlTPge2JWGcA4981o487r0XCFOOeFWnYrBwJu2uVReeLk=
+X-Received: by 2002:a9d:12a1:0:b0:658:5c77:d547 with SMTP id
+ g30-20020a9d12a1000000b006585c77d547mr9105264otg.48.1663623275484; Mon, 19
+ Sep 2022 14:34:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220916075651.64957-1-mie@igel.co.jp>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <1662109086-15881-1-git-send-email-hongxing.zhu@nxp.com>
+ <1662109086-15881-4-git-send-email-hongxing.zhu@nxp.com> <ec59c235f11664a0a90f14b86bd63f74fb7f6d27.camel@toradex.com>
+In-Reply-To: <ec59c235f11664a0a90f14b86bd63f74fb7f6d27.camel@toradex.com>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Mon, 19 Sep 2022 14:34:23 -0700
+Message-ID: <CAJ+vNU3tV1NSNT8R-QNTxEhe+oxR=Fz9zHKGbf_MSBgr9dQ10g@mail.gmail.com>
+Subject: Re: [PATCH v7 3/7] arm64: dts: imx8mp-evk: Add PCIe support
+To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "richard.leitner@linux.dev" <richard.leitner@linux.dev>,
+        "alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "hongxing.zhu@nxp.com" <hongxing.zhu@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "marex@denx.de" <marex@denx.de>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 04:56:51PM +0900, Shunsuke Mie wrote:
-> Some pci endpoint controllers has not alignment constraint, and the
+On Mon, Sep 19, 2022 at 8:22 AM Marcel Ziswiler
+<marcel.ziswiler@toradex.com> wrote:
+>
+> Hi Richard et. al.
+>
+> Thank you very much for the i.MX 8MP PCIe support work.
+>
+> On Fri, 2022-09-02 at 16:58 +0800, Richard Zhu wrote:
+> > Add PCIe support on i.MX8MP EVK board.
+> >
+> > Signed-off-by: Richard Zhu <hongxing.zhu-3arQi8VN3Tc@public.gmane.org>
+> > Tested-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > Tested-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+> > Tested-by: Alexander Stein <alexander.stein-W3o+9BuWjQaZox4op4iWzw@public.gmane.org>
+> > Reviewed-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 53 ++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+> > index f6b017ab5f53..9f1469db554d 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+> > @@ -5,6 +5,7 @@
+> >
+> >  /dts-v1/;
+> >
+> > +#include <dt-bindings/phy/phy-imx8-pcie.h>
+> >  #include "imx8mp.dtsi"
+> >
+> >  / {
+> > @@ -33,6 +34,12 @@ memory@40000000 {
+> >                       <0x1 0x00000000 0 0xc0000000>;
+> >         };
+> >
+> > +       pcie0_refclk: pcie0-refclk {
+> > +               compatible = "fixed-clock";
+> > +                       #clock-cells = <0>;
+> > +                       clock-frequency = <100000000>;
+> > +       };
+> > +
+> >         reg_can1_stby: regulator-can1-stby {
+> >                 compatible = "regulator-fixed";
+> >                 regulator-name = "can1-stby";
+> > @@ -55,6 +62,17 @@ reg_can2_stby: regulator-can2-stby {
+> >                 enable-active-high;
+> >         };
+> >
+> > +       reg_pcie0: regulator-pcie {
+> > +               compatible = "regulator-fixed";
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_pcie0_reg>;
+> > +               regulator-name = "MPCIE_3V3";
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               gpio = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+> > +               enable-active-high;
+> > +       };
+> > +
+> >         reg_usdhc2_vmmc: regulator-usdhc2 {
+> >                 compatible = "regulator-fixed";
+> >                 pinctrl-names = "default";
+> > @@ -350,6 +368,28 @@ &i2c5 {
+> >          */
+> >  };
+> >
+> > +&pcie_phy {
+> > +       fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+>
+> While this indeed works on the EVK so far I failed to get this to work on our Verdin iMX8M Plus which requires
+> the fsl,refclk-pad-mode to be IMX8_PCIE_REFCLK_PAD_OUTPUT. It is not quite clear to me what kind of clocks I
+> would need specifying in that case.
+>
+> Has anybody by any chance tried on any such HW design?
+>
+> For reference [1] on the Verdin iMX8M Mini the same works very well but the clocking seems rather different.
+>
 
-s/pci/PCI/
-s/has not/have no/
-s/constraint/constraints/
+Marcel,
 
-> epc_features->align becomes 0. In this case, IS_ALIGNED() in
-> epf_ntb_config_spad_bar_alloc() doesn't work well. So this patch adds the 0
-> checking before the IS_ALIGNED().
+Do you have all the patches in Richard's series applied [1]? They got
+picked up in different trees so make sure you have them all. I just
+tested this series on top of 6.0-rc6 with imx8mp-venice-gw74xx and it
+works fine. This board however does have IMX8_PCIE_REFCLK_PAD_INPUT.
 
-s/So this patch adds .../Check for this before IS_ALIGNED()/
+Do you by chance have CLKREQ not hooked up? If so make sure you add a
+'fsl,clkreq-unsupported' probe to pcie_phy.
 
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> index 9a00448c7e61..f74155ee8d72 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> @@ -1021,7 +1021,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb,
->  	peer_size = peer_epc_features->bar_fixed_size[peer_barno];
->  
->  	/* Check if epc_features is populated incorrectly */
-> -	if ((!IS_ALIGNED(size, align)))
-> +	if (align && (!IS_ALIGNED(size, align)))
->  		return -EINVAL;
->  
->  	spad_count = ntb->spad_count;
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 0ea85e1d292e..5e346c0a0f05 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -418,7 +418,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
->  	size = epc_features->bar_fixed_size[barno];
->  	align = epc_features->align;
->  
-> -	if ((!IS_ALIGNED(size, align)))
-> +	if (align && !IS_ALIGNED(size, align))
->  		return -EINVAL;
->  
->  	spad_count = ntb->spad_count;
-> -- 
-> 2.17.1
-> 
+Best Regards,
+
+Tim
+[1] https://patchwork.kernel.org/project/linux-pci/list/?series=673548&state=*
