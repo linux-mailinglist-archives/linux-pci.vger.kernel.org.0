@@ -2,91 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F81A5BD3AF
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 19:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B97B95BD3B1
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 19:30:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiISR3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Sep 2022 13:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        id S231220AbiISRaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Sep 2022 13:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiISR3W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 13:29:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496743D594;
-        Mon, 19 Sep 2022 10:29:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EA0A9B81EF0;
-        Mon, 19 Sep 2022 17:29:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66097C433D6;
-        Mon, 19 Sep 2022 17:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663608558;
-        bh=uAaDMBR6wdaIdoGJly4nKlVmMPFF45TGloJtwL9jCQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WS4pPJw6ZjGnVbVrKKmm0gRGZT/xqQLvhHeIzfGUu7y8sPBpLRVJ8BIaEpgk8bLtn
-         cmlG0Z6qwPlS08fSNaHElASfXrK5vywcJvkGE6QH8+5O/G7QttS7iZTScH4A5VIyao
-         lrDCUXClOgpQ/aG8izxixdHhx9MEvJc4ZbP4jNYlodjvspRR4aLRDbcmXmQ868OorQ
-         SvHjwFDpW2lVBBM2AC8vb0ZYYvgbe73/gJxt/QcyLlrLPsV8P3uskgmnyRYBmJnfgS
-         +1jylAC83Mf+CeT73Lrs1GvV6iKEzyfpm8ac6tFsDhIZynjars2KBWh62RY6bOV6o4
-         gH88aWOHedQAQ==
-Date:   Mon, 19 Sep 2022 12:29:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI: dwc: Fixes N_FTS setup
-Message-ID: <20220919172916.GA1012108@bhelgaas>
+        with ESMTP id S229732AbiISRaC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 13:30:02 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E5EE033
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 10:29:59 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id z25so48151367lfr.2
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 10:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=qpgJIJElhOXjn7LOSKznlt5pJlFxXPnXLSPfz4rMEuo=;
+        b=oyzK8EBRU+2zWPdRgH9erpf+j2aLOw0qG78VeQjhQixmYyZrgL9XLnMfYfH5DjWDRa
+         h0bcJHbmayn19VCCHCj544ZxnUazLr/dfGyPhslIsm0T01CYuE2ETRSNYLHGIE9Y6BgC
+         oB3NDG1ZDaewjoflU9W/gVDkShoNRU/IsbDN6sJbj1mPRiK7cQTH2IAa55ialwbvWIiS
+         BRmZs2UK8ZpWEhd/xR0PetTbFLHHAiWq4ZRrpAEuduQrf74+tTuTG5NuCIeMGVydfvSB
+         TIl2n594BENEfVBUVzg48xBJoknMvDkPBL3CZINSPSJUUYE13t4JibccLK0LNovbr8Ic
+         xrYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=qpgJIJElhOXjn7LOSKznlt5pJlFxXPnXLSPfz4rMEuo=;
+        b=jllPNT9M96W+tVu9MpcqG2js7+JoB2brNDOdOq/c9wFWzZ29PT5YC3Yyiw7GIZu+hY
+         NqqeQAnUAnNBLsfrA3IZCezKkg6qca9XkMOIQ0LOua4IhMOxv49IdqZEoETGuXqiia3s
+         XHJFfBjezn9SKi4tUjFDsEdxerj8cHsoZtOGXsnMFWLru2tgOo5rZzd2J5lLnxRB9W/j
+         OEQnPfHAVd8j0yg9oTHu48Kyww0fBgnjc3Z10L59X69hMwEW8bNG3BC+Q+9izfwxILwy
+         VIdQL94bxt3iVB1mAc3NT1xai+1rSU4U9xu3G0gzc4yWG7F5DZKuosITPsqa28xO4B0R
+         lYuQ==
+X-Gm-Message-State: ACrzQf36QVpALwHVGj95mk7GQ/F5w3WrwPTa7hUZYv63m3ho1R65Qj6/
+        LXBV37jf52O+EHvDGcZeGdnFxA==
+X-Google-Smtp-Source: AMsMyM6buy4eNEC6Rgb65J/xMPsi3p+v09EQ6PWBzxA5uOW9Po2LnjNRrdWX5MTNGfAFkdQFpP/vbg==
+X-Received: by 2002:a19:435c:0:b0:49f:5861:59a3 with SMTP id m28-20020a19435c000000b0049f586159a3mr5538223lfj.295.1663608597790;
+        Mon, 19 Sep 2022 10:29:57 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id a17-20020a2eb551000000b00261a8e56fe4sm4994215ljn.55.2022.09.19.10.29.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 10:29:57 -0700 (PDT)
+Message-ID: <bd6fc826-94b9-f539-a37e-820ab49b9d14@linaro.org>
+Date:   Mon, 19 Sep 2022 20:29:56 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919143123.28250-1-vidyas@nvidia.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v6 3/5] phy: core: Add support for phy power down & power
+ up
+Content-Language: en-GB
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, quic_vbadigan@quicinc.com,
+        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>
+References: <1662713084-8106-1-git-send-email-quic_krichai@quicinc.com>
+ <1662713084-8106-4-git-send-email-quic_krichai@quicinc.com>
+ <CAA8EJppgaAuEDU44ePOt+ZWK0_rNsXHnE3WOEc9F-n=VE=3aVQ@mail.gmail.com>
+ <87138bc9-2fc0-39fb-89c1-d3826e28594e@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <87138bc9-2fc0-39fb-89c1-d3826e28594e@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject, "Fix" (not "Fixes") so it's an imperative verb.  Maybe
-"Fix n_fts[] array overrun" to be more specific.
-
-On Mon, Sep 19, 2022 at 08:01:23PM +0530, Vidya Sagar wrote:
-> commit aeaa0bfe89654 ("PCI: dwc: Move N_FTS setup to common setup")
-> unnecessarily uses pci->link_gen in deriving the index to the
-
-Not just "unnecessarily"; using pci->link_gen is *incorrect* since
-only [0] and [1] are defined.
-
-> n_fts[] array also introducing the issue of accessing beyond the
-> boundaries of array for greater than Gen-2 speeds. This change fixes
-> that issue.
+On 14/09/2022 17:50, Krishna Chaitanya Chundru wrote:
 > 
-> Fixes: aeaa0bfe8965 ("PCI: dwc: Move N_FTS setup to common setup")
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 9/9/2022 2:34 PM, Dmitry Baryshkov wrote:
+>> On Fri, 9 Sept 2022 at 11:45, Krishna chaitanya chundru
+>> <quic_krichai@quicinc.com> wrote:
+>>> Introducing phy power down/up callbacks for allowing to park the
+>>> link-state in L1ss without holding any PCIe resources during
+>>> system suspend.
+>>>
+>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>> ---
+>>>   drivers/phy/phy-core.c  | 30 ++++++++++++++++++++++++++++++
+>>>   include/linux/phy/phy.h | 20 ++++++++++++++++++++
+>>>   2 files changed, 50 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+>>> index d93ddf1..1b0b757 100644
+>>> --- a/drivers/phy/phy-core.c
+>>> +++ b/drivers/phy/phy-core.c
+>>> @@ -441,6 +441,36 @@ int phy_set_speed(struct phy *phy, int speed)
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(phy_set_speed);
+>>>
+>>> +int phy_power_down(struct phy *phy)
+>>> +{
+>>> +       int ret;
+>>> +
+>>> +       if (!phy || !phy->ops->power_down)
+>>> +               return 0;
+>>> +
+>>> +       mutex_lock(&phy->mutex);
+>>> +       ret = phy->ops->power_down(phy);
+>>> +       mutex_unlock(&phy->mutex);
+>>> +
+>>> +       return ret;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(phy_power_down);
+>>> +
+>>> +int phy_power_up(struct phy *phy)
+>>> +{
+>>> +       int ret;
+>>> +
+>>> +       if (!phy || !phy->ops->power_up)
+>>> +               return 0;
+>>> +
+>>> +       mutex_lock(&phy->mutex);
+>>> +       ret = phy->ops->power_up(phy);
+>>> +       mutex_unlock(&phy->mutex);
+>>> +
+>>> +       return ret;
+>>> +}
+>> As it can be seen from the phy_power_off(), the PHY can be a shared
+>> resource, with the power_count counting the number of users that
+>> requested the PHY to be powered up. By introducing suc calls you break
+>> directly into this by allowing a single user to power down the PHY, no
+>> matter how many other users have requested the PHY to stay alive.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index c6725c519a47..9e4d96e5a3f5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -641,7 +641,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	if (pci->n_fts[1]) {
->  		val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->  		val &= ~PORT_LOGIC_N_FTS_MASK;
-> -		val |= pci->n_fts[pci->link_gen - 1];
-> +		val |= pci->n_fts[1];
->  		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
->  	}
->  
-> -- 
-> 2.17.1
+> can we use same power_count in this function also here and restrict the 
+> single user to
 > 
+> power down the PHY same like phy_power_off?.
+
+What is the difference between power_off() and power_down()?
+
+
+-- 
+With best wishes
+Dmitry
+
