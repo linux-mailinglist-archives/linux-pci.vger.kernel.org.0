@@ -2,46 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7ED35BD4E9
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 20:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 362955BD4F5
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 20:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiISSpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Sep 2022 14:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        id S229520AbiISSzt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Sep 2022 14:55:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiISSpt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 14:45:49 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4007F476F2
-        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 11:45:48 -0700 (PDT)
+        with ESMTP id S229519AbiISSzt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 14:55:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536853206E;
+        Mon, 19 Sep 2022 11:55:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9CBDBB8085E
-        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 18:45:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1403CC433D6;
-        Mon, 19 Sep 2022 18:45:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB11661645;
+        Mon, 19 Sep 2022 18:55:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31F2C433C1;
+        Mon, 19 Sep 2022 18:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663613145;
-        bh=CaPH1GiQw43HQHeKmwuNXofzz3y75x5BPTF3AxKZvns=;
+        s=k20201202; t=1663613747;
+        bh=fxrYj+SlLB8t+pk8TjlywB7jE7G0jb9b3YEkADAG/Ec=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SS2gab+sRIyrG24IMe7OjgnThXZDGmcOTv8cdU+XlJ7wqeeOkleamtqD6mGjULC1U
-         GbuU7x31eHcbjxrRNPpFcHljYYN1YLU+3hrjBtAZ2nL7sdR8q/CH3PTp9SRIR1pGW2
-         wiBKFKFc5Nh3tTBFzuYiLIk/Yxyv4KZgcwDtRYBxlFyR5+Ea6celqaEYuPVMTDO8Sy
-         eUBVRPOc5Cw7vMtP/wMqc+a8P2i3lsWxa3rZJZu7D7xkYpGvU8ng1n8BCJGkl0ijRu
-         Cwa9x5E1Fn4eBVLpER4//Nqrc2L0qKhF43CDGer8MKYqKRe6m4sp3vRv7IteJmQpz+
-         6Qkd2agDe2Duw==
-Date:   Mon, 19 Sep 2022 13:45:43 -0500
+        b=OixGiX1zzOPN6mg3SiNe/k4cJRLOWMGwkieahZOLsfsrCkX4AX8ynTYtSeFmCP1YV
+         ULh+5dCXo7x8HesmJd+khwvtQjWAazHTShDy8f39YCgtl/rRW5L4V6l2mruz8EHihR
+         xsL5+HdBLLodjHVIqj2Wn3ae4Nq4olM2qX1YIjcab6vtMlplW3esnBDffyLnqE0BIj
+         MrtPpt5o+Vs60Lf3i/hQh5WJ9AVw/RDuHdKNsb5nfzRrjqbhLf0d+l9UmbvdWJCrJw
+         Q4A5+O2yy+Tc3OZj7V+NceumqmbVeFkaESP36M36Q0dDPj/+s7Uz3W3LCP17QYSiC1
+         43xrkM7aciy5A==
+Date:   Mon, 19 Sep 2022 13:55:45 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        logang@deltatee.com, hch@lst.de
-Subject: Re: [PATCH -next] PCI/P2PDMA: Switch to use for_each_pci_dev() helper
-Message-ID: <20220919184543.GA1022568@bhelgaas>
+To:     Shunsuke Mie <mie@igel.co.jp>
+Cc:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-{,v}ntb: fix a check for no epc
+ alignment constraint
+Message-ID: <20220919185545.GA1022691@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220916140329.679633-1-yangyingliang@huawei.com>
+In-Reply-To: <20220916075651.64957-1-mie@igel.co.jp>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,31 +57,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 10:03:29PM +0800, Yang Yingliang wrote:
-> Use for_each_pci_dev() instead of open-coding it.
-> No functional change.
-> 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+On Fri, Sep 16, 2022 at 04:56:51PM +0900, Shunsuke Mie wrote:
+> Some pci endpoint controllers has not alignment constraint, and the
 
-Applied with Logan's Reviewed-by to pci/misc for v6.1, thanks!
+s/pci/PCI/
+s/has not/have no/
+s/constraint/constraints/
 
+> epc_features->align becomes 0. In this case, IS_ALIGNED() in
+> epf_ntb_config_spad_bar_alloc() doesn't work well. So this patch adds the 0
+> checking before the IS_ALIGNED().
+
+s/So this patch adds .../Check for this before IS_ALIGNED()/
+
+> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
 > ---
->  drivers/pci/p2pdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 4496a7c5c478..88dc66ee1c46 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -649,7 +649,7 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
->  	if (!closest_pdevs)
->  		return NULL;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+> index 9a00448c7e61..f74155ee8d72 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+> @@ -1021,7 +1021,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb,
+>  	peer_size = peer_epc_features->bar_fixed_size[peer_barno];
 >  
-> -	while ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pdev))) {
-> +	for_each_pci_dev(pdev) {
->  		if (!pci_has_p2pmem(pdev))
->  			continue;
+>  	/* Check if epc_features is populated incorrectly */
+> -	if ((!IS_ALIGNED(size, align)))
+> +	if (align && (!IS_ALIGNED(size, align)))
+>  		return -EINVAL;
 >  
+>  	spad_count = ntb->spad_count;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index 0ea85e1d292e..5e346c0a0f05 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -418,7 +418,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
+>  	size = epc_features->bar_fixed_size[barno];
+>  	align = epc_features->align;
+>  
+> -	if ((!IS_ALIGNED(size, align)))
+> +	if (align && !IS_ALIGNED(size, align))
+>  		return -EINVAL;
+>  
+>  	spad_count = ntb->spad_count;
 > -- 
-> 2.25.1
+> 2.17.1
 > 
