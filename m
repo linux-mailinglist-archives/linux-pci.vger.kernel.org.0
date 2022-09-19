@@ -2,57 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE555BD3BF
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 19:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E48545BD3E7
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 19:37:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiISRcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Sep 2022 13:32:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        id S229718AbiISRhH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Sep 2022 13:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiISRcm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 13:32:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238FD31DC2;
-        Mon, 19 Sep 2022 10:32:41 -0700 (PDT)
+        with ESMTP id S231397AbiISRgr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 13:36:47 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F386A422E3
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 10:36:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B1AEF61BD4;
-        Mon, 19 Sep 2022 17:32:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE097C433C1;
-        Mon, 19 Sep 2022 17:32:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F2A6B81EF3
+        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 17:36:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C2AC433D6;
+        Mon, 19 Sep 2022 17:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663608760;
-        bh=TB+0gRSIN5rcKrjh40MuTk8n8S3NBnRNudCQ11g3VQY=;
+        s=k20201202; t=1663609003;
+        bh=jkG4891B6GGZ69slhjyKEIVhWBcQm0wrOpbVVV9al2I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O0pmtZQoaOtjsmjSOBs8DglqGNou81tOxyfEbcewNAAhJntyY/ukqaKZpN2xNC6GP
-         tS3s9K9ayax6mIIcNAVRTzkFymC6+r47W+ZVjfeJpgInWCg7bdvQZWK+OylIKmk7Kw
-         HvtKXvYFQZCcPYskb5yJSQ8O1WNzqKrRBSeHkHOVAOpeCj+0vyQvY+SmYfrMc6LrI5
-         iSHHzfSHrIrm8Orx94SzEKUj1UaJPgNW2cwLCHi7pYe67n2yNhq8TAK/G8SJE3JbGv
-         JaiTD6X7YtyRAn2klgr5xoZM2qGXwynR99CewVitDEQJk+DB8cIYxJpmerQFp9x4iW
-         Zzs2bZQ2StdQw==
-Date:   Mon, 19 Sep 2022 12:32:38 -0500
+        b=Ewlo5IFi+88Flt1dhLw8XuNbkGXLKNgaWtJC2D9VSc6zsRz4ZYKdziHPscpKaN4ab
+         QjyVNbY/FmT61DQlTP03v4eaqZSD1Y+yCghSA26b8qMgwReuQST8H2rC+DRJRG+Jgb
+         mH78puWJ/B7CxX3k4fVZoM9TdF6hu7NNlVpNlkg85uKvmMh8w/JAKM7CL2YcXjLhHK
+         nQxM/J1veU7fxTHRU2YLggaomJ+v907QRAJ4SyNATa7BT2pCKlPr4qShEyhdvlE6o6
+         6rRrAkVq2r574bbKYGoOuhpS7dAE7CSUojWuVIoNhea0ZKdUsLXfQDOz6xPbRnweRj
+         2UjVOAvnqy/xw==
+Date:   Mon, 19 Sep 2022 12:36:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     acme@kernel.org, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, leo.yan@linaro.org,
-        james.clark@arm.com, will@kernel.org, mathieu.poirier@linaro.org,
-        mark.rutland@arm.com, suzuki.poulose@arm.com,
-        jonathan.cameron@huawei.com, john.garry@huawei.com,
-        mike.leach@linaro.org, gregkh@linuxfoundation.org,
-        lorenzo.pieralisi@arm.com, shameerali.kolothum.thodi@huawei.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, prime.zeng@huawei.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        yangyicong@hisilicon.com, liuqi6124@gmail.com
-Subject: Re: [PATCH v13 3/3] perf tool: Add support for parsing HiSilicon
- PCIe Trace packet
-Message-ID: <20220919173238.GA1014074@bhelgaas>
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Cc:     Liang He <windhl@126.com>, jgross@suse.com,
+        virtualization@lists.linux-foundation.org,
+        jailhouse-dev@googlegroups.com, mark.rutland@arm.com,
+        jan.kiszka@siemens.com, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, wangkelin2023@163.com,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] jailhouse: Hold reference returned from of_find_xxx
+ API
+Message-ID: <20220919173641.GA1014673@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220919090045.6778-4-yangyicong@huawei.com>
+In-Reply-To: <0069849b-e6c7-5c9b-4b52-5aa6e4a328e4@csail.mit.edu>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,38 +58,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 05:00:45PM +0800, Yicong Yang wrote:
-> From: Qi Liu <liuqi115@huawei.com>
+On Fri, Sep 16, 2022 at 10:25:31PM -0700, Srivatsa S. Bhat wrote:
+> [ Adding author and reviewers of commit 63338a38db95 again ]
 > 
-> Add support for using 'perf report --dump-raw-trace' to parse PTT packet.
+> On 9/16/22 2:00 AM, Liang He wrote:
+> > In jailhouse_paravirt(), we should hold the reference returned from
+> > of_find_compatible_node() which has increased the refcount and then
+> > call of_node_put() with it when done.
+> > 
+> > Fixes: 63338a38db95 ("jailhouse: Provide detection for non-x86 systems")
+> > Signed-off-by: Liang He <windhl@126.com>
+> > Co-developed-by: Kelin Wang <wangkelin2023@163.com>
+> > Signed-off-by: Kelin Wang <wangkelin2023@163.com>
 > 
-> Example usage:
-> 
-> Output will contain raw PTT data and its textual representation, such
-> as:
-> 
-> 0 0 0x5810 [0x30]: PERF_RECORD_AUXTRACE size: 0x400000  offset: 0
-> ref: 0xa5d50c725  idx: 0  tid: -1  cpu: 0
-> .
-> . ... HISI PTT data: size 4194304 bytes
-> .  00000000: 00 00 00 00                                 Prefix
-> .  00000004: 08 20 00 60                                 Header DW0
-> .  00000008: ff 02 00 01                                 Header DW1
-> .  0000000c: 20 08 00 00                                 Header DW2
-> .  00000010: 10 e7 44 ab                                 Header DW3
-> .  00000014: 2a a8 1e 01                                 Time
-> .  00000020: 00 00 00 00                                 Prefix
-> .  00000024: 01 00 00 60                                 Header DW0
-> .  00000028: 0f 1e 00 01                                 Header DW1
-> .  0000002c: 04 00 00 00                                 Header DW2
-> .  00000030: 40 00 81 02                                 Header DW3
-> .  00000034: ee 02 00 00                                 Time
+> Reviewed-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-This is great!  Is there a way to actually decode the TLP headers?
-E.g., something along the lines of what this does?
-https://github.com/NetTLP/wireshark-nettlp/blob/master/plugins/nettlp.lua
+The message to which you are responding didn't make it to the mailing
+list, so it's unlikely that anybody will pick it up.  See the archive:
+https://lore.kernel.org/all/0069849b-e6c7-5c9b-4b52-5aa6e4a328e4@csail.mit.edu/
 
-If there is, it might be nice if the commit log included a hint about
-how to do more decoding.
+Maybe it was a multipart message or was HTML, which the mailing lists
+reject: http://vger.kernel.org/majordomo-info.html
 
 Bjorn
