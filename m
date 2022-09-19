@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ACF75BD151
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 17:42:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B98625BD154
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Sep 2022 17:42:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230342AbiISPmA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Sep 2022 11:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        id S230311AbiISPmL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Sep 2022 11:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbiISPlq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 11:41:46 -0400
+        with ESMTP id S230307AbiISPl5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Sep 2022 11:41:57 -0400
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2044.outbound.protection.outlook.com [40.107.21.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A89399F8;
-        Mon, 19 Sep 2022 08:41:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBA3A159;
+        Mon, 19 Sep 2022 08:41:45 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g8GF9W/A+ADNtUH9c3WBdfBdHLZxp06Tx+iYniz5wrhJQJQsShM6Eg0orA3dt060/iH+PnFxa1f+msiSYLgUVXD01Q1Rr8ChBgnKPYJFFUXDYI/Uw2oCUz208iRRRQoW6WV+ifETH7FXzlixUgxJBe014tp0T1z8bKg8Y4btLubZeQuoc6kY22nDuOMIghsHhhIRgvU8lpB3+Pvuiy/0dw1ha6Dn9Ip/BbPnqtyrGbrK0UeAwDyEcDqJtJGYzPG/I+kI25J2fAKuXBNV/oLaJVeSCL1W55Yraudu/nqY14YfkN2+K3evpBPlqPlNZWgGZyIJHYCGrAuJXQdfXDnkSA==
+ b=AQV8xU7mPAKg165oPpAUJmJQda+r+0P4FCc8X/jHmaqD9pr4Kvl8MqAMJ3ID2bqaCZ28aKn9TD71Wff0n3Pdgu83kkBpUAaviv9CR0atKzRJZs+un2TnZb780TqWF1QWIi76NgI7W8mNDNQ/uxlAVvJBqts5bYadRPhnZLeHK4zK03vPRTqE7lPJQHhew6dRJ6BRovFbHRC0P2m032RNCMIpS1BdmyQxM3ry5ZYwDp7ap9glTLGz/TYbKAFCy/l0YnV2urGBSESo6d8GKAJ8HUY2W3yhAqa4UtrX8RLNV/hcv8Pi+dvAaeAyB1DYPqX5RTMqAT55ix0SM7PVSjVEbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q4AcB2RqDPI/KvJ8x43udsBlzc9VfZ0PGuEvXiaJtys=;
- b=D/05vQV3louTKEsGA5hqauvKpn2PjeLVVTtQxXGEUtpIEtUDv0dDuKlyfWNXhPflI5IKkgTpOAistCmhk/pZ1szglo/GSPu5SX4nwKXc8FpcYPtnf4JmevafS2hfii1BKzl3BX5SDGfeHDQfEZDbtoxSM8ap5Bb5Cmc+iwDsNO+wA1e4hnzF2yzk07rRpbTKCy2gQikF/CBxAbyfybhNQ+fR7vVAj/kh/tzt54zzPG0LLqueHsDp6BnePJdBDlnW5uXZIu7sRoV2zuiuL0cDKY+XF0iS16BBfNXXuGmVrNPEVAN55Rpv1zOLmpd9AVIaoIcNzf8aakZOoxwLpCtmmw==
+ bh=S+y6KFDFpJGY3mCQokZytDF6vDhQSn1oubXHZ9oJp70=;
+ b=lKE/oZ0ddbeqyoFeJ//mynRp8CR78Ra2rmooAPv/pQ5ydb05f6bordqP3R66LUVUo3XvhLWJPn7n1K9aIpiSkfRRvhSarb/t/fwQOYg6WOKiNG9eZdGIPpigixgkGz9LSw9JqEJhWLjaCJVTNgnuJalUDpZRTh1BsFvo4XhyGUgXZrVROqMsRNCmw9aoXrlR6yi3QeP3fpZnNp4OunnEXzexnPG3cXqht2IxGFU80mf0CH31YsBshPeckiZeboMEu05H+L3jOoRH7iJe3jLJzxg33qpY2CfVWOGOoYEpN1vtFT2Ds982QgSY1HEAAdo5tURnI65Iosdz6aSjJkxCWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q4AcB2RqDPI/KvJ8x43udsBlzc9VfZ0PGuEvXiaJtys=;
- b=o05cF1HcHq4oSZhN4+N2QzsAFoQpCkRLQQJ4Cjf0XEL3gUVl2XeQ228betp+ajY1+nObxH6xMnOIOypmh4IbyYXOWIzGkxD5WTVq35pU1zknBFejrA5NNwQUA5mG9dDXN4RSl/srum4pWwFZIxTfm7TbxyuRe8lGENvNh/HYY68=
+ bh=S+y6KFDFpJGY3mCQokZytDF6vDhQSn1oubXHZ9oJp70=;
+ b=GSWRiPB0gQ7prdwU4bNaO069n8Z96FzB6TntBqZu9PkQnw+58rHt8Pr92E29MXZRsI3bevVD5qHx+IVtI8/fIMQ3zVQMzt15ozC+aM74/CdcLzHbQ3d60S8aJvo3v2TgK3lDezAAowg34N/uL9fHu8wHB7g8ADu8mn9rXI3eo3A=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM9PR04MB8793.eurprd04.prod.outlook.com (2603:10a6:20b:408::22)
  by VI1PR04MB7165.eurprd04.prod.outlook.com (2603:10a6:800:125::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.19; Mon, 19 Sep
- 2022 15:41:29 +0000
+ 2022 15:41:34 +0000
 Received: from AM9PR04MB8793.eurprd04.prod.outlook.com
  ([fe80::5a3:ff70:317d:a99e]) by AM9PR04MB8793.eurprd04.prod.outlook.com
  ([fe80::5a3:ff70:317d:a99e%7]) with mapi id 15.20.5632.021; Mon, 19 Sep 2022
- 15:41:29 +0000
+ 15:41:34 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     maz@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
@@ -50,64 +50,73 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
         lznuaa@gmail.com, imx@lists.linux.dev,
         manivannan.sadhasivam@linaro.org
-Subject: [PATCH v11 5/6] PCI: endpoint: cleanup pci-epf-vntb.c
-Date:   Mon, 19 Sep 2022 10:40:37 -0500
-Message-Id: <20220919154038.187168-6-Frank.Li@nxp.com>
+Subject: [PATCH v11 6/6] PCI: endpoint: Add vNTB MSI support
+Date:   Mon, 19 Sep 2022 10:40:38 -0500
+Message-Id: <20220919154038.187168-7-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220919154038.187168-1-Frank.Li@nxp.com>
 References: <20220919154038.187168-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: BY3PR05CA0059.namprd05.prod.outlook.com
  (2603:10b6:a03:39b::34) To AM9PR04MB8793.eurprd04.prod.outlook.com
  (2603:10a6:20b:408::22)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM9PR04MB8793:EE_|VI1PR04MB7165:EE_
-X-MS-Office365-Filtering-Correlation-Id: abe7d279-6fa2-4f41-9156-08da9a556b30
+X-MS-Office365-Filtering-Correlation-Id: 5bf9d996-843c-4df6-f113-08da9a556e7c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RsIB34wZCjE7UruW2H0eOsCicBNiZqbLutJE2yTUF6SMFYm3ZxZaaqk/ERaTeEBBdkzrSuur6Js6BWL7g2mkfHH7Y3Lv3vJbWh9r9gJQ/mpUOnZDoN91C//obrrMBDaO/b2NJuGNadqV8E035OOXHT8lAQ7WevUZXbR9V4/RUjb+9im/P44GYMTU/CWieFkSyTNfq99y6SlfMfytYLqz+eKzoEQSqiRFPojesQS1Vtv0ZBwcodBb1ca1WWPPsyl3pTu8IIFPPaNSlu7Rc6i2S3Rsd/al1HLHtH/J5fdAVwUxRQtKgfv1qWKzJaxGzrpRmMroWgxSMPd95jHRf2t5+e+93N5SzeDcfTkkPLWzcxCFLutKNfLh321qsoKt+TrpD/5udC8zNJHgoBTW9PH/6722CPmeWdDLt07u+CnhGno8lLw3iwYDGZZX/xk/zLDCHasf9D1Skm/HrJhuzKyMid3M+HfAWN6FKhUvjUkAzpQFyESo1dnr0kyxG2aduBVb4BoQ3r39Mqr51c2XbaV7sOTmWKA84C0MvJmJDcHG5UQAl/gWJyuysxLwsichY0+G0sBAqBcIzvgG4QU+8irPhhQLd108Rrnu18MIMfHrnCvseaYowUSbL9KIzPZ6XxfoXEYzHJ+tCANJ8jJFAwAcrIVyaBOyEYWXdewveNd4QrzVozJJ189ECr3s1s2ZA5PqrG6sSOyDusBrtGjnB0FS7MgcYBl/JVo9wdOgHvp/cnof9WycpAnuOt4T8E9pTujSpPUL1uQj+xkkH/T5UbCCFw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8793.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(396003)(346002)(376002)(136003)(451199015)(4326008)(36756003)(1076003)(2906002)(2616005)(66946007)(38100700002)(38350700002)(83380400001)(8936002)(6486002)(186003)(66556008)(66476007)(6666004)(478600001)(86362001)(8676002)(6512007)(26005)(316002)(41300700001)(5660300002)(52116002)(6506007)(7416002)(30864003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: rg7vXEHW7QxHfx9n87hsV/AQffiC5lntVSRgzKN2Ahfy/6giB3wfjF++fXjRxtNYJa2hXPsecxTMfmzT7HOrE67fVRC3NtuBWWT96qk78oAkiACZySlI2q5SSxQikR5P5DQYvVO5Mk5Lcql6FgAop+Jy5XG7qhWUKL0ljh0PPBCbcwqQcVe7Ubh+X61KWO5ghJS6GiIPwQAhY4DBxSKQwNToy1q4jUVtisR24dGLpR9lm7aR4Al8XwSWmjzZ/aVqv6VLy6iD+q4fOIBfQ6i1HHma6AwTgGWi4I5mm4xHHdEf09OtV0jA0PUoln43DE/tarFAAAYzual5kju7D/JcJnsK6tAVoFw+ZROOMXskOIHxzvRe49MIFgRf+CS9YsCx1hMhF+KntFylLJT5VOTXIPHYzYEMUP/Xq3iqWvl07i67YGpogVjkBGnq/XGi/xJbRpgF0UkTbVMK8FV1SbV0B3ekZS+uq79ejjWOgz58yCHe1B34q1c0oAf7itgsL7s8rXHuzR+JK+o+RX09LpjkxHkp92TbV8uekL8baX5OSgX/i8pRXVv5AID+Mqmx0GA1efgcbKXxtDqmS97TnO5KzH+h+OuM/sGmmJkf9D39RLBh7skVQLFn3U/KWXhHqKtMm+QclU3CijgNKvwpkm0HTddirOwO4qRJwW0PBnJWivin77sVL4HfO0rqmfnWJ492E/OIdOO0TB6QCsJe7BJw0jt5qWjK7UTEvYFhEN04slGty8VTya9jogR6hTq7pSJLWuT/Fd4gvYG9H5Aw1bYmRg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8793.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(396003)(346002)(376002)(136003)(451199015)(4326008)(36756003)(1076003)(2906002)(2616005)(66946007)(38100700002)(38350700002)(83380400001)(8936002)(6486002)(186003)(66556008)(66476007)(478600001)(86362001)(8676002)(6512007)(26005)(316002)(41300700001)(5660300002)(52116002)(6506007)(7416002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kNucwszJKmh6Fx/AlmM2hgDZ0TKoXCi72fnaAnnioYlszm2QYlpPTyH0dbLV?=
- =?us-ascii?Q?1rrxJXMIjG3xy9Kkyj9pw/Wu07Qp7q3WY4wHT1MhMFC1V0KDU0/vdevcPSS9?=
- =?us-ascii?Q?7Pdx6hAJbkU/MQxUql9KGuXquhGTprD1WKXmZH1MD5QocIWtn0VuDl+zPNMS?=
- =?us-ascii?Q?w0HlzgZ7AqAXuQ4fnloutcCN6R/oegcoEmizUAiOloX95SVVC2ulfrJfgyvW?=
- =?us-ascii?Q?EbPKx/gX6+cztRnraluUeOA0/iPkOQxBQTJ74v1KtEAY/2pqY/3UylTBHsQl?=
- =?us-ascii?Q?mUHnkvZqmXZ3jUeC5KXIM2zacLRw/c49fW2gHuUkLRpTJM6aB48hIOAqtGGo?=
- =?us-ascii?Q?uRUBzN6+zT4gS7T0OeNu3XMcC0yueahO3THx7RJiN4zWgVQzbUeByj/YlGc+?=
- =?us-ascii?Q?u4uSI3exU3g5WOvO+LDNHpWOWN6QXpSpjlDGDWeOds/TjpO+OzZjYWFED+ls?=
- =?us-ascii?Q?jt+rJphCNdOYww6MIdheXQfYAO5qidAgN6zDTRsB3tLAX8z18RG6m7NRvG3k?=
- =?us-ascii?Q?EFy6YKCsDeiN57WRuhZ94tIGTF33etxs7k4BPlfDwUZLItsXR0y92DguhJBj?=
- =?us-ascii?Q?X1IQZi1J0MLBEVJvTdH2QWYHn3Guo2b/t6GqNxl9EqcIjoZv/Zhv1Kpy3cE7?=
- =?us-ascii?Q?dOkZVqLhtcYazxLuqOKQL2aSrModdjenfu2JDCnHD/Bo6kHzcFukxgNr5h8S?=
- =?us-ascii?Q?EPHBpDfq6T6FnXBPSShCtezUQQZq3t5G23bNltctmfN5VDU7dcjnAEmtMECk?=
- =?us-ascii?Q?Ee0YUM8U8HtBPh3nQmSwryv6sCBMcqvX9rKd9fRNz6YcYG3AlY+ZKxNbd4RR?=
- =?us-ascii?Q?OFEiRSev7va7McTtb92CaMECiLxwkmCgpUFRBtXHUhXYBi+5luWyFphe+bhJ?=
- =?us-ascii?Q?i3xS5+NjVrI+NJ5rLBJfKxqsZWAKEa3N2baU08aXh878yQCemOCqstP+8Dzc?=
- =?us-ascii?Q?EcLoaxdbyDyBE/G/9aO4RQGrDfJQAyfwKVUrYXySQXEqp6STfwvD9VIu/zlj?=
- =?us-ascii?Q?YNSo7WUJfhxUNvFRTTbywaDidc0wLAXkvshhe6jkH/hWBGNQg8vKIRBv0Edp?=
- =?us-ascii?Q?MDaCfUMckklf3ImA2vrFPgN1NhkozqqKFo0jm4xubmiyuAez8bbCzOE7doIK?=
- =?us-ascii?Q?7keSsR6IaPNcGxwFzGS/jdfyTXH1pyJaTFg2yNOOKZDEKn7wgtY6U/w6kchq?=
- =?us-ascii?Q?WosWuxU/9AHomxbE46WP9bxEEfZOwUQVQNi8flYmlEOT2KP3bDFWMPdapj2+?=
- =?us-ascii?Q?hlAH+y9E4jnFzM/ZpIdQJUKngbtNFZV2dhrYJCIUWSGlz/ZjYuNPLue5HYn3?=
- =?us-ascii?Q?qa9WmVjaGEJBGYbFL4Or+tjfLcrMoDl0z/fbYKKC3ckxEE8vR9khdY2xLQuC?=
- =?us-ascii?Q?V20rk912US3pvXrJ2AOLP8IxhnH/0vzkIiYwWHSGXG5jo0VP2Ng4P6JdjguG?=
- =?us-ascii?Q?Z6NmVrT9/8A9ta1FKGpkTkZb0uOhulAteBfzScL16beJAY1di6wUyxEj+8b8?=
- =?us-ascii?Q?fuOn/QvGECBMIP76ajk10hFfyBUmkgqAWRwPuzzEafT8qZnVuEAZrs9D/JiZ?=
- =?us-ascii?Q?dIj1jXCqdAyShDXSU0+cIWp1tWYHyEcBHXEILnV8?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFZoeWoyZzMrbDRRMUIxN1dLek5NN0JlNFNqMm1ER0VRc3FFMEVhWW1RK2lC?=
+ =?utf-8?B?QjdXQlY5TThaNGgxdlBxV1VkVFBadlhubWRzV3VoZTFlL2hVOXhRWkxHRHA1?=
+ =?utf-8?B?U3ZqTW1YNS95VmVqY0NvdFBuWE5KbUlybmlqRTJUSXA5YzZ1OWg5ZCtUS2o1?=
+ =?utf-8?B?ZWFlWSthTzdlUEw0aTN0dkpjSDgxUlkxbXc5dHA5YnZxaStDZmxDczF3WHZU?=
+ =?utf-8?B?aVNZR0FaZm5vaVhYQUdzZkdEa1oyVitpclVwZFNVVy9ZWVl3cDhuZ2E4Sy9z?=
+ =?utf-8?B?UEZ1YVpFY05waGl1L3hKdUw5aTM0MnZhc0pvM1p3RkNWY3Urd3VSRnM1MFJm?=
+ =?utf-8?B?VndRK0duUHlyekF3d2xaait5a1g4R25pUFAvbW1ZU3o2QUdWanB5M09raUx2?=
+ =?utf-8?B?NU1zdVhNQTkvYkhzUFVoWEpXZmNWa3JoT3l6dkFOMHAzVmc1N3RlYU1sak5O?=
+ =?utf-8?B?bWtZdk82V240TzR0ajRpUC9hSnVMb0lDWDFKQmNzWnpaV05LNmZ5VUs2R0JC?=
+ =?utf-8?B?U043RllnajN4S09CZmFEWWRHT2o4c3FNMUtrbXA4VTcvT2FBMFRBekFBeElO?=
+ =?utf-8?B?WXMyRCtaa2JxVG9uS3NxaGJXZ3c3ZklmZ2xDbWMvR0MrVmxOM0lsMkZZei8y?=
+ =?utf-8?B?cnk4TUVMajY3SEJLWEtqLzIyUUlHVUYvZ3NjaGFRcjdVelJPS3R6eWgzenhL?=
+ =?utf-8?B?T1ZUR0tPbEIyOGJ6VDFmRzJLcEk5UWVhRHdpUmE0aktqYnRRL21TWkxGeWRj?=
+ =?utf-8?B?empNZ0xqTURScmZMaEMzaSt5akErSDJpRkgrbG5NbnFVZDZwVEgxUnRHZXJI?=
+ =?utf-8?B?UGxOaG41MTdGZVRRZ3B3Zlp5SFNKTUVmaCtaWlhZK3ZNNGJDYldyUmlGeGJy?=
+ =?utf-8?B?YmJXYzNZQmVJMmpQQ0NQanN3bC9VWWYzZEdCeGpZOHAzb1BsU3pYcU9kTktG?=
+ =?utf-8?B?TFdMcWRLeHhoZC8yd00rcVVBSVJXNVRvR1JWM09MaE5HZ1NERzJzeTIrWVhD?=
+ =?utf-8?B?NkV1UW1hQmNtMXYyejV5VEdSNXFzNzJQUktvditNZHdiWkFRc0kwT1lFbW9j?=
+ =?utf-8?B?K2lFV3ZLNXZaTzZjSkZNRzU5VmdtU3FWYW8wVXk4NmprR2owNHdzc2xYU255?=
+ =?utf-8?B?UDR1S1Exc21ObkRmaWZHb0dSb2xzRDJST1NMWEJkN3ZMZXY2a2I4MXVYbzJm?=
+ =?utf-8?B?ZGNtSW95U0JKWE00VTB5VGRVUG1reS9qU3N5VkFTQjRPMzlGZ3FjTmFoY1l2?=
+ =?utf-8?B?R0puMFY5bjhDZWVQYUIxbnZhclk1QUxwNUVBV0tvNWVLS2REdUZYbVBSN3Uw?=
+ =?utf-8?B?ZnkwVml2dU9XNlNlRFdoYitOQVo5QW1RRGIzNGxReDhsVlFiQjhySEU5TWdU?=
+ =?utf-8?B?djBlQVorUzdNMmdseFZQdVNwRFAza1RRSlNiL0x6TjMzRFBRSmduZWZqeGMv?=
+ =?utf-8?B?aldlekdiWTBFZFhvekxLbUZvYlpscXE5bWtoYXpOUmljOXZqeTkxUmFuSS9Q?=
+ =?utf-8?B?dmY2TC9wY0o5ZUJHYlluM0RqWUc1bitFOWlBYWhSVTJwSXVWL0ZROTEzNmE5?=
+ =?utf-8?B?L2lveDFTeUlEMmNRWHA4dVlxNHk1Y1BMTi9UUXdMaHdsVUNmdU9wSTVGNCsy?=
+ =?utf-8?B?L0VWUjBhK1JzVEhpa2k3ZG5zcmRQbE5rby81V0tGeDFlVUJhd1VjbG05THYw?=
+ =?utf-8?B?bnc3cE0zUkovSkRKWEtIenEyWFVLanNlNlBic2tncVNpSHRhVTNmWUIrczJz?=
+ =?utf-8?B?MWt4aFNFZlNwRUM1L3IwWE5vaU55TFptTUtCV0xuYjhyUWkvcC9UNW0vb0VF?=
+ =?utf-8?B?WHdqaEVBZlFEUFh1UmxBMDJHb0tpTWk1bjJqOGdlVFFheFdRNWJxUHhvVG1x?=
+ =?utf-8?B?cCs0YWVuV3R2am9sek1WaUlrVTcrNzdEZTNlZFlha0lEYnYwcVRXQWpLcHNK?=
+ =?utf-8?B?ZTRVbjRvSzF4TG9hbFRTdE9tV2F3Nmwxa0sxamljZG1uZTNxZFBMc1JpTm15?=
+ =?utf-8?B?Y0FoZjVIdktaMTNpQ1RQaFlHZ2h6SjhmQ0xEYytadHBCNEdNdEdRYWVIRDEr?=
+ =?utf-8?B?cTFrTjYybGpvWllVbHlob2J3VjJyODFneS9YdFk0b0ZVYTJyeXZ3eFlzTnph?=
+ =?utf-8?Q?Hwc62LwkTLpcDygsnTd8bc084?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abe7d279-6fa2-4f41-9156-08da9a556b30
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bf9d996-843c-4df6-f113-08da9a556e7c
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8793.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 15:41:28.9619
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 15:41:34.7299
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EG34kZ+5AJ5XDgDqEKJlxcLygsEnr3ihxW2QD/giQU+/goDAIhBZdrFLkFUCtYXTmaBY3KS/QxBbr80+MPXtuA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: qoUQVLjzwSH/cAwj5amgKUGYDSlDc3lSzAHa9xh9hi4H7bmq1k09Kaea+C9LIoTraUx5f9ikZDhHuxeA9eJghg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7165
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -119,459 +128,275 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove unused field: epf_db_phy.
-Remove __iomem before epf_db.
-Change epf_db to u32* from void *
-Remove dupicate check if (readl(ntb->epf_db + i * 4)).
-Using sizeof(u32) instead of number 4 at all place.
+                      ┌───────┐                   ┌──────────┐
+                      │       │                   │          │
+    ┌─────────────┐   │ PCI   │                   │ PCI Host │
+    │ MSI         │◄┐ │ EP    │                   │          │
+    │ Controller  │ │ │       │ 3.MSI Write       │          │
+    └────────┬────┘ └─┼───────┼───────────────────┤          │
+      ▲      │        │       │                   ├─BAR_n    │
+      │      └────────┼───────┼──────────────────►│          │
+      │               │       │ 2.Call Back       │          │
+      │               │       │   write_msi_msg() │          │
+      │               │       │                   │          │
+      │               └───┬───┘                   └──────────┘
+      │                   │
+      └───────────────────┘
+      1.platform_msi_domain_alloc_irqs()
 
-Clean up sparse build warning
-  Using  epf_db[i] instead of readl() because epf_db is located in local memory
-  and allocated by dma_alloc_coherent()
+There is no defined way of raising IRQs by PCI host to the PCI endpoint.
+Only define MSI/MSI-X to let EP notified RC status change.
 
-Replace pci_epc_mem_free_addr() with pci_epf_free_space() at error handle path
-to match pci_epf_alloc_space().
+The memory assigned for BAR region by the PCI host is mapped to the
+message address of platform msi interrupt controller in PCI Endpoint.
+Such that, whenever the PCI host writes to the BAR region, it will
+trigger an IRQ in the Endpoint.
 
-Cleanup warning found by scripts/kernel-doc
-Fix indentation of the struct epf_ntb_ctrl
-Consildate term
-  host, host1 to HOST
-  vhost, vHost, Vhost, VHOST2 to VHOST
+Basic working follow as
+1. EP function driver call platform_msi_domain_alloc_irqs() alloc a
+MSI irq from MSI controller with call back function write_msi_msg();
+2. write_msg_msg will config BAR and map to address defined in msi_msg;
+3. Host side trigger an IRQ in Endpoint by write to BAR region.
+
+Add MSI support for pci-epf-vntb. Query if system has an MSI controller.
+Set up doorbell address according to struct msi_msg.
+
+So PCI RC can write this doorbell address to trigger EP side's IRQ.
+
+If no MSI controller exists, fall back to software polling.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 157 ++++++++++--------
- 1 file changed, 90 insertions(+), 67 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 149 +++++++++++++++---
+ 1 file changed, 128 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 1466dd1904175..90522de00c6a9 100644
+index 90522de00c6a9..34e01c30aea41 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -11,7 +11,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
+@@ -44,6 +44,7 @@
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ #include <linux/ntb.h>
++#include <linux/msi.h>
  
--/**
-+/*
-  * +------------+         +---------------------------------------+
-  * |            |         |                                       |
-  * +------------+         |                        +--------------+
-@@ -99,20 +99,20 @@ enum epf_ntb_bar {
-  *       NTB Driver               NTB Driver
-  */
- struct epf_ntb_ctrl {
--	u32     command;
--	u32     argument;
--	u16     command_status;
--	u16     link_status;
--	u32     topology;
--	u64     addr;
--	u64     size;
--	u32     num_mws;
--	u32	reserved;
--	u32     spad_offset;
--	u32     spad_count;
--	u32	db_entry_size;
--	u32     db_data[MAX_DB_COUNT];
--	u32     db_offset[MAX_DB_COUNT];
-+	u32 command;
-+	u32 argument;
-+	u16 command_status;
-+	u16 link_status;
-+	u32 topology;
-+	u64 addr;
-+	u64 size;
-+	u32 num_mws;
-+	u32 reserved;
-+	u32 spad_offset;
-+	u32 spad_count;
-+	u32 db_entry_size;
-+	u32 db_data[MAX_DB_COUNT];
-+	u32 db_offset[MAX_DB_COUNT];
- } __packed;
+ static struct workqueue_struct *kpcintb_workqueue;
  
- struct epf_ntb {
-@@ -136,8 +136,7 @@ struct epf_ntb {
- 
+@@ -137,11 +138,14 @@ struct epf_ntb {
  	struct epf_ntb_ctrl *reg;
  
--	phys_addr_t epf_db_phy;
--	void __iomem *epf_db;
-+	u32 *epf_db;
+ 	u32 *epf_db;
++	phys_addr_t epf_db_phys;
  
  	phys_addr_t vpci_mw_phy[MAX_MW];
  	void __iomem *vpci_mw_addr[MAX_MW];
-@@ -156,12 +155,14 @@ static struct pci_epf_header epf_ntb_header = {
+ 
+ 	struct delayed_work cmd_handler;
++
++	int msi_virqbase;
  };
  
- /**
-- * epf_ntb_link_up() - Raise link_up interrupt to Virtual Host
-+ * epf_ntb_link_up() - Raise link_up interrupt to Virtual Host (VHOST)
-  * @ntb: NTB device that facilitates communication between HOST and VHOST
-  * @link_up: true or false indicating Link is UP or Down
-  *
-  * Once NTB function in HOST invoke ntb_link_enable(),
-- * this NTB function driver will trigger a link event to vhost.
-+ * this NTB function driver will trigger a link event to VHOST.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
- {
-@@ -175,9 +176,9 @@ static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
- }
+ #define to_epf_ntb(epf_group) container_of((epf_group), struct epf_ntb, group)
+@@ -256,10 +260,13 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
  
- /**
-- * epf_ntb_configure_mw() - Configure the Outbound Address Space for vhost
-- *   to access the memory window of host
-- * @ntb: NTB device that facilitates communication between host and vhost
-+ * epf_ntb_configure_mw() - Configure the Outbound Address Space for VHOST
-+ *   to access the memory window of HOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  * @mw: Index of the memory window (either 0, 1, 2 or 3)
-  *
-  *                          EP Outbound Window
-@@ -194,7 +195,9 @@ static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
-  * |        |              |           |
-  * |        |              |           |
-  * +--------+              +-----------+
-- *  VHost                   PCI EP
-+ *  VHOST                   PCI EP
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_configure_mw(struct epf_ntb *ntb, u32 mw)
- {
-@@ -219,7 +222,7 @@ static int epf_ntb_configure_mw(struct epf_ntb *ntb, u32 mw)
- 
- /**
-  * epf_ntb_teardown_mw() - Teardown the configured OB ATU
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  * @mw: Index of the memory window (either 0, 1, 2 or 3)
-  *
-  * Teardown the configured OB ATU configured in epf_ntb_configure_mw() using
-@@ -234,12 +237,12 @@ static void epf_ntb_teardown_mw(struct epf_ntb *ntb, u32 mw)
- }
- 
- /**
-- * epf_ntb_cmd_handler() - Handle commands provided by the NTB Host
-+ * epf_ntb_cmd_handler() - Handle commands provided by the NTB HOST
-  * @work: work_struct for the epf_ntb_epc
-  *
-  * Workqueue function that gets invoked for the two epf_ntb_epc
-  * periodically (once every 5ms) to see if it has received any commands
-- * from NTB host. The host can send commands to configure doorbell or
-+ * from NTB HOST. The HOST can send commands to configure doorbell or
-  * configure memory window or to update link status.
-  */
- static void epf_ntb_cmd_handler(struct work_struct *work)
-@@ -254,12 +257,9 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
  	ntb = container_of(work, struct epf_ntb, cmd_handler.work);
  
- 	for (i = 1; i < ntb->db_count; i++) {
--		if (readl(ntb->epf_db + i * 4)) {
--			if (readl(ntb->epf_db + i * 4))
--				ntb->db |= 1 << (i - 1);
--
-+		if (ntb->epf_db[i]) {
- 			ntb_db_event(&ntb->ntb, i);
--			writel(0, ntb->epf_db + i * 4);
-+			ntb->epf_db[i] = 0;
+-	for (i = 1; i < ntb->db_count; i++) {
+-		if (ntb->epf_db[i]) {
+-			ntb_db_event(&ntb->ntb, i);
+-			ntb->epf_db[i] = 0;
++	if (!ntb->epf_db_phys) {
++		for (i = 1; i < ntb->db_count; i++) {
++			if (ntb->epf_db[i]) {
++				ntb->db |= 1 << (i - 1);
++				ntb_db_event(&ntb->ntb, i);
++				ntb->epf_db[i] = 0;
++			}
  		}
  	}
  
-@@ -321,8 +321,8 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
- 
- /**
-  * epf_ntb_config_sspad_bar_clear() - Clear Config + Self scratchpad BAR
-- * @ntb_epc: EPC associated with one of the HOST which holds peer's outbound
-- *	     address.
-+ * @ntb: EPC associated with one of the HOST which holds peer's outbound
-+ *	 address.
-  *
-  * Clear BAR0 of EP CONTROLLER 1 which contains the HOST1's config and
-  * self scratchpad region (removes inbound ATU configuration). While BAR0 is
-@@ -331,8 +331,10 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
-  * used for self scratchpad from epf_ntb_bar[BAR_CONFIG].
-  *
-  * Please note the self scratchpad region and config region is combined to
-- * a single region and mapped using the same BAR. Also note HOST2's peer
-- * scratchpad is HOST1's self scratchpad.
-+ * a single region and mapped using the same BAR. Also note VHOST's peer
-+ * scratchpad is HOST's self scratchpad.
-+ *
-+ * Returns: void
-  */
- static void epf_ntb_config_sspad_bar_clear(struct epf_ntb *ntb)
- {
-@@ -347,13 +349,15 @@ static void epf_ntb_config_sspad_bar_clear(struct epf_ntb *ntb)
- 
- /**
-  * epf_ntb_config_sspad_bar_set() - Set Config + Self scratchpad BAR
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-- * Map BAR0 of EP CONTROLLER 1 which contains the HOST1's config and
-+ * Map BAR0 of EP CONTROLLER which contains the VHOST's config and
-  * self scratchpad region.
-  *
-  * Please note the self scratchpad region and config region is combined to
-  * a single region and mapped using the same BAR.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_config_sspad_bar_set(struct epf_ntb *ntb)
- {
-@@ -380,7 +384,7 @@ static int epf_ntb_config_sspad_bar_set(struct epf_ntb *ntb)
- /**
-  * epf_ntb_config_spad_bar_free() - Free the physical memory associated with
-  *   config + scratchpad region
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  */
- static void epf_ntb_config_spad_bar_free(struct epf_ntb *ntb)
- {
-@@ -393,11 +397,13 @@ static void epf_ntb_config_spad_bar_free(struct epf_ntb *ntb)
- /**
-  * epf_ntb_config_spad_bar_alloc() - Allocate memory for config + scratchpad
-  *   region
-- * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-  * Allocate the Local Memory mentioned in the above diagram. The size of
-  * CONFIG REGION is sizeof(struct epf_ntb_ctrl) and size of SCRATCHPAD REGION
-  * is obtained from "spad-count" configfs entry.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- {
-@@ -424,7 +430,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- 	spad_count = ntb->spad_count;
- 
- 	ctrl_size = sizeof(struct epf_ntb_ctrl);
--	spad_size = 2 * spad_count * 4;
-+	spad_size = 2 * spad_count * sizeof(u32);
- 
- 	if (!align) {
- 		ctrl_size = roundup_pow_of_two(ctrl_size);
-@@ -454,7 +460,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- 	ctrl->num_mws = ntb->num_mws;
- 	ntb->spad_size = spad_size;
- 
--	ctrl->db_entry_size = 4;
-+	ctrl->db_entry_size = sizeof(u32);
+@@ -464,7 +471,7 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
  
  	for (i = 0; i < ntb->db_count; i++) {
  		ntb->reg->db_data[i] = 1 + i;
-@@ -465,11 +471,13 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
+-		ntb->reg->db_offset[i] = 0;
++		ntb->reg->db_offset[i] = sizeof(u32) * i;
+ 	}
+ 
+ 	return 0;
+@@ -517,6 +524,28 @@ static int epf_ntb_configure_interrupt(struct epf_ntb *ntb)
+ 	return 0;
  }
  
- /**
-- * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capaiblity
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capability
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-  * Configure MSI/MSI-X capability for each interface with number of
-  * interrupts equal to "db_count" configfs entry.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_configure_interrupt(struct epf_ntb *ntb)
- {
-@@ -511,18 +519,22 @@ static int epf_ntb_configure_interrupt(struct epf_ntb *ntb)
- 
++static int epf_ntb_db_size(struct epf_ntb *ntb)
++{
++	const struct pci_epc_features *epc_features;
++	size_t size = sizeof(u32) * ntb->db_count;
++	u32 align;
++
++	epc_features = pci_epc_get_features(ntb->epf->epc,
++					    ntb->epf->func_no,
++					    ntb->epf->vfunc_no);
++	align = epc_features->align;
++
++	if (size < 128)
++		size = 128;
++
++	if (align)
++		size = ALIGN(size, align);
++	else
++		size = roundup_pow_of_two(size);
++
++	return size;
++}
++
  /**
   * epf_ntb_db_bar_init() - Configure Doorbell window BARs
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
- {
- 	const struct pci_epc_features *epc_features;
--	u32 align;
- 	struct device *dev = &ntb->epf->dev;
--	int ret;
- 	struct pci_epf_bar *epf_bar;
--	void __iomem *mw_addr;
- 	enum pci_barno barno;
--	size_t size = 4 * ntb->db_count;
-+	void *mw_addr;
-+	size_t size;
-+	u32 align;
-+	int ret;
-+
-+	size = sizeof(u32) * ntb->db_count;
- 
- 	epc_features = pci_epc_get_features(ntb->epf->epc,
+  * @ntb: NTB device that facilitates communication between HOST and VHOST
+@@ -540,27 +569,26 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
  					    ntb->epf->func_no,
-@@ -557,14 +569,14 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
- 	return ret;
+ 					    ntb->epf->vfunc_no);
+ 	align = epc_features->align;
+-
+-	if (size < 128)
+-		size = 128;
+-
+-	if (align)
+-		size = ALIGN(size, align);
+-	else
+-		size = roundup_pow_of_two(size);
++	size = epf_ntb_db_size(ntb);
  
- err_alloc_peer_mem:
--	pci_epc_mem_free_addr(ntb->epf->epc, epf_bar->phys_addr, mw_addr, epf_bar->size);
-+	pci_epf_free_space(ntb->epf, mw_addr, barno, 0);
- 	return -1;
+ 	barno = ntb->epf_ntb_bar[BAR_DB];
++	epf_bar = &ntb->epf->bar[barno];
+ 
+-	mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
+-	if (!mw_addr) {
+-		dev_err(dev, "Failed to allocate OB address\n");
+-		return -ENOMEM;
++	if (ntb->epf_db_phys) {
++		mw_addr = NULL;
++		epf_bar->phys_addr = ntb->epf_db_phys;
++		epf_bar->barno = barno;
++		epf_bar->size = size;
++	} else {
++		mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
++		if (!mw_addr) {
++			dev_err(dev, "Failed to allocate doorbell address\n");
++			return -ENOMEM;
++		}
+ 	}
+ 
+ 	ntb->epf_db = mw_addr;
+ 
+-	epf_bar = &ntb->epf->bar[barno];
+-
+ 	ret = pci_epc_set_bar(ntb->epf->epc, ntb->epf->func_no, ntb->epf->vfunc_no, epf_bar);
+ 	if (ret) {
+ 		dev_err(dev, "Doorbell BAR set failed\n");
+@@ -719,6 +747,84 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
+ 	return 0;
  }
  
- /**
-  * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
-  *   allocated in peer's outbound address space
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  */
- static void epf_ntb_db_bar_clear(struct epf_ntb *ntb)
- {
-@@ -580,8 +592,9 @@ static void epf_ntb_db_bar_clear(struct epf_ntb *ntb)
- 
- /**
-  * epf_ntb_mw_bar_init() - Configure Memory window BARs
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- {
-@@ -629,7 +642,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 
- /**
-  * epf_ntb_mw_bar_clear() - Clear Memory window BARs
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  */
- static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
- {
-@@ -652,7 +665,7 @@ static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
- 
- /**
-  * epf_ntb_epc_destroy() - Cleanup NTB EPC interface
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-  * Wrapper for epf_ntb_epc_destroy_interface() to cleanup all the NTB interfaces
-  */
-@@ -665,7 +678,9 @@ static void epf_ntb_epc_destroy(struct epf_ntb *ntb)
- /**
-  * epf_ntb_init_epc_bar() - Identify BARs to be used for each of the NTB
-  * constructs (scratchpad region, doorbell, memorywindow)
-- * @ntb: NTB device that facilitates communication between HOST and vHOST
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
- {
-@@ -706,11 +721,13 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
- 
++#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
++static void epf_ntb_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
++{
++	struct epf_ntb *ntb = dev_get_drvdata(desc->dev);
++	struct epf_ntb_ctrl *reg = ntb->reg;
++	int size = epf_ntb_db_size(ntb);
++	u64 addr;
++
++	addr = msg->address_hi;
++	addr <<= 32;
++	addr |= msg->address_lo;
++
++	reg->db_data[desc->msi_index] = msg->data;
++
++	if (!desc->msi_index)
++		ntb->epf_db_phys = round_down(addr, size);
++
++	reg->db_offset[desc->msi_index] = addr - ntb->epf_db_phys;
++}
++#endif
++
++static irqreturn_t epf_ntb_interrupt_handler(int irq, void *data)
++{
++	struct epf_ntb *ntb = data;
++	int index;
++
++	index = irq - ntb->msi_virqbase;
++	ntb->db |= 1 << (index - 1);
++	ntb_db_event(&ntb->ntb, index);
++
++	return IRQ_HANDLED;
++}
++
++#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
++static void epf_ntb_epc_msi_init(struct epf_ntb *ntb)
++{
++	struct device *dev = &ntb->epf->dev;
++	struct irq_domain *domain;
++	int virq;
++	int ret;
++	int i;
++
++	domain = dev_get_msi_domain(ntb->epf->epc->dev.parent);
++	if (!domain)
++		return;
++
++	dev_set_msi_domain(dev, domain);
++
++	if (platform_msi_domain_alloc_irqs(&ntb->epf->dev,
++		ntb->db_count,
++		epf_ntb_write_msi_msg)) {
++		dev_err(dev, "Can't allocate MSI, falling back to polling mode\n");
++		return;
++	}
++	dev_info(dev, "Using MSI as doorbell\n");
++
++	for (i = 0; i < ntb->db_count; i++) {
++		virq = msi_get_virq(dev, i);
++		ret = devm_request_irq(dev, virq,
++			       epf_ntb_interrupt_handler, 0,
++			       "pci_epf_vntb", ntb);
++
++		if (ret) {
++			dev_err(dev, "Failed to request doorbell IRQ! Falling back to polling mode");
++			ntb->epf_db_phys = 0;
++			break;
++		}
++
++		if (!i)
++			ntb->msi_virqbase = virq; /* msi start virq number */
++	}
++}
++#else
++static void epf_ntb_epc_msi_init(struct epf_ntb *ntb)
++{
++	return;
++}
++#endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
  /**
   * epf_ntb_epc_init() - Initialize NTB interface
-- * @ntb: NTB device that facilitates communication between HOST and vHOST2
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-  * Wrapper to initialize a particular EPC interface and start the workqueue
-- * to check for commands from host. This function will write to the
-+ * to check for commands from HOST. This function will write to the
-  * EP controller HW for configuring it.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_epc_init(struct epf_ntb *ntb)
- {
-@@ -777,7 +794,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
+  * @ntb: NTB device that facilitates communication between HOST and VHOST
+@@ -1320,14 +1426,15 @@ static int epf_ntb_bind(struct pci_epf *epf)
+ 		goto err_bar_alloc;
+ 	}
  
- /**
-  * epf_ntb_epc_cleanup() - Cleanup all NTB interfaces
-- * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-+ * @ntb: NTB device that facilitates communication between HOST and VHOST
-  *
-  * Wrapper to cleanup all NTB interfaces.
-  */
-@@ -934,6 +951,8 @@ static const struct config_item_type ntb_group_type = {
-  *
-  * Add configfs directory specific to NTB. This directory will hold
-  * NTB specific properties like db_count, spad_count, num_mws etc.,
-+ *
-+ * Returns: Pointer to config_group
-  */
- static struct config_group *epf_ntb_add_cfs(struct pci_epf *epf,
- 					    struct config_group *group)
-@@ -1084,11 +1103,11 @@ static int vntb_epf_link_enable(struct ntb_dev *ntb,
- static u32 vntb_epf_spad_read(struct ntb_dev *ndev, int idx)
- {
- 	struct epf_ntb *ntb = ntb_ndev(ndev);
--	int off = ntb->reg->spad_offset, ct = ntb->reg->spad_count * 4;
-+	int off = ntb->reg->spad_offset, ct = ntb->reg->spad_count * sizeof(u32);
- 	u32 val;
--	void __iomem *base = ntb->reg;
-+	void __iomem *base = (void __iomem *)ntb->reg;
++	epf_set_drvdata(epf, ntb);
++	epf_ntb_epc_msi_init(ntb);
++
+ 	ret = epf_ntb_epc_init(ntb);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to initialize EPC\n");
+ 		goto err_bar_alloc;
+ 	}
  
--	val = readl(base + off + ct + idx * 4);
-+	val = readl(base + off + ct + idx * sizeof(u32));
- 	return val;
- }
- 
-@@ -1096,10 +1115,10 @@ static int vntb_epf_spad_write(struct ntb_dev *ndev, int idx, u32 val)
- {
- 	struct epf_ntb *ntb = ntb_ndev(ndev);
- 	struct epf_ntb_ctrl *ctrl = ntb->reg;
--	int off = ctrl->spad_offset, ct = ctrl->spad_count * 4;
--	void __iomem *base = ntb->reg;
-+	int off = ctrl->spad_offset, ct = ctrl->spad_count * sizeof(u32);
-+	void __iomem *base = (void __iomem *)ntb->reg;
- 
--	writel(val, base + off + ct + idx * 4);
-+	writel(val, base + off + ct + idx * sizeof(u32));
- 	return 0;
- }
- 
-@@ -1108,10 +1127,10 @@ static u32 vntb_epf_peer_spad_read(struct ntb_dev *ndev, int pidx, int idx)
- 	struct epf_ntb *ntb = ntb_ndev(ndev);
- 	struct epf_ntb_ctrl *ctrl = ntb->reg;
- 	int off = ctrl->spad_offset;
--	void __iomem *base = ntb->reg;
-+	void __iomem *base = (void __iomem*)ntb->reg;
- 	u32 val;
- 
--	val = readl(base + off + idx * 4);
-+	val = readl(base + off + idx * sizeof(u32));
- 	return val;
- }
- 
-@@ -1120,9 +1139,9 @@ static int vntb_epf_peer_spad_write(struct ntb_dev *ndev, int pidx, int idx, u32
- 	struct epf_ntb *ntb = ntb_ndev(ndev);
- 	struct epf_ntb_ctrl *ctrl = ntb->reg;
- 	int off = ctrl->spad_offset;
--	void __iomem *base = ntb->reg;
-+	void __iomem *base = (void __iomem*)ntb->reg;
- 
--	writel(val, base + off + idx * 4);
-+	writel(val, base + off + idx * sizeof(u32));
- 	return 0;
- }
- 
-@@ -1275,6 +1294,8 @@ static struct pci_driver vntb_pci_driver = {
-  * Invoked when a primary interface or secondary interface is bound to EPC
-  * device. This function will succeed only when EPC is bound to both the
-  * interfaces.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_bind(struct pci_epf *epf)
- {
-@@ -1359,6 +1380,8 @@ static struct pci_epf_ops epf_ntb_ops = {
-  *
-  * Probe NTB function driver when endpoint function bus detects a NTB
-  * endpoint function.
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-  */
- static int epf_ntb_probe(struct pci_epf *epf)
- {
+-	epf_set_drvdata(epf, ntb);
+-
+ 	pci_space[0] = (ntb->vntb_pid << 16) | ntb->vntb_vid;
+ 	pci_vntb_table[0].vendor = ntb->vntb_vid;
+ 	pci_vntb_table[0].device = ntb->vntb_pid;
 -- 
 2.35.1
 
