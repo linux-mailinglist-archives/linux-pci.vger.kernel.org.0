@@ -2,183 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 281D85BE0B3
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 10:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 361105BE165
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 11:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbiITIsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Sep 2022 04:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36318 "EHLO
+        id S231580AbiITJHs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Sep 2022 05:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230249AbiITIr4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 04:47:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CF22FFE3;
-        Tue, 20 Sep 2022 01:47:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0793C621BB;
-        Tue, 20 Sep 2022 08:47:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FEDC433C1;
-        Tue, 20 Sep 2022 08:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663663674;
-        bh=pR5dTdl8QcwJ+GvmFZiO2SLRRtJXz8jfmSxpS4Sg5j8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ba4XQtwGAf7J1/pirvwb2QTm7r6VcO9mCBVb/t5ItpDjSPWg1kVAmQvmhRnPlzdWK
-         M0M2Xcr72MHjcaKko5h4qXsPF/nlNVJuBIgAzm0yiSHNosgCrZwZm0ktefYa29EH07
-         hHdWJdIrz2nwGLVO3fc6DqYANxhX3SE66q3IHezXJkxWAwyxNDl7AFUEjF3wFhLr7H
-         JSE4QL8uirmaVME32WbISL1dhvxr9gp+PwL2hPZxij96487EATFMADTr0vU8O4mXXe
-         iAl0Wxq/2AX7yAowNJxEu2+thRIR3GhOM6H8VNB8wJ6nu81/71krUOyqR6wzhStEjr
-         I0fHgeeWmEL5Q==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oaYv6-0002Db-MC; Tue, 20 Sep 2022 10:47:56 +0200
-Date:   Tue, 20 Sep 2022 10:47:56 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Add support for modular builds
-Message-ID: <Yyl+PNcbtSwzlgvh@hovoldconsulting.com>
-References: <20220721064720.10762-1-johan+linaro@kernel.org>
+        with ESMTP id S231627AbiITJHY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 05:07:24 -0400
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846436D9EA;
+        Tue, 20 Sep 2022 02:05:20 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-12803ac8113so3255045fac.8;
+        Tue, 20 Sep 2022 02:05:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=gd/npqLKLd3AnTSH/+RFKBsH5iJOqAjM5MsAjYDhe+E=;
+        b=fnnscz7VljZQXX4AixFOtwmwMOrI/KAwQLCKpiQh8OhcYn5izhpN9Zvsty/7viGJOr
+         vhXpc+UbScB838RJc351Feaq3UtMF1UHspCiIGfe/TDn/FA5s92Sp1cFpa8LaKJm7yaI
+         vKG5ZmYckBkv6lEw5lBv95dMaUZxEwcEMHe7RqlbBiPO2UtNDk/QKUN4QHTnKgJATcbt
+         +DhU/ZhBfRtntbS1kAL7iC2fJA5GLoy1KZf8lAehqEK0anz7sX3FFwMsm9CV6Pr8oP9P
+         iBfH6d3/ltRzOdhPV46jhSeUIlFVsCjBeZHa8gEUj1+B9lmFPIXWtoG85XbL93JTU8U1
+         WUFA==
+X-Gm-Message-State: ACrzQf0yjvF9W0GHrSqggifXSOnqB3CNLCUnos4+2aje5k16BEjmcQ3l
+        gJWMqILQC5oFQMQa0P6YeMTGjDd6BCOrgw==
+X-Google-Smtp-Source: AMsMyM7QLzvaKy5B9ZvgsD8MrO3Uf4lxdYxGoNsNfAzFQTpSDv2Ia8WjBbfwzQiHNJHP4DS1zqqiZQ==
+X-Received: by 2002:a05:6870:f20b:b0:12d:29e4:df2e with SMTP id t11-20020a056870f20b00b0012d29e4df2emr1542655oao.262.1663664719430;
+        Tue, 20 Sep 2022 02:05:19 -0700 (PDT)
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
+        by smtp.gmail.com with ESMTPSA id ep36-20020a056870a9a400b00118281a1227sm679779oab.39.2022.09.20.02.05.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Sep 2022 02:05:19 -0700 (PDT)
+Received: by mail-ot1-f45.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so1279933otu.7;
+        Tue, 20 Sep 2022 02:05:19 -0700 (PDT)
+X-Received: by 2002:a0d:dd09:0:b0:344:fca5:9b44 with SMTP id
+ g9-20020a0ddd09000000b00344fca59b44mr18154946ywe.358.1663664299984; Tue, 20
+ Sep 2022 01:58:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220721064720.10762-1-johan+linaro@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220503211954.1428919-1-frowand.list@gmail.com>
+ <CAMuHMdWhn8cY4usyqao-osEcSCcmkU+NYg21co+GxVfvg5+dhw@mail.gmail.com> <725f870b-b927-352d-85ab-675b91b7c75a@gmail.com>
+In-Reply-To: <725f870b-b927-352d-85ab-675b91b7c75a@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 20 Sep 2022 10:58:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX52_pnJPDuYoqOxwxsiC_+Zecg4kyWU94zAg1NRYHyDQ@mail.gmail.com>
+Message-ID: <CAMuHMdX52_pnJPDuYoqOxwxsiC_+Zecg4kyWU94zAg1NRYHyDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] of: overlay: rename overlay source files from .dts
+ to .dtso
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Jason Liu <jason.hui.liu@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+Hi Frank,
 
-On Thu, Jul 21, 2022 at 08:47:20AM +0200, Johan Hovold wrote:
-> Allow the Qualcomm PCIe controller driver to be built as a module, which
-> is useful for multi-platform kernels as well as during development.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
-> 
-> Changes in v2
->  - rebase on next-20220720 (adjust context)
->  - add Rob and Mani's reviewed-by tags
+Pity you couldn't make it to Dublin. We've been missing you!
 
-Have you had a change to look at this one since you got back from
-vacation?
+On Tue, Jul 19, 2022 at 1:44 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> On 7/7/22 02:21, Geert Uytterhoeven wrote:
+> > On Tue, May 3, 2022 at 11:20 PM <frowand.list@gmail.com> wrote:
+> >> From: Frank Rowand <frank.rowand@sony.com>
+> >>
+> >> In drivers/of/unittest-data/:
+> >>    - Rename .dts overlay source files to use .dtso suffix.
+> >>    - Add Makefile rule to build .dtbo.o assembly file from overlay
+> >>      .dtso source file.
+> >>    - Update Makefile to build .dtbo.o objects instead of .dtb.o from
+> >>      unittest overlay source files.
+> >>
+> >> Modify driver/of/unitest.c to use .dtbo.o based symbols instead of
+> >> .dtb.o
+> >>
+> >> Modify scripts/Makefile.lib %.dtbo rule to depend upon %.dtso instead
+> >> of %.dts
+> >>
+> >> Rename .dts overlay source files to use .dtso suffix in:
+> >>    arch/arm64/boot/dts/freescale/
+> >>    arch/arm64/boot/dts/xilinx/
+> >>
+> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> >
+> > What is the status of this work?
+> > Thanks!
+>
+> I'll work on this tomorrow after I test your overlay improvement patches.
 
-I believe this should be uncontroversial as we already have other
-modular dwc drivers and there's no mapping of legacy INTx interrupts
-involved.
+Any updates? We're again at rc6.
+Thanks!
 
->  drivers/pci/controller/dwc/Kconfig     |  2 +-
->  drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++---
->  2 files changed, 34 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 62ce3abf0f19..230f56d1a268 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -168,7 +168,7 @@ config PCI_HISI
->  	  Hip05 and Hip06 SoCs
->  
->  config PCIE_QCOM
-> -	bool "Qualcomm PCIe controller"
-> +	tristate "Qualcomm PCIe controller"
->  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 5ed164c2afa3..d176c635016b 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -16,7 +16,7 @@
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
-> -#include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> @@ -1518,6 +1518,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  	return ret;
->  }
->  
-> +static void qcom_pcie_host_deinit(struct qcom_pcie *pcie)
-> +{
-> +	qcom_ep_reset_assert(pcie);
-> +	if (pcie->cfg->ops->post_deinit)
-> +		pcie->cfg->ops->post_deinit(pcie);
-> +	phy_power_off(pcie->phy);
-> +	pcie->cfg->ops->deinit(pcie);
-> +}
-> +
->  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->  	.host_init = qcom_pcie_host_init,
->  };
-> @@ -1752,6 +1761,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +
-> +	dw_pcie_host_deinit(&pcie->pci->pp);
-> +	qcom_pcie_host_deinit(pcie);
-> +
-> +	phy_exit(pcie->phy);
-> +
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> @@ -1771,6 +1796,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
->  	{ }
->  };
-> +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
->  
->  static void qcom_fixup_class(struct pci_dev *dev)
->  {
-> @@ -1786,10 +1812,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> +	.remove = qcom_pcie_remove,
->  	.driver = {
->  		.name = "qcom-pcie",
-> -		.suppress_bind_attrs = true,
->  		.of_match_table = qcom_pcie_match,
->  	},
->  };
-> -builtin_platform_driver(qcom_pcie_driver);
-> +module_platform_driver(qcom_pcie_driver);
-> +
-> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
-> +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
-> +MODULE_LICENSE("GPL");
+Gr{oetje,eeting}s,
 
-Johan
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
