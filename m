@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0B8F5BE30E
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 12:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 046FE5BE2FF
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 12:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230247AbiITKXB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Sep 2022 06:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
+        id S229971AbiITKW4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Sep 2022 06:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbiITKW4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 06:22:56 -0400
+        with ESMTP id S229598AbiITKWz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 06:22:55 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4AE6AA0B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186FA6C105;
         Tue, 20 Sep 2022 03:22:54 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28K7xs7Y009306;
-        Tue, 20 Sep 2022 10:22:35 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28K806Q0015789;
+        Tue, 20 Sep 2022 10:22:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=9L8/3hza+gG/c24PjetIgp7Z0fytSeM8c90I6dU3fx0=;
- b=WAa110Vde0vp7VN+xTols9xp2EXEPqCZiKgKBNM4zVECylEcYzlaCIllbqG5tgxltlLB
- kvpEztI2DwKTod+jKJ0V1QidlRiRsk0iyPjaHbh3OAhNJu/FtSDO79poAfFlOTajvI+1
- 3VmLsM8wYidrj8qlFn/Zz+ikmcAjlm0Qp9b+DL1YGCtU3nzvaLnYsiYK5+LdaiegXHXI
- VfzA7tV0n9mKGOXZLvkvQct/5EXcmpwvaRvzVf94ldkjZvwYKS7BVUCHCCvG1rDbsq5G
- m5O0mAGi4WAfSbp2YqwUCAVYsQik+CW31bcZrnklayJR3r/QFGIXdwa+V/4hnl5JYx1Y Kw== 
+ bh=N/kqJ6hM+MKZcKVcVJSn5RZWT45C+Ed1GuSP75wY0sc=;
+ b=pMm79fqCw+8FgHk2eoJVCNq2kgiQETN/YFZ++WDGwFDe9q/xo+6+i1TvIZTBCozuOZdh
+ ZwX1476iWmOHn37Zl3Nq9TU7FQPqc69n2TB6e9QY2TQYnvEjcSjpsme5HCs654rXMPNg
+ LPVynA1z+kIQHqa030yXcyPXmInkU1Dj2jkhNLl1nUcUhmpMNQRpXWEHtqsn0HPf1cjt
+ SlF3LznCIbOnN5gutiyxeTpALZxc0YO3U8/v+7OpQ4ESBCtzH6wmkcx7WFpHNcsBPEM+
+ OBVZlW1kp17keoYFQX8kp+G25+7zG1MaRmHpJip4cPdMkVRFDf9mdlXxw+qP0+MFIUW5 rw== 
 Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jptw33445-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jq4r09dbm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 20 Sep 2022 10:22:34 +0000
 Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 28KAMU4g016194;
-        Tue, 20 Sep 2022 10:22:30 GMT
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 28KAMUpv016172;
+        Tue, 20 Sep 2022 10:22:31 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3jnqrbnbqv-1
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3jnqrbnbqy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 20 Sep 2022 10:22:30 +0000
+        Tue, 20 Sep 2022 10:22:31 +0000
 Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28KAMUYx016171;
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28KAMUgh016182;
         Tue, 20 Sep 2022 10:22:30 GMT
 Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 28KAMUNg016162;
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 28KAMUL2016169;
         Tue, 20 Sep 2022 10:22:30 +0000
 Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 9CFAA19FB; Tue, 20 Sep 2022 15:52:29 +0530 (+0530)
+        id DDF7E1A07; Tue, 20 Sep 2022 15:52:29 +0530 (+0530)
 From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
 To:     helgaas@kernel.org
 Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -57,10 +57,11 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         robh@kernel.org, kw@linux.com, bhelgaas@google.com,
         linux-phy@lists.infradead.org, vkoul@kernel.org, kishon@ti.com,
         mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: [PATCH v7 3/5] phy: core: Add support for phy suspend & resume
-Date:   Tue, 20 Sep 2022 15:52:25 +0530
-Message-Id: <1663669347-29308-4-git-send-email-quic_krichai@quicinc.com>
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v7 4/5] phy: qcom: Add power suspend & resume callbacks to PCIe phy
+Date:   Tue, 20 Sep 2022 15:52:26 +0530
+Message-Id: <1663669347-29308-5-git-send-email-quic_krichai@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1663669347-29308-1-git-send-email-quic_krichai@quicinc.com>
 References: <1663669347-29308-1-git-send-email-quic_krichai@quicinc.com>
@@ -68,16 +69,16 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: iG49z6pzG43hKAh5IJjwaeck3CKweXNZ
-X-Proofpoint-GUID: iG49z6pzG43hKAh5IJjwaeck3CKweXNZ
+X-Proofpoint-ORIG-GUID: Sjn5LIsd3PAAGUkv95Ma8gS-WHXmhmjc
+X-Proofpoint-GUID: Sjn5LIsd3PAAGUkv95Ma8gS-WHXmhmjc
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
  definitions=2022-09-20_02,2022-09-16_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 phishscore=0 adultscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 spamscore=0
- mlxlogscore=779 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209200062
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=693
+ malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209200062
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -88,118 +89,117 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introducing phy power suspend and resume callbacks for allowing to
-park the link-state in L1ss without holding any PCIe resources during
-system suspend.
+Add phy power suspend & resume callbacks to PCIe phy. Using these
+callbacks we can release phy resources like phy specific clocks
+but continue maintain PCIe link in l1ss state.
 
-If we use  phy_suspend & phy_resume API's we are getting compilation
-issue as same function is present in drivers/net/phy/phy_device.c.
+This can help in parking PCIe link in l1ss state during system
+suspend (S3).
 
-So creating phy_pm_suspend & phy_pm_resume API's.
+Instead of this if we add suspend & resume pm ops, phy will suspend
+first instead of PCIe driver, it will cause link down as phy will
+be down before controller goes down.
 
 Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 ---
 changes since v6:
-	- change names from power_down, power_up to suspend & resume
-	  respectively.
+	- Change names from phy_power_down and phy_power_up to
+	  phy_pm_suspend and phy_pm_resume respectively.
 ---
- drivers/phy/phy-core.c  | 30 ++++++++++++++++++++++++++++++
- include/linux/phy/phy.h | 20 ++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c   |  4 +--
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 50 ++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index d93ddf1..ca3e423 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -441,6 +441,36 @@ int phy_set_speed(struct phy *phy, int speed)
- }
- EXPORT_SYMBOL_GPL(phy_set_speed);
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 7a6f69e..672a9be 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1326,7 +1326,7 @@ static int qcom_pcie_resume_2_7_0(struct qcom_pcie *pcie)
  
-+int phy_pm_suspend(struct phy *phy)
+ 	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+ 
+-	phy_power_on(pcie->phy);
++	phy_pm_resume(pcie->phy);
+ 
+ 	return ret;
+ }
+@@ -1335,7 +1335,7 @@ static int qcom_pcie_suspend_2_7_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+ 
+-	phy_power_off(pcie->phy);
++	phy_pm_suspend(pcie->phy);
+ 
+ 	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+ 	return 0;
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+index 2d65e1f..69220dd 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+@@ -2145,6 +2145,54 @@ static int qcom_qmp_phy_pcie_exit(struct phy *phy)
+ 	return 0;
+ }
+ 
++static int qcom_qmp_phy_pcie_resume(struct phy *phy)
 +{
++	struct qmp_phy *qphy = phy_get_drvdata(phy);
++	struct qcom_qmp *qmp = qphy->qmp;
++	const struct qmp_phy_cfg *cfg = qphy->cfg;
 +	int ret;
 +
-+	if (!phy || !phy->ops->suspend)
-+		return 0;
++	ret = clk_bulk_prepare_enable(cfg->num_clks, qmp->clks);
++	if (ret)
++		return ret;
 +
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->suspend(phy);
-+	mutex_unlock(&phy->mutex);
++	ret = clk_prepare_enable(qphy->pipe_clk);
++	if (ret)
++		return ret;
 +
-+	return ret;
++	/* Pull out PHY from POWER DOWN state */
++	if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) {
++		qphy_setbits(qphy->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
++			     cfg->pwrdn_ctrl);
++	} else {
++		qphy_setbits(qphy->pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL,
++				cfg->pwrdn_ctrl);
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(phy_pm_suspend);
 +
-+int phy_pm_resume(struct phy *phy)
++static int qcom_qmp_phy_pcie_suspend(struct phy *phy)
 +{
-+	int ret;
++	struct qmp_phy *qphy = phy_get_drvdata(phy);
++	struct qcom_qmp *qmp = qphy->qmp;
++	const struct qmp_phy_cfg *cfg = qphy->cfg;
 +
-+	if (!phy || !phy->ops->resume)
-+		return 0;
++	clk_disable_unprepare(qphy->pipe_clk);
++	clk_bulk_disable_unprepare(cfg->num_clks, qmp->clks);
 +
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->resume(phy);
-+	mutex_unlock(&phy->mutex);
++	/* Put PHY into POWER DOWN state: active low */
++	if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) {
++		qphy_clrbits(qphy->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
++			     cfg->pwrdn_ctrl);
++	} else {
++		qphy_clrbits(qphy->pcs, QPHY_V2_PCS_POWER_DOWN_CONTROL,
++				cfg->pwrdn_ctrl);
++	}
 +
-+	return ret;
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(phy_pm_resume);
 +
- int phy_reset(struct phy *phy)
+ static int qcom_qmp_phy_pcie_enable(struct phy *phy)
  {
  	int ret;
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index b141375..e312028 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -76,6 +76,8 @@ union phy_configure_opts {
-  * @set_mode: set the mode of the phy
-  * @set_media: set the media type of the phy (optional)
-  * @set_speed: set the speed of the phy (optional)
-+ * @suspend: suspending the phy
-+ * @resume: resuming the phy
-  * @reset: resetting the phy
-  * @calibrate: calibrate the phy
-  * @release: ops to be performed while the consumer relinquishes the PHY
-@@ -89,6 +91,8 @@ struct phy_ops {
- 	int	(*set_mode)(struct phy *phy, enum phy_mode mode, int submode);
- 	int	(*set_media)(struct phy *phy, enum phy_media media);
- 	int	(*set_speed)(struct phy *phy, int speed);
-+	int	(*suspend)(struct phy *phy);
-+	int	(*resume)(struct phy *phy);
+@@ -2304,6 +2352,8 @@ static const struct phy_ops qcom_qmp_phy_pcie_ops = {
+ 	.power_on	= qcom_qmp_phy_pcie_enable,
+ 	.power_off	= qcom_qmp_phy_pcie_disable,
+ 	.set_mode	= qcom_qmp_phy_pcie_set_mode,
++	.suspend	= qcom_qmp_phy_pcie_suspend,
++	.resume		= qcom_qmp_phy_pcie_resume,
+ 	.owner		= THIS_MODULE,
+ };
  
- 	/**
- 	 * @configure:
-@@ -226,6 +230,8 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+int phy_pm_suspend(struct phy *phy);
-+int phy_pm_resume(struct phy *phy);
- int phy_set_mode_ext(struct phy *phy, enum phy_mode mode, int submode);
- #define phy_set_mode(phy, mode) \
- 	phy_set_mode_ext(phy, mode, 0)
-@@ -349,6 +355,20 @@ static inline int phy_power_off(struct phy *phy)
- 	return -ENOSYS;
- }
- 
-+static inline int phy_pm_suspend(struct phy *phy)
-+{
-+	if (!phy)
-+		return 0;
-+	return -ENOSYS;
-+}
-+
-+static inline int phy_pm_resume(struct phy *phy)
-+{
-+	if (!phy)
-+		return 0;
-+	return -ENOSYS;
-+}
-+
- static inline int phy_set_mode_ext(struct phy *phy, enum phy_mode mode,
- 				   int submode)
- {
 -- 
 2.7.4
 
