@@ -2,154 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E245BDCB7
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 07:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9695BDCEA
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Sep 2022 08:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbiITFza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Sep 2022 01:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51144 "EHLO
+        id S229731AbiITGLt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Sep 2022 02:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbiITFzM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 01:55:12 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 753611004
-        for <linux-pci@vger.kernel.org>; Mon, 19 Sep 2022 22:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663653306; x=1695189306;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RbTpk4YCr75hGwvrdKaqkrALZ/RLs0EYWr6R1JM2Lp4=;
-  b=g17avoeppCXD++0iNEJMjiGWwMqcTknb+hmnEmlgiESwv15CPdT43h8I
-   S2T3nsWWPmaMTnpqf/RNESI1wB3fTxJcJJIxvj1GOl6xjdbVDC3mCIK5I
-   OR/uRgEv+Pn6s00dEBHf2n8J975w8rw4RjcONTlUKYMBqGOw2/x5p/VrH
-   GQ7OLmQ6tfSHiMdQq4z/1fz1cGdkLPgc08sMi9YX0YaQOleRNsItqoTiC
-   haJLdnp9AhGhQOJ+sJCAHOhwo2G7NMZZlpbfL1a2Suf2hPKrkUFPSATU3
-   nJYqO3+0VowXL5A6eKu+w5tqxL++HP994kSIYCkuIafdReJhtFIV+H9vO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="282634137"
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="282634137"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 22:55:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="761168985"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Sep 2022 22:55:04 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oaWDo-0002WP-0q;
-        Tue, 20 Sep 2022 05:55:04 +0000
-Date:   Tue, 20 Sep 2022 13:54:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- fcf773ae8016c6bffe5d408d3eda50d981b946e6
-Message-ID: <63295585.coZVFVPNH9ygw9lk%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229546AbiITGLt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Sep 2022 02:11:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C42D3AE46;
+        Mon, 19 Sep 2022 23:11:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C54F5B8249F;
+        Tue, 20 Sep 2022 06:11:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB181C433C1;
+        Tue, 20 Sep 2022 06:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663654305;
+        bh=NuFw7uED7Nut4KOkUsKsKxYCFbmw1Pj9smtOuX/NV5U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sJ/P2SXqcLyeBHY3+xxuhckYc5Q5wc31re0TfJgTYhh/XxK6AYmDtnQmvy8jjgrrq
+         KE2B0Z9zUk1lwISuJnYeVhkhfvShg5Zy+sLLC9/fNmoMG9HuxbkMLGyuM7IL0IJ+vT
+         HqAa4AYUFX/T5UATTw50dGM6Xkkh+3oXIAv38wgCY6c5QPYajL0vl7XgTudNLNUhAF
+         7qrMr2OgZz5EupI66zkwli4u4OarQTHNaz7x5rmJyI/tYjKfzO3RYhvkR70D4BWjbz
+         bwWXRYD9tfYzK7vy/S3E3fKQqPv4qDdXmCai7+e+Xaq55+fN0OLrvKVShXlsi/gNEw
+         Moi5LGimzIuqQ==
+Date:   Tue, 20 Sep 2022 11:41:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, mani@kernel.org,
+        Sergey.Semin@baikalelectronics.ru, ffclaire1224@gmail.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V1 8/9] phy: tegra: p2u: Set ENABLE_L2_EXIT_RATE_CHANGE
+ in calibration
+Message-ID: <YylZnfan61xlXFWb@matsya>
+References: <20220919143627.13803-1-vidyas@nvidia.com>
+ <20220919143627.13803-9-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220919143627.13803-9-vidyas@nvidia.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: fcf773ae8016c6bffe5d408d3eda50d981b946e6  Merge branch 'remotes/lorenzo/pci/qcom'
+On 19-09-22, 20:06, Vidya Sagar wrote:
+> Set ENABLE_L2_EXIT_RATE_CHANGE to request UPHY PLL rate change to Gen1
+> during initialization. This helps in the below surprise down cases,
+>   - Surprise down happens at Gen3/Gen4 link speed
+>   - Surprise down happens and external REFCLK is cut off which causes
+> UPHY PLL rate to deviate to an invalid rate
+> 
+> ENABLE_L2_EXIT_RATE_CHANGE needs to be set to bring the UPHY PLL rate
+> back to Gen1 during controller initialization for the link up.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/phy/tegra/phy-tegra194-p2u.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+> index 1415ca71de38..fb710e89acac 100644
+> --- a/drivers/phy/tegra/phy-tegra194-p2u.c
+> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/phy/phy.h>
+>  
+>  #define P2U_CONTROL_CMN			0x74
+> +#define P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE		BIT(13)
+>  #define P2U_CONTROL_CMN_SKP_SIZE_PROTECTION_EN			BIT(20)
+>  
+>  #define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
+> @@ -85,8 +86,21 @@ static int tegra_p2u_power_on(struct phy *x)
+>  	return 0;
+>  }
+>  
+> +int tegra_p2u_calibrate(struct phy *x)
 
-elapsed time: 724m
+why not static?
 
-configs tested: 74
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                                 defconfig
-alpha                               defconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-s390                                defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-s390                             allmodconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-x86_64                              defconfig
-alpha                            allyesconfig
-i386                 randconfig-a013-20220919
-arm                                 defconfig
-riscv                randconfig-r042-20220919
-i386                 randconfig-a012-20220919
-x86_64                               rhel-8.3
-x86_64                    rhel-8.3-kselftests
-arc                  randconfig-r043-20220919
-x86_64               randconfig-a012-20220919
-x86_64                          rhel-8.3-func
-i386                 randconfig-a014-20220919
-x86_64               randconfig-a011-20220919
-x86_64               randconfig-a014-20220919
-i386                 randconfig-a011-20220919
-s390                 randconfig-r044-20220919
-x86_64               randconfig-a015-20220919
-x86_64                         rhel-8.3-kunit
-x86_64               randconfig-a013-20220919
-x86_64                           rhel-8.3-kvm
-i386                                defconfig
-x86_64                           rhel-8.3-syz
-x86_64               randconfig-a016-20220919
-arm64                            allyesconfig
-i386                 randconfig-a016-20220919
-i386                 randconfig-a015-20220919
-arm                              allyesconfig
-x86_64                           allyesconfig
-ia64                             allmodconfig
-i386                             allyesconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-sh                             shx3_defconfig
-powerpc                       holly_defconfig
-x86_64               randconfig-k001-20220919
-i386                 randconfig-c001-20220919
-i386                             alldefconfig
-arm                         lpc18xx_defconfig
-sh                          r7785rp_defconfig
-powerpc                      chrp32_defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-
-clang tested configs:
-i386                 randconfig-a001-20220919
-i386                 randconfig-a002-20220919
-hexagon              randconfig-r041-20220919
-i386                 randconfig-a003-20220919
-i386                 randconfig-a004-20220919
-i386                 randconfig-a005-20220919
-hexagon              randconfig-r045-20220919
-i386                 randconfig-a006-20220919
-x86_64               randconfig-a003-20220919
-x86_64               randconfig-a001-20220919
-x86_64               randconfig-a002-20220919
-x86_64               randconfig-a004-20220919
-x86_64               randconfig-a006-20220919
-x86_64               randconfig-a005-20220919
-powerpc                     tqm5200_defconfig
+> +{
+> +	struct tegra_p2u *phy = phy_get_drvdata(x);
+> +	u32 val;
+> +
+> +	val = p2u_readl(phy, P2U_CONTROL_CMN);
+> +	val |= P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE;
+> +	p2u_writel(phy, val, P2U_CONTROL_CMN);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct phy_ops ops = {
+>  	.power_on = tegra_p2u_power_on,
+> +	.calibrate = tegra_p2u_calibrate,
+>  	.owner = THIS_MODULE,
+>  };
+>  
+> -- 
+> 2.17.1
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+~Vinod
