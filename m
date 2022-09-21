@@ -2,126 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E42495E5371
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Sep 2022 20:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBB335E53F3
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Sep 2022 21:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiIUS4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Sep 2022 14:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38194 "EHLO
+        id S229825AbiIUTtT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Sep 2022 15:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbiIUS4N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Sep 2022 14:56:13 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1380A0634
-        for <linux-pci@vger.kernel.org>; Wed, 21 Sep 2022 11:56:11 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1F374300097C6;
-        Wed, 21 Sep 2022 20:56:10 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 01FB74E7FC; Wed, 21 Sep 2022 20:56:09 +0200 (CEST)
-Date:   Wed, 21 Sep 2022 20:56:09 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        aaron@sigma-star.at
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 216511] New: Spurious
- PCI_EXP_SLTSTA_DLLSC when hot plugging]
-Message-ID: <20220921185609.GA20860@wunner.de>
-References: <20220921114020.GA1191462@bhelgaas>
- <20220921180326.GA1221419@bhelgaas>
+        with ESMTP id S229560AbiIUTtS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Sep 2022 15:49:18 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C35C3A0254;
+        Wed, 21 Sep 2022 12:49:17 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 6251A92009C; Wed, 21 Sep 2022 21:49:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 5C5A892009B;
+        Wed, 21 Sep 2022 20:49:16 +0100 (BST)
+Date:   Wed, 21 Sep 2022 20:49:16 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] PCI: Sanitise firmware BAR assignments behind a PCI-PCI
+ bridge
+Message-ID: <alpine.DEB.2.21.2209211921250.29493@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220921180326.GA1221419@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,HDRS_LCASE,
+        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 01:03:26PM -0500, Bjorn Helgaas wrote:
-> On Wed, Sep 21, 2022 at 06:40:20AM -0500, Bjorn Helgaas wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216511
+Fix an issue with the Tyan Tomcat IV S1564D system, the BIOS of which 
+does not assign PCI buses beyond #2, where our resource reallocation 
+code preserves the reset default of an I/O BAR assignment outside its 
+upstream PCI-to-PCI bridge's I/O forwarding range:
+
+pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
+pci 0000:06:08.0: BAR 4: trying firmware assignment [io  0xfce0-0xfcff]
+pci 0000:06:08.0: BAR 4: assigned [io  0xfce0-0xfcff]
 [...]
-> Here's the call chain when handling that DLL state change:
-> 
->   pciehp_ist
->     pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status)
->     status &= ... PCI_EXP_SLTSTA_DLLSC
->     events |= status
->     if (events & PCI_EXP_SLTSTA_DLLSC)
->       pciehp_handle_presence_or_link_change
->         pciehp_disable_slot
->           __pciehp_disable_slot
->             remove_board
->               pciehp_unconfigure_device
->                 pci_stop_and_remove_bus_device
-> 
-> Per spec, "software must read the Data Link Layer Link Active bit of
-> the Link Status Register to determine if the Link is active before
-> initiating configuration cycles to the hot plugged device" (PCIe r6.0,
-> sec 7.5.3.11).
-> 
-> It looks like Linux depends on PCI_EXP_SLTSTA_DLLSC but does not
-> actually read PCI_EXP_LNKSTA in this path, so this looks like a pciehp
-> defect.
+pci_bus 0000:06: resource 0 [io  0x2000-0x2fff]
 
-I disagree.  The spec citation pertains to *bringup* of the slot,
-but this is the bringdown code path.
+Consequently when the device driver tries to access 06:08.0 according to 
+its designated address range it pokes at an unassigned I/O location, 
+likely subtractively decoded by the southbridge and forwarded to ISA, 
+causing the driver to become confused and bail out:
 
-The logic in pciehp is such that if we receive DLLSC or PDC and the
-slot is up, we always bring it down.  Only then do we check whether
-the slot is occupied or link is up.  If that's the case, we attempt
-to bring the slot up again.
+uhci_hcd 0000:06:08.0: host system error, PCI problems?
+uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
+uhci_hcd 0000:06:08.0: host controller halted, very bad!
+uhci_hcd 0000:06:08.0: HCRESET not completed yet!
+uhci_hcd 0000:06:08.0: HC died; cleaning up
 
-pciehp assumes that the card may have changed when it receives DLLSC
-or PDC.  That's the rationale behind this behavior.
+if good luck happens or if bad luck does, an infinite flood of messages:
 
-In theory one might think that if DLLSC is received without a concurrent
-PDC event, then the card in the slot is still the same and only the
-link went down (probably flapped).  Unfortunately the reality is not
-that simple:  For one, DLLSC and PDC events may come in arbitrary order
-and with quite a delay between them.  Second, there are broken slots
-which hardwire PDC to 0 and we support those.  So we can't reliably
-determine if presence hasn't changed and only link has.
+uhci_hcd 0000:06:08.0: host system error, PCI problems?
+uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
 
-In this particular case, the PEX switch is clearly broken because it
-shouldn't signal DLLSC both for a slot where the link change occurred
-and its sibling.
+making the system virtually unusable.
 
-A while ago Jon Derrick submitted a patch for a similar problem:
-A bifurcated SSD where bringing down one half of the SSD results
-in a spurious DLLSC event for the other half:
+This is because we try to retain any BAR assignment the firmware may 
+have made here, which may be necessary for devices on the root bus with 
+some systems, but cannot work for devices that are behind a PCI-to-PCI 
+bridge where the BAR assignment is outside the upstream bridge's 
+forwarding range.
 
-https://lore.kernel.org/linux-pci/20210830155628.130054-1-jonathan.derrick@linux.dev/
+Make sure then for a device behind a PCI-to-PCI bridge that any firmware 
+assignment is within the bridge's relevant forwarding window or do not 
+restore the assignment, fixing the system concerned as follows:
 
-I'm not really happy with that patch because it adds a quirk
-in the middle of the code path for interpreting slot events
-which makes it difficult to reason about the code's correctness.
+pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
+pci 0000:06:08.0: BAR 4: failed to assign [io  0xfce0-0xfcff]
+[...]
+pci 0000:06:08.0: BAR 4: assigned [io  0x2000-0x201f]
 
-I'm starting to wonder if instead of Jon's patch, we should
-just disable DLLSC events on broken devices such as this
-PEX switch or Jon's SSD.  We'd only rely on PDC then but
-that's probably sufficient.  And the code changes would be
-less intrusive.
+and making device 06:08.0 work correctly.
 
-FWIW, Jon is still interested in upstreaming his quirk:
+Cf. <https://bugzilla.kernel.org/show_bug.cgi?id=16263>
 
-https://lore.kernel.org/linux-pci/446a21e2-aea2-773f-ca88-b6676b54b292@linux.dev/
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Link: https://lore.kernel.org/r/alpine.DEB.2.21.2203012338460.46819@angie.orcam.me.uk
+Fixes: 58c84eda0756 ("PCI: fall back to original BIOS BAR addresses")
+Cc: stable@vger.kernel.org # v2.6.35+
+---
+Hi Bjorn,
 
-@Richard:  I think Jon's patch doesn't solve your issue does it?
-Because I think the issue he's seeing is slightly different
-albeit likewise caused by unreliable DLLSC.  (His pertains to
-bringdown, yours to bringup of the slot it seems.)
+ I have trimmed the change description down as you requested and left the 
+change proper unmodified, as discussed in my earlier response.
 
-Thanks,
+ Let me know if you have any other concerns with this fix.
 
-Lukas
+  Maciej
+
+Changes from v2:
+
+- Change description trimmed and rephrased, link to a full bootstrap log 
+  earlier on in discussion added.
+
+Changes from v1:
+
+- Do restore firmware BAR assignments behind a PCI-PCI bridge, but only if 
+  within the bridge's forwarding window.
+
+- Update the change description and heading accordingly (was: PCI: Do not 
+  restore firmware BAR assignments behind a PCI-PCI bridge).
+---
+ drivers/pci/setup-res.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+linux-pci-setup-res-fw-address-nobridge.diff
+Index: linux-macro/drivers/pci/setup-res.c
+===================================================================
+--- linux-macro.orig/drivers/pci/setup-res.c
++++ linux-macro/drivers/pci/setup-res.c
+@@ -212,9 +212,19 @@ static int pci_revert_fw_address(struct
+ 	res->end = res->start + size - 1;
+ 	res->flags &= ~IORESOURCE_UNSET;
+ 
++	/*
++	 * If we're behind a P2P or CardBus bridge, make sure we're
++	 * inside the relevant forwarding window, or otherwise the
++	 * assignment must have been bogus and accesses intended for
++	 * the range assigned would not reach the device anyway.
++	 * On the root bus accept anything under the assumption the
++	 * host bridge will let it through.
++	 */
+ 	root = pci_find_parent_resource(dev, res);
+ 	if (!root) {
+-		if (res->flags & IORESOURCE_IO)
++		if (dev->bus->parent)
++			return -ENXIO;
++		else if (res->flags & IORESOURCE_IO)
+ 			root = &ioport_resource;
+ 		else
+ 			root = &iomem_resource;
