@@ -2,142 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBB335E53F3
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Sep 2022 21:49:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB2B25E53FE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Sep 2022 21:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbiIUTtT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Sep 2022 15:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58176 "EHLO
+        id S229904AbiIUTxF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Sep 2022 15:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbiIUTtS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Sep 2022 15:49:18 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C35C3A0254;
-        Wed, 21 Sep 2022 12:49:17 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 6251A92009C; Wed, 21 Sep 2022 21:49:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 5C5A892009B;
-        Wed, 21 Sep 2022 20:49:16 +0100 (BST)
-Date:   Wed, 21 Sep 2022 20:49:16 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCI: Sanitise firmware BAR assignments behind a PCI-PCI
- bridge
-Message-ID: <alpine.DEB.2.21.2209211921250.29493@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S229630AbiIUTxE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Sep 2022 15:53:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8BDA1A57
+        for <linux-pci@vger.kernel.org>; Wed, 21 Sep 2022 12:53:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7118AB82613
+        for <linux-pci@vger.kernel.org>; Wed, 21 Sep 2022 19:53:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 079DFC433C1;
+        Wed, 21 Sep 2022 19:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663789980;
+        bh=PdU8Gr8cc8IN+VJuteyVt/AxAPSXajC5EdWmedWluKI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=H4FeLe24ZH/3wqdGCDz3lSvAF6Yq4mLB4Vfh+ZDM0ytQhTh/rVJqctEo4GfuFvSL7
+         rXeq7sVrdOcQN6wYqHgPKKhY/UHhFJaNtNdndBV7L+vHQ0GuPx3P5wgJGU591EA0GG
+         geoWMveWx73LpqGWuj+i5zQdB7MxpeXL2/dDZc3nT0mwnXxffBY+K61gYULfpM74ZT
+         4Qe/hne+tNR7c24N7++ZOiz25m/x/Or7ACoSPJB2fotDD73OYLiOtljhXSfO3tZhwg
+         qCh0/apMhA4JDaGK5op64tO6RVtFqwOppAEKAJJdoQHD9plQvzo5n35UZyd0h2/y3G
+         6eetVVC9TD0cg==
+Date:   Wed, 21 Sep 2022 14:52:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] PCI: Allow for future resource expansion on
+ initial root bus scan
+Message-ID: <20220921195258.GA1232632@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,HDRS_LCASE,
-        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix an issue with the Tyan Tomcat IV S1564D system, the BIOS of which 
-does not assign PCI buses beyond #2, where our resource reallocation 
-code preserves the reset default of an I/O BAR assignment outside its 
-upstream PCI-to-PCI bridge's I/O forwarding range:
+On Mon, Sep 05, 2022 at 11:02:26AM +0300, Mika Westerberg wrote:
+> Hi,
+> 
+> The series works around an issue found on some Dell systems where
+> booting with Thunderbolt/USB4 devices connected the BIOS leaves some of
+> the PCIe devices unconfigured. If the connected devices that are not
+> configured have PCIe hotplug ports as well the initial root bus scan
+> only reserves the minimum amount of resources to them making any
+> expansion happening later impossible.
+> 
+> We do already distribute the "spare" resources between hotplug ports on
+> hot-add but we have not done that upon the initial scan. The first four
+> patches make the initial root bus scan path to do the same.
+> 
+> The additional patches are just a small cleanups that can be applied
+> separately too.
+> 
+> The related bug: https://bugzilla.kernel.org/show_bug.cgi?id=216000.
+> 
+> The previous version of the patch series can be found here:
+> 
+>   https://lore.kernel.org/linux-pci/20220816100740.68667-1-mika.westerberg@linux.intel.com/
+> 
+> Changes from the previous version:
+> 
+>   * Split patch 3 into two: move and then the actual fix as suggested by
+>     Andy.
+>   * Fold the two whitespace fixes into one patch.
+>   * Added tags from Chris and Andy.
+> 
+> Mika Westerberg (6):
+>   PCI: Fix used_buses calculation in pci_scan_child_bus_extend()
+>   PCI: Pass available buses also when the bridge is already configured
+>   PCI: Move pci_assign_unassigned_root_bus_resources()
+>   PCI: Distribute available resources for root buses too
+>   PCI: Fix whitespace and indentation
+>   PCI: Fix typo in pci_scan_child_bus_extend()
+> 
+>  drivers/pci/probe.c     |  13 +-
+>  drivers/pci/setup-bus.c | 290 ++++++++++++++++++++++++----------------
+>  2 files changed, 181 insertions(+), 122 deletions(-)
 
-pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.0: BAR 4: trying firmware assignment [io  0xfce0-0xfcff]
-pci 0000:06:08.0: BAR 4: assigned [io  0xfce0-0xfcff]
-[...]
-pci_bus 0000:06: resource 0 [io  0x2000-0x2fff]
-
-Consequently when the device driver tries to access 06:08.0 according to 
-its designated address range it pokes at an unassigned I/O location, 
-likely subtractively decoded by the southbridge and forwarded to ISA, 
-causing the driver to become confused and bail out:
-
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-uhci_hcd 0000:06:08.0: host controller halted, very bad!
-uhci_hcd 0000:06:08.0: HCRESET not completed yet!
-uhci_hcd 0000:06:08.0: HC died; cleaning up
-
-if good luck happens or if bad luck does, an infinite flood of messages:
-
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-
-making the system virtually unusable.
-
-This is because we try to retain any BAR assignment the firmware may 
-have made here, which may be necessary for devices on the root bus with 
-some systems, but cannot work for devices that are behind a PCI-to-PCI 
-bridge where the BAR assignment is outside the upstream bridge's 
-forwarding range.
-
-Make sure then for a device behind a PCI-to-PCI bridge that any firmware 
-assignment is within the bridge's relevant forwarding window or do not 
-restore the assignment, fixing the system concerned as follows:
-
-pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.0: BAR 4: failed to assign [io  0xfce0-0xfcff]
-[...]
-pci 0000:06:08.0: BAR 4: assigned [io  0x2000-0x201f]
-
-and making device 06:08.0 work correctly.
-
-Cf. <https://bugzilla.kernel.org/show_bug.cgi?id=16263>
-
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Link: https://lore.kernel.org/r/alpine.DEB.2.21.2203012338460.46819@angie.orcam.me.uk
-Fixes: 58c84eda0756 ("PCI: fall back to original BIOS BAR addresses")
-Cc: stable@vger.kernel.org # v2.6.35+
----
-Hi Bjorn,
-
- I have trimmed the change description down as you requested and left the 
-change proper unmodified, as discussed in my earlier response.
-
- Let me know if you have any other concerns with this fix.
-
-  Maciej
-
-Changes from v2:
-
-- Change description trimmed and rephrased, link to a full bootstrap log 
-  earlier on in discussion added.
-
-Changes from v1:
-
-- Do restore firmware BAR assignments behind a PCI-PCI bridge, but only if 
-  within the bridge's forwarding window.
-
-- Update the change description and heading accordingly (was: PCI: Do not 
-  restore firmware BAR assignments behind a PCI-PCI bridge).
----
- drivers/pci/setup-res.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-linux-pci-setup-res-fw-address-nobridge.diff
-Index: linux-macro/drivers/pci/setup-res.c
-===================================================================
---- linux-macro.orig/drivers/pci/setup-res.c
-+++ linux-macro/drivers/pci/setup-res.c
-@@ -212,9 +212,19 @@ static int pci_revert_fw_address(struct
- 	res->end = res->start + size - 1;
- 	res->flags &= ~IORESOURCE_UNSET;
- 
-+	/*
-+	 * If we're behind a P2P or CardBus bridge, make sure we're
-+	 * inside the relevant forwarding window, or otherwise the
-+	 * assignment must have been bogus and accesses intended for
-+	 * the range assigned would not reach the device anyway.
-+	 * On the root bus accept anything under the assumption the
-+	 * host bridge will let it through.
-+	 */
- 	root = pci_find_parent_resource(dev, res);
- 	if (!root) {
--		if (res->flags & IORESOURCE_IO)
-+		if (dev->bus->parent)
-+			return -ENXIO;
-+		else if (res->flags & IORESOURCE_IO)
- 			root = &ioport_resource;
- 		else
- 			root = &iomem_resource;
+Applied to pci/resource for v6.1, thanks, Mika!
