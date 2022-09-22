@@ -2,58 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EDD15E6B28
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 20:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86F55E6C9A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 22:02:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232266AbiIVSms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Sep 2022 14:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
+        id S232244AbiIVUCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Sep 2022 16:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbiIVSmr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 14:42:47 -0400
+        with ESMTP id S232479AbiIVUCL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 16:02:11 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDE6E5F84;
-        Thu, 22 Sep 2022 11:42:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42646B61;
+        Thu, 22 Sep 2022 13:02:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7B8E2B839EA;
-        Thu, 22 Sep 2022 18:42:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C40C433C1;
-        Thu, 22 Sep 2022 18:42:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1062B83A6C;
+        Thu, 22 Sep 2022 20:02:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67686C433D6;
+        Thu, 22 Sep 2022 20:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663872162;
-        bh=/h8vcD/VKlMfsilM0pkuVJ3xlR/VnjMHKVy8yWgVg3g=;
+        s=k20201202; t=1663876924;
+        bh=Ap/Inp3Sfe6Zj7tVN/jKuxxDgsHgXhBJT3+6ZeY53fc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DmVinFlzBg9GsiUso69Bkk+/qHgPMQ2PgkuO4jWk25WN3iEbJx1lE2EPNnp+UpZnd
-         hu5TxP9txk4iW6UcAN8LLLgpNHGZzGGn+4EzxfTVDvIXQoiUgJtylxpnQ+3iFjCgVu
-         nDiO8mlp2Bh4pFYJrzemIOLrxrvY1zxfDlvg0hIuGDNz81AxsGF9CmSDzj2YGxtOzr
-         6aA+HTqnfXy8X/FQaqynQCNkeGqZmbI67yE0Ba44vb1jgHEm4td29W588UgyBiSoKZ
-         efOtVj8fB9632l2+UQfoZPOMLabf9FRBZp4Tml0Ipz9iTG5vhN842RM6k5pL5kD3Pz
-         fH9Ppb9LPh2JQ==
-Date:   Thu, 22 Sep 2022 13:42:40 -0500
+        b=YD5Izudcy+JGNfMCtpGgZ/rSEC/l9vxBq36v7/luVgQo32yQqZBe6+BK3Eh/9831P
+         UxlwPxO8o8wWv6Vb61BN+jGJ3l+KXsdNecTqFHLALYH5JKvA9arWWSlTVsvRYi1jjD
+         MheTFWou+tfUq8aaRr0uzCNXUnBlFkBtXoK8pq/sxq7UQmQePlks30pUPoijAwqgg+
+         /h7JFohyEHX4vurUPlyY/AvDy8ySJ1hHQBXWQZxG9W2FKFFnvVr0BgqLaK+L3tGal9
+         +fxci7yFTUK22u1yLmcvsv9XIlR2U7Qkyu5Z56xdfINRcxFiNA6pDfOnOzp84JsUH0
+         x4/VwD+Ma+QDQ==
+Date:   Thu, 22 Sep 2022 15:02:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        svarbanov@mm-sol.com, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@somainline.org, lpieralisi@kernel.org,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        linux-phy@lists.infradead.org, vkoul@kernel.org, kishon@ti.com,
-        mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
-Message-ID: <20220922184240.GA1326211@bhelgaas>
+To:     Zhuo Chen <chenzhuo.1@bytedance.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>, allenbh@gmail.com,
+        dave.jiang@intel.com, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, linux-pci@vger.kernel.org,
+        jejb@linux.ibm.com, jdmason@kudzu.us, james.smart@broadcom.com,
+        linux-kernel@vger.kernel.org, ntb@lists.linux.dev,
+        oohall@gmail.com, bhelgaas@google.com, dick.kennedy@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [External] Re: [PATCH 1/3] PCI/AER: Use
+ pci_aer_clear_uncorrect_error_status() to clear uncorrectable error status
+Message-ID: <20220922200202.GA1330813@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <807730f9-0220-d297-dffd-929dde30d513@quicinc.com>
+In-Reply-To: <69f2df4e-b2c6-0f19-bf8d-92b7d6c4e033@bytedance.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -63,92 +58,238 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 09:09:28PM +0530, Krishna Chaitanya Chundru wrote:
-> On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
-> > [+cc Rafael, linux-pm since this is real power management magic,
-> > beginning of thread:
-> > https://lore.kernel.org/all/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
-> > full patch since I trimmed too much of it:
-> > https://lore.kernel.org/all/1663669347-29308-2-git-send-email-quic_krichai@quicinc.com/]
+On Mon, Sep 12, 2022 at 01:09:05AM +0800, Zhuo Chen wrote:
+> On 9/12/22 12:22 AM, Serge Semin wrote:
+> > On Fri, Sep 02, 2022 at 02:16:32AM +0800, Zhuo Chen wrote:
+> > > Status bits for ERR_NONFATAL errors only are cleared in
+> > > pci_aer_clear_nonfatal_status(), but we want clear uncorrectable
+> > > error status in ntb_hw_idt.c and lpfc_attr.c. So we add
+> > > pci_aer_clear_uncorrect_error_status() and change to use it.
 > > 
-> > On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya Chundru wrote:
-> > > On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
-> > > > On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya chundru wrote:
-> > > > > Add suspend and resume syscore ops.
-> > > > > 
-> > > > > Few PCIe endpoints like NVMe and WLANs are always expecting the device
-> > > > > to be in D0 state and the link to be active (or in l1ss) all the time
-> > > > > (including in S3 state).
-> > > > What does this have to do with the patch?  I don't see any NVMe or
-> > > > WLAN patches here.
-> > > Existing NVMe driver expecting NVMe device to be in D0 during S3 also. If we
-> > > turn off the link in
-> > > suspend, the NVMe resume path is broken as the state machine is getting
-> > > reset in the NVMe device.
-> > > Due to this, the host driver state machine and the device state machine are
-> > > going out of sync, and all NVMe commands
-> > > after resumes are getting timed out.
-> > > 
-> > > IIRC, Tegra is also facing this issue with NVMe.
-> > > 
-> > > This issue has been discussed below threads:
-> > > 
-> > > https://lore.kernel.org/all/Yl+6V3pWuyRYuVV8@infradead.org/T/
-> > > 
-> > > https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
-> > The problem is that this commit log doesn't explain the problem and
-> > doesn't give us anything to connect the NVMe and WLAN assumptions with
-> > this special driver behavior.  There needs to be some explicit
-> > property of NVMe and WLAN that the PM core or drivers like qcom can
-> > use to tell whether the clocks can be turned off.
->
-> Not only that NVMe is expecting the device state to be always in D0.
-> So any PCIe drivers should not turn off the link in suspend and do
-> link retraining in the resume.  As this is considered a power cycle
-> by the NVMe device and eventually increases the wear of the NVMe
-> flash.
+> > What about the next drivers
+> > 
+> > drivers/scsi/lpfc/lpfc_attr.c
+> > drivers/crypto/hisilicon/qm.c
+> > drivers/net/ethernet/intel/ice/ice_main.c
+> > 
+> > which call the pci_aer_clear_nonfatal_status() method too?
+> 
+> ‘pci_aer_clear_nonfatal_status()’ in
+> drivers/net/ethernet/intel/ice/ice_main.c has already been removed and
+> merged in kernel in: https://github.com/torvalds/linux/commit/ca415ea1f03abf34fc8e4cc5fc30a00189b4e776
 
-I can't quite parse this.  Are you saying that all PCI devices should
-stay in D0 when the system is in S3?
+It's better if you can use kernel.org URLs that don't depend on
+third parties like github, e.g.,
 
-> We are trying to keep the device in D0 and also reduce the power
-> consumption when the system is in S3 by turning off clocks and phy
-> with this patch series.
+  https://git.kernel.org/linus/ca415ea1f03a
 
-The decision to keep a device in D0 is not up to qcom or any other PCI
-controller driver.
+> ‘pci_aer_clear_nonfatal_status()’ in drivers/crypto/hisilicon/qm.c will be
+> removed in the next kernel:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/crypto/hisilicon/qm.c?id=00278564a60e11df8bcca0ececd8b2f55434e406
 
-> > > > > In qcom platform PCIe resources( clocks, phy etc..) can
-> > > > > released when the link is in L1ss to reduce the power
-> > > > > consumption. So if the link is in L1ss, release the PCIe
-> > > > > resources. And when the system resumes, enable the PCIe
-> > > > > resources if they released in the suspend path.
-> > > >
-> > > > What's the connection with L1.x?  Links enter L1.x based on
-> > > > activity and timing.  That doesn't seem like a reliable
-> > > > indicator to turn PHYs off and disable clocks.
-> > >
-> > > This is a Qcom PHY-specific feature (retaining the link state in
-> > > L1.x with clocks turned off).  It is possible only with the link
-> > > being in l1.x. PHY can't retain the link state in L0 with the
-> > > clocks turned off and we need to re-train the link if it's in L2
-> > > or L3. So we can support this feature only with L1.x.  That is
-> > > the reason we are taking l1.x as the trigger to turn off clocks
-> > > (in only suspend path).
-> >
-> > This doesn't address my question.  L1.x is an ASPM feature, which
-> > means hardware may enter or leave L1.x autonomously at any time
-> > without software intervention.  Therefore, I don't think reading the
-> > current state is a reliable way to decide anything.
->
-> After the link enters the L1.x it will come out only if there is
-> some activity on the link.  AS system is suspended and NVMe driver
-> is also suspended( queues will� freeze in suspend) who else can
-> initiate any data.
+This is a problem because 00278564a60e ("crypto: hisilicon - Remove
+pci_aer_clear_nonfatal_status() call") is in Herbert's cryptodev tree,
+and if I apply this series to the PCI tree and Linus merges it before
+Herbert's cryptodev changes, it will break the build.
 
-I don't think we can assume that nothing will happen to cause exit
-from L1.x.  For instance, PCIe Messages for INTx signaling, LTR, OBFF,
-PTM, etc., may be sent even though we think the device is idle and
-there should be no link activity.
+I think we need to split this patch up like this:
+
+  - Add pci_aer_clear_uncorrect_error_status() to PCI core
+  - Convert dpc to use pci_aer_clear_uncorrect_error_status()
+    (I might end up squashing with above)
+  - Convert lpfc to use pci_aer_clear_uncorrect_error_status()
+  - Convert ntb_hw_idt to use pci_aer_clear_uncorrect_error_status()
+  - Unexport pci_aer_clear_nonfatal_status()
+
+Then I can apply all but the last patch safely.  If the crypto changes
+are merged first, we can add the last one; otherwise we can do it for
+the next cycle.
+
+> Uncorrectable error status register was intended to be cleared in
+> drivers/scsi/lpfc/lpfc_attr.c. But originally function was changed in https://github.com/torvalds/linux/commit/e7b0b847de6db161e3917732276e425bc92a2feb
+> and
+> https://github.com/torvalds/linux/commit/894020fdd88c1e9a74c60b67c0f19f1c7696ba2f
+
+This will be a behavior change for lpfc and ntb_hw_idt.  It looks like
+it changes the behavior back to what it was before e7b0b847de6d
+("PCI/AER: Clear only ERR_NONFATAL bits during non-fatal recovery"),
+so it might be OK, but splitting these out to their own patches will
+make the change more obvious and we can make sure that's what we want.
 
 Bjorn
+
+> > > Use pci_aer_clear_nonfatal_status() in dpc_process_error(), which has
+> > > no functional changes.
+> > > 
+> > > Since pci_aer_clear_nonfatal_status() is used only internally, move
+> > > its declaration to the PCI internal header file. Also, no one cares
+> > > about return value of pci_aer_clear_nonfatal_status(), so make it void.
+> > > 
+> > > Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
+> > > ---
+> > >   drivers/ntb/hw/idt/ntb_hw_idt.c |  4 ++--
+> > >   drivers/pci/pci.h               |  2 ++
+> > >   drivers/pci/pcie/aer.c          | 23 ++++++++++++++++++-----
+> > >   drivers/pci/pcie/dpc.c          |  3 +--
+> > >   drivers/scsi/lpfc/lpfc_attr.c   |  4 ++--
+> > >   include/linux/aer.h             |  4 ++--
+> > >   6 files changed, 27 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
+> > > index 733557231ed0..de1dbbc5b9de 100644
+> > > --- a/drivers/ntb/hw/idt/ntb_hw_idt.c
+> > > +++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
+> > > @@ -2657,8 +2657,8 @@ static int idt_init_pci(struct idt_ntb_dev *ndev)
+> > >   	ret = pci_enable_pcie_error_reporting(pdev);
+> > >   	if (ret != 0)
+> > >   		dev_warn(&pdev->dev, "PCIe AER capability disabled\n");
+> > 
+> > > -	else /* Cleanup nonfatal error status before getting to init */
+> > > -		pci_aer_clear_nonfatal_status(pdev);
+> > > +	else /* Cleanup uncorrectable error status before getting to init */
+> > > +		pci_aer_clear_uncorrect_error_status(pdev);
+> > 
+> >  From the IDT NTB PCIe initialization procedure point of view both of
+> > these methods are equivalent. So for the IDT NTB part:
+> > 
+> IDT NTB part is the same as drivers/scsi/lpfc/lpfc_attr.c. The original
+> function is clear uncorrectable error status register including fatal and
+> non-fatal error status bits.
+> 
+> > Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> > 
+> > -Sergey
+> > 
+> > >   	/* First enable the PCI device */
+> > >   	ret = pcim_enable_device(pdev);
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index e10cdec6c56e..574176f43025 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -686,6 +686,7 @@ void pci_aer_init(struct pci_dev *dev);
+> > >   void pci_aer_exit(struct pci_dev *dev);
+> > >   extern const struct attribute_group aer_stats_attr_group;
+> > >   void pci_aer_clear_fatal_status(struct pci_dev *dev);
+> > > +void pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+> > >   int pci_aer_clear_status(struct pci_dev *dev);
+> > >   int pci_aer_raw_clear_status(struct pci_dev *dev);
+> > >   #else
+> > > @@ -693,6 +694,7 @@ static inline void pci_no_aer(void) { }
+> > >   static inline void pci_aer_init(struct pci_dev *d) { }
+> > >   static inline void pci_aer_exit(struct pci_dev *d) { }
+> > >   static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+> > > +static inline void pci_aer_clear_nonfatal_status(struct pci_dev *dev) { }
+> > >   static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
+> > >   static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+> > >   #endif
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index 7952e5efd6cf..d2996afa80f6 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -251,13 +251,13 @@ int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
+> > > -int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> > > +void pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> > >   {
+> > >   	int aer = dev->aer_cap;
+> > >   	u32 status, sev;
+> > >   	if (!pcie_aer_is_native(dev))
+> > > -		return -EIO;
+> > > +		return;
+> > >   	/* Clear status bits for ERR_NONFATAL errors only */
+> > >   	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
+> > > @@ -265,10 +265,7 @@ int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> > >   	status &= ~sev;
+> > >   	if (status)
+> > >   		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+> > > -
+> > > -	return 0;
+> > >   }
+> > > -EXPORT_SYMBOL_GPL(pci_aer_clear_nonfatal_status);
+> > >   void pci_aer_clear_fatal_status(struct pci_dev *dev)
+> > >   {
+> > > @@ -286,6 +283,22 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+> > >   		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+> > >   }
+> > > +int pci_aer_clear_uncorrect_error_status(struct pci_dev *dev)
+> > > +{
+> > > +	int aer = dev->aer_cap;
+> > > +	u32 status;
+> > > +
+> > > +	if (!pcie_aer_is_native(dev))
+> > > +		return -EIO;
+> > > +
+> > > +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
+> > > +	if (status)
+> > > +		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_aer_clear_uncorrect_error_status);
+> > > +
+> > >   /**
+> > >    * pci_aer_raw_clear_status - Clear AER error registers.
+> > >    * @dev: the PCI device
+> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > > index 3e9afee02e8d..7942073fbb34 100644
+> > > --- a/drivers/pci/pcie/dpc.c
+> > > +++ b/drivers/pci/pcie/dpc.c
+> > > @@ -288,8 +288,7 @@ void dpc_process_error(struct pci_dev *pdev)
+> > >   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> > >   		 aer_get_device_error_info(pdev, &info)) {
+> > >   		aer_print_error(pdev, &info);
+> > > -		pci_aer_clear_nonfatal_status(pdev);
+> > > -		pci_aer_clear_fatal_status(pdev);
+> > > +		pci_aer_clear_uncorrect_error_status(pdev);
+> > >   	}
+> > >   }
+> > > diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+> > > index 3caaa7c4af48..1ed8d1640325 100644
+> > > --- a/drivers/scsi/lpfc/lpfc_attr.c
+> > > +++ b/drivers/scsi/lpfc/lpfc_attr.c
+> > > @@ -4712,7 +4712,7 @@ static DEVICE_ATTR_RW(lpfc_aer_support);
+> > >    * Description:
+> > >    * If the @buf contains 1 and the device currently has the AER support
+> > >    * enabled, then invokes the kernel AER helper routine
+> > > - * pci_aer_clear_nonfatal_status() to clean up the uncorrectable
+> > > + * pci_aer_clear_uncorrect_error_status() to clean up the uncorrectable
+> > >    * error status register.
+> > >    *
+> > >    * Notes:
+> > > @@ -4738,7 +4738,7 @@ lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
+> > >   		return -EINVAL;
+> > >   	if (phba->hba_flag & HBA_AER_ENABLED)
+> > > -		rc = pci_aer_clear_nonfatal_status(phba->pcidev);
+> > > +		rc = pci_aer_clear_uncorrect_error_status(phba->pcidev);
+> > >   	if (rc == 0)
+> > >   		return strlen(buf);
+> > > diff --git a/include/linux/aer.h b/include/linux/aer.h
+> > > index 97f64ba1b34a..f638ad955deb 100644
+> > > --- a/include/linux/aer.h
+> > > +++ b/include/linux/aer.h
+> > > @@ -44,7 +44,7 @@ struct aer_capability_regs {
+> > >   /* PCIe port driver needs this function to enable AER */
+> > >   int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+> > >   int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+> > > -int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+> > > +int pci_aer_clear_uncorrect_error_status(struct pci_dev *dev);
+> > >   void pci_save_aer_state(struct pci_dev *dev);
+> > >   void pci_restore_aer_state(struct pci_dev *dev);
+> > >   #else
+> > > @@ -56,7 +56,7 @@ static inline int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+> > >   {
+> > >   	return -EINVAL;
+> > >   }
+> > > -static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> > > +static inline int pci_aer_clear_uncorrect_error_status(struct pci_dev *dev)
+> > >   {
+> > >   	return -EINVAL;
+> > >   }
+> > > -- 
+> > > 2.30.1 (Apple Git-130)
+> > > 
+> 
+> -- 
+> Thanks,
+> Zhuo Chen
