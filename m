@@ -2,66 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEE315E6AF2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 20:31:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDD15E6B28
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 20:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232573AbiIVSbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Sep 2022 14:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49498 "EHLO
+        id S232266AbiIVSms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Sep 2022 14:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232635AbiIVSaW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 14:30:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B0E10AB30;
-        Thu, 22 Sep 2022 11:27:56 -0700 (PDT)
+        with ESMTP id S229777AbiIVSmr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 14:42:47 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDE6E5F84;
+        Thu, 22 Sep 2022 11:42:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6052563759;
-        Thu, 22 Sep 2022 18:27:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 797E5C433C1;
-        Thu, 22 Sep 2022 18:27:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7B8E2B839EA;
+        Thu, 22 Sep 2022 18:42:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C40C433C1;
+        Thu, 22 Sep 2022 18:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663871258;
-        bh=8xWBJ6Sj6BfVo4gfoi/4G8CBQ6Jx/wBwvklLiTjCFyM=;
+        s=k20201202; t=1663872162;
+        bh=/h8vcD/VKlMfsilM0pkuVJ3xlR/VnjMHKVy8yWgVg3g=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s69F1omKgr2HrO0nTiXgJhVXfkTHk5wTJUcaIeSmJ0XajGhhyPnrb1bU/nv2iQqnN
-         W3caY/I9YU693aup6abaVXXxOFAj5HnEaV+f+mW+USOTiKdT5VDbo4vuDdzlh8z/UU
-         /aynRJSNuS5OFlAEr08CcXQvqXNzvH82QeBvZ+svaWrWgwoCxBjDhgoTF3HxxGsr2B
-         RHfBlVJJXlQsVDWYkXMPCMh5RNtGs9PdgdSwZvN31BFVKmmjE2hbJ0hP4xDdk1DbDF
-         q+MOFeJrCKHHXBIH9N+ZEVDqAQyriFbate7Mnvp6ebI677UzOy6UvVkYaYR7jIvUKc
-         AWYISuH7tO4Gw==
-Date:   Thu, 22 Sep 2022 13:27:37 -0500
+        b=DmVinFlzBg9GsiUso69Bkk+/qHgPMQ2PgkuO4jWk25WN3iEbJx1lE2EPNnp+UpZnd
+         hu5TxP9txk4iW6UcAN8LLLgpNHGZzGGn+4EzxfTVDvIXQoiUgJtylxpnQ+3iFjCgVu
+         nDiO8mlp2Bh4pFYJrzemIOLrxrvY1zxfDlvg0hIuGDNz81AxsGF9CmSDzj2YGxtOzr
+         6aA+HTqnfXy8X/FQaqynQCNkeGqZmbI67yE0Ba44vb1jgHEm4td29W588UgyBiSoKZ
+         efOtVj8fB9632l2+UQfoZPOMLabf9FRBZp4Tml0Ipz9iTG5vhN842RM6k5pL5kD3Pz
+         fH9Ppb9LPh2JQ==
+Date:   Thu, 22 Sep 2022 13:42:40 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v10 7/8] PCI/P2PDMA: Allow userspace VMA allocations
- through sysfs
-Message-ID: <20220922182737.GA1326059@bhelgaas>
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        svarbanov@mm-sol.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        linux-phy@lists.infradead.org, vkoul@kernel.org, kishon@ti.com,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
+Message-ID: <20220922184240.GA1326211@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220922163926.7077-8-logang@deltatee.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <807730f9-0220-d297-dffd-929dde30d513@quicinc.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -71,198 +63,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 10:39:25AM -0600, Logan Gunthorpe wrote:
-> Create a sysfs bin attribute called "allocate" under the existing
-> "p2pmem" group. The only allowable operation on this file is the mmap()
-> call.
-> 
-> When mmap() is called on this attribute, the kernel allocates a chunk of
-> memory from the genalloc and inserts the pages into the VMA. The
-> dev_pagemap .page_free callback will indicate when these pages are no
-> longer used and they will be put back into the genalloc.
-> 
-> On device unbind, remove the sysfs file before the memremap_pages are
-> cleaned up. This ensures unmap_mapping_range() is called on the files
-> inode and no new mappings can be created.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+On Thu, Sep 22, 2022 at 09:09:28PM +0530, Krishna Chaitanya Chundru wrote:
+> On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
+> > [+cc Rafael, linux-pm since this is real power management magic,
+> > beginning of thread:
+> > https://lore.kernel.org/all/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
+> > full patch since I trimmed too much of it:
+> > https://lore.kernel.org/all/1663669347-29308-2-git-send-email-quic_krichai@quicinc.com/]
+> > 
+> > On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
+> > > > On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya chundru wrote:
+> > > > > Add suspend and resume syscore ops.
+> > > > > 
+> > > > > Few PCIe endpoints like NVMe and WLANs are always expecting the device
+> > > > > to be in D0 state and the link to be active (or in l1ss) all the time
+> > > > > (including in S3 state).
+> > > > What does this have to do with the patch?  I don't see any NVMe or
+> > > > WLAN patches here.
+> > > Existing NVMe driver expecting NVMe device to be in D0 during S3 also. If we
+> > > turn off the link in
+> > > suspend, the NVMe resume path is broken as the state machine is getting
+> > > reset in the NVMe device.
+> > > Due to this, the host driver state machine and the device state machine are
+> > > going out of sync, and all NVMe commands
+> > > after resumes are getting timed out.
+> > > 
+> > > IIRC, Tegra is also facing this issue with NVMe.
+> > > 
+> > > This issue has been discussed below threads:
+> > > 
+> > > https://lore.kernel.org/all/Yl+6V3pWuyRYuVV8@infradead.org/T/
+> > > 
+> > > https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
+> > The problem is that this commit log doesn't explain the problem and
+> > doesn't give us anything to connect the NVMe and WLAN assumptions with
+> > this special driver behavior.  There needs to be some explicit
+> > property of NVMe and WLAN that the PM core or drivers like qcom can
+> > use to tell whether the clocks can be turned off.
+>
+> Not only that NVMe is expecting the device state to be always in D0.
+> So any PCIe drivers should not turn off the link in suspend and do
+> link retraining in the resume.  As this is considered a power cycle
+> by the NVMe device and eventually increases the wear of the NVMe
+> flash.
 
-Not sure which tree this should go through, so:
+I can't quite parse this.  Are you saying that all PCI devices should
+stay in D0 when the system is in S3?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> We are trying to keep the device in D0 and also reduce the power
+> consumption when the system is in S3 by turning off clocks and phy
+> with this patch series.
 
-> ---
->  drivers/pci/p2pdma.c | 124 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 124 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 4496a7c5c478..a6ed6bbca214 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -89,6 +89,90 @@ static ssize_t published_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(published);
->  
-> +static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
-> +		struct bin_attribute *attr, struct vm_area_struct *vma)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> +	size_t len = vma->vm_end - vma->vm_start;
-> +	struct pci_p2pdma *p2pdma;
-> +	struct percpu_ref *ref;
-> +	unsigned long vaddr;
-> +	void *kaddr;
-> +	int ret;
-> +
-> +	/* prevent private mappings from being established */
-> +	if ((vma->vm_flags & VM_MAYSHARE) != VM_MAYSHARE) {
-> +		pci_info_ratelimited(pdev,
-> +				     "%s: fail, attempted private mapping\n",
-> +				     current->comm);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (vma->vm_pgoff) {
-> +		pci_info_ratelimited(pdev,
-> +				     "%s: fail, attempted mapping with non-zero offset\n",
-> +				     current->comm);
-> +		return -EINVAL;
-> +	}
-> +
-> +	rcu_read_lock();
-> +	p2pdma = rcu_dereference(pdev->p2pdma);
-> +	if (!p2pdma) {
-> +		ret = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	kaddr = (void *)gen_pool_alloc_owner(p2pdma->pool, len, (void **)&ref);
-> +	if (!kaddr) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * vm_insert_page() can sleep, so a reference is taken to mapping
-> +	 * such that rcu_read_unlock() can be done before inserting the
-> +	 * pages
-> +	 */
-> +	if (unlikely(!percpu_ref_tryget_live_rcu(ref))) {
-> +		ret = -ENODEV;
-> +		goto out_free_mem;
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	for (vaddr = vma->vm_start; vaddr < vma->vm_end; vaddr += PAGE_SIZE) {
-> +		ret = vm_insert_page(vma, vaddr, virt_to_page(kaddr));
-> +		if (ret) {
-> +			gen_pool_free(p2pdma->pool, (uintptr_t)kaddr, len);
-> +			return ret;
-> +		}
-> +		percpu_ref_get(ref);
-> +		put_page(virt_to_page(kaddr));
-> +		kaddr += PAGE_SIZE;
-> +		len -= PAGE_SIZE;
-> +	}
-> +
-> +	percpu_ref_put(ref);
-> +
-> +	return 0;
-> +out_free_mem:
-> +	gen_pool_free(p2pdma->pool, (uintptr_t)kaddr, len);
-> +out:
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +
-> +static struct bin_attribute p2pmem_alloc_attr = {
-> +	.attr = { .name = "allocate", .mode = 0660 },
-> +	.mmap = p2pmem_alloc_mmap,
-> +	/*
-> +	 * Some places where we want to call mmap (ie. python) will check
-> +	 * that the file size is greater than the mmap size before allowing
-> +	 * the mmap to continue. To work around this, just set the size
-> +	 * to be very large.
-> +	 */
-> +	.size = SZ_1T,
-> +};
-> +
->  static struct attribute *p2pmem_attrs[] = {
->  	&dev_attr_size.attr,
->  	&dev_attr_available.attr,
-> @@ -96,11 +180,32 @@ static struct attribute *p2pmem_attrs[] = {
->  	NULL,
->  };
->  
-> +static struct bin_attribute *p2pmem_bin_attrs[] = {
-> +	&p2pmem_alloc_attr,
-> +	NULL,
-> +};
-> +
->  static const struct attribute_group p2pmem_group = {
->  	.attrs = p2pmem_attrs,
-> +	.bin_attrs = p2pmem_bin_attrs,
->  	.name = "p2pmem",
->  };
->  
-> +static void p2pdma_page_free(struct page *page)
-> +{
-> +	struct pci_p2pdma_pagemap *pgmap = to_p2p_pgmap(page->pgmap);
-> +	struct percpu_ref *ref;
-> +
-> +	gen_pool_free_owner(pgmap->provider->p2pdma->pool,
-> +			    (uintptr_t)page_to_virt(page), PAGE_SIZE,
-> +			    (void **)&ref);
-> +	percpu_ref_put(ref);
-> +}
-> +
-> +static const struct dev_pagemap_ops p2pdma_pgmap_ops = {
-> +	.page_free = p2pdma_page_free,
-> +};
-> +
->  static void pci_p2pdma_release(void *data)
->  {
->  	struct pci_dev *pdev = data;
-> @@ -152,6 +257,19 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
->  	return error;
->  }
->  
-> +static void pci_p2pdma_unmap_mappings(void *data)
-> +{
-> +	struct pci_dev *pdev = data;
-> +
-> +	/*
-> +	 * Removing the alloc attribute from sysfs will call
-> +	 * unmap_mapping_range() on the inode, teardown any existing userspace
-> +	 * mappings and prevent new ones from being created.
-> +	 */
-> +	sysfs_remove_file_from_group(&pdev->dev.kobj, &p2pmem_alloc_attr.attr,
-> +				     p2pmem_group.name);
-> +}
-> +
->  /**
->   * pci_p2pdma_add_resource - add memory for use as p2p memory
->   * @pdev: the device to add the memory to
-> @@ -198,6 +316,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	pgmap->range.end = pgmap->range.start + size - 1;
->  	pgmap->nr_range = 1;
->  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
-> +	pgmap->ops = &p2pdma_pgmap_ops;
->  
->  	p2p_pgmap->provider = pdev;
->  	p2p_pgmap->bus_offset = pci_bus_address(pdev, bar) -
-> @@ -209,6 +328,11 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  		goto pgmap_free;
->  	}
->  
-> +	error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_unmap_mappings,
-> +					 pdev);
-> +	if (error)
-> +		goto pages_free;
-> +
->  	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
->  	error = gen_pool_add_owner(p2pdma->pool, (unsigned long)addr,
->  			pci_bus_address(pdev, bar) + offset,
-> -- 
-> 2.30.2
-> 
+The decision to keep a device in D0 is not up to qcom or any other PCI
+controller driver.
+
+> > > > > In qcom platform PCIe resources( clocks, phy etc..) can
+> > > > > released when the link is in L1ss to reduce the power
+> > > > > consumption. So if the link is in L1ss, release the PCIe
+> > > > > resources. And when the system resumes, enable the PCIe
+> > > > > resources if they released in the suspend path.
+> > > >
+> > > > What's the connection with L1.x?  Links enter L1.x based on
+> > > > activity and timing.  That doesn't seem like a reliable
+> > > > indicator to turn PHYs off and disable clocks.
+> > >
+> > > This is a Qcom PHY-specific feature (retaining the link state in
+> > > L1.x with clocks turned off).  It is possible only with the link
+> > > being in l1.x. PHY can't retain the link state in L0 with the
+> > > clocks turned off and we need to re-train the link if it's in L2
+> > > or L3. So we can support this feature only with L1.x.  That is
+> > > the reason we are taking l1.x as the trigger to turn off clocks
+> > > (in only suspend path).
+> >
+> > This doesn't address my question.  L1.x is an ASPM feature, which
+> > means hardware may enter or leave L1.x autonomously at any time
+> > without software intervention.  Therefore, I don't think reading the
+> > current state is a reliable way to decide anything.
+>
+> After the link enters the L1.x it will come out only if there is
+> some activity on the link.  AS system is suspended and NVMe driver
+> is also suspended( queues will  freeze in suspend) who else can
+> initiate any data.
+
+I don't think we can assume that nothing will happen to cause exit
+from L1.x.  For instance, PCIe Messages for INTx signaling, LTR, OBFF,
+PTM, etc., may be sent even though we think the device is idle and
+there should be no link activity.
+
+Bjorn
