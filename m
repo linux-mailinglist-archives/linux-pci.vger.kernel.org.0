@@ -2,145 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC22C5E5D84
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 10:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B3B5E5D9A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 10:38:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbiIVIbC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Sep 2022 04:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49572 "EHLO
+        id S230045AbiIVIiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Sep 2022 04:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbiIVIap (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 04:30:45 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E43DCBAC0
-        for <linux-pci@vger.kernel.org>; Thu, 22 Sep 2022 01:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663835415; x=1695371415;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2JWMeeJNGRyw4nVNqR4jnKEwqWXEr9kIdUY3mWCli3U=;
-  b=COZFPM8/lsHPDJOe/i7veyIwsJ+SkwhIEfaCelPiUecBmaE42p3Km11I
-   En/lU+Ok2In756KYCJe6lEd2g4vpIdgXu/mjidzHMGGYphIezL5/MxUEe
-   tYVIbTzPMTgTP96o7zqNsssvYQqTsFf5r+54Ifh+BRr7aERtP2/Ezhale
-   +fYxlCNRCDJX+gGcDKbzhKAx1iNn395pr+G+hgdxq+rTU8ZsrnDhgFvCu
-   Tr8NkFkDU7Amfq/c6NpfUydgiz69Y5teuiG8H9JUypie69wGt+9A0upVl
-   SslRN5NWGihd5FhSGZjweKnKBIm/GXszhLBmtoYLMxnxFBHTQ+zcxkjau
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="362004684"
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="362004684"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 01:30:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="570878001"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 22 Sep 2022 01:30:13 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1obHb2-0004Ue-2p;
-        Thu, 22 Sep 2022 08:30:12 +0000
-Date:   Thu, 22 Sep 2022 16:29:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/resource] BUILD SUCCESS
- 58e011609c4305fc50674c4610cbe8a8c26261f6
-Message-ID: <632c1d01.gUTiL/kZkmwGHjFZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229641AbiIVIiU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 04:38:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70149A59B6;
+        Thu, 22 Sep 2022 01:38:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 25346B83134;
+        Thu, 22 Sep 2022 08:38:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F6B2C433D6;
+        Thu, 22 Sep 2022 08:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1663835896;
+        bh=ZXqrm8nedeHyjJHSE+1GJ5DZF7ttxhR/iupCB+jykP4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sLVTqeua8VBBS9O2uBUp1F+RCRb3jzgT/qYn8/Erj5crjgRsyAtxSy76D5wqSuehI
+         ky9/I44ksfKvi5sSHy7PazF5U81CS9thdVN+6Zzm6o2+vNMFMFDT7elLAZup43khua
+         W/eR3vgb0Y3Make/VdghCWlJmdQ8796Skliks+5Q=
+Date:   Thu, 22 Sep 2022 10:38:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v9 7/8] PCI/P2PDMA: Allow userspace VMA allocations
+ through sysfs
+Message-ID: <Yywe9rBMB6hlUwqw@kroah.com>
+References: <20220825152425.6296-8-logang@deltatee.com>
+ <YxDb2MyRx6o/wDAz@kroah.com>
+ <4a4bca1e-bebf-768f-92d4-92eb8ae714e1@deltatee.com>
+ <YxDhEO9ycZDTnbZm@kroah.com>
+ <cc9a24a8-dd3a-9d21-d9a7-5ee4b0ad7a57@deltatee.com>
+ <YxD7uZYaV75gJS9d@kroah.com>
+ <fb9d7948-43fe-87c5-5275-70f280181ad1@deltatee.com>
+ <YxGad5h2Nn/Ejslc@kroah.com>
+ <db8cd049-c78b-1aa0-dcd0-0feb8c6cb25c@deltatee.com>
+ <20220920064613.GB17325@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220920064613.GB17325@lst.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/resource
-branch HEAD: 58e011609c4305fc50674c4610cbe8a8c26261f6  PCI: Fix typo in pci_scan_child_bus_extend()
+On Tue, Sep 20, 2022 at 08:46:13AM +0200, Christoph Hellwig wrote:
+> On Fri, Sep 02, 2022 at 12:46:54PM -0600, Logan Gunthorpe wrote:
+> > See the diff at the bottom of this email. I can apply it on top of this
+> > patch, but IMO it is neither easier to follow nor maintain. Unless you 
+> > have a different suggestion...
+> 
+> Greg, can you chime in on this?  Besides this item we just have a few
+> cosmetic bits left I think, and I'd really like to get the series into
+> this merge window.
+> 
 
-elapsed time: 724m
+I don't seem to have this in my inbox at all anymore, sorry.
 
-configs tested: 65
-configs skipped: 2
+The original should be fine, Logan, thanks for trying to split it out a
+bit more.  So this can be taken as-is for 6.1-rc1.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+thanks,
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-arc                  randconfig-r043-20220921
-riscv                randconfig-r042-20220921
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-s390                 randconfig-r044-20220921
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-m68k                             allyesconfig
-m68k                             allmodconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-powerpc                     stx_gp3_defconfig
-arm                          exynos_defconfig
-m68k                                defconfig
-sh                 kfr2r09-romimage_defconfig
-m68k                       m5208evb_defconfig
-arm                        multi_v7_defconfig
-powerpc                      makalu_defconfig
-i386                             alldefconfig
-powerpc                      ppc6xx_defconfig
-i386                          randconfig-c001
-powerpc                    adder875_defconfig
-sh                               j2_defconfig
-sh                             espt_defconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220922
-ia64                             allmodconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20220921
-hexagon              randconfig-r045-20220921
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+greg k-h
