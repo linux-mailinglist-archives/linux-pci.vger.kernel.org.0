@@ -2,112 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB885E664A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 16:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3845E67A6
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 17:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbiIVO6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Sep 2022 10:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
+        id S231479AbiIVPyW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Sep 2022 11:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231820AbiIVO6b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 10:58:31 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E646D74D7;
-        Thu, 22 Sep 2022 07:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=lIqeYmIYKdZ39Sv7iKx98PZ/aFncvZ/B1l8HysQoIhk=; b=I75dP8r9MX4OiRESuJQ15NM69H
-        E7EPt6dmj1RLUSLfLdHSdQgN1mX1Mps+QUyXlvHfee+UqpkHTb6XVDmWWJmc+SsSXElXncswhSea/
-        n7ClPcuX8C+GwiXwMt/bA9+YVdTDgHYaqcPfaUTSE2PgJgFZGhE5WKHVUC+x9lJkdalVuklY4Xq8n
-        nEI+f/4MSCesrWAsHDl7LEYeD/yhSatwrHa4riE/CQsWfphlfqxmoZ49pmeUh05ZlrdcurIihp0za
-        NSFZ6gpSHMV26d1luCPA7bAblBb7vBlDXKICtG6AtRLly1VcBQJPVRZYaHZ6jleuswBvQRteHobdp
-        Z4DBeTVg==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1obNef-00848L-ST; Thu, 22 Sep 2022 08:58:22 -0600
-Message-ID: <0074a009-9ece-6617-b66d-d003593d153e@deltatee.com>
-Date:   Thu, 22 Sep 2022 08:58:16 -0600
+        with ESMTP id S229794AbiIVPyU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 11:54:20 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE250F8C04;
+        Thu, 22 Sep 2022 08:54:19 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28MDUWSf021785;
+        Thu, 22 Sep 2022 15:53:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=US13UxSFNQuHhq+dXkWL+HohYUtp82gPRRe3BJERysc=;
+ b=bW9R+CkuNVB1UiU5dGGV+QIz0uWebcQlh1VDjZWXJBHXrem21bKtzbkrOalUGn+C2Mv7
+ Z5eLrziimecoCYpopS/mqyqxqJVKjl337Ck4KH+Jp0DRT+p7smmiPfBceer+J/T5JDd8
+ hMKWvM9lXKA081F0OwFYQo7HFnRQGn+ibBHtTsRM/HqSVlyR2Mz5ATPq6oWN3C4g0rgs
+ 761mz/XCkTalhFAtDjJBIQvnlCY7ANbvHIU16RxwTUgqDHeKMpJ5PJ8IB7wjE4H/nH0I
+ 4nSXKqaLTGqX95pERQchzVpend5D62mPn2YYPJrIVAPAcJOxOZfs6tVzReQIV0xefFZX xQ== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jrq4r8kn6-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Sep 2022 15:53:56 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 28MFdfXI025772
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Sep 2022 15:39:41 GMT
+Received: from [10.216.47.110] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 22 Sep
+ 2022 08:39:31 -0700
+Message-ID: <807730f9-0220-d297-dffd-929dde30d513@quicinc.com>
+Date:   Thu, 22 Sep 2022 21:09:28 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-CA
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20220825152425.6296-8-logang@deltatee.com>
- <YxDb2MyRx6o/wDAz@kroah.com>
- <4a4bca1e-bebf-768f-92d4-92eb8ae714e1@deltatee.com>
- <YxDhEO9ycZDTnbZm@kroah.com>
- <cc9a24a8-dd3a-9d21-d9a7-5ee4b0ad7a57@deltatee.com>
- <YxD7uZYaV75gJS9d@kroah.com>
- <fb9d7948-43fe-87c5-5275-70f280181ad1@deltatee.com>
- <YxGad5h2Nn/Ejslc@kroah.com>
- <db8cd049-c78b-1aa0-dcd0-0feb8c6cb25c@deltatee.com>
- <20220920064613.GB17325@lst.de> <Yywe9rBMB6hlUwqw@kroah.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <Yywe9rBMB6hlUwqw@kroah.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, hch@lst.de, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
+        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
+        <svarbanov@mm-sol.com>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@somainline.org>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-phy@lists.infradead.org>,
+        <vkoul@kernel.org>, <kishon@ti.com>, <mturquette@baylibre.com>,
+        <linux-clk@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>
+References: <20220921165601.GA1215223@bhelgaas>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220921165601.GA1215223@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qy6KnT5DFSRzCuruOAI_w_U-p6xqbqlO
+X-Proofpoint-ORIG-GUID: qy6KnT5DFSRzCuruOAI_w_U-p6xqbqlO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-22_08,2022-09-22_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1011 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209220106
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v9 7/8] PCI/P2PDMA: Allow userspace VMA allocations
- through sysfs
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-
-On 2022-09-22 02:38, Greg Kroah-Hartman wrote:
-> On Tue, Sep 20, 2022 at 08:46:13AM +0200, Christoph Hellwig wrote:
->> On Fri, Sep 02, 2022 at 12:46:54PM -0600, Logan Gunthorpe wrote:
->>> See the diff at the bottom of this email. I can apply it on top of this
->>> patch, but IMO it is neither easier to follow nor maintain. Unless you 
->>> have a different suggestion...
+On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
+> [+cc Rafael, linux-pm since this is real power management magic,
+> beginning of thread:
+> https://lore.kernel.org/all/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
+> full patch since I trimmed too much of it:
+> https://lore.kernel.org/all/1663669347-29308-2-git-send-email-quic_krichai@quicinc.com/]
+>
+> On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya Chundru wrote:
+>> On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
+>>> On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya chundru wrote:
+>>>> Add suspend and resume syscore ops.
+>>>>
+>>>> Few PCIe endpoints like NVMe and WLANs are always expecting the device
+>>>> to be in D0 state and the link to be active (or in l1ss) all the time
+>>>> (including in S3 state).
+>>> What does this have to do with the patch?  I don't see any NVMe or
+>>> WLAN patches here.
+>> Existing NVMe driver expecting NVMe device to be in D0 during S3 also. If we
+>> turn off the link in
+>> suspend, the NVMe resume path is broken as the state machine is getting
+>> reset in the NVMe device.
+>> Due to this, the host driver state machine and the device state machine are
+>> going out of sync, and all NVMe commands
+>> after resumes are getting timed out.
 >>
->> Greg, can you chime in on this?  Besides this item we just have a few
->> cosmetic bits left I think, and I'd really like to get the series into
->> this merge window.
+>> IIRC, Tegra is also facing this issue with NVMe.
 >>
-> 
-> I don't seem to have this in my inbox at all anymore, sorry.
-> 
-> The original should be fine, Logan, thanks for trying to split it out a
-> bit more.  So this can be taken as-is for 6.1-rc1.
+>> This issue has been discussed below threads:
+>>
+>> https://lore.kernel.org/all/Yl+6V3pWuyRYuVV8@infradead.org/T/
+>>
+>> https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
+> The problem is that this commit log doesn't explain the problem and
+> doesn't give us anything to connect the NVMe and WLAN assumptions with
+> this special driver behavior.  There needs to be some explicit
+> property of NVMe and WLAN that the PM core or drivers like qcom can
+> use to tell whether the clocks can be turned off.
+Not only that NVMe is expecting the device state to be always in D0. So 
+any PCIe
+drivers should not turn off the link in suspend and do link retraining 
+in the resume.
+As this is considered a power cycle by the NVMe device and eventually 
+increases the
+wear of the NVMe flash.
 
-Thanks Greg,
-
-I'll send a v10 with changes from the other feedback later today.
-
-Logan
+We are trying to keep the device in D0 and also reduce the power 
+consumption when the system
+is in S3 by turning off clocks and phy with this patch series.
+>
+>>>> In qcom platform PCIe resources( clocks, phy etc..) can released
+>>>> when the link is in L1ss to reduce the power consumption. So if the link
+>>>> is in L1ss, release the PCIe resources. And when the system resumes,
+>>>> enable the PCIe resources if they released in the suspend path.
+>>> What's the connection with L1.x?  Links enter L1.x based on activity
+>>> and timing.  That doesn't seem like a reliable indicator to turn PHYs
+>>> off and disable clocks.
+>> This is a Qcom PHY-specific feature (retaining the link state in L1.x with
+>> clocks turned off).
+>> It is possible only with the link being in l1.x. PHY can't retain the link
+>> state in L0 with the
+>> clocks turned off and we need to re-train the link if it's in L2 or L3. So
+>> we can support this feature only with L1.x.
+>> That is the reason we are taking l1.x as the trigger to turn off clocks (in
+>> only suspend path).
+> This doesn't address my question.  L1.x is an ASPM feature, which
+> means hardware may enter or leave L1.x autonomously at any time
+> without software intervention.  Therefore, I don't think reading the
+> current state is a reliable way to decide anything.
+After the link enters the L1.x it will come out only if there is some 
+activity on the link.
+AS system is suspended and NVMe driver is also suspended( queues will  
+freeze in suspend)
+who else can initiate any data. As long the link stays in L1ss we can 
+turn off clocks and phy.
+When the system resumes we turn off clocks and phy before resuming the 
+NVMe, this makes sure
+the clocks and phy are up before there is any activity to bring up the 
+link back to L0 state from L1.x.
+>
+>> ...
+>>>> Its observed that access to Ep PCIe space to mask MSI/MSIX is happening
+>>>> at the very late stage of suspend path (access by affinity changes while
+>>>> making CPUs offline during suspend, this will happen after devices are
+>>>> suspended (after all phases of suspend ops)). If we turn off clocks in
+>>>> any PM callback, afterwards running into crashes due to un-clocked access
+>>>> due to above mentioned MSI/MSIx access.
+>>>> So, we are making use of syscore framework to turn off the PCIe clocks
+>>>> which will be called after making CPUs offline.
