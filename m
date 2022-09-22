@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F361B5E5CF3
+	by mail.lfdr.de (Postfix) with ESMTP id CB8A05E5CF2
 	for <lists+linux-pci@lfdr.de>; Thu, 22 Sep 2022 10:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbiIVIHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229927AbiIVIHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 22 Sep 2022 04:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiIVIHJ (ORCPT
+        with ESMTP id S229865AbiIVIHJ (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Sep 2022 04:07:09 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4BAEB40DB;
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5C85B40DE;
         Thu, 22 Sep 2022 01:07:08 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.93,335,1654527600"; 
-   d="scan'208";a="133637561"
+   d="scan'208";a="135810767"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 22 Sep 2022 17:07:07 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 22 Sep 2022 17:07:07 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 050D74185388;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 28DEE418538D;
         Thu, 22 Sep 2022 17:07:07 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -27,9 +27,9 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v6 03/10] PCI: Add PCI_EXP_LNKCAP_MLW macros
-Date:   Thu, 22 Sep 2022 17:06:40 +0900
-Message-Id: <20220922080647.3489791-4-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v6 04/10] PCI: designware-ep: Expose dw_pcie_ep_exit() to module
+Date:   Thu, 22 Sep 2022 17:06:41 +0900
+Message-Id: <20220922080647.3489791-5-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220922080647.3489791-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20220922080647.3489791-1-yoshihiro.shimoda.uh@renesas.com>
@@ -43,32 +43,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add macros defining Maximum Link Width bits in Link Capabilities
-Register.
+Expose dw_pcie_ep_exit() to module.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- include/uapi/linux/pci_regs.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 57b8e2ffb1dd..06c9e5d0ef33 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -538,6 +538,12 @@
- #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
- #define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
- #define  PCI_EXP_LNKCAP_SLS_64_0GB 0x00000006 /* LNKCAP2 SLS Vector bit 5 */
-+#define  PCI_EXP_LNKCAP_MLW_X1	0x00000010 /* Maximum Link Width x1 */
-+#define  PCI_EXP_LNKCAP_MLW_X2	0x00000020 /* Maximum Link Width x2 */
-+#define  PCI_EXP_LNKCAP_MLW_X4	0x00000040 /* Maximum Link Width x4 */
-+#define  PCI_EXP_LNKCAP_MLW_X8	0x00000080 /* Maximum Link Width x8 */
-+#define  PCI_EXP_LNKCAP_MLW_X12	0x000000c0 /* Maximum Link Width x12 */
-+#define  PCI_EXP_LNKCAP_MLW_X16	0x00000100 /* Maximum Link Width x16 */
- #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
- #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
- #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a9956692a97..ca8f1804ee10 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -622,6 +622,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+ 
+ 	pci_epc_mem_exit(epc);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_exit);
+ 
+ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+ {
 -- 
 2.25.1
 
