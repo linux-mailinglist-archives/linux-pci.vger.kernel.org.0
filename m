@@ -2,50 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DF55E7CA4
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Sep 2022 16:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64F0B5E7CF4
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Sep 2022 16:26:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232414AbiIWOPd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Sep 2022 10:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
+        id S232586AbiIWO0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Sep 2022 10:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232133AbiIWOPc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 10:15:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD134109638;
-        Fri, 23 Sep 2022 07:15:30 -0700 (PDT)
+        with ESMTP id S232622AbiIWO0V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 10:26:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A2CFA0C9;
+        Fri, 23 Sep 2022 07:26:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 689A9B8360F;
-        Fri, 23 Sep 2022 14:15:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1778C433D6;
-        Fri, 23 Sep 2022 14:15:27 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC2B9B80B4C;
+        Fri, 23 Sep 2022 14:26:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16133C433C1;
+        Fri, 23 Sep 2022 14:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663942528;
-        bh=1AEcv2sMJqybL3a/melDfwWejdXEdqsvn6UZFqQXk0w=;
+        s=k20201202; t=1663943173;
+        bh=ObX6HvLa+ySlFwmEmsOrRGpPJYrz/yfFRnE1KqoIX0Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KO/FydUZ6XN6vBhLT7QRnwB5Xe/lkshw7359t/XGWUVY3nZ6Brhtd/b4mj51hk5Ya
-         teE0g2+L/r9SpFkcVnl9ISTxozo4Ew6R6BpfAd9LsOETTzQj/jZQKis2PH3fMjV266
-         QcJwIELCFD9UNnWUnlmMUWV7qNNk97IsP7CHEwppi2meC3pMzKQwOUx6KKV0IjcnOl
-         dms4TAusM5nqHJk8tPVe03Z0yfOUZMocomBgW1lNMyAT6jKUmzMsFKapsS4AXPKBmk
-         86g55mvkOHVPvxjNW79d8LFrtmT0T6fVf9Kq8y4BbVvr1sryoDbx43j8LXgutChbIB
-         We6XJ/zOy1iBw==
-Date:   Fri, 23 Sep 2022 09:15:26 -0500
+        b=USLuatUTEmyIgU2Aq8Log9JG+qRZjgZycPj46CoYsjOhO4Te9M5o1aWKI7BRmtvdM
+         LyiAxh1zM59V+a30u/L29IL83ASv7/MpyUBJ1dUkVUoCow7vY0l9DwpQLnl7OQgIs4
+         hH9ZIj7n3hqXQ18xEzrBjkvdSqrS1V6blwsmBdncB5zO4ilhg7qkvQvi5Wp8o1B/pH
+         gGGjEaDgeqLprAybZHo222IH1RDwVCfG8pfbPKCyNCPlEBXwhvaZmYcF9Zu2whk5P/
+         EOUP+dFAym2QbbsPwtrVan5NXxW2KedOrHlQsk/LP1GOo3OHsZT8B72oIIbVPOyl/0
+         cH+Vj2uh2VlJw==
+Date:   Fri, 23 Sep 2022 09:26:11 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
-        kw@linux.com, frank.li@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v3 04/14] PCI: dwc: Kconfig: Add iMX PCIe EP mode support
-Message-ID: <20220923141526.GA1388290@bhelgaas>
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        svarbanov@mm-sol.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        linux-phy@lists.infradead.org, vkoul@kernel.org, kishon@ti.com,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
+Message-ID: <20220923142611.GA1389970@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1663913220-9523-5-git-send-email-hongxing.zhu@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95e4e9d9-3f39-6cf4-0739-967c7e568697@quicinc.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,82 +63,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 02:06:50PM +0800, Richard Zhu wrote:
-> Since i.MX PCIe is one dual mode PCIe controller.
-
-This is not a sentence.
-
-> Add i.MX PCIe EP mode support, and split the PCIe modes to the Root
-> Complex mode and Endpoint mode.
-
-Add blank lines between paragraphs or rewrap into a single paragraph
-that fills 75 columns.
-
-I think you should split "[12/14] PCI: imx6: Add iMX8MM PCIe EP mode"
-into:
-
-  - A patch that adds the generic endpoint infrastructure, e.g.,
-    imx6_pcie_ep_init(), imx6_pcie_ep_raise_irq(), imx6_add_pcie_ep().
-
-  - A second patch that adds the i.MX8MM identifiers.
-
-That way the i.MX8MM patch will be analogous to the i.MX8MQ and
-i.MX8MP patches.
-
-Then you could squash this Kconfig patch into the generic endpoint
-infrastructure patch because this patch is what selects PCIE_DW_EP,
-which is what ensures that dw_pcie_ep_reset_bar(),
-dw_pcie_ep_raise_legacy_irq(), etc., are available.
-
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -92,10 +92,33 @@ config PCI_EXYNOS
->  	  functions to implement the driver.
->  
->  config PCI_IMX6
-> -	bool "Freescale i.MX6/7/8 PCIe controller"
-> +	bool
-> +
-> +config PCI_IMX6_HOST
-> +	bool "Freescale i.MX6/7/8 PCIe controller host mode"
->  	depends on ARCH_MXC || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
-> +	select PCI_IMX6
-> +	help
-> +	  Enables support for the PCIe controller Root Complex mode in the
-> +	  iMX6/7/8 SoCs.
-
-> +	  This controller can work either as EP or RC. In order to enable
-> +	  host-specific features PCIE_DW_HOST must be selected and in order
-> +	  to enable device-specific features PCIE_DW_EP must be selected.
-
-I don't think these three lines are useful to the user.  They only
-describe what Kconfig does when PCI_IMX6_HOST is enabled, which is
-really an internal implementation detail.
-
-> +config PCI_IMX6_EP
-> +	bool "Freescale i.MX6/7/8 PCIe controller endpoint mode"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	select PCI_IMX6
-> +	help
-> +	  Enables support for the PCIe controller endpoint mode in the
-> +	  iMX6/7/8 SoCs.
-> +	  This controller can work either as EP or RC. In order to enable
-> +	  host-specific features PCIE_DW_HOST must be selected and in order
-> +	  to enable device-specific features PCIE_DW_EP must be selected.
-
-Ditto.
-
->  config PCIE_SPEAR13XX
->  	bool "STMicroelectronics SPEAr PCIe controller"
-> -- 
-> 2.25.1
+On Fri, Sep 23, 2022 at 07:29:31AM +0530, Krishna Chaitanya Chundru wrote:
 > 
+> On 9/23/2022 12:12 AM, Bjorn Helgaas wrote:
+> > On Thu, Sep 22, 2022 at 09:09:28PM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
+> > > > On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
+> > > > > > On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya chundru wrote:
+
+> > > > > > > In qcom platform PCIe resources( clocks, phy etc..) can
+> > > > > > > released when the link is in L1ss to reduce the power
+> > > > > > > consumption. So if the link is in L1ss, release the PCIe
+> > > > > > > resources. And when the system resumes, enable the PCIe
+> > > > > > > resources if they released in the suspend path.
+> > > > > > What's the connection with L1.x?  Links enter L1.x based on
+> > > > > > activity and timing.  That doesn't seem like a reliable
+> > > > > > indicator to turn PHYs off and disable clocks.
+> > > > >
+> > > > > This is a Qcom PHY-specific feature (retaining the link state in
+> > > > > L1.x with clocks turned off).  It is possible only with the link
+> > > > > being in l1.x. PHY can't retain the link state in L0 with the
+> > > > > clocks turned off and we need to re-train the link if it's in L2
+> > > > > or L3. So we can support this feature only with L1.x.  That is
+> > > > > the reason we are taking l1.x as the trigger to turn off clocks
+> > > > > (in only suspend path).
+> > > >
+> > > > This doesn't address my question.  L1.x is an ASPM feature, which
+> > > > means hardware may enter or leave L1.x autonomously at any time
+> > > > without software intervention.  Therefore, I don't think reading the
+> > > > current state is a reliable way to decide anything.
+> > >
+> > > After the link enters the L1.x it will come out only if there is
+> > > some activity on the link.  AS system is suspended and NVMe driver
+> > > is also suspended( queues will  freeze in suspend) who else can
+> > > initiate any data.
+> >
+> > I don't think we can assume that nothing will happen to cause exit
+> > from L1.x.  For instance, PCIe Messages for INTx signaling, LTR, OBFF,
+> > PTM, etc., may be sent even though we think the device is idle and
+> > there should be no link activity.
+>
+> I don't think after the link enters into L1.x there will some
+> activity on the link as you mentioned, except for PCIe messages like
+> INTx/MSI/MSIX. These messages also will not come because the client
+> drivers like NVMe will keep their device in the lowest power mode.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> The link will come out of L1.x only when there is config or memory
+> access or some messages to trigger the interrupts from the devices.
+> We are already making sure this access will not be there in S3.  If
+> the link is in L0 or L0s what you said is expected but not in L1.x
+
+Forgive me for being skeptical, but we just spent a few months
+untangling the fact that some switches send PTM request messages even
+when they're in a non-D0 state.  We expected that devices in D3hot
+would not send such messages because "why would they?"  But it turns
+out the spec allows that, and they actually *do*.
+
+I don't think it's robust interoperable design for a PCI controller
+driver like qcom to assume anything about PCI devices unless it's
+required by the spec.
+
+Bjorn
