@@ -2,43 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E5B95E7414
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Sep 2022 08:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 208015E7584
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Sep 2022 10:15:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbiIWG0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Sep 2022 02:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47092 "EHLO
+        id S231229AbiIWIPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Sep 2022 04:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbiIWG0Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 02:26:16 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8986128720;
-        Thu, 22 Sep 2022 23:26:10 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B82F01B67D1;
-        Fri, 23 Sep 2022 08:26:08 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2FAB51B67CC;
-        Fri, 23 Sep 2022 08:26:08 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9CC841820F5A;
-        Fri, 23 Sep 2022 14:26:06 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
-        kw@linux.com, frank.li@nxp.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: [PATCH v3 14/14] PCI: imx6: Add iMX8MP PCIe EP support
-Date:   Fri, 23 Sep 2022 14:07:00 +0800
-Message-Id: <1663913220-9523-15-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1663913220-9523-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1663913220-9523-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        with ESMTP id S229788AbiIWIPx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 04:15:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0DDAB6561;
+        Fri, 23 Sep 2022 01:15:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A3F361491;
+        Fri, 23 Sep 2022 08:15:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2193DC433D6;
+        Fri, 23 Sep 2022 08:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1663920950;
+        bh=ITi0Pkie/41exckOOEHb1oAjXkYdzFl60zYe1Z6SOsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v0KIwFqnf0h62gPG0bxhRtPlMQRU+sn46T0CtPVR5NKOnXZsjItRiireczqzCeKag
+         pAvIG3SEtkcD85MT7X2TMXaDlhSnRQcrEOmrMoSMt/EK/FQujn5mkajW6X3k8utzpw
+         anYADRkPfWaRWXGb6PsKo0p6qOHfHnd0hbjq1K+8=
+Date:   Fri, 23 Sep 2022 10:15:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v10 7/8] PCI/P2PDMA: Allow userspace VMA allocations
+ through sysfs
+Message-ID: <Yy1rMn3t33OcFzmB@kroah.com>
+References: <20220922163926.7077-1-logang@deltatee.com>
+ <20220922163926.7077-8-logang@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220922163926.7077-8-logang@deltatee.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,127 +70,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the iMX8MP PCIe EP support
+On Thu, Sep 22, 2022 at 10:39:25AM -0600, Logan Gunthorpe wrote:
+> Create a sysfs bin attribute called "allocate" under the existing
+> "p2pmem" group. The only allowable operation on this file is the mmap()
+> call.
+> 
+> When mmap() is called on this attribute, the kernel allocates a chunk of
+> memory from the genalloc and inserts the pages into the VMA. The
+> dev_pagemap .page_free callback will indicate when these pages are no
+> longer used and they will be put back into the genalloc.
+> 
+> On device unbind, remove the sysfs file before the memremap_pages are
+> cleaned up. This ensures unmap_mapping_range() is called on the files
+> inode and no new mappings can be created.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/p2pdma.c | 124 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 931243e36252..e339e32d97f8 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -54,6 +54,7 @@ enum imx6_pcie_variants {
- 	IMX8MP,
- 	IMX8MM_EP,
- 	IMX8MQ_EP,
-+	IMX8MP_EP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -158,7 +159,8 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
- 		imx6_pcie->drvdata->variant != IMX8MQ_EP &&
- 		imx6_pcie->drvdata->variant != IMX8MM &&
- 		imx6_pcie->drvdata->variant != IMX8MM_EP &&
--		imx6_pcie->drvdata->variant != IMX8MP);
-+		imx6_pcie->drvdata->variant != IMX8MP &&
-+		imx6_pcie->drvdata->variant != IMX8MP_EP);
- 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
- }
- 
-@@ -323,6 +325,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		/*
- 		 * The PHY initialization had been done in the PHY
- 		 * driver, break here directly.
-@@ -584,6 +587,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
- 		if (ret) {
- 			dev_err(dev, "unable to enable pcie_aux clock\n");
-@@ -631,6 +635,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		clk_disable_unprepare(imx6_pcie->pcie_aux);
- 		break;
- 	default:
-@@ -701,6 +706,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	case IMX6SX:
-@@ -779,6 +785,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		break;
- 	}
- 
-@@ -831,6 +838,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_deassert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -853,6 +861,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -1104,6 +1113,7 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MM_EP:
- 	case IMX8MQ_EP:
-+	case IMX8MP_EP:
- 		pcie_dbi2_offset = SZ_1M;
- 		break;
- 	default:
-@@ -1318,6 +1328,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux))
- 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-@@ -1487,6 +1498,11 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.mode = DW_PCIE_EP_TYPE,
- 		.gpr = "fsl,imx8mq-iomuxc-gpr",
- 	},
-+	[IMX8MP_EP] = {
-+		.variant = IMX8MP_EP,
-+		.mode = DW_PCIE_EP_TYPE,
-+		.gpr = "fsl,imx8mp-iomuxc-gpr",
-+	},
- };
- 
- static const struct of_device_id imx6_pcie_of_match[] = {
-@@ -1499,6 +1515,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
- 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
- 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
-+	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
- 	{},
- };
- 
--- 
-2.25.1
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
