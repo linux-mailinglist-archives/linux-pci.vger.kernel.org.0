@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4074E5E8658
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Sep 2022 01:35:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4845E8662
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Sep 2022 01:51:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbiIWXfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Sep 2022 19:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
+        id S232705AbiIWXv5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Sep 2022 19:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231535AbiIWXfd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 19:35:33 -0400
+        with ESMTP id S231387AbiIWXv4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 19:51:56 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5000A113B57;
-        Fri, 23 Sep 2022 16:35:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDB5132D62;
+        Fri, 23 Sep 2022 16:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
         MIME-Version:Date:Message-ID:content-disposition;
-        bh=ZJ2D/u8LKAjUePz4BAfAZjKycbvRBV24qdab0WS2Do0=; b=cidUeS+F5YuKxig39k8/QaW6li
-        pb54I8J9/pacBdOVy7vHE8zH6fjirVHYxvuKS/sjGfWyStphwJ0s0oQE0jFlZIwhitTgn6OIxzhPy
-        gpjKRednNXMAvew6hZJ9FsuWYVOS8SyfgqR0SLmNw5ZlDtqk1raZmYorVEZL3dNqPH/DfgZer34kJ
-        6571HJ8mrfzxVTniVG7mCNCPsyf1Pv0RrFJjT18ytiMQXjbwnIoxdc2KvJUEIeMG4S7IzNgFNRbjz
-        FPXp5ce+Sg1z0/YNWNxJ2mF84IumOIy7yosjYWupE3S1WlUeTpG/Z8xJ+ayj4PJP0wtBk+ZjU2kps
-        gC67NYDw==;
+        bh=cUg53KE3fCr2/FM4+1kQkCEVRqSvO20HjqayFNgCRrQ=; b=HQCDu9xSfwPWo2IPeb8laTwEUj
+        aojQ22j+YpDB7arOxLtqv/XTjJlXZ14DxoQIoRSdqO2DCxXtXccBs828NSjTpfdIGgdmDgM6+wRgP
+        H145SxIcGPfhB3EO80i9LWj9O/Z3rL9Y3orfoCINZt7lo/yVWySkPWiFwacu+xqZWrboA7/l2ZAm5
+        MJzV/MqzvOXwjZ/UCNMEpP7LsmnGp//2QHFY4w+PoiSiN6mNCWxR7AWP219xKbRPoGBnONMrFVDNd
+        p7X5PblnErvbuQu2sXqwpEGBfpOLMlK/UxRj5Nq2iLzHNBVH35xZckDyFI6l67EYyPdbXRkLcRIdf
+        hXRZbR7A==;
 Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
         by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <logang@deltatee.com>)
-        id 1obsCb-0090zl-HH; Fri, 23 Sep 2022 17:35:30 -0600
-Message-ID: <794b4022-843b-32de-f382-be0a375659c7@deltatee.com>
-Date:   Fri, 23 Sep 2022 17:35:22 -0600
+        id 1obsSW-009191-O4; Fri, 23 Sep 2022 17:51:54 -0600
+Message-ID: <980899e1-532a-772b-2f6d-6fb017def50b@deltatee.com>
+Date:   Fri, 23 Sep 2022 17:51:49 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.0
@@ -126,42 +126,17 @@ On 2022-09-23 17:21, Jason Gunthorpe wrote:
 >>>> error used for bad P2PDMA page everywhere.
 >>>
 >>> I'd rather not see GUP made more fragile just for that..
->>
->> Not sure how that's more fragile... You're way seems more dangerous given
->> the large number of call sites we are adding it to when it might not
->> apply.
-> 
-> No, that is the point, it *always* applies. A devmap struct page of
-> the wrong type should never exit gup, from any path, no matter what.
-> 
-> We have two central functions that validate a page is OK to return,
-> that *everyone* must call.
-> 
-> If you don't put it there then we will probably miss copying it into a
-> call site eventually.
 
-Most of the call sites don't apply though, with huge pages and gate pages...
+And on further consideration I really think the correct error return is 
+important here. This will be a user facing error that'll be easy enough
+to hit: think code that might be run on any file and if the file is 
+hosted on a block device that doesn't support P2PDMA then the user
+will see the very uninformative "Cannot allocate memory" error.
 
->>> try_grab_page() calls folio_ref_inc(), that is only legal if it knows
->>> the page is already a valid pointer under the PTLs, so it is safe to
->>> check the pgmap as well.
->>
->> My point is it doesn't get a reference or a pin unless FOLL_PIN or FOLL_GET is
->> set and the documentation states that neither might be set, in which case 
->> folio_ref_inc() will not be called...
-> 
-> That isn't how GUP is structured, all the calls to try_grab_page() are
-> in places where PIN/GET might be set and are safe for that usage.
-> 
-> If we know PIN/GET is not set then we don't even need to call the
-> function because it is a NOP.
-
-That's not what the documentation for the function says:
-
-"Either FOLL_PIN or FOLL_GET (or neither) may be set... Return: true for success, 
- or if no action was required (if neither FOLL_PIN nor FOLL_GET was set, nothing 
- is done)."
-
-https://elixir.bootlin.com/linux/v6.0-rc6/source/mm/gup.c#L194
+Userspace code that's written for purpose can look at the EREMOTEIO error
+and tell the user something useful, if we return the correct error.
+If we return ENOMEM in this case, that is not possible because
+lots of things might have caused that error.
 
 Logan
+
