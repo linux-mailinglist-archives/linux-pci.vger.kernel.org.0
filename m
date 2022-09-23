@@ -2,64 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF6715E861B
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Sep 2022 00:58:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F535E8622
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Sep 2022 01:01:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbiIWW6y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Sep 2022 18:58:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42730 "EHLO
+        id S232301AbiIWXBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Sep 2022 19:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232598AbiIWW6x (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 18:58:53 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE16B147681
-        for <linux-pci@vger.kernel.org>; Fri, 23 Sep 2022 15:58:51 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id w2so968311qtv.9
-        for <linux-pci@vger.kernel.org>; Fri, 23 Sep 2022 15:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=FNVLh7QhTGQ0fcTY+ctZvZZG3IwOkyYDgRdATbQqFOE=;
-        b=K6ThUhwaPxzE2uNJlUneDV+lEcb3sOSkMme+uJcOlA6PYnkzlx9eWnQI1++F4JHPTq
-         6r5PK01FmTenaqwabhqB54wtpEtSh4q/f93LAarupwwOtTOjD+IgB/VnY7DUeuIhnkQC
-         ueJpGrhUyrDSBys3KiQqSXiiBkciEmtt9rHzEbu8riWDZ48ZSyiWrSiPky8YDf3TxmTw
-         JUiu1YmBDldxsDnWcSHllSPx0BxlwyOXe/lppV6D0S4dxlwZK9P4DpsQeTWyB8t6HwzK
-         z3SSHJoW/95nBFxiW6hEVkAM1qDx4k+3uHGKOmgxxq5NvqNGbvm3e45Zg2lFjxXsyWRU
-         k//Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=FNVLh7QhTGQ0fcTY+ctZvZZG3IwOkyYDgRdATbQqFOE=;
-        b=0+2me3CX5pfh1z7PYhRu8pIoIe5MhlM8pOT1g5AGakkuylpnmEpqBnmOsUjjPZbf56
-         Av+J676RmR1ru/kSCGY/4iH7YcJT1Ju4qAxJlsOZp93xcpgYPt+Un7tHs6xZkTso3Jtv
-         6DGRSrS/FNolvFxiH9Ul2J/fUqoU3sePSYX7XfLUIjmIyEUta+AvR/nUMWGe6p/xhs2a
-         siiobxZl0FOH/S8pbq2AbuaVW+j4AdkngsliOW1L31z1/WjzKnbjfGKGnjATXjpaKCbP
-         eTlQPUhyLDxyC11RgVmshIUrP4xAM0nWefnVhdLHPEmxe8+coidKCE007qRshfsSURLh
-         AXYQ==
-X-Gm-Message-State: ACrzQf3qqCaRUEv9ARXlSCT2nL3NLEOLM0o0hOHXS1JPqcvDXw7g7atV
-        HiVKFcqqCQ2Kj2arr8KGYRXYvw==
-X-Google-Smtp-Source: AMsMyM47dsm4TxegiRkZUeLCH+5O+Wr8H54uLORgq4Q+/7wXo2aoGW0gmLRhcDSR3jPPk1osSOqTXA==
-X-Received: by 2002:ac8:5a8b:0:b0:35b:f5c0:d5c9 with SMTP id c11-20020ac85a8b000000b0035bf5c0d5c9mr9233331qtc.14.1663973931136;
-        Fri, 23 Sep 2022 15:58:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id s5-20020a05620a254500b006b98315c6fbsm7255492qko.1.2022.09.23.15.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 15:58:50 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1obrdB-00316G-At;
-        Fri, 23 Sep 2022 19:58:49 -0300
-Date:   Fri, 23 Sep 2022 19:58:49 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
+        with ESMTP id S229511AbiIWXBl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Sep 2022 19:01:41 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329D71288B8;
+        Fri, 23 Sep 2022 16:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=kYxoa2A/VZYlmBEZXrShkN4p1jEZ2X0IG3XKqdZvMjc=; b=CGuPbm2GwPARkaL7H/tXPpvFFf
+        UO64LxTPr0c+nRXbxMvb+qs/0Q4O0/BLxYyvU37C1j66pglYKB/XBmmbDukfuiAcY8kZz4RkDiDaR
+        /xQNlnahak1tJ/MMIghDuE0H+CSB6ZX4vWT2i1x1HZhUR4r7hguNKtemm+qUwhRdOW15tICpUwg8q
+        liudeqcL9JCPmsukgrQFCY0gMzjqU5nS5lhlX79x8HgsJ8JrgvPdbcllDxCNsWa0dLXQgX5VXLPDh
+        JTRArRNjIdukkPz1/dfGue8Vu+o0ozOI6vcE2uXmqidCQSCam3/bLHQyGTaXDeZfFwYVKaEh19mte
+        Gv8jsZbQ==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1obrfq-0090QR-Q4; Fri, 23 Sep 2022 17:01:35 -0600
+Message-ID: <3840c1c6-3a5c-2286-e577-949f0d4ea7a6@deltatee.com>
+Date:   Fri, 23 Sep 2022 17:01:26 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Content-Language: en-CA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
@@ -75,111 +56,67 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v10 1/8] mm: introduce FOLL_PCI_P2PDMA to gate getting
- PCI P2PDMA pages
-Message-ID: <Yy46KbD/PvhaHA6X@ziepe.ca>
 References: <20220922163926.7077-1-logang@deltatee.com>
- <20220922163926.7077-2-logang@deltatee.com>
- <Yy33LUqvDLSOqoKa@ziepe.ca>
+ <20220922163926.7077-2-logang@deltatee.com> <Yy33LUqvDLSOqoKa@ziepe.ca>
  <64f8da81-7803-4db4-73da-a158295cbc9c@deltatee.com>
  <Yy4Ot5MoOhsgYLTQ@ziepe.ca>
  <2327d393-af5c-3f4c-b9b9-6852b9d72f90@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2327d393-af5c-3f4c-b9b9-6852b9d72f90@deltatee.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <Yy46KbD/PvhaHA6X@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <Yy46KbD/PvhaHA6X@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, gregkh@linuxfoundation.org, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v10 1/8] mm: introduce FOLL_PCI_P2PDMA to gate getting PCI
+ P2PDMA pages
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 02:11:03PM -0600, Logan Gunthorpe wrote:
+
+
+
+On 2022-09-23 16:58, Jason Gunthorpe wrote:
+> On Fri, Sep 23, 2022 at 02:11:03PM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2022-09-23 13:53, Jason Gunthorpe wrote:
+>>> On Fri, Sep 23, 2022 at 01:08:31PM -0600, Logan Gunthorpe wrote:
+>>> I'm encouraging Dan to work on better infrastructure in pgmap core
+>>> because every pgmap implementation has this issue currently.
+>>>
+>>> For that reason it is probably not so relavent to this series.
+>>>
+>>> Perhaps just clarify in the commit message that the FOLL_LONGTERM
+>>> restriction is to copy DAX until the pgmap page refcounts are fixed.
+>>
+>> Ok, I'll add that note.
+>>
+>> Per the fix for the try_grab_page(), to me it doesn't fit well in 
+>> try_grab_page() without doing a bunch of cleanup to change the
+>> error handling, and the same would have to be added to try_grab_folio().
+>> So I think it's better to leave it where it was, but move it below the 
+>> respective grab calls. Does the incremental patch below look correct?
 > 
-> 
-> On 2022-09-23 13:53, Jason Gunthorpe wrote:
-> > On Fri, Sep 23, 2022 at 01:08:31PM -0600, Logan Gunthorpe wrote:
-> > I'm encouraging Dan to work on better infrastructure in pgmap core
-> > because every pgmap implementation has this issue currently.
-> > 
-> > For that reason it is probably not so relavent to this series.
-> > 
-> > Perhaps just clarify in the commit message that the FOLL_LONGTERM
-> > restriction is to copy DAX until the pgmap page refcounts are fixed.
-> 
-> Ok, I'll add that note.
-> 
-> Per the fix for the try_grab_page(), to me it doesn't fit well in 
-> try_grab_page() without doing a bunch of cleanup to change the
-> error handling, and the same would have to be added to try_grab_folio().
-> So I think it's better to leave it where it was, but move it below the 
-> respective grab calls. Does the incremental patch below look correct?
+> Oh? I was thinking of just a very simple thing:
 
-Oh? I was thinking of just a very simple thing:
+Really would like it to return -EREMOTEIO instead of -ENOMEM as that's the
+error used for bad P2PDMA page everywhere.
 
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -225,6 +225,11 @@ bool __must_check try_grab_page(struct page *page, unsigned int flags)
-                node_stat_mod_folio(folio, NR_FOLL_PIN_ACQUIRED, 1);
-        }
- 
-+       if (unlikely(!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page))) {
-+               gup_put_folio(page_folio(page), 1, flags);
-+              return false;
-+       }
-+
-        return true;
- }
+Plus the concern that some of the callsites of try_grab_page() might not have
+a get or a pin and thus it's not safe which was the whole point of the change
+anyway.
 
+Plus we have to do the same for try_grab_folio().
 
-> I am confused about what happens if neither FOLL_PIN or FOLL_GET 
-> are set (which the documentation for try_grab_x() says is possible, but
-> other documentation suggests that FOLL_GET is automatically set). 
-> In which case it'd be impossible to do the check if we can't 
-> access the page.
-
-try_grab_page is operating under the PTL so it can probably touch the
-page OK (though perhaps we don't need to even check anything)
-
-try_grab_folio cannot be called without PIN/GET, so like this perhaps:
-
-@@ -123,11 +123,14 @@ static inline struct folio *try_get_folio(struct page *page, int refs)
-  */
- struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
- {
-+       struct folio *folio;
-+
-+       if (WARN_ON((flags & (FOLL_GET | FOLL_PIN)) == 0))
-+               return NULL;
-+
-        if (flags & FOLL_GET)
--               return try_get_folio(page, refs);
-+               folio = try_get_folio(page, refs);
-        else if (flags & FOLL_PIN) {
--               struct folio *folio;
--
-                /*
-                 * Can't do FOLL_LONGTERM + FOLL_PIN gup fast path if not in a
-                 * right zone, so fail and let the caller fall back to the slow
-@@ -160,11 +163,14 @@ struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
-                                        refs * (GUP_PIN_COUNTING_BIAS - 1));
-                node_stat_mod_folio(folio, NR_FOLL_PIN_ACQUIRED, refs);
- 
--               return folio;
-        }
- 
--       WARN_ON_ONCE(1);
--       return NULL;
-+       if (unlikely(!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page))) {
-+               gup_put_folio(page, 1, flags);
-+               return NULL;
-+       }
-+
-+       return folio;
- }
-
-Jason
-
+Logan
