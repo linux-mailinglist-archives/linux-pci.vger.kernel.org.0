@@ -2,103 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D61D45E906A
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Sep 2022 01:21:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E74D5E9075
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Sep 2022 01:54:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233960AbiIXXVy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Sep 2022 19:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        id S233935AbiIXXyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Sep 2022 19:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233791AbiIXXVy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Sep 2022 19:21:54 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734682AC44
-        for <linux-pci@vger.kernel.org>; Sat, 24 Sep 2022 16:21:52 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 28ONLkC7124329;
-        Sat, 24 Sep 2022 18:21:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1664061706;
-        bh=v3lCVtkq6BEwNFbBeBeKgPZwfN6yjcH4TCyVEWbvL5c=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=ANKbLcae3FJoOOvFhRU5QXZnWl0MOcdzgFc+5xi67NO7vUhpIiatvXfNaWKbKSHSz
-         8Oc1md3tei951ueKlD43lI2fe1LAtAkRJNtNBKzA+y1vJSUpOGlCbeEjstrZ6i6FZu
-         fsIBbvzI/4sd+Pj7FpY+KOG90bd9dJP5L1ovit5Q=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 28ONLkA1114073
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 24 Sep 2022 18:21:46 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Sat, 24
- Sep 2022 18:21:46 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Sat, 24 Sep 2022 18:21:46 -0500
-Received: from ubuntu (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id 28ONLfx1111346;
-        Sat, 24 Sep 2022 18:21:43 -0500
-Date:   Sat, 24 Sep 2022 16:21:41 -0700
-From:   Matt Ranostay <mranostay@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <tjoseph@cadence.com>,
-        <vigneshr@ti.com>
-Subject: Re: [PATCH 1/3] PCI: j721e: Add PCIe 4x lane selection support
-Message-ID: <Yy+RBVc8tvFop/Jv@ubuntu>
-References: <20220909201607.3835-1-mranostay@ti.com>
- <20220909201607.3835-2-mranostay@ti.com>
- <ce9bf8e3-bfb7-5f38-39ac-3a80da2c3839@ti.com>
+        with ESMTP id S229863AbiIXXyK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Sep 2022 19:54:10 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A60E3BC5C;
+        Sat, 24 Sep 2022 16:54:09 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id 30so4650979edw.5;
+        Sat, 24 Sep 2022 16:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=CBRSPkWO3j4tbi/g0ng0NFipbSw0aK/tx8sgTF9xYdU=;
+        b=kaQ0umG/iyuJTdaE8gvYt91R+0HAZiBJew74tjADm0tF37tACwptqO0jBCxJauu6Fk
+         BmPGUKAn5tlipHYxvfw0apIkZPhmReWFtY1ghEFzcXBrwclSYRBVcd7oGCxGUvwiHQgh
+         oyu2UyLwE9iJLEsOJrTMjBzvoQuw0jEO/MPwvf6nk005b6R1dOYHrJM7EpSv0Cyd9OwO
+         Eh1pEbLtImKAC5tFpVXy5eqi1fBCkYK2w6kF/yGH3XTRi7pS52fV/y2RVaSxYkUsryo1
+         UFEFpAkgbxVRWKyja5ru8WKAdZvdVkAZKcA9Sk2UNYMUjBV8xHJzwC/piurDPtntD0r1
+         yC+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=CBRSPkWO3j4tbi/g0ng0NFipbSw0aK/tx8sgTF9xYdU=;
+        b=nBLXZhEvXDS4L9CdmcWhEgUgulnt0fDrm3mc7jc91YqPW9iVC+yA6FUaXmAL5Qe+M+
+         u4GhWdlgQjbD/arh+O1KVej3H3Fl1k4TB1ExjsBaSkw/q/33vnlpSyNViVZBHzRCIAP5
+         /+aSJL9SIC7YWzdFeWqjtWKQNSToX2yRtjQsXxxla5StCFDfYqsBPcepujCsXub0Ov3c
+         6T5MG2KOH+GolYUmKqbwjE3Ia0NL7N61ff50J3wxXuXinFkhuFgtJUyrTLrF6flkVxak
+         pFcegQsm3dLSICE7YAoW+h/IU48wuLchFKkqXL9s0VhaY1AQghjIQuWr0dOvRvh5Myig
+         gyVQ==
+X-Gm-Message-State: ACrzQf11RGluZlGry/fKc+Vy/ivEEHWxvvcSybHkDzVU8hTLvTPsJz6n
+        aHwCh0ajwvfpz6OItRBfbBGjfgxXlw5Phld8N5I7rvbSdiu7hA==
+X-Google-Smtp-Source: AMsMyM4WRG/u0/uSPvSkxdC92l4S/9EliQuDYaHsV7mW8jNluQmpGysYZyHdtYUMP03H9qDLXF3lJ1Tn6itP+pX4Hog=
+X-Received: by 2002:a50:fa8c:0:b0:456:cf8e:40fd with SMTP id
+ w12-20020a50fa8c000000b00456cf8e40fdmr9249955edr.365.1664063647851; Sat, 24
+ Sep 2022 16:54:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ce9bf8e3-bfb7-5f38-39ac-3a80da2c3839@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220924160302.285875-1-dmitry.baryshkov@linaro.org> <20220924160302.285875-7-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220924160302.285875-7-dmitry.baryshkov@linaro.org>
+From:   Han Jingoo <jingoohan1@gmail.com>
+Date:   Sat, 24 Sep 2022 16:53:55 -0700
+Message-ID: <CAPOBaE5Psf3NehAM+5nQe2=rEC-wdF=zSrLXAnagEnt1ft2f5Q@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] PCI: qcom-ep: Setup PHY to work in EP mode
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 02:50:19PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Matt,
-> 
-> On 10/09/22 1:46 am, Matt Ranostay wrote:
-> > Increase LANE_COUNT_MASK to two-bit field that allows selection of
-> > 4x lane PCIe which was previously limited to 2x lane support.
-> > 
-> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> > Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> > ---
-> >   drivers/pci/controller/cadence/pci-j721e.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > index a82f845cc4b5..62c2c70256b8 100644
-> > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > @@ -43,7 +43,7 @@ enum link_status {
-> >   };
-> >   #define J721E_MODE_RC			BIT(7)
-> > -#define LANE_COUNT_MASK			BIT(8)
-> > +#define LANE_COUNT_MASK			GENMASK(9, 8)
-> 
-> The MASK value as well has to be specific to platforms. For J721E, it is 1
-> bit only.
+On Sat, Sep 24, 2022 Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 >
+> Call phy_set_mode_ext() to notify the PHY driver that the PHY is being
+> used in the EP mode.
+>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Noted. Will revise in next version of the patchset.
+Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
 
-- Matt
+Best regards,
+Jingoo Han
 
-> Thanks,
-> Kishon
-> 
-> >   #define LANE_COUNT(n)			((n) << 8)
-> >   #define GENERATION_SEL_MASK		GENMASK(1, 0)
-> > 
+
+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index ec99116ad05c..8dcfeed24424 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/mfd/syscon.h>
+> +#include <linux/phy/pcie.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+> @@ -240,6 +241,10 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
+>         if (ret)
+>                 goto err_disable_clk;
+>
+> +       ret = phy_set_mode_ext(pcie_ep->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_EP);
+> +       if (ret)
+> +               goto err_phy_exit;
+> +
+>         ret = phy_power_on(pcie_ep->phy);
+>         if (ret)
+>                 goto err_phy_exit;
+> --
+> 2.35.1
+>
