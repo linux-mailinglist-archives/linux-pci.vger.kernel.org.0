@@ -2,148 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E87A5EAA09
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 17:16:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 104B95EAA10
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 17:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235933AbiIZPQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 11:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
+        id S236019AbiIZPRH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 11:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235983AbiIZPP6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 11:15:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE4B2A963
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 07:00:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97B6860DCB
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 14:00:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02FDC433C1;
-        Mon, 26 Sep 2022 14:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664200820;
-        bh=xQH4FsyT+Dv/FkIwMdXsyg+Yph7LcdP5Gv0oJ1Qxs0M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=crRE+EBu+h5LCZnCIkijcvAUhnwHc76d6SkoxoaORJHoOD3yDO1OY/3ma/YF14U9w
-         i4vQCoW/0zZzYgmBd/0be6DjcYVkurnVBEmy+FwP8p5g5VDwFAu7H3ZhqwtavWEvsk
-         FYNiM9w+ZSBtCjCxgiKWeJNtl6MhgYOEHSiN74qEuEKxm/63v3UWZUytpWeiRim9Ac
-         TuYE2JIAQS0bTd7TgaBf2m0aq67argsHOIua4unZ2uL/TEgRzG+jcyXmlhTPD1hcFY
-         DVEAZJedaLl/lPNkZUWs4ZUd+djWC6+1xNSe24/fNHu8PYE/YlCGfXPBqyYYhzHaN5
-         3IAvTgqmIYnrw==
-Date:   Mon, 26 Sep 2022 16:00:13 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        pali@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
-Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug
- interrupt
-Message-ID: <YzGwbWoFIpADgbXz@lpieralisi>
-References: <20220818135140.5996-1-kabel@kernel.org>
- <20220818135140.5996-4-kabel@kernel.org>
- <YxtUR0+dBZut8QZH@lpieralisi>
- <87r10al6a0.wl-maz@kernel.org>
- <YzGR40/kmQX4ZNaS@lpieralisi>
- <868rm68g9k.wl-maz@kernel.org>
+        with ESMTP id S235398AbiIZPQg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 11:16:36 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03A51CB37
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id r62so2802646pgr.12
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=1yGPnS7+tabIF9f3YGZrIJUzZlCgUowefj3Ak6tgbc8=;
+        b=Cml+idqKmgZLlpiIB8rfPG/ng2lFM3Uc9sHJGoyFG7EKF7hZNke7PI/XfWak9pHRFi
+         efod9Ah4zEqgORi+dMraA2Sbgo/pbkOsElfL2aD04OOna/C7XRrRxw0DfgIIfFkuQBtl
+         cmmg93A0HBEzFfB1+OSXJZfXPeyzl0IgyhatrNNxgm2ohJf5RdnnNFXZNdgo7YaW0/yv
+         LuuQM2kgG/3u1LhXdaEb1jXfGr5iRHnQ+eWfqiHMVUElxVxahOJVNf9IRTzA3BIZLfv3
+         zqpVrMthiVdLVBUkfIC5c7/0nUDogIn6jR/lCahdK1UXLrg6UQyGo+qF4+waB/51xAs+
+         2x6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=1yGPnS7+tabIF9f3YGZrIJUzZlCgUowefj3Ak6tgbc8=;
+        b=vufBmB7vZ4IPz1oAxhNoYDd3q2KJ9xfzrwc8GuL+fGcLMdn3xOg/5b0uxjlYPvcxqV
+         nuMYxdGN5VaKt883l7y4WdpKOlCzsn6teWkox85u+oMdKlgQYLYQj4+MvBe223hdt0+5
+         kV9aMF2DWXKGdx2L37UWCXrD+cSINRtV1ZGDFhjeaAYFznSGY+eKEoTL5Fadkgc7F9lH
+         NxbLuqG/92i2D64VdWjH5n3b7OP0+AGxhY2NcYDYXd1LEO4lYBRaTIdC3vESE58bFHot
+         NXqpJo6ESG+Ort8F3w+C2zs19ADcX9yqptXO1SZDjNP1SXnh+JK3z2CeSI1QPkkHKGgV
+         hSEA==
+X-Gm-Message-State: ACrzQf1GMCtBz7IC4Da8Sot0Jv/NNMFO7jylluFOOufPizuvFzov9SPY
+        wjfonoDXjHU6p0WcBiera+RoMg==
+X-Google-Smtp-Source: AMsMyM56mNVNCK934eTJEzhPKz0Kgne9owdo04+/JMJy5BNbxI/i4itBQ3mjMLHU+WUWOj1bBuUPqA==
+X-Received: by 2002:aa7:9f0c:0:b0:546:c556:ac86 with SMTP id g12-20020aa79f0c000000b00546c556ac86mr23732346pfr.55.1664200924322;
+        Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
+Received: from [10.2.223.68] ([61.120.150.77])
+        by smtp.gmail.com with ESMTPSA id b15-20020a63d30f000000b004393cb720afsm10769098pgg.38.2022.09.26.07.01.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 07:02:03 -0700 (PDT)
+Message-ID: <1de80c28-33ec-b1bd-a557-91e4166d2da7@bytedance.com>
+Date:   Mon, 26 Sep 2022 22:01:55 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <868rm68g9k.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.0
+Subject: Re: [PATCH 2/3] PCI/ERR: Clear fatal status in pcie_do_recovery()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
+        allenbh@gmail.com, bhelgaas@google.com, ruscur@russell.cc,
+        oohall@gmail.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ntb@lists.linux.dev, linuxppc-dev@lists.ozlabs.org
+References: <20220922210853.GA1335665@bhelgaas>
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+In-Reply-To: <20220922210853.GA1335665@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:35:51AM -0400, Marc Zyngier wrote:
-> On Mon, 26 Sep 2022 07:49:55 -0400,
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > 
-> > On Sat, Sep 17, 2022 at 10:05:59AM +0100, Marc Zyngier wrote:
-> > > Hi Lorenzo,
-> > > 
-> > > On Fri, 09 Sep 2022 15:57:11 +0100,
-> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > > 
-> > > > [+Marc, Thomas - I can't merge this code without them reviewing it,
-> > > > I am not sure at all you can mix the timer/IRQ code the way you do]
-> > > > 
-> > > > On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Behún wrote:
-> > > > > From: Pali Rohár <pali@kernel.org>
-> > > > > 
-> > > > > Add support for Data Link Layer State Change in the emulated slot
-> > > > > registers and hotplug interrupt via the emulated root bridge.
-> > > > > 
-> > > > > This is mainly useful for when an error causes link down event. With
-> > > > > this change, drivers can try recovery.
-> > > > > 
-> > > > > Link down state change can be implemented because Aardvark supports Link
-> > > > > Down event interrupt. Use it for signaling that Data Link Layer Link is
-> > > > > not active anymore via Hot-Plug Interrupt on emulated root bridge.
-> > > > > 
-> > > > > Link up interrupt is not available on Aardvark, but we check for whether
-> > > > > link is up in the advk_pcie_link_up() function. By triggering Hot-Plug
-> > > > > Interrupt from this function we achieve Link up event, so long as the
-> > > > > function is called (which it is after probe and when rescanning).
-> > > > > Although it is not ideal, it is better than nothing.
-> > > > 
-> > > > So before even coming to the code review: this patch does two things.
-> > > > 
-> > > > 1) It adds support for handling the Link down state
-> > > > 2) It adds some code to emulate a Link-up event
-> > > > 
-> > > > Now, for (2). IIUC you are adding code to make sure that an HP
-> > > > event is triggered if advk_pcie_link_up() is called and it
-> > > > detects a Link-down->Link-up transition, that has to be notified
-> > > > through an HP event.
-> > > > 
-> > > > If that's correct, you have to explain to me please what this is
-> > > > actually achieving and a specific scenario where we want this to be
-> > > > implemented, in fine details; then we add it to the commit log.
-> > > > 
-> > > > That aside, the interaction of the timer and the IRQ domain code
-> > > > must be reviewed by Marc and Thomas to make sure this is not
-> > > > a gross violation of the respective subsystems usage.
-> > > 
-> > > I don't see anything being a "gross violation" here, at least from an
-> > > interrupt subsystem perspective. In a way, this is synthesising an
-> > > interrupt on the back of some other event, and as long as the context
-> > > is somehow appropriate (something that looks like an interrupt when
-> > > pretending there is one), this should be OK. Other subsystems such as
-> > > i2c GPIO expanders do similar things.
-> > 
-> > Right, thanks.
-> > 
-> > > The one thing I'm dubious about is the frequency of the timer. Asking
-> > > for a poll of the link every jiffy is bound to be expensive, and it
-> > > would be good to relax this as much as possible, specially on low-end
-> > > HW such as this, where every cycle counts. It is always going to be a
-> > > "best effort" thing, and the commit message doesn't say what's the
-> > > actual grace period to handle this (the spec probably has one).
-> > 
-> > AFAICS, the code does not poll the link. It sets a timer only if
-> > the link is checked (eg upon PCI bus forced rescan or config access)
-> > the link is up and it was down, to emulate a HP IRQ.
+
+
+On 9/23/22 5:08 AM, Bjorn Helgaas wrote:
+> On Fri, Sep 02, 2022 at 02:16:33AM +0800, Zhuo Chen wrote:
+>> When state is pci_channel_io_frozen in pcie_do_recovery(),
+>> the severity is fatal and fatal status should be cleared.
+>> So we add pci_aer_clear_fatal_status().
 > 
-> I still find the timer frequency pretty high, but surely the authors
-> of the code have worked out that this wasn't a problem.
+> Seems sensible to me.  Did you find this by code inspection or by
+> debugging a problem?  If the latter, it would be nice to mention the
+> symptoms of the problem in the commit log.
 
-Please correct me if I am wrong but with mod_timer() all they want to do
-is emulating/firing an (hotplug) IRQ as soon as possible - a one-off.
+I found this by code inspection so I may not enumerate what kind of 
+problems this code will cause.
+> 
+>> Since pcie_aer_is_native() in pci_aer_clear_fatal_status()
+>> and pci_aer_clear_nonfatal_status() contains the function of
+>> 'if (host->native_aer || pcie_ports_native)', so we move them
+>> out of it.
+> 
+> Wrap commit log to fill 75 columns.
+> 
+>> Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
+>> ---
+>>   drivers/pci/pcie/err.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 0c5a143025af..e0a8ade4c3fe 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -243,10 +243,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>   	 * it is responsible for clearing this status.  In that case, the
+>>   	 * signaling device may not even be visible to the OS.
+>>   	 */
+>> -	if (host->native_aer || pcie_ports_native) {
+>> +	if (host->native_aer || pcie_ports_native)
+>>   		pcie_clear_device_status(dev);
+> 
+> pcie_clear_device_status() doesn't check for pcie_aer_is_native()
+> internally, but after 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status
+> errors only if OS owns AER") and aa344bc8b727 ("PCI/ERR: Clear AER
+> status only when we control AER"), both callers check before calling
+> it.
+> 
+> I think we should move the check inside pcie_clear_device_status().
+> That could be a separate preliminary patch.
+> 
+> There are a couple other places (aer_root_reset() and
+> get_port_device_capability()) that do the same check and could be
+> changed to use pcie_aer_is_native() instead.  That could be another
+> preliminary patch.
+> 
+Good suggestion. But I have only one doubt. In aer_root_reset(), if we 
+use "if (pcie_aer_is_native(dev) && aer)", when dev->aer_cap
+is NULL and root->aer_cap is not NULL, pcie_aer_is_native() will return 
+false. It's different from just using "(host->native_aer ||
+pcie_ports_native)".
+Or if we can use "if (pcie_aer_is_native(root))", at this time a NULL 
+pointer check should be added in pcie_aer_is_native() because root may 
+be NULL.
 
-It is not a periodic timer - at least that's what I understand from the
-code and that's the reason why such a short interval was chosen but
-it should not be me who comment on that :)
+> 
+>> +	if (state == pci_channel_io_frozen)
+>> +		pci_aer_clear_fatal_status(dev);
+>> +	else
+>>   		pci_aer_clear_nonfatal_status(dev);
+>> -	}
+>> +
+>>   	pci_info(bridge, "device recovery successful\n");
+>>   	return status;
+>>   
+>> -- 
+>> 2.30.1 (Apple Git-130)
+>>
 
-Again - that's just my understanding of this patch (the link-up
-portion).
-
-Lorenzo
+-- 
+Thanks,
+Zhuo Chen
