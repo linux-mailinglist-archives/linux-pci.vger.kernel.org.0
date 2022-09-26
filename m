@@ -2,50 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33E355EB2CA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 23:05:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7423A5EB2D7
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 23:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbiIZVFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 17:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
+        id S231316AbiIZVIE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 17:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231285AbiIZVFT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 17:05:19 -0400
-Received: from out1.migadu.com (out1.migadu.com [IPv6:2001:41d0:2:863f::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D123D5F83
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 14:05:16 -0700 (PDT)
-Message-ID: <883588c2-0b02-49fb-0074-7c2a47ad4476@linux.dev>
+        with ESMTP id S231338AbiIZVID (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 17:08:03 -0400
+Received: from out0.migadu.com (out0.migadu.com [IPv6:2001:41d0:2:267::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A030874341
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 14:08:01 -0700 (PDT)
+Message-ID: <6a435b33-b27c-7f56-2dca-6e8964242109@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1664226314;
+        t=1664226479;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nrf3mPw7zBN5qGOq+z6gbepqux75dxPH81yUPJxSMRU=;
-        b=v5U0pyaXlMZz+mvd3TTKfSja5c31Dp8T+OScD/dXJmuniwlZCGpwiIWJ0KF5jN/2LfushV
-        aLYmZtn+svUWdL6SoJ17F86OFhV4W9/4iOFQxyN5WDYfdtn6vnsFLqQGhosAvxRT2ExlX/
-        TD9DGHAPM3r75QhFbJ/yoTIZESRQotE=
-Date:   Mon, 26 Sep 2022 15:05:03 -0600
+        bh=kbK0a0b2cvFpJLbVBqmEudCdcMiN8USB7uQaj60v4jk=;
+        b=TELLA11a1i91wUDAf1E6foVh17bJFoP9dDtQEduS7aZeIr8TsePNfkIy1pGqz7In8/7NTI
+        gWgV7qnNyZEYMi9IAh+9jCi8elvSEyfCTWPf9gmL3PWh7XUG+wxCCGSzVKBV9v4lPwIO2M
+        5NyhnmQfQ2Ic/J/uIAFoKGNAANJnMBQ=
+Date:   Mon, 26 Sep 2022 15:07:51 -0600
 MIME-Version: 1.0
-Subject: Re: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a
- x4x4 SSD
+Subject: Re: [PATCH] PCI: vmd: Fix secondary bus reset for Intel bridges
 Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>
-References: <20210830155628.130054-1-jonathan.derrick@linux.dev>
- <20210912084547.GA26678@wunner.de>
- <91950e7a-68e9-9d35-ff0b-a2109de7a853@intel.com>
- <20210914144621.GA30031@wunner.de>
- <3f7773e0-1c20-f96f-097f-f545a905151d@intel.com>
- <446a21e2-aea2-773f-ca88-b6676b54b292@linux.dev>
- <20220924073208.GA26243@wunner.de>
+To:     francisco.munoz.ruiz@linux.intel.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+References: <20220923203757.4918-1-francisco.munoz.ruiz@linux.intel.com>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <20220924073208.GA26243@wunner.de>
+In-Reply-To: <20220923203757.4918-1-francisco.munoz.ruiz@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
@@ -61,94 +52,44 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 9/24/2022 1:32 AM, Lukas Wunner wrote:
-> On Fri, Jul 08, 2022 at 10:35:15AM -0600, Jonathan Derrick wrote:
->> On 9/20/2021 11:18 AM, Jon Derrick wrote:
->>> On 9/14/21 9:46 AM, Lukas Wunner wrote:
->>>> On Mon, Sep 13, 2021 at 04:07:22PM -0500, Jon Derrick wrote:
->>>>> On 9/12/21 3:45 AM, Lukas Wunner wrote:
->>>>>> On Mon, Aug 30, 2021 at 09:56:28AM -0600, Jon Derrick wrote:
->>>>>>> When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
->>>>>>> ports both support hotplugging on each respective x4 device, a slot
->>>>>>> management system for the SSD requires both x4 slots to have power
->>>>>>> removed via sysfs (echo 0 > slot/N/power), from the OS before it can
->>>>>>> safely turn-off physical power for the whole x8 device. The implications
->>>>>>> are that slot status will display powered off and link inactive statuses
->>>>>>> for the x4 devices where the devices are actually powered until both
->>>>>>> ports have powered off.
->>>>>>
->>>>>> Just to get a better understanding, does the P5608 have an internal
->>>>>> PCIe switch with hotplug capability on the Downstream Ports or
->>>>>> does it plug into two separate PCIe slots?  I recall previous patches
->>>>>> mentioned a CEM interposer?  (An lspci listing might be helpful.)
->>>>>
->>>>> It looks like 2 NVMe endpoints plugged into two different root ports, ex,
->>>>> 80:00.0 Root port to [81-86]
->>>>> 80:01.0 Root port to [87-8b]
->>>>> 81:00.0 NVMe
->>>>> 87:00.0 NVMe
->>>>>
->>>>> The x8 is bifurcated to x4x4. Physically they share the same slot
->>>>> power/clock/reset but are logically separate per root port.
->>>>
->>>> So are these two P5608 drives attached to a single Root Port with an
->>>> interposer in-between?
->>>>
->>>> I assume the Root Port needs to know that it's bifurcated and has to
->>>> appear as two slots on the bus.  Is this configured with a BIOS setting?
->>>>
->>>> If these assumptions are true, the quirk isn't really specific to
->>>> the P5608 but should rather apply to the bifurcation-capable Root Port
->>>> and the quirk should set the flag if the Root Port is indeed configured
->>>> for bifurcation.
->>> It's a function of the slot + card combination, but we can't distinguish this
->>> slot's special power handling behavior from the vanilla behavior. It's modified
->>> to handle power on the logically bifurcated, singular physical device.
->>
->> Hi Bjorn, Lukas,
->>
->> I need to resubmit this.
->>
->> Besides the 'pdev->shared_pcc_and_link_slot = false', addition mentioned
->> above, is there anything else that should be changed or any reason this
->> wouldn't be accepted?
+On 9/23/2022 2:37 PM, francisco.munoz.ruiz@linux.intel.com wrote:
+> From: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
 > 
-> Another report has cropped up of spurious DLLSC events:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216511
+> The reset was never applied in the current implementation because Intel
+> Bridges owned by VMD are parentless. Internally, the reset API applies
+> a reset to the parent of the pci device supplied as argument, but in this
+> case it failed because there wasn't a parent. This change feeds a child
+> device of an Intel Bridge to the reset API and internally the reset is
+> applied to its parent.
 > 
-> That other case differs from yours in that a spurious DLLSC event
-> is seen on plugging *in* a card, whereas in your case the event
-> seems to occur on *removing* a card.  In both cases, the spurious
-> event is seen on the hotplug port's sibling.
-> 
-> I'm starting to think that we should probably disable DLLSC events
-> entirely if they're known to be unreliable.  The hotplug port
-> solely relies on PDC events then.  Otherwise we'd have to clutter
-> the event handling with all sorts of special cases.  The code would
-> become fairly difficult to follow.
-I'm not sure we can do that either. Think of a non-logical interposer.
-PDC will be static but DLLSC may be the only hotplug status received.
+> Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
 
-
+> ---
+>  drivers/pci/controller/vmd.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> I've attached an experimental patch to the bug report which disables
-> DLLSC events on a hotplug port if a P5608 SSD is plugged into it:
-> https://bugzilla.kernel.org/attachment.cgi?id=301845
-> 
-> Would this approach work for you?
-It looks correct to me
-
-
-> 
-> One other question:  What if the SSD is not bifurcated (i.e. x8
-> instead of x4x4), don't we need avoid applying the quirk in that case?
-> Your patch doesn't seem to do that.  Can we recognize somehow whether
-> the card is bifurcated or not?  Is it sufficient to just look at the
-> Maximum Link Width in the Link Capabilities Register?  Does the SSD
-> report x4 there if it's bifurcate
-Good question. Unique to the subsystem device id?
-
-> 
-> Thanks,
-> 
-> Lukas
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index e06e9f4fc50f..34d6ba675440 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -859,8 +859,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	pci_scan_child_bus(vmd->bus);
+>  	vmd_domain_reset(vmd);
+> -	list_for_each_entry(child, &vmd->bus->children, node)
+> -		pci_reset_bus(child->self);
+> +
+> +	list_for_each_entry(child, &vmd->bus->children, node) {
+> +		if (!list_empty(&child->devices)) {
+> +			pci_reset_bus(list_first_entry(&child->devices,
+> +						       struct pci_dev,
+> +						       bus_list));
+> +			break;
+> +		}
+> +	}
+> +
+>  	pci_assign_unassigned_bus_resources(vmd->bus);
+>  
+>  	/*
