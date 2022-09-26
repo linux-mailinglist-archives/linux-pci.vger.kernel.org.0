@@ -2,169 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51145EB2B8
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 22:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E355EB2CA
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 23:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbiIZUyC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 16:54:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
+        id S231287AbiIZVFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 17:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbiIZUxr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 16:53:47 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B68EAED84;
-        Mon, 26 Sep 2022 13:53:39 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id h3so8864342lja.1;
-        Mon, 26 Sep 2022 13:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=FMc3Y59a61qmemE+Mlyalv3Fdm9mXvRwbGeyg5kaP7c=;
-        b=KmSsCwg5KieOLEo2miTUWW9SMvZ1Sx/ppKWul6CbqePRoR1Z8Ts6yW1ov733+j7fIT
-         pLz8CO3qRoHNAGUNYLz6b+PONfr95Bct4QXktrWc0Z3J7hLBfAAQ7THi0snn7r2bBiiv
-         Yfn9HvC7srMWUA318yf4iFbIjr6y6Cv+zPOPALg1XKuIEUnh2RlPXfm8WWCd55Se6oVs
-         7vqE2KAV321o1XZB9zGRV2CfTHOqx/zVTW67+038palJoC2NLO6pMLTN/SnkiQaekhKJ
-         t7tl/OqaijOvOQmgTepNAQ4jNfBg3OhaapcOYmw/Litr+vkPconmJ35fSAWtsNfVIaeR
-         wk1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=FMc3Y59a61qmemE+Mlyalv3Fdm9mXvRwbGeyg5kaP7c=;
-        b=kcUkbrEwrlF06lvXyAF6qKJnPTNXIzpH6hNmjG/o41qxblrT2RU5PZHzXr2ZzPQftM
-         BOMTTZ7WjOp4u2tY58pQsFG8MKXuExnYPhOZMVwIGxEhWbfztdhqb7JbBp+/CclfI+J8
-         4Z8d8rbe2xrj6/VyK7Yq7XnOgbDkh780TnEmC07DZGNNdylfJXyN0aQ1Fnb5Ier7BM4Y
-         Jnx3BrAgJYoW6ZOKCkE8bU/vJh0s0ZiX3ZW8ZTxnCSVd31c+y6yLerKncA5P6fwCkcWD
-         3u2u08wvjiQAEvL1EjSlZK79+NKD3+jyL3uIGPBLi9FZbTRCzj6Mnv0uO/zLsp+7Ff4z
-         +rCg==
-X-Gm-Message-State: ACrzQf35w61yipY6+gflf+yz1i2mjZ5N3M/nUxyh0GLhl8htdoeNz6pU
-        cNVPWn0VjH3PI2PvcLUpTl9Z7b9o2v+SLQ==
-X-Google-Smtp-Source: AMsMyM4FVIUDLVx8IWM9Oyck9CF7/Duaa7FQJ4SWOK+lo7Sn/FcizNivqN3IySBjESwOPcAnvS204w==
-X-Received: by 2002:a2e:b893:0:b0:26c:22e0:716d with SMTP id r19-20020a2eb893000000b0026c22e0716dmr8851725ljp.48.1664225617750;
-        Mon, 26 Sep 2022 13:53:37 -0700 (PDT)
-Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
-        by smtp.gmail.com with ESMTPSA id p7-20020a056512138700b0049482adb3basm2627627lfa.63.2022.09.26.13.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 13:53:36 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 23:53:33 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        William McVicker <willmcvicker@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 20/20] PCI: dwc: Add Baikal-T1 PCIe controller support
-Message-ID: <20220926205333.qlhb5ojmx4sktzt5@mobilestation>
-References: <20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru>
- <20220822184701.25246-21-Sergey.Semin@baikalelectronics.ru>
- <YwzbARMkb/69+l2d@lpieralisi>
- <20220912000211.ct6asuhhmnatje5e@mobilestation>
- <YzF8N/jzkWsjcgdD@lpieralisi>
- <20220926124924.4vodhncnuaorrlwj@mobilestation>
- <20220926143127.GB19031@lst.de>
+        with ESMTP id S231285AbiIZVFT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 17:05:19 -0400
+Received: from out1.migadu.com (out1.migadu.com [IPv6:2001:41d0:2:863f::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D123D5F83
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 14:05:16 -0700 (PDT)
+Message-ID: <883588c2-0b02-49fb-0074-7c2a47ad4476@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1664226314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nrf3mPw7zBN5qGOq+z6gbepqux75dxPH81yUPJxSMRU=;
+        b=v5U0pyaXlMZz+mvd3TTKfSja5c31Dp8T+OScD/dXJmuniwlZCGpwiIWJ0KF5jN/2LfushV
+        aLYmZtn+svUWdL6SoJ17F86OFhV4W9/4iOFQxyN5WDYfdtn6vnsFLqQGhosAvxRT2ExlX/
+        TD9DGHAPM3r75QhFbJ/yoTIZESRQotE=
+Date:   Mon, 26 Sep 2022 15:05:03 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926143127.GB19031@lst.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a
+ x4x4 SSD
+Content-Language: en-US
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>
+References: <20210830155628.130054-1-jonathan.derrick@linux.dev>
+ <20210912084547.GA26678@wunner.de>
+ <91950e7a-68e9-9d35-ff0b-a2109de7a853@intel.com>
+ <20210914144621.GA30031@wunner.de>
+ <3f7773e0-1c20-f96f-097f-f545a905151d@intel.com>
+ <446a21e2-aea2-773f-ca88-b6676b54b292@linux.dev>
+ <20220924073208.GA26243@wunner.de>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Jonathan Derrick <jonathan.derrick@linux.dev>
+In-Reply-To: <20220924073208.GA26243@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 04:31:28PM +0200, Christoph Hellwig wrote:
-> On Mon, Sep 26, 2022 at 03:49:24PM +0300, Serge Semin wrote:
-> > @Christoph, @Marek, @Bjorn, @Rob could you please join to the
-> > DMA-mask related discussion. @Lorenzo can't decide which driver should
-> > initialize the device DMA-mask.
+
+
+On 9/24/2022 1:32 AM, Lukas Wunner wrote:
+> On Fri, Jul 08, 2022 at 10:35:15AM -0600, Jonathan Derrick wrote:
+>> On 9/20/2021 11:18 AM, Jon Derrick wrote:
+>>> On 9/14/21 9:46 AM, Lukas Wunner wrote:
+>>>> On Mon, Sep 13, 2021 at 04:07:22PM -0500, Jon Derrick wrote:
+>>>>> On 9/12/21 3:45 AM, Lukas Wunner wrote:
+>>>>>> On Mon, Aug 30, 2021 at 09:56:28AM -0600, Jon Derrick wrote:
+>>>>>>> When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
+>>>>>>> ports both support hotplugging on each respective x4 device, a slot
+>>>>>>> management system for the SSD requires both x4 slots to have power
+>>>>>>> removed via sysfs (echo 0 > slot/N/power), from the OS before it can
+>>>>>>> safely turn-off physical power for the whole x8 device. The implications
+>>>>>>> are that slot status will display powered off and link inactive statuses
+>>>>>>> for the x4 devices where the devices are actually powered until both
+>>>>>>> ports have powered off.
+>>>>>>
+>>>>>> Just to get a better understanding, does the P5608 have an internal
+>>>>>> PCIe switch with hotplug capability on the Downstream Ports or
+>>>>>> does it plug into two separate PCIe slots?  I recall previous patches
+>>>>>> mentioned a CEM interposer?  (An lspci listing might be helpful.)
+>>>>>
+>>>>> It looks like 2 NVMe endpoints plugged into two different root ports, ex,
+>>>>> 80:00.0 Root port to [81-86]
+>>>>> 80:01.0 Root port to [87-8b]
+>>>>> 81:00.0 NVMe
+>>>>> 87:00.0 NVMe
+>>>>>
+>>>>> The x8 is bifurcated to x4x4. Physically they share the same slot
+>>>>> power/clock/reset but are logically separate per root port.
+>>>>
+>>>> So are these two P5608 drives attached to a single Root Port with an
+>>>> interposer in-between?
+>>>>
+>>>> I assume the Root Port needs to know that it's bifurcated and has to
+>>>> appear as two slots on the bus.  Is this configured with a BIOS setting?
+>>>>
+>>>> If these assumptions are true, the quirk isn't really specific to
+>>>> the P5608 but should rather apply to the bifurcation-capable Root Port
+>>>> and the quirk should set the flag if the Root Port is indeed configured
+>>>> for bifurcation.
+>>> It's a function of the slot + card combination, but we can't distinguish this
+>>> slot's special power handling behavior from the vanilla behavior. It's modified
+>>> to handle power on the logically bifurcated, singular physical device.
+>>
+>> Hi Bjorn, Lukas,
+>>
+>> I need to resubmit this.
+>>
+>> Besides the 'pdev->shared_pcc_and_link_slot = false', addition mentioned
+>> above, is there anything else that should be changed or any reason this
+>> wouldn't be accepted?
 > 
+> Another report has cropped up of spurious DLLSC events:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216511
+> 
+> That other case differs from yours in that a spurious DLLSC event
+> is seen on plugging *in* a card, whereas in your case the event
+> seems to occur on *removing* a card.  In both cases, the spurious
+> event is seen on the hotplug port's sibling.
+> 
+> I'm starting to think that we should probably disable DLLSC events
+> entirely if they're known to be unreliable.  The hotplug port
+> solely relies on PDC events then.  Otherwise we'd have to clutter
+> the event handling with all sorts of special cases.  The code would
+> become fairly difficult to follow.
+I'm not sure we can do that either. Think of a non-logical interposer.
+PDC will be static but DLLSC may be the only hotplug status received.
 
-> The driver that does the actual DMA mapping or allocation functions
-> need to set it.  But even with your comments on the questions I'm
-> still confused what struct device you are even talking about.  Can
-> you explain this a bit better?
 
-We are talking about the DW PCIe Root Port controller with DW eDMA engine
-embedded. It' simplified structure can be represented as follows:
+> 
+> I've attached an experimental patch to the bug report which disables
+> DLLSC events on a hotplug port if a P5608 SSD is plugged into it:
+> https://bugzilla.kernel.org/attachment.cgi?id=301845
+> 
+> Would this approach work for you?
+It looks correct to me
 
-         +---------------+     +--------+
-         | System memory |     | CPU(s) |
-         +---------------+     +--------+
-                ^  |              |  ^
-                | ... System bus ... |
-               ... |              | ...
-                |  v              v  |
- +------------+------+--------+----------+------+
- | DW PCIe RP | AXI-m|        | AXI-s/DBI|      |
- |            +------+        +----------+      |
- |                ^              ^     |        |
- |         +------+----+         |    CSRs      |
- |         v           v         v              |
- |     +-------+  +---------+ +----------+      |
- |     | eDMA  |  | in-iATU | | out-iATU |      |
- |     +-------+  +---------+ +----------+      |
- |         ^           ^           ^            |
- |         +--------+--+---+-------+            |
- +------------------| PIPE |--------------------+
-                    +------+
-                      | ^
-                      v |
-                   PCIe bus
 
-The DW PCIe controller device is instantiated as a platform device
-defined in the system DT source file. The device is probed by the
-DW PCIe low-level driver, which after the platform-specific setups
-initiates the generic DW PCIe host-controller registration. On the way
-of that procedure the DW PCIe core tries to auto-detect the DW eDMA
-engine availability. If the engine is found, the DW eDMA probe method
-is called in order to register the DMA-engine device. After that the
-PCIe host bridge is registered. Both the PCIe host-bridge and
-DMA-engine devices will have the DW PCIe platform device as parent.
+> 
+> One other question:  What if the SSD is not bifurcated (i.e. x8
+> instead of x4x4), don't we need avoid applying the quirk in that case?
+> Your patch doesn't seem to do that.  Can we recognize somehow whether
+> the card is bifurcated or not?  Is it sufficient to just look at the
+> Maximum Link Width in the Link Capabilities Register?  Does the SSD
+> report x4 there if it's bifurcate
+Good question. Unique to the subsystem device id?
 
-Getting back to the sketch above. Here is a short description of the
-content:
-1. DW eDMA is capable of performing the data transfers from/to System
-memory to/from PCIe bus memory.
-2. in-iATU is the Inbound Address Translation Unit, which is
-responsible for the PCIe bus peripheral devices to access the system
-memory. The "dma-ranges" DT-property is used to initialize the
-PCIe<->Sys memory mapping. (@William note the In-iATU setup doesn't
-affect the eDMA transfers.)
-3. out-iATU is responsible for the CPU(s) to access the PCIe bus
-peripheral devices memory/cfg-space.
-
-So eDMA and in-iATU are using the same AXI-master interface to access
-the system memory. Thus the DMAable memory capability is the same for
-both of them (Though in-iATU may have some specific mapping based on
-the "dma-ranges" DT-property setup). Neither DW eDMA nor DW PCIe Root
-Port CSRs region have any register to auto-detect the AXI-m interface
-address bus width. It's selected during the IP-core synthesize and is
-platform-specific. The question is: "What driver/code is supposed to
-set the DMA-mask of the DW PCIe platform device?" Seeing the parental
-platform device is used to perform the memory-mapping for both DW eDMA
-clients and PCIe-bus peripheral device drivers, and seeing the AXI-m
-interface parameters aren't auto-detectable and are platform-specific,
-the only place it should be done in is the DW PCIe low-level device
-driver. I don't really see any alternative... What is your opinion?
-
--Sergey
+> 
+> Thanks,
+> 
+> Lukas
