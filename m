@@ -2,158 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 104B95EAA10
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 17:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21CD95EAA80
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 17:22:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236019AbiIZPRH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 11:17:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
+        id S236449AbiIZPWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 11:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235398AbiIZPQg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 11:16:36 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03A51CB37
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id r62so2802646pgr.12
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=1yGPnS7+tabIF9f3YGZrIJUzZlCgUowefj3Ak6tgbc8=;
-        b=Cml+idqKmgZLlpiIB8rfPG/ng2lFM3Uc9sHJGoyFG7EKF7hZNke7PI/XfWak9pHRFi
-         efod9Ah4zEqgORi+dMraA2Sbgo/pbkOsElfL2aD04OOna/C7XRrRxw0DfgIIfFkuQBtl
-         cmmg93A0HBEzFfB1+OSXJZfXPeyzl0IgyhatrNNxgm2ohJf5RdnnNFXZNdgo7YaW0/yv
-         LuuQM2kgG/3u1LhXdaEb1jXfGr5iRHnQ+eWfqiHMVUElxVxahOJVNf9IRTzA3BIZLfv3
-         zqpVrMthiVdLVBUkfIC5c7/0nUDogIn6jR/lCahdK1UXLrg6UQyGo+qF4+waB/51xAs+
-         2x6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=1yGPnS7+tabIF9f3YGZrIJUzZlCgUowefj3Ak6tgbc8=;
-        b=vufBmB7vZ4IPz1oAxhNoYDd3q2KJ9xfzrwc8GuL+fGcLMdn3xOg/5b0uxjlYPvcxqV
-         nuMYxdGN5VaKt883l7y4WdpKOlCzsn6teWkox85u+oMdKlgQYLYQj4+MvBe223hdt0+5
-         kV9aMF2DWXKGdx2L37UWCXrD+cSINRtV1ZGDFhjeaAYFznSGY+eKEoTL5Fadkgc7F9lH
-         NxbLuqG/92i2D64VdWjH5n3b7OP0+AGxhY2NcYDYXd1LEO4lYBRaTIdC3vESE58bFHot
-         NXqpJo6ESG+Ort8F3w+C2zs19ADcX9yqptXO1SZDjNP1SXnh+JK3z2CeSI1QPkkHKGgV
-         hSEA==
-X-Gm-Message-State: ACrzQf1GMCtBz7IC4Da8Sot0Jv/NNMFO7jylluFOOufPizuvFzov9SPY
-        wjfonoDXjHU6p0WcBiera+RoMg==
-X-Google-Smtp-Source: AMsMyM56mNVNCK934eTJEzhPKz0Kgne9owdo04+/JMJy5BNbxI/i4itBQ3mjMLHU+WUWOj1bBuUPqA==
-X-Received: by 2002:aa7:9f0c:0:b0:546:c556:ac86 with SMTP id g12-20020aa79f0c000000b00546c556ac86mr23732346pfr.55.1664200924322;
-        Mon, 26 Sep 2022 07:02:04 -0700 (PDT)
-Received: from [10.2.223.68] ([61.120.150.77])
-        by smtp.gmail.com with ESMTPSA id b15-20020a63d30f000000b004393cb720afsm10769098pgg.38.2022.09.26.07.01.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 07:02:03 -0700 (PDT)
-Message-ID: <1de80c28-33ec-b1bd-a557-91e4166d2da7@bytedance.com>
-Date:   Mon, 26 Sep 2022 22:01:55 +0800
+        with ESMTP id S236294AbiIZPVD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 11:21:03 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 744E45D12C;
+        Mon, 26 Sep 2022 07:08:09 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB1BE1042;
+        Mon, 26 Sep 2022 07:08:15 -0700 (PDT)
+Received: from [10.57.65.170] (unknown [10.57.65.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5E4B3F73B;
+        Mon, 26 Sep 2022 07:08:06 -0700 (PDT)
+Message-ID: <5569ad73-9699-e326-c1fb-e0753bbdde78@arm.com>
+Date:   Mon, 26 Sep 2022 15:08:01 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.3.0
-Subject: Re: [PATCH 2/3] PCI/ERR: Clear fatal status in pcie_do_recovery()
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
-        allenbh@gmail.com, bhelgaas@google.com, ruscur@russell.cc,
-        oohall@gmail.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ntb@lists.linux.dev, linuxppc-dev@lists.ozlabs.org
-References: <20220922210853.GA1335665@bhelgaas>
-From:   Zhuo Chen <chenzhuo.1@bytedance.com>
-In-Reply-To: <20220922210853.GA1335665@bhelgaas>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH RESEND v5 22/24] dmaengine: dw-edma: Bypass dma-ranges
+ mapping for the local setup
+Content-Language: en-GB
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220822185332.26149-23-Sergey.Semin@baikalelectronics.ru>
+ <7a035b29-fca6-2650-c3c1-eedb3904c32d@arm.com>
+ <20220912012426.xcg4tu6wzogbirp6@mobilestation>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220912012426.xcg4tu6wzogbirp6@mobilestation>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 9/23/22 5:08 AM, Bjorn Helgaas wrote:
-> On Fri, Sep 02, 2022 at 02:16:33AM +0800, Zhuo Chen wrote:
->> When state is pci_channel_io_frozen in pcie_do_recovery(),
->> the severity is fatal and fatal status should be cleared.
->> So we add pci_aer_clear_fatal_status().
-> 
-> Seems sensible to me.  Did you find this by code inspection or by
-> debugging a problem?  If the latter, it would be nice to mention the
-> symptoms of the problem in the commit log.
-
-I found this by code inspection so I may not enumerate what kind of 
-problems this code will cause.
-> 
->> Since pcie_aer_is_native() in pci_aer_clear_fatal_status()
->> and pci_aer_clear_nonfatal_status() contains the function of
->> 'if (host->native_aer || pcie_ports_native)', so we move them
->> out of it.
-> 
-> Wrap commit log to fill 75 columns.
-> 
->> Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
->> ---
->>   drivers/pci/pcie/err.c | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
+On 2022-09-12 02:24, Serge Semin wrote:
+> On Wed, Aug 31, 2022 at 10:17:30AM +0100, Robin Murphy wrote:
+>> On 2022-08-22 19:53, Serge Semin wrote:
+>>> DW eDMA doesn't perform any translation of the traffic generated on the
+>>> CPU/Application side. It just generates read/write AXI-bus requests with
+>>> the specified addresses. But in case if the dma-ranges DT-property is
+>>> specified for a platform device node, Linux will use it to map the CPU
+>>> memory regions into the DMAable bus ranges. This isn't what we want for
+>>> the eDMA embedded into the locally accessed DW PCIe Root Port and
+>>> End-point. In order to work that around let's set the chan_dma_dev flag
+>>> for each DW eDMA channel thus forcing the client drivers to getting a
+>>> custom dma-ranges-less parental device for the mappings.
+>>>
+>>> Note it will only work for the client drivers using the
+>>> dmaengine_get_dma_device() method to get the parental DMA device.
 >>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 0c5a143025af..e0a8ade4c3fe 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -243,10 +243,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>   	 * it is responsible for clearing this status.  In that case, the
->>   	 * signaling device may not even be visible to the OS.
->>   	 */
->> -	if (host->native_aer || pcie_ports_native) {
->> +	if (host->native_aer || pcie_ports_native)
->>   		pcie_clear_device_status(dev);
 > 
-> pcie_clear_device_status() doesn't check for pcie_aer_is_native()
-> internally, but after 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status
-> errors only if OS owns AER") and aa344bc8b727 ("PCI/ERR: Clear AER
-> status only when we control AER"), both callers check before calling
-> it.
+>> No, this is nonsense. If the DMA engine is on the host side of the bridge
+>> then it should not have anything to do with the PCI device at all, it should
+>> be associated with the platform device,
 > 
-> I think we should move the check inside pcie_clear_device_status().
-> That could be a separate preliminary patch.
+> Well. The DMA-engine is embedded into the PCIe Root Port bus, is associated
+> with the platform device it's embedded to, and it doesn't have
+> anything to do with any particular PCI device.
 > 
-> There are a couple other places (aer_root_reset() and
-> get_port_device_capability()) that do the same check and could be
-> changed to use pcie_aer_is_native() instead.  That could be another
-> preliminary patch.
+>> and thus any range mapping on the bridge itself would be irrelevant anyway.
 > 
-Good suggestion. But I have only one doubt. In aer_root_reset(), if we 
-use "if (pcie_aer_is_native(dev) && aer)", when dev->aer_cap
-is NULL and root->aer_cap is not NULL, pcie_aer_is_native() will return 
-false. It's different from just using "(host->native_aer ||
-pcie_ports_native)".
-Or if we can use "if (pcie_aer_is_native(root))", at this time a NULL 
-pointer check should be added in pcie_aer_is_native() because root may 
-be NULL.
+> Really? I find it otherwise. Please see the way the "dma-ranges"
+> property is parsed and works during the device-specific memory ranges
+> mapping when it's applicable for the PCIe Root Ports.
 
-> 
->> +	if (state == pci_channel_io_frozen)
->> +		pci_aer_clear_fatal_status(dev);
->> +	else
->>   		pci_aer_clear_nonfatal_status(dev);
->> -	}
->> +
->>   	pci_info(bridge, "device recovery successful\n");
->>   	return status;
->>   
->> -- 
->> 2.30.1 (Apple Git-130)
->>
+Sigh, that's a bug. Now I see where the confusion is coming from.
 
--- 
+Annoyingly it's basically the exact thing I called out in 951d48855d86 
+when making dma-ranges work for non-OF PCI devices in the first place, 
+but apparently neither I nor anyone else thought of this particular edge 
+case at the time. Sorry about that. I'll have a look at how best to fix it.
+
+Everything else still stands, though. If you can't use the original 
+platform device for DMA API calls, at least configure the child device 
+properly by calling of_dma_configure() with the parent's DT node in the 
+expected manner (and manually remove its dma_range_map if you need an 
+immediate workaround).
+
 Thanks,
-Zhuo Chen
+Robin.
