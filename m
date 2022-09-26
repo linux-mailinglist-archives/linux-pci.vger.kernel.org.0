@@ -2,54 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA805EAE99
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 19:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 476BA5EAECB
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 19:57:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbiIZRuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 13:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53546 "EHLO
+        id S230097AbiIZR53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 13:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiIZRuN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 13:50:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D61A4865;
-        Mon, 26 Sep 2022 10:22:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C60AB80B8B;
-        Mon, 26 Sep 2022 17:22:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC080C433C1;
-        Mon, 26 Sep 2022 17:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664212968;
-        bh=4EYiYZ0wrDgSgsqkBMAwgMjP6z1zRz5Fmv8L+RYBpPg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XBGoGIPobGMP16I4bFTLp4eHtOgJGOZUZHef8ebOBcb7pYrIzpxDPi39Cv3BXSbTE
-         yDIpGbaDJShRsyYq50eEe0VIQT7TJCiUN3p5oqjE/QK7IvCBtUmJiPCLZLSXlH7tJY
-         apt19ITXr926s7KKXqBlNpm4DCsmlFbnuabBiKWwLA9JYL0EWeVfO9kAyG2aSB+T/G
-         ZsLqStUswyWHmlaVpAud1aYKUdvH2cNneaIE4hegZSo442hawm0mJq9j2jha91GKn3
-         HqBU1xFvU/s7p8HS0QDiwHdI1FUCqErzpQZm911AHs8ewHGOV2UR13IMJSpttiIkU3
-         6i8iuXQnYBY7Q==
-Date:   Mon, 26 Sep 2022 12:22:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhuo Chen <chenzhuo.1@bytedance.com>
-Cc:     allenbh@gmail.com, dave.jiang@intel.com,
-        linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        linux-pci@vger.kernel.org, jejb@linux.ibm.com, jdmason@kudzu.us,
-        james.smart@broadcom.com, fancer.lancer@gmail.com,
-        linux-kernel@vger.kernel.org, ntb@lists.linux.dev,
-        oohall@gmail.com, bhelgaas@google.com, dick.kennedy@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 3/3] PCI/AER: Use pci_aer_raw_clear_status() to clear
- root port's AER error status
-Message-ID: <20220926172246.GA1609538@bhelgaas>
+        with ESMTP id S230168AbiIZR5C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 13:57:02 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AC2DFC2
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 10:34:38 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id j24so8282689lja.4
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 10:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=3eBH9ZtwH+GTFt8HaXwfYSZezFnUoJTA70guBM37OMI=;
+        b=cacUG67zWxuwZavxQfNyoL9Ipbh7EvP5+pviX/VL13Ltt/sTfe5AI1YMTNWKfCW4dU
+         anDUG572cEsYhdnIqb0bssaJ/tardiiGdYcFgS18G5Bbqz5JCM/66+XnxETZwlTaInNH
+         EmwlqF6lzqjtM7NAqYONYSEzGqyEMwY6WQQ/D+TBZ5XsnAdkL0m4U46i4RgD5xR6aho4
+         FSj49ykhlbS2CB+tIR/HSL5okxOi3O9hHrq6wKa6Ev/RSrVMznYkXzkbBQy1i2jhD7sY
+         FBjRTPD1lBTC8KFOU6EmXCptithx+qkVDtbGMRO/5i3X1W5pTafLu8FEEIY443A+bzUm
+         BQmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=3eBH9ZtwH+GTFt8HaXwfYSZezFnUoJTA70guBM37OMI=;
+        b=Ehv1DEScHmFj+dAMVy11RmSlh0QS/rHoe1BTGO0y42RxFsRqOBWirMX06EZodiyQyi
+         pJ63XhnJmQmkAzrrsyYZP4PzdWdsQafQ95RbARQ7A8X3coZkyWMj3jfz70brZW3rlG/Y
+         x3DF2q1XCDo9yNzTNR2baxRVAiDBuTWDX4cwz28XBVIzrmHO+UonXjTYSOLY5t71U2jP
+         1B2gmLuTgHuZDE1It2zZ600XAC64IbNbFBiKNOQwHv0FnrT74ZYo9D10RaLczAti5k9O
+         Jq0Zvzml+LlC0GywZEOi4rPKyKfl3revx1vwOVhBDlOc+sWIfO7vYx3FyL/c0ajfldJ2
+         zemA==
+X-Gm-Message-State: ACrzQf31U4sG0b3I8iaz05r/U8nxEItCyoKgeUqGF4GBL+WVKqXS/baM
+        TJGxCGmZKVmnfgGLov9D2LrFiA==
+X-Google-Smtp-Source: AMsMyM4pxRcN2ISIho7dHyf0AgOpoOfBmClLxsel4WJpoWCRmMmdttFOPBwD3I9PILHlBaYJSI+vqQ==
+X-Received: by 2002:a2e:98ce:0:b0:26b:e763:27d1 with SMTP id s14-20020a2e98ce000000b0026be76327d1mr7600971ljj.306.1664213676642;
+        Mon, 26 Sep 2022 10:34:36 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id v8-20020a2ea448000000b0026ad1da0dc3sm2402640ljn.122.2022.09.26.10.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 10:34:36 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: [PATCH v5 0/5] PCI: qcom: Support using the same PHY for both RC and EP
+Date:   Mon, 26 Sep 2022 20:34:30 +0300
+Message-Id: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e025745-06af-c5c6-aa70-6ff1f9ad0962@bytedance.com>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,40 +77,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 10:16:23PM +0800, Zhuo Chen wrote:
-> On 9/23/22 5:50 AM, Bjorn Helgaas wrote:
-> > On Fri, Sep 02, 2022 at 02:16:34AM +0800, Zhuo Chen wrote:
-> > > Statements clearing AER error status in aer_enable_rootport() has the
-> > > same function as pci_aer_raw_clear_status(). So we replace them, which
-> > > has no functional changes.
+Programming of QMP PCIe PHYs slightly differs between RC and EP modes.
 
-> > > -	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> > > -	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
-> > > -	pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &reg32);
-> > > -	pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS, reg32);
-> > > -	pci_read_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, &reg32);
-> > > -	pci_write_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, reg32);
-> > > +	pci_aer_raw_clear_status(pdev);
-> > 
-> > It's true that this is functionally equivalent.
-> > 
-> > But 20e15e673b05 ("PCI/AER: Add pci_aer_raw_clear_status() to
-> > unconditionally clear Error Status") says pci_aer_raw_clear_status()
-> > is only for use in the EDR path (this should have been included in the
-> > function comment), so I think we should preserve that property and use
-> > pci_aer_clear_status() here.
-> > 
-> > pci_aer_raw_clear_status() is the same as pci_aer_clear_status()
-> > except it doesn't check pcie_aer_is_native().  And I'm pretty sure we
-> > can't get to aer_enable_rootport() *unless* pcie_aer_is_native(),
-> > because get_port_device_capability() checks the same thing, so they
-> > should be equivalent here.
-> > 
-> Thanks Bjorn, this very detailed correction is helpful. By the way, 'only
-> for use in the EDR path' obviously written in the function comments may be
-> better. So far only commit log has included these.
+Currently both qcom and qcom-ep PCIe controllers setup the PHY in the
+default mode, making it impossible to select at runtime whether the PHY
+should be running in RC or in EP modes. Usually this is not an issue,
+since for most devices only the RC mode is used. Some devices (SDX55)
+currently support only the EP mode without supporting the RC mode (at
+this moment).
 
-Yes, definitely!  I goofed when I applied that patch without making
-sure there was something in the function comment.
+Nevertheless some of the Qualcomm platforms (e.g. the aforementioned
+SDX55) would still benefit from being able to switch between RC and EP
+depending on the driver being used. While it is possible to use
+different compat strings for the PHY depending on the mode, it seems
+like an incorrect approach, since the PHY doesn't differ between
+usecases. It's the PCIe controller, who should decide how to configure
+the PHY.
 
-Bjorn
+This patch series implements the ability to select between RC and EP
+modes, by allowing the PCIe QMP PHY driver to switch between
+programming tables.
+
+This patchseries depends on the header from the pre-6.1 phy/next. Thus
+after the 6.1 the PCIe patches can be applied independently of the PHY
+part.
+
+Changes since v4:
+- Fixed the possible oops in probe (Johan)
+- Renamed the tables struct and individual table fields (Johan)
+- Squashed the 'separate funtions' patch to lower the possible
+  confusion.
+
+Changes since v3:
+- Rebased on top of phy/next to pick in newly defined
+  PHY_MODE_PCIE_RC/EP.
+- Renamed 'main' to 'common' and 'secondary' to 'extra' to reflect the
+  intention of the split (the 'common' tables and the 'extra for the ...
+  mode' tables).
+- Merged the 'pointer' patch into first and second patches to make them
+  more obvious.
+
+Changes since v2:
+- Added PHY_SUBMODE_PCIE_RC/EP defines (Vinod),
+- Changed `primary' table name to `main', added extra comments
+  describing that `secondary' are the additional tables, not required in
+  most of the cases (following the suggestion by Johan to rename
+  `primary' table),
+- Changed secondary tables into the pointers to stop wasting extra
+  memory (Vinod),
+- Split several functions for programming the PHY using these tables.
+
+Changes since v1:
+- Split the if(table) removal to the separate patch
+- Expanded commit messages and comments to provide additional details
+- Fixed build error on pcie-qcom.c
+- Added support for EP mode on sm8450 to demonstrate the usage of this
+  patchset
+
+Changes since RFC:
+- Fixed the compilation of PCIe EP driver,
+- Changed pri/sec names to primary and secondary,
+- Added comments regarding usage of secondary_rc/_ep fields.
+
+Dmitry Baryshkov (5):
+  phy: qcom-qmp-pcie: split register tables into common and extra parts
+  phy: qcom-qmp-pcie: support separate tables for EP mode
+  phy: qcom-qmp-pcie: Support SM8450 PCIe1 PHY in EP mode
+  PCI: qcom: Setup PHY to work in RC mode
+  PCI: qcom-ep: Setup PHY to work in EP mode
+
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   5 +
+ drivers/pci/controller/dwc/pcie-qcom.c        |   5 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 523 +++++++++++-------
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h    |   1 +
+ 4 files changed, 335 insertions(+), 199 deletions(-)
+
+-- 
+2.35.1
+
