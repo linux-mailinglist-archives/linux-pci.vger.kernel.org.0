@@ -2,278 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 186F75EA6CB
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 15:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FEC5EA71C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 15:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235683AbiIZNER (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 09:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43822 "EHLO
+        id S234224AbiIZN1K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 09:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234602AbiIZND7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 09:03:59 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9B084E51
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 04:35:51 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id b6so7053603ljr.10
-        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 04:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=2ZDbwsohrDOt1C3mx7JqUO/6C3uPA8KxvxzeCT35giQ=;
-        b=W6fvKJb3OqaNYsuGy/e0/ehyYEjI9glZaybx2pT6JCqqWJd8RP0ZNnBvE9yEtFNcHM
-         +Q5dvLdk50XtwKxWUEI5QZWkfouIHCV7W9iKIkRTJwYdtFKYyaqKwmQRng8b+tf+odEE
-         /zBcL/tXPvMN5fNVpvBn1bSnknRbPm380GF6PDj1evcH/z/ytDc75h/NJwmsOFrPlxS3
-         AhfMgN2gS/V5slk5HHvUl+VBj7zfTmrE1NTwidMaolxY29GPjZIVkzTdu5FKFf83yqo8
-         gxEajxeTWalzmUVSBKV4HerzunkzOeAjfuFRYp1sgfB17agsy9X6KWTP3IC8yqschQnB
-         g22A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=2ZDbwsohrDOt1C3mx7JqUO/6C3uPA8KxvxzeCT35giQ=;
-        b=n2OrZ0Urk7ELGYjPG9Aoh+v2Y7PSMv7/onhIg14c6atUKVfjrVd7IBmq2J8RL9pFkC
-         7If9ZIGMASI/x5Ho21JaLio/MZ7PaXzPbhRyPy4k8XOKLhr+ez6MEDX8r84+NyJmaxLn
-         dpQAfgmcoHI4PRMOFAz1u5oN54SKeK05oocJebbQ7VUIhxJBfndcyWsPmFAUEdhds1hv
-         FnJRJ330r6is2g4HFOd+mpy+5Pbsi9aY15/fierbFqmhjJwIs0TKjIBiJwC+LYxGxhzv
-         BteyswJPUZxvTwC8x8bls535FRE8jRihxs9zQNkWyfQg/sntJR0zvzCb1VAMjbO5OZyz
-         8zXQ==
-X-Gm-Message-State: ACrzQf3DXpjLvkKOREUspfxNevzYXYOagk6Sx4x0/FkDxxr+MC/k9nmN
-        37iObjemnet+L5C+zntdMre3NQ==
-X-Google-Smtp-Source: AMsMyM4MrUgZUXAyzh1ehVVxmrLzTja7PVNTLftG5Mn2EDpfSxA4Xs9Vjwv/dZHlRggIAPqnVPobEA==
-X-Received: by 2002:a2e:8190:0:b0:26b:d94b:75e9 with SMTP id e16-20020a2e8190000000b0026bd94b75e9mr7815046ljg.379.1664192108640;
-        Mon, 26 Sep 2022 04:35:08 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id v21-20020a05651203b500b00494747ba5f7sm2502835lfp.272.2022.09.26.04.35.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 04:35:08 -0700 (PDT)
-Message-ID: <5a93a4fc-b6a9-6371-84c1-ff39c60dbb5a@linaro.org>
-Date:   Mon, 26 Sep 2022 14:35:07 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v4 1/6] phy: qcom-qmp-pcie: split register tables into
- common and extra parts
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S231727AbiIZN0u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 09:26:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCD5760E0
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 04:51:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0025460AB8
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 11:50:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D51EC433D6;
+        Mon, 26 Sep 2022 11:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664193002;
+        bh=Z/TIaNKp8bR7xnaGrhBToyQtEOEgcXRRRy1oqGRgqpQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YkyGBOxAEZe/9QeHc03sk6OKPHMwTaLe4TcqvgcJmQi9hlPGj0WuViQNWksSdtSF6
+         3Kez+72cB9XlquncxruvRZo4U0i7cjzedys1niSVhs9188UygMVOHw76KTAnQjCnSM
+         OMglBs0HCHLOC3qJhwaScSUcbND4TAKkdhFqVXKJfCYHvkDPsQa3BqD8evgZgp64wo
+         Dwt7dcss32WkuVtQjTYpIMD82STrjqwR5X1WQ51eu+vykhXlGbc7kD0Tb4AgkJc+3i
+         D2eDDgIcXDe1D8CpYGYkiZ6mfwJZY9GtPg2Z2ZL+p65+DgsAtvuR0uGRfDQ9vYBWCL
+         oSSV5iTqutzKw==
+Date:   Mon, 26 Sep 2022 13:49:55 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org
-References: <20220924160302.285875-1-dmitry.baryshkov@linaro.org>
- <20220924160302.285875-2-dmitry.baryshkov@linaro.org>
- <YzFUcWSHkdSlIbHU@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <YzFUcWSHkdSlIbHU@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        pali@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug
+ interrupt
+Message-ID: <YzGR40/kmQX4ZNaS@lpieralisi>
+References: <20220818135140.5996-1-kabel@kernel.org>
+ <20220818135140.5996-4-kabel@kernel.org>
+ <YxtUR0+dBZut8QZH@lpieralisi>
+ <87r10al6a0.wl-maz@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87r10al6a0.wl-maz@kernel.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 26/09/2022 10:27, Johan Hovold wrote:
-> On Sat, Sep 24, 2022 at 07:02:57PM +0300, Dmitry Baryshkov wrote:
->> SM8250 configuration tables are split into two parts: the common one and
->> the PHY-specific tables. Make this split more formal. Rather than having
->> a blind renamed copy of all QMP table fields, add separate struct
->> qmp_phy_cfg_tables and add two instances of this structure to the struct
->> qmp_phy_cfg. Later on this will be used to support different PHY modes
->> (RC vs EP).
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 129 ++++++++++++++---------
->>   1 file changed, 77 insertions(+), 52 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> index 7aff3f9940a5..30806816c8b0 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> @@ -1300,31 +1300,30 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
->>   	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_G4_PRE_GAIN, 0x2e),
->>   };
->>   
->> -/* struct qmp_phy_cfg - per-PHY initialization config */
->> -struct qmp_phy_cfg {
->> -	int lanes;
->> -
->> -	/* Init sequence for PHY blocks - serdes, tx, rx, pcs */
->> +struct qmp_phy_cfg_tables {
->>   	const struct qmp_phy_init_tbl *serdes_tbl;
->>   	int serdes_tbl_num;
+On Sat, Sep 17, 2022 at 10:05:59AM +0100, Marc Zyngier wrote:
+> Hi Lorenzo,
 > 
-> So I still think you should drop the now redundant "tbl" suffix and
-> infix.
+> On Fri, 09 Sep 2022 15:57:11 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > [+Marc, Thomas - I can't merge this code without them reviewing it,
+> > I am not sure at all you can mix the timer/IRQ code the way you do]
+> > 
+> > On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Behún wrote:
+> > > From: Pali Rohár <pali@kernel.org>
+> > > 
+> > > Add support for Data Link Layer State Change in the emulated slot
+> > > registers and hotplug interrupt via the emulated root bridge.
+> > > 
+> > > This is mainly useful for when an error causes link down event. With
+> > > this change, drivers can try recovery.
+> > > 
+> > > Link down state change can be implemented because Aardvark supports Link
+> > > Down event interrupt. Use it for signaling that Data Link Layer Link is
+> > > not active anymore via Hot-Plug Interrupt on emulated root bridge.
+> > > 
+> > > Link up interrupt is not available on Aardvark, but we check for whether
+> > > link is up in the advk_pcie_link_up() function. By triggering Hot-Plug
+> > > Interrupt from this function we achieve Link up event, so long as the
+> > > function is called (which it is after probe and when rescanning).
+> > > Although it is not ideal, it is better than nothing.
+> > 
+> > So before even coming to the code review: this patch does two things.
+> > 
+> > 1) It adds support for handling the Link down state
+> > 2) It adds some code to emulate a Link-up event
+> > 
+> > Now, for (2). IIUC you are adding code to make sure that an HP
+> > event is triggered if advk_pcie_link_up() is called and it
+> > detects a Link-down->Link-up transition, that has to be notified
+> > through an HP event.
+> > 
+> > If that's correct, you have to explain to me please what this is
+> > actually achieving and a specific scenario where we want this to be
+> > implemented, in fine details; then we add it to the commit log.
+> > 
+> > That aside, the interaction of the timer and the IRQ domain code
+> > must be reviewed by Marc and Thomas to make sure this is not
+> > a gross violation of the respective subsystems usage.
 > 
->> -	const struct qmp_phy_init_tbl *serdes_tbl_sec;
->> -	int serdes_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *tx_tbl;
->>   	int tx_tbl_num;
->> -	const struct qmp_phy_init_tbl *tx_tbl_sec;
->> -	int tx_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *rx_tbl;
->>   	int rx_tbl_num;
->> -	const struct qmp_phy_init_tbl *rx_tbl_sec;
->> -	int rx_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *pcs_tbl;
->>   	int pcs_tbl_num;
->> -	const struct qmp_phy_init_tbl *pcs_tbl_sec;
->> -	int pcs_tbl_num_sec;
->>   	const struct qmp_phy_init_tbl *pcs_misc_tbl;
->>   	int pcs_misc_tbl_num;
->> -	const struct qmp_phy_init_tbl *pcs_misc_tbl_sec;
->> -	int pcs_misc_tbl_num_sec;
->> +};
->> +
->> +/* struct qmp_phy_cfg - per-PHY initialization config */
->> +struct qmp_phy_cfg {
->> +	int lanes;
->> +
->> +	/* Main init sequence for PHY blocks - serdes, tx, rx, pcs */
->> +	struct qmp_phy_cfg_tables common;
-> 
-> And this could be "tbls_common".
+> I don't see anything being a "gross violation" here, at least from an
+> interrupt subsystem perspective. In a way, this is synthesising an
+> interrupt on the back of some other event, and as long as the context
+> is somehow appropriate (something that looks like an interrupt when
+> pretending there is one), this should be OK. Other subsystems such as
+> i2c GPIO expanders do similar things.
 
-I'd go for common_tables, if you don't mind.
+Right, thanks.
 
-> 
->> +	/*
->> +	 * Additional init sequence for PHY blocks, providing additional
->> +	 * register programming. Unless required it can be left omitted.
->> +	 */
->> +	struct qmp_phy_cfg_tables *extra;
-> 
-> And "tbls_extra".
-> 
-> I guess this table should be const as well.
+> The one thing I'm dubious about is the frequency of the timer. Asking
+> for a poll of the link every jiffy is bound to be expensive, and it
+> would be good to relax this as much as possible, specially on low-end
+> HW such as this, where every cycle counts. It is always going to be a
+> "best effort" thing, and the commit message doesn't say what's the
+> actual grace period to handle this (the spec probably has one).
 
-Ack
+AFAICS, the code does not poll the link. It sets a timer only if
+the link is checked (eg upon PCI bus forced rescan or config access)
+the link is up and it was down, to emulate a HP IRQ.
 
-> 
->>   
->>   	/* clock ids to be requested */
->>   	const char * const *clk_list;
->> @@ -1459,6 +1458,7 @@ static const char * const sdm845_pciephy_reset_l[] = {
->>   static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
->>   	.lanes			= 1,
->>   
->> +	.common = {
->>   	.serdes_tbl		= ipq8074_pcie_serdes_tbl,
->>   	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_pcie_serdes_tbl),
->>   	.tx_tbl			= ipq8074_pcie_tx_tbl,
->> @@ -1467,6 +1467,7 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
->>   	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
->>   	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
->>   	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
->> +	},
-> 
-> Shouldn't you indent the members now? The above looks unnecessarily hard
-> to read.
+> I guess this patch could do with being split between handling link
+> down and link up events, but that's for you to decide.
 
-I wanted to keep the indentation to make the patch small enough, but 
-let's indent these lines (while dropping the _tbl from names as you 
-insisted).
+It is fine for me as-is even though its logic could be simplified
+by the split.
 
-> 
->>   	.clk_list		= ipq8074_pciephy_clk_l,
->>   	.num_clks		= ARRAY_SIZE(ipq8074_pciephy_clk_l),
->>   	.reset_list		= ipq8074_pciephy_reset_l,
-> 
->   @@ -1603,24 +1612,28 @@ static const struct qmp_phy_cfg sdm845_qhp_pciephy_cfg = {
->>   static const struct qmp_phy_cfg sm8250_qmp_gen3x1_pciephy_cfg = {
->>   	.lanes			= 1,
->>   
->> +	.common = {
->>   	.serdes_tbl		= sm8250_qmp_pcie_serdes_tbl,
->>   	.serdes_tbl_num		= ARRAY_SIZE(sm8250_qmp_pcie_serdes_tbl),
->> -	.serdes_tbl_sec		= sm8250_qmp_gen3x1_pcie_serdes_tbl,
->> -	.serdes_tbl_num_sec	= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_serdes_tbl),
->>   	.tx_tbl			= sm8250_qmp_pcie_tx_tbl,
->>   	.tx_tbl_num		= ARRAY_SIZE(sm8250_qmp_pcie_tx_tbl),
->>   	.rx_tbl			= sm8250_qmp_pcie_rx_tbl,
->>   	.rx_tbl_num		= ARRAY_SIZE(sm8250_qmp_pcie_rx_tbl),
->> -	.rx_tbl_sec		= sm8250_qmp_gen3x1_pcie_rx_tbl,
->> -	.rx_tbl_num_sec		= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_rx_tbl),
->>   	.pcs_tbl		= sm8250_qmp_pcie_pcs_tbl,
->>   	.pcs_tbl_num		= ARRAY_SIZE(sm8250_qmp_pcie_pcs_tbl),
->> -	.pcs_tbl_sec		= sm8250_qmp_gen3x1_pcie_pcs_tbl,
->> -	.pcs_tbl_num_sec		= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_pcs_tbl),
->>   	.pcs_misc_tbl		= sm8250_qmp_pcie_pcs_misc_tbl,
->>   	.pcs_misc_tbl_num	= ARRAY_SIZE(sm8250_qmp_pcie_pcs_misc_tbl),
->> -	.pcs_misc_tbl_sec		= sm8250_qmp_gen3x1_pcie_pcs_misc_tbl,
->> -	.pcs_misc_tbl_num_sec	= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_pcs_misc_tbl),
->> +	},
->> +	.extra = &(struct qmp_phy_cfg_tables) {
-> 
-> const structure?
+Thanks,
+Lorenzo
 
-Ack
-
+> Thanks,
 > 
->> +	.serdes_tbl		= sm8250_qmp_gen3x1_pcie_serdes_tbl,
->> +	.serdes_tbl_num		= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_serdes_tbl),
->> +	.rx_tbl			= sm8250_qmp_gen3x1_pcie_rx_tbl,
->> +	.rx_tbl_num		= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_rx_tbl),
->> +	.pcs_tbl		= sm8250_qmp_gen3x1_pcie_pcs_tbl,
->> +	.pcs_tbl_num		= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_pcs_tbl),
->> +	.pcs_misc_tbl		= sm8250_qmp_gen3x1_pcie_pcs_misc_tbl,
->> +	.pcs_misc_tbl_num	= ARRAY_SIZE(sm8250_qmp_gen3x1_pcie_pcs_misc_tbl),
+> 	M.
 > 
-> Indentation.
+> -- 
+> Without deviation from the norm, progress is not possible.
 > 
->> +	},
->>   	.clk_list		= sdm845_pciephy_clk_l,
->>   	.num_clks		= ARRAY_SIZE(sdm845_pciephy_clk_l),
->>   	.reset_list		= sdm845_pciephy_reset_l,
-> 
->> @@ -1854,11 +1881,9 @@ static int qmp_pcie_serdes_init(struct qmp_phy *qphy)
->>   {
->>   	const struct qmp_phy_cfg *cfg = qphy->cfg;
->>   	void __iomem *serdes = qphy->serdes;
->> -	const struct qmp_phy_init_tbl *serdes_tbl = cfg->serdes_tbl;
->> -	int serdes_tbl_num = cfg->serdes_tbl_num;
->>   
->> -	qmp_pcie_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_num);
->> -	qmp_pcie_configure(serdes, cfg->regs, cfg->serdes_tbl_sec, cfg->serdes_tbl_num_sec);
->> +	qmp_pcie_configure(serdes, cfg->regs, cfg->common.serdes_tbl, cfg->common.serdes_tbl_num);
->> +	qmp_pcie_configure(serdes, cfg->regs, cfg->extra->serdes_tbl, cfg->extra->serdes_tbl_num);
-> 
-> I already mentioned the NULL-derefs as cfg->extra can be NULL.
-> 
->>   
->>   	return 0;
->>   }
->   
->>   	if (IS_ERR(qphy->pcs_misc)) {
->> -		if (cfg->pcs_misc_tbl || cfg->pcs_misc_tbl_sec)
->> +		if (cfg->common.pcs_misc_tbl || cfg->extra->pcs_misc_tbl)
-> 
-> Here too.
-> 
->>   			return PTR_ERR(qphy->pcs_misc);
->>   	}
-> 
-> Johan
-
--- 
-With best wishes
-Dmitry
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
