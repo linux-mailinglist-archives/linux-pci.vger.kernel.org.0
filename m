@@ -2,52 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71BD95EB3AB
+	by mail.lfdr.de (Postfix) with ESMTP id BD6CC5EB3AC
 	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 23:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbiIZV5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 17:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45800 "EHLO
+        id S230393AbiIZV5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 17:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbiIZV5V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 17:57:21 -0400
+        with ESMTP id S230145AbiIZV5W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 17:57:22 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC85D4327;
-        Mon, 26 Sep 2022 14:57:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E79D12DE;
+        Mon, 26 Sep 2022 14:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664229440; x=1695765440;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zVMWunYPM2+IIkAGb+SLwB9+KCfT1/0NI6xHqBaLML8=;
-  b=N2xvYHCnYqxeIv2I0kDIj3t6MHcbCy8AldWsG9zdJjA/el2B4y//YIrz
-   IJ8J0BeJkvMzAmXwqko8MR1ythV7KlMl9mzGeFFwwUaR/Dt/a+cDaXysG
-   YEyPGxcUAI8fMnae889ftOx+20qaHYt9v/d7UpBQPx5ycDI7TpGxc9zEj
-   yossYGVCZp6cBofU4RkDfuMo6NOsd8vhYz1sicSzMvGRnJd9t2I3X18z7
-   79vZ6N8fcnoYnoQtwlwXMsCDxV87vPNz02F9QZx+gQm2lry95bXFvgSnj
-   E7IjxBHSYLotDuEdk6YA2dL22f6a7WnDksDHppPUcynqSEqbH/3nzkPYY
+  t=1664229441; x=1695765441;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HWQPEWMIfAJ0oMb03uWhJIko74Q4m6iCSM6tVkiOPpw=;
+  b=NFHD5DxvvutSNVSTcMAj8s30NAP/RgNqT4RsS18B3PDWbCqEQIFetumm
+   u3YcC/wSR+qvwLIfb+5Njbwirwh8aKKzzBIh5yodHb0G3ipfco/unCGee
+   4o5LvFNf34zsEdgbJX74EZdAoE4bmt0LL4dz/RSdHWIQ6rRANEiiKQ77Q
+   DJwOdlpWBy7GwI3u1hTfj2fP6FUTJiUQEoQQgBUyAf2eoDXC44celiXiE
+   mWWWe6ocTAlXkZorw+oP8k+V0PhWMq3PI7LKVzcwF13wIKDVZG6efBmae
+   2PhGISU5Rrv4UU0+ytBy9KWL/DRxrIOzwPhgIvICT9S8n+d28oZraAOCB
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302057556"
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302057557"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="302057556"
+   d="scan'208";a="302057557"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:57:20 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="598911424"
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="598911429"
 X-IronPort-AV: E=Sophos;i="5.93,347,1654585200"; 
-   d="scan'208";a="598911424"
+   d="scan'208";a="598911429"
 Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.209.75.159])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:57:19 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 14:57:20 -0700
 From:   ira.weiny@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH V3 0/2] CXL: Taint user access to DOE mailbox config space
-Date:   Mon, 26 Sep 2022 14:57:09 -0700
-Message-Id: <20220926215711.2893286-1-ira.weiny@intel.com>
+Subject: [PATCH V3 1/2] PCI: Allow drivers to request exclusive config regions
+Date:   Mon, 26 Sep 2022 14:57:10 -0700
+Message-Id: <20220926215711.2893286-2-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220926215711.2893286-1-ira.weiny@intel.com>
+References: <20220926215711.2893286-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -62,43 +67,195 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Changes from V2
-	Incorporate feedback from Greg and Jonathan
-
-Changes from V1
-	Incorporate feedback from Dan and Greg.
-
-PCI config space access from user space has traditionally been unrestricted
-with writes being an understood risk for device operation.
+PCI config space access from user space has traditionally been
+unrestricted with writes being an understood risk for device operation.
 
 Unfortunately, device breakage or odd behavior from config writes lacks
-indicators that can leave driver writers confused when evaluating failures.
-This is especially true with the new PCIe Data Object Exchange (DOE) mailbox
-protocol where backdoor shenanigans from user space through things such as
-vendor defined protocols may affect device operation without complete breakage.
+indicators that can leave driver writers confused when evaluating
+failures.  This is especially true with the new PCIe Data Object
+Exchange (DOE) mailbox protocol where backdoor shenanigans from user
+space through things such as vendor defined protocols may affect device
+operation without complete breakage.
 
-Even though access should not be restricted it would be nice for driver writers
-to be able to flag critical parts of the config space such that interference
-from user space can be detected.
+A prior proposal restricted read and writes completely.[1]  Greg and
+Bjorn pointed out that proposal is flawed for a couple of reasons.
+First, lspci should always be allowed and should not interfere with any
+device operation.  Second, setpci is a valuable tool that is sometimes
+necessary and it should not be completely restricted.[2]  Finally
+methods exist for full lock of device access if required.
 
-Introduce pci_request_config_region_exclusive() and use it in the CXL driver
-for DOE config space.
+Even though access should not be restricted it would be nice for driver
+writers to be able to flag critical parts of the config space such that
+interference from user space can be detected.
 
-Ira Weiny (2):
-  PCI: Allow drivers to request exclusive config regions
-  cxl/doe: Request exclusive DOE access
+Introduce pci_request_config_region_exclusive() to mark exclusive config
+regions.  Such regions trigger a warning and kernel taint if accessed
+via user space.
 
- drivers/cxl/pci.c             |  5 +++++
- drivers/pci/pci-sysfs.c       |  7 +++++++
- drivers/pci/probe.c           |  6 ++++++
- include/linux/ioport.h        |  2 ++
- include/linux/pci.h           | 17 +++++++++++++++++
- include/uapi/linux/pci_regs.h |  1 +
- kernel/resource.c             | 13 ++++++++-----
- 7 files changed, 46 insertions(+), 5 deletions(-)
+Create pci_warn_once() to restrict the user from spamming the log.
 
+[1] https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
+[2] https://lore.kernel.org/all/YF8NGeGv9vYcMfTV@kroah.com/
 
-base-commit: f76349cf41451c5c42a99f18a9163377e4b364ff
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Changes from V2:
+	Greg: s/config_resource/driver_exclusive_resource/
+	Jonathan: don't reformat the pci_*() messages
+
+Changes from V1:
+	Greg and Dan:
+		Create and use pci_warn_once() to keep the user from spamming
+	Dan:
+		Clarify the warn message
+
+Changes from[1]:
+	Change name to pci_request_config_region_exclusive()
+	Don't flag reads at all.
+	Allow writes with a warn and taint of the kernel.
+	Update commit message
+	Forward port to latest tree.
+---
+ drivers/pci/pci-sysfs.c |  7 +++++++
+ drivers/pci/probe.c     |  6 ++++++
+ include/linux/ioport.h  |  2 ++
+ include/linux/pci.h     | 17 +++++++++++++++++
+ kernel/resource.c       | 13 ++++++++-----
+ 5 files changed, 40 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index fc804e08e3cb..7354e135e646 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -755,6 +755,13 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
+ 	if (ret)
+ 		return ret;
+ 
++	if (resource_is_exclusive(&dev->driver_exclusive_resource, off,
++				  count)) {
++		pci_warn_once(dev, "%s: Unexpected write to kernel-exclusive config offset %llx",
++			      current->comm, off);
++		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
++	}
++
+ 	if (off > dev->cfg_size)
+ 		return 0;
+ 	if (off + count > dev->cfg_size) {
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c5286b027f00..e16ce452cc1e 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2306,6 +2306,12 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+ 	INIT_LIST_HEAD(&dev->bus_list);
+ 	dev->dev.type = &pci_dev_type;
+ 	dev->bus = pci_bus_get(bus);
++	dev->driver_exclusive_resource = (struct resource) {
++		.name = "PCI Exclusive",
++		.start = 0,
++		.end = -1,
++	};
++
+ #ifdef CONFIG_PCI_MSI
+ 	raw_spin_lock_init(&dev->msi_lock);
+ #endif
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 616b683563a9..cf1de55d14da 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -312,6 +312,8 @@ extern void __devm_release_region(struct device *dev, struct resource *parent,
+ 				  resource_size_t start, resource_size_t n);
+ extern int iomem_map_sanity_check(resource_size_t addr, unsigned long size);
+ extern bool iomem_is_exclusive(u64 addr);
++extern bool resource_is_exclusive(struct resource *resource, u64 addr,
++				  resource_size_t size);
+ 
+ extern int
+ walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 060af91bafcd..d75347114307 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -409,6 +409,7 @@ struct pci_dev {
+ 	 */
+ 	unsigned int	irq;
+ 	struct resource resource[DEVICE_COUNT_RESOURCE]; /* I/O and memory regions + expansion ROMs */
++	struct resource driver_exclusive_resource;	 /* driver exclusive resource ranges */
+ 
+ 	bool		match_driver;		/* Skip attaching driver */
+ 
+@@ -1406,6 +1407,21 @@ int pci_request_selected_regions(struct pci_dev *, int, const char *);
+ int pci_request_selected_regions_exclusive(struct pci_dev *, int, const char *);
+ void pci_release_selected_regions(struct pci_dev *, int);
+ 
++static inline __must_check struct resource *
++pci_request_config_region_exclusive(struct pci_dev *pdev, unsigned int offset,
++				    unsigned int len, const char *name)
++{
++	return __request_region(&pdev->driver_exclusive_resource, offset, len,
++				name, IORESOURCE_EXCLUSIVE);
++}
++
++static inline void pci_release_config_region(struct pci_dev *pdev,
++					     unsigned int offset,
++					     unsigned int len)
++{
++	__release_region(&pdev->driver_exclusive_resource, offset, len);
++}
++
+ /* drivers/pci/bus.c */
+ void pci_add_resource(struct list_head *resources, struct resource *res);
+ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+@@ -2481,6 +2497,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #define pci_crit(pdev, fmt, arg...)	dev_crit(&(pdev)->dev, fmt, ##arg)
+ #define pci_err(pdev, fmt, arg...)	dev_err(&(pdev)->dev, fmt, ##arg)
+ #define pci_warn(pdev, fmt, arg...)	dev_warn(&(pdev)->dev, fmt, ##arg)
++#define pci_warn_once(pdev, fmt, arg...) dev_warn_once(&(pdev)->dev, fmt, ##arg)
+ #define pci_notice(pdev, fmt, arg...)	dev_notice(&(pdev)->dev, fmt, ##arg)
+ #define pci_info(pdev, fmt, arg...)	dev_info(&(pdev)->dev, fmt, ##arg)
+ #define pci_dbg(pdev, fmt, arg...)	dev_dbg(&(pdev)->dev, fmt, ##arg)
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 4c5e80b92f2f..82ed54cd1f0d 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1707,18 +1707,15 @@ static int strict_iomem_checks;
+  *
+  * Returns true if exclusive to the kernel, otherwise returns false.
+  */
+-bool iomem_is_exclusive(u64 addr)
++bool resource_is_exclusive(struct resource *root, u64 addr, resource_size_t size)
+ {
+ 	const unsigned int exclusive_system_ram = IORESOURCE_SYSTEM_RAM |
+ 						  IORESOURCE_EXCLUSIVE;
+ 	bool skip_children = false, err = false;
+-	int size = PAGE_SIZE;
+ 	struct resource *p;
+ 
+-	addr = addr & PAGE_MASK;
+-
+ 	read_lock(&resource_lock);
+-	for_each_resource(&iomem_resource, p, skip_children) {
++	for_each_resource(root, p, skip_children) {
+ 		if (p->start >= addr + size)
+ 			break;
+ 		if (p->end < addr) {
+@@ -1757,6 +1754,12 @@ bool iomem_is_exclusive(u64 addr)
+ 	return err;
+ }
+ 
++bool iomem_is_exclusive(u64 addr)
++{
++	return resource_is_exclusive(&iomem_resource, addr & PAGE_MASK,
++				     PAGE_SIZE);
++}
++
+ struct resource_entry *resource_list_create_entry(struct resource *res,
+ 						  size_t extra_size)
+ {
 -- 
 2.37.2
 
