@@ -2,60 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 957CE5EA851
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 16:24:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84C15EA856
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Sep 2022 16:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbiIZOYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Sep 2022 10:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
+        id S234302AbiIZOZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Sep 2022 10:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234790AbiIZOXz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 10:23:55 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64E01181B;
-        Mon, 26 Sep 2022 05:34:41 -0700 (PDT)
+        with ESMTP id S234311AbiIZOYs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Sep 2022 10:24:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7C0606B1
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 05:35:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6007FCE1130;
-        Mon, 26 Sep 2022 12:34:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525C9C433D6;
-        Mon, 26 Sep 2022 12:34:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D786F60BEF
+        for <linux-pci@vger.kernel.org>; Mon, 26 Sep 2022 12:35:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA9AC433C1;
+        Mon, 26 Sep 2022 12:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664195677;
-        bh=vW41fwAs8yIBAAXaBsitEXuJcX7gT1jTUr0chte7TQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VpxSd5W9pu6Liz8eesFvgkC10k4/VfcVRY48jH0XFMXa9yYO5qo+Iho/nDlEkO4JI
-         Hsc4kZStYodD31wZ3VuBO6onE9RksIfyc9hkFxzgKXxfIeQNIN18d6+k/Z9o4eyFUY
-         uObqF6AZGtHyFAcT5A3ar1jx6OVpp+sJgyWfZpTv0ydPyh+4e9D2P5/BdPvCwXm5x3
-         f+AqCJoRbgagsluLpXuMSPjLTNZVOAHRPWrBtTQHk4ugmPKqRTanvooUv1Daht0ktX
-         nLyDzIdh/JnpXsJsCWnkfC+n+BevcRFnBbemS/+EuPmKciLJMWwIK9hjFcVjsJ3RBH
-         +8avfzyeXXRVw==
-Received: by pali.im (Postfix)
-        id 8CA958A3; Mon, 26 Sep 2022 14:34:34 +0200 (CEST)
-Date:   Mon, 26 Sep 2022 14:34:34 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Elad Nachman <enachman@marvell.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>
-Subject: Re: [PATCH v2] PCI: aardvark: Implement workaround for PCIe
- Completion Timeout
-Message-ID: <20220926123434.2tqx4t6u3cnlrcx3@pali>
-References: <20220802123816.21817-1-pali@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220802123816.21817-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+        s=k20201202; t=1664195754;
+        bh=+7Dy/qBrAbPQ/VnyDF8M/916yD7tx2rsp8x7Rh1LF+M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iKD/KaoBjASUcVsppCdsYJd+4o9qIfRvb3ipDeI4T+NiM2GCqdOIRvHF7+IGEjfNx
+         n0p3xrZ44QG2ZVsraKgL7+8Gb+prhshE4kKRCL1Q2gmnKtnOvZaJ6VfZQBKJDq6yb+
+         tD26heVhEBDEcXxf8X0mbcu+fp9vbAmhMelAEsaJdydw/x9JHGAS2CKX66cEyFk1nE
+         FXZtDFdnzaFYhD4otiMGxg7xejbRGCEBAs2eYcOOuYhr80M4yubGYUvoVzT3SHtvY7
+         6f0W0tEUjdxDi8byhud/ara485LkikwS6FWkBHgk0sywDurW2m5Z4XNGrtXXRMtInl
+         QI4dtPU4HRElg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ocnKx-00CgqY-Tt;
+        Mon, 26 Sep 2022 13:35:52 +0100
+Date:   Mon, 26 Sep 2022 08:35:51 -0400
+Message-ID: <868rm68g9k.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        pali@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug interrupt
+In-Reply-To: <YzGR40/kmQX4ZNaS@lpieralisi>
+References: <20220818135140.5996-1-kabel@kernel.org>
+        <20220818135140.5996-4-kabel@kernel.org>
+        <YxtUR0+dBZut8QZH@lpieralisi>
+        <87r10al6a0.wl-maz@kernel.org>
+        <YzGR40/kmQX4ZNaS@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, kabel@kernel.org, lorenzo.pieralisi@arm.com, helgaas@kernel.org, kw@linux.com, pali@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -65,83 +73,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Elad, could you please review this patch? I have implemented it
-according your instructions, including that full memory barrier as you
-described.
+On Mon, 26 Sep 2022 07:49:55 -0400,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+>=20
+> On Sat, Sep 17, 2022 at 10:05:59AM +0100, Marc Zyngier wrote:
+> > Hi Lorenzo,
+> >=20
+> > On Fri, 09 Sep 2022 15:57:11 +0100,
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > >=20
+> > > [+Marc, Thomas - I can't merge this code without them reviewing it,
+> > > I am not sure at all you can mix the timer/IRQ code the way you do]
+> > >=20
+> > > On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Beh=C3=BAn wrote:
+> > > > From: Pali Roh=C3=A1r <pali@kernel.org>
+> > > >=20
+> > > > Add support for Data Link Layer State Change in the emulated slot
+> > > > registers and hotplug interrupt via the emulated root bridge.
+> > > >=20
+> > > > This is mainly useful for when an error causes link down event. With
+> > > > this change, drivers can try recovery.
+> > > >=20
+> > > > Link down state change can be implemented because Aardvark supports=
+ Link
+> > > > Down event interrupt. Use it for signaling that Data Link Layer Lin=
+k is
+> > > > not active anymore via Hot-Plug Interrupt on emulated root bridge.
+> > > >=20
+> > > > Link up interrupt is not available on Aardvark, but we check for wh=
+ether
+> > > > link is up in the advk_pcie_link_up() function. By triggering Hot-P=
+lug
+> > > > Interrupt from this function we achieve Link up event, so long as t=
+he
+> > > > function is called (which it is after probe and when rescanning).
+> > > > Although it is not ideal, it is better than nothing.
+> > >=20
+> > > So before even coming to the code review: this patch does two things.
+> > >=20
+> > > 1) It adds support for handling the Link down state
+> > > 2) It adds some code to emulate a Link-up event
+> > >=20
+> > > Now, for (2). IIUC you are adding code to make sure that an HP
+> > > event is triggered if advk_pcie_link_up() is called and it
+> > > detects a Link-down->Link-up transition, that has to be notified
+> > > through an HP event.
+> > >=20
+> > > If that's correct, you have to explain to me please what this is
+> > > actually achieving and a specific scenario where we want this to be
+> > > implemented, in fine details; then we add it to the commit log.
+> > >=20
+> > > That aside, the interaction of the timer and the IRQ domain code
+> > > must be reviewed by Marc and Thomas to make sure this is not
+> > > a gross violation of the respective subsystems usage.
+> >=20
+> > I don't see anything being a "gross violation" here, at least from an
+> > interrupt subsystem perspective. In a way, this is synthesising an
+> > interrupt on the back of some other event, and as long as the context
+> > is somehow appropriate (something that looks like an interrupt when
+> > pretending there is one), this should be OK. Other subsystems such as
+> > i2c GPIO expanders do similar things.
+>=20
+> Right, thanks.
+>=20
+> > The one thing I'm dubious about is the frequency of the timer. Asking
+> > for a poll of the link every jiffy is bound to be expensive, and it
+> > would be good to relax this as much as possible, specially on low-end
+> > HW such as this, where every cycle counts. It is always going to be a
+> > "best effort" thing, and the commit message doesn't say what's the
+> > actual grace period to handle this (the spec probably has one).
+>=20
+> AFAICS, the code does not poll the link. It sets a timer only if
+> the link is checked (eg upon PCI bus forced rescan or config access)
+> the link is up and it was down, to emulate a HP IRQ.
 
-On Tuesday 02 August 2022 14:38:16 Pali Rohár wrote:
-> Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions
-> document describes in erratum 3.12 PCIe Completion Timeout (Ref #: 251),
-> that PCIe IP does not support a strong-ordered model for inbound posted vs.
-> outbound completion.
-> 
-> As a workaround for this erratum, DIS_ORD_CHK flag in Debug Mux Control
-> register must be set. It disables the ordering check in the core between
-> Completions and Posted requests received from the link.
-> 
-> Marvell also suggests to do full memory barrier at the beginning of
-> aardvark summary interrupt handler before calling interrupt handlers of
-> endpoint drivers in order to minimize the risk for the race condition
-> documented in the Erratum between the DMA done status reading and the
-> completion of writing to the host memory.
-> 
-> More details about this issue and suggested workarounds are in discussion:
-> https://lore.kernel.org/linux-pci/BN9PR18MB425154FE5019DCAF2028A1D5DB8D9@BN9PR18MB4251.namprd18.prod.outlook.com/t/#u
-> 
-> It was reported that enabling this workaround fixes instability issues and
-> "Unhandled fault" errors when using 60 GHz WiFi 802.11ad card with Qualcomm
-> QCA6335 chip under significant load which were caused by interrupt status
-> stuck in the outbound CMPLT queue traced back to this erratum.
-> 
-> This workaround fixes also kernel panic triggered after some minutes of
-> usage 5 GHz WiFi 802.11ax card with Mediatek MT7915 chip:
-> 
->     Internal error: synchronous external abort: 96000210 [#1] SMP
->     Kernel panic - not syncing: Fatal exception in interrupt
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/pci/controller/pci-aardvark.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 060936ef01fe..3ae8a85ec72e 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -210,6 +210,8 @@ enum {
->  };
->  
->  #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
-> +#define DEBUG_MUX_CTRL_REG			(LMI_BASE_ADDR + 0x208)
-> +#define     DIS_ORD_CHK				BIT(30)
->  
->  /* PCIe core controller registers */
->  #define CTRL_CORE_BASE_ADDR			0x18000
-> @@ -558,6 +560,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  		PCIE_CORE_CTRL2_TD_ENABLE;
->  	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
->  
-> +	/* Disable ordering checks, workaround for erratum 3.12 "PCIe completion timeout" */
-> +	reg = advk_readl(pcie, DEBUG_MUX_CTRL_REG);
-> +	reg |= DIS_ORD_CHK;
-> +	advk_writel(pcie, reg, DEBUG_MUX_CTRL_REG);
-> +
->  	/* Set lane X1 */
->  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
->  	reg &= ~LANE_CNT_MSK;
-> @@ -1581,6 +1588,9 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
->  	struct advk_pcie *pcie = arg;
->  	u32 status;
->  
-> +	/* Full memory barrier (ARM dsb sy), workaround for erratum 3.12 "PCIe completion timeout" */
-> +	mb();
-> +
->  	status = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
->  	if (!(status & PCIE_IRQ_CORE_INT))
->  		return IRQ_NONE;
-> -- 
-> 2.20.1
-> 
+I still find the timer frequency pretty high, but surely the authors
+of the code have worked out that this wasn't a problem.
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
