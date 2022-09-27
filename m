@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C4A5ED12F
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 01:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C7E25ED154
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 01:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbiI0XsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 19:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
+        id S229940AbiI0X60 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 19:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiI0XsA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 19:48:00 -0400
+        with ESMTP id S229846AbiI0X6Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 19:58:25 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449571B349C;
-        Tue, 27 Sep 2022 16:47:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3268EB0882
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 16:58:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0010DB81E34;
-        Tue, 27 Sep 2022 23:47:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97460C433D6;
-        Tue, 27 Sep 2022 23:47:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D6B6BB81E57
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 23:58:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59EA8C433C1;
+        Tue, 27 Sep 2022 23:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664322476;
-        bh=zu8DhpREBxnDbXHPKtFL4jUKQOyG5JcebqzNX6Tenm4=;
+        s=k20201202; t=1664323101;
+        bh=fCBtFd/p72vyqH22o4m1T+dFq4GzarF+6+SlZv1MLQA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MOlI3JUxeVWF2QXGdc01RE6z3qlVfDvOfDP8VejyhCVCNgjG69H7v79chXSvMynKT
-         szeKFD6I4MCCwO82ncuimmWIAd8hfY3kpoQVjFfMeQ5hREknO/hA7Ty6FnSXMunX04
-         yuBB+MueV89oC4ofJVoh2Nx4m8qQxDRQhXAcj6rA5mebMYgQtA2/fSY7iLR4C1uSNb
-         Q1oNI+XgZxk0XdtHo3fmWD6tocUWtEFT8UMx8jZ8jhG6ywZeIzwWadmN5vptlRXLe3
-         jGXqi8hYbVA9cTkgOG7VUovJ0sAXkbfNiagNUqm+UOxLtZU3jZDCbQUK25IbarN3ZI
-         eHzMHzAb2Otig==
-Date:   Tue, 27 Sep 2022 18:47:55 -0500
+        b=jApjyK6oogKIwf53t6ELqrO9cyxdkC2+rjh6i21JHCp24zy6I9v1EnLkcAPniR1Fu
+         snn9ZBn1ZU9DPEQU2yWFUvN9JWN/eFrOBdVxXmH8e/wQrorug29f8EPidPFzcitm/C
+         Lt8v4iImJ9b2E4tEp/Sql4mRdctwbKt2wJujbGx7dDbhmSpchdlQrvWdUmfclxIWL+
+         sxWcnJKCEcd3IAkaaVs/lZvzfDrNUW2SA6mp7kokTGMwrF7kMjbL9uqHyMpy3ERgM/
+         WlYkxgBSrp5D93pM3Qk4EkhQD3IXRUuZZIIl4XCDFSBBKHPDUkY0l8SNFPcuKUdAb7
+         tm5wLboRy8BYA==
+Date:   Tue, 27 Sep 2022 18:58:19 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huang Shijie <shijie@os.amperecomputing.com>
-Cc:     bhelgaas@google.com, patches@amperecomputing.com,
-        zwang@amperecomputing.com, darren@os.amperecomputing.com,
-        corbet@lwn.net, yangyicong@hisilicon.com,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: update the links for aer-inject git tree
-Message-ID: <20220927234755.GA1750512@bhelgaas>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        bhelgaas@google.com
+Subject: Re: [PATCH v2] PCI: Expose PCIe Resizable BAR support via sysfs
+Message-ID: <20220927235819.GA1753306@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220805105238.345599-1-shijie@os.amperecomputing.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <166336088796.3597940.14973499936692558556.stgit@omen>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,35 +54,217 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 05, 2022 at 10:52:38AM +0000, Huang Shijie wrote:
-> The aer-inject tree has been moved to:
->     https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> Update the links.
+On Fri, Sep 16, 2022 at 02:44:48PM -0600, Alex Williamson wrote:
+> This proposes a simple sysfs interface to Resizable BAR support,
+> largely for the purposes of assigning such devices to a VM through
+> VFIO.  Resizable BARs present a difficult feature to expose to a VM
+> through emulation, as resizing a BAR is done on the host.  It can
+> fail, and often does, but we have no means via emulation of a PCIe
+> REBAR capability to handle the error cases.
 > 
-> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
-> ---
-> v1 --> v2: Modified the commit message and the title.
-> v2 --> v3: Change the commit message again.
-> ---
->  Documentation/PCI/pcieaer-howto.rst | 2 +-
->  drivers/pci/pcie/Kconfig            | 2 +-
->  drivers/pci/pcie/aer_inject.c       | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> A vfio-pci specific ioctl interface is also cumbersome as there are
+> often multiple devices within the same bridge aperture and handling
+> them is a challenge.  In the interface proposed here, expanding a
+> BAR potentially requires such devices to be soft-removed during the
+> resize operation and rescanned after, in order for all the necessary
+> resources to be released.  A pci-sysfs interface is also more
+> universal than a vfio specific interface.
 > 
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 0b36b9ebfa4b..b31fc9a0edbc 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -294,7 +294,7 @@ After reboot with new kernel or insert the module, a device file named
->  Then, you need a user space tool named aer-inject, which can be gotten
->  from:
+> Please see the ABI documentation update for usage.
+> 
+> Cc: Christian König <christian.koenig@amd.com>
+> Cc: Krzysztof Wilczyński <kw@linux.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+
+Applied with Christian's Reviewed-by to pci/rebar for v6.1, thanks,
+Alex!
+
+> ---
+> 
+> v2:
+>  - Convert to static attributes with is_visible callback
+>  - Include aperture driver removal for console drivers
+>  - Remove and recreate resourceN attributes
+>  - Expand ABI description
+>  - Drop 2nd field in show attribute
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |   33 +++++++++
+>  drivers/pci/pci-sysfs.c                 |  108 +++++++++++++++++++++++++++++++
+>  2 files changed, 141 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index 6fc2c2efe8ab..ba9a5482436f 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -457,3 +457,36 @@ Description:
 >  
-> -    https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
-> +    https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/
-
-I don't get it.  Both links work fine for me.  Do the cgit links
-redirect to pub/scm, but cgit is deprecated?  I'm happy to apply if
-that's the case, but I'd like a pointer to the reason for the change,
-e.g., email that says cgit is being deprecated.
-
-Bjorn
+>  		The file is writable if the PF is bound to a driver that
+>  		implements ->sriov_set_msix_vec_count().
+> +
+> +What:		/sys/bus/pci/devices/.../resourceN_resize
+> +Date:		September 2022
+> +Contact:	Alex Williamson <alex.williamson@redhat.com>
+> +Description:
+> +		These files provide an interface to PCIe Resizable BAR support.
+> +		A file is created for each BAR resource (N) supported by the
+> +		PCIe Resizable BAR extended capability of the device.  Reading
+> +		each file exposes the bitmap of available resources sizes:
+> +
+> +		# cat resource1_resize
+> +		00000000000001c0
+> +
+> +		The bitmap represents supported resources sizes for the BAR,
+> +		where bit0 = 1MB, bit1 = 2MB, bit2 = 4MB, etc.  In the above
+> +		example the devices supports 64MB, 128MB, and 256MB BAR sizes.
+> +
+> +		When writing the file, the user provides the bit position of
+> +		the desired resource size, for example:
+> +
+> +		# echo 7 > resource1_resize
+> +
+> +		This indicates to set the size value corresponding to bit 7,
+> +		128MB.  The resulting size is 2 ^ (bit# + 20).  This definition
+> +		matches the PCIe specification of this capability.
+> +
+> +		In order to make use of resouce resizing, all PCI drivers must
+> +		be unbound from the device and peer devices under the same
+> +		parent bridge may need to be soft removed.  In the case of
+> +		VGA devices, writing a resize value will remove low level
+> +		console drivers from the device.  Raw users of pci-sysfs
+> +		resourceN attributes must be terminated prior to resizing.
+> +		Success of the resizing operation is not a guaranteed.
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 9ac92e6a2397..f0298a8b08d9 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/msi.h>
+>  #include <linux/of.h>
+> +#include <linux/aperture.h>
+>  #include "pci.h"
+>  
+>  static int sysfs_initialized;	/* = 0 */
+> @@ -1379,6 +1380,112 @@ static const struct attribute_group pci_dev_reset_attr_group = {
+>  	.is_visible = pci_dev_reset_attr_is_visible,
+>  };
+>  
+> +#define pci_dev_resource_resize_attr(n)					\
+> +static ssize_t resource##n##_resize_show(struct device *dev,		\
+> +					 struct device_attribute *attr,	\
+> +					 char * buf)			\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	ssize_t ret;							\
+> +									\
+> +	pci_config_pm_runtime_get(pdev);				\
+> +									\
+> +	ret = sysfs_emit(buf, "%016llx\n",				\
+> +			 (u64)pci_rebar_get_possible_sizes(pdev, n));	\
+> +									\
+> +	pci_config_pm_runtime_put(pdev);				\
+> +									\
+> +	return ret;							\
+> +}									\
+> +									\
+> +static ssize_t resource##n##_resize_store(struct device *dev,		\
+> +					  struct device_attribute *attr,\
+> +					  const char *buf, size_t count)\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	unsigned long size, flags;					\
+> +	int ret, i;							\
+> +	u16 cmd;							\
+> +									\
+> +	if (kstrtoul(buf, 0, &size) < 0)				\
+> +		return -EINVAL;						\
+> +									\
+> +	device_lock(dev);						\
+> +	if (dev->driver) {						\
+> +		ret = -EBUSY;						\
+> +		goto unlock;						\
+> +	}								\
+> +									\
+> +	pci_config_pm_runtime_get(pdev);				\
+> +									\
+> +	if ((pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA) {		\
+> +		ret = aperture_remove_conflicting_pci_devices(pdev,	\
+> +						"resourceN_resize");	\
+> +		if (ret)						\
+> +			goto pm_put;					\
+> +	}								\
+> +									\
+> +	pci_read_config_word(pdev, PCI_COMMAND, &cmd);			\
+> +	pci_write_config_word(pdev, PCI_COMMAND,			\
+> +			      cmd & ~PCI_COMMAND_MEMORY);		\
+> +									\
+> +	flags = pci_resource_flags(pdev, n);				\
+> +									\
+> +	pci_remove_resource_files(pdev);				\
+> +									\
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {			\
+> +		if (pci_resource_len(pdev, i) &&			\
+> +		    pci_resource_flags(pdev, i) == flags)		\
+> +			pci_release_resource(pdev, i);			\
+> +	}								\
+> +									\
+> +	ret = pci_resize_resource(pdev, n, size);			\
+> +									\
+> +	pci_assign_unassigned_bus_resources(pdev->bus);			\
+> +									\
+> +	if (pci_create_resource_files(pdev))				\
+> +		pci_warn(pdev, "Failed to recreate resource files after BAR resizing\n");\
+> +									\
+> +	pci_write_config_word(pdev, PCI_COMMAND, cmd);			\
+> +pm_put:									\
+> +	pci_config_pm_runtime_put(pdev);				\
+> +unlock:									\
+> +	device_unlock(dev);						\
+> +									\
+> +	return ret ? ret : count;					\
+> +}									\
+> +static DEVICE_ATTR_RW(resource##n##_resize)
+> +
+> +pci_dev_resource_resize_attr(0);
+> +pci_dev_resource_resize_attr(1);
+> +pci_dev_resource_resize_attr(2);
+> +pci_dev_resource_resize_attr(3);
+> +pci_dev_resource_resize_attr(4);
+> +pci_dev_resource_resize_attr(5);
+> +
+> +static struct attribute *resource_resize_attrs[] = {
+> +	&dev_attr_resource0_resize.attr,
+> +	&dev_attr_resource1_resize.attr,
+> +	&dev_attr_resource2_resize.attr,
+> +	&dev_attr_resource3_resize.attr,
+> +	&dev_attr_resource4_resize.attr,
+> +	&dev_attr_resource5_resize.attr,
+> +	NULL,
+> +};
+> +
+> +static umode_t resource_resize_is_visible(struct kobject *kobj,
+> +					  struct attribute *a, int n)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +
+> +	return pci_rebar_get_current_size(pdev, n) < 0 ? 0 : a->mode;
+> +}
+> +
+> +static const struct attribute_group pci_dev_resource_resize_group = {
+> +	.attrs = resource_resize_attrs,
+> +	.is_visible = resource_resize_is_visible,
+> +};
+> +
+>  int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+>  {
+>  	if (!sysfs_initialized)
+> @@ -1500,6 +1607,7 @@ const struct attribute_group *pci_dev_groups[] = {
+>  #ifdef CONFIG_ACPI
+>  	&pci_dev_acpi_attr_group,
+>  #endif
+> +	&pci_dev_resource_resize_group,
+>  	NULL,
+>  };
+>  
+> 
+> 
