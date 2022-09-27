@@ -2,123 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55B815EC34A
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 14:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE435EC47F
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbiI0Mto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 08:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
+        id S232907AbiI0NcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 09:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231672AbiI0Mtj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 08:49:39 -0400
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C916958B;
-        Tue, 27 Sep 2022 05:49:32 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VQs4TXf_1664282967;
-Received: from 30.240.121.51(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VQs4TXf_1664282967)
-          by smtp.aliyun-inc.com;
-          Tue, 27 Sep 2022 20:49:28 +0800
-Message-ID: <2085a695-7fa2-b560-3164-c62cb17dd5f7@linux.alibaba.com>
-Date:   Tue, 27 Sep 2022 20:49:26 +0800
+        with ESMTP id S232837AbiI0Nbe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:31:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B2338687;
+        Tue, 27 Sep 2022 06:28:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7D0A6B81BBD;
+        Tue, 27 Sep 2022 13:28:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0ADC433D7;
+        Tue, 27 Sep 2022 13:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664285296;
+        bh=L5XWbAoVUICGVz9qUaMDvnJiWWRc6SqEtKyCMV3wxSk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ElT1ECIlrJNtzE4yL/NfhN7NwMcGi6/bFDtdxn1RUPRm2VQYPeskI1TRnv3aNEdTh
+         Bn38zFcm8pijFMS7yNdXnZmFrbZdr/z6QAM+XHLhDaiiYqr1NCoSeu4ojwMmYyXcQL
+         shVGMT+/yNa7ekN94wtLiheTgZWMQm0lGnZhKoNwKE/gHGxajZcVBzpEOfYgBWr4lL
+         /y7AJ0WLjD2SMX/w6oz/zQtuyiIIr7TpUucsUEXSOIcH3xtxgZSW55+ycu2ERR0tFc
+         11neib8lKkCCxW2CEzUwlgtXBIVI6tgDlT4mC+2arSsFkO5evuaraPBjqlB5F/bk4T
+         cLB3uo6Jbd9zg==
+Date:   Tue, 27 Sep 2022 15:28:09 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: qcom: Add support for modular builds
+Message-ID: <YzL6aS6mktksLnqn@lpieralisi>
+References: <20220721064720.10762-1-johan+linaro@kernel.org>
+ <Yyl+PNcbtSwzlgvh@hovoldconsulting.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.13.0
-Subject: Re: [PATCH v1 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        baolin.wang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-pci@vger.kernel.org
-References: <20220926171857.GA1609097@bhelgaas>
- <7502d496-9ec1-1ca4-c643-376ec2aa662e@linux.alibaba.com>
- <20220927110435.00005b4d@huawei.com>
- <5372edb4-5717-42a0-142e-91657a9b18c3@arm.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <5372edb4-5717-42a0-142e-91657a9b18c3@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-12.2 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yyl+PNcbtSwzlgvh@hovoldconsulting.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-+ Jonathan
-
-在 2022/9/27 PM6:14, Robin Murphy 写道:
-> On 2022-09-27 11:04, Jonathan Cameron wrote:
->> On Tue, 27 Sep 2022 13:13:29 +0800
->> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>
->>> 在 2022/9/27 AM1:18, Bjorn Helgaas 写道:
->>>> On Mon, Sep 26, 2022 at 09:31:34PM +0800, Shuai Xue wrote:
->>>>> 在 2022/9/23 PM11:54, Jonathan Cameron 写道:
->>>>>>> I found a similar definition in arch/ia64/pci/pci.c .
->>>>>>>
->>>>>>>     #define PCI_SAL_ADDRESS(seg, bus, devfn, reg)        \
->>>>>>>     (((u64) seg << 24) | (bus << 16) | (devfn << 8) | (reg))
->>>>>>>
->>>>>>> Should we move it into a common header first?
->>>>>>
->>>>>> Maybe. The bus, devfn, reg part is standard bdf, but I don't think
->>>>>> the PCI 6.0 spec defined a version with the seg in the upper bits.
->>>>>> I'm not sure if we want to adopt that in LInux.
->>>>>
->>>>> I found lots of code use seg,bus,devfn,reg with format "%04x:%02x:%02x.%x",
->>>>> I am not quite familiar with PCIe spec. What do you think about it, Bjorn?
->>>>
->>>> The PCIe spec defines an address encoding for bus/device/function/reg
->>>> for the purposes of ECAM (PCIe r6.0, sec 7.2.2), but as far as I know,
->>>> it doesn't define anything similar that includes the segment.  The
->>>> segment is really outside the scope of PCIe because each segment is a
->>>> completely separate PCIe hierarchy.
->>>
->>> Thank you for your explanation.
->>>
->>>>
->>>> So I probably wouldn't make this a generic definition.  But if/when
->>>> you print things like this out, please do use the format spec you
->>>> mentioned above so it matches the style used elsewhere.
->>>>    
->>>
->>> Agree. The print format of bus/device/function/reg is "%04x:%02x:%02x.%x",
->>> so I named the PMU as the same format. Then the usage flow would be:
->>>
->>> - lspci to get the device root port in format seg/bus/device/function/reg.
->>>     10:00.0 PCI bridge: Device 1ded:8000 (rev 01)
->>> - select its PMU name pcie_bdf_100000.
->>> - monitor with perf:
->>>     perf stat -a -e pcie_bdf_100000/Rx_PCIe_TLP_Data_Payload/
->>
->> I think you probably want something in there to indicate it's an RP
->> and the bdf part may be redundant...
+On Tue, Sep 20, 2022 at 10:47:56AM +0200, Johan Hovold wrote:
+> Hi Lorenzo,
 > 
-> Indeed that seems horribly unclear; personally I reckon something like "dw_pcie_200" would be more appropriate. The address is just a disambiguator between multiple instances so doesn't need any further emphasis, but what is crucial to the user is exactly what kind of PMU it is (especially if there's potential for other unrelated PCIe functions to start exposing their own different PMUs).
+> On Thu, Jul 21, 2022 at 08:47:20AM +0200, Johan Hovold wrote:
+> > Allow the Qualcomm PCIe controller driver to be built as a module, which
+> > is useful for multi-platform kernels as well as during development.
+> > 
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> > 
+> > Changes in v2
+> >  - rebase on next-20220720 (adjust context)
+> >  - add Rob and Mani's reviewed-by tags
+> 
+> Have you had a change to look at this one since you got back from
+> vacation?
+> 
+> I believe this should be uncontroversial as we already have other
+> modular dwc drivers and there's no mapping of legacy INTx interrupts
+> involved.
 
-I see your point. The current prefix `pcie_bdf` is not appropriate,
+Sincere apologies for the delay.
 
-- it does not indicate it is for a root point as Jonathan mentioned.
-- its prefix is not `dwc`
+I am afraid it does look controversial - I need some time to go through
+the full discussion and make up my mind, unfortunately we are late in
+the cycle and I am dealing with the patch backlog, I believe this may
+end up being a discussion targeting the v6.2 merge window I am afraid.
 
-Is dwc_rootport_100000 more appropriate?
+Lorenzo
 
-- `dwc` indicates the PMU is for Synopsys DesignWare Cores PCIe controller IP
-- `rootport` indicates the PMU is for a root port device
-- `100000` indicates the device address
-
-
-Thank you.
-
-Best Regards,
-Shuai
-
-
-
+> >  drivers/pci/controller/dwc/Kconfig     |  2 +-
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++---
+> >  2 files changed, 34 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 62ce3abf0f19..230f56d1a268 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -168,7 +168,7 @@ config PCI_HISI
+> >  	  Hip05 and Hip06 SoCs
+> >  
+> >  config PCIE_QCOM
+> > -	bool "Qualcomm PCIe controller"
+> > +	tristate "Qualcomm PCIe controller"
+> >  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> >  	depends on PCI_MSI_IRQ_DOMAIN
+> >  	select PCIE_DW_HOST
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5ed164c2afa3..d176c635016b 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -16,7 +16,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/iopoll.h>
+> >  #include <linux/kernel.h>
+> > -#include <linux/init.h>
+> > +#include <linux/module.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_gpio.h>
+> >  #include <linux/pci.h>
+> > @@ -1518,6 +1518,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> >  	return ret;
+> >  }
+> >  
+> > +static void qcom_pcie_host_deinit(struct qcom_pcie *pcie)
+> > +{
+> > +	qcom_ep_reset_assert(pcie);
+> > +	if (pcie->cfg->ops->post_deinit)
+> > +		pcie->cfg->ops->post_deinit(pcie);
+> > +	phy_power_off(pcie->phy);
+> > +	pcie->cfg->ops->deinit(pcie);
+> > +}
+> > +
+> >  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+> >  	.host_init = qcom_pcie_host_init,
+> >  };
+> > @@ -1752,6 +1761,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >  	return ret;
+> >  }
+> >  
+> > +static int qcom_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > +	struct device *dev = &pdev->dev;
+> > +
+> > +	dw_pcie_host_deinit(&pcie->pci->pp);
+> > +	qcom_pcie_host_deinit(pcie);
+> > +
+> > +	phy_exit(pcie->phy);
+> > +
+> > +	pm_runtime_put_sync(dev);
+> > +	pm_runtime_disable(dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
+> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
+> > @@ -1771,6 +1796,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
+> >  	{ }
+> >  };
+> > +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
+> >  
+> >  static void qcom_fixup_class(struct pci_dev *dev)
+> >  {
+> > @@ -1786,10 +1812,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> >  
+> >  static struct platform_driver qcom_pcie_driver = {
+> >  	.probe = qcom_pcie_probe,
+> > +	.remove = qcom_pcie_remove,
+> >  	.driver = {
+> >  		.name = "qcom-pcie",
+> > -		.suppress_bind_attrs = true,
+> >  		.of_match_table = qcom_pcie_match,
+> >  	},
+> >  };
+> > -builtin_platform_driver(qcom_pcie_driver);
+> > +module_platform_driver(qcom_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
+> > +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> Johan
