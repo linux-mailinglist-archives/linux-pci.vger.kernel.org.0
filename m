@@ -2,62 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D03D5EBDD3
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E70B5EBE24
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 11:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbiI0Iz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 04:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36772 "EHLO
+        id S231552AbiI0JQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 05:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbiI0IzZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:55:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5466E58B6D;
-        Tue, 27 Sep 2022 01:55:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DFF6F6174F;
-        Tue, 27 Sep 2022 08:55:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517D0C433C1;
-        Tue, 27 Sep 2022 08:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664268923;
-        bh=9CEZSGxZXu10IfLWzBonZeqKa3qHuekmxQGhNgMxu3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o54hJYec0DnzxPLdHbiag+mJdkcPVG/7Ra1RmjUyvX20WlL71ez6+wxlEL4dQ3X0o
-         3sRaPcYTQqwLCw5IvwDCaJLgUWDC+dYP2kobN1zEBMGg7nS0M5JvNNRCrE9ZRB7iGE
-         PZHH9fnNu/Z544Sv7ztMIVvGHRo3pyvg62yOuqdVSEUUPff+o+mWHL7A5gdpaTaCQj
-         CAlb3w3Prul0PnD+Fkr2gsB0ehLEi0wuarXGzAtrJdIgqQ/4WlheuDmvw3pReUKGWB
-         yh4XZXrx5+wMbb007pamlbittAT5vtUVZhWwZU9sYL5h6XDqERiAyyIXbpo0yqd0Ff
-         EhjFM2rZAGLBg==
-Date:   Tue, 27 Sep 2022 10:55:15 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v5 0/5] PCI: qcom: Support using the same PHY for both RC
- and EP
-Message-ID: <YzK6c2g0bgwyvZ+O@lpieralisi>
-References: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S231522AbiI0JQZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 05:16:25 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F32288DE3;
+        Tue, 27 Sep 2022 02:16:20 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 16AD51AF559;
+        Tue, 27 Sep 2022 11:16:19 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 91AFD1AF555;
+        Tue, 27 Sep 2022 11:16:18 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 231121802201;
+        Tue, 27 Sep 2022 17:16:16 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
+        lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
+        kw@linux.com, frank.li@nxp.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: [PATCH v4 0/14] Add i.MX PCIe EP mode support
+Date:   Tue, 27 Sep 2022 16:57:02 +0800
+Message-Id: <1664269036-16142-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,87 +44,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:34:30PM +0300, Dmitry Baryshkov wrote:
-> Programming of QMP PCIe PHYs slightly differs between RC and EP modes.
-> 
-> Currently both qcom and qcom-ep PCIe controllers setup the PHY in the
-> default mode, making it impossible to select at runtime whether the PHY
-> should be running in RC or in EP modes. Usually this is not an issue,
-> since for most devices only the RC mode is used. Some devices (SDX55)
-> currently support only the EP mode without supporting the RC mode (at
-> this moment).
-> 
-> Nevertheless some of the Qualcomm platforms (e.g. the aforementioned
-> SDX55) would still benefit from being able to switch between RC and EP
-> depending on the driver being used. While it is possible to use
-> different compat strings for the PHY depending on the mode, it seems
-> like an incorrect approach, since the PHY doesn't differ between
-> usecases. It's the PCIe controller, who should decide how to configure
-> the PHY.
-> 
-> This patch series implements the ability to select between RC and EP
-> modes, by allowing the PCIe QMP PHY driver to switch between
-> programming tables.
-> 
-> This patchseries depends on the header from the pre-6.1 phy/next. Thus
-> after the 6.1 the PCIe patches can be applied independently of the PHY
-> part.
+i.MX PCIe controller is one dual mode PCIe controller, and can work either
+as RC or EP.
 
-I assume then it is better for me to ACK the PCI patches so
-that they can be pulled into the PHY tree, right ?
+This series add the i.MX PCIe EP mode support. And had been verified on
+i.MX8MQ, i.MX8MM EVK and i.MX8MP EVK boards.
 
-Lorenzo
+In the verification, one EVK board used as RC, the other one used as EP.
+Use the cross TX/RX differential cable connect the two PCIe ports of these
+two EVK boards.
 
-> Changes since v4:
-> - Fixed the possible oops in probe (Johan)
-> - Renamed the tables struct and individual table fields (Johan)
-> - Squashed the 'separate funtions' patch to lower the possible
->   confusion.
-> 
-> Changes since v3:
-> - Rebased on top of phy/next to pick in newly defined
->   PHY_MODE_PCIE_RC/EP.
-> - Renamed 'main' to 'common' and 'secondary' to 'extra' to reflect the
->   intention of the split (the 'common' tables and the 'extra for the ...
->   mode' tables).
-> - Merged the 'pointer' patch into first and second patches to make them
->   more obvious.
-> 
-> Changes since v2:
-> - Added PHY_SUBMODE_PCIE_RC/EP defines (Vinod),
-> - Changed `primary' table name to `main', added extra comments
->   describing that `secondary' are the additional tables, not required in
->   most of the cases (following the suggestion by Johan to rename
->   `primary' table),
-> - Changed secondary tables into the pointers to stop wasting extra
->   memory (Vinod),
-> - Split several functions for programming the PHY using these tables.
-> 
-> Changes since v1:
-> - Split the if(table) removal to the separate patch
-> - Expanded commit messages and comments to provide additional details
-> - Fixed build error on pcie-qcom.c
-> - Added support for EP mode on sm8450 to demonstrate the usage of this
->   patchset
-> 
-> Changes since RFC:
-> - Fixed the compilation of PCIe EP driver,
-> - Changed pri/sec names to primary and secondary,
-> - Added comments regarding usage of secondary_rc/_ep fields.
-> 
-> Dmitry Baryshkov (5):
->   phy: qcom-qmp-pcie: split register tables into common and extra parts
->   phy: qcom-qmp-pcie: support separate tables for EP mode
->   phy: qcom-qmp-pcie: Support SM8450 PCIe1 PHY in EP mode
->   PCI: qcom: Setup PHY to work in RC mode
->   PCI: qcom-ep: Setup PHY to work in EP mode
-> 
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     |   5 +
->  drivers/pci/controller/dwc/pcie-qcom.c        |   5 +
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 523 +++++++++++-------
->  .../qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h    |   1 +
->  4 files changed, 335 insertions(+), 199 deletions(-)
-> 
-> -- 
-> 2.35.1
-> 
++-----------+                +------------+
+|   PCIe TX |<-------------->|PCIe RX     |
+|           |                |            |
+|EVK Board  |                |EVK Board   |
+|           |                |            |
+|   PCIe RX |<-------------->|PCIe TX     |
++-----------+                +------------+
+
+NOTE:
+The following commits should be cherried back firstly, when apply this
+series.
+
+Shawn's tree (git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git)
+d50650500064 arm64: dts: imx8mp-evk: Add PCIe support
+9e65987b9584 arm64: dts: imx8mp: Add iMX8MP PCIe support
+5506018d3dec soc: imx: imx8mp-blk-ctrl: handle PCIe PHY resets
+
+Philipp's tree (git://git.pengutronix.de/git/pza/linux)
+051d9eb40388 reset: imx7: Fix the iMX8MP PCIe PHY PERST support
+
+The PHY changes:
+https://patchwork.kernel.org/project/linux-pci/cover/1664174463-13721-1-git-send-email-hongxing.zhu@nxp.com/
+
+Main changes from v3 -> v4:
+- Add the Rob's ACK in the dt-binding patch.
+- Based on pci/next, specify the dependencies(listed above) of this series.
+- Use "i.MX" to keep spell consistent.
+- Squash generic endpoint infrastructure changes of
+  "[12/14] PCI: imx6: Add iMX8MM PCIe EP mode" into Kconfig changes.
+
+Main changes from v2 -> v3:
+- Add the i.MX8MP PCIe EP support, and verified on i.MX8MP EVK board.
+- Rebase to latest pci/next branch(tag: v6.0-rc1 plus some PCIe changes).
+
+Main changes from v1 -> v2:
+- Add Rob's ACK into first two commits.
+- Rebase to the tag: pci-v5.20-changes of the pci/next branch.
+
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml |   3 ++
+arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi             |  14 ++++++
+arch/arm64/boot/dts/freescale/imx8mm.dtsi                 |  20 +++++++++
+arch/arm64/boot/dts/freescale/imx8mp-evk.dts              |  13 ++++++
+arch/arm64/boot/dts/freescale/imx8mp.dtsi                 |  19 ++++++++
+arch/arm64/boot/dts/freescale/imx8mq-evk.dts              |  12 ++++++
+arch/arm64/boot/dts/freescale/imx8mq.dtsi                 |  27 ++++++++++++
+drivers/misc/pci_endpoint_test.c                          |   2 +
+drivers/pci/controller/dwc/Kconfig                        |  23 +++++++++-
+drivers/pci/controller/dwc/pci-imx6.c                     | 200 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+10 files changed, 314 insertions(+), 19 deletions(-)
+
+[PATCH v4 01/14] dt-bindings: imx6q-pcie: Add i.MX8MM PCIe EP mode
+[PATCH v4 02/14] dt-bindings: imx6q-pcie: Add i.MX8MQ PCIe EP mode
+[PATCH v4 03/14] dt-bindings: imx6q-pcie: Add i.MX8MP PCIe EP mode
+[PATCH v4 04/14] arm64: dts: Add i.MX8MM PCIe EP support
+[PATCH v4 05/14] arm64: dts: Add i.MX8MM PCIe EP support on EVK board
+[PATCH v4 06/14] arm64: dts: Add i.MX8MQ PCIe EP support
+[PATCH v4 07/14] arm64: dts: Add i.MX8MQ PCIe EP support on EVK board
+[PATCH v4 08/14] arm64: dts: Add i.MX8MP PCIe EP support
+[PATCH v4 09/14] arm64: dts: Add i.MX8MP PCIe EP support on EVK board
+[PATCH v4 10/14] misc: pci_endpoint_test: Add i.MX8 PCIe EP device
+[PATCH v4 11/14] PCI: imx6: Add i.MX PCIe EP mode support
+[PATCH v4 12/14] PCI: imx6: Add i.MX8MQ PCIe EP support
+[PATCH v4 13/14] PCI: imx6: Add i.MX8MM PCIe EP support
+[PATCH v4 14/14] PCI: imx6: Add i.MX8MP PCIe EP support
