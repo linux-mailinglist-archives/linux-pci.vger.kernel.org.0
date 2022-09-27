@@ -2,51 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3362D5EC5DD
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:20:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E4CB5EC7AA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 17:28:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbiI0OUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 10:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57520 "EHLO
+        id S232130AbiI0P2P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 11:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbiI0OUW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:20:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391001822C4
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 07:19:53 -0700 (PDT)
+        with ESMTP id S232054AbiI0P2D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 11:28:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F7D1B348F;
+        Tue, 27 Sep 2022 08:27:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 705A6619E3
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 14:19:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38EA0C433D7;
-        Tue, 27 Sep 2022 14:19:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8635DB81C5B;
+        Tue, 27 Sep 2022 15:27:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BF2C433C1;
+        Tue, 27 Sep 2022 15:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664288391;
-        bh=VWlDeVNSF8K5y9LwrhrOTt+8IGNO/UVbQ6FhhVMO6zE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSgYvBOgzUo4uVzOaUGi/dh2K6IdbhJwzywq+hxZ5fPfxOvuVXLfHEMdtykaWgEoe
-         uJbk+tr2h0Rcltgeo+Xjc+pa7D35Gx/z2utnMud8aOdtCHSwOHNNFjk78WhbN3+1ya
-         4ZL7lTb4W4+qoCqnpmAzyCrKVIdLXcfOpjyG2WBXbg2XRFurwQLm9azF6E+Lo8AwZZ
-         s3Lk5q7S0Ofd8Q81Hnc9Qjm4hR+wsWPzIvJzw279qwL9rnck2uOElrJbdoQ+fJ8vOl
-         5WsjGeS3o1EOZYp8Ag+AOquimT+1td+158loCLv9aP9LhzazOdhzUvRPQRz8HOKiEL
-         smtTQ6UuBjhLw==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>, pali@kernel.org,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 10/10] PCI: aardvark: Cleanup some register macros
-Date:   Tue, 27 Sep 2022 16:19:26 +0200
-Message-Id: <20220927141926.8895-11-kabel@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220927141926.8895-1-kabel@kernel.org>
-References: <20220927141926.8895-1-kabel@kernel.org>
+        s=k20201202; t=1664292474;
+        bh=CjW2AN+Ns/4UkIYVLzkQVu05g1VFuqqL8TsZ16gUCiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G8pFAzbwfdtfmmaqK33lZ2OGoMucfWPApXvcXYd5qlrohRakBeU2Ajmdvggm7M27M
+         33GwSGkmUp4EtQ3Ods9DhloQJfqkvBAy4LayIjSh6rdDTjHfNCK+2Ou8PlEN0NaXlL
+         rxI2CPfjrCaB/XvpU3XjaqdY8nGDwYzTye0ooZ0nB4qhKwopg2ETPBz2OHht/YYAHF
+         HXG5De57FiNFaCC8oeoIqTM6z+WVOvYMyDuoI24bAUiJkYGh0oVU9eA1GFgjFgSZFC
+         raRKWON/qBfQkWIkrTJeEf+WfGjWBz6UK7iEqKnv9RDw/sP4UO5SGc5gr+JoXu8i+c
+         qichXszpNcc6w==
+Date:   Tue, 27 Sep 2022 17:27:42 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+Message-ID: <YzMWbmWWul1AhpuR@lpieralisi>
+References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
+ <20220722143858.GA1818206@bhelgaas>
+ <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
+ <87czdtxnfn.wl-maz@kernel.org>
+ <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
+ <87zggxaye8.wl-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zggxaye8.wl-maz@kernel.org>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,126 +69,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
 
-Define SPEED_GEN_* macros with correct PCIE_GEN_SEL_SHIFT.
+[...]
 
-Simplify macro for setting root complex mode (use BIT instead of
-MSK + SHIFT).
+> > That is precisely the way I've been testing it and everything appears
+> > to be tore down as it should.
+> >
+> > And a PCI driver that has been unbound should have released its
+> > resources, or that's a driver bug. Right?
+> 
+> But that's the thing: you can easily remove part of the infrastructure
+> without the endpoint driver even noticing. It may not happen in your
+> particular case if removing the RC driver will also nuke the endpoints
+> in the process, but I can't see this is an absolute guarantee. The
+> crash pointed to by an earlier email is symptomatic of it.
+> 
+> > And for the OF INTx case you mentioned earlier, aren't those mapped by
+> > PCI core and could in theory be released by core as well?
+> 
+> Potentially, though I haven't tried to follow the life cycle of those.
+> The whole thing is pretty fragile, and this sort of resource is rarely
+> expected to be removed...
 
-Rename PCIE_MSG_PM_PME_MASK to PCIE_ISR0_MSG_PM_PME to match existing
-naming convention, rename PCIE_ISR0_MSI_INT_PENDING to PCIE_ISR0_MSI_INT
-as it is used for both interrupt mask and pending bit.
+This made me notice that we don't undo the actions (ie bridge->map_irq())
+executed in pci_assign_irq() in pci_device_remove(); I don't think this
+can be right and that's already a candidate for a fix.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <kabel@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 28 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+It is not necessarily related to this thread topic, though I believe,
+in an _ideal_ world, removing a bridge should guarantee that all
+the downstream devices (ie drivers) had a chance of freeing/disposing
+the resources they allocated. This in theory; I totally understand
+Marc's point of view here and we should make up our mind about what
+we want to do on host bridge removal policy - this will take me more
+time to get to the bottom of it.
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 73a604f70f06..11afafe71e3d 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -66,11 +66,10 @@
- #define PCIE_CORE_CTRL0_REG			(CONTROL_BASE_ADDR + 0x0)
- #define     PCIE_GEN_SEL_MSK			0x3
- #define     PCIE_GEN_SEL_SHIFT			0x0
--#define     SPEED_GEN_1				0
--#define     SPEED_GEN_2				1
--#define     SPEED_GEN_3				2
--#define     IS_RC_MSK				1
--#define     IS_RC_SHIFT				2
-+#define     SPEED_GEN_1				(0 << PCIE_GEN_SEL_SHIFT)
-+#define     SPEED_GEN_2				(1 << PCIE_GEN_SEL_SHIFT)
-+#define     SPEED_GEN_3				(2 << PCIE_GEN_SEL_SHIFT)
-+#define     IS_RC				BIT(2)
- #define     LANE_CNT_MSK			0x18
- #define     LANE_CNT_SHIFT			0x3
- #define     LANE_COUNT_1			(0 << LANE_CNT_SHIFT)
-@@ -95,16 +94,16 @@
- #define     PCIE_CORE_REF_CLK_RX_ENABLE		BIT(2)
- #define PCIE_MSG_LOG_REG			(CONTROL_BASE_ADDR + 0x30)
- #define PCIE_ISR0_REG				(CONTROL_BASE_ADDR + 0x40)
--#define PCIE_MSG_PM_PME_MASK			BIT(7)
- #define PCIE_ISR0_MASK_REG			(CONTROL_BASE_ADDR + 0x44)
--#define     PCIE_ISR0_MSI_INT_PENDING		BIT(24)
- #define     PCIE_ISR0_LINK_DOWN			BIT(1)
-+#define     PCIE_ISR0_MSG_PM_PME		BIT(7)
- #define     PCIE_ISR0_CORR_ERR			BIT(11)
- #define     PCIE_ISR0_NFAT_ERR			BIT(12)
- #define     PCIE_ISR0_FAT_ERR			BIT(13)
- #define     PCIE_ISR0_ERR_MASK			GENMASK(13, 11)
- #define     PCIE_ISR0_INTX_ASSERT(val)		BIT(16 + (val))
- #define     PCIE_ISR0_INTX_DEASSERT(val)	BIT(20 + (val))
-+#define     PCIE_ISR0_MSI_INT			BIT(24)
- #define     PCIE_ISR0_ALL_MASK			GENMASK(31, 0)
- #define PCIE_ISR1_REG				(CONTROL_BASE_ADDR + 0x48)
- #define PCIE_ISR1_MASK_REG			(CONTROL_BASE_ADDR + 0x4C)
-@@ -546,7 +545,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	/* Set PCI global control register to RC mode */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg |= (IS_RC_MSK << IS_RC_SHIFT);
-+	reg |= IS_RC;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
- 
- 	/*
-@@ -633,7 +632,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	/* Unmask summary MSI interrupt */
- 	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
--	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
-+	reg &= ~PCIE_ISR0_MSI_INT;
- 	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
- 
- 	/* Unmask Link Down interrupt */
-@@ -643,7 +642,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	/* Unmask PME interrupt for processing of PME requester */
- 	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
--	reg &= ~PCIE_MSG_PM_PME_MASK;
-+	reg &= ~PCIE_ISR0_MSG_PM_PME;
- 	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
- 
- 	/* Enable summary interrupt for GIC SPI source */
-@@ -1661,7 +1660,7 @@ static void advk_pcie_handle_pme(struct advk_pcie *pcie)
- {
- 	u32 requester = advk_readl(pcie, PCIE_MSG_LOG_REG) >> 16;
- 
--	advk_writel(pcie, PCIE_MSG_PM_PME_MASK, PCIE_ISR0_REG);
-+	advk_writel(pcie, PCIE_ISR0_MSG_PM_PME, PCIE_ISR0_REG);
- 
- 	/*
- 	 * PCIE_MSG_LOG_REG contains the last inbound message, so store
-@@ -1700,8 +1699,7 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
- 			dev_err_ratelimited(&pcie->pdev->dev, "unexpected MSI 0x%02x\n", msi_idx);
- 	}
- 
--	advk_writel(pcie, PCIE_ISR0_MSI_INT_PENDING,
--		    PCIE_ISR0_REG);
-+	advk_writel(pcie, PCIE_ISR0_MSI_INT, PCIE_ISR0_REG);
- }
- 
- static void advk_pcie_handle_int(struct advk_pcie *pcie)
-@@ -1720,7 +1718,7 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
- 	isr1_status = isr1_val & ((~isr1_mask) & PCIE_ISR1_ALL_MASK);
- 
- 	/* Process PME interrupt as the first one to do not miss PME requester id */
--	if (isr0_status & PCIE_MSG_PM_PME_MASK)
-+	if (isr0_status & PCIE_ISR0_MSG_PM_PME)
- 		advk_pcie_handle_pme(pcie);
- 
- 	/* Process ERR interrupt */
-@@ -1756,7 +1754,7 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
- 	}
- 
- 	/* Process MSI interrupts */
--	if (isr0_status & PCIE_ISR0_MSI_INT_PENDING)
-+	if (isr0_status & PCIE_ISR0_MSI_INT)
- 		advk_pcie_handle_msi(pcie);
- 
- 	/* Process legacy interrupts */
--- 
-2.35.1
-
+Lorenzo
