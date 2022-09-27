@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 225935ED05A
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 00:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A975ED0DE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 01:14:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbiI0WlC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 18:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51334 "EHLO
+        id S230283AbiI0XOE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 19:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231298AbiI0WlB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 18:41:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499CCE62CF
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 15:40:59 -0700 (PDT)
+        with ESMTP id S232312AbiI0XNz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 19:13:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362EB110EDB
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 16:13:53 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F2BAFB81D8E
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 22:40:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697DDC433C1;
-        Tue, 27 Sep 2022 22:40:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E22161C1A
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 23:13:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14D5C433D6;
+        Tue, 27 Sep 2022 23:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664318456;
-        bh=oeBUAtOvBMAr8nvb+I7ydT8FTCVTIOQdHqv4NyV1CYk=;
+        s=k20201202; t=1664320432;
+        bh=x6omt0J+foVKvG0ruKy/N/N3JTVqnZLsSw4pl51MS1Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g5y/T3Qdg1yH0sJqQ+/Mlon8hS2/utlYCFvuG4iVXAIMKPRVf3VEJCSNnGaLZvcQW
-         a8d+nQkB75A6Fw0pjITIFwRYHSvvHN2PgzocsIz6CK7mjwbAMSzRObwY2BSrW1rMbI
-         NGe655ZXER0DkKSwzvgQER7kry46tZ500jMomtvc93VSu66Ixnc+10PV1YAvIuOHbC
-         HfaKoO6czP6maebc6jNQPsPMsGMGeEDa9CupYTTQ8U4cK1IP3B+8OKsQdWgOgtLs8I
-         DdIuyqOrzvgX5CXPqOrY2qj3cZabr5ogSbvSqYslBvLt99rBCitlev/97I5BPAYkF0
-         8KONDtMAYUvXQ==
-Date:   Tue, 27 Sep 2022 17:40:54 -0500
+        b=RcPd0J9zgyt/l9wePoEOWVmuhC1fu66CGUZukIeulUBJyEo73Fy2bLJbbvCose+DW
+         QCTiSLVAgTLBbtG2reR0ig/p8d4ebHmYDLeqlgZ4ZKhKq5IeI2Vgoc9//2lKlwsc3S
+         nIVlP2aPS9oEgwatv2+YyHVRxjA5A2c9NQ2CqoFryk9kkqdIg9urBAdvMh1p7cip1q
+         QvCopUci6eF3MfuqH3Cw82zy2bIEFjYJd+knwIgtqzBXoeXAfZwnYCsHIfTVRLiDOQ
+         ajkvxvEPs9g4Zm040+nyRrZagzize1JnEqoTQDJP2dOOvCliKWecdeajADW9Sx9DDK
+         M8ROi/ARwvKag==
+Date:   Tue, 27 Sep 2022 18:13:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -40,7 +40,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
 Subject: Re: [PATCH] PCI/DPC: Quirk PIO log size for certain Intel PCIe root
  ports
-Message-ID: <20220927224054.GA1739368@bhelgaas>
+Message-ID: <20220927231351.GA1746059@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -62,6 +62,28 @@ On Tue, Aug 16, 2022 at 01:20:42PM +0300, Mika Westerberg wrote:
 > 
 > Link: https://bugzilla.kernel.org/show_bug.cgi?id=209943
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Applied to pci/dpc for v6.1, thanks, Mika!
+
+I updated the commit log to include the fact that the bug also
+prevents dumping the RP PIO Log registers, so let me know if that's
+not accurate:
+
+    PCI/DPC: Quirk PIO log size for certain Intel Root Ports
+
+    Some Root Ports on Intel Tiger Lake and Alder Lake systems support the RP
+    Extensions for DPC and the RP PIO Log registers but incorrectly advertise
+    an RP PIO Log Size of zero.  This means the kernel complains that:
+
+      DPC: RP PIO log size 0 is invalid
+
+    and if DPC is triggered, the DPC driver will not dump the RP PIO Log
+    registers when it should.
+
+    This is caused by a BIOS bug and should be fixed the BIOS for future CPUs.
+
+    Add a quirk to set the correct RP PIO Log size for the affected Root Ports.
+
 > ---
 >  drivers/pci/pcie/dpc.c | 13 ++++++++-----
 >  drivers/pci/quirks.c   | 37 +++++++++++++++++++++++++++++++++++++
@@ -121,15 +143,6 @@ On Tue, Aug 16, 2022 at 01:20:42PM +0300, Mika Westerberg wrote:
 > +	if (!((val & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8)) {
 > +		pci_info(dev, "quirking RP PIO log size\n");
 > +		dev->dpc_rp_log_size = 4;
-
-Just to clarify here, I originally thought this was only a cosmetic
-fix, and the "DPC: RP PIO log size 0 is invalid" could be ignored.
-
-I guess it's true that it can be ignored, but it *also* means that
-dpc_process_rp_pio_error() will not dump the RP PIO Header Log even
-though these devices support the RP Extensions and implement the RP
-PIO Log registers, right?
-
 > +	}
 > +}
 > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x461f, dpc_log_size);
