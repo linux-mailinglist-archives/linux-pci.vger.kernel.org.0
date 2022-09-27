@@ -2,185 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 606905EBD96
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D03D5EBDD3
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:55:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbiI0Ijj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 04:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        id S229779AbiI0Iz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 04:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231240AbiI0Ije (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:39:34 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8098FF8
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 01:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664267971; x=1695803971;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yTvBt6Ra9jX4T7oXI1CEhrmpZwc8Uts/cbORqmWYZLI=;
-  b=YmNDmyI0zvQcln1epVeNPahRAk4YaMAC6P10g5y341SOmrHiRRlkZJrg
-   8SVCWmsrFbLNdXfPKOpkrNv+1AgOA5KpqvrL3ufRY05qOiddC16Q2X6S3
-   MRTw3bvB+Xyc2ahM1t3SMqdGZpJ/fzoACKUUy6kjJIeML0+CMr1IHMSHY
-   nG6aW9vgyKYvynbyvV9h80zcweNrdCEUxCZWgt51l/l/TyZMXFskdB8Ls
-   O2iSrW2aGJqCr+1lktqe1q5llFaouQUj0+K+uMzPtxHvHig7P7qVnGxzQ
-   yUTKBijJQUoiCCOIPfVcQ1nFcoT3hsAdiyb4JpRLVtNLtJsUo0Q5ZuhIM
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302170854"
-X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="302170854"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 01:39:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="725427223"
-X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="725427223"
-Received: from lkp-server02.sh.intel.com (HELO dfa2c9fcd321) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Sep 2022 01:39:30 -0700
-Received: from kbuild by dfa2c9fcd321 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1od67l-0000oW-1W;
-        Tue, 27 Sep 2022 08:39:29 +0000
-Date:   Tue, 27 Sep 2022 16:38:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
- e01bae16a7d68931f0450cb079479c4a8f56d3e3
-Message-ID: <6332b6a3.g/SevJ59OZaI5h1V%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229567AbiI0IzZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:55:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5466E58B6D;
+        Tue, 27 Sep 2022 01:55:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DFF6F6174F;
+        Tue, 27 Sep 2022 08:55:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517D0C433C1;
+        Tue, 27 Sep 2022 08:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664268923;
+        bh=9CEZSGxZXu10IfLWzBonZeqKa3qHuekmxQGhNgMxu3o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o54hJYec0DnzxPLdHbiag+mJdkcPVG/7Ra1RmjUyvX20WlL71ez6+wxlEL4dQ3X0o
+         3sRaPcYTQqwLCw5IvwDCaJLgUWDC+dYP2kobN1zEBMGg7nS0M5JvNNRCrE9ZRB7iGE
+         PZHH9fnNu/Z544Sv7ztMIVvGHRo3pyvg62yOuqdVSEUUPff+o+mWHL7A5gdpaTaCQj
+         CAlb3w3Prul0PnD+Fkr2gsB0ehLEi0wuarXGzAtrJdIgqQ/4WlheuDmvw3pReUKGWB
+         yh4XZXrx5+wMbb007pamlbittAT5vtUVZhWwZU9sYL5h6XDqERiAyyIXbpo0yqd0Ff
+         EhjFM2rZAGLBg==
+Date:   Tue, 27 Sep 2022 10:55:15 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v5 0/5] PCI: qcom: Support using the same PHY for both RC
+ and EP
+Message-ID: <YzK6c2g0bgwyvZ+O@lpieralisi>
+References: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: e01bae16a7d68931f0450cb079479c4a8f56d3e3  PCI/P2PDMA: Use for_each_pci_dev() helper
+On Mon, Sep 26, 2022 at 08:34:30PM +0300, Dmitry Baryshkov wrote:
+> Programming of QMP PCIe PHYs slightly differs between RC and EP modes.
+> 
+> Currently both qcom and qcom-ep PCIe controllers setup the PHY in the
+> default mode, making it impossible to select at runtime whether the PHY
+> should be running in RC or in EP modes. Usually this is not an issue,
+> since for most devices only the RC mode is used. Some devices (SDX55)
+> currently support only the EP mode without supporting the RC mode (at
+> this moment).
+> 
+> Nevertheless some of the Qualcomm platforms (e.g. the aforementioned
+> SDX55) would still benefit from being able to switch between RC and EP
+> depending on the driver being used. While it is possible to use
+> different compat strings for the PHY depending on the mode, it seems
+> like an incorrect approach, since the PHY doesn't differ between
+> usecases. It's the PCIe controller, who should decide how to configure
+> the PHY.
+> 
+> This patch series implements the ability to select between RC and EP
+> modes, by allowing the PCIe QMP PHY driver to switch between
+> programming tables.
+> 
+> This patchseries depends on the header from the pre-6.1 phy/next. Thus
+> after the 6.1 the PCIe patches can be applied independently of the PHY
+> part.
 
-elapsed time: 720m
+I assume then it is better for me to ACK the PCI patches so
+that they can be pulled into the PHY tree, right ?
 
-configs tested: 102
-configs skipped: 2
+Lorenzo
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-alpha                               defconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-s390                             allmodconfig
-alpha                            allyesconfig
-s390                                defconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-m68k                             allyesconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-s390                             allyesconfig
-sh                               allmodconfig
-x86_64                           rhel-8.3-kvm
-x86_64                              defconfig
-i386                                defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-arm                                 defconfig
-x86_64               randconfig-a002-20220926
-x86_64               randconfig-a001-20220926
-x86_64               randconfig-a003-20220926
-x86_64               randconfig-a004-20220926
-x86_64               randconfig-a006-20220926
-x86_64               randconfig-a005-20220926
-i386                 randconfig-a001-20220926
-i386                 randconfig-a004-20220926
-i386                 randconfig-a005-20220926
-i386                 randconfig-a002-20220926
-i386                 randconfig-a003-20220926
-i386                 randconfig-a006-20220926
-i386                             allyesconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arc                  randconfig-r043-20220925
-riscv                randconfig-r042-20220925
-arc                  randconfig-r043-20220926
-s390                 randconfig-r044-20220925
-sh                   secureedge5410_defconfig
-arm                          gemini_defconfig
-powerpc                      tqm8xx_defconfig
-sh                               alldefconfig
-m68k                        m5307c3_defconfig
-powerpc                      cm5200_defconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-ia64                             allmodconfig
-arm                         axm55xx_defconfig
-powerpc                 canyonlands_defconfig
-i386                          randconfig-c001
-sparc                             allnoconfig
-arm                          simpad_defconfig
-sh                ecovec24-romimage_defconfig
-powerpc                      mgcoge_defconfig
-powerpc                 mpc834x_itx_defconfig
-powerpc                       eiger_defconfig
-mips                  decstation_64_defconfig
-sh                      rts7751r2d1_defconfig
-sh                           se7724_defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arm                      integrator_defconfig
-microblaze                          defconfig
-ia64                             alldefconfig
-sh                          kfr2r09_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220925
-
-clang tested configs:
-i386                 randconfig-a011-20220926
-i386                 randconfig-a013-20220926
-i386                 randconfig-a012-20220926
-i386                 randconfig-a015-20220926
-i386                 randconfig-a014-20220926
-i386                 randconfig-a016-20220926
-hexagon              randconfig-r045-20220925
-hexagon              randconfig-r041-20220926
-hexagon              randconfig-r045-20220926
-hexagon              randconfig-r041-20220925
-riscv                randconfig-r042-20220926
-x86_64               randconfig-a012-20220926
-x86_64               randconfig-a013-20220926
-s390                 randconfig-r044-20220926
-x86_64               randconfig-a011-20220926
-x86_64               randconfig-a016-20220926
-x86_64               randconfig-a015-20220926
-x86_64               randconfig-a014-20220926
-x86_64                        randconfig-k001
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-powerpc                          allmodconfig
-arm                          collie_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> Changes since v4:
+> - Fixed the possible oops in probe (Johan)
+> - Renamed the tables struct and individual table fields (Johan)
+> - Squashed the 'separate funtions' patch to lower the possible
+>   confusion.
+> 
+> Changes since v3:
+> - Rebased on top of phy/next to pick in newly defined
+>   PHY_MODE_PCIE_RC/EP.
+> - Renamed 'main' to 'common' and 'secondary' to 'extra' to reflect the
+>   intention of the split (the 'common' tables and the 'extra for the ...
+>   mode' tables).
+> - Merged the 'pointer' patch into first and second patches to make them
+>   more obvious.
+> 
+> Changes since v2:
+> - Added PHY_SUBMODE_PCIE_RC/EP defines (Vinod),
+> - Changed `primary' table name to `main', added extra comments
+>   describing that `secondary' are the additional tables, not required in
+>   most of the cases (following the suggestion by Johan to rename
+>   `primary' table),
+> - Changed secondary tables into the pointers to stop wasting extra
+>   memory (Vinod),
+> - Split several functions for programming the PHY using these tables.
+> 
+> Changes since v1:
+> - Split the if(table) removal to the separate patch
+> - Expanded commit messages and comments to provide additional details
+> - Fixed build error on pcie-qcom.c
+> - Added support for EP mode on sm8450 to demonstrate the usage of this
+>   patchset
+> 
+> Changes since RFC:
+> - Fixed the compilation of PCIe EP driver,
+> - Changed pri/sec names to primary and secondary,
+> - Added comments regarding usage of secondary_rc/_ep fields.
+> 
+> Dmitry Baryshkov (5):
+>   phy: qcom-qmp-pcie: split register tables into common and extra parts
+>   phy: qcom-qmp-pcie: support separate tables for EP mode
+>   phy: qcom-qmp-pcie: Support SM8450 PCIe1 PHY in EP mode
+>   PCI: qcom: Setup PHY to work in RC mode
+>   PCI: qcom-ep: Setup PHY to work in EP mode
+> 
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c     |   5 +
+>  drivers/pci/controller/dwc/pcie-qcom.c        |   5 +
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 523 +++++++++++-------
+>  .../qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h    |   1 +
+>  4 files changed, 335 insertions(+), 199 deletions(-)
+> 
+> -- 
+> 2.35.1
+> 
