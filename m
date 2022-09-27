@@ -2,111 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD4775EBA4C
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 08:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18DA5EBB71
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 09:27:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbiI0GBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 02:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
+        id S230112AbiI0H1W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 03:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiI0GBb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 02:01:31 -0400
-Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8059A8962;
-        Mon, 26 Sep 2022 23:01:29 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R551e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VQqLV.E_1664258485;
-Received: from 30.240.86.142(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VQqLV.E_1664258485)
-          by smtp.aliyun-inc.com;
-          Tue, 27 Sep 2022 14:01:26 +0800
-Message-ID: <63037753-af65-6229-95e9-72eb310069d7@linux.alibaba.com>
-Date:   Tue, 27 Sep 2022 14:01:24 +0800
+        with ESMTP id S230206AbiI0H1Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 03:27:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142525A839;
+        Tue, 27 Sep 2022 00:27:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A4BC661633;
+        Tue, 27 Sep 2022 07:27:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAEAC433D6;
+        Tue, 27 Sep 2022 07:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1664263633;
+        bh=SI3kVzyecrOMD/bcba3UfKjYRRQPvyugPiizWjjNlW8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a7yA5+skaquN4y+vevefsEkQE6uigIxphkNMmk9rkL2DRmNXZJBAr6VWB+5frE/pV
+         V89bwhx2dfKLSUW5ZBhl68d4D/lrRYoWG3MbKOZwVAotK+6SqLhTSmbIRLhnIeNUyW
+         iqT6ETmIrMTZs2B4dGuajdB/iz8jr+eViHmhBIZw=
+Date:   Tue, 27 Sep 2022 09:27:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] PCI: Allow drivers to request exclusive config
+ regions
+Message-ID: <YzKlzp2/pSdYiOUf@kroah.com>
+References: <20220926215711.2893286-1-ira.weiny@intel.com>
+ <20220926215711.2893286-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.13.0
-Subject: Re: [PATCH v1 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     will@kernel.org, Jonathan.Cameron@Huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, robin.murphy@arm.com, mark.rutland@arm.com,
-        baolin.wang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-pci@vger.kernel.org
-References: <20220923185141.GA1407035@bhelgaas>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20220923185141.GA1407035@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-12.2 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220926215711.2893286-2-ira.weiny@intel.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-在 2022/9/24 AM2:51, Bjorn Helgaas 写道:
-> On Fri, Sep 23, 2022 at 10:46:09PM +0800, Shuai Xue wrote:
->> 在 2022/9/23 AM1:36, Bjorn Helgaas 写道:
->>> On Sat, Sep 17, 2022 at 08:10:35PM +0800, Shuai Xue wrote:
+On Mon, Sep 26, 2022 at 02:57:10PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
->>>> +static struct device_attribute dwc_pcie_pmu_cpumask_attr =
->>>> +__ATTR(cpumask, 0444, dwc_pcie_pmu_cpumask_show, NULL);
->>>
->>> DEVICE_ATTR_RO()?
+> PCI config space access from user space has traditionally been
+> unrestricted with writes being an understood risk for device operation.
 > 
->> DEVICE_ATTR_RO may a good choice. But does it fit the code style to use
->> DEVICE_ATTR_RO in drivers/perf? As far as know, CCN, CCI, SMMU,
->> qcom_l2_pmu use "struct device_attribute" directly.
+> Unfortunately, device breakage or odd behavior from config writes lacks
+> indicators that can leave driver writers confused when evaluating
+> failures.  This is especially true with the new PCIe Data Object
+> Exchange (DOE) mailbox protocol where backdoor shenanigans from user
+> space through things such as vendor defined protocols may affect device
+> operation without complete breakage.
 > 
-> DEVICE_ATTR_RO is just newer, and I think CCN, CCI, SMMU, etc. would
-> be using it if they were written today.  Of course, the drivers/perf
-> maintainers may have a different opinion :)
-
-Well, you are right, I will use DEVICE_ATTR_RO instead :)
-
+> A prior proposal restricted read and writes completely.[1]  Greg and
+> Bjorn pointed out that proposal is flawed for a couple of reasons.
+> First, lspci should always be allowed and should not interfere with any
+> device operation.  Second, setpci is a valuable tool that is sometimes
+> necessary and it should not be completely restricted.[2]  Finally
+> methods exist for full lock of device access if required.
 > 
->>> I think every caller of dwc_pcie_pmu_read_dword() makes the same check
->>> and prints the same message; maybe the message should be moved inside
->>> dwc_pcie_pmu_read_dword()?
->>>
->>> Same with dwc_pcie_pmu_write_dword(); moving the message there would
->>> simplify all callers.
->>
->> I would like to wrap dwc_pcie_pmu_{write}_dword out, use
->> pci_{read}_config_dword and drop the snaity check of return value as
->> Jonathan suggests.  How did you like it?
+> Even though access should not be restricted it would be nice for driver
+> writers to be able to flag critical parts of the config space such that
+> interference from user space can be detected.
 > 
-> Sounds good.  Not sure the error checking is worthwhile since
-> pci_read_config_dword() really doesn't return meaningful errors
-> anyway.
+> Introduce pci_request_config_region_exclusive() to mark exclusive config
+> regions.  Such regions trigger a warning and kernel taint if accessed
+> via user space.
 > 
->>>> +static struct dwc_pcie_info_table *pmu_to_pcie_info(struct pmu *pmu)
->>>> +{
->>>> +	struct dwc_pcie_info_table *pcie_info;
->>>> +	struct dwc_pcie_pmu *pcie_pmu = to_pcie_pmu(pmu);
->>>> +
->>>> +	pcie_info = container_of(pcie_pmu, struct dwc_pcie_info_table, pcie_pmu);
->>>> +	if (pcie_info == NULL)
->>>> +		pci_err(pcie_info->pdev, "Can't get pcie info\n");
->>>
->>> It shouldn't be possible to get here for a pmu with no pcie_info, and
->>> callers don't check for a NULL pointer return value before
->>> dereferencing it, so I guess all this adds is an error message before
->>> a NULL pointer oops?  Not sure the code clutter is worth it.
->>
->> Do you mean to drop the snaity check of container_of?
+> Create pci_warn_once() to restrict the user from spamming the log.
 > 
-> Yes.  I'm suggesting that the NULL pointer oops itself has enough
-> information to debug this problem, even without the pci_err().
+> [1] https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
+> [2] https://lore.kernel.org/all/YF8NGeGv9vYcMfTV@kroah.com/
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I will drop the snaity check in next version.
-
-
-Thank you for you valuable comments.
-
-Best Regards,
-Shuai
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
