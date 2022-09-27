@@ -2,166 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4925B5EC5F3
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 659285EC5C9
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbiI0O0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 10:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46090 "EHLO
+        id S231382AbiI0OTf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 10:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231537AbiI0O0j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:26:39 -0400
-Received: from mail-m971.mail.163.com (mail-m971.mail.163.com [123.126.97.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E19FA49B68;
-        Tue, 27 Sep 2022 07:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=4S5XBiFjDZg4gx2Ocx
-        QfUQjnQwfdPOoTKn7C7OGJNZc=; b=DPK/qDxDbMUvYQ/cTLcYRaUN/ZCMN5xq6x
-        h7PtMricsucf9NV0yxKSLVpM3Dn28vATg/qAPU9gBo1+yvXbeD5mr/q2wqHK/78a
-        qFCsFPBRcoCnkHY9KdIJipMQiV+V5l0FVk052hJYUGuc3d81qm8y16eDC5H8YxLc
-        03U+6UB2U=
-Received: from os-l3a203-yehs1-dev01.localdomain (unknown [103.244.59.1])
-        by smtp1 (Coremail) with SMTP id GdxpCgC3vKTjBzNjs5TAfw--.37703S2;
-        Tue, 27 Sep 2022 22:25:41 +0800 (CST)
-From:   Xiaochun Lee <lixiaochun.2888@163.com>
-To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
-Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkp@intel.com, xiaocli@redhat.com,
-        Xiaochun Lee <lixc17@lenovo.com>
-Subject: [PATCH v2 1/1] PCI: Set no io resource for bridges that behind VMD controller
-Date:   Tue, 27 Sep 2022 22:16:06 +0800
-Message-Id: <1664288166-7432-1-git-send-email-lixiaochun.2888@163.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: GdxpCgC3vKTjBzNjs5TAfw--.37703S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXrW5KF4DAryfJF1UKFy5CFg_yoWrtFWDpF
-        4agr45Zr48XFy7tws3uwn7CFWFvFs2yFWYyry3KwnIva1UCFyUZr9IyFyjgF4UJF1Dt343
-        X3Z5GrykuayDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeHq7UUUUU=
-X-Originating-IP: [103.244.59.1]
-X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbioAWJQFjSPgyEjgAAse
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231835AbiI0OTc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:19:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC122BC8
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 07:19:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7398A619EB
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 14:19:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2989AC433C1;
+        Tue, 27 Sep 2022 14:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664288370;
+        bh=TqW0UwINqhnNZuaWMGDZ5GwxrhxmTz6HVjmYbKvZi+c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iqg6NuCEAYHZ+bcDrupY9CM4LimhL5AC7x3ZLUEL7kQ9NAOGwcmhHJgvxbDdVewVh
+         28lwe4V0uJGW928/Q3cvtkMIeG4XMpznSr2PZjvTzRNk0qc5o64WS5tnoo5G9i/i6T
+         kQL+NG26g7smDi8nBvlFXqdplwsWmed/liyYQKNZEhzNX/2gPYD65c8jwJO0uffyDA
+         qUTRlCGHQqxMxd5Q9gML7l6SYxbnRkyiHEfqOEQ9aAfUil+5DG02s80TfuqiNUK2pm
+         9LrqLiXR2z6Ao0SKNJ00475ZLJ/EJePZqG4cGE86HRoG9A+mhh+cv5m6GvcfDEPlUB
+         eIdtEGy93RZRw==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>, pali@kernel.org,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v2 00/10] PCI: aardvark controller changes BATCH 6
+Date:   Tue, 27 Sep 2022 16:19:16 +0200
+Message-Id: <20220927141926.8895-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+Hello Lorenzo,
 
-When enable VMDs on Intel CPUs, VMD controllers(8086:28c0) be
-recognized by VMD driver and there are many failed messages of
-BAR 13 when scan the bridges and assign IO resource behind it
-as listed below, the bridge wants to get 0x6000 as its IO
-resource, but there is no IO resources on the host bridge.
+here comes v2 of batch 6 of Aardvark patches.
+The original version can be found on the mailing list archives [1].
 
-VMD host bridge resources:
-vmd 0000:e2:00.5: PCI host bridge to bus 10001:00
-pci_bus 10001:00: root bus resource [bus 00-1f]
-pci_bus 10001:00: root bus resource [mem 0xf4000000-0xf5ffffff]
-pci_bus 10001:00: root bus resource [mem 0x29ffff02010-0x29fffffffff 64bit]
-pci_bus 10001:00: scanning bus
+Changes since v1:
+- dropped first patch,
+    PCI: pciehp: Enable DLLSC interrupt only if supported
+  since it is not a dependency for this series and Lukas Wunner
+  considers the change without value
+- added more explanation to patches 2 and 6 (previously 3 and 7)
 
-Read bridge IO resource:
-pci 10001:00:02.0: PCI bridge to [bus 01]
-pci 10001:00:02.0:   bridge window [io  0x1000-0x6fff]
-pci 10001:00:03.0: PCI bridge to [bus 02]
-pci 10001:00:03.0:   bridge window [io  0x1000-0x6fff]
+Marek
 
-Failed messages of BAR#13:
-pci 10001:00:02.0: BAR 13: no space for [io  size 0x6000]
-pci 10001:00:02.0: BAR 13: failed to assign [io  size 0x6000]
-pci 10001:00:03.0: BAR 13: no space for [io  size 0x6000]
-pci 10001:00:03.0: BAR 13: failed to assign [io  size 0x6000]
+[1] https://lore.kernel.org/linux-pci/20220818135140.5996-1-kabel@kernel.org/
 
-VMD-enabled root ports use
-Enhanced Configuration Access Mechanism (ECAM) access
-PCI Express configuration space, and offer VMD_CFGBAR as
-base of PCI Express configuration space for the bridges
-behind it. The configuration space includes IO resources,
-but these IO resources are not actually used on X86,
-it can result in BAR#13 assign IO resource failed.
-Therefor,clear IO resources by setting an IO base value
-greater than limit to these bridges here, so in this case,
-we can leverage kernel parameter "pci=hpiosize=0KB" to
-avoid this failed messages show up.
+Marek Behún (2):
+  PCI: aardvark: Don't write read-only bits explicitly in PCI_ERR_CAP
+    register
+  PCI: aardvark: Explicitly disable Marvell strict ordering
 
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
----
- drivers/pci/quirks.c | 60 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+Miquel Raynal (2):
+  PCI: aardvark: Add clock support
+  PCI: aardvark: Add suspend to RAM support
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4944798e75b5..efecf12e8059 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5956,3 +5956,63 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
- #endif
-+
-+#if defined(CONFIG_X86_64) || defined(CONFIG_X86)
-+
-+#ifdef CONFIG_UML_X86
-+#define is_vmd(bus)             false
-+#endif /* CONFIG_UML_X86 */
-+
-+/*
-+ * VMD-enabled root ports use Enhanced Configuration Access Mechanism (ECAM)
-+ * access PCI Express configuration space, and offer VMD_CFGBAR as the
-+ * base of PCI Express configuration space for the bridges behind it.
-+ * The configuration space includes IO resources, but these IO
-+ * resources are not actually used on X86, and it can result
-+ * in BAR#13 assign IO resource failed. Therefor, clear IO resources
-+ * by setting an IO base value greater than limit to these bridges here,
-+ * so in this case, append kernel parameter "pci=hpiosize=0KB" can avoid
-+ * the BAR#13 failed messages show up.
-+ */
-+static void quirk_vmd_no_iosize(struct pci_dev *bridge)
-+{
-+	u8 io_base_lo, io_limit_lo;
-+	u16 io_low;
-+	u32 io_upper16;
-+	unsigned long io_mask,  base, limit;
-+
-+	io_mask = PCI_IO_RANGE_MASK;
-+	if (bridge->io_window_1k)
-+		io_mask = PCI_IO_1K_RANGE_MASK;
-+
-+	/* VMD Domain */
-+	if (is_vmd(bridge->bus) && bridge->is_hotplug_bridge) {
-+		pci_read_config_byte(bridge, PCI_IO_BASE, &io_base_lo);
-+		pci_read_config_byte(bridge, PCI_IO_LIMIT, &io_limit_lo);
-+		base = (io_base_lo & io_mask) << 8;
-+		limit = (io_limit_lo & io_mask) << 8;
-+		/* if there are defined io ports behind the bridge on x86,
-+		 * we clear it, since there is only 64KB IO resource on it,
-+		 * beyond that, hotplug io bridges don't needs IO port resource,
-+		 * such as NVMes attach on it. So the corresponding range must be
-+		 * turned off by writing base value greater than limit to the
-+		 * bridge's base/limit registers.
-+		 */
-+		if (limit >= base) {
-+			/* Clear upper 16 bits of I/O base/limit */
-+			io_upper16 = 0;
-+			/* set base value greater than limit */
-+			io_low = 0x00f0;
-+
-+			/* Temporarily disable the I/O range before updating PCI_IO_BASE */
-+			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, 0x0000ffff);
-+			/* Update lower 16 bits of I/O base/limit */
-+			pci_write_config_word(bridge, PCI_IO_BASE, io_low);
-+			/* Update upper 16 bits of I/O base/limit */
-+			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, io_upper16);
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
-+		PCI_CLASS_BRIDGE_PCI, 8, quirk_vmd_no_iosize);
-+#endif
+Pali Rohár (6):
+  PCI: pciehp: Enable Command Completed Interrupt only if supported
+  PCI: aardvark: Add support for DLLSC and hotplug interrupt
+  PCI: aardvark: Send Set_Slot_Power_Limit message
+  arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt
+    for PCIe
+  PCI: aardvark: Replace custom PCIE_CORE_ERR_CAPCTL_* macros by
+    linux/pci_regs.h macros
+  PCI: aardvark: Cleanup some register macros
+
+ .../dts/marvell/armada-3720-turris-mox.dts    |   1 +
+ drivers/pci/controller/Kconfig                |   3 +
+ drivers/pci/controller/pci-aardvark.c         | 258 +++++++++++++++---
+ drivers/pci/hotplug/pciehp_hpc.c              |   4 +-
+ 4 files changed, 232 insertions(+), 34 deletions(-)
+
 -- 
-2.37.3
+2.35.1
 
