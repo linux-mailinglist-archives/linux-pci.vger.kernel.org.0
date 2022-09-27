@@ -2,106 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4CB5EC7AA
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 17:28:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18115EC821
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 17:38:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232130AbiI0P2P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 11:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32990 "EHLO
+        id S232716AbiI0PiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 11:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232054AbiI0P2D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 11:28:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F7D1B348F;
-        Tue, 27 Sep 2022 08:27:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8635DB81C5B;
-        Tue, 27 Sep 2022 15:27:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BF2C433C1;
-        Tue, 27 Sep 2022 15:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664292474;
-        bh=CjW2AN+Ns/4UkIYVLzkQVu05g1VFuqqL8TsZ16gUCiU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G8pFAzbwfdtfmmaqK33lZ2OGoMucfWPApXvcXYd5qlrohRakBeU2Ajmdvggm7M27M
-         33GwSGkmUp4EtQ3Ods9DhloQJfqkvBAy4LayIjSh6rdDTjHfNCK+2Ou8PlEN0NaXlL
-         rxI2CPfjrCaB/XvpU3XjaqdY8nGDwYzTye0ooZ0nB4qhKwopg2ETPBz2OHht/YYAHF
-         HXG5De57FiNFaCC8oeoIqTM6z+WVOvYMyDuoI24bAUiJkYGh0oVU9eA1GFgjFgSZFC
-         raRKWON/qBfQkWIkrTJeEf+WfGjWBz6UK7iEqKnv9RDw/sP4UO5SGc5gr+JoXu8i+c
-         qichXszpNcc6w==
-Date:   Tue, 27 Sep 2022 17:27:42 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <YzMWbmWWul1AhpuR@lpieralisi>
-References: <YtqllIHY/R/BbR3V@hovoldconsulting.com>
- <20220722143858.GA1818206@bhelgaas>
- <Yt6Z3cBrVy1lVTp1@hovoldconsulting.com>
- <87czdtxnfn.wl-maz@kernel.org>
- <Yt60WNVNEVHgzSuN@hovoldconsulting.com>
- <87zggxaye8.wl-maz@kernel.org>
+        with ESMTP id S231981AbiI0Phf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 11:37:35 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03CD77DF6A
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 08:36:27 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id c198so9982296pfc.13
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 08:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=ENsxjBVLvcS9Sl/erSmzP+QvgvvXtgtHf/5YnhDAvHI=;
+        b=VMxLQw+YzPOn2ZG207xNCd7dLUdSahvAo2cuZvccakSqdgflshCiO1x7gfYWchdJ7V
+         MCbKf+oPmAXIPER4u7KiJyyz7pAcid/j6/AlL50WeYv/o2l8dj+CX7bohhgd6tHED0Ww
+         VMT71agF2P2Am58mJrlx0azMo4TcSPcfRKByBmJl//FaKLgerEtYxKuFwTXtZHb5FLfl
+         yhyajQl/AQ+9ykGvVPVSv+D+3GIKNbUm2Mit6c6d1/fe2Er8ssiIFJRXmnJf2LTqc1jU
+         5qdhgsGc7x4OP7dpnBunyb2WPnVW5doGUv3OcRPtdGreBu3hN1KBDzTdqoETRdQhu9/b
+         G5sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=ENsxjBVLvcS9Sl/erSmzP+QvgvvXtgtHf/5YnhDAvHI=;
+        b=VHrdwnd/tBdKYIcNYT6IoO6Cr1c72dsYmXOGdQ8sjwN8Bdpjw9CNDTFyFB4aQFN/Ls
+         G5ko2TPsGbUcZXJulFSR22VD1KHgG8F6rwqAxGKptXgvottGTTwWtmUEQqaBUMcoUjdR
+         pmK9kp8q09uOPuHKQQUNNsaSBLmgvi2UQOiPPYK64jXLY0b01kLk4kmCASLk0UqBqDM6
+         4VOymL6sQur858VnEaaeRs20awfU5LnPFWPsrcfVnzI87fKR/+xoDaf3m/yso88VwKDY
+         PEFyEt11r0FQ0GcVGjSI7NaEt3zNZub/FZeis2dFU69LE65yATd0B5imqXr4cgmHqSWn
+         RwoA==
+X-Gm-Message-State: ACrzQf1K5g6VJgDMCnONwExZz8e1R8tKpJP+0CPWF+ATHwJND82XFGsE
+        1VsREGkvh2WlHVvmUQJo45SS5Q==
+X-Google-Smtp-Source: AMsMyM4AesfztARYj7VKlI8kwy86tANKtLJm/3jYH/7q0idxBuYkgELKcxtj7x5R4ivUtTFXDoPKoA==
+X-Received: by 2002:a05:6a02:205:b0:41b:96dc:bb2a with SMTP id bh5-20020a056a02020500b0041b96dcbb2amr25106581pgb.116.1664292971298;
+        Tue, 27 Sep 2022 08:36:11 -0700 (PDT)
+Received: from C02F63J9MD6R.bytedance.net ([61.120.150.77])
+        by smtp.gmail.com with ESMTPSA id w16-20020aa79a10000000b0053639773ad8sm1933087pfj.119.2022.09.27.08.36.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Sep 2022 08:36:10 -0700 (PDT)
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com,
+        fancer.lancer@gmail.com, jdmason@kudzu.us, dave.jiang@intel.com,
+        allenbh@gmail.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     chenzhuo.1@bytedance.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ntb@lists.linux.dev, linux-scsi@vger.kernel.org
+Subject: [PATCH v2 0/9] PCI/AER: Fix and optimize usage of status clearing api
+Date:   Tue, 27 Sep 2022 23:35:15 +0800
+Message-Id: <20220927153524.49172-1-chenzhuo.1@bytedance.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zggxaye8.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
+Hello.
 
-[...]
+Here comes patch v2, which contains some fixes and optimizations of
+aer api usage. The original version can be found on the mailing list.
 
-> > That is precisely the way I've been testing it and everything appears
-> > to be tore down as it should.
-> >
-> > And a PCI driver that has been unbound should have released its
-> > resources, or that's a driver bug. Right?
-> 
-> But that's the thing: you can easily remove part of the infrastructure
-> without the endpoint driver even noticing. It may not happen in your
-> particular case if removing the RC driver will also nuke the endpoints
-> in the process, but I can't see this is an absolute guarantee. The
-> crash pointed to by an earlier email is symptomatic of it.
-> 
-> > And for the OF INTx case you mentioned earlier, aren't those mapped by
-> > PCI core and could in theory be released by core as well?
-> 
-> Potentially, though I haven't tried to follow the life cycle of those.
-> The whole thing is pretty fragile, and this sort of resource is rarely
-> expected to be removed...
+Changes since v1:
+- Modifications to comments proposed by Bjorn. Split patch into more
+  obvious parts.
 
-This made me notice that we don't undo the actions (ie bridge->map_irq())
-executed in pci_assign_irq() in pci_device_remove(); I don't think this
-can be right and that's already a candidate for a fix.
+Zhuo Chen (9):
+  PCI/AER: Add pci_aer_clear_uncorrect_error_status() to PCI core
+  PCI/DPC: Use pci_aer_clear_uncorrect_error_status() to clear
+    uncorrectable error status
+  NTB: Change to use pci_aer_clear_uncorrect_error_status()
+  scsi: lpfc: Change to use pci_aer_clear_uncorrect_error_status()
+  PCI/AER: Unexport pci_aer_clear_nonfatal_status()
+  PCI/AER: Move check inside pcie_clear_device_status().
+  PCI/AER: Use pcie_aer_is_native() to judge whether OS owns AER
+  PCI/ERR: Clear fatal status when pci_channel_io_frozen
+  PCI/AER: Refine status clearing process with api
 
-It is not necessarily related to this thread topic, though I believe,
-in an _ideal_ world, removing a bridge should guarantee that all
-the downstream devices (ie drivers) had a chance of freeing/disposing
-the resources they allocated. This in theory; I totally understand
-Marc's point of view here and we should make up our mind about what
-we want to do on host bridge removal policy - this will take me more
-time to get to the bottom of it.
+ drivers/ntb/hw/idt/ntb_hw_idt.c |  4 +--
+ drivers/pci/pci.c               |  7 +++--
+ drivers/pci/pci.h               |  2 ++
+ drivers/pci/pcie/aer.c          | 45 +++++++++++++++++++--------------
+ drivers/pci/pcie/dpc.c          |  3 +--
+ drivers/pci/pcie/err.c          | 15 ++++-------
+ drivers/pci/pcie/portdrv_core.c |  3 +--
+ drivers/scsi/lpfc/lpfc_attr.c   |  4 +--
+ include/linux/aer.h             |  4 +--
+ 9 files changed, 46 insertions(+), 41 deletions(-)
 
-Lorenzo
+-- 
+2.30.1 (Apple Git-130)
+
