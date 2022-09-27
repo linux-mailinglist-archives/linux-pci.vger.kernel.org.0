@@ -2,52 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30C1C5EC543
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4925B5EC5F3
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233039AbiI0N7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 09:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
+        id S231625AbiI0O0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 10:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233009AbiI0N6k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:58:40 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C38146610;
-        Tue, 27 Sep 2022 06:58:39 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McLm45ks9z688Z6;
-        Tue, 27 Sep 2022 21:57:24 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 27 Sep 2022 15:58:37 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 27 Sep
- 2022 14:58:37 +0100
-Date:   Tue, 27 Sep 2022 14:58:36 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V3 2/2] cxl/doe: Request exclusive DOE access
-Message-ID: <20220927145836.0000572e@huawei.com>
-In-Reply-To: <20220926215711.2893286-3-ira.weiny@intel.com>
-References: <20220926215711.2893286-1-ira.weiny@intel.com>
-        <20220926215711.2893286-3-ira.weiny@intel.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S231537AbiI0O0j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:26:39 -0400
+Received: from mail-m971.mail.163.com (mail-m971.mail.163.com [123.126.97.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E19FA49B68;
+        Tue, 27 Sep 2022 07:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=4S5XBiFjDZg4gx2Ocx
+        QfUQjnQwfdPOoTKn7C7OGJNZc=; b=DPK/qDxDbMUvYQ/cTLcYRaUN/ZCMN5xq6x
+        h7PtMricsucf9NV0yxKSLVpM3Dn28vATg/qAPU9gBo1+yvXbeD5mr/q2wqHK/78a
+        qFCsFPBRcoCnkHY9KdIJipMQiV+V5l0FVk052hJYUGuc3d81qm8y16eDC5H8YxLc
+        03U+6UB2U=
+Received: from os-l3a203-yehs1-dev01.localdomain (unknown [103.244.59.1])
+        by smtp1 (Coremail) with SMTP id GdxpCgC3vKTjBzNjs5TAfw--.37703S2;
+        Tue, 27 Sep 2022 22:25:41 +0800 (CST)
+From:   Xiaochun Lee <lixiaochun.2888@163.com>
+To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@intel.com, xiaocli@redhat.com,
+        Xiaochun Lee <lixc17@lenovo.com>
+Subject: [PATCH v2 1/1] PCI: Set no io resource for bridges that behind VMD controller
+Date:   Tue, 27 Sep 2022 22:16:06 +0800
+Message-Id: <1664288166-7432-1-git-send-email-lixiaochun.2888@163.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: GdxpCgC3vKTjBzNjs5TAfw--.37703S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrW5KF4DAryfJF1UKFy5CFg_yoWrtFWDpF
+        4agr45Zr48XFy7tws3uwn7CFWFvFs2yFWYyry3KwnIva1UCFyUZr9IyFyjgF4UJF1Dt343
+        X3Z5GrykuayDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeHq7UUUUU=
+X-Originating-IP: [103.244.59.1]
+X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbioAWJQFjSPgyEjgAAse
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,63 +50,118 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 26 Sep 2022 14:57:11 -0700
-ira.weiny@intel.com wrote:
+From: Xiaochun Lee <lixc17@lenovo.com>
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
-> configuration cycles.  It assumes one initiator at a time.  While the
-> kernel has control of the mailbox user space writes could interfere with
-> the kernel access.
-> 
-> Mark DOE mailbox config space exclusive when iterated by the CXL driver.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-I wonder a bit on whether the failure should be fatal given that something
-very odd would be required for it to fail.
+When enable VMDs on Intel CPUs, VMD controllers(8086:28c0) be
+recognized by VMD driver and there are many failed messages of
+BAR 13 when scan the bridges and assign IO resource behind it
+as listed below, the bridge wants to get 0x6000 as its IO
+resource, but there is no IO resources on the host bridge.
 
-I'm not that bothered though.
+VMD host bridge resources:
+vmd 0000:e2:00.5: PCI host bridge to bus 10001:00
+pci_bus 10001:00: root bus resource [bus 00-1f]
+pci_bus 10001:00: root bus resource [mem 0xf4000000-0xf5ffffff]
+pci_bus 10001:00: root bus resource [mem 0x29ffff02010-0x29fffffffff 64bit]
+pci_bus 10001:00: scanning bus
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Read bridge IO resource:
+pci 10001:00:02.0: PCI bridge to [bus 01]
+pci 10001:00:02.0:   bridge window [io  0x1000-0x6fff]
+pci 10001:00:03.0: PCI bridge to [bus 02]
+pci 10001:00:03.0:   bridge window [io  0x1000-0x6fff]
 
-> 
-> ---
-> Changes from V2:
-> 	Jonathan:
-> 		s/PCI_DOE_CAP_SIZE/PCI_DOE_CAP_SIZEOF
-> 		Set PCI_DOE_CAP_SIZEOF directly
-> ---
->  drivers/cxl/pci.c             | 5 +++++
->  include/uapi/linux/pci_regs.h | 1 +
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index faeb5d9d7a7a..621a0522b554 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -418,6 +418,11 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
->  			continue;
->  		}
->  
-> +		if (!pci_request_config_region_exclusive(pdev, off,
-> +							 PCI_DOE_CAP_SIZEOF,
-> +							 dev_name(dev)))
-> +			pci_err(pdev, "Failed to exclude DOE registers\n");
-> +
->  		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
->  			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
->  				off);
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 57b8e2ffb1dd..82a03ea954af 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1119,6 +1119,7 @@
->  #define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
->  #define PCI_DOE_WRITE		0x10    /* DOE Write Data Mailbox Register */
->  #define PCI_DOE_READ		0x14    /* DOE Read Data Mailbox Register */
-> +#define PCI_DOE_CAP_SIZEOF	0x18	/* Size of DOE register block */
->  
->  /* DOE Data Object - note not actually registers */
->  #define PCI_DOE_DATA_OBJECT_HEADER_1_VID		0x0000ffff
+Failed messages of BAR#13:
+pci 10001:00:02.0: BAR 13: no space for [io  size 0x6000]
+pci 10001:00:02.0: BAR 13: failed to assign [io  size 0x6000]
+pci 10001:00:03.0: BAR 13: no space for [io  size 0x6000]
+pci 10001:00:03.0: BAR 13: failed to assign [io  size 0x6000]
+
+VMD-enabled root ports use
+Enhanced Configuration Access Mechanism (ECAM) access
+PCI Express configuration space, and offer VMD_CFGBAR as
+base of PCI Express configuration space for the bridges
+behind it. The configuration space includes IO resources,
+but these IO resources are not actually used on X86,
+it can result in BAR#13 assign IO resource failed.
+Therefor,clear IO resources by setting an IO base value
+greater than limit to these bridges here, so in this case,
+we can leverage kernel parameter "pci=hpiosize=0KB" to
+avoid this failed messages show up.
+
+Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+---
+ drivers/pci/quirks.c | 60 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4944798e75b5..efecf12e8059 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5956,3 +5956,63 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+ #endif
++
++#if defined(CONFIG_X86_64) || defined(CONFIG_X86)
++
++#ifdef CONFIG_UML_X86
++#define is_vmd(bus)             false
++#endif /* CONFIG_UML_X86 */
++
++/*
++ * VMD-enabled root ports use Enhanced Configuration Access Mechanism (ECAM)
++ * access PCI Express configuration space, and offer VMD_CFGBAR as the
++ * base of PCI Express configuration space for the bridges behind it.
++ * The configuration space includes IO resources, but these IO
++ * resources are not actually used on X86, and it can result
++ * in BAR#13 assign IO resource failed. Therefor, clear IO resources
++ * by setting an IO base value greater than limit to these bridges here,
++ * so in this case, append kernel parameter "pci=hpiosize=0KB" can avoid
++ * the BAR#13 failed messages show up.
++ */
++static void quirk_vmd_no_iosize(struct pci_dev *bridge)
++{
++	u8 io_base_lo, io_limit_lo;
++	u16 io_low;
++	u32 io_upper16;
++	unsigned long io_mask,  base, limit;
++
++	io_mask = PCI_IO_RANGE_MASK;
++	if (bridge->io_window_1k)
++		io_mask = PCI_IO_1K_RANGE_MASK;
++
++	/* VMD Domain */
++	if (is_vmd(bridge->bus) && bridge->is_hotplug_bridge) {
++		pci_read_config_byte(bridge, PCI_IO_BASE, &io_base_lo);
++		pci_read_config_byte(bridge, PCI_IO_LIMIT, &io_limit_lo);
++		base = (io_base_lo & io_mask) << 8;
++		limit = (io_limit_lo & io_mask) << 8;
++		/* if there are defined io ports behind the bridge on x86,
++		 * we clear it, since there is only 64KB IO resource on it,
++		 * beyond that, hotplug io bridges don't needs IO port resource,
++		 * such as NVMes attach on it. So the corresponding range must be
++		 * turned off by writing base value greater than limit to the
++		 * bridge's base/limit registers.
++		 */
++		if (limit >= base) {
++			/* Clear upper 16 bits of I/O base/limit */
++			io_upper16 = 0;
++			/* set base value greater than limit */
++			io_low = 0x00f0;
++
++			/* Temporarily disable the I/O range before updating PCI_IO_BASE */
++			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, 0x0000ffff);
++			/* Update lower 16 bits of I/O base/limit */
++			pci_write_config_word(bridge, PCI_IO_BASE, io_low);
++			/* Update upper 16 bits of I/O base/limit */
++			pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, io_upper16);
++		}
++	}
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
++		PCI_CLASS_BRIDGE_PCI, 8, quirk_vmd_no_iosize);
++#endif
+-- 
+2.37.3
 
