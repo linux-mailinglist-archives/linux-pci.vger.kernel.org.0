@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2957A5EBE76
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 11:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32BB45EBE79
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 11:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231891AbiI0JYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 05:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
+        id S231837AbiI0JYe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 05:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231819AbiI0JYP (ORCPT
+        with ESMTP id S231825AbiI0JYP (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 05:24:15 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A89115A78
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 02:22:11 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id a10so10299499ljq.0
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 02:22:11 -0700 (PDT)
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC62115BD9
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 02:22:12 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id a14so10214565ljj.8
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 02:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=+WALVDKGJ8TjpguNws9V7oDyGWCAG+ppaoeEBl6oQTs=;
-        b=REvxypI6NYFJxXOy2OaCGcqlncy/01sKMRM+5lJit+BDTPiUWjrAoG3N9ooDhH5mFV
-         btCXa8geykRDdyVHCDEd49LKLGNvWaCkSRWAIJuJtaC+LCvljsAMGNJV3eTjp2jZl/KA
-         Ha4biub1jlbcjgT9EsJkDpTzCrEDQobVuZhqKNuQwwr17MV4OdmLRwmZin9H2yTyoHwx
-         Nm8TkDAD5tczUObst+NI19GfIhCDwbtU7EfwqzDY+zftG9diXh8YVpPTTRy0crSXNmSD
-         b3FvBb/e8777KcHEaRlxtmD8E51vtYik4tHfDvpAP51KG83wtqjjQVR1FbIC5+JPku/z
-         vfEA==
+        bh=AuijzO7SsYwBBNSVylV44exI038CpnWFWeR0ygs9Tfs=;
+        b=VmkK0e4f2SdgwGxAtieUuMjCB7RI/lMMsXM1L6eMfvL07D59Uf6McL5Dpdm4gjHEs8
+         EDdQvfD3JTwqm3rAN0OyUld5otRJvJZGtzsd7ul79VBMuPeRItv8EH0Z8cAtUIswJYGD
+         anT1L5olCkfe3ucLUWWP25eIAbaGjplCrJhwsqUthayeeV4zG79rQTN317fNUNZxxoTc
+         vE2cBmh04kEBqW2A3d/IK6MSFKUQZ6PNoGfPE5RyYWZWs/oJ9lCJiNjIvXRrImLQERxP
+         kqFbYXp2wXqMFSbPLbzOuahbNYEII0mslmKVAng3aoxCOvxYDwcCoVRuYFSCdZrqGOxD
+         D6nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=+WALVDKGJ8TjpguNws9V7oDyGWCAG+ppaoeEBl6oQTs=;
-        b=J6VaR3mBAF5+u34sg9xpPK2+4oj+bMbZuRlnZlUuoYqd/GipVuVappSukY1lU0ybnM
-         BFgSzNqufxB903zm7gf+WC7oe+WCm62sg1L64l09pQ7AflUi8NwawzZW0dCB7P+s9Rxf
-         zNS45ioNdiebCD+i/j6PiaNUP7IJuNQD4lB3/P9QK2kjwnf/kfajy31x/9Zeg7TVBWVk
-         oJgYMDzfE8eX1isnktYEDAaycCc2X4kukgEkXbxwGU32Bwe/w5X8H0dPsuj7OSzuPHtg
-         NVr0vlyxMMoPw0T2v+nAz+2rVoXVgd69ZeEj1FpC0D35XrsR7MFSVqBjEIfB43FoALHx
-         MP1Q==
-X-Gm-Message-State: ACrzQf19ruxFxAXZvhn0gDZWWOs7JdenVE8zCiDEiRL7f4EXsJsjjq/k
-        +DQLKzr75UsGTnrWEdYcCyjHXQ==
-X-Google-Smtp-Source: AMsMyM4cVZECH0F/MQlDHtKGzBzN39n6V5xkPo1jJ+I2hRQCv25o+4UgB1zNju6tvYj6G2MsSeeN0A==
-X-Received: by 2002:a2e:98da:0:b0:26c:7b01:70a with SMTP id s26-20020a2e98da000000b0026c7b01070amr7161189ljj.197.1664270529729;
-        Tue, 27 Sep 2022 02:22:09 -0700 (PDT)
+        bh=AuijzO7SsYwBBNSVylV44exI038CpnWFWeR0ygs9Tfs=;
+        b=4Jmi7VEO2e/+32eYXbu88XjXF7AsQFT/hy+T4jSESBSNEpE/cr1llrJh955uBaldTF
+         XjwrTRdQHN1IAV4tGdBJczF+FaNa+jvB7p6VIMfChJnK1v5gcT4kszpKNKaqqk7fE8FR
+         WA7g4p3YfYkF3UPu8YeWbN9lUgNm0WifnWzCYCave7udVVMCWHa1OtW/TPkwWRLJKaOd
+         5W5gIsAktZcxjpXZ+bjHCDwv7Hxr1CDpBJcjfOtMLL2fwKq0FT8vt4d2IsI1cGGvtNux
+         1Rvt8vJcp59cLkFGoF1FEo4qc1dpjSllW5fyqLzfBwY/b2QgnLf3Veae/H/WiIbKyM9Y
+         AbsQ==
+X-Gm-Message-State: ACrzQf2grs0mezNvLf/IlynwBkVYWgi3f/CzgrPCSRnTOIQvlnbVG5eR
+        7UrBM0Hj0gmc1Zq6HWBwRyl+eg==
+X-Google-Smtp-Source: AMsMyM4dCTmm+Maw1UIXOHpjLNEOqa+aTIzsNXGHIsMYahWt0pF/PeVkymwpoe1Rtm/ZaErkCOgc0A==
+X-Received: by 2002:a2e:6d02:0:b0:26a:cf02:40c4 with SMTP id i2-20020a2e6d02000000b0026acf0240c4mr9812805ljc.513.1664270530540;
+        Tue, 27 Sep 2022 02:22:10 -0700 (PDT)
 Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id r28-20020a2e8e3c000000b0026c15d60ad1sm104584ljk.132.2022.09.27.02.22.08
+        by smtp.gmail.com with ESMTPSA id r28-20020a2e8e3c000000b0026c15d60ad1sm104584ljk.132.2022.09.27.02.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 02:22:09 -0700 (PDT)
+        Tue, 27 Sep 2022 02:22:10 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -62,11 +62,10 @@ To:     Andy Gross <agross@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
         Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v6 2/5] phy: qcom-qmp-pcie: support separate tables for EP mode
-Date:   Tue, 27 Sep 2022 12:22:03 +0300
-Message-Id: <20220927092207.161501-3-dmitry.baryshkov@linaro.org>
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: [PATCH v6 3/5] phy: qcom-qmp-pcie: Support SM8450 PCIe1 PHY in EP mode
+Date:   Tue, 27 Sep 2022 12:22:04 +0300
+Message-Id: <20220927092207.161501-4-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220927092207.161501-1-dmitry.baryshkov@linaro.org>
 References: <20220927092207.161501-1-dmitry.baryshkov@linaro.org>
@@ -74,7 +73,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,151 +81,160 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe QMP PHY requires different programming sequences when being
-used for the RC (Root Complex) or for the EP (End Point) modes. Allow
-selecting the submode and thus selecting a set of PHY programming
-tables.
+Add support for using PCIe1 (gen4x2) in EP mode on SM8450. The tables to
+program are mostly common with the RC mode tables, so only register
+difference are split into separate RC and EP tables.
 
-Since the RC and EP modes share common some common init sequence, the
-common sequence is kept in the main table and the sequence differences
-are pushed to the extra tables.
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 46 ++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 6 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 78 +++++++++++++++----
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h    |  1 +
+ 2 files changed, 64 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index ae0d7b49dfa3..ba01338d93ac 100644
+index ba01338d93ac..f3f75eda01a6 100644
 --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
 +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -14,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-+#include <linux/phy/pcie.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
-@@ -1320,10 +1321,14 @@ struct qmp_phy_cfg {
- 	/* Main init sequence for PHY blocks - serdes, tx, rx, pcs */
- 	const struct qmp_phy_cfg_tables tables;
- 	/*
--	 * Additional init sequence for PHY blocks, providing additional
--	 * register programming. Unless required it can be left omitted.
-+	 * Additional init sequences for PHY blocks, providing additional
-+	 * register programming. They are used for providing separate sequences
-+	 * for the Root Complex and End Point use cases.
-+	 *
-+	 * If EP mode is not supported, both tables can be left unset.
- 	 */
- 	const struct qmp_phy_cfg_tables *tables_rc;
-+	const struct qmp_phy_cfg_tables *tables_ep;
- 
- 	/* clock ids to be requested */
- 	const char * const *clk_list;
-@@ -1367,6 +1372,7 @@ struct qmp_phy_cfg {
-  * @pcs_misc: iomapped memory space for lane's pcs_misc
-  * @pipe_clk: pipe clock
-  * @qmp: QMP phy to which this lane belongs
-+ * @mode: currently selected PHY mode
-  */
- struct qmp_phy {
- 	struct phy *phy;
-@@ -1380,6 +1386,7 @@ struct qmp_phy {
- 	void __iomem *pcs_misc;
- 	struct clk *pipe_clk;
- 	struct qcom_qmp *qmp;
-+	int mode;
+@@ -1185,15 +1185,29 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_pcs_misc_tbl[] = {
  };
  
- /**
-@@ -1991,13 +1998,19 @@ static int qmp_pcie_power_on(struct phy *phy)
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
- 	struct qcom_qmp *qmp = qphy->qmp;
- 	const struct qmp_phy_cfg *cfg = qphy->cfg;
-+	const struct qmp_phy_cfg_tables *mode_tables;
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *status;
- 	unsigned int mask, val, ready;
- 	int ret;
- 
-+	if (qphy->mode == PHY_MODE_PCIE_RC)
-+		mode_tables = cfg->tables_rc;
-+	else
-+		mode_tables = cfg->tables_ep;
+ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_IVCO, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_EN, 0x46),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_CFG, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE_MAP, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_SEL, 0x12),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_HS_SWITCH_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE0, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE1, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MISC1, 0x88),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_CONFIG, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MODE, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_DC_LEVEL_CTRL, 0x0f),
++};
 +
- 	qmp_pcie_serdes_init(qphy, &cfg->tables);
--	qmp_pcie_serdes_init(qphy, cfg->tables_rc);
-+	qmp_pcie_serdes_init(qphy, mode_tables);
- 
- 	ret = clk_prepare_enable(qphy->pipe_clk);
- 	if (ret) {
-@@ -2007,10 +2020,10 @@ static int qmp_pcie_power_on(struct phy *phy)
- 
- 	/* Tx, Rx, and PCS configurations */
- 	qmp_pcie_lanes_init(qphy, &cfg->tables);
--	qmp_pcie_lanes_init(qphy, cfg->tables_rc);
-+	qmp_pcie_lanes_init(qphy, mode_tables);
- 
- 	qmp_pcie_pcs_init(qphy, &cfg->tables);
--	qmp_pcie_pcs_init(qphy, cfg->tables_rc);
-+	qmp_pcie_pcs_init(qphy, mode_tables);
- 
- 	/*
- 	 * Pull out PHY from POWER DOWN state.
-@@ -2097,6 +2110,23 @@ static int qmp_pcie_disable(struct phy *phy)
- 	return qmp_pcie_exit(phy);
- }
- 
-+static int qmp_pcie_set_mode(struct phy *phy, enum phy_mode mode, int submode)
-+{
-+	struct qmp_phy *qphy = phy_get_drvdata(phy);
-+
-+	switch (submode) {
-+	case PHY_MODE_PCIE_RC:
-+	case PHY_MODE_PCIE_EP:
-+		qphy->mode = submode;
-+		break;
-+	default:
-+		dev_err(&phy->dev, "Unsupported submode %d\n", submode);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int qmp_pcie_vreg_init(struct device *dev, const struct qmp_phy_cfg *cfg)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
-@@ -2220,6 +2250,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
- static const struct phy_ops qmp_pcie_ops = {
- 	.power_on	= qmp_pcie_enable,
- 	.power_off	= qmp_pcie_disable,
-+	.set_mode	= qmp_pcie_set_mode,
- 	.owner		= THIS_MODULE,
++static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_rc_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER1, 0x31),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER2, 0x01),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE0, 0xde),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE0, 0x07),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE1, 0x97),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE1, 0x0c),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_ENABLE1, 0x90),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_IVCO, 0x0f),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x06),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x06),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x16),
+@@ -1201,8 +1215,6 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x36),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x36),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x08),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_EN, 0x46),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_CFG, 0x04),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0x0a),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x1a),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0x14),
+@@ -1215,17 +1227,8 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START1_MODE1, 0x55),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START2_MODE1, 0x55),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START3_MODE1, 0x05),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE_MAP, 0x02),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_SEL, 0x12),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_HS_SWITCH_SEL, 0x00),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE0, 0x0a),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE1, 0x04),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MISC1, 0x88),
+ 	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORE_CLK_EN, 0x20),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_CONFIG, 0x06),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MODE, 0x14),
+-	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_DC_LEVEL_CTRL, 0x0f),
  };
  
-@@ -2235,6 +2266,8 @@ static int qmp_pcie_create(struct device *dev, struct device_node *np, int id,
- 	if (!qphy)
- 		return -ENOMEM;
+ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_tx_tbl[] = {
+@@ -1293,14 +1296,44 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_tbl[] = {
+ };
  
-+	qphy->mode = PHY_MODE_PCIE_RC;
+ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
+-	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_ENDPOINT_REFCLK_DRIVE, 0xc1),
+-	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_ACTIONS, 0x00),
+ 	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_G4_EQ_CONFIG5, 0x02),
+ 	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_EQ_CONFIG1, 0x16),
+ 	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_RX_MARGINING_CONFIG3, 0x28),
+ 	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_G4_PRE_GAIN, 0x2e),
+ };
+ 
++static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_rc_pcs_misc_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_ENDPOINT_REFCLK_DRIVE, 0xc1),
++	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_ACTIONS, 0x00),
++};
 +
- 	qphy->cfg = cfg;
- 	qphy->serdes = serdes;
- 	/*
-@@ -2278,7 +2311,8 @@ static int qmp_pcie_create(struct device *dev, struct device_node *np, int id,
++static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_ep_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BG_TIMER, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYS_CLK_CTRL, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x27),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x17),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x09),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x28),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE0, 0xfb),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE0, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE1, 0xfb),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE1, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORE_CLK_EN, 0x60),
++};
++
++static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
++};
++
+ struct qmp_phy_cfg_tables {
+ 	const struct qmp_phy_init_tbl *serdes;
+ 	int serdes_num;
+@@ -1836,6 +1869,21 @@ static const struct qmp_phy_cfg sm8450_qmp_gen4x2_pciephy_cfg = {
+ 		.pcs_misc	= sm8450_qmp_gen4x2_pcie_pcs_misc_tbl,
+ 		.pcs_misc_num	= ARRAY_SIZE(sm8450_qmp_gen4x2_pcie_pcs_misc_tbl),
+ 	},
++
++	.tables_rc = &(const struct qmp_phy_cfg_tables) {
++		.serdes		= sm8450_qmp_gen4x2_pcie_rc_serdes_tbl,
++		.serdes_num	= ARRAY_SIZE(sm8450_qmp_gen4x2_pcie_rc_serdes_tbl),
++		.pcs_misc	= sm8450_qmp_gen4x2_pcie_rc_pcs_misc_tbl,
++		.pcs_misc_num	= ARRAY_SIZE(sm8450_qmp_gen4x2_pcie_rc_pcs_misc_tbl),
++	},
++
++	.tables_ep = &(const struct qmp_phy_cfg_tables) {
++		.serdes		= sm8450_qmp_gen4x2_pcie_ep_serdes_tbl,
++		.serdes_num	= ARRAY_SIZE(sm8450_qmp_gen4x2_pcie_ep_serdes_tbl),
++		.pcs_misc	= sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl,
++		.pcs_misc_num	= ARRAY_SIZE(sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl),
++	},
++
+ 	.clk_list		= sdm845_pciephy_clk_l,
+ 	.num_clks		= ARRAY_SIZE(sdm845_pciephy_clk_l),
+ 	.reset_list		= sdm845_pciephy_reset_l,
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h
+index 1eedf50cf9cb..c9fa90b45475 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h
+@@ -8,6 +8,7 @@
  
- 	if (IS_ERR(qphy->pcs_misc)) {
- 		if (cfg->tables.pcs_misc ||
--		    (cfg->tables_rc && cfg->tables_rc->pcs_misc))
-+		    (cfg->tables_rc && cfg->tables_rc->pcs_misc) ||
-+		    (cfg->tables_ep && cfg->tables_ep->pcs_misc))
- 			return PTR_ERR(qphy->pcs_misc);
- 	}
- 
+ /* Only for QMP V5_20 PHY - PCIe PCS registers */
+ #define QPHY_V5_20_PCS_PCIE_ENDPOINT_REFCLK_DRIVE	0x01c
++#define QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5	0x084
+ #define QPHY_V5_20_PCS_PCIE_OSC_DTCT_ACTIONS		0x090
+ #define QPHY_V5_20_PCS_PCIE_EQ_CONFIG1			0x0a0
+ #define QPHY_V5_20_PCS_PCIE_G4_EQ_CONFIG5		0x108
 -- 
 2.35.1
 
