@@ -2,66 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BB335EBCE4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91D925EBD00
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbiI0INv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 04:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
+        id S230141AbiI0IRc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 04:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbiI0INe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:13:34 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA62ABF27;
-        Tue, 27 Sep 2022 01:09:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D740BCE1763;
-        Tue, 27 Sep 2022 08:09:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD08FC433D6;
-        Tue, 27 Sep 2022 08:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664266139;
-        bh=Mb19XfGnPCcnwswVS6PF2KmTYQWlJKV6Z8OZtSEzClo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n2XhKXo4qdh4EP/FiVyhKpJbNfTSadbk6ffhXzLFpCd5LdkuJKrvrGxDZNSMZPUDr
-         f+GVP1PIIdazNdmzgwRA5JnM7y0wWw/r2kXiEZ2eAlsZPZ1nwI3q6IAZ8JXhFE9tt7
-         AhVh5u8vPwP7uoG3jSqUF5TW8RNxY3ZeVh8l1R7yrfrAkDED1u2RvoApRZf/GIjJPM
-         tUXFy0jnsjig/CyhzDfHcoVLUxF6JPKFyhE5QrGkveHIWSMj2Eh4nnWz3erMHmBWbS
-         vBEBpQI/JvT9WcUFlri1/BbkNYTjsv/HxemmwbbRAxTocCSlog8Fk8UCBfwx6DX9YZ
-         1lapEghthd67g==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1od5eK-0005Ts-QN; Tue, 27 Sep 2022 10:09:04 +0200
-Date:   Tue, 27 Sep 2022 10:09:04 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH v5 2/5] phy: qcom-qmp-pcie: support separate tables for
- EP mode
-Message-ID: <YzKvoN6hplGOKzsr@hovoldconsulting.com>
-References: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
- <20220926173435.881688-3-dmitry.baryshkov@linaro.org>
+        with ESMTP id S230236AbiI0IRJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:17:09 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63536348;
+        Tue, 27 Sep 2022 01:16:30 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4McC7K4yrlzpTK4;
+        Tue, 27 Sep 2022 16:13:33 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 27 Sep 2022 16:16:28 +0800
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     <acme@kernel.org>, <peterz@infradead.org>,
+        <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
+        <james.clark@arm.com>, <will@kernel.org>,
+        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
+        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
+        <john.garry@huawei.com>, <mike.leach@linaro.org>
+CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <lorenzo.pieralisi@arm.com>,
+        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <liuqi6124@gmail.com>
+Subject: [PATCH v14 0/3] Add perf support for HiSilicon PCIe Tune and Trace device
+Date:   Tue, 27 Sep 2022 16:13:57 +0800
+Message-ID: <20220927081400.14364-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926173435.881688-3-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,84 +56,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:34:32PM +0300, Dmitry Baryshkov wrote:
-> The PCIe QMP PHY requires different programming sequences when being
-> used for the RC (Root Complex) or for the EP (End Point) modes. Allow
-> selecting the submode and thus selecting a set of PHY programming
-> tables.
-> 
-> Since the RC and EP modes share common some common init sequence, the
-> common sequence is kept in the main table and the sequence differences
-> are pushed to the extra tables.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 47 +++++++++++++++++++++---
->  1 file changed, 41 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> index dc8f0f236212..dd7911879b10 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> @@ -14,6 +14,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/of_address.h>
-> +#include <linux/phy/pcie.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
-> @@ -1320,10 +1321,14 @@ struct qmp_phy_cfg {
->  	/* Main init sequence for PHY blocks - serdes, tx, rx, pcs */
->  	const struct qmp_phy_cfg_tables tables;
->  	/*
-> -	 * Additional init sequence for PHY blocks, providing additional
-> -	 * register programming. Unless required it can be left omitted.
-> +	 * Additional init sequences for PHY blocks, providing additional
-> +	 * register programming. They are used for providing separate sequences
-> +	 * for the Root Complex and for the End Point usecases.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-"use cases", drop the second "for the".
+This patchset adds the perf tool support for HiSilicon PCIe Tune and Trace
+device [1]. The device driver makes use of perf AUX trace for tracing
+TLP (Transaction Layer Packet) headers of PCIe. The trace can be started by
+`perf record` and the traced data can be decoded by `perf report` with
+this patchset. The detailed usage is documented in [1].
 
+This is split from the v11 series as suggested to send driver part and
+perf tool part separately. The changelog before v11 can be found at [2].
 
-> +	 *
-> +	 * If EP mode is not supported, both tables can be left empty.
+Since the driver has been accepted, wish to have perf support along with
+the PTT driver to enable the full support.
 
-s/empty/unset/
+[1] https://lore.kernel.org/lkml/20220816114414.4092-5-yangyicong@huawei.com/
+[2] https://lore.kernel.org/lkml/20220816114414.4092-1-yangyicong@huawei.com/
 
->  	 */
->  	const struct qmp_phy_cfg_tables *tables_rc;
-> +	const struct qmp_phy_cfg_tables *tables_ep;
->  
->  	/* clock ids to be requested */
->  	const char * const *clk_list;
+Change since v13:
+- Collect tags from John and do few cleanups. Thanks.
+Link: https://lore.kernel.org/lkml/20220919090045.6778-1-yangyicong@huawei.com/
 
-> +static int qmp_pcie_set_mode(struct phy *phy,
-> +				 enum phy_mode mode, int submode)
+Change since v12:
+- Remove unused headers and some minor fixes, Per John. Thanks!
+Link: https://lore.kernel.org/lkml/20220914075925.48549-1-yangyicong@huawei.com/
 
-No need for line break.
+Qi Liu (3):
+  perf tool: arm: Refactor event list iteration in
+    auxtrace_record__init()
+  perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
+  perf tool: Add support for parsing HiSilicon PCIe Trace packet
 
-> +{
-> +	struct qmp_phy *qphy = phy_get_drvdata(phy);
-> +
-> +	switch (submode) {
-> +	case PHY_MODE_PCIE_RC:
-> +	case PHY_MODE_PCIE_EP:
-> +		qphy->mode = submode;
-> +		break;
-> +	default:
-> +		dev_err(&phy->dev, "Unuspported submode %d\n", submode);
+ tools/perf/arch/arm/util/auxtrace.c           | 116 +++++++++--
+ tools/perf/arch/arm/util/pmu.c                |   3 +
+ tools/perf/arch/arm64/util/Build              |   2 +-
+ tools/perf/arch/arm64/util/hisi-ptt.c         | 188 +++++++++++++++++
+ tools/perf/util/Build                         |   2 +
+ tools/perf/util/auxtrace.c                    |   4 +
+ tools/perf/util/auxtrace.h                    |   1 +
+ tools/perf/util/hisi-ptt-decoder/Build        |   1 +
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 164 +++++++++++++++
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  31 +++
+ tools/perf/util/hisi-ptt.c                    | 192 ++++++++++++++++++
+ tools/perf/util/hisi-ptt.h                    |  19 ++
+ 12 files changed, 703 insertions(+), 20 deletions(-)
+ create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+ create mode 100644 tools/perf/util/hisi-ptt.c
+ create mode 100644 tools/perf/util/hisi-ptt.h
 
-You forgot to fix the "unsupported" typo.
+-- 
+2.24.0
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Looks good otherwise:
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-
-Johan
