@@ -2,140 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD6325EC4A8
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:39:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6944E5EC4AE
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:40:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231536AbiI0Njx convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 27 Sep 2022 09:39:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41320 "EHLO
+        id S232772AbiI0NkQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 09:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbiI0Njx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:39:53 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A1C3FA2A;
-        Tue, 27 Sep 2022 06:39:52 -0700 (PDT)
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4McLLN6tv7z67kws;
-        Tue, 27 Sep 2022 21:38:36 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 27 Sep 2022 15:39:49 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 27 Sep
- 2022 14:39:49 +0100
-Date:   Tue, 27 Sep 2022 14:39:48 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <baolin.wang@linux.alibaba.com>,
-        <zhuo.song@linux.alibaba.com>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v1 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20220927143948.00004c43@huawei.com>
-In-Reply-To: <2085a695-7fa2-b560-3164-c62cb17dd5f7@linux.alibaba.com>
-References: <20220926171857.GA1609097@bhelgaas>
-        <7502d496-9ec1-1ca4-c643-376ec2aa662e@linux.alibaba.com>
-        <20220927110435.00005b4d@huawei.com>
-        <5372edb4-5717-42a0-142e-91657a9b18c3@arm.com>
-        <2085a695-7fa2-b560-3164-c62cb17dd5f7@linux.alibaba.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232778AbiI0NkL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:40:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62836B154
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 06:40:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5314F619A3
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 13:40:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF8FC433D6;
+        Tue, 27 Sep 2022 13:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664286008;
+        bh=bHe7jqSdC6M9l75s9W0qT54/RGr69ijmKeccBsyU9Lk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d7KI9QJVRUTbcxl2kwBxegRL0PUDjIfPysbyPFBnPS4CkR6/6vAIQdaKcnEAPXsrM
+         Wjbfq+SMhAxqAmwq1LcDO8G/wzDHDNoEpDoMLUo4p7F56F7zT8VZpBYcWUhfldUVth
+         0EkJodrqlSX169VCruVQ7XYUq8O/0/lrqTSubcuomDdXetYD5eN7bOqjdRmiuakWmK
+         pCPYARhnKqkE5U0n53aW+655dCupQ9OpdfxZVOQCdMaPC3NIvWYmww6N2Mp9eSVCcy
+         xjbK4wlSCZQE3MeVfY6C5tt3Qo7OblLH2osDxTxNIBbbkgXxgZj6+DBuNiiuHtfauu
+         Gc1kQ8Vl0TNPQ==
+Date:   Tue, 27 Sep 2022 15:40:02 +0200
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        pali@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
+Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug
+ interrupt
+Message-ID: <20220927153947.2df43936@dellmb>
+In-Reply-To: <YzGwbWoFIpADgbXz@lpieralisi>
+References: <20220818135140.5996-1-kabel@kernel.org>
+        <20220818135140.5996-4-kabel@kernel.org>
+        <YxtUR0+dBZut8QZH@lpieralisi>
+        <87r10al6a0.wl-maz@kernel.org>
+        <YzGR40/kmQX4ZNaS@lpieralisi>
+        <868rm68g9k.wl-maz@kernel.org>
+        <YzGwbWoFIpADgbXz@lpieralisi>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 27 Sep 2022 20:49:26 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+On Mon, 26 Sep 2022 16:00:13 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 
-> + Jonathan
-> 
-> 在 2022/9/27 PM6:14, Robin Murphy 写道:
-> > On 2022-09-27 11:04, Jonathan Cameron wrote:  
-> >> On Tue, 27 Sep 2022 13:13:29 +0800
-> >> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> >>  
-> >>> 在 2022/9/27 AM1:18, Bjorn Helgaas 写道:  
-> >>>> On Mon, Sep 26, 2022 at 09:31:34PM +0800, Shuai Xue wrote:  
-> >>>>> 在 2022/9/23 PM11:54, Jonathan Cameron 写道:  
-> >>>>>>> I found a similar definition in arch/ia64/pci/pci.c .
-> >>>>>>>
-> >>>>>>>     #define PCI_SAL_ADDRESS(seg, bus, devfn, reg)        \
-> >>>>>>>     (((u64) seg << 24) | (bus << 16) | (devfn << 8) | (reg))
-> >>>>>>>
-> >>>>>>> Should we move it into a common header first?  
-> >>>>>>
-> >>>>>> Maybe. The bus, devfn, reg part is standard bdf, but I don't think
-> >>>>>> the PCI 6.0 spec defined a version with the seg in the upper bits.
-> >>>>>> I'm not sure if we want to adopt that in LInux.  
-> >>>>>
-> >>>>> I found lots of code use seg,bus,devfn,reg with format "%04x:%02x:%02x.%x",
-> >>>>> I am not quite familiar with PCIe spec. What do you think about it, Bjorn?  
-> >>>>
-> >>>> The PCIe spec defines an address encoding for bus/device/function/reg
-> >>>> for the purposes of ECAM (PCIe r6.0, sec 7.2.2), but as far as I know,
-> >>>> it doesn't define anything similar that includes the segment.  The
-> >>>> segment is really outside the scope of PCIe because each segment is a
-> >>>> completely separate PCIe hierarchy.  
-> >>>
-> >>> Thank you for your explanation.
-> >>>  
-> >>>>
-> >>>> So I probably wouldn't make this a generic definition.  But if/when
-> >>>> you print things like this out, please do use the format spec you
-> >>>> mentioned above so it matches the style used elsewhere.
-> >>>>      
-> >>>
-> >>> Agree. The print format of bus/device/function/reg is "%04x:%02x:%02x.%x",
-> >>> so I named the PMU as the same format. Then the usage flow would be:
-> >>>
-> >>> - lspci to get the device root port in format seg/bus/device/function/reg.
-> >>>     10:00.0 PCI bridge: Device 1ded:8000 (rev 01)
-> >>> - select its PMU name pcie_bdf_100000.
-> >>> - monitor with perf:
-> >>>     perf stat -a -e pcie_bdf_100000/Rx_PCIe_TLP_Data_Payload/  
-> >>
-> >> I think you probably want something in there to indicate it's an RP
-> >> and the bdf part may be redundant...  
-> > 
-> > Indeed that seems horribly unclear; personally I reckon something like "dw_pcie_200" would be more appropriate. The address is just a disambiguator between multiple instances so doesn't need any further emphasis, but what is crucial to the user is exactly what kind of PMU it is (especially if there's potential for other unrelated PCIe functions to start exposing their own different PMUs).  
-> 
-> I see your point. The current prefix `pcie_bdf` is not appropriate,
-> 
-> - it does not indicate it is for a root point as Jonathan mentioned.
-> - its prefix is not `dwc`
-> 
-> Is dwc_rootport_100000 more appropriate?
-> 
-> - `dwc` indicates the PMU is for Synopsys DesignWare Cores PCIe controller IP
-> - `rootport` indicates the PMU is for a root port device
-> - `100000` indicates the device address
+> On Mon, Sep 26, 2022 at 08:35:51AM -0400, Marc Zyngier wrote:
+> > On Mon, 26 Sep 2022 07:49:55 -0400,
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote: =20
+> > >=20
+> > > On Sat, Sep 17, 2022 at 10:05:59AM +0100, Marc Zyngier wrote: =20
+> > > > Hi Lorenzo,
+> > > >=20
+> > > > On Fri, 09 Sep 2022 15:57:11 +0100,
+> > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote: =20
+> > > > >=20
+> > > > > [+Marc, Thomas - I can't merge this code without them reviewing i=
+t,
+> > > > > I am not sure at all you can mix the timer/IRQ code the way you d=
+o]
+> > > > >=20
+> > > > > On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Beh=C3=BAn wrote:=
+ =20
+> > > > > > From: Pali Roh=C3=A1r <pali@kernel.org>
+> > > > > >=20
+> > > > > > Add support for Data Link Layer State Change in the emulated sl=
+ot
+> > > > > > registers and hotplug interrupt via the emulated root bridge.
+> > > > > >=20
+> > > > > > This is mainly useful for when an error causes link down event.=
+ With
+> > > > > > this change, drivers can try recovery.
+> > > > > >=20
+> > > > > > Link down state change can be implemented because Aardvark supp=
+orts Link
+> > > > > > Down event interrupt. Use it for signaling that Data Link Layer=
+ Link is
+> > > > > > not active anymore via Hot-Plug Interrupt on emulated root brid=
+ge.
+> > > > > >=20
+> > > > > > Link up interrupt is not available on Aardvark, but we check fo=
+r whether
+> > > > > > link is up in the advk_pcie_link_up() function. By triggering H=
+ot-Plug
+> > > > > > Interrupt from this function we achieve Link up event, so long =
+as the
+> > > > > > function is called (which it is after probe and when rescanning=
+).
+> > > > > > Although it is not ideal, it is better than nothing. =20
+> > > > >=20
+> > > > > So before even coming to the code review: this patch does two thi=
+ngs.
+> > > > >=20
+> > > > > 1) It adds support for handling the Link down state
+> > > > > 2) It adds some code to emulate a Link-up event
+> > > > >=20
+> > > > > Now, for (2). IIUC you are adding code to make sure that an HP
+> > > > > event is triggered if advk_pcie_link_up() is called and it
+> > > > > detects a Link-down->Link-up transition, that has to be notified
+> > > > > through an HP event.
+> > > > >=20
+> > > > > If that's correct, you have to explain to me please what this is
+> > > > > actually achieving and a specific scenario where we want this to =
+be
+> > > > > implemented, in fine details; then we add it to the commit log.
+> > > > >=20
+> > > > > That aside, the interaction of the timer and the IRQ domain code
+> > > > > must be reviewed by Marc and Thomas to make sure this is not
+> > > > > a gross violation of the respective subsystems usage. =20
+> > > >=20
+> > > > I don't see anything being a "gross violation" here, at least from =
+an
+> > > > interrupt subsystem perspective. In a way, this is synthesising an
+> > > > interrupt on the back of some other event, and as long as the conte=
+xt
+> > > > is somehow appropriate (something that looks like an interrupt when
+> > > > pretending there is one), this should be OK. Other subsystems such =
+as
+> > > > i2c GPIO expanders do similar things. =20
+> > >=20
+> > > Right, thanks.
+> > >  =20
+> > > > The one thing I'm dubious about is the frequency of the timer. Aski=
+ng
+> > > > for a poll of the link every jiffy is bound to be expensive, and it
+> > > > would be good to relax this as much as possible, specially on low-e=
+nd
+> > > > HW such as this, where every cycle counts. It is always going to be=
+ a
+> > > > "best effort" thing, and the commit message doesn't say what's the
+> > > > actual grace period to handle this (the spec probably has one). =20
+> > >=20
+> > > AFAICS, the code does not poll the link. It sets a timer only if
+> > > the link is checked (eg upon PCI bus forced rescan or config access)
+> > > the link is up and it was down, to emulate a HP IRQ. =20
+> >=20
+> > I still find the timer frequency pretty high, but surely the authors
+> > of the code have worked out that this wasn't a problem. =20
+>=20
+> Please correct me if I am wrong but with mod_timer() all they want to do
+> is emulating/firing an (hotplug) IRQ as soon as possible - a one-off.
+>=20
+> It is not a periodic timer - at least that's what I understand from the
+> code and that's the reason why such a short interval was chosen but
+> it should not be me who comment on that :)
 
-Looks good to me.
+This is true, it is not a periodic timer. We are just using an IRQSAFE
+timer to call generic_handle_domain_irq() from it's handler, because we
+can't do it during the config space access.
 
-J
-> 
-> 
-> Thank you.
-> 
-> Best Regards,
-> Shuai
-> 
-> 
-> 
-> 
-
+Marek
