@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71DFE5EBBF9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 09:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BB335EBCE4
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 10:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbiI0HvD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 03:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
+        id S229508AbiI0INv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 04:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiI0Huq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 03:50:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9DFA9D50F;
-        Tue, 27 Sep 2022 00:50:44 -0700 (PDT)
+        with ESMTP id S229735AbiI0INe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 04:13:34 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA62ABF27;
+        Tue, 27 Sep 2022 01:09:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 69804B81A19;
-        Tue, 27 Sep 2022 07:50:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EBD1C433D7;
-        Tue, 27 Sep 2022 07:50:42 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D740BCE1763;
+        Tue, 27 Sep 2022 08:09:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD08FC433D6;
+        Tue, 27 Sep 2022 08:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664265042;
-        bh=zwi3Jb7SLffqJUmZqFS0iIaPJHK54nxgPcaTtLfeGmk=;
+        s=k20201202; t=1664266139;
+        bh=Mb19XfGnPCcnwswVS6PF2KmTYQWlJKV6Z8OZtSEzClo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oqS/vdbB76YmjqnwrfbYOVMZw9EAelv34gchEkyjhcMEVFwJsYWuCDGlURXpiSxul
-         xMLMOylmwPBL/h/5ASJDDr6OWs10AjN1sLpWwTLRbwoCLhlorucM8kfhOELlZnpLq+
-         4iBTbYQ7U8ZsdnLXoZ5CQf+aVPBodckY9LBQ1Wm8zANVcdBzyx0+cOwyBLDKTmSenT
-         wYqU3qoPK3oUHbzgRP12nO85tiz+owmPjmARNGVbkZj/2WzmG/ue/B6MhiplwX+Kvg
-         VgrkSr4Q3WPKi6Vt4n0UlkWBEbeEtPrTXi+uhCDkfOk1eG0cKWWKwog7FX+3zl22i5
-         sV9tgGFfUHKtA==
+        b=n2XhKXo4qdh4EP/FiVyhKpJbNfTSadbk6ffhXzLFpCd5LdkuJKrvrGxDZNSMZPUDr
+         f+GVP1PIIdazNdmzgwRA5JnM7y0wWw/r2kXiEZ2eAlsZPZ1nwI3q6IAZ8JXhFE9tt7
+         AhVh5u8vPwP7uoG3jSqUF5TW8RNxY3ZeVh8l1R7yrfrAkDED1u2RvoApRZf/GIjJPM
+         tUXFy0jnsjig/CyhzDfHcoVLUxF6JPKFyhE5QrGkveHIWSMj2Eh4nnWz3erMHmBWbS
+         vBEBpQI/JvT9WcUFlri1/BbkNYTjsv/HxemmwbbRAxTocCSlog8Fk8UCBfwx6DX9YZ
+         1lapEghthd67g==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1od5Me-0005Kq-0O; Tue, 27 Sep 2022 09:50:48 +0200
-Date:   Tue, 27 Sep 2022 09:50:48 +0200
+        id 1od5eK-0005Ts-QN; Tue, 27 Sep 2022 10:09:04 +0200
+Date:   Tue, 27 Sep 2022 10:09:04 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -51,15 +51,15 @@ Cc:     Andy Gross <agross@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org
-Subject: Re: [PATCH v5 1/5] phy: qcom-qmp-pcie: split register tables into
- common and extra parts
-Message-ID: <YzKrWLjYx9Cqk0Qf@hovoldconsulting.com>
+Subject: Re: [PATCH v5 2/5] phy: qcom-qmp-pcie: support separate tables for
+ EP mode
+Message-ID: <YzKvoN6hplGOKzsr@hovoldconsulting.com>
 References: <20220926173435.881688-1-dmitry.baryshkov@linaro.org>
- <20220926173435.881688-2-dmitry.baryshkov@linaro.org>
+ <20220926173435.881688-3-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220926173435.881688-2-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220926173435.881688-3-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -69,97 +69,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:34:31PM +0300, Dmitry Baryshkov wrote:
-> SM8250 configuration tables are split into two parts: the common one and
-> the PHY-specific tables. Make this split more formal. Rather than having
-> a blind renamed copy of all QMP table fields, add separate struct
-> qmp_phy_cfg_tables and add two instances of this structure to the struct
-> qmp_phy_cfg. Later on this will be used to support different PHY modes
-> (RC vs EP).
+On Mon, Sep 26, 2022 at 08:34:32PM +0300, Dmitry Baryshkov wrote:
+> The PCIe QMP PHY requires different programming sequences when being
+> used for the RC (Root Complex) or for the EP (End Point) modes. Allow
+> selecting the submode and thus selecting a set of PHY programming
+> tables.
+> 
+> Since the RC and EP modes share common some common init sequence, the
+> common sequence is kept in the main table and the sequence differences
+> are pushed to the extra tables.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 410 +++++++++++++----------
->  1 file changed, 226 insertions(+), 184 deletions(-)
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 47 +++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> index 5be5348fbb26..dc8f0f236212 100644
+> index dc8f0f236212..dd7911879b10 100644
 > --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
 > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> @@ -1300,31 +1300,30 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
->  	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_G4_PRE_GAIN, 0x2e),
->  };
+> @@ -14,6 +14,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_address.h>
+> +#include <linux/phy/pcie.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -1320,10 +1321,14 @@ struct qmp_phy_cfg {
+>  	/* Main init sequence for PHY blocks - serdes, tx, rx, pcs */
+>  	const struct qmp_phy_cfg_tables tables;
+>  	/*
+> -	 * Additional init sequence for PHY blocks, providing additional
+> -	 * register programming. Unless required it can be left omitted.
+> +	 * Additional init sequences for PHY blocks, providing additional
+> +	 * register programming. They are used for providing separate sequences
+> +	 * for the Root Complex and for the End Point usecases.
+
+"use cases", drop the second "for the".
+
+
+> +	 *
+> +	 * If EP mode is not supported, both tables can be left empty.
+
+s/empty/unset/
+
+>  	 */
+>  	const struct qmp_phy_cfg_tables *tables_rc;
+> +	const struct qmp_phy_cfg_tables *tables_ep;
 >  
-> +struct qmp_phy_cfg_tables {
-> +	const struct qmp_phy_init_tbl *serdes;
-> +	int serdes_num;
-> +	const struct qmp_phy_init_tbl *tx;
-> +	int tx_num;
-> +	const struct qmp_phy_init_tbl *rx;
-> +	int rx_num;
-> +	const struct qmp_phy_init_tbl *pcs;
-> +	int pcs_num;
-> +	const struct qmp_phy_init_tbl *pcs_misc;
-> +	int pcs_misc_num;
-> +};
+>  	/* clock ids to be requested */
+>  	const char * const *clk_list;
 
-> @@ -1459,14 +1458,16 @@ static const char * const sdm845_pciephy_reset_l[] = {
->  static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
->  	.lanes			= 1,
->  
-> -	.serdes_tbl		= ipq8074_pcie_serdes_tbl,
-> -	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_pcie_serdes_tbl),
-> -	.tx_tbl			= ipq8074_pcie_tx_tbl,
-> -	.tx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_tx_tbl),
-> -	.rx_tbl			= ipq8074_pcie_rx_tbl,
-> -	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
-> -	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
-> -	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
-> +	.tables = {
-> +		.serdes		= ipq8074_pcie_serdes_tbl,
-> +		.serdes_num	= ARRAY_SIZE(ipq8074_pcie_serdes_tbl),
-> +		.tx		= ipq8074_pcie_tx_tbl,
-> +		.tx_num		= ARRAY_SIZE(ipq8074_pcie_tx_tbl),
-> +		.rx		= ipq8074_pcie_rx_tbl,
-> +		.rx_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
-> +		.pcs		= ipq8074_pcie_pcs_tbl,
-> +		.pcs_num	= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
-> +	},
+> +static int qmp_pcie_set_mode(struct phy *phy,
+> +				 enum phy_mode mode, int submode)
 
-This looks much better. Even improves readability here too.
+No need for line break.
 
->  	.clk_list		= ipq8074_pciephy_clk_l,
->  	.num_clks		= ARRAY_SIZE(ipq8074_pciephy_clk_l),
->  	.reset_list		= ipq8074_pciephy_reset_l,
- 
-> +static void qmp_pcie_lanes_init(struct qmp_phy *qphy, const struct qmp_phy_cfg_tables *tables)
 > +{
-> +	const struct qmp_phy_cfg *cfg = qphy->cfg;
-> +	void __iomem *tx = qphy->tx;
-> +	void __iomem *rx = qphy->rx;
+> +	struct qmp_phy *qphy = phy_get_drvdata(phy);
 > +
-> +	if (!tables)
-> +		return;
-> +
-> +	qmp_pcie_configure_lane(tx, cfg->regs,
-> +				tables->tx, tables->tx_num, 1);
+> +	switch (submode) {
+> +	case PHY_MODE_PCIE_RC:
+> +	case PHY_MODE_PCIE_EP:
+> +		qphy->mode = submode;
+> +		break;
+> +	default:
+> +		dev_err(&phy->dev, "Unuspported submode %d\n", submode);
 
-Nit: do you really need that line break?
+You forgot to fix the "unsupported" typo.
 
-Same comment applies throughout.
-
+> +		return -EINVAL;
+> +	}
 > +
-> +	if (cfg->lanes >= 2)
-> +		qmp_pcie_configure_lane(qphy->tx2, cfg->regs,
-> +					tables->tx, tables->tx_num, 2);
-> +
-> +	qmp_pcie_configure_lane(rx, cfg->regs,
-> +				tables->rx, tables->rx_num, 1);
-> +	if (cfg->lanes >= 2)
-> +		qmp_pcie_configure_lane(qphy->rx2, cfg->regs,
-> +					tables->rx, tables->rx_num, 2);
+> +	return 0;
 > +}
- 
+
 Looks good otherwise:
 
 Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
