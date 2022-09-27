@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 104755EBE3A
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 11:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0250E5EBE3B
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 11:17:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231609AbiI0JRH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 05:17:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46976 "EHLO
+        id S231783AbiI0JRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 05:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231634AbiI0JQx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 05:16:53 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEBA9F778;
-        Tue, 27 Sep 2022 02:16:37 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 480C820EC90;
-        Tue, 27 Sep 2022 11:16:35 +0200 (CEST)
+        with ESMTP id S231713AbiI0JQz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 05:16:55 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38469C88B3;
+        Tue, 27 Sep 2022 02:16:39 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 264C41AF554;
+        Tue, 27 Sep 2022 11:16:37 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0148820EC91;
-        Tue, 27 Sep 2022 11:16:35 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D19541AF54D;
+        Tue, 27 Sep 2022 11:16:36 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E48D181D0CA;
-        Tue, 27 Sep 2022 17:16:32 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 63614181D0CB;
+        Tue, 27 Sep 2022 17:16:34 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
         lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
@@ -31,9 +31,9 @@ Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Subject: [PATCH v4 08/14] arm64: dts: Add i.MX8MP PCIe EP support
-Date:   Tue, 27 Sep 2022 16:57:10 +0800
-Message-Id: <1664269036-16142-9-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v4 09/14] arm64: dts: Add i.MX8MP PCIe EP support on EVK board
+Date:   Tue, 27 Sep 2022 16:57:11 +0800
+Message-Id: <1664269036-16142-10-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1664269036-16142-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1664269036-16142-1-git-send-email-hongxing.zhu@nxp.com>
@@ -46,43 +46,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MP PCIe EP support.
+Add i.MX8MP PCIe EP support on EVK board.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 21a4cc417c81..104d61a64a00 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -1142,6 +1142,25 @@ pcie: pcie@33800000 {
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+index 9f1469db554d..6daaa5ddc6b6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -390,6 +390,19 @@ &pcie {
+ 	status = "okay";
+ };
  
-+		pcie_ep: pcie_ep@33800000 {
-+			compatible = "fsl,imx8mp-pcie-ep";
-+			reg = <0x33800000 0x000400000>, <0x18000000 0x08000000>;
-+			reg-names = "regs", "addr_space";
-+			num-lanes = <1>;
-+			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>; /* eDMA */
-+			interrupt-names = "dma";
-+			fsl,max-link-speed = <3>;
-+			power-domains = <&hsio_blk_ctrl IMX8MP_HSIOBLK_PD_PCIE>;
-+			resets = <&src IMX8MP_RESET_PCIE_CTRL_APPS_EN>,
-+				 <&src IMX8MP_RESET_PCIE_CTRL_APPS_TURNOFF>;
-+			reset-names = "apps", "turnoff";
-+			phys = <&pcie_phy>;
-+			phy-names = "pcie-phy";
-+			num-ib-windows = <4>;
-+			num-ob-windows = <4>;
-+			status = "disabled";
-+		};
++&pcie_ep{
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie0>;
++	clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
++		 <&clk IMX8MP_CLK_PCIE_ROOT>,
++		 <&clk IMX8MP_CLK_HSIO_AXI>;
++	clock-names = "pcie", "pcie_aux", "pcie_bus";
++	assigned-clocks = <&clk IMX8MP_CLK_PCIE_AUX>;
++	assigned-clock-rates = <10000000>;
++	assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_50M>;
++	status = "disabled";
++};
 +
- 		gpu3d: gpu@38000000 {
- 			compatible = "vivante,gc";
- 			reg = <0x38000000 0x8000>;
+ &snvs_pwrkey {
+ 	status = "okay";
+ };
 -- 
 2.25.1
 
