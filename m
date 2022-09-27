@@ -2,45 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0075EC5D5
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 621245EC5D4
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 16:20:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbiI0OUF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 10:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54548 "EHLO
+        id S230374AbiI0OUC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 10:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232106AbiI0OTz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:19:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6157A9C7CF
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 07:19:41 -0700 (PDT)
+        with ESMTP id S231948AbiI0OTq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 10:19:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C8B9E2EC
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 07:19:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 67346B81C14
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 14:19:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F230C43140;
-        Tue, 27 Sep 2022 14:19:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 01519619D9
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 14:19:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD86C43470;
+        Tue, 27 Sep 2022 14:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664288379;
-        bh=KM7YvgpO+UoAIHJk/hRytiOdqT/ZECH6OH4Q6FHzez0=;
+        s=k20201202; t=1664288381;
+        bh=YOHpPreByGGoyZO9gaJvQCWGWwT25levFv1BixvDFn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teEhsWgbobaikerL8AsyjDVebRRuy1OKMa5kaiXisqa9mzu1QiacchdRoOZuhGjXT
-         0ZaM+sXG24taFwg+5ywuDKU2ai0vjZ1+jKfHdCLPJyKbNGZdS+4zffc2SFqfpjDr6F
-         RNIG+RCqldF9J4JzWxekQjnP13/P/3QZuQZUIVOhS+LmTNpfpcSfSVHyu9f+XYrhE5
-         u5nBUquKdflZ4ACu2X9bypC0yczwi5kOt5om2Ayqv/oTGoW+9BK0nzNi8qfjQNuZgM
-         4ff7nImnC4i+1h7GqmnVrcI7EqpXXNAPUB2PGbwVeZu+OV2W2b5FO+kFabvXzmi9W/
-         dIgmub4+ReuCw==
+        b=C2garZzaK4Pg6GrBqg5oZs3ujiWgC77GzEjxlYtYv4KH5CNh+h9NYIgN8kn41yeTY
+         qmRAHheaUVC4fMIMMVY9QjuD5bDDlfEvrqKZZTYaHfD4R9ANGiViR2KnT5YNII8zvU
+         iQcLt/jOr788Ym8oCHtOG4dlhgIgocKg5Icknv0Ou1cuC31UpY3uOSBbYCxUuQpgz9
+         jlolo890KePtLoF0cMLRBnkUioT8dhzStuMQm75+ZeZrPK7SnXTfP7DWGbh890Zz5f
+         t4VuJ+JtyVgoq4sGccG7wN0VaPx2CBt/ghDGJThinNb57oRHukNOu3cCv7I3Chhnt0
+         WTAa8MNqq3VFQ==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Gregory CLEMENT <gregory.clement@bootlin.com>, pali@kernel.org,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 04/10] arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt for PCIe
-Date:   Tue, 27 Sep 2022 16:19:20 +0200
-Message-Id: <20220927141926.8895-5-kabel@kernel.org>
+Subject: [PATCH v2 05/10] PCI: aardvark: Add clock support
+Date:   Tue, 27 Sep 2022 16:19:21 +0200
+Message-Id: <20220927141926.8895-6-kabel@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220927141926.8895-1-kabel@kernel.org>
 References: <20220927141926.8895-1-kabel@kernel.org>
@@ -56,28 +57,90 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-PCIe Slot Power Limit on Turris Mox is 10W.
+The IP relies on a gated clock. When we will add S2RAM support, this
+clock will need to be resumed before any PCIe registers are
+accessed. Add support for this clock.
 
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pci-aardvark.c | 32 +++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index ada164d423f3..5d2b221dbd96 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -136,6 +136,7 @@ &pcie0 {
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
- 	status = "okay";
- 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-+	slot-power-limit-milliwatt = <10000>;
- 	/*
- 	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
- 	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 03e318bc171f..3beafc893969 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+@@ -297,6 +298,7 @@ struct advk_pcie {
+ 	struct timer_list link_irq_timer;
+ 	struct pci_bridge_emul bridge;
+ 	struct gpio_desc *reset_gpio;
++	struct clk *clk;
+ 	struct phy *phy;
+ };
+ 
+@@ -1809,6 +1811,29 @@ static int advk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ 		return of_irq_parse_and_map_pci(dev, slot, pin);
+ }
+ 
++static int advk_pcie_setup_clk(struct advk_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	int ret;
++
++	pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pcie->clk) && (PTR_ERR(pcie->clk) == -EPROBE_DEFER))
++		return PTR_ERR(pcie->clk);
++
++	/* Old bindings miss the clock handle */
++	if (IS_ERR(pcie->clk)) {
++		dev_warn(dev, "Clock unavailable (%ld)\n", PTR_ERR(pcie->clk));
++		pcie->clk = NULL;
++		return 0;
++	}
++
++	ret = clk_prepare_enable(pcie->clk);
++	if (ret)
++		dev_err(dev, "Clock initialization failed (%d)\n", ret);
++
++	return ret;
++}
++
+ static void advk_pcie_disable_phy(struct advk_pcie *pcie)
+ {
+ 	phy_power_off(pcie->phy);
+@@ -2000,6 +2025,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 			 slot_power_limit / 1000,
+ 			 (slot_power_limit / 100) % 10);
+ 
++	ret = advk_pcie_setup_clk(pcie);
++	if (ret)
++		return ret;
++
+ 	ret = advk_pcie_setup_phy(pcie);
+ 	if (ret)
+ 		return ret;
+@@ -2122,6 +2151,9 @@ static int advk_pcie_remove(struct platform_device *pdev)
+ 	/* Disable phy */
+ 	advk_pcie_disable_phy(pcie);
+ 
++	/* Disable clock */
++	clk_disable_unprepare(pcie->clk);
++
+ 	return 0;
+ }
+ 
 -- 
 2.35.1
 
