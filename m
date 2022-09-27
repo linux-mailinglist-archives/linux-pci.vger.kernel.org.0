@@ -2,173 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6944E5EC4AE
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:40:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3868C5EC4B8
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 15:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbiI0NkQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 09:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
+        id S232428AbiI0NlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 09:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232778AbiI0NkL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:40:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62836B154
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 06:40:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5314F619A3
-        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 13:40:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF8FC433D6;
-        Tue, 27 Sep 2022 13:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664286008;
-        bh=bHe7jqSdC6M9l75s9W0qT54/RGr69ijmKeccBsyU9Lk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d7KI9QJVRUTbcxl2kwBxegRL0PUDjIfPysbyPFBnPS4CkR6/6vAIQdaKcnEAPXsrM
-         Wjbfq+SMhAxqAmwq1LcDO8G/wzDHDNoEpDoMLUo4p7F56F7zT8VZpBYcWUhfldUVth
-         0EkJodrqlSX169VCruVQ7XYUq8O/0/lrqTSubcuomDdXetYD5eN7bOqjdRmiuakWmK
-         pCPYARhnKqkE5U0n53aW+655dCupQ9OpdfxZVOQCdMaPC3NIvWYmww6N2Mp9eSVCcy
-         xjbK4wlSCZQE3MeVfY6C5tt3Qo7OblLH2osDxTxNIBbbkgXxgZj6+DBuNiiuHtfauu
-         Gc1kQ8Vl0TNPQ==
-Date:   Tue, 27 Sep 2022 15:40:02 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        pali@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de
-Subject: Re: [PATCH 03/11] PCI: aardvark: Add support for DLLSC and hotplug
- interrupt
-Message-ID: <20220927153947.2df43936@dellmb>
-In-Reply-To: <YzGwbWoFIpADgbXz@lpieralisi>
-References: <20220818135140.5996-1-kabel@kernel.org>
-        <20220818135140.5996-4-kabel@kernel.org>
-        <YxtUR0+dBZut8QZH@lpieralisi>
-        <87r10al6a0.wl-maz@kernel.org>
-        <YzGR40/kmQX4ZNaS@lpieralisi>
-        <868rm68g9k.wl-maz@kernel.org>
-        <YzGwbWoFIpADgbXz@lpieralisi>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        with ESMTP id S231923AbiI0NlV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 09:41:21 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15F25E66C
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 06:41:18 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id q35-20020a17090a752600b002038d8a68fbso15646921pjk.0
+        for <linux-pci@vger.kernel.org>; Tue, 27 Sep 2022 06:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=4pzwYFff+/gp6imXGz+Xr/QW1tSB5Pck/AS91fsmU3k=;
+        b=LePq5aNygaRO4JwWo4786w9RJBPiOvEJaaocpUnMfXBoPwzGPk2aH8F8r0Y192UysC
+         /GVZyqPuEod63zVf/SLGKIbUrkaA1NHkdRx5Ihl8zSriN6TdOCVIqyAOEWdTeu9SEJRm
+         zVlJiU5ca/DSoQoraxCyph66is6b6yPPfVDrIOQX1R2GboUsqZXSN9giX+ystSq6zU+e
+         OpFstFBRjZX66JhUETQen00Nqpf2MnEK2uhahuwX5CrCMMekAjTst7VBZrvM2mOVNWPu
+         +cy5+6fA0vS8uG5yYR50nl8aenZjMrkYrvaFwhjmN9+DYFoG0v9UAN/K7Iu39dqeOnPp
+         SjZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=4pzwYFff+/gp6imXGz+Xr/QW1tSB5Pck/AS91fsmU3k=;
+        b=7PhMpK66kauZgzh+BK06y3h1akViRA1sjgO2c02RyoRgWOlWcgM3tgHYAXeb9pKAqf
+         fRwermMFbCbpn/tzbknRKdiqCpXAVOYreXzjDAGxqtFKRsTszMGzBXOwydT+vH+w5AmA
+         HEBr+CQF/o2bumrIfmrcM/SvBVJa5zK5s1XTngs6XXDchloaO9jxaWKHILKA6enKtMKY
+         hFFskXxuuNg1JYjo+SVV2KW6BbrwGp5vDM+XB8rN7mzVswOv7HIzFsS9R1q+xCitdkOD
+         eSkJabul4jZfQXDbAAbNsbxz3EV2+ZrRzhaK7EGLbo8jIvGIC/Wlc4N2+ENr4HA2pM87
+         8DCA==
+X-Gm-Message-State: ACrzQf1f5v76pOMcKv6yAWkaj/lKKVFIOg6xtZXEzT7UsuGKFPqiyCL7
+        6HzCE66q/0UKv9yxGSetF7lV0A==
+X-Google-Smtp-Source: AMsMyM77LunLFCmKosQx6Onu7WC4eGvOAvGGQe2jOricoTl6inaR33JtDw1CPTh3n9Pc1Mv0wYQf5g==
+X-Received: by 2002:a17:90a:3f89:b0:205:a54e:2db8 with SMTP id m9-20020a17090a3f8900b00205a54e2db8mr4622868pjc.36.1664286078324;
+        Tue, 27 Sep 2022 06:41:18 -0700 (PDT)
+Received: from [10.2.223.68] ([61.120.150.77])
+        by smtp.gmail.com with ESMTPSA id n16-20020a634d50000000b0042c0ffa0e62sm1516141pgl.47.2022.09.27.06.41.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Sep 2022 06:41:17 -0700 (PDT)
+Message-ID: <97ac6c82-81a0-2f63-7d8f-e56d702bc874@bytedance.com>
+Date:   Tue, 27 Sep 2022 21:41:09 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.0
+Subject: Re: [External] Re: [PATCH 2/3] PCI/ERR: Clear fatal status in
+ pcie_do_recovery()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     allenbh@gmail.com, dave.jiang@intel.com,
+        linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        linux-pci@vger.kernel.org, jejb@linux.ibm.com, jdmason@kudzu.us,
+        james.smart@broadcom.com, fancer.lancer@gmail.com,
+        linux-kernel@vger.kernel.org, ntb@lists.linux.dev,
+        oohall@gmail.com, bhelgaas@google.com, dick.kennedy@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org
+References: <20220926180906.GA1609498@bhelgaas>
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+In-Reply-To: <20220926180906.GA1609498@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 26 Sep 2022 16:00:13 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 
-> On Mon, Sep 26, 2022 at 08:35:51AM -0400, Marc Zyngier wrote:
-> > On Mon, 26 Sep 2022 07:49:55 -0400,
-> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote: =20
-> > >=20
-> > > On Sat, Sep 17, 2022 at 10:05:59AM +0100, Marc Zyngier wrote: =20
-> > > > Hi Lorenzo,
-> > > >=20
-> > > > On Fri, 09 Sep 2022 15:57:11 +0100,
-> > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote: =20
-> > > > >=20
-> > > > > [+Marc, Thomas - I can't merge this code without them reviewing i=
-t,
-> > > > > I am not sure at all you can mix the timer/IRQ code the way you d=
-o]
-> > > > >=20
-> > > > > On Thu, Aug 18, 2022 at 03:51:32PM +0200, Marek Beh=C3=BAn wrote:=
- =20
-> > > > > > From: Pali Roh=C3=A1r <pali@kernel.org>
-> > > > > >=20
-> > > > > > Add support for Data Link Layer State Change in the emulated sl=
-ot
-> > > > > > registers and hotplug interrupt via the emulated root bridge.
-> > > > > >=20
-> > > > > > This is mainly useful for when an error causes link down event.=
- With
-> > > > > > this change, drivers can try recovery.
-> > > > > >=20
-> > > > > > Link down state change can be implemented because Aardvark supp=
-orts Link
-> > > > > > Down event interrupt. Use it for signaling that Data Link Layer=
- Link is
-> > > > > > not active anymore via Hot-Plug Interrupt on emulated root brid=
-ge.
-> > > > > >=20
-> > > > > > Link up interrupt is not available on Aardvark, but we check fo=
-r whether
-> > > > > > link is up in the advk_pcie_link_up() function. By triggering H=
-ot-Plug
-> > > > > > Interrupt from this function we achieve Link up event, so long =
-as the
-> > > > > > function is called (which it is after probe and when rescanning=
-).
-> > > > > > Although it is not ideal, it is better than nothing. =20
-> > > > >=20
-> > > > > So before even coming to the code review: this patch does two thi=
-ngs.
-> > > > >=20
-> > > > > 1) It adds support for handling the Link down state
-> > > > > 2) It adds some code to emulate a Link-up event
-> > > > >=20
-> > > > > Now, for (2). IIUC you are adding code to make sure that an HP
-> > > > > event is triggered if advk_pcie_link_up() is called and it
-> > > > > detects a Link-down->Link-up transition, that has to be notified
-> > > > > through an HP event.
-> > > > >=20
-> > > > > If that's correct, you have to explain to me please what this is
-> > > > > actually achieving and a specific scenario where we want this to =
-be
-> > > > > implemented, in fine details; then we add it to the commit log.
-> > > > >=20
-> > > > > That aside, the interaction of the timer and the IRQ domain code
-> > > > > must be reviewed by Marc and Thomas to make sure this is not
-> > > > > a gross violation of the respective subsystems usage. =20
-> > > >=20
-> > > > I don't see anything being a "gross violation" here, at least from =
-an
-> > > > interrupt subsystem perspective. In a way, this is synthesising an
-> > > > interrupt on the back of some other event, and as long as the conte=
-xt
-> > > > is somehow appropriate (something that looks like an interrupt when
-> > > > pretending there is one), this should be OK. Other subsystems such =
-as
-> > > > i2c GPIO expanders do similar things. =20
-> > >=20
-> > > Right, thanks.
-> > >  =20
-> > > > The one thing I'm dubious about is the frequency of the timer. Aski=
-ng
-> > > > for a poll of the link every jiffy is bound to be expensive, and it
-> > > > would be good to relax this as much as possible, specially on low-e=
-nd
-> > > > HW such as this, where every cycle counts. It is always going to be=
- a
-> > > > "best effort" thing, and the commit message doesn't say what's the
-> > > > actual grace period to handle this (the spec probably has one). =20
-> > >=20
-> > > AFAICS, the code does not poll the link. It sets a timer only if
-> > > the link is checked (eg upon PCI bus forced rescan or config access)
-> > > the link is up and it was down, to emulate a HP IRQ. =20
-> >=20
-> > I still find the timer frequency pretty high, but surely the authors
-> > of the code have worked out that this wasn't a problem. =20
->=20
-> Please correct me if I am wrong but with mod_timer() all they want to do
-> is emulating/firing an (hotplug) IRQ as soon as possible - a one-off.
->=20
-> It is not a periodic timer - at least that's what I understand from the
-> code and that's the reason why such a short interval was chosen but
-> it should not be me who comment on that :)
 
-This is true, it is not a periodic timer. We are just using an IRQSAFE
-timer to call generic_handle_domain_irq() from it's handler, because we
-can't do it during the config space access.
+On 9/27/22 2:09 AM, Bjorn Helgaas wrote:
+> On Mon, Sep 26, 2022 at 10:01:55PM +0800, Zhuo Chen wrote:
+>> On 9/23/22 5:08 AM, Bjorn Helgaas wrote:
+>>> On Fri, Sep 02, 2022 at 02:16:33AM +0800, Zhuo Chen wrote:
+>>>> When state is pci_channel_io_frozen in pcie_do_recovery(),
+>>>> the severity is fatal and fatal status should be cleared.
+>>>> So we add pci_aer_clear_fatal_status().
+>>>
+>>> Seems sensible to me.  Did you find this by code inspection or by
+>>> debugging a problem?  If the latter, it would be nice to mention the
+>>> symptoms of the problem in the commit log.
+>>
+>> I found this by code inspection so I may not enumerate what kind of problems
+>> this code will cause.
+>>>
+>>>> Since pcie_aer_is_native() in pci_aer_clear_fatal_status()
+>>>> and pci_aer_clear_nonfatal_status() contains the function of
+>>>> 'if (host->native_aer || pcie_ports_native)', so we move them
+>>>> out of it.
+>>>
+>>> Wrap commit log to fill 75 columns.
+>>>
+>>>> Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
+>>>> ---
+>>>>    drivers/pci/pcie/err.c | 8 ++++++--
+>>>>    1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>> index 0c5a143025af..e0a8ade4c3fe 100644
+>>>> --- a/drivers/pci/pcie/err.c
+>>>> +++ b/drivers/pci/pcie/err.c
+>>>> @@ -243,10 +243,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>    	 * it is responsible for clearing this status.  In that case, the
+>>>>    	 * signaling device may not even be visible to the OS.
+>>>>    	 */
+>>>> -	if (host->native_aer || pcie_ports_native) {
+>>>> +	if (host->native_aer || pcie_ports_native)
+>>>>    		pcie_clear_device_status(dev);
+>>>
+>>> pcie_clear_device_status() doesn't check for pcie_aer_is_native()
+>>> internally, but after 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status
+>>> errors only if OS owns AER") and aa344bc8b727 ("PCI/ERR: Clear AER
+>>> status only when we control AER"), both callers check before calling
+>>> it.
+>>>
+>>> I think we should move the check inside pcie_clear_device_status().
+>>> That could be a separate preliminary patch.
+>>>
+>>> There are a couple other places (aer_root_reset() and
+>>> get_port_device_capability()) that do the same check and could be
+>>> changed to use pcie_aer_is_native() instead.  That could be another
+>>> preliminary patch.
+>>>
+>> Good suggestion. But I have only one doubt. In aer_root_reset(), if we use
+>> "if (pcie_aer_is_native(dev) && aer)", when dev->aer_cap
+>> is NULL and root->aer_cap is not NULL, pcie_aer_is_native() will return
+>> false. It's different from just using "(host->native_aer ||
+>> pcie_ports_native)".
+>> Or if we can use "if (pcie_aer_is_native(root))", at this time a NULL
+>> pointer check should be added in pcie_aer_is_native() because root may be
+>> NULL.
+> 
+> Good point.  In aer_root_reset(), we're updating Root Port registers,
+> so I think they should look like:
+> 
+>    if (pcie_aer_is_native(root) && aer) {
+>      ...
+>    }
+> 
+> Does that seem safe and equivalent to you?
+> 
+> Bjorn
 
-Marek
+I think ‘if (aer && pcie_aer_is_native(root))’ might be safer,
+because when root is NULL, 'aer' will be NUll as well, and the
+predicate will return false without entering pcie_aer_is_native(root).
+
+
+-- 
+Thanks,
+Zhuo Chen
