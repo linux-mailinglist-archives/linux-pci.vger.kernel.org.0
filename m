@@ -2,48 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B717B5ECD59
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 21:57:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9220D5ECD8B
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Sep 2022 22:00:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232201AbiI0T5o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Sep 2022 15:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
+        id S232509AbiI0UAl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Sep 2022 16:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232234AbiI0T5k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 15:57:40 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73828F1D77;
-        Tue, 27 Sep 2022 12:57:38 -0700 (PDT)
+        with ESMTP id S232142AbiI0T7i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Sep 2022 15:59:38 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E844E1C483D;
+        Tue, 27 Sep 2022 12:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664308658; x=1695844658;
+  t=1664308770; x=1695844770;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YJq7VoMFPOHGklVVnPw2e/A3qO2QBSWiCy9Vm7kXyOA=;
-  b=kc+6MqeSUcCbwQre76dRB4iXuPYFl/szaOQZ7kQelqxQ/dXWjU+7MVPF
-   lGAtWbgHBPXGypclPn69APBAfkq2vnuVkEvTfMdCQQy5rua1QgzE0DXZh
-   Z0mLRQcXtQI5U4FYFHENAcuIm/bKhQDn2pky1Cc0o87BwNnfSKUdIMkfn
-   JkkLz/gBv3BSA1mDl3zKyOnblBBVhgs/XRSAh0E9uTNyEctJMP3xRCZPQ
-   DSBnI1nZDP+lSD3ymxEAxjAatevXdqdrpWbqigoJhS8j8mbDagaBsvoTf
-   E3rJ2mwdv4nPhdXehCjwbJ1f3aQtVsWY9w5tSzespD2HtfOyEVBVGiRCy
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="302328624"
+  bh=hHMW6dKcSr50LmzJxBbJqerolMIPg6Gn2+JmAaKAzHQ=;
+  b=HkjBZn39TzCR4sNt6SAAne2GnMObisw+JDT9ogoCVOPz9I0B42IClLBE
+   jw0ap1E0VATm9PrwrlDIMF23cbxiY8ig+ZlTWR1c2qQBks3c+EVZx7LSt
+   P2MxgAtLPYIjuuFACPBznDNLQ4680QNo49zAnZtbDCXq+moleNH1wXZBt
+   nN/a8u/xRsxDk3V5XV3aQA2z72GkNj9W9R5MYaQwHPUGkoehCIkU76VT5
+   CHlj+7g9ZcSfNeouJ9eqMtRUaSsE4gdSQFVqI3mxUORSdJZP42LRg9Fh1
+   yJpNUuCncnnv1tAX/h+BtPh9ViZLdQracOlDl6Q6aYH/MFtszE3uw0wHE
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="363256903"
 X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="302328624"
+   d="scan'208";a="363256903"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:57:37 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="684116192"
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:29 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="684116462"
 X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
-   d="scan'208";a="684116192"
+   d="scan'208";a="684116462"
 Received: from weimingg-mobl.amr.corp.intel.com (HELO [10.212.244.112]) ([10.212.244.112])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:57:35 -0700
-Message-ID: <14057120-a6d6-8726-80f1-8e60328fbf36@linux.intel.com>
-Date:   Tue, 27 Sep 2022 12:57:35 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 12:59:28 -0700
+Message-ID: <8bf3e3c0-78b6-7121-1951-300175ede3b9@linux.intel.com>
+Date:   Tue, 27 Sep 2022 12:59:27 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v2 4/9] scsi: lpfc: Change to use
- pci_aer_clear_uncorrect_error_status()
+Subject: Re: [PATCH v2 5/9] PCI/AER: Unexport pci_aer_clear_nonfatal_status()
 Content-Language: en-US
 To:     Zhuo Chen <chenzhuo.1@bytedance.com>, bhelgaas@google.com,
         ruscur@russell.cc, oohall@gmail.com, fancer.lancer@gmail.com,
@@ -54,16 +53,15 @@ Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, ntb@lists.linux.dev,
         linux-scsi@vger.kernel.org
 References: <20220927153524.49172-1-chenzhuo.1@bytedance.com>
- <20220927153524.49172-5-chenzhuo.1@bytedance.com>
+ <20220927153524.49172-6-chenzhuo.1@bytedance.com>
 From:   Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220927153524.49172-5-chenzhuo.1@bytedance.com>
+In-Reply-To: <20220927153524.49172-6-chenzhuo.1@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -73,47 +71,94 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 9/27/22 8:35 AM, Zhuo Chen wrote:
-> Status bits for ERR_NONFATAL errors only are cleared in
-> pci_aer_clear_nonfatal_status(), but we want clear uncorrectable
-> error status in lpfc_aer_cleanup_state(), so we change to use
-> pci_aer_clear_uncorrect_error_status().
-
-I think you don't need to mention status bits here. Just use terms
-"fatal" and "non-fatal" errors.
-
-lpfc_aer_cleanup_state() requires clearing both fatal and non-fatal
-uncorrectable error status. But using  pci_aer_clear_nonfatal_status()
-will only clear non-fatal error status. To clear both fatal and non-fatal
-error status, use pci_aer_clear_uncorrect_error_status().
-
+> Since pci_aer_clear_nonfatal_status() is used only internally, move
+> its declaration to the PCI internal header file. Also, no one cares
+> about return value of pci_aer_clear_nonfatal_status(), so make it void.
 > 
 > Signed-off-by: Zhuo Chen <chenzhuo.1@bytedance.com>
 > ---
->  drivers/scsi/lpfc/lpfc_attr.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Looks good to me.
+
+>  drivers/pci/pci.h      | 2 ++
+>  drivers/pci/pcie/aer.c | 7 ++-----
+>  include/linux/aer.h    | 5 -----
+>  3 files changed, 4 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-> index 09cf2cd0ae60..d835cc0ba153 100644
-> --- a/drivers/scsi/lpfc/lpfc_attr.c
-> +++ b/drivers/scsi/lpfc/lpfc_attr.c
-> @@ -4689,7 +4689,7 @@ static DEVICE_ATTR_RW(lpfc_aer_support);
->   * Description:
->   * If the @buf contains 1 and the device currently has the AER support
->   * enabled, then invokes the kernel AER helper routine
-> - * pci_aer_clear_nonfatal_status() to clean up the uncorrectable
-> + * pci_aer_clear_uncorrect_error_status() to clean up the uncorrectable
->   * error status register.
->   *
->   * Notes:
-> @@ -4715,7 +4715,7 @@ lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
->  		return -EINVAL;
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 785f31086313..a114175d08e4 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -684,6 +684,7 @@ void pci_aer_init(struct pci_dev *dev);
+>  void pci_aer_exit(struct pci_dev *dev);
+>  extern const struct attribute_group aer_stats_attr_group;
+>  void pci_aer_clear_fatal_status(struct pci_dev *dev);
+> +void pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pci_aer_clear_status(struct pci_dev *dev);
+>  int pci_aer_raw_clear_status(struct pci_dev *dev);
+>  #else
+> @@ -691,6 +692,7 @@ static inline void pci_no_aer(void) { }
+>  static inline void pci_aer_init(struct pci_dev *d) { }
+>  static inline void pci_aer_exit(struct pci_dev *d) { }
+>  static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+> +static inline void pci_aer_clear_nonfatal_status(struct pci_dev *dev) { }
+>  static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
+>  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+>  #endif
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4e637121be23..e2ebd108339d 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -251,13 +251,13 @@ int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
 >  
->  	if (phba->hba_flag & HBA_AER_ENABLED)
-> -		rc = pci_aer_clear_nonfatal_status(phba->pcidev);
-> +		rc = pci_aer_clear_uncorrect_error_status(phba->pcidev);
+> -int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> +void pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	int aer = dev->aer_cap;
+>  	u32 status, sev;
 >  
->  	if (rc == 0)
->  		return strlen(buf);
+>  	if (!pcie_aer_is_native(dev))
+> -		return -EIO;
+> +		return;
+>  
+>  	/* Clear status bits for ERR_NONFATAL errors only */
+>  	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
+> @@ -265,10 +265,7 @@ int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  	status &= ~sev;
+>  	if (status)
+>  		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+> -
+> -	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(pci_aer_clear_nonfatal_status);
+>  
+>  void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  {
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 154690c278cb..f638ad955deb 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -44,7 +44,6 @@ struct aer_capability_regs {
+>  /* PCIe port driver needs this function to enable AER */
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+> -int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pci_aer_clear_uncorrect_error_status(struct pci_dev *dev);
+>  void pci_save_aer_state(struct pci_dev *dev);
+>  void pci_restore_aer_state(struct pci_dev *dev);
+> @@ -57,10 +56,6 @@ static inline int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+> -static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+> -{
+> -	return -EINVAL;
+> -}
+>  static inline int pci_aer_clear_uncorrect_error_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
 
 -- 
 Sathyanarayanan Kuppuswamy
