@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B5A5EDEDC
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 16:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B47555EDEEB
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 16:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234133AbiI1OfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 10:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
+        id S234150AbiI1Oie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 10:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbiI1OfQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 10:35:16 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8D87CB79;
-        Wed, 28 Sep 2022 07:35:14 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id l14so27560779eja.7;
-        Wed, 28 Sep 2022 07:35:14 -0700 (PDT)
+        with ESMTP id S234418AbiI1Oid (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 10:38:33 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74E1AE211;
+        Wed, 28 Sep 2022 07:38:31 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id c30so16391241edn.2;
+        Wed, 28 Sep 2022 07:38:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=bITryamKPXAaRRd2P5JThc+kCnMrI1AdcBLFS62YJTM=;
-        b=JME++gzbxsQDSHyB5nBuZ+eAXbc+6lkyj/ZOK33HsVtR7zkN40I3qzN3hi9LxzimAP
-         Dfw34Bbc0jDus2v8SCLIs3VF4bA+7dI78cTOsJDOas4EDEtKYywcJ+VrbGyG7IpP0iSO
-         0PKTR3wnaYzH1i0LFnR87b5ndDyTJYTBed3m18qBCHBWIx7z/uwAC5cy4wa8y2N4Q3Ue
-         dLHKikSqmaN57yU5P+0OimIXTsY4/Jg8fkoJ7THtLvEYpAENciUb/J8kJwrEBqG8BI5p
-         GV9PQEsTQe4lJodk82nGdvnFFGYcaZSHa2iUNxQvnuX1PaS0uvGGU48CE9dISv3oape0
-         v1RQ==
+        bh=8DnDko/nUiaNQfilebzmtyXvqhSN9KVnALbnVAuYDqY=;
+        b=WgvQ11R+E2jsOCPT8ZNGJjq2pseCnFfA1rrwcat2ovY/RqY6+BNQ7i5E83cuRSedBe
+         fXZ4WpYRCddesrDjbvOu+snt1NOyX8KTgiS6p3AuUzOmOGZlyB35e1XKyx3gXwGrxXUZ
+         xHmOm5yClT7SHgmmZakm0WWiWCMxmjc184Nh7XQ0XCe5tLmeXNml9Og2T9m6KKlWNZg2
+         QMSO066GUcY4K0PY0X2SgVFgC+i+yyHURlMepAAkd9X73P6Y2v9MT7/zcKZlVJNdgNt1
+         BZXO3fvTN8pnQWSjkFrTXMgrjX+VtClkUUGfKg03eVoL540aoE7LSriP9D0v/i91w51f
+         tPmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=bITryamKPXAaRRd2P5JThc+kCnMrI1AdcBLFS62YJTM=;
-        b=AtmHUryLi5+SWJJWbVlN+k4HKwC7w76WRA6S3zSffKd9EZYEfnk34KiQI6iv9TlD5O
-         BKZpP6Rp7lG14nlCJ6URV/w3SWHCMfSHOoKcJJp3xpqBkfjOWZZbkudU9080tfTQeq5D
-         u6FGXiWmHRwIN3hAI4hK2uBzNNUJ0L/aksslPHFCxSaxbHk/B3aulF++xsa4Avqyx/iv
-         AVzrmQwHRQdmqOvw13pkRrVE7VGMrHTCHj788pX6j/kZrI6/lELBqKkVGeJppFtx8aDE
-         IQmzsCc63yg8rf0+J3BUk7jJGS2ICSCGrvIxoLHSr+9hxkUWzUS9tY2bngJpMFLQd5YF
-         lRkw==
-X-Gm-Message-State: ACrzQf0pPjJndAoNjkgx+2RCSFMmBFed8Ny4qpZuzUR3ZabMmvv4j1Ag
-        jmvcds4KK1tvQ5LlIPWSYto=
-X-Google-Smtp-Source: AMsMyM7EDKPCuPoi+lD+mpD0Wys7tz3LPH1v2LlA7lAm8CznGXnuyPttmyMkcDlXYNpz9imHcrdwJw==
-X-Received: by 2002:a17:906:730b:b0:782:2eaf:a4ad with SMTP id di11-20020a170906730b00b007822eafa4admr29146255ejc.27.1664375713473;
-        Wed, 28 Sep 2022 07:35:13 -0700 (PDT)
+        bh=8DnDko/nUiaNQfilebzmtyXvqhSN9KVnALbnVAuYDqY=;
+        b=7AgFrpjrMsjY1KwU3WXpFf4eE1PCFLDBmnDSRoF/TQH9qBrxLM9IKAq311p/38nE60
+         5Kwao3uJ85jbeJUfFtL4RzEdvoMO9dxlrdmvjN/g5kmC+lN9Cnao3XhAUy69RerRkCEx
+         p0e7OTv5+xPT302VSPMPUmIVeFKv/yvhxlUVmN1VhodBTbcpXRzUwwxrfPsL5J/Kjyod
+         PO5TnmzWZGcJuySV0xg8dR6KbkZvLsPpM+IHG8Yf5XjTzJlDLqRAv2uKixRlyJgesgPW
+         ySvUS1xoEy2VL2x4lLQCKrZTnx3tNkie56lO1trsAdWLif4lxAWUW6GYKY50kp6VUoUL
+         l2Ag==
+X-Gm-Message-State: ACrzQf2HJPRwtFH75lzpIiSMIh0znZFnBdw7lq1nSZNeLujvHKmEhSar
+        MhrYmKxGGnc3QizX1wvsm2c=
+X-Google-Smtp-Source: AMsMyM7CRrMZVNMHkmmpmNiBvIwdWVrrsRiJWkkGrnazyApe61Bk6BWnrn+7kLLA0mP/it3HOZnSig==
+X-Received: by 2002:aa7:da08:0:b0:456:ea2b:3ce3 with SMTP id r8-20020aa7da08000000b00456ea2b3ce3mr24742806eds.181.1664375910066;
+        Wed, 28 Sep 2022 07:38:30 -0700 (PDT)
 Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id t7-20020a170906a10700b0074136cac2e7sm2467887ejy.81.2022.09.28.07.35.11
+        by smtp.gmail.com with ESMTPSA id x2-20020a1709060ee200b0073dde62713asm2493593eji.89.2022.09.28.07.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 07:35:12 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 16:35:10 +0200
+        Wed, 28 Sep 2022 07:38:28 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 16:38:27 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -58,14 +58,14 @@ Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Use PCI_CONF1_EXT_ADDRESS() macro
-Message-ID: <YzRbnjb6UVwrj/li@orome>
-References: <20220928121911.14994-1-pali@kernel.org>
+Subject: Re: [PATCH] PCI: tegra: Update comment about config space
+Message-ID: <YzRcYwQYlawV10QS@orome>
+References: <20220911113216.14892-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RyfNZ9e+knk+ANeR"
+        protocol="application/pgp-signature"; boundary="PBUmyu+1rqqoAJH+"
 Content-Disposition: inline
-In-Reply-To: <20220928121911.14994-1-pali@kernel.org>
+In-Reply-To: <20220911113216.14892-1-pali@kernel.org>
 User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -78,51 +78,46 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---RyfNZ9e+knk+ANeR
+--PBUmyu+1rqqoAJH+
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 28, 2022 at 02:19:11PM +0200, Pali Roh=C3=A1r wrote:
-> Simplify pci-tegra.c driver code and use new PCI_CONF1_EXT_ADDRESS() macro
-> for accessing PCI config space.
+On Sun, Sep 11, 2022 at 01:32:16PM +0200, Pali Roh=C3=A1r wrote:
+> Like many other ARM PCIe controllers, it uses old PCI Configuration
+> Mechanism #1 from PCI Local Bus for accessing PCI config space.
+> It is not PCIe ECAM in any case.
 >=20
 > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
 > ---
-> Please look also at this related patch:
-> https://patchwork.kernel.org/project/linux-pci/patch/20220911113216.14892=
--1-pali@kernel.org/
-> ---
->  drivers/pci/controller/pci-tegra.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+>  drivers/pci/controller/pci-tegra.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 
-I had to go chase down the patch that introduces PCI_CONF1_EXT_ADDRESS.
-It would've been easier if this had been part of the series that
-introduced that, or if you had provided a link to that patch here.
+Perhaps this should be rolled into the PCI_CONF1_EXT_ADDRESS patch? On
+the other hand there's really no use in keeping this comment around
+after that other patch because the documentation for the new macro lays
+out the details already.
 
-Anyway, looks like this is equivalent to the existing inline function,
-so:
+Thierry
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---RyfNZ9e+knk+ANeR
+--PBUmyu+1rqqoAJH+
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0W54ACgkQ3SOs138+
-s6H5Dw/8CCO0A48ejlIl6fquIuKAyXV4HMQnBUd+DQgaINWHH893pKdu1BsR672v
-IBVB6xEb+9zR5l5zqPyxGl6p51xXhzE6H3FxEOYnSxk1tJAzRTeo/hslUvhWTCWy
-ePiI+7zY8zxAEwSIUF0fU0kyoMuUMyDZELJTbxF5PM4PoDYy7fYSTptN0DTztsEk
-ftpnOOVTWVIArYRrBPQEyk60teDGwQOAYlICcjqlm8yt3Zsn6yNEh5M0wmO/oDZH
-kJtCaw5kymBa610fny18hooEZpE8SypRbFptOpi6/Tagkj4RywPYlBTfCo3qWDvR
-Tv33A/X2RB+f0/vyUjfUmZN3GWY00lv64N9IRucYLpSDoN4xjrWsVTXAmCDjAMKS
-OOkGIJuEt+T/aPX0DqpxrKOEm/dw3ywURK05rinmPsisWShOyBm7p1/yxm3smZL4
-35TyDIsSCLpGQCoLZc7zPsD6h0fo0bK8VLPUeulzMC4ZYXjP53G7HTSGWHcMqecM
-PJFUv9PuzLdfvbkbixFsNzSpZo4HqTi41VlHIdlSzUXd1aZsBvcc4a3B9c8fFd1X
-8Jc0bGLDhmxAFQeGpjKtXMy1++p34yrO1hI80IS2jDV7je63ZKA7zlCrBA4+cjM7
-cnjGjC+ZyDLd8S0XkYf3NdJXIkmrk3EOfzXdDSj3EfOOyVHLl2k=
-=a3Eo
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0XGMACgkQ3SOs138+
+s6EUKw//e6+EBVbBjmdErmRkedqQRSc8/R4Y7cyWp8xtevza46OFYc837j7g+Lmp
+wqru1VugD6Zz0+t/ppR/84mjEr5EcsOnXJmbvz0QCq0oGUkvUfYULtMUpLPCy59n
+pbLQ/buBsGaE9kbGs0QWE+A1dBr7AWigRv5osD0ahl7OkkIuXSfYA5j0EgkTfslf
+jSoIrw4jyfiXTF01FMdb1Qsnq3qcOYsoCgwXXRoarhoVtS/NvN71hUQbohBrV675
+Y/C8zwngKIx0EO1X9VmcxpyWtgdTG5HgbdTS0eN7QckLFyATCoz1FsZ8tPwwAWix
+iY3iV5lpjCr7JCC7rNj1tTtNpdfaqpnb/sRDNLKu2E2RDomueKkO+YzRTMLqTacF
+6tEZk+W1evdPfTnfc/Oo6IIEEGhbMViQS4sYKiNiHG0NxjWoy/I0mt/JJ5uAapY6
+0LMD+hqHTl+E0VMsd0Q0n9bMMW/qloZKW8Fgm6P8Eu9WtXQ3W7EnR76q6/Zn1a9Z
+3u27DfG39rebzY0mAAHbqZDz70kU9XxHXrH1TJ6YPytyKBg5Oqwcp66IJ1B8qDqr
+Xy1sthcegoYWjpaIHRCN5R7eTX8LKQnqdqtNfBb4GnGoCFzXwB430Mdfao5w+wBZ
+79PqcMXD/v03WiUhthfZor8sA8gxb9R5BBp8hU92D6MTeqR4LIw=
+=KBC4
 -----END PGP SIGNATURE-----
 
---RyfNZ9e+knk+ANeR--
+--PBUmyu+1rqqoAJH+--
