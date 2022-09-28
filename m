@@ -2,41 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F31B5ED7DD
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 10:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C70EC5ED806
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 10:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233321AbiI1Iej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 04:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
+        id S233262AbiI1Iju (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 04:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233713AbiI1IeX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 04:34:23 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F6993784;
-        Wed, 28 Sep 2022 01:34:11 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1odSW9-0006qO-R9; Wed, 28 Sep 2022 10:34:09 +0200
-Message-ID: <2128c845-c3d0-e5af-0f08-7e28ac946e52@leemhuis.info>
-Date:   Wed, 28 Sep 2022 10:34:09 +0200
+        with ESMTP id S233129AbiI1IjZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 04:39:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D264DA1D6E
+        for <linux-pci@vger.kernel.org>; Wed, 28 Sep 2022 01:39:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2E65EB81FB2
+        for <linux-pci@vger.kernel.org>; Wed, 28 Sep 2022 08:39:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CFAC433D6;
+        Wed, 28 Sep 2022 08:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664354360;
+        bh=s/YcRSwr9zctteq1dmxPcXH2bnKWNhBdbSVODYGwNz0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vDlhN+wOGpLcYy2dzLZG3vJxpBMJqwmMmjxrkov2S4tdBv8u7Z25Q4Z0opf6P5a7q
+         TkWRAzR0qGhovGIc8EwxPQwJxjsNGaWXX8a6f7AxWTl+xMTKFExqjqmSzAtKhZVXpp
+         UjOXHuRRIT1t1plhO0WxKQJlY4iK1MK8FdQJ+Fr5UY9vgAGI7YhDifGHiV5MSRlMlk
+         J892stCpd8yY6wVyfdAs3vRPy8jBVLZoB+xUeTTOGU6H1ZipSJsSmh/efyd0lVgaE7
+         EGqsFnEKeHq8te5jM+MxVVocDoFDevcqmuK4O6ggwQU8SDgHNx/riE3NxyfTByLlD/
+         DP/WgrJb5NvYA==
+Date:   Wed, 28 Sep 2022 10:39:14 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        pali@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/11] PCI: pciehp: Enable Command Completed Interrupt
+ only if supported
+Message-ID: <YzQIMpWm9GLR8YYi@lpieralisi>
+References: <20220818135140.5996-1-kabel@kernel.org>
+ <20220818135140.5996-3-kabel@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: boot interrupt quirk (also in 4.19.y) breaks serial ports (was:
- [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets)
- #forregzbot
-Content-Language: en-US, de-DE
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de>
- <20220923192030.162412-1-ghalat@redhat.com>
-To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220923192030.162412-1-ghalat@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664354052;d52024d7;
-X-HE-SMSGID: 1odSW9-0006qO-R9
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+In-Reply-To: <20220818135140.5996-3-kabel@kernel.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,55 +59,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-Hi, this is your Linux kernel regression tracker.
-
-On 23.09.22 21:20, Grzegorz Halat wrote:
-> Hi,
+On Thu, Aug 18, 2022 at 03:51:31PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
 > 
-> On Wed, Sep 16 2020 at 12:12, Stefan BÃ¼hler wrote:
->> this quirk breaks our serial ports PCIe card (i.e. we don't see any
->> output from the connected devices; no idea whether anything we send
->> reaches them):
+> The No Command Completed Support bit in the Slot Capabilities register
+> indicates whether Command Completed Interrupt Enable is unsupported.
 > 
-> I have the same problem, also with a PCI serial adapter from Oxford Semiconductor.
-> I've bisected the kernel and it was introduced in b88bf6c3b6ff.
-> When the system is booted with "pci=noioapicquirk" then the PCI card works fine.
-> The CPU is Intel Xeon E5-2680 v3 @ 2.50GHz.
+> We already check whether No Command Completed Support bit is set in
+> pcie_wait_cmd(), and do not wait in this case.
 > 
-> Sean, do you have any news about this issue?
+> Let's not enable this Command Completed Interrupt at all if NCCS is set,
+> so that when users dump configuration space from userspace, the dump
+> does not confuse them by saying that Command Completed Interrupt is not
+> supported, but it is enabled.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> ---
+> Changes since batch 5:
+> - changed commit message, previously we wrote that the change is needed
+>   to fix a bug where kernel was waiting for an event which did not
+>   come. This turns out to be false. See
+>   https://lore.kernel.org/linux-pci/20220818142243.4c046c59@dellmb/T/#u
+> ---
+>  drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+Hi Bjorn,
 
-#regzbot ^introduced b88bf6c3b6ff77948
-#regzbot title boot interrupt quirk (also in 4.19.y) breaks serial ports
-#regzbot ignore-activity
-#regzbot backburner: known since 2020, original developer likely moved on
+this patch is mixed with aardvark specific changes,
+please let me know if it is fine for you to merge it.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+Thanks,
+Lorenzo
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 373bb396fe22..838eb6cc3ec7 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -817,7 +817,9 @@ static void pcie_enable_notification(struct controller *ctrl)
+>  	else
+>  		cmd |= PCI_EXP_SLTCTL_PDCE;
+>  	if (!pciehp_poll_mode)
+> -		cmd |= PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_CCIE;
+> +		cmd |= PCI_EXP_SLTCTL_HPIE;
+> +	if (!pciehp_poll_mode && !NO_CMD_CMPL(ctrl))
+> +		cmd |= PCI_EXP_SLTCTL_CCIE;
+>  
+>  	mask = (PCI_EXP_SLTCTL_PDCE | PCI_EXP_SLTCTL_ABPE |
+>  		PCI_EXP_SLTCTL_PFDE |
+> -- 
+> 2.35.1
+> 
