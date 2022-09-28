@@ -2,148 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A53445EE86B
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 23:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D5B5EE870
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 23:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233015AbiI1Viv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 17:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        id S229901AbiI1Vja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 17:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbiI1Vit (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 17:38:49 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC62395E59;
-        Wed, 28 Sep 2022 14:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=VOh9QcFEDE1YfzcxWIGp+1k7f+qP9ixR08UnNbWnKpc=; b=mOBFIK5m8mLy4ywi3FVTK4mL6V
-        oj75zw9aDB26C9Y6E3q3Zh+2OVl0EQqV4erRsyOn6/kj0Tt8zleEZbtbluaojd3dKCXarw1p0vw2N
-        Mjm+cJscVTFtRI6ZPBK1NMDtmJ37SkFDwrsyizQWmLDPIffvRJnH6j1msXmitMEuUo/Vnmp2R1D4p
-        3eeslAUPK9oaVUW/PBgxclT7nvMxXVf6RSS/t7hKvCFdGuk4mom65QCMpDVM/oB2p4534U7GPMsT2
-        IrYHvtiO2s/gVPnZi67xksWEgfLmwrPbCcD3YWEry/HYu/+x3cwqtiiEiJwyJj2kiqcaFXQ9u2+sd
-        n5FHDhcw==;
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1odelP-00D1s7-Da; Wed, 28 Sep 2022 15:38:44 -0600
-Message-ID: <a375f380-b153-bdfe-1822-c6d8b1668c64@deltatee.com>
-Date:   Wed, 28 Sep 2022 15:38:36 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <Yy33LUqvDLSOqoKa@ziepe.ca>
- <64f8da81-7803-4db4-73da-a158295cbc9c@deltatee.com>
- <Yy4Ot5MoOhsgYLTQ@ziepe.ca>
- <2327d393-af5c-3f4c-b9b9-6852b9d72f90@deltatee.com>
- <Yy46KbD/PvhaHA6X@ziepe.ca>
- <3840c1c6-3a5c-2286-e577-949f0d4ea7a6@deltatee.com>
- <Yy48GPMdQS/pzNSa@ziepe.ca>
- <aa5d51dd-0b40-29c0-69af-e83043541d3e@deltatee.com>
- <Yy4/f+s1jOCm7dFo@ziepe.ca>
- <980899e1-532a-772b-2f6d-6fb017def50b@deltatee.com>
- <YzIuSsFpOC+VN1/P@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <YzIuSsFpOC+VN1/P@ziepe.ca>
+        with ESMTP id S229496AbiI1Vj3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 17:39:29 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2088.outbound.protection.outlook.com [40.107.22.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D76697D5F
+        for <linux-pci@vger.kernel.org>; Wed, 28 Sep 2022 14:39:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GvENDMliue3/FxlO9ZBOmjNG1ODpOacSDWAQny0wJ+9rNf7tM2Mx6Lc6YsBncABeIns51ajrRu9hSIEB1XTUcZ3jDFqLkTUQGLAPkIk6K51d7QObcc6vY3Z6QxLiF54KtoZFdQ8nPshRJURGTxvUjU2xBO0zUDU4jMqN9aAqF+E9GNjuUD5tYRnJb7KEZx5pzIPUxchjCvV6weDhLRwrxGsLPI9yCNcFLkQ/pYMNiirhugkfKaWAskbF7CoAizkISugalRpa5x+n9/aWWcxDibqYrlRzNK7OqSPAPOS9RsbnlNdClvbjvqE+16KjKuGfyZh6sPznRqX0IvC7stQvGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rktDTD4A/iB32/kZ63Y3XStryDpmWWe53Z18bX+2+4I=;
+ b=ZEreDjflt9PuMM1xjkCQbVgO4EBqO1P83oyOQEMLStbJKqsQotkC1n7JyjvP5OOLInBJYpgDQajLl3NAgairHxycZBVWU9sNkfMQtpdYwYTfyi9c1cxI0AsDOt3otQs/PjG+TMufIakxcxeWST+5yizUZnHMgWT1P8KKMPM9eEg2f701QUFt5ORIkt8ES7sbdnDer47XLfPMpMJlbDVsked3eVMc/FmS+m89ZRQUJ1BSJiCGcT4HeMFLhUlqs3xXgXfap/moG323Zeu7nxjsP9OYxaIU6SyuIDgC5qddapLXr2luROyETWkLA4Qtkif9SsZLARKlNMKB9FgeOJ/Bjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rktDTD4A/iB32/kZ63Y3XStryDpmWWe53Z18bX+2+4I=;
+ b=VZEswMuhSS/o+AwdT4KaR/BheEAS+63sGX+xxocOe2kQf02199eEhEXdTCIAOCgENDJ0iF2DNFdchBsJdfBn/a/viKrMgdCiXw/ZsO/Hiyb01EWz4mUQrsXyOy70+ia3fA6PH2XpRpfjU977qQCIM75E9CIpkhp7FfW3AosH8hM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8793.eurprd04.prod.outlook.com (2603:10a6:20b:408::22)
+ by DU2PR04MB9100.eurprd04.prod.outlook.com (2603:10a6:10:2f3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17; Wed, 28 Sep
+ 2022 21:39:24 +0000
+Received: from AM9PR04MB8793.eurprd04.prod.outlook.com
+ ([fe80::4d5d:40ae:e0c0:63a3]) by AM9PR04MB8793.eurprd04.prod.outlook.com
+ ([fe80::4d5d:40ae:e0c0:63a3%7]) with mapi id 15.20.5676.019; Wed, 28 Sep 2022
+ 21:39:18 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     fancer.lancer@gmail.com, helgaas@kernel.org,
+        sergey.semin@baikalelectronics.ru, kw@linux.com,
+        linux-pci@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        ntb@lists.linux.dev, jdmason@kudzu.us, kishon@ti.com,
+        haotian.wang@sifive.com, lznuaa@gmail.com, imx@lists.linux.dev
+Subject: [RFC] PCI EP/RC network transfer by using eDMA
+Date:   Wed, 28 Sep 2022 16:38:56 -0500
+Message-Id: <20220928213856.54211-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.35.1
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, gregkh@linuxfoundation.org, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0232.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::27) To AM9PR04MB8793.eurprd04.prod.outlook.com
+ (2603:10a6:20b:408::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8793:EE_|DU2PR04MB9100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76cf1657-85e1-4ee0-0eaa-08daa199e5e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Q3P7dBtz1Vacsa/Ua7XgzYoUpj5UUEFdx57CrUX4ojmAHN4VDwRALrXsjflSN72IKh/pBaDPRlAJs222qFi5yXavK1WP61N1rJwlR385bnBHvuG08nfCStO5BzTDFyz6i1FH7lYbQrXa/s3qx/D6GKzGv2vKDazBARO5j17jzzTHpLRXKxurxKYKseVBUVb0Env7+XNx5H1ENJNzqpo2UkJHidTU3QODub6UpynTF3wOSlaAQlftJRrWE6XaIS542gOSD07KE7owALxnjzxKH5OtguP++dAfd3WPWIQWmPenTXzFZ+ST2ilKihQoM2KTrXeVrqQkr4ouwY8e2W0y2ffFolXM5hFo9oUpr0AnAtHizgXj4Py6SJIcfQ9BmG83/2MKfdXEaQ7NLJtryfBLHsZ+efJhv/COo51Rx317ozwmhaOovFB1OhWBfLumkX8esKK4nPDk21Neek8dLRskXt9Akjqn3QzbMijmyP2jLksjZRsEf7OePubKb6neZDPBpTAzQpFaKV5a5o8u46EEhO9WG17t7i6XCMd3J/AFB5r4Gnq7Cb+poWpLceQmuRbNsfQqFPfIJvir1vsx+HJ8jysZpyLkbHWe17L6ZHAsWdLXQvPFN1GENgG/D2FuNzhsBlK4um2o5jjf59xIv0jGsFNG42DN6wU55ZrdD/ch7GGhOSwotQPaTBoutj/e8ofm34ffactiRDFTKY1Xro/jOo3QeHFUOqBRFsVexjbcrVcjd/p13q8S2V12wU9BoSt3umwBqx3e4pQ2OuEcqW/qbxZ0uPAB3BRtQ//NLfS9jHUleOfs2ZhwSKB0MpVcpDOpeeJ77F0OyWgOlkanCKAcOMF9d+TCMNCUidoZg/Pi77A=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8793.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(376002)(136003)(366004)(346002)(451199015)(38100700002)(83380400001)(316002)(921005)(5660300002)(66556008)(478600001)(7416002)(2906002)(66946007)(6486002)(38350700002)(6666004)(41300700001)(66476007)(8676002)(6506007)(966005)(52116002)(8936002)(1076003)(186003)(2616005)(86362001)(36756003)(26005)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bkdhL2VxcUVaZVYyYkFCRktjTURXc05Tc0s2NGF6eTUzZ21hZnUyUlJqT2wv?=
+ =?utf-8?B?M3F3L213d2tZYitIK2ZKQzRVQy84YU0yblZ5Z0g0V1cxNnpLempNZG1MVlQ5?=
+ =?utf-8?B?OUs0WS9IOGdOUU80YWRBRGJCU3FkczZ3Z0pxZkcrTzlieXpMM09nOTM4Y0RP?=
+ =?utf-8?B?dlErbE1rM1I2bjRaOTZpdGZuRHV2MHZCVld0bnpOK3BaVmNoS2U5S3VPWSt5?=
+ =?utf-8?B?UHlEMFhsblhzbGwvQ3hGdDdNQi9YZzBaRUd5MVNtYzZqRFhPNFkwaDF5Rjdq?=
+ =?utf-8?B?SmJHWVMxR0FFMDN6aWpTSHY0elNuNU9nclJGTUFpOU9FZE9VYXlHek9XUzNl?=
+ =?utf-8?B?SGdEZWcxRFY5UDhsWjhjelZzZ2FUQzdRZHd0SWZNZ2FIV3F3L3lTTGM2cVB3?=
+ =?utf-8?B?UmFSNkI2YU55QlFjNVByV0JybzF5OGtuQmFHWmFZY0tJN0NRWnVZWVVieHBI?=
+ =?utf-8?B?c21BQnhhUmNKejJRZVR0cmVKZlJJN3g0T3RBTlNpODQ1NHlqczVuSyt1c09D?=
+ =?utf-8?B?WUNqOU9FNWN4UFZscEFybjZ4UUlMVkNmbVA4UHYxV3FjNzhwNWQ4SDF6TzNn?=
+ =?utf-8?B?NFM2d0F2eEhWNjlBMkl5U3MrWXVHSmo4anNqaytmRlBCclFFUEUxdDZtaEht?=
+ =?utf-8?B?cHZpMHBTM3dPbVdiT1d1dm5MTEdGbktkM01KaXVhaWxXbHl4S1U3a1QxdGdr?=
+ =?utf-8?B?LzIwdWdYa2hkdHJObEhWeHBjLzM0dXcrdjQxRitFOGxEdmhESTlzNVZOSG1G?=
+ =?utf-8?B?c0VkT202MzZDL2lLN25TdTl2OEpBT2gySmlSQnV2RDVHTkp4ek82aHNEb2NK?=
+ =?utf-8?B?VkVBUnd3SWZrS0ZRMGNYYWNKTTJOand4b2tad0p3UTY1RFBHejJjM1lQUHVl?=
+ =?utf-8?B?RHhVb1dqcFg3M2tYaUlhSWVJcldIYlp3Zjlqam11Vjlqa1VvTjBPRlZzeno4?=
+ =?utf-8?B?REFrSjBBeEpRYytKdEN2MDdxMW1laXdJUXBrODhpVHJUcUE0bmR6VytGbEpX?=
+ =?utf-8?B?OFA1NW5JT2dVRklzTWRFZFplRnlrMmQ1RUhxMnUvYmlMRTE1akpxQmRRa1Ey?=
+ =?utf-8?B?c0k2UWV4OUFJWFNKU0V4SDNtSDREcys2Nzk4MlU2UWxHZ1p4QnMyUEg2QUxS?=
+ =?utf-8?B?UkFrZGVsVXRsS010WUVWKzNaamU2NlMwcWNlNHpVcWMva1RFR3pUSnU1WWJs?=
+ =?utf-8?B?TUdPaEdacFBkNEdjZmFVQ2lZeTFRYVpLS2ZwVXVZY2VmdWVqY0YvV1pBNlFl?=
+ =?utf-8?B?Mm9rT2RRSkY0U0RYSzhQT1E5Mi9WSDlVaklFajQ0TWVxMkZhZmYwNWw1R1FB?=
+ =?utf-8?B?ZnR0UHFZajBtTVRLdTVtdUppYUtKbUREZGc3VGZNY2UzSDh2bVZpZ0w3QTYv?=
+ =?utf-8?B?ZVp0Y1pGTTJtS3o4eGJXNTJmZlE3aS80SndyWUFseFUzRE1xSzAxSFFkb3BZ?=
+ =?utf-8?B?aStUTlRxbWJnYUxtaEw2cWVrMWNaV2dkbmZvZTZkZ3VYaTNGN1dhMGJVQmI1?=
+ =?utf-8?B?ZVZWTVRtWW1PbWxmSVF0dGk5enNlY2M1b083Qlp3ekJwOCsvckJFS3FlNm0r?=
+ =?utf-8?B?ZkF3R3NLR2I0S1VwMzkzUUg4ZktHbkd0bDFzQUFpYzBLWGxUSVBOT2tidlNr?=
+ =?utf-8?B?WnJYa2oyUTBiODc4OTQ1N0JCSHRHWG9uN2ZHVWJSc1dYSzFwR3hMTWZrSnBY?=
+ =?utf-8?B?eWRtKzRDczRPcFl3RW8xcnBwNkEySFRGeHVWM0xacFRhbnU3cnV6UXRCTWZj?=
+ =?utf-8?B?K0JlSUh1SndHTVYxNVJqbDg2SXcvbjZWKzkwTmhBbHdNMEw0VzIzYzBPYTJT?=
+ =?utf-8?B?L0NiYzdWakdoSG9WcmYxcnFFempQSkxiMks3NVZ2ZlhGeng3RjNzSCtYYXZD?=
+ =?utf-8?B?ajJMUklReUtEbzBYWDlheFI1bGFrdXBNV0xWNHFMdFcxUU02N3AyeTVVYy9p?=
+ =?utf-8?B?UlBmVFM5Vk81Y0RVQ3k2QUVmbFF5L09DeEQ1QVVZOFF2aU4ybEJxd1VSMzdM?=
+ =?utf-8?B?K3hHOFlQTTFiaWkzTCtsbm1LL25nQ3huTUNSQ3g4MmFrWWhqeGdvNm1Fc1V0?=
+ =?utf-8?B?cElqTjBvQkJ6T1VIcnBZY3dsRnRSSmpMTythdzlDb1pBMVpKRktBM0IwZWda?=
+ =?utf-8?Q?AGn6uOExHgYutdkT/LOr93GPK?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76cf1657-85e1-4ee0-0eaa-08daa199e5e7
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8793.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 21:39:18.8976
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DybJM5770QIckJIi6UgbeANIP5GnytgOgZ3FNSQM49jJ72oKSBLMVPm4xLbENQjaku4ARXPpD/MwDhWoT/VRwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9100
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v10 1/8] mm: introduce FOLL_PCI_P2PDMA to gate getting PCI
- P2PDMA pages
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+ALL:
 
-On 2022-09-26 16:57, Jason Gunthorpe wrote:
-> On Fri, Sep 23, 2022 at 05:51:49PM -0600, Logan Gunthorpe wrote:
->> Userspace code that's written for purpose can look at the EREMOTEIO error
->> and tell the user something useful, if we return the correct error.
->> If we return ENOMEM in this case, that is not possible because
->> lots of things might have caused that error.
-> 
-> That is reasonable, but I'd still prefer to see it done more
-> centrally.
-> 
-> I mean the way the code is structured is at the top of the call chain
-> the PIN/GET/0 is decided and then the callchain is run. All the
-> callsites of try_grab_page() must be safe to call under FOLL_PIN
-> because their caller is making the decision what flag to use.
+       Recently some important PCI EP function patch already merged.  
+Especially DWC EDMA support. 
+       PCIe EDMA have nice feature, which can read/write all PCI host
+memory regardless EP side PCI memory map windows size.
+       Pci-epf-vntb.c also merged into mainline.  
+       And part of vntb msi patch already merged. 
+		https://lore.kernel.org/imx/86mtaj7hdw.wl-maz@kernel.org/T/#m35546867af07735c1070f596d653a2666f453c52
 
-Ok, so I've done some auditing here.
+       Although msi can improve transfer latency,  the transfer speed
+still quite slow because DMA have not supported yet. 
 
-I've convinced myself it's safe to access the page before incrementing
-the reference:
+       I plan continue to improve transfer speed. But I find some
+fundamental limitation at original framework, which can’t use EDMA 100% benefits. 
+       After research some old thread: 
+		https://lore.kernel.org/linux-pci/20200702082143.25259-1-kishon@ti.com/
+		https://lore.kernel.org/linux-pci/9f8e596f-b601-7f97-a98a-111763f966d1@ti.com/T/
+		Some RDMA document and https://github.com/ntrdma/ntrdma-ext
 
- * In the try_grab_page() case it must be safe as all call sites do seem
-to be called under the appropriate ptl or mmap_lock (though this is hard
-to audit). It's also true that it touches the page struct in the sense
-of the reference.
- * In the try_grab_folio() case there already is already a similar
-FOLL_LONGTERM check in that function *before* getting the reference and
-the page should be stable due to the existing gup fast guarantees.
+       I think the solution, which based on haotian wang will be best one. 
 
-So we don't need to do the check after we have the reference and release
-it when it fails. This simplifies things.
-
-Moving the check into try_grab_x() should be possible with some cleanup.
-
-For try_grab_page(), there are a few call sites that WARN_ON if it
-fails, assuming it cannot fail seeing the page is stable.
-try_grab_page() already has a WARN_ON on failure so it appears fine to
-remove the second WARN_ON and add a new failure path that doesn't WARN.
-
-For try_grab_folio() there's one call site in follow_hugetlb_page() that
-assumes success and warns on failure; but this call site only applies to
-hugetlb pages which should never be P2PDMA pages (nor non-longterm pages
-which is another existing failure path). So I've added a note in the
-comment with a couple other conditions that should not be possible.
-
-I expect this work is way too late for the merge window now so I'll send
-v11 after the window. In the meantime, if you want to do a quick review
-on the first two patches, it would speed things up if there are obvious
-changes. You can see these patches on this git branch:
-
-  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v11pre
-
-Thanks,
-
-Logan
+  ┌─────────────────────────────────┐   ┌──────────────┐
+  │                                 │   │              │
+  │                                 │   │              │
+  │   VirtQueue             RX      │   │  VirtQueue   │
+  │     TX                 ┌──┐     │   │    TX        │
+  │  ┌─────────┐           │  │     │   │ ┌─────────┐  │
+  │  │ SRC LEN ├─────┐  ┌──┤  │◄────┼───┼─┤ SRC LEN │  │
+  │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
+  │  │         │     │  │  │  │     │   │ │         │  │
+  │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
+  │  │         │     │  │  │  │     │   │ │         │  │
+  │  └─────────┘     │  │  └──┘     │   │ └─────────┘  │
+  │                  │  │           │   │              │
+  │     RX       ┌───┼──┘   TX      │   │    RX        │
+  │  ┌─────────┐ │   │     ┌──┐     │   │ ┌─────────┐  │
+  │  │         │◄┘   └────►│  ├─────┼───┼─┤         │  │
+  │  ├─────────┤           │  │     │   │ ├─────────┤  │
+  │  │         │           │  │     │   │ │         │  │
+  │  ├─────────┤           │  │     │   │ ├─────────┤  │
+  │  │         │           │  │     │   │ │         │  │
+  │  └─────────┘           │  │     │   │ └─────────┘  │
+  │   virtio_net           └──┘     │   │ virtio_net   │
+  │  Virtual PCI BUS   EDMA Queue   │   │              │
+  ├─────────────────────────────────┤   │              │
+  │  PCI EP Controller with eDMA    │   │  PCI Host    │
+  └─────────────────────────────────┘   └──────────────┘
 
 
+       Basic idea is
+	1.	Both EP and host probe virtio_net driver
+	2.	There are two queues,  one is EP side(EQ),  the other is Host side. 
+	3.	EP side epf driver map Host side’s queue into EP’s space. , Called HQ.
+	4.	One working thread 
+	a.	pick one TX from EQ and RX from HQ, combine and generate EDMA request, and put into DMA TX queue.
+	b.	Pick one RX from EQ and TX from HQ, combine and generate EDMA request, and put into DMA RX queue. 
+	5.	EDMA done irq will mark related item in EP and HQ finished.
 
+The whole transfer is zero copied and use DMA queue.
+
+      RDMA have similar idea and more coding efforts. 
+      I think Kishon Vijay Abraham I prefer use vhost,  but I don’t know how to build a queue at host side.
+      NTB transfer just do one directory EDMA transfer (DMA write) because Read actually local memory
+ to local memory.
+
+      Any comments about overall solution?
+
+best regards
+Frank Li
