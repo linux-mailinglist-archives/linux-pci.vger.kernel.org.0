@@ -2,62 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9E4B5ED5C4
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 09:15:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAF665ED72F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 10:11:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232396AbiI1HPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 03:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58230 "EHLO
+        id S233927AbiI1ILL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 04:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233315AbiI1HPD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 03:15:03 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B167C15734;
-        Wed, 28 Sep 2022 00:14:56 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 28S7Ebg0065997;
-        Wed, 28 Sep 2022 02:14:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1664349277;
-        bh=F9c9kYNufz7ig/6Cx1Q4VpArre0AWDUO2cP2JP9tKi0=;
-        h=From:To:CC:Subject:Date;
-        b=WOHxHf2YWP+2ckGmEk3haCUCGVo3k3m+QlwsZ3ViUnDgkmSO3o5Yval+9ejC5hTyF
-         qeHZwA1oF9hboDY6uNHHlGtb13s2qau4Zds+acJajCcLcTueyjyCcoUF7KneFrmx7r
-         XisQ5h1YxKXNSe7TG+3oNXNsummdGLOOm+3O9sS0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 28S7EbQs114589
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Sep 2022 02:14:37 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 28
- Sep 2022 02:14:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Wed, 28 Sep 2022 02:14:37 -0500
-Received: from a0393678ub.dal.design.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 28S7EX4c103835;
-        Wed, 28 Sep 2022 02:14:34 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH] MAINTAINERS: Add Vignesh Raghavendra as maintainer of TI DRA7XX/J721E driver
-Date:   Wed, 28 Sep 2022 12:44:18 +0530
-Message-ID: <20220928071418.30456-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S233954AbiI1ILI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 04:11:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9B163F3B;
+        Wed, 28 Sep 2022 01:11:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E70D2B81F4E;
+        Wed, 28 Sep 2022 08:11:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3063C433D6;
+        Wed, 28 Sep 2022 08:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664352659;
+        bh=ZOOO0MWPjQs3iC2W6p1C6FjEUQTUaQp8JdKtNdUAINk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EodwKMluZotcrJvTeRhAWXbLL5ieFuKvuvVjHsdScMLw3pD3aOzVqcdXnX9zBSesP
+         UGpS03Z/o/9vKInjrYZXpovGDgGCctadzq5YD8yvueUxy2CDPQ9SLL8butB3Sz/SuV
+         lFNZJflb0oZWIJJYwFBE52aafzLGLAkF8m0easwvQJeDXAosKQhVr77Bsp5I+E0fvA
+         qTjNGdy9eHr+UY4DKDusG8Ds9eV2A8ynYbDiiEdwsz1pORv4D6qZ03NQAO3BNfn/hv
+         2BtTiW/q2C0FHyzAa9s7VKIicMitNCDaEk8kyrvBR35Ke7550UDb/2cwZljj+ZdAlk
+         Uytwy7tGs+MXg==
+Date:   Wed, 28 Sep 2022 10:10:52 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v4 00/15] PCI: dwc: Add hw version and dma-ranges
+ support
+Message-ID: <YzQBjHYI9REEaqeL@lpieralisi>
+References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
+ <20220729023645.GA423256@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220729023645.GA423256@bhelgaas>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,26 +66,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Vignesh Raghavendra as maintainer of TI DRA7XX/J721E driver.
+On Thu, Jul 28, 2022 at 09:36:45PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 24, 2022 at 05:39:32PM +0300, Serge Semin wrote:
+> > This patchset is a second one in the series created in the framework of
+> > my Baikal-T1 PCIe/eDMA-related work:
+> 
+> > Serge Semin (15):
+> >   PCI: dwc: Add more verbose link-up message
+> >   PCI: dwc: Detect iATU settings after getting "addr_space" resource
+> >   PCI: dwc: Convert to using native IP-core versions representation
+> >   PCI: dwc: Add IP-core version detection procedure
+> >   PCI: dwc: Introduce Synopsys IP-core versions/types interface
+> >   PCI: intel-gw: Drop manual DW PCIe controller version setup
+> >   PCI: tegra194: Drop manual DW PCIe controller version setup
+> >   PCI: dwc: Add host de-initialization callback
+> >   PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
+> >   PCI: dwc: Drop iATU regions enumeration - dw_pcie_region_type
+> >   PCI: dwc: Simplify in/outbound iATU setup methods
+> >   PCI: dwc: Add iATU regions size detection procedure
+> >   PCI: dwc: Verify in/out regions against iATU constraints
+> >   PCI: dwc: Check iATU in/outbound ranges setup methods status
+> 
+> I applied the above to pci/ctrl/dwc for v5.20, thanks!
+> 
+> >   PCI: dwc: Introduce dma-ranges property support for RC-host
+> 
+> I deferred this one for now because the current value isn't clear yet.
+> If we have a user for it, I'll be glad to add it.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This one is still deferred and I agree with Bjorn it should be part of
+a series that actually requires it - it would also simplify the review.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efada49e2e2e..c368f5aa7429 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15667,7 +15667,7 @@ F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
- F:	drivers/pci/controller/dwc/*designware*
- 
- PCI DRIVER FOR TI DRA7XX/J721E
--M:	Kishon Vijay Abraham I <kishon@ti.com>
-+M:	Vignesh Raghavendra <vigneshr@ti.com>
- L:	linux-omap@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.17.1
-
+Lorenzo
