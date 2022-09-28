@@ -2,88 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A58B5EDED6
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 16:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B5A5EDEDC
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 16:35:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234393AbiI1OdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 10:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
+        id S234133AbiI1OfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 10:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbiI1OdP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 10:33:15 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0BAACA2B;
-        Wed, 28 Sep 2022 07:33:14 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28SCvNcj010676;
-        Wed, 28 Sep 2022 14:32:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=+7FsEsmSzmHPrpkQKjyZG1T0NwZSFVJVfMS6Ktray90=;
- b=g5727hPnuJs6+VZIk7PC03ipq3r7aJXPWXiz4cYyxTy2TD72TrRTioJLUshP8eb5S3jp
- T/e0fZoTLEzHT5M7GUKckHSY5ee44pZUXUNNeP7oDqVSfjHIxGiG3XzZefJ7i66qLI3U
- s2EBfRfyATRcknRkTmdhxeZNSaPnn3YW7dBgPT9IhvPK8qbxZHH47hL0xTo18F9W7hBS
- MMBx83dYnOiX4XqzRwN7rDwrf5OLq0/WNsFehkfKv0rzSWHdfbGDdpZ0Z8CfRJFKrn4i
- mfY447+fcki8BQ5o5SzXxZKErWjDJjI/Xs9gczGhxH9y7BRmqFdQcl/gOxLTkNVLSusG CA== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jvm758g4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 14:32:46 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 28SEWj0V029305
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 14:32:45 GMT
-Received: from [10.216.15.146] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Wed, 28 Sep
- 2022 07:32:35 -0700
-Message-ID: <35e82a1b-7a36-d460-5a98-1378175836f1@quicinc.com>
-Date:   Wed, 28 Sep 2022 20:02:32 +0530
+        with ESMTP id S233506AbiI1OfQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 10:35:16 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8D87CB79;
+        Wed, 28 Sep 2022 07:35:14 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id l14so27560779eja.7;
+        Wed, 28 Sep 2022 07:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=bITryamKPXAaRRd2P5JThc+kCnMrI1AdcBLFS62YJTM=;
+        b=JME++gzbxsQDSHyB5nBuZ+eAXbc+6lkyj/ZOK33HsVtR7zkN40I3qzN3hi9LxzimAP
+         Dfw34Bbc0jDus2v8SCLIs3VF4bA+7dI78cTOsJDOas4EDEtKYywcJ+VrbGyG7IpP0iSO
+         0PKTR3wnaYzH1i0LFnR87b5ndDyTJYTBed3m18qBCHBWIx7z/uwAC5cy4wa8y2N4Q3Ue
+         dLHKikSqmaN57yU5P+0OimIXTsY4/Jg8fkoJ7THtLvEYpAENciUb/J8kJwrEBqG8BI5p
+         GV9PQEsTQe4lJodk82nGdvnFFGYcaZSHa2iUNxQvnuX1PaS0uvGGU48CE9dISv3oape0
+         v1RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=bITryamKPXAaRRd2P5JThc+kCnMrI1AdcBLFS62YJTM=;
+        b=AtmHUryLi5+SWJJWbVlN+k4HKwC7w76WRA6S3zSffKd9EZYEfnk34KiQI6iv9TlD5O
+         BKZpP6Rp7lG14nlCJ6URV/w3SWHCMfSHOoKcJJp3xpqBkfjOWZZbkudU9080tfTQeq5D
+         u6FGXiWmHRwIN3hAI4hK2uBzNNUJ0L/aksslPHFCxSaxbHk/B3aulF++xsa4Avqyx/iv
+         AVzrmQwHRQdmqOvw13pkRrVE7VGMrHTCHj788pX6j/kZrI6/lELBqKkVGeJppFtx8aDE
+         IQmzsCc63yg8rf0+J3BUk7jJGS2ICSCGrvIxoLHSr+9hxkUWzUS9tY2bngJpMFLQd5YF
+         lRkw==
+X-Gm-Message-State: ACrzQf0pPjJndAoNjkgx+2RCSFMmBFed8Ny4qpZuzUR3ZabMmvv4j1Ag
+        jmvcds4KK1tvQ5LlIPWSYto=
+X-Google-Smtp-Source: AMsMyM7EDKPCuPoi+lD+mpD0Wys7tz3LPH1v2LlA7lAm8CznGXnuyPttmyMkcDlXYNpz9imHcrdwJw==
+X-Received: by 2002:a17:906:730b:b0:782:2eaf:a4ad with SMTP id di11-20020a170906730b00b007822eafa4admr29146255ejc.27.1664375713473;
+        Wed, 28 Sep 2022 07:35:13 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id t7-20020a170906a10700b0074136cac2e7sm2467887ejy.81.2022.09.28.07.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 07:35:12 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 16:35:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Use PCI_CONF1_EXT_ADDRESS() macro
+Message-ID: <YzRbnjb6UVwrj/li@orome>
+References: <20220928121911.14994-1-pali@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
-Content-Language: en-US
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
-        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
-        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
-        <svarbanov@mm-sol.com>, <agross@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@somainline.org>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <linux-phy@lists.infradead.org>,
-        <vkoul@kernel.org>, <kishon@ti.com>, <mturquette@baylibre.com>,
-        <linux-clk@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>
-References: <20220923142611.GA1389970@bhelgaas>
- <5fb1e6d9-00c0-33f2-753e-2338010da352@quicinc.com>
-In-Reply-To: <5fb1e6d9-00c0-33f2-753e-2338010da352@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: LAKEQkVTk4y8zDCqOoNMJY_kDv9VaNpk
-X-Proofpoint-GUID: LAKEQkVTk4y8zDCqOoNMJY_kDv9VaNpk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-28_06,2022-09-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxlogscore=474 adultscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209280086
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RyfNZ9e+knk+ANeR"
+Content-Disposition: inline
+In-Reply-To: <20220928121911.14994-1-pali@kernel.org>
+User-Agent: Mutt/2.2.7 (2022-08-07)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -91,81 +78,51 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 9/25/2022 7:23 AM, Krishna Chaitanya Chundru wrote:
->
-> On 9/23/2022 7:56 PM, Bjorn Helgaas wrote:
->> On Fri, Sep 23, 2022 at 07:29:31AM +0530, Krishna Chaitanya Chundru 
->> wrote:
->>> On 9/23/2022 12:12 AM, Bjorn Helgaas wrote:
->>>> On Thu, Sep 22, 2022 at 09:09:28PM +0530, Krishna Chaitanya Chundru 
->>>> wrote:
->>>>> On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
->>>>>> On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya 
->>>>>> Chundru wrote:
->>>>>>> On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
->>>>>>>> On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya 
->>>>>>>> chundru wrote:
->>>>>>>>> In qcom platform PCIe resources( clocks, phy etc..) can
->>>>>>>>> released when the link is in L1ss to reduce the power
->>>>>>>>> consumption. So if the link is in L1ss, release the PCIe
->>>>>>>>> resources. And when the system resumes, enable the PCIe
->>>>>>>>> resources if they released in the suspend path.
->>>>>>>> What's the connection with L1.x?  Links enter L1.x based on
->>>>>>>> activity and timing.  That doesn't seem like a reliable
->>>>>>>> indicator to turn PHYs off and disable clocks.
->>>>>>> This is a Qcom PHY-specific feature (retaining the link state in
->>>>>>> L1.x with clocks turned off).  It is possible only with the link
->>>>>>> being in l1.x. PHY can't retain the link state in L0 with the
->>>>>>> clocks turned off and we need to re-train the link if it's in L2
->>>>>>> or L3. So we can support this feature only with L1.x. That is
->>>>>>> the reason we are taking l1.x as the trigger to turn off clocks
->>>>>>> (in only suspend path).
->>>>>> This doesn't address my question.  L1.x is an ASPM feature, which
->>>>>> means hardware may enter or leave L1.x autonomously at any time
->>>>>> without software intervention.  Therefore, I don't think reading the
->>>>>> current state is a reliable way to decide anything.
->>>>> After the link enters the L1.x it will come out only if there is
->>>>> some activity on the link.  AS system is suspended and NVMe driver
->>>>> is also suspended( queues will  freeze in suspend) who else can
->>>>> initiate any data.
->>>> I don't think we can assume that nothing will happen to cause exit
->>>> from L1.x.  For instance, PCIe Messages for INTx signaling, LTR, OBFF,
->>>> PTM, etc., may be sent even though we think the device is idle and
->>>> there should be no link activity.
->>> I don't think after the link enters into L1.x there will some
->>> activity on the link as you mentioned, except for PCIe messages like
->>> INTx/MSI/MSIX. These messages also will not come because the client
->>> drivers like NVMe will keep their device in the lowest power mode.
->>>
->>> The link will come out of L1.x only when there is config or memory
->>> access or some messages to trigger the interrupts from the devices.
->>> We are already making sure this access will not be there in S3.  If
->>> the link is in L0 or L0s what you said is expected but not in L1.x
->> Forgive me for being skeptical, but we just spent a few months
->> untangling the fact that some switches send PTM request messages even
->> when they're in a non-D0 state.  We expected that devices in D3hot
->> would not send such messages because "why would they?"  But it turns
->> out the spec allows that, and they actually *do*.
->>
->> I don't think it's robust interoperable design for a PCI controller
->> driver like qcom to assume anything about PCI devices unless it's
->> required by the spec.
->>
->> Bjorn
-> We will check the spec once and will come back to you,
- From pci spec 4, in sec 5.5
-"Ports that support L1 PM Substates must not require a reference clock 
-while in L1 PM Substates
-other than L1.0".
-If there is no reference clk we can say there is no activity on the link.
-If anything needs to be sent (such as LTR, or some messages ), the link 
-needs to be back in L0 before it
-sends the packet to the link partner.
+--RyfNZ9e+knk+ANeR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To exit from L1.x clkreq pin should be asserted.
+On Wed, Sep 28, 2022 at 02:19:11PM +0200, Pali Roh=C3=A1r wrote:
+> Simplify pci-tegra.c driver code and use new PCI_CONF1_EXT_ADDRESS() macro
+> for accessing PCI config space.
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> ---
+> Please look also at this related patch:
+> https://patchwork.kernel.org/project/linux-pci/patch/20220911113216.14892=
+-1-pali@kernel.org/
+> ---
+>  drivers/pci/controller/pci-tegra.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 
-In suspend after turning off clocks and phy we can enable to trigger an 
-interrupt whenever the clk req pin asserts.
-In that interrupt handler, we can enable the pcie resources back.
+I had to go chase down the patch that introduces PCI_CONF1_EXT_ADDRESS.
+It would've been easier if this had been part of the series that
+introduced that, or if you had provided a link to that patch here.
 
-What are your thoughts on this?
+Anyway, looks like this is equivalent to the existing inline function,
+so:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--RyfNZ9e+knk+ANeR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0W54ACgkQ3SOs138+
+s6H5Dw/8CCO0A48ejlIl6fquIuKAyXV4HMQnBUd+DQgaINWHH893pKdu1BsR672v
+IBVB6xEb+9zR5l5zqPyxGl6p51xXhzE6H3FxEOYnSxk1tJAzRTeo/hslUvhWTCWy
+ePiI+7zY8zxAEwSIUF0fU0kyoMuUMyDZELJTbxF5PM4PoDYy7fYSTptN0DTztsEk
+ftpnOOVTWVIArYRrBPQEyk60teDGwQOAYlICcjqlm8yt3Zsn6yNEh5M0wmO/oDZH
+kJtCaw5kymBa610fny18hooEZpE8SypRbFptOpi6/Tagkj4RywPYlBTfCo3qWDvR
+Tv33A/X2RB+f0/vyUjfUmZN3GWY00lv64N9IRucYLpSDoN4xjrWsVTXAmCDjAMKS
+OOkGIJuEt+T/aPX0DqpxrKOEm/dw3ywURK05rinmPsisWShOyBm7p1/yxm3smZL4
+35TyDIsSCLpGQCoLZc7zPsD6h0fo0bK8VLPUeulzMC4ZYXjP53G7HTSGWHcMqecM
+PJFUv9PuzLdfvbkbixFsNzSpZo4HqTi41VlHIdlSzUXd1aZsBvcc4a3B9c8fFd1X
+8Jc0bGLDhmxAFQeGpjKtXMy1++p34yrO1hI80IS2jDV7je63ZKA7zlCrBA4+cjM7
+cnjGjC+ZyDLd8S0XkYf3NdJXIkmrk3EOfzXdDSj3EfOOyVHLl2k=
+=a3Eo
+-----END PGP SIGNATURE-----
+
+--RyfNZ9e+knk+ANeR--
