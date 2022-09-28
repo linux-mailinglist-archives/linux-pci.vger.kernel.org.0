@@ -2,51 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 193205EDC86
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 14:25:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 495355EDDC1
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 15:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233454AbiI1MZx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 08:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32790 "EHLO
+        id S233782AbiI1Nd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 09:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233468AbiI1MZw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 08:25:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F65E8E4E7;
-        Wed, 28 Sep 2022 05:25:51 -0700 (PDT)
+        with ESMTP id S233534AbiI1Ndz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 09:33:55 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53361A262E;
+        Wed, 28 Sep 2022 06:33:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4FB70B82038;
-        Wed, 28 Sep 2022 12:25:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E0DC433C1;
-        Wed, 28 Sep 2022 12:25:48 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 9B9FACE1E3D;
+        Wed, 28 Sep 2022 13:33:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52D5C433D7;
+        Wed, 28 Sep 2022 13:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664367949;
-        bh=HxjRtE7qJ8SnB2Cpy1WN7fiG48wE2ef95Ior+9SMHi4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Gj8g8FWku3S4xd/aAMVTwd8KkXul7xp8os0OiiVAQPp6zUgyDZ1yO8uZxf+u62zCy
-         KcLg0SlFxKpGmUTmm4iDmdSsqWBCBLEvC5yxtWgnrkVPSmHJsZDv+MhpkRPf+ETn12
-         FZ4Yy9Wx2VfT/SJaM7Hyu5jfJHsqOkoBh5uHujOJflYbGI8wgQ2XUt2tmeACjF9tM/
-         w1XYwZKey4RlFd1D+onFB6SsuCnU/aeb+zfArpNwLsRBeE0JIgooF4pU5bzMW4buue
-         rNI8i41FWhxvfX4+FIOea1iCKey876bzV/3No+gPZfBJTfm0F93e1LCL2ZJ2BcFcX9
-         90tYdOEdUIP1w==
-Received: by pali.im (Postfix)
-        id BFA207DE; Wed, 28 Sep 2022 14:25:45 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: ixp4xx: Use PCI_CONF1_ADDRESS() macro
-Date:   Wed, 28 Sep 2022 14:25:39 +0200
-Message-Id: <20220928122539.15116-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
+        s=k20201202; t=1664372030;
+        bh=b/FYU3aJ9ggOeVDclUSANnV7bmk+tzL6okjGvLPAgB4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hwbitYwa7jrTpzhRAI1tqG4RiKIgY7HRXka+LcFvMHjPKCf2onHfdzt3NDIFKThRF
+         ZUts1qeD4YqT/vESskDF94vQ5pL/9spKiPvRFkLcSU5va1/gDb6CbzIAOkwgGJO+dB
+         xuFCoWhU4A8SMYb1HFZflOOs45AkOZv3t1FNN0PgxILtQPe7xf/V6puED8aIgFlbwS
+         2tOsr9OEJzTf9rYLg/gaoZ2yZd9113OrrN+Cs/EZKY4Qk88PgmrM4xb2dkw8CeNrME
+         5xEq7GHO3JoiJ38PWFAxC5VDSlWvwLDYhgc7h4xFh52+iMp+pxSfmZ/lDwDRNTRa23
+         TPu/EeLGDwwZg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1odXC8-00DI4S-FT;
+        Wed, 28 Sep 2022 14:33:48 +0100
+Date:   Wed, 28 Sep 2022 09:33:47 -0400
+Message-ID: <86mtaj7hdw.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     tglx@linutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev,
+        lznuaa@gmail.com, imx@lists.linux.dev,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v11 0/6] PCI EP driver support MSI doorbell from host
+In-Reply-To: <20220922161246.20586-1-Frank.Li@nxp.com>
+References: <20220922161246.20586-1-Frank.Li@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev, lznuaa@gmail.com, imx@lists.linux.dev, manivannan.sadhasivam@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,36 +73,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Simplify pci-ixp4xx.c driver code and use new PCI_CONF1_ADDRESS() macro for
-accessing PCI config space.
+On Thu, 22 Sep 2022 12:12:40 -0400,
+Frank Li <Frank.Li@nxp.com> wrote:
+>=20
+>=20
+>=20
+>                   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=90          =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+>                   =E2=94=82       =E2=94=82          =E2=94=82          =
+=E2=94=82
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =E2=94=82=
+       =E2=94=82          =E2=94=82 PCI Host =E2=94=82
+> =E2=94=82 MSI         =E2=94=82=E2=97=84=E2=94=90 =E2=94=82       =E2=94=
+=82          =E2=94=82          =E2=94=82
+> =E2=94=82 Controller  =E2=94=82 =E2=94=82 =E2=94=82       =E2=94=82      =
+    =E2=94=82          =E2=94=82
+> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=94=
+=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80Bar0     =E2=94=82
+>                   =E2=94=82 PCI   =E2=94=82          =E2=94=82 Bar1     =
+=E2=94=82
+>                   =E2=94=82 Func  =E2=94=82          =E2=94=82 Bar2     =
+=E2=94=82
+>                   =E2=94=82       =E2=94=82          =E2=94=82 Bar3     =
+=E2=94=82
+>                   =E2=94=82       =E2=94=82          =E2=94=82 Bar4     =
+=E2=94=82
+>                   =E2=94=82       =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA=E2=94=82      =
+    =E2=94=82
+>                   =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=98          =E2=94=94=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>=20
+> Many PCI controllers provided Endpoint functions.
+> Generally PCI endpoint is hardware, which is not running a rich OS,
+> like linux.
+>=20
+> But Linux also supports endpoint functions.  PCI Host write BAR<n> space
+> like write to memory. The EP side can't know memory changed by the Host
+> driver.=20
+>=20
+> PCI Spec has not defined a standard method to do that.  Only define
+> MSI(x) to let EP notified RC status change.=20
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pci/controller/pci-ixp4xx.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/drivers/pci/controller/pci-ixp4xx.c b/drivers/pci/controller/pci-ixp4xx.c
-index 654ac4a82beb..c83b5ae0b017 100644
---- a/drivers/pci/controller/pci-ixp4xx.c
-+++ b/drivers/pci/controller/pci-ixp4xx.c
-@@ -188,12 +188,13 @@ static u32 ixp4xx_config_addr(u8 bus_num, u16 devfn, int where)
- 	/* Root bus is always 0 in this hardware */
- 	if (bus_num == 0) {
- 		/* type 0 */
--		return BIT(32-PCI_SLOT(devfn)) | ((PCI_FUNC(devfn)) << 8) |
--			(where & ~3);
-+		return (PCI_CONF1_ADDRESS(0, 0, PCI_FUNC(devfn), where) &
-+			~PCI_CONF1_ENABLE) | BIT(32-PCI_SLOT(devfn));
- 	} else {
- 		/* type 1 */
--		return (bus_num << 16) | ((PCI_SLOT(devfn)) << 11) |
--			((PCI_FUNC(devfn)) << 8) | (where & ~3) | 1;
-+		return (PCI_CONF1_ADDRESS(bus_num, PCI_SLOT(devfn),
-+					  PCI_FUNC(devfn), where) &
-+			~PCI_CONF1_ENABLE) | 1;
- 	}
- }
- 
--- 
-2.20.1
+FWIW, I have queued the first 4 patches of this series into -next. If
+there is a need for these patches to be pulled by another subsystem, I
+have pushed out a stable branch at [1].
 
+Thanks,
+
+	M.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/l=
+og/?h=3Dirq/fsl-mu-msi
+
+--=20
+Without deviation from the norm, progress is not possible.
