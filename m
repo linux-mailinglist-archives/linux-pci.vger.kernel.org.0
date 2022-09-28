@@ -2,56 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C70EC5ED806
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 10:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06FEC5ED8FF
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 11:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233262AbiI1Iju (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 04:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
+        id S233831AbiI1Jbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 05:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233129AbiI1IjZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 04:39:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D264DA1D6E
-        for <linux-pci@vger.kernel.org>; Wed, 28 Sep 2022 01:39:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2E65EB81FB2
-        for <linux-pci@vger.kernel.org>; Wed, 28 Sep 2022 08:39:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CFAC433D6;
-        Wed, 28 Sep 2022 08:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664354360;
-        bh=s/YcRSwr9zctteq1dmxPcXH2bnKWNhBdbSVODYGwNz0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vDlhN+wOGpLcYy2dzLZG3vJxpBMJqwmMmjxrkov2S4tdBv8u7Z25Q4Z0opf6P5a7q
-         TkWRAzR0qGhovGIc8EwxPQwJxjsNGaWXX8a6f7AxWTl+xMTKFExqjqmSzAtKhZVXpp
-         UjOXHuRRIT1t1plhO0WxKQJlY4iK1MK8FdQJ+Fr5UY9vgAGI7YhDifGHiV5MSRlMlk
-         J892stCpd8yY6wVyfdAs3vRPy8jBVLZoB+xUeTTOGU6H1ZipSJsSmh/efyd0lVgaE7
-         EGqsFnEKeHq8te5jM+MxVVocDoFDevcqmuK4O6ggwQU8SDgHNx/riE3NxyfTByLlD/
-         DP/WgrJb5NvYA==
-Date:   Wed, 28 Sep 2022 10:39:14 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        pali@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/11] PCI: pciehp: Enable Command Completed Interrupt
- only if supported
-Message-ID: <YzQIMpWm9GLR8YYi@lpieralisi>
-References: <20220818135140.5996-1-kabel@kernel.org>
- <20220818135140.5996-3-kabel@kernel.org>
+        with ESMTP id S233860AbiI1Jbb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 05:31:31 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B47D33EE;
+        Wed, 28 Sep 2022 02:31:29 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 28S9VEo9115810;
+        Wed, 28 Sep 2022 04:31:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1664357474;
+        bh=bamV10jgSCholN4PmlvQuQ/l4nJvgo3gp0ydKye83mQ=;
+        h=From:To:CC:Subject:Date;
+        b=saYZB4wbOeT8hn7A/mGHXvDCYMooWyRu4C7WjW3bCXQyO/nsenqpLLLGQH159AY5S
+         XQ2J027m7FQpeSKAs8Kg5l9ZUIsK50HW707pe15NnjRNYMMEU4o07p5YetPdqNpU3w
+         AoeAX7qxwgrRZCLCffj4dKkBGa8csl6jDuKYd+mE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 28S9VELk064227
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 28 Sep 2022 04:31:14 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 28
+ Sep 2022 04:31:13 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Wed, 28 Sep 2022 04:31:13 -0500
+Received: from a0393678ub.dal.design.ti.com (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 28S9VAei045260;
+        Wed, 28 Sep 2022 04:31:10 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2] MAINTAINERS: Add Vignesh Raghavendra as maintainer of TI DRA7XX/J721E PCI driver
+Date:   Wed, 28 Sep 2022 15:01:05 +0530
+Message-ID: <20220928093105.23073-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220818135140.5996-3-kabel@kernel.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,55 +65,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 03:51:31PM +0200, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> The No Command Completed Support bit in the Slot Capabilities register
-> indicates whether Command Completed Interrupt Enable is unsupported.
-> 
-> We already check whether No Command Completed Support bit is set in
-> pcie_wait_cmd(), and do not wait in this case.
-> 
-> Let's not enable this Command Completed Interrupt at all if NCCS is set,
-> so that when users dump configuration space from userspace, the dump
-> does not confuse them by saying that Command Completed Interrupt is not
-> supported, but it is enabled.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
-> Changes since batch 5:
-> - changed commit message, previously we wrote that the change is needed
->   to fix a bug where kernel was waiting for an event which did not
->   come. This turns out to be false. See
->   https://lore.kernel.org/linux-pci/20220818142243.4c046c59@dellmb/T/#u
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+Add Vignesh Raghavendra as maintainer of TI DRA7XX/J721E PCI driver.
 
-Hi Bjorn,
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Change from v1:
+Added "PCI" in the subject and commit log.
 
-this patch is mixed with aardvark specific changes,
-please let me know if it is fine for you to merge it.
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Lorenzo
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aef4632f4e87..ffad3f1dfe9c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15667,7 +15667,7 @@ F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+ F:	drivers/pci/controller/dwc/*designware*
+ 
+ PCI DRIVER FOR TI DRA7XX/J721E
+-M:	Kishon Vijay Abraham I <kishon@ti.com>
++M:	Vignesh Raghavendra <vigneshr@ti.com>
+ L:	linux-omap@vger.kernel.org
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+2.17.1
 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 373bb396fe22..838eb6cc3ec7 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -817,7 +817,9 @@ static void pcie_enable_notification(struct controller *ctrl)
->  	else
->  		cmd |= PCI_EXP_SLTCTL_PDCE;
->  	if (!pciehp_poll_mode)
-> -		cmd |= PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_CCIE;
-> +		cmd |= PCI_EXP_SLTCTL_HPIE;
-> +	if (!pciehp_poll_mode && !NO_CMD_CMPL(ctrl))
-> +		cmd |= PCI_EXP_SLTCTL_CCIE;
->  
->  	mask = (PCI_EXP_SLTCTL_PDCE | PCI_EXP_SLTCTL_ABPE |
->  		PCI_EXP_SLTCTL_PFDE |
-> -- 
-> 2.35.1
-> 
