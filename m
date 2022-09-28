@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9D1A5EE0F4
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 17:55:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61A3E5EE0F9
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Sep 2022 17:55:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234127AbiI1PzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 11:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
+        id S234166AbiI1PzR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Sep 2022 11:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234078AbiI1PzJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 11:55:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B777EFCC;
-        Wed, 28 Sep 2022 08:55:07 -0700 (PDT)
+        with ESMTP id S234141AbiI1PzO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 11:55:14 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6958768C;
+        Wed, 28 Sep 2022 08:55:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C69F261F0E;
-        Wed, 28 Sep 2022 15:55:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2949CC433D6;
+        by sin.source.kernel.org (Postfix) with ESMTPS id ABD52CE1EE1;
+        Wed, 28 Sep 2022 15:55:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E1E5C433D7;
         Wed, 28 Sep 2022 15:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1664380506;
-        bh=hz7buZETgB+MH/jgJl89cmN6D+RYIk5iKsv8v2DxjEc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EwhA4L9jFQesimIVWXLTqy0g4TeNp8b4tObhZpmuzsR9Y1Feznh02o+SJ2QWBGYG2
-         JwVkPArhxptBMdMKGowZGot5Hob0OnxS28gI9oiACiDqn7zrgMMRQ3DjFJBujyMT5Z
-         /fMBlttkyOnlehva6+zAiCMbIYX3qGpqODuFxfvK/fJuEXln1/yI6mPuq1jYTSJV0L
-         uz/G0ekfa87zSjEMmldgdTZU+gfZ4IjB2rNujSc8+fGrKaM0BR5W13jHUNGRbGXuyS
-         8KzIi6pxi1O5L4YNQb0Tfkhux0uy3cgh1GdiC+BCDN6UBAbPFvjYgXZoi4yp3dG9AA
-         EQoqrD07v+g8w==
+        bh=snbCPFGK77lLhaoBKaG+W4txsXWhqgoJg/DwQu1/7Wo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s8gBCOaI21XKWOE/s/fW03R9iL7ZdL05MNVEePYa0Bu9sb9edsJyjOsG+WD3Q8oAH
+         mk7LycDvNYKwN2ezN4MygIzEOhcmdD01tmdawLuQS+Z7c9cNY0rzXomGLCMuyHDwj0
+         yZIzc8qMP/ukh/Bqd5oKx1oSawGLeWnfsaCIRAmDl6CH/e9kh1Dhtqj6zKnivZKtuU
+         lUeyHL3kbgLY0IHT2XrkhTibqho+K9WFL41SvthXCSRfLeqTK9PuDzes4e/cXXOzup
+         WCuOCZmot2KMFROEp2H/mUK06Wwa4WHrZwy9qB1TvDe1/v9VXX5onvtRv7aHt+4qTK
+         CFCQe5hJugzGg==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1odZOx-0005e6-W3; Wed, 28 Sep 2022 17:55:12 +0200
+        id 1odZOy-0005e8-Q2; Wed, 28 Sep 2022 17:55:12 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>
@@ -45,10 +45,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 0/2] PCI: qcom: Drop unused post_deinit callback
-Date:   Wed, 28 Sep 2022 17:54:19 +0200
-Message-Id: <20220928155421.21660-1-johan+linaro@kernel.org>
+Subject: [PATCH v3 1/2] PCI: qcom: Drop unused post_deinit callback
+Date:   Wed, 28 Sep 2022 17:54:20 +0200
+Message-Id: <20220928155421.21660-2-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220928155421.21660-1-johan+linaro@kernel.org>
+References: <20220928155421.21660-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -60,31 +62,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series drops the badly named post_deinit callback which is unused
-after merging the PIPE clock series. Included is also a related
-error-label cleanup.
+Drop the unused and confusingly named post_deinit callback that was
+added for the now removed pipe clock handling.
 
-Since the modular driver patch is held off for a while still, I've
-rebased these cleanups so that they might make it into 6.1.
+If ever needed we can add back a callback named pre_deinit (or perhaps
+rather pre_phy_power_off) instead.
 
-Johan
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-
-Changes in v3
- - drop dependency on patch making the driver modular
-
-Changes in v2
- - keep the post_init() callback which is being repurposed for DBI
-   accesses
-
-
-Johan Hovold (2):
-  PCI: qcom: Drop unused post_deinit callback
-  PCI: qcom: Rename host-init error label
-
- drivers/pci/controller/dwc/pcie-qcom.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 39ca06ffe614..8d6df0db4ebb 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -208,7 +208,6 @@ struct qcom_pcie_ops {
+ 	int (*init)(struct qcom_pcie *pcie);
+ 	int (*post_init)(struct qcom_pcie *pcie);
+ 	void (*deinit)(struct qcom_pcie *pcie);
+-	void (*post_deinit)(struct qcom_pcie *pcie);
+ 	void (*ltssm_enable)(struct qcom_pcie *pcie);
+ 	int (*config_sid)(struct qcom_pcie *pcie);
+ };
+@@ -1520,8 +1519,6 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ 
+ err:
+ 	qcom_ep_reset_assert(pcie);
+-	if (pcie->cfg->ops->post_deinit)
+-		pcie->cfg->ops->post_deinit(pcie);
+ err_disable_phy:
+ 	phy_power_off(pcie->phy);
+ err_deinit:
 -- 
 2.35.1
 
