@@ -2,64 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25E945EEBD8
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Sep 2022 04:36:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31FC05EECDE
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Sep 2022 06:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231499AbiI2CgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Sep 2022 22:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        id S232298AbiI2E5n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Sep 2022 00:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233911AbiI2Cf5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Sep 2022 22:35:57 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5986810C7BE;
-        Wed, 28 Sep 2022 19:35:32 -0700 (PDT)
-Received: from [10.20.42.32] (unknown [10.20.42.32])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxYOJlBDVjq5YjAA--.2565S3;
-        Thu, 29 Sep 2022 10:35:18 +0800 (CST)
-Subject: Re: [PATCH V1 1/2] irqchip/loongson-pch-pic: Support to set irq type
- for ACPI path
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-References: <1660615291-35409-1-git-send-email-lvjianmin@loongson.cn>
- <1660615291-35409-2-git-send-email-lvjianmin@loongson.cn>
- <86leq37duw.wl-maz@kernel.org>
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <71fc2d5b-fc3c-0a2d-65ce-df7d5bb26503@loongson.cn>
-Date:   Thu, 29 Sep 2022 10:35:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <86leq37duw.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        with ESMTP id S232380AbiI2E5m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Sep 2022 00:57:42 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F9711D621;
+        Wed, 28 Sep 2022 21:57:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CAA536uJmeY6awAvJGx54omWdZMpRUeKnNu32VK7FCRevSOG9rsVZpNkHIALdkE1j3Y4shlFa00R7Pgq7HTpSSAnanSIkyon4qwC8Y3JgcRqOCbRL6/OMtFJs0hMs2iIuARCwzLkRIZvo8XL2MsJPHGTwWKSy8kyfOaE3XC1k4WgXx3r9sBB9/oqQ1WkdUY+AgSVa/06NsiLipjSAT2FbHiEdNMYtSWhUAE6mFeBgeiqzEoKbmVJzCr2dfR3G9hcWzhzyXD12FmssVfiq760w57tJxeV9ZviPt3UpBQkZP97eLd3D+IpObh7jberUAxSJ/3Z3Gl7hSu3VtmN3ybWFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e+yQiGHABdNeGHtYQOkkgI/1tB4u8tYY4V1fqr4v4aQ=;
+ b=QPyuWzrEu+c4IXX12v4XFxGqn8r/Y4x0q4iu7qQUD/MbF5KuQGnjav7/Ab5zeiYBssBG+7iO1OlZkrHqT5v4/gdnHEzVyD/SfEeJWZi9AO2Q5kn4eLFyNVdB6x0L6hB58nzMrNtqQjmfiCdPNl75Po8PzQAlodTzOwXkdwYl20vnrs6unOUGG8G/qf7nuVrTKhcPtiNjPprOyru3jtRbjd4Eu6/22Yj2MT/NEcMgtnSFbWOJXL+gYbiZr/M4BR7gSbRM4ceZI6WeSqg9LaNrg5MUgJxnp8eA2iEQNhUzVoWVHPFymueU/XigaTO/LTi/+HCcO0aHa2Veerr7/A+8tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e+yQiGHABdNeGHtYQOkkgI/1tB4u8tYY4V1fqr4v4aQ=;
+ b=lDGVWjfj9iOKMeJIdgO1HX15Dh6Qe9D1B0Vmi1+SJIcZxqMMw+zAgfLD7p+HZJjRpLEjR9qS/B3y3XrQItttL3+OLEph+3gBM0vWILTlyv/SBuh7Q8nyRSwP4eGQGib24NK2mxe1/zn7YKM7st7nTCVW9kgaW4M6E9+REVEOxgaV1I66ta0y8sHI03GItVjSGj569sY/qRt5vUeo09DEC2A4Cj70kvzQPOs7fWsaOrV/Td/3dwSI4ANe02oapfWczwtMvVfZ8BJiHYc1usyQFcc+AVNT62quKNMGcqDQdl/xz2/llw88OsbqIhck3W+KgUe3liO3/rIm7Lmz732k0g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
+ by CY8PR12MB7635.namprd12.prod.outlook.com (2603:10b6:930:9e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17; Thu, 29 Sep
+ 2022 04:57:37 +0000
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::d9ae:c30e:ce3d:9cb3]) by BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::d9ae:c30e:ce3d:9cb3%7]) with mapi id 15.20.5654.026; Thu, 29 Sep 2022
+ 04:57:37 +0000
+Message-ID: <09c23fbd-0319-5e06-6c10-dc73352131f8@nvidia.com>
+Date:   Thu, 29 Sep 2022 10:27:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V2] PCI: dwc: Fix n_fts[] array overrun
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxYOJlBDVjq5YjAA--.2565S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw1kKryfGF4fGw4ktrW3GFg_yoWrCr1xpF
-        WYvFWayws7JFy7JrnxCw48Ca45AwnIkFW7KFs5K3WxXrsrCr18CF1xurWF9FnFyF43CF4j
-        vrsYvayUKa47AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
-        87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
-        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-        JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY
-        0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaV
-        Av8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
-        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+To:     Han Jingoo <jingoohan1@gmail.com>
+Cc:     gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20220919143123.28250-1-vidyas@nvidia.com>
+ <20220926111923.22487-1-vidyas@nvidia.com>
+ <CAPOBaE5X8iUTQW5QqTKFN78U=jnVvCzCj2mb4HG5S4uxBaCN1Q@mail.gmail.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <CAPOBaE5X8iUTQW5QqTKFN78U=jnVvCzCj2mb4HG5S4uxBaCN1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR01CA0158.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::28) To BN8PR12MB2900.namprd12.prod.outlook.com
+ (2603:10b6:408:69::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|CY8PR12MB7635:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70595236-2f6d-4dee-570d-08daa1d720d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dDWjRyAmXtY032obxurptM+ctpgcsFxFjezYJePdpIu71qNZVuXbmK9/F4824+ifB4WsYuJ5uaiGI2y7AVbhTy6iaC9QxEQVj4e5eL3S/Qa5FfQt54fIjp5KV1B+qEJQuC/3aoI5YEhnx+0soMsBctArjBjup8mjRZf+hBMyjkbLk59p+dS+X8hU+6PaVOykz7clBWT3ND5z2DYgEGM8P6IFhXw3GHj+7DUalck6/Wf5y74K2u9W7aPS9HDRJ1tcWDomTc0fagemp8ncMGoun9Yf3jQcVlI4cyNftNEhRPV2ieAWteHphZa+eXNIb9LPhUpGCTxF6322Sx41HKngaTjOU/dH1zO1yVQ6UUf2JAyFzgta8SfL3ran77CvL20wxYzgug1tPZzj1O8Utfc5K/RNY4tm8eylTwrA4OXwaSJJwrzKt6TI2l450y/n+yKUxjoZPq2UXMJF3cknlpjWjN/G5ycofVYIF1LWYoHQgQlH7Fglpx93BEitODtsMJlaehLkc9zskBEP2OhIPqWuHMAmNHjKUflaRdd4CEOIie/LVDMjWEBeOLI7DleBKHhkOp2RCXLS7K2dkbUtwwR5yi6tx42QiGcLJklom9Bt+OAF8tzv2kr0lxGqas8R/PPBGLMbIPzPxKSlfS+q/ciM+LYav0aNp+TILJI7xf38391RGNRQU7ItMwvl3C53Cxh4Vj0hpIKBt/zwEMqDOlUFVQksQl/+HmXlnjh6940kqk+wZyb+IADGxl4fA8hlA+ReZjZU3BeqM8NIU+iFe4DB2XKHc8DKsZMydldDz/iuWFk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(451199015)(31686004)(66476007)(26005)(6512007)(2616005)(186003)(66899015)(6666004)(478600001)(36756003)(316002)(6506007)(38100700002)(6486002)(83380400001)(53546011)(2906002)(8936002)(6916009)(5660300002)(86362001)(4326008)(66556008)(66946007)(41300700001)(8676002)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z2lsTEpDanlkaFpMb2FnRmhUVXRBUlRyZzJNcENzdUV1V1N6ajl2RHRrTWl2?=
+ =?utf-8?B?dnB0d0VUcUN2MDIyaEozWXZsRFlmaEpZaHZQbTRqK001d1QwUCt0YmQybjV6?=
+ =?utf-8?B?dUFLOHZiVFEwbmdHSkphaGhYZi9IdzJkSTZZMDJkRUp3TEJUSXRHMExWZUc5?=
+ =?utf-8?B?WWJVNlBoWW5IS0ZPL2pBdE9tNUR4U0Q2NEtySHFOd0tMRlVKSXhFRXJzTGZE?=
+ =?utf-8?B?UGJuYk9IS3hvc3NRREdwdXFOb0dJdjV2RmcrdGNOTlNMQ2hnYVM4NTNKNDI1?=
+ =?utf-8?B?NFZ5M01BZkNqdkF6dnFnYm96REI4TlAvV2FoUU5rVDNjaFowRTZWVmppNzA3?=
+ =?utf-8?B?eUEwUk1uZTg3eTJINkI0K3djbVdvMW12MEl6WnU3NFRUdXRiZnhYWk9EMm5L?=
+ =?utf-8?B?bDg0R1gyblkxcDdveWp2cHYrbWxBVzFHT3p0ZE01VVRaVlIxb3hjSTFiOXNP?=
+ =?utf-8?B?TWk1TjRCbTdZc2RpT3N4NlgvMmlMRmVaU0p5ODRibFB0VTNwOFhzemhraEZT?=
+ =?utf-8?B?cm84Z3JiRkJ3TTREdU5OSTBKY2pSeTk3eHZpRHJnQndLdE5XMGMrM1FaOWc2?=
+ =?utf-8?B?UDZnOGFWb05sdUlzeXRrSzNNNkFXaUY2Vm00ZjJhYXd2Y0Jldkc5d3Y4cThH?=
+ =?utf-8?B?M1ZMWUdvOUswbGh4K3dnQUtZN09OS2pyY2FxT2NjNkZqQzdycjh5RkpoTVZp?=
+ =?utf-8?B?K1I2Zm8yZ0NpWFQ3eFoyenVXQXl0NlFzSExCWWh5K2FOYnZZdFNkT2ZKWGdE?=
+ =?utf-8?B?M3hJSjRoV0Vhemx4NW1GV1BKcDYweGp6ZjllekZtRFJpNVdvcmhUS2NrNHlr?=
+ =?utf-8?B?M3luYXozRGFIRFNDUUdnQ1JzRlhpTWlETUNXTFFRVUt1dlhtMjdyNjBFL01u?=
+ =?utf-8?B?R211MWhlVHBnTk10SXlER2c5R1NNWG8wOG1kR2gyZlhBMFNacmFEOGU2R3Fq?=
+ =?utf-8?B?U0oxTU9HY1hQU1U0RE9IYlZCbDBsZlBTNzlPdG9oaXdjTUMxSFBxTTVSMWhz?=
+ =?utf-8?B?SGtVSGs4TVFOSS9HdXpmTHRwNnlTaFBwSGEyYmw4eUloMytZazhzOE1GTWph?=
+ =?utf-8?B?bUVSSjdqNnZjU2s0K0VoaHQzNXM2bm80aHhCWkpMTVg5NXc5Zmo3MkpiVXFY?=
+ =?utf-8?B?SFJKZTRXN3NHZlZMSzhLVDBMN1VhVkQ5bHc1UkJpRGhPQXdNNjIrekVORkhh?=
+ =?utf-8?B?SjJYTnl1TllVZDlhV29HUldxWG9ySC9CYXlMUmE1OVBncVBmRkZoOEhxNE5k?=
+ =?utf-8?B?RVFxczdGR0t5Q0EvSldxMzJJYjV6YzAxTFFNc3Frc1l6UERHRWxSQWJuRklS?=
+ =?utf-8?B?TzRvZVVwYTkvMUZ1UXl5djc3ZzVpZFVLcHZqMC9MbEJNZUx2eW9IUUJBTlFE?=
+ =?utf-8?B?YXRoWUV5UFpXWUNHUnhlaU5nc21BMVB2eDRoVWxlQmNGNWhBYjlDZXdiSGxC?=
+ =?utf-8?B?d0RqR3p0a3J3K28rdGY3eGo5czRlbGFvNGNweTF4K0dMNlAzakdTQWlTTHI2?=
+ =?utf-8?B?UHllY2tDSUN1alE5aFdndTR2SDhnYjVzeTJhdHpEUnpjcU90dldQSllHUnBu?=
+ =?utf-8?B?Z0VRSXQ5WG1TdllsYjBZQWxwRmFSaXNZUHpvZnN1a3o1WVZpTkJkZytneSsz?=
+ =?utf-8?B?RG5PeGFnWTdCa0RsRGpRUDlybzljVUhEQ2FhS0VxM0VRcDBicmlnZnp5c0Zq?=
+ =?utf-8?B?VHlVT1lweGJPcm1qL0IwSDF6YVp0UjNtN1ZvdmJnZW03S0JxRlY0RG16amFR?=
+ =?utf-8?B?VXZEakJKTi9pbmFwS1VEa0tsQ0RCVUJKcWJ4Tmd2LzB5SmtqUy83M1NiOHNi?=
+ =?utf-8?B?cEhBR3RQY3VnNGdFK0Zxck4yRmJrbmo3cHdJc1Z6akM0ZHU4MGhBN2xFN3la?=
+ =?utf-8?B?enhJTTZqTUUySDR5ek1LRERRYUZCZ2lDYzU4b2NoMjlsa1Z4dDRab3lyRVJM?=
+ =?utf-8?B?ZE5nT3ZHaXBCSHVCQVZFZFhhM2h5VEh1cmhMZzA4Vzl1Tk41T0NOdld6UWhB?=
+ =?utf-8?B?MGFOaXNRcDZBNWt2SytwOUc2a3IzVjNzSGxCQzFSbUF1VkJveHUyKzVIRE9F?=
+ =?utf-8?B?bUoxUERobHR2d0lTMGJ5RjRTdWVZR1Fia25zbjk1NnB5a3ZBYWtMNmRkMjVv?=
+ =?utf-8?Q?UU25m0kkN0HcnhNVXFAPtQYDT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70595236-2f6d-4dee-570d-08daa1d720d7
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2022 04:57:37.1432
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PkgesBW3WqIGHy2lU8QVCTCNDfStDeqrnyRxfdJSaGtAsnBI9SbG+Co+6dNm3JSDVhnzQa2Cy7TI/wlgxI9sOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7635
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -68,135 +130,67 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2022/9/28 下午10:49, Marc Zyngier wrote:
-> On Mon, 15 Aug 2022 22:01:30 -0400,
-> Jianmin Lv <lvjianmin@loongson.cn> wrote:
+On 9/29/2022 7:34 AM, Han Jingoo wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Mon, Sep 26, 2022, Vidya Sagar <vidyas@nvidia.com> wrote:
 >>
->> For ACPI path, the translate callback used IRQ_TYPE_NONE and ignored
->> the irq type in fwspec->param[1]. For supporting to set type for
->> irqs of the irqdomain, fwspec->param[1] should be used to get irq
->> type.
+>> commit aeaa0bfe89654 ("PCI: dwc: Move N_FTS setup to common setup")
+>> incorrectly uses pci->link_gen in deriving the index to the
+>> n_fts[] array also introducing the issue of accessing beyond the
+>> boundaries of array for greater than Gen-2 speeds. This change fixes
+>> that issue.
+> 
+> Dear Vidya,
+> 
+> I am just ok with this patch. By the way, do we need another patch to generalize
+> this setting? Currently, this code targets only Gen1 and Gen2. But, in
+> my opinion,
+> it is possible that this driver can be  used for more than Gen2,
+> later. PCIe Gen6
+> standard is available and Synopsys has their solution for Gen6. So, would you
+> send a new patch to generalize this thing, later?
+> Thank you.
+
+As I mentioned in the commit message, current code is incorrectly using 
+'gen' in the index and ideally n_fts programming has nothing to do with 
+the speed and hence I tried to remove the 'gen' reference in the current 
+patch. So, the same code (after applying this patch) should work for any 
+future Synopsys IP versions supporting higher speeds.
+
+Thanks,
+Vidya Sagar
+
+> 
+> Best regards,
+> Jingoo Han
+> 
 >>
->> On Loongson platform, the irq trigger type of PCI devices is
->> high level, so high level triggered type is inputed to acpi_register_gsi
->> when create irq mapping for PCI devices.
->>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> Fixes: aeaa0bfe8965 ("PCI: dwc: Move N_FTS setup to common setup")
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Jingoo Han <jingoohan1@gmail.com>
 >> ---
->>   drivers/acpi/pci_irq.c                 |  3 ++-
->>   drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++++----
->>   2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> $ ./scripts/get_maintainer.pl drivers/acpi/pci_irq.c
-> Bjorn Helgaas <bhelgaas@google.com> (supporter:PCI SUBSYSTEM)
-> "Rafael J. Wysocki" <rafael@kernel.org> (supporter:ACPI)
-> Len Brown <lenb@kernel.org> (reviewer:ACPI)
-> linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
-> linux-acpi@vger.kernel.org (open list:ACPI)
-> linux-kernel@vger.kernel.org (open list)
-> 
-> How about you start Cc-ing some of the relevant people?
-> 
-Ok, thanks, I'll cc relevant people list here.
-
+>> V2:
+>> * Addressed review comments from Bjorn
+>> * Added "Acked-by: Jingoo Han <jingoohan1@gmail.com>"
 >>
->> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
->> index 08e1577..34483b3 100644
->> --- a/drivers/acpi/pci_irq.c
->> +++ b/drivers/acpi/pci_irq.c
->> @@ -393,7 +393,8 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->>   	 * controller and must therefore be considered active high
->>   	 * as default.
->>   	 */
->> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
->> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
->> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
->>   				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
-> 
-> The comment just above this only talks about ARM. Should it be
-> updated? 
-
-Ok, I'll update the comment.
-
-
-Is this a limitation of the underlying interrupt controller?
-> 
-It's the limitation that pci interrupt source of LoongArch only sends 
-high level trigger signal to interrupt controller(though, pci spec 
-requires asserted low).
-
-
->>   	char *link = NULL;
->>   	char link_desc[16];
->> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
->> index b6f1392..5067010 100644
->> --- a/drivers/irqchip/irq-loongson-pch-pic.c
->> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
->> @@ -177,13 +177,15 @@ static int pch_pic_domain_translate(struct irq_domain *d,
->>   	if (fwspec->param_count < 1)
->>   		return -EINVAL;
->>   
->> -	if (of_node) {
->> +	if (of_node)
->>   		*hwirq = fwspec->param[0] + priv->ht_vec_base;
->> -		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
->> -	} else {
->> +	else
->>   		*hwirq = fwspec->param[0] - priv->gsi_base;
->> +
->> +	if (fwspec->param_count > 1)
->> +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
->> +	else
->>   		*type = IRQ_TYPE_NONE;
-> 
-> Isn't that a change in behaviour if of_node is non-NULL and
-> param_count==1?
-> 
-
-It seems that current code here has bug that if fwspec->param_count==1 
-and of_node is non-null, fwspec->param[1] will be accessed, which is 
-introduced from previous patch(irqchip/loongson-pch-pic: Add ACPI init 
-support). Before the patch, for non-null of_node, translate callback(use 
-irq_domain_translate_twocell) will return -EINVAL if fwspec->param_count 
-< 2.
-
-For ACPI path, fwspec->param_count can be 1 or 2.
-
-So in this patch, I'll fix the bug and change the code as following:
-
-         if (fwspec->param_count < 1)
-                 return -EINVAL;
-
-         if (of_node) {
-                 if (fwspec->param_count < 2)
-                         return -EINVAL;
-
-                 *hwirq = fwspec->param[0] + priv->ht_vec_base;
-                 *type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-         } else {
-                 *hwirq = fwspec->param[0] - priv->gsi_base;
-
-                 if (fwspec->param_count > 1)
-                         *type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-                 else
-                         *type = IRQ_TYPE_NONE;
-         }
-
-
->> -	}
->>   
->>   	return 0;
->>   }
-> 
-> This irqchip change should probably be a separate patch.
-> 
-
-As a separate patch, the input trigger type of pci devices will be low 
-level because of lacking of workaround to acpi_pci_irq_enable, which 
-will cause kernel hang, unless the patch of workaround to 
-acpi_pci_irq_enable is in front of this separated patch.
-
-
-> 	M.
-> 
-
+>>   drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 650a7f22f9d0..3df687667f27 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -649,7 +649,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>>          if (pci->n_fts[1]) {
+>>                  val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>>                  val &= ~PORT_LOGIC_N_FTS_MASK;
+>> -               val |= pci->n_fts[pci->link_gen - 1];
+>> +               val |= pci->n_fts[1];
+>>                  dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>>          }
+>>
+>> --
+>> 2.17.1
+>>
