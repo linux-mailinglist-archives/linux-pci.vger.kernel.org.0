@@ -2,52 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E32C85EFFD3
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 00:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40A415F05E1
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 09:40:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiI2WAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Sep 2022 18:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
+        id S231213AbiI3HkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Sep 2022 03:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbiI2WAW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Sep 2022 18:00:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871F2D58A1;
-        Thu, 29 Sep 2022 15:00:21 -0700 (PDT)
+        with ESMTP id S231215AbiI3HkJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 03:40:09 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B38402CE;
+        Fri, 30 Sep 2022 00:39:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 08DFA621C1;
-        Thu, 29 Sep 2022 22:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDC9C4347C;
-        Thu, 29 Sep 2022 22:00:20 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 40BFCCE23B6;
+        Fri, 30 Sep 2022 07:39:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08982C433D6;
+        Fri, 30 Sep 2022 07:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664488820;
-        bh=WtkC37Gy/WTEiwuFHzLPNkA8qv8vtULh3URNp4L7KrQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RiycpSO/A50KTcqwqIadnTsvse61MYmoU9k10P+Rt1osFPIwLjYVBa+jxVpZNlEFu
-         5SCs59qFmc6/Ua8y3G1B4+poUSqf+ixy4+Qo6G5R6i/sSqWx6sR0MTqglYNCfOC4I1
-         AUzGJntxu0x59s2bJMpJhJdAGJv1zkoG8XjkCJUIScmxlNZuEVMklRow5I7Cq6+OKf
-         pWLWDuZDJKS78bQ4LPsOlpstjGyZ0HpiOK1Jt6wO8kcXwuMHaP40J8l8QTbEwal0Eo
-         JRJT51rW1T5qaj/Cgvo/XcptYtrySKVih8UxW0cZirISAHiu3fQf4u6dj95i7+b2be
-         zBLUrFbNBrAHw==
-Date:   Thu, 29 Sep 2022 17:00:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        refactormyself@gmail.com, kw@linux.com, rajatja@google.com,
-        kenny@panix.com, kai.heng.feng@canonical.com, abhsahu@nvidia.com,
-        sagupta@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: Re: [PATCH V4 1/2] PCI/ASPM: Refactor ASPM L1SS control register
- programming
-Message-ID: <20220929220018.GA1927153@bhelgaas>
+        s=k20201202; t=1664523592;
+        bh=kr/i3Wayavvzeth2QlB8fm7DhiWUidsC7nT+QNv01Aw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BpxjtYajPjYkq8xQLL6+lpm+RRIIJYELOL51TDbRDFuZzz/3To2+lGi5taqbMdQDD
+         xAAWVHxDzSpFdJuYMttRed1Kj2xwiLqVxzNW0XkSAOgeNjQj3vp3ogXiJN29rw14cS
+         m7wqnNfZlrQL6R7g4ADb5Nhh2s1k8QNaLUq93F24PfFxySvIugEL8bs7LgIpmimwu9
+         qdpUSdTAcGsPj1qvbVCPcRgG44iAeS8A0WZ6AuFyNIqDZHGFMoLVsaYYSgjIXliuZ4
+         XNrcY05/XRSOlFKGCy14o38IqiivNMWb1dziXOfzsGH6gS15jHYSynqGHPbKhUAM5/
+         YPgP3WuLO5Niw==
+Date:   Fri, 30 Sep 2022 09:39:44 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        kabel@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] PCI: mvebu: Implement support for interrupts on
+ emulated bridge
+Message-ID: <YzadQCETD16jBTwH@lpieralisi>
+References: <20220817230036.817-1-pali@kernel.org>
+ <20220817230036.817-3-pali@kernel.org>
+ <20220830123639.4zpvvvlrsaqs2rls@pali>
+ <20220929140510.ib2akodamg4b62mp@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220913131822.16557-2-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220929140510.ib2akodamg4b62mp@pali>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,112 +65,460 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Krishna]
-
-On Tue, Sep 13, 2022 at 06:48:21PM +0530, Vidya Sagar wrote:
-> Refactor the code to extract the command code out to program
-> Control Registers-1 & 2 of L1 Sub-States capability to a new function
-> aspm_program_l1ss() and call it for both parent and child devices.
+On Thu, Sep 29, 2022 at 04:05:10PM +0200, Pali Rohár wrote:
+> Hello!
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V4:
-> * New patch in this series
+> Gentle reminder for this patch. It is waiting there for more than month
+> and other patches from this patch series were already reviewed and merged.
+> Could you please look at it?
 > 
->  drivers/pci/pcie/aspm.c | 63 +++++++++++++++++++----------------------
->  1 file changed, 29 insertions(+), 34 deletions(-)
+> As stated in commit message this patch adds support for PCIe AER to
+> pci-mvebu.c and as we know AER required for debugging any PCIe endpoint
+> issues.
+
+I thought this patch has a dependency on other patches that I can't
+merge and therefore I postponed reviewing it:
+
+https://lore.kernel.org/linux-pci/20220830123639.4zpvvvlrsaqs2rls@pali/
+
+> On Tuesday 30 August 2022 14:36:39 Pali Rohár wrote:
+> > On Thursday 18 August 2022 01:00:34 Pali Rohár wrote:
+> > > This adds support for PME and ERR interrupts reported by emulated bridge
+> > > (for PME and AER kernel drivers) via new Root Port irq chip as these
+> > > interrupts from PCIe Root Ports are handled by mvebu hardware completely
+> > > separately from INTx and MSI interrupts send by real PCIe devices.
+> > > 
+> > > With this change, kernel PME and AER drivers start working as they can
+> > > acquire required interrupt lines (provided by mvebu rp virtual irq chip).
+> > > 
+> > > Note that for this support, device tree files has to be properly adjusted
+> > > to provide "interrupts" or "interrupts-extended" property with error
+> > > interrupt source and "interrupt-names" property with "error" string.
+> > > 
+> > > If device tree files do not provide these properties then driver would work
+> > > as before and would not provide interrupts on emulated bridge, like before.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > ---
+> > 
+> > Just to note that because these error interrupts are shared on some
+> > mvebu platforms, this patch depends on another patch which convert
+> > driver to devm_request_irq() and which I sent more months before:
+> > https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+> > 
+> > >  drivers/pci/controller/pci-mvebu.c | 256 ++++++++++++++++++++++++++---
+> > >  1 file changed, 237 insertions(+), 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > index 54ce5d43b695..e69bdaa8de43 100644
+> > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > @@ -56,8 +56,16 @@
+> > >  #define PCIE_CONF_DATA_OFF	0x18fc
+> > >  #define PCIE_INT_CAUSE_OFF	0x1900
+> > >  #define PCIE_INT_UNMASK_OFF	0x1910
+> > > +#define  PCIE_INT_DET_COR		BIT(8)
+> > > +#define  PCIE_INT_DET_NONFATAL		BIT(9)
+> > > +#define  PCIE_INT_DET_FATAL		BIT(10)
+> > > +#define  PCIE_INT_ERR_FATAL		BIT(16)
+> > > +#define  PCIE_INT_ERR_NONFATAL		BIT(17)
+> > > +#define  PCIE_INT_ERR_COR		BIT(18)
+> > >  #define  PCIE_INT_INTX(i)		BIT(24+i)
+> > >  #define  PCIE_INT_PM_PME		BIT(28)
+> > > +#define  PCIE_INT_DET_MASK		(PCIE_INT_DET_COR | PCIE_INT_DET_NONFATAL | PCIE_INT_DET_FATAL)
+> > > +#define  PCIE_INT_ERR_MASK		(PCIE_INT_ERR_FATAL | PCIE_INT_ERR_NONFATAL | PCIE_INT_ERR_COR)
+> > >  #define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
+> > >  #define PCIE_CTRL_OFF		0x1a00
+> > >  #define  PCIE_CTRL_X1_MODE		0x0001
+> > > @@ -120,9 +128,12 @@ struct mvebu_pcie_port {
+> > >  	struct resource regs;
+> > >  	u8 slot_power_limit_value;
+> > >  	u8 slot_power_limit_scale;
+> > > +	struct irq_domain *rp_irq_domain;
+> > >  	struct irq_domain *intx_irq_domain;
+> > >  	raw_spinlock_t irq_lock;
+> > > +	int error_irq;
+> > >  	int intx_irq;
+> > > +	bool pme_pending;
+> > >  };
+> > >  
+> > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
+> > > @@ -321,9 +332,19 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > >  	/* Clear all interrupt causes. */
+> > >  	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> > >  
+> > > -	/* Check if "intx" interrupt was specified in DT. */
+> > > -	if (port->intx_irq > 0)
+> > > -		return;
+> > > +	/*
+> > > +	 * Unmask all error interrupts which are internally generated.
+> > > +	 * They cannot be disabled by SERR# Enable bit in PCI Command register,
+> > > +	 * see Figure 6-3: Pseudo Logic Diagram for Error Message Controls in
+> > > +	 * PCIe base specification.
+> > > +	 * Internally generated mvebu interrupts are reported via mvebu summary
+> > > +	 * interrupt which requires "error" interrupt to be specified in DT.
+> > > +	 */
+> > > +	if (port->error_irq > 0) {
+> > > +		unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > +		unmask |= PCIE_INT_DET_MASK;
+> > > +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> > > +	}
+> > >  
+> > >  	/*
+> > >  	 * Fallback code when "intx" interrupt was not specified in DT:
+> > > @@ -335,10 +356,12 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > >  	 * performance penalty as every PCIe interrupt handler needs to be
+> > >  	 * called when some interrupt is triggered.
+> > >  	 */
+> > > -	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > -	unmask |= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
+> > > -		  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
+> > > -	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> > > +	if (port->intx_irq <= 0) {
+> > > +		unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > +		unmask |= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
+> > > +			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
+> > > +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> > > +	}
+> > >  }
+> > >  
+> > >  static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
+> > > @@ -603,11 +626,16 @@ mvebu_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
+> > >  	case PCI_INTERRUPT_LINE: {
+> > >  		/*
+> > >  		 * From the whole 32bit register we support reading from HW only
+> > > -		 * one bit: PCI_BRIDGE_CTL_BUS_RESET.
+> > > +		 * two bits: PCI_BRIDGE_CTL_BUS_RESET and PCI_BRIDGE_CTL_SERR.
+> > >  		 * Other bits are retrieved only from emulated config buffer.
+> > >  		 */
+> > >  		__le32 *cfgspace = (__le32 *)&bridge->conf;
+> > >  		u32 val = le32_to_cpu(cfgspace[PCI_INTERRUPT_LINE / 4]);
+> > > +		if ((mvebu_readl(port, PCIE_INT_UNMASK_OFF) &
+> > > +		      PCIE_INT_ERR_MASK) == PCIE_INT_ERR_MASK)
+> > > +			val |= PCI_BRIDGE_CTL_SERR << 16;
+> > > +		else
+> > > +			val &= ~(PCI_BRIDGE_CTL_SERR << 16);
+> > >  		if (mvebu_readl(port, PCIE_CTRL_OFF) & PCIE_CTRL_MASTER_HOT_RESET)
+> > >  			val |= PCI_BRIDGE_CTL_BUS_RESET << 16;
+> > >  		else
+> > > @@ -675,6 +703,11 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> > >  		break;
+> > >  	}
+> > >  
+> > > +	case PCI_EXP_RTCTL:
+> > > +		*value = (mvebu_readl(port, PCIE_INT_UNMASK_OFF) &
+> > > +			  PCIE_INT_PM_PME) ? PCI_EXP_RTCTL_PMEIE : 0;
+> > > +		break;
+> > > +
+> > >  	case PCI_EXP_RTSTA:
+> > >  		*value = mvebu_readl(port, PCIE_RC_RTSTA);
+> > >  		break;
+> > > @@ -780,6 +813,14 @@ mvebu_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
+> > >  		break;
+> > >  
+> > >  	case PCI_INTERRUPT_LINE:
+> > > +		if ((mask & (PCI_BRIDGE_CTL_SERR << 16)) && port->error_irq > 0) {
+> > > +			u32 unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > +			if (new & (PCI_BRIDGE_CTL_SERR << 16))
+> > > +				unmask |= PCIE_INT_ERR_MASK;
+> > > +			else
+> > > +				unmask &= ~PCIE_INT_ERR_MASK;
+> > > +			mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> > > +		}
+> > >  		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
+> > >  			u32 ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
+> > >  			if (new & (PCI_BRIDGE_CTL_BUS_RESET << 16))
+> > > @@ -838,10 +879,25 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> > >  		 * PME Status bit in Root Status Register (PCIE_RC_RTSTA)
+> > >  		 * is read-only and can be cleared only by writing 0b to the
+> > >  		 * Interrupt Cause RW0C register (PCIE_INT_CAUSE_OFF). So
+> > > -		 * clear PME via Interrupt Cause.
+> > > +		 * clear PME via Interrupt Cause and also set port->pme_pending
+> > > +		 * variable to false value to start processing PME interrupts
+> > > +		 * in interrupt handler again.
+> > >  		 */
+> > > -		if (new & PCI_EXP_RTSTA_PME)
+> > > +		if (new & PCI_EXP_RTSTA_PME) {
+> > >  			mvebu_writel(port, ~PCIE_INT_PM_PME, PCIE_INT_CAUSE_OFF);
+> > > +			port->pme_pending = false;
+> > > +		}
+> > > +		break;
+> > > +
+> > > +	case PCI_EXP_RTCTL:
+> > > +		if ((mask & PCI_EXP_RTCTL_PMEIE) && port->error_irq > 0) {
+> > > +			u32 unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > +			if (new & PCI_EXP_RTCTL_PMEIE)
+> > > +				unmask |= PCIE_INT_PM_PME;
+> > > +			else
+> > > +				unmask &= ~PCIE_INT_PM_PME;
+> > > +			mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> > > +		}
+> > >  		break;
+> > >  
+> > >  	case PCI_EXP_DEVCTL2:
+> > > @@ -924,6 +980,14 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
+> > >  		bridge_flags |= PCI_BRIDGE_EMUL_NO_IO_FORWARD;
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * Interrupts on emulated bridge are supported only when "error"
+> > > +	 * interrupt was specified in DT. Without it emulated bridge cannot
+> > > +	 * emulate interrupts.
+> > > +	 */
+> > > +	if (port->error_irq > 0)
+> > > +		bridge->conf.intpin = PCI_INTERRUPT_INTA;
+> > > +
+> > >  	/*
+> > >  	 * Older mvebu hardware provides PCIe Capability structure only in
+> > >  	 * version 1. New hardware provides it in version 2.
+> > > @@ -1072,6 +1136,26 @@ static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_ops = {
+> > >  	.xlate = irq_domain_xlate_onecell,
+> > >  };
+> > >  
+> > > +static struct irq_chip rp_irq_chip = {
+> > > +	.name = "mvebu-rp",
+> > > +};
+> > > +
+> > > +static int mvebu_pcie_rp_irq_map(struct irq_domain *h,
+> > > +				   unsigned int virq, irq_hw_number_t hwirq)
+> > > +{
+> > > +	struct mvebu_pcie_port *port = h->host_data;
+> > > +
+> > > +	irq_set_chip_and_handler(virq, &rp_irq_chip, handle_simple_irq);
+> > > +	irq_set_chip_data(virq, port);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct irq_domain_ops mvebu_pcie_rp_irq_domain_ops = {
+> > > +	.map = mvebu_pcie_rp_irq_map,
+> > > +	.xlate = irq_domain_xlate_onecell,
+> > > +};
+> > > +
+> > >  static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
+> > >  {
+> > >  	struct device *dev = &port->pcie->pdev->dev;
+> > > @@ -1094,10 +1178,72 @@ static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
+> > >  		return -ENOMEM;
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * When "error" interrupt was not specified in DT then there is no
+> > > +	 * support for interrupts on emulated root bridge. So skip following
+> > > +	 * initialization.
+> > > +	 */
+> > > +	if (port->error_irq <= 0)
+> > > +		return 0;
+> > > +
+> > > +	port->rp_irq_domain = irq_domain_add_linear(NULL, 1,
+> > > +						      &mvebu_pcie_rp_irq_domain_ops,
+> > > +						      port);
+> > > +	if (!port->rp_irq_domain) {
+> > > +		irq_domain_remove(port->intx_irq_domain);
+> > > +		dev_err(dev, "Failed to add Root Port IRQ domain for %s\n", port->name);
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
+> > > +static irqreturn_t mvebu_pcie_error_irq_handler(int irq, void *arg)
+> > > +{
+> > > +	struct mvebu_pcie_port *port = arg;
+> > > +	struct device *dev = &port->pcie->pdev->dev;
+> > > +	u32 cause, unmask, status;
+> > > +
+> > > +	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
+> > > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > > +	status = cause & unmask;
+> > > +
+> > > +	/* "error" interrupt handler does not process INTX interrupts */
+> > > +	status &= ~(PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
+> > > +		    PCIE_INT_INTX(2) | PCIE_INT_INTX(3));
+> > > +
+> > > +	/* Process PME interrupt */
+> > > +	if ((status & PCIE_INT_PM_PME) && !port->pme_pending) {
+> > > +		/*
+> > > +		 * Do not clear PME interrupt bit in Cause Register as it
+> > > +		 * invalidates also content of Root Status Register. Instead
+> > > +		 * set port->pme_pending variable to true to indicate that
+> > > +		 * next time PME interrupt should be ignored until variable
+> > > +		 * is back to the false value.
+> > > +		 */
+> > > +		port->pme_pending = true;
+> > > +		if (generic_handle_domain_irq(port->rp_irq_domain, 0) == -EINVAL)
+> > > +			dev_err_ratelimited(dev, "unhandled PME IRQ\n");
+> > > +	}
+> > > +
+> > > +	/* Process ERR interrupt */
+> > > +	if (status & PCIE_INT_ERR_MASK) {
+> > > +		mvebu_writel(port, ~PCIE_INT_ERR_MASK, PCIE_INT_CAUSE_OFF);
+> > > +		if (generic_handle_domain_irq(port->rp_irq_domain, 0) == -EINVAL)
+> > > +			dev_err_ratelimited(dev, "unhandled ERR IRQ\n");
+> > > +	}
+> > > +
+> > > +	/* Process local ERR interrupt */
+> > > +	if (status & PCIE_INT_DET_MASK) {
+> > > +		mvebu_writel(port, ~PCIE_INT_DET_MASK, PCIE_INT_CAUSE_OFF);
+> > > +		if (generic_handle_domain_irq(port->rp_irq_domain, 0) == -EINVAL)
+> > > +			dev_err_ratelimited(dev, "unhandled ERR IRQ\n");
+> > > +	}
+> > > +
+> > > +	return status ? IRQ_HANDLED : IRQ_NONE;
+> > > +}
+> > > +
+> > > +static irqreturn_t mvebu_pcie_intx_irq_handler(int irq, void *arg)
+> > >  {
+> > >  	struct mvebu_pcie_port *port = arg;
+> > >  	struct device *dev = &port->pcie->pdev->dev;
+> > > @@ -1108,6 +1254,10 @@ static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
+> > >  	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> > >  	status = cause & unmask;
+> > >  
+> > > +	/* "intx" interrupt handler process only INTX interrupts */
+> > > +	status &= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
+> > > +		  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
+> > > +
+> > >  	/* Process legacy INTx interrupts */
+> > >  	for (i = 0; i < PCI_NUM_INTX; i++) {
+> > >  		if (!(status & PCIE_INT_INTX(i)))
+> > > @@ -1122,9 +1272,29 @@ static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
+> > >  
+> > >  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> > >  {
+> > > -	/* Interrupt support on mvebu emulated bridges is not implemented yet */
+> > > -	if (dev->bus->number == 0)
+> > > -		return 0; /* Proper return code 0 == NO_IRQ */
+> > > +	struct mvebu_pcie_port *port;
+> > > +	struct mvebu_pcie *pcie;
+> > > +
+> > > +	if (dev->bus->number == 0) {
+> > > +		/*
+> > > +		 * Each emulated root bridge for every mvebu port has its own
+> > > +		 * Root Port irq chip and irq domain. Argument pin is the INTx
+> > > +		 * pin (1=INTA, 2=INTB, 3=INTC, 4=INTD) and hwirq for function
+> > > +		 * irq_create_mapping() is indexed from zero.
+> > > +		 */
+> > > +		pcie = dev->bus->sysdata;
+> > > +		port = mvebu_pcie_find_port(pcie, dev->bus, PCI_DEVFN(slot, 0));
+> > > +		if (!port)
+> > > +			return 0; /* Proper return code 0 == NO_IRQ */
+> > > +		/*
+> > > +		 * port->rp_irq_domain is available only when "error" interrupt
+> > > +		 * was specified in DT. When is not available then interrupts
+> > > +		 * for emulated root bridge are not provided.
+> > > +		 */
+> > > +		if (port->error_irq <= 0)
+> > > +			return 0; /* Proper return code 0 == NO_IRQ */
+> > > +		return irq_create_mapping(port->rp_irq_domain, pin - 1);
+> > > +	}
+> > >  
+> > >  	return of_irq_parse_and_map_pci(dev, slot, pin);
+> > >  }
+> > > @@ -1333,6 +1503,21 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
+> > >  			 port->name, child);
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * Old DT bindings do not contain "error" interrupt
+> > > +	 * so do not fail probing driver when interrupt does not exist.
+> > > +	 */
+> > > +	port->error_irq = of_irq_get_byname(child, "error");
+> > > +	if (port->error_irq == -EPROBE_DEFER) {
+> > > +		ret = port->error_irq;
+> > > +		goto err;
+> > > +	}
+> > > +	if (port->error_irq <= 0) {
+> > > +		dev_warn(dev, "%s: interrupts on Root Port are unsupported, "
+> > > +			      "%pOF does not contain error interrupt\n",
+> > > +			 port->name, child);
+> > > +	}
+> > > +
+> > >  	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
+> > >  	if (reset_gpio == -EPROBE_DEFER) {
+> > >  		ret = reset_gpio;
+> > > @@ -1538,7 +1723,6 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> > >  
+> > >  	for (i = 0; i < pcie->nports; i++) {
+> > >  		struct mvebu_pcie_port *port = &pcie->ports[i];
+> > > -		int irq = port->intx_irq;
+> > >  
+> > >  		child = port->dn;
+> > >  		if (!child)
+> > > @@ -1566,7 +1750,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> > >  			continue;
+> > >  		}
+> > >  
+> > > -		if (irq > 0) {
+> > > +		if (port->error_irq > 0 || port->intx_irq > 0) {
+> > >  			ret = mvebu_pcie_init_irq_domain(port);
+> > >  			if (ret) {
+> > >  				dev_err(dev, "%s: cannot init irq domain\n",
+> > > @@ -1577,14 +1761,42 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> > >  				mvebu_pcie_powerdown(port);
+> > >  				continue;
+> > >  			}
+> > > +		}
+> > > +
+> > > +		if (port->error_irq > 0) {
+> > > +			ret = devm_request_irq(dev, port->error_irq,
+> > > +					       mvebu_pcie_error_irq_handler,
+> > > +					       IRQF_SHARED | IRQF_NO_THREAD,
+> > > +					       port->name, port);
+> > > +			if (ret) {
+> > > +				dev_err(dev, "%s: cannot register error interrupt handler: %d\n",
+> > > +					port->name, ret);
+> > > +				if (port->intx_irq_domain)
+> > > +					irq_domain_remove(port->intx_irq_domain);
+> > > +				if (port->rp_irq_domain)
+> > > +					irq_domain_remove(port->rp_irq_domain);
+> > > +				pci_bridge_emul_cleanup(&port->bridge);
+> > > +				devm_iounmap(dev, port->base);
+> > > +				port->base = NULL;
+> > > +				mvebu_pcie_powerdown(port);
+> > > +				continue;
+> > > +			}
+> > > +		}
+> > >  
+> > > -			ret = devm_request_irq(dev, irq, mvebu_pcie_irq_handler,
+> > > +		if (port->intx_irq > 0) {
+> > > +			ret = devm_request_irq(dev, port->intx_irq,
+> > > +					       mvebu_pcie_intx_irq_handler,
+> > >  					       IRQF_SHARED | IRQF_NO_THREAD,
+> > >  					       port->name, port);
+> > >  			if (ret) {
+> > > -				dev_err(dev, "%s: cannot register interrupt handler: %d\n",
+> > > +				dev_err(dev, "%s: cannot register intx interrupt handler: %d\n",
+> > >  					port->name, ret);
+> > > -				irq_domain_remove(port->intx_irq_domain);
+> > > +				if (port->error_irq > 0)
+> > > +					devm_free_irq(dev, port->error_irq, port);
+> > > +				if (port->intx_irq_domain)
+> > > +					irq_domain_remove(port->intx_irq_domain);
+> > > +				if (port->rp_irq_domain)
+> > > +					irq_domain_remove(port->rp_irq_domain);
+> > >  				pci_bridge_emul_cleanup(&port->bridge);
+> > >  				devm_iounmap(dev, port->base);
+> > >  				port->base = NULL;
+> > > @@ -1722,6 +1934,12 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+> > >  			}
+> > >  			irq_domain_remove(port->intx_irq_domain);
+> > >  		}
+> > > +		if (port->rp_irq_domain) {
+> > > +			int virq = irq_find_mapping(port->rp_irq_domain, 0);
+> > > +			if (virq > 0)
+> > > +				irq_dispose_mapping(virq);
+> > > +			irq_domain_remove(port->rp_irq_domain);
+> > > +		}
+> > >  
+> > >  		/* Free config space for emulated root bridge. */
+> > >  		pci_bridge_emul_cleanup(&port->bridge);
+> > > -- 
+> > > 2.20.1
+> > > 
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index a8aec190986c..ecbe3af4188d 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -455,6 +455,31 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
->  	pci_write_config_dword(pdev, pos, val);
->  }
->  
-> +static void aspm_program_l1ss(struct pci_dev *dev, u32 ctl1, u32 ctl2)
-> +{
-> +	u16 l1ss = dev->l1ss;
-> +	u32 l1_2_enable;
-> +
-> +	/*
-> +	 * Per PCIe r6.0, sec 5.5.4, T_POWER_ON in PCI_L1SS_CTL2 must be
-> +	 * programmed prior to setting the L1.2 enable bits in PCI_L1SS_CTL1.
-> +	 */
-> +	pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL2, ctl2);
-> +
-> +	/*
-> +	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD in
-> +	 * PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
-> +	 * enable bits, even though they're all in PCI_L1SS_CTL1.
-> +	 */
-> +	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-> +	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
-> +
-> +	pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1, ctl1);
-> +	if (l1_2_enable)
-> +		pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1,
-> +				       ctl1 | l1_2_enable);
-> +}
-> +
->  /* Calculate L1.2 PM substate timing parameters */
->  static void aspm_calc_l1ss_info(struct pcie_link_state *link,
->  				u32 parent_l1ss_cap, u32 child_l1ss_cap)
-> @@ -464,7 +489,6 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
->  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
->  	u32 ctl1 = 0, ctl2 = 0;
->  	u32 pctl1, pctl2, cctl1, cctl2;
-> -	u32 pl1_2_enables, cl1_2_enables;
->  
->  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
->  		return;
-> @@ -513,39 +537,10 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
->  	    ctl2 == pctl2 && ctl2 == cctl2)
->  		return;
->  
-> -	/* Disable L1.2 while updating.  See PCIe r5.0, sec 5.5.4, 7.8.3.3 */
-> -	pl1_2_enables = pctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-> -	cl1_2_enables = cctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-> -
-> -	if (pl1_2_enables || cl1_2_enables) {
-> -		pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
-> -					PCI_L1SS_CTL1_L1_2_MASK, 0);
-> -		pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
-> -					PCI_L1SS_CTL1_L1_2_MASK, 0);
-> -	}
-> -
-> -	/* Program T_POWER_ON times in both ports */
-> -	pci_write_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, ctl2);
-> -	pci_write_config_dword(child, child->l1ss + PCI_L1SS_CTL2, ctl2);
-> -
-> -	/* Program Common_Mode_Restore_Time in upstream device */
-> -	pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
-> -				PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
-> -
-> -	/* Program LTR_L1.2_THRESHOLD time in both ports */
-> -	pci_clear_and_set_dword(parent,	parent->l1ss + PCI_L1SS_CTL1,
-> -				PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
-> -				PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
-> -	pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
-> -				PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
-> -				PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
-> -
-> -	if (pl1_2_enables || cl1_2_enables) {
-> -		pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1, 0,
-> -					pl1_2_enables);
-> -		pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1, 0,
-> -					cl1_2_enables);
-> -	}
-> +	aspm_program_l1ss(parent,
-> +			  ctl1 | (pctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
-> +	aspm_program_l1ss(child,
-> +			  ctl1 | (cctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
-
-This doesn't seem right to me.  I think the intent is to update
-LTR_L1.2_THRESHOLD and Common_Mode_Restore_Time, which are encoded in
-"ctl1".  It does do that, but it looks like it *also* clears
-everything except PCI_L1SS_CTL1_L1_2_MASK, i.e., the L1.1 Enable bits,
-the Link Activation bits, and the RsvdP bits, which I don't think we
-should be clearing.  Am I missing something?
-
-Bjorn
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
