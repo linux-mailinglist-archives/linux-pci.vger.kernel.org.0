@@ -2,234 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E80FD5F0679
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 10:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A82755F06CD
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 10:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230399AbiI3Icb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Sep 2022 04:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        id S230085AbiI3Iqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Sep 2022 04:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbiI3Ica (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 04:32:30 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B09C1499
-        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 01:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664526749; x=1696062749;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uEnpJ8NC9dFeIdlHIw2KF4fwDt30lX8SP0h8ePl1YJs=;
-  b=AsoIECH+uIC0q5XtUDBdBjJ/T139PQVoj42ramOwouKJXHv/Wd5QPUpk
-   vVGeTu27g1wxNWqnPPdTsDj/VD9yawr+QYGT6AqnmK90pX2glwasAntEG
-   A1fqvJBse+QPL8ZSH53tAgEKLGPxmtDnhGyLPqLp9zCasna1mlKsqOW0N
-   ZFL0UP/Q1EEOcKEpqWjh89Bt4wZrsLIgGth4zLCwD0qXuFlj9fbNS6i/D
-   fONdpNUvFds7i8TX8URSM183zGLPv3wuzrdZkOsdpL26Aw+WnaPk89tIO
-   oCNmzhO05E+UN8GNMttRE4rOmDFQO6juRxCIzByNRlRpQ6wcE5774kkrv
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="282503225"
-X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
-   d="scan'208";a="282503225"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 01:32:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="711723360"
-X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
-   d="scan'208";a="711723360"
-Received: from lkp-server01.sh.intel.com (HELO 14cc182da2d0) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Sep 2022 01:32:20 -0700
-Received: from kbuild by 14cc182da2d0 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oeBRT-0000lp-1R;
-        Fri, 30 Sep 2022 08:32:19 +0000
-Date:   Fri, 30 Sep 2022 16:31:21 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [lpieralisi-pci:pci/misc] BUILD SUCCESS
- 8bb7ff12a91429eb76e093b517ae810b146448fe
-Message-ID: <6336a959.Cshe4v2o9V08a4qS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230112AbiI3Iqf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 04:46:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2F411F7FB
+        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 01:46:34 -0700 (PDT)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1oeBf5-0000eu-W7; Fri, 30 Sep 2022 10:46:24 +0200
+Message-ID: <070a4442-6fd0-c63c-65d9-caca18eea20a@pengutronix.de>
+Date:   Fri, 30 Sep 2022 09:46:14 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v10 4/4] phy: freescale: imx8m-pcie: Add i.MX8MP PCIe PHY
+ support
+Content-Language: en-US
+To:     Richard Zhu <hongxing.zhu@nxp.com>, vkoul@kernel.org,
+        p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, alexander.stein@ew.tq-group.com,
+        marex@denx.de, richard.leitner@linux.dev
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-phy@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1664440622-18556-1-git-send-email-hongxing.zhu@nxp.com>
+ <1664440622-18556-5-git-send-email-hongxing.zhu@nxp.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <1664440622-18556-5-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/misc
-branch HEAD: 8bb7ff12a91429eb76e093b517ae810b146448fe  PCI: tegra: Use PCI_CONF1_EXT_ADDRESS() macro
+Hi,
 
-elapsed time: 1357m
+On 29.09.22 09:37, Richard Zhu wrote:
+> Add i.MX8MP PCIe PHY support.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Tested-by: Marek Vasut <marex@denx.de>
+> Tested-by: Richard Leitner <richard.leitner@skidata.com>
+> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> index 59b46a4ae069..be5e48864c5a 100644
+> --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> @@ -48,6 +48,7 @@
+>  
+>  enum imx8_pcie_phy_type {
+>  	IMX8MM,
+> +	IMX8MP,
+>  };
+>  
+>  struct imx8_pcie_phy_drvdata {
+> @@ -60,6 +61,7 @@ struct imx8_pcie_phy {
+>  	struct clk		*clk;
+>  	struct phy		*phy;
+>  	struct regmap		*iomuxc_gpr;
+> +	struct reset_control	*perst;
+>  	struct reset_control	*reset;
+>  	u32			refclk_pad_mode;
+>  	u32			tx_deemph_gen1;
+> @@ -87,6 +89,9 @@ static int imx8_pcie_phy_init(struct phy *phy)
+>  			writel(imx8_phy->tx_deemph_gen2,
+>  			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
+>  		break;
+> +	case IMX8MP:
+> +		reset_control_assert(imx8_phy->perst);
+> +		break;
+>  	}
+>  
+>  	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ||
+> @@ -141,6 +146,9 @@ static int imx8_pcie_phy_init(struct phy *phy)
+>  			   IMX8MM_GPR_PCIE_CMN_RST);
+>  
+>  	switch (imx8_phy->drvdata->variant) {
+> +	case IMX8MP:
+> +		reset_control_deassert(imx8_phy->perst);
+> +		fallthrough;
+>  	case IMX8MM:
+>  		reset_control_deassert(imx8_phy->reset);
+>  		usleep_range(200, 500);
+> @@ -181,8 +189,14 @@ static const struct imx8_pcie_phy_drvdata imx8mm_drvdata = {
+>  	.gpr = "fsl,imx8mm-iomuxc-gpr",
+>  };
+>  
+> +static const struct imx8_pcie_phy_drvdata imx8mp_drvdata = {
+> +	.variant = IMX8MP,
+> +	.gpr = "fsl,imx8mp-iomuxc-gpr",
+> +};
+> +
+>  static const struct of_device_id imx8_pcie_phy_of_match[] = {
+>  	{.compatible = "fsl,imx8mm-pcie-phy", .data = &imx8mm_drvdata, },
+> +	{.compatible = "fsl,imx8mp-pcie-phy", .data = &imx8mp_drvdata, },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
+> @@ -238,6 +252,15 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
+>  		return PTR_ERR(imx8_phy->reset);
+>  	}
+>  
+> +	if (imx8_phy->drvdata->variant == IMX8MP) {
+> +		imx8_phy->perst =
+> +			devm_reset_control_get_exclusive(dev, "perst");
+> +		if (IS_ERR(imx8_phy->perst)) {
+> +			dev_err(dev, "Failed to get PCIE PHY PERST control\n");
+> +			return PTR_ERR(imx8_phy->perst);
 
-configs tested: 153
-configs skipped: 2
+Nitpick: dev_err_probe here would be useful if user forgets to
+enable PHY driver. Anyways:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-arc                                 defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-i386                                defconfig
-alpha                               defconfig
-x86_64                           rhel-8.3-kvm
-powerpc                           allnoconfig
-sh                               allmodconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                              defconfig
-arc                  randconfig-r043-20220925
-riscv                randconfig-r042-20220925
-arc                  randconfig-r043-20220926
-s390                 randconfig-r044-20220925
-s390                             allmodconfig
-x86_64                               rhel-8.3
-i386                             allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-x86_64                           allyesconfig
-m68k                             allmodconfig
-alpha                            allyesconfig
-arm                                 defconfig
-i386                 randconfig-a001-20220926
-arc                              allyesconfig
-i386                 randconfig-a004-20220926
-x86_64                        randconfig-a004
-m68k                             allyesconfig
-x86_64                        randconfig-a002
-i386                 randconfig-a002-20220926
-i386                 randconfig-a003-20220926
-i386                 randconfig-a005-20220926
-x86_64                        randconfig-a006
-i386                 randconfig-a006-20220926
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-arm                              allyesconfig
-i386                          randconfig-a014
-arm64                            allyesconfig
-i386                          randconfig-a012
-i386                          randconfig-a016
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-arm                       omap2plus_defconfig
-powerpc                     ep8248e_defconfig
-arm                             ezx_defconfig
-powerpc                       maple_defconfig
-mips                       bmips_be_defconfig
-arm                         s3c6400_defconfig
-sh                 kfr2r09-romimage_defconfig
-m68k                        m5307c3_defconfig
-sh                           se7722_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                            migor_defconfig
-xtensa                          iss_defconfig
-i386                          randconfig-c001
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220925
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-sh                   secureedge5410_defconfig
-mips                      loongson3_defconfig
-arc                            hsdk_defconfig
-sh                     sh7710voipgw_defconfig
-sh                             sh03_defconfig
-sh                               j2_defconfig
-m68k                       m5249evb_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                     decstation_defconfig
-sh                         apsh4a3a_defconfig
-m68k                        mvme147_defconfig
-sh                             shx3_defconfig
-sh                     magicpanelr2_defconfig
-mips                      fuloong2e_defconfig
-arm                          pxa3xx_defconfig
-sh                          landisk_defconfig
-nios2                            allyesconfig
-sh                            hp6xx_defconfig
-powerpc                      cm5200_defconfig
-x86_64               randconfig-a002-20220926
-x86_64               randconfig-a001-20220926
-x86_64               randconfig-a004-20220926
-x86_64               randconfig-a006-20220926
-x86_64               randconfig-a005-20220926
-x86_64               randconfig-a003-20220926
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-sh                        edosk7760_defconfig
-mips                         rt305x_defconfig
-arm                         assabet_defconfig
-sparc                             allnoconfig
-powerpc                    sam440ep_defconfig
-arm                         at91_dt_defconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-x86_64                           alldefconfig
-ia64                             allmodconfig
+Cheers,
+Ahmad
 
-clang tested configs:
-hexagon              randconfig-r045-20220925
-hexagon              randconfig-r041-20220926
-hexagon              randconfig-r045-20220926
-hexagon              randconfig-r041-20220925
-riscv                randconfig-r042-20220926
-s390                 randconfig-r044-20220926
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                 randconfig-a011-20220926
-i386                 randconfig-a015-20220926
-i386                 randconfig-a014-20220926
-i386                 randconfig-a012-20220926
-i386                 randconfig-a013-20220926
-i386                 randconfig-a016-20220926
-hexagon              randconfig-r041-20220928
-hexagon              randconfig-r045-20220928
-riscv                randconfig-r042-20220928
-s390                 randconfig-r044-20220928
-x86_64                        randconfig-k001
-x86_64               randconfig-a016-20220926
-x86_64               randconfig-a012-20220926
-x86_64               randconfig-a014-20220926
-x86_64               randconfig-a013-20220926
-x86_64               randconfig-a011-20220926
-x86_64               randconfig-a015-20220926
-arm                         hackkit_defconfig
-powerpc                      walnut_defconfig
-mips                        maltaup_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
+> +		}
+> +	}
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	imx8_phy->base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(imx8_phy->base))
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
