@@ -2,157 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A82755F06CD
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 10:46:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6002D5F0740
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 11:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbiI3Iqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Sep 2022 04:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
+        id S231282AbiI3JLI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Sep 2022 05:11:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbiI3Iqf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 04:46:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2F411F7FB
-        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 01:46:34 -0700 (PDT)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1oeBf5-0000eu-W7; Fri, 30 Sep 2022 10:46:24 +0200
-Message-ID: <070a4442-6fd0-c63c-65d9-caca18eea20a@pengutronix.de>
-Date:   Fri, 30 Sep 2022 09:46:14 +0100
+        with ESMTP id S229839AbiI3JLH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 05:11:07 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41CDB45047
+        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 02:11:00 -0700 (PDT)
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7AAFE3FFE0
+        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 09:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1664529058;
+        bh=3EwN7ICYiqgTYVQO2ot2VfpryeYvkvfH7StD/2CT2TA=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=R7k4s/+JvD44S9U+yj/9ffjD3/UYFaO8N7owrxz2+T8ceHqWM5DTIwsZHnM+HjcHH
+         lN5XrvVCD1QUw6WrsPINWGHPEbCHD5Stz9je7nwTYu2PtyeqgL+jwWb7UB5AaA6Kl0
+         wnBNVja+gL9Z0OFOR917m0x+4eg/ku3h6Cg2o3aEI72qzp133smoYiVDh4hOJ9sBab
+         /UERYDza76Um4TQfsNUsjofe6dKY10iNQ5NrS1PCFsu9/94Om/27n8l48iZIRP73Zz
+         gVV1FTW0kSekTwQwuKeLecb2huA6K+Pkn2nDKzXZfpcN/GG3Am4Ia+eXz7ogNPc1kd
+         wY5Qz8M76PBIg==
+Received: by mail-pj1-f70.google.com with SMTP id m2-20020a17090a158200b002058e593c2bso2343802pja.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 Sep 2022 02:10:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=3EwN7ICYiqgTYVQO2ot2VfpryeYvkvfH7StD/2CT2TA=;
+        b=0OXOpCYfDvCd7LttKbLGRTT3NuxVugwquMR9fgZL3Fz2y2m1WPVjFJSel7rM0ATnc+
+         qO5gdpDF7vJO0CR0VPgva6pXoRx5fMHf5ZWuSFjlRTkmGIvoNScXxN5+PzLrw+O+GuEm
+         OCJ1q7Z06+Ddjsw7zetY4a3ZDy5WYoDr/v6JEIWFVkZu596OmzJsZF6+PcgSZkNH7kdU
+         5KkB0JABTM0R5OI0kHc6kNK5HRFu6kofgdSWXwG7hxhAUhbRLvHZ4DvnQm8nLVMF4jX0
+         JiEfmbjbTJC0QPLoyoCzD9UVeYTzvcl0TK19kbbZhVU2WgIcO0HcWKWctAMilgCpJfDj
+         NL6A==
+X-Gm-Message-State: ACrzQf35u18DFeqlQzdbysP818D3wFXkz+V+XYSH/OSEHKKfYEJI8hzE
+        Yzx0mW1VoeT3sfXbrs1h2hel0oJ35Y0FILG2Xk/MWzUb1U1pI4wT6vgh6cAPhjfl0LoE7K3p6CG
+        BlVybxPWXeevGdWr2T6pEqKsDs2GWeeXPWsagbA==
+X-Received: by 2002:a17:902:e846:b0:17c:a00b:69c1 with SMTP id t6-20020a170902e84600b0017ca00b69c1mr1299094plg.143.1664529057119;
+        Fri, 30 Sep 2022 02:10:57 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7p+cTf1lW/V8rs3eKZXr6tS966Ojg7mXPPBy2dHAgLVDEp55KpJUQ+4bPTnlgIK7SLCre3mw==
+X-Received: by 2002:a17:902:e846:b0:17c:a00b:69c1 with SMTP id t6-20020a170902e84600b0017ca00b69c1mr1299066plg.143.1664529056766;
+        Fri, 30 Sep 2022 02:10:56 -0700 (PDT)
+Received: from u-Precision-5560.mymeshdevice.home (2001-b011-381d-9173-bb82-1440-19c3-59f5.dynamic-ip6.hinet.net. [2001:b011:381d:9173:bb82:1440:19c3:59f5])
+        by smtp.gmail.com with ESMTPSA id w1-20020a170902d10100b001785dddc703sm1360115plw.120.2022.09.30.02.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 02:10:56 -0700 (PDT)
+From:   Chris Chiu <chris.chiu@canonical.com>
+To:     bhelgaas@google.com, mika.westerberg@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Chiu <chris.chiu@canonical.com>
+Subject: [PATCH] PCI/ASPM: Make SUNIX serial card acceptable latency unlimited
+Date:   Fri, 30 Sep 2022 17:10:50 +0800
+Message-Id: <20220930091050.193096-1-chris.chiu@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v10 4/4] phy: freescale: imx8m-pcie: Add i.MX8MP PCIe PHY
- support
-Content-Language: en-US
-To:     Richard Zhu <hongxing.zhu@nxp.com>, vkoul@kernel.org,
-        p.zabel@pengutronix.de, l.stach@pengutronix.de,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        shawnguo@kernel.org, alexander.stein@ew.tq-group.com,
-        marex@denx.de, richard.leitner@linux.dev
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-phy@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1664440622-18556-1-git-send-email-hongxing.zhu@nxp.com>
- <1664440622-18556-5-git-send-email-hongxing.zhu@nxp.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <1664440622-18556-5-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+SUNIX serial card advertise L1 acceptable L0S exit latency to be
+< 2us, L1 < 32us, but the link capability shows they're unlimited.
 
-On 29.09.22 09:37, Richard Zhu wrote:
-> Add i.MX8MP PCIe PHY support.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Tested-by: Marek Vasut <marex@denx.de>
-> Tested-by: Richard Leitner <richard.leitner@skidata.com>
-> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> index 59b46a4ae069..be5e48864c5a 100644
-> --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> @@ -48,6 +48,7 @@
->  
->  enum imx8_pcie_phy_type {
->  	IMX8MM,
-> +	IMX8MP,
->  };
->  
->  struct imx8_pcie_phy_drvdata {
-> @@ -60,6 +61,7 @@ struct imx8_pcie_phy {
->  	struct clk		*clk;
->  	struct phy		*phy;
->  	struct regmap		*iomuxc_gpr;
-> +	struct reset_control	*perst;
->  	struct reset_control	*reset;
->  	u32			refclk_pad_mode;
->  	u32			tx_deemph_gen1;
-> @@ -87,6 +89,9 @@ static int imx8_pcie_phy_init(struct phy *phy)
->  			writel(imx8_phy->tx_deemph_gen2,
->  			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
->  		break;
-> +	case IMX8MP:
-> +		reset_control_assert(imx8_phy->perst);
-> +		break;
->  	}
->  
->  	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ||
-> @@ -141,6 +146,9 @@ static int imx8_pcie_phy_init(struct phy *phy)
->  			   IMX8MM_GPR_PCIE_CMN_RST);
->  
->  	switch (imx8_phy->drvdata->variant) {
-> +	case IMX8MP:
-> +		reset_control_deassert(imx8_phy->perst);
-> +		fallthrough;
->  	case IMX8MM:
->  		reset_control_deassert(imx8_phy->reset);
->  		usleep_range(200, 500);
-> @@ -181,8 +189,14 @@ static const struct imx8_pcie_phy_drvdata imx8mm_drvdata = {
->  	.gpr = "fsl,imx8mm-iomuxc-gpr",
->  };
->  
-> +static const struct imx8_pcie_phy_drvdata imx8mp_drvdata = {
-> +	.variant = IMX8MP,
-> +	.gpr = "fsl,imx8mp-iomuxc-gpr",
-> +};
-> +
->  static const struct of_device_id imx8_pcie_phy_of_match[] = {
->  	{.compatible = "fsl,imx8mm-pcie-phy", .data = &imx8mm_drvdata, },
-> +	{.compatible = "fsl,imx8mp-pcie-phy", .data = &imx8mp_drvdata, },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
-> @@ -238,6 +252,15 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
->  		return PTR_ERR(imx8_phy->reset);
->  	}
->  
-> +	if (imx8_phy->drvdata->variant == IMX8MP) {
-> +		imx8_phy->perst =
-> +			devm_reset_control_get_exclusive(dev, "perst");
-> +		if (IS_ERR(imx8_phy->perst)) {
-> +			dev_err(dev, "Failed to get PCIE PHY PERST control\n");
-> +			return PTR_ERR(imx8_phy->perst);
+It fails the latency check and prohibits the ASPM L1 from being
+enabled. The L1 acceptable latency quirk fixes the issue.
 
-Nitpick: dev_err_probe here would be useful if user forgets to
-enable PHY driver. Anyways:
+Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
+---
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-
-Cheers,
-Ahmad
-
-> +		}
-> +	}
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	imx8_phy->base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(imx8_phy->base))
-
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4944798e75b5..e1663e43846e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5955,4 +5955,5 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999, aspm_l1_acceptable_latency);
+ #endif
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+
