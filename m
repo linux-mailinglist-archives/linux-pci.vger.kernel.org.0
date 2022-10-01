@@ -2,216 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C02245F14DA
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Sep 2022 23:29:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A55975F1C9F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Oct 2022 16:16:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230450AbiI3V3T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Sep 2022 17:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
+        id S229441AbiJAOQv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Oct 2022 10:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbiI3V3R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Sep 2022 17:29:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0499D1CD12D;
-        Fri, 30 Sep 2022 14:29:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DE04B6250C;
-        Fri, 30 Sep 2022 21:29:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5BCC433D7;
-        Fri, 30 Sep 2022 21:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664573351;
-        bh=NTTzbJJF9X0vGnGIOc251ZTkuAM+HSF5NjtXEgtJH7U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jliIKOzU1kBvM2I7e1wo4JNOFsRwJLQp8ZslYaGwaCIC8OyOpyGwLmC42NIsKCt0Y
-         i2b4cS3e85QCn/F9oImHNLczIqv2u2uBTXoDv/82ZJpQudDwTEY7IzsewqsfVDI/pG
-         sRZKvSAiIdfSER+zCh4VHhbygQhlwRibiPx+5/kwbtwGzgpHmjj5buI9hvE9t8F0/v
-         QjVFvHsxau7XrU+qBPmPaesikAgwGGZjf15FrpxMgmr3pMz9elNIvtub1Pj+SWXeYW
-         H60CFFjfbZDZsRHcIE2wfuJeA75iN+WZl/sg6j9b0sJ09feVDAhWarPYgse9D4qPxU
-         CVcMXfq4kXVFQ==
-Date:   Fri, 30 Sep 2022 16:29:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported
- max latencies
-Message-ID: <20220930212909.GA1923173@bhelgaas>
+        with ESMTP id S229458AbiJAOQu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Oct 2022 10:16:50 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9940D3D59B
+        for <linux-pci@vger.kernel.org>; Sat,  1 Oct 2022 07:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664633809; x=1696169809;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CKTX3AOrT38fatbYgiX7En4c2LxaJ7Sy+M/cl4pSKKo=;
+  b=PZ3CgU0s+ECJe2aiSx24W6OJJlzDyW9yMaLySKaU4xypCHobNMgkwzAW
+   Q6OpNHNgFdObPS4hEuxgFDLp1AAgNbx+EOBZ4iLT4emdcGiiWzNR7z/sD
+   M0Nvk84KUTJqJZ6LJK6veqHmfG6gVAIUI78hY3iJZyQ8sEudXAs0qZiWZ
+   9z8x9NKzdkwnYo9VbCP5bCN8D/1ejfdRUf+IcAwPwVkY2oK/L8B2maGC1
+   BNnr2ER9hvDVf5ozR6/9hefNhA7Qc3D5HhcKhWSrmwodKEeRa6ycGGFT9
+   C9DFxqEC58Z8bFmH9bS8k7Jajdt0ssJ5l8gvWOcLE55ojuNmd+XDweMaL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10487"; a="301102454"
+X-IronPort-AV: E=Sophos;i="5.93,361,1654585200"; 
+   d="scan'208";a="301102454"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2022 07:16:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10487"; a="712116296"
+X-IronPort-AV: E=Sophos;i="5.93,361,1654585200"; 
+   d="scan'208";a="712116296"
+Received: from lkp-server01.sh.intel.com (HELO 14cc182da2d0) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Oct 2022 07:16:35 -0700
+Received: from kbuild by 14cc182da2d0 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oedIA-0002LB-2j;
+        Sat, 01 Oct 2022 14:16:34 +0000
+Date:   Sat, 01 Oct 2022 22:15:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/pm] BUILD SUCCESS
+ 3e347969a5776947a115649dae740a9ed47473f5
+Message-ID: <63384b98.ZvImtL32ldWB3TKX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 01:38:37PM +0530, Krishna chaitanya chundru wrote:
-> In ASPM driver, LTR threshold scale and value are updated based on
-> tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
-> LTR threshold scale and value are greater values than max snoop/non-snoop
-> value.
->
-> Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
-> reported snoop/no-snoop values is greater than or equal to
-> LTR_L1.2_THRESHOLD value.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
+branch HEAD: 3e347969a5776947a115649dae740a9ed47473f5  PCI/PM: Reduce D3hot delay with usleep_range()
 
-I find LTR configuration pretty much impenetrable, but this doesn't
-seem right to me.  If I understand correctly, LTR messages are a way
-for endpoints to report their latency requirements, i.e., sort of a
-dynamic version of "Endpoint L1 Acceptable Latency".
+elapsed time: 2540m
 
-As you said, a comparison between the most recent LTR value and
-LTR_L1.2_THESHOLD determines whether the link goes to L1.1 or L1.2.
+configs tested: 198
+configs skipped: 2
 
-So I assume LTR_L1.2_THESHOLD must be the minimum time required to
-transition the link from L0 to L1.2 and back to L0, which includes
-T_POWER_OFF, T_L1.2, T_POWER_ON, and T_COMMONMODE (sec 5.5.3.3.1,
-5.5.5).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If the device can tolerate at least that much time, i.e., if the
-LTR value >= LTR_L1.2_THESHOLD, the link should go to L1.2.
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+x86_64                          rhel-8.3-func
+s390                             allmodconfig
+arc                              allyesconfig
+alpha                               defconfig
+x86_64                    rhel-8.3-kselftests
+alpha                            allyesconfig
+s390                                defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+s390                             allyesconfig
+x86_64                               rhel-8.3
+m68k                             allyesconfig
+m68k                             allmodconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+i386                                defconfig
+x86_64                           rhel-8.3-syz
+powerpc                           allnoconfig
+i386                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+mips                             allyesconfig
+i386                 randconfig-a001-20220926
+i386                 randconfig-a004-20220926
+i386                 randconfig-a002-20220926
+i386                 randconfig-a003-20220926
+i386                 randconfig-a005-20220926
+x86_64                        randconfig-a004
+i386                 randconfig-a006-20220926
+x86_64                        randconfig-a002
+arc                  randconfig-r043-20220925
+x86_64                        randconfig-a006
+arc                  randconfig-r043-20220926
+s390                 randconfig-r044-20220925
+riscv                randconfig-r042-20220925
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+sh                           se7722_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                            migor_defconfig
+xtensa                          iss_defconfig
+sh                        edosk7760_defconfig
+mips                         rt305x_defconfig
+sh                 kfr2r09-romimage_defconfig
+i386                          randconfig-c001
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arm                         assabet_defconfig
+sh                            hp6xx_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+sparc                             allnoconfig
+powerpc                    sam440ep_defconfig
+arm                         at91_dt_defconfig
+m68k                        mvme147_defconfig
+x86_64                           alldefconfig
+m68k                        m5307c3_defconfig
+x86_64               randconfig-a002-20220926
+x86_64               randconfig-a001-20220926
+x86_64               randconfig-a004-20220926
+x86_64               randconfig-a006-20220926
+x86_64               randconfig-a005-20220926
+x86_64               randconfig-a003-20220926
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+powerpc                        cell_defconfig
+m68k                                defconfig
+arm                          gemini_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220925
+mips                     decstation_defconfig
+sh                         apsh4a3a_defconfig
+sh                             shx3_defconfig
+sh                     magicpanelr2_defconfig
+mips                      fuloong2e_defconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+powerpc                      ppc6xx_defconfig
+sh                          rsk7269_defconfig
+arm                            xcep_defconfig
+arm                       omap2plus_defconfig
+powerpc                     ep8248e_defconfig
+arm                             ezx_defconfig
+powerpc                       maple_defconfig
+mips                       bmips_be_defconfig
+arm                          pxa3xx_defconfig
+sh                          landisk_defconfig
+powerpc                      cm5200_defconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+m68k                       m5249evb_defconfig
+riscv                               defconfig
+sh                   sh7770_generic_defconfig
+mips                           ip32_defconfig
+powerpc                     taishan_defconfig
+arm                        shmobile_defconfig
+ia64                                defconfig
+arm                            mps2_defconfig
+loongarch                        allmodconfig
+powerpc                        warp_defconfig
+arc                      axs103_smp_defconfig
+riscv                randconfig-r042-20221001
+arc                  randconfig-r043-20221001
+s390                 randconfig-r044-20221001
+arc                          axs101_defconfig
+mips                 decstation_r4k_defconfig
+sh                           se7712_defconfig
+arm                         lpc18xx_defconfig
+arm                       aspeed_g5_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                           h5000_defconfig
+m68k                          atari_defconfig
+powerpc                      chrp32_defconfig
+sh                        edosk7705_defconfig
+sh                         ap325rxa_defconfig
+arm                        spear6xx_defconfig
+sh                         ecovec24_defconfig
+riscv                randconfig-r042-20220927
+arc                  randconfig-r043-20220927
+s390                 randconfig-r044-20220927
+powerpc                       ppc64_defconfig
+arm                           sunxi_defconfig
+powerpc                     rainier_defconfig
+arm64                               defconfig
+arm                              allmodconfig
+mips                             allmodconfig
+arm                          simpad_defconfig
+m68k                           sun3_defconfig
+sh                      rts7751r2d1_defconfig
+alpha                            alldefconfig
+mips                           gcw0_defconfig
+ia64                             allmodconfig
 
-I'm not a hardware person, but I don't see how LTR_L1.2_THESHOLD can
-*depend* on the LTR max latency values.  The LTR max latencies depend
-on the endpoint.  I think LTR_L1.2_THESHOLD depends on the circuit
-design of both ends of the link.
+clang tested configs:
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20220925
+x86_64                        randconfig-a003
+hexagon              randconfig-r041-20220926
+hexagon              randconfig-r045-20220926
+hexagon              randconfig-r041-20220925
+x86_64                        randconfig-a005
+riscv                randconfig-r042-20220926
+x86_64               randconfig-a015-20220926
+x86_64               randconfig-a012-20220926
+s390                 randconfig-r044-20220926
+x86_64               randconfig-a014-20220926
+x86_64               randconfig-a013-20220926
+x86_64               randconfig-a011-20220926
+x86_64               randconfig-a016-20220926
+i386                 randconfig-a011-20220926
+i386                 randconfig-a013-20220926
+i386                 randconfig-a012-20220926
+i386                 randconfig-a014-20220926
+i386                 randconfig-a016-20220926
+i386                 randconfig-a015-20220926
+hexagon              randconfig-r041-20220928
+hexagon              randconfig-r045-20220928
+riscv                randconfig-r042-20220928
+s390                 randconfig-r044-20220928
+x86_64                        randconfig-k001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+powerpc                   microwatt_defconfig
+mips                      malta_kvm_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                         hackkit_defconfig
+powerpc                      walnut_defconfig
+mips                        maltaup_defconfig
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+arm                          moxart_defconfig
+arm                         mv78xx0_defconfig
+riscv                    nommu_virt_defconfig
+powerpc                        icon_defconfig
+arm                          pxa168_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                          allyesconfig
+mips                     loongson1c_defconfig
 
-More comments below, but they're only pertinent if we can figure out
-that this is the correct approach.
-
-Bjorn
-
-> Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> 
-> I am taking this patch forward as prasad is no more working with our org.
-> changes since v6:
-> 	- Rebasing with pci/next.
-
-It's best if you base patches on my "main" branch (not "next"), which
-is typically -rc1, unless they depend on something that's already been
-merged.
-
-In the patch below, rewrap so everything still fits in 80 columns like
-the rest of the file.
-
-Update citations to current spec version (r6.0).  It looks like the
-section numbers are the same.
-
-> changes since v5:
-> 	- no changes, just reposting as standalone patch instead of reply to
-> 	  previous patch.
-> Changes since v4:
-> 	- Replaced conditional statements with min and max.
-> changes since v3:
-> 	- Changed the logic to include this condition "snoop/nosnoop
-> 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
-> Changes since v2:
-> 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
-> Changes since v1:
-> 	- Added missing variable declaration in v1 patch
-> ---
->  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 928bf64..2bb8470 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
->  {
->  	struct pci_dev *child = link->downstream, *parent = link->pdev;
->  	u32 val1, val2, scale1, scale2;
-> +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
->  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
->  	u32 ctl1 = 0, ctl2 = 0;
->  	u32 pctl1, pctl2, cctl1, cctl2;
-> +	u16 ltr;
-> +	u16 max_snoop_lat, max_nosnoop_lat;
->  
->  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
->  		return;
->  
-> +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
-> +	if (!ltr)
-> +		return;
-> +
-> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
-> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
-> +
-> +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-> +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
-> +
-> +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-> +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
-> +
-> +	/* choose the greater max scale value between snoop and no snoop value*/
-
-Add space before */
-
-Capitalize comments to match style of file.
-
-> +	max_scale = max(max_snp_scale, max_nsnp_scale);
-> +
-> +	/* choose the greater max value between snoop and no snoop scales */
-> +	max_val = max(max_snp_val, max_nsnp_val);
-> +
->  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
->  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
->  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
-> @@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
->  	 */
->  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
->  	encode_l12_threshold(l1_2_threshold, &scale, &value);
-> +
-> +	/*
-> +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
-> +	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
-> +	 */
-> +	scale = min(scale, max_scale);
-> +	value = min(value, max_val);
-
-I don't think this computes the right thing.  If we have this:
-
-  scale = 001b (x 32ns)
-  value = 1024
-  max_scale = 010b (x 1024ns)
-  max_value = 1
-
-Then the latencies are both 1024ns, so I would expect a min() of
-1024ns.  But computing min() separately for the scale and value will
-give "scale = 001b" (x 32ns) and "value = 1", for a latency of 32ns.
-
-I think you would need to compare the values in ns, i.e.,
-"l1_2_threshold".
-
-I assume the max() computations above have a similar issue, but I
-didn't work it out.
-
-But I'm not convinced that this is the right approach to begin with.
-
->  	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
->  
->  	/* Some broken devices only support dword access to L1 SS */
-> -- 
-> 2.7.4
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
