@@ -2,127 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A0B5F2F76
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Oct 2022 13:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E79D75F2F8C
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Oct 2022 13:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiJCLTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Oct 2022 07:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
+        id S229814AbiJCLZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Oct 2022 07:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiJCLTA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 07:19:00 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B0F4456D;
-        Mon,  3 Oct 2022 04:18:59 -0700 (PDT)
+        with ESMTP id S229470AbiJCLZh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 07:25:37 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73147286E1;
+        Mon,  3 Oct 2022 04:25:33 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ll3qtL2TLoR4Cl0rUz280saInLF7H7M1wnzuemVY7Jb2GfUKmOOPTG7SSq2BqQHDa0HDJIr0y5n/zlhTfSTaatY6HrF5zzhwSSc//eT1BzKaA/dZv9BRHXSX8V3XifoJ5H4EMII7B6sTc5tKDZKk1CvUaqoUzqQLkGFw1rokuUuk61uJTX/g+lLqGgK9zllnJLm7Io5HRg+f/NkQ9ZZbJcl3hOOmut0Nb6cHBIRwiMVAvSRHHTg/UYbQBWNiFx55RcQGSXp9nKY76vD/tBxBqejxiHOkEE49jbDF68u3bnl7TXMEHgbuAdcIAEHWurZgQTsq4lAuE074wCv8C7WI+g==
+ b=KTSfAWEqjqpHIKYm2TcJ4+O7/8zp90jgTzVPYdM55oOEBIm8qQu52RW8+To/a5Ri6y31g0m2cLrf31YVtgBjlvl8pDgJNQ1rKZ1LTcXBPs1LjkkvpGlxoRlkEflGW/ISX/V+cI1s7suUvVnMpC2muGifAfORF9QbHhUZhNf48wfRjAZvlFaXObWQs8HuVhVPBDpP7Gu1Hjxz7CbEJtq3+rx4PYjBtumagupjz/aVEMzzxUbavYKpz8rJ0aonLhlxl97u7Aqj4msmDCMF8t1VnOhmu67CHDWhIWEd/jewN81x3No4B0t+pH9K6TKlP4FOoyoHqMYu1KF1Cph/PAMYUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zaFLJ2Nf4RLTw3oDPtXpNVrmUD/hjKznU/RfBQ77WF0=;
- b=bEVLCvNmo9A0kxPV3ziHyuOKedRe/Z54KeROlFt0JSFuiQjUUOCmtvJun8P6Q6GC/mPPXbXHKC06RWzsRL6yLlnY93mGrctb4SvK8WrrmBZIwRuVjFl4DDlVhg8enFRcB/u7I+d5LJbywvIMUO04qm6bZm7p/kxYSG6J5UF2tTMoB7htN8XV/ovCNptmSHuxCvPiZ3jADmGkIwmeWgLNchB21vWgH31h5/0dmYX3DUL0naKwTscGBtrjhmh03FpTSn6292jgYU6LQVrK9Z7mZNQGbnPJkguvrX+NhnUUdzequdwL/MIWdiX3KNgnYaQ/OlMjxr1pflhq5XdQgbdQNg==
+ bh=fKwqfQPf5XjAo4utaXZi+KLFV+03c8DI9kOBMu9Puxo=;
+ b=nMXY8df9c3nnARTKK+PmYQGFIqihMO/Qw8CrioQKQ04W6EmZxZfkVZvmeW+Rx4DldUOAINpwrlqxGquN+Sjd5BHQjZ8Ma4PfRNFHdBjf5IjJLnIKQBKZAdIY++IUV/AQooZDulQ4rsd0VV13Mvq+kYu0pnDWqVhQzpySOeMhXdjaiQU3cqdJwaR059HcngfmR00cuTPYZFF8PqYLWAelGvESgeqnlTuoo3iBMJWQmYXizdkGzqK4nMZlZQVJlr6oKFKR6TSBy+XF7jlK/0Jxvph1uiK2kSAUnfR/qu4Wx9/pLj/zWdOCdSIVPaD7Gfv07AE8+UU9l45Mn5WVbE8SpA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zaFLJ2Nf4RLTw3oDPtXpNVrmUD/hjKznU/RfBQ77WF0=;
- b=fG00V7kEgzyCQrzh0LFcr5dJYNAoHIkFDeL4Arw9zD90GUKG5FEbQIqj4ueriueS7MCzrYogQWAA14EyzIvw4hQLsFgNQKF0Oo1/uvo5EEriHoUj4Ofuyw0gUfEkbbS6vyWzQMOYk3+HmSs3ZsCNdJz1IS3kGVux5GIpVR+wjDuNnTZ8sOEZ7jwbAjxBY2kd0apWaSKCZ4dDf7vLvdp9++JMXxXfDXu3LLydtTmKpLNIB9SDIUKV7NqNYF6VDRLyMwmX79xIBnQjJcKotMkvj+qvM+dqHqyOVSnYhHBxo3u/7iuEPykC1gjxFkgps9ltaRzwUI3oupcubS33IwaO/w==
+ bh=fKwqfQPf5XjAo4utaXZi+KLFV+03c8DI9kOBMu9Puxo=;
+ b=ZX+iwsK5WCXlptDZtz0gVmPsCTiWk9FuDBCTZ6WoBfmU2wkhKsf6hr+JrRG6XbCj1Y7HxQ2hadh9fEzZQ/ucVeOIVkd+JPqowIpIieDBfXqiVyzlumIpOjrKmKPMnCQ4n4FBWah2w+EkOrI4Yx3bnLlwB0ywUBo1dNVPs0/dzVzeuEsb5SpemCzrEHxM/dvRCXc5qdHAHZ9EgJyrke+buipqZXf7vMD0WJck/GmuwG3QyfmuwNZb+leKzjgjleVYSaucs6xaDV1ki/YyQ543gbk7uhfrOZYobWC87lcutxyRNwrmJp48XZOX+FsiWo5MC1RZsI7LvpC9ibEp/y2qpA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by BL0PR12MB4849.namprd12.prod.outlook.com (2603:10b6:208:1c2::17) with
+ by SJ0PR12MB5421.namprd12.prod.outlook.com (2603:10b6:a03:3bb::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.24; Mon, 3 Oct
- 2022 11:18:57 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Mon, 3 Oct
+ 2022 11:25:31 +0000
 Received: from BN8PR12MB2900.namprd12.prod.outlook.com
  ([fe80::d9ae:c30e:ce3d:9cb3]) by BN8PR12MB2900.namprd12.prod.outlook.com
  ([fe80::d9ae:c30e:ce3d:9cb3%7]) with mapi id 15.20.5676.028; Mon, 3 Oct 2022
- 11:18:56 +0000
-Message-ID: <37161acb-d523-fb97-2c7a-e8d3aa842c52@nvidia.com>
-Date:   Mon, 3 Oct 2022 16:48:41 +0530
+ 11:25:31 +0000
+Message-ID: <27e8f2e8-8b97-a142-9da4-437c8dd498c4@nvidia.com>
+Date:   Mon, 3 Oct 2022 16:55:16 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.2
-Subject: Re: [PATCH V4 0/3] PCI: designware-ep: Fix DBI access before core
- init
+Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
+ logging
 Content-Language: en-US
 From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, mani@kernel.org,
-        Sergey.Semin@baikalelectronics.ru, dmitry.baryshkov@linaro.org,
-        linmq006@gmail.com, ffclaire1224@gmail.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20220919224014.GA1030798@bhelgaas>
- <554df533-df52-ee69-6c6f-effba88b55e1@nvidia.com>
-In-Reply-To: <554df533-df52-ee69-6c6f-effba88b55e1@nvidia.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <treding@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krishna Thota <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        sagar.tv@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>
+References: <b1c243b0-2e6e-3254-eff0-a5276020a320@nvidia.com>
+ <20220913200746.GA619956@bhelgaas> <20220914062411.GD16459@workstation>
+ <CAL_JsqLbr4O_BHb8s-Px4S0OOY23qhFkN32cKBctc_BFakSBzA@mail.gmail.com>
+ <20220915145241.GE4550@workstation>
+ <75b9bbc0-0e99-3201-f83d-f1fe28c54b12@nvidia.com>
+In-Reply-To: <75b9bbc0-0e99-3201-f83d-f1fe28c54b12@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0161.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:71::31) To BN8PR12MB2900.namprd12.prod.outlook.com
+X-ClientProxiedBy: MAXPR01CA0106.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::24) To BN8PR12MB2900.namprd12.prod.outlook.com
  (2603:10b6:408:69::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|BL0PR12MB4849:EE_
-X-MS-Office365-Filtering-Correlation-Id: 745624e2-b1b8-48d1-79b1-08daa5310fd8
+X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|SJ0PR12MB5421:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19106d24-7360-41a0-11da-08daa531fab4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7V4FvnH+f8Bhh/01RppW2KmZ+1eLL8OexL6o4AqurU0IulwZVqDxBEW3XLzauWGecBMaQPANy2/ZHPrcK5o8wHXtqHrRkRMZRB8vA6TUInqO70qZU9ib/d3SLIj2Vr0uBxrmNcLNsUfPRtH5FuQr5lz6i1uCOrBCON6/n9nAHKtZ3IeNO2Ow4KT6b5iFdKkV/LI3Jw01hDErclxwVecnGw4qYb+6ndBNDdZC1Yguv4zX+Tk1nx/Lzh2A0mQm3fu2m47PKIMbYYgvolCZZbSrkOw/acoljcHk/dhoWhXsuLw2UKH8f9jcyo09LD/FpZg/8XbACqUoJ7D4dAlJjIlF+4qVJdL3fMkuMA/ZkZUktDYU0gZ7R0XdQiOJfuFRc91JuqFNrYNTKtG3wqQwMnfb0GwxJNmVCsrYEw1XNzyCs8qb9M/SrxmqeLu+rBUnY91mZJxBA8yPJ/KLwe0Jf+hIFlxDirErD23hmHeGBxdiq8ZLAu63JbR6t1mGMYlHN/Ronhc0C7iZDvjaCH6k30o+V6ic5v91Ie2Zg2Y9/o8AV8+v8NVqrC6b2IPiJUOItGpnI0sihhuYf0/3fYp0CXMdF7YFHSA6crgW8OGdQxzpXb13eWX3CrmDscaHSDqo8P16yF9NS+llhdjVmXomnAKcUbmTm5yxIf8Mkr+u91FHqVaSOPm9WFcUgNsroiKKk62mKlqe6UPcPfQr3Vhuyl9+3B3X7Im4yGBCT5vn7dEENkIoZpjCgFx4PgTJkTiDmsZWerLBcJ7B3gX81wOA7/dvRuv13D6BN8eH22KGXKpDCtaJAd66iRIl9Z7/otI4oyyOo2pPUFo1Z4MahwJqskwljGy7m4R1n2G5IeBVZQr0Q1xT8b3jNJkpfre4WF+IL0eN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(136003)(366004)(346002)(396003)(39860400002)(451199015)(31686004)(8676002)(66476007)(66556008)(66946007)(4326008)(7416002)(86362001)(6512007)(38100700002)(41300700001)(5660300002)(6916009)(6486002)(316002)(966005)(36756003)(8936002)(478600001)(6506007)(53546011)(31696002)(6666004)(2616005)(2906002)(186003)(83380400001)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 3ES+Le3UpXlW74BSWngMNgLU1NW/eB+HE3T1SpueFQ5votOWyY7AmDeOP3yTu6fYzizfQvsBT/w4Q8Fyybn9a0AxuS4hb+mjBdTmFWO70BnoUTVga0EJAgSsMhhuSPlP3YsFIvKoo4G5tYmPfgEeCU87daqsC62bd5GhsN2tx4k/cT7j3xpGC+//V28Ut5WFZvNgDDxZRPQIOB1J9pwpNApii1gVVhEWQdRKVtGZPlacAtPWFWMYwEszQaqBWxdlCzHEhFCbK4Iead6yHrDNtVeG8abwXPnb11Zf9P2gQZMtZPRsdD5E/QsArfUO9osmbjf/5w0wvWw4mQ40tkx6a0T98NR84aUyqYbP7qlbL+ASsm1H24WAVt8lMJghTrJb3F/Ndg4Zu1hFl+d0olyFnEqDT3uffE5bpC+3+LEcRsJF3tNl0yD8RL3HzRBPzyjHWZd/SaLNYQImMSLC5yxK/P5i1SqnXGl6URaKuPud1xPp7DYHVGJTWU3hdVTjb5rKUUzq+Y/tAbqgydKK/ehSRt9RAD+30Afst2yTIkAuijaWrNM5aDyHmk97EdJKcJC9qye7uf+R7UtL4+RmJQoVn3nwhuiLSFsHghYyGmastmnn3wPf1Xr2diJathSaXIWallzpUTl/1LLsHQcfkspCdlJLZDMYLhpGiKFG1gNXi9A8lVkDNGbXpFVOh5gatwZkDkd3f2JdO345k3pnXzax2NwQnxW52ElkcYIPnnqJgIf7qjmMMklVaPG3j5s/v9WoHzomqYntt97cuajeYa61llKs306fZWWzfY0bRfMjdrE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(451199015)(86362001)(31696002)(36756003)(8676002)(66476007)(66946007)(66556008)(4326008)(54906003)(316002)(2906002)(38100700002)(7416002)(83380400001)(5660300002)(8936002)(41300700001)(110136005)(186003)(2616005)(53546011)(6486002)(6512007)(478600001)(26005)(6506007)(6666004)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z2VWTGZlcHI3RGthb1ZpRWhHMy9xSWk0NisvQU91U3VjRGhBcGpPU0ZDQmgv?=
- =?utf-8?B?Y2N3Q3MrZEo4NFZhdkVrclVDTGdWdDFUcE5uVCswSDBsRzdNK0hUOTNPVUY2?=
- =?utf-8?B?OE9WMXMzS0N0Q3ZERnl5Mkp2NjFwS245cVRDU01KKzRIVEgxT2l1MnZNRldC?=
- =?utf-8?B?VkQ3TFp3OGIvNTludWFaRHhGNWN3anRPRmRCQW1EVDkwSmEreXZERGNJMnQz?=
- =?utf-8?B?RkRrMzRUb3lWYVFUN2RHeUh2cWpnQ1Q1ZDNTNi9sK1prNysxSWRaYkEvTS9l?=
- =?utf-8?B?N2hrd3huSStkaXFkVTJQOGV6LzBlN2VHYUJFZ1Z4VDJabmZ4VjRTRXBlbGlT?=
- =?utf-8?B?amwveURWdTNSYzJaV3p0Z0dhVUwwU3R5UlBmdjBFblNBUWFXOVMzcE5mSnFH?=
- =?utf-8?B?SjdaUkt0Z2d4SHBabGNtS2ZleTk4Vmw4ektUajNOL3VhV21ZRHE4c1ArdGNj?=
- =?utf-8?B?NUlYQlVWS0l6Rk52aXladTVHMzkyZmxIMW1aeGRTVENhZWthNE5vS1YvRUx2?=
- =?utf-8?B?VzMrQkhOdnpDaUVFV1FNR1R6MkRuT3FWTEpDbERLWG40QkdwbnJXRXJuQXJs?=
- =?utf-8?B?azNEajcwS0FzdTJkaDVzN0FPeDg2MXpsNm8wdUd0ak13T3FKL2tYWFltNW1S?=
- =?utf-8?B?RUxvMGZTeVMwTFhKemhCQkpQc3hLSExFOVdxVm9FbElhWUY4RS9DK2dkUTMy?=
- =?utf-8?B?K0JjT1pBZVNLZ1JkTEo2Wm5VNXpqZzlRVmpyS0JnL3Fpc0lBcllzNHB3S0U2?=
- =?utf-8?B?c0tBZkFFMUZVTmF2MnFLL09NbW5TNzRnSlRjb3NjVkE1eDNXaTRKM29HcC9j?=
- =?utf-8?B?RmRWV1l0UnozcnVFVldJZTlOWGUyK1ZpYzR6ZFhrdHdwaHMyS1p5UXY0K0py?=
- =?utf-8?B?cFd6bUhUaW52dFkxY0taRHdiN2dwNUJyclNsbnpEYUhYb3JhWVpNU3oxOEpO?=
- =?utf-8?B?ZjhBVk5BZU82RkNjb29DOEF1SzdmOC9UNXZxUjJ5WHM5ejRiZ1pNU1B3dktT?=
- =?utf-8?B?azlIM3FKYjBzTUtKTTBodUxsa0dQSTh2bGltV1IyQ0NoM29qSVNpakJkUlpE?=
- =?utf-8?B?MHpSNmNBNFRybGh2SmloM3RCbGRiNlgrSGFwYlAwbGR2ZVFzSWh2NnQ5UlQy?=
- =?utf-8?B?R2szc2FmS1RvNVJHOGNQOXlzQWF1WGJZWFFuNnJhQWxGWE55eE9JeUNlNk95?=
- =?utf-8?B?MmRDWVo2VlNCcHNrMUxZWEdsYWd3dExqMWRXc00wOUNYSitzWUsyQzRicm1a?=
- =?utf-8?B?QzhscG5vcFN6ZTRlUzhwWW45eHhHNmMrMmFkakRtb0c1a3lmN29HaGRRdmRK?=
- =?utf-8?B?NzVLU1FTdVRtR1hJTHdpYllmTkxURkIwdk5LSEZzV1pIQmEwTnlMRmx5a2N4?=
- =?utf-8?B?bVVSUitneDJVUDVxL3grRzlCZ1Fzc041aks0bFBiWWVaNnZGWUxBU0QwQWUr?=
- =?utf-8?B?Y05pSk1MRTI4VWRFTnpsT3dFRktkblhUREh0em92Y0xFbFRCUGs0NjZ5dE1R?=
- =?utf-8?B?WWJ4Q1cyM3pTd0s4L0NTTnJCTkxUY0Nmdmw5bXZEbjlBRStGVDROanAyZlFt?=
- =?utf-8?B?ZWJ0cGViRHlCK0doOEJvbHFBa0U0bTJ2RnZBdXdaa29uTmpRT3p5cEVka1Nt?=
- =?utf-8?B?cjh4WC84T1VaSDJJMUVwL3l0OWczeFQ3cVZ5ZFpJZGJYa2tFWjZNWXJERWZQ?=
- =?utf-8?B?WHlibm5lcE85NklUcVBIS0VTamlKVTRWZGtIUExyMDNwWU15Ym5HMGErSHlS?=
- =?utf-8?B?bUZNVWFIYmNnc05UV3BLeGdNY3B2RzNoaFZ1ZnEvcUN3K1dud09FVW5oMG12?=
- =?utf-8?B?bkxQdnpiRFBFL0ZMNk5BQ2J5ZE9vblhUYm1vb1k2UXY2MXBOZEVNSUhnK3l0?=
- =?utf-8?B?a2tIc1QrUGVCNW04d2RXYWMzMGdBeEMxZGNuek85MkxlYVF2ODVyb1lKdFlK?=
- =?utf-8?B?elluUWVmUS9YWDRyNlUzV1BqT3RQUmN3Q1R1dWxEczZaNUNmcllHazFiOW5J?=
- =?utf-8?B?QVJud3hRN1kxZEt6bG9mWCtWZHZmZlluOEVBeGZSU2F4NFRjZU5UMmVkWWk2?=
- =?utf-8?B?NVdyZDZ6K0hiZWVnUHRoMyt6YzVnUWovNWFLem50UCswa2tWMEk2VGtsMGFM?=
- =?utf-8?Q?tk0uSU1p8ZNvbvjtLw6EZ2EVG?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S2dCYy91TGRGVTQyVVhkNVBKdjBCRE5Sa0NtMjNvWm1Pa2dIUkxHMGxoVTRO?=
+ =?utf-8?B?eFo3Ym42MWJwdnNsZERzSjR5bGpvRjEvdzBZYWQxZmpIbzgzZ0cwV1hLZlBq?=
+ =?utf-8?B?MG5FR0w0SVlkanBZSHIrUWV2dkxYQkljWkg5N0JjUEZ2Nllibm9mblo5UzNj?=
+ =?utf-8?B?T01Dd0dWekdqbkZxeERJTTBiOHp2NkdBNERWRzUrTDNFa2lkdGpnTXpOSEI4?=
+ =?utf-8?B?T3cyTmJVZWFTVUFWRmFwRHF4bGZpd3BIbGJLZTlKZVNmSVkvVFNSY01xcGVu?=
+ =?utf-8?B?a3ViTSticDE4d296K0gxSmdtNkpHSzJ6WWdLbCtwcmd3MDZONVZ3SzBEREJK?=
+ =?utf-8?B?WkN4SjFqMjNXM2FXU3g1cnllaUxtZXBOckMrOGZoandxeE1OY3Y3ZzF0VEhk?=
+ =?utf-8?B?dmhET3Y2akJnbVhrMDh1SVhXanpGbjd2czRNem1FclNQN0V0RnI4S2pBME5n?=
+ =?utf-8?B?UUN6L0R5VzJaQ2tqNVBkUmZhNGY5R0V5QWxueVd1R2k4TUtrMUp0Mm04R3NJ?=
+ =?utf-8?B?d3hCTTA4T1pTeTNYb2FyL0VnTTFsS3ptODlRaGMyMVpCRWUzVXlmcC9ianhz?=
+ =?utf-8?B?cWNHTmkyWFlKN2NUZXJOazNSdkR2UkxkOSt5QXVLd0xLcGdzV05GU090cWhF?=
+ =?utf-8?B?Q2w4UnE2Z2huSXk0K0Rpdm1sU2F1UlE1N2R1WFZBTHpCM3p4SExldmJoVnI2?=
+ =?utf-8?B?NGZlMG1JdWR4R2FIYjhOb0NCOHl3cTlSd3ltSDc1emlGUmhnNkY5dWx2RHIx?=
+ =?utf-8?B?VDR3dmRrdDlOOGxPdTdXckJEelhvcDBvK1Z3SFJ5SVRVQVVGTHpPczdUVjM3?=
+ =?utf-8?B?aWc1WER3SmVSL1BnMldNcHd0ZVpsdGV2a0ZzVDZyWjdObUJQdURPRnk2bkow?=
+ =?utf-8?B?NjZMRGlXdVhZd09SVVBUZTJBbjlsTEgwNi9KMU9mTnV2bWx1UXZZaWgzN3Rz?=
+ =?utf-8?B?cThzaWR0SWUvNVdyWmpEZDZibDJKdThXRkVPUEZCZ3oxUE1MVWgxQ1kvNFV1?=
+ =?utf-8?B?bGFtcDI3dURCUWRaM01oQ0xwdHQwZFg5bkdjREY0N3lNeWxrdU83c3lPdU43?=
+ =?utf-8?B?dUhGRzJ1UDJqTk8rZDdqMUhHRTVaL0t1dldyd1NLL2Z4alk3VW1CUWphbmJV?=
+ =?utf-8?B?OGEwdXJ5NzFqMDRKRmpIQS9jVjY1U1NDNGZrNTVqVzhtdWJJRFZnT2liNDdz?=
+ =?utf-8?B?d0xOa0dFM0dyZkFzbzZRMHdLdGZWVlJOOVd5V290Tjh6VlVZZE1sbnUrQk9q?=
+ =?utf-8?B?bzJOMlZiVXBPSnhhZlV0N1JJbFZQVHRkZnljT3NRUWJta05GeXJpKy90Zmwv?=
+ =?utf-8?B?aWJQUkQzczhZV2Jqdnl2ZVgyS29iQXZWbUhYOWV4cDNkZC9GMzF2UkZaV2Zz?=
+ =?utf-8?B?M3dmZnBqd2czZ2ZGNEttYlJwSHc1Wlh1T0czQWhmZFd6UUxkdXJDekEwQUNy?=
+ =?utf-8?B?bnVXbjYrVTJEQ2F0N2JGVHp4blBiL1VYdHRVNkZwNThuOExvM2JVb0ZNV0FD?=
+ =?utf-8?B?eS9JU05MWnJLMzlTVDhVUEtad2NacmROd3dWZkIya2Y0MGRmS05Pdjg5S09z?=
+ =?utf-8?B?eXEyb3Y0d3RIYVZvMDRTMk5wNThYRDRqcXBKNThSeDJvTkJvSTZ1N3h5c3pt?=
+ =?utf-8?B?Yk5CZ0QrWnJLSVYyR3AzRDZhQzYySHpEVjR5L1dtcHJjY1hGaTdienpzL2w4?=
+ =?utf-8?B?VVdiVSs2YXNCZnBpekxxWE9sVnRGTWdYODZJT3N1emp5bnhnQ1paYnVQRHlU?=
+ =?utf-8?B?VHRtUmdVNG1GZTFtaGJaYzFPd1VkRWNyalZVMVFWRHBRYWJ0VTFsbUNSR0pL?=
+ =?utf-8?B?R0sxVGhNM1UrVzRKTy9xNmVJL2FMbkZiSER0YzFJcmNCZ2xKeDBOVzVJbk8v?=
+ =?utf-8?B?enJNdlJVN0hzWVYxWFgwcDZuSFhXVFRPd2hRZnNhcDQ0WVAxaWlQVXFBWmpV?=
+ =?utf-8?B?U1JETWxkeFVvYnpNa3Q4UGhZNUcvSFg2UUFmckJnT1VYbjB3Mk85ak41dXpp?=
+ =?utf-8?B?M05sSkNGVFp0M1lYV3BJRnVYd2RQaTcxdk5EWkRRN3E3eVBpQjNrK1NGaGly?=
+ =?utf-8?B?ckl3NmNGWGVRalkxMDBrY0l6K0pocjNSbEFLZGd5NE9TSzVTeEhPV0Y1ZHNC?=
+ =?utf-8?Q?sSb+4Gk0hwBV8BrMJ6dtszmFe?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 745624e2-b1b8-48d1-79b1-08daa5310fd8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19106d24-7360-41a0-11da-08daa531fab4
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2022 11:18:56.8859
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2022 11:25:30.9431
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ikhpr5kYGTdlJDx6NT3vrU47cfP/aw5ZjME7oj7yeuvGOdGrBLZnSEiyU5d+YEX69/ibvPGU2FzsyKuZgEe8Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4849
+X-MS-Exchange-CrossTenant-UserPrincipalName: /ORfC56lf/xOXbVYfYCMkkvhHOxpHMUTZ54uteMYPkqAd11mRjb/O0Tp8h9frqVSqXcqnFLfArrw6U2Q4MsFuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5421
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
@@ -133,120 +141,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-Did you find time to take a look at my responses?
-If you don't have anything to add further, I'll take care of the review 
-comments as mentioned and send the V5 patch for review.
-Please let me know.
+Hi Bjorn / Lorenzo,
+Just checking if there are any more comments for this patch? If not, are 
+we good to take it?
 
 Thanks,
 Vidya Sagar
 
-On 9/26/2022 8:32 PM, Vidya Sagar wrote:
+On 9/26/2022 3:59 PM, Vidya Sagar wrote:
+> Hi,
+> Just checking if we are good with this patch or does it need any further 
+> modifications?
 > 
+> Thanks,
+> Vidya Sagar
 > 
-> On 9/20/2022 4:10 AM, Bjorn Helgaas wrote:
+> On 9/15/2022 8:22 PM, Manivannan Sadhasivam wrote:
 >> External email: Use caution opening links or attachments
 >>
 >>
->> On Tue, Sep 20, 2022 at 12:03:39AM +0530, Vidya Sagar wrote:
->>> This series attempts to fix the issue with core register (Ex:- DBI) 
->>> accesses
->>> causing system hang issues in platforms where there is a dependency 
->>> on the
->>> availability of PCIe Reference clock from the host for their core
->>> initialization.
->>> This series is verified on Tegra194 & Tegra234 platforms.
->>
->> I think this design is just kind of weird, specifically, the fact that
->> setting .core_init_notifier makes dw_pcie_ep_init() bail out early.
->> The usual pattern is more like "if the specific driver sets this
->> function pointer, the generic code calls it."
-> 
-> Thanks for the review Bjorn.
-> 
-> Typically the PCIe endpoints run using the reference clock from the 
-> hosts that they are connected to. Our hardware designers followed the 
-> same approach here as well, but the main difference here being that the 
-> controllers operating in the endpoint mode are not standalone 
-> controllers but part of a bigger Tegra (/Qcom) systems.
-> So, the complete controller initialization sequence just can't happen 
-> during the boot stage itself, hence the boot initialization sequence 
-> needs to be split into two parts viz a) early initialization - that just 
-> parses DT, does the programming that doesn't depend on the reference 
-> clock from host and b) does the programming that can only be performed 
-> after reference clock is available from the host
-> We are working with our hardware designers to avoid this dependency on 
-> the reference clock from the host so that all the programming can happen 
-> during boot itself and hardware is smart enough to switch to using the 
-> reference clock from the host when it is available. But, this is for 
-> future designs and Tegra194 & Tegra234 continue to have this limitation.
-> 
->>
->> The name "dw_pcie_ep_init_complete()" is not as helpful as it could
->> be: it tells us something about what has happened before this point,
->> but it doesn't tell us anything about what dw_pcie_ep_init_complete()
->> *does*.
-> 
-> To be inline with new ops ep_init_late that I added in this series, 
-> would it be fine to name this as dw_pcie_ep_init_late()?
-> 
->>
->> Same thing with dw_pcie_ep_init_notify() -- it doesn't tell us
->> anything about what the function *does*.
-> 
-> Would it make more sense to rename it as dw_pcie_ep_linkup_notify()?
-> 
->    I see that it calls
->> pci_epc_init_notify(), which calls a notifier call chain (currently
->> always empty except for a test case).  I think pci_epc_linkup() is a
->> better name because it says something about what's happening: the link
->> is now up and we're telling somebody about it.  "pci_epc_init_notify()"
->> doesn't convey that.  "pci_epc_core_initialized()" might.
-> 
-> Ok. I'll rename it to pci_epc_core_initialized().
-> 
->>
->> It looks like both qcom and tegra wait for an interrupt before calling
->> dw_pcie_ep_init_notify(), but I'm a little concerned because I can't
->> figure out what specifically they do to start the process that
->> ultimately generates the interrupt.
-> 
-> As part of 'start'ing the endpoint as mentioned in 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/PCI/endpoint/pci-test-howto.rst#n101 
-> 
-> we execute the following
-> echo 1 > controllers/141a0000.pcie-ep/start
-> that enables the interrupt generation for toggles on the PERST# line.
-> 
->    Presumably they request the IRQ
->> *before* starting the process, but there's not much between the
->> devm_request_threaded_irq() and the interrupt handler, which makes me
->> wonder if both are racy.
-> 
-> I don't think there is any race between these two as the 'start' is 
-> initiated from the user space. Not sure if I'm missing something here 
-> though.
-> 
->>
->>> Manivannan, could you please verify on qcom platforms?
+>> On Thu, Sep 15, 2022 at 09:16:27AM -0500, Rob Herring wrote:
+>>> On Wed, Sep 14, 2022 at 1:24 AM Manivannan Sadhasivam
+>>> <manivannan.sadhasivam@linaro.org> wrote:
+>>>>
+>>>> On Tue, Sep 13, 2022 at 03:07:46PM -0500, Bjorn Helgaas wrote:
+>>>>> On Tue, Sep 13, 2022 at 06:00:30PM +0100, Jon Hunter wrote:
+>>>>>> On 13/09/2022 17:51, Manivannan Sadhasivam wrote:
+>>>>>>> On Tue, Sep 13, 2022 at 03:42:37PM +0530, Vidya Sagar wrote:
+>>>>>>>> Some of the platforms (like Tegra194 and Tegra234) have open 
+>>>>>>>> slots and
+>>>>>>>> not having an endpoint connected to the slot is not an error.
+>>>>>>>> So, changing the macro from dev_err to dev_info to log the event.
+>>>>>>>
+>>>>>>> But the link up not happening is an actual error and -ETIMEDOUT 
+>>>>>>> is being
+>>>>>>> returned. So I don't think the log severity should be changed.
+>>>>>>
+>>>>>> Yes it is an error in the sense it is a timeout, but reporting an 
+>>>>>> error
+>>>>>> because nothing is attached to a PCI slot seems a bit noisy. 
+>>>>>> Please note
+>>>>>> that a similar change was made by the following commit and it also 
+>>>>>> seems
+>>>>>> appropriate here ...
+>>>>>>
+>>>>>> commit 4b16a8227907118e011fb396022da671a52b2272
+>>>>>> Author: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>>>>>> Date:   Tue Jun 18 23:32:06 2019 +0530
+>>>>>>
+>>>>>>      PCI: tegra: Change link retry log level to debug
+>>>>>>
+>>>>>>
+>>>>>> BTW, we check for error messages in the dmesg output and this is a 
+>>>>>> new error
+>>>>>> seen as of Linux v6.0 and so this was flagged in a test. We can 
+>>>>>> ignore the
+>>>>>> error, but in this case it seem more appropriate to make this a 
+>>>>>> info or
+>>>>>> debug level print.
+>>>>>
+>>>>> Can you tell whether there's a device present, e.g., via Slot Status
+>>>>> Presence Detect?  If there's nothing in the slot, I don't know why we
+>>>>> would print anything at all.  If a card is present but there's no
+>>>>> link, that's probably worthy of dev_info() or even dev_err().
+>>>>>
+>>>>
+>>>> I don't think all form factors allow for the PRSNT pin to be wired up,
+>>>> so we cannot know if the device is actually present in the slot or 
+>>>> not all
+>>>> the time. Maybe we should do if the form factor supports it?
+>>>>
+>>>>> I guess if you can tell the slot is empty, there's no point in even
+>>>>> trying to start the link, so you could avoid both the message and the
+>>>>> timeout by not even calling dw_pcie_wait_for_link().
+>>>>
+>>>> Right. There is an overhead of waiting for ~1ms during boot.
 >>>
->>> V4:
->>> * Addressed review comments from Bjorn and Manivannan
->>> * Added .ep_init_late() ops
->>> * Added patches to refactor code in qcom and tegra platforms
+>>> Async probe should mitigate that, right? Saravana is working toward
+>>> making that the default instead of opt in, but you could opt in now.
 >>>
->>> Vidya Sagar (3):
->>>    PCI: designware-ep: Fix DBI access before core init
->>>    PCI: qcom-ep: Refactor EP initialization completion
->>>    PCI: tegra194: Refactor EP initialization completion
->>>
->>>   .../pci/controller/dwc/pcie-designware-ep.c   | 112 ++++++++++--------
->>>   drivers/pci/controller/dwc/pcie-designware.h  |  10 +-
->>>   drivers/pci/controller/dwc/pcie-qcom-ep.c     |  27 +++--
->>>   drivers/pci/controller/dwc/pcie-tegra194.c    |   4 +-
->>>   4 files changed, 85 insertions(+), 68 deletions(-)
->>>
->>> -- 
->>> 2.17.1
->>>
+>>
+>> No. The delay is due to the DWC core waiting for link up that depends on
+>> the PCIe device to be present on the slot. The driver probe order
+>> doesn't apply here.
+>>
+>> Thanks,
+>> Mani
+>>
+>>> Rob
