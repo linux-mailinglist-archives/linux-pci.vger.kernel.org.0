@@ -2,230 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E79D75F2F8C
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Oct 2022 13:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A29605F3008
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Oct 2022 14:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbiJCLZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Oct 2022 07:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
+        id S229945AbiJCMLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Oct 2022 08:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiJCLZh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 07:25:37 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73147286E1;
-        Mon,  3 Oct 2022 04:25:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KTSfAWEqjqpHIKYm2TcJ4+O7/8zp90jgTzVPYdM55oOEBIm8qQu52RW8+To/a5Ri6y31g0m2cLrf31YVtgBjlvl8pDgJNQ1rKZ1LTcXBPs1LjkkvpGlxoRlkEflGW/ISX/V+cI1s7suUvVnMpC2muGifAfORF9QbHhUZhNf48wfRjAZvlFaXObWQs8HuVhVPBDpP7Gu1Hjxz7CbEJtq3+rx4PYjBtumagupjz/aVEMzzxUbavYKpz8rJ0aonLhlxl97u7Aqj4msmDCMF8t1VnOhmu67CHDWhIWEd/jewN81x3No4B0t+pH9K6TKlP4FOoyoHqMYu1KF1Cph/PAMYUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fKwqfQPf5XjAo4utaXZi+KLFV+03c8DI9kOBMu9Puxo=;
- b=nMXY8df9c3nnARTKK+PmYQGFIqihMO/Qw8CrioQKQ04W6EmZxZfkVZvmeW+Rx4DldUOAINpwrlqxGquN+Sjd5BHQjZ8Ma4PfRNFHdBjf5IjJLnIKQBKZAdIY++IUV/AQooZDulQ4rsd0VV13Mvq+kYu0pnDWqVhQzpySOeMhXdjaiQU3cqdJwaR059HcngfmR00cuTPYZFF8PqYLWAelGvESgeqnlTuoo3iBMJWQmYXizdkGzqK4nMZlZQVJlr6oKFKR6TSBy+XF7jlK/0Jxvph1uiK2kSAUnfR/qu4Wx9/pLj/zWdOCdSIVPaD7Gfv07AE8+UU9l45Mn5WVbE8SpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fKwqfQPf5XjAo4utaXZi+KLFV+03c8DI9kOBMu9Puxo=;
- b=ZX+iwsK5WCXlptDZtz0gVmPsCTiWk9FuDBCTZ6WoBfmU2wkhKsf6hr+JrRG6XbCj1Y7HxQ2hadh9fEzZQ/ucVeOIVkd+JPqowIpIieDBfXqiVyzlumIpOjrKmKPMnCQ4n4FBWah2w+EkOrI4Yx3bnLlwB0ywUBo1dNVPs0/dzVzeuEsb5SpemCzrEHxM/dvRCXc5qdHAHZ9EgJyrke+buipqZXf7vMD0WJck/GmuwG3QyfmuwNZb+leKzjgjleVYSaucs6xaDV1ki/YyQ543gbk7uhfrOZYobWC87lcutxyRNwrmJp48XZOX+FsiWo5MC1RZsI7LvpC9ibEp/y2qpA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by SJ0PR12MB5421.namprd12.prod.outlook.com (2603:10b6:a03:3bb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Mon, 3 Oct
- 2022 11:25:31 +0000
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::d9ae:c30e:ce3d:9cb3]) by BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::d9ae:c30e:ce3d:9cb3%7]) with mapi id 15.20.5676.028; Mon, 3 Oct 2022
- 11:25:31 +0000
-Message-ID: <27e8f2e8-8b97-a142-9da4-437c8dd498c4@nvidia.com>
-Date:   Mon, 3 Oct 2022 16:55:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
- logging
-Content-Language: en-US
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <treding@nvidia.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        sagar.tv@gmail.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>
-References: <b1c243b0-2e6e-3254-eff0-a5276020a320@nvidia.com>
- <20220913200746.GA619956@bhelgaas> <20220914062411.GD16459@workstation>
- <CAL_JsqLbr4O_BHb8s-Px4S0OOY23qhFkN32cKBctc_BFakSBzA@mail.gmail.com>
- <20220915145241.GE4550@workstation>
- <75b9bbc0-0e99-3201-f83d-f1fe28c54b12@nvidia.com>
-In-Reply-To: <75b9bbc0-0e99-3201-f83d-f1fe28c54b12@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MAXPR01CA0106.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::24) To BN8PR12MB2900.namprd12.prod.outlook.com
- (2603:10b6:408:69::18)
+        with ESMTP id S229810AbiJCMLC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 08:11:02 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F5B22B0F;
+        Mon,  3 Oct 2022 05:10:58 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 293Bj0j4003422;
+        Mon, 3 Oct 2022 12:10:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=TmtMV5g53OuRHxbjrDV5hTm21YfygvGwXjD9bGOD3uQ=;
+ b=nEYOt2KYsyW2KbUiLhb1W1cVf2VuQyeR8W49TUPHHQbsUwzCp3XoSbFQ/t21cCXXSvNr
+ uUdSQBqXq90Fd/lwDXM7OzFe1/HowLMYGHT/gCKN2aSGTx+96wPdRaWyZlgD4bC/IG0G
+ Hxiosh2zjICBxhU6qk2NTUMVWOTKeUWIRw/zstZZgt8bJ80t86kd+zInCMWybwNA+/j+
+ y6W+SkBgbJRK6oib/lXTWk03BjorLegzOQ26YasqGcPcHkqeXag1ZP5i1nj+CbDAWvRR
+ Bnk7f8tAJB7i4gHe6MPCgLMomI0FYhzFGQEriI8bGZYwUYpTiYm+j0DeWkDf8mqRKGuz wA== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jxeugku90-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Oct 2022 12:10:35 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 293CAYBJ025065
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 3 Oct 2022 12:10:34 GMT
+Received: from [10.216.56.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 3 Oct 2022
+ 05:10:24 -0700
+Message-ID: <f1b079c9-d0b8-6d4d-bf3d-dee45731ee88@quicinc.com>
+Date:   Mon, 3 Oct 2022 17:40:21 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|SJ0PR12MB5421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19106d24-7360-41a0-11da-08daa531fab4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3ES+Le3UpXlW74BSWngMNgLU1NW/eB+HE3T1SpueFQ5votOWyY7AmDeOP3yTu6fYzizfQvsBT/w4Q8Fyybn9a0AxuS4hb+mjBdTmFWO70BnoUTVga0EJAgSsMhhuSPlP3YsFIvKoo4G5tYmPfgEeCU87daqsC62bd5GhsN2tx4k/cT7j3xpGC+//V28Ut5WFZvNgDDxZRPQIOB1J9pwpNApii1gVVhEWQdRKVtGZPlacAtPWFWMYwEszQaqBWxdlCzHEhFCbK4Iead6yHrDNtVeG8abwXPnb11Zf9P2gQZMtZPRsdD5E/QsArfUO9osmbjf/5w0wvWw4mQ40tkx6a0T98NR84aUyqYbP7qlbL+ASsm1H24WAVt8lMJghTrJb3F/Ndg4Zu1hFl+d0olyFnEqDT3uffE5bpC+3+LEcRsJF3tNl0yD8RL3HzRBPzyjHWZd/SaLNYQImMSLC5yxK/P5i1SqnXGl6URaKuPud1xPp7DYHVGJTWU3hdVTjb5rKUUzq+Y/tAbqgydKK/ehSRt9RAD+30Afst2yTIkAuijaWrNM5aDyHmk97EdJKcJC9qye7uf+R7UtL4+RmJQoVn3nwhuiLSFsHghYyGmastmnn3wPf1Xr2diJathSaXIWallzpUTl/1LLsHQcfkspCdlJLZDMYLhpGiKFG1gNXi9A8lVkDNGbXpFVOh5gatwZkDkd3f2JdO345k3pnXzax2NwQnxW52ElkcYIPnnqJgIf7qjmMMklVaPG3j5s/v9WoHzomqYntt97cuajeYa61llKs306fZWWzfY0bRfMjdrE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(451199015)(86362001)(31696002)(36756003)(8676002)(66476007)(66946007)(66556008)(4326008)(54906003)(316002)(2906002)(38100700002)(7416002)(83380400001)(5660300002)(8936002)(41300700001)(110136005)(186003)(2616005)(53546011)(6486002)(6512007)(478600001)(26005)(6506007)(6666004)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S2dCYy91TGRGVTQyVVhkNVBKdjBCRE5Sa0NtMjNvWm1Pa2dIUkxHMGxoVTRO?=
- =?utf-8?B?eFo3Ym42MWJwdnNsZERzSjR5bGpvRjEvdzBZYWQxZmpIbzgzZ0cwV1hLZlBq?=
- =?utf-8?B?MG5FR0w0SVlkanBZSHIrUWV2dkxYQkljWkg5N0JjUEZ2Nllibm9mblo5UzNj?=
- =?utf-8?B?T01Dd0dWekdqbkZxeERJTTBiOHp2NkdBNERWRzUrTDNFa2lkdGpnTXpOSEI4?=
- =?utf-8?B?T3cyTmJVZWFTVUFWRmFwRHF4bGZpd3BIbGJLZTlKZVNmSVkvVFNSY01xcGVu?=
- =?utf-8?B?a3ViTSticDE4d296K0gxSmdtNkpHSzJ6WWdLbCtwcmd3MDZONVZ3SzBEREJK?=
- =?utf-8?B?WkN4SjFqMjNXM2FXU3g1cnllaUxtZXBOckMrOGZoandxeE1OY3Y3ZzF0VEhk?=
- =?utf-8?B?dmhET3Y2akJnbVhrMDh1SVhXanpGbjd2czRNem1FclNQN0V0RnI4S2pBME5n?=
- =?utf-8?B?UUN6L0R5VzJaQ2tqNVBkUmZhNGY5R0V5QWxueVd1R2k4TUtrMUp0Mm04R3NJ?=
- =?utf-8?B?d3hCTTA4T1pTeTNYb2FyL0VnTTFsS3ptODlRaGMyMVpCRWUzVXlmcC9ianhz?=
- =?utf-8?B?cWNHTmkyWFlKN2NUZXJOazNSdkR2UkxkOSt5QXVLd0xLcGdzV05GU090cWhF?=
- =?utf-8?B?Q2w4UnE2Z2huSXk0K0Rpdm1sU2F1UlE1N2R1WFZBTHpCM3p4SExldmJoVnI2?=
- =?utf-8?B?NGZlMG1JdWR4R2FIYjhOb0NCOHl3cTlSd3ltSDc1emlGUmhnNkY5dWx2RHIx?=
- =?utf-8?B?VDR3dmRrdDlOOGxPdTdXckJEelhvcDBvK1Z3SFJ5SVRVQVVGTHpPczdUVjM3?=
- =?utf-8?B?aWc1WER3SmVSL1BnMldNcHd0ZVpsdGV2a0ZzVDZyWjdObUJQdURPRnk2bkow?=
- =?utf-8?B?NjZMRGlXdVhZd09SVVBUZTJBbjlsTEgwNi9KMU9mTnV2bWx1UXZZaWgzN3Rz?=
- =?utf-8?B?cThzaWR0SWUvNVdyWmpEZDZibDJKdThXRkVPUEZCZ3oxUE1MVWgxQ1kvNFV1?=
- =?utf-8?B?bGFtcDI3dURCUWRaM01oQ0xwdHQwZFg5bkdjREY0N3lNeWxrdU83c3lPdU43?=
- =?utf-8?B?dUhGRzJ1UDJqTk8rZDdqMUhHRTVaL0t1dldyd1NLL2Z4alk3VW1CUWphbmJV?=
- =?utf-8?B?OGEwdXJ5NzFqMDRKRmpIQS9jVjY1U1NDNGZrNTVqVzhtdWJJRFZnT2liNDdz?=
- =?utf-8?B?d0xOa0dFM0dyZkFzbzZRMHdLdGZWVlJOOVd5V290Tjh6VlVZZE1sbnUrQk9q?=
- =?utf-8?B?bzJOMlZiVXBPSnhhZlV0N1JJbFZQVHRkZnljT3NRUWJta05GeXJpKy90Zmwv?=
- =?utf-8?B?aWJQUkQzczhZV2Jqdnl2ZVgyS29iQXZWbUhYOWV4cDNkZC9GMzF2UkZaV2Zz?=
- =?utf-8?B?M3dmZnBqd2czZ2ZGNEttYlJwSHc1Wlh1T0czQWhmZFd6UUxkdXJDekEwQUNy?=
- =?utf-8?B?bnVXbjYrVTJEQ2F0N2JGVHp4blBiL1VYdHRVNkZwNThuOExvM2JVb0ZNV0FD?=
- =?utf-8?B?eS9JU05MWnJLMzlTVDhVUEtad2NacmROd3dWZkIya2Y0MGRmS05Pdjg5S09z?=
- =?utf-8?B?eXEyb3Y0d3RIYVZvMDRTMk5wNThYRDRqcXBKNThSeDJvTkJvSTZ1N3h5c3pt?=
- =?utf-8?B?Yk5CZ0QrWnJLSVYyR3AzRDZhQzYySHpEVjR5L1dtcHJjY1hGaTdienpzL2w4?=
- =?utf-8?B?VVdiVSs2YXNCZnBpekxxWE9sVnRGTWdYODZJT3N1emp5bnhnQ1paYnVQRHlU?=
- =?utf-8?B?VHRtUmdVNG1GZTFtaGJaYzFPd1VkRWNyalZVMVFWRHBRYWJ0VTFsbUNSR0pL?=
- =?utf-8?B?R0sxVGhNM1UrVzRKTy9xNmVJL2FMbkZiSER0YzFJcmNCZ2xKeDBOVzVJbk8v?=
- =?utf-8?B?enJNdlJVN0hzWVYxWFgwcDZuSFhXVFRPd2hRZnNhcDQ0WVAxaWlQVXFBWmpV?=
- =?utf-8?B?U1JETWxkeFVvYnpNa3Q4UGhZNUcvSFg2UUFmckJnT1VYbjB3Mk85ak41dXpp?=
- =?utf-8?B?M05sSkNGVFp0M1lYV3BJRnVYd2RQaTcxdk5EWkRRN3E3eVBpQjNrK1NGaGly?=
- =?utf-8?B?ckl3NmNGWGVRalkxMDBrY0l6K0pocjNSbEFLZGd5NE9TSzVTeEhPV0Y1ZHNC?=
- =?utf-8?Q?sSb+4Gk0hwBV8BrMJ6dtszmFe?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19106d24-7360-41a0-11da-08daa531fab4
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2022 11:25:30.9431
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /ORfC56lf/xOXbVYfYCMkkvhHOxpHMUTZ54uteMYPkqAd11mRjb/O0Tp8h9frqVSqXcqnFLfArrw6U2Q4MsFuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5421
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v7 1/5] PCI: qcom: Add system suspend and resume support
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
+        <quic_vbadigan@quicinc.com>, <quic_hemantk@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <swboyd@chromium.org>, <dmitry.baryshkov@linaro.org>,
+        <svarbanov@mm-sol.com>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@somainline.org>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-phy@lists.infradead.org>,
+        <vkoul@kernel.org>, <kishon@ti.com>, <mturquette@baylibre.com>,
+        <linux-clk@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>
+References: <20220929185305.GA1912842@bhelgaas>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20220929185305.GA1912842@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cM67SiMoHe_n5yZttNth0pK7TbGcJQ3q
+X-Proofpoint-ORIG-GUID: cM67SiMoHe_n5yZttNth0pK7TbGcJQ3q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-03_02,2022-09-29_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=733 spamscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2209130000 definitions=main-2210030075
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn / Lorenzo,
-Just checking if there are any more comments for this patch? If not, are 
-we good to take it?
 
-Thanks,
-Vidya Sagar
+On 9/30/2022 12:23 AM, Bjorn Helgaas wrote:
+> On Mon, Sep 26, 2022 at 09:00:11PM +0530, Krishna Chaitanya Chundru wrote:
+>> On 9/23/2022 7:56 PM, Bjorn Helgaas wrote:
+>>> On Fri, Sep 23, 2022 at 07:29:31AM +0530, Krishna Chaitanya Chundru wrote:
+>>>> On 9/23/2022 12:12 AM, Bjorn Helgaas wrote:
+>>>>> On Thu, Sep 22, 2022 at 09:09:28PM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>> On 9/21/2022 10:26 PM, Bjorn Helgaas wrote:
+>>>>>>> On Wed, Sep 21, 2022 at 03:23:35PM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>>> On 9/20/2022 11:46 PM, Bjorn Helgaas wrote:
+>>>>>>>>> On Tue, Sep 20, 2022 at 03:52:23PM +0530, Krishna chaitanya chundru wrote:
+>>>>>>>>>> In qcom platform PCIe resources( clocks, phy etc..) can
+>>>>>>>>>> released when the link is in L1ss to reduce the power
+>>>>>>>>>> consumption. So if the link is in L1ss, release the PCIe
+>>>>>>>>>> resources. And when the system resumes, enable the PCIe
+>>>>>>>>>> resources if they released in the suspend path.
+>>>>>>>>> What's the connection with L1.x?  Links enter L1.x based on
+>>>>>>>>> activity and timing.  That doesn't seem like a reliable
+>>>>>>>>> indicator to turn PHYs off and disable clocks.
+>>>>>>>> This is a Qcom PHY-specific feature (retaining the link state in
+>>>>>>>> L1.x with clocks turned off).  It is possible only with the link
+>>>>>>>> being in l1.x. PHY can't retain the link state in L0 with the
+>>>>>>>> clocks turned off and we need to re-train the link if it's in L2
+>>>>>>>> or L3. So we can support this feature only with L1.x.  That is
+>>>>>>>> the reason we are taking l1.x as the trigger to turn off clocks
+>>>>>>>> (in only suspend path).
+>>>>>>> This doesn't address my question.  L1.x is an ASPM feature, which
+>>>>>>> means hardware may enter or leave L1.x autonomously at any time
+>>>>>>> without software intervention.  Therefore, I don't think reading the
+>>>>>>> current state is a reliable way to decide anything.
+>>>>>> After the link enters the L1.x it will come out only if there is
+>>>>>> some activity on the link.  AS system is suspended and NVMe driver
+>>>>>> is also suspended( queues will  freeze in suspend) who else can
+>>>>>> initiate any data.
+>>>>> I don't think we can assume that nothing will happen to cause exit
+>>>>> from L1.x.  For instance, PCIe Messages for INTx signaling, LTR, OBFF,
+>>>>> PTM, etc., may be sent even though we think the device is idle and
+>>>>> there should be no link activity.
+>>>> I don't think after the link enters into L1.x there will some
+>>>> activity on the link as you mentioned, except for PCIe messages like
+>>>> INTx/MSI/MSIX. These messages also will not come because the client
+>>>> drivers like NVMe will keep their device in the lowest power mode.
+>>>>
+>>>> The link will come out of L1.x only when there is config or memory
+>>>> access or some messages to trigger the interrupts from the devices.
+>>>> We are already making sure this access will not be there in S3.  If
+>>>> the link is in L0 or L0s what you said is expected but not in L1.x
+>>> Forgive me for being skeptical, but we just spent a few months
+>>> untangling the fact that some switches send PTM request messages even
+>>> when they're in a non-D0 state.  We expected that devices in D3hot
+>>> would not send such messages because "why would they?"  But it turns
+>>> out the spec allows that, and they actually *do*.
+>>>
+>>> I don't think it's robust interoperable design for a PCI controller
+>>> driver like qcom to assume anything about PCI devices unless it's
+>>> required by the spec.
+>>  From pci spec 4, in sec 5.5
+>> "Ports that support L1 PM Substates must not require a reference clock while
+>> in L1 PM Substates
+>> other than L1.0".
+>> If there is no reference clk we can say there is no activity on the link.
+>> If anything needs to be sent (such as LTR, or some messages ), the link
+>> needs to be back in L0 before it
+>> sends the packet to the link partner.
+>>
+>> To exit from L1.x clkreq pin should be asserted.
+>>
+>> In suspend after turning off clocks and phy we can enable to trigger an
+>> interrupt whenever the clk req pin asserts.
+>> In that interrupt handler, we can enable the pcie resources back.
+>  From the point of view of the endpoint driver, ASPM should be
+> invisible -- no software intervention required.  I think you're
+> suggesting that the PCIe controller driver could help exit L1.x by
+> handling a clk req interrupt and enabling clock and PHY then.
+>
+> But doesn't L1.x exit also have to happen within the time the endpoint
+> can tolerate?  E.g., I think L1.2 exit has to happen within the LTR
+> time advertised by the endpoint (PCIe r6.0, sec 5.5.5).  How can we
+> guarantee that if software is involved?
+It is true that it is difficult to guarantee those delays. On our internal
+boards, we are able to achieve this but that is not with linux kernel.
 
-On 9/26/2022 3:59 PM, Vidya Sagar wrote:
-> Hi,
-> Just checking if we are good with this patch or does it need any further 
-> modifications?
-> 
-> Thanks,
-> Vidya Sagar
-> 
-> On 9/15/2022 8:22 PM, Manivannan Sadhasivam wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On Thu, Sep 15, 2022 at 09:16:27AM -0500, Rob Herring wrote:
->>> On Wed, Sep 14, 2022 at 1:24 AM Manivannan Sadhasivam
->>> <manivannan.sadhasivam@linaro.org> wrote:
->>>>
->>>> On Tue, Sep 13, 2022 at 03:07:46PM -0500, Bjorn Helgaas wrote:
->>>>> On Tue, Sep 13, 2022 at 06:00:30PM +0100, Jon Hunter wrote:
->>>>>> On 13/09/2022 17:51, Manivannan Sadhasivam wrote:
->>>>>>> On Tue, Sep 13, 2022 at 03:42:37PM +0530, Vidya Sagar wrote:
->>>>>>>> Some of the platforms (like Tegra194 and Tegra234) have open 
->>>>>>>> slots and
->>>>>>>> not having an endpoint connected to the slot is not an error.
->>>>>>>> So, changing the macro from dev_err to dev_info to log the event.
->>>>>>>
->>>>>>> But the link up not happening is an actual error and -ETIMEDOUT 
->>>>>>> is being
->>>>>>> returned. So I don't think the log severity should be changed.
->>>>>>
->>>>>> Yes it is an error in the sense it is a timeout, but reporting an 
->>>>>> error
->>>>>> because nothing is attached to a PCI slot seems a bit noisy. 
->>>>>> Please note
->>>>>> that a similar change was made by the following commit and it also 
->>>>>> seems
->>>>>> appropriate here ...
->>>>>>
->>>>>> commit 4b16a8227907118e011fb396022da671a52b2272
->>>>>> Author: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->>>>>> Date:   Tue Jun 18 23:32:06 2019 +0530
->>>>>>
->>>>>>      PCI: tegra: Change link retry log level to debug
->>>>>>
->>>>>>
->>>>>> BTW, we check for error messages in the dmesg output and this is a 
->>>>>> new error
->>>>>> seen as of Linux v6.0 and so this was flagged in a test. We can 
->>>>>> ignore the
->>>>>> error, but in this case it seem more appropriate to make this a 
->>>>>> info or
->>>>>> debug level print.
->>>>>
->>>>> Can you tell whether there's a device present, e.g., via Slot Status
->>>>> Presence Detect?  If there's nothing in the slot, I don't know why we
->>>>> would print anything at all.  If a card is present but there's no
->>>>> link, that's probably worthy of dev_info() or even dev_err().
->>>>>
->>>>
->>>> I don't think all form factors allow for the PRSNT pin to be wired up,
->>>> so we cannot know if the device is actually present in the slot or 
->>>> not all
->>>> the time. Maybe we should do if the form factor supports it?
->>>>
->>>>> I guess if you can tell the slot is empty, there's no point in even
->>>>> trying to start the link, so you could avoid both the message and the
->>>>> timeout by not even calling dw_pcie_wait_for_link().
->>>>
->>>> Right. There is an overhead of waiting for ~1ms during boot.
->>>
->>> Async probe should mitigate that, right? Saravana is working toward
->>> making that the default instead of opt in, but you could opt in now.
->>>
->>
->> No. The delay is due to the DWC core waiting for link up that depends on
->> the PCIe device to be present on the slot. The driver probe order
->> doesn't apply here.
->>
->> Thanks,
->> Mani
->>
->>> Rob
+With NVMe attach we have connected the protocol analyzer and tried to see if
+there are any transactions over the link. We found there are no transactions
+on the link once the link enters L1.x till we resume the system. As the NVMe
+is a passive system it is not initiating any transactions.
+
+This whole requirement came from the NVMe driver, it requires keeping 
+the link
+active state when the system is suspended.
+
+There are only two things we can in do in PCIe suspend as we have to 
+turn off
+PCIe clocks to allow the system to the lowest possible power state.
+1) Keep the device in D3 cold and turn off all the clocks and phy etc.( 
+It is not
+an ideal one as this decreases the NVMe lifetime because link-down and 
+link-up
+is treated as a power cycle by a few NVMe devices).
+2) This is the one we are proposing where we turn off the clocks, phy 
+once the
+link enters L1ss.
+
+Can you please suggest us any other possible solutions to meet NVMe 
+requirement
+(That is to keep the link active during suspend) and the Qcom platform
+requirement (that is to turn off all the clocks to allow a lower possible
+power state)? Qcom PCIe controller is compatible with v3.1 specification 
+only.
+
+
+Thanks & Regards,
+Krishna Chaitanya.
+
