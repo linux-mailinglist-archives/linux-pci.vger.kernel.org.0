@@ -2,118 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ACC85F3923
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Oct 2022 00:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 492E35F3933
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Oct 2022 00:38:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbiJCWfO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Oct 2022 18:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57646 "EHLO
+        id S229864AbiJCWiP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Oct 2022 18:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiJCWfN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 18:35:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F23D2B1A2;
-        Mon,  3 Oct 2022 15:35:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E7FFA61207;
-        Mon,  3 Oct 2022 22:35:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F30C433C1;
-        Mon,  3 Oct 2022 22:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664836502;
-        bh=/HyUGvOdy05y8ZqPqeV3/QxVPa0YOiDKBVhKygIm+gs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N7xbFDcN2WZiJY3eoRrAwi3O+8rwWa1HXthDTMayS/PqwxChXbJkl65W3EMk6i/4f
-         mOXiAv0eZbG4njVFGFE/OKa1LcIARAswPqtTFu2ffK6Didiew2hgyhexBcmQn7Ew++
-         rxP/F/LtdnMvIYmYewc5jmkbG9LidtnqRXs8M1xYB3QcKkOlK/ThmqSMGmjCbFV16W
-         Fzs41NHN8AKkCXoJcVgIMPgXRYGgz6ieSHhEewm5QT4sHsCqQo0AdGdCfmCSTzo0Vp
-         qFxiUv7blSHM8I/L4Ye6vCwe2tdylL/8jrjSj16NxO4+8Qe1LLDCG8BvoDm7dRjRQa
-         Fk/yuiTK8YUnQ==
-Date:   Mon, 3 Oct 2022 17:35:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Rogalski <rrogalski@tutanota.com>
-Cc:     Linux Pci <linux-pci@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: SPARC64: getting "no compatible bridge window" errors :/
-Message-ID: <20221003223500.GA2124698@bhelgaas>
+        with ESMTP id S229766AbiJCWiG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Oct 2022 18:38:06 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1F0459B6
+        for <linux-pci@vger.kernel.org>; Mon,  3 Oct 2022 15:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664836686; x=1696372686;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7L4v6LJwBWavk3IRZI5Y0siQsTj2zN1zieALloKuwMA=;
+  b=OQKdtbAh+uIK42obFBbK7Jod/1pB+APke5Au2jjzIFFjtuJjjZbZ/PhI
+   Dto3S8UihU93iDF+8hB3Byy1D3X+QIPjXZvJapk4u9hyMxNm/Dd0vqXns
+   0QH11lxKUocflOpshIH44KunWBRVjzPjbgtMV6J3D6NDOwU7ae8Om/q1G
+   t/2vQZwT1Xo/Q509+nq2Pshnv1qGypZVBCMvKXTlhlMlHoiqt5frSy9oo
+   JQ6ZB/LZsv7PoISE295od1IQuaCcatjmfY8dAJkklE2Ib510hp+EV5Uo9
+   /C/8dia2LuZXPDpCAJHC18Rm5sHNsljQG8Wm5a7kUpEGFkiKVZEaFAzRU
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10489"; a="283141809"
+X-IronPort-AV: E=Sophos;i="5.93,366,1654585200"; 
+   d="scan'208";a="283141809"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 15:38:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10489"; a="625968799"
+X-IronPort-AV: E=Sophos;i="5.93,366,1654585200"; 
+   d="scan'208";a="625968799"
+Received: from lkp-server01.sh.intel.com (HELO 14cc182da2d0) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Oct 2022 15:38:04 -0700
+Received: from kbuild by 14cc182da2d0 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ofU4a-00050N-0Z;
+        Mon, 03 Oct 2022 22:38:04 +0000
+Date:   Tue, 04 Oct 2022 06:37:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/dwc] BUILD SUCCESS
+ cbcf8722b523dcf0970ab67dc3d5ced1ea7b334e
+Message-ID: <633b6443.mjrR9nr+OZRDttKw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926171104.GA1605932@bhelgaas>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 12:11:06PM -0500, Bjorn Helgaas wrote:
-> [+cc Alex, David, sparclinux, LKML]
-> 
-> On Sun, Sep 25, 2022 at 06:59:23PM +0200, Richard Rogalski wrote:
-> > I hope this is the right place for this.
-> 
-> This is great, thanks a lot for your report!  Is this a regression?
-> If so, what's the most recent kernel that worked?  
-> 
-> > In my dmesg output, I get things like:
-> > 
-> > pci 0000:04:00.0: can't claim VGA legacy [mem 0x000a0000-0x000bffff]: no compatible bridge window
-> > pci 0000:06:00.0: can't claim VGA legacy [mem 0x000a0000-0x000bffff]: no compatible bridge window
-> > pci 0000:06:00.1: can't claim BAR 0 [mem 0x84110200000-0x84110203fff 64bit]: no compatible bridge window
-> > 
-> > I opened a bug for amdgpu [here](https://gitlab.freedesktop.org/drm/amd/-/issues/2169) but looking further into it I think it is caused by deeper PCIe problems :\
-> > 
-> > https://gitlab.freedesktop.org/drm/amd/uploads/cbf47807972c8a990bb2a8cdbb39ad9e/8C7CA9QNG dmesg log
-> > https://gitlab.freedesktop.org/drm/amd/uploads/6a799425dea50febd82f8bc11e54433a/ll.txt lspci -vv
-> > https://gitlab.freedesktop.org/drm/amd/uploads/7d4a794b1f7d67a1ffcdee5dfdec3ad6/config.txt kernel .config
-> 
-> Your error output attachment [1] contains an address that looks like
-> it's in 06:00.0 BAR 5:
-> 
->   pci 0000:06:00.0: reg 0x24: [mem 0x84001200000-0x8400123ffff]
->   NON-RESUMABLE ERROR: insn effective address [0x0000084001201410]
-> 
-> This looks like an amdgpu issue.  There have been recent changes like
-> c1c39032a074 ("drm/amdgpu: make sure to init common IP before gmc")
-> and dd6aeb4e5f59 ("drm/amdgpu: Don't enable LTR if not supported")
-> that could be related.
-> 
-> The PCI "no compatible bridge window" warnings are definitely an
-> issue, but I don't think they're related to the amdgpu crash:
-> 
->   pci@400: PCI MEM64 [mem 0x84100000000-0x84dffffffff] offset 80000000000
->   pci_bus 0000:00: root bus resource [mem 0x84100000000-0x84dffffffff] (bus address [0x4100000000-0x4dffffffff])
->   pci 0000:09:00.0: can't claim BAR 0 [mem 0x84120000000-0x8412007ffff 64bit]: no compatible bridge window
-> 
-> Those and this from lspci:
-> 
->   0000:01:00.0 bridge to [bus 02-09] window [mem 0x4100000000-0x412fffffff pref]
->   0000:02:0c.0 bridge to [bus 09]    window [mem 0x4120000000-0x412fffffff pref]
->   0000:09:00.0 Intel 82599ES NIC Region 0: Memory at 0x84120000000
-> 
-> are telling us there's something wrong with how the resource-to-bus
-> offset is being applied.  It looks like the offset was applied to the
-> NIC BAR, but didn't get applied to the bridge windows.
-> 
-> Could you start a new thread here (linux-kernel@vger.kernel.org,
-> linux-pci@vger.kernel.org, and sparclinux@vger.kernel.org) for this
-> issue and attach the dmesg log when booting with "ofpci_debug=1"?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
+branch HEAD: cbcf8722b523dcf0970ab67dc3d5ced1ea7b334e  phy: freescale: imx8m-pcie: Fix the wrong order of phy_init() and phy_power_on()
 
-Any chance you could collect a dmesg log with "ofpci_debug=1"?
+elapsed time: 726m
 
-I'd like to look at the resource-to-bus offset issue.
+configs tested: 63
+configs skipped: 2
 
-> Do the devices we complain about (NICs and storage HBAs 09:00.0,
-> 09:00.1, 0d:00.0, 0d:00.1, 0e:00.0, 0f:00.0, 0001:03:00.0,
-> 0001:03:00.1, 0001:0:00.0, 0001:0a:00.1) work?
-> 
-> Bjorn
-> 
-> [1] https://gitlab.freedesktop.org/drm/amd/uploads/b51f4d6783eeebf90de9a400525d07d6/qq
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+s390                                defconfig
+x86_64                              defconfig
+x86_64                           rhel-8.3-kvm
+x86_64                         rhel-8.3-kunit
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+powerpc                           allnoconfig
+x86_64                    rhel-8.3-kselftests
+s390                             allyesconfig
+i386                 randconfig-a014-20221003
+i386                 randconfig-a011-20221003
+i386                 randconfig-a012-20221003
+i386                 randconfig-a013-20221003
+i386                 randconfig-a015-20221003
+i386                 randconfig-a016-20221003
+x86_64                               rhel-8.3
+i386                                defconfig
+x86_64                           allyesconfig
+x86_64               randconfig-a011-20221003
+x86_64               randconfig-a012-20221003
+x86_64               randconfig-a013-20221003
+arc                              allyesconfig
+x86_64               randconfig-a014-20221003
+alpha                            allyesconfig
+arm                                 defconfig
+x86_64               randconfig-a016-20221003
+x86_64               randconfig-a015-20221003
+m68k                             allmodconfig
+m68k                             allyesconfig
+riscv                randconfig-r042-20221003
+arc                  randconfig-r043-20221003
+arc                  randconfig-r043-20221002
+ia64                             allmodconfig
+i386                             allyesconfig
+s390                 randconfig-r044-20221003
+arm                              allyesconfig
+arm64                            allyesconfig
+sh                               allmodconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+
+clang tested configs:
+i386                 randconfig-a003-20221003
+hexagon              randconfig-r041-20221003
+i386                 randconfig-a002-20221003
+i386                 randconfig-a001-20221003
+riscv                randconfig-r042-20221002
+x86_64               randconfig-a002-20221003
+x86_64               randconfig-a001-20221003
+hexagon              randconfig-r041-20221002
+s390                 randconfig-r044-20221002
+x86_64               randconfig-a004-20221003
+x86_64               randconfig-a006-20221003
+x86_64               randconfig-a003-20221003
+hexagon              randconfig-r045-20221002
+x86_64               randconfig-a005-20221003
+hexagon              randconfig-r045-20221003
+i386                 randconfig-a004-20221003
+i386                 randconfig-a005-20221003
+i386                 randconfig-a006-20221003
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
