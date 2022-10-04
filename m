@@ -2,140 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35B395F3E5B
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Oct 2022 10:30:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2567E5F3E8C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Oct 2022 10:40:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiJDIaS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Oct 2022 04:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
+        id S229795AbiJDIkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Oct 2022 04:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiJDIaQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 04:30:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 214C71B9EB
-        for <linux-pci@vger.kernel.org>; Tue,  4 Oct 2022 01:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664872215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kChJ5YXyR55NqzsspcQL6vhugqTTUyXdwpS+PG+Hins=;
-        b=Kw3r1QGtzzhZ35c/9Zi8Rv0Ekgzwp9oFMTLNmk/ghIaiSYWROlgguAh0VClghWCuyBkUkt
-        EDXih7xDwahOFuPpIBzvMZ/fj5pLiisy/HKwfW5upYQfCfaRTppFdI8o/F3/MZ+YiZqN+B
-        ORwpCMd5FL8tDUTt31RsF6zG8Cqqc3Q=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-663-LX-RQ_pvPLO4E4O8EYEwZQ-1; Tue, 04 Oct 2022 04:30:13 -0400
-X-MC-Unique: LX-RQ_pvPLO4E4O8EYEwZQ-1
-Received: by mail-ej1-f71.google.com with SMTP id nb3-20020a1709071c8300b0078cf3dab9f4so1457681ejc.20
-        for <linux-pci@vger.kernel.org>; Tue, 04 Oct 2022 01:30:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=kChJ5YXyR55NqzsspcQL6vhugqTTUyXdwpS+PG+Hins=;
-        b=DNjJ6nlnOS9wkqrDQ9aWHNS3HQCZ6XvUmP7sjxK2Qoz9LfqSeZQD9WZYmg20npSvSb
-         977zdkMSUiTa9Ue1dvnSWU+o17J/V4tax7zJCmPATRic3khDzoPwjSF4gaM6nGNugS3N
-         FCIFIapZP/z2KlFm06qTBkCKQ5kngxnBdxz2S4xH81uY9RmvZ2xitpety43oEV4ySmTw
-         b4DrogNd1rAu6bzt01+0XY5dYCndfmCnnZUHJvrRu0+MSqjdfwZGpd1BeEWE4ZF/+wE+
-         ZNqnF4hwUXxYdXXBfoTYYqhrPAVYyxT2O2BPIb6E2I95KhahcIJkboAdH66u0Alvp3Z8
-         P+Lg==
-X-Gm-Message-State: ACrzQf0usuBPJN8JAV4w/xA2L4Lecct0zwxxc4sT0g5JZjk30/tQ7NeE
-        OZM0m3Eu6OlYxN9wgpxhcZXBiIbigFghqfsbBneKOj2ycy8PlUJg86cjtbXl4kxOfZTx9kqKs5Q
-        gtlRoVL7UZI/0OkuuNvFM
-X-Received: by 2002:a17:907:1626:b0:782:e490:4f4 with SMTP id hb38-20020a170907162600b00782e49004f4mr18347579ejc.464.1664872212797;
-        Tue, 04 Oct 2022 01:30:12 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4V1XegvfHQqtOdwuF9hkqqgOAv0Ct2ylqgG/E0UdTe0kkF9v3n5AapSW1/X/ZGX1Jj9DACkw==
-X-Received: by 2002:a17:907:1626:b0:782:e490:4f4 with SMTP id hb38-20020a170907162600b00782e49004f4mr18347564ejc.464.1664872212563;
-        Tue, 04 Oct 2022 01:30:12 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id by30-20020a0564021b1e00b004590d4e35cdsm1198745edb.54.2022.10.04.01.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 01:30:11 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Nadav Amit <namit@vmware.com>, Alexander Graf <graf@amazon.com>,
-        Ajay Kaher <akaher@vmware.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "jailhouse-dev@googlegroups.com" <jailhouse-dev@googlegroups.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "acrn-dev@lists.projectacrn.org" <acrn-dev@lists.projectacrn.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2] x86/PCI: Prefer MMIO over PIO on all hypervisor
-In-Reply-To: <04F550C5-786A-4B8E-9A88-EBFBD8872F16@vmware.com>
-References: <9FEC6622-780D-41E6-B7CA-8D39EDB2C093@vmware.com>
- <87zgf3pfd1.fsf@redhat.com>
- <B64FD502-E794-4E94-A267-D690476C57EE@vmware.com>
- <87tu4l9cfm.fsf@redhat.com>
- <04F550C5-786A-4B8E-9A88-EBFBD8872F16@vmware.com>
-Date:   Tue, 04 Oct 2022 10:30:10 +0200
-Message-ID: <87lepw9ejx.fsf@redhat.com>
+        with ESMTP id S229673AbiJDIkG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 04:40:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2331116F;
+        Tue,  4 Oct 2022 01:40:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0CCBCB80D6C;
+        Tue,  4 Oct 2022 08:40:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C48FC433D6;
+        Tue,  4 Oct 2022 08:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664872800;
+        bh=bx68xPJAJ43lau5j5ugu8iFK/HU4dpaBmftcd9vEsVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oiu4jNea5fa5S1YvKCDns/73BLlseerk4sCZr07W1pdgXdigPXLVg57A6AbgJkXRm
+         VdjObfBHa5DicDcu6o87340sf5X/qEpteCTvBj4QeeUU9BcoETJAXv/60KhUOPp3Y0
+         TTNpP4hyLzwM2z07hR1iKtzgkJosBarHSAXPTfYMzizOtle9jLtusHe3bQL2JC6HRG
+         8k1Df5y+oOXbQLY6E5sr2im/3JAEUaorU5GQ74fE5z43nrENWQ4cM5JP6kmJsFxDX9
+         v/JO9WHcf2GJ//cjQhxF0hSts2smBCYnC+ONFemRveYuJGQY/RtotnU/MKana9TgD1
+         UIxi26EC7y2Fg==
+Received: by pali.im (Postfix)
+        id 2058F7BA; Tue,  4 Oct 2022 10:39:57 +0200 (CEST)
+Date:   Tue, 4 Oct 2022 10:39:57 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Elad Nachman <enachman@marvell.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for
+ PCIe Completion Timeout
+Message-ID: <20221004083957.qtfkn4eyi42lsd4j@pali>
+References: <20220802123816.21817-1-pali@kernel.org>
+ <20220926123434.2tqx4t6u3cnlrcx3@pali>
+ <BN9PR18MB425117376E64340DED894178DB549@BN9PR18MB4251.namprd18.prod.outlook.com>
+ <20221003211412.5pqfjvcxyszd4ai6@pali>
+ <YzvomObCatuKMujz@lpieralisi>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YzvomObCatuKMujz@lpieralisi>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Nadav Amit <namit@vmware.com> writes:
++ Elad
 
-> On Oct 3, 2022, at 8:03 AM, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
->> Not my but rather PCI maintainer's call but IMHO dropping 'const' is
->> better, introducing a new global var is our 'last resort' and should be
->> avoided whenever possible. Alternatively, you can add a
->> raw_pci_ext_ops_preferred() function checking somethin within 'struct
->> hypervisor_x86' but I'm unsure if it's better.
->>=20
->> Also, please check Alex' question/suggestion.
->
-> Here is my take (and Ajay knows probably more than me):
->
-> Looking briefly on MCFG, I do not see a clean way of using the ACPI table.
-> The two options are either to use a reserved field (which who knows, might
-> be used one day) or some OEM ID. I am also not familiar with
-> PCI_COMMAND.MEMORY=3D0, so Ajay can hopefully give some answer about that.
->
-> Anyhow, I understand (although not relate) to the objection for a new glo=
-bal
-> variable. How about explicitly calling this hardware bug a =E2=80=9Cbug=
-=E2=80=9D and using
-> the proper infrastructure? Calling it explicitly a bug may even push whoe=
-ver
-> can to resolve it.
->
-> IOW, how about doing something along the lines of (not tested):
->
+Could you please look at Lorenzo's comments and help with this fix?
 
-Works for me. Going forward, the intention shoud be to also clear the
-bug on other x86 hypervisors, e.g. we test modern Hyper-V versions and
-if MMIO works well we clear it, we test modern QEMU/KVM setups and if
-MMIO works introduce a feature bit somewhere and also clear the bug in
-the guest when the bit is set.
-
---=20
-Vitaly
-
+On Tuesday 04 October 2022 10:02:32 Lorenzo Pieralisi wrote:
+> On Mon, Oct 03, 2022 at 11:14:12PM +0200, Pali Rohár wrote:
+> > Lorenzo, is something more needed for this patch? As it workarounds
+> > crashing it is really needed to have it in mainline and backports.
+> 
+> Yes, a clear explanation from Marvell about what this is actually
+> fixing - it took me a while to go through the whole thread but
+> I still don't understand what this patch actually does and why.
+> 
+> An Erratum workaround (if there is any) should define and explain
+> a SW workaround.
+> 
+> (1) Bjorn's concerns in relation to PCI memory model weren't addressed
+> (2) We don't add undocumented memory barriers to the kernel to "minimize
+>     risks". Either we fix a bug or we don't. If we do, write that down
+>     and document why the barrier is there and the issue it solves.
+> 
+> I understand that basically you are reverse engineering a HW bug but
+> I am afraid we can't fix the kernel this way - more so with patches
+> going to be backported to stable kernels.
+> 
+> Lorenzo
+> 
+> > On Wednesday 28 September 2022 14:05:10 Elad Nachman wrote:
+> > > Reviewed-by: Elad Nachman <enachman@marvell.com>
+> > > 
+> > > Thanks,
+> > > 
+> > > Elad.
+> > > 
+> > > -----Original Message-----
+> > > From: Pali Rohár <pali@kernel.org> 
+> > > Sent: Monday, September 26, 2022 3:35 PM
+> > > To: Elad Nachman <enachman@marvell.com>
+> > > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>; Lorenzo Pieralisi <lpieralisi@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; Krzysztof Wilczyński <kw@linux.com>; Rob Herring <robh@kernel.org>; linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Gregory Clement <gregory.clement@bootlin.com>; Marek Behún <kabel@kernel.org>; Remi Pommarel <repk@triplefau.lt>; Xogium <contact@xogium.me>; Tomasz Maciej Nowak <tmn505@gmail.com>
+> > > Subject: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for PCIe Completion Timeout
+> > > 
+> > > External Email
+> > > 
+> > > ----------------------------------------------------------------------
+> > > Hello Elad, could you please review this patch? I have implemented it according your instructions, including that full memory barrier as you described.
+> > > 
+> > > On Tuesday 02 August 2022 14:38:16 Pali Rohár wrote:
+> > > > Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions 
+> > > > document describes in erratum 3.12 PCIe Completion Timeout (Ref #: 
+> > > > 251), that PCIe IP does not support a strong-ordered model for inbound posted vs.
+> > > > outbound completion.
+> > > > 
+> > > > As a workaround for this erratum, DIS_ORD_CHK flag in Debug Mux 
+> > > > Control register must be set. It disables the ordering check in the 
+> > > > core between Completions and Posted requests received from the link.
+> > > > 
+> > > > Marvell also suggests to do full memory barrier at the beginning of 
+> > > > aardvark summary interrupt handler before calling interrupt handlers 
+> > > > of endpoint drivers in order to minimize the risk for the race 
+> > > > condition documented in the Erratum between the DMA done status 
+> > > > reading and the completion of writing to the host memory.
+> > > > 
+> > > > More details about this issue and suggested workarounds are in discussion:
+> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_l
+> > > > inux-2Dpci_BN9PR18MB425154FE5019DCAF2028A1D5DB8D9-40BN9PR18MB4251.namp
+> > > > rd18.prod.outlook.com_t_-23u&d=DwIDaQ&c=nKjWec2b6R0mOyPaz7xtfQ&r=eTeNT
+> > > > LEK5-TxXczjOcKPhANIFtlB9pP4lq9qhdlFrwQ&m=bjgkhgPgOjqCEsbHYHONCZMiFDX72
+> > > > MztWaE0AvWBktQVn3zKEDtUdn02Kx_KJ14B&s=SToGsDGEObwbZGilVtVZPyME8jNiRgrq
+> > > > 4SDYvqqT0TA&e=
+> > > > 
+> > > > It was reported that enabling this workaround fixes instability issues 
+> > > > and "Unhandled fault" errors when using 60 GHz WiFi 802.11ad card with 
+> > > > Qualcomm
+> > > > QCA6335 chip under significant load which were caused by interrupt 
+> > > > status stuck in the outbound CMPLT queue traced back to this erratum.
+> > > > 
+> > > > This workaround fixes also kernel panic triggered after some minutes 
+> > > > of usage 5 GHz WiFi 802.11ax card with Mediatek MT7915 chip:
+> > > > 
+> > > >     Internal error: synchronous external abort: 96000210 [#1] SMP
+> > > >     Kernel panic - not syncing: Fatal exception in interrupt
+> > > > 
+> > > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller 
+> > > > driver")
+> > > > Cc: stable@vger.kernel.org
+> > > > ---
+> > > >  drivers/pci/controller/pci-aardvark.c | 10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c 
+> > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > index 060936ef01fe..3ae8a85ec72e 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -210,6 +210,8 @@ enum {
+> > > >  };
+> > > >  
+> > > >  #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
+> > > > +#define DEBUG_MUX_CTRL_REG			(LMI_BASE_ADDR + 0x208)
+> > > > +#define     DIS_ORD_CHK				BIT(30)
+> > > >  
+> > > >  /* PCIe core controller registers */
+> > > >  #define CTRL_CORE_BASE_ADDR			0x18000
+> > > > @@ -558,6 +560,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > > >  		PCIE_CORE_CTRL2_TD_ENABLE;
+> > > >  	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+> > > >  
+> > > > +	/* Disable ordering checks, workaround for erratum 3.12 "PCIe completion timeout" */
+> > > > +	reg = advk_readl(pcie, DEBUG_MUX_CTRL_REG);
+> > > > +	reg |= DIS_ORD_CHK;
+> > > > +	advk_writel(pcie, reg, DEBUG_MUX_CTRL_REG);
+> > > > +
+> > > >  	/* Set lane X1 */
+> > > >  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> > > >  	reg &= ~LANE_CNT_MSK;
+> > > > @@ -1581,6 +1588,9 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
+> > > >  	struct advk_pcie *pcie = arg;
+> > > >  	u32 status;
+> > > >  
+> > > > +	/* Full memory barrier (ARM dsb sy), workaround for erratum 3.12 "PCIe completion timeout" */
+> > > > +	mb();
+> > > > +
+> > > >  	status = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
+> > > >  	if (!(status & PCIE_IRQ_CORE_INT))
+> > > >  		return IRQ_NONE;
+> > > > --
+> > > > 2.20.1
+> > > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
