@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1368C5F4DF6
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 04:58:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5098F5F4DF8
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 04:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiJEC6Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Oct 2022 22:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
+        id S229705AbiJEC6b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Oct 2022 22:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbiJEC6W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 22:58:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB12F4D157;
-        Tue,  4 Oct 2022 19:58:21 -0700 (PDT)
+        with ESMTP id S229730AbiJEC62 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 22:58:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC4566A42;
+        Tue,  4 Oct 2022 19:58:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 66DF46155E;
-        Wed,  5 Oct 2022 02:58:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3362C433C1;
-        Wed,  5 Oct 2022 02:58:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E67CAB81C82;
+        Wed,  5 Oct 2022 02:58:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56335C433C1;
+        Wed,  5 Oct 2022 02:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664938700;
-        bh=mm3PVLnR7PvroJVH9u2FBC+N86N77tt3CLlFz8nWPPA=;
+        s=k20201202; t=1664938702;
+        bh=nhuFmYnUCX7jGJj/igSj3CBNeD2gxo/OyINL/iZYw0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjC66djVUDVZ0t1wvPPUUGyJmVjoDpSgX+tXRrWJgu8b6BFhxE7AZ61Z4C0q/JFX2
-         Wzfs5jNwwEJxB+VNn6IlL4GYG8BO5WufIgq06xW0HLPsueLKARgIrypyNkOMoptvKn
-         ay7/ndRENbmXyGeMfzGU2oi7rr72BPiR5NnzSMwbBrUI+0StvFgjJZPSZsdGIba3D7
-         RflUzcTHEK+3ls/EULzG1t/i5wtsO05/AnWC06bx5i5C6YY1gVGme9poB18xeS3Od5
-         5iXpJBIq+wIIn+MehFendTxSrGHe6WXfKNBnADx/zFGGAf2MOg9tRq7CQ5yVg4FrW5
-         RMpL0+Yr5OaXg==
+        b=Z6FtTcPBhKTiSZSffH3UtpW32C7jS8vHajBjEoeQkKPqbZSsZd7QwXJvXfagcUEes
+         37SB3Vl5nVRgwuz1p2zkDUmIsG+oKoO+hI3L6x4DwSHKGWPhQTU1w1CUWJdDarTIT6
+         lu+UaWl1toEsxifP5fsrZZ4re3A+LLm0cm+W9fG+MXzVJympMVgOcnC7Rymi3OyBBO
+         YeNvsIVZ6IKaWCKZXi+o+kfnGqH2hl5Gd4ruNG0yF0j2zkpipEHI/dSuy3MziKMs6X
+         j6M/Jc/D8CuHXV0C4K4Aatss/PYmFgGe7bhGhfonTtT1GrwWwURqzTHBBJC9JLmfXA
+         AlsY3mPb+ncNQ==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Vidya Sagar <vidyas@nvidia.com>,
@@ -47,9 +47,9 @@ Cc:     Vidya Sagar <vidyas@nvidia.com>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>,
         Vidya Sagar <sagar.tv@gmail.com>, sagupta@nvidia.com,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/3] PCI/ASPM: Ignore L1 PM Substates if device lacks capability
-Date:   Tue,  4 Oct 2022 21:58:08 -0500
-Message-Id: <20221005025809.2247547-3-helgaas@kernel.org>
+Subject: [PATCH 3/3] PCI/ASPM: Correct LTR_L1.2_THRESHOLD computation
+Date:   Tue,  4 Oct 2022 21:58:09 -0500
+Message-Id: <20221005025809.2247547-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221005025809.2247547-1-helgaas@kernel.org>
 References: <20221005025809.2247547-1-helgaas@kernel.org>
@@ -66,36 +66,102 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-187f91db8237 ("PCI/ASPM: Remove struct aspm_register_info.l1ss_cap")
-inadvertently removed a check for existence of the L1 PM Substates (L1SS)
-Capability before reading it.
+80d7d7a904fa ("PCI/ASPM: Calculate LTR_L1.2_THRESHOLD from device
+characteristics") replaced a fixed value (163840ns) with one computed from
+T_POWER_OFF, Common_Mode_Restore_Time, etc., but it encoded the
+LTR_L1.2_THRESHOLD value incorrectly.
 
-If there is no L1SS Capability, this means we mistakenly read PCI_COMMAND
-and PCI_STATUS (config address 0x04) and interpret that as the PCI_L1SS_CAP
-register, so we may incorrectly configure L1SS.
+This is especially a problem for small thresholds, e.g., 63ns fell into the
+"threshold_ns < 1024" case and was encoded as 32ns:
 
-Make sure the L1SS Capability exists before trying to read it.
+  LTR_L1.2_THRESHOLD_Scale = 1 (multiplier is 32ns)
+  LTR_L1.2_THRESHOLD_Value = 63 >> 5 = 1
+  LTR_L1.2_THRESHOLD       = multiplier * value = 32ns * 1 = 32ns
 
-Fixes: 187f91db8237 ("PCI/ASPM: Remove struct aspm_register_info.l1ss_cap")
+Correct the algorithm to encode all times of 1023ns (0x3ff) or smaller
+exactly and larger times conservatively (the encoded threshold is never
+smaller than was requested).  This reduces the chance of entering L1.2
+when the device can't tolerate the exit latency.
+
+Fixes: 80d7d7a904fa ("PCI/ASPM: Calculate LTR_L1.2_THRESHOLD from device characteristics")
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/aspm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/pcie/aspm.c | 49 +++++++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 4535228e4a64..f12d117f44e0 100644
+index f12d117f44e0..53a1fa306e1e 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -560,6 +560,9 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
- 	u32 parent_l1ss_cap, child_l1ss_cap;
- 	u32 parent_l1ss_ctl1 = 0, child_l1ss_ctl1 = 0;
+@@ -8,6 +8,7 @@
+  */
  
-+	if (!parent->l1ss || !child->l1ss)
-+		return;
-+
- 	/* Setup L1 substate */
- 	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
- 			      &parent_l1ss_cap);
+ #include <linux/kernel.h>
++#include <linux/math.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/pci.h>
+@@ -350,29 +351,43 @@ static u32 calc_l1ss_pwron(struct pci_dev *pdev, u32 scale, u32 val)
+ 	return 0;
+ }
+ 
++/*
++ * Encode an LTR_L1.2_THRESHOLD value for the L1 PM Substates Control 1
++ * register.  Ports enter L1.2 when the most recent LTR value is greater
++ * than or equal to LTR_L1.2_THRESHOLD, so we round up to make sure we
++ * don't enter L1.2 too aggressively.
++ *
++ * See PCIe r6.0, sec 5.5.1, 6.18, 7.8.3.3.
++ */
+ static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
+ {
+-	u32 threshold_ns = threshold_us * 1000;
++	u64 threshold_ns = (u64) threshold_us * 1000;
+ 
+-	/* See PCIe r3.1, sec 7.33.3 and sec 6.18 */
+-	if (threshold_ns < 32) {
+-		*scale = 0;
++	/*
++	 * LTR_L1.2_THRESHOLD_Value ("value") is a 10-bit field with max
++	 * value of 0x3ff.
++	 */
++	if (threshold_ns <= 0x3ff * 1) {
++		*scale = 0;		/* Value times 1ns */
+ 		*value = threshold_ns;
+-	} else if (threshold_ns < 1024) {
+-		*scale = 1;
+-		*value = threshold_ns >> 5;
+-	} else if (threshold_ns < 32768) {
+-		*scale = 2;
+-		*value = threshold_ns >> 10;
+-	} else if (threshold_ns < 1048576) {
+-		*scale = 3;
+-		*value = threshold_ns >> 15;
+-	} else if (threshold_ns < 33554432) {
+-		*scale = 4;
+-		*value = threshold_ns >> 20;
++	} else if (threshold_ns <= 0x3ff * 32) {
++		*scale = 1;		/* Value times 32ns */
++		*value = roundup(threshold_ns, 32) / 32;
++	} else if (threshold_ns <= 0x3ff * 1024) {
++		*scale = 2;		/* Value times 1024ns */
++		*value = roundup(threshold_ns, 1024) / 1024;
++	} else if (threshold_ns <= 0x3ff * 32768) {
++		*scale = 3;		/* Value times 32768ns */
++		*value = roundup(threshold_ns, 32768) / 32768;
++	} else if (threshold_ns <= 0x3ff * 1048576) {
++		*scale = 4;		/* Value times 1048576ns */
++		*value = roundup(threshold_ns, 1048576) / 1048576;
++	} else if (threshold_ns <= 0x3ff * (u64) 33554432) {
++		*scale = 5;		/* Value times 33554432ns */
++		*value = roundup(threshold_ns, 33554432) / 33554432;
+ 	} else {
+ 		*scale = 5;
+-		*value = threshold_ns >> 25;
++		*value = 0x3ff;		/* Max representable value */
+ 	}
+ }
+ 
 -- 
 2.25.1
 
