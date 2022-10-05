@@ -2,112 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6745F55FF
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 15:59:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 240FC5F566C
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 16:30:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbiJEN7G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Oct 2022 09:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48354 "EHLO
+        id S229868AbiJEOaV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Oct 2022 10:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229707AbiJEN7F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 09:59:05 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF527C1D5
-        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 06:59:03 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id a26so6890990pfg.7
-        for <linux-pci@vger.kernel.org>; Wed, 05 Oct 2022 06:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=4GHAQq3Ab8Hgu7Ai+ngirQfvBonZmF3ZDCHqLz0H/hg=;
-        b=XjqIdx98+RPbrIVN9x5rxVQdyVxFqNW1PsqYrs6fnku6XD08LmcJAgbMYXNAPtQe27
-         mAdIGrBnRRjg6QYUj3XBD8CX/UaFznIA3XqhMGh4bqy0Yu4/Jl3sW4wRzZrYphVTULAc
-         DESez5aqx5JoCGiuLzkhWUOSSRZtdLmPg6dChh0SdX+aoI1nMlo6HUBq+CgkpcuYq/Gu
-         3ZBBzRkLRLkDeVhQLVkyzZexhd2u5di9h9fIGxnq5ktB2X1Lb2bbXvCKH6JMCh82F88u
-         XsLUXVQNNwtYVBtGpZI39Fkv4hzzshc84XicOYwPTz/e1Sp2dPzxoSz6PmlcZHYVFOKH
-         WX7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=4GHAQq3Ab8Hgu7Ai+ngirQfvBonZmF3ZDCHqLz0H/hg=;
-        b=l2Q5qr/1kgz5BtUNntC/VOzg8oYRvQcZ7vfkSsUXt59PXWlutRKSUV/YoqlCeVpS12
-         p5DqnjPz/ohSaZu6c9fNcWq3VvRQckjAJJ3+Tq8Dz9s7H3lSJaddAfNeAGV3ZeJOfCZS
-         OmH76Wixp9n3+LOO3RHImmaU+a6N+L4NYR+tTt27YR/1EYl2Dd1q+1yiZsN2ORvYKdxW
-         x5mrTDWGxjKqh0UNtQsWQABzTF8Wct1eDIPL7z44Cva8yoe+0JYttmCBVKJ4YejeXU8O
-         BdDP2lfkGxNXb0h6j4A93Aps2N30NOruPJGlud4WbYoYqOA+ZbFpUaEGk81dgiaYiPNi
-         yc2A==
-X-Gm-Message-State: ACrzQf1yOMMrHcLiaKbZPEXxbobYEe3nAaERPnfXjPqOHCeYNb97a3Te
-        TAB41zXq2ffLNLlqOmQ45IWl
-X-Google-Smtp-Source: AMsMyM6dl84w13wlxG5aIyhuXwtgyoO0gr2xNXwnNTdnpSE5e1R/wwqZWvtY02Zi2Ke1u+TvmV+c+A==
-X-Received: by 2002:a05:6a02:186:b0:431:25fb:f1fe with SMTP id bj6-20020a056a02018600b0043125fbf1femr7334pgb.130.1664978342707;
-        Wed, 05 Oct 2022 06:59:02 -0700 (PDT)
-Received: from localhost.localdomain ([220.158.159.173])
-        by smtp.gmail.com with ESMTPSA id ik13-20020a170902ab0d00b0017f74cab9eesm2787957plb.128.2022.10.05.06.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 06:59:02 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org
-Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        robh@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] PCI: qcom-ep: Fix disabling global_irq in error path
-Date:   Wed,  5 Oct 2022 19:28:52 +0530
-Message-Id: <20221005135852.22634-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229771AbiJEOaU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 10:30:20 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003092B255
+        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 07:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664980220; x=1696516220;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ch0GPkVDHff8LL/oKQipz2H/eU/YJjRV+VLpu4+sCV0=;
+  b=nKOyT3TWAPQPMlZ59F5zFkViDM8nevjfxokSzkE7ONyg60nKVdjE+gc+
+   fKUfSjtTi1V9zoJbkbzmKq8to6/dypVv43ATYT70fnkUlBUhkyGfh5SVT
+   t7y4xFPgdmCDcckOdEH7QugDqb//tPa7a5E2XpA2mEegCQMsEpDlILtbz
+   6c5YFsmSHdF98psA667gxmzXGCcGzQjs2N2SoNaoKa+geNTmXj8G5Mnge
+   AhEApmy2lmz0VdO3jaCGtkgAbRsfKzZfyM+zDkQHFSZxm/qldmMU+tPP9
+   OtT3aah3LQvR2tfn/NkTB6ubLQHn66Q393eS/DwdAjVXyWjuT5lgyeEMg
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10491"; a="304155642"
+X-IronPort-AV: E=Sophos;i="5.95,161,1661842800"; 
+   d="scan'208";a="304155642"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2022 07:28:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10491"; a="766741333"
+X-IronPort-AV: E=Sophos;i="5.95,161,1661842800"; 
+   d="scan'208";a="766741333"
+Received: from lkp-server01.sh.intel.com (HELO d4f44333118a) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Oct 2022 07:28:13 -0700
+Received: from kbuild by d4f44333118a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1og5Nd-0001Jt-0I;
+        Wed, 05 Oct 2022 14:28:13 +0000
+Date:   Wed, 05 Oct 2022 22:27:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/aspm] BUILD SUCCESS
+ d3a9d35300341349af62d77372b85c1ffbd5c071
+Message-ID: <633d946b.edhts4aebHvGqwnD%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After commit 6a534df3da88 ("PCI: qcom-ep: Disable IRQs during driver
-remove"), the global irq is stored in the "global_irq" member of pcie_ep
-structure. This eliminates the need of local "irq" variable but that
-commit didn't remove the "irq" variable usage completely and it is still
-used for disable_irq() in error path which is wrong since the variable is
-uninitialized.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
+branch HEAD: d3a9d35300341349af62d77372b85c1ffbd5c071  PCI/ASPM: Correct LTR_L1.2_THRESHOLD computation
 
-Fix this by removing the local "irq" variable and using
-"pcie_ep->global_irq" for disable_irq() in error path.
+elapsed time: 725m
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 6a534df3da88 ("PCI: qcom-ep: Disable IRQs during driver remove")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+configs tested: 102
+configs skipped: 3
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 16bb8f166c3b..00a0728d5ecd 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -614,7 +614,7 @@ static irqreturn_t qcom_pcie_ep_perst_irq_thread(int irq, void *data)
- static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
- 					     struct qcom_pcie_ep *pcie_ep)
- {
--	int irq, ret;
-+	int ret;
- 
- 	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
- 	if (pcie_ep->global_irq < 0)
-@@ -637,7 +637,7 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
- 					"perst_irq", pcie_ep);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
--		disable_irq(irq);
-+		disable_irq(pcie_ep->global_irq);
- 		return ret;
- 	}
- 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+arc                                 defconfig
+m68k                             allyesconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+x86_64                              defconfig
+riscv                randconfig-r042-20221003
+arc                  randconfig-r043-20221003
+i386                 randconfig-a011-20221003
+x86_64                           rhel-8.3-kvm
+arc                  randconfig-r043-20221002
+x86_64                           rhel-8.3-syz
+i386                                defconfig
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+i386                 randconfig-a012-20221003
+s390                 randconfig-r044-20221003
+x86_64                               rhel-8.3
+i386                 randconfig-a013-20221003
+s390                             allyesconfig
+x86_64                    rhel-8.3-kselftests
+i386                 randconfig-a015-20221003
+arm                                 defconfig
+i386                 randconfig-a016-20221003
+x86_64                           allyesconfig
+i386                 randconfig-a014-20221003
+arm64                            allyesconfig
+arm                              allyesconfig
+i386                             allyesconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a011-20221003
+x86_64               randconfig-a014-20221003
+x86_64               randconfig-a012-20221003
+x86_64               randconfig-a013-20221003
+x86_64               randconfig-a015-20221003
+x86_64               randconfig-a016-20221003
+ia64                             allmodconfig
+arc                               allnoconfig
+alpha                             allnoconfig
+riscv                             allnoconfig
+csky                              allnoconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+sh                               allmodconfig
+mips                           xway_defconfig
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+arm                         nhk8815_defconfig
+sparc64                             defconfig
+arc                          axs101_defconfig
+sh                   sh7770_generic_defconfig
+powerpc                 linkstation_defconfig
+arm                            pleb_defconfig
+arm                       imx_v6_v7_defconfig
+sh                             shx3_defconfig
+mips                            ar7_defconfig
+m68k                                defconfig
+sparc                               defconfig
+arc                        nsim_700_defconfig
+sh                            titan_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                     decstation_defconfig
+powerpc                     stx_gp3_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+m68k                        m5407c3_defconfig
+sh                  sh7785lcr_32bit_defconfig
+xtensa                    xip_kc705_defconfig
+arm                  randconfig-c002-20221002
+x86_64                        randconfig-c001
+i386                          randconfig-c001
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+
+clang tested configs:
+i386                 randconfig-a004-20221003
+i386                 randconfig-a005-20221003
+i386                 randconfig-a003-20221003
+i386                 randconfig-a002-20221003
+i386                 randconfig-a001-20221003
+i386                 randconfig-a006-20221003
+hexagon              randconfig-r041-20221003
+riscv                randconfig-r042-20221002
+hexagon              randconfig-r041-20221002
+s390                 randconfig-r044-20221002
+hexagon              randconfig-r045-20221002
+hexagon              randconfig-r045-20221003
+x86_64               randconfig-a003-20221003
+x86_64               randconfig-a002-20221003
+x86_64               randconfig-a001-20221003
+x86_64               randconfig-a005-20221003
+x86_64               randconfig-a004-20221003
+x86_64               randconfig-a006-20221003
+powerpc                 mpc8313_rdb_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                     powernv_defconfig
+riscv                             allnoconfig
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
