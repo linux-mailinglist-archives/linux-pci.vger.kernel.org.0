@@ -2,59 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1835A5F5972
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 19:57:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCA7C5F5AB3
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 21:43:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbiJER5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Oct 2022 13:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
+        id S229898AbiJETno (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Oct 2022 15:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbiJER5s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 13:57:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5108C78BCD;
-        Wed,  5 Oct 2022 10:57:47 -0700 (PDT)
+        with ESMTP id S229712AbiJETnn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 15:43:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF147CB76;
+        Wed,  5 Oct 2022 12:43:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7707C6178F;
-        Wed,  5 Oct 2022 17:57:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8553BC433D6;
-        Wed,  5 Oct 2022 17:57:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E331EB81F3A;
+        Wed,  5 Oct 2022 19:43:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E397C433D6;
+        Wed,  5 Oct 2022 19:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664992665;
-        bh=hYC0opATC0Nmx1bPQMzQLWCcT3yhZpfxCXEFJN/s3qI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NONKl8qqujs2rlwAFWW3Swq1nuYiRytwvRiPDf0qjoTgSUOcWmzqDp+MLsJg5zKMR
-         ao3se269USLlTI6/XVXDff8SPS8zOnF2JmHYUzuuKukZ241biXtUnLiTNhOgwWgUmS
-         LP3V1P/ECZSU1XV++t31gXFq2jXt+qJXIbuK4TZDjVs/pB+xwBIDdaEacEsa9RHnCx
-         25Au5tWo4oJs+/ofjj9hcOZjaxU5cQ9wJnNlFQ38nbxVH5+YINEMclONuZFxlA+HWt
-         FbEen/WYSMqoqk9lnobC6x4VPxsCuLiBGPYMR445ZX0AbZQzEpBkRdy2KyFTAHiu19
-         rQT10nG1cE3ig==
-Date:   Wed, 5 Oct 2022 12:57:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        "Saheed O . Bolarinwa" <refactormyself@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        s=k20201202; t=1664999019;
+        bh=epayr2GoDHtYX0BIuBJ5J+rd1FUYks1xkQARebFSwdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NuIkCTLRHCBxlgxNCzNecEKzbqHqAjOPq/2u9wGxHZZyR0EDpkZ/YKw16qF5NhRFb
+         EhmXfodlJEUSoufI+96I06mJ6X4TByLypGNFeDlQTwVWZrGqoR1UUwxNRYejJVXnzX
+         4Wnezwq1ZOOdwIA4d3m6rTWjnxmhpccC7qhikHZsTX9beTsPnjP7gwQr1wsjH6eAZG
+         /S5yYB276MaEkzzziFq5isjJEsGMri+kiCTKIbPjgrauuzQbwkNJ3i0F3GlqmxW3As
+         g00qAH3koZCNk8YmDkejrG4Uv+Nr3nAtanYDhh2VTOoMvoFlnVegpYReYfUl142VSl
+         8ifVfkwrFQSng==
+Received: by pali.im (Postfix)
+        id 5D77E772; Wed,  5 Oct 2022 21:43:36 +0200 (CEST)
+Date:   Wed, 5 Oct 2022 21:43:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Kenneth R . Crudup" <kenny@panix.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <sagar.tv@gmail.com>, sagupta@nvidia.com,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/3] PCI/ASPM: Fix L1SS issues
-Message-ID: <20221005175744.GA2382840@bhelgaas>
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Update comment about config space
+Message-ID: <20221005194336.gdnu4vfzkudedjw5@pali>
+References: <20220911113216.14892-1-pali@kernel.org>
+ <YzRcYwQYlawV10QS@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ca836507-50ca-13bc-ef88-7f69b1333c99@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YzRcYwQYlawV10QS@orome>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,37 +62,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 04, 2022 at 08:28:07PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 10/4/22 7:58 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
+On Wednesday 28 September 2022 16:38:27 Thierry Reding wrote:
+> On Sun, Sep 11, 2022 at 01:32:16PM +0200, Pali Rohár wrote:
+> > Like many other ARM PCIe controllers, it uses old PCI Configuration
+> > Mechanism #1 from PCI Local Bus for accessing PCI config space.
+> > It is not PCIe ECAM in any case.
 > > 
-> > This is really late, but I think we have two significant issues with L1SS:
-> > 
-> >   1) pcie_aspm_cap_init() reads from the L1SS capability even when it
-> >   doesn't exist, so it reads PCI_COMMAND and PCI_STATUS instead and treats
-> >   those as an L1SS Capability value.
-> > 
-> >   2) encode_l12_threshold() encodes LTR_L1.2_THRESHOLD as smaller than
-> >   requested, so ports may enter L1.2 when they should not.
-> > 
-> > These patches are intended to fix both issues.
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >  drivers/pci/controller/pci-tegra.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> Looks good to me.
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Perhaps this should be rolled into the PCI_CONF1_EXT_ADDRESS patch?
 
-Thanks a lot for taking a look at these!  I put them on pci/aspm for
-v6.1.
+Well, I split documentation change and PCI_CONF1_EXT_ADDRESS usage into
+two patches as those are two different / separate things. Documentation
+change is a fix (because documentation is wrong) and PCI_CONF1_EXT_ADDRESS
+is an improvement - code cleanup. And in case if there is a issue with
+"cleanup" patch it can be reverted without need to revert also "fix"
+part. This is just information how I looked at these changes and why I
+decided to split them.
 
-> > Bjorn Helgaas (3):
-> >   PCI/ASPM: Factor out L1 PM Substates configuration
-> >   PCI/ASPM: Ignore L1 PM Substates if device lacks capability
-> >   PCI/ASPM: Correct LTR_L1.2_THRESHOLD computation
-> > 
-> >  drivers/pci/pcie/aspm.c | 155 +++++++++++++++++++++++-----------------
-> >  1 file changed, 90 insertions(+), 65 deletions(-)
-> > 
+> On
+> the other hand there's really no use in keeping this comment around
+> after that other patch because the documentation for the new macro lays
+> out the details already.
 > 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
+> Thierry
+
+Ok, whether documentation is needed or not - it is your maintainer
+decision. Maybe really obvious things do not have to be documented.
+Also another look at this problem can be that if somebody wrote wrong
+documentation for it, maybe it is not too obvious? I do not have opinion
+on this, so choose what is better :-)
+
+In any case, wrong documentation (which is the current state) should be
+fixed (and removal in most case is also proper fix).
