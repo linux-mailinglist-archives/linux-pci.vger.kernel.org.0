@@ -2,106 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DDEE5F5324
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 13:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAAF55F5578
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 15:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbiJELH6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Oct 2022 07:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59710 "EHLO
+        id S230009AbiJENdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Oct 2022 09:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiJELH5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 07:07:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8256AEB9;
-        Wed,  5 Oct 2022 04:07:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A71C6B81D88;
-        Wed,  5 Oct 2022 11:07:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E19FC433D6;
-        Wed,  5 Oct 2022 11:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664968073;
-        bh=yAcjCd8qA0PzpOonzfxU8FLI+ZPg/Daluyl3Ph2LnAM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Igpm/Y2g7ACnv9Gf+/TLz/Y3zwmAx8CbG+OmnYVYEbH2g9v6+Zi5zVR5DHTKRA9xJ
-         J9QFot3Sik6r44y8Gou+WufyVyiwom0r7BIMnefwoB/eIRT93poXZ0meWVSguJg2pY
-         r280nvDXH4eXRq3N9or+Ep659lomKnxbmSlt2yHB6h9dn0ctN7rjwjeiykf9murJD2
-         9nD5TBS1uXEkI02qChCQICeaGj0k/P1ZGqWls/LcCb70VahfXYVL5DpUDtMgbHKQcl
-         KbcpERGJ477hZswNQjTE/e5iqImEimWoHga1jz4XLJM3VvprccsBK/C2mMreXW1bnf
-         LTaSQhea5nF8A==
-Date:   Wed, 5 Oct 2022 06:07:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        "Saheed O . Bolarinwa" <refactormyself@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Kenneth R . Crudup" <kenny@panix.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <sagar.tv@gmail.com>, sagupta@nvidia.com,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/3] PCI/ASPM: Ignore L1 PM Substates if device lacks
- capability
-Message-ID: <20221005110751.GA2275321@bhelgaas>
+        with ESMTP id S229946AbiJENdU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 09:33:20 -0400
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A7479EDB
+        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 06:33:20 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id h8-20020a17090a054800b00205ccbae31eso1512446pjf.5
+        for <linux-pci@vger.kernel.org>; Wed, 05 Oct 2022 06:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=nDz/mypA3pBMuVq7axyrfxfpHKJJ2GOzegFDtXQ9wkw=;
+        b=gmG0dz8uCabfvPifTOP8eivCPUgnHo3UMsWMu6VSY1F5h6kT97y0hziGeosPyIj2Xr
+         j8ur5Dj2aHO7fturlfi8kOKhHooeWLMsZ8N4AT9bdrq1iq8aTSDmnXN6UYfnR4PBaQzC
+         kGCWgg+WbIjAj1F9NSAZzpJYDJfGmaQueL7RbRwufJ7g3nl2kdzLxvBofcyFlwjUg1hD
+         AyYkzY7jQ+79YLRNRkaI3W/XR+alEJnNredc+Ks55rhYeigOhZsZtDuvIbihYMj52oFL
+         APClZzjLMTzO7Srje6Cd4ObkJr0/bLThbm1u00MT4iA+JFa+AeDhJyKCPozfQPIQN5hC
+         ZBxQ==
+X-Gm-Message-State: ACrzQf2oEMA189mCNGc6gmat8K8MNg+OGEsGA+uH50Nyk0GXoqCZTNkE
+        Hx7kQNtMnF7zu6L35hPFERo=
+X-Google-Smtp-Source: AMsMyM48aCKZf4N9qRrQBcsbJA+eqKVBl9N5nYXRRx70NrWzruGSxhmCOprRwcWqLm+PVsKU8nS2Dg==
+X-Received: by 2002:a17:90b:314b:b0:203:41c:2dbb with SMTP id ip11-20020a17090b314b00b00203041c2dbbmr5117346pjb.18.1664976799390;
+        Wed, 05 Oct 2022 06:33:19 -0700 (PDT)
+Received: from rocinante (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id n12-20020a170902d2cc00b0017da2798025sm8256744plc.295.2022.10.05.06.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 06:33:18 -0700 (PDT)
+Date:   Wed, 5 Oct 2022 22:33:15 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     linuxkernelml@undead.fr
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: pci=no_e820 required for Clevo laptop
+Message-ID: <Yz2Hm99xHaJmdN6g@rocinante>
+References: <5d8ae0a2-1c0c-11ab-a33c-9b57bd087733@undead.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5799dca0-5ad2-be44-ae79-e276bd7e0a8c@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d8ae0a2-1c0c-11ab-a33c-9b57bd087733@undead.fr>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 04, 2022 at 08:26:53PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 10/4/22 7:58 PM, Bjorn Helgaas wrote:
-> > 187f91db8237 ("PCI/ASPM: Remove struct aspm_register_info.l1ss_cap")
-> > inadvertently removed a check for existence of the L1 PM Substates (L1SS)
-> > Capability before reading it.
-> > 
-> > If there is no L1SS Capability, this means we mistakenly read PCI_COMMAND
-> > and PCI_STATUS (config address 0x04) and interpret that as the PCI_L1SS_CAP
-> > register, so we may incorrectly configure L1SS.
-> > 
-> > Make sure the L1SS Capability exists before trying to read it.
-> > 
-> > Fixes: 187f91db8237 ("PCI/ASPM: Remove struct aspm_register_info.l1ss_cap")
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/aspm.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 4535228e4a64..f12d117f44e0 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -560,6 +560,9 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
-> >  	u32 parent_l1ss_cap, child_l1ss_cap;
-> >  	u32 parent_l1ss_ctl1 = 0, child_l1ss_ctl1 = 0;
-> >  
-> > +	if (!parent->l1ss || !child->l1ss)
-> > +		return;
+(+CC Bjorn and Hans directly for visibility)
+
+Hi Florent,
+
+I am sorry that you are having issues!
+
+> As per
+> https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt,
+> I am sending you this email to inform you that I need to set "pci=no_e820"
+> parameter to get the SSD and touchpad working.
 > 
-> I have noticed that l1ss state is initialized in pci_configure_ltr(). I am
-> wondering whether it is the right place? Are L1SS and LTR related?
+> ---------------------------------------------------------------------
+> 
+> Dmidecode:
+> 
+> BIOS Information
+>     Vendor: INSYDE Corp.
+>     Version: 1.07.02TPCS
+>     Release Date: 08/19/2020
+> 
+>     BIOS Revision: 7.2
+>     Firmware Revision: 7.2
+> Handle 0x0001, DMI type 1, 27 bytes
+> System Information
+>     Manufacturer: PC Specialist LTD
+>     Product Name: NL4x_NL5xLU
+> Base Board Information
+>     Manufacturer: CLEVO
+>     Product Name: NL4XLU
+> 
+> uname -a
+> Linux topik 5.19.0-2-amd64 #1 SMP PREEMPT_DYNAMIC Debian 5.19.11-1
+> (2022-09-24) x86_64 GNU/Linux
 
-L1SS and LTR are definitely related -- LTR supplies information
-that's needed for L1.2.
+We need a little bit more information, if you have the time, to collect
+that will be of great help to us with troubleshooting this.
 
-I'm not sure why pci_configure_ltr() is in probe.c and
-pci_bridge_reconfigure_ltr() is in pci.c; maybe it would make
-sense to put them both in aspm.c.  
+Would you be able to collect output from the following:
 
-Bjorn
+  - lspci -vvv
+  - dmesg (preferably since the system started)
+
+Then, either attach these here as text attachments, or better yet, open
+a bug report against the PCI driver on Kernel's Bugzilla at
+
+  https://bugzilla.kernel.org/
+
+and include as much information as possible about your system as you can,
+plus the details mentioned above.  That would help greatly.
+
+Thank you!
+
+	Krzysztof
