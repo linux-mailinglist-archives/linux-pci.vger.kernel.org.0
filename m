@@ -2,79 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AFE55F57DB
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 17:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D1A5F589B
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 18:54:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbiJEPy5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Oct 2022 11:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52408 "EHLO
+        id S229913AbiJEQyE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Oct 2022 12:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbiJEPyz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 11:54:55 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265601180F
-        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 08:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=J/TjVImG9EYPyzs4mcUCVepZm5aOnxDKEIC/gFb5VVE=; b=GxJtMZxE87d+NotYeKgQQ9oOxF
-        IMDRDISjWdNpvdnrkUl9GsWze+Z6K+87V4m1k9l+I/PSyJD+seBUTbXUyLNcZ6x3ymQziNCVePxZJ
-        A7izry7n1EBLCyRTcFLESzdDjqGO1i4Ybg6Z+qQepXxz00GGza3YOLyaYBZ/AlP4fPp1wvn6WBha7
-        YAyQpXKhQj4dkjOi/nyA3yfSkAtUKG7r0E2w1ziPejn1lqQ/n3oI4PxYRayaoGwNREUUvUvDrVY/Q
-        5oAeUbOVA/YGrDHiiiVh0xCF2UmHfiMLHAUnayGihI1kTwOaRyuPP0HMBYnb51ceCR+hR7bwUL99z
-        P0ONHLiQ==;
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1og6jS-0010l1-JG; Wed, 05 Oct 2022 09:54:51 -0600
-Message-ID: <5d3b257a-c125-fdd6-e29f-229e54679f45@deltatee.com>
-Date:   Wed, 5 Oct 2022 09:54:50 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-US
-To:     Ramesh Errabolu <ramesh.errabolu@gmail.com>
+        with ESMTP id S229977AbiJEQyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 12:54:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392A24B9A8
+        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 09:54:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D65F8B81E04
+        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 16:54:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F1FC433C1;
+        Wed,  5 Oct 2022 16:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664988840;
+        bh=02jFrDuiLeHk3JlOJlwhjSQCdDBi6pthdZghCi9Pedg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ON17HedbQHvtnzK55K6iJKdd8RqK8cbKjJtCON72NF79JJwDUMv4wS6Bt4KXa2POk
+         PuyQD8Chavw6ohk3LOwG3bKBICwwgME1cEuNOkUdpM/Mn3+t6pp9OvQTR+ILut7Nwq
+         WPlyBVPkiD6MAinaj+oRVtA6pfioVHQ9tbFZ3hiYDcTBSdjGI1hqt1AkwLUI4O4uEG
+         h9cqe5q8pUBXDK0EO+nuqr7s35R+Sn8fQav2VJDTWQRWH7XmSAl5qjs6MxRxFc5mek
+         CEZ8yKqHOf6J2up22ix9b1vQISPKsCFL6sman5MW9k5pJ7rOz9LvDJi1v/LpZZWM4r
+         EzXlaY5dtgakw==
+Date:   Wed, 5 Oct 2022 11:53:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     veredz72@gmail.com
 Cc:     linux-pci@vger.kernel.org
-References: <CAFGSPrzM_pRZ-JEWimKYDPzv76t_Nw2Q6od19S_3dzbG_0-bDA@mail.gmail.com>
- <014978f9-9ab6-7ef5-25e3-905bf1f7516b@deltatee.com>
- <CAFGSPrz2ym5oEot9gLi3Z38PWS5A_wCFM4OWk36U_RazDMR67A@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <CAFGSPrz2ym5oEot9gLi3Z38PWS5A_wCFM4OWk36U_RazDMR67A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: ramesh.errabolu@gmail.com, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [Bug 216555] New: Kernel 4.19.135: pci_resource_start,
+ pci_resource_len return wrong value
+Message-ID: <20221005165358.GA2298432@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-216555-41252@https.bugzilla.kernel.org/>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: Understanding P2P DMA related errors
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc linux-pci]
 
+On Wed, Oct 05, 2022 at 01:00:58PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216555
+>            Summary: Kernel 4.19.135: pci_resource_start, pci_resource_len
+>                     return wrong value
 
-On 2022-10-04 22:42, Ramesh Errabolu wrote:
-> Hi,
+> I used 4.19.135(x64) + rootfs (buildroot) to boot an x86 SBC. 
+> This SBC is connected via PCIe to a customized PCIe IO card.
 > 
-> Thanks for taking a look at this. I will see if I can add 0x09A2 to the
-> whitelist and see what happens. But could you clarify my reading of the
-> device tree. In the tree I don't see an AMD device attached to the
-> 0x09A2 device. Is that a misread on my part? Would appreciate it if you
-> could shed light on this aspect.
+> In the kernel module, I used pci_resource_start, pci_resource_len to find
+> start, length of 3 BARs. 
+> It worked fine. 
+> 
+> Then I used the same kernel, kernel module on another x86 SBC. 
+> In this SBC, pci_resource_start, pci_resource_len returned wrong data. 
+> I booted this SBC with Centos 8.2 (4.18) and also with vanilla 4.9.20. 
+> It worked fine. 
+> 
+> Is it possible that 4.19.135 has a BUG ?
 
-The two AMD devices are connected to the [0000:16] and [0000:64] buses
-respectively both are Intel 09a2. I'm not sure if the whitelist code
-will handle this topology. You may need to make more substantial changes
-to handle it. If adding the device to the white list doesn't work you
-can try disabling the check. If that all works then we'll need to
-somehow add support for this topology.
+It's unlikely that pci_resource_start() and pci_resource_len() are
+broken in 4.19.135, but I guess anything is possible.
 
-Logan
+Can you give any more details about why it seems broken?  Dmesg logs
+of a boot that fails and one that works, for instance?
+
+Bjorn
