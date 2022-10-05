@@ -2,129 +2,289 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91CD95F4CC4
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 01:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA3BD5F4DBE
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Oct 2022 04:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbiJDXpQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Oct 2022 19:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
+        id S229445AbiJECft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Oct 2022 22:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJDXpC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 19:45:02 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA4B70E50
-        for <linux-pci@vger.kernel.org>; Tue,  4 Oct 2022 16:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:To:
-        MIME-Version:Date:Message-ID:cc:content-disposition;
-        bh=ul6oLaMJ+7ees8TH3Whzbb525lmZJ0Ol/GK410c00+I=; b=m23y50dVkafqpdCQ2piapTIrLt
-        YNJXghpczMhX6I2+tPwt+gF4ghXoOMYJNuFy0HS9wDIzWmdSthLh2JE5bynlhXtFOcLTPA3DhsX90
-        xxH4AV136p8ZBSAZsGNQH31r3cah6jj9iGzT/xQvJ/rANi3LjCnwai8fHx+sW7Pex8A/YkFlssULQ
-        YLTU5PTdapbyJ0gSchrr98WyeWkyQLMVttLGirRzNQoy8tE61GJmArRpgJtgjvZu1YNXRcNzr1b9n
-        ktxmh8KWJsnmx/h7fyoHkjdvd1NOvhUHbgGCLznvalXxVlEEMf5bndUKK6kMBwHxhxNe9CH7vu99f
-        TBnskgvw==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1ofraB-000JWr-J5; Tue, 04 Oct 2022 17:44:16 -0600
-Message-ID: <014978f9-9ab6-7ef5-25e3-905bf1f7516b@deltatee.com>
-Date:   Tue, 4 Oct 2022 17:44:15 -0600
+        with ESMTP id S229482AbiJECfs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Oct 2022 22:35:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8793315FEB;
+        Tue,  4 Oct 2022 19:35:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 31EC0B81BEF;
+        Wed,  5 Oct 2022 02:35:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1832C433C1;
+        Wed,  5 Oct 2022 02:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664937343;
+        bh=nWD4G4yTpfbFxxUWy4D29Qa7I+4ZXc2ps+gnDX/wDbA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dA6KCfAypwa4v41fQfvgOc+eVNWZBZIZT3sj9wnfSi0LQKLjNWVXIoiMkyCbSj+Ia
+         fSQL44jWULNOjFa8T0XEMEvuOypMCRkyYd9cLuCmY6Pkw6b4guDUN71ninvdeTZSdC
+         MPQsof1zOTa/cWa8acQxsbeyl3gIoe1IZTfYqZAyvJPy2z9F0y22strZrrIGAKsTu1
+         1Z9WH7yma4dKTt+5DQMKLSW2NGTJ+DnPuK4FV0M2nD/5lFqWbWZxUjZ9sLXMX2b6T3
+         k5g0lVxzOO6JDELQ+lJcnna0TZ8bgKGl6/603CgYeIxFBIBWWw15yaYBS+JZgpWIc9
+         zUOaF0fNlh6vw==
+Date:   Tue, 4 Oct 2022 21:35:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        refactormyself@gmail.com, kw@linux.com, rajatja@google.com,
+        kenny@panix.com, kai.heng.feng@canonical.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH V4 1/2] PCI/ASPM: Refactor ASPM L1SS control register
+ programming
+Message-ID: <20221005023542.GA2190062@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-To:     Ramesh Errabolu <ramesh.errabolu@gmail.com>,
-        linux-pci@vger.kernel.org
-References: <CAFGSPrzM_pRZ-JEWimKYDPzv76t_Nw2Q6od19S_3dzbG_0-bDA@mail.gmail.com>
-Content-Language: en-CA
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <CAFGSPrzM_pRZ-JEWimKYDPzv76t_Nw2Q6od19S_3dzbG_0-bDA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: ramesh.errabolu@gmail.com, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36fa13c5-e0f8-022f-77f7-7908e4df98b8@nvidia.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: Understanding P2P DMA related errors
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Oct 03, 2022 at 12:12:22PM +0530, Vidya Sagar wrote:
+> On 9/30/2022 3:30 AM, Bjorn Helgaas wrote:
+> > On Tue, Sep 13, 2022 at 06:48:21PM +0530, Vidya Sagar wrote:
+> > > Refactor the code to extract the command code out to program
+> > > Control Registers-1 & 2 of L1 Sub-States capability to a new function
+> > > aspm_program_l1ss() and call it for both parent and child devices.
+> > > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > > V4:
+> > > * New patch in this series
+> > > 
+> > >   drivers/pci/pcie/aspm.c | 63 +++++++++++++++++++----------------------
+> > >   1 file changed, 29 insertions(+), 34 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > index a8aec190986c..ecbe3af4188d 100644
+> > > --- a/drivers/pci/pcie/aspm.c
+> > > +++ b/drivers/pci/pcie/aspm.c
+> > > @@ -455,6 +455,31 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+> > >        pci_write_config_dword(pdev, pos, val);
+> > >   }
+> > > 
+> > > +static void aspm_program_l1ss(struct pci_dev *dev, u32 ctl1, u32 ctl2)
+> > > +{
+> > > +     u16 l1ss = dev->l1ss;
+> > > +     u32 l1_2_enable;
+> > > +
+> > > +     /*
+> > > +      * Per PCIe r6.0, sec 5.5.4, T_POWER_ON in PCI_L1SS_CTL2 must be
+> > > +      * programmed prior to setting the L1.2 enable bits in PCI_L1SS_CTL1.
+> > > +      */
+> > > +     pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL2, ctl2);
+> > > +
+> > > +     /*
+> > > +      * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD in
+> > > +      * PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
+> > > +      * enable bits, even though they're all in PCI_L1SS_CTL1.
+> > > +      */
+> > > +     l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+> > > +     ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
+> > > +
+> > > +     pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1, ctl1);
+> > > +     if (l1_2_enable)
+> > > +             pci_write_config_dword(dev, l1ss + PCI_L1SS_CTL1,
+> > > +                                    ctl1 | l1_2_enable);
+> > > +}
+> > > +
+> > >   /* Calculate L1.2 PM substate timing parameters */
+> > >   static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > >                                u32 parent_l1ss_cap, u32 child_l1ss_cap)
+> > > @@ -464,7 +489,6 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > >        u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+> > >        u32 ctl1 = 0, ctl2 = 0;
+> > >        u32 pctl1, pctl2, cctl1, cctl2;
+> > > -     u32 pl1_2_enables, cl1_2_enables;
+> > > 
+> > >        if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+> > >                return;
+> > > @@ -513,39 +537,10 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > >            ctl2 == pctl2 && ctl2 == cctl2)
+> > >                return;
+> > > 
+> > > -     /* Disable L1.2 while updating.  See PCIe r5.0, sec 5.5.4, 7.8.3.3 */
+> > > -     pl1_2_enables = pctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+> > > -     cl1_2_enables = cctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+> > > -
+> > > -     if (pl1_2_enables || cl1_2_enables) {
+> > > -             pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+> > > -                                     PCI_L1SS_CTL1_L1_2_MASK, 0);
+> > > -             pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+> > > -                                     PCI_L1SS_CTL1_L1_2_MASK, 0);
+> > > -     }
+> > > -
+> > > -     /* Program T_POWER_ON times in both ports */
+> > > -     pci_write_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, ctl2);
+> > > -     pci_write_config_dword(child, child->l1ss + PCI_L1SS_CTL2, ctl2);
+> > > -
+> > > -     /* Program Common_Mode_Restore_Time in upstream device */
+> > > -     pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+> > > -                             PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
+> > > -
+> > > -     /* Program LTR_L1.2_THRESHOLD time in both ports */
+> > > -     pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+> > > -                             PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> > > -                             PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
+> > > -     pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+> > > -                             PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> > > -                             PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
+> > > -
+> > > -     if (pl1_2_enables || cl1_2_enables) {
+> > > -             pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1, 0,
+> > > -                                     pl1_2_enables);
+> > > -             pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1, 0,
+> > > -                                     cl1_2_enables);
+> > > -     }
+> > > +     aspm_program_l1ss(parent,
+> > > +                       ctl1 | (pctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+> > > +     aspm_program_l1ss(child,
+> > > +                       ctl1 | (cctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+> > 
+> > This doesn't seem right to me.  I think the intent is to update
+> > LTR_L1.2_THRESHOLD and Common_Mode_Restore_Time, which are encoded in
+> > "ctl1".  It does do that, but it looks like it *also* clears
+> > everything except PCI_L1SS_CTL1_L1_2_MASK, i.e., the L1.1 Enable bits,
+> > the Link Activation bits, and the RsvdP bits, which I don't think we
+> > should be clearing.  Am I missing something?
+> 
+> Agree. Instead of updating some of the register fields with new values while
+> keeping other fields intact, this code programs the register fields with
+> only new values and also programming all other fields to zero which is
+> wrong.
+> Thanks for catching this. I missed it as the card with which I had tested
+> didn't have L1.1 support.
 
+> I think the following modification should fix this issue.
+> 
+> 
+> @@ -537,10 +537,23 @@ static void aspm_calc_l1ss_info(struct pcie_link_state
+> *link,
+>             ctl2 == pctl2 && ctl2 == cctl2)
+>                 return;
+> 
+> -       aspm_program_l1ss(parent,
+> -                         ctl1 | (pctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+> -       aspm_program_l1ss(child,
+> -                         ctl1 | (cctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+> +       pctl1 &= ~(PCI_L1SS_CTL1_CM_RESTORE_TIME |
+> +                  PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> +                  PCI_L1SS_CTL1_LTR_L12_TH_SCALE);
+> +       pctl1 |= (ctl1 & (PCI_L1SS_CTL1_CM_RESTORE_TIME |
+> +                         PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> +                         PCI_L1SS_CTL1_LTR_L12_TH_SCALE)
+> +                );
+> +       aspm_program_l1ss(parent, pctl1, ctl2);
+> +
+> +       cctl1 &= ~(PCI_L1SS_CTL1_CM_RESTORE_TIME |
+> +                  PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> +                  PCI_L1SS_CTL1_LTR_L12_TH_SCALE);
+> +       cctl1 |= (ctl1 & (PCI_L1SS_CTL1_CM_RESTORE_TIME |
+> +                         PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+> +                         PCI_L1SS_CTL1_LTR_L12_TH_SCALE)
+> +                );
+> +       aspm_program_l1ss(child, cctl1, ctl2);
+>  }
+> 
+>  static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> 
+> But, given that you mentioned we shouldn't be touching Rsvd also, I'm
+> wondering if the following can cause any issue?
+> With the top of the tree code, the CMRT in ctrl1 register is updated only
+> for the upstream device whereas with my change, it gets updated even for the
+> downstream device. Although spec says that it is Rsvd for a downstream
+> device (i.e. upstream port), I'm wondering if we should really avoid
+> touching it?
 
-On 2022-10-04 17:23, Ramesh Errabolu wrote:
-> Could I request some help in understanding some PCIe P2P related errors.
-> 
->     [72.896624] amdgpu 0000:67:00.0: cannot be used for peer-to-peer DMA
->     as the client and provider (0000:19:00.0) do not share an upstream
->     bridge or whitelisted host bridge
-> 
-> 
-> *System Information*:
-> 
->   * The kernel is tagged as 5.14.21
->   * The last entry in the whitelist is   {PCI_VENDOR_ID_INTEL, 0x2030 -
->     31, 32, 33, 20,  0}
->       o p2pdma.c - LINK
->         <https://elixir.bootlin.com/linux/v5.14.21/source/drivers/pci/p2pdma.c>
->   * Output of PCIe device on the system that might reference root
->     complex is:
->       o fe:00.3 Host bridge [0600]: Intel Corporation Device [8086:0998]
->       o Could you confirm if the command I ran is correct. I am not sure
->       o *sudo lspci -nn | grep  -C 1 -i host*
->       o If above command is not correct, how can I get root complex
->         device's id correctly
-> 
-> I tried to reason if the two AMD devices are connected to two different
-> root complex devices. Looking at the PCIe device tree, I don't see that
-> to be the case. Perhaps I am not interpreting the PCIe device tree
-> correctly. Including below a short fragment:
-> 
-> 
->     +-[0000:e2]-+-00.0  Intel Corporation Device 09a2
->      |           +-00.1  Intel Corporation Device 09a4
->      |           +-00.2  Intel Corporation Device 09a3
->      |           +-00.4  Intel Corporation Device 0998
->      |          * \-02.0-[e3-e5]*----00.0-[e4-e5]----00.0-[e5]----00.0
->      Advanced Micro Devices, Inc. [AMD/ATI]
-> 
->     I am reading this as follows:
-> 
->       o Device E2:02.0, a Intel PCI bridge is connected to Domain 0000
->       o Device E3:00.0, a PCI bridge from AMD is connected to Intel PCI
->         bridge device E2:02.
->       o Device E4:00.0, a PCI bridge from AMD is connected to AMD PCI
->         bridge device E3:00.0
->       o Device E5:00.0, a Display controller is connected to AMD PCI
->         bridge E4:00.0
-> 
-> Per my reading, in the above tree devices *E2:02.0* (*8086:347A*)
-> and *E2:00.4* (*8086:09A2*) are not connected to each other directly.
-> More importantly they should be considered as PEERs / SIBLINGs.
-> Downstream from E2:02.0 is the AMD device E5:00.0 (*1002:740F*). In this
-> reading AMD device is not connected to the root complex device. A
-> similar pattern is seen with regards to other AMD devices. Basically all
-> of the AMD devices connect to the domain (*0000*) via different buses.
-> Importantly in their connection to the domain there is no root complex
-> device. *Is my reading WRONG*? What is also not clear is how adding the
-> device *8086:09A2* to the whitelist helps as the packets do not go
-> through that device?
-> 
+I'm not sure it's worth bothering about at this point.  It feels a
+little OCD right now.
 
-Hmm, looks like a really new Ice-Lake system. Doesn't even have proper
-PCI database entries yet. The topology seems a bit unusual, but those
-have been getting ever stranger with each new generation.
+> If the answer is yes, I think it is better to drop the modifications done to
+> aspm_calc_l1ss_info() function and just proceed with rest of the
+> modifications given the way it is differentiating between upstream and
+> downstream devices while updating the registers.
+> What are your comments on this?
 
-09a2 looks like the host bridge device id. I'd probably try adding that
-to the white list and see what happens.
+I thought we had some indication that Common_Mode_Restore_Time and
+LTR_L1.2_THRESHOLD should be programmed *before* setting the L1.2
+enable bits, even though they're all in PCI_L1SS_CTL1.
 
-Logan
+The first place that comment appears is
+https://lore.kernel.org/linux-pci/20220907210540.GA140988@bhelgaas/,
+but I can't remember if it actually solved a problem or if it was just
+more OCD reading of the spec, which says "This field must only be
+modified when the ASPM L1.2 Enable bit is Clear".
 
+I'm inclined to keep the aspm_program_l1ss() changes unless we think
+they're risky, because I think it is a small step forward, at least in
+terms of reducing the number of config accesses.
 
+On pci/aspm, I currently have your v4 patches plus these tweaks:
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index dc2e21c7a9d4..016d222b07c7 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -537,10 +537,21 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 	    ctl2 == pctl2 && ctl2 == cctl2)
+ 		return;
+ 
+-	aspm_program_l1ss(parent,
+-			  ctl1 | (pctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
+-	aspm_program_l1ss(child,
+-			  ctl1 | (cctl1 & PCI_L1SS_CTL1_L1_2_MASK), ctl2);
++	pctl1 &= ~(PCI_L1SS_CTL1_CM_RESTORE_TIME |
++		   PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++		   PCI_L1SS_CTL1_LTR_L12_TH_SCALE);
++	pctl1 |= (ctl1 & (PCI_L1SS_CTL1_CM_RESTORE_TIME |
++			  PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++			  PCI_L1SS_CTL1_LTR_L12_TH_SCALE));
++	aspm_program_l1ss(parent, pctl1, ctl2);
++
++	cctl1 &= ~(PCI_L1SS_CTL1_CM_RESTORE_TIME |
++		   PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++		   PCI_L1SS_CTL1_LTR_L12_TH_SCALE);
++	cctl1 |= (ctl1 & (PCI_L1SS_CTL1_CM_RESTORE_TIME |
++			  PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++			  PCI_L1SS_CTL1_LTR_L12_TH_SCALE));
++	aspm_program_l1ss(child, cctl1, ctl2);
+ }
+ 
+ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+@@ -727,9 +738,6 @@ void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+ 	u16 l1ss = dev->l1ss;
+ 	u32 *cap;
+ 
+-	if (!pci_is_pcie(dev))
+-		return;
+-
+ 	if (!l1ss)
+ 		return;
+ 
+@@ -748,9 +756,6 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+ 	u32 *cap, ctl1, ctl2;
+ 	u16 l1ss = dev->l1ss;
+ 
+-	if (!pci_is_pcie(dev))
+-		return;
+-
+ 	if (!l1ss)
+ 		return;
+ 
