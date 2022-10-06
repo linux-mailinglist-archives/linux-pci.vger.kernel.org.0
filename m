@@ -2,123 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FACF5F5F3C
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 04:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 995205F6079
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 07:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbiJFC5f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Oct 2022 22:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
+        id S229510AbiJFFMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 01:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiJFC5d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Oct 2022 22:57:33 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2083.outbound.protection.outlook.com [40.107.220.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513EFC0B
-        for <linux-pci@vger.kernel.org>; Wed,  5 Oct 2022 19:57:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T3bmbsKWqGWI0LNGeqGNs4ZJgEnxWy4AR7ZhV2oick5mrNYoMAbZQjfaD8VSh4Vf/gNS5+rx/K4XJp4OJwsdmM9f3ic1S1r+nmAj1ibQa7G3m2aOB4xdBFA4IRcoIErQndwWV/OrRwvS7EAOS+aSrmmA2r2dfeeXiSOBy4nNnHZbzG8r61+8iMIwtaCRcKQdC1syj+LPUe1mq/mrw3py5G8blncQ0zRNyJlZnuSsW0rh6PpNFL9JrKp0+ynoEY6UDDA49rMd216PVXpePxqdv59XK2h9LfVI8Zto2UPqEYzzEHpXcKPcnD2Z43zW7effq2x34BQFlLVx30fpTwgG2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B6mXjGiWQwcSc3xOhMBUe9IcT7/8gx1ehhdxHm+2+PI=;
- b=KC0oJNf0HXAlq+7g9EIMobLFwF5vXC0wUeUtFAPj/GAxdHXvi4z9oyU4TcnJvcRaSs1rtUA6wm3UkyJDGy3CWCme0y+zv1qCkAolyzwsf8NGmmuj9V4VdJ7A3ravKgqBcBTjo7OPE8MNqCdCEJzDwZ042OyZKe1PiBktvm2sxRORAcvczmt36pq483ZBLpV+3SL2z8YlO8mLswtD+6tVRIuFulR7RvO1jd0GpULVDiY8J3DRhZt/QuXAxP20y7h89YIAoYMI0xwImvKCrH97boF+7S+e6E6qgHSYdlSt160AxbXbUijtjhvObAEWRHasz1eMmDX9eqhELF1LKwFC1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=deltatee.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B6mXjGiWQwcSc3xOhMBUe9IcT7/8gx1ehhdxHm+2+PI=;
- b=UHMP8QMrFimkkmzib2DdnTRboJTN52FQVX3YvwQf0mJKwRLB0aDfdkokiqYAVWXSXRlQAKmQQWBQ/z2FT5hriAWwjZ77M8fMvKOzDOt3nlyASmkf7oO8LfkoBTJkEK3sAM0IrmI+fiLPn9iyRbh9LS+lgohmlheXNOr9iDBCBIs=
-Received: from DM6PR13CA0042.namprd13.prod.outlook.com (2603:10b6:5:134::19)
- by IA0PR12MB7650.namprd12.prod.outlook.com (2603:10b6:208:436::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.25; Thu, 6 Oct
- 2022 02:57:30 +0000
-Received: from DM6NAM11FT038.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:134:cafe::c7) by DM6PR13CA0042.outlook.office365.com
- (2603:10b6:5:134::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.12 via Frontend
- Transport; Thu, 6 Oct 2022 02:57:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT038.mail.protection.outlook.com (10.13.173.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5709.10 via Frontend Transport; Thu, 6 Oct 2022 02:57:29 +0000
-Received: from RErrabolDevMach.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 5 Oct
- 2022 21:57:25 -0500
-From:   Ramesh Errabolu <Ramesh.Errabolu@amd.com>
-To:     <logang@deltatee.com>
-CC:     <linux-pci@vger.kernel.org>, <ramesh.errabolu@gmail.com>
-Subject: Understanding P2P DMA related errors
-Date:   Wed, 5 Oct 2022 21:56:53 -0500
-Message-ID: <20221006025653.3519854-1-Ramesh.Errabolu@amd.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <5d3b257a-c125-fdd6-e29f-229e54679f45@deltatee.com>
-References: <5d3b257a-c125-fdd6-e29f-229e54679f45@deltatee.com>
+        with ESMTP id S229543AbiJFFML (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 01:12:11 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9D189AEF;
+        Wed,  5 Oct 2022 22:12:10 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 352211F85D;
+        Thu,  6 Oct 2022 05:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1665033129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5iU3UBkPp5UeHx8TTGn1E43Xg/sRr9X8ndnUiDuaOio=;
+        b=DU90G3KI9ALj1tLlzpzC9+wr8wwamnEjKp1YZE1Z8epwMXoabl+sE80Zhtt2NPY50Z2Ex0
+        Sn/Dko7vGMrs7wDGv0MKDXCSaYAT/KNuUJaO6TJJ+zc9W+BW6wPFWJsJGNATx8tm4Ncnet
+        334BR36GQ3IlNO2wDb1bWo40B3F6kIM=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F2192139D2;
+        Thu,  6 Oct 2022 05:12:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Nv6iOahjPmM5ZAAAMHmgww
+        (envelope-from <jgross@suse.com>); Thu, 06 Oct 2022 05:12:08 +0000
+Message-ID: <ee16518a-69a6-d3bc-2581-61b37b803af8@suse.com>
+Date:   Thu, 6 Oct 2022 07:12:08 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT038:EE_|IA0PR12MB7650:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b25a7e9-1dd9-4bbe-aca3-08daa74681e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9CYYJSd51+I+310oclESBv5tvHHxmX9MxxKOjp8V/83E2cMQia04poDMa3zzTKdPz2oQDS3ls/PLyWvg6r686ATWGh7+VAiWdjMCoFO2D7vA41qr4cOxleloqoHY3sU4s6vbQPWsZEfKfIRqcTG/N6x1Zazup/0x+u8Qhd4tQ2ARbOcmlBevcKRAP8r6dq4K9U/bv0BMbRx/pOguvsQZLcWnZIsc4dTTjkZG+qIZQ0LAvLdWyucMfeI0TZmW4SGOm57+uwXW2aGrbaSnHz54n+AhDsTdviRb3iy+kscytfkNwnHYNVJ4FDDtBxPribuWgxnKx0YfFu5pNy5pwW7KR4gctpP4GKYI8WlfwzK90RNEhPl037V1UXXBmMsAz8APLtWPZMIDieuryiqX6zPDhAi53ze1++MHIecNy9OobW6ZQj8ihBHC2ma/m/Fm4VTXQ+k4ir9qJrYOr/vs0g0BRE5rYFeXLKeUjmU925XRWVcZtiX4GOFrevv0JN7hh/ZUpoAYVCS34IgYuTC1wDMR8YVd8aYnLqGEilRjJr/EuDzGutIjft/hy6Se3Rxr/OXzwpayecLKP6yQg9UTtmgWTr97j3yx6D8zXy6Ib/eUtt2p6gQ76bAuc9YIigLUUyDvs1ebEhsQYYpEyH5Ccdqn7fRvWsefxF5Tjr02akO990yCyIRZNR94MF+3fCzZAUMeFOK2JLGsuLH6OYLhrKBLSpTse0pjyX2jxItzJSikCy072E+Io/CDHaMTu3xHuF9IqttcA7dur81V4qJPeaQs7KlYWBH018w3hj/mUcO1shFFVgWLSGVV07SI99uTiXG0
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(396003)(376002)(346002)(451199015)(46966006)(40470700004)(36840700001)(316002)(82740400003)(5660300002)(81166007)(83380400001)(336012)(47076005)(2616005)(356005)(36860700001)(186003)(16526019)(1076003)(6666004)(70206006)(40460700003)(4744005)(40480700001)(7696005)(70586007)(82310400005)(41300700001)(8936002)(426003)(478600001)(2906002)(54906003)(4326008)(26005)(8676002)(6916009)(36756003)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2022 02:57:29.4205
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b25a7e9-1dd9-4bbe-aca3-08daa74681e4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT038.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7650
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] xen-pcifront: Handle missed Connected state
+Content-Language: en-US
+To:     Jason Andryuk <jandryuk@gmail.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220829151536.8578-1-jandryuk@gmail.com>
+From:   Juergen Gross <jgross@suse.com>
+In-Reply-To: <20220829151536.8578-1-jandryuk@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Yy9TwF3GPZx5SgNEqSTsuaZh"
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Yy9TwF3GPZx5SgNEqSTsuaZh
+Content-Type: multipart/mixed; boundary="------------7hUe9JATxFCEuZthwY476fEZ";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Jason Andryuk <jandryuk@gmail.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <ee16518a-69a6-d3bc-2581-61b37b803af8@suse.com>
+Subject: Re: [PATCH] xen-pcifront: Handle missed Connected state
+References: <20220829151536.8578-1-jandryuk@gmail.com>
+In-Reply-To: <20220829151536.8578-1-jandryuk@gmail.com>
 
-Logan,
+--------------7hUe9JATxFCEuZthwY476fEZ
+Content-Type: multipart/mixed; boundary="------------NlW0XA0x2EWjlbOjJvE07M3D"
 
-You are right about AMD devices connecting to buses [0000:16] and [0000:64].
-However I am unable to understand as to how you extend that to mean they
-belong to Intel 0x09A2.
+--------------NlW0XA0x2EWjlbOjJvE07M3D
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Per my understanding I am expecting Root Complex enumerated as a device,
-with various other devices hanging off one or more ports/buses. In the
-PCIe device tree, I don't see that.
+T24gMjkuMDguMjIgMTc6MTUsIEphc29uIEFuZHJ5dWsgd3JvdGU6DQo+IEFuIEhWTSBndWVz
+dCB3aXRoIGxpbnV4IHN0dWJkb20gYW5kIDIgUENJIGRldmljZXMgZmFpbGVkIHRvIHN0YXJ0
+IGFzDQo+IGxpYnhsIHRpbWVkIG91dCB3YWl0aW5nIGZvciB0aGUgUENJIGRldmljZXMgdG8g
+YmUgYWRkZWQuICBJdCBoYXBwZW5zDQo+IGludGVybWl0dGVudGx5IGJ1dCB3aXRoIHNvbWUg
+cmVndWxhcml0eS4gIGxpYnhsIHdyb3RlIHRoZSB0d28geGVuc3RvcmUNCj4gZW50cmllcyBm
+b3IgdGhlIGRldmljZXMsIGJ1dCB0aGVuIHRpbWVkIG91dCB3YWl0aW5nIGZvciBiYWNrZW5k
+IHN0YXRlIDQNCj4gKENvbm5lY3RlZCkgLSB0aGUgc3RhdGUgc3RheWVkIGF0IDcgKFJlY29u
+ZmlndXJpbmcpLiAgKFBDSSBwYXNzdGhyb3VnaA0KPiB0byBhbiBIVk0gd2l0aCBzdHViZG9t
+YWluIGlzIFBWIHBhc3N0aHJvdWdoIHRvIHRoZSBzdHViZG9tYWluIGFuZCB0aGVuDQo+IEhW
+TSBwYXNzdGhyb3VnaCB3aXRoIHRoZSBRRU1VIGluc2lkZSB0aGUgc3R1YmRvbWFpbi4pDQo+
+IA0KPiBUaGUgc3R1YmRvbSBrZXJuZWwgbmV2ZXIgcHJpbnRlZCAicGNpZnJvbnQgcGNpLTA6
+IEluc3RhbGxpbmcgUENJDQo+IGZyb250ZW5kIiwgc28gaXQgc2VlbXMgdG8gaGF2ZSBtaXNz
+ZWQgc3RhdGUgNCB3aGljaCB3b3VsZCBoYXZlDQo+IGNhbGxlZCBwY2lmcm9udF90cnlfY29u
+bmVjdCAtPiBwY2lmcm9udF9jb25uZWN0X2FuZF9pbml0X2RtYQ0KPiANCj4gSGF2ZSBwY2lm
+cm9udF9kZXRhY2hfZGV2aWNlcyBzcGVjaWFsLWNhc2Ugc3RhdGUgSW5pdGlhbGlzZWQgYW5k
+IGNhbGwNCj4gcGNpZnJvbnRfY29ubmVjdF9hbmRfaW5pdF9kbWEuICBEb24ndCB1c2UgcGNp
+ZnJvbnRfdHJ5X2Nvbm5lY3QgYmVjYXVzZQ0KPiB0aGF0IHNldHMgdGhlIHhlbmJ1cyBzdGF0
+ZSB3aGljaCBtYXkgdGhyb3cgb2ZmIHRoZSBiYWNrZW5kLiAgQWZ0ZXINCj4gY29ubmVjdGlu
+Zywgc2tpcCB0aGUgcmVtYWluZGVyIG9mIGRldGFjaF9kZXZpY2VzIHNpbmNlIG5vbmUgaGF2
+ZSBiZWVuDQo+IGluaXRpYWxpemVkIHlldC4gIFdoZW4gdGhlIGJhY2tlbmQgc3dpdGNoZXMg
+dG8gUmVjb25maWd1cmVkLA0KPiBwY2lmcm9udF9hdHRhY2hfZGV2aWNlcyB3aWxsIHBpY2sg
+dGhlbSB1cCBhZ2Fpbi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEphc29uIEFuZHJ5dWsgPGph
+bmRyeXVrQGdtYWlsLmNvbT4NCg0KUHVzaGVkIHRvIHhlbi90aXAuZ2l0IGZvci1saW51cy02
+LjENCg0KDQpKdWVyZ2VuDQoNCg==
+--------------NlW0XA0x2EWjlbOjJvE07M3D
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-I see the [domain::bus] as the root of the AMD device. Furthermore I see
-Intel devices 0x09A2 hanging off the same domain::bus. I will take your
-word, but the way the root complex is reported could be less confusing.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-If I could make a request, it will be very helpfulf for folks who don't
-dabble in this area with a simple cheat sheet plus write explaining with
-examples the various root complexes and the variou end-points hanging off
-of them.
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
+oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
+kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
+1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
+BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
+N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
+PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
+FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
+UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
+vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
++6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
+qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
+tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
+Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
+CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
+RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
+8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
+BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
+SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
+nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
+AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
+Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
+hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
+w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
+VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
+OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
+/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
+c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
+F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
+k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
+wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
+5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
+TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
+N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
+AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
+0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
+Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
+we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
+v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
+Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
+534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
+b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
+yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
+suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
 
-Let me know if I could help in this effort.
+--------------NlW0XA0x2EWjlbOjJvE07M3D--
 
-Regards,
-Ramesh
+--------------7hUe9JATxFCEuZthwY476fEZ--
 
+--------------Yy9TwF3GPZx5SgNEqSTsuaZh
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmM+Y6gFAwAAAAAACgkQsN6d1ii/Ey82
+Pgf/bd9LG5JBdmzy+b6OKaM00dpAMyzK/xdjune8yx9q13iXOLQ6sXcQCHCbD1i4whfcm5Nrqe0B
+hHv+iorDX1mwnfsp1gx9qRhY0C1Yix89+9dmt4rc1ENfRlRfK3IVVzpJc8vdtk1IsGi6iiqA4/OZ
+dEGkC6SAYeefaD2rHU0O1vsbvpsFag8oqBT6E9Dot4HRBmpvBTAF1X7GQXMtdGxjxI5k49zG6qRr
+bqLJ2iDzkhW8yeCOQtCJIKtciJSs2sEvK11bG47FZQI/Li5GbVL+s8XKPFPZgCP/f9R58gtViR6m
+G75GcJp5dDDDdwZYkVMZyzE/PruFaw0QlntcE2EywQ==
+=/VrV
+-----END PGP SIGNATURE-----
+
+--------------Yy9TwF3GPZx5SgNEqSTsuaZh--
