@@ -2,147 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04CAA5F6A53
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 17:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E135F6A8D
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 17:26:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbiJFPK4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 11:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42052 "EHLO
+        id S231892AbiJFP0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 11:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbiJFPKz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 11:10:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C1A3FEE0;
-        Thu,  6 Oct 2022 08:10:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BCDD6B82035;
-        Thu,  6 Oct 2022 15:10:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EBF3C433B5;
-        Thu,  6 Oct 2022 15:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665069051;
-        bh=EsOcPnG6SrdA7Pq8LqofCWapCMsw29KW3LBWaXqh73E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IUXNQtJWFwyZgl6PZkiE5pSsvdmyq6/Mq8wgk6gwe3Eg3TyCCXP7E2AcRoS6iRaim
-         5WGDl3umltMsU2Qod6Rf0yoh9xtQp6J6ooFYG/cANd/RxbmFe9MkpJOov5b7qtbukx
-         5Z4W6VUPLErAE0qPdTCGffMsfl16uirOj2RP2GFWvzEQ6KQslrnekWm2+LrvmzCjTV
-         BDFAtDTvoR7parUWBkVbwQeUPDhCyyDdmSIA5EAL4KV1cUcYqjymkQnUE4gS0bNGXl
-         NbCpe+YYUmGdfhyNiNbLclSG3/9SEAdbba8lTcf33AFHKDIgO3u+o7cvI8j8cZVeOB
-         WE/PZotbbhBPQ==
-Received: by mail-ua1-f51.google.com with SMTP id p89so728639uap.12;
-        Thu, 06 Oct 2022 08:10:51 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1hknNtz2A4x9uH1JXJrj2+oVrDz9fcXnjriFKSI3iyP0vfHx3M
-        eTfXCm06IJEZbUetXQqscHUUlx184YPd5hmBCw==
-X-Google-Smtp-Source: AMsMyM5EMjw94DkinhMIy3TgxlR6A1EG+W79KwecYmw4NBP3HOUDgfdpeYVtkJB5wNhODUSNoXtrxa7HoEvV+g5VmAw=
-X-Received: by 2002:ab0:25d4:0:b0:3c1:c353:31cb with SMTP id
- y20-20020ab025d4000000b003c1c35331cbmr339075uan.63.1665069050451; Thu, 06 Oct
- 2022 08:10:50 -0700 (PDT)
+        with ESMTP id S231386AbiJFP0X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 11:26:23 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DE5BC463
+        for <linux-pci@vger.kernel.org>; Thu,  6 Oct 2022 08:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=6Hn6Ee66CE6cPHbf2tkSYnH8VMRGntcwDmyAPrX66lY=; b=sH1PCnJiyJ8so92jgNRjQRi3sv
+        udhXg5YuiiJBUPt8Ed1b1cUxcFQB4M7i5EejuT4DC7uIqubio3iIxXDDrkRJoZHZLvRH5Eaz4CWXd
+        MPnzZZd3CgsoDM3lveV1Nt2K080pYaOQ61c7hyiYVmRwSeeOBLlc+QdemFObxNd6C7u6VrF1K2N48
+        DeLzxgunOWwqDNDejW5HFf7zj96+xjlmE0QHMqqVlgRren4r1o0rEA+9G7XmCi8uNRnaOMTBbnpeY
+        RqwucxLYk17ubd6Olc48nD5j1Ba+K6yNk9GGd7qpPdVDB+AwdyGn0AX7h1x17WHJ9FEQUzGo4B8yC
+        4vn8RuhQ==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1ogSlN-001oWc-Pe; Thu, 06 Oct 2022 09:26:18 -0600
+Message-ID: <a57803de-9356-810e-2cc3-fa06f08309d2@deltatee.com>
+Date:   Thu, 6 Oct 2022 09:26:17 -0600
 MIME-Version: 1.0
-References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
- <f831f62b-004b-4f73-2a66-de9d675c44b6@gmail.com> <CAL_JsqJn=i=TT9NArHK25g1NkZN_G1GjN3EGEeTAvyW_PUhgcw@mail.gmail.com>
- <8ea70992-d4e9-8bbd-0fca-d5700f84e071@amd.com>
-In-Reply-To: <8ea70992-d4e9-8bbd-0fca-d5700f84e071@amd.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 6 Oct 2022 10:10:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJA8K0nKO=O2QjyHdue6=EHYNqCTw6pKUsBKwrdrYGePA@mail.gmail.com>
-Message-ID: <CAL_JsqJA8K0nKO=O2QjyHdue6=EHYNqCTw6pKUsBKwrdrYGePA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devices
-To:     Sonal Santan <sonal.santan@amd.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helgaas@kernel.org, clement.leger@bootlin.com, max.zhen@amd.com,
-        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
-        trix@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Content-Language: en-CA
+To:     Ramesh Errabolu <Ramesh.Errabolu@amd.com>
+Cc:     linux-pci@vger.kernel.org, ramesh.errabolu@gmail.com
+References: <5d3b257a-c125-fdd6-e29f-229e54679f45@deltatee.com>
+ <20221006025653.3519854-1-Ramesh.Errabolu@amd.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20221006025653.3519854-1-Ramesh.Errabolu@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: Ramesh.Errabolu@amd.com, linux-pci@vger.kernel.org, ramesh.errabolu@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: Understanding P2P DMA related errors
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 2:29 PM Sonal Santan <sonal.santan@amd.com> wrote:
->
-> On 9/26/22 15:44, Rob Herring wrote:
-> > On Fri, Sep 16, 2022 at 6:15 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 8/29/22 16:43, Lizhi Hou wrote:
-> >>> This patch series introduces OF overlay support for PCI devices which
-> >>> primarily addresses two use cases. First, it provides a data driven method
-> >>> to describe hardware peripherals that are present in a PCI endpoint and
-> >>> hence can be accessed by the PCI host. An example device is Xilinx/AMD
-> >>> Alveo PCIe accelerators. Second, it allows reuse of a OF compatible
-> >>> driver -- often used in SoC platforms -- in a PCI host based system. An
-> >>> example device is Microchip LAN9662 Ethernet Controller.
-> >>>
-> >>> This patch series consolidates previous efforts to define such an
-> >>> infrastructure:
-> >>> https://lore.kernel.org/lkml/20220305052304.726050-1-lizhi.hou@xilinx.com/
-> >>> https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
-> >>>
-> >>> Normally, the PCI core discovers PCI devices and their BARs using the
-> >>> PCI enumeration process. However, the process does not provide a way to
-> >>> discover the hardware peripherals that are present in a PCI device, and
-> >>> which can be accessed through the PCI BARs. Also, the enumeration process
-> >>> does not provide a way to associate MSI-X vectors of a PCI device with the
-> >>> hardware peripherals that are present in the device. PCI device drivers
-> >>> often use header files to describe the hardware peripherals and their
-> >>> resources as there is no standard data driven way to do so. This patch> series proposes to use flattened device tree blob to describe the
-> >>> peripherals in a data driven way.
-> >>
-> >>> Based on previous discussion, using
-> >>> device tree overlay is the best way to unflatten the blob and populate
-> >>> platform devices.
-> >>
-> >> I still do not agree with this statement.  The device tree overlay
-> >> implementation is very incomplete and should not be used until it
-> >> becomes more complete.  No need to debate this right now, but I don't want
-> >> to let this go unchallenged.
-> >
-> > Then we should remove overlay support. The only way it becomes more
-> > complete is having actual users.
-> >
-> > But really, whether this is the right solution to the problem is
-> > independent of the state of kernel overlay support.
-> >
-> >> If there is no base system device tree on an ACPI based system, then I
-> >> am not convinced that a mixed ACPI / device tree implementation is
-> >> good architecture.
-> >
-> > Most/all of this series is needed for a DT system in which the PCI
-> > devices are not populated in the DT.
-> >
-> >>   I might be more supportive of using a device tree
-> >> description of a PCI device in a detached device tree (not linked to
-> >> the system device tree, but instead freestanding).  Unfortunately the
-> >> device tree functions assume a single system devicetree, with no concept
-> >> of a freestanding tree (eg, if a NULL device tree node is provided to
-> >> a function or macro, it often defaults to the root of the system device
-> >> tree).  I need to go look at whether the flag OF_DETACHED handles this,
-> >> or if it could be leveraged to do so.
-> >
-> > Instead of worrying about a theoretical problem, we should see if
-> > there is an actual problem for a user.
-> >
-> > I'm not so worried about DT functions themselves, but places which
-> > have 'if ACPI ... else (DT) ...' paths.
-> >
->
-> Bringing this thread back into focus. Any thoughts on how to move forward?
 
-Reviewers raise concerns/issues and the submitters work to address
-them or explain why they aren't an issue. The submitter has to push
-things forward. That's how the process works.
 
-As I noted, much of this is needed on a DT system with PCI device not
-described in DT. So you could split out any ACPI system support to
-avoid that concern for example. Enabling others to exercise these
-patches may help too. Perhaps use QEMU to create some imaginary
-device.
 
-Rob
+On 2022-10-05 20:56, Ramesh Errabolu wrote:
+> 
+> Logan,
+> 
+> You are right about AMD devices connecting to buses [0000:16] and [0000:64].
+> However I am unable to understand as to how you extend that to mean they
+> belong to Intel 0x09A2.
+
+Well the root bus in your tree is 09A2 and each of the 16 and 64 buses each 
+have a 09A2. So it's my guess that 09A2 is the root complex it just shows 
+up multiple times.
+
+> Per my understanding I am expecting Root Complex enumerated as a device,
+> with various other devices hanging off one or more ports/buses. In the
+> PCIe device tree, I don't see that.
+> 
+> I see the [domain::bus] as the root of the AMD device. Furthermore I see
+> Intel devices 0x09A2 hanging off the same domain::bus. I will take your
+> word, but the way the root complex is reported could be less confusing.
+
+Yup. Like I said, this is a bit strange. 
+
+> If I could make a request, it will be very helpfulf for folks who don't
+> dabble in this area with a simple cheat sheet plus write explaining with
+> examples the various root complexes and the variou end-points hanging off
+> of them.
+
+I don't really know any more than you do here. You'd have to ask Intel what 
+their newer topologies imply. They keep coming up with new ways to organize
+things and its not clear what it means from a P2P perspective. 
+
+But really what needs to happen is to verify P2PDMA works between ports and
+find a way for the whitelist code to accept it if it does.
+
+Logan
