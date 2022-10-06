@@ -2,269 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B81D5F63A0
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 11:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 271575F6420
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 12:08:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231432AbiJFJ3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 05:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
+        id S231269AbiJFKIi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 06:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiJFJ3e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 05:29:34 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82968FD5B;
-        Thu,  6 Oct 2022 02:29:32 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S230511AbiJFKIe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 06:08:34 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34138B2F2;
+        Thu,  6 Oct 2022 03:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1665050913; x=1696586913;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iYEdCNesRlQWbZglMDlT/Pm4/qGqVLhxqobtVJx/fHc=;
+  b=Dp4eib/dvH/Lmz8pvgdwPFhGNlsfK98ZXRMcYFjaiq2MFK+OwZHHBWgV
+   wvPNh3QcyHLwW0hPOym+54pL6npEhRVyuvvF2tlRDjpqRKkxvYYwsmPKo
+   FaXFUJmghz0RhEHdUVlcjxiLW+1820FB594T8a/p8ogqJG1Pb+uPoggFQ
+   G5hS1v46DggIWTY8DhuldzINTO9IqA/X4Q8waXyYv1h//qhGAJdDFIwsI
+   v3YMdrsslW9zNGKYixKywCEvhKlTYf5NCM37QVs5bSbiu+XbeQoEvFjsP
+   p8cEZzwgzt/DuNioCuGHsJwbt7DUAhvPy1n0K++WWoGsXNbVxAZ40Y+Cw
+   w==;
+X-IronPort-AV: E=Sophos;i="5.95,163,1661810400"; 
+   d="scan'208";a="26592554"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 06 Oct 2022 12:08:30 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 06 Oct 2022 12:08:30 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 06 Oct 2022 12:08:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1665050910; x=1696586910;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iYEdCNesRlQWbZglMDlT/Pm4/qGqVLhxqobtVJx/fHc=;
+  b=NlaC3R03tm8Y3jG6ruvBcQ6JFaRqQzCw4R35Ct6vT8r71WJzDrKximQm
+   R4tar3f+nJp0D2Rz8ydIoh3ugY1SFWwsjLkb/y48x+MiojhbIuliXVDYx
+   UHNvDlh8IYFg/fIkfefMVq9D1Z+hyOsTAp6ZyToXAnzPZko8GxqK+vSzv
+   qvGpLi70lg1QI/rx6fyWKldTKhdsVI88fhY3dY/bPLn0qMhpc7AS9jqsA
+   A324Ad8npY0Rz18Qj+HlMJvKDOWkUZxLHj+Pv7UBYDzt4jxv8sydRinvR
+   I3hFs0jJrwRW58v2q3Du/USRSj6xpg9deBetD+at3LnwsrJwLT1T2vuk6
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.95,163,1661810400"; 
+   d="scan'208";a="26592553"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 06 Oct 2022 12:08:30 +0200
+Received: from steina-w.localnet (unknown [10.123.49.11])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 772132197F;
-        Thu,  6 Oct 2022 09:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1665048571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=L7RZFM5d4dnIi1GRTKhMwES2/uyXuvfgoPRuTe96ogM=;
-        b=Ci/J0VnfozSfW1tn8VrgOAeBJ0GslTmfAaoB/QDoi2AQB8js+3KZ7nxA6MxMpRSmow6xVi
-        j2hmf+j+RbkQkmXnOztnb/pndUnWf44vQX6nrfx02GbaRGavkRcfPmN3RY6FOYJjL0o+cN
-        1YtXQlXJfn1PeYjiWilheBlS/EyqdzM=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3D0A51376E;
-        Thu,  6 Oct 2022 09:29:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Plt5DfufPmNIVAAAMHmgww
-        (envelope-from <jgross@suse.com>); Thu, 06 Oct 2022 09:29:31 +0000
-From:   Juergen Gross <jgross@suse.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH] xen/pcifront: move xenstore config scanning into sub-function
-Date:   Thu,  6 Oct 2022 11:29:29 +0200
-Message-Id: <20221006092929.30041-1-jgross@suse.com>
-X-Mailer: git-send-email 2.35.3
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 79D43280056;
+        Thu,  6 Oct 2022 12:08:30 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Korneliusz Osmenda <korneliuszo@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Guard pci_create_sysfs_dev_files with atomic value
+Date:   Thu, 06 Oct 2022 12:08:27 +0200
+Message-ID: <5610142.DvuYhMxLoT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com>
+References: <4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pcifront_try_connect() and pcifront_attach_devices() share a large
-chunk of duplicated code for reading the config information from
-Xenstore, which only differs regarding a function call.
+Hi,
 
-Put that code into a new sub-function. While at it fix the error
-reporting in case the root-xx node had the wrong format.
+Am Montag, 29. August 2022, 21:14:43 CEST schrieb Korneliusz Osmenda:
+> On Gateworks Ventana there is a number of PCI devices and:
+>   - imx6_pcie_probe takes longer than start of late init
+>   - pci_sysfs_init sets up flag sysfs_initialized
+>   - pci_sysfs_init initializes already found devices
+>   - imx6_pcie_probe tries to reinitialize device
+> 
+> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=215515
+> 
+> Signed-off-by: Korneliusz Osmenda <korneliuszo@gmail.com>
+> ---
+>   drivers/pci/pci-sysfs.c | 6 ++++++
+>   include/linux/pci.h     | 2 ++
+>   2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index fc804e08e3cb..a6648239e235 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1378,6 +1378,9 @@ int __must_check pci_create_sysfs_dev_files(struct
+> pci_dev *pdev)
+>   	if (!sysfs_initialized)
+>   		return -EACCES;
+> 
+> +	if (atomic_cmpxchg(&pdev->sysfs_init_cnt,0,1) == 1)
+> +		return 0;		/* already added */
+> +
+>   	return pci_create_resource_files(pdev);
+>   }
+> 
+> @@ -1392,6 +1395,9 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
+>   	if (!sysfs_initialized)
+>   		return;
+> 
+> +	if (atomic_cmpxchg(&pdev->sysfs_init_cnt,1,0) == 0)
+> +		return;		/* already removed */
+> +
+>   	pci_remove_resource_files(pdev);
+>   }
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 060af91bafcd..5477de2ef057 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -465,6 +465,8 @@ struct pci_dev {
+>   	pci_dev_flags_t dev_flags;
+>   	atomic_t	enable_cnt;	/* pci_enable_device has been 
+called */
+> 
+> +	atomic_t	sysfs_init_cnt;	/* pci_create_sysfs_dev_files has 
+been called */
+> +
+>   	u32		saved_config_space[16]; /* Config space saved 
+at suspend time */
+>   	struct hlist_head saved_cap_space;
+>   	int		rom_attr_enabled;	/* Display of ROM 
+attribute enabled? */
 
-As the return value of pcifront_try_connect() and
-pcifront_attach_devices() are not used anywhere make those functions
-return void. As an additional bonus this removes the dubious return
-of -EFAULT in case of an unexpected driver state.
+Is there any feedback here? I'm hitting the same issue on TQMa6x+MBa6x.
+Having this patch applied my PCIe device using several bridges is detected 
+fine.
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/pci/xen-pcifront.c | 133 +++++++++++--------------------------
- 1 file changed, 40 insertions(+), 93 deletions(-)
+root@tqma6-common:~# lspci
+00:00.0 PCI bridge: Synopsys, Inc. DWC_usb3 / PCIe bridge (rev 01)
+01:00.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+02:01.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+02:02.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 
+PCI Express Gigabit Ethernet Controller (rev 0c)
+04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 
+PCI Express Gigabit Ethernet Controller (rev 0c)
 
-diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
-index 689271c4245c..a68e47dcdd7e 100644
---- a/drivers/pci/xen-pcifront.c
-+++ b/drivers/pci/xen-pcifront.c
-@@ -819,76 +819,79 @@ static int pcifront_publish_info(struct pcifront_device *pdev)
- 	return err;
- }
- 
--static int pcifront_try_connect(struct pcifront_device *pdev)
-+static void pcifront_connect(struct pcifront_device *pdev, bool rescan)
- {
--	int err = -EFAULT;
-+	int err;
- 	int i, num_roots, len;
- 	char str[64];
- 	unsigned int domain, bus;
- 
--
--	/* Only connect once */
--	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
--	    XenbusStateInitialised)
--		goto out;
--
--	err = pcifront_connect_and_init_dma(pdev);
--	if (err && err != -EEXIST) {
--		xenbus_dev_fatal(pdev->xdev, err,
--				 "Error setting up PCI Frontend");
--		goto out;
--	}
--
- 	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
- 			   "root_num", "%d", &num_roots);
- 	if (err == -ENOENT) {
- 		xenbus_dev_error(pdev->xdev, err,
- 				 "No PCI Roots found, trying 0000:00");
--		err = pcifront_scan_root(pdev, 0, 0);
-+		if (rescan)
-+			err = pcifront_rescan_root(pdev, 0, 0);
-+		else
-+			err = pcifront_scan_root(pdev, 0, 0);
- 		if (err) {
- 			xenbus_dev_fatal(pdev->xdev, err,
- 					 "Error scanning PCI root 0000:00");
--			goto out;
-+			return;
- 		}
- 		num_roots = 0;
- 	} else if (err != 1) {
--		if (err == 0)
--			err = -EINVAL;
--		xenbus_dev_fatal(pdev->xdev, err,
-+		xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
- 				 "Error reading number of PCI roots");
--		goto out;
-+		return;
- 	}
- 
- 	for (i = 0; i < num_roots; i++) {
- 		len = snprintf(str, sizeof(str), "root-%d", i);
--		if (unlikely(len >= (sizeof(str) - 1))) {
--			err = -ENOMEM;
--			goto out;
--		}
-+		if (unlikely(len >= (sizeof(str) - 1)))
-+			return;
- 
- 		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
- 				   "%x:%x", &domain, &bus);
- 		if (err != 2) {
--			if (err >= 0)
--				err = -EINVAL;
--			xenbus_dev_fatal(pdev->xdev, err,
-+			xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
- 					 "Error reading PCI root %d", i);
--			goto out;
-+			return;
- 		}
- 
--		err = pcifront_scan_root(pdev, domain, bus);
-+		if (rescan)
-+			err = pcifront_rescan_root(pdev, domain, bus);
-+		else
-+			err = pcifront_scan_root(pdev, domain, bus);
- 		if (err) {
- 			xenbus_dev_fatal(pdev->xdev, err,
- 					 "Error scanning PCI root %04x:%02x",
- 					 domain, bus);
--			goto out;
-+			return;
- 		}
- 	}
- 
--	err = xenbus_switch_state(pdev->xdev, XenbusStateConnected);
-+	xenbus_switch_state(pdev->xdev, XenbusStateConnected);
-+}
- 
--out:
--	return err;
-+static void pcifront_try_connect(struct pcifront_device *pdev)
-+{
-+	int err;
-+
-+	/* Only connect once */
-+	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
-+	    XenbusStateInitialised)
-+		return;
-+
-+	err = pcifront_connect_and_init_dma(pdev);
-+	if (err && err != -EEXIST) {
-+		xenbus_dev_fatal(pdev->xdev, err,
-+				 "Error setting up PCI Frontend");
-+		return;
-+	}
-+
-+	pcifront_connect(pdev, false);
- }
- 
- static int pcifront_try_disconnect(struct pcifront_device *pdev)
-@@ -914,67 +917,11 @@ static int pcifront_try_disconnect(struct pcifront_device *pdev)
- 	return err;
- }
- 
--static int pcifront_attach_devices(struct pcifront_device *pdev)
-+static void pcifront_attach_devices(struct pcifront_device *pdev)
- {
--	int err = -EFAULT;
--	int i, num_roots, len;
--	unsigned int domain, bus;
--	char str[64];
--
--	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
-+	if (xenbus_read_driver_state(pdev->xdev->nodename) ==
- 	    XenbusStateReconfiguring)
--		goto out;
--
--	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
--			   "root_num", "%d", &num_roots);
--	if (err == -ENOENT) {
--		xenbus_dev_error(pdev->xdev, err,
--				 "No PCI Roots found, trying 0000:00");
--		err = pcifront_rescan_root(pdev, 0, 0);
--		if (err) {
--			xenbus_dev_fatal(pdev->xdev, err,
--					 "Error scanning PCI root 0000:00");
--			goto out;
--		}
--		num_roots = 0;
--	} else if (err != 1) {
--		if (err == 0)
--			err = -EINVAL;
--		xenbus_dev_fatal(pdev->xdev, err,
--				 "Error reading number of PCI roots");
--		goto out;
--	}
--
--	for (i = 0; i < num_roots; i++) {
--		len = snprintf(str, sizeof(str), "root-%d", i);
--		if (unlikely(len >= (sizeof(str) - 1))) {
--			err = -ENOMEM;
--			goto out;
--		}
--
--		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
--				   "%x:%x", &domain, &bus);
--		if (err != 2) {
--			if (err >= 0)
--				err = -EINVAL;
--			xenbus_dev_fatal(pdev->xdev, err,
--					 "Error reading PCI root %d", i);
--			goto out;
--		}
--
--		err = pcifront_rescan_root(pdev, domain, bus);
--		if (err) {
--			xenbus_dev_fatal(pdev->xdev, err,
--					 "Error scanning PCI root %04x:%02x",
--					 domain, bus);
--			goto out;
--		}
--	}
--
--	xenbus_switch_state(pdev->xdev, XenbusStateConnected);
--
--out:
--	return err;
-+		pcifront_connect(pdev, true);
- }
- 
- static int pcifront_detach_devices(struct pcifront_device *pdev)
--- 
-2.35.3
+root@tqma6-common:~# lspci -t
+-[0000:00]---00.0-[01-ff]----00.0-[02-04]--+-01.0-[03]----00.0
+                                           \-02.0-[04]----00.0
+
+Best regards,
+Alexander
+
+
 
