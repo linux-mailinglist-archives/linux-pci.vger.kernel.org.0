@@ -2,65 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D9075F6A32
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 17:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04CAA5F6A53
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 17:10:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbiJFPCC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 11:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        id S231458AbiJFPK4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 11:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbiJFPCC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 11:02:02 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000869C7FE;
-        Thu,  6 Oct 2022 08:01:58 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S231139AbiJFPKz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 11:10:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C1A3FEE0;
+        Thu,  6 Oct 2022 08:10:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 90A711F85D;
-        Thu,  6 Oct 2022 15:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1665068517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SmAmDb37SISjauoN4xpdMA0CBkVXMUvyHWIb/ERmsEQ=;
-        b=A1G3cp62M0BwkAiSJtOVQwYsyv0M63UMB5KUE0mHXdg0QNaFplo4nTe2TURanFcH3K2s85
-        WPjvT2bZOwg1EpsiLXrX/pZQBi4heYTO1vIujlMcqkEB2TgeiJoJv16yKi9gXhC9jncGaS
-        XWoT7yCE8bfwVObe8QyIvER4MOpjhp4=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2A20A13AC8;
-        Thu,  6 Oct 2022 15:01:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 8sihCOXtPmP4eQAAMHmgww
-        (envelope-from <jgross@suse.com>); Thu, 06 Oct 2022 15:01:57 +0000
-Message-ID: <d5e199ae-5da8-a25e-ff76-c3a1b05e0a01@suse.com>
-Date:   Thu, 6 Oct 2022 17:01:56 +0200
+        by ams.source.kernel.org (Postfix) with ESMTPS id BCDD6B82035;
+        Thu,  6 Oct 2022 15:10:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EBF3C433B5;
+        Thu,  6 Oct 2022 15:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665069051;
+        bh=EsOcPnG6SrdA7Pq8LqofCWapCMsw29KW3LBWaXqh73E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IUXNQtJWFwyZgl6PZkiE5pSsvdmyq6/Mq8wgk6gwe3Eg3TyCCXP7E2AcRoS6iRaim
+         5WGDl3umltMsU2Qod6Rf0yoh9xtQp6J6ooFYG/cANd/RxbmFe9MkpJOov5b7qtbukx
+         5Z4W6VUPLErAE0qPdTCGffMsfl16uirOj2RP2GFWvzEQ6KQslrnekWm2+LrvmzCjTV
+         BDFAtDTvoR7parUWBkVbwQeUPDhCyyDdmSIA5EAL4KV1cUcYqjymkQnUE4gS0bNGXl
+         NbCpe+YYUmGdfhyNiNbLclSG3/9SEAdbba8lTcf33AFHKDIgO3u+o7cvI8j8cZVeOB
+         WE/PZotbbhBPQ==
+Received: by mail-ua1-f51.google.com with SMTP id p89so728639uap.12;
+        Thu, 06 Oct 2022 08:10:51 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1hknNtz2A4x9uH1JXJrj2+oVrDz9fcXnjriFKSI3iyP0vfHx3M
+        eTfXCm06IJEZbUetXQqscHUUlx184YPd5hmBCw==
+X-Google-Smtp-Source: AMsMyM5EMjw94DkinhMIy3TgxlR6A1EG+W79KwecYmw4NBP3HOUDgfdpeYVtkJB5wNhODUSNoXtrxa7HoEvV+g5VmAw=
+X-Received: by 2002:ab0:25d4:0:b0:3c1:c353:31cb with SMTP id
+ y20-20020ab025d4000000b003c1c35331cbmr339075uan.63.1665069050451; Thu, 06 Oct
+ 2022 08:10:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Content-Language: en-US
-To:     Jason Andryuk <jandryuk@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        xen-devel@lists.xenproject.org
-References: <20221006092929.30041-1-jgross@suse.com>
- <CAKf6xpvS20J0oz6vn+g47OBbKxEhAC8f2gyQ9otj+rOn+L9FOw@mail.gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH] xen/pcifront: move xenstore config scanning into
- sub-function
-In-Reply-To: <CAKf6xpvS20J0oz6vn+g47OBbKxEhAC8f2gyQ9otj+rOn+L9FOw@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------YPi0Z3Xsawmw8vnE8qg0Q0OL"
-X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
+ <f831f62b-004b-4f73-2a66-de9d675c44b6@gmail.com> <CAL_JsqJn=i=TT9NArHK25g1NkZN_G1GjN3EGEeTAvyW_PUhgcw@mail.gmail.com>
+ <8ea70992-d4e9-8bbd-0fca-d5700f84e071@amd.com>
+In-Reply-To: <8ea70992-d4e9-8bbd-0fca-d5700f84e071@amd.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 6 Oct 2022 10:10:39 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJA8K0nKO=O2QjyHdue6=EHYNqCTw6pKUsBKwrdrYGePA@mail.gmail.com>
+Message-ID: <CAL_JsqJA8K0nKO=O2QjyHdue6=EHYNqCTw6pKUsBKwrdrYGePA@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devices
+To:     Sonal Santan <sonal.santan@amd.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helgaas@kernel.org, clement.leger@bootlin.com, max.zhen@amd.com,
+        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
+        trix@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,156 +66,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------YPi0Z3Xsawmw8vnE8qg0Q0OL
-Content-Type: multipart/mixed; boundary="------------qsS4Y1csmvwjP5GAoenBHod8";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Jason Andryuk <jandryuk@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Bjorn Helgaas <bhelgaas@google.com>, xen-devel@lists.xenproject.org
-Message-ID: <d5e199ae-5da8-a25e-ff76-c3a1b05e0a01@suse.com>
-Subject: Re: [PATCH] xen/pcifront: move xenstore config scanning into
- sub-function
-References: <20221006092929.30041-1-jgross@suse.com>
- <CAKf6xpvS20J0oz6vn+g47OBbKxEhAC8f2gyQ9otj+rOn+L9FOw@mail.gmail.com>
-In-Reply-To: <CAKf6xpvS20J0oz6vn+g47OBbKxEhAC8f2gyQ9otj+rOn+L9FOw@mail.gmail.com>
+On Fri, Sep 30, 2022 at 2:29 PM Sonal Santan <sonal.santan@amd.com> wrote:
+>
+> On 9/26/22 15:44, Rob Herring wrote:
+> > On Fri, Sep 16, 2022 at 6:15 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 8/29/22 16:43, Lizhi Hou wrote:
+> >>> This patch series introduces OF overlay support for PCI devices which
+> >>> primarily addresses two use cases. First, it provides a data driven method
+> >>> to describe hardware peripherals that are present in a PCI endpoint and
+> >>> hence can be accessed by the PCI host. An example device is Xilinx/AMD
+> >>> Alveo PCIe accelerators. Second, it allows reuse of a OF compatible
+> >>> driver -- often used in SoC platforms -- in a PCI host based system. An
+> >>> example device is Microchip LAN9662 Ethernet Controller.
+> >>>
+> >>> This patch series consolidates previous efforts to define such an
+> >>> infrastructure:
+> >>> https://lore.kernel.org/lkml/20220305052304.726050-1-lizhi.hou@xilinx.com/
+> >>> https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+> >>>
+> >>> Normally, the PCI core discovers PCI devices and their BARs using the
+> >>> PCI enumeration process. However, the process does not provide a way to
+> >>> discover the hardware peripherals that are present in a PCI device, and
+> >>> which can be accessed through the PCI BARs. Also, the enumeration process
+> >>> does not provide a way to associate MSI-X vectors of a PCI device with the
+> >>> hardware peripherals that are present in the device. PCI device drivers
+> >>> often use header files to describe the hardware peripherals and their
+> >>> resources as there is no standard data driven way to do so. This patch> series proposes to use flattened device tree blob to describe the
+> >>> peripherals in a data driven way.
+> >>
+> >>> Based on previous discussion, using
+> >>> device tree overlay is the best way to unflatten the blob and populate
+> >>> platform devices.
+> >>
+> >> I still do not agree with this statement.  The device tree overlay
+> >> implementation is very incomplete and should not be used until it
+> >> becomes more complete.  No need to debate this right now, but I don't want
+> >> to let this go unchallenged.
+> >
+> > Then we should remove overlay support. The only way it becomes more
+> > complete is having actual users.
+> >
+> > But really, whether this is the right solution to the problem is
+> > independent of the state of kernel overlay support.
+> >
+> >> If there is no base system device tree on an ACPI based system, then I
+> >> am not convinced that a mixed ACPI / device tree implementation is
+> >> good architecture.
+> >
+> > Most/all of this series is needed for a DT system in which the PCI
+> > devices are not populated in the DT.
+> >
+> >>   I might be more supportive of using a device tree
+> >> description of a PCI device in a detached device tree (not linked to
+> >> the system device tree, but instead freestanding).  Unfortunately the
+> >> device tree functions assume a single system devicetree, with no concept
+> >> of a freestanding tree (eg, if a NULL device tree node is provided to
+> >> a function or macro, it often defaults to the root of the system device
+> >> tree).  I need to go look at whether the flag OF_DETACHED handles this,
+> >> or if it could be leveraged to do so.
+> >
+> > Instead of worrying about a theoretical problem, we should see if
+> > there is an actual problem for a user.
+> >
+> > I'm not so worried about DT functions themselves, but places which
+> > have 'if ACPI ... else (DT) ...' paths.
+> >
+>
+> Bringing this thread back into focus. Any thoughts on how to move forward?
 
---------------qsS4Y1csmvwjP5GAoenBHod8
-Content-Type: multipart/mixed; boundary="------------0GZcOvDTc8ncAvQxBYsj0s8B"
+Reviewers raise concerns/issues and the submitters work to address
+them or explain why they aren't an issue. The submitter has to push
+things forward. That's how the process works.
 
---------------0GZcOvDTc8ncAvQxBYsj0s8B
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+As I noted, much of this is needed on a DT system with PCI device not
+described in DT. So you could split out any ACPI system support to
+avoid that concern for example. Enabling others to exercise these
+patches may help too. Perhaps use QEMU to create some imaginary
+device.
 
-T24gMDYuMTAuMjIgMTU6MjksIEphc29uIEFuZHJ5dWsgd3JvdGU6DQo+IE9uIFRodSwgT2N0
-IDYsIDIwMjIgYXQgNToyOSBBTSBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+IHdy
-b3RlOg0KPj4NCj4+IHBjaWZyb250X3RyeV9jb25uZWN0KCkgYW5kIHBjaWZyb250X2F0dGFj
-aF9kZXZpY2VzKCkgc2hhcmUgYSBsYXJnZQ0KPj4gY2h1bmsgb2YgZHVwbGljYXRlZCBjb2Rl
-IGZvciByZWFkaW5nIHRoZSBjb25maWcgaW5mb3JtYXRpb24gZnJvbQ0KPj4gWGVuc3RvcmUs
-IHdoaWNoIG9ubHkgZGlmZmVycyByZWdhcmRpbmcgYSBmdW5jdGlvbiBjYWxsLg0KPj4NCj4+
-IFB1dCB0aGF0IGNvZGUgaW50byBhIG5ldyBzdWItZnVuY3Rpb24uIFdoaWxlIGF0IGl0IGZp
-eCB0aGUgZXJyb3INCj4+IHJlcG9ydGluZyBpbiBjYXNlIHRoZSByb290LXh4IG5vZGUgaGFk
-IHRoZSB3cm9uZyBmb3JtYXQuDQo+Pg0KPj4gQXMgdGhlIHJldHVybiB2YWx1ZSBvZiBwY2lm
-cm9udF90cnlfY29ubmVjdCgpIGFuZA0KPj4gcGNpZnJvbnRfYXR0YWNoX2RldmljZXMoKSBh
-cmUgbm90IHVzZWQgYW55d2hlcmUgbWFrZSB0aG9zZSBmdW5jdGlvbnMNCj4+IHJldHVybiB2
-b2lkLiBBcyBhbiBhZGRpdGlvbmFsIGJvbnVzIHRoaXMgcmVtb3ZlcyB0aGUgZHViaW91cyBy
-ZXR1cm4NCj4+IG9mIC1FRkFVTFQgaW4gY2FzZSBvZiBhbiB1bmV4cGVjdGVkIGRyaXZlciBz
-dGF0ZS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3Vz
-ZS5jb20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9wY2kveGVuLXBjaWZyb250LmMgfCAxMzMg
-KysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gICAxIGZpbGUgY2hh
-bmdlZCwgNDAgaW5zZXJ0aW9ucygrKSwgOTMgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGNpL3hlbi1wY2lmcm9udC5jIGIvZHJpdmVycy9wY2kveGVuLXBj
-aWZyb250LmMNCj4+IGluZGV4IDY4OTI3MWM0MjQ1Yy4uYTY4ZTQ3ZGNkZDdlIDEwMDY0NA0K
-Pj4gLS0tIGEvZHJpdmVycy9wY2kveGVuLXBjaWZyb250LmMNCj4+ICsrKyBiL2RyaXZlcnMv
-cGNpL3hlbi1wY2lmcm9udC5jDQo+PiBAQCAtODE5LDc2ICs4MTksNzkgQEAgc3RhdGljIGlu
-dCBwY2lmcm9udF9wdWJsaXNoX2luZm8oc3RydWN0IHBjaWZyb250X2RldmljZSAqcGRldikN
-Cj4gDQo+PiAgICAgICAgICBlcnIgPSB4ZW5idXNfc2NhbmYoWEJUX05JTCwgcGRldi0+eGRl
-di0+b3RoZXJlbmQsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInJvb3RfbnVt
-IiwgIiVkIiwgJm51bV9yb290cyk7DQo+PiAgICAgICAgICBpZiAoZXJyID09IC1FTk9FTlQp
-IHsNCj4+ICAgICAgICAgICAgICAgICAgeGVuYnVzX2Rldl9lcnJvcihwZGV2LT54ZGV2LCBl
-cnIsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIk5vIFBDSSBSb290
-cyBmb3VuZCwgdHJ5aW5nIDAwMDA6MDAiKTsNCj4+IC0gICAgICAgICAgICAgICBlcnIgPSBw
-Y2lmcm9udF9zY2FuX3Jvb3QocGRldiwgMCwgMCk7DQo+PiArICAgICAgICAgICAgICAgaWYg
-KHJlc2NhbikNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGVyciA9IHBjaWZyb250X3Jl
-c2Nhbl9yb290KHBkZXYsIDAsIDApOw0KPj4gKyAgICAgICAgICAgICAgIGVsc2UNCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIGVyciA9IHBjaWZyb250X3NjYW5fcm9vdChwZGV2LCAw
-LCAwKTsNCj4gDQo+IEVhcmx5IGluIHBjaWZyb250X3Jlc2Nhbl9yb290KCksIHdlIGhhdmU6
-DQo+IA0KPiAgICAgICAgICBiID0gcGNpX2ZpbmRfYnVzKGRvbWFpbiwgYnVzKTsNCj4gICAg
-ICAgICAgaWYgKCFiKQ0KPiAgICAgICAgICAgICAgICAgIC8qIElmIHRoZSBidXMgaXMgdW5r
-bm93biwgY3JlYXRlIGl0LiAqLw0KPiAgICAgICAgICAgICAgICAgIHJldHVybiBwY2lmcm9u
-dF9zY2FuX3Jvb3QocGRldiwgZG9tYWluLCBidXMpOw0KPiANCj4gcGNpZnJvbnRfc2Nhbl9y
-b290KCkgZG9lcyBzb21lIGFsbG9jYXRpb24sIGJ1dCB0aGUgbGF0ZXIgc2Nhbm5pbmcNCj4g
-bWF0Y2hlcyB0aGF0IG9mIHBjaWZyb250X3Jlc2Nhbl9yb290KCkuICBTbyBJIHRoaW5rIHdl
-IGNhbiBqdXN0IGFsd2F5cw0KPiBjYWxsIHBjaWZyb250X3Jlc2Nhbl9yb290KCkgYW5kIGl0
-IHNob3VsZCBkbyB0aGUgcmlnaHQgdGhpbmcuICBUaGF0DQo+IGRyb3BzIHRoZSBuZWVkIGZv
-ciB0aGUgcmVzY2FuIGJvb2xlYW4uDQoNCkhtbSwgd2l0aCBzb21lIG1vcmUgcGNpZnJvbnRf
-cmVzY2FuX3Jvb3QoKSBhZGFwdGlvbiB0aGlzIHdpbGwgbWFrZSBpdA0KcG9zc2libGUgdG8g
-ZHJvcCBldmVuIG1vcmUgY29kZSAoaS5lLiB0aGUgQ09ORklHX1BDSV9ET01BSU5TIGNoZWNr
-IGluDQpwY2lmcm9udF9yZXNjYW5fcm9vdCgpLCBhcyB0aGUgb25lIGluIHBjaWZyb250X3Nj
-YW5fcm9vdCgpIHdvdWxkIGJlDQplbm91Z2ggdGhlbikuDQoNCkknbGwgc2VuZCBvdXQgVjIg
-c29vbi4NCg0KPiANCj4gUmVnYXJkbGVzcyBvZiB0aGUgYWJvdmUgaWRlYToNCj4gDQo+IFJl
-dmlld2VkLWJ5OiBKYXNvbiBBbmRyeXVrIDxqYW5kcnl1a0BnbWFpbC5jb20+DQoNClRoYW5r
-cy4gQXMgSSdtIGFib3V0IHRvIGNoYW5nZSB0aGUgcGF0Y2gsIEknbGwgZHJvcCB0aGUgUi1i
-Lg0KDQoNCkp1ZXJnZW4NCg==
---------------0GZcOvDTc8ncAvQxBYsj0s8B
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------0GZcOvDTc8ncAvQxBYsj0s8B--
-
---------------qsS4Y1csmvwjP5GAoenBHod8--
-
---------------YPi0Z3Xsawmw8vnE8qg0Q0OL
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmM+7eQFAwAAAAAACgkQsN6d1ii/Ey+X
-vQf7B4D1H8RrO9tYlsBJfV3G+8+r4cVAjjphzFF0aLQa7j82YAnjfU2Ge92pUzRq8BOzcagZaJwr
-W5vWP9AOtS3ZLFMQO7igZcoxC/iAgd5UMjCU23hyEDQ7UipGc40y+2SiCKmPBnDdtURKWMrTLg3X
-VRhOdnWw71aTJ75kD8p+jPbD/Rw0a7w4OvsaekSuV1j32DVtOkV/3fSkBrzQTMiEadV6K5jdIMM3
-VsDU7/5zb8TxKz8f6Yt6jBft2I9gfmN1fpPzpoVlLt0rTQAjpmzC/Ebv9DkDQ4htFSjegTguxEWE
-MRb0cBxkzAzgQ2V/kde6esmYXIOLOuNFdVx8CIDBUw==
-=xL2k
------END PGP SIGNATURE-----
-
---------------YPi0Z3Xsawmw8vnE8qg0Q0OL--
+Rob
