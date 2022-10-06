@@ -2,171 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 750E15F66FF
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 14:56:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 257985F682D
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 15:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231726AbiJFM4x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 08:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
+        id S230404AbiJFNbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 09:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231740AbiJFM4Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 08:56:24 -0400
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960B421828;
-        Thu,  6 Oct 2022 05:55:33 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id r17so4322258eja.7;
-        Thu, 06 Oct 2022 05:55:33 -0700 (PDT)
+        with ESMTP id S230447AbiJFNbu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 09:31:50 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24BDAA374;
+        Thu,  6 Oct 2022 06:31:26 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id u21so2802061edi.9;
+        Thu, 06 Oct 2022 06:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=pMgQyMBUHz4DAGv7dUKQ5faE2OXLKUuJdGmQsBE60y8=;
-        b=AUCe13PGJRYHhE/cTCIPw3OUFheQpUYNOU1YGMsrmfFlzNw2kwLLxVFE7xU4qNWRhj
-         9+MqUoB1YKqUZ3grGYiXLXIciHboc0OhiCtxIR1W6M6cavsAtHlj8DlNj+fTVvalDIHy
-         74udg159h7+Xf8btJEit/ihZjOhuuIrIzg9xBO3ev96L9E/t8wiG+V9Pk6SPpVBYA/4e
-         0cBR56s7R/eWMiRwmY8UgV4MYlvuFtsey9C35FuQE9TFx9hvThpq6mFowVovaFMgQxMq
-         1kR8ncqlEbm7AvVMob7N3+9WrsNEH0eadJyccflxQBerghS+1SNTMW5eEMB8BSvJASQK
-         bX8A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=6ZdDTmo4+335EbBvlEmQjT8GDpny2W8EHJfskLeQgYU=;
+        b=OM8dnY2tg5vevPKL7Mnvbt5ETiaM4d58uhREXqFxxKt0/V8KauGHkWTvb7x2Oqt0IQ
+         aEejxhNdge0oFvaJY8CAdxgnWAgK4wSbysP8CQBrYZU3tVc/HUG18oqON1Qc4k0HyvmX
+         xlO3nuv08QPmrsaC57vOL93rMqf5EgWpd8LoA0wI1km1qOGq2FaqvoFLcrHX61sGkweU
+         UCD0Mp5xzvsFNg18sdEOvnJG0+cBg12+ROqA3DOYIVWuyz7cndaSK170EIJX7lh9BErx
+         EWob7RD84FlsXzau9HMYQ7oaLWlnBSdFxt77whBg73BDOMcQkml0e3x8yR7IJXGg4cVc
+         iYgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=pMgQyMBUHz4DAGv7dUKQ5faE2OXLKUuJdGmQsBE60y8=;
-        b=JZX3MSiVAIFWTKQp5c+/RkLvEMiehP+yNk6eK8bkAS25L0ACywHhsm3OxdoXDtbrxZ
-         GudILje6ImjSGU/LuHTq09zIe5QwN4pMQanac1eHIbsILflVF9Tk9z74nV5MF9JOZBGw
-         rVAkDOnWClF0YijLZR3oeCT4/7DQV7UdCoSLcnk4DlQfFWjf2RrLd606rUlArfxSCR+L
-         xSSTLDAUItuAP/6We7+/851v2QO6i80pxbdzr4CJIRunGOmYKX9eH6pC4pcUlhciCF+D
-         ZezVT5PvitQ0gveRxjYAJAQ0cZU2mzlmATZ/w5NGgKhZ4qrAPbDQf4obWfNZXdCrGa4e
-         kJEA==
-X-Gm-Message-State: ACrzQf2vvzKQIgXLwxer9+SHmf7In+2MMJ5gMw7vvmfL3Z5mbr8rXWR1
-        1MWJOUbsVAXuwICuP4Re9zU=
-X-Google-Smtp-Source: AMsMyM5eI7766P4xReWjJJvJIeOwhFNTHRvpw0SnB31J+1Nay85fWQ9zH9PSAx5ICwz59XycOdax6Q==
-X-Received: by 2002:a17:907:7ea7:b0:78d:3638:9018 with SMTP id qb39-20020a1709077ea700b0078d36389018mr3934377ejc.236.1665060627958;
-        Thu, 06 Oct 2022 05:50:27 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id b40-20020a509f2b000000b00456c6b4b777sm5710157edf.69.2022.10.06.05.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 05:50:27 -0700 (PDT)
-Date:   Thu, 6 Oct 2022 14:50:25 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Update comment about config space
-Message-ID: <Yz7PEakeTyvmnxDh@orome>
-References: <20220911113216.14892-1-pali@kernel.org>
- <YzRcYwQYlawV10QS@orome>
- <20221005194336.gdnu4vfzkudedjw5@pali>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=6ZdDTmo4+335EbBvlEmQjT8GDpny2W8EHJfskLeQgYU=;
+        b=n6kqmsHs5KkljSLHqndvoQYvwFSU+DqTroM42HQkNdIZS9bBSOSh5u1XsxEVwaIyN4
+         NTgnulLX2dGKARqO6nQUTZ3u0kJe+3YmkQ2sg7hzhBMRB7kHfxGFSz11kKJzj0nGrTXF
+         6oZ08R4Z5MY1fuQEGiGs2DhNymWRycZ95gkLxWbki856Ayw4JMAXmhk7WsatGXCStCr5
+         Kh28wYdvgm8ZyYEq9hgfMxXbrZg8h9Xjkl2G+xbzvMXah1h9AQ/lRlzz3rCKn4I+kHod
+         GZTr9uQMh7J1LlwSS2607mm31XoH0KUeDp0BYTJ3lvFnyD2bfx9TprsDbmZVOACp24FR
+         u1Tg==
+X-Gm-Message-State: ACrzQf2oS/ppGn/uLo9iSdCDlyLi4LciBWCc7rWiDgN92+7d1EHFmrMu
+        Bl+3QaVOSvRqpIwwJezF+TT+4DewXXMxX1Vty2Y=
+X-Google-Smtp-Source: AMsMyM5EPdeLuWOWDgXAOEFMd2VbWS3fbiofJOic5lMpfbYcw1O+Uxlkjte/6Xq5LeSybtdVQY6hogt1NJyXHeeymfo=
+X-Received: by 2002:a05:6402:524d:b0:459:3619:9cfa with SMTP id
+ t13-20020a056402524d00b0045936199cfamr4749148edd.227.1665062993966; Thu, 06
+ Oct 2022 06:29:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ERmlPpGZ/YGPk8vW"
-Content-Disposition: inline
-In-Reply-To: <20221005194336.gdnu4vfzkudedjw5@pali>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+References: <20221006092929.30041-1-jgross@suse.com>
+In-Reply-To: <20221006092929.30041-1-jgross@suse.com>
+From:   Jason Andryuk <jandryuk@gmail.com>
+Date:   Thu, 6 Oct 2022 09:29:41 -0400
+Message-ID: <CAKf6xpvS20J0oz6vn+g47OBbKxEhAC8f2gyQ9otj+rOn+L9FOw@mail.gmail.com>
+Subject: Re: [PATCH] xen/pcifront: move xenstore config scanning into sub-function
+To:     Juergen Gross <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Oct 6, 2022 at 5:29 AM Juergen Gross <jgross@suse.com> wrote:
+>
+> pcifront_try_connect() and pcifront_attach_devices() share a large
+> chunk of duplicated code for reading the config information from
+> Xenstore, which only differs regarding a function call.
+>
+> Put that code into a new sub-function. While at it fix the error
+> reporting in case the root-xx node had the wrong format.
+>
+> As the return value of pcifront_try_connect() and
+> pcifront_attach_devices() are not used anywhere make those functions
+> return void. As an additional bonus this removes the dubious return
+> of -EFAULT in case of an unexpected driver state.
+>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  drivers/pci/xen-pcifront.c | 133 +++++++++++--------------------------
+>  1 file changed, 40 insertions(+), 93 deletions(-)
+>
+> diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+> index 689271c4245c..a68e47dcdd7e 100644
+> --- a/drivers/pci/xen-pcifront.c
+> +++ b/drivers/pci/xen-pcifront.c
+> @@ -819,76 +819,79 @@ static int pcifront_publish_info(struct pcifront_device *pdev)
 
---ERmlPpGZ/YGPk8vW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>         err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
+>                            "root_num", "%d", &num_roots);
+>         if (err == -ENOENT) {
+>                 xenbus_dev_error(pdev->xdev, err,
+>                                  "No PCI Roots found, trying 0000:00");
+> -               err = pcifront_scan_root(pdev, 0, 0);
+> +               if (rescan)
+> +                       err = pcifront_rescan_root(pdev, 0, 0);
+> +               else
+> +                       err = pcifront_scan_root(pdev, 0, 0);
 
-On Wed, Oct 05, 2022 at 09:43:36PM +0200, Pali Roh=C3=A1r wrote:
-> On Wednesday 28 September 2022 16:38:27 Thierry Reding wrote:
-> > On Sun, Sep 11, 2022 at 01:32:16PM +0200, Pali Roh=C3=A1r wrote:
-> > > Like many other ARM PCIe controllers, it uses old PCI Configuration
-> > > Mechanism #1 from PCI Local Bus for accessing PCI config space.
-> > > It is not PCIe ECAM in any case.
-> > >=20
-> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/pci-tegra.c | 8 +++++---
-> > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >=20
-> > Perhaps this should be rolled into the PCI_CONF1_EXT_ADDRESS patch?
->=20
-> Well, I split documentation change and PCI_CONF1_EXT_ADDRESS usage into
-> two patches as those are two different / separate things. Documentation
-> change is a fix (because documentation is wrong) and PCI_CONF1_EXT_ADDRESS
-> is an improvement - code cleanup. And in case if there is a issue with
-> "cleanup" patch it can be reverted without need to revert also "fix"
-> part. This is just information how I looked at these changes and why I
-> decided to split them.
->=20
-> > On
-> > the other hand there's really no use in keeping this comment around
-> > after that other patch because the documentation for the new macro lays
-> > out the details already.
-> >=20
-> > Thierry
->=20
-> Ok, whether documentation is needed or not - it is your maintainer
-> decision. Maybe really obvious things do not have to be documented.
-> Also another look at this problem can be that if somebody wrote wrong
-> documentation for it, maybe it is not too obvious? I do not have opinion
-> on this, so choose what is better :-)
+Early in pcifront_rescan_root(), we have:
 
-I wrote that documentation back at the time and I fail to see what
-exactly is wrong about it. Granted, it doesn't mention the Intel PCI
-Configuration mechanism #1 from the PCI Local Bus Specification, but
-that's just because I didn't know about it. Back when I wrote this I
-was looking at the PCIe specifications (because, well, this supports
-PCIe) and I noticed that it was similar to ECAM. And that's exactly
-what the comment says and it points out what the differences are.
+        b = pci_find_bus(domain, bus);
+        if (!b)
+                /* If the bus is unknown, create it. */
+                return pcifront_scan_root(pdev, domain, bus);
 
-So just because the mapping is closer to PCI_CONF1_EXT_ADDRESS than
-ECAM, it doesn't automatically make the comment wrong. The mapping also
-isn't exactly PCI_CONF1_EXT_ADDRESS, so the new comment can be
-considered equally wrong. The mapping is neither ECAM nor PCI_CONF1, so
-describing it one way or the other doesn't make a difference.
+pcifront_scan_root() does some allocation, but the later scanning
+matches that of pcifront_rescan_root().  So I think we can just always
+call pcifront_rescan_root() and it should do the right thing.  That
+drops the need for the rescan boolean.
 
-> In any case, wrong documentation (which is the current state) should be
-> fixed (and removal in most case is also proper fix).
+Regardless of the above idea:
 
-Again, I don't see that this fixes anything because there was no bug.
-The documentation change makes the most sense when combined with the
-change that actually implements this in terms of the new macro.
+Reviewed-by: Jason Andryuk <jandryuk@gmail.com>
 
-The existing documentation exists to give further background information
-about the mapping. If we remove the comment out of context we loose that
-extra information. However, if at the same time we change the code to
-use another (documented) macro, then we replace the information without
-loosing anything.
-
-Thierry
-
---ERmlPpGZ/YGPk8vW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM+zw4ACgkQ3SOs138+
-s6GdLQ/+K2j1y2qtNmImdTk6z0RFpErz4nwlOCuWT8DAT/EhGoQbinPh2BdjSXNg
-YXhfLiuq2EPHg/sE0m5EGifBF6ntxU35M34GZydQ/sSpLpyymYDyUj1iWul7PbGe
-/OKq/0sOmL/F9L0lkouwEnnftncz5JDa/xGEQ5g6D3wiyTsz1IVorXUjC8ezilSm
-ZNxdgaV1uwV4k5Tt+tLGK1FXA1G1bLi0wEUJm3c/sUPQLGkF+HHCeyxzwkDMyVe1
-9j5Go1tULi6ZPMGw4MZvX7g02dZ9kZif9I2xf6P+N9LHyvAeG8vVCMlj8In3IT1B
-CUwiYwx70qucJZB9gAnOeHWBWCFPHf9gi97kGvkQ4ysCMQ022j2FrsnyEIJ+IwL2
-TdiU6Sf60TAjmLudBew0Gf4ruDPyQWL5DLHOb/bqYWd59PBsd2Svno4S7JwaJUKK
-fPLwilYCpMjwD/jy7eBG5Hkoehd0jEeTZbg4wVczJVbCHVV3hKJShVpaHjH5CN1p
-iaZcK67rPEFyRjuq6skj8bkFKqUaQFRBe7Ui1nrntDi33e32W9JnwJ7DadVeuGfu
-9zWLcIxKEHTAaKdx/tUG6RJL+qCLaB/5GBx/7NzLQk4QQn9gOrBb9wm3EkXsUtRR
-/JnJkLSvqaDK4VzuGSMkmt/0tPGI+LFF4pSeqqBu0jvfru78CFY=
-=uOBE
------END PGP SIGNATURE-----
-
---ERmlPpGZ/YGPk8vW--
+Regards,
+Jason
