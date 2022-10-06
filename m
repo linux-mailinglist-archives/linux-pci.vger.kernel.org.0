@@ -2,371 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B595F6263
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 10:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B81D5F63A0
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 11:29:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbiJFIPO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 04:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
+        id S231432AbiJFJ3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 05:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbiJFIPN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 04:15:13 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D163FD73;
-        Thu,  6 Oct 2022 01:15:10 -0700 (PDT)
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 295LFiPG019630;
-        Thu, 6 Oct 2022 01:14:51 -0700
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
-        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3k17uhc48f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 01:14:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BPHTkDZ5QDAT91XxiM5pN6IrVAV70ueZom4WklGxNANu1pQt42QEeYmoDzSsFK9/Y+pPm3Ta0ams/e90+fju5w4t2P6LFujQbTicWOVtSPFLQqYmeV5702OKSoquWt9wtrYBQpYI6vNYmbG1KcjgDAugrwNHjwt1yzGBbd1dho/jBKOjkOFXJ16qD/X8C3YdGvJgVcxpNbJLaQNiJccRiN5/difVOp6B0VLEft6IstsXewDTwrhXJy15iJfH/Q+Rwc6J8OKJK1hrrRfDlI58M2gDBTouATr0nKncm9CAo/6Vihp6FSy0wJfAuOuzkSE6QxsngrLzitRmf6X/RGhxWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EEencgJeJ7FGv/RhMNHZ1WKr4r9drlGHpam3VJ2Un+A=;
- b=AnLe51BZJVleAEDt9L3owuw30VOGOUznBqpDxjjGL60PxoDezGD+51nGbnj3zWM5M5yv68nuC3Y9n8UTHHduvqbym210LqzktZUejKYovkQsmYyVa2k5C5z9ODbzNv387/B0jtzOC+eZGEzIxMwwO3usqalziJljNfQP2W3wmBX8XtAxzCzwiIF+uFJv9OG6uetMeuAoqPIkeaMp+Lfpqp3CGFIAgDIYisT/fcxqvpnCwVqUdGap8FEofbXIEPIREMQSWBxMpmXg89+l1FO1/u86CUBPn+5xG5JcQ6q6ai2Nxd6B6ZY4BtmHFq717enZIVe0gtRPm67UsorCWpI+1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EEencgJeJ7FGv/RhMNHZ1WKr4r9drlGHpam3VJ2Un+A=;
- b=TV2/nVl6smFVcfp/TGfwobxG7ZkYL19MGlDixSWnsXvmYTxnVBWQxTfCk+qGPFR556+vCijx/rBr5K88iqCP0eUp17JvOYQWuRGEKnPGI4VcMmRiG2dhIwpkWk92GkJPUVyUUwG0qXkUoEhDZCOYowzTM6YgAdEieasPURyBObI=
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com (2603:10b6:408:11c::10)
- by SN4PR18MB4995.namprd18.prod.outlook.com (2603:10b6:806:21b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.31; Thu, 6 Oct
- 2022 08:14:49 +0000
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::205a:3471:8e28:a0fc]) by BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::205a:3471:8e28:a0fc%5]) with mapi id 15.20.5676.036; Thu, 6 Oct 2022
- 08:14:49 +0000
-From:   Elad Nachman <enachman@marvell.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for PCIe
- Completion Timeout
-Thread-Topic: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for
- PCIe Completion Timeout
-Thread-Index: AQHY0aRcVUQptz+/B0Wq4DbCZsArKq304zCAgAkTVNSAAxgEoA==
-Date:   Thu, 6 Oct 2022 08:14:48 +0000
-Message-ID: <BN9PR18MB4251C2684FD21D8A2DE5522FDB5C9@BN9PR18MB4251.namprd18.prod.outlook.com>
-References: <20220802123816.21817-1-pali@kernel.org>
- <20220926123434.2tqx4t6u3cnlrcx3@pali>
- <BN9PR18MB425117376E64340DED894178DB549@BN9PR18MB4251.namprd18.prod.outlook.com>
- <20221003211412.5pqfjvcxyszd4ai6@pali> <YzvomObCatuKMujz@lpieralisi>
- <20221004083957.qtfkn4eyi42lsd4j@pali>
-In-Reply-To: <20221004083957.qtfkn4eyi42lsd4j@pali>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWlc1aFkyaHRZVzVjWVhCd1pHRjBZVnh5YjJGdGFXNW5YREE1WkRnME9X?=
- =?utf-8?B?STJMVE15WkRNdE5HRTBNQzA0TldWbExUWmlPRFJpWVRJNVpUTTFZbHh0YzJk?=
- =?utf-8?B?elhHMXpaeTFsWm1ZMVpHRmtNQzAwTlRSbExURXhaV1F0WWpjeU5pMHhPR05q?=
- =?utf-8?B?TVRnM09HRmlZVGhjWVcxbExYUmxjM1JjWldabU5XUmhaREl0TkRVMFpTMHhN?=
- =?utf-8?B?V1ZrTFdJM01qWXRNVGhqWXpFNE56aGhZbUU0WW05a2VTNTBlSFFpSUhONlBT?=
- =?utf-8?B?STRPRFEwSWlCMFBTSXhNek13T1RVeE56WTROalF4TXpVMk1EQWlJR2c5SWxW?=
- =?utf-8?B?Q1ducERZbmRGWm5BNU4wUk5VVUUySzBkdVJWRnhhM1JhWnowaUlHbGtQU0lp?=
- =?utf-8?B?SUdKc1BTSXdJaUJpYnowaU1TSWdZMms5SW1OQlFVRkJSVkpJVlRGU1UxSlZS?=
- =?utf-8?B?azVEWjFWQlFWQTBSa0ZCUTNjclZUSjVWemx1V1VGU2RVVk5kV1JQTmtScFEw?=
- =?utf-8?B?YzBVWGsxTURkdlQwbEpTa0ZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRklRVUZCUVVOUFFsRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGRlFVRlJRVUpCUVVGQk5sQnhaV3hCUVVGQlFVRkJRVUZCUVVGQlFVRkJT?=
- =?utf-8?B?alJCUVVGQ2FFRkhVVUZhUVVKNVFVZFZRV04zUW5wQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlowRkJRVUZCUVc1blFVRkJSMDFCWkZGQ2VrRklVVUZpZDBKMFFVWTRRV05C?=
- =?utf-8?B?UW14QlNFbEJZM2RDZGtGSE5FRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZCUVVGQlFVRlJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRMEZCUVVGQlFVTmxRVUZCUVZsM1FqRkJTRTFCWkVGQ2Rr?=
- =?utf-8?B?RkhNRUZZZDBKM1FVZG5RV0ozUW5WQlIxVkJZbWRDTVVGSE1FRlpaMEpzUVVo?=
- =?utf-8?B?SlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZDUVVGQlFVRkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnFRVWhW?=
- =?utf-8?B?UVdOM1FqQkJSemhCWWxGQ1prRklUVUZqZDBKMVFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?Q?FBQUFB?=
-x-dg-rorf: true
-x-dg-refone: =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZI?=
- =?utf-8?B?VVVGaVFVSjNRVVk0UVdOM1FuSkJTR3RCWTBGQ2JFRkdPRUZaZDBKdlFVZEZR?=
- =?utf-8?B?V1JCUW1aQlJ6QkJXbEZDZWtGSVRVRlpVVUp1UVVkVlFWaDNRakpCUkVGQlRX?=
- =?utf-8?B?ZEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFV?=
- =?utf-8?B?RkJRMlZCUVVGQldrRkNjMEZJUVVGWWQwSjZRVWQzUVZsUlFtcEJSM05CV0hk?=
- =?utf-8?B?Q2FrRkhaMEZaVVVJd1FVWTRRV0pSUW14QlNFMUJZM2RDYUVGSFkwRmFVVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlNVRkJRVUZCUVVvMFFVRkJRbXRCUjNkQlkwRkNaa0ZJVVVGYVVVSm9R?=
- =?utf-8?B?VWN3UVdOM1FtWkJSemhCWW1kQ2JFRkhVVUZqWjBKd1FVaFpRVnBSUW1aQlIx?=
- =?utf-8?B?bEJZVkZDYzBGSFZVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkZRVUZCUVVGQlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVkVlFXSlJRbWhCUjJ0?=
- =?utf-8?B?QllrRkNaa0ZIUlVGYVFVSnJRVWhKUVZwUlFucEJTRTFCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVoQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmlV?=
- =?utf-8?B?VUpvUVVoSlFXUm5RbXhCUjNkQllrRkNaa0ZJVVVGYVVVSjVRVWN3UVdGUlFu?=
- =?utf-8?B?VkJTRlZCWTNkQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?Q?FBQUFB?=
-x-dg-reftwo: QUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9tZXRhPg==
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR18MB4251:EE_|SN4PR18MB4995:EE_
-x-ms-office365-filtering-correlation-id: 7fb7cf8d-f093-4e4c-d5a3-08daa772d633
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uUanPdbn4X3chS9pcYZNF8Og1bxh8h7YJZ4nq7vJkTR/tp7oLQ5r4qWOI1U5S3a5R6SA7ktGOgGLb3PVQnQD6fLr9k00uJ0867/BhBuNrVdEKs6TnYTaguE9Ahlwo6ZzqOz9Vj7VqO/ocTvPADuo8rJeZfGIDwSZjfxNQKtnngBnrYN63KgyIuRiXOTW0g0z9Z44Om0gqIswc/uOTOb/YMPaSd9rYgDhTVIiX4QopI5sacHuek10QmmSNsgvAnprQlkc8e2jxbrdlbAAX6k1zXYG6ij/KT+4g4veC6lkdeKN1JaFen7K+PmWqgh/C5rYRbEg5eKAG3YLMcSUdywLqvRW/xI03gxXV1rk87VA15jfOb6RKAemX+d9Md1hDf+8jREa3GTl77GXnz3nFcU1vnT+dBctTRXraCzVWA6qQayDJ6gw4B798BTE5OZmipBd+Lhz2/EVW4LjasDHsVl/8TxbDwOykAbcICzt3WMzkF12ijTkL8Dn1T2ISjGSDnpKokmNh6qyNF2cGTkBnOEVRuZURfIM4eHkV/yBTNW7nPvPH/f8BTsCdpl1nt8K+zf/WpNzec9S/KmD4Ew47cvmTKUau7dNjmR/ZZY/j2pcv8br/9v+SekbMi4qt0RHAq1fGI15aKsu5vaMFI7IVaP4FJBtOsHDchHnQEkaHP41Bd+Rl5FctvBHJdByylTTHtLQtznUnNM3NP7gDu80+CA5q8XoJdLdYRlVfyTKmJAIRgf5w2ueY+yEPRmm7U59AMjKcJb8GYDDAhXw2DsI9rIaIw7upEc2/1ceCNPxIS8y0d2jWxF4iCDabjcuyvIroG2IeBfDhnKep2llepTX6jURQA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR18MB4251.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(451199015)(86362001)(186003)(2906002)(71200400001)(316002)(478600001)(33656002)(122000001)(76116006)(45080400002)(4326008)(8676002)(64756008)(110136005)(66476007)(66446008)(41300700001)(66556008)(66946007)(66574015)(55016003)(966005)(53546011)(52536014)(38070700005)(7696005)(26005)(8936002)(54906003)(5660300002)(6506007)(83380400001)(38100700002)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OUwrL1lva3hwNVhMUHZza0hMMEkyNUdsVjBSM3BLOG1VQnIrZ05ZRjI1d2lq?=
- =?utf-8?B?ekh0V2owbEQxU2RJWm5XWFBxNjVXWGRBOXJvOGQ3T3FPUWpzOThCWXkvVFI2?=
- =?utf-8?B?VDdONUNyb0x5cFlrTFRHS3lmNFFna1lJMkdieE01VnNRa3lSVEViU3RlbkQv?=
- =?utf-8?B?OG5CU1Q2VzJjUWZyZFhCbzJsYmJLUUgxNmtkWXhDQmc3YXdrc3ZHSnhUSExT?=
- =?utf-8?B?M1RPK1FvWmRKdHNncUkxeHdNQlpZQTh1amNJVzc4Ly9Waml0TjhZNFFhWWtL?=
- =?utf-8?B?NjFFZ2R5aVZjWTZKWEsvZ3R0Q2pzNUNHVkhKd3pIaEZXT2JGRGYxR0VvS0xG?=
- =?utf-8?B?MXc1d3N1VEUwOFFoZnNoUmU2WjBrTkFoTGVGcWxGRDBaNFZHV1Vsc3MrMFBr?=
- =?utf-8?B?ZDdHaHdxbVNxVzlqZlZJand4YzNLRzY5cE81UjQzbW1lSWI0aU1nUWZUWDBz?=
- =?utf-8?B?cUs3bFRXV29DM0l5bGxRZ3lob3pjRlZDeEV0VkhiRTF2VjVkMXQvQ0FCNmlO?=
- =?utf-8?B?anVxSUlxaHlQTmRnc3NBd1lybWZITWZSMWpzZkRtemlaOFBWY1dEUEQwSTNG?=
- =?utf-8?B?VnM5SUVaWVY1Z3I2WTNGMXJXMWpNcEtjVDZENDJZenlPaW1hSXhId1ZqNzVE?=
- =?utf-8?B?ekxCMExxTWlSRTZIVTJid3NVVmlmdjVLTWRkRHJKdTdNYUdWdmlYWDA4aVh6?=
- =?utf-8?B?WVZIcjFPSTNzNjRzcFBvck1GWER0UWRjaEVkRW9oMURnUlVjdWNMckVneGhS?=
- =?utf-8?B?Z1JQYXorMFZUUXk4ZEFnVUJHWXF1emVVZEE3ZVd3N3lOdVZ6dU5SR3RGdzFO?=
- =?utf-8?B?TXRROUgxYnVWZExTazgzbkdHM05KUVM1QmtCK3IzRjdDUThLSUhtQWpCZENz?=
- =?utf-8?B?OEN3aENzTFZzUUJMNHBNRW9qbEZTclZaemNzWk5sV1FFNCtGVE4veTFFbTRy?=
- =?utf-8?B?aW95Q1A2MW9PMW14MmRYc0xnVGRuMi9CcDY0Wi9qeFdnUVdCUUVDdG9oZU10?=
- =?utf-8?B?dGtFMlVTU25PNjFkWDQveW9NVXRrUWVQMWs3RHpFUGxGSU02UTRWVktieGZj?=
- =?utf-8?B?N0t6Q3NReUJMWEErWmkvU2JQZUEwUVRyWUFsV1JKK2I2bkcxV3JkS0NsVWV4?=
- =?utf-8?B?N0dTVnNEZXozY3VwcDRuUmRLN3VlQkxTc05JeVQzU2k1eVRmZ1VJZEdsOXdO?=
- =?utf-8?B?WDNUWUdmUFl5bFQrbkRLc3NHcU5vbmsxY0NVbE1VaU5TUHk4NFo3VEYxWHFk?=
- =?utf-8?B?eTVIWGJWajhGaDZENjNGVk8yRGxEVVNyRml3aVBDeWxjRzYrcGhXNldMRjFh?=
- =?utf-8?B?b3hwYUpGTlZRNFVsdXRwV0JRNDhnQlpmMWFlaUQwdGNCaWtUcEV4LzdaNlpB?=
- =?utf-8?B?dU55aEl5RTEwYmxKaXFMbkVUNWdSSThiaDNJWTRMalZlT0czUDMyMWhNNjdz?=
- =?utf-8?B?WHpSbXZBUC9nZVJQbEhScUhVWVBvWlAwbzZqbkhuNFk5NEpCckdmLzlyVExh?=
- =?utf-8?B?Rnp2YzBXekVEeXJmdllDd0RyYU1zOWc3ZUlqVHI1dlROUUFYbEpLbHl0dnpr?=
- =?utf-8?B?U05ocC9HcEpaTVZYS3NBVzYvVlgwMGdhYUpXSjNTbWV6UUNGRjNINDJva3Jz?=
- =?utf-8?B?V3QwbDVIWWI5cnBTM2VyeFdRVURTYzBxOUdkWm05elBmb24rdE1aREdPZmVT?=
- =?utf-8?B?VWlkaFNMcWxHcjJwbEp1R2RQUGhGTGZvaWZnSktIQUpDVmVVMkltek1idHVN?=
- =?utf-8?B?bnFlbmhDTjI0d20yUHpTUEE2cTRFZmRBZ1NWZ00vRHhsWWMxeCtJZkhBSmFa?=
- =?utf-8?B?dGxyS0c1OUU3NUVjTU1JSTFITG1pb3VPcS96Q2lyNGZxeHBpd2tkNGZOYnVj?=
- =?utf-8?B?UzREZGdaMmZSTmh5U3pDN3JVeUw1WUZKekNxamZndER3V0FTVG9vVnNDZndF?=
- =?utf-8?B?ckdTVU5PSkcxVU5idUdXMzJEQUZMRXMwc2VoZGh3enpUR0FYVnhwMmZPVURO?=
- =?utf-8?B?UUd1VitUOEdGN1ZuRWM2ejdoYXptdzJxbUJTMEQ3S0ViTk53MkVmVEFaMytG?=
- =?utf-8?B?RDEreG9MZThDNTJ0RkRVdEhjVTdhVHBRZVNHWjhPbnRBa0gyZ2FMUEtTeWZC?=
- =?utf-8?Q?iHj2jFL1QjKmu4JjTsocOqMxW?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S230216AbiJFJ3e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 05:29:34 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82968FD5B;
+        Thu,  6 Oct 2022 02:29:32 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 772132197F;
+        Thu,  6 Oct 2022 09:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1665048571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=L7RZFM5d4dnIi1GRTKhMwES2/uyXuvfgoPRuTe96ogM=;
+        b=Ci/J0VnfozSfW1tn8VrgOAeBJ0GslTmfAaoB/QDoi2AQB8js+3KZ7nxA6MxMpRSmow6xVi
+        j2hmf+j+RbkQkmXnOztnb/pndUnWf44vQX6nrfx02GbaRGavkRcfPmN3RY6FOYJjL0o+cN
+        1YtXQlXJfn1PeYjiWilheBlS/EyqdzM=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3D0A51376E;
+        Thu,  6 Oct 2022 09:29:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Plt5DfufPmNIVAAAMHmgww
+        (envelope-from <jgross@suse.com>); Thu, 06 Oct 2022 09:29:31 +0000
+From:   Juergen Gross <jgross@suse.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH] xen/pcifront: move xenstore config scanning into sub-function
+Date:   Thu,  6 Oct 2022 11:29:29 +0200
+Message-Id: <20221006092929.30041-1-jgross@suse.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR18MB4251.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fb7cf8d-f093-4e4c-d5a3-08daa772d633
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2022 08:14:48.8178
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QgZFAeyNGbfZlljfgghMi/BO/iTIi8KpDxGeykIB/E1A3CBpM8TTQFIi6IfoS+n808rsMc50aoL/iRZekiFvXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR18MB4995
-X-Proofpoint-GUID: WG5VFzosM8O0RfYzA3VBj3WS7gjhBAnF
-X-Proofpoint-ORIG-GUID: WG5VFzosM8O0RfYzA3VBj3WS7gjhBAnF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-05_05,2022-10-06_01,2022-06-22_01
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGksDQoNClJlZ2FyZGluZyBudW1iZXIgIzEgOg0KVGhlIEgvVyBlcnJhdHVtIG1lYW5zIHN0cm9u
-ZyBvcmRlcmluZyBtb2RlIGlzIG5vdCBwcm9wZXJseSBpbXBsZW1lbnRlZCBpbiB0aGUgSC9XLg0K
-VGhlIHdvcmthcm91bmQgaXMgdG8gc2V0IERJU19PUkRfQ0hLIHRvIGRpc2FibGUgdGhlIG9yZGVy
-ZWQgY2hlY2ssIHRvIHByZXZlbnQgdGhlIGlzc3VlcyBQYWxpIG1lbnRpb25lZC4NCkxlYXZpbmcg
-aXQgd2l0aG91dCB0aGUgd29ya2Fyb3VuZCBtZWFucyBlbmNvdW50ZXJpbmcgdGhlIGNyYXNoZXMg
-UGFsaSBtZW50aW9uZWQuDQpUaGUgSC9XIHdhcyBvcmlnaW5hbGx5IGRlc2lnbmVkIHRvIGhhdmUg
-dGhlIHN0cm9uZyBvcmRlcmluZyBtb2RlLCBwZXIgd2hhdCBpcyBleHBlY3RlZCBvZiBQQ0kgRXhw
-cmVzcywgYnV0IGR1ZSB0byB0aGlzIGVycmF0dW0sIGl0IGNhbm5vdCBiZSBzdXBwb3J0ZWQgYnkg
-dGhlIHRhcGVkLW91dCBIL1cuDQpUaGVyZSBpcyBub3RoaW5nIHRvIGRvIGFib3V0IGl0IG5vdyBp
-biB0aGUgSC9XLCBhcyB0aGlzIGlzIGEgeWVhcnMgb2xkIFNPQy4NClNvZnR3YXJlIHdpc2UgdGhl
-IG9ubHkgb3B0aW9uIGlzIHRoZSB3b3JrYXJvdW5kIGFib3ZlLCBvciB0byBhY2NlcHQgc3BvcmFk
-aWMgY3Jhc2hlcyBvZiB0aGUga2VybmVsLg0KDQpSZWdhcmRpbmcgbnVtYmVyICMyIDoNClRoZSBp
-bXBhY3Qgb2YgdGhlIHdvcmthcm91bmQgaXMgdGhhdCB0aGUgRE1BIGRvbmUgc3RhdHVzIGNvdWxk
-IGJlIHNldCBiZWZvcmUgdGhlIGxhc3QgZGF0YSBpcyB3cml0dGVuIHRvIHRoZSBob3N0IG1lbW9y
-eSwgY2F1c2luZyB0aGUgaG9zdCB0byByZWFkIGluY29tcGxldGUgZGF0YS4gVGhpcyBpcyB0aGUg
-cmVhc29uIHdoeSBJIHJlY29tbWVuZGVkIHRvIGFkZCBhIG1lbW9yeSBiYXJyaWVyLiBJZiB0aGlz
-IGlzIGJvdGhlcmluZywgdGhlIG1lbW9yeSBiYXJyaWVyIGNhbiBiZSByZW1vdmVkIGZyb20gdGhl
-IHBhdGNoLCBhbHRob3VnaCBJIHN1Z2dlc3QgdG8gdGhvcm91Z2hseSB0ZXN0IHRoZSBkYXRhIGlu
-dGVncml0eSBpZiBpbXBsZW1lbnRpbmcgdGhlIHBhdGNoIHdpdGhvdXQgdGhlIG1lbW9yeSBiYXJy
-aWVyLg0KDQpGWUksDQoNCkVsYWQuDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9t
-OiBQYWxpIFJvaMOhciA8cGFsaUBrZXJuZWwub3JnPiANClNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIg
-NCwgMjAyMiAxMTo0MCBBTQ0KVG86IEVsYWQgTmFjaG1hbiA8ZW5hY2htYW5AbWFydmVsbC5jb20+
-OyBMb3JlbnpvIFBpZXJhbGlzaSA8bHBpZXJhbGlzaUBrZXJuZWwub3JnPg0KQ2M6IEJqb3JuIEhl
-bGdhYXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+OyBLcnp5c3p0b2YgV2lsY3p5xYRza2kgPGt3QGxp
-bnV4LmNvbT47IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDog
-UmU6IFtFWFRdIFJlOiBbUEFUQ0ggdjJdIFBDSTogYWFyZHZhcms6IEltcGxlbWVudCB3b3JrYXJv
-dW5kIGZvciBQQ0llIENvbXBsZXRpb24gVGltZW91dA0KDQorIEVsYWQNCg0KQ291bGQgeW91IHBs
-ZWFzZSBsb29rIGF0IExvcmVuem8ncyBjb21tZW50cyBhbmQgaGVscCB3aXRoIHRoaXMgZml4Pw0K
-DQpPbiBUdWVzZGF5IDA0IE9jdG9iZXIgMjAyMiAxMDowMjozMiBMb3JlbnpvIFBpZXJhbGlzaSB3
-cm90ZToNCj4gT24gTW9uLCBPY3QgMDMsIDIwMjIgYXQgMTE6MTQ6MTJQTSArMDIwMCwgUGFsaSBS
-b2jDoXIgd3JvdGU6DQo+ID4gTG9yZW56bywgaXMgc29tZXRoaW5nIG1vcmUgbmVlZGVkIGZvciB0
-aGlzIHBhdGNoPyBBcyBpdCB3b3JrYXJvdW5kcyANCj4gPiBjcmFzaGluZyBpdCBpcyByZWFsbHkg
-bmVlZGVkIHRvIGhhdmUgaXQgaW4gbWFpbmxpbmUgYW5kIGJhY2twb3J0cy4NCj4gDQo+IFllcywg
-YSBjbGVhciBleHBsYW5hdGlvbiBmcm9tIE1hcnZlbGwgYWJvdXQgd2hhdCB0aGlzIGlzIGFjdHVh
-bGx5IA0KPiBmaXhpbmcgLSBpdCB0b29rIG1lIGEgd2hpbGUgdG8gZ28gdGhyb3VnaCB0aGUgd2hv
-bGUgdGhyZWFkIGJ1dCBJIHN0aWxsIA0KPiBkb24ndCB1bmRlcnN0YW5kIHdoYXQgdGhpcyBwYXRj
-aCBhY3R1YWxseSBkb2VzIGFuZCB3aHkuDQo+IA0KPiBBbiBFcnJhdHVtIHdvcmthcm91bmQgKGlm
-IHRoZXJlIGlzIGFueSkgc2hvdWxkIGRlZmluZSBhbmQgZXhwbGFpbiBhIFNXIA0KPiB3b3JrYXJv
-dW5kLg0KPiANCj4gKDEpIEJqb3JuJ3MgY29uY2VybnMgaW4gcmVsYXRpb24gdG8gUENJIG1lbW9y
-eSBtb2RlbCB3ZXJlbid0IGFkZHJlc3NlZA0KPiAoMikgV2UgZG9uJ3QgYWRkIHVuZG9jdW1lbnRl
-ZCBtZW1vcnkgYmFycmllcnMgdG8gdGhlIGtlcm5lbCB0byAibWluaW1pemUNCj4gICAgIHJpc2tz
-Ii4gRWl0aGVyIHdlIGZpeCBhIGJ1ZyBvciB3ZSBkb24ndC4gSWYgd2UgZG8sIHdyaXRlIHRoYXQg
-ZG93bg0KPiAgICAgYW5kIGRvY3VtZW50IHdoeSB0aGUgYmFycmllciBpcyB0aGVyZSBhbmQgdGhl
-IGlzc3VlIGl0IHNvbHZlcy4NCj4gDQo+IEkgdW5kZXJzdGFuZCB0aGF0IGJhc2ljYWxseSB5b3Ug
-YXJlIHJldmVyc2UgZW5naW5lZXJpbmcgYSBIVyBidWcgYnV0IEkgDQo+IGFtIGFmcmFpZCB3ZSBj
-YW4ndCBmaXggdGhlIGtlcm5lbCB0aGlzIHdheSAtIG1vcmUgc28gd2l0aCBwYXRjaGVzIA0KPiBn
-b2luZyB0byBiZSBiYWNrcG9ydGVkIHRvIHN0YWJsZSBrZXJuZWxzLg0KPiANCj4gTG9yZW56bw0K
-PiANCj4gPiBPbiBXZWRuZXNkYXkgMjggU2VwdGVtYmVyIDIwMjIgMTQ6MDU6MTAgRWxhZCBOYWNo
-bWFuIHdyb3RlOg0KPiA+ID4gUmV2aWV3ZWQtYnk6IEVsYWQgTmFjaG1hbiA8ZW5hY2htYW5AbWFy
-dmVsbC5jb20+DQo+ID4gPiANCj4gPiA+IFRoYW5rcywNCj4gPiA+IA0KPiA+ID4gRWxhZC4NCj4g
-PiA+IA0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFBhbGkg
-Um9ow6FyIDxwYWxpQGtlcm5lbC5vcmc+DQo+ID4gPiBTZW50OiBNb25kYXksIFNlcHRlbWJlciAy
-NiwgMjAyMiAzOjM1IFBNDQo+ID4gPiBUbzogRWxhZCBOYWNobWFuIDxlbmFjaG1hbkBtYXJ2ZWxs
-LmNvbT4NCj4gPiA+IENjOiBUaG9tYXMgUGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGJvb3Rs
-aW4uY29tPjsgTG9yZW56byANCj4gPiA+IFBpZXJhbGlzaSA8bHBpZXJhbGlzaUBrZXJuZWwub3Jn
-PjsgQmpvcm4gSGVsZ2FhcyANCj4gPiA+IDxiaGVsZ2Fhc0Bnb29nbGUuY29tPjsgS3J6eXN6dG9m
-IFdpbGN6ecWEc2tpIDxrd0BsaW51eC5jb20+OyBSb2IgDQo+ID4gPiBIZXJyaW5nIDxyb2JoQGtl
-cm5lbC5vcmc+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyANCj4gPiA+IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgDQo+ID4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBHcmVnb3J5IENsZW1lbnQgDQo+ID4gPiA8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4u
-Y29tPjsgTWFyZWsgQmVow7puIDxrYWJlbEBrZXJuZWwub3JnPjsgDQo+ID4gPiBSZW1pIFBvbW1h
-cmVsIDxyZXBrQHRyaXBsZWZhdS5sdD47IFhvZ2l1bSA8Y29udGFjdEB4b2dpdW0ubWU+OyANCj4g
-PiA+IFRvbWFzeiBNYWNpZWogTm93YWsgPHRtbjUwNUBnbWFpbC5jb20+DQo+ID4gPiBTdWJqZWN0
-OiBbRVhUXSBSZTogW1BBVENIIHYyXSBQQ0k6IGFhcmR2YXJrOiBJbXBsZW1lbnQgd29ya2Fyb3Vu
-ZCANCj4gPiA+IGZvciBQQ0llIENvbXBsZXRpb24gVGltZW91dA0KPiA+ID4gDQo+ID4gPiBFeHRl
-cm5hbCBFbWFpbA0KPiA+ID4gDQo+ID4gPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+IC0tLS0gSGVsbG8gRWxh
-ZCwgY291bGQgeW91IHBsZWFzZSByZXZpZXcgdGhpcyBwYXRjaD8gSSBoYXZlIA0KPiA+ID4gaW1w
-bGVtZW50ZWQgaXQgYWNjb3JkaW5nIHlvdXIgaW5zdHJ1Y3Rpb25zLCBpbmNsdWRpbmcgdGhhdCBm
-dWxsIG1lbW9yeSBiYXJyaWVyIGFzIHlvdSBkZXNjcmliZWQuDQo+ID4gPiANCj4gPiA+IE9uIFR1
-ZXNkYXkgMDIgQXVndXN0IDIwMjIgMTQ6Mzg6MTYgUGFsaSBSb2jDoXIgd3JvdGU6DQo+ID4gPiA+
-IE1hcnZlbGwgQXJtYWRhIDM3MDAgRnVuY3Rpb25hbCBFcnJhdGEsIEd1aWRlbGluZXMsIGFuZCAN
-Cj4gPiA+ID4gUmVzdHJpY3Rpb25zIGRvY3VtZW50IGRlc2NyaWJlcyBpbiBlcnJhdHVtIDMuMTIg
-UENJZSBDb21wbGV0aW9uIFRpbWVvdXQgKFJlZiAjOg0KPiA+ID4gPiAyNTEpLCB0aGF0IFBDSWUg
-SVAgZG9lcyBub3Qgc3VwcG9ydCBhIHN0cm9uZy1vcmRlcmVkIG1vZGVsIGZvciBpbmJvdW5kIHBv
-c3RlZCB2cy4NCj4gPiA+ID4gb3V0Ym91bmQgY29tcGxldGlvbi4NCj4gPiA+ID4gDQo+ID4gPiA+
-IEFzIGEgd29ya2Fyb3VuZCBmb3IgdGhpcyBlcnJhdHVtLCBESVNfT1JEX0NISyBmbGFnIGluIERl
-YnVnIE11eCANCj4gPiA+ID4gQ29udHJvbCByZWdpc3RlciBtdXN0IGJlIHNldC4gSXQgZGlzYWJs
-ZXMgdGhlIG9yZGVyaW5nIGNoZWNrIGluIA0KPiA+ID4gPiB0aGUgY29yZSBiZXR3ZWVuIENvbXBs
-ZXRpb25zIGFuZCBQb3N0ZWQgcmVxdWVzdHMgcmVjZWl2ZWQgZnJvbSB0aGUgbGluay4NCj4gPiA+
-ID4gDQo+ID4gPiA+IE1hcnZlbGwgYWxzbyBzdWdnZXN0cyB0byBkbyBmdWxsIG1lbW9yeSBiYXJy
-aWVyIGF0IHRoZSBiZWdpbm5pbmcgDQo+ID4gPiA+IG9mIGFhcmR2YXJrIHN1bW1hcnkgaW50ZXJy
-dXB0IGhhbmRsZXIgYmVmb3JlIGNhbGxpbmcgaW50ZXJydXB0IA0KPiA+ID4gPiBoYW5kbGVycyBv
-ZiBlbmRwb2ludCBkcml2ZXJzIGluIG9yZGVyIHRvIG1pbmltaXplIHRoZSByaXNrIGZvciANCj4g
-PiA+ID4gdGhlIHJhY2UgY29uZGl0aW9uIGRvY3VtZW50ZWQgaW4gdGhlIEVycmF0dW0gYmV0d2Vl
-biB0aGUgRE1BIA0KPiA+ID4gPiBkb25lIHN0YXR1cyByZWFkaW5nIGFuZCB0aGUgY29tcGxldGlv
-biBvZiB3cml0aW5nIHRvIHRoZSBob3N0IG1lbW9yeS4NCj4gPiA+ID4gDQo+ID4gPiA+IE1vcmUg
-ZGV0YWlscyBhYm91dCB0aGlzIGlzc3VlIGFuZCBzdWdnZXN0ZWQgd29ya2Fyb3VuZHMgYXJlIGlu
-IGRpc2N1c3Npb246DQo+ID4gPiA+IGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92
-Mi91cmw/dT1odHRwcy0zQV9fbG9yZS5rZXJuZWwNCj4gPiA+ID4gLm9yZ19sIA0KPiA+ID4gPiBp
-bnV4LTJEcGNpX0JOOVBSMThNQjQyNTE1NEZFNTAxOURDQUYyMDI4QTFENURCOEQ5LTQwQk45UFIx
-OE1CNDI1DQo+ID4gPiA+IDEubmFtcCANCj4gPiA+ID4gcmQxOC5wcm9kLm91dGxvb2suY29tX3Rf
-LTIzdSZkPUR3SURhUSZjPW5LaldlYzJiNlIwbU95UGF6N3h0ZlEmcg0KPiA+ID4gPiA9ZVRlTlQN
-Cj4gPiA+ID4gTEVLNS1UeFhjempPY0tQaEFOSUZ0bEI5cFA0bHE5cWhkbEZyd1EmbT1iamdraGdQ
-Z09qcUNFc2JIWUhPTkNaTQ0KPiA+ID4gPiBpRkRYNzIgDQo+ID4gPiA+IE16dFdhRTBBdldCa3RR
-Vm4zektFRHRVZG4wMkt4X0tKMTRCJnM9U1RvR3NER0VPYndiWkdpbFZ0VlpQeU1FOGoNCj4gPiA+
-ID4gTmlSZ3JxDQo+ID4gPiA+IDRTRFl2cXFUMFRBJmU9DQo+ID4gPiA+IA0KPiA+ID4gPiBJdCB3
-YXMgcmVwb3J0ZWQgdGhhdCBlbmFibGluZyB0aGlzIHdvcmthcm91bmQgZml4ZXMgaW5zdGFiaWxp
-dHkgDQo+ID4gPiA+IGlzc3VlcyBhbmQgIlVuaGFuZGxlZCBmYXVsdCIgZXJyb3JzIHdoZW4gdXNp
-bmcgNjAgR0h6IFdpRmkgDQo+ID4gPiA+IDgwMi4xMWFkIGNhcmQgd2l0aCBRdWFsY29tbQ0KPiA+
-ID4gPiBRQ0E2MzM1IGNoaXAgdW5kZXIgc2lnbmlmaWNhbnQgbG9hZCB3aGljaCB3ZXJlIGNhdXNl
-ZCBieSANCj4gPiA+ID4gaW50ZXJydXB0IHN0YXR1cyBzdHVjayBpbiB0aGUgb3V0Ym91bmQgQ01Q
-TFQgcXVldWUgdHJhY2VkIGJhY2sgdG8gdGhpcyBlcnJhdHVtLg0KPiA+ID4gPiANCj4gPiA+ID4g
-VGhpcyB3b3JrYXJvdW5kIGZpeGVzIGFsc28ga2VybmVsIHBhbmljIHRyaWdnZXJlZCBhZnRlciBz
-b21lIA0KPiA+ID4gPiBtaW51dGVzIG9mIHVzYWdlIDUgR0h6IFdpRmkgODAyLjExYXggY2FyZCB3
-aXRoIE1lZGlhdGVrIE1UNzkxNSBjaGlwOg0KPiA+ID4gPiANCj4gPiA+ID4gICAgIEludGVybmFs
-IGVycm9yOiBzeW5jaHJvbm91cyBleHRlcm5hbCBhYm9ydDogOTYwMDAyMTAgWyMxXSBTTVANCj4g
-PiA+ID4gICAgIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4g
-aW50ZXJydXB0DQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgUGV0YXp6
-b25pIDx0aG9tYXMucGV0YXp6b25pQGJvb3RsaW4uY29tPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBQYWxpIFJvaMOhciA8cGFsaUBrZXJuZWwub3JnPg0KPiA+ID4gPiBGaXhlczogOGMzOWQ3MTAz
-NjNjICgiUENJOiBhYXJkdmFyazogQWRkIEFhcmR2YXJrIFBDSSBob3N0IA0KPiA+ID4gPiBjb250
-cm9sbGVyDQo+ID4gPiA+IGRyaXZlciIpDQo+ID4gPiA+IENjOiBzdGFibGVAdmdlci5rZXJuZWwu
-b3JnDQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktYWFy
-ZHZhcmsuYyB8IDEwICsrKysrKysrKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNl
-cnRpb25zKCspDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9wY2ktYWFyZHZhcmsuYw0KPiA+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpLWFhcmR2YXJrLmMNCj4gPiA+ID4gaW5kZXggMDYwOTM2ZWYwMWZlLi4zYWU4YTg1ZWM3MmUg
-MTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWFhcmR2YXJr
-LmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktYWFyZHZhcmsuYw0K
-PiA+ID4gPiBAQCAtMjEwLDYgKzIxMCw4IEBAIGVudW0gew0KPiA+ID4gPiAgfTsNCj4gPiA+ID4g
-IA0KPiA+ID4gPiAgI2RlZmluZSBWRU5ET1JfSURfUkVHCQkJCShMTUlfQkFTRV9BRERSICsgMHg0
-NCkNCj4gPiA+ID4gKyNkZWZpbmUgREVCVUdfTVVYX0NUUkxfUkVHCQkJKExNSV9CQVNFX0FERFIg
-KyAweDIwOCkNCj4gPiA+ID4gKyNkZWZpbmUgICAgIERJU19PUkRfQ0hLCQkJCUJJVCgzMCkNCj4g
-PiA+ID4gIA0KPiA+ID4gPiAgLyogUENJZSBjb3JlIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+
-ID4gPiA+ICAjZGVmaW5lIENUUkxfQ09SRV9CQVNFX0FERFIJCQkweDE4MDAwDQo+ID4gPiA+IEBA
-IC01NTgsNiArNTYwLDExIEBAIHN0YXRpYyB2b2lkIGFkdmtfcGNpZV9zZXR1cF9odyhzdHJ1Y3Qg
-YWR2a19wY2llICpwY2llKQ0KPiA+ID4gPiAgCQlQQ0lFX0NPUkVfQ1RSTDJfVERfRU5BQkxFOw0K
-PiA+ID4gPiAgCWFkdmtfd3JpdGVsKHBjaWUsIHJlZywgUENJRV9DT1JFX0NUUkwyX1JFRyk7DQo+
-ID4gPiA+ICANCj4gPiA+ID4gKwkvKiBEaXNhYmxlIG9yZGVyaW5nIGNoZWNrcywgd29ya2Fyb3Vu
-ZCBmb3IgZXJyYXR1bSAzLjEyICJQQ0llIGNvbXBsZXRpb24gdGltZW91dCIgKi8NCj4gPiA+ID4g
-KwlyZWcgPSBhZHZrX3JlYWRsKHBjaWUsIERFQlVHX01VWF9DVFJMX1JFRyk7DQo+ID4gPiA+ICsJ
-cmVnIHw9IERJU19PUkRfQ0hLOw0KPiA+ID4gPiArCWFkdmtfd3JpdGVsKHBjaWUsIHJlZywgREVC
-VUdfTVVYX0NUUkxfUkVHKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAgCS8qIFNldCBsYW5lIFgxICov
-DQo+ID4gPiA+ICAJcmVnID0gYWR2a19yZWFkbChwY2llLCBQQ0lFX0NPUkVfQ1RSTDBfUkVHKTsN
-Cj4gPiA+ID4gIAlyZWcgJj0gfkxBTkVfQ05UX01TSzsNCj4gPiA+ID4gQEAgLTE1ODEsNiArMTU4
-OCw5IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBhZHZrX3BjaWVfaXJxX2hhbmRsZXIoaW50IGlycSwg
-dm9pZCAqYXJnKQ0KPiA+ID4gPiAgCXN0cnVjdCBhZHZrX3BjaWUgKnBjaWUgPSBhcmc7DQo+ID4g
-PiA+ICAJdTMyIHN0YXR1czsNCj4gPiA+ID4gIA0KPiA+ID4gPiArCS8qIEZ1bGwgbWVtb3J5IGJh
-cnJpZXIgKEFSTSBkc2Igc3kpLCB3b3JrYXJvdW5kIGZvciBlcnJhdHVtIDMuMTIgIlBDSWUgY29t
-cGxldGlvbiB0aW1lb3V0IiAqLw0KPiA+ID4gPiArCW1iKCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
-IAlzdGF0dXMgPSBhZHZrX3JlYWRsKHBjaWUsIEhPU1RfQ1RSTF9JTlRfU1RBVFVTX1JFRyk7DQo+
-ID4gPiA+ICAJaWYgKCEoc3RhdHVzICYgUENJRV9JUlFfQ09SRV9JTlQpKQ0KPiA+ID4gPiAgCQly
-ZXR1cm4gSVJRX05PTkU7DQo+ID4gPiA+IC0tDQo+ID4gPiA+IDIuMjAuMQ0KPiA+ID4gPiANCj4g
-PiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiA+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29t
-L3YyL3VybD91PWh0dHAtM0FfX2xpc3RzLmluZnJhZGVhZC4NCj4gPiBvcmdfbWFpbG1hbl9saXN0
-aW5mb19saW51eC0yRGFybS0yRGtlcm5lbCZkPUR3SURhUSZjPW5LaldlYzJiNlIwbU95UA0KPiA+
-IGF6N3h0ZlEmcj1lVGVOVExFSzUtVHhYY3pqT2NLUGhBTklGdGxCOXBQNGxxOXFoZGxGcndRJm09
-Mk56a1Q5S0xPMjZrDQo+ID4gZWZVT3cybkllU2VSbkpWWkx4RWlCWHFFb1J2RFEwdWV3dzZuNFlh
-WFdnQU4xdUNKWDIwbyZzPW5jekFDU18yakVSYkENCj4gPiAtYzRHZmFyMC1IVEE0UHR2WmRKbXNC
-djhqaFc4RzAmZT0NCg==
+pcifront_try_connect() and pcifront_attach_devices() share a large
+chunk of duplicated code for reading the config information from
+Xenstore, which only differs regarding a function call.
+
+Put that code into a new sub-function. While at it fix the error
+reporting in case the root-xx node had the wrong format.
+
+As the return value of pcifront_try_connect() and
+pcifront_attach_devices() are not used anywhere make those functions
+return void. As an additional bonus this removes the dubious return
+of -EFAULT in case of an unexpected driver state.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ drivers/pci/xen-pcifront.c | 133 +++++++++++--------------------------
+ 1 file changed, 40 insertions(+), 93 deletions(-)
+
+diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+index 689271c4245c..a68e47dcdd7e 100644
+--- a/drivers/pci/xen-pcifront.c
++++ b/drivers/pci/xen-pcifront.c
+@@ -819,76 +819,79 @@ static int pcifront_publish_info(struct pcifront_device *pdev)
+ 	return err;
+ }
+ 
+-static int pcifront_try_connect(struct pcifront_device *pdev)
++static void pcifront_connect(struct pcifront_device *pdev, bool rescan)
+ {
+-	int err = -EFAULT;
++	int err;
+ 	int i, num_roots, len;
+ 	char str[64];
+ 	unsigned int domain, bus;
+ 
+-
+-	/* Only connect once */
+-	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
+-	    XenbusStateInitialised)
+-		goto out;
+-
+-	err = pcifront_connect_and_init_dma(pdev);
+-	if (err && err != -EEXIST) {
+-		xenbus_dev_fatal(pdev->xdev, err,
+-				 "Error setting up PCI Frontend");
+-		goto out;
+-	}
+-
+ 	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
+ 			   "root_num", "%d", &num_roots);
+ 	if (err == -ENOENT) {
+ 		xenbus_dev_error(pdev->xdev, err,
+ 				 "No PCI Roots found, trying 0000:00");
+-		err = pcifront_scan_root(pdev, 0, 0);
++		if (rescan)
++			err = pcifront_rescan_root(pdev, 0, 0);
++		else
++			err = pcifront_scan_root(pdev, 0, 0);
+ 		if (err) {
+ 			xenbus_dev_fatal(pdev->xdev, err,
+ 					 "Error scanning PCI root 0000:00");
+-			goto out;
++			return;
+ 		}
+ 		num_roots = 0;
+ 	} else if (err != 1) {
+-		if (err == 0)
+-			err = -EINVAL;
+-		xenbus_dev_fatal(pdev->xdev, err,
++		xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
+ 				 "Error reading number of PCI roots");
+-		goto out;
++		return;
+ 	}
+ 
+ 	for (i = 0; i < num_roots; i++) {
+ 		len = snprintf(str, sizeof(str), "root-%d", i);
+-		if (unlikely(len >= (sizeof(str) - 1))) {
+-			err = -ENOMEM;
+-			goto out;
+-		}
++		if (unlikely(len >= (sizeof(str) - 1)))
++			return;
+ 
+ 		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
+ 				   "%x:%x", &domain, &bus);
+ 		if (err != 2) {
+-			if (err >= 0)
+-				err = -EINVAL;
+-			xenbus_dev_fatal(pdev->xdev, err,
++			xenbus_dev_fatal(pdev->xdev, err >= 0 ? -EINVAL : err,
+ 					 "Error reading PCI root %d", i);
+-			goto out;
++			return;
+ 		}
+ 
+-		err = pcifront_scan_root(pdev, domain, bus);
++		if (rescan)
++			err = pcifront_rescan_root(pdev, domain, bus);
++		else
++			err = pcifront_scan_root(pdev, domain, bus);
+ 		if (err) {
+ 			xenbus_dev_fatal(pdev->xdev, err,
+ 					 "Error scanning PCI root %04x:%02x",
+ 					 domain, bus);
+-			goto out;
++			return;
+ 		}
+ 	}
+ 
+-	err = xenbus_switch_state(pdev->xdev, XenbusStateConnected);
++	xenbus_switch_state(pdev->xdev, XenbusStateConnected);
++}
+ 
+-out:
+-	return err;
++static void pcifront_try_connect(struct pcifront_device *pdev)
++{
++	int err;
++
++	/* Only connect once */
++	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
++	    XenbusStateInitialised)
++		return;
++
++	err = pcifront_connect_and_init_dma(pdev);
++	if (err && err != -EEXIST) {
++		xenbus_dev_fatal(pdev->xdev, err,
++				 "Error setting up PCI Frontend");
++		return;
++	}
++
++	pcifront_connect(pdev, false);
+ }
+ 
+ static int pcifront_try_disconnect(struct pcifront_device *pdev)
+@@ -914,67 +917,11 @@ static int pcifront_try_disconnect(struct pcifront_device *pdev)
+ 	return err;
+ }
+ 
+-static int pcifront_attach_devices(struct pcifront_device *pdev)
++static void pcifront_attach_devices(struct pcifront_device *pdev)
+ {
+-	int err = -EFAULT;
+-	int i, num_roots, len;
+-	unsigned int domain, bus;
+-	char str[64];
+-
+-	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
++	if (xenbus_read_driver_state(pdev->xdev->nodename) ==
+ 	    XenbusStateReconfiguring)
+-		goto out;
+-
+-	err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend,
+-			   "root_num", "%d", &num_roots);
+-	if (err == -ENOENT) {
+-		xenbus_dev_error(pdev->xdev, err,
+-				 "No PCI Roots found, trying 0000:00");
+-		err = pcifront_rescan_root(pdev, 0, 0);
+-		if (err) {
+-			xenbus_dev_fatal(pdev->xdev, err,
+-					 "Error scanning PCI root 0000:00");
+-			goto out;
+-		}
+-		num_roots = 0;
+-	} else if (err != 1) {
+-		if (err == 0)
+-			err = -EINVAL;
+-		xenbus_dev_fatal(pdev->xdev, err,
+-				 "Error reading number of PCI roots");
+-		goto out;
+-	}
+-
+-	for (i = 0; i < num_roots; i++) {
+-		len = snprintf(str, sizeof(str), "root-%d", i);
+-		if (unlikely(len >= (sizeof(str) - 1))) {
+-			err = -ENOMEM;
+-			goto out;
+-		}
+-
+-		err = xenbus_scanf(XBT_NIL, pdev->xdev->otherend, str,
+-				   "%x:%x", &domain, &bus);
+-		if (err != 2) {
+-			if (err >= 0)
+-				err = -EINVAL;
+-			xenbus_dev_fatal(pdev->xdev, err,
+-					 "Error reading PCI root %d", i);
+-			goto out;
+-		}
+-
+-		err = pcifront_rescan_root(pdev, domain, bus);
+-		if (err) {
+-			xenbus_dev_fatal(pdev->xdev, err,
+-					 "Error scanning PCI root %04x:%02x",
+-					 domain, bus);
+-			goto out;
+-		}
+-	}
+-
+-	xenbus_switch_state(pdev->xdev, XenbusStateConnected);
+-
+-out:
+-	return err;
++		pcifront_connect(pdev, true);
+ }
+ 
+ static int pcifront_detach_devices(struct pcifront_device *pdev)
+-- 
+2.35.3
+
