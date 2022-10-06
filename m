@@ -2,52 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ECCC5F6B36
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 18:07:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E225F6B3A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Oct 2022 18:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbiJFQHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Oct 2022 12:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53772 "EHLO
+        id S231139AbiJFQHr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Oct 2022 12:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbiJFQHA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 12:07:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8DC2AC0;
-        Thu,  6 Oct 2022 09:06:59 -0700 (PDT)
+        with ESMTP id S230039AbiJFQHp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Oct 2022 12:07:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA005FAEC;
+        Thu,  6 Oct 2022 09:07:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 08FA1619F3;
-        Thu,  6 Oct 2022 16:06:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5EAC433C1;
-        Thu,  6 Oct 2022 16:06:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DAD2CB8060E;
+        Thu,  6 Oct 2022 16:07:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E13C433C1;
+        Thu,  6 Oct 2022 16:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665072418;
-        bh=GGru+8sbJMjinEq83pAZv/oY3nAPx/Kxa/Uh35InZ60=;
+        s=k20201202; t=1665072462;
+        bh=UgBb/TSUw7my6TY7l4G4qUWrT35p6b5DxWO5v2EXFUw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=K9P4bCWhaT/BOtpZlOMk30/5KsskSUIZ1Lwbfbmc23LQvk7iT03JBUkeaBHpAgnsf
-         EWBwyvWTA7HGQRiQCHwjgw5WW+lYOMRIzJjSZDNrNqikFBtedXJztDCEMDNQTZ5b13
-         7JVcJ68Jjl0ntZCsOCvuasXXOZTtSoXX10dIpoWT1MJZN7pwS7tPA39PK5mKrfFas1
-         fUE82sZiyVgcBVMO22WCku2M6OfDwO+ij3kPIS5kcJTfF2QoOehyO59reKEGargJxp
-         YWoVgtsqA4or4QP61YmdspmepAokfSA67Dxu3x2d5YOCbCStbafmQ0gNXLoKDwr7Vq
-         5sBXaqdYP454g==
-Date:   Thu, 6 Oct 2022 11:06:56 -0500
+        b=bYRc9gY+RnaW3M+UVdNEDmoLAugBYy8K2qX0kpXPGQkv9N5tbL79ptUNR2mMT7szw
+         QoVJUwxd885mPZ0VCF0KSbvDiSAs6BvjXT6jz9eyJSCygFvb7QlYVplbUs8/Q+Cjyr
+         NuzuGZQN4iAn767Bn1IgR2AWGtPIq3PotbEN6AgX90ns466dTjErLVIxPjZVirBNU4
+         l8WwEykmpRY0G9lwblaUww19ZUdVoLT4wvn+SUhVhm/JGRBFkhZJUD0EcllR5cgYJ7
+         7edK6mnfNSGxnnhFSpD3c+6yc3NiePbLikMhys4hB+n7EE8T5j4lG7yK0ErHWO3I/X
+         702ZHcrx8fTRQ==
+Date:   Thu, 6 Oct 2022 11:07:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Elad Nachman <enachman@marvell.com>,
-        Yuval Shaia <yshaia@marvell.com>
-Subject: Re: [PATCH 2/2] PCI: armada8k: Add MSI support for AC5 SoC
-Message-ID: <20221006160656.GA2469901@bhelgaas>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        robh@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] PCI: qcom-ep: Fix disabling global_irq in error path
+Message-ID: <20221006160741.GA2470032@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221006111110.8574-3-vadym.kochan@plvision.eu>
+In-Reply-To: <Yz53NnxEkS7hg8Vc@lpieralisi>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,12 +53,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 06, 2022 at 02:11:10PM +0300, Vadym Kochan wrote:
-> From: Yuval Shaia <yshaia@marvell.com>
+On Thu, Oct 06, 2022 at 08:35:34AM +0200, Lorenzo Pieralisi wrote:
+> On Wed, Oct 05, 2022 at 12:35:29PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Oct 05, 2022 at 07:28:52PM +0530, Manivannan Sadhasivam wrote:
+> > > After commit 6a534df3da88 ("PCI: qcom-ep: Disable IRQs during driver
+> > > remove"), the global irq is stored in the "global_irq" member of pcie_ep
+> > > structure. This eliminates the need of local "irq" variable but that
+> > > commit didn't remove the "irq" variable usage completely and it is still
+> > > used for disable_irq() in error path which is wrong since the variable is
+> > > uninitialized.
+> > > 
+> > > Fix this by removing the local "irq" variable and using
+> > > "pcie_ep->global_irq" for disable_irq() in error path.
+> > > 
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Fixes: 6a534df3da88 ("PCI: qcom-ep: Disable IRQs during driver remove")
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > For today's "next" branch, I dropped 6a534df3da88 and the subsequent
+> > patches.  Hopefully Lorenzo can squash this fix into 6a534df3da88.
 > 
-> AC5 requieres different handling for MSI as with armada8k.
-> Fix it by:
-> 1. Enabling the relevant bits in init phase
-> 2. Dispatch virtual IRQ handlers when MSI interrupts are received
+> Done - the pci/qcom branch successfully passed kbot's tests as well.
 
-s/requieres/requires/
+Thanks, picked this up yesterday :)
+
+Bjorn
