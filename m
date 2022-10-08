@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4CE5F8290
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Oct 2022 04:52:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 541F05F828D
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Oct 2022 04:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiJHCwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229587AbiJHCwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 7 Oct 2022 22:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40428 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiJHCwF (ORCPT
+        with ESMTP id S229513AbiJHCwF (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Oct 2022 22:52:05 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 730F9BBE2C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 96D63BC60A;
         Fri,  7 Oct 2022 19:52:03 -0700 (PDT)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWvG5UBjIB8oAA--.19935S2;
-        Sat, 08 Oct 2022 10:51:50 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWvG5UBjIB8oAA--.19935S3;
+        Sat, 08 Oct 2022 10:51:51 +0800 (CST)
 From:   Jianmin Lv <lvjianmin@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
@@ -25,27 +25,31 @@ Cc:     linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         Bjorn Helgaas <bhelgaas@google.com>,
         Len Brown <lenb@kernel.org>, rafael@kernel.org,
         linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH V2 0/2] irqchip: Support to set irq type for ACPI path
-Date:   Sat,  8 Oct 2022 10:51:48 +0800
-Message-Id: <20221008025150.10734-1-lvjianmin@loongson.cn>
+Subject: [PATCH V2 1/2] irqchip/loongson-pch-pic: Support to set irq type for ACPI path
+Date:   Sat,  8 Oct 2022 10:51:49 +0800
+Message-Id: <20221008025150.10734-2-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221008025150.10734-1-lvjianmin@loongson.cn>
+References: <20221008025150.10734-1-lvjianmin@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxTWvG5UBjIB8oAA--.19935S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY97CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-        8cxan2IY04v7MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r
-        yrJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-        04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-TRANSID: AQAAf8AxTWvG5UBjIB8oAA--.19935S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar47XF1xCF4UuF1xWrWDtwb_yoW8tFy3pF
+        WY9a1ayr4xJFy7Zr1DCa18Wr15AwnakFW7KF4rAw129wsrCr4fAF17uFy7Zr9xAF43AF4U
+        ZrsYvF4Uua47uF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9a1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+        87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+        Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+        0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xS
+        Y4AK6svPMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_XrWUJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+        UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,22 +59,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For ACPI path of pch-pic and liointc driver, setting irq
-type is not supported yet, so the patch series add code
-to implement it.
+For ACPI path, the translate callback used IRQ_TYPE_NONE and ignored
+the irq type in fwspec->param[1]. For supporting to set type for
+irqs of the irqdomain, fwspec->param[1] should be used to get irq
+type.
 
-V1 -> V2
-- Change comment information and fix a bug for DT path in patch[1].
+On Loongson platform, the irq trigger type of PCI devices is
+high level, so high level triggered type is inputed to acpi_register_gsi
+when create irq mapping for PCI devices.
 
-Jianmin Lv (2):
-  irqchip/loongson-pch-pic: Support to set irq type for ACPI path
-  irqchip/loongson-liointc: Support to set irq type for ACPI path
-
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
  drivers/acpi/pci_irq.c                 | 6 ++++--
- drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
  drivers/irqchip/irq-loongson-pch-pic.c | 9 ++++++++-
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index 08e15774fb9f..ff30ceca2203 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+ 	u8 pin;
+ 	int triggering = ACPI_LEVEL_SENSITIVE;
+ 	/*
+-	 * On ARM systems with the GIC interrupt model, level interrupts
++	 * On ARM systems with the GIC interrupt model, or LoongArch
++	 * systems with the LPIC interrupt model, level interrupts
+ 	 * are always polarity high by specification; PCI legacy
+ 	 * IRQs lines are inverted before reaching the interrupt
+ 	 * controller and must therefore be considered active high
+ 	 * as default.
+ 	 */
+-	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
++	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
++		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
+ 				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+ 	char *link = NULL;
+ 	char link_desc[16];
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index c01b9c257005..5576c97fec85 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -159,11 +159,18 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+ 		return -EINVAL;
+ 
+ 	if (of_node) {
++		if (fwspec->param_count < 2)
++			return -EINVAL;
++
+ 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+ 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	} else {
+ 		*hwirq = fwspec->param[0] - priv->gsi_base;
+-		*type = IRQ_TYPE_NONE;
++
++		if (fwspec->param_count > 1)
++			*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++		else
++			*type = IRQ_TYPE_NONE;
+ 	}
+ 
+ 	return 0;
 -- 
 2.31.1
 
