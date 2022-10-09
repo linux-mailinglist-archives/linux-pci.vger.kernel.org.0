@@ -2,86 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 812095F8619
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Oct 2022 18:50:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E78C5F88AB
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Oct 2022 03:09:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbiJHQta (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Oct 2022 12:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47268 "EHLO
+        id S229776AbiJIBJu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 Oct 2022 21:09:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbiJHQs7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Oct 2022 12:48:59 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 08 Oct 2022 09:48:58 PDT
-Received: from mxout4.routing.net (mxout4.routing.net [IPv6:2a03:2900:1:a::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668D928718
-        for <linux-pci@vger.kernel.org>; Sat,  8 Oct 2022 09:48:58 -0700 (PDT)
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-        by mxout4.routing.net (Postfix) with ESMTP id 993EF100797;
-        Sat,  8 Oct 2022 16:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1665247337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2CjtYpLAgvV5iuDbNdLfUn1AAQ8FbgDIHOMDDF1b7zE=;
-        b=mWuFCw00ayffrf1hbea3CVx35NNRaREswXMrhnbPSUxzlOYtzYvwQZNvNnlRim+wAGk1bt
-        3qssCMDMIYCgTt8SDuL/1DnKdJb5If6UFY4ETLUCDHvGK2uC00qs3pWfOhpYs2SS8+6wza
-        nFm+mtkL7IfgkZJhxnDuCWmvJ/CY/HY=
-Received: from frank-G5.. (fttx-pool-217.61.149.60.bambit.de [217.61.149.60])
-        by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 9C70B8037B;
-        Sat,  8 Oct 2022 16:42:16 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Felix Fietkau <nbd@nbd.name>, Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S229772AbiJIBJt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Oct 2022 21:09:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A922417897;
+        Sat,  8 Oct 2022 18:09:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65DDC60A39;
+        Sun,  9 Oct 2022 01:09:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B545EC433D6;
+        Sun,  9 Oct 2022 01:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665277784;
+        bh=E9QLgyhF+lPn4P5xm5K5n9w5uHxiziXWKS7iOyG0cW4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hwAmqKIfojx4wr26MeIMDWqVB0ar+6+frmSVNpty9vQR+Bn8OIjO5AzrqbhC/FcPK
+         iCYRonHuTBfJyULP1a/makgBv2be7XqNcblAV5V/N9CP+zi9Qw1ZogTXlNndJnCFrD
+         zTQq8mrhfeBwi1edNZk9aKpaaNbAxxA7mQ2Jkn4BKNoTx/TQg0jInaSqP3XCuha2M8
+         3EDLUIAzy/p9iU1UHsYrCshQ/yj4wU3kIQR1RNWgJcweaidFbB2rFhAcPpwcLaSSez
+         YrhCBPbpWQ9EdYGdGNMeFaEfuQcT23HzBrXL1lW7ddqqguN6gPogvWW51GWauf2evr
+         nMPiCRlcI8M3w==
+Received: from [156.39.10.100] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ohKp4-00FKmf-BG;
+        Sun, 09 Oct 2022 02:09:42 +0100
+Date:   Sun, 09 Oct 2022 02:08:44 +0100
+Message-ID: <87v8othkgz.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianmin Lv <lvjianmin@loongson.cn>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH] PCI: mediatek-gen3: change driver name to mtk-pcie-gen3
-Date:   Sat,  8 Oct 2022 18:42:11 +0200
-Message-Id: <20221008164211.112944-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: ca58d61e-466f-4b8b-ab13-12b2dbd24a29
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Len Brown <lenb@kernel.org>, rafael@kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] irqchip/loongson-pch-pic: Support to set irq type for ACPI path
+In-Reply-To: <20221008025150.10734-2-lvjianmin@loongson.cn>
+References: <20221008025150.10734-1-lvjianmin@loongson.cn>
+        <20221008025150.10734-2-lvjianmin@loongson.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 156.39.10.100
+X-SA-Exim-Rcpt-To: lvjianmin@loongson.cn, tglx@linutronix.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, jiaxun.yang@flygoat.com, chenhuacai@loongson.cn, bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+On Sat, 08 Oct 2022 03:51:49 +0100,
+Jianmin Lv <lvjianmin@loongson.cn> wrote:
+> 
+> For ACPI path, the translate callback used IRQ_TYPE_NONE and ignored
+> the irq type in fwspec->param[1]. For supporting to set type for
+> irqs of the irqdomain, fwspec->param[1] should be used to get irq
+> type.
+> 
+> On Loongson platform, the irq trigger type of PCI devices is
+> high level, so high level triggered type is inputed to acpi_register_gsi
+> when create irq mapping for PCI devices.
+> 
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> ---
+>  drivers/acpi/pci_irq.c                 | 6 ++++--
+>  drivers/irqchip/irq-loongson-pch-pic.c | 9 ++++++++-
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index 08e15774fb9f..ff30ceca2203 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  	u8 pin;
+>  	int triggering = ACPI_LEVEL_SENSITIVE;
+>  	/*
+> -	 * On ARM systems with the GIC interrupt model, level interrupts
+> +	 * On ARM systems with the GIC interrupt model, or LoongArch
+> +	 * systems with the LPIC interrupt model, level interrupts
+>  	 * are always polarity high by specification; PCI legacy
+>  	 * IRQs lines are inverted before reaching the interrupt
+>  	 * controller and must therefore be considered active high
+>  	 * as default.
+>  	 */
+> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
+> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
+>  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+>  	char *link = NULL;
+>  	char link_desc[16];
 
-This allows it to coexist with the other mtk pcie driver in the same
-kernel.
+This is one patch adding support for the LPIC model.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+> index c01b9c257005..5576c97fec85 100644
+> --- a/drivers/irqchip/irq-loongson-pch-pic.c
+> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
+> @@ -159,11 +159,18 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+>  		return -EINVAL;
+>  
+>  	if (of_node) {
+> +		if (fwspec->param_count < 2)
+> +			return -EINVAL;
+> +
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 11cdb9b6f109..b8612ce5f4d0 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -1071,7 +1071,7 @@ static struct platform_driver mtk_pcie_driver = {
- 	.probe = mtk_pcie_probe,
- 	.remove = mtk_pcie_remove,
- 	.driver = {
--		.name = "mtk-pcie",
-+		.name = "mtk-pcie-gen3",
- 		.of_match_table = mtk_pcie_of_match,
- 		.pm = &mtk_pcie_pm_ops,
- 	},
+This is another patch fixing a regression introduced by bcdd75c596c8.
+
+>  		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+>  		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+>  	} else {
+>  		*hwirq = fwspec->param[0] - priv->gsi_base;
+> -		*type = IRQ_TYPE_NONE;
+> +
+> +		if (fwspec->param_count > 1)
+> +			*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+> +		else
+> +			*type = IRQ_TYPE_NONE;
+
+This is yet another patch fixing PCI INTx handling. You can also move
+the check against 'param_count < 1' in this block.
+
+>  	}
+>  
+>  	return 0;
+
+	M.
+
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
