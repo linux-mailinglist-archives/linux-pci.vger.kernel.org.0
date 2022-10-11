@@ -2,132 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0D35FB418
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 16:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 016805FB6DA
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 17:20:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbiJKOF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Oct 2022 10:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
+        id S230182AbiJKPUt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Oct 2022 11:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbiJKOFz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 10:05:55 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2049.outbound.protection.outlook.com [40.107.237.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B129081F;
-        Tue, 11 Oct 2022 07:05:53 -0700 (PDT)
+        with ESMTP id S230478AbiJKPUV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 11:20:21 -0400
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on20615.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e1a::615])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF4EB03DD
+        for <linux-pci@vger.kernel.org>; Tue, 11 Oct 2022 08:11:54 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VHyC84jtDM8wcaBsdzQ8LHNlN41Xf7+MzV18vaZrlOipyorRZacdOGx7aMELo8KBSevQcUHoXq5GZktIY+cKp9wsctwu0O1ApyBKSKnesMMsgSeiiW9m0+J4MiXGZPreQURebCWqSdQxAV+LpYs8S/tOefmqYL4YO1XDQRtp108hi5eFj6iKKyxiSEqkmpeDHTRoaj9wyOyfYTRYu06FH/cpuXDTTnkVuXGADfMCt0jgsryJ6vKs7ZRsVVLal9ujNT/WaR/v2VYep+gadGk9/kn3O5ICx5PUBn1V8zCzAIUjGFAsxevup6fNWeGHjqE4sd08avfxWCMAN8OFYyzqRg==
+ b=ZMIyXfrdXNQnzKnIdrO5wgrF6/Isy7wzA6eLhS0D0NiFzRBV24lA1XFH8DFwsoZLwVU9HmQBGxq6rY+4u5XMyalC/QX6HunK9lTWNYYXWafKEdNVEi8HcXXA460oLKH1Omla2OeZCGRUuHycGbboA3r9trhic373FXQE9cCvAIbN+ANZXpwlrl2YC8Das++jQOh2n1qo+OnNtpLC4H+Bw1BQUJHE2+44s5xn83w/lWqtlKD1qOnXgrTLDen07fbnpPeQgz9JkS5PkO/yX2NOZV6w2oG7hjRiil3UVaI5jszLkovzHuhM1avbQWMC8OW4SD2mQtHXNyLKnUQiiY+ksQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JkLEuNk3VzV9sW2V73dmkuYgAOs0nCQwhXGyPDPt9KI=;
- b=Pd3SFVoVWOgIQWSxz8WdmbG2fI3e2fAWlUJJc49Z390hw7dZN51r1MkT8K4Xz2GFgAOf3uHmonRkeIs7RfjyBwDf5AwCpDUxNGgEJmSwxn0wRawVCF+NVDanqPZoMpbP4hjtkMV/ZBz4sw5VxMNEwUOvNf8l3lJzcdRj+thPW1Lmpqu7l72U/rOVk6+3C6NYD5wi9RIAFHMbvY4qd3hOYPji70pZLpUixLF76z1llbK/Zntxra9d0P7mrj5McONBcqjIlQUWefYoMwkY1qlgAxajf+L5jFCsVdj9lsCwU3U4+gOPEJ/zXS52pTJr6CawbP138s3qE/LGmObF4YvtYQ==
+ bh=4iuTK//cPUuEqtR9afbKJq4t6CGbMG+4MNKzr5NKGXY=;
+ b=C6UwJxt6aJlkpQ9m6QSzF11kqO6h55mtyhrr0E7xN5KUZCo8vthQ0iZ8OXEUejwIs3n4dTgF2MkGAkI75bvGep+C2nULa0pBT5xePypXg8Wm663MoK9+PId57fikCPa6GzTWoKY+uu5ImnqU+S/pbl56KoOldm/Qe8PyMGeojxtwgA5YEkpww5lOSuz45asw/WgH/RTpvcP/pKnbrHMH8Bz1DxG+1HNhKMXjfzr0jbxOKA8YoBYjvSYglh2qwvMotFMoKV4PLdZllRRkELoyu0RyWQXtolKw5EQp1P0wUBfNFlgfcg51lCcHSrY9C1I1NreLiu4BLY/n/bOwM0XibQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JkLEuNk3VzV9sW2V73dmkuYgAOs0nCQwhXGyPDPt9KI=;
- b=1qJd+v4hGAhA8XKXhCrhliFOiDNlpzAjZpVFDXtQsMV5UNQ5SHsvu+fb0Wc9XUZecEiOR/Y5EISlPM5a+0OId7TF5HasrSRG07ChRFTGADjmBJ6c+nQdB0YC/cpapFniVn7y2pqG3zYtEKbfp4hxDSzJrrEEYJQ2E3GU8ICZkzE=
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
- by MN0PR12MB6053.namprd12.prod.outlook.com (2603:10b6:208:3cf::14) with
+ bh=4iuTK//cPUuEqtR9afbKJq4t6CGbMG+4MNKzr5NKGXY=;
+ b=SUFyINakda99UvgSfNn3UKAsJstPv5PnpiiaWm2Xm5HllrUz9yK+U4uNh7YdqxEUcn7o9p6jw4QBv+Z6H3r4kVRd+BysYjfet5AETB5ARJI4QIe6FcrgISHdsj6qaCs/SyF5Ld9UGvLeST0UkMIan0o3dyav0TIGGqN8svImfZQ=
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
+ by PAXPR04MB9253.eurprd04.prod.outlook.com (2603:10a6:102:2bd::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.36; Tue, 11 Oct
- 2022 14:05:51 +0000
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::f5f8:4688:2e04:4769]) by BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::f5f8:4688:2e04:4769%3]) with mapi id 15.20.5709.019; Tue, 11 Oct 2022
- 14:05:51 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     "Ma, Rui" <Rui.Ma@amd.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Tue, 11 Oct
+ 2022 15:09:54 +0000
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::6110:8304:5648:88f5]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::6110:8304:5648:88f5%10]) with mapi id 15.20.5709.019; Tue, 11 Oct
+ 2022 15:09:54 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "sergey.semin@baikalelectronics.ru" 
+        <sergey.semin@baikalelectronics.ru>, "kw@linux.com" <kw@linux.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Subject: RE: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host memory
- occupied by PTEs
-Thread-Topic: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host memory
- occupied by PTEs
-Thread-Index: AQHY0X7RCECvmc6ZJ0OnxWUUfOu4763z19kAgBU3eRCAAEFiwA==
-Date:   Tue, 11 Oct 2022 14:05:51 +0000
-Message-ID: <BL1PR12MB51446437265DD1E8AA0794E9F7239@BL1PR12MB5144.namprd12.prod.outlook.com>
-References: <20220926080542.920427-1-Rui.Ma@amd.com>
- <20220927220640.GA1728095@bhelgaas>
- <CH2PR12MB4838B7571D40D0CEDF30600D91239@CH2PR12MB4838.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB4838B7571D40D0CEDF30600D91239@CH2PR12MB4838.namprd12.prod.outlook.com>
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lznuaa@gmail.com" <lznuaa@gmail.com>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [EXT] Re: [RFC] PCI EP/RC network transfer by using eDMA
+Thread-Topic: [EXT] Re: [RFC] PCI EP/RC network transfer by using eDMA
+Thread-Index: AQHY04LDhqJDbvFxMUGGQWTdR9PZS64JJMuAgAAyNNA=
+Date:   Tue, 11 Oct 2022 15:09:54 +0000
+Message-ID: <HE1PR0401MB23311B6698EE10744BA671DE88239@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <20220928213856.54211-1-Frank.Li@nxp.com>
+ <d098a631-9930-26d3-48f3-8f95386c8e50@ti.com>
+In-Reply-To: <d098a631-9930-26d3-48f3-8f95386c8e50@ti.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=true;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2022-10-11T11:19:13Z;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ActionId=bae527d0-9544-4c72-ac95-fc57c150fa09;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=1
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_enabled: true
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_setdate: 2022-10-11T14:05:48Z
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_method: Standard
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_name: General
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_actionid: 8b7ec263-f7a5-4b54-bc97-0f054e9d0bd0
-msip_label_4342314e-0df4-4b58-84bf-38bed6170a0f_contentbits: 0
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
+ header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR12MB5144:EE_|MN0PR12MB6053:EE_
-x-ms-office365-filtering-correlation-id: 91cae50a-cac1-4d32-abfa-08daab91b47f
+x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|PAXPR04MB9253:EE_
+x-ms-office365-filtering-correlation-id: 7dce431c-de8b-4ef3-015c-08daab9aa711
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kQ/sAORr3C27cdwLms5ua8Kf2UuCCgMVZxaR37e8EJSGBXYhfvbaYDdhDYODIQBRa3g4Xo1t7kDkkfoXWbGBEPrk61sACzBQEEPwH5OjQYZ9WbF2eDXpSrQV6BP476tVxPuy6tLHSty2zGzIji1Ty6qBjeea7tqX85OXb04OpelV8XTmbGGn4PBVsX0aWjQ3HfO0IGzdVtia1tRla2pVxTsTuD5KwYt3seR/++F3jReWJmZxAJ6X+QrF+IxerRH7PY4VL4t03AH1BkdBuGLQp72/YJmahQ1z93u+q9B7ev9jtmusCeFup9kTsGcmxZn5SsatHIczgyo6SPWWcE5EsEeg7wH7vRmctxQSI3/lzaijDYl5qEuOAoCLFu8m8a3FGmcu0hQHSAyAXAm8A0MWOVt/bEtaX/4taSkHDzfJHqGGDAFRL+ygeR09WYU/g+N16fuzTCS6pqtTNOW+tn+nSex3QrrSRugtBSXygkt170poB0IdfEEx4QQUsFZceKzZfH0I+Ymo9rxQfSApbfgnj81jj0ma84RdBHt6bsFvRQ+HDgR98QufMn8GnK6tPel+3UffezlKvWqaFcnJGp4jlgehY/GC8F5OmZ3o6Q7eQ3RUeXoFP9SdCKSY9JzpCVuAJSDlfK9AmO0QMxBkUGXyKr7PyuGNqnlsmxvez4gqc9mvpVlfP09j5qH6tB4twXAAbKSE4thrKzP5orJvGEceRQtG6uPklW6sZDatqNRijyPqXKlkJHxrCiwuIPpgffu/G/5tKdwCRG8HeoK8W8hp1g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(451199015)(71200400001)(66946007)(76116006)(4326008)(6506007)(66556008)(8676002)(7696005)(54906003)(110136005)(53546011)(64756008)(38100700002)(66446008)(66476007)(316002)(33656002)(122000001)(478600001)(55016003)(26005)(9686003)(38070700005)(83380400001)(86362001)(41300700001)(8936002)(52536014)(186003)(5660300002)(2906002);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: 5ul1rtagXptommdJQnKDr0MX/2MD3d/y5X3iqX7nFTvUv4151X7dzYvZjyUiJRjerfBuU/8Pp6MnL26jaWyg1qXkRCipIta1hebHf35vHhDAwsLo9UGsAd7YyRRxg8xxYBDw/25Xhbr7JIzzmZpN4mxaZxaqBwOsHGhZo7LrvgFWMPtVk+Shj4K/zrbb+cz/YFVRtVBAga0M2OpJPN/49f6AWBAQ/12ypL6aAq1+d1woTS3jkAilFp18lVk8QUBeplXwuiabXd2bBxuVJ71zWgUMDAYzs+kTkR740N5YxcLQdk4lssXqiQcGTjL7VUsH4PSdMensbLV7QF9vXkbkNyaqmdqJ9qHZWXOp0n4Q/bTR0t62CzJp1HG8dhBH+WamHLfSzYBAfsVdHKLm4JHbnkDTE5tgqmYEm+lg5xJcH3wab05eJA3+kMc1rjsXw3GnC6XkB29klzOehuW5NBPFxcU2xoydeQW7KS7p9Llurijqj6C/83OmnAgXKDUPh01EQOx+2Rubr22vYzM71zO6mhfg5H+7Rvrk6I9GMJAyfWWi6brokxFInzYSvCQl4qbnoMwJjhqEDzk6EkkqcULJlPDtFzRuHPi5haktLc3CUOyO/woDMetfzkTfydPBnWZXVRFsL4dXZrIqNepQGqDeLQ2BAuGPZOwGPE9+Th6Vgni8MRJLVJUErN50/RgSKLs6tGMMBF1HqQklm3mBS3Mr4I8r/cA5e1PqxDOta6fslhaVED7QgvlQjnzFEeUDDDbxMdv1HN9vcwtQxQbtFAYUUYViUstOy7VAv5x7fuiukubRPuaIktwJdfk/irNSWj8Y
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(451199015)(110136005)(83380400001)(71200400001)(8676002)(41300700001)(6506007)(38100700002)(45080400002)(966005)(53546011)(9686003)(7696005)(122000001)(316002)(7416002)(921005)(44832011)(478600001)(8936002)(66446008)(33656002)(76116006)(86362001)(26005)(52536014)(64756008)(5660300002)(55016003)(66556008)(38070700005)(186003)(2906002)(66476007)(55236004)(66946007);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Yn4qwC9NkuH0aC7YNYoF0soJK+T8aDrBtkIDpWDzQIqXwsr2IXVa84Q2csYs?=
- =?us-ascii?Q?23hCaJzYEHVHY+EKK28I50lqzxmxy8dBLyKp6OH79wLgGW+4WOf4q/2JRYDu?=
- =?us-ascii?Q?7mK6FrS3AMrp9rhY/bf+nn6Nsm9uh+ynQRon50F52OuIPC/VjcFU3VtYkXo/?=
- =?us-ascii?Q?hXGq9DPgHzG2w8AQPHydbbsTDXvZZk68uvxjBgYSscA73LXUz9WwpmBROXlH?=
- =?us-ascii?Q?v/md20dF41rQVA8HM2DYV6oMx+y//l3Lgmeql40EF6aCqGzgWZeu2MN28reg?=
- =?us-ascii?Q?olgocGApNZjZJkOVslgjeMbVe3qKwPwjRlieY3lEOWp3poy6/8GxsmfTFTGq?=
- =?us-ascii?Q?auh62ITwihX9bitDW2cg2C4mY401PCQatHBaM29SAlsNU/vKM6pUkgKioNLM?=
- =?us-ascii?Q?P1/bUfF4imnbBM94wuAhnfFUM7u8yaGo0w2BRfUSWdGgsrXsEQjv1bqlFGVR?=
- =?us-ascii?Q?j4qTpx9bTsOIddciJACVQfolTS7PmDHdD5ZVInfQ0D0tSHbkFcxQ4KbEAvU1?=
- =?us-ascii?Q?GH3KbbSpMF+sRu0ILrvPVxZWgahcaidHgk3cP3kDFlDFLJgerf66+kZ4frlA?=
- =?us-ascii?Q?Kj7t0kYTKXQq59z5bMIVbqTbfqBP+dtWl1drs4e3yLsICcuvbqiH4koRjfMM?=
- =?us-ascii?Q?o/UnBMfcj2gKNzdhirvUSb+DckkDE1dTIen6LWCz7Es/AXoWIA8RWFw0fRYG?=
- =?us-ascii?Q?ewyMlQEEW4cpM1OsWZE9duXoD8NkIEovIt8an9toK/URIVquaSD2MDBsrR2c?=
- =?us-ascii?Q?IXM4h8T62DA55vYxI3pymbu96gI4QYXzwR8Zg9bWamdS7YtyhYiAdbcUGuHe?=
- =?us-ascii?Q?j1p34uBOCSvwe8w+fQv6XGkHr7XpMyVqqXhRl4s+3/wv1l7LwyuWYVjVrJxM?=
- =?us-ascii?Q?NpnzuwyiA8soTkNLjZjZ/NI+/lhRTQCctFHMpQ6t8V69c30zqwW1HfKpX/Gg?=
- =?us-ascii?Q?sebSNT0D7tbirFaib8tXytzBWvN6Y4fyRH5YuVevMHife2uexTgDgcbtFePo?=
- =?us-ascii?Q?7VtdDzyOWQh2TqI2E0eKpop+rPtY0D5kEGDZsF5cpNknKnUn6amedKxxmTzH?=
- =?us-ascii?Q?TWTuxCExG+mgvMZNJpCs45mr4jv7ZVYamjGdiC4aJp/TuKrhbvoiBoE5eDx+?=
- =?us-ascii?Q?oAzT5vhBVHRwC2tRFfNv8QNQF23ULeeezjYceMlOedQcbjx1nlltZDJSGxJ6?=
- =?us-ascii?Q?5rHG2RSK3ECQEE9n5yKWv+C9bglsIcUGgqwK3UUCTFCD0U/8n1XuAO1x39k+?=
- =?us-ascii?Q?/wKrt63Buh74VKmEp7/6CPhppU/3uzOi3LAg8ycQh8gMdyctrGEaycTP+5ro?=
- =?us-ascii?Q?Oe2LYQ3ZGhnJFcSM3rUOmJOHowZwGJjBuS927er3g7Uug7b4OqhoGaptfpK4?=
- =?us-ascii?Q?MnC6gRLqTwHlgVSFjVGgVTfjiqQLpz2n+JFyCvOcTqSzC1+8giqZ/LxKUXOs?=
- =?us-ascii?Q?LV2Z+cpzuevVM2TI/0J5cCUp1dEOKqSaPCFR8qP86UQsiWnbrdypoCBLa/Yn?=
- =?us-ascii?Q?vaOBjFFgOBqzH+O/oq/ESMf5eMyVxJcoY0VYV4+Dl+zYC3X91LFvUMnMwmZ+?=
- =?us-ascii?Q?npwLogi1evFL4AA55TfyZssQXSr94KROMLW6X6VB?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eUpONmYxaFZvTUtOL1VxanM4c1ZuVWdHRS9ORDBmQjBUUXhEQWtjenh4ZXN1?=
+ =?utf-8?B?QUtUcFg3VlVtMmM4YjhIYWFNVDVkVTI1bEdUM0pjVWx6KzdsTCtxUlJVRWdk?=
+ =?utf-8?B?aXl3QXVHOGNnaERBWERIYy9hbWVaL1REMGJoSzZWV2g2WkxiWGVCQm9LR0Ur?=
+ =?utf-8?B?OVN2ZGNPT0w5TGdTQzNXdWdTNTl3MFl0enk3aFR2V3RTZjFEVW5idDRxZVNC?=
+ =?utf-8?B?eStLamgvVHNCcEtYRm1qY0lMeTNpODNFNGxkMUNvVkRrWFRyWkVVR1J5ald6?=
+ =?utf-8?B?NHhTeFBSdVNadmkzWXQ2N0x2c01PY3AvODRWVFh2U2R1Y2kwZlUyS04yeHVa?=
+ =?utf-8?B?SnlIU212NnkyMWxvZTIxbnNrNDMwajVvZDFrSEVicEhIZU5uWis2RkpjVjRM?=
+ =?utf-8?B?cXQzM0krcWc5YjFLMlVFWGxpcW9SVGlrQk1nVEhjY1pnVVZDU3hvRmd5Y1BV?=
+ =?utf-8?B?R2JGZlJoU3p4Nm9ZL3h4SWl6NEY1ODlnWTB3c0MwcU9OMHZxVEV5eUNEampW?=
+ =?utf-8?B?Y2xaa01DcWxJVlR6Z25BSlVJNHNPUFE1cWVuK2ZhdFdYZ3BabVVHWlBkMDd2?=
+ =?utf-8?B?dk5mT3R4TWpzU3dtNnp1UDVndDlBT2lyMmF2SkVCWmY1YkFHN3VicmM2RVlp?=
+ =?utf-8?B?MkNtUGFocW5iOXJ4M2k4NzJySmhxU3MvNnl2WmJPYmRHU0VLc2N4ZnJVVUdJ?=
+ =?utf-8?B?aHZtZXBOcGtoUHlIcmhyODZQNmFzS1VYVXY1Y1NqWDU0aHVRdHB2V1o5dlFx?=
+ =?utf-8?B?QzNDMmhtaXYxKzBCRXBDNXpBbkN2U3ZTRDhWcGJNSWplYjJvU0pVejNyeEdS?=
+ =?utf-8?B?Zk5Vd2NyWFQzQ01BSkhiSmZkU3hqakQzNWxNSlI0alVabDNnblZJYVZRclhT?=
+ =?utf-8?B?RHdjU28vcnAvdC9kcWVJcXBTQXhlVmZRYmdFUm83dm1OMlRoZ2FnQ1B2anJj?=
+ =?utf-8?B?V2phNkQ1WWtvS0gyMzMrNGQ3YmthL1VwK2kxRVdxVnA0c2lhQXlUV2RIZHpt?=
+ =?utf-8?B?MnlqZUlYN1FMM296dDYwMHB5QlYvSUpwYlE5a3RHUWJFK04wTTlFNitMZVg4?=
+ =?utf-8?B?RWY3TXJqZmd6MDlkNGFzN2FTNEo0ZC9QSmhtVDF0blZwZXRENFVCTjhhNHEy?=
+ =?utf-8?B?cjIwY0l4Y2d2N1ZXb0VMU09sa3VjNlV3bjJGWWliay9WRTQzaHFDenVaT1NJ?=
+ =?utf-8?B?OGp2U3FtdnFxaUpRWkFiYU02OStkVXVaT2tybHl5SGY1WjJCVmd3YldhSUpn?=
+ =?utf-8?B?aE9nNWFmeTRPbk16QllVbFZDSzg2YzJYUVJSSjU4L2hBRDkwRDNWbDhuZ3ky?=
+ =?utf-8?B?K21YZEthMitHWm1hS1FLNWlQT3gzYm1ESmdnMHZlQm8yR1I4eElJS3Y3RUdi?=
+ =?utf-8?B?b1BhTldkSFFRZytKUVRNZWNaODVKdTAzNkJleGxzaTJRa0l6Qk1hUnE4NitY?=
+ =?utf-8?B?STBRWG8yV0Z4S1VOZmtDVUF0ZkdyRVB3dHJxdUhibDBqMDlJNENZNTdNay9v?=
+ =?utf-8?B?UVpQRGh5cjNiWnA1Zlhydnp6cW1EWlVSVVRqMGdlUDVEL3JBZi8wZlFSSEJG?=
+ =?utf-8?B?MjF3NXpSQStJanBZSEgwL0R4T0E4R2pSZ1Q3VDRUNHA3Ri9uOHN5Smk4UDZB?=
+ =?utf-8?B?Umtad3FjYTVOOUdENVhNbVJKQ29Xc3dRWWlvamUyMXlZL05GRXRlSEJ0THpO?=
+ =?utf-8?B?TUZwV1F5QlFUOGZ6bm9PTDRXcTVvSnk1OVNUQ0FQQXQ1NGV1MmFGakQzWHFD?=
+ =?utf-8?B?R2tsRGdvTDBqK1o0ZlBqV3BEalFqMVRSUW5QQjZIV0pxL3luY2lBV2ticUw0?=
+ =?utf-8?B?ZEwrWFhnUzNDNE9HK0NvSDlySm15dFl3UUIydUpsZFA0bnBxTkpjb3czSE5H?=
+ =?utf-8?B?Uy96N252QlE3aE0yNkZzdm5yanRsV2FtbUZtbmNsUXFLSzA5SjJkOWJrTHhp?=
+ =?utf-8?B?UTlWYTdOaE13bVJlOWt2L3AwS0lPaHhiM2E5MjJ5RXRQRkhxbkJsVDlQd2I1?=
+ =?utf-8?B?S1VncWZBb29zcUVHSDVGNTJKdTJZSGZPVWloT2Zha1lPSldoZTFjREl5MCtu?=
+ =?utf-8?B?UDZqRnlVUmFQakJZOWNaMEVHMXUrVk1RaklzcmphclNzK2Nrc2ZaL3RhVW9J?=
+ =?utf-8?Q?cGBQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91cae50a-cac1-4d32-abfa-08daab91b47f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2022 14:05:51.3063
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7dce431c-de8b-4ef3-015c-08daab9aa711
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2022 15:09:54.2100
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eparh8fdmbaV9NcvhBJxsxZhvltqyS2mmG49RPAtTkJg1N71WGD9v6Bk29waQ22BU1ERWV7F+sKY25DOlmRAsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6053
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+X-MS-Exchange-CrossTenant-userprincipalname: kl/rHEzh0tKZvFcS/xYiq7+9kjjLyinlhPHEMzPU4cMWoShWYtXhbQjlUeAQ2LjR/37OYZIy3Yz7UifdRen8cA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9253
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,T_SPF_PERMERROR autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -135,279 +133,167 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[AMD Official Use Only - General]
-
-> -----Original Message-----
-> From: Ma, Rui <Rui.Ma@amd.com>
-> Sent: Tuesday, October 11, 2022 7:19 AM
-> To: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Deucher, Alexander
-> <Alexander.Deucher@amd.com>
-> Subject: RE: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host
-> memory occupied by PTEs
->=20
-> [AMD Official Use Only - General]
->=20
-> Hi Helgass:
-> 	Thank you very much for your suggestions on my patch!
->=20
-> 	The patch is a device-specific behavior. In our AMD device SR-IOV,
-> the actual VF BAR size is dependent on NumVFs too. If only one VF is
-> created, the VF BAR size will depend on BAR probing algorithm as describe=
-d
-> in Section 9.3.3.14, but when several VFs created our own driver will
-> decrease BAR0 memory size  according to NumVFs. So I want to add this
-> quirk to keep Linux code and certain driver code consistent.
->=20
-> > Except that this doesn't affect the *starting* address of each VF BAR,
-> which I guess is what you mean by "BAR memory mapping is always based on
-> the initial device physical device."
-> Yes we should not change the starting address or the device cannot load
-> well.
->=20
-> > Well, I guess the device still describes its worst-case BAR size; the q=
-uirk
-> basically just optimizes space usage.  Right?
-> Yes.
->=20
-> > Aren't both virt and phys contiguous and nicely aligned for this case? =
- It
-> seems like the perfect application for huge pages.
-> It cannot use huge page though address aligned.
-
-+ KVM, Christian
-
-I think this is just working around a bug in KVM.  This is to avoid wasting=
- huge amounts of memory for page tables due to KVM using 4K pages for some =
-reason.  I think we should figure out why KVM is not using huge pages for t=
-his rather than working around this in the PCI layer.
-
-Alex
-
->=20
-> >> +		shift =3D 1;
-> >> +		shift =3D virtfn_get_shift(dev, iov->num_VFs, i);
-> >Maybe more of the fiddling could be hidden in the quirk, e.g.,
-> >  size =3D quirk_vf_bar_size(dev, iov->num_VFs, i);
-> >  if (!size)
-> >    size =3D pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> If I hide get-shift func in the quirk is it concise to call pci_iov_resou=
-rce_size()
-> in quirk?
->=20
-> 	And I solved other issues in the patch sent later. Thank you for your
-> patience!
->=20
->=20
-> Regards,
-> Rui
->=20
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Wednesday, September 28, 2022 6:07 AM
-> To: Ma, Rui <Rui.Ma@amd.com>
-> Cc: bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host
-> memory occupied by PTEs
->=20
-> On Mon, Sep 26, 2022 at 04:05:42PM +0800, Rui Ma wrote:
-> > In SR_IOV scene, when the device physical space(such as Video RAM)is
-> > fixed, as the number of VFs increases, the actual BAR memory space
-> > used by each VF decreases.
->=20
-> s/SR_IOV/SR-IOV/ to match spec usage.
->=20
-> I think this is device-specific behavior, right?  I don't see anything in=
- the PCIe
-> spec about the BAR size being dependent on NumVFs.  If it's device-specif=
-ic,
-> it shouldn't be presented as "for all SR-IOV devices, the actual BAR memo=
-ry
-> space decreases as number of VFs increases."
->=20
-> > However, the BAR memory mapping is always based on the initial device
-> > physical device. So do not map this unneeded memory can save host
-> > memory occupied by PTEs. Although each PTE only occupies a few bytes
-> > of space on its own, a large number of PTEs can still take up a lot of =
-space.
->=20
-> So IIUC this is basically a quirk to override the "VF BAR aperture"
-> size, which PCIe r6.0, sec 9.2.1.1.1 says is "determined by the usual BAR
-> probing algorithm as described in Section 9.3.3.14."
->=20
-> Except that this doesn't affect the *starting* address of each VF BAR, wh=
-ich I
-> guess is what you mean by "BAR memory mapping is always based on the
-> initial device physical device."
->=20
-> Hmm.  This kind of breaks the "plug and play" model of PCI because the
-> device is no longer self-describing.  Well, I guess the device still desc=
-ribes its
-> worst-case BAR size; the quirk basically just optimizes space usage.  Rig=
-ht?
->=20
-> It's a shame if we can't reduce PTE usage by using hugeTLB pages for this=
-.
-> Aren't both virt and phys contiguous and nicely aligned for this case?  I=
-t
-> seems like the perfect application for huge pages.
->=20
-> > Signed-off-by: Rui Ma <Rui.Ma@amd.com>
-> > ---
-> >  drivers/pci/iov.c    | 14 ++++++++++++--
-> >  drivers/pci/pci.h    | 15 +++++++++++++++
-> >  drivers/pci/quirks.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 64 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c index
-> > 952217572113..6b9f9b6b9be1 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -296,6 +296,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id=
-)
-> >  	struct pci_sriov *iov =3D dev->sriov;
-> >  	struct pci_bus *bus;
-> >
-> > +    /*
-> > +     * Some SR-IOV device's BAR map range is larger than they can actu=
-ally
-> use.
-> > +     * This extra BAR space occupy too much reverse mapping size(physi=
-cal
-> page
-> > +     * back to the PTEs). So add a divisor shift parameter to resize t=
-he
-> > +     * request resource of VF.
-> > +     */
-> > +	u16 shift =3D 1;
-> > +
-> >  	bus =3D virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
-> >  	if (!bus)
-> >  		goto failed;
-> > @@ -328,8 +336,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id=
-)
-> >  		virtfn->resource[i].name =3D pci_name(virtfn);
-> >  		virtfn->resource[i].flags =3D res->flags;
-> >  		size =3D pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> > +		shift =3D 1;
-> > +		shift =3D virtfn_get_shift(dev, iov->num_VFs, i);
->=20
-> Maybe more of the fiddling could be hidden in the quirk, e.g.,
->=20
->   size =3D quirk_vf_bar_size(dev, iov->num_VFs, i);
->   if (!size)
->     size =3D pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
->=20
-> >  		virtfn->resource[i].start =3D res->start + size * id;
-> > -		virtfn->resource[i].end =3D virtfn->resource[i].start + size - 1;
-> > +		virtfn->resource[i].end =3D virtfn->resource[i].start + (size >>
-> > +(shift - 1)) - 1;
-> >  		rc =3D request_resource(res, &virtfn->resource[i]);
-> >  		BUG_ON(rc);
-> >  	}
-> > @@ -680,12 +690,12 @@ static int sriov_enable(struct pci_dev *dev, int
-> nr_virtfn)
-> >  	msleep(100);
-> >  	pci_cfg_access_unlock(dev);
-> >
-> > +	iov->num_VFs =3D nr_virtfn;
-> >  	rc =3D sriov_add_vfs(dev, initial);
-> >  	if (rc)
-> >  		goto err_pcibios;
-> >
-> >  	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
-> > -	iov->num_VFs =3D nr_virtfn;
-> >
-> >  	return 0;
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h index
-> > 3d60cabde1a1..befc67a280eb 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -603,6 +603,21 @@ static inline int pci_dev_specific_reset(struct
-> > pci_dev *dev, bool probe)  }  #endif
-> >
-> > +struct virtfn_get_shift_methods {
-> > +	u16 vendor;
-> > +	u16 device;
-> > +	u16 (*get_shift)(struct pci_dev *dev, u16 arg, int arg2); };
-> > +
-> > +#ifdef CONFIG_PCI_QUIRKS
-> > +u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2); #else
-> > +static inline u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int
-> > +arg2) {
-> > +	return (u16)1;
-> > +}
-> > +#endif
-> > +
-> >  #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)  int
-> > acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
-> >  			  struct resource *res);
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
-> > da829274fc66..add587919705 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4085,6 +4085,43 @@ int pci_dev_specific_reset(struct pci_dev *dev,
-> bool probe)
-> >  	return -ENOTTY;
-> >  }
-> >
-> > +static u16 divided_by_VF(struct pci_dev *dev, u16 num_VFs, int
-> > +bar_num)
->=20
-> This is clearly ATI specific or at the very least specific to devices tha=
-t divvy up
-> BAR0 in special ways, so the name is a bit too generic.
->=20
-> > +{
-> > +	u16 shift =3D 1;
-> > +
-> > +	if (bar_num =3D=3D 0) {
-> > +		while ((1 << shift) <=3D num_VFs)
-> > +			shift +=3D 1;
-> > +	}
-> > +	pci_info(dev, "BAR %d get shift: %d.\n", bar_num, shift);
->=20
-> Drop the period at end.  If we're changing the size, I think it would be =
-useful
-> to know num_VFs, BAR #, and the new size.  IIUC, "dev" here is the PF, so
-> this is the "VF BAR", not the BAR 0 of the PF.
->=20
-> > +	return shift;
-> > +}
-> > +
-> > +static const struct virtfn_get_shift_methods virtfn_get_shift_methods[=
-] =3D
-> {
-> > +	{ PCI_VENDOR_ID_ATI, 0x73a1, divided_by_VF},
-> > +	{ 0 }
-> > +};
-> > +
-> > +/*
-> > + * Get shift num to calculate SR-IOV device BAR. Sometimes the BAR
-> > +size for
-> > + * SR-IOV device is too large and we want to calculate the size to
-> > +define
-> > + * the end of virtfn.
-> > + */
-> > +u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2) {
-> > +	const struct virtfn_get_shift_methods *i;
-> > +
-> > +	for (i =3D virtfn_get_shift_methods; i->get_shift; i++) {
-> > +		if ((i->vendor =3D=3D dev->vendor ||
-> > +		     i->vendor =3D=3D (u16)PCI_ANY_ID) &&
-> > +		    (i->device =3D=3D dev->device ||
-> > +		     i->device =3D=3D (u16)PCI_ANY_ID))
-> > +			return i->get_shift(dev, arg1, arg2);
-> > +	}
-> > +
-> > +	return (u16)1;
-> > +}
-> > +
-> >  static void quirk_dma_func0_alias(struct pci_dev *dev)  {
-> >  	if (PCI_FUNC(dev->devfn) !=3D 0)
-> > --
-> > 2.25.1
-> >
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxMSwgMjAy
+MiA2OjM4IEFNDQo+IFRvOiBGcmFuayBMaSA8ZnJhbmsubGlAbnhwLmNvbT47IGZhbmNlci5sYW5j
+ZXJAZ21haWwuY29tOw0KPiBoZWxnYWFzQGtlcm5lbC5vcmc7IHNlcmdleS5zZW1pbkBiYWlrYWxl
+bGVjdHJvbmljcy5ydTsga3dAbGludXguY29tOw0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+OyBtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZzsNCj4gbnRiQGxpc3RzLmxpbnV4LmRl
+djsgamRtYXNvbkBrdWR6dS51czsgaGFvdGlhbi53YW5nQHNpZml2ZS5jb207DQo+IGx6bnVhYUBn
+bWFpbC5jb207IGlteEBsaXN0cy5saW51eC5kZXYNCj4gU3ViamVjdDogW0VYVF0gUmU6IFtSRkNd
+IFBDSSBFUC9SQyBuZXR3b3JrIHRyYW5zZmVyIGJ5IHVzaW5nIGVETUENCj4gDQo+IENhdXRpb246
+IEVYVCBFbWFpbA0KPiANCj4gSGkgRnJhbmssDQo+IA0KPiBPbiAyOS8wOS8yMiAzOjA4IGFtLCBG
+cmFuayBMaSB3cm90ZToNCj4gPg0KPiA+IEFMTDoNCj4gPg0KPiA+ICAgICAgICAgUmVjZW50bHkg
+c29tZSBpbXBvcnRhbnQgUENJIEVQIGZ1bmN0aW9uIHBhdGNoIGFscmVhZHkgbWVyZ2VkLg0KPiA+
+IEVzcGVjaWFsbHkgRFdDIEVETUEgc3VwcG9ydC4NCj4gPiAgICAgICAgIFBDSWUgRURNQSBoYXZl
+IG5pY2UgZmVhdHVyZSwgd2hpY2ggY2FuIHJlYWQvd3JpdGUgYWxsIFBDSSBob3N0DQo+ID4gbWVt
+b3J5IHJlZ2FyZGxlc3MgRVAgc2lkZSBQQ0kgbWVtb3J5IG1hcCB3aW5kb3dzIHNpemUuDQo+ID4g
+ICAgICAgICBQY2ktZXBmLXZudGIuYyBhbHNvIG1lcmdlZCBpbnRvIG1haW5saW5lLg0KPiA+ICAg
+ICAgICAgQW5kIHBhcnQgb2Ygdm50YiBtc2kgcGF0Y2ggYWxyZWFkeSBtZXJnZWQuDQo+ID4NCj4g
+aHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
+JTNBJTJGJTJGbG9yZS5rDQo+IGVybmVsLm9yZyUyRmlteCUyRjg2bXRhajdoZHcud2wtDQo+IG1h
+eiU0MGtlcm5lbC5vcmclMkZUJTJGJTIzbTM1NTQ2ODY3YWYwNzczNWMxMDcwZjU5NmQ2NTNhMjY2
+NmY0NTMNCj4gYzUyJmFtcDtkYXRhPTA1JTdDMDElN0NGcmFuay5MaSU0MG54cC5jb20lN0M1ZGRk
+OGVhMzJjMDg0YWFkZGENCj4gOTcwOGRhYWI3ZDIwNWQlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5
+OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjMNCj4gODAxMDg1MTE1MzYxMjIwNCU3Q1Vua25vd24lN0NU
+V0ZwYkdac2IzZDhleUpXSWpvaU1DNHdMakF3TUQNCj4gQWlMQ0pRSWpvaVYybHVNeklpTENKQlRp
+STZJazFoYVd3aUxDSlhWQ0k2TW4wJTNEJTdDMzAwMCU3QyU3QyU3Qw0KPiAmYW1wO3NkYXRhPXhv
+JTJCNHpKQUFDaTFENHA3ZmFPaVVHSjdrMTJvMFIzcjhURDlaaEZiU1d0TSUzRCZhDQo+IG1wO3Jl
+c2VydmVkPTANCj4gPg0KPiA+ICAgICAgICAgQWx0aG91Z2ggbXNpIGNhbiBpbXByb3ZlIHRyYW5z
+ZmVyIGxhdGVuY3ksICB0aGUgdHJhbnNmZXIgc3BlZWQNCj4gPiBzdGlsbCBxdWl0ZSBzbG93IGJl
+Y2F1c2UgRE1BIGhhdmUgbm90IHN1cHBvcnRlZCB5ZXQuDQo+ID4NCj4gPiAgICAgICAgIEkgcGxh
+biBjb250aW51ZSB0byBpbXByb3ZlIHRyYW5zZmVyIHNwZWVkLiBCdXQgSSBmaW5kIHNvbWUNCj4g
+PiBmdW5kYW1lbnRhbCBsaW1pdGF0aW9uIGF0IG9yaWdpbmFsIGZyYW1ld29yaywgd2hpY2ggY2Fu
+4oCZdCB1c2UgRURNQSAxMDAlDQo+IGJlbmVmaXRzLg0KPiANCj4gQnkgZnJhbWV3b3JrLCB5b3Ug
+bWVhbiBsaW1pdGF0aW9ucyB3aXRoIHBjaS1lcGYtdm50YiByaWdodD8NCg0KW0ZyYW5rIExpXSBu
+b3QgcGNpLWVwZi12bnRiLCBpdCBpcyBudGIgZGVmaW5pdGlvbi4gDQpOVEIgZGVmaW5lIG9uZSBD
+UFUganVzdCBtYXAgcGFydCBvZiBtZW1vcnkgb2YgYW5vdGhlciBDUFUncyBtZW1vcnkuDQpTbyBh
+dCBsZWFzdCBvbmUgbWVtb3J5IGNvcHkgaGFwcGVuLg0KMS4gQ1BVMTogIHVzZXIgc3BhY2UgYnVm
+ZmVyIGNvcHkgdG8gbWFwIG1lbW9yeS4gDQoyLiBDUFUyOiAgbWFwIG1lbW9yeSB0byB1c2VyIHNw
+YWNlIGJ1ZmZlci4NCg0KTlRCIHN1cHBvcnQgTWVtb3J5IHRvIE1lbW9yeSBETUEgIHRvIGRvIDEg
+YW5kIDIuIEJ1dCBzdGlsbCBuZWVkIGFkZGl0aW9uYWwNCk1lbW9yeSBjb3B5IHJlZ2FyZGxlc3Mg
+YnkgRE1BIG9yIENQVS4NCg0KV2UgY2FuIGNoYW5nZSBudGJfdHJhbnNwb3J0LmMgdG8gc3VwcG9y
+dCBQQ0llIEVQJ3MgRURNQSBmb3Igd3JpdGUgZGlyZWN0aW9uLiANCkFsbCBSZWFkIGluIE5UQiBp
+cyBsb2NhbCBtZW1vcnkgdG8gbG9jYWwgbWVtb3J5LiANCg0KDQo+ID4gICAgICAgICBBZnRlciBy
+ZXNlYXJjaCBzb21lIG9sZCB0aHJlYWQ6DQo+ID4NCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3Mu
+cHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGbG9yZS5rDQo+IGVybmVs
+Lm9yZyUyRmxpbnV4LXBjaSUyRjIwMjAwNzAyMDgyMTQzLjI1MjU5LTEtDQo+IGtpc2hvbiU0MHRp
+LmNvbSUyRiZhbXA7ZGF0YT0wNSU3QzAxJTdDRnJhbmsuTGklNDBueHAuY29tJTdDNWRkZA0KPiA4
+ZWEzMmMwODRhYWRkYTk3MDhkYWFiN2QyMDVkJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMz
+MDE2MzUNCj4gJTdDMCU3QzAlN0M2MzgwMTA4NTExNTM3Njg0NDQlN0NVbmtub3duJTdDVFdGcGJH
+WnNiM2Q4ZXlKV0kNCj4gam9pTUM0d0xqQXdNREFpTENKUUlqb2lWMmx1TXpJaUxDSkJUaUk2SWsx
+aGFXd2lMQ0pYVkNJNk1uMCUzRCU3QzMNCj4gMDAwJTdDJTdDJTdDJmFtcDtzZGF0YT1xUUh0VHd1
+MFEzSDAyZzdwJTJCMEglMkJRTmdtRCUyQnR4DQo+IGhyZUpZOUtCSExUJTJGU1l3JTNEJmFtcDty
+ZXNlcnZlZD0wDQo+ID4NCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRs
+b29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGbG9yZS5rDQo+IGVybmVsLm9yZyUyRmxpbnV4LXBj
+aSUyRjlmOGU1OTZmLWI2MDEtN2Y5Ny1hOThhLQ0KPiAxMTE3NjNmOTY2ZDElNDB0aS5jb20lMkZU
+JTJGJmFtcDtkYXRhPTA1JTdDMDElN0NGcmFuay5MaSU0MG54cC5jDQo+IG9tJTdDNWRkZDhlYTMy
+YzA4NGFhZGRhOTcwOGRhYWI3ZDIwNWQlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5DQo+IDljNWMz
+MDE2MzUlN0MwJTdDMCU3QzYzODAxMDg1MTE1Mzc2ODQ0NCU3Q1Vua25vd24lN0NUV0ZwYkdaDQo+
+IHNiM2Q4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazFoYVd3
+aUxDSlhWQ0k2TQ0KPiBuMCUzRCU3QzMwMDAlN0MlN0MlN0MmYW1wO3NkYXRhPWhQUFNpUHRIdHZB
+WTZ5SFRObm5nUkpEbkVqYmZ2bw0KPiBublVNSW9ueCUyQnp4aEklM0QmYW1wO3Jlc2VydmVkPTAN
+Cj4gPiAgICAgICAgICAgICAgIFNvbWUgUkRNQSBkb2N1bWVudCBhbmQNCj4gaHR0cHM6Ly9ldXIw
+MS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZ2l0
+aHViDQo+IC5jb20lMkZudHJkbWElMkZudHJkbWEtDQo+IGV4dCZhbXA7ZGF0YT0wNSU3QzAxJTdD
+RnJhbmsuTGklNDBueHAuY29tJTdDNWRkZDhlYTMyYzA4NGFhZGRhOQ0KPiA3MDhkYWFiN2QyMDVk
+JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzOA0KPiAwMTA4
+NTExNTM3Njg0NDQlN0NVbmtub3duJTdDVFdGcGJHWnNiM2Q4ZXlKV0lqb2lNQzR3TGpBd01EQWkN
+Cj4gTENKUUlqb2lWMmx1TXpJaUxDSkJUaUk2SWsxaGFXd2lMQ0pYVkNJNk1uMCUzRCU3QzMwMDAl
+N0MlN0MlN0MmYQ0KPiBtcDtzZGF0YT1XdGE5R3dweVJTbW5rMGhsWSUyRkZDcEs5QzdmcTZEang5
+SzA4THVQY01DbWMlM0QmYW0NCj4gcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiAgICAgICAgIEkgdGhp
+bmsgdGhlIHNvbHV0aW9uLCB3aGljaCBiYXNlZCBvbiBoYW90aWFuIHdhbmcgd2lsbCBiZSBiZXN0
+IG9uZS4NCj4gDQo+IHdoeT8NCltGcmFuayBMaV0gU2VlIGJlbG93Lg0KDQo+ID4NCj4gPiAgICDi
+lIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIANCj4g4pSA4pSA4pSA4pSA4pSQICAg4pSM
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQDQo+ID4gICAg4pSC
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4pSCICAg4pSCICAgICAgICAgICAgICDi
+lIINCj4gPiAgICDilIIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilIIgICDilIIg
+ICAgICAgICAgICAgIOKUgg0KPiA+ICAgIOKUgiAgIFZpcnRRdWV1ZSAgICAgICAgICAgICBSWCAg
+ICAgIOKUgiAgIOKUgiAgVmlydFF1ZXVlICAg4pSCDQo+ID4gICAg4pSCICAgICBUWCAgICAgICAg
+ICAgICAgICAg4pSM4pSA4pSA4pSQICAgICDilIIgICDilIIgICAgVFggICAgICAgIOKUgg0KPiA+
+ICAgIOKUgiAg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQICAgICAgICAgICDilIIg
+IOKUgiAgICAg4pSCICAg4pSCIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgA0KPiDilIDilJAg
+IOKUgg0KPiA+ICAgIOKUgiAg4pSCIFNSQyBMRU4g4pSc4pSA4pSA4pSA4pSA4pSA4pSQICDilIzi
+lIDilIDilKQgIOKUguKXhOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUvOKUgA0KPiDilKQgU1JD
+IExFTiDilIIgIOKUgg0KPiA+ICAgIOKUgiAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSkICAgICDilIIgIOKUgiAg4pSCICDilIIgICAgIOKUgiAgIOKUgiDilJzilIDilIDilIDilIDi
+lIDilIANCj4g4pSA4pSA4pSA4pSkICDilIINCj4gPiAgICDilIIgIOKUgiAgICAgICAgIOKUgiAg
+ICAg4pSCICDilIIgIOKUgiAg4pSCICAgICDilIIgICDilIIg4pSCICAgICAgICAg4pSCICDilIIN
+Cj4gPiAgICDilIIgIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAg4pSCICDi
+lIIgIOKUgiAg4pSCICAgICDilIIgICDilIIg4pSc4pSA4pSA4pSA4pSA4pSA4pSADQo+IOKUgOKU
+gOKUgOKUpCAg4pSCDQo+ID4gICAg4pSCICDilIIgICAgICAgICDilIIgICAgIOKUgiAg4pSCICDi
+lIIgIOKUgiAgICAg4pSCICAg4pSCIOKUgiAgICAgICAgIOKUgiAg4pSCDQo+ID4gICAg4pSCICDi
+lJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilJggICAgIOKUgiAg4pSCICDilJTilIDilIDi
+lJggICAgIOKUgiAgIOKUgiDilJTilIDilIDilIDilIDilIANCj4g4pSA4pSA4pSA4pSA4pSYICDi
+lIINCj4gPiAgICDilIIgICAgICAgICAgICAgICAgICDilIIgIOKUgiAgICAgICAgICAg4pSCICAg
+4pSCICAgICAgICAgICAgICDilIINCj4gPiAgICDilIIgICAgIFJYICAgICAgIOKUjOKUgOKUgOKU
+gOKUvOKUgOKUgOKUmCAgIFRYICAgICAg4pSCICAg4pSCICAgIFJYICAgICAgICDilIINCj4gPiAg
+ICDilIIgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUkCDilIIgICDilIIgICAgIOKU
+jOKUgOKUgOKUkCAgICAg4pSCICAg4pSCIOKUjOKUgOKUgOKUgOKUgOKUgA0KPiDilIDilIDilIDi
+lIDilJAgIOKUgg0KPiA+ICAgIOKUgiAg4pSCICAgICAgICAg4pSC4peE4pSYICAg4pSU4pSA4pSA
+4pSA4pSA4pa64pSCICDilJzilIDilIDilIDilIDilIDilLzilIDilIDilIDilLzilIDilKQNCj4g
+4pSCICDilIINCj4gPiAgICDilIIgIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAg
+ICAgICAgICAg4pSCICDilIIgICAgIOKUgiAgIOKUgiDilJzilIDilIDilIDilIDilIDilIDilIDi
+lIANCj4g4pSA4pSkICDilIINCj4gPiAgICDilIIgIOKUgiAgICAgICAgIOKUgiAgICAgICAgICAg
+4pSCICDilIIgICAgIOKUgiAgIOKUgiDilIIgICAgICAgICDilIIgIOKUgg0KPiA+ICAgIOKUgiAg
+4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSkICAgICAgICAgICDilIIgIOKUgiAgICAg
+4pSCICAg4pSCIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgA0KPiDilIDilKQgIOKUgg0KPiA+
+ICAgIOKUgiAg4pSCICAgICAgICAg4pSCICAgICAgICAgICDilIIgIOKUgiAgICAg4pSCICAg4pSC
+IOKUgiAgICAgICAgIOKUgiAg4pSCDQo+ID4gICAg4pSCICDilJTilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilJggICAgICAgICAgIOKUgiAg4pSCICAgICDilIIgICDilIIg4pSU4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSADQo+IOKUgOKUmCAg4pSCDQo+ID4gICAg4pSCICAgdmlydGlvX25ldCAg
+ICAgICAgICAg4pSU4pSA4pSA4pSYICAgICDilIIgICDilIIgdmlydGlvX25ldCAgIOKUgg0KPiA+
+ICAgIOKUgiAgVmlydHVhbCBQQ0kgQlVTICAgRURNQSBRdWV1ZSAgIOKUgiAgIOKUgiAgICAgICAg
+ICAgICAg4pSCDQo+ID4gICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSADQo+IOKU
+gOKUgOKUgOKUgOKUpCAgIOKUgiAgICAgICAgICAgICAg4pSCDQo+ID4gICAg4pSCICBQQ0kgRVAg
+Q29udHJvbGxlciB3aXRoIGVETUEgICAg4pSCICAg4pSCICBQQ0kgSG9zdCAgICDilIINCj4gPiAg
+ICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIANCj4g4pSA4pSA4pSA4pSA4pSYICAg
+4pSU4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYDQo+ID4NCj4g
+Pg0KPiA+ICAgICAgICAgQmFzaWMgaWRlYSBpcw0KPiA+ICAgICAgIDEuICAgICAgQm90aCBFUCBh
+bmQgaG9zdCBwcm9iZSB2aXJ0aW9fbmV0IGRyaXZlcg0KPiA+ICAgICAgIDIuICAgICAgVGhlcmUg
+YXJlIHR3byBxdWV1ZXMsICBvbmUgaXMgRVAgc2lkZShFUSksICB0aGUgb3RoZXIgaXMgSG9zdCBz
+aWRlLg0KPiA+ICAgICAgIDMuICAgICAgRVAgc2lkZSBlcGYgZHJpdmVyIG1hcCBIb3N0IHNpZGXi
+gJlzIHF1ZXVlIGludG8gRVDigJlzIHNwYWNlLiAsIENhbGxlZA0KPiBIUS4NCj4gPiAgICAgICA0
+LiAgICAgIE9uZSB3b3JraW5nIHRocmVhZA0KPiA+ICAgICAgIGEuICAgICAgcGljayBvbmUgVFgg
+ZnJvbSBFUSBhbmQgUlggZnJvbSBIUSwgY29tYmluZSBhbmQgZ2VuZXJhdGUNCj4gRURNQSByZXF1
+ZXN0LCBhbmQgcHV0IGludG8gRE1BIFRYIHF1ZXVlLg0KPiA+ICAgICAgIGIuICAgICAgUGljayBv
+bmUgUlggZnJvbSBFUSBhbmQgVFggZnJvbSBIUSwgY29tYmluZSBhbmQgZ2VuZXJhdGUNCj4gRURN
+QSByZXF1ZXN0LCBhbmQgcHV0IGludG8gRE1BIFJYIHF1ZXVlLg0KPiA+ICAgICAgIDUuICAgICAg
+RURNQSBkb25lIGlycSB3aWxsIG1hcmsgcmVsYXRlZCBpdGVtIGluIEVQIGFuZCBIUSBmaW5pc2hl
+ZC4NCj4gPg0KPiA+IFRoZSB3aG9sZSB0cmFuc2ZlciBpcyB6ZXJvIGNvcGllZCBhbmQgdXNlIERN
+QSBxdWV1ZS4NCj4gPg0KPiA+ICAgICAgICBSRE1BIGhhdmUgc2ltaWxhciBpZGVhIGFuZCBtb3Jl
+IGNvZGluZyBlZmZvcnRzLg0KPiANCj4gTXkgc3VnZ2VzdGlvbiB3b3VsZCBiZSB0byBwaWNrIGEg
+Y2xlYW5lciBzb2x1dGlvbiB3aXRoIHRoZSByaWdodA0KPiBhYnN0cmFjdGlvbnMgYW5kIG5vdCBi
+YXNlZCBvbiBjb2RpbmcgZWZmb3J0cy4NCg0KW0ZyYW5rIExpXSBNeSBpZGVhIGlzIHF1aXRlIHNp
+bWlsYXIgd2l0aCBSRE1BLiBJIGFtIG5vdCBzdXJlIGhvdyBtdWNoIHBlb3BsZQ0KVXNpbmcgUkRN
+QS4gIEkgbWF5IG5lZWQgZG8gbW9yZSByZXNlYXJjaCBhYm91dCBpbmZpbmliYW5kIFJETUEuIA0K
+DQo+IA0KPiA+ICAgICAgICBJIHRoaW5rIEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgcHJlZmVyIHVz
+ZSB2aG9zdCwgIGJ1dCBJIGRvbuKAmXQga25vdyBob3cNCj4gdG8gYnVpbGQgYSBxdWV1ZSBhdCBo
+b3N0IHNpZGUuDQo+IA0KPiBOb3Qgc3VyZSB3aGF0IHlvdSBtZWFuIGJ5IGhvc3Qgc2lkZSBoZXJl
+LiBCdXQgdGhlIHF1ZXVlIHdvdWxkIGJlIG9ubHkgb24NCj4gdmlydGlvIGZyb250ZW5kICh2aXJ0
+aW8tbmV0IHJ1bm5pbmcgb24gUENJZSBSQykgYW5kIFBDSWUgRVAgd291bGQgYWNjZXNzDQo+IHRo
+ZSBmcm9udC1lbmQncyBxdWV1ZS4NCg0KW0ZyYW5rIExpXSB3ZSBoYXZlIHRvIHVzZSB0d28gcXVl
+dWUgdG8gbWF4aW11bSB0cmFuc2ZlciBzcGVlZC4gIEVQIHF1ZXVlIGFuZCBSQyBxdWV1ZS4gDQoN
+CklmIHdlIGp1c3Qgb25lIHF1ZXVlIGF0IFBDSWUgUkMsDQoNCkVQIHdpbGwgZG9uZSBiZWxvdyB3
+b3JrDQoJMS4gRE1BIE1hcA0KCTIuIHN1Ym1pdCBvbmUgdHJhbnNmZXIgdG8gRE1BIHF1ZXVlDQoJ
+My4gd2FpdCBmb3IgRE1BIHRyYW5zZmVyIGRvbmUNCgk0LiBETUEgdW1hcC4NCg0KVGhlIGxhdGVu
+Y3kgYmV0d2VlbiAxIHRvIDQgaXMgcXVpdGUgaHVnZS4gDQoNCklmIHRoZXJlIGFyZSB0d28gcXVl
+dWUsIEVQIHF1ZXVlLCAgYW5kIFJDIHF1ZXVlLiANCg0KS2VybmVsIHRocmVhZCAoRVAgLT4gUkMg
+ZXhhbXBsZSkuDQoJMS4gZGVxdWV1ZSBUWCBmcm9tIEVQIHF1ZXVlLCAgZGVxdWV1ZSBSWCBmcm9t
+IFJDIHF1ZXVlLg0KCTIuIHB1dCB0byBFRE1BIGhhcmR3YXJlIHRyYW5zZmVyIHF1ZXVlDQoJMy4g
+Z28gdG8gMSwgdW50aWwgb25lIG9mIEVQIGFuZCBSQyBxdWV1ZSBlbXB0eS4gDQoNCklSUTogDQoJ
+TG9vcCBFRE1BIGhhcmR3YXJlIHRyYW5zZmVyIHF1ZXVlLCAgbWFyayBUWCBFUCBxdWV1ZSBpdGVt
+IGRvbmUsIG1hcmsgUlggUkMgcXVldWUgaXRlbSBkb25lLiAgDQoJTm90aWZpZWQgYm90aCBFUCBh
+bmQgUkMgc2lkZS4gDQoNCldob2xlIGZsb3cgd2lsbCBub3QgYWRkaXRpb25hbCBtZW1vcnkgY29w
+eSBhbmQgc3luYyB3YWl0LiAgQWxsIGlzIGFzeW5jZWQNCg0KDQo+ID4gICAgICAgIE5UQiB0cmFu
+c2ZlciBqdXN0IGRvIG9uZSBkaXJlY3RvcnkgRURNQSB0cmFuc2ZlciAoRE1BIHdyaXRlKSBiZWNh
+dXNlDQo+IFJlYWQgYWN0dWFsbHkgbG9jYWwgbWVtb3J5DQo+ID4gICB0byBsb2NhbCBtZW1vcnku
+DQo+ID4NCj4gPiAgICAgICAgQW55IGNvbW1lbnRzIGFib3V0IG92ZXJhbGwgc29sdXRpb24/DQo+
+IA0KPiBJIHdvdWxkIHN1Z2dlc3QgeW91IHRvIGdvIHRocm91Z2ggdGhlIGNvbW1lbnRzIHJlY2Vp
+dmVkIG9uIEhhb3RpYW4gV2FuZw0KPiBwYXRjaCBhbmQgc3VnZ2VzdCB3aGF0IGNoYW5nZXMgeW91
+IGFyZSBwcm9wb3NpbmcuDQoNCltGcmFuayBMaV0gVGhlIG1ham9yIGNvbmNlcm4gZnJvbSB5b3Ug
+aXMgRVAgc2lkZSB1c2luZyB2aG9zdC4NCg0KRURNQSBjaGFuZ2VkIHRoZSBzaXR1YXRpb24sIHNl
+ZSBhYm92ZSBleHBsYW5hdGlvbi4gDQoNCg0KPiANCj4gVGhhbmtzLA0KPiBLaXNob24NCg==
