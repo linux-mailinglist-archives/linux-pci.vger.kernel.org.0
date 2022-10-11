@@ -2,45 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A57CA5FB883
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 18:49:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCB5F5FB8AB
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 18:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiJKQtL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Oct 2022 12:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55670 "EHLO
+        id S229846AbiJKQzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Oct 2022 12:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiJKQtK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 12:49:10 -0400
+        with ESMTP id S229829AbiJKQzS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 12:55:18 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E4CA598D
-        for <linux-pci@vger.kernel.org>; Tue, 11 Oct 2022 09:49:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DC2222B3;
+        Tue, 11 Oct 2022 09:55:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9C23EB81637
-        for <linux-pci@vger.kernel.org>; Tue, 11 Oct 2022 16:49:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0012CC433C1;
-        Tue, 11 Oct 2022 16:49:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7B5BCB81636;
+        Tue, 11 Oct 2022 16:55:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D53C433C1;
+        Tue, 11 Oct 2022 16:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665506946;
-        bh=6SriIwkaOIcGDHnK+Ozk4u7ZtosENElGgQ/usfRVq/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=I1roJaaurTTikLpYTQy+/gaMbZxuECvIWLjmO/bmon0V278V8C3/3TkGf3J25lQ3i
-         xgdLhviXB3uxh7GqX5UihNW8m8Hvgk3yuGuarRlKIbYF2R6HRJ20RBfdYrUoqYveSl
-         JkS0P/3y2mg8vyb2OezTU5jxQ/+KTyl1xmfv9NDuiqSwK5RZ7vz5H1z3sRawaHjroU
-         NGVMODgNWN3A4HP9QvmuO3WhxPablVvQQC2S9VTsi1HRsIKd3Jgla2Eyqv9LHgDuJp
-         Ieb5TxgH7ER6Hq6W90SI7dZ1jqQLc388VWWD+BrzFjjk8CE5eIsi7+sU8JKagXsECF
-         4jr1PV15Dqawg==
-Date:   Tue, 11 Oct 2022 11:49:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     mj@ucw.cz, linux-pci@vger.kernel.org
-Subject: Re: [PATCH pciutils v1] pciutils: add new readpci utility
-Message-ID: <20221011164904.GA2995976@bhelgaas>
+        s=k20201202; t=1665507311;
+        bh=XhAZyckRCPAFshg1YwE1cWtM5ptq2V0EJ1cI4a3T4lk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eyZNjF9l9nEHnymnGoqS9M5gQlP0iK8MgO7fbz4RABuHtVDGxZaeAJ0L0dO01LqRu
+         vDo1//wYKRhP22Saxjkt3NRzR5jVsKcseMrst8wKP0wEtaWg9d3YoHdvQiUMHztYES
+         z/RKDsM0gxlNIvesdFrrfsTz6PeOZd0dVReGcceCd39wBORuoPM+dBmfOwi+4eG0Hf
+         YFWF4oNC+vTt3Vpv7+dr4K6rM7yxl8DUwOFsfEgWj5BHtndMo3W0ERAJ/VRvq/NMwq
+         5cowW8DisOULOy0O0+nE9JlUGOTbijZti0U0VtgeKFf+L9D7YRuCcr86e/6QdcZk1S
+         aTCJPtGxFPqfA==
+Received: by pali.im (Postfix)
+        id 1F1CF7B3; Tue, 11 Oct 2022 18:55:08 +0200 (CEST)
+Date:   Tue, 11 Oct 2022 18:55:08 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Use PCI_CONF1_EXT_ADDRESS() macro
+Message-ID: <20221011165508.ezpwvmzmxywqoj4u@pali>
+References: <20220928121911.14994-1-pali@kernel.org>
+ <220b0fe7-8b7b-cf9b-e28d-d9d81647fb80@nvidia.com>
+ <20221011161638.ycxpg3ox2wv63vym@pali>
+ <18a48407-9fd7-175d-0c7f-5702b077f13d@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221011012741.41961-1-jesse.brandeburg@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <18a48407-9fd7-175d-0c7f-5702b077f13d@nvidia.com>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -50,106 +64,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 06:27:41PM -0700, Jesse Brandeburg wrote:
-> Add the new utility 'readpci' in order to allow users to read and write the
-> register address space located in the BAR designator + offset.
+On Tuesday 11 October 2022 17:47:50 Jon Hunter wrote:
+> On 11/10/2022 17:16, Pali Rohár wrote:
 > 
-> The reason that this app is better than what is generally available on the
-> internet (there are several) is that this app integrates with the libpci
-> and further benefits from pciutils like arguments and device
-> specifications.
+> ...
 > 
-> help output:
+> > I see, this is stupid mistake. PCIe config read and write operations
+> > needs to be 4-byte aligned, so normally it is done by calculating 4-byte
+> > aligned base address and then using appropriate cpu load/store
+> > instruction to access just defined size/offset of 4-byte config space
+> > register.
+> > 
+> > pci-tegra.c is using common helper functions pci_generic_config_read()
+> > and pci_generic_config_write(), which expects final address with offset,
+> > and not 4-byte aligned address.
+> > 
+> > I'm not sure what should be the proper fix, but for me it looks like
+> > that pci_generic_config_read() and pci_generic_config_write() could be
+> > adjusted to handle it.
+> > 
+> > In any case, above patch is a regressions and I see there two options
+> > for now:
+> > 
+> > 1) Reverting that patch
+> > 
+> > 2) Adding "offset |= where & 0x3;" after the PCI_CONF1_EXT_ADDRESS()
+> >     macro to set also lower 2 bits of accessed register.
+> > 
+> > Jon, Lorenzo, what do you think? Could you test if 2) is working fine?
 > 
-> $ sudo ./readpci -h
-> ./readpci: invalid option -- 'h'
-> Usage: ./readpci [options] [device]   (/usr/local/share/pci.ids.gz)
 > 
-> Options:
-> -w <value>              Value to write to the address
-> -W <value>              Value to write to the address (no read)
-> -a <value>              Register address
-> -b <value>              BAR to access other than BAR 0
-> -m                      Access MSI-X BAR instead of BAR 0
-> -D                      PCI debugging
-> -q                      Quiet mode, no banner
-> -v                      Enable more verbose output
-> Device:
-> -d [<vendor>]:[<device>]                        Show selected devices
-> -s [[[[<domain>]:]<bus>]:][<slot>][.[<func>]]   Show devices in selected slots
-
-I like this idea.  I often use rdwrmem, which is more general-purpose,
-but it's a bit of a hassle that it's not commonly installed like
-pciutils is, and you have to manually come up with the physical
-address of a BAR.
-
-The names:
-  "setpci" -- read and write PCI config space
-  "readpci" -- read and write PCI MMIO BARs
-are slightly confusing since both support reads *and* writes, and
-there's no clear config space vs BAR connection in the names.
-
-Would it make any sense to integrate this into setpci, e.g., by
-adding an address format for BAR MMIO offsets?
-
-> basic usage to read a register:
+> I tested 'offset |= where & 0xff' which is essentially the same as the above
+> and that is working and so I am sure that the above works too. However, I do
+> wonder if reverting is simpler because we already have a '&
+> ~PCI_CONF1_ENABLE' and now adding '| where & 0x3' seems to diminish the
+> value of this change.
 > 
-> $ sudo ./readpci -s 17:0.0 -a 0xb8000
-> 17:00.0 (8086:1592) - Device 8086:1592
-> 0xb8000 == 0x1
+> Cheers
+> Jon
+> 
+> -- 
+> nvpublic
 
-Possibly annotate with the BAR # and the complete physical address (to
-correlate with lspci or dmesg output, especially when debugging via
-email)?  Maybe also useful with reading MSI-X BAR.  Looks like maybe
-it already does some of this with "v".
+Well, if decision would be that pci_generic_config_read() could be
+modified in the future to handle aligning, then '|= where & 0x3' block
+would be moved from driver to generic function...
 
-Possibly fill out the value to indicate the access width, e.g.,
-0x00000001 in this case?
-
-> Currently the utility only allows reading or writing one 32 bit address at
-> a time. The utility must be run as root.
-
-Does this mean the *address* is limited to 32 bits, or the access size
-is 32 bits?
-
-> +++ b/readpci.man
-
-> +Access to read and write registers in PCI configuration space is restricted to root,
-
-IIUC, readpci is for MMIO, not config space.  But I guess readpci
-still needs data from config space to figure out *where* to read?  But
-I assume that would normally come from sysfs, not config space
-directly, so we can account for _TRA offsets.  I assume that info is
-sysfs is also root-only, so it amounts to the same thing.  And
-/dev/mem itself is also root-only.
-
-I guess I would say either just "readpci can only be used by root" or
-list the items actually required (sysfs config info and /dev/mem) in
-case access to them requires different CAP_SYS_* things.
-
-> +So,
-> +.I readpci
-> +isn't available to normal users.
-
-> +.B -b [<value>]
-> +Optional parameter, defaults to 0 if not specified. BAR number to access if
-> +other than BAR0.
-
-Maybe move the main point ("BAR number") first, mention the "optional"
-part later?
-
-> +on any bus, "0.3" selects third function of device 0 on all buses and ".4" shows only
-> +the fourth function of each device.
-
-Isn't "0.3" the *fourth* function?  0.0, 0.1, 0.2, 0.3?  Maybe reword
-to avoid the question of whether we start with "zeroth" or "first",
-e.g., "0.3 selects function 3 of device 0 on all buses"?
-
-> +There might be some, but none known at this time. If you find one please
-> +let the list know.
-
-Does this man page say what "the list" refers to?
-
-Bjorn
-
-[1] https://cmp.felk.cvut.cz/~pisa/linux/rdwrmem.c
+I'm really not sure which option to choose.
