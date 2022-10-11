@@ -2,153 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F3DE5FB199
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 13:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A37985FB19F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 13:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbiJKLhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Oct 2022 07:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
+        id S229757AbiJKLii (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Oct 2022 07:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiJKLhK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 07:37:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739448BBA0;
-        Tue, 11 Oct 2022 04:37:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 334A1B815A3;
-        Tue, 11 Oct 2022 11:37:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A46AC433D6;
-        Tue, 11 Oct 2022 11:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665488224;
-        bh=VBtQaFtLWaxwSn/lcpWL94iaXvTdhOab5SQsLixxk9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KaROchQDKpCahPMWqO+eopdtyan7mm+dbkBPB5l2if8DaPLob/aj9jSWqjWhbmWel
-         0cLUBswn7tVbDESaRQPPTtKY7coU7EE9AIso+URqj1b3CeHMh2ExoxaxraV605P7M2
-         VUOTbvXvwDYXo5SMxAZ3F4zgl+yRfQu/QmVP9EPF3QRaZklQK92Sd7YuFYW9UlMh4F
-         xedSgfcslKvsENLyPBI7Ey9TmpRsuwqkiKySO9eAKFhV/h2jUjfEgTwdHHQgoeyhSa
-         FVuGBhBUSNgUiF8DGNrB/cRfk8ZuXz19YhYvYWXr5LaESA4Oy4CxiQhNppzwOWMkjF
-         oJty89eqUOERw==
-Date:   Tue, 11 Oct 2022 14:37:00 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Rui Ma <Rui.Ma@amd.com>
-Cc:     helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Alexander.Deucher@amd.com,
-        bhelgaas@google.com
-Subject: Re: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host memory
- occupied by PTEs
-Message-ID: <Y0VVXB0XTobClVJo@unreal>
-References: <20221011112325.992317-1-Rui.Ma@amd.com>
+        with ESMTP id S229508AbiJKLii (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 07:38:38 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA82C7DF5D
+        for <linux-pci@vger.kernel.org>; Tue, 11 Oct 2022 04:38:34 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29BBc2VP124208;
+        Tue, 11 Oct 2022 06:38:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1665488282;
+        bh=O939ppKFQ711a6u7DlUF6zI/V1H471HhXJNuzjrPsBE=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=VT5qj/RrYpTaWsC2RVeYOXJhcwoQdKQdkxv8ArgwSubUT0Md2MQaAfXbJGyM1If6l
+         XAFFD3EfeQ+EakzH3gAvka8vn54sYxl4Wb23TklUAroWrooBbp7ILayz/AP7PgDvIk
+         4f2B+Q3R04RBzxzMMhEYPAHl0KTe4JSNNiFN5tZw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29BBc2do088460
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Oct 2022 06:38:02 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 11
+ Oct 2022 06:38:01 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Tue, 11 Oct 2022 06:38:01 -0500
+Received: from [172.24.147.145] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29BBbw44092905;
+        Tue, 11 Oct 2022 06:37:58 -0500
+Subject: Re: [RFC] PCI EP/RC network transfer by using eDMA
+To:     Frank Li <Frank.Li@nxp.com>, <fancer.lancer@gmail.com>,
+        <helgaas@kernel.org>, <sergey.semin@baikalelectronics.ru>,
+        <kw@linux.com>, <linux-pci@vger.kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <ntb@lists.linux.dev>,
+        <jdmason@kudzu.us>, <haotian.wang@sifive.com>, <lznuaa@gmail.com>,
+        <imx@lists.linux.dev>
+References: <20220928213856.54211-1-Frank.Li@nxp.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d098a631-9930-26d3-48f3-8f95386c8e50@ti.com>
+Date:   Tue, 11 Oct 2022 17:07:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221011112325.992317-1-Rui.Ma@amd.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220928213856.54211-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 07:23:25PM +0800, Rui Ma wrote:
-> In some certain SR-IOV scene, when the device physical space(such as Video
-> RAM)is fixed, as the number of VFs increases, some device driver may decrease
-> actual BAR memory space used by each VF. However, the VF BAR memory mapping is
-> always based on the usual BAR probing algorithm in PCIe spec. So do not map this
-> unneeded memory can save host memory which occupied by PTEs. Although each PTE
-> only occupies a few bytes of space on its own, a large number of PTEs can still
-> take up a lot of space.
+Hi Frank,
+
+On 29/09/22 3:08 am, Frank Li wrote:
 > 
-> Signed-off-by: Rui Ma <Rui.Ma@amd.com>
-> ---
->  drivers/pci/iov.c    | 14 ++++++++++++--
->  drivers/pci/pci.h    | 15 +++++++++++++++
->  drivers/pci/quirks.c | 37 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 64 insertions(+), 2 deletions(-)
+> ALL:
 > 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 952217572113..92a69e51d85c 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -296,6 +296,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  	struct pci_sriov *iov = dev->sriov;
->  	struct pci_bus *bus;
->  
-> +    /*
-> +     * Some SR-IOV device's BAR map range is larger than they can actually use.
-> +     * This extra BAR space occupy too much reverse mapping size(physical page
-> +     * back to the PTEs). So add a divisor shift parameter to resize the request
-> +     * resource of VF according to num of VFs.
-> +     */
-> +	u16 shift = 1;
-> +
->  	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
->  	if (!bus)
->  		goto failed;
-> @@ -328,8 +336,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  		virtfn->resource[i].name = pci_name(virtfn);
->  		virtfn->resource[i].flags = res->flags;
->  		size = pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> +		shift = 1;
-> +		shift = virtfn_get_shift(dev, iov->num_VFs, i);
->  		virtfn->resource[i].start = res->start + size * id;
-> -		virtfn->resource[i].end = virtfn->resource[i].start + size - 1;
-> +		virtfn->resource[i].end = virtfn->resource[i].start + (size >> (shift - 1)) - 1;
->  		rc = request_resource(res, &virtfn->resource[i]);
->  		BUG_ON(rc);
->  	}
-> @@ -680,12 +690,12 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
->  	msleep(100);
->  	pci_cfg_access_unlock(dev);
->  
-> +	iov->num_VFs = nr_virtfn;
->  	rc = sriov_add_vfs(dev, initial);
->  	if (rc)
->  		goto err_pcibios;
->  
->  	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
-> -	iov->num_VFs = nr_virtfn;
->  
->  	return 0;
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3d60cabde1a1..befc67a280eb 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -603,6 +603,21 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, bool probe)
->  }
->  #endif
->  
-> +struct virtfn_get_shift_methods {
-> +	u16 vendor;
-> +	u16 device;
-> +	u16 (*get_shift)(struct pci_dev *dev, u16 arg, int arg2);
-> +};
-> +
-> +#ifdef CONFIG_PCI_QUIRKS
-> +u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2);
-> +#else
-> +static inline u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2)
-> +{
-> +	return (u16)1;
-
-<...>
-
-> +	return (u16)1;
-
-Why do you need these casts? You can omit them.
-
-Thanks
-
-> +}
-> +
->  static void quirk_dma_func0_alias(struct pci_dev *dev)
->  {
->  	if (PCI_FUNC(dev->devfn) != 0)
-> -- 
-> 2.25.1
+>         Recently some important PCI EP function patch already merged.
+> Especially DWC EDMA support.
+>         PCIe EDMA have nice feature, which can read/write all PCI host
+> memory regardless EP side PCI memory map windows size.
+>         Pci-epf-vntb.c also merged into mainline.
+>         And part of vntb msi patch already merged.
+> 		https://lore.kernel.org/imx/86mtaj7hdw.wl-maz@kernel.org/T/#m35546867af07735c1070f596d653a2666f453c52
 > 
+>         Although msi can improve transfer latency,  the transfer speed
+> still quite slow because DMA have not supported yet.
+> 
+>         I plan continue to improve transfer speed. But I find some
+> fundamental limitation at original framework, which can’t use EDMA 100% benefits.
+
+By framework, you mean limitations with pci-epf-vntb right?
+>         After research some old thread:
+> 		https://lore.kernel.org/linux-pci/20200702082143.25259-1-kishon@ti.com/
+> 		https://lore.kernel.org/linux-pci/9f8e596f-b601-7f97-a98a-111763f966d1@ti.com/T/
+> 		Some RDMA document and https://github.com/ntrdma/ntrdma-ext
+> 
+>         I think the solution, which based on haotian wang will be best one.
+
+why?
+> 
+>    ┌─────────────────────────────────┐   ┌──────────────┐
+>    │                                 │   │              │
+>    │                                 │   │              │
+>    │   VirtQueue             RX      │   │  VirtQueue   │
+>    │     TX                 ┌──┐     │   │    TX        │
+>    │  ┌─────────┐           │  │     │   │ ┌─────────┐  │
+>    │  │ SRC LEN ├─────┐  ┌──┤  │◄────┼───┼─┤ SRC LEN │  │
+>    │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
+>    │  │         │     │  │  │  │     │   │ │         │  │
+>    │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
+>    │  │         │     │  │  │  │     │   │ │         │  │
+>    │  └─────────┘     │  │  └──┘     │   │ └─────────┘  │
+>    │                  │  │           │   │              │
+>    │     RX       ┌───┼──┘   TX      │   │    RX        │
+>    │  ┌─────────┐ │   │     ┌──┐     │   │ ┌─────────┐  │
+>    │  │         │◄┘   └────►│  ├─────┼───┼─┤         │  │
+>    │  ├─────────┤           │  │     │   │ ├─────────┤  │
+>    │  │         │           │  │     │   │ │         │  │
+>    │  ├─────────┤           │  │     │   │ ├─────────┤  │
+>    │  │         │           │  │     │   │ │         │  │
+>    │  └─────────┘           │  │     │   │ └─────────┘  │
+>    │   virtio_net           └──┘     │   │ virtio_net   │
+>    │  Virtual PCI BUS   EDMA Queue   │   │              │
+>    ├─────────────────────────────────┤   │              │
+>    │  PCI EP Controller with eDMA    │   │  PCI Host    │
+>    └─────────────────────────────────┘   └──────────────┘
+> 
+> 
+>         Basic idea is
+> 	1.	Both EP and host probe virtio_net driver
+> 	2.	There are two queues,  one is EP side(EQ),  the other is Host side.
+> 	3.	EP side epf driver map Host side’s queue into EP’s space. , Called HQ.
+> 	4.	One working thread
+> 	a.	pick one TX from EQ and RX from HQ, combine and generate EDMA request, and put into DMA TX queue.
+> 	b.	Pick one RX from EQ and TX from HQ, combine and generate EDMA request, and put into DMA RX queue.
+> 	5.	EDMA done irq will mark related item in EP and HQ finished.
+> 
+> The whole transfer is zero copied and use DMA queue.
+> 
+>        RDMA have similar idea and more coding efforts.
+
+My suggestion would be to pick a cleaner solution with the right 
+abstractions and not based on coding efforts.
+
+>        I think Kishon Vijay Abraham I prefer use vhost,  but I don’t know how to build a queue at host side.
+
+Not sure what you mean by host side here. But the queue would be only on 
+virtio frontend (virtio-net running on PCIe RC) and PCIe EP would access 
+the front-end's queue.
+>        NTB transfer just do one directory EDMA transfer (DMA write) because Read actually local memory
+>   to local memory.
+> 
+>        Any comments about overall solution?
+
+I would suggest you to go through the comments received on Haotian Wang 
+patch and suggest what changes you are proposing.
+
+Thanks,
+Kishon
