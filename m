@@ -2,621 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 059345FAA1B
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 03:28:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C09B5FAEBA
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Oct 2022 10:51:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbiJKB23 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Oct 2022 21:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34810 "EHLO
+        id S229590AbiJKIvr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Oct 2022 04:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbiJKB22 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Oct 2022 21:28:28 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F6B1838B
-        for <linux-pci@vger.kernel.org>; Mon, 10 Oct 2022 18:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665451706; x=1696987706;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VTxcx4xRodcFzD7+i5Hem0Ya/e0cObURy1M/oX3KKXE=;
-  b=YFb0mtQnd/6TJfixaPkE6zbhReP8BZ0Z0oTefnilHKgpLweZaO2zS/KE
-   9uIHGRCrlTmK099yB0wd8acNRnIOlrmAGWnad9il6qRwVGhwcqkZjW/iN
-   7yre8/eXuIQ3NtCDcBRWh9+akJy1dZPFJnPbFU9JmzBbmU9rrCTukWqbj
-   h+UVRNssoBie4sruQBmC/2MqADynYTFXkIUooPHi1FbUdMeOJDXbQO+xl
-   HzwEkEhjOuPVKjrZFj1yMcRt/z8HJ9FuMVeKeMsKABY/8h4jP488baH42
-   OfhXv012iJDQL9x9ORk1XPaPdwCRlECh/0fcbog9jpJczGIg3mi0JKRxO
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="301988996"
-X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
-   d="scan'208";a="301988996"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 18:28:26 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="715324971"
-X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
-   d="scan'208";a="715324971"
-Received: from jbrandeb-coyote30.jf.intel.com ([10.166.29.19])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 18:28:26 -0700
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     mj@ucw.cz, linux-pci@vger.kernel.org
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: [PATCH pciutils v1] pciutils: add new readpci utility
-Date:   Mon, 10 Oct 2022 18:27:41 -0700
-Message-Id: <20221011012741.41961-1-jesse.brandeburg@intel.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S229468AbiJKIvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Oct 2022 04:51:47 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55BF5F222;
+        Tue, 11 Oct 2022 01:51:44 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MmqCd72gQz1M8w2;
+        Tue, 11 Oct 2022 16:47:09 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 11 Oct 2022 16:51:43 +0800
+Received: from huawei.com (10.175.104.170) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 11 Oct
+ 2022 16:51:42 +0800
+From:   Zhuang Shengen <zhuangshengen@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <arei.gonglei@huawei.com>, <jianjay.zhou@huawei.com>
+Subject: [PATCH v2] iov: support enable pci sriov concurrently
+Date:   Tue, 11 Oct 2022 16:50:18 +0800
+Message-ID: <20221011085018.1505798-1-zhuangshengen@huawei.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.175.104.170]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the new utility 'readpci' in order to allow users to read and write the
-register address space located in the BAR designator + offset.
+Enable SRIOV concurrently with many different PFs in userspace
+will get warnings below:
+Warning 1:
+sysfs: cannot create duplicate filename
+'/devices/pci0000:30/0000:30:02.0/pci_bus/0000:32'
+Call Trace:
+ dump_stack+0x6f/0xab
+ sysfs_warn_dup+0x56/0x70
+ sysfs_create_dir_ns+0x80/0x90
+ kobject_add_internal+0xa0/0x2b0
+ kobject_add+0x71/0xd0
+ device_add+0x126/0x630
+ pci_add_new_bus+0x17c/0x4b0
+ pci_iov_add_virtfn+0x336/0x390
+ sriov_enable+0x26e/0x450
+ virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
+Warning 2:
+proc_dir_entry 'pci/33' already registered
+WARNING: CPU: 71 PID: 893 at fs/proc/generic.c:360
+proc_register+0xf8/0x130
+Call Trace:
+ proc_mkdir_data+0x5d/0x80
+ pci_proc_attach_device+0xe9/0x120
+ pci_bus_add_device+0x33/0x90
+ pci_iov_add_virtfn+0x375/0x390
+ sriov_enable+0x26e/0x450
+ virtio_pci_sriov_configure+0x61/0xc0 [virtio_pci]
 
-The reason that this app is better than what is generally available on the
-internet (there are several) is that this app integrates with the libpci
-and further benefits from pciutils like arguments and device
-specifications.
+The reason is:
+1）different VFs may create the same pci bus number and try to add new bus
+concurrently in virtfn_add_bus.
+2）different VFs may create '/proc/bus/pci/bus_number' directory using the
+same bus number in pci_proc_attach_device concurrently.
 
-help output:
+Add new lock when creating new bus, hold device_lock when creating
+'/proc/bus/pci/bus_number' directory in pci_proc_attach_device to fix them
 
-$ sudo ./readpci -h
-./readpci: invalid option -- 'h'
-Usage: ./readpci [options] [device]   (/usr/local/share/pci.ids.gz)
-
-Options:
--w <value>              Value to write to the address
--W <value>              Value to write to the address (no read)
--a <value>              Register address
--b <value>              BAR to access other than BAR 0
--m                      Access MSI-X BAR instead of BAR 0
--D                      PCI debugging
--q                      Quiet mode, no banner
--v                      Enable more verbose output
-Device:
--d [<vendor>]:[<device>]                        Show selected devices
--s [[[[<domain>]:]<bus>]:][<slot>][.[<func>]]   Show devices in selected slots
-
-basic usage to read a register:
-
-$ sudo ./readpci -s 17:0.0 -a 0xb8000
-17:00.0 (8086:1592) - Device 8086:1592
-0xb8000 == 0x1
-
-This program was originally written by Shannon Nelson, and extended
-by me.
-
-Limitations
-===========
-Currently the utility only allows reading or writing one 32 bit address at
-a time. The utility must be run as root.
-
-Future options
-==============
-- Implement machine readable output
-- Implement multiple register reads (ranges)
-- Implement multiple device match (same register multiple devices of a
-  match)
-
-This change also contains a tiny Makefile optimization to allow
-overriding the compiler at build time on the command line, which made it
-easier to test with multiple compilers.
-
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Signed-off-by: Zhuang Shengen <zhuangshengen@huawei.com>
+Signed-off-by: Jay Zhou <jianjay.zhou@huawei.com>
 ---
- .gitignore  |   1 +
- Makefile    |  19 ++--
- readpci.c   | 310 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- readpci.man |  98 +++++++++++++++++
- 4 files changed, 421 insertions(+), 7 deletions(-)
+ drivers/pci/iov.c   |  7 ++++++-
+ drivers/pci/probe.c | 26 ++++++++++++++++++++++++++
+ drivers/pci/proc.c  |  6 +++++-
+ include/linux/pci.h |  2 ++
+ 4 files changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index 4a25863a1504..d2b57902900e 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -6,5 +6,6 @@
- lspci
- setpci
- example
-+readpci
- update-pciids
- pci.ids.gz
-diff --git a/Makefile b/Makefile
-index 9319bb495b21..549457c47229 100644
---- a/Makefile
-+++ b/Makefile
-@@ -47,9 +47,9 @@ INSTALL=install
- DIRINSTALL=install -d
- STRIP=-s
- ifdef CROSS_COMPILE
--CC=$(CROSS_COMPILE)gcc
-+CC:=$(CROSS_COMPILE)gcc
- else
--CC=cc
-+CC:=cc
- endif
- AR=$(CROSS_COMPILE)ar
- RANLIB=$(CROSS_COMPILE)ranlib
-@@ -64,7 +64,7 @@ PCIINC_INS=lib/config.h lib/header.h lib/pci.h lib/types.h
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 952217572113..6d113ea64ba8 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -127,11 +127,16 @@ static struct pci_bus *virtfn_add_bus(struct pci_bus *bus, int busnr)
+ 	if (bus->number == busnr)
+ 		return bus;
  
- export
++	/*
++	 * vf will find existing bus at most case; if not existing, it should
++	 * go through slow path to create new bus with locked to support enable SRIOV
++	 * concurrently with different PFs in userspace.
++	 */
+ 	child = pci_find_bus(pci_domain_nr(bus), busnr);
+ 	if (child)
+ 		return child;
  
--all: lib/$(PCILIB) lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS)
-+all: lib/$(PCILIB) lspci$(EXEEXT) setpci$(EXEEXT) readpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 readpci.8  pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS)
+-	child = pci_add_new_bus(bus, NULL, busnr);
++	child = pci_add_new_bus_locked(bus, NULL, busnr);
+ 	if (!child)
+ 		return NULL;
  
- lib/$(PCILIB): $(PCIINC) force
- 	$(MAKE) -C lib all
-@@ -103,6 +103,10 @@ update-pciids: update-pciids.sh
- 	sed <$< >$@ "s@^DEST=.*@DEST=$(IDSDIR)/$(PCI_IDS)@;s@^PCI_COMPRESSED_IDS=.*@PCI_COMPRESSED_IDS=$(PCI_COMPRESSED_IDS)@"
- 	chmod +x $@
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c5286b027f00..a2baf3fe9e7c 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -25,6 +25,8 @@
+ #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+ #define CARDBUS_RESERVE_BUSNR	3
  
-+# add the readpci executable
-+readpci$(EXEEXT): readpci.o lib/$(PCILIB)
-+readpci.o: readpci.c pciutils.h $(PCIINC)
++static DEFINE_MUTEX(add_bus_mutex);
 +
- # The example of use of libpci
- example$(EXEEXT): example.o lib/$(PCILIB)
- example.o: example.c $(PCIINC)
-@@ -123,7 +127,7 @@ TAGS:
+ static struct resource busn_resource = {
+ 	.name	= "PCI busn",
+ 	.start	= 0,
+@@ -1170,6 +1172,30 @@ struct pci_bus *pci_add_new_bus(struct pci_bus *parent, struct pci_dev *dev,
+ }
+ EXPORT_SYMBOL(pci_add_new_bus);
  
- clean:
- 	rm -f `find . -name "*~" -o -name "*.[oa]" -o -name "\#*\#" -o -name TAGS -o -name core -o -name "*.orig"`
--	rm -f update-pciids lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lib/config.* *.[578] pci.ids.gz lib/*.pc lib/*.so lib/*.so.* tags
-+	rm -f update-pciids lspci$(EXEEXT) setpci$(EXEEXT) readpci$(EXEEXT) example$(EXEEXT) lib/config.* *.[578] pci.ids.gz lib/*.pc lib/*.so lib/*.so.* tags
- 	rm -rf maint/dist
- 
- distclean: clean
-@@ -133,9 +137,10 @@ install: all
- 	$(DIRINSTALL) -m 755 $(DESTDIR)$(BINDIR) $(DESTDIR)$(SBINDIR) $(DESTDIR)$(IDSDIR) $(DESTDIR)$(MANDIR)/man8 $(DESTDIR)$(MANDIR)/man7 $(DESTDIR)/$(MANDIR)/man5
- 	$(INSTALL) -c -m 755 $(STRIP) lspci$(EXEEXT) $(DESTDIR)$(LSPCIDIR)
- 	$(INSTALL) -c -m 755 $(STRIP) setpci$(EXEEXT) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -c -m 755 $(STRIP) readpci$(EXEEXT) $(DESTDIR)$(SBINDIR)
- 	$(INSTALL) -c -m 755 update-pciids $(DESTDIR)$(SBINDIR)
- 	$(INSTALL) -c -m 644 $(PCI_IDS) $(DESTDIR)$(IDSDIR)
--	$(INSTALL) -c -m 644 lspci.8 setpci.8 update-pciids.8 $(DESTDIR)$(MANDIR)/man8
-+	$(INSTALL) -c -m 644 lspci.8 setpci.8 readpci.8 update-pciids.8 $(DESTDIR)$(MANDIR)/man8
- 	$(INSTALL) -c -m 644 pcilib.7 $(DESTDIR)$(MANDIR)/man7
- 	$(INSTALL) -c -m 644 pci.ids.5 $(DESTDIR)$(MANDIR)/man5
- ifeq ($(SHARED),yes)
-@@ -169,9 +174,9 @@ endif
- endif
- 
- uninstall: all
--	rm -f $(DESTDIR)$(SBINDIR)/lspci$(EXEEXT) $(DESTDIR)$(SBINDIR)/setpci$(EXEEXT) $(DESTDIR)$(SBINDIR)/update-pciids
-+	rm -f $(DESTDIR)$(SBINDIR)/lspci$(EXEEXT) $(DESTDIR)$(SBINDIR)/setpci$(EXEEXT) $(DESTDIR)$(SBINDIR)/readpci$(EXEEXT) $(DESTDIR)$(SBINDIR)/update-pciids
- 	rm -f $(DESTDIR)$(IDSDIR)/$(PCI_IDS)
--	rm -f $(DESTDIR)$(MANDIR)/man8/lspci.8 $(DESTDIR)$(MANDIR)/man8/setpci.8 $(DESTDIR)$(MANDIR)/man8/update-pciids.8
-+	rm -f $(DESTDIR)$(MANDIR)/man8/lspci.8 $(DESTDIR)$(MANDIR)/man8/setpci.8 $(DESTDIR)$(MANDIR)/man8/readpci.8 $(DESTDIR)$(MANDIR)/man8/update-pciids.8
- 	rm -f $(DESTDIR)$(MANDIR)/man7/pcilib.7
- 	rm -f $(DESTDIR)$(MANDIR)/man5/pci.ids.5
- 	rm -f $(DESTDIR)$(LIBDIR)/$(PCILIB)
-diff --git a/readpci.c b/readpci.c
-new file mode 100644
-index 000000000000..01719eac9680
---- /dev/null
-+++ b/readpci.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *	The PCI Utilities -- read and write PCI registers
-+ *
-+ *	Copyright(c) 2022 Intel Corporation. All rights reserved.
-+ *
-+ *	Originally authored by: Shannon Nelson <shannon.nelson@intel.com>
-+ *	Changes and published by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-+ */
-+
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include "pciutils.h"
-+
-+#include <fcntl.h>
-+#include <getopt.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
-+#include <linux/types.h>
-+
-+static struct pci_filter filter;    /* Device filter */
-+
-+static struct option opts[] = {
-+	{"write", 1, NULL, 'w' },
-+	{"address", 1, NULL, 'a' },
-+	{"debug", 0, NULL, 'D' },
-+	{"verbose", 0, NULL, 'v' },
-+	{"device", 1, NULL, 'd' },
-+	{"slot", 1, NULL, 's' },
-+	{ 0, 0, NULL, '0' }
-+};
-+
-+static void usage(char *progname, char *idfile)
++struct pci_bus *pci_add_new_bus_locked(struct pci_bus *parent, struct pci_dev *dev,
++				       int busnr)
 +{
-+	printf("Usage: %s [options] [device]   (%s)\n\n"
-+	       "Options:\n"
-+	       "-w <value>\t\tValue to write to the address\n"
-+	       "-W <value>\t\tValue to write to the address (no read)\n"
-+	       "-a <value>\t\tRegister address\n"
-+	       "-b <value>\t\tBAR to access other than BAR 0\n"
-+	       "-m\t\t\tAccess MSI-X BAR instead of BAR 0\n"
-+	       "-D\t\t\tPCI debugging\n"
-+	       "-q \t\t\tQuiet mode, no banner\n"
-+	       "-v \t\t\tEnable more verbose output\n"
-+	       "Device:\n"
-+	       "-d [<vendor>]:[<device>]\t\t\tShow selected devices\n"
-+	       "-s [[[[<domain>]:]<bus>]:][<slot>][.[<func>]]"
-+	       "\tShow devices in selected slots\n\n",
-+	       progname, idfile);
++	struct pci_bus *child;
++
++	mutex_lock(&add_bus_mutex);
++	child = pci_find_bus(pci_domain_nr(parent), busnr);
++	if (child) {
++		mutex_unlock(&add_bus_mutex);
++		return child;
++	}
++
++	child = pci_alloc_child_bus(parent, dev, busnr);
++	if (child) {
++		down_write(&pci_bus_sem);
++		list_add_tail(&child->node, &parent->children);
++		up_write(&pci_bus_sem);
++	}
++	mutex_unlock(&add_bus_mutex);
++
++	return child;
 +}
++EXPORT_SYMBOL(pci_add_new_bus_locked);
 +
-+static int find_msix(struct pci_dev *dev, u8 *bir)
-+{
-+	struct pci_cap *msix_cap;
-+
-+	msix_cap = pci_find_cap(dev, PCI_CAP_ID_MSIX, PCI_CAP_NORMAL);
-+
-+	/* no MSI-X capabilities found, just exit without error */
-+	if (!msix_cap) {
-+		printf("Cannot find MSI-X capability!\n");
-+		return -1;
-+	}
-+
-+	/* determine which BAR contains MSI-X data */
-+	*bir = pci_read_long(dev, msix_cap->addr + 4) & 0x7;
-+	if (!*bir) {
-+		printf("Cannot find MSI-X BAR!\n");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int print_register(struct pci_dev *dev, u8 bir, u32 address)
-+{
-+	volatile void *mem;
-+	int dev_mem_fd;
-+
-+	dev_mem_fd = open("/dev/mem", O_RDONLY);
-+	if (dev_mem_fd < 0) {
-+		perror("open");
-+		return -1;
-+	}
-+
-+	mem = (u8 *)mmap(NULL, dev->size[bir], PROT_READ, MAP_SHARED, dev_mem_fd, (dev->base_addr[bir] & PCI_ADDR_MEM_MASK));
-+	if (mem == MAP_FAILED) {
-+		perror("mmap/readable - try rebooting with iomem=relaxed");
-+		close(dev_mem_fd);
-+		return -1;
-+	}
-+
-+	printf("0x%x == 0x%x\n", address, *((u32 *)(mem + address)));
-+
-+	close(dev_mem_fd);
-+	munmap((void *)mem, dev->size[bir]);
-+
-+	return 0;
-+}
-+
-+static int write_register(struct pci_dev *dev, u8 bir, u32 address, u32 value)
-+{
-+	volatile void *mem;
-+	int dev_mem_fd;
-+
-+	dev_mem_fd = open("/dev/mem", O_RDWR);
-+	if (dev_mem_fd < 0) {
-+		perror("open");
-+		return -1;
-+	}
-+
-+	mem = mmap(NULL, dev->size[bir], PROT_WRITE, MAP_SHARED, dev_mem_fd, (dev->base_addr[bir] & PCI_ADDR_MEM_MASK));
-+	if (mem == MAP_FAILED) {
-+		perror("mmap/writable - try rebooting with iomem=relaxed");
-+		close(dev_mem_fd);
-+		return -1;
-+	}
-+
-+	*((u32 *)(mem + address)) = value;
-+
-+	close(dev_mem_fd);
-+	munmap((void *)mem, dev->size[bir]);
-+
-+	return 0;
-+}
-+
-+#ifndef ARRAY_SIZE
-+#define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
-+#endif
-+
-+int main(int argc, char **argv)
-+{
-+	int ch, debug = 0, quiet = 0;
-+	struct pci_access *pacc;
-+	struct pci_dev *dev;
-+	char *errmsg;
-+	char buf[128];
-+	u32 address = 0;
-+	u32 value = 0;
-+	u64 lvalue = 0;
-+	int device_specified = 0;
-+	int do_write = 0;
-+	int do_writeonly = 0;
-+	int got_address = 0;
-+	int ret = 0;
-+	int msix = 0;
-+	u8 bir = 0;
-+
-+	if (getuid() != 0) {
-+		printf("%s: must be run as root\n", argv[0]);
-+		exit(1);
-+	}
-+
-+	pacc = pci_alloc();		/* Get the pci_access structure */
-+	if (pacc == NULL) {
-+		perror("pci_alloc");
-+		exit(1);
-+	}
-+	pci_filter_init(pacc, &filter);
-+
-+	while ((ch = getopt_long(argc, argv, "W:w:Da:mb:d:s:qv", opts, NULL)) != -1) {
-+		switch (ch) {
-+		case 'w':
-+			lvalue = strtoll(optarg, NULL, 0);
-+			value = (u32)lvalue;
-+			do_write++;
-+			break;
-+		case 'W':
-+			lvalue = strtoll(optarg, NULL, 0);
-+			value = (u32)lvalue;
-+			do_write++;
-+			do_writeonly++;
-+			break;
-+		case 'D':
-+			pacc->debugging++;
-+			break;
-+		case 'a':
-+			address = strtol(optarg, NULL, 0);
-+			got_address++;
-+			break;
-+		case 'm':
-+			msix++;
-+			break;
-+		case 'b':
-+			lvalue = strtoll(optarg, NULL, 0);
-+			if (lvalue >= ARRAY_SIZE(dev->base_addr)) {
-+				printf("Invalid BAR requested!\n");
-+				exit(1);
-+			}
-+			bir = (u8)lvalue;
-+			break;
-+		case 'd':
-+			/* Show only selected devices */
-+			if ((errmsg = pci_filter_parse_id(&filter, optarg))) {
-+				printf("%s\n", errmsg);
-+				exit(1);
-+			}
-+			device_specified++;
-+			break;
-+		case 's':
-+			/* Show only devices in selected slots */
-+			if ((errmsg = pci_filter_parse_slot(&filter, optarg))) {
-+				printf("%s\n", errmsg);
-+				exit(1);
-+			}
-+			device_specified++;
-+			break;
-+		case 'q':
-+			/* don't print the banner */
-+			quiet = 1;
-+			break;
-+		case 'v':
-+			/* turn on extra debug prints */
-+			debug = 1;
-+			break;
-+		case '?':
-+		default:
-+			usage(argv[0], pacc->id_file_name);
-+			exit(1);
-+			break;
+ static void pci_enable_crs(struct pci_dev *pdev)
+ {
+ 	u16 root_cap = 0;
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index f967709082d6..f927263c2fe0 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -421,6 +421,7 @@ int pci_proc_attach_device(struct pci_dev *dev)
+ 	if (!proc_initialized)
+ 		return -EACCES;
+ 
++	device_lock(&bus->dev);
+ 	if (!bus->procdir) {
+ 		if (pci_proc_domain(bus)) {
+ 			sprintf(name, "%04x:%02x", pci_domain_nr(bus),
+@@ -429,9 +430,12 @@ int pci_proc_attach_device(struct pci_dev *dev)
+ 			sprintf(name, "%02x", bus->number);
+ 		}
+ 		bus->procdir = proc_mkdir(name, proc_bus_pci_dir);
+-		if (!bus->procdir)
++		if (!bus->procdir) {
++			device_unlock(&bus->dev);
+ 			return -ENOMEM;
 +		}
-+	}
-+
-+	if (!device_specified) {
-+		printf("No device given\n");
-+		usage(argv[0], pacc->id_file_name);
-+		exit(1);
-+	}
-+
-+	if (!got_address) {
-+		printf("No address given\n");
-+		usage(argv[0], pacc->id_file_name);
-+		exit(1);
-+	}
-+
-+	pci_init(pacc);			/* Initialize the PCI library */
-+	pci_scan_bus(pacc);		/* Get the list of devices */
-+
-+	if (pacc->debugging)
-+		printf(	"filter: "
-+#ifdef HAVE_DOMAIN_SUPPORT
-+			"domain=0x%x "
-+#endif
-+			"bus=0x%x slot=0x%x func=0x%x\n"
-+			"\tvendor=0x%x device=0x%x\n\n",
-+#ifdef HAVE_DOMAIN_SUPPORT
-+			filter.domain,
-+#endif
-+			filter.bus, filter.slot, filter.func,
-+			filter.vendor, filter.device);
-+
-+	/* Iterate over all devices to find the single one we want */
-+	for (dev = pacc->devices; dev; dev = dev->next) {
-+
-+		if (!pci_filter_match(&filter, dev))
-+			continue;
-+
-+		/* Fill in header info we need */
-+		pci_fill_info(dev, PCI_FILL_IDENT | PCI_FILL_BASES | PCI_FILL_SIZES);
-+
-+#ifdef HAVE_DOMAIN_SUPPORT
-+		if (dev->domain) {
-+			if (!quiet)
-+				printf("%04x:", dev->domain);
-+		}
-+#endif
-+		if (!quiet) {
-+			printf("%02x:%02x.%d (%04x:%04x) - %s\n", dev->bus,
-+			       dev->dev, dev->func, dev->vendor_id,
-+			       dev->device_id, pci_lookup_name(pacc, buf,
-+							       sizeof(buf),
-+					PCI_LOOKUP_VENDOR|PCI_LOOKUP_DEVICE,
-+					dev->vendor_id, dev->device_id, 0, 0));
-+		}
-+
-+		/* overwrite bir with offset of MSI-X BAR */
-+		if (msix) {
-+			ret = find_msix(dev, &bir);
-+			if (ret)
-+				break;
-+		}
-+
-+		/* verify that the BAR requested is valid */
-+		if (!dev->base_addr[bir]) {
-+			printf("Invalid BAR requested!\n");
-+			break;
-+		}
-+
-+		if (debug)
-+			printf("BAR%d: len 0x%08lX\n", bir, dev->size[bir]);
-+
-+		if (do_write) {
-+			ret = write_register(dev, bir, address, value);
-+			if (ret || do_writeonly)
-+				break;
-+		}
-+		ret = print_register(dev, bir, address);
-+
-+		/* we're done, we only write/print one device */
-+		break;
-+	}
-+
-+	if (!dev)
-+		printf("no device found\n");
-+
-+	pci_cleanup(pacc);		/* Close everything */
-+	return ret;
-+}
-+
-diff --git a/readpci.man b/readpci.man
-new file mode 100644
-index 000000000000..03fc64ff55fe
---- /dev/null
-+++ b/readpci.man
-@@ -0,0 +1,98 @@
-+.TH readpci 8 "@TODAY@" "@VERSION@" "The PCI Utilities"
-+.SH NAME
-+readpci \- read or write PCI registers
-+.SH SYNOPSIS
-+.B readpci
-+.RB [ options ]
-+.SH DESCRIPTION
-+.B readpci
-+is a utility for reading and writing PCI registers in a memory
-+mapped range.
-+
-+If you are going to report bugs in PCI device drivers or in
-+.I readpci
-+itself, please include output of "lspci -vvx" or even better "lspci -vvxxx"
-+(however, see below for possible caveats).
-+
-+Access to read and write registers in PCI configuration space is restricted to root,
-+So,
-+.I readpci
-+isn't available to normal users.
-+
-+.SH OPTIONS
-+
-+.SS Program options
-+.TP
-+.B -v
-+Be verbose and display detailed information about the actions of readpci.
-+.TP
-+.B -w [<value>]
-+The value to write to the address, usually specified like 0x0123abcd. Using
-+this argument causes a read after write to the register to report the value
-+read back after write. This parameter is optional but requires -a.
-+.TP
-+.B -W [<value>]
-+The value to write to the address, usually specified like 0x0123abcd. Using
-+this argument AVOIDS a read after write to the register and DOES NOT report the
-+value read back after write. This parameter is optional, but cannot be used
-+with -w and requires -a.
-+.TP
-+.B -a [<address>]
-+The address to read or write from (or both), as an offset from the start of the
-+BAR. Typically specified like 0x0123abcd.
-+.TP
-+.B -b [<value>]
-+Optional parameter, defaults to 0 if not specified. BAR number to access if
-+other than BAR0.
-+.TP
-+.B -m
-+Read from MSI-X BAR.
-+.TP
-+.B -D
-+Add more PCI library debugging.
-+.TP
-+.B -q
-+Don't print the banner during each read or write.
-+
-+.SS Options for selection of devices
-+.TP
-+.B -s [[[[<domain>]:]<bus>]:][<device>][.[<func>]]
-+Show only devices in the specified domain (in case your machine has several host bridges,
-+they can either share a common bus number space or each of them can address a PCI domain
-+of its own; domains are numbered from 0 to ffff), bus (0 to ff), device (0 to 1f) and function (0 to 7).
-+Each component of the device address can be omitted or set to "*", both meaning "any value". All numbers are
-+hexadecimal.  E.g., "0:" means all devices on bus 0, "0" means all functions of device 0
-+on any bus, "0.3" selects third function of device 0 on all buses and ".4" shows only
-+the fourth function of each device.
-+.TP
-+.B -d [<vendor>]:[<device>][:<class>[:<prog-if>]]
-+Show only devices with specified vendor, device, class ID, and programming interface.
-+The ID's are given in hexadecimal and may be omitted or given as "*", both meaning
-+"any value". The class ID can contain "x" characters which stand for "any digit".
-+
-+.P
-+The relative order of positional arguments and options is undefined.
-+New options can be added in future versions, but they will always
-+have a single argument not separated from the option by any spaces,
-+so they can be easily ignored if not recognized.
-+
-+.SH FILES
-+.TP
-+.B @IDSDIR@/pci.ids
-+A list of all known PCI ID's (vendors, devices, classes and subclasses).
-+
-+.SH BUGS
-+
-+There might be some, but none known at this time. If you find one please
-+let the list know.
-+
-+.SH SEE ALSO
-+.BR lspci (8),
-+.BR setpci (8),
-+.BR pci.ids (5),
-+.BR update-pciids (8),
-+.BR pcilib (7)
-+
-+.SH AUTHOR
-+The PCI Utilities are maintained by Martin Mares <mj@ucw.cz>.
-+The readpci utility was written by Intel.
+ 	}
++	device_unlock(&bus->dev);
+ 
+ 	sprintf(name, "%02x.%x", PCI_SLOT(dev->devfn), PCI_FUNC(dev->devfn));
+ 	e = proc_create_data(name, S_IFREG | S_IRUGO | S_IWUSR, bus->procdir,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 5da0846aa3c1..bfe2a2e74af6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1112,6 +1112,8 @@ struct pci_bus *pci_scan_root_bus(struct device *parent, int bus,
+ int pci_scan_root_bus_bridge(struct pci_host_bridge *bridge);
+ struct pci_bus *pci_add_new_bus(struct pci_bus *parent, struct pci_dev *dev,
+ 				int busnr);
++struct pci_bus *pci_add_new_bus_locked(struct pci_bus *parent, struct pci_dev *dev,
++				       int busnr);
+ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 				 const char *name,
+ 				 struct hotplug_slot *hotplug);
 
-base-commit: 0478e1f3928bfaa34eb910ba2cbaf1dda8f84aab
+base-commit: 4c86114194e644b6da9107d75910635c9e87179e
 -- 
-2.31.1
+2.27.0
 
