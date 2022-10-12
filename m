@@ -2,101 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C14F5FC664
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Oct 2022 15:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 557225FC667
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Oct 2022 15:28:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiJLN0u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Oct 2022 09:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55506 "EHLO
+        id S229823AbiJLN2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Oct 2022 09:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiJLN0t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Oct 2022 09:26:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8654BA927C
-        for <linux-pci@vger.kernel.org>; Wed, 12 Oct 2022 06:26:47 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1oibkz-0000DO-J4; Wed, 12 Oct 2022 15:26:45 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1oibky-0016Pp-H8; Wed, 12 Oct 2022 15:26:44 +0200
-Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1oibkx-0018DA-PO; Wed, 12 Oct 2022 15:26:43 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] PCI: imx6: Fix link initialisation when the phy is ref clk provider
-Date:   Wed, 12 Oct 2022 15:26:34 +0200
-Message-Id: <20221012132634.267970-1-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S229639AbiJLN2l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Oct 2022 09:28:41 -0400
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86189ABF0F;
+        Wed, 12 Oct 2022 06:28:39 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4MnYPq2t9xz4x1G;
+        Thu, 13 Oct 2022 00:28:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1665581313;
+        bh=9E6D8SfUt/XvbCtYk6H79eLF5Z0a8VLBf3dbm5xgnlU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=RHHgYvEMnEbCBFnzD18P+zJmb66XY27lFmS0KJ8KUqFVam8bV7++FxLIykwgZpM/S
+         FiBTpasGKgc4Upb01vtGUerSG6up/lXQMe090W03pZ1gmjOVpSYg2vuz0r9lwE9EaH
+         nPqvbKpIktgReSHQQVIIsx9vuUd7T26IIBp7sx/Ug4gb5mLGMBkdlSvT2E6Zimumhr
+         VWasrOgScYJaSBz9IGFstoG13WLv+UD/l0Kp0YJkmY1BMAl37gPZRm+rB1wtZyzYYe
+         21IqN5MPO+DWz2YaSMuMqRd9RzsPAA+tPSMk6qmHZOV7hS2uVpYymn6LQtqiBePpA4
+         tf35f+0SCmUZg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alvaro.karsz@solid-run.com, angus.chen@jaguarmicro.com,
+        gavinl@nvidia.com, jasowang@redhat.com, lingshan.zhu@intel.com,
+        wangdeming@inspur.com, xiujianfeng@huawei.com,
+        linuxppc-dev@lists.ozlabs.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [GIT PULL] virtio: fixes, features
+In-Reply-To: <20221012070532-mutt-send-email-mst@kernel.org>
+References: <20221010132030-mutt-send-email-mst@kernel.org>
+ <87r0zdmujf.fsf@mpe.ellerman.id.au>
+ <20221012070532-mutt-send-email-mst@kernel.org>
+Date:   Thu, 13 Oct 2022 00:28:25 +1100
+Message-ID: <87mta1marq.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the phy is the reference clock provider then it must be initialised
-and powered on before the reset on the client is deasserted, otherwise
-the link will never come up. The order was changed in cf236e0c0d59.
-Restore the correct order to make the driver work again on boards where
-the phy provides the reference clock.
+[ Cc += Bjorn & linux-pci ]
 
-Fixes: cf236e0c0d59 ("PCI: imx6: Do not hide PHY driver callbacks and refine the error handling")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/pci/controller/dwc/pci-imx6.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+"Michael S. Tsirkin" <mst@redhat.com> writes:
+> On Wed, Oct 12, 2022 at 05:21:24PM +1100, Michael Ellerman wrote:
+>> "Michael S. Tsirkin" <mst@redhat.com> writes:
+...
+>> > ----------------------------------------------------------------
+>> > virtio: fixes, features
+>> >
+>> > 9k mtu perf improvements
+>> > vdpa feature provisioning
+>> > virtio blk SECURE ERASE support
+>> >
+>> > Fixes, cleanups all over the place.
+>> >
+>> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>> >
+>> > ----------------------------------------------------------------
+>> > Alvaro Karsz (1):
+>> >       virtio_blk: add SECURE ERASE command support
+>> >
+>> > Angus Chen (1):
+>> >       virtio_pci: don't try to use intxif pin is zero
+>> 
+>> This commit breaks virtio_pci for me on powerpc, when running as a qemu
+>> guest.
+>> 
+>> vp_find_vqs() bails out because pci_dev->pin == 0.
+>> 
+>> But pci_dev->irq is populated correctly, so vp_find_vqs_intx() would
+>> succeed if we called it - which is what the code used to do.
+>> 
+>> I think this happens because pci_dev->pin is not populated in
+>> pci_assign_irq().
+>> 
+>> I would absolutely believe this is bug in our PCI code, but I think it
+>> may also affect other platforms that use of_irq_parse_and_map_pci().
+>
+> How about fixing this in of_irq_parse_and_map_pci then?
+> Something like the below maybe?
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 196834ed44fe..504c4d75c83f 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -446,6 +446,8 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
+>  	if (pin == 0)
+>  		return -ENODEV;
+>  
+> +	pdev->pin = pin;
+> +
+>  	/* Local interrupt-map in the device node? Use it! */
+>  	if (of_get_property(dn, "interrupt-map", NULL)) {
+>  		pin = pci_swizzle_interrupt_pin(pdev, pin);
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index b5f0de455a7bd..211eb55d6d34b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -942,12 +942,6 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
- 		}
- 	}
+That doesn't fix it in all cases, because there's an early return if
+there's a struct device_node associated with the pci_dev, before we even
+read the pin.
+
+Also the pci_dev is const, and removing the const would propagate to a
+few other places.
+
+The other obvious place to fix it would be in pci_assign_irq(), as
+below. That fixes this bug for me, but is otherwise very lightly tested.
+
+cheers
+
+
+diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+index cc7d26b015f3..0135413b33af 100644
+--- a/drivers/pci/setup-irq.c
++++ b/drivers/pci/setup-irq.c
+@@ -22,6 +22,15 @@ void pci_assign_irq(struct pci_dev *dev)
+ 	int irq = 0;
+ 	struct pci_host_bridge *hbrg = pci_find_host_bridge(dev->bus);
  
--	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
--	if (ret < 0) {
--		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
--		goto err_phy_off;
--	}
++	/* Make sure dev->pin is populated */
++	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
++
++	/* Cope with illegal. */
++	if (pin > 4)
++		pin = 1;
++
++	dev->pin = pin;
++
+ 	if (!(hbrg->map_irq)) {
+ 		pci_dbg(dev, "runtime IRQ mapping not provided by arch\n");
+ 		return;
+@@ -34,11 +43,6 @@ void pci_assign_irq(struct pci_dev *dev)
+ 	 * time the interrupt line passes through a PCI-PCI bridge we must
+ 	 * apply the swizzle function.
+ 	 */
+-	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+-	/* Cope with illegal. */
+-	if (pin > 4)
+-		pin = 1;
 -
- 	if (imx6_pcie->phy) {
- 		ret = phy_power_on(imx6_pcie->phy);
- 		if (ret) {
-@@ -955,6 +949,13 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
- 			goto err_phy_off;
- 		}
- 	}
-+
-+	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
-+		goto err_phy_off;
-+	}
-+
- 	imx6_setup_phy_mpll(imx6_pcie);
- 
- 	return 0;
--- 
-2.30.2
-
+ 	if (pin) {
+ 		/* Follow the chain of bridges, swizzling as we go. */
+ 		if (hbrg->swizzle_irq)
