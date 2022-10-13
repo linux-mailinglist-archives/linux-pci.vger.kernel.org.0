@@ -2,121 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE2D5FD4CF
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 08:29:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF54B5FD5D8
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 10:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbiJMG3R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Oct 2022 02:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
+        id S229757AbiJMIB0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Oct 2022 04:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbiJMG3Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Oct 2022 02:29:16 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1DD1EC55;
-        Wed, 12 Oct 2022 23:29:13 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 55C7E5C00FC;
-        Thu, 13 Oct 2022 02:29:11 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Thu, 13 Oct 2022 02:29:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1665642551; x=1665728951; bh=IK7qyXP/Hq
-        Hv2l79+EvbWbN9n2PDThaIIYKN+SdCmLU=; b=InSsjplS9Ys0U2AGlXKt7JrKR9
-        P4de4X3Des9x2jpi0NY5SqXFP9lDw2DELcTICNVaFYyQVug4NSAlLn2wnv5RNlKE
-        yseSXnYYuoWnY4pjo8NBgTmK4BauaA0Vxpaxn30Rme9wCptdagLbtyc4WqCbQL+Q
-        cbpa5YWMf59gAIoWc3xf7hsmriAvf6j0yjBXUSGoOutA/yJEXGrfxtUUh5GtWCLx
-        zifPjL/UKNieG6TcgJ/e4rUEQQTkNwwTqlJHxlGJxgo3ljAN8kc2ybhzMWsdCfpj
-        IJCSW6YUymHtrKbcSmGL7p68Usa2uTDg003fZ+yniKqlbvDqZ69trc46dPqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1665642551; x=1665728951; bh=IK7qyXP/HqHv2l79+EvbWbN9n2PD
-        ThaIIYKN+SdCmLU=; b=Q2CpNE0R0yn5ejpW0T6nFjfHoMnRLXBS32u4Y90NWnC0
-        1tIINvXRjhsIWBsk9oo21L9SAU2QG0twhkXlxNprdbOVir6CW2viY7ro8/IkN8ok
-        W1MerrZ+NRcgQkEAfAo90dHOYlI/yT2O/u4mZarMEBDibKBp2TtBsMdspWbRg2kQ
-        Px0D68KqMraQDAElccP2rC/C/MFaZSBgdlWvMtzRW6oqKkXKDumd9MfS8pJCrir2
-        nCjkuqxVVg1yMAURsQv5HJ7jx7PktJYsnkYbIGw3/La60yExsGRF81MZ30FuyXLE
-        3X3N1SLQ8ZDLF1NicDFofzohyntVbzNOOhnOW0gCgQ==
-X-ME-Sender: <xms:NrBHY7_Ni3TZ3cVbcq129ad5lztFqrAYS710Pvv1ow2bZY2XNGV1gw>
-    <xme:NrBHY3tQatCkmrhc2_bIhRoGWRGOqxv5firinyaUfWUaMrKmhSZ-4DcpdrafBG5Xr
-    vDrDMrPBmVYdpapWdQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejledguddutdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:NrBHY5AeVxScoHloAQn3dk12_0JBsCSMxhuCYcm0_4fd4jccNPWxqA>
-    <xmx:NrBHY3fPMECVqQVWlU7aEwnSnBUtJ3eZzm5kEW7Di4IbMUH406kCmw>
-    <xmx:NrBHYwMEJd_OL-fNGSTJEFtKIs8WIBfG6KXbe-VRRsY3OPi7Nu-NYw>
-    <xmx:N7BHYyv332Ii0uhigppB6rMr2NLWWMg9MonS7J95YHIiD4hXOpdN6Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 28323B60086; Thu, 13 Oct 2022 02:29:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
-Mime-Version: 1.0
-Message-Id: <a35fd31b-0658-4ac1-8340-99cdf4c75bb7@app.fastmail.com>
-In-Reply-To: <20221012180806-mutt-send-email-mst@kernel.org>
-References: <20221010132030-mutt-send-email-mst@kernel.org>
- <87r0zdmujf.fsf@mpe.ellerman.id.au>
- <20221012070532-mutt-send-email-mst@kernel.org>
- <87mta1marq.fsf@mpe.ellerman.id.au> <87edvdm7qg.fsf@mpe.ellerman.id.au>
- <20221012115023-mutt-send-email-mst@kernel.org>
- <CAHk-=wg2Pkb9kbfbstbB91AJA2SF6cySbsgHG-iQMq56j3VTcA@mail.gmail.com>
- <38893b2e-c7a1-4ad2-b691-7fbcbbeb310f@app.fastmail.com>
- <20221012180806-mutt-send-email-mst@kernel.org>
-Date:   Thu, 13 Oct 2022 08:28:03 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "Linus Torvalds" <torvalds@linux-foundation.org>,
-        xiujianfeng@huawei.com, kvm@vger.kernel.org,
-        alvaro.karsz@solid-run.com, "Jason Wang" <jasowang@redhat.com>,
-        angus.chen@jaguarmicro.com, wangdeming@inspur.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Netdev <netdev@vger.kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, lingshan.zhu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, gavinl@nvidia.com
-Subject: Re: [GIT PULL] virtio: fixes, features
-Content-Type: text/plain
+        with ESMTP id S229624AbiJMIBZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Oct 2022 04:01:25 -0400
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057CC7F262;
+        Thu, 13 Oct 2022 01:01:22 -0700 (PDT)
+Received: (Authenticated sender: clement.leger@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 0A1CCFF816;
+        Thu, 13 Oct 2022 08:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1665648078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l6aR3+3rfdAF7vB9eEvTfewDxBVIcWtX5nWe2mtu88A=;
+        b=J0cPL5LbOImtVP/oYDZgcufrAlVac8Bs1mjmDnKZeJjnf7SbXSwsGiefrNC49jgvPUnW0I
+        QkQNlAvFvAXiQWJs9VZZ3v2OwTySwMOKU4P3DUAoUEwAIE0l1nXuVoQjE5WrqhPYRz2ywN
+        uiLkxLR6SBWPWC6PCarWJ1pSplnMFZlxycFBrvXumOhH16xQ2TapWUrf0dQ4w8UmGoq9G/
+        OrfIJRoUhT26PWi1mlxJKwgASyFkcY5abhoZmDq2UF34wUVJRfQT+AXKxbXBO+SJmhAeLQ
+        jdFcCTGse7Ww7J9rBMqR4hBc2M/HTE5WYJpbQ493SXywr74MUHey0Z0+yadisA==
+Date:   Thu, 13 Oct 2022 10:02:45 +0200
+From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, helgaas@kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
+        stefano.stabellini@xilinx.com, trix@redhat.com
+Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devicesgain,
+Message-ID: <20221013100245.14c509ec@fixe.home>
+In-Reply-To: <0d571d21-507d-fcc5-bf58-d02f958de28a@gmail.com>
+References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
+        <1d9faa2e-e3fc-d104-c85f-4035233848d6@gmail.com>
+        <ca35a14d-501d-265e-b196-a87e1e994cd0@amd.com>
+        <78211af5-171c-ef4f-a8c2-17f63dc479bc@gmail.com>
+        <20221010104210.68edf825@fixe.home>
+        <0d571d21-507d-fcc5-bf58-d02f958de28a@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 13, 2022, at 12:08 AM, Michael S. Tsirkin wrote:
-> On Wed, Oct 12, 2022 at 11:06:54PM +0200, Arnd Bergmann wrote:
->> On Wed, Oct 12, 2022, at 7:22 PM, Linus Torvalds wrote:
->> >
->> > The NO_IRQ thing is mainly actually defined by a few drivers that just
->> > never got converted to the proper world order, and even then you can
->> > see the confusion (ie some drivers use "-1", others use "0", and yet
->> > others use "((unsigned int)(-1)".
->> 
->> The last time I looked at removing it for arch/arm/, one problem was
->> that there were a number of platforms using IRQ 0 as a valid number.
->> We have converted most of them in the meantime, leaving now only
->> mach-rpc and mach-footbridge. For the other platforms, we just
->> renumbered all interrupts to add one, but footbridge apparently
->> relies on hardcoded ISA interrupts in device drivers. For rpc,
->> it looks like IRQ 0 (printer) already wouldn't work, and it
->> looks like there was never a driver referencing it either.
->
-> Do these two boxes even have pci?
+Le Thu, 13 Oct 2022 01:05:26 -0500,
+Frank Rowand <frowand.list@gmail.com> a =C3=A9crit :
 
-Footbridge/netwinder has PCI and PC-style ISA on-board devices
-(floppy, ps2 mouse/keyboard, parport, soundblaster, ...), RiscPC
-has neither.
+> > This would also require two different descriptions of the same card
+> > (for ACPI and device-tree) and would require the final user to create a
+> > specific overlay for its device based on the PCI slots the card is
+> > plugged in. =20
+>=20
+> One of the many missing pieces of overlay support.  There have been sever=
+al
+> discussion of how to describe a "socket" in a device tree that a device
+> could be plugged into, where a single device tree subtree .dtb could be
+> relocated to one or more different socket locations.  Thus in this
+> case a single overlay could be relocated to various PCI slots.
+>=20
+> I don't expect be getting involved in any future efforts around sockets
+> (see my following comment for why).
+>=20
+> >=20
+> > The solution we proposed (Lizhi and I) allows to overcome these
+> > problems and is way easier to use. Fixing the potential bugs that might
+> > exists in the overlay layer seems a way better idea that just pushing =
+=20
+>=20
+> It is not potential bugs.  The current run time overlay implementation is
+> proof of concept quality and completeness.  It is not production ready.
+>=20
+> I got an opportunity for early retirement a couple of weeks ago.  My first
+> inclination was to continue the same level of device tree maintainership,
+> but I am quickly realizing that there are other activities that I would
+> like to devote my time and energy to.  I will continue to support Rob with
+> minor patch reviews and testing, and potentially finishing up some
+> improvements to unittest.  On the other hand, bringing run time overlay
+> support to product quality would be a major investment of my time that I
+> am not willing to continue.
 
-    Arnd
+Hi Frank,
+
+This explains your position on the overlay support and I can
+certainly understand it ! Regarding the fact that it would enter
+"production", the devices we are talking about are not really
+widespread yet? This would be a good opportunity to gather feedback
+early and improve the support gradually. We could probably even be able
+to support improvements in the overlay code if needed I guess.
+
+Thanks for your honest answer,
+
+Cl=C3=A9ment
+
+>=20
+> So I am leaving major overlay issues in the capable hands of Rob.  I may
+> chime in from time to time when I can do so without requiring too much of
+> my time.
+>=20
+> -Frank
+>=20
+> > that away to the bootloader level. Moreover, this kind of devices is
+> > likely to be more common with the increasing popularity of FPGA and a
+> > proper solution must be found.
+> >  =20
+
+
+
+--=20
+Cl=C3=A9ment L=C3=A9ger,
+Embedded Linux and Kernel engineer at Bootlin
+https://bootlin.com
