@@ -2,148 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E3AA5FD329
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 04:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6013A5FD39B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 05:49:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbiJMCHG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Oct 2022 22:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
+        id S229470AbiJMDt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Oct 2022 23:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbiJMCHD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Oct 2022 22:07:03 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A576E13B8ED;
-        Wed, 12 Oct 2022 19:06:58 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A151A211006;
-        Thu, 13 Oct 2022 04:06:56 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 343E021100B;
-        Thu, 13 Oct 2022 04:06:56 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 86D081802204;
-        Thu, 13 Oct 2022 10:06:54 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     vkoul@kernel.org, a.fatoum@pengutronix.de, p.zabel@pengutronix.de,
-        l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, shawnguo@kernel.org,
-        alexander.stein@ew.tq-group.com, marex@denx.de,
-        richard.leitner@linux.dev
-Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [RESEND v12 4/4] phy: freescale: imx8m-pcie: Add i.MX8MP PCIe PHY support
-Date:   Thu, 13 Oct 2022 09:47:02 +0800
-Message-Id: <1665625622-20551-5-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1665625622-20551-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1665625622-20551-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229459AbiJMDt0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Oct 2022 23:49:26 -0400
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F6C511B2F3
+        for <linux-pci@vger.kernel.org>; Wed, 12 Oct 2022 20:49:25 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 068005803F6;
+        Wed, 12 Oct 2022 23:49:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 12 Oct 2022 23:49:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
+        cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1665632962; x=1665636562; bh=7Xu3WAbIeT
+        3msy3mJnCikbC/d3pvfoC4qbTOoSPMVaA=; b=mAvuXsfIyIgdduxNJNFcVKe6VG
+        fbfjydLagjvL11+WrRamRpqb4DM2Ck0C55UNV1Sqdmci2AjnaXr11e8xMoa6JO32
+        CbICRGJ/6J/507OZDBQWHoNF8a/Z2utqTl/Ed+vGyQg+Wq2ApSt7732+jmPfMmoD
+        8cyvrwUwjj1Eq0WN9ed+UMmtNpMkk3CWrz/2cqJYzxWR0aZoRkOzN1w4AIHAgugy
+        v/M4Cg/lQIPv1c1ZwP4ijAiCsUSPrEPScJ42i5+0iUSIgaJ8cMKu+EVh5ZeLEs9s
+        dPjmBnfUdqO6RpI/TGbqzXE6K0dZLHhIsEPKRqAljCw02rqNFL9weurBolOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1665632962; x=1665636562; bh=7Xu3WAbIeT3msy3mJnCikbC/d3pv
+        foC4qbTOoSPMVaA=; b=exdyFdgLTOfGM+dol2M4wNHsSXEdiOcMANhvOBYHfxbU
+        EAkTaYyl002MWukVrFoRki9RunQKVIR0NUgbIEBX7wLtxqoUYCYtr7tEWknarN2l
+        LqX1N1SgI5gKhRth1ZswzJOGdV9fzLgovEit9cWRyywZjPQnDAQxeOldqkwHIfhR
+        VN1hKCpG5d1UTJmBXWWFRRhYM6VLR0zlwNtJRhqzbTUiF9Mcoyx5YE+ra4JycNdM
+        g1eV46rcT0Jo/X84pldVVz1GdefKqzSL9klRdDRh2R80iSB6OoGh9RpAm0sXiPWD
+        rD2lYjLKIe35U4scoLONTY/epdSKfogMRwp8y5ag7g==
+X-ME-Sender: <xms:wYpHY1CevNI0Xka50VoWgZOoB0xPkZrVk7-2Pzh7vghyYpQPdPR_1w>
+    <xme:wYpHYzhkQcoLaGb-APdKX40roqhPB06IX_WpieL68LKuN6m6AbL0y43KrIQgtAGWG
+    OMV5bcKF3IQvjKF7S4>
+X-ME-Received: <xmr:wYpHYwlU4shXXvI6c_8-grlcEX0CxmO4ERlxY4vrky2XsCfW9xEAz673eec>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejledgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihlhgv
+    rhcujfhitghkshcuoegtohguvgesthihhhhitghkshdrtghomheqnecuggftrfgrthhtvg
+    hrnhepvdehvddttdfhfefhtdfgleehfeeggfdujeeuveekudevkedvgeejtddtfefgleei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghoug
+    gvsehthihhihgtkhhsrdgtohhm
+X-ME-Proxy: <xmx:wYpHY_xJDWs2VDtPHNd7CFFAEcLf_TQA7IET7hOfZTD2E2iz-v1O5Q>
+    <xmx:wYpHY6SstH0OAPqDJwyKZQQ6CDZUmeYpsPxonCDSVQcwjQUHsrcV1Q>
+    <xmx:wYpHYyZ2H7mMTx9HL2P3nrQSBGa7AdAXAiOWqeku6Mn8oofqfSg73Q>
+    <xmx:wYpHY9IYbV4D9gOtiwibZoDcYeekZdpBUg6nss_BOUSc-BGTapAwhA>
+Feedback-ID: i78e14604:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Oct 2022 23:49:21 -0400 (EDT)
+Date:   Wed, 12 Oct 2022 22:48:57 -0500
+From:   Tyler Hicks <code@tyhicks.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH] PCI: Align MPS to upstream bridge for SAFE and
+ PERFORMANCE mode
+Message-ID: <20221013034857.hr2gq5gkuryygpcm@sequoia>
+References: <20220610150131.6256-1-Zhiqiang.Hou@nxp.com>
+ <20220826154933.GB39334@sequoia>
+ <20220914144105.GB169602@sequoia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220914144105.GB169602@sequoia>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MP PCIe PHY support.
+On 2022-09-14 09:41:05, Tyler Hicks wrote:
+> On 2022-08-26 10:49:39, Tyler Hicks wrote:
+> > On 2022-06-10 23:01:31, Zhiqiang Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > 
+> > > The commit 27d868b5e6cf ("PCI: Set MPS to match upstream bridge")
+> > > made the device's MPS matches upstream bridge for PCIE_BUS_DEFAULT
+> > > mode, so that it's more likely that a hot-added device will work in
+> > > a system with an optimized MPS configuration.
+> > > 
+> > > Obviously, the Linux itself optimizes the MPS settings in the
+> > > PCIE_BUS_SAFE and PCIE_BUS_PERFORMANCE mode, so let's do this also
+> > > for these modes.
+> > > 
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > ---
+> > 
+> > Hi Bjorn - We have some interest in this patch and I am hoping it can be
+> > considered in preparation for v6.1. I took a look at it and it makes
+> > sense to me but I'm not an expert in this area. Thanks!
+> 
+> Ping. Do you expect to get any free cycles to review this in prep for
+> v6.1?
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Marek Vasut <marex@denx.de>
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 25 ++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+Ping now that you've got the v6.1 PR out for the PCI subsystem. Thanks. 
 
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index 3e494612db3c..7585e8080b77 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -48,6 +48,7 @@
- 
- enum imx8_pcie_phy_type {
- 	IMX8MM,
-+	IMX8MP,
- };
- 
- struct imx8_pcie_phy_drvdata {
-@@ -60,6 +61,7 @@ struct imx8_pcie_phy {
- 	struct clk		*clk;
- 	struct phy		*phy;
- 	struct regmap		*iomuxc_gpr;
-+	struct reset_control	*perst;
- 	struct reset_control	*reset;
- 	u32			refclk_pad_mode;
- 	u32			tx_deemph_gen1;
-@@ -74,11 +76,11 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 	u32 val, pad_mode;
- 	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
- 
--	reset_control_assert(imx8_phy->reset);
--
- 	pad_mode = imx8_phy->refclk_pad_mode;
- 	switch (imx8_phy->drvdata->variant) {
- 	case IMX8MM:
-+		reset_control_assert(imx8_phy->reset);
-+
- 		/* Tune PHY de-emphasis setting to pass PCIe compliance. */
- 		if (imx8_phy->tx_deemph_gen1)
- 			writel(imx8_phy->tx_deemph_gen1,
-@@ -87,6 +89,8 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 			writel(imx8_phy->tx_deemph_gen2,
- 			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
- 		break;
-+	case IMX8MP: /* Do nothing. */
-+		break;
- 	}
- 
- 	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ||
-@@ -141,6 +145,9 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 			   IMX8MM_GPR_PCIE_CMN_RST);
- 
- 	switch (imx8_phy->drvdata->variant) {
-+	case IMX8MP:
-+		reset_control_deassert(imx8_phy->perst);
-+		fallthrough;
- 	case IMX8MM:
- 		reset_control_deassert(imx8_phy->reset);
- 		usleep_range(200, 500);
-@@ -181,8 +188,14 @@ static const struct imx8_pcie_phy_drvdata imx8mm_drvdata = {
- 	.variant = IMX8MM,
- };
- 
-+static const struct imx8_pcie_phy_drvdata imx8mp_drvdata = {
-+	.gpr = "fsl,imx8mp-iomuxc-gpr",
-+	.variant = IMX8MP,
-+};
-+
- static const struct of_device_id imx8_pcie_phy_of_match[] = {
- 	{.compatible = "fsl,imx8mm-pcie-phy", .data = &imx8mm_drvdata, },
-+	{.compatible = "fsl,imx8mp-pcie-phy", .data = &imx8mp_drvdata, },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
-@@ -238,6 +251,14 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(imx8_phy->reset);
- 	}
- 
-+	if (imx8_phy->drvdata->variant == IMX8MP) {
-+		imx8_phy->perst =
-+			devm_reset_control_get_exclusive(dev, "perst");
-+		if (IS_ERR(imx8_phy->perst))
-+			dev_err_probe(dev, PTR_ERR(imx8_phy->perst),
-+				      "Failed to get PCIE PHY PERST control\n");
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	imx8_phy->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(imx8_phy->base))
--- 
-2.25.1
-
+> 
+> Tyler
+> 
+> > 
+> > Tyler
+> > 
+> > >  drivers/pci/probe.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index 17a969942d37..2c5a1aefd9cb 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -2034,7 +2034,9 @@ static void pci_configure_mps(struct pci_dev *dev)
+> > >  	 * Fancier MPS configuration is done later by
+> > >  	 * pcie_bus_configure_settings()
+> > >  	 */
+> > > -	if (pcie_bus_config != PCIE_BUS_DEFAULT)
+> > > +	if (pcie_bus_config != PCIE_BUS_DEFAULT &&
+> > > +	    pcie_bus_config != PCIE_BUS_SAFE &&
+> > > +	    pcie_bus_config != PCIE_BUS_PERFORMANCE)
+> > >  		return;
+> > >  
+> > >  	mpss = 128 << dev->pcie_mpss;
+> > > @@ -2047,7 +2049,7 @@ static void pci_configure_mps(struct pci_dev *dev)
+> > >  
+> > >  	rc = pcie_set_mps(dev, p_mps);
+> > >  	if (rc) {
+> > > -		pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
+> > > +		pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_peer2peer\" and report a bug\n",
+> > >  			 p_mps);
+> > >  		return;
+> > >  	}
+> > > -- 
+> > > 2.17.1
+> > > 
