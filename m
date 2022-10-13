@@ -2,82 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E3D5FDECD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 19:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85BA65FDEEA
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Oct 2022 19:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiJMRTX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Oct 2022 13:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        id S229772AbiJMR2r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Oct 2022 13:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbiJMRTV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Oct 2022 13:19:21 -0400
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB22D73DF
-        for <linux-pci@vger.kernel.org>; Thu, 13 Oct 2022 10:19:20 -0700 (PDT)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1326637be6eso3017765fac.13
-        for <linux-pci@vger.kernel.org>; Thu, 13 Oct 2022 10:19:20 -0700 (PDT)
+        with ESMTP id S229470AbiJMR2q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Oct 2022 13:28:46 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1C745F70;
+        Thu, 13 Oct 2022 10:28:45 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id q18so1294804ils.12;
+        Thu, 13 Oct 2022 10:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j1qTz+oYugF8Lf770mKCIrdepvqmBbCEzwy+EaukMrM=;
-        b=RwP93R0i/58OL7LRD+//xbsGSpXEvsNfrhi2GXL/rRnIR0fEBr1hhf0AxtH9ySaIuq
-         fxnBUs5tBFF0nv+sS5fXPWTFdyDQIQyfW3oaIHCHCny57nHo+jkN3VT1oW56ATf0pSAn
-         /cXKnAs4MWRb/mczWEGT2NYOdgosHqzbcK1Ec=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xW1hGhhG1a+jZESpJXTZ+May2tEDBDYQoIz1i9vNh40=;
+        b=da5n71lPLMztDLCID6RIPDr1X+8jEDhO2W9JXZdaE3MGwAgs7L1PSlKod5ZxNQkrjS
+         6Knk4TplvnW+sE+2v0fm1SfX6bSMlHMFcQ001NUp5kG0oXbXQfC61ldVV1HoOBXZrnQX
+         P6diRw2Pi2wSFnix/OhE5xfTdMVBgQ5vRVn5f5q6DJGEKK1li2ULILktzQ5DPmop45as
+         TM/Dt2tz7NcvB2sIphw16IxZxDU92RVg5lBawhiYQe1i2C9nHozcF6qdg0WyH/0te4Y4
+         3va8lA5pwaqPrb7RuAySh5latEgxV+RgQbO8lXToFNNZx78P+HPmrBjnXul9KBCfoXxE
+         IS+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j1qTz+oYugF8Lf770mKCIrdepvqmBbCEzwy+EaukMrM=;
-        b=B1oJFZV5IjotcSf4i3DxfgMgYFPyMrBRRJaGM+8bdaR6FV9kz49O0itYd0RP4Y9fSW
-         Mx+6t8HH9UGlOmKbLyZ3hoJxh/WJZulm7gfZjVKzVaqTI84vtNk5PA2jxevNLpelb6Uz
-         /DIy4HXCBqJlBf2OnK8NCh5HMyf5uUmwNiNEmo7B3FiLc+81ZhCNWp9L55bOzfZaUKwj
-         R+23wQxOX71QvPk2yL+M/9qRF96lJ9KYlwpso6xytUO1Wg8aB/R9HE9IX5bQZQoXxxgQ
-         9evjNfGr8xBo5L+cJWqPSABP1xIEgWVN0AYjuNnIAS8uGfZxuh3ZSqaG5krJ74XfLYo0
-         lgyQ==
-X-Gm-Message-State: ACrzQf0Q9H50dLdWZkpHSWA6Zz/FmdGJy/jwdOF6HBNpimgvn3cspI9M
-        9tNi4BaMSGp9mg4EskPFPu1al92N/71TfA==
-X-Google-Smtp-Source: AMsMyM6y/FqzD5NPiIQjsJCPi1Nx8RrntdNTgybE/EOsp8m9AVTbcBM9Jq0YJ4Fod4iUNsNo3uGQvQ==
-X-Received: by 2002:a05:6870:c68b:b0:127:36e4:d437 with SMTP id cv11-20020a056870c68b00b0012736e4d437mr446586oab.40.1665681559778;
-        Thu, 13 Oct 2022 10:19:19 -0700 (PDT)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
-        by smtp.gmail.com with ESMTPSA id s4-20020a056870248400b00136cfb02a94sm212115oaq.7.2022.10.13.10.19.19
-        for <linux-pci@vger.kernel.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xW1hGhhG1a+jZESpJXTZ+May2tEDBDYQoIz1i9vNh40=;
+        b=K09cyOC2PHNeDuHggEKG6dzxS0KeXiQFQk3kkmOpcwOUqcvq5dF93CqOn4P8XoyT21
+         rSEems0smuIWObQuyg5K+dCUj0jkyWhkQwmc85BYg04/2Q+XMorgNYBoJDghLiDaUTX/
+         hc4yBvcFAkhYClAd1yaKpBJ5HRtruCWJFr8T4Qwd00owOAJgZM6sOI6BMZ0Orrt0gvgn
+         EXfzhbvi3IxpbdR3/UGvOAUocbe1tMcAB+Wd8euC/LUukSBY8QuSOITlaGkZrBPORt82
+         d7jJd9U97NhgJCyvJLyR36pVCGkhAWHNDD6UvtPofVF5Wh2dtQfznhSJ33qqDHkDJTTz
+         +FqA==
+X-Gm-Message-State: ACrzQf12KPpXviA+YUtBC3B5mHqMdoBWGlDz25pSy1370Pky3/EUPGRS
+        h0iU1LMBxTwsHrCyqm4/MdY=
+X-Google-Smtp-Source: AMsMyM5tMJzDXtwtLS2rKteGqKwUTreLeuR4hV29JfDDw9coo46UJ7wQ18NLhDrAUGUmhG0ddURaaw==
+X-Received: by 2002:a05:6e02:19ce:b0:2fc:3a29:f89f with SMTP id r14-20020a056e0219ce00b002fc3a29f89fmr524762ill.219.1665682125034;
+        Thu, 13 Oct 2022 10:28:45 -0700 (PDT)
+Received: from ?IPV6:2600:1700:2442:6db0:dfd:8f05:49f2:c057? ([2600:1700:2442:6db0:dfd:8f05:49f2:c057])
+        by smtp.gmail.com with ESMTPSA id z44-20020a0293af000000b00363a5566a3bsm178635jah.90.2022.10.13.10.28.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Oct 2022 10:19:19 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id a14-20020a9d470e000000b00661b66a5393so425595otf.11
-        for <linux-pci@vger.kernel.org>; Thu, 13 Oct 2022 10:19:19 -0700 (PDT)
-X-Received: by 2002:a05:6830:4421:b0:661:8fdd:81e9 with SMTP id
- q33-20020a056830442100b006618fdd81e9mr528782otv.69.1665681558964; Thu, 13 Oct
- 2022 10:19:18 -0700 (PDT)
+        Thu, 13 Oct 2022 10:28:44 -0700 (PDT)
+Message-ID: <c427fd85-3746-bf26-e4a3-9b2aa53f6572@gmail.com>
+Date:   Thu, 13 Oct 2022 12:28:42 -0500
 MIME-Version: 1.0
-References: <20221010132030-mutt-send-email-mst@kernel.org>
- <87r0zdmujf.fsf@mpe.ellerman.id.au> <20221012070532-mutt-send-email-mst@kernel.org>
- <87mta1marq.fsf@mpe.ellerman.id.au> <87edvdm7qg.fsf@mpe.ellerman.id.au>
- <20221012115023-mutt-send-email-mst@kernel.org> <CAHk-=wg2Pkb9kbfbstbB91AJA2SF6cySbsgHG-iQMq56j3VTcA@mail.gmail.com>
- <38893b2e-c7a1-4ad2-b691-7fbcbbeb310f@app.fastmail.com> <20221012180806-mutt-send-email-mst@kernel.org>
- <a35fd31b-0658-4ac1-8340-99cdf4c75bb7@app.fastmail.com>
-In-Reply-To: <a35fd31b-0658-4ac1-8340-99cdf4c75bb7@app.fastmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 13 Oct 2022 10:19:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whLv3MO0Tvc62zJ+=4yvSfKMK17C0wfpbXBwUJqSjKbYA@mail.gmail.com>
-Message-ID: <CAHk-=whLv3MO0Tvc62zJ+=4yvSfKMK17C0wfpbXBwUJqSjKbYA@mail.gmail.com>
-Subject: Re: [GIT PULL] virtio: fixes, features
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, xiujianfeng@huawei.com,
-        kvm@vger.kernel.org, alvaro.karsz@solid-run.com,
-        Jason Wang <jasowang@redhat.com>, angus.chen@jaguarmicro.com,
-        wangdeming@inspur.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Netdev <netdev@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, lingshan.zhu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, gavinl@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devicesgain,
+Content-Language: en-US
+To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, helgaas@kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
+        stefano.stabellini@xilinx.com, trix@redhat.com
+References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
+ <1d9faa2e-e3fc-d104-c85f-4035233848d6@gmail.com>
+ <ca35a14d-501d-265e-b196-a87e1e994cd0@amd.com>
+ <78211af5-171c-ef4f-a8c2-17f63dc479bc@gmail.com>
+ <20221010104210.68edf825@fixe.home>
+ <0d571d21-507d-fcc5-bf58-d02f958de28a@gmail.com>
+ <20221013100245.14c509ec@fixe.home>
+From:   Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <20221013100245.14c509ec@fixe.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,59 +83,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 11:29 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Oct 13, 2022, at 12:08 AM, Michael S. Tsirkin wrote:
-> >
-> > Do these two boxes even have pci?
->
-> Footbridge/netwinder has PCI and PC-style ISA on-board devices
-> (floppy, ps2 mouse/keyboard, parport, soundblaster, ...), RiscPC
-> has neither.
+On 10/13/22 03:02, Clément Léger wrote:
+> Le Thu, 13 Oct 2022 01:05:26 -0500,
+> Frank Rowand <frowand.list@gmail.com> a écrit :
+> 
+>>> This would also require two different descriptions of the same card
+>>> (for ACPI and device-tree) and would require the final user to create a
+>>> specific overlay for its device based on the PCI slots the card is
+>>> plugged in.  
+>>
+>> One of the many missing pieces of overlay support.  There have been several
+>> discussion of how to describe a "socket" in a device tree that a device
+>> could be plugged into, where a single device tree subtree .dtb could be
+>> relocated to one or more different socket locations.  Thus in this
+>> case a single overlay could be relocated to various PCI slots.
+>>
+>> I don't expect be getting involved in any future efforts around sockets
+>> (see my following comment for why).
+>>
+>>>
+>>> The solution we proposed (Lizhi and I) allows to overcome these
+>>> problems and is way easier to use. Fixing the potential bugs that might
+>>> exists in the overlay layer seems a way better idea that just pushing  
+>>
+>> It is not potential bugs.  The current run time overlay implementation is
+>> proof of concept quality and completeness.  It is not production ready.
+>>
+>> I got an opportunity for early retirement a couple of weeks ago.  My first
+>> inclination was to continue the same level of device tree maintainership,
+>> but I am quickly realizing that there are other activities that I would
+>> like to devote my time and energy to.  I will continue to support Rob with
+>> minor patch reviews and testing, and potentially finishing up some
+>> improvements to unittest.  On the other hand, bringing run time overlay
+>> support to product quality would be a major investment of my time that I
+>> am not willing to continue.
+> 
+> Hi Frank,
+> 
+> This explains your position on the overlay support and I can
+> certainly understand it ! Regarding the fact that it would enter
 
-It's worth noting that changing a driver that does
+No, my position on the technical aspects of overlay support is totally
+unchanged.
 
-        if (dev->irq == NO_IRQ)
-                return -ENODEV;
+The only thing that has changed is that my time will not be available to
+assist in future overlay related work.  The burden for this will fall
+more on Rob than it has in the past.
 
-to use
 
-        if (!dev->irq)
-                return -ENODEV;
+> "production", the devices we are talking about are not really
+> widespread yet? This would be a good opportunity to gather feedback
+> early and improve the support gradually. We could probably even be able
+> to support improvements in the overlay code if needed I guess.
 
-should be pretty much always fine.
+That is avoiding my point about the current implementation being
+proof of concept.
 
-Even *if* that driver is then compiled and used on an architecture
-where NO_IRQ is one of the odd values, you end up having only two
-cases
+-Frank
 
- (a) irq 0 was actually a valid irq after all
+> 
+> Thanks for your honest answer,
+> 
+> Clément
+> 
+>>
+>> So I am leaving major overlay issues in the capable hands of Rob.  I may
+>> chime in from time to time when I can do so without requiring too much of
+>> my time.
+>>
+>> -Frank
+>>
+>>> that away to the bootloader level. Moreover, this kind of devices is
+>>> likely to be more common with the increasing popularity of FPGA and a
+>>> proper solution must be found.
+>>>   
+> 
+> 
+> 
 
- (b) you just get the error later when actually trying to use the odd
-NO_IRQ interrupt with request_irq() and friends
-
-and here (a) basically never happens - certainly not for any PCI setup
-- and (b) is harmless unless the driver was already terminally broken
-anyway.
-
-The one exception for (a) might be some platform irq code. On x86,
-that would be the legacy timer interrupt, of course.
-
-So if some odd platform actually has a "real" interrupt on irq0, that
-platform should either just fix the irq number mapping, or should
-consider that interrupt to be a platform-specific thing and handle it
-very very specially.
-
-On x86, for example, we do
-
-        if (request_irq(0, timer_interrupt, flags, "timer", NULL))
-
-early in boot, and that's basically what then makes sure that no
-driver can get that irq. It's done through the platform "timer_init"
-code at the "late_time_init()" call.
-
-(And that "late_time_init()" - despite the name - isn't very late at
-all. It's just later than the very early timekeeping init - after
-interrupts have been enabled at all.
-
-             Linus
