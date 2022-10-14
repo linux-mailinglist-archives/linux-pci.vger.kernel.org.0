@@ -2,46 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8E65FE59B
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Oct 2022 00:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71B0D5FE8B7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Oct 2022 08:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbiJMWyz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Oct 2022 18:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
+        id S229754AbiJNGKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Oct 2022 02:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbiJMWyw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Oct 2022 18:54:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5356321E0F;
-        Thu, 13 Oct 2022 15:54:49 -0700 (PDT)
+        with ESMTP id S229711AbiJNGKU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Oct 2022 02:10:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E544887F81;
+        Thu, 13 Oct 2022 23:10:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4FAB1B820BB;
-        Thu, 13 Oct 2022 22:54:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B3DC433D6;
-        Thu, 13 Oct 2022 22:54:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 604E5B81FBE;
+        Fri, 14 Oct 2022 06:10:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0AEC433C1;
+        Fri, 14 Oct 2022 06:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665701687;
-        bh=wY5aP2fq2o1Ri1eqe3JUjMm0lwpYU44WlaPlKlU03BM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aLOPDkrIBZygrHleN4/P+l/SirzmF+Vu7b7D+uGGVT0rc6M9o38pUOl0goEX871FM
-         byrxvc8Is0qWR6yQpd7sgzOe740c3PvzlpUhwJeErE9r1BpH1G+2nRQSFw+9nduiBX
-         kKB7k2GQMlT5EuGi4RrxGApu4gbXZiiDV6KnKAy+btBgO6hFysPYCXLeSklKQo4hgb
-         aPkyDY/HKrYmN2+S5yp8nnpTjPXHpuQP45dt1oHn5ScIprJbtSLw/N8LKWQNxj3zTq
-         gXbcUL54ybkRjQRVO0U1DUILqPlofbohnc4XD5PDotalYAX3U9qukOU1yg0QOyppmG
-         Eo1xieoxRARuA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        iommu@lists.linux.dev, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Rename PCI_DEVICE_ID_RD890_IOMMU to PCI_DEVICE_ID_ATI_RD890_IOMMU
-Date:   Thu, 13 Oct 2022 17:54:40 -0500
-Message-Id: <20221013225440.3336168-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        s=k20201202; t=1665727816;
+        bh=CiefB9Bs7UdCwH3zk05eBuTxLD49fBRg6WyB1mAS/Yw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AGxdNMhZm8rMatlboAOXRBQ+27845QkClFJqntmo7HHGRn0yQ3iYkMcipgXo7ipmK
+         X3O0Vo98Z9VayqUJxZoYmZwSynh758eJ5e/Nz2+UJ+SQhjGd8ebemUQFPx+zQzNtSU
+         pBzRkSwofMsH55tzuHU67zS7hVaXD/yHlFA51l5UkYOM7XPl2ufPPHj5yt/5gpxLym
+         uwcxppPsMCP/7ZhVDPtemToQdqw21Z7r16gjoaoHfRkQsYPCkRT2mQP2aMw8hQrDz0
+         CWTGD6ZPS/cVQCwAbMUBIDTCjmPa/AIHwxvGCstYf+Z4QIdR1opYRPoC8/RbqEW9U/
+         g+c5SYxc1sXAg==
+Date:   Fri, 14 Oct 2022 11:40:00 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, mani@kernel.org,
+        Sergey.Semin@baikalelectronics.ru, dmitry.baryshkov@linaro.org,
+        linmq006@gmail.com, ffclaire1224@gmail.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 0/3] PCI: designware-ep: Fix DBI access before core
+ init
+Message-ID: <20221014061000.GA316241@thinkpad>
+References: <20221013175712.7539-1-vidyas@nvidia.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221013175712.7539-1-vidyas@nvidia.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,54 +61,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Hi Vidya,
 
-PCI_DEVICE_ID_RD890_IOMMU is a device ID in the ATI vendor ID namespace.
-Rename it accordingly and move it to the list of ATI device IDs.  No
-functional change intended.
+On Thu, Oct 13, 2022 at 11:27:09PM +0530, Vidya Sagar wrote:
+> This series attempts to fix the issue with core register (Ex:- DBI) accesses
+> causing system hang issues in platforms where there is a dependency on the
+> availability of PCIe Reference clock from the host for their core
+> initialization.
+> This series is verified on Tegra194 & Tegra234 platforms.
+> 
+> Manivannan, could you please verify on qcom platforms?
+> 
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/iommu/amd/amd_iommu.h | 2 +-
- include/linux/pci_ids.h       | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+Currently I'm on paternity leave this week and next. Will test/review the latest
+version once I'm back.
 
-diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
-index c160a332ce33..61749d52ba05 100644
---- a/drivers/iommu/amd/amd_iommu.h
-+++ b/drivers/iommu/amd/amd_iommu.h
-@@ -82,7 +82,7 @@ extern int amd_iommu_complete_ppr(struct pci_dev *pdev, u32 pasid,
- static inline bool is_rd890_iommu(struct pci_dev *pdev)
- {
- 	return (pdev->vendor == PCI_VENDOR_ID_ATI) &&
--	       (pdev->device == PCI_DEVICE_ID_RD890_IOMMU);
-+	       (pdev->device == PCI_DEVICE_ID_ATI_RD890_IOMMU);
- }
- 
- static inline bool iommu_feature(struct amd_iommu *iommu, u64 mask)
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b362d90eb9b0..be2910028e27 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -382,6 +382,8 @@
- #define PCI_DEVICE_ID_ATI_RS350_133     0x7831
- #define PCI_DEVICE_ID_ATI_RS350_166     0x7832
- #define PCI_DEVICE_ID_ATI_RS350_200     0x7833
-+/* AMD RD890 Chipset */
-+#define PCI_DEVICE_ID_ATI_RD890_IOMMU	0x5a23
- #define PCI_DEVICE_ID_ATI_RS400_100     0x5a30
- #define PCI_DEVICE_ID_ATI_RS400_133     0x5a31
- #define PCI_DEVICE_ID_ATI_RS400_166     0x5a32
-@@ -416,9 +418,6 @@
- #define PCI_DEVICE_ID_VLSI_82C147	0x0105
- #define PCI_DEVICE_ID_VLSI_VAS96011	0x0702
- 
--/* AMD RD890 Chipset */
--#define PCI_DEVICE_ID_RD890_IOMMU	0x5a23
--
- #define PCI_VENDOR_ID_ADL		0x1005
- #define PCI_DEVICE_ID_ADL_2301		0x2301
- 
+Thanks,
+Mani
+
+> V5:
+> * Addressed review comments from Bjorn
+> * Changed dw_pcie_ep_init_complete() to dw_pcie_ep_init_late()
+> * Skipped memory allocation if done already. This is to avoid freeing and then
+>   allocating again during PERST# toggles from the host.
+> 
+> V4:
+> * Addressed review comments from Bjorn and Manivannan
+> * Added .ep_init_late() ops
+> * Added patches to refactor code in qcom and tegra platforms
+> 
+> Vidya Sagar (3):
+>   PCI: designware-ep: Fix DBI access before core init
+>   PCI: qcom-ep: Refactor EP initialization completion
+>   PCI: tegra194: Refactor EP initialization completion
+> 
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 125 +++++++++++-------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  10 +-
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  27 ++--
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |   4 +-
+>  4 files changed, 97 insertions(+), 69 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
