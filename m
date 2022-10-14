@@ -2,380 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 928C85FF099
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Oct 2022 16:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03B3E5FF18E
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Oct 2022 17:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbiJNOtG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Oct 2022 10:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        id S231215AbiJNPlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Oct 2022 11:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbiJNOtF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Oct 2022 10:49:05 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79672252AA;
-        Fri, 14 Oct 2022 07:49:02 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mpq4n5mgNz67Ybb;
-        Fri, 14 Oct 2022 22:48:09 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 14 Oct 2022 16:49:00 +0200
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 14 Oct
- 2022 15:48:59 +0100
-Date:   Fri, 14 Oct 2022 15:48:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Chris Chiu" <chris.chiu@canonical.com>,
-        <linux-pci@vger.kernel.org>, <regressions@lists.linux.dev>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
- resources for root buses too
-Message-ID: <20221014154858.000079f2@huawei.com>
-In-Reply-To: <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
-        <20220905080232.36087-5-mika.westerberg@linux.intel.com>
-        <20221014124553.0000696f@huawei.com>
-        <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S231163AbiJNPk4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Oct 2022 11:40:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DF3180263
+        for <linux-pci@vger.kernel.org>; Fri, 14 Oct 2022 08:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1665762039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2W9qXSAyW3i3z7Il6mhVOG/mGDmVLEb8HCxR9KXZkzI=;
+        b=LvBuevDO6wUGS+4j1Yu36moxFu30udlMsGRzlWbh7WJwcV3tMja8Q+IPfpjplbZ4JDfxMR
+        wr4JD5+cv9GVVY7Ytsoe3PuvgYqLFjFEoN7vCgGgg6JbHjK9cZ/I0zJiip1IzG6aqg2Pl/
+        60j9kDAu4D8Au9dv4EKsS5VO8qHCh78=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-659-0mjcIP8rNIuhoGAxtFK5dA-1; Fri, 14 Oct 2022 11:40:38 -0400
+X-MC-Unique: 0mjcIP8rNIuhoGAxtFK5dA-1
+Received: by mail-yb1-f197.google.com with SMTP id y65-20020a25c844000000b006bb773548d5so4602997ybf.5
+        for <linux-pci@vger.kernel.org>; Fri, 14 Oct 2022 08:40:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2W9qXSAyW3i3z7Il6mhVOG/mGDmVLEb8HCxR9KXZkzI=;
+        b=EtM9jCAI7NFA5cNgi7gLCOqIkGxlbWwIrq9zI3lojrmJcoSL2hzcFcr4v148MFyRrd
+         B4pfszerVhsU/qZJYJj7Hs334eiaSuBgn11ma8f8ILnXtNZiBnCBalhpU7mmkpZ4pzRg
+         1t969ZKF7bMBCyZU0vLxQutkVLQxNDMuhpI2bbViEkoDiNNGInAqqzTAAWU+N1NMZyd1
+         AbWQifvzTzIS6NyIWTNjpkYkzJPR14MtSWAUGHkc4LaulW9y0UF7iKpJ+m1P+iAWP8Ok
+         VbGlG2jERO2ax8w3w5sc/ncGb5APMXmF2CTH/8bFKe2c94s8FxFXQTy9kpesVIRv0eB0
+         w7VQ==
+X-Gm-Message-State: ACrzQf3DaObdJB64iVnsygChyhekIyOA4t9u4LjoYHl6SsbJ9bax1wFP
+        MPYPmPzkCyQnqZCRHAD4ysGByuvsjqtWNuDLs0sJ8+o+lyrPiGGWaJDVtEWSdtdLZTI1RK14CuL
+        q5eCYdkz1z74pSCHng6EQYzkgYwezVhm1JxZP
+X-Received: by 2002:a81:6355:0:b0:349:ec95:9b4f with SMTP id x82-20020a816355000000b00349ec959b4fmr5036473ywb.117.1665762037692;
+        Fri, 14 Oct 2022 08:40:37 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5wszgLE/baFAJoUPz1LarjMEkEV3m1qgdC/X7WKQPSa6LlHcRXR7rjrhLRD2E/3EYszUQaBzzIxlp0PXuApOw=
+X-Received: by 2002:a81:6355:0:b0:349:ec95:9b4f with SMTP id
+ x82-20020a816355000000b00349ec959b4fmr5036433ywb.117.1665762037480; Fri, 14
+ Oct 2022 08:40:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20221013184028.129486-1-leobras@redhat.com> <20221013184028.129486-3-leobras@redhat.com>
+ <Y0kejqowLYqHIS43@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y0kejqowLYqHIS43@hirez.programming.kicks-ass.net>
+From:   Leonardo Bras Soares Passos <leobras@redhat.com>
+Date:   Fri, 14 Oct 2022 12:40:26 -0300
+Message-ID: <CAJ6HWG4ip+8unQ9DqZ6vk9OVV8g5jhV7EwJxDQ576xyibjQuMA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] sched/isolation: Improve documentation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Phil Auld <pauld@redhat.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Wang Yufen <wangyufen@huawei.com>, mtosatti@redhat.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 14 Oct 2022 16:30:34 +0300
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+On Fri, Oct 14, 2022 at 6:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Oct 13, 2022 at 03:40:27PM -0300, Leonardo Bras wrote:
+>
+> > +/* Kernel parameters like nohz_full and isolcpus allow passing cpu numbers
+> > + * for disabling housekeeping types.
+> > + *
+> > + * The functions bellow work the opposite way, by referencing which cpus
+> > + * are able to perform the housekeeping type in parameter.
+> > + */
+>
+> So checkpatch should have bitten your head off for this drug-indiced
+> comment style :-)
 
-> Hi,
-> 
-> On Fri, Oct 14, 2022 at 12:45:53PM +0100, Jonathan Cameron wrote:
-> > On Mon,  5 Sep 2022 11:02:30 +0300
-> > Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> >   
-> > > Currently we distribute the spare resources only upon hot-add so if
-> > > there are PCI devices connected already when the initial root bus scan
-> > > is done, and they have not been fully configured by the BIOS, we may end
-> > > up allocating resources just enough to cover only what is currently
-> > > there. If some of those devices are hotplug bridges themselves we do not
-> > > leave any additional resource space for future expansion.
-> > > 
-> > > For this reason distribute the available resources for root buses too to
-> > > make this work the same way we do in the normal hotplug case.
-> > > 
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
-> > > Reported-by: Chris Chiu <chris.chiu@canonical.com>
-> > > Tested-by: Chris Chiu <chris.chiu@canonical.com>
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > ---  
-> > 
-> > Early days, but I have a regression that's bisecting to this patch
-> > after I did an optimistic checkout of mainline mid merge window.
-> > 
-> > Initial platform was QEMU emulation of CXL on arm64 with EDK2 / ACPI etc.
-> > That uses an extended version of the PCI eXpander Bus (PXB) with extended
-> > version of the emulated pci root ports.  Particular test was
-> > 
-> > 1 PXB, 2 RP, below first RP switch USP, with two functions (USP and
-> > a stand along switch CCI), below that 4 DSP each with a CXL type 3 device.
-> > 
-> > Clearly something wrong with the error handling in CXL code as it goes boom
-> > spectacularly.  I'll address that separately.  Anyhow, setup way to complex
-> > to debug easily. 
-> > 
-> > Anyhow to make this easier for others to poke I set up equivalent with pxb-pcie
-> > etc and it happens there.  Everything works with the exception of additional
-> > functions on USP.
-> > 
-> > Next up in minimal test case (could be more minimal but I'm lazy) is 
-> > 
-> > ../qemu/bin/native/aarch64-softmmu/qemu-system-aarch64 -M virt,nvdimm=on,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
-> >  -kernel Image \
-> >  -drive if=none,file=full.qcow2,format=qcow2,id=hd \
-> >  -device pcie-root-port,id=root_port1 -device virtio-blk-pci,drive=hd \
-> >  -netdev type=user,id=mynet,hostfwd=tcp::5555-:22 \
-> >  -device virtio-net-pci,netdev=mynet,id=bob \
-> >  -nographic -no-reboot -append 'earlycon root=/dev/vda2 fsck.mode=skip tp_printk maxcpus=4' \
-> >  -monitor telnet:127.0.0.1:1235,server,nowait -bios QEMU_EFI.fd \
-> >  -object memory-backend-ram,size=4G,id=mem0 \
-> >  -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
-> > # Interesting part follows:
-> >  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
-> >  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
-> >  -device e1000,bus=root_port13,addr=0.1 \
-> >  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3\
-> >  -device e1000,bus=fun1
-> > 
-> > 
-> > Error message on failure to probe my switch integrated e1000 (who doesn't have one of
-> > those - lets pretend it's a more common switch PMU function or something like
-> > that) is :
-> >  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
-> > 
-> > With this patch reverted it works as normal and the e1000 driver comes up.
-> > 
-> > Possibly useful stuff follows:
-> > 
-> > # lspci -tv
-> > -[0000:00]-+-00.0  Red Hat, Inc. QEMU PCIe Host bridge
-> >            +-01.0-[01]--
-> >            +-02.0  Red Hat, Inc. Virtio block device
-> >            +-03.0  Red Hat, Inc. Virtio network device
-> >            \-04.0-[02-04]--+-00.0-[03-04]----00.0-[04]----00.0  Intel Corporation 82540EM Gigabit Ethernet Controller
-> >                            \-00.1  Intel Corporation 82540EM Gigabit Ethernet Controller
-> > 
-> > with patch in place.
-> > //without patch
-> > Note I aligned by hand so may be errorr.
-> > 
-> > # dmesg | grep pci                                  
-> > pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff window]
-> > pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
-> > pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff window]
-> > pci_bus 0000:00: root bus resource [bus 00-ff]
-> > pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
-> > pci 0000:00:01.0: [1b36:000c] type 01 class 0x060400
-> > pci 0000:00:01.0: reg 0x10: [mem 0x10643000-0x10643fff]
-> > pci 0000:00:02.0: [1af4:1001] type 00 class 0x010000
-> > pci 0000:00:02.0: reg 0x10: [io  0x2200-0x227f]
-> > pci 0000:00:02.0: reg 0x14: [mem 0x10642000-0x10642fff]
-> > pci 0000:00:02.0: reg 0x20: [mem 0x8000000000-0x8000003fff 64bit pref]
-> > pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
-> > pci 0000:00:03.0: reg 0x10: [io  0x2280-0x229f]
-> > pci 0000:00:03.0: reg 0x14: [mem 0x10641000-0x10641fff]
-> > pci 0000:00:03.0: reg 0x20: [mem 0x8000004000-0x8000007fff 64bit pref]
-> > pci 0000:00:03.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:00:04.0: [1b36:000c] type 01 class 0x060400
-> > pci 0000:00:04.0: reg 0x10: [mem 0x10640000-0x10640fff]
-> > pci 0000:02:00.0: [104c:8232] type 01 class 0x060400
-> > pci 0000:02:00.1: [8086:100e] type 00 class 0x020000
-> > pci 0000:02:00.1: reg 0x10: [mem 0x10200000-0x1021ffff]
-> > pci 0000:02:00.1: reg 0x14: [io  0x1000-0x103f]
-> > pci 0000:02:00.1: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:03:00.0: [104c:8233] type 01 class 0x060400
-> > pci 0000:04:00.0: [8086:100e] type 00 class 0x020000
-> > pci 0000:04:00.0: reg 0x10: [mem 0x10000000-0x1001ffff]
-> > pci 0000:04:00.0: reg 0x14: [io  0x0000-0x003f]
-> > pci 0000:04:00.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
-> > pci 0000:00:01.0: bridge window [io  0x1000-0x0fff] to [bus 01] add_size 1000
-> > pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000 add_align 100000
-> > pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff] to [bus 01] add_size 200000 add_align 100000
-> > pci 0000:03:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 04] add_size 200000 add_align 100000
-> > pci 0000:03:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 04] add_size 100000 add_align 100000
-> > pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 03-04] add_size 200000 add_align 100000
-> > pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 03-04] add_size 100000 add_align 100000
-> > pci 0000:00:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 02-04] add_size 300000 add_align 100000
-> > pci 0000:00:04.0: bridge window [mem 0x00100000-0x002fffff] to [bus 02-04] add_size 100000 add_align 100000
-> > pci 0000:00:01.0: BAR 14: assigned [mem 0x10000000-0x101fffff]
-> > pci 0000:00:01.0: BAR 15: assigned [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > // pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x104fffff]
-> > pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci 0000:00:03.0: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> > // pci 0000:00:03.0: BAR 6: assigned [mem 0x10500000-0x1053ffff pref]
-> > pci 0000:00:02.0: BAR 4: assigned [mem 0x8000300000-0x8000303fff 64bit pref]
-> > //  pci 0000:00:02.0: BAR 4: assigned [mem 0x8000600000-0x8000603fff 64bit pref]
-> > pci 0000:00:03.0: BAR 4: assigned [mem 0x8000304000-0x8000307fff 64bit pref]
-> > //  pci 0000:00:03.0: BAR 4: assigned [mem 0x8000604000-0x8000607fff 64bit pref]
-> > pci 0000:00:01.0: BAR 0: assigned [mem 0x10440000-0x10440fff]
-> > //  pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> > pci 0000:00:01.0: BAR 13: assigned [io  0x1000-0x1fff]
-> > pci 0000:00:02.0: BAR 1: assigned [mem 0x10441000-0x10441fff]
-> > //  pci 0000:00:02.0: BAR 1: assigned [mem 0x10541000-0x10541fff]
-> > pci 0000:00:03.0: BAR 1: assigned [mem 0x10442000-0x10442fff]
-> > // pci 0000:00:03.0: BAR 1: assigned [mem 0x10542000-0x10542fff]
-> > pci 0000:00:04.0: BAR 0: assigned [mem 0x10443000-0x10443fff]
-> > // pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
-> > pci 0000:00:04.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > pci 0000:00:02.0: BAR 0: assigned [io  0x4000-0x407f]
-> > pci 0000:00:03.0: BAR 0: assigned [io  0x4080-0x409f]
-> > pci 0000:00:01.0: PCI bridge to [bus 01]
-> > pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x10000000-0x101fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci 0000:02:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci 0000:02:00.1: BAR 6: no space for [mem size 0x00040000 pref]
-> > pci 0000:02:00.1: BAR 6: failed to assign [mem size 0x00040000 pref]
-> > // pci 0000:02:00.1: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
-> > pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
-> > // pci 0000:02:00.1: BAR 0: assigned [mem 0x10440000-0x1045ffff]
-> > pci 0000:02:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > pci 0000:02:00.1: BAR 1: no space for [io  size 0x0040]
-> > // pci 0000:02:00.1: BAR 1: assigned [io  0x3000-0x303f]
-> > pci 0000:02:00.1: BAR 1: failed to assign [io  size 0x0040]
-> > pci 0000:03:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
-> > pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x3fff]
-> > // pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x2fff]
-> > pci 0000:04:00.0: BAR 6: assigned [mem 0x10200000-0x1023ffff pref]
-> > pci 0000:04:00.0: BAR 0: assigned [mem 0x10240000-0x1025ffff]
-> > pci 0000:04:00.0: BAR 1: assigned [io  0x2000-0x203f]
-> > pci 0000:03:00.0: PCI bridge to [bus 04]
-> > pci 0000:03:00.0:   bridge window [io  0x2000-0x3fff]
-> > // pci 0000:03:00.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:03:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> > pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pci 0000:02:00.0: PCI bridge to [bus 03-04]
-> > pci 0000:02:00.0:   bridge window [io  0x2000-0x3fff]
-> > // pci 0000:02:00.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:02:00.0:   bridge window [mem 0x10200000-0x103fffff]
-> > pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci 0000:00:04.0: PCI bridge to [bus 02-04]
-> > pci 0000:00:04.0:   bridge window [io  0x2000-0x3fff]
-> > pci 0000:00:04.0:   bridge window [mem 0x10200000-0x103fffff]
-> > // pci 0000:00:04.0:   bridge window [mem 0x10200000-0x104fffff]
-> > pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci_bus 0000:00: Some PCI device resources are unassigned, try booting with pci=realloc
-> > // LINE NOT PRESENT
-> > pci_bus 0000:00: resource 4 [mem 0x10000000-0x3efeffff window]
-> > pci_bus 0000:00: resource 5 [io  0x0000-0xffff window]
-> > pci_bus 0000:00: resource 6 [mem 0x8000000000-0xffffffffff window]
-> > pci_bus 0000:01: resource 0 [io  0x1000-0x1fff]
-> > pci_bus 0000:01: resource 1 [mem 0x10000000-0x101fffff]
-> > pci_bus 0000:01: resource 2 [mem 0x8000000000-0x80001fffff 64bit pref]
-> > pci_bus 0000:02: resource 0 [io  0x2000-0x3fff]
-> > pci_bus 0000:02: resource 1 [mem 0x10200000-0x103fffff]
-> > // pci_bus 0000:02: resource 1 [mem 0x10200000-0x104fffff]
-> > pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > //  pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80005fffff 64bit pref]
-> > pci_bus 0000:03: resource 0 [io  0x2000-0x3fff]
-> > // pci_bus 0000:03: resource 0 [io  0x2000-0x2fff]
-> > pci_bus 0000:03: resource 1 [mem 0x10200000-0x103fffff]
-> > pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80004fffff 64bit pref]
-> > pci_bus 0000:04: resource 0 [io  0x2000-0x3fff]
-> > // pci_bus 0000:04: resource 0 [io  0x2000-0x2fff]
-> > pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> > // pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
-> > pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
-> > // pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80003fffff 64bit pref]
-> > pcieport 0000:00:01.0: PME: Signaling with IRQ 51
-> > pcieport 0000:00:01.0: AER: enabled with IRQ 51
-> > pcieport 0000:00:01.0: pciehp: Slot #0 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> > pcieport 0000:00:04.0: PME: Signaling with IRQ 52
-> > pcieport 0000:00:04.0: AER: enabled with IRQ 52
-> > pcieport 0000:00:04.0: pciehp: Slot #2 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
-> > pcieport 0000:03:00.0: pciehp: Slot #3 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep-
-> > virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
-> > virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
-> > 
-> > All suggestions of things to test and other useful info to provide welcome.  
-> 
-> Thanks for the detailed report! I wonder if you could try the below
-> patch and see if it changes anything?
-Thanks for the quick response.
+Oh, my bad on this one, I will fix that now.
 
-Doesn't fix it unfortunately.
+>
+> https://lore.kernel.org/all/CA+55aFyQYJerovMsSoSKS7PessZBr4vNp-3QUUwhqk4A4_jcbg@mail.gmail.com/
+>
 
-For reference with the extra prints and a bit of context (trivial fix below)
+Any comments in the text? Is that correct?
 
-pci 0000:0e:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 0f] add_size 200000 add_align 100000
-pci 0000:0e:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 0f] add_size 100000 add_align 100000
-pci 0000:0d:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 0e-0f] add_size 200000 add_align 100000
-pci 0000:0d:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 0e-0f] add_size 100000 add_align 100000
-pci 0000:0c:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 0d-0f] add_size 300000 add_align 100000
-pci 0000:0c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 0d-0f] add_size 100000 add_align 100000
-pci 0000:0d:00.0: check [io  0x1000-0x1fff
-pci 0000:0d:00.0: check [mem 0x00100000-0x001fffff]
-pci 0000:0d:00.0: check [mem 0x00100000-0x001fffff 64bit pref]
-pci 0000:0c:00.0: BAR 14: assigned [mem 0x10400000-0x105fffff]
-pci 0000:0c:00.0: BAR 15: assigned [mem 0x10600000-0x106fffff 64bit pref]
-pci 0000:0c:00.0: BAR 0: assigned [mem 0x10740000-0x10740fff]
-pci 0000:0c:00.0: BAR 13: no space for [io  size 0x2000]
-pci 0000:0c:00.0: BAR 13: failed to assign [io  size 0x2000]
-pci 0000:0d:00.0: BAR 14: assigned [mem 0x10400000-0x105fffff]
-pci 0000:0d:00.0: BAR 15: assigned [mem 0x10600000-0x106fffff 64bit pref]      
+Thanks for the feedback!
 
-> I will be on vacation starting
-> tomorrow for the whole next week so if nothing else helps then I suppose
-> we should revert that commit for now.
-> 
-> I can look at this further after I come back.
-
-Enjoy your vacation.  I might get time to dig a bit more whilst you are away
-though probably not :(
-
-Jonathan
-
-
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index dc6a30ee6edf..637f1a1df409 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1939,7 +1939,7 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->  					       available_mmio_pref);
->  }
->  
-> -static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
-> +static bool pci_bridge_resources_assigned(struct pci_dev *dev)
->  {
->  	const struct resource *r;
->  
-> @@ -1951,16 +1951,19 @@ static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
->  	 * in the same way we do with the normal hotplug case.
->  	 */
->  	r = &dev->resource[PCI_BRIDGE_IO_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
-
-&dev->dev 
-
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  	r = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  	r = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> -	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
-> -		return false;
-> +	dev_info(dev->dev, "check %pR\n", r);
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return true;
->  
-> -	return true;
-> +	return false;
->  }
->  
->  static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
-> @@ -1979,7 +1982,7 @@ static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
->  		 * Need to check "bridge" here too because it is NULL
->  		 * in case of root bus.
->  		 */
-> -		if (bridge && pci_bridge_resources_not_assigned(dev)) {
-> +		if (bridge && !pci_bridge_resources_assigned(dev)) {
->  			pci_bridge_distribute_available_resources(bridge, add_list);
->  			/*
->  			 * There is only PCIe upstream port on the bus
-> 
-> 
+Best regards,
+Leo
 
