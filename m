@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5518C600E13
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 13:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D136600E10
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 13:48:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230221AbiJQLsF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Oct 2022 07:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        id S230214AbiJQLsE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Oct 2022 07:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230196AbiJQLsC (ORCPT
+        with ESMTP id S229597AbiJQLsC (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 07:48:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF23501BA;
-        Mon, 17 Oct 2022 04:48:01 -0700 (PDT)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E406550709;
+        Mon, 17 Oct 2022 04:48:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6F0D5B81620;
-        Mon, 17 Oct 2022 11:48:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8B4C433D7;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C90C36103E;
+        Mon, 17 Oct 2022 11:47:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC82C43470;
         Mon, 17 Oct 2022 11:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1666007279;
-        bh=nLvYNjNcsWp65q0okwELSdi4ANG2a+C37u/lQ6/epEM=;
+        bh=E8/ccenRKIQU903OsMdJb6fnp8/h0tN8tiOOLCxh+7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcvK+rmrUYh1V0sc+sYyL6tCuliAdBr6oJiHYPOEgdO+5JXo6UtrbIlj5Pi2r1uDd
-         R8+yvvBSTZvEj4xUP0206m+BBwdG7VxbCvDbSQjoo9y16rBLy3YiBvck2c3q5GYXlX
-         dPgnGP/8GtfpdOsu5yZlQBqd7TKsj2wJCt++LlXvzx3YrsBAI1dO6gyqGCH2lJfGFl
-         Va/FrcKvRv/kO+GzzvSFw4KkIRiPNpgPqaiFL0HEJYbz1lLaaS/W8aIWsKUITz02+D
-         26ZPuFeb6sl7tFONXKAdajlG1SfaE4YeUrXfBcTnhiQqzHsm5wTTJWEs9Ypfpnx0pX
-         bwUkv77KeLXjg==
+        b=pULQbl7yb4gPO7W1STGg2ilF21YSi1fuD9KxrcifsXTsweYK8p13GYFOPkR2OnTSX
+         Hv7Nf4WtEn2GG0Ew5lwvFOfgn+JFjEqDFazmo02IGEusel1n2y34m6Wa8ygCmi7nA0
+         PlRyCrJ+puDKf0gnTmDzK99ZVMKXHwjMXqwkRVMRU5oNuRRswHY0eO24r/AcsjwYre
+         In4NXB80v5gVcjQmAoAflIRcBW6bB/jhSZHDu2z18EbEZhSz/6j6Ybc/ugahjMzAMc
+         BtZ+trUeU57s6sE05Il83XlCjpXsVCzpRjel1M+igNxcRTKBlwqYZYmblox7FlwiuJ
+         tIu8zL1CeQHUQ==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1okOay-0002B1-OG; Mon, 17 Oct 2022 13:47:48 +0200
+        id 1okOay-0002B3-RD; Mon, 17 Oct 2022 13:47:48 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>
@@ -46,10 +46,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <mani@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 1/2] PCI: qcom: Fix host-init error handling
-Date:   Mon, 17 Oct 2022 13:47:04 +0200
-Message-Id: <20221017114705.8277-2-johan+linaro@kernel.org>
+        Johan Hovold <johan+linaro@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 2/2] PCI: qcom: Add support for modular builds
+Date:   Mon, 17 Oct 2022 13:47:05 +0200
+Message-Id: <20221017114705.8277-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20221017114705.8277-1-johan+linaro@kernel.org>
 References: <20221017114705.8277-1-johan+linaro@kernel.org>
@@ -64,40 +66,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Implement the new host_deinit() callback so that the PHY is powered off
-and regulators and clocks are disabled also on late host-init errors.
+Allow the Qualcomm PCIe controller driver to be built as a module, which
+is useful for multi-platform kernels as well as during development.
 
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/Kconfig     |  2 +-
+ drivers/pci/controller/dwc/pcie-qcom.c | 26 +++++++++++++++++++++++---
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 62ce3abf0f19..230f56d1a268 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -168,7 +168,7 @@ config PCI_HISI
+ 	  Hip05 and Hip06 SoCs
+ 
+ config PCIE_QCOM
+-	bool "Qualcomm PCIe controller"
++	tristate "Qualcomm PCIe controller"
+ 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0c13f976626f..417be4d225ed 100644
+index 417be4d225ed..699172c22ed4 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1534,8 +1534,19 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+@@ -17,7 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+-#include <linux/init.h>
++#include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pci.h>
+@@ -1820,6 +1820,21 @@ static int qcom_pcie_probe(struct platform_device *pdev)
  	return ret;
  }
  
-+static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
++static int qcom_pcie_remove(struct platform_device *pdev)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
++	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
 +
-+	qcom_ep_reset_assert(pcie);
-+	phy_power_off(pcie->phy);
-+	pcie->cfg->ops->deinit(pcie);
++	dw_pcie_host_deinit(&pcie->pci->pp);
++
++	phy_exit(pcie->phy);
++
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++
++	return 0;
 +}
 +
- static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
--	.host_init = qcom_pcie_host_init,
-+	.host_init	= qcom_pcie_host_init,
-+	.host_deinit	= qcom_pcie_host_deinit,
+ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+@@ -1841,6 +1856,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+ 	{ }
  };
++MODULE_DEVICE_TABLE(of, qcom_pcie_match);
  
- /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
+ static void qcom_fixup_class(struct pci_dev *dev)
+ {
+@@ -1856,10 +1872,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+ 
+ static struct platform_driver qcom_pcie_driver = {
+ 	.probe = qcom_pcie_probe,
++	.remove = qcom_pcie_remove,
+ 	.driver = {
+ 		.name = "qcom-pcie",
+-		.suppress_bind_attrs = true,
+ 		.of_match_table = qcom_pcie_match,
+ 	},
+ };
+-builtin_platform_driver(qcom_pcie_driver);
++module_platform_driver(qcom_pcie_driver);
++
++MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
++MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
++MODULE_LICENSE("GPL");
 -- 
 2.37.3
 
