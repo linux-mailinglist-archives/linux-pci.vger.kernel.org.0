@@ -2,47 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4645C60126F
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 17:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29470601451
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 19:08:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbiJQPJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Oct 2022 11:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46090 "EHLO
+        id S229995AbiJQRI0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Oct 2022 13:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbiJQPIv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 11:08:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C4F6B66D;
-        Mon, 17 Oct 2022 08:08:36 -0700 (PDT)
+        with ESMTP id S230037AbiJQRIZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 13:08:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4104E851;
+        Mon, 17 Oct 2022 10:08:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 48E19B818F3;
-        Mon, 17 Oct 2022 15:08:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C1AC433D6;
-        Mon, 17 Oct 2022 15:08:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 49AA561195;
+        Mon, 17 Oct 2022 17:08:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73065C433C1;
+        Mon, 17 Oct 2022 17:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666019284;
-        bh=oiF4vdLS02EOCCj4hUcovK01LgXQJHuTmhDNEmbXky8=;
+        s=k20201202; t=1666026502;
+        bh=KdUaY1/13+fnvQg7dGcqMAbtIcx96IH8hUYqJC8QAJ8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P9mZAWlajuxDhtRYmgVnQqxBaL2uHlR2KfSLKiWnP+Jc6tuC2e4Bh301QJmBSfW33
-         mi30HDmw2psgWnIxXucj1E6hMLNHA4GT2VSbmCAkIaWAS0r44eWPWZLw8kLlhpiqIH
-         sNR+CQsYY5S8WG6m1O0JnPk6NyCLTnZEDyKLx5KJeL055yvHYiK9AMydSDd42ucIB5
-         tBYAdxvrAGOI/sYtvn67Apt4mzTGOS0pSfSMMDqAroVIZdCTqnIWrgGy6hxrh3+Fxy
-         rKX1MavsMpAXLzJIm8kxNtX5UO6+LxKy7LxcfWUnbUFmMu2+2uwfasW2zvc4BTnVHQ
-         gwD3ksZY2NKxg==
-Date:   Mon, 17 Oct 2022 10:08:02 -0500
+        b=XopEiKeMz0xAqDySvCRIy/9wJiF27eMUrvzSI5IiEW0kQl+xYIsJKToEI3ZDzQiz1
+         KKXh/VYTo9DsmswmqKrA9CkIj4BRbs9sA2d4tPBA68hsezhM949Cs9izoV1y4olSGc
+         Z8DAph7c5ofVit31xCqBYC8Y0acBpdG4AxjQFYCr06BjWaRvbW0sauADnW29QWKO0e
+         yxkLev/7SKgzfaiIMRjI3c/fOWl3DmHiQRce6IYzcs6guh6TZytakviVXL1zr1d2GF
+         IurjDobWdLtqcmAPcwIQo1LEZtrXMWQF2ULEwYUCcFn5U08+iYZ7k+NTKuihggWWar
+         W9TsG7W9f3ddA==
+Date:   Mon, 17 Oct 2022 12:08:20 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christian GMEINER <Christian.GMEINER@bachmann.info>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add Bachmann electronic GmbH vendor ID
-Message-ID: <20221017150802.GA3701588@bhelgaas>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc:     Jeffrey Tseng <jeffrey.tseng@gigabyte.com>, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Bug 216599] New: i210 doesn't work and triggers netdev watchdog
+ (Linux 5.10)
+Message-ID: <20221017170820.GA3712555@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221017142338.1445199-1-christian.gmeiner@gmail.com>
+In-Reply-To: <bug-216599-41252@https.bugzilla.kernel.org/>
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,85 +54,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 04:23:37PM +0200, Christian Gmeiner wrote:
-> From: Christian GMEINER <Christian.GMEINER@bachmann.info>
+On Mon, Oct 17, 2022 at 11:09:20AM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216599
 > 
-> Signed-off-by: Christian GMEINER <Christian.GMEINER@bachmann.info>
+>             Bug ID: 216599
+>            Summary: i210 doesn't work and triggers netdev watchdog (Linux
+>                     5.10)
 
-I tweaked it to shorten the name in the style of other entries and
-sort it by numeric ID.
+> Created attachment 303021
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=303021&action=edit
+> This is the complete dmesg log and "sudo lspci -vv" output.
+> 
+> Here is my question.
+> My platform : imx8mm
+> Ethernet Control : Intel I210
+> Linux version 5.10.72-lts-5.10.y+g22ec7e8cbace (oe-user@oe-host)
+> (aarch64-poky-linux-gcc (GCC) 10.2.0, GNU ld (GNU Binutils) 2. UTC 2011
+> 
+> I follow this  https://git.kernel.org/linus/500b55b05d0a
+> to add the patch in my platform.
+> 
+> The issue and problem is still there. Anyone can give me a hand ?
 
-I assume there's a driver that will use this definition.  If so, you
-might want to post this patch (including my ack) along with the driver
-so they get merged together.  But let me know if you need me to take
-it directly.
+Note this is an old v5.10 kernel on ARM64.  No indication of whether
+the problem occurs on a recent kernel.
 
-Also it will be helpful if you can add the item to the PCI ID database
-here: https://pci-ids.ucw.cz/read/PC?restrict=0, which will let lspci
-identify devices with this Vendor ID.
+We had an earlier issue with i210 when the disabled ROM BAR
+overlapped BAR 3 [1] and the watchdog triggered:
+
+  BAR 0: 0x40000000 (32-bit, non-prefetchable) [size=1M]
+  BAR 3: 0x40200000 (32-bit, non-prefetchable) [size=16K]
+  ROM:   0x40200000 (disabled) [size=1M]
+  ...
+  NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed out
+  Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
+  igb 0002:01:00.0 enP2p1s0: Reset adapter
+
+But this case looks different because there is no ROM BAR at all.
+From the dmesg attached at [2]:
+
+  pci 0000:01:00.0: BAR 0: assigned [mem 0x18100000-0x1817ffff]
+  pci 0000:01:00.0: BAR 3: assigned [mem 0x18180000-0x18183fff]
+  pci 0000:01:00.0: BAR 2: assigned [io  0x1000-0x101f]
+  ...
+  igb 0000:01:00.0: Detected Tx Unit Hang
+  NETDEV WATCHDOG: eth1 (igb): transmit queue 1 timed out
+
+I'm assuming this is a driver issue, not a PCI core issue.  But please
+ping me if you think otherwise.
 
 Bjorn
 
-
-commit 2fa819fdbb2b ("PCI: Add Bachmann electronic GmbH vendor ID")
-Author: Christian GMEINER <Christian.GMEINER@bachmann.info>
-Date:   Mon Oct 17 16:23:37 2022 +0200
-
-    PCI: Add Bachmann electronic GmbH vendor ID
-    
-    Link: https://lore.kernel.org/r/20221017142338.1445199-1-christian.gmeiner@gmail.com
-    Signed-off-by: Christian GMEINER <Christian.GMEINER@bachmann.info>
-    Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b362d90eb9b0..4cc0e9ecd398 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2,7 +2,7 @@
- /*
-  *	PCI Class, Vendor and Device IDs
-  *
-- *	Please keep sorted.
-+ *	Please keep sorted by numeric ID.
-  *
-  *	Do not add new entries to this file unless the definitions
-  *	are shared between multiple drivers.
-@@ -153,7 +153,7 @@
- 
- #define PCI_CLASS_OTHERS		0xff
- 
--/* Vendors and devices.  Sort key: vendor first, device next. */
-+/* Vendors and devices.  Numeric sort key: vendor first, device next. */
- #define PCI_VENDOR_ID_PCI_SIG		0x0001
- 
- #define PCI_VENDOR_ID_LOONGSON		0x0014
-@@ -172,6 +172,8 @@
- #define PCI_DEVICE_ID_BERKOM_A4T		0xffa4
- #define PCI_DEVICE_ID_BERKOM_SCITEL_QUADRO	0xffa8
- 
-+#define PCI_VENDOR_ID_BACHMANN		0x0bae
-+
- #define PCI_VENDOR_ID_COMPAQ		0x0e11
- #define PCI_DEVICE_ID_COMPAQ_TOKENRING	0x0508
- #define PCI_DEVICE_ID_COMPAQ_TACHYON	0xa0fc
-
-> ---
->  include/linux/pci_ids.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index b362d90eb9b0..b93a52977d85 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -166,6 +166,8 @@
->  
->  #define PCI_VENDOR_ID_UBIQUITI		0x0777
->  
-> +#define PCI_VENDOR_ID_BACHMANN_ELECTRONIC 0x0bae
-> +
->  #define PCI_VENDOR_ID_BERKOM			0x0871
->  #define PCI_DEVICE_ID_BERKOM_A1T		0xffa1
->  #define PCI_DEVICE_ID_BERKOM_T_CONCEPT		0xffa2
-> -- 
-> 2.37.3
-> 
+[1] https://git.kernel.org/linus/500b55b05d0a
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=216599
