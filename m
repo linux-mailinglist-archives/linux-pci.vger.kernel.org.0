@@ -2,171 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8C7601578
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 19:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A856C601684
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 20:42:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230233AbiJQRel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Oct 2022 13:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57624 "EHLO
+        id S229885AbiJQSmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Oct 2022 14:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbiJQRei (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 13:34:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEBD6575;
-        Mon, 17 Oct 2022 10:34:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E9F6EB81331;
-        Mon, 17 Oct 2022 17:34:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515B9C433D6;
-        Mon, 17 Oct 2022 17:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666028064;
-        bh=FDw24rOSiOpR/AA8bVEZXihOsH9mEP441rpoEYpcJFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AslKcmmirEJ+FkEFGQta8P959CSzZlZ4kKPpTVCQw28Tm0uIXNNixmfWnvg43/C++
-         NHbUWzMbMXj8Lb58Z+IDCEGTSnc5rcvFLUyBkwQmRTKKdloimm2uce2WGUBpu8vMUr
-         RhGDg5namuKA9EOnzkuS8MIgDMZS2f2/AR08+YVD2g8iDwg927T/1dseMdJfhRt1V+
-         XI/ILMYbfsdX/vW+nW/tP3xs7gMkBGFLuFMGfpukfrWUsv5I95eZRWUyAcwk/5ElCz
-         s37+CkVU0DHwsQkMq6xmxgGq8qRsz80Ecd0l9g2NhnQOQ+EbStiNDpjAPoPydknKwy
-         QwULAXUT8jgGw==
-Date:   Mon, 17 Oct 2022 12:34:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        with ESMTP id S229796AbiJQSmf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 14:42:35 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA9F733CB;
+        Mon, 17 Oct 2022 11:42:34 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id n130so13103473oia.6;
+        Mon, 17 Oct 2022 11:42:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZ+TOy+i0aYFJ/iFf9DtC13NpbD7/U7juh/tS5gbMQI=;
+        b=nvQXgeE4P5RCjLpzj/MWLJJXfigI6KvTW887n/rJcA+AJHE6fHpnHLSLFFQeYyitba
+         Xlh4t91r9TKU3CfkgOlJ2K74oxGmjXQB3Ddt+0GJrnjA1ZEHlMtUMXrW/u63jqpoLo0m
+         1tCGKCTiZfUYh9uz9LfFlOyEIo259kAcI9w5P7ljttVAZ09QNcNK5dFVjyVsJzUHlBNt
+         2DjxOQhHm/urKZqL304+j/lCfUd1+7DWgVMzpG+1VNgUMOD4WPqKrZkscpkDZiJQkQhd
+         23/f1ea4A4e9NXoNsWFXoAUA8r+7L69j0qn265Xjii4AmTfbnKNuKIJhIH4F+GcAvQ7Z
+         lAHw==
+X-Gm-Message-State: ACrzQf0RkYvq4GiNT8uCl/wUnOGUAzN/j8k0uDO5/IkBQBYE9L6e32CG
+        LukZk/gZD7kpwG/EFGLeow==
+X-Google-Smtp-Source: AMsMyM69rBChqI2DHVCnodCENYuzVOrePDGda8YjhYza7SKgmCrl6bqqncNYE/8cx13f9zABeJZ+sg==
+X-Received: by 2002:a05:6808:14d2:b0:354:c733:abd3 with SMTP id f18-20020a05680814d200b00354c733abd3mr5818411oiw.96.1666032153700;
+        Mon, 17 Oct 2022 11:42:33 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id bk15-20020a0568081a0f00b003546cb60859sm4707864oib.14.2022.10.17.11.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 11:42:33 -0700 (PDT)
+Received: (nullmailer pid 2263866 invoked by uid 1000);
+        Mon, 17 Oct 2022 18:42:33 -0000
+Date:   Mon, 17 Oct 2022 13:42:33 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for modular builds
-Message-ID: <20221017173422.GA3715509@bhelgaas>
+        linux-arm-kernel@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v1 1/3] dt-bindings: PCI: mediatek-gen3: Add iommu and
+ power-domain support
+Message-ID: <20221017184233.GA2260080-robh@kernel.org>
+References: <20221017070858.13902-1-tinghan.shen@mediatek.com>
+ <20221017070858.13902-2-tinghan.shen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221017114705.8277-3-johan+linaro@kernel.org>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221017070858.13902-2-tinghan.shen@mediatek.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 01:47:05PM +0200, Johan Hovold wrote:
-> Allow the Qualcomm PCIe controller driver to be built as a module, which
-> is useful for multi-platform kernels as well as during development.
-
-There are two different goals here, and there's no real reason to
-bundle them together:
-
-  1) Make qcom a loadable module.  This is a hard requirement so
-     multi-platform kernels don't need to build in all drivers
-     statically.
-
-  2) Make qcom unloadable.  This is a high want, possibly even a
-     requirement for developers, but is not really a big issue for
-     users.
-
-There are different changes required: 1) requires the Kconfig change;
-2) requires .remove() to be implemented.  Since there's no requirement
-that these be done together, let's split them into separate patches.
-
-Then we can make sure that at least 1) gets done, and if for any
-reason 2) isn't safe or breaks something, we can at least bisect and
-if necessary revert it without losing 1).
-
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  2 +-
->  drivers/pci/controller/dwc/pcie-qcom.c | 26 +++++++++++++++++++++++---
->  2 files changed, 24 insertions(+), 4 deletions(-)
+On Mon, Oct 17, 2022 at 03:08:56PM +0800, Tinghan Shen wrote:
+> From: Jianjun Wang <jianjun.wang@mediatek.com>
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 62ce3abf0f19..230f56d1a268 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -168,7 +168,7 @@ config PCI_HISI
->  	  Hip05 and Hip06 SoCs
->  
->  config PCIE_QCOM
-> -	bool "Qualcomm PCIe controller"
-> +	tristate "Qualcomm PCIe controller"
->  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 417be4d225ed..699172c22ed4 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -17,7 +17,7 @@
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
-> -#include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> @@ -1820,6 +1820,21 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +
-> +	dw_pcie_host_deinit(&pcie->pci->pp);
-> +
-> +	phy_exit(pcie->phy);
-> +
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
-> @@ -1841,6 +1856,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ }
->  };
-> +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
->  
->  static void qcom_fixup_class(struct pci_dev *dev)
->  {
-> @@ -1856,10 +1872,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> +	.remove = qcom_pcie_remove,
->  	.driver = {
->  		.name = "qcom-pcie",
-> -		.suppress_bind_attrs = true,
->  		.of_match_table = qcom_pcie_match,
->  	},
->  };
-> -builtin_platform_driver(qcom_pcie_driver);
-> +module_platform_driver(qcom_pcie_driver);
-> +
-> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
-> +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.37.3
-> 
+> Add iommu and power-domain support, and add examples for MT8195, which
+> has two PCIe ports with different clocks and phys.
+
+Is that really a big enough difference to add a whole other example 
+when we have a dts file with it too? I don't think so, and we certainly 
+don't need to show all instances either.
+
+Rob
