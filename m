@@ -2,172 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF3CA600711
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 08:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE17A600750
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Oct 2022 09:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230207AbiJQGxi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Oct 2022 02:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        id S229986AbiJQHJN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Oct 2022 03:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbiJQGxU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 02:53:20 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C535973B
-        for <linux-pci@vger.kernel.org>; Sun, 16 Oct 2022 23:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665989536; x=1697525536;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uH1o4mJJ0e5YIFpBePmtr8kwhTnVo/L3YcVgAUuyKlk=;
-  b=RFMmjNBizZPQq6etqo5nNav18ktvWInnUD6F0Q27FOOgoyMlqulcF3kU
-   C/9geP8RD4WcKfxnNthUQNAORde8DG+qlIFdLWbXux0mg5V9tqIM/aegD
-   NFr8fSD0AVd5yVPvZtXP2mk0pHjyraC+SXLKFU827m5OeTJ9EGdxGvNTm
-   75YGo5Uv8pTAIgOe0yglgUfs72prP5IT+fnQebvT11jH+YvlTDRP0gcKD
-   BhYiR25bep5pWxqkFGuohP1LwOGh7TIaz8hYnGYzJ0euaFl+9Rw57jS27
-   QOU2fRvfQT/Os0yCrS3Vi7V9H0hL3XXBpf+Xle4eycgdwMKL4NYUfDtq4
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10502"; a="392028593"
-X-IronPort-AV: E=Sophos;i="5.95,190,1661842800"; 
-   d="scan'208";a="392028593"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2022 23:51:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10502"; a="659245884"
-X-IronPort-AV: E=Sophos;i="5.95,190,1661842800"; 
-   d="scan'208";a="659245884"
-Received: from lkp-server01.sh.intel.com (HELO 8381f64adc98) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 16 Oct 2022 23:51:52 -0700
-Received: from kbuild by 8381f64adc98 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1okJyZ-00009Y-31;
-        Mon, 17 Oct 2022 06:51:51 +0000
-Date:   Mon, 17 Oct 2022 14:51:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:wip/bjorn-config-of] BUILD SUCCESS
- be531082fd9461f6d0fbe4e2f5f46313b4a62246
-Message-ID: <634cfb5e.ke+dF2JHPr9115ev%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230122AbiJQHJL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Oct 2022 03:09:11 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845015509B;
+        Mon, 17 Oct 2022 00:09:06 -0700 (PDT)
+X-UUID: 1d242b7622b24b778c20586d4f133a31-20221017
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6wSeMUN6joaIjXkd06WMrNVSEQQ4OFvA/3GtXd+WLio=;
+        b=oMgtt+B1l37neC0V3q9NikoOej2zFIp3Jcnem/gbfrQ5BlqtjxYt/hWitSBGt682R+EO68U+aUM8/TnVwEa7yF5OSZ8tT9RG6DIGkdtnfHBQqAPOiqR+c4OgqenZxym+j9qyhnwmQzFlQs3+zmBH3aXrTizSAnCp3Mp28XsJtHg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.11,REQID:cd7651af-3204-4783-a2cd-3d07922e7e69,IP:0,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-5
+X-CID-META: VersionHash:39a5ff1,CLOUDID:7e2393db-0379-47b3-a5dd-2ef5001d380a,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: 1d242b7622b24b778c20586d4f133a31-20221017
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1005958664; Mon, 17 Oct 2022 15:09:01 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.194) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Mon, 17 Oct 2022 15:09:00 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.15 via Frontend Transport; Mon, 17 Oct 2022 15:09:00 +0800
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        Tinghan Shen <tinghan.shen@mediatek.com>
+Subject: [PATCH v1 0/3] Add driver nodes for MT8195 SoC
+Date:   Mon, 17 Oct 2022 15:08:55 +0800
+Message-ID: <20221017070858.13902-1-tinghan.shen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-config-of
-branch HEAD: be531082fd9461f6d0fbe4e2f5f46313b4a62246  PCI: mobiveil: Drop CONFIG_OF dependencies
+Add pcie and venc nodes for MT8195 SoC.
 
-elapsed time: 4883m
+This series is based on linux-next/next-20221014.
+Depends on https://lore.kernel.org/all/20221001030752.14486-1-irui.wang@mediatek.com/ 
 
-configs tested: 91
-configs skipped: 2
+---
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Jianjun Wang (1):
+  dt-bindings: PCI: mediatek-gen3: Add iommu and power-domain support
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                  randconfig-r043-20221013
-x86_64                          rhel-8.3-func
-arc                                 defconfig
-s390                             allmodconfig
-x86_64                    rhel-8.3-kselftests
-alpha                               defconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-s390                                defconfig
-alpha                            allyesconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-s390                             allyesconfig
-m68k                             allyesconfig
-sh                               allmodconfig
-x86_64                              defconfig
-arm                                 defconfig
-x86_64                        randconfig-a004
-x86_64                               rhel-8.3
-i386                          randconfig-a001
-x86_64                           allyesconfig
-x86_64                        randconfig-a002
-x86_64                           rhel-8.3-syz
-i386                          randconfig-a003
-x86_64                         rhel-8.3-kunit
-i386                          randconfig-a005
-i386                                defconfig
-i386                          randconfig-a014
-x86_64                           rhel-8.3-kvm
-x86_64                        randconfig-a006
-i386                          randconfig-a012
-arm                              allyesconfig
-i386                          randconfig-a016
-arm64                            allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                             allyesconfig
-x86_64                        randconfig-a015
-arc                  randconfig-r043-20221012
-s390                 randconfig-r044-20221012
-riscv                randconfig-r042-20221012
-arc                  randconfig-r043-20221017
-mips                      loongson3_defconfig
-arm                         lpc18xx_defconfig
-i386                 randconfig-a005-20221017
-i386                 randconfig-a003-20221017
-i386                 randconfig-a002-20221017
-i386                 randconfig-a004-20221017
-i386                 randconfig-a001-20221017
-i386                 randconfig-a006-20221017
-sh                   sh7724_generic_defconfig
-sh                          rsk7264_defconfig
-mips                 decstation_r4k_defconfig
-loongarch                         allnoconfig
-sh                ecovec24-romimage_defconfig
-arm                      footbridge_defconfig
-m68k                             alldefconfig
-arm                         assabet_defconfig
-mips                  maltasmvp_eva_defconfig
-ia64                             allmodconfig
+Tinghan Shen (2):
+  arm64: dts: mt8195: Add pcie and pcie phy nodes
+  arm64: dts: mt8195: Add venc node
 
-clang tested configs:
-hexagon              randconfig-r045-20221013
-hexagon              randconfig-r041-20221013
-riscv                randconfig-r042-20221013
-s390                 randconfig-r044-20221013
-i386                          randconfig-a002
-x86_64                        randconfig-a005
-i386                          randconfig-a013
-x86_64                        randconfig-a001
-i386                          randconfig-a011
-x86_64                        randconfig-a003
-i386                          randconfig-a004
-i386                          randconfig-a006
-i386                          randconfig-a015
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                 randconfig-a013-20221017
-i386                 randconfig-a015-20221017
-i386                 randconfig-a016-20221017
-i386                 randconfig-a011-20221017
-i386                 randconfig-a014-20221017
-i386                 randconfig-a012-20221017
-x86_64               randconfig-a014-20221017
-x86_64               randconfig-a015-20221017
-x86_64               randconfig-a012-20221017
-x86_64               randconfig-a011-20221017
-x86_64               randconfig-a013-20221017
-x86_64               randconfig-a016-20221017
+ .../bindings/pci/mediatek-pcie-gen3.yaml      | 115 ++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi      | 167 ++++++++++++++++++
+ 2 files changed, 282 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.18.0
+
