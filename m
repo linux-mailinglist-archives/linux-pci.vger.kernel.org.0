@@ -2,58 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED042603086
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Oct 2022 18:09:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D1F6030E7
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Oct 2022 18:43:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbiJRQJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Oct 2022 12:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44570 "EHLO
+        id S229625AbiJRQne (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Oct 2022 12:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiJRQJE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Oct 2022 12:09:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B53AA3CD;
-        Tue, 18 Oct 2022 09:09:03 -0700 (PDT)
+        with ESMTP id S229574AbiJRQnd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Oct 2022 12:43:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F354FE8C4B;
+        Tue, 18 Oct 2022 09:43:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97716615FF;
-        Tue, 18 Oct 2022 16:09:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37D0C433C1;
-        Tue, 18 Oct 2022 16:09:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E5D861629;
+        Tue, 18 Oct 2022 16:43:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57764C433D6;
+        Tue, 18 Oct 2022 16:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666109342;
-        bh=GM6MSYEr926mJXjI6RLujQbUK1lPFH8a6M91n4+Nf+0=;
+        s=k20201202; t=1666111411;
+        bh=onIU6UaIPDJ4ITtA1n47wYHHewH84Cps093KvcKCmBc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qKKvld+uoC2djWFzFuyPcWZBEda3UQIIR3gfS2YnjIncpcRBsEPANnOWC+F2Jhe7R
-         YUM5Ex1zpgY79zIW5DEApHHdi5Ipq4UH+l9ipp5vfII1XpkPu/Rc5VilAc2r3QtX62
-         lew5v0kCCQsHMInMtaQmhXUmUe3mG2yuhP2EmBt83O+QLO/Jowg9KtQ4u87F4gmGL8
-         tXWR2oArseCaV9qzf+h/0SBBnUlBntPf2YH2tH4/vaZg3nBSoMPOykvLv9LSqfxkm3
-         3Q3rZSxWclvn6phWaI8dOHxB2M6JaTri71EJjRVgySreTCafAwBIjOvq5Lipga64l/
-         fo0LEJWxzpfSA==
-Date:   Tue, 18 Oct 2022 11:08:59 -0500
+        b=Wue3uBJfAC7a8RK23LasuJUGRQOwuSjdf19eLT0uRUPqsxK/bWH2wrpLTwDRqjx2F
+         obRE16jOOkQCH9NUnA6AfGo2yucGITh/ej0VZQSvspQAHTHpurUwChpfQCY8vDFysu
+         W6F0X3mdbkVzm/ISijLvlYAnRJIUkpPig6cA6fVL27drqt4Upro4IboikOZ7koUn3l
+         DYv6OvDWcSoIVaTFb1oyqyFKbRtmMpH8fQxz3PTm1KIfFFLHBfrsG5gXk7HrIjO9x4
+         Fr8kd6KvweaoccceVxr4u/eDMXPxpAibqQSFCAAwSfVYTkxgO7VpM0xJaPxnoyT0vN
+         3QmEqzx8/hYhQ==
+Date:   Tue, 18 Oct 2022 11:43:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for modular builds
-Message-ID: <20221018160859.GA3805344@bhelgaas>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        treding@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
+ logging
+Message-ID: <20221018164329.GA3808783@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y07B/cHkyvw3M4NV@hovoldconsulting.com>
+In-Reply-To: <49834f69-0e6c-70a6-ef70-5563fb5e9215@nvidia.com>
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -63,48 +57,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 05:10:53PM +0200, Johan Hovold wrote:
-> On Mon, Oct 17, 2022 at 12:34:22PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Oct 17, 2022 at 01:47:05PM +0200, Johan Hovold wrote:
-> > > Allow the Qualcomm PCIe controller driver to be built as a module, which
-> > > is useful for multi-platform kernels as well as during development.
-> > 
-> > There are two different goals here, and there's no real reason to
-> > bundle them together:
-> > 
-> >   1) Make qcom a loadable module.  This is a hard requirement so
-> >      multi-platform kernels don't need to build in all drivers
-> >      statically.
-> > 
-> >   2) Make qcom unloadable.  This is a high want, possibly even a
-> >      requirement for developers, but is not really a big issue for
-> >      users.
-> > 
-> > There are different changes required: 1) requires the Kconfig change;
-> > 2) requires .remove() to be implemented.  Since there's no requirement
-> > that these be done together, let's split them into separate patches.
-> > 
-> > Then we can make sure that at least 1) gets done, and if for any
-> > reason 2) isn't safe or breaks something, we can at least bisect and
-> > if necessary revert it without losing 1).
+On Tue, Oct 18, 2022 at 07:21:54AM +0100, Jon Hunter wrote:
+> Hi Bjorn,
 > 
-> Implementing 1) in itself requires more than simply splitting this
-> patch. And I don't think we should be making life harder for developers,
-> as well as users assisting during debugging, by going in that direction.
+> On 13/09/2022 11:12, Vidya Sagar wrote:
+> > Some of the platforms (like Tegra194 and Tegra234) have open slots and
+> > not having an endpoint connected to the slot is not an error.
+> > So, changing the macro from dev_err to dev_info to log the event.
+> > 
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> >   drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 650a7f22f9d0..25154555aa7a 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -456,7 +456,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> >   	}
+> >   	if (retries >= LINK_WAIT_MAX_RETRIES) {
+> > -		dev_err(pci->dev, "Phy link never came up\n");
+> > +		dev_info(pci->dev, "Phy link never came up\n");
+> >   		return -ETIMEDOUT;
+> >   	}
+> 
+> 
+> Are you OK to take this change?
 
-If you're saying this patch can't be split, can you elaborate on the
-details of *why* it can't be split?
+When this came up, Lorenzo was in the middle of a big move and I was
+covering for him while he was unavailable.  But he's back, and I'm
+sure he will resolve this soon.
 
-> We have tons of modules in the kernel and very few that cannot be
-> unloaded. Anyone who doesn't trust root to not unload modules can
-> always disable unloading completely using CONFIG_MODULE_UNLOAD.
-
-This is all true, but IIUC, the issue is about unloading IRQ
-controller drivers, and this doesn't address that.  I don't have a
-clear understanding of the issue, and it would be nice if a patch that
-specifically added unloadability could elaborate on that.  Then we can
-decide that "yes, this is a risk, and we're willing to accept it." An
-argument that "tons of modules do this" totally avoids the issues of
-this particular case.
+Personally I'm OK either way.
 
 Bjorn
