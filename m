@@ -2,109 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD99602C51
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Oct 2022 15:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9CEB602F38
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Oct 2022 17:11:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbiJRNE7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Oct 2022 09:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49130 "EHLO
+        id S229906AbiJRPLK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Oct 2022 11:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbiJRNE5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Oct 2022 09:04:57 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBB874351
-        for <linux-pci@vger.kernel.org>; Tue, 18 Oct 2022 06:04:56 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id d13so8530179qko.5
-        for <linux-pci@vger.kernel.org>; Tue, 18 Oct 2022 06:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JVggg/zGpEgRhovjVbnJJA36oAouEK0fvptCigeAEiI=;
-        b=bhqSB3ryRV8GJLGPzDnOYf8WCdBmi9ErGIC+xRFHwuHDvaU3XCja0tioOn/5XZx6gi
-         pYWZtDI3kv97T/9WsyeyKT39mc08e5NjPyl64QwiqLamP5IuyKL69xSFl0o6vkgwcLLZ
-         iwOIT4kZPlwA4X0i+urx0c/ziQohJgNl1AF2ZTwVucDj7Pv95pzaN4n9MHjncsve1CMQ
-         +mQcn9IcYlVICCBqKCsgBLqPnxxEjDYit+tJ2jjh1bzh7QQ0iypz2Oq219OBThBhK3Bb
-         DR3BXhbG/d5wkqOyViAAo+3kPxsizYejzhewL39xrAfYGdeAVpIn+0AtRz/6SJQZAIhz
-         3O1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JVggg/zGpEgRhovjVbnJJA36oAouEK0fvptCigeAEiI=;
-        b=hMh2PxHGcm/We1+kJC2x9hg3ytwtnC2RRmal9qjmWlAxm0lJRXjk+E3549iaLSzBFN
-         rFPTHcEmkqkAs/bAVJBgu4GVLtj0fyz16jYY99KxlnZu5zr2NQ/Q1Sp1rPqvbc28vx7n
-         mFRS3uQcUe8XK2n5TcdqGrQwBlU9GRtdkmRCOennNmqoYraJ9P1CwW8zrMJ4eFrp1r1w
-         zBs6zaHSFQf9SM5cvEpOP47WgssxnRfEmwcXodlZb0+LSPx2UtCgIKdoQP72HGwbZSg3
-         SeIN8oSSWyOOlDrXQr233g7HgCAmz1Yo2G1/2JIdEJ5lLnDaTs6UPY2KVWAwa88zIV47
-         a2ww==
-X-Gm-Message-State: ACrzQf1LWKxYTUnNw3j1LFFULQAtJvMxojLIACR1AsOY+/DNEeQKiYcu
-        a3KOlrm48oKfmVn52UJz3zn6iQ==
-X-Google-Smtp-Source: AMsMyM4UKl/gZaGJ/cWVtaEPrCGXVBFGcjnNI41kh6JnRKrICOizaNxEXyI0ZVESLEsCXd1fWghhvg==
-X-Received: by 2002:a05:620a:1a94:b0:6ee:d395:663e with SMTP id bl20-20020a05620a1a9400b006eed395663emr1733742qkb.632.1666098293130;
-        Tue, 18 Oct 2022 06:04:53 -0700 (PDT)
-Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id bw15-20020a05622a098f00b0035d08c1da35sm1893102qtb.45.2022.10.18.06.04.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Oct 2022 06:04:52 -0700 (PDT)
-Message-ID: <4b870c82-12cb-5e59-bbf7-4291888f9d51@linaro.org>
-Date:   Tue, 18 Oct 2022 09:04:50 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH] dt-bindings: PCI: qcom-ep: Fix PERST register description
-Content-Language: en-US
-To:     Johan Hovold <johan+linaro@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        with ESMTP id S229729AbiJRPLJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Oct 2022 11:11:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7704A50B86;
+        Tue, 18 Oct 2022 08:11:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EAA3AB81F68;
+        Tue, 18 Oct 2022 15:11:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A018FC433C1;
+        Tue, 18 Oct 2022 15:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666105865;
+        bh=QiYNM+K9UffyPq7bB1q2XxVJ5g4+7nvu943fwEjrsBo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ER3B+QxfDyT+DCKKNpiGHKNCMudOdLCWJulUxF1LxYPzeuc1LwWN9Cn8hAC8PCCyJ
+         eAkY3eQUKqa/LtXSBAx39JjFvAOFXYGAbGSmBnSC3d+NJUFfP5JJvNyKZ2OkHlc7/r
+         kO6PLTl1iXYAlgC7bkPqbMCONcC5hlyG9TsdlZgxe1L56p4mc7PL39D9a7s4652GUg
+         Y9GWHzdrQ7CQ/3xqZAsfnDzFVQ0gk1sA0DpV8TqXucINREdHsespKV43/TCMs61M+C
+         I3SwErhv1usOs7KNa1O/bPLDF+fMwbZuI7bnsy9YvrFf3G4ltFvDrhrQWItVl/yXuH
+         Q/4XXRBxEOOJA==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1okoF3-0005eX-GA; Tue, 18 Oct 2022 17:10:54 +0200
+Date:   Tue, 18 Oct 2022 17:10:53 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221018093115.7537-1-johan+linaro@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221018093115.7537-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for modular builds
+Message-ID: <Y07B/cHkyvw3M4NV@hovoldconsulting.com>
+References: <20221017114705.8277-3-johan+linaro@kernel.org>
+ <20221017173422.GA3715509@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221017173422.GA3715509@bhelgaas>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/10/2022 05:31, Johan Hovold wrote:
-> The 'qcom,perst-regs' property holds a single phandle array with the
-> phandle of the TCSR syscon and offsets of the two PERST registers, but
-> the current schema does not capture this.
+On Mon, Oct 17, 2022 at 12:34:22PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 17, 2022 at 01:47:05PM +0200, Johan Hovold wrote:
+> > Allow the Qualcomm PCIe controller driver to be built as a module, which
+> > is useful for multi-platform kernels as well as during development.
 > 
-> Update the binding to describe the single phandle array and its three
-> elements.
+> There are two different goals here, and there's no real reason to
+> bundle them together:
 > 
-> Fixes: 31c9ef002580 ("dt-bindings: PCI: Add Qualcomm PCIe Endpoint controller")
+>   1) Make qcom a loadable module.  This is a hard requirement so
+>      multi-platform kernels don't need to build in all drivers
+>      statically.
+> 
+>   2) Make qcom unloadable.  This is a high want, possibly even a
+>      requirement for developers, but is not really a big issue for
+>      users.
+> 
+> There are different changes required: 1) requires the Kconfig change;
+> 2) requires .remove() to be implemented.  Since there's no requirement
+> that these be done together, let's split them into separate patches.
+> 
+> Then we can make sure that at least 1) gets done, and if for any
+> reason 2) isn't safe or breaks something, we can at least bisect and
+> if necessary revert it without losing 1).
 
-It's not necessarily a fix, the original code was correct, just this one
-is better. :)
+Implementing 1) in itself requires more than simply splitting this
+patch. And I don't think we should be making life harder for developers,
+as well as users assisting during debugging, by going in that direction.
 
-Anyway:
+We have tons of modules in the kernel and very few that cannot be
+unloaded. Anyone who doesn't trust root to not unload modules can
+always disable unloading completely using CONFIG_MODULE_UNLOAD.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml          | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-
-
-Best regards,
-Krzysztof
-
+Johan
