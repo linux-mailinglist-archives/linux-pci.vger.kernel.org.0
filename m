@@ -2,60 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E06086046A1
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 15:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D71060499F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 16:46:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbiJSNQJ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 19 Oct 2022 09:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        id S230077AbiJSOqy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Oct 2022 10:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbiJSNPv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 09:15:51 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227351DC825;
-        Wed, 19 Oct 2022 06:01:31 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id z8so11563187qtv.5;
-        Wed, 19 Oct 2022 06:01:31 -0700 (PDT)
+        with ESMTP id S229971AbiJSOq0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 10:46:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0FF176B9D
+        for <linux-pci@vger.kernel.org>; Wed, 19 Oct 2022 07:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666189967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5YibLNy+OciDPg1RqQtPWy91evf3zRYGT05L7hMD1SE=;
+        b=K73TW2KwvaAFkVX7wQTDmg40Jp5EfQWvYH4WwD4eRfoy2QdDDcka2RWQHSqXydCXy02y1s
+        YBIjGVUM2KD6gQdm9NRgpB3rC0EelT76puIlUAJyXbg5IS/TIO8vpOsC5QIWrtJ1jwuAV9
+        6gGc3OAwPgIsZjbH79UTLx854PxSNd0=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-175-8Elo9g_uMGGg7-OPkanmng-1; Wed, 19 Oct 2022 10:32:46 -0400
+X-MC-Unique: 8Elo9g_uMGGg7-OPkanmng-1
+Received: by mail-io1-f69.google.com with SMTP id s3-20020a5eaa03000000b006bbdfc81c6fso13358872ioe.4
+        for <linux-pci@vger.kernel.org>; Wed, 19 Oct 2022 07:32:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3neje0k7T3cx7D7C9HLG6iO3ovR2451tT9bBWNpd1HI=;
-        b=U4j1tiVNLgBom3Fbg9Ja6CyfAQ5ADhndxt/jZWqsvacNYnrp6dOU5t2RthWZryJtwq
-         RTSuxnWLtFWPzTbWKoZvDA60lJT8nfxbTuXhjgYNRc02MZ4FD01NjA/q8c6br7Zgq7Ew
-         ys1qJhAOStddz7ablFkr3vAwTLPOI8n7Tj/4JwDv6XqTfvXUuhgwNufPkE2UafkCGFr6
-         Eq/THjOHSWHtkPAsGiR1ATuR/NA+5dJ6v/gRp5tCxL4pfBBDU98+PQo9oMJGPDOF+8ET
-         tla4SYItiwWyv0aGt6upZT1tlOMrLxDo0MtM0ckzC2Y7TIXDt/q3PovNs+eNKnIjXKg9
-         SHwQ==
-X-Gm-Message-State: ACrzQf0ynKggrsI/aw5Qj8Mg5GfemhvuCyCQ5j2+46MTe24ko3S1+uhb
-        wtKabWxdgwuyAOCt6xx+bx0YqYzleCjJKeFYZ+U=
-X-Google-Smtp-Source: AMsMyM5AXDZhR6X0SfzaRw+VO5tHTbxkxUczN5nB/2Y/zue0gU7uIAIrZQUDwIWkE8nim4szWBMx9SDfRMrdJB6x0YA=
-X-Received: by 2002:a05:622a:620a:b0:35c:bf9e:8748 with SMTP id
- hj10-20020a05622a620a00b0035cbf9e8748mr6319785qtb.494.1666184414930; Wed, 19
- Oct 2022 06:00:14 -0700 (PDT)
+        bh=5YibLNy+OciDPg1RqQtPWy91evf3zRYGT05L7hMD1SE=;
+        b=NsehgPHaw7uYfSVMmFVEaU+vBHgv8Sfp2ijLgWawo04RLxNhlRHE16RhzIh4V03Wnm
+         BiWtlFKCuyDvGzsYsCvBa87KcVfTN5tP7WkdIWZiUMOa2fIGjhG0r6DBOJsnRhDZmDfg
+         UNe6Ms7c/jNnAQNNXNpwag2wSZOORouY3O6LWTCVIPZXbTwCVfiHzjKhmNgD2Tkyr+tv
+         e9MVJwjx4O6bw1VVDD2b+ZNt0eOwkP93A4absFyahmtfHZokN21unxzPvFs2NAgw5p3q
+         q7MAD7zs5+GDDy9YDYJcZX9+JjZYZ4Aa8QikLyMKE+csFi9FHdWWxRyfwXrZM6ijls6F
+         9Amg==
+X-Gm-Message-State: ACrzQf19Ss7Ilhgm4qOXllIsHRWPrfUbGu1qzMAC5VpCeWS8/Is//P2N
+        ZJvVxfYaJgjXL+pJQg/zLzpUON1BkC3JELssPV8Ho51qgsRqSYyqERxuvKvrHVTFZUCADwsb9eA
+        u5tlNx1sAxheflA2bZj21
+X-Received: by 2002:a02:54c1:0:b0:363:453e:2ccb with SMTP id t184-20020a0254c1000000b00363453e2ccbmr6451893jaa.228.1666189964202;
+        Wed, 19 Oct 2022 07:32:44 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6/HkVuS6wNDB9egoiQiNu3qMpbMyAK3j1AnEKd9qXTPxLsvFR1yo6X9O/te7EZm3+VoF9IlA==
+X-Received: by 2002:a02:54c1:0:b0:363:453e:2ccb with SMTP id t184-20020a0254c1000000b00363453e2ccbmr6451869jaa.228.1666189963941;
+        Wed, 19 Oct 2022 07:32:43 -0700 (PDT)
+Received: from x1 (c-98-239-145-235.hsd1.wv.comcast.net. [98.239.145.235])
+        by smtp.gmail.com with ESMTPSA id f20-20020a02a114000000b00363961f0f2dsm2140039jag.115.2022.10.19.07.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Oct 2022 07:32:43 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 10:32:41 -0400
+From:   Brian Masney <bmasney@redhat.com>
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: qcom: Add basic interconnect support
+Message-ID: <Y1AKiTkLa23idaf2@x1>
+References: <20221017112449.2146-1-johan+linaro@kernel.org>
+ <20221017112449.2146-3-johan+linaro@kernel.org>
 MIME-Version: 1.0
-References: <12097002.O9o76ZdvQC@kreacher> <Y0+7Ug9Yh6J6uHVr@intel.com>
- <CAJZ5v0gKW9S29xS2+qkcopzYtZKTcM=ZT-Jjc4fnEJfu=oYKaw@mail.gmail.com> <Y0/sGveKPjuUWOhO@intel.com>
-In-Reply-To: <Y0/sGveKPjuUWOhO@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 19 Oct 2022 15:00:01 +0200
-Message-ID: <CAJZ5v0gdcVSOPkfs0yzfubpU9EXu02n2u8Pau7sE=yrZ-mvDEQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PCI: Fix device reference counting in acpi_get_pci_dev()
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221017112449.2146-3-johan+linaro@kernel.org>
+User-Agent: Mutt/2.2.7 (2022-08-07)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,74 +90,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 2:22 PM Ville Syrjälä
-<ville.syrjala@linux.intel.com> wrote:
->
-> On Wed, Oct 19, 2022 at 01:35:26PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Oct 19, 2022 at 11:02 AM Ville Syrjälä
-> > <ville.syrjala@linux.intel.com> wrote:
-> > >
-> > > On Tue, Oct 18, 2022 at 07:34:03PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Commit 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()") failed
-> > > > to reference count the device returned by acpi_get_pci_dev() as
-> > > > expected by its callers which in some cases may cause device objects
-> > > > to be dropped prematurely.
-> > > >
-> > > > Add the missing get_device() to acpi_get_pci_dev().
-> > > >
-> > > > Fixes: 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()")
-> > >
-> > > FYI this (and the rtc-cmos regression discussed in
-> > > https://lore.kernel.org/linux-acpi/5887691.lOV4Wx5bFT@kreacher/)
-> > > took down the entire Intel gfx CI.
-> >
-> > Sorry for the disturbance.
-> >
-> > > I've applied both fixes into our fixup branch and things are looking much
-> > > healthier now.
-> >
-> > Thanks for letting me know.
-> >
-> > I've just added the $subject patch to my linux-next branch as an
-> > urgent fix and the other one has been applied to the RTC tree.
-> >
-> > > This one caused i915 selftests to eat a lot of POISON_FREE
-> > > in the CI. While bisecting it locally I didn't have
-> > > poisoning enabled so I got refcount_t undeflows instead.
-> >
-> > Unfortunately, making no mistakes is generally hard to offer.
-> >
-> > If catching things like this early is better, what about pulling my
-> > bleeding-edge branch, where all of my changes are staged before going
-> > into linux-next, into the CI?
->
-> Pretty sure we don't have the resources to become the CI for
-> everyone. So testing random trees is not really possible. And
-> the alternative of pulling random trees into drm-tip is probably
-> a not a popular idea either. We used to pull in the sound tree
-> since it's pretty closely tied to graphics, but I think we
-> stopped even that because it eneded up pulling the whole of
-> -rc1 in at random points in time when we were't expecting it.
+On Mon, Oct 17, 2022 at 01:24:49PM +0200, Johan Hovold wrote:
+> +	/*
+> +	 * Some Qualcomm platforms require interconnect bandwidth constraints
+> +	 * to be set before enabling interconnect clocks.
+> +	 *
+> +	 * Set an initial peak bandwidth corresponding to single-lane Gen 1
+> +	 * for the pcie-mem path.
+> +	 */
+> +	ret = icc_set_bw(pcie->icc_mem, 0, MBps_to_icc(250));
 
-I see.
+[snip]
 
-> Ideally each subsystem would have its own CI, or there should
-> be some kernel wide thing. But I suppose the progress towards
-> something like that is glacial.
+> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
+> +
+> +	switch (speed) {
+> +	case 1:
+> +		bw = MBps_to_icc(250);
+> +		break;
+> +	case 2:
+> +		bw = MBps_to_icc(500);
+> +		break;
+> +	default:
+> +	case 3:
+> +		bw = MBps_to_icc(985);
+> +		break;
+> +	}
 
-Well, I definitely cannot afford a dedicated CI just for my tree and I
-haven't got any useful information from KernlCI yet (even though hey
-pull and test my linux-next branch on a regular basis).
+Just curious: These platforms have a 4 lane PCIe bus. Why use 985
+instead of 1000 for the maximum?
 
-KernelCI seems to be focusing on different set of hardware, so to speak.
+Brian
 
-> That said, we do test linux-next to some degree. And looks like
-> at least one of these could have been caught a bit earlier through
-> that. Unfortunately no one is really keeping an eye on that so
-> things tend to slip through. Probably need to figure out something
-> to make better use of that.
-
-I think it could also be possible to contribute to KernelCI to get
-more useful x86 coverage from it.
