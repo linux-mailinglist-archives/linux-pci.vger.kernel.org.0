@@ -2,116 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98457603621
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 00:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C8F6603952
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 07:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbiJRWmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Oct 2022 18:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
+        id S229660AbiJSFmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Oct 2022 01:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbiJRWmC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Oct 2022 18:42:02 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACEFD03A9
-        for <linux-pci@vger.kernel.org>; Tue, 18 Oct 2022 15:41:56 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id f8so9667405qkg.3
-        for <linux-pci@vger.kernel.org>; Tue, 18 Oct 2022 15:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QPHsfF5G/eKNcWYWTSHi0xoOr+RUpiJkFM56TjDpIhw=;
-        b=cMtW7lgcJvDjvjAYrJwMB5BYBquSoGYgp9AM9VNASnhcTzA3VT2TA7IG94L7X3cPgr
-         fKqLbezOGfyszHnXRLuKEo1k0pSXUsi0QxnVMbloRUMQSfdO5QyUOtyTgXrMktTAAETu
-         yrXj/NY3hkY90zBqAhJELc7xuZZo6sQZkMe2dLmO2AbVhbeqPcZoDfdM0Z5KffRwxe7W
-         jTXr3MEjHlD3i3UYSTxgCxQWVpwJ2Ubaonulh1xdHyK0PSYO4L66qrvARdkLD7CPW7WN
-         0199owG2tuDCidKwr2wvdHtXh8yemlVgdoE5kw6D0pEczV1QwnTwPvLhRfkGz5mtMYoO
-         RSFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QPHsfF5G/eKNcWYWTSHi0xoOr+RUpiJkFM56TjDpIhw=;
-        b=fkVvfk8Is0AL4BB3p4MbMdj1m3A0BTLoMmcQtrwjUReZku8apCTZfxqWT5Ef193Drp
-         0RgtEMdjfvnV83VRYJCIddYJ9pz34TxCge54uuSDd9cvSVbve0rY2eMNzeNID3N735pA
-         rmuP5k4Elpeub3Zptgts6+RgSZ5+b1p7usmdEKtkjiei8iY6RE4Fico6lfXryYKZUdzF
-         u6srwvqRmYH/1AOWRWTYnXuNWGTQYWAE953+HpYQ/5DtRqJxHa4kCOzwVH5Ex6SQtQm9
-         CDWMzwVF0Z7gpdWM7rJGlSg7sJ+Qu3k/NNwXJRtcxlUDSGRMNgNuXuUvOoEMJEW/g800
-         ugEA==
-X-Gm-Message-State: ACrzQf2QvrVSKlwqESFX51Vt/c+LNeEYfSWPHzLACFdJNSjl+Lr8rnN6
-        G5KIV+LLC3/wCLoJPY6RxqsP4g==
-X-Google-Smtp-Source: AMsMyM7EedzjO6hEsUs2zztzn/M462CVJQYYcG6wF5jfqugCFf8K5I8jcxMc++W3EFWNNT2dw/Mg4w==
-X-Received: by 2002:a05:620a:1909:b0:6ee:d4a1:fc07 with SMTP id bj9-20020a05620a190900b006eed4a1fc07mr3606841qkb.489.1666132914823;
-        Tue, 18 Oct 2022 15:41:54 -0700 (PDT)
-Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id m10-20020ac8444a000000b0039b03ac2f72sm2761502qtn.46.2022.10.18.15.41.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Oct 2022 15:41:54 -0700 (PDT)
-Message-ID: <d6bc528e-1108-908b-fa87-c4f97bc6450b@linaro.org>
-Date:   Tue, 18 Oct 2022 18:41:53 -0400
+        with ESMTP id S229494AbiJSFmi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 01:42:38 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9190A4B99B
+        for <linux-pci@vger.kernel.org>; Tue, 18 Oct 2022 22:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666158157; x=1697694157;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zGtRnssKJbGgXCZtB8JIPZbtb1s/V6/Gi4DTRkeeA7w=;
+  b=e401/70pKPrywehjpgwm8+XTHIUhcCyp9FOsU5ETPKytDUJlLLK31ydN
+   TIT3kUJcSXrtkGiXyYcVseN4Q4MhcW/IItMdrSAnAveJqW2jVUADZhtCL
+   omo8egirND0cihApx50/B+9yZwS+UPaqjTCbNGG3Z3Nw1NuEHOYbc9uLr
+   yhLbYLM7Gj4a4wV/Dl+730Ow6UpW4egIo7tU2vdYdSRCUQq21C6P0NXDf
+   q7AaFrF8vG510oINjzZryK7I4uFRrXF3kybFiXN8li526CjabEFCdWlDc
+   IN8MHqWMV2GLaiiom/T/l3eor7hGss+282AcwDVGDs36MlHqO0szDyTIS
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="370531020"
+X-IronPort-AV: E=Sophos;i="5.95,195,1661842800"; 
+   d="scan'208";a="370531020"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 22:42:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="718306833"
+X-IronPort-AV: E=Sophos;i="5.95,195,1661842800"; 
+   d="scan'208";a="718306833"
+Received: from lkp-server01.sh.intel.com (HELO 8381f64adc98) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Oct 2022 22:42:35 -0700
+Received: from kbuild by 8381f64adc98 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ol1qd-0002X2-12;
+        Wed, 19 Oct 2022 05:42:35 +0000
+Date:   Wed, 19 Oct 2022 13:42:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:wip/bjorn-22-10-slow-down-io] BUILD SUCCESS
+ ea4e0099789879f18a195997a13b9c510f097c39
+Message-ID: <634f8e43.M9OLnhVObvy1AMSF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v1 3/3] arm64: dts: mt8195: Add venc node
-Content-Language: en-US
-To:     Tinghan Shen <tinghan.shen@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        Irui Wang <irui.wang@mediatek.com>
-References: <20221017070858.13902-1-tinghan.shen@mediatek.com>
- <20221017070858.13902-4-tinghan.shen@mediatek.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221017070858.13902-4-tinghan.shen@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17/10/2022 03:08, Tinghan Shen wrote:
-> Add venc node for mt8195 SoC.
-> 
-> Signed-off-by: Irui Wang <irui.wang@mediatek.com>
-> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8195.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> index 903e92d6156f..7cf2f7ef4ec6 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> @@ -2163,6 +2163,30 @@
->  			power-domains = <&spm MT8195_POWER_DOMAIN_VENC>;
->  		};
->  
-> +		venc: venc@1a020000 {
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-22-10-slow-down-io
+branch HEAD: ea4e0099789879f18a195997a13b9c510f097c39  alpha: remove unused __SLOW_DOWN_IO and SLOW_DOWN_IO definitions
 
-I think you called this video-codec in other patches... Would be great
-if you (you as folks working on Mediatek from Mediatek) keep patches
-consistent...
+elapsed time: 722m
 
+configs tested: 88
+configs skipped: 101
 
-> +			compatible = "mediatek,mt8195-vcodec-enc";
-> +			reg = <0 0x1a020000 0 0x10000>;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                             allyesconfig
+i386                                defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                        cerfcube_defconfig
+sh                  sh7785lcr_32bit_defconfig
+xtensa                  audio_kc705_defconfig
+arc                           tb10x_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                     stx_gp3_defconfig
+powerpc                   currituck_defconfig
+powerpc                 mpc834x_mds_defconfig
+arc                  randconfig-r043-20221018
+s390                 randconfig-r044-20221018
+riscv                randconfig-r042-20221018
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+um                           x86_64_defconfig
+um                             i386_defconfig
+i386                          randconfig-c001
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+ia64                             allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+arm                        spear6xx_defconfig
+arm                         assabet_defconfig
+mips                 decstation_r4k_defconfig
+sh                          r7780mp_defconfig
+arm                         axm55xx_defconfig
+ia64                        generic_defconfig
+arm                           tegra_defconfig
+powerpc                      chrp32_defconfig
+mips                         db1xxx_defconfig
+powerpc                  storcenter_defconfig
+powerpc                 canyonlands_defconfig
+sh                          urquell_defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+sh                        sh7763rdp_defconfig
+sh                          sdk7780_defconfig
+powerpc                    klondike_defconfig
+sh                             sh03_defconfig
+sh                          r7785rp_defconfig
+sh                             espt_defconfig
+arm                          iop32x_defconfig
+sh                            hp6xx_defconfig
 
-Best regards,
-Krzysztof
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                 randconfig-a013-20221017
+i386                 randconfig-a015-20221017
+i386                 randconfig-a016-20221017
+i386                 randconfig-a011-20221017
+i386                 randconfig-a014-20221017
+i386                 randconfig-a012-20221017
+x86_64                        randconfig-c007
+mips                 randconfig-c004-20221019
+i386                          randconfig-c001
+s390                 randconfig-c005-20221019
+arm                  randconfig-c002-20221019
+riscv                randconfig-c006-20221019
+powerpc              randconfig-c003-20221019
 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
