@@ -2,95 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8429C6049FF
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 16:55:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13A56049FD
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 16:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231868AbiJSOzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Oct 2022 10:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42894 "EHLO
+        id S229613AbiJSOzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Oct 2022 10:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231676AbiJSOzP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 10:55:15 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2046.outbound.protection.outlook.com [40.107.100.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA55C1BBEFD;
-        Wed, 19 Oct 2022 07:46:50 -0700 (PDT)
+        with ESMTP id S231779AbiJSOzQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 10:55:16 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2062.outbound.protection.outlook.com [40.107.223.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7FDBEB753;
+        Wed, 19 Oct 2022 07:46:54 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=diXok1u0105eV+djuIe7gJoPWNW9NQX+c7YRgm9NfO1ETS8MnZVbupYvIvmpNXaq6uw73BprBBWPfGcOEtb6IHmB0jvNqWYoA1lLN95jvY0fMgLw8RAinVA4qwD23w3f9KKCmz+QFrYEhKpBDlaHVzZzgisPzuOj/Ed14wM4ip8sIY7/fA7FncJuXZ7UOZZxMFQ4Y+AkiOMXOgO2MJ70vZPNJov355Kl7qSsIu2i0LKRykv3al9zY/33A/H/aE1dzG4Kx8RlTFVmeWSiGfLvo2YzwwXz5nRdr93qARLCMsGbeXj90d/ACnIBIYHE8HX/2qfbVOAVRFwdqKgG54iIAw==
+ b=I+38+/e1H4yiFylK+UEZBaxCKWWi1sKEFxA0DPNKhTKqkIKOXa4dBMENTg8u7h0smS0JX/yV1ns/JT511juYFKe0tXJ8OQ9P5bL9/lShairhQIE51cYCkZcqCpBeFd2oAXOBgQO+B1VdXHb15tuKN5zCSImLqQUOJhsHU/2Xt9QsIZhkPLFyhZChUTiF1boqTRv9w2jlod617YZNxed/QP8L5vByMzmo+acOsBZDsy2zlBMBoUt2YmkuGgMbBid1FcGGjbf7QRZ3MQ5Voxz1lqxFvnRh4zDpfLqc3Qs2BjsP0uaYuQ3p+s8q2520y+nxR9HDAIhc+9JDz93nd72jAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sUpnadfdzMK1LS7jCOVe767krzTOT8gzC4qjPNed+g4=;
- b=EL9JzP0In23OU18MjlTOEpsyZTzPOtOuaQDfXg8nfZYq6HyiJQ8532gu2BNcOvBBlmvBY7tViUHZcP7QZe0DIkTxWErsE5r2aTA865ClcLoK+CWIEMmpO32CA1mbL3PO3tfNW6kt5i70PSCxPncfquyZb4q8qN6rKvjPSOqaOry/fhIskF2M1x3/RKdCRokXLge2XJls5rHn2XuJp6cGBkH8689PNowEqpaam/K+Z7zDXlDzPiyC8BgnxHJiOI6XQ39t6lgZu+RHUbTgUd/UkOdrPnAHPWKpFVd4o0Nf7szjDSoUnxG16t1BkaNtF0HOWZ0TIhu5+Qhrcg0wmIbOFA==
+ bh=0/MimmidqPGF3nmtrdLL4db2omxCnVvguAJknCxQS+Y=;
+ b=CzuNT0S0XNglBEDxbP3H3JD9mlQkBQg/WTMXZWdz1+wHALcvvPzzchO1meXmsEq5XbFdPrOOkInLnEKWLjFVJW3/BoxwOi7PoMt3pCb5i+zo0fmOHnYZzf/u1nAxKwH2d5SH37k9Eq5obt/TZqK/qXN2q8n9YtMzA2mqihjwb3FOex3xIjCiIzjlnhbjqMVUNeWeTyfvWpznwZO8idgNk2cBR6vc65mt/E3s3VSSzI44PcqjgN8TORU3b0UxWZ0KfbNv5/CxUASBoeHlh8eCW6a+/92f6ScAMw/002tR0ZYX6C93P9yd5jg8sa0BDN+Bt/nqD1sNLw1WvASnRjMn3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sUpnadfdzMK1LS7jCOVe767krzTOT8gzC4qjPNed+g4=;
- b=nnjZQTX74izF8xGoxq0TqWHZ2VYUDipH0qTa5heeztPzcjtkP8H25J9Zs39MQv/UaBVEos9JDNuNoNYRDwFgoUlXpHB1yk/3rLwJnjKqh5NoUhRngg1fANtAvf4ZCuoesS0hau1XJNyIUAvWi8R7Xgd48OOyEN0NTKJZVA9mXAw=
-Received: from DM6PR06CA0003.namprd06.prod.outlook.com (2603:10b6:5:120::16)
- by DS7PR12MB5791.namprd12.prod.outlook.com (2603:10b6:8:76::12) with
+ bh=0/MimmidqPGF3nmtrdLL4db2omxCnVvguAJknCxQS+Y=;
+ b=3Ny1ZodoSiSj26iA6az1ILbclhMdkEi8VLcXvefE+skx4u6tm+KYYXpgnin0ntx2cU7VciZ16Q2QDfEnaBZ3Z4DcWnSRndfpcsE8ClgcukiRWghdm4PAvfo/szoAq4AOWJjnKhy6d4bfAvLKgLzfjzxCg8fv1savQNIRlqTS0iY=
+Received: from DM6PR02CA0037.namprd02.prod.outlook.com (2603:10b6:5:177::14)
+ by CY8PR12MB7562.namprd12.prod.outlook.com (2603:10b6:930:95::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Wed, 19 Oct
- 2022 14:46:48 +0000
-Received: from CY4PEPF0000B8EE.namprd05.prod.outlook.com
- (2603:10b6:5:120:cafe::d6) by DM6PR06CA0003.outlook.office365.com
- (2603:10b6:5:120::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34 via Frontend
- Transport; Wed, 19 Oct 2022 14:46:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34; Wed, 19 Oct
+ 2022 14:46:53 +0000
+Received: from DM6NAM11FT018.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:177:cafe::21) by DM6PR02CA0037.outlook.office365.com
+ (2603:10b6:5:177::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.32 via Frontend
+ Transport; Wed, 19 Oct 2022 14:46:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000B8EE.mail.protection.outlook.com (10.167.241.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Wed, 19 Oct 2022 14:46:47 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DM6NAM11FT018.mail.protection.outlook.com (10.13.172.110) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5746.16 via Frontend Transport; Wed, 19 Oct 2022 14:46:50 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 19 Oct
- 2022 09:46:47 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ 2022 09:46:50 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 19 Oct
- 2022 07:46:46 -0700
+ 2022 09:46:50 -0500
 Received: from xhdbharatku40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Wed, 19 Oct 2022 09:46:44 -0500
+ Transport; Wed, 19 Oct 2022 09:46:47 -0500
 From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
 CC:     <bhelgaas@google.com>, <michals@xilinx.com>, <robh+dt@kernel.org>,
         <bharat.kumar.gogada@amd.com>,
         Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: xilinx-pcie: Convert to YAML schemas of Xilinx AXI PCIe Root Port Bridge
-Date:   Wed, 19 Oct 2022 20:16:39 +0530
-Message-ID: <20221019144640.9458-1-thippeswamy.havalige@amd.com>
+Subject: [PATCH 2/2] dt-bindings: PCI: xilinx-nwl: Convert to YAML schemas of Xilinx NWL PCIe Root Port Bridge
+Date:   Wed, 19 Oct 2022 20:16:40 +0530
+Message-ID: <20221019144640.9458-2-thippeswamy.havalige@amd.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20221019144640.9458-1-thippeswamy.havalige@amd.com>
+References: <20221019144640.9458-1-thippeswamy.havalige@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000B8EE:EE_|DS7PR12MB5791:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab0b71b1-31b4-40e1-3b82-08dab1e0c019
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT018:EE_|CY8PR12MB7562:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb3539a7-381f-4414-b801-08dab1e0c1ea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RBsqyhwK8J9mmkzXugHk0OfgPmYxhQQPwSv38Rl1uo6KnYfgFr4JNMS5luUeEtJ2a/xgxzx1AsOAL0XelnKTYeA3O5CSeNb4mttOlbfGjHe95il4pXVD+cqj4UAceW8c2mlgcyyqgIg4pXRkmZilOE6PTwyYCa0iCoGYzIciRSjKoNlPw5dit3WEql6NDJ1sOXbd20slKyZ1P4Tv2rvaJzECElmsM9Sv8yW8osiqqevN5UnvWz9LYed8uO9XkQ9l7X3Owq6GKA8e30N0GnM8MvolYkY3Tmnc7HWJ49ixiowoVTsN36cDMH3RRt2mY9aERo6rG1kTkEqDBFaDIf4VBvbOaiTbvkf1ZFUtovxJXs23XKFgaEUEfd1ibj1qNruD4+bmYUe4YH6XKLk+jtp3dnWUPMHAM1XMEJnEmT771CSWxPuUvsVU4QOR8dqR26lrePnDs18P53Pi1Q05swfWzChZjgsEij1LsbGo64l5zXVjmJHtgyq7JEBMKrDECNMYoy0N8+8UXomJ1596SksteexbqVGSLWscZ7YhKiFKE3dRwa1/ywic02wgSia+2JdpieGmdlxf54nd07JiNalDqOPbFyh/x870/iojR3CLUHMAeZvv0wqSJuGn7dxHllNtdw794/teSeiAVkPaE4xOXWAMdQWpwKvLtwJzhiKHWkcqeIvrWwnVbbaehd2Kl+0cQr9SBFQIwWtqRN4ZlJ/9DxT8vUe43IsqxeBSagUkoa2Mdmad3GPQK4r62KWUd/cu1l7Wuj4w5VMKjUFk/QbE33S8wi/0gJtL2kiKRaXG+UHEHMi/tki2GVbJ8y2I8sjKUqy94GO3qgvjNP3UtmXhVz0lEq4Qh6HsiM0x5PiVgcBnl3wI08yBhuY63+swnHQX
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(396003)(346002)(136003)(376002)(451199015)(36840700001)(40470700004)(46966006)(316002)(110136005)(54906003)(83380400001)(8936002)(5660300002)(336012)(1076003)(2616005)(40460700003)(2906002)(44832011)(36860700001)(70206006)(47076005)(8676002)(70586007)(86362001)(186003)(82740400003)(82310400005)(41300700001)(26005)(6666004)(4326008)(426003)(40480700001)(36756003)(81166007)(966005)(478600001)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 4sUO2EohTG5r7ROCWhLq/KXGtswC/+XsoyR6aRumVPUKj/rCiT5b9iLdwg/tOWSm0vmwafFQB4Jzyliw/qHUgfPbprqqGpKwMkjsM8Xx/hCvJZCLHieaCqkdINxJZutF+6sUyKUPY/+n+VTCyH0VftPYXGgUg0MrWLsUUxJXcjYr+3rLIxiylmTcUz2TANI0JBXrFlnOEprBZb2gRITAQvavIZAKoVOK1bxtxdXuUR4MIRk7AiLbobh306XSbWeKr1yQfubnOLEsKxGUk+PRz7tWE1GkaAaxmKtmTqbDKThREA92qiz4gdQ3MXeHKPrf0UfFwj5/XFzVdbyaz7RSxOmsJhLgcKv7SmI5TWSrh3dXMOGWXmGKM3azCjLy3knD/jiXXulNkENa5tJKmc45j9PU9YQaapfRpqkPvIfDoF4rnEp0ie+6SDm4QD1iBKdg7DbK++jryGWtpK5uaFKDEgHC9NhfuwWcM7ujoEmSxL0n0S6QGgOfcloP+AKTGp/6y7qd68a2ElJIycCeLUWNbdeW0NeRozAZNKgmjLKP6uqjpFljgBESvHXg5fYLSf4iolAY6jU4J0vjx49KM4QBPCxYKg03jZ8l9h3u9DPVG3yoFYKZ7gEtfMmnL8ySMT/9qPEnzzhdF4jQCTPCxmnRH5nTZAq626euWdUR8A8QJKs/ZZRuwGoisktnoLM9GCU4fpUrYElv7bstuUMWVCK8yIoBkbEXKxaSblKNArBdUSkvjk0bittAg5JTcbjuO7tZ3pADGVo+YFmtTOA3eS4Q8eKQSxX61VWC/Ey09qimCTOu+/uQKoGAPjdNTKcUyo/PLaBeuZi/xXoMII7B5REJX4snMNadqmiNOjzK4xUA99g8ylG9eJBWopgdDD3np5cT
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(376002)(346002)(136003)(451199015)(46966006)(36840700001)(40470700004)(426003)(36860700001)(47076005)(83380400001)(86362001)(82310400005)(81166007)(356005)(82740400003)(41300700001)(8676002)(4326008)(44832011)(8936002)(966005)(5660300002)(70206006)(316002)(54906003)(70586007)(110136005)(40480700001)(26005)(1076003)(336012)(186003)(40460700003)(2616005)(2906002)(6666004)(478600001)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2022 14:46:47.7516
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2022 14:46:50.9741
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab0b71b1-31b4-40e1-3b82-08dab1e0c019
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb3539a7-381f-4414-b801-08dab1e0c1ea
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000B8EE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT018.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5791
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7562
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
@@ -101,124 +103,109 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert to YAML dtschemas of Xilinx AXI PCIe Root Port Bridge
+Convert to YAML schemas for Xilinx NWL PCIe Root Port Bridge
 dt binding.
 
 Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 ---
- .../devicetree/bindings/pci/xilinx-pcie.txt   | 88 -------------------
- .../devicetree/bindings/pci/xilinx-pcie.yaml  | 81 +++++++++++++++++
- 2 files changed, 81 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/xilinx-pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/xilinx-pcie.yaml
+ .../bindings/pci/xilinx-nwl-pcie.txt          |  73 -----------
+ .../bindings/pci/xilinx-nwl-pcie.yaml         | 122 ++++++++++++++++++
+ 2 files changed, 122 insertions(+), 73 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
 deleted file mode 100644
-index fd57a81180a4..000000000000
---- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+index f56f8c58c5d9..000000000000
+--- a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
 +++ /dev/null
-@@ -1,88 +0,0 @@
--* Xilinx AXI PCIe Root Port Bridge DT description
+@@ -1,73 +0,0 @@
+-* Xilinx NWL PCIe Root Port Bridge DT description
 -
 -Required properties:
+-- compatible: Should contain "xlnx,nwl-pcie-2.11"
 -- #address-cells: Address representation for root ports, set to <3>
 -- #size-cells: Size representation for root ports, set to <2>
 -- #interrupt-cells: specifies the number of cells needed to encode an
 -	interrupt source. The value must be 1.
--- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
--- reg: Should contain AXI PCIe registers location and length
+-- reg: Should contain Bridge, PCIe Controller registers location,
+-	configuration space, and length
+-- reg-names: Must include the following entries:
+-	"breg": bridge registers
+-	"pcireg": PCIe controller registers
+-	"cfg": configuration space region
 -- device_type: must be "pci"
--- interrupts: Should contain AXI PCIe interrupt
--- interrupt-map-mask,
--  interrupt-map: standard PCI properties to define the mapping of the
--	PCI interface to interrupt numbers.
+-- interrupts: Should contain NWL PCIe interrupt
+-- interrupt-names: Must include the following entries:
+-	"msi1, msi0": interrupt asserted when an MSI is received
+-	"intx": interrupt asserted when a legacy interrupt is received
+-	"misc": interrupt asserted when miscellaneous interrupt is received
+-- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+-	mapping of the PCI interface to interrupt numbers.
 -- ranges: ranges for the PCI memory regions (I/O space region is not
 -	supported by hardware)
 -	Please refer to the standard PCI bus binding document for a more
 -	detailed explanation
+-- msi-controller: indicates that this is MSI controller node
+-- msi-parent:  MSI parent of the root complex itself
+-- legacy-interrupt-controller: Interrupt controller device node for Legacy
+-	interrupts
+-	- interrupt-controller: identifies the node as an interrupt controller
+-	- #interrupt-cells: should be set to 1
+-	- #address-cells: specifies the number of cells needed to encode an
+-		address. The value must be 0.
 -
--Optional properties for Zynq/Microblaze:
--- bus-range: PCI bus numbers covered
--
--Interrupt controller child node
--+++++++++++++++++++++++++++++++
--Required properties:
--- interrupt-controller: identifies the node as an interrupt controller
--- #address-cells: specifies the number of cells needed to encode an
--	address. The value must be 0.
--- #interrupt-cells: specifies the number of cells needed to encode an
--	interrupt source. The value must be 1.
--
--NOTE:
--The core provides a single interrupt for both INTx/MSI messages. So,
--created a interrupt controller node to support 'interrupt-map' DT
--functionality.  The driver will create an IRQ domain for this map, decode
--the four INTx interrupts in ISR and route them to this domain.
--
+-Optional properties:
+-- dma-coherent: present if DMA operations are coherent
+-- clocks: Input clock specifier. Refer to common clock bindings
 -
 -Example:
 -++++++++
--Zynq:
--	pci_express: axi-pcie@50000000 {
--		#address-cells = <3>;
--		#size-cells = <2>;
--		#interrupt-cells = <1>;
--		compatible = "xlnx,axi-pcie-host-1.00.a";
--		reg = < 0x50000000 0x1000000 >;
--		device_type = "pci";
--		interrupts = < 0 52 4 >;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &pcie_intc 1>,
--				<0 0 0 2 &pcie_intc 2>,
--				<0 0 0 3 &pcie_intc 3>,
--				<0 0 0 4 &pcie_intc 4>;
--		ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
 -
--		pcie_intc: interrupt-controller {
--			interrupt-controller;
--			#address-cells = <0>;
--			#interrupt-cells = <1>;
--		};
+-nwl_pcie: pcie@fd0e0000 {
+-	#address-cells = <3>;
+-	#size-cells = <2>;
+-	compatible = "xlnx,nwl-pcie-2.11";
+-	#interrupt-cells = <1>;
+-	msi-controller;
+-	device_type = "pci";
+-	interrupt-parent = <&gic>;
+-	interrupts = <0 114 4>, <0 115 4>, <0 116 4>, <0 117 4>, <0 118 4>;
+-	interrupt-names = "msi0", "msi1", "intx", "dummy", "misc";
+-	interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-	interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
+-			<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
+-			<0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
+-			<0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
+-
+-	msi-parent = <&nwl_pcie>;
+-	reg = <0x0 0xfd0e0000 0x0 0x1000>,
+-	      <0x0 0xfd480000 0x0 0x1000>,
+-	      <0x80 0x00000000 0x0 0x1000000>;
+-	reg-names = "breg", "pcireg", "cfg";
+-	ranges = <0x02000000 0x00000000 0xe0000000 0x00000000 0xe0000000 0x00000000 0x10000000  /* non-prefetchable memory */
+-		  0x43000000 0x00000006 0x00000000 0x00000006 0x00000000 0x00000002 0x00000000>;/* prefetchable memory */
+-
+-	pcie_intc: legacy-interrupt-controller {
+-		interrupt-controller;
+-		#address-cells = <0>;
+-		#interrupt-cells = <1>;
 -	};
 -
--
--Microblaze:
--	pci_express: axi-pcie@10000000 {
--		#address-cells = <3>;
--		#size-cells = <2>;
--		#interrupt-cells = <1>;
--		compatible = "xlnx,axi-pcie-host-1.00.a";
--		reg = <0x10000000 0x4000000>;
--		device_type = "pci";
--		interrupt-parent = <&microblaze_0_intc>;
--		interrupts = <1 2>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &pcie_intc 1>,
--				<0 0 0 2 &pcie_intc 2>,
--				<0 0 0 3 &pcie_intc 3>,
--				<0 0 0 4 &pcie_intc 4>;
--		ranges = <0x02000000 0x00000000 0x80000000 0x80000000 0x00000000 0x10000000>;
--
--		pcie_intc: interrupt-controller {
--			interrupt-controller;
--			#address-cells = <0>;
--			#interrupt-cells = <1>;
--		};
--
--	};
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.yaml b/Documentation/devicetree/bindings/pci/xilinx-pcie.yaml
+-};
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.yaml
 new file mode 100644
-index 000000000000..6b372ac1763e
+index 000000000000..97a33e8cc171
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.yaml
-@@ -0,0 +1,81 @@
++++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.yaml
+@@ -0,0 +1,122 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pci/xilinx-pcie.yaml#
++$id: http://devicetree.org/schemas/pci/xilinx-nwl-pcie.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Xilinx AXI PCIe Root Port Bridge DT description
++title: Xilinx NWL PCIe Root Port Bridge DT description
 +
 +maintainers:
 +  - Thippeswamy Havalige <thippesw@xilinx.com>
@@ -228,71 +215,112 @@ index 000000000000..6b372ac1763e
 +
 +properties:
 +  compatible:
-+    const: xlnx,axi-pcie-host-1.00.a
++    const: xlnx,nwl-pcie-2.11
 +
 +  reg:
 +    items:
-+      - description: should contain AXI PCIe registers location and length
++      - description: PCIe bridge registers location.
++      - description: PCIe Controller registers location.
++      - description: PCIe Configuration space region.
++
++  reg-names:
++    items:
++      - const: breg
++      - const: pcireg
++      - const: cfg
 +
 +  interrupts:
 +    items:
-+      - description: should contain AXI PCIe interrupt
++      - description: msi0 interrupt asserted when an MSI is received
++      - description: msi1 interrupt asserted when an MSI is received
++      - description: interrupt asserted when a legacy interrupt is received
++      - description: unused interrupt(dummy)
++      - description: interrupt asserted when miscellaneous interrupt is received
 +
-+  ranges:
++  interrupt-names:
++    minItems: 5
++
++  interrupt-map-mask:
 +    items:
-+      - description: |
-+          ranges for the PCI memory regions (I/O space region is not
-+          supported by hardware)
++      - const: 0
++      - const: 0
++      - const: 0
++      - const: 7
 +
 +  "#interrupt-cells":
 +    const: 1
 +
-+  interrupt-controller:
-+    description: identifies the node as an interrupt controller
++  msi-controller:
++    description: Identifies the node as an MSI controller.
++
++  msi-parent:
++    description: MSI controller the device is capable of using.
++
++  interrupt-map:
++    maxItems: 4
++
++  legacy-interrupt-controller:
++    description: Interrupt controller node for handling legacy PCI interrupts.
 +    type: object
 +    properties:
-+      "interrupt-controller": true
 +      "#address-cells":
 +        const: 0
 +      "#interrupt-cells":
 +        const: 1
++      "interrupt-controller": true
 +
 +required:
-+  - compatible
 +  - reg
++  - reg-names
 +  - interrupts
-+  - ranges
-+  - device_type
-+  - interrupt-map
++  - interrupt-names
 +  - "#interrupt-cells"
-+  - interrupt-controller
++  - interrupt-map
++  - msi-controller
++  - msi-parent
++  - interrupt-map-mask
++  - legacy-interrupt-controller
 +
 +unevaluatedProperties: false
 +
 +examples:
 +  - |
 +
-+    Zynq:
-+        pci_express: pcie@50000000 {
-+               #address-cells = <3>;
-+               #size-cells = <2>;
-+               #interrupt-cells = <1>;
-+               compatible = "xlnx,axi-pcie-host-1.00.a";
-+               reg = < 0x50000000 0x1000000 >;
-+               device_type = "pci";
-+               interrupts = < 0 52 4 >;
-+               interrupt-map-mask = <0 0 0 7>;
-+               interrupt-map = <0 0 0 1 &pcie_intc 1>,
-+                               <0 0 0 2 &pcie_intc 2>,
-+                               <0 0 0 3 &pcie_intc 3>,
-+                               <0 0 0 4 &pcie_intc 4>;
-+                ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
-+                pcie_intc: interrupt-controller {
-+                         interrupt-controller;
-+                         #address-cells = <0>;
-+                         #interrupt-cells = <1>;
-+                };
-+    };
++    soc {
++          #address-cells = <2>;
++          #size-cells = <2>;
++          nwl_pcie: pcie@fd0e0000 {
++                     #address-cells = <3>;
++                     #size-cells = <2>;
++                     compatible = "xlnx,nwl-pcie-2.11";
++                     #interrupt-cells = <1>;
++                     msi-controller;
++                     device_type = "pci";
++                     interrupt-parent = <&gic>;
++                     interrupts = <0 114 4>, <0 115 4>, <0 116 4>, <0 117 4>, <0 118 4>;
++                     interrupt-names = "msi0", "msi1", "intx", "dummy", "misc";
++                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++                     interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
++                                     <0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
++                                     <0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
++                                     <0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
++
++                     msi-parent = <&nwl_pcie>;
++                     reg = <0x0 0xfd0e0000 0x0 0x1000>,
++                           <0x0 0xfd480000 0x0 0x1000>,
++                           <0x80 0x00000000 0x0 0x1000000>;
++                     reg-names = "breg", "pcireg", "cfg";
++                     ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000
++                               0x43000000 0x00000006 0x0 0x00000006 0x0 0x00000002 0x0>;
++
++                     pcie_intc: legacy-interrupt-controller {
++                     interrupt-controller;
++                     #address-cells = <0>;
++                     #interrupt-cells = <1>;
++                     };
++
++           };
++        };
 -- 
 2.25.1
 
