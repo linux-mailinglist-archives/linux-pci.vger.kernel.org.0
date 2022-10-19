@@ -2,118 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6185603D71
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 11:02:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7DB603F41
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Oct 2022 11:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232079AbiJSJCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Oct 2022 05:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41620 "EHLO
+        id S233507AbiJSJaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Oct 2022 05:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232077AbiJSJAY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 05:00:24 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE17F6A48F;
-        Wed, 19 Oct 2022 01:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666169728; x=1697705728;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=tluH/Cm9rHuVo1oqk9kZY3xo8Ij2/appO2LxOuExjnw=;
-  b=TjxMdgtpg7Kof2qdPkLIEEIc9Fp+Z0IV+xyoa/V89FuDRT/7WcaldT4H
-   YtxY5y1gdXvpWMTx9IYwJcWd3ZuTPSlR4rDa3gZ7tfAwXI3E+MBk7LGWv
-   +agUWxx0UmKjC+USuDEj/hqVLLFQhH7iHMc+4HPR4f7aWDlWmLJTdCXzS
-   joTGmQH96vncOv/45RIcKfqJzQnxYru1x2kxgghYUsqOFowicnsaGWrLc
-   cIWWgymNTh9dI95EEJ89oOXac00DPryirAnVnz9Nb2200eIJKZgglXyNg
-   BCCHN+8gkP/i/8fulVYZrFCkmn5PFo8xQK2ZoIbuLk8Gqbxzt5FBEGqww
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="392651196"
-X-IronPort-AV: E=Sophos;i="5.95,195,1661842800"; 
-   d="scan'208";a="392651196"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2022 01:54:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="629154024"
-X-IronPort-AV: E=Sophos;i="5.95,195,1661842800"; 
-   d="scan'208";a="629154024"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.191])
-  by orsmga002.jf.intel.com with SMTP; 19 Oct 2022 01:54:43 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 19 Oct 2022 11:54:42 +0300
-Date:   Wed, 19 Oct 2022 11:54:42 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] ACPI: PCI: Fix device reference counting in
- acpi_get_pci_dev()
-Message-ID: <Y0+7Ug9Yh6J6uHVr@intel.com>
-References: <12097002.O9o76ZdvQC@kreacher>
+        with ESMTP id S233913AbiJSJ3v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 05:29:51 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B12EB774;
+        Wed, 19 Oct 2022 02:13:14 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 754E166015ED;
+        Wed, 19 Oct 2022 09:55:52 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1666169753;
+        bh=qCUZKYlUvnwloHXmaClS+rjs+8bWGqFAUjftTWAGEx0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=LjE9o1GkblbjvaNm++jLYcGI4z/7vIBJEIcY9dQ++qrF+YgZSueMSbMEgippcC9Mw
+         pLlEtU7beTPzMCPEZ6cNp3+GeTyHcDiUkUs37Tmd6FG6BeuD1bl1mMHh+54tbwUy27
+         9y07KjbsIHu3KFQVGQBU5ATCPRLarQwbSAsOF8yOynbMqANFjGrVTAo4MSnbhNQs0v
+         K5gNaAJ2l5wNOKPA09IVlZK15+UtGaJXSPWSkIJpUFQzJoqBI/GLNiiSx6hDMH5Psm
+         4sp+lykeNyXJ/ZVIO9mrnvEVWhHmy0rqXMUZF3viHi8tHPL3KQdeCq1lYLQpLTmb03
+         uhmwv4ph4+UnQ==
+Message-ID: <c30fbc60-bcdf-71f5-0db7-bd9bb27ddd37@collabora.com>
+Date:   Wed, 19 Oct 2022 10:55:49 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <12097002.O9o76ZdvQC@kreacher>
-X-Patchwork-Hint: comment
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH v1 2/3] arm64: dts: mt8195: Add pcie and pcie phy nodes
+Content-Language: en-US
+To:     Tinghan Shen <tinghan.shen@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20221017070858.13902-1-tinghan.shen@mediatek.com>
+ <20221017070858.13902-3-tinghan.shen@mediatek.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221017070858.13902-3-tinghan.shen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 07:34:03PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Il 17/10/22 09:08, Tinghan Shen ha scritto:
+> Add pcie and pcie phy nodes for mt8195.
 > 
-> Commit 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()") failed
-> to reference count the device returned by acpi_get_pci_dev() as
-> expected by its callers which in some cases may cause device objects
-> to be dropped prematurely.
-> 
-> Add the missing get_device() to acpi_get_pci_dev().
-> 
-> Fixes: 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()")
-
-FYI this (and the rtc-cmos regression discussed in
-https://lore.kernel.org/linux-acpi/5887691.lOV4Wx5bFT@kreacher/)
-took down the entire Intel gfx CI. I've applied both fixes
-into our fixup branch and things are looking much healthier
-now.
-
-This one caused i915 selftests to eat a lot of POISON_FREE
-in the CI. While bisecting it locally I didn't have
-poisoning enabled so I got refcount_t undeflows instead.
-
-https://intel-gfx-ci.01.org/tree/drm-tip/index.html has a lot
-of colorful boxes to click if you're interested in any of the
-logs. The fixes are included in the CI_DRM_12259 build. Earlier
-builds were broken.
-
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
 > ---
->  drivers/acpi/pci_root.c |    1 +
->  1 file changed, 1 insertion(+)
+>   arch/arm64/boot/dts/mediatek/mt8195.dtsi | 143 +++++++++++++++++++++++
+>   1 file changed, 143 insertions(+)
 > 
-> Index: linux-pm/drivers/acpi/pci_root.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/pci_root.c
-> +++ linux-pm/drivers/acpi/pci_root.c
-> @@ -323,6 +323,7 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
->  
->  	list_for_each_entry(pn, &adev->physical_node_list, node) {
->  		if (dev_is_pci(pn->dev)) {
-> +			get_device(pn->dev);
->  			pci_dev = to_pci_dev(pn->dev);
->  			break;
->  		}
-> 
-> 
-> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> index d03f0c2b8233..903e92d6156f 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> @@ -1182,6 +1182,104 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		pcie0: pcie@112f0000 {
+> +			compatible = "mediatek,mt8195-pcie",
+> +				     "mediatek,mt8192-pcie";
 
--- 
-Ville Syrjälä
-Intel
+..snip..
+
+> +
+> +			phys = <&pciephy>;
+> +			phy-names = "pcie-phy";
+> +
+> +			power-domains = <&spm MT8195_POWER_DOMAIN_PCIE_MAC_P0>;
+
+You're missing the resets:
+
+			resets = <&infracfg_ao MT8195_INFRA_RST2_PCIE_P0_SWRST>;
+			reset-names = "mac";
+
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+
+..snip..
+
+> +		};
+> +
+> +		pcie1: pcie@112f8000 {
+> +			compatible = "mediatek,mt8195-pcie",
+> +				     "mediatek,mt8192-pcie";
+
+..snip..
+
+> +			power-domains = <&spm MT8195_POWER_DOMAIN_PCIE_MAC_P1>;
+
+Here too:
+			resets = <&infracfg_ao MT8195_INFRA_RST2_USBSIF_P1_SWRST>,
+				 <&infracfg_ao MT8195_INFRA_RST2_PCIE_P1_SWRST>;
+			reset-names = "phy", "mac";
+
+> +
+> +			#interrupt-cells = <1>;
+
+..snip..
+
+> @@ -1241,6 +1339,34 @@
+>   				reg = <0x189 0x2>;
+>   				bits = <7 5>;
+>   			};
+> +			pciephy_rx_ln1: pciephy-rx-ln1@190 {
+> +				reg = <0x190 0x1>;
+> +				bits = <0 4>;
+> +			};
+> +			pciephy_tx_ln1_nmos: pciephy-tx-ln1-nmos@190 {
+
+Please run dtbs_check and try to build the kernel before pushing commits upstream.
+This will give you a not-so-nice warning and that shall not happen.
+
+You can solve it by naming these nodes like:
+pciephy-rx-ln1@190,1
+pciephy-tx-ln1-nmos@190,2
+
+...etc
+
+Regards,
+Angelo
+
