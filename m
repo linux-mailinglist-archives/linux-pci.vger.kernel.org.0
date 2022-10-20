@@ -2,83 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B9F60623F
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 15:53:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4456063C2
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 17:04:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiJTNxV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Oct 2022 09:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42338 "EHLO
+        id S229674AbiJTPEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Oct 2022 11:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiJTNxU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 09:53:20 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465B51863FB;
-        Thu, 20 Oct 2022 06:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1666273995; x=1697809995;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CezaQ6FZiRtuuhnBRuO3KdKRT5p4X9KJSGf6RIFTEQg=;
-  b=vfFvKcEiJYym5gPmcMm+09rFNr2S032hz49W6DOBrMFVjvWmCAqmeWth
-   ZQaITGLmOA96uRw64Bz8TUpSLkNpTk0bKxJztlpcXcYh3uN9ufK1PLM0q
-   4OG+8pknKJN5j5LcoSCbRAKxn+kZzbwhPrE0257La0DCIaXDN+CG7D8p7
-   haWey7bB/t0ltBM0pfBoQOPLvmvkPZZEksQf6IEWiUFMD85x0wffvyWdp
-   96U9/FcEVRvj6cXbnSgHDqx52JMDyxbyN7StNHUT/EKWz2MrWQi0Ac0Ke
-   yrudQbXIKMireez0RsHZWd8+KAUKYELv8+3fU1Nr+iMY3MFX8d5GxlypK
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.95,198,1661842800"; 
-   d="scan'208";a="183149311"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Oct 2022 06:53:13 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Thu, 20 Oct 2022 06:53:09 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Thu, 20 Oct 2022 06:53:04 -0700
-Date:   Thu, 20 Oct 2022 14:52:48 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     kernel test robot <lkp@intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Heiko Stuebner <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        <llvm@lists.linux.dev>, Minghuan Lian <minghuan.Lian@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        <linux-riscv@lists.infradead.org>,
-        "Kishon Vijay Abraham I" <kishon@kernel.org>,
+        with ESMTP id S229535AbiJTPEj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 11:04:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335FB2A96C;
+        Thu, 20 Oct 2022 08:04:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0BA361BCE;
+        Thu, 20 Oct 2022 15:04:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE56FC433C1;
+        Thu, 20 Oct 2022 15:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666278276;
+        bh=MRWW87pAsq3Ov7I38XJfjHIT6/6rcGMTIKudamH/Qlc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fvmtWob5RXz/kHLTL1TNBOAyteTHgsKDs4ZTjevlmoHIwxTjMd0nHa/IJPz0Bqkkm
+         ACdZeNHLrRH+6y5zswwgfHPmTvxDu75CA8nbwp7RKnHlIuMqln7eIskaTwbhmpZewT
+         KVgKEOET44WVom2LR3A3I+QIYGZyJc62sUPg4agsLtmbZzDt3ZqTt09OXKTpApPPGw
+         gk6b9kg8u38YOwSVK2VXY83opXqL6uuA5lx7BKQI8usJHilEMYH8sGqNo88EMFvPgt
+         mN0/wxxiGAPaMYBiC0DwgBywEJONrUS11+7Miwv0T25KrHYUaFo/K6Gy1GR3Et/cEe
+         KMdiC587G7e6w==
+Date:   Thu, 20 Oct 2022 10:04:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, kbuild-all@lists.01.org,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
         Rob Herring <robh@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Ray Jui <rjui@broadcom.com>, <linux-tegra@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Michal Simek <monstr@monstr.eu>,
-        <kbuild-all@lists.01.org>, Scott Branden <sbranden@broadcom.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
         Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Michal Simek <monstr@monstr.eu>,
+        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org
 Subject: Re: [PATCH] PCI: Remove unnecessary of_irq.h includes
-Message-ID: <Y1FSsFKKJDzzrf8C@wendy>
-References: <Y1D2ubkwXqwx9LWD@wendy>
- <20221020134547.GA94120@bhelgaas>
+Message-ID: <20221020150434.GA121028@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221020134547.GA94120@bhelgaas>
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+In-Reply-To: <20221020134101.GA90102@bhelgaas>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,49 +74,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 08:45:47AM -0500, Bjorn Helgaas wrote:
-> [+cc Pali, heads-up for trivial addition of <linux/irqdomain.h> to
-> pci-mvebu.c]
-> 
-> On Thu, Oct 20, 2022 at 08:20:25AM +0100, Conor Dooley wrote:
-> > On Thu, Oct 20, 2022 at 03:08:50PM +0800, kernel test robot wrote:
-> > > Hi Bjorn,
-> > > 
-> > > I love your patch! Yet something to improve:
-> > > 
-> > > >> drivers/pci/controller/pcie-microchip-host.c:473:31: error: incomplete definition of type 'struct irq_domain'
-> > >            struct mc_pcie *port = domain->host_data;
+On Thu, Oct 20, 2022 at 08:41:01AM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 20, 2022 at 04:09:37PM +0800, kernel test robot wrote:
+> > Hi Bjorn,
 > > 
-> > That's what I get for only visually inspecting the patch before Acking
-> > it.. Un-ack I suppose.
+> > I love your patch! Yet something to improve:
+> > 
+> > [auto build test ERROR on helgaas-pci/next]
+> > [also build test ERROR on xilinx-xlnx/master rockchip/for-next linus/master v6.1-rc1 next-20221020]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> > patch link:    https://lore.kernel.org/r/20221019195452.37606-1-helgaas%40kernel.org
+> > patch subject: [PATCH] PCI: Remove unnecessary of_irq.h includes
+> > config: ia64-randconfig-r026-20221020
+> > compiler: ia64-linux-gcc (GCC) 12.1.0
+> > reproduce (this is a W=1 build):
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # https://github.com/intel-lab-lkp/linux/commit/273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+> >         git remote add linux-review https://github.com/intel-lab-lkp/linux
+> >         git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+> >         git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+> >         # save the config file
+> >         mkdir build_dir && cp config build_dir/.config
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
 > 
-> No problem!
-> 
-> I think what happened is the pcie-microchip-host.c uses
-> irq_domain_add_linear() so it needs <linux/irqdomain.h>, but it
-> currently gets it via <linux/of_irq.h>, which it doesn't otherwise
-> need.
-> 
-> I added a preparatory patch to include <linux/irqdomain.h> explicitly,
-> but I haven't been able to cross-build either riscv or ia64 to verify
-> this fix.  I'll wait a few days and post an updated series for the
-> 0-day bot to test.
+> FYI, the instructions above didn't work for me.  Missing "config".
 
-I saw you saying you couldn't find the config from LKP, FWIW a build
-using riscv defconfig w/ CONFIG_PCIE_MICROCHIP_HOST=y fails for me
-in the same way as lkp reports.
-Otherwise, dump the patch in response to this and I'll give it a shot
-later if you like?
+Sorry, my fault, "config" was a MIME attachment.  Possibly update the
+instructions:
 
-HTH,
-Conor.
-
-> 
-> Same situation for pcie-altera-msi.c.
-> 
-> pci-mvebu.c also relies on getting <linux/irqdomain.h> via
-> <linux/of_irq.h>, but it actually depends on of_irq.h, so I'll just
-> add an irqdomain.h include there.
-> 
-> Bjorn
-> 
+  - # save the config file
+  + # save the config file from the MIME attachment
