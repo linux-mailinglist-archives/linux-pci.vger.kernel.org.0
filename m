@@ -2,105 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8C496053F5
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 01:32:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCDAA605509
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 03:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbiJSXcA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Oct 2022 19:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50422 "EHLO
+        id S231355AbiJTBcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Oct 2022 21:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230390AbiJSXb5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 19:31:57 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2BCB171CF8;
-        Wed, 19 Oct 2022 16:31:54 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id x188so21065866oig.5;
-        Wed, 19 Oct 2022 16:31:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E5cGz5B9dPL46ZTbOBdW+TTlGdujxRf62tpWJdo/bwM=;
-        b=vZAUr/mcKwU3CB6M0WGpUg5CDf2k3uAcTS1T508kwSNMB8s+jZot8RXsyiPKzhLZBT
-         qGzUvzztTaFwRrLwT3vHpOYiMK7FLtm6mnBGpvMlcL1BDQ2wfBf60Nilr5w9+IenZIVP
-         PGFRZfzbV2AiiEfNoCgtwmeGqH9Z1JMbQ5YxMXrLELD65u8xUFeDGxnbHzxdpOnQGBsQ
-         SeJmjucKzqEiqlTCIg1rIJ+hCghlcvUlVnSVNYIJiDNgLpjgwHgUKEvNzzkYQyvMBZKS
-         fLh3+00pxP0QkvjX5jrPibkaUmsEUDUf9PcBU3Quo2hrKkYuybdg3mPX7NiD/fd3GJ8N
-         iwBg==
-X-Gm-Message-State: ACrzQf0m3IDly+Np8wog3mwA2a+h8jWJ3I+HOYr4drIP1SsnabM27JXJ
-        zh/zPwtt2Fhj/OpStLF06A==
-X-Google-Smtp-Source: AMsMyM5ZVSZDdegdGAkToDobbXtMAhqVv57lgef/mAQiKfsNW1YOi3NJDccz/RIi8hCNsqTAHAnWbQ==
-X-Received: by 2002:a05:6808:1507:b0:355:3ec:3109 with SMTP id u7-20020a056808150700b0035503ec3109mr6076098oiw.263.1666222313861;
-        Wed, 19 Oct 2022 16:31:53 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id y22-20020a056870459600b0011d02a3fa63sm8264285oao.14.2022.10.19.16.31.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 16:31:53 -0700 (PDT)
-Received: (nullmailer pid 19944 invoked by uid 1000);
-        Wed, 19 Oct 2022 23:31:53 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc:     krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        bharat.kumar.gogada@amd.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, michals@xilinx.com
-In-Reply-To: <20221019144640.9458-2-thippeswamy.havalige@amd.com>
-References: <20221019144640.9458-1-thippeswamy.havalige@amd.com> <20221019144640.9458-2-thippeswamy.havalige@amd.com>
-Message-Id: <166622207386.14208.14849032885001110673.robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: xilinx-nwl: Convert to YAML schemas of Xilinx NWL PCIe Root Port Bridge
-Date:   Wed, 19 Oct 2022 18:31:53 -0500
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S231361AbiJTBcJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Oct 2022 21:32:09 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03079B56D8
+        for <linux-pci@vger.kernel.org>; Wed, 19 Oct 2022 18:31:27 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29K1TLPX055727;
+        Wed, 19 Oct 2022 20:29:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1666229361;
+        bh=gumevXI0IuINFduuB09NrfkrPYztuKj3D9j7vLJD1KE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=GxFiVC9SWGODCrqVYhd6OrwHlIwwKjAKGtCq8qvbFpSW3cssFlVE3vQ2VBBh85MAD
+         Dw3SGzlAJOl6dbQa0JAXchcOrT+W3AE5FJdF3ISaIP2s7/YEpr/vNorQNY5OBgFeYh
+         QiRGtOSrA2QGc6twAIiVYXIQJ+uLu2acaRqNGOJ8=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29K1TL7o054556
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Oct 2022 20:29:21 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 19
+ Oct 2022 20:29:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Wed, 19 Oct 2022 20:29:20 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29K1THLn020676;
+        Wed, 19 Oct 2022 20:29:19 -0500
+From:   Matt Ranostay <mranostay@ti.com>
+To:     <robh@kernel.org>, <tjoseph@cadence.com>, <nm@ti.com>,
+        <a-verma1@ti.com>, <vigneshr@ti.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, Matt Ranostay <mranostay@ti.com>
+Subject: [PATCH v3 1/3] PCI: j721e: Add PCIe 4x lane selection support
+Date:   Wed, 19 Oct 2022 18:29:09 -0700
+Message-ID: <20221020012911.305139-2-mranostay@ti.com>
+X-Mailer: git-send-email 2.38.GIT
+In-Reply-To: <20221020012911.305139-1-mranostay@ti.com>
+References: <20221020012911.305139-1-mranostay@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 19 Oct 2022 20:16:40 +0530, Thippeswamy Havalige wrote:
-> Convert to YAML schemas for Xilinx NWL PCIe Root Port Bridge
-> dt binding.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> ---
->  .../bindings/pci/xilinx-nwl-pcie.txt          |  73 -----------
->  .../bindings/pci/xilinx-nwl-pcie.yaml         | 122 ++++++++++++++++++
->  2 files changed, 122 insertions(+), 73 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.yaml
-> 
+Add support for setting of two-bit field that allows selection of 4x
+lane PCIe which was previously limited to only 2x lanes.
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
+Signed-off-by: Matt Ranostay <mranostay@ti.com>
+---
+ drivers/pci/controller/cadence/pci-j721e.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
-
-Full log is available here: https://patchwork.ozlabs.org/patch/
-
-
-pcie@fd0e0000: Unevaluated properties are not allowed ('clocks', 'iommus', 'power-domains' were unexpected)
-	arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-smk-k26-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.1.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revC.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dtb
-	arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dtb
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index a82f845cc4b5..d9b1527421c3 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -43,7 +43,6 @@ enum link_status {
+ };
+ 
+ #define J721E_MODE_RC			BIT(7)
+-#define LANE_COUNT_MASK			BIT(8)
+ #define LANE_COUNT(n)			((n) << 8)
+ 
+ #define GENERATION_SEL_MASK		GENMASK(1, 0)
+@@ -207,11 +206,15 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+ {
+ 	struct device *dev = pcie->cdns_pcie->dev;
+ 	u32 lanes = pcie->num_lanes;
++	u32 mask = GENMASK(8, 8);
+ 	u32 val = 0;
+ 	int ret;
+ 
++	if (lanes == 4)
++		mask = GENMASK(9, 8);
++
+ 	val = LANE_COUNT(lanes - 1);
+-	ret = regmap_update_bits(syscon, offset, LANE_COUNT_MASK, val);
++	ret = regmap_update_bits(syscon, offset, mask, val);
+ 	if (ret)
+ 		dev_err(dev, "failed to set link count\n");
+ 
+-- 
+2.38.GIT
 
