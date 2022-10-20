@@ -2,201 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 679B760602D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 14:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC906061FB
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 15:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiJTM3J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Oct 2022 08:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36278 "EHLO
+        id S230516AbiJTNlm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Oct 2022 09:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiJTM3H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 08:29:07 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E1631D3C4F
-        for <linux-pci@vger.kernel.org>; Thu, 20 Oct 2022 05:29:05 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id g16so8717298qtu.2
-        for <linux-pci@vger.kernel.org>; Thu, 20 Oct 2022 05:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nIpMO9a3TMJ3e31kasrT8my9ncSnz9zJEo18eTxZYyk=;
-        b=ukSxzKBcV+DFRtLpuVpDfi/17STUzj4EVb1xaaIsvxFtW70JA63QhdGU8cVdXKYXbW
-         4uSeM66NIMpIFMlLyn/4QSZMfEqHC7MtkhjpMm+zlmJhmlrxm5x+iPESwQTo83yM0EWh
-         3mgtr5CY+DaXe1w+nXPBufcaXeV7tTuFNZmCJ7X7TlakvYXTGuODiZyAMof8SW6FvBKX
-         b5ffLVLe1Xq+oG+Rv5ohaCPkkC6gWsjtC3M1lyjHXc1ZrB85DlFS9C/9RAHlge9htAty
-         SvTf+7NuYi72OGXw8spYtGWlBuWJ9ZsnQQwAAaGsBHWExVDp9+K46unrAqYmjrcpxVdj
-         x2eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nIpMO9a3TMJ3e31kasrT8my9ncSnz9zJEo18eTxZYyk=;
-        b=RcHQMEX3FckxtGRkDzxpW6H2bvpSGMamqpmWxS0HyV2ViQY2x53TQqrDIeAylNEmfZ
-         nuEQpt0zUjJxaBnqvIqbJjgrMswlPZtaTLrTbhwvin0OBLohSvWawHX6CZTe6p5VWUk5
-         S2AAAnkCMhyoVh9XrgKs7vlBJYaIMAgoj/x/2vcMJHvz0gLrHrqYvDNooCNha3CXt7XA
-         +jZJZAmICh2ErJa9Eo+BenyJke58TvQYnhZ97gvSyx5pVsRQEAgb5+IsqBSVDvAvwtAQ
-         w5e5e7o04I6PBAlvKVcAhnjd4g6K1iLPP3NntKZ/bsEVK3063o9Oeay0h2nTlUC12U8U
-         FLLw==
-X-Gm-Message-State: ACrzQf10HNEvLPKXiJZ0tt2bbogKU+IZOgaiIN8KOcrdqgoPDXmBSnmw
-        W//qTgMr9P40P8d9rm6CT6UpEg==
-X-Google-Smtp-Source: AMsMyM6iTZOiG6wgWBnMxFnwJfs0K9Tg8YX2G44KHiB6c0TvGF3AHGkYhfW5BZM2LlbYcCAlE2QePQ==
-X-Received: by 2002:a05:622a:312:b0:39c:dc09:49e3 with SMTP id q18-20020a05622a031200b0039cdc0949e3mr10568430qtw.4.1666268944557;
-        Thu, 20 Oct 2022 05:29:04 -0700 (PDT)
-Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id j12-20020a05620a288c00b006b640efe6dasm7179583qkp.132.2022.10.20.05.29.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 05:29:03 -0700 (PDT)
-Message-ID: <972db8bd-e45a-47b1-c2c4-008c279c6b59@linaro.org>
-Date:   Thu, 20 Oct 2022 08:29:02 -0400
+        with ESMTP id S230026AbiJTNla (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 09:41:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE051A7A0E;
+        Thu, 20 Oct 2022 06:41:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC9CBB82661;
+        Thu, 20 Oct 2022 13:41:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D035C433D6;
+        Thu, 20 Oct 2022 13:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666273263;
+        bh=YsFcTa55ZQFPp0hOeLu/vtpfvJF13IE3dXu8sPusS9k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hU++4MKiV/tZw08OHjSB/oNvjhtwTriYLPcXmwNHrx6ihtwizIERxo4J4tQEN8tgX
+         v9P9FZeP7pJVvvhPp4mMLX6+xLZFjPxd1mwHaVC3PSR0A2Xu1V1undmXZUzEZ7VspG
+         2L+wHLz33YyRgaTWoo5qCOv6EZ2xKsGz3sVmnvKypMPxB/PweR1DkK0sJDol7K9csR
+         d0Ts5e8L9ueAV+RKCpLMpWqI00I6HMGeE9n8cDPjZl3lwCEeir7Iq79yJk6hebfEc+
+         i9pSIPC2g9AiGCJ3u0ln5kSGw7fmSunAOAsr1r++MsYawyYPNdg/ynUHjWOnPkyR+6
+         +gqMZktB2QLWQ==
+Date:   Thu, 20 Oct 2022 08:41:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, kbuild-all@lists.01.org,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Michal Simek <monstr@monstr.eu>,
+        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] PCI: Remove unnecessary of_irq.h includes
+Message-ID: <20221020134101.GA90102@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: qcom: Add SC8280XP/SA8540P
- interconnects
-Content-Language: en-US
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221017112449.2146-1-johan+linaro@kernel.org>
- <20221017112449.2146-2-johan+linaro@kernel.org>
- <010b6de2-5df6-77c9-2f04-43f2edc89ff2@linaro.org>
- <Y1D/Vaa/3zKP4Cxj@hovoldconsulting.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y1D/Vaa/3zKP4Cxj@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202210201618.NsgGYbMI-lkp@intel.com>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/10/2022 03:57, Johan Hovold wrote:
-> On Wed, Oct 19, 2022 at 10:37:31AM -0400, Krzysztof Kozlowski wrote:
->> On 17/10/2022 07:24, Johan Hovold wrote:
->>> Add the missing SC8280XP/SA8540P "pcie-mem" and "cpu-pcie" interconnect
->>> paths to the bindings.
->>>
->>> Fixes: 76d777ae045e ("dt-bindings: PCI: qcom: Add SC8280XP to binding")
->>> Fixes: 76c4207f4085 ("dt-bindings: PCI: qcom: Add SA8540P to binding")
->>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
->>> ---
->>>  .../devicetree/bindings/pci/qcom,pcie.yaml    | 25 +++++++++++++++++++
->>>  1 file changed, 25 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> index 22a2aac4c23f..a55434f95edd 100644
->>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>> @@ -62,6 +62,12 @@ properties:
->>>      minItems: 3
->>>      maxItems: 12
->>>  
->>> +  interconnects:
->>> +    maxItems: 2
->>> +
->>> +  interconnect-names:
->>> +    maxItems: 2
->>> +
->>>    resets:
->>>      minItems: 1
->>>      maxItems: 12
->>> @@ -629,6 +635,25 @@ allOf:
->>>            items:
->>>              - const: pci # PCIe core reset
->>>  
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - qcom,pcie-sa8540p
->>> +              - qcom,pcie-sc8280xp
->>> +    then:
->>> +      properties:
->>> +        interconnects:
->>> +          maxItems: 2
->>
->> No need for this.
->>
->>> +        interconnect-names:
->>> +          items:
->>> +            - const: pcie-mem
->>> +            - const: cpu-pcie
->>> +      required:
->>> +        - interconnects
->>> +        - interconnect-names
->>
->> else:
->>   ??
->>
->> Otherwise, you allow any names for other variants.
+On Thu, Oct 20, 2022 at 04:09:37PM +0800, kernel test robot wrote:
+> Hi Bjorn,
 > 
-> Are you suggesting something like moving the names to the common
-> constraints for now:
+> I love your patch! Yet something to improve:
 > 
->   interconnects:
->     maxItems: 2
+> [auto build test ERROR on helgaas-pci/next]
+> [also build test ERROR on xilinx-xlnx/master rockchip/for-next linus/master v6.1-rc1 next-20221020]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
->   interconnect-names:
->     items:
->       - const: pcie-mem
->       - const: cpu-pcie
-> 
-> and then in the allOf:
-> 
->   - if:
->       properties:
->         compatible:
->           contains:
->             enum:
->               - qcom,pcie-sa8540p
->               - qcom,pcie-sc8280xp
->     then:
->       required:
->         - interconnects
->         - interconnect-names
->     else:
->       properties:
->         interconnects: false
->         interconnect-names: false
-> 
-> This way we'd catch anyone adding interconnects to a DTS without first
-> updating the bindings, but it also seems to go against the idea of
-> bindings fully describing the hardware by saying that no other platforms
-> have interconnects (when they actually do even if we don't describe it
-> just yet).
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> patch link:    https://lore.kernel.org/r/20221019195452.37606-1-helgaas%40kernel.org
+> patch subject: [PATCH] PCI: Remove unnecessary of_irq.h includes
+> config: ia64-randconfig-r026-20221020
+> compiler: ia64-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/intel-lab-lkp/linux/commit/273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+>         git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
 
-You can add a comment to the else like "TODO: Not described yet". I
-would prefer to have specific but incomplete bindings, instead of loose
-one which later might cause people adding whatever names they like.
+FYI, the instructions above didn't work for me.  Missing "config".
 
-> Or should we do the above but without the else clause to have some
-> constraints in place on the names at least?
+  $ git remote add linux-review https://github.com/intel-lab-lkp/linux
+  $ git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+  $ git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+  HEAD is now at 273a24b16a40 PCI: Remove unnecessary of_irq.h includes
+  $ mkdir build_dir && cp config build_dir/.config
+  cp: cannot stat 'config': No such file or directory
 
-This would work as well if you think the names are applicable for other
-devices.
-
-Best regards,
-Krzysztof
+  $ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
+  Compiler will be installed in /home/bjorn/0day
+  Cannot find ia64-linux under https://download.01.org/0day-ci/cross-package check /tmp/0day-ci-crosstool-files
+  Please set new url, e.g. export URL=https://cdn.kernel.org/pub/tools/crosstool/files/bin/x86_64
+  gcc crosstool install failed
+  Install gcc cross compiler failed
+  setup_crosstool failed
 
