@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A9B607DB9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 19:41:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFEFC607DC0
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 19:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbiJURlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Oct 2022 13:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59860 "EHLO
+        id S230394AbiJURli (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Oct 2022 13:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbiJURla (ORCPT
+        with ESMTP id S230086AbiJURla (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 13:41:30 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F414324AE3C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F411324AE39;
         Fri, 21 Oct 2022 10:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
-        :references:content-disposition:in-reply-to;
-        bh=nF0SVUXmUm6/1jQhAiGtVkXjqXLugkxBCw1H6lsq9qw=; b=kAAkNydFPlQ84zWbqcIf6HYHWw
-        swriGADMx3GagNeM2QyZOZagVVUqkxGVMUP+thgek92nyZqj/nN+tAEQK++PGuuoctMWY7q1X57ex
-        YZ2My7wYnjj8Zk0+4XR1miPNQHBm/khken5A0/4BCVp3HT02+NvGZbh5Q3SXn1r3GqjvJFNhXrphm
-        28Gro+M5SHbcfCJ4skRzMSah8NQ1cVbBRqLsjR/6Jp3gMKUCuIfTtFnZyWnLBrek+WNqKAZsghIX7
-        NX/kmablgeZJ2HhcxDrHbzJHJsfxJl5MKmQDtTB2kmrQWMJfF4EmYhAKFHZnzohfJy1BnP16QVC/c
-        WXH1a7vA==;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Cc:To:From:content-disposition;
+        bh=ZKzeHAseABZVh8sd+FhS8dmH5rKh2MAqOmNnK2azrFk=; b=SCPNrRDZ9UU4DpltRcbsssgmyI
+        AHJvEMgJpBj9GsQW3ewgt9CMYRzjTXS2pClQa/iJ5O4KclRX5lVa5tsEEz3BY9MiZ/70kt6YKTKon
+        adDQ6Rz1R9tvT9HgxUS6OnkIq96l33Z1f2ijTn5iFaT8UgRTVw/sR9htaLNNeMp7lvcHWXl4FZliC
+        OiKr0d1TOW4sUqigC0T9LjQxmVKBf09QghSF5km2kvs/fxlTr4tSNAK5c80z7xXFmKdDy9/Lr/GBZ
+        CUUng/vaRDjJEJ3Yc5bszWou2LyaJq0lEQsl9M7kL9ztyr33ASxSAgOOoQm7IvyeGp0SSewunrXTJ
+        1iyfFsKg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1olw1I-00DoHx-T9; Fri, 21 Oct 2022 11:41:22 -0600
+        id 1olw1I-00DoHy-T8; Fri, 21 Oct 2022 11:41:22 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1olw1F-0001t4-HC; Fri, 21 Oct 2022 11:41:17 -0600
+        id 1olw1F-0001t6-LU; Fri, 21 Oct 2022 11:41:17 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -56,9 +56,11 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 21 Oct 2022 11:41:07 -0600
-Message-Id: <20221021174116.7200-1-logang@deltatee.com>
+Date:   Fri, 21 Oct 2022 11:41:08 -0600
+Message-Id: <20221021174116.7200-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221021174116.7200-1-logang@deltatee.com>
+References: <20221021174116.7200-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
@@ -70,103 +72,214 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH v11 0/9] Userspace P2PDMA with O_DIRECT NVMe devices
+Subject: [PATCH v11 1/9] mm: allow multiple error returns in try_grab_page()
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+In order to add checks for P2PDMA memory into try_grab_page(), expand
+the error return from a bool to an int/error code. Update all the
+callsites handle change in usage.
 
-This is the latest P2PDMA userspace patch set. This version includes
-some cleanup from feedback from the last posting[1].
+Also remove the WARN_ON_ONCE() call at the callsites seeing there
+already is a WARN_ON_ONCE() inside the function if it fails.
 
-This patch set enables userspace P2PDMA by allowing userspace to mmap()
-allocated chunks of the CMB. The resulting VMA can be passed only
-to O_DIRECT IO on NVMe backed files or block devices. A flag is added
-to GUP() in Patch 1, then Patches 2 through 6 wire this flag up based
-on whether the block queue indicates P2PDMA support. Patches 7
-creates the sysfs resource that can hand out the VMAs and Patch 8
-adds brief documentation for the new interface.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ include/linux/mm.h |  2 +-
+ mm/gup.c           | 26 ++++++++++++++------------
+ mm/huge_memory.c   | 19 +++++++++++++------
+ mm/hugetlb.c       | 17 +++++++++--------
+ 4 files changed, 37 insertions(+), 27 deletions(-)
 
-Feedback welcome.
-
-This series is based on v6.1-rc1. A git branch is available here:
-
-  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v11
-
-Thanks,
-
-Logan
-
-[1] https://lkml.kernel.org/r/20220922163926.7077-1-logang@deltatee.com
-
---
-
-Changes in v11:
-  - Rebased onto v6.1-rc1, fixed minor conflict in bio_map_user_iov
-  - The GUP test was moved to try_grab_page() and try_grab_folio().
-    This ought to be a bit more future proof. It required adding a new
-    cleanup patch to return a proper error code from try_grab_page().
-    (Per Jason)
-
-Changes in v10:
-  - Rebased onto v6.0-rc6
-  - Reworked iov iter changes to reuse the code better and
-    name them without the _flags() prefix (per Christoph)
-  - Renamed a number of flags variables to gup_flags (per John)
-  - Minor fixups to the last documentation patch (from Greg and John)
-
-Changes in v9:
-  - Rebased onto v6.0-rc2, included reworking the iov_iter patch
-    due to changes there
-  - Drop the char device mmap implementation in favour of a sysfs
-    based interface. (per Christoph)
-
- (v8 only included the first half of the series and was merged for v6.0)
-
-Changes in v8:
-  - Rebase onto v5.19-rc1
-  - Rework how the pages are stored in the VMA per Jason's suggestion
-
-Changes in v7:
-  - Rebased onto v5.18-rc1 which includes Christophs cleanup to
-    free_zone_device_page() (similar to Ralph's patch).
-  - Fix bug with concurrent first calls to pci_p2pdma_vma_fault()
-    that caused a double allocation and lost p2p memory. Noticed
-    by Andrew Maier.
-  - Collected a Reviewed-by tag from Chaitanya.
-  - Numerous minor fixes to commit messages
-
---
-
-Logan Gunthorpe (9):
-  mm: allow multiple error returns in try_grab_page()
-  mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
-  iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
-  block: add check when merging zone device pages
-  lib/scatterlist: add check when merging zone device pages
-  block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
-  block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
-  PCI/P2PDMA: Allow userspace VMA allocations through sysfs
-  ABI: sysfs-bus-pci: add documentation for p2pmem allocate
-
- Documentation/ABI/testing/sysfs-bus-pci |  10 ++
- block/bio.c                             |  11 ++-
- block/blk-map.c                         |  12 ++-
- drivers/pci/p2pdma.c                    | 124 ++++++++++++++++++++++++
- include/linux/mm.h                      |   3 +-
- include/linux/mmzone.h                  |  24 +++++
- include/linux/uio.h                     |   6 ++
- lib/iov_iter.c                          |  32 ++++--
- lib/scatterlist.c                       |  25 +++--
- mm/gup.c                                |  45 ++++++---
- mm/huge_memory.c                        |  19 ++--
- mm/hugetlb.c                            |  23 +++--
- 12 files changed, 280 insertions(+), 54 deletions(-)
-
-
-base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
---
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8bbcccbc5565..62a91dc1272b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1129,7 +1129,7 @@ static inline void get_page(struct page *page)
+ 	folio_get(page_folio(page));
+ }
+ 
+-bool __must_check try_grab_page(struct page *page, unsigned int flags);
++int __must_check try_grab_page(struct page *page, unsigned int flags);
+ 
+ static inline __must_check bool try_get_page(struct page *page)
+ {
+diff --git a/mm/gup.c b/mm/gup.c
+index fe195d47de74..e2f447446384 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -202,17 +202,19 @@ static void gup_put_folio(struct folio *folio, int refs, unsigned int flags)
+  * time. Cases: please see the try_grab_folio() documentation, with
+  * "refs=1".
+  *
+- * Return: true for success, or if no action was required (if neither FOLL_PIN
+- * nor FOLL_GET was set, nothing is done). False for failure: FOLL_GET or
+- * FOLL_PIN was set, but the page could not be grabbed.
++ * Return: 0 for success, or if no action was required (if neither FOLL_PIN
++ * nor FOLL_GET was set, nothing is done). A negative error code for failure:
++ *
++ *   -ENOMEM		FOLL_GET or FOLL_PIN was set, but the page could not
++ *			be grabbed.
+  */
+-bool __must_check try_grab_page(struct page *page, unsigned int flags)
++int __must_check try_grab_page(struct page *page, unsigned int flags)
+ {
+ 	struct folio *folio = page_folio(page);
+ 
+ 	WARN_ON_ONCE((flags & (FOLL_GET | FOLL_PIN)) == (FOLL_GET | FOLL_PIN));
+ 	if (WARN_ON_ONCE(folio_ref_count(folio) <= 0))
+-		return false;
++		return -ENOMEM;
+ 
+ 	if (flags & FOLL_GET)
+ 		folio_ref_inc(folio);
+@@ -232,7 +234,7 @@ bool __must_check try_grab_page(struct page *page, unsigned int flags)
+ 		node_stat_mod_folio(folio, NR_FOLL_PIN_ACQUIRED, 1);
+ 	}
+ 
+-	return true;
++	return 0;
+ }
+ 
+ /**
+@@ -624,8 +626,9 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 		       !PageAnonExclusive(page), page);
+ 
+ 	/* try_grab_page() does nothing unless FOLL_GET or FOLL_PIN is set. */
+-	if (unlikely(!try_grab_page(page, flags))) {
+-		page = ERR_PTR(-ENOMEM);
++	ret = try_grab_page(page, flags);
++	if (unlikely(ret)) {
++		page = ERR_PTR(ret);
+ 		goto out;
+ 	}
+ 	/*
+@@ -960,10 +963,9 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 			goto unmap;
+ 		*page = pte_page(*pte);
+ 	}
+-	if (unlikely(!try_grab_page(*page, gup_flags))) {
+-		ret = -ENOMEM;
++	ret = try_grab_page(*page, gup_flags);
++	if (unlikely(ret))
+ 		goto unmap;
+-	}
+ out:
+ 	ret = 0;
+ unmap:
+@@ -2536,7 +2538,7 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 		}
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+-		if (unlikely(!try_grab_page(page, flags))) {
++		if (unlikely(try_grab_page(page, flags))) {
+ 			undo_dev_pagemap(nr, nr_start, flags, pages);
+ 			break;
+ 		}
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1cc4a5f4791e..52f2b2a2ffae 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1035,6 +1035,7 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 	unsigned long pfn = pmd_pfn(*pmd);
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct page *page;
++	int ret;
+ 
+ 	assert_spin_locked(pmd_lockptr(mm, pmd));
+ 
+@@ -1066,8 +1067,9 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
+-	if (!try_grab_page(page, flags))
+-		page = ERR_PTR(-ENOMEM);
++	ret = try_grab_page(page, flags);
++	if (ret)
++		page = ERR_PTR(ret);
+ 
+ 	return page;
+ }
+@@ -1193,6 +1195,7 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	unsigned long pfn = pud_pfn(*pud);
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct page *page;
++	int ret;
+ 
+ 	assert_spin_locked(pud_lockptr(mm, pud));
+ 
+@@ -1226,8 +1229,10 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
+-	if (!try_grab_page(page, flags))
+-		page = ERR_PTR(-ENOMEM);
++
++	ret = try_grab_page(page, flags);
++	if (ret)
++		page = ERR_PTR(ret);
+ 
+ 	return page;
+ }
+@@ -1435,6 +1440,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct page *page;
++	int ret;
+ 
+ 	assert_spin_locked(pmd_lockptr(mm, pmd));
+ 
+@@ -1459,8 +1465,9 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+ 	VM_BUG_ON_PAGE((flags & FOLL_PIN) && PageAnon(page) &&
+ 			!PageAnonExclusive(page), page);
+ 
+-	if (!try_grab_page(page, flags))
+-		return ERR_PTR(-ENOMEM);
++	ret = try_grab_page(page, flags);
++	if (ret)
++		return ERR_PTR(ret);
+ 
+ 	if (flags & FOLL_TOUCH)
+ 		touch_pmd(vma, addr, pmd, flags & FOLL_WRITE);
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index b586cdd75930..e8d01a19ce46 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -7224,14 +7224,15 @@ follow_huge_pmd_pte(struct vm_area_struct *vma, unsigned long address, int flags
+ 		page = pte_page(pte) +
+ 			((address & ~huge_page_mask(h)) >> PAGE_SHIFT);
+ 		/*
+-		 * try_grab_page() should always succeed here, because: a) we
+-		 * hold the pmd (ptl) lock, and b) we've just checked that the
+-		 * huge pmd (head) page is present in the page tables. The ptl
+-		 * prevents the head page and tail pages from being rearranged
+-		 * in any way. So this page must be available at this point,
+-		 * unless the page refcount overflowed:
++		 * try_grab_page() should always be able to get the page here,
++		 * because: a) we hold the pmd (ptl) lock, and b) we've just
++		 * checked that the huge pmd (head) page is present in the
++		 * page tables. The ptl prevents the head page and tail pages
++		 * from being rearranged in any way. So this page must be
++		 * available at this point, unless the page refcount
++		 * overflowed:
+ 		 */
+-		if (WARN_ON_ONCE(!try_grab_page(page, flags))) {
++		if (try_grab_page(page, flags)) {
+ 			page = NULL;
+ 			goto out;
+ 		}
+@@ -7269,7 +7270,7 @@ follow_huge_pud(struct mm_struct *mm, unsigned long address,
+ 	pte = huge_ptep_get((pte_t *)pud);
+ 	if (pte_present(pte)) {
+ 		page = pud_page(*pud) + ((address & ~PUD_MASK) >> PAGE_SHIFT);
+-		if (WARN_ON_ONCE(!try_grab_page(page, flags))) {
++		if (try_grab_page(page, flags)) {
+ 			page = NULL;
+ 			goto out;
+ 		}
+-- 
 2.30.2
+
