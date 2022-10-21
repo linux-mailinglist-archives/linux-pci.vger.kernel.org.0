@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A008607066
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 08:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D3B60705D
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 08:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbiJUGsI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Oct 2022 02:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
+        id S230123AbiJUGr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Oct 2022 02:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiJUGrx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 02:47:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC3C242CB9;
-        Thu, 20 Oct 2022 23:47:50 -0700 (PDT)
+        with ESMTP id S230077AbiJUGrw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 02:47:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384202413F4;
+        Thu, 20 Oct 2022 23:47:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4F5D8B82B1B;
-        Fri, 21 Oct 2022 06:47:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C0DC43140;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C40F61B39;
+        Fri, 21 Oct 2022 06:47:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE015C433D6;
         Fri, 21 Oct 2022 06:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666334868;
-        bh=QZFgdFVSmg4MEVl1gC6mhp0X7Dh0uB8lyTuIoyqeqJU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nGIJTj94A6u2iWr3KT/xLh33Ds3CQomSVUTa5Q43f6HcLCGMdV0B2aWzSg8h0EkQJ
-         dq6DMJHM3Q1r1sXgAbZzlOtDBnhbV7Drcsz6sj/jbSLo0NgyiEjUuoOXBFnpX81+RD
-         q8zBZBtBkCgmBcjsHKEQmDyO5RyAkQED6cqch/wDC+mwW6dd/DyqMULmjk49Hh1acW
-         vstHHPOJ8LAAySfBZIcSYvQZdRRWrBodnvoHpB8GDEHu42/9hzsFCjS3SEQPLN3iKU
-         pAPtB0YdKemzjavJD6tGSoFDhLDvafxws+Lo14Z4ArnqQJwdHb+80KsmI0t6034+zW
-         +esyQWAHKZtlA==
+        s=k20201202; t=1666334867;
+        bh=L2kl6xZZIoArZEtrdl2/F173ECwVvHETksPU21qwgRE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R9ROaxc/KwLiIIiAAjv30f0ccyVD3IU4x6k9l5AzwnZ6eLV/ylJafIDqZp1SrBZrG
+         38yDMWOZNchG8nhG1Eu+moNdFWqX+iCN2FU/p8tHdB9VFGC65ICdsFdAEFizjDEh7n
+         Zn8fQG8UFM/QtS3PngMFsGaPteqcc0sFOPBwHi4tDz+86kSbRJUwchP8zQFpxHGL1O
+         jWpqhW5n+eve6zCxNYHYdKLYX28yXtB70ym3bFnh+ZKY7PFuK3hh/mC+2TIF/0hFLQ
+         6O47P9Te13+XISMhuGziVy6VUimDWAag2trAF+Yijtkd1sJx251xmQitpSANjTEP3R
+         un1YWzKHdzlSg==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1ollob-0001fQ-JG; Fri, 21 Oct 2022 08:47:34 +0200
+        id 1olloc-0001fU-D5; Fri, 21 Oct 2022 08:47:34 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>
@@ -50,10 +50,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 0/2] PCI: qcom: Add basic interconnect support
-Date:   Fri, 21 Oct 2022 08:46:14 +0200
-Message-Id: <20221021064616.6380-1-johan+linaro@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: PCI: qcom: Add SC8280XP/SA8540P interconnects
+Date:   Fri, 21 Oct 2022 08:46:15 +0200
+Message-Id: <20221021064616.6380-2-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20221021064616.6380-1-johan+linaro@kernel.org>
+References: <20221021064616.6380-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -65,34 +67,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Qualcomm platforms like SC8280XP and SA8540P interconnect bandwidth
-must be requested before enabling interconnect clocks.
+Add the missing SC8280XP/SA8540P "pcie-mem" and "cpu-pcie" interconnect
+paths to the bindings.
 
-Add basic support for managing an optional "pcie-mem" interconnect path
-by setting a low constraint before enabling clocks and updating it after
-the link is up.
+Fixes: 76d777ae045e ("dt-bindings: PCI: qcom: Add SC8280XP to binding")
+Fixes: 76c4207f4085 ("dt-bindings: PCI: qcom: Add SA8540P to binding")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-This is specifically needed to prevent a crash on SC8280XP/SA8540P when
-the interconnect constraints are enforced during boot.
-
-As support for these platforms was added in 6.1-rc1 it would be nice to
-have this merged as a fix for 6.1, but deferring for 6.2 works as well.
-
-Johan
-
-Changes in v2
- - update the bindings so that the interconnect-names constraints apply
-   to all platforms (Krzysztof)
-
-
-Johan Hovold (2):
-  dt-bindings: PCI: qcom: Add SC8280XP/SA8540P interconnects
-  PCI: qcom: Add basic interconnect support
-
- .../devicetree/bindings/pci/qcom,pcie.yaml    | 20 +++++
- drivers/pci/controller/dwc/pcie-qcom.c        | 76 +++++++++++++++++++
- 2 files changed, 96 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 54f07852d279..2f851c804bb0 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -62,6 +62,14 @@ properties:
+     minItems: 3
+     maxItems: 13
+ 
++  interconnects:
++    maxItems: 2
++
++  interconnect-names:
++    items:
++      - const: pcie-mem
++      - const: cpu-pcie
++
+   resets:
+     minItems: 1
+     maxItems: 12
+@@ -631,6 +639,18 @@ allOf:
+           items:
+             - const: pci # PCIe core reset
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-sa8540p
++              - qcom,pcie-sc8280xp
++    then:
++      required:
++        - interconnects
++        - interconnect-names
++
+   - if:
+       not:
+         properties:
 -- 
 2.37.3
 
