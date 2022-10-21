@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 261A3607DBB
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 19:41:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D09B6607DAE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 19:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiJURlg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Oct 2022 13:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
+        id S230259AbiJURlb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Oct 2022 13:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbiJURla (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 13:41:30 -0400
+        with ESMTP id S229574AbiJURl3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 13:41:29 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FD424AE36;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C3943E47;
         Fri, 21 Oct 2022 10:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=meh9MET/cLorzCFSIwyZ+v6c79pnFv9f4AD/6AjXlyA=; b=Dnxvz9bu1650+6uPD6XmeHI8eu
-        FNbTzbtOAcPLiaUgO8REsgHo8opYH6vss+qGqThk6nRcTRIELX8h8YRVbg6Ca5T2yOEfwOlWq30tw
-        oQeQyefasTRB1O5m9JCPDxe5NoxoS7huiM1FYEB7omz+P3NEF5VgI1na+UVWb+Ziru45774Hvg/CL
-        dAc5a953b5uESq8n8B9SwRQr3ls/SNQDGedrN6mu0fSx/4NRAU71kWNzt/7LZ3DRJi9lBH6Q2fMKG
-        X1NmaE8uLSpHCWFCWUWvYHCR3zJDh8DN8psovNNZh4wOx/tlDlzp99Ot8tMbZyB38AYefT7BQEXij
-        jWwmIZcQ==;
+        bh=89QTElwZFXRfggrOmp22BVYbNApHwJCc7/AtxsSaqyQ=; b=DUFJL4ob6bvKEwDSE4GWtIirYS
+        X97GxPsQU/8gpPukGv4stsVhpCVMpaZfqfjtZunkmVXWQISTg/R/BOcVA3pa7CZfACS0bNB43mpI+
+        c4OTnsrV1MciXZB4TbndO5a7ikBN/fz/wDgukCPrwSjCFtZ9ZyqxXcPgPcEnqgfdFeSTZyfCOy53l
+        RxY+GZLkNNPiCm5OAKU8w+xesdg2eMT/Wb02k7Pdlz/yKsq/T6ahDZumCPpUSmcZ/3oCl/3HEMwwC
+        cKWDtI+6VVeKGW1kms9Qbz0IR8J14E2KIWUlJDjVvyMCgYEjQLZ/KBKnSkVH95V20TixmWMKF5dVk
+        bcv8KLUw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1olw1L-00DoHx-6Z; Fri, 21 Oct 2022 11:41:23 -0600
+        id 1olw1K-00DoI1-5N; Fri, 21 Oct 2022 11:41:23 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1olw1G-0001tL-5n; Fri, 21 Oct 2022 11:41:18 -0600
+        id 1olw1G-0001tO-8W; Fri, 21 Oct 2022 11:41:18 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -56,8 +56,8 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 21 Oct 2022 11:41:13 -0600
-Message-Id: <20221021174116.7200-7-logang@deltatee.com>
+Date:   Fri, 21 Oct 2022 11:41:14 -0600
+Message-Id: <20221021174116.7200-8-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221021174116.7200-1-logang@deltatee.com>
 References: <20221021174116.7200-1-logang@deltatee.com>
@@ -72,7 +72,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH v11 6/9] block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
+Subject: [PATCH v11 7/9] block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
@@ -80,51 +80,55 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 When a bio's queue supports PCI P2PDMA, set FOLL_PCI_P2PDMA for
-iov_iter_get_pages_flags(). This allows PCI P2PDMA pages to be passed
-from userspace and enables the O_DIRECT path in iomap based filesystems
-and direct to block devices.
+iov_iter_get_pages_flags(). This allows PCI P2PDMA pages to be
+passed from userspace and enables the NVMe passthru requests to
+use P2PDMA pages.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 ---
- block/bio.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ block/blk-map.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 439469370b7c..a7abf9b1b66a 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1197,6 +1197,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 	unsigned short entries_left = bio->bi_max_vecs - bio->bi_vcnt;
- 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
- 	struct page **pages = (struct page **)bv;
+diff --git a/block/blk-map.c b/block/blk-map.c
+index 34735626b00f..8750f82d7da4 100644
+--- a/block/blk-map.c
++++ b/block/blk-map.c
+@@ -267,6 +267,7 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
+ {
+ 	unsigned int max_sectors = queue_max_hw_sectors(rq->q);
+ 	unsigned int nr_vecs = iov_iter_npages(iter, BIO_MAX_VECS);
 +	unsigned int gup_flags = 0;
- 	ssize_t size, left;
- 	unsigned len, i = 0;
- 	size_t offset, trim;
-@@ -1210,6 +1211,9 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 	BUILD_BUG_ON(PAGE_PTRS_PER_BVEC < 2);
- 	pages += entries_left * (PAGE_PTRS_PER_BVEC - 1);
+ 	struct bio *bio;
+ 	int ret;
+ 	int j;
+@@ -278,6 +279,9 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
+ 	if (bio == NULL)
+ 		return -ENOMEM;
  
-+	if (bio->bi_bdev && blk_queue_pci_p2pdma(bio->bi_bdev->bd_disk->queue))
++	if (blk_queue_pci_p2pdma(rq->q))
 +		gup_flags |= FOLL_PCI_P2PDMA;
 +
- 	/*
- 	 * Each segment in the iov is required to be a block size multiple.
- 	 * However, we may not be able to get the entire segment if it spans
-@@ -1217,8 +1221,9 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 	 * result to ensure the bio's total size is correct. The remainder of
- 	 * the iov data will be picked up in the next bio iteration.
- 	 */
--	size = iov_iter_get_pages2(iter, pages, UINT_MAX - bio->bi_iter.bi_size,
--				  nr_pages, &offset);
-+	size = iov_iter_get_pages(iter, pages,
-+				  UINT_MAX - bio->bi_iter.bi_size,
-+				  nr_pages, &offset, gup_flags);
- 	if (unlikely(size <= 0))
- 		return size ? size : -EFAULT;
+ 	while (iov_iter_count(iter)) {
+ 		struct page **pages, *stack_pages[UIO_FASTIOV];
+ 		ssize_t bytes;
+@@ -286,11 +290,11 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
  
+ 		if (nr_vecs <= ARRAY_SIZE(stack_pages)) {
+ 			pages = stack_pages;
+-			bytes = iov_iter_get_pages2(iter, pages, LONG_MAX,
+-							nr_vecs, &offs);
++			bytes = iov_iter_get_pages(iter, pages, LONG_MAX,
++						   nr_vecs, &offs, gup_flags);
+ 		} else {
+-			bytes = iov_iter_get_pages_alloc2(iter, &pages,
+-							LONG_MAX, &offs);
++			bytes = iov_iter_get_pages_alloc(iter, &pages,
++						LONG_MAX, &offs, gup_flags);
+ 		}
+ 		if (unlikely(bytes <= 0)) {
+ 			ret = bytes ? bytes : -EFAULT;
 -- 
 2.30.2
 
