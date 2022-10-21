@@ -2,107 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D96DC606972
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Oct 2022 22:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01587606CA4
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 02:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbiJTUYr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Oct 2022 16:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50152 "EHLO
+        id S229682AbiJUAuB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Oct 2022 20:50:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiJTUYq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 16:24:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9B42339D
-        for <linux-pci@vger.kernel.org>; Thu, 20 Oct 2022 13:24:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C324961D02
-        for <linux-pci@vger.kernel.org>; Thu, 20 Oct 2022 20:24:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB15C433D6;
-        Thu, 20 Oct 2022 20:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666297479;
-        bh=Ak9rL6bc631+472LSxcLILNo1X2ELStyVJk3o3FvtIA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gQ7nw7sSQfCkiTwoWVyLhuIjPIJt8b6AlXOHxDYfaIM4GPbeoP1LL2zjuvhi/L2GO
-         QyLYVEehbXYpWftmqqjrydd1oqO4jNEMrkrWMRGwmsm1UklL+XhOFTqciwDhHgqAxR
-         o23QquZIhcFd7/5B7gRaoJffUGyipjjjzrv/xTr0osbkPHH+PFRLTP1sllGpJjHfp2
-         C8De2R72L8t16vId+ba3Ak3W+mbEKOi9ZBcqrcQYp6fcgi9BMipExzjgFA7NOPmA4k
-         L+Sog009JnuH8d1RKkQxubp4NB5Nh3+V/lF+mRN3DHZB4Lb6neS2YgxOeqYpJ5KZNI
-         xKxnZmZiyV1wQ==
-Date:   Thu, 20 Oct 2022 15:24:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tyler Hicks <code@tyhicks.com>
-Cc:     bhelgaas@google.com, Keith Busch <kbusch@kernel.org>,
-        linux-pci@vger.kernel.org, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI: Align MPS to upstream bridge for SAFE and
- PERFORMANCE mode
-Message-ID: <20221020202437.GA142348@bhelgaas>
+        with ESMTP id S229897AbiJUAuA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 20:50:00 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3999F3ED66;
+        Thu, 20 Oct 2022 17:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666313398; x=1697849398;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=EouB8ThNo2sWMhfV1Mcpy1sEPBvn+PIid4ogFAJ3BJg=;
+  b=kbsu/iwhe5IzV5x7ONS+sx/lbg+zeKUYoopcb2da8Cy+BOll2nLBq1KB
+   sJ7EJznZGqH8iAE75Ops40puxLYxqOMU9qx2FRfDB+yZfT6cNdpt7H6B1
+   4MqoXPFhRbY8AGd/YkOVv9CBo8oR1cG4OD0dSfynz54OlGOXCVMr+5ptT
+   jBRq3rq4BMISqbjZBLD0cAgg8odvG/5X3yGEmyEgxiMsg2OwIZJ+ZsGaZ
+   Z7O4oy/kPJ0wt3ixfBvFMcTWJ8emXcdAuwtEdWRqkn+I40qPKA3gHkbtA
+   XomxxJUvE670smv0KPtnDLlRgho/WaLM853OFJN7zHFyS0PNR2RtVB/WE
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="287278715"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="287278715"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 17:49:57 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="661274898"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="661274898"
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.172.222]) ([10.249.172.222])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 17:49:49 -0700
+Subject: Re: [kbuild-all] Re: [PATCH] PCI: Remove unnecessary of_irq.h
+ includes
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        kernel test robot <lkp@intel.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, kbuild-all@lists.01.org,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Michal Simek <monstr@monstr.eu>,
+        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, "linux-ar m-kernel"@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20221020134101.GA90102@bhelgaas>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <7e7d18e2-17a2-9b61-4b3c-252556f8b6be@intel.com>
+Date:   Fri, 21 Oct 2022 08:49:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221019182559.yjnd2z6lhbvptwr3@sequoia>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221020134101.GA90102@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 01:25:59PM -0500, Tyler Hicks wrote:
-> On 2022-06-10 23:01:31, Zhiqiang Hou wrote:
-> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > 
-> > The commit 27d868b5e6cf ("PCI: Set MPS to match upstream bridge")
-> > made the device's MPS matches upstream bridge for PCIE_BUS_DEFAULT
-> > mode, so that it's more likely that a hot-added device will work in
-> > a system with an optimized MPS configuration.
-> > 
-> > Obviously, the Linux itself optimizes the MPS settings in the
-> > PCIE_BUS_SAFE and PCIE_BUS_PERFORMANCE mode, so let's do this also
-> > for these modes.
-> > 
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+
+On 10/20/2022 9:41 PM, Bjorn Helgaas wrote:
+> On Thu, Oct 20, 2022 at 04:09:37PM +0800, kernel test robot wrote:
+>> Hi Bjorn,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on helgaas-pci/next]
+>> [also build test ERROR on xilinx-xlnx/master rockchip/for-next linus/master v6.1-rc1 next-20221020]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+>> patch link:    https://lore.kernel.org/r/20221019195452.37606-1-helgaas%40kernel.org
+>> patch subject: [PATCH] PCI: Remove unnecessary of_irq.h includes
+>> config: ia64-randconfig-r026-20221020
+>> compiler: ia64-linux-gcc (GCC) 12.1.0
+>> reproduce (this is a W=1 build):
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          # https://github.com/intel-lab-lkp/linux/commit/273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+>>          git remote add linux-review https://github.com/intel-lab-lkp/linux
+>>          git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+>>          git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+>>          # save the config file
+>>          mkdir build_dir && cp config build_dir/.config
+>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
 > 
-> I wanted to give a little more information about the issue we're seeing.
-> We're having trouble retaining the optimized Max Payload Size (MPS)
-> value of a PCIe endpoint after hotplug/rescan. In this case,
-> `pcie_ports=native` and `pci=pcie_bus_safe` are set on the cmdline and
-> we expect the Linux kernel to retain the MPS value. Commit 27d868b5e6cf
-> preserved the MPS value when using the default PCIe bus mode
-> (PCIE_BUS_DEFAULT) and we're hopeful that this can be extended to other
-> modes, as well.
+> FYI, the instructions above didn't work for me.  Missing "config".
+> 
+>    $ git remote add linux-review https://github.com/intel-lab-lkp/linux
+>    $ git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
+>    $ git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
+>    HEAD is now at 273a24b16a40 PCI: Remove unnecessary of_irq.h includes
+>    $ mkdir build_dir && cp config build_dir/.config
+>    cp: cannot stat 'config': No such file or directory
+> 
+>    $ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
+>    Compiler will be installed in /home/bjorn/0day
+>    Cannot find ia64-linux under https://download.01.org/0day-ci/cross-package check /tmp/0day-ci-crosstool-files
 
-Thanks, Tyler.  I need help understanding what's going on here.  An
-example of the topology and what happens and what *should* happen
-might help.
+Hi Bjorn,
 
-Some MPS configuration is done per-device in pci_configure_mps(), and
-some considers a hierarchy in pcie_bus_configure_settings().  In the
-current tree, in the PCIE_BUS_SAFE case:
+Sorry for the inconvenience, the 01.org website is unstable recently, 
+could you try 
+"URL=https://cdn.kernel.org/pub/tools/crosstool/files/bin/x86_64 
+COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 
+O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/"?
 
-  - pci_configure_mps() does nothing (except for RCiEPs).
+Best Regards,
+Rong Chen
 
-  - pcie_bus_configure_settings(bus) looks at the hierarchy rooted at
-    the bridge leading to "bus".  If the hierarchy contains a hotplug
-    Switch Downstream Port, it sets MPS and MRRS to 128 for
-    everything.
-
-    If it does not contain such a bridge, it finds the smallest
-    MPS_Supported ("smpss") of any device in the hierarchy and sets
-    MPS and MRRS to that for everything.
-
-If you boot with a hotplug Root Port leading to an empty slot, I think
-the RP MPS will end up being whatever BIOS put there.
-
-A subsequent hot-add will do nothing in pci_configure_mps(), and
-pcie_bus_configure_settings() looks like it would set the RP and EP
-MPS to the minimum of the RP and EP MPS_Supported.
-
-Is that what you see?  What would you like to see instead?
-
-Bjorn
+>    Please set new url, e.g. export URL=https://cdn.kernel.org/pub/tools/crosstool/files/bin/x86_64
+>    gcc crosstool install failed
+>    Install gcc cross compiler failed
+>    setup_crosstool failed
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+> 
