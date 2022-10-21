@@ -2,84 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37E47606CAF
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 02:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C8A606D4E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 03:59:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbiJUAw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Oct 2022 20:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42658 "EHLO
+        id S229794AbiJUB7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Oct 2022 21:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiJUAw4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 20:52:56 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910C6230AB2;
-        Thu, 20 Oct 2022 17:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666313571; x=1697849571;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=t8eukQQRNGfAZeDiwMZwSJzWT294/JgXyPrPo/qNp6g=;
-  b=ZtK6dDj5xf+TztAflG22tT3twX9N2MOfJNYt9kLPReA22KyumiiCZL0+
-   dLvl3N84uoPnESmxTok4D14AoGegrz6byJF2ERX9bljD+Mecda458TqjS
-   9aOLT7ltQxfaGxsizcACSwc5pc+/vOMg0WFslwGeXehMjC1D0efbNoU03
-   6Qy3qFFvjEpHQBad6HTZ3Nx6mSaKWQ/Wluc1msHXnlMEd+hIQ22wMNvcF
-   jN+1KHmFBRGMEgD2uHOc2wPG3XPX8Eepfn4MowSNn1dK/PKsisQdcLfJx
-   OBHTt38hFHowgOFIRIbcanptldJX57WmgJ2ojPWhzovO/+C5MnAzjLd9W
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="294275824"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="294275824"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 17:52:50 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="608037424"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="608037424"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.172.222]) ([10.249.172.222])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 17:52:42 -0700
-Subject: Re: [kbuild-all] Re: [PATCH] PCI: Remove unnecessary of_irq.h
- includes
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        kernel test robot <lkp@intel.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>, llvm@lists.linux.dev,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        linux-riscv@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Ray Jui <rjui@broadcom.com>, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org, Mingkai Hu <mingkai.hu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Michal Simek <monstr@monstr.eu>,
-        kbuild-all@lists.01.org, Scott Branden <sbranden@broadcom.com>,
-        Daire McNa mara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org, Tom Joseph <tjoseph@cadence.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20221020150731.GA121202@bhelgaas>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <9ac1f194-cef3-68bf-25e2-4bc6c0dbefce@intel.com>
-Date:   Fri, 21 Oct 2022 08:52:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.12.0
+        with ESMTP id S229941AbiJUB7C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Oct 2022 21:59:02 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F954158D47;
+        Thu, 20 Oct 2022 18:59:00 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.32])
+        by gateway (Coremail) with SMTP id _____8AxDdnj_FFjeUcBAA--.5872S3;
+        Fri, 21 Oct 2022 09:58:59 +0800 (CST)
+Received: from [10.20.42.32] (unknown [10.20.42.32])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuDh_FFjy1kCAA--.9584S3;
+        Fri, 21 Oct 2022 09:58:57 +0800 (CST)
+Subject: Re: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ
+ polarity
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, rafael@kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20221020164718.GA127832@bhelgaas>
+From:   Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <f8a64289-6560-7d75-461c-39b7a612e9c2@loongson.cn>
+Date:   Fri, 21 Oct 2022 09:58:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20221020150731.GA121202@bhelgaas>
+In-Reply-To: <20221020164718.GA127832@bhelgaas>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxXuDh_FFjy1kCAA--.9584S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAr1UXF4DXw1xXw1UZw4ruFg_yoWrKw18pF
+        ZF93Wayr4ktF47X3s2ka1xZr1fAFs3KrW5Crs5Cw15G3s8ur1vqF1xKrW5Xr98CrZ5Zayj
+        vryYv3yUXayDCFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+        87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+        AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+        07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+        JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+        1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
+        cSsGvfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -88,74 +70,126 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 10/20/2022 11:07 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 20, 2022 at 10:13:10PM +0800, kernel test robot wrote:
->> Hi Bjorn,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on helgaas-pci/next]
->> [also build test ERROR on xilinx-xlnx/master rockchip/for-next linus/master v6.1-rc1 next-20221020]
->> [If your patch is applied to the wrong git tree, kindly drop us a note.
->> And when submitting patch, we suggest to use '--base' as documented in
->> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->>
->> url:    https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
->> patch link:    https://lore.kernel.org/r/20221019195452.37606-1-helgaas%40kernel.org
->> patch subject: [PATCH] PCI: Remove unnecessary of_irq.h includes
->> config: s390-randconfig-r044-20221019
->> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 791a7ae1ba3efd6bca96338e10ffde557ba83920)
->> reproduce (this is a W=1 build):
->>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # install s390 cross compiling tool for clang build
->>          # apt-get install binutils-s390x-linux-gnu
->>          # https://github.com/intel-lab-lkp/linux/commit/273a24b16a40ffd6a64c6c55aecbfae00a1cd996
->>          git remote add linux-review https://github.com/intel-lab-lkp/linux
->>          git fetch --no-tags linux-review Bjorn-Helgaas/PCI-Remove-unnecessary-of_irq-h-includes/20221020-100633
->>          git checkout 273a24b16a40ffd6a64c6c55aecbfae00a1cd996
->>          # save the config file
->>          mkdir build_dir && cp config build_dir/.config
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/pci/controller/
+On 2022/10/21 上午12:47, Bjorn Helgaas wrote:
+> On Thu, Oct 20, 2022 at 04:22:02PM +0800, Jianmin Lv wrote:
+>> On LoongArch ACPI based systems, the PCI devices (e.g. sata
+>> controlers and PCI-to-to PCI bridge controlers) existed in
+>> Loongson chipsets output high-level interrupt signal to the
+>> interrupt controller they connected to,
 > 
-> Maybe more user error?
+> I assume the active high behavior is hardware behavior that is
+> independent of the fact that you're using ACPI firmware on the
+> hardware.  If so, I would omit "ACPI based".
 > 
->    $ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/pci/controller/
->    Compiler will be installed in /home/bjorn/0day
->    make --keep-going HOSTCC=/home/bjorn/0day/clang/bin/clang CC=/home/bjorn/0day/clang/bin/clang OBJCOPY=/usr/s390x-linux-gnu/bin/objcopy AR=llvm-ar NM=llvm-nm STRIP=llvm-strip OBJDUMP=llvm-objdump OBJSIZE=llvm-size READELF=llvm-readelf HOSTCXX=clang++ HOSTAR=llvm-ar CROSS_COMPILE=s390x-linux-gnu- --jobs=16 W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/pci/controller/
->    make[1]: Entering directory '/home/bjorn/linux/build_dir'
->      SYNC    include/config/auto.conf.cmd
->      GEN     Makefile
->    scripts/Kconfig.include:40: linker 's390x-linux-gnu-ld' not found
-
-
-Hi Bjorn,
-
-You may need to install the below package, or similar package for other OS:
-
-$ dpkg -S /usr/bin/s390x-linux-gnu-ld
-binutils-s390x-linux-gnu: /usr/bin/s390x-linux-gnu-ld
-
- >>          # install s390 cross compiling tool for clang build
- >>          # apt-get install binutils-s390x-linux-gnu
-
-Best Regards,
-Rong Chen
-
->    make[3]: *** [../scripts/kconfig/Makefile:77: syncconfig] Error 1
->    make[2]: *** [../Makefile:697: syncconfig] Error 2
->    make[1]: *** [/home/bjorn/linux/Makefile:798: include/config/auto.conf.cmd] Error 2
->    make[1]: Failed to remake makefile 'include/config/auto.conf.cmd'.
->    make[1]: Failed to remake makefile 'include/config/auto.conf'.
->      GEN     Makefile
->    Error: kernelrelease not valid - run 'make prepare' to update it
->    ../scripts/mkcompile_h: 19: s390x-linux-gnu-ld: not found
->    make[1]: Target 'drivers/pci/controller/' not remade because of errors.
->    make[1]: Leaving directory '/home/bjorn/linux/build_dir'
->    make: *** [Makefile:231: __sub-make] Error 2
->    make: Target 'drivers/pci/controller/' not remade because of errors.
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+> s/sata/SATA/
+> s/controlers/controllers/ (twice)
+> s/PCI-to-to PCI/PCI-to-PCI/
+> s/existed in/in/
+> s/they connected/they are connected/
 > 
+
+Ok, thanks, I'll improve them again.
+
+>> while the IRQs are
+>> active low from the perspective of PCI(in 2.2.6. Interrupt
+>> Pins, "Interrupts on PCI are optional and defined as level
+>> sensitive, asserted low),
+> 
+> I don't think you need this spec reference, since "asserted low" is
+> the standard thing that happens everywhere.  But if you do want it, it
+> needs to specify which spec it refers to, e.g., "Conventional PCI
+> r3.0, sec 2.2.6" so it's not confused with the PCIe spec.
+> 
+> The quote from the spec itself should be terminated with a close quote
+> ("), i.e.,
+> 
+>    "Interrupts on PCI ... asserted low"
+> 
+
+Ok, thanks, I'll specify spec version with correct pattern.
+
+>> which means that the interrupt
+>> output of PCI devices plugged into PCI-to-to PCI bridges of
+>> Loongson chipset will be also converted to high-level. So
+>> high level triggered type is required to be passed to
+>> acpi_register_gsi() when creating mappings for PCI devices.
+> 
+> This is the part where I was hoping for a reference to a spec that
+> talks about how PCI interrupts are inverted.  The inverter is the part
+> that's special here.
+> 
+> I see that ACPI r6.5, sec 5.2.12, mentions LPIC, but it doesn't
+> mention the inverter.  It has a lot more mentions of GIC, but also no
+> details about an inverter.  I suppose that would be in the GIC spec,
+> which I'm not familiar with.
+> 
+> The point is that one should be able to write this code from a spec,
+> without having to empirically discover the interrupt polarity.  What
+> spec tells you about using ACTIVE_HIGH here?
+> 
+Yes, no mentions for the inverter in ACPI spec, the description about
+device interrupt type can be found in Loongson chipset manual:
+
+https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongson-7A1000-usermanual-EN/interrupt-controller/device-interrupt-types.adoc
+
+where the interrupts coming from interrupt source are level triggered 
+and active high except some specific device such as AC97 DMA and GPIO.
+
+> s/PCI-to-to PCI/PCI-to-PCI/ again
+>
+> Rewrap the log to fill 75 columns like the rest of the history.
+> 
+Ok, thanks.
+
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> ---
+>>   drivers/acpi/pci_irq.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+>> index 08e15774fb9f..ff30ceca2203 100644
+>> --- a/drivers/acpi/pci_irq.c
+>> +++ b/drivers/acpi/pci_irq.c
+>> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>>   	u8 pin;
+>>   	int triggering = ACPI_LEVEL_SENSITIVE;
+>>   	/*
+>> -	 * On ARM systems with the GIC interrupt model, level interrupts
+>> +	 * On ARM systems with the GIC interrupt model, or LoongArch
+>> +	 * systems with the LPIC interrupt model, level interrupts
+> 
+> Is "LoongArch" required in this comment?  Might the LPIC model be used
+> on non-LoongArch systems?
+> 
+Just like GIC is restricted to ARM, and LPIC is restricted to LoongArch, 
+as you mentioned below. So LPIC model will be not used on non-LoongArch 
+systems.
+
+> I see it follows the example of "ARM systems".  In my opinion, "ARM"
+> probably should be removed, too, because the code checks only for GIC
+> or LPIC; it doesn't check for ARM or LoongArch.
+> 
+> If GIC is restricted to ARM and LPIC is restricted to LoongArch,
+> that's fine, but that constraint should be expressed somewhere else
+> and doesn't need to be repeated here.
+> 
+Though the definition and constraints for GIC and LPIC are explicitly 
+expressed in ACPI spec, to be clear, repeating the relation here only 
+with short words maybe worthy so that people understand the workaround 
+conveniently without having to referencing ACPI spec, right?
+
+>>   	 * are always polarity high by specification; PCI legacy
+>>   	 * IRQs lines are inverted before reaching the interrupt
+>>   	 * controller and must therefore be considered active high
+>>   	 * as default.
+>>   	 */
+>> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+>> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
+>> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
+>>   				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+>>   	char *link = NULL;
+>>   	char link_desc[16];
+>> -- 
+>> 2.31.1
+>>
+
