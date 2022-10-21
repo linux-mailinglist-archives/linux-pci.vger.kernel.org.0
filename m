@@ -2,343 +2,289 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3743460718C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 10:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 555DF60721E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Oct 2022 10:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbiJUIAY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Oct 2022 04:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+        id S229711AbiJUI0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Oct 2022 04:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiJUIAX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 04:00:23 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C543D143A7C
-        for <linux-pci@vger.kernel.org>; Fri, 21 Oct 2022 01:00:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 20so1887005pgc.5
-        for <linux-pci@vger.kernel.org>; Fri, 21 Oct 2022 01:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Af64HsW8Hb3IJa0+V6qoz6cLtuntZ5l3rMcrmMxUOek=;
-        b=ZFQOQ+i0+gxqjtqEyGfjrYUT1cFe7ehfq6Aqb1a109g6ZvyEW487gDPEwXJap00wgT
-         r9DQqgK43+ngqcsqL5DZPEKR1QAn9pBIFHRoMNGWm8EJ2nKKJu5spz/s0FGP76pRq3Oi
-         1l4caFXtTm4xGRSoe22tKlgJeV6fYUOFGQRtJvlrCORSJY9VM7rPy1v1pSuAqstv1PEU
-         ami7MC/c0J66v1Z6kf4tFMd/eKxjxBjrVLA/A+5FGb77Q6R5ec8sukzfmGymXlOBbdwa
-         H6IBvnli/6+1aD2Uha35Ate16rLhFlG3WYRzocWiZ9dZWk7c5cw1UgbMQmKRCVHhm4dN
-         7McQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Af64HsW8Hb3IJa0+V6qoz6cLtuntZ5l3rMcrmMxUOek=;
-        b=hTvl2pDYik+oAMIpSvYpmU/V1XiEucShq90SJ3N1DgfkXoBbUnxjdBsaDtCb2HbURC
-         dK082Gvfc0pRXgCOOKQknebqmJpI0X7HTgtZ9CAk5Z3z+cykLw0nAAdiC4LQFKa/ITHn
-         9T1diAZoScDBhaLDz6E0UBMtB7NhgGWss9A4HzULTnO1NbY9S0O994ArvzbrlAo/ldxo
-         C1VUraOd6ytoF+PuxCFhhDNbS/3yTKWwy8UrU/wRymwmGnVXt9Zk2R/cW/f9W2o+QySy
-         EHZ3jMZoaaGIqE3XCiQeuPbc0KigZ+HGaOeDpE3Ph73YxaXnVXp2Byp43q2yVRdRjpfH
-         ksJg==
-X-Gm-Message-State: ACrzQf2pUrFUdxWbXawSh2vAiaf+dWRLnjL7TRlQHImQq4pxQ5ccj42V
-        4T1f9NnR7RZg7dXSovOoMOJw
-X-Google-Smtp-Source: AMsMyM5rRdNsJM9l2Vo+GcMg4s4PscaCRWLG2VkppCZoNdKcVcTDzkw6HBLtS8j2Rhydy1V59AC8qA==
-X-Received: by 2002:a62:e70f:0:b0:562:d556:8cf2 with SMTP id s15-20020a62e70f000000b00562d5568cf2mr18129850pfh.78.1666339220235;
-        Fri, 21 Oct 2022 01:00:20 -0700 (PDT)
-Received: from thinkpad ([117.193.215.105])
-        by smtp.gmail.com with ESMTPSA id e17-20020a17090301d100b001782398648dsm14436010plh.8.2022.10.21.01.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 01:00:19 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 13:30:12 +0530
-From:   'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To:     Aman Gupta <aman1.gupta@samsung.com>
-Cc:     'Kishon Vijay Abraham I' <kishon@ti.com>, shradha.t@samsung.com,
-        pankaj.dubey@samsung.com, lpieralisi@kernel.org, kw@linux.com,
-        shuah@kernel.org, linux-pci@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
- endpoint driver test
-Message-ID: <20221021080012.GA93287@thinkpad>
-References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
- <20221007053934.5188-1-aman1.gupta@samsung.com>
- <fe40a005-b6a2-2938-576d-acf5432636b9@ti.com>
- <007c01d8e51a$4b2e3720$e18aa560$@samsung.com>
+        with ESMTP id S229631AbiJUI03 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 04:26:29 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0F4168E56;
+        Fri, 21 Oct 2022 01:26:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 79E13CE2A2A;
+        Fri, 21 Oct 2022 08:26:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE65C433C1;
+        Fri, 21 Oct 2022 08:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666340781;
+        bh=t96neusjtVw7AQjAlsFggmE7+zhUoCI2GVkrlHER7Uo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sJCbGz88BhMZZ9QTKFDfSvOsgECd8EsClAxN7pnaPx8q/QzQpSYv0hBW94+xOID31
+         E7CUs6hJNbGuZ2MSIqPYEjAZwa4LNehysnbhHdeNV1n+fSpauSZCRNcV6bRSBOt+WV
+         vC4h2N30Npz9UzFoZgvhqQueHKcsH2D42tGqRoKIWCzA5h1bFvEzs4K+17JBlXdT7w
+         jbMKpswX3AJymB4zcvb00uwQEzXbne561qqJrc0JTlbA+ztlATlSIUAPIN940R7OjD
+         Y1OTzt3MEAmUoLbIuIJxJdvodWyj9+yaDqr91DONmmO2Gv/2CFAlEcX9X/iyh1NHRu
+         vOsd9XjVEJjZQ==
+Date:   Fri, 21 Oct 2022 10:26:15 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Elad Nachman <enachman@marvell.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for
+ PCIe Completion Timeout
+Message-ID: <Y1JXp8S76dRrX5bT@lpieralisi>
+References: <20220802123816.21817-1-pali@kernel.org>
+ <20220926123434.2tqx4t6u3cnlrcx3@pali>
+ <BN9PR18MB425117376E64340DED894178DB549@BN9PR18MB4251.namprd18.prod.outlook.com>
+ <20221003211412.5pqfjvcxyszd4ai6@pali>
+ <YzvomObCatuKMujz@lpieralisi>
+ <20221004083957.qtfkn4eyi42lsd4j@pali>
+ <BN9PR18MB4251C2684FD21D8A2DE5522FDB5C9@BN9PR18MB4251.namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <007c01d8e51a$4b2e3720$e18aa560$@samsung.com>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <BN9PR18MB4251C2684FD21D8A2DE5522FDB5C9@BN9PR18MB4251.namprd18.prod.outlook.com>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 12:26:38PM +0530, Aman Gupta wrote:
+On Thu, Oct 06, 2022 at 08:14:48AM +0000, Elad Nachman wrote:
+> Hi,
 > 
-> 
-> > -----Original Message-----
-> > From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
-> > Sent: Tuesday, October 11, 2022 4:29 PM
-> > To: Aman Gupta <aman1.gupta@samsung.com>; shradha.t@samsung.com;
-> > pankaj.dubey@samsung.com; lpieralisi@kernel.org; kw@linux.com;
-> > shuah@kernel.org
-> > Cc: linux-pci@vger.kernel.org; linux-kselftest@vger.kernel.org;
-> > Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>; Manivannan
-> > Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI endpoint
-> > driver test
-> > 
-> > +Mani
-> Gentle reminder for review of this patch.
-> 
+> Regarding number #1 :
+> The H/W erratum means strong ordering mode is not properly implemented
+> in the H/W.  The workaround is to set DIS_ORD_CHK to disable the
+> ordered check, to prevent the issues Pali mentioned.  Leaving it
+> without the workaround means encountering the crashes Pali mentioned.
+> The H/W was originally designed to have the strong ordering mode, per
+> what is expected of PCI Express, but due to this erratum, it cannot be
+> supported by the taped-out H/W.  There is nothing to do about it now
+> in the H/W, as this is a years old SOC.  Software wise the only option
+> is the workaround above, or to accept sporadic crashes of the kernel.
 
-Sorry for the delay. I'm on leave for the past few weeks. Will get to the patch
-next week.
+It can fix a driver, it can break another one - the PCI ordering model
+is broken one way or another.
+
+I have no way to determine what setting DIS_ORD_CHK does and what it
+implies.
+
+What I know is that we are sending this patch to stable kernels
+and I want to make sure a) it was thoroughly tested on several
+PCI endpoints and b) it is properly documented.
+
+> The impact of the workaround is that the DMA done status could be set
+> before the last data is written to the host memory, causing the host
+> to read incomplete data. This is the reason why I recommended to add a
+> memory barrier. If this is bothering, the memory barrier can be
+> removed from the patch, although I suggest to thoroughly test the data
+> integrity if implementing the patch without the memory barrier.
+
+It is not bothering, it is that every mb() must be explained in depth.
+
+We are adding an mb() in the *controller* interrupt handler.
+
+I assume this is because that's where the DMA completion IRQ is raised
+and there we issue an mb() to make sure that endpoint writes into
+memory completed.
+
+If that's correct, I have no idea how the barrier plays together
+with DIS_ORD_CHK above. The mb() has no effect on PCI writes queued
+in the PCI bus, so it may be a plaster but not a fix.
+
+I would like to have a full description of what that mb() is supposed
+to fix - in details.
+
+When we agree it is fixing something we can add a descriptive comment
+with the mb() and merge the code.
 
 Thanks,
-Mani
+Lorenzo
 
-> Thanks and Regards
-> Aman Gupta
-> > 
-> > On 07/10/22 11:09 am, Aman Gupta wrote:
-> > > This patch enables the support to perform selftest on PCIe endpoint
-> > > driver present in the system. The following tests are currently
-> > > performed by the selftest utility
-> > >
-> > > 1. BAR Tests (BAR0 to BAR5)
-> > > 2. MSI Interrupt Tests (MSI1 to MSI32) 3. Read Tests (For 1, 1024,
-> > > 1025, 1024000, 1024001 Bytes) 4. Write Tests (For 1, 1024, 1025,
-> > > 1024000, 1024001 Bytes) 5. Copy Tests (For 1, 1024, 1025, 1024000,
-> > > 1024001 Bytes)
-> > >
-> > > Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
-> > > Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-> > > ---
-> > >   tools/testing/selftests/Makefile           |   1 +
-> > >   tools/testing/selftests/pci/.gitignore     |   1 +
-> > >   tools/testing/selftests/pci/Makefile       |   7 +
-> > >   tools/testing/selftests/pci/pci-selftest.c | 167 +++++++++++++++++++++
-> > >   4 files changed, 176 insertions(+)
-> > >   create mode 100644 tools/testing/selftests/pci/.gitignore
-> > >   create mode 100644 tools/testing/selftests/pci/Makefile
-> > >   create mode 100644 tools/testing/selftests/pci/pci-selftest.c
-> > >
-> > > diff --git a/tools/testing/selftests/Makefile
-> > > b/tools/testing/selftests/Makefile
-> > > index c2064a35688b..81584169a80f 100644
-> > > --- a/tools/testing/selftests/Makefile
-> > > +++ b/tools/testing/selftests/Makefile
-> > > @@ -49,6 +49,7 @@ TARGETS += net/forwarding
-> > >   TARGETS += net/mptcp
-> > >   TARGETS += netfilter
-> > >   TARGETS += nsfs
-> > > +TARGETS += pci
-> > >   TARGETS += pidfd
-> > >   TARGETS += pid_namespace
-> > >   TARGETS += powerpc
-> > > diff --git a/tools/testing/selftests/pci/.gitignore
-> > > b/tools/testing/selftests/pci/.gitignore
-> > > new file mode 100644
-> > > index 000000000000..db01411b8200
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/pci/.gitignore
-> > > @@ -0,0 +1 @@
-> > > +pci-selftest
-> > > diff --git a/tools/testing/selftests/pci/Makefile
-> > > b/tools/testing/selftests/pci/Makefile
-> > > new file mode 100644
-> > > index 000000000000..76b7725a45ae
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/pci/Makefile
-> > > @@ -0,0 +1,7 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +CFLAGS += -O2 -Wl,-no-as-needed -Wall LDFLAGS += -lrt -lpthread -lm
-> > > +
-> > > +TEST_GEN_PROGS = pci-selftest
-> > > +
-> > > +include ../lib.mk
-> > > diff --git a/tools/testing/selftests/pci/pci-selftest.c
-> > > b/tools/testing/selftests/pci/pci-selftest.c
-> > > new file mode 100644
-> > > index 000000000000..73e8f3eb1982
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/pci/pci-selftest.c
-> > > @@ -0,0 +1,167 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * PCI Endpoint Driver Test Program
-> > > + *
-> > > + * Copyright (c) 2022 Samsung Electronics Co., Ltd.
-> > > + *             https://www.samsung.com
-> > > + * Author: Aman Gupta <aman1.gupta@samsung.com>  */
-> > > +
-> > > +#include <errno.h>
-> > > +#include <fcntl.h>
-> > > +#include <stdbool.h>
-> > > +#include <stdio.h>
-> > > +#include <stdlib.h>
-> > > +#include <sys/ioctl.h>
-> > > +#include <unistd.h>
-> > > +
-> > > +#include "../kselftest_harness.h"
-> > > +
-> > > +#define PCITEST_BAR		_IO('P', 0x1)
-> > > +#define PCITEST_LEGACY_IRQ	_IO('P', 0x2)
-> > > +#define PCITEST_MSI		_IOW('P', 0x3, int)
-> > > +#define PCITEST_WRITE		_IOW('P', 0x4, unsigned long)
-> > > +#define PCITEST_READ		_IOW('P', 0x5, unsigned long)
-> > > +#define PCITEST_COPY		_IOW('P', 0x6, unsigned long)
-> > > +#define PCITEST_MSIX		_IOW('P', 0x7, int)
-> > > +#define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
-> > > +#define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
-> > > +#define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> > > +
-> > > +static char *test_device = "/dev/pci-endpoint-test.0";
-> > > +
-> > > +struct xfer_param {
-> > > +	unsigned long size;
-> > > +	unsigned char flag;
-> > > +	};
-> > > +
-> > > +FIXTURE(device)
-> > > +{
-> > > +	int fd;
-> > > +};
-> > > +
-> > > +FIXTURE_SETUP(device)
-> > > +{
-> > > +
-> > > +	self->fd = open(test_device, O_RDWR);
-> > > +
-> > > +	ASSERT_NE(-1, self->fd) {
-> > > +		TH_LOG("Can't open PCI Endpoint Test device\n");
-> > > +	}
-> > > +}
-> > > +
-> > > +FIXTURE_TEARDOWN(device)
-> > > +{
-> > > +	close(self->fd);
-> > > +}
-> > > +
-> > > +TEST_F(device, BAR_TEST)
-> > > +{
-> > > +	int ret = -EINVAL;
-> > > +	int final = 0;
-> > > +
-> > > +	for (int i = 0; i <= 5; i++) {
-> > > +		ret = ioctl(self->fd, PCITEST_BAR, i);
-> > > +
-> > > +		EXPECT_EQ(1, ret) {
-> > > +			TH_LOG("TEST FAILED FOR BAR %d\n", i);
-> > > +			final++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ASSERT_EQ(0, final);
-> > > +}
-> > > +
-> > > +TEST_F(device, MSI_TEST)
-> > > +{
-> > > +	int ret = -EINVAL;
-> > > +	int final = 0;
-> > > +
-> > > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > > +	ASSERT_EQ(1, ret);
-> > > +
-> > > +	for (int i = 1; i <= 32; i++) {
-> > > +		ret = ioctl(self->fd, PCITEST_MSI, i);
-> > > +		EXPECT_EQ(1, ret) {
-> > > +			TH_LOG("TEST FAILED FOR MSI%d\n", i);
-> > > +			final++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ASSERT_EQ(0, final);
-> > > +}
-> > > +
-> > > +TEST_F(device, READ_TEST)
-> > > +{
-> > > +	int final = 0;
-> > > +	int ret = -EINVAL;
-> > > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > > +
-> > > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > > +	ASSERT_EQ(1, ret);
-> > > +
-> > > +	struct xfer_param param;
-> > > +
-> > > +	param.flag = 0;
-> > > +	for (int i = 0; i < 5; i++) {
-> > > +		param.size = SIZE[i];
-> > > +		ret = ioctl(self->fd, PCITEST_READ, &param);
-> > > +		EXPECT_EQ(1, ret) {
-> > > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > > +			final++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ASSERT_EQ(0, final);
-> > > +}
-> > > +
-> > > +TEST_F(device, WRITE_TEST)
-> > > +{
-> > > +	int final = 0;
-> > > +	int ret = -EINVAL;
-> > > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > > +
-> > > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > > +	ASSERT_EQ(1, ret);
-> > > +
-> > > +	struct xfer_param param;
-> > > +
-> > > +	param.flag = 0;
-> > > +
-> > > +	for (int i = 0; i < 5; i++) {
-> > > +		param.size = SIZE[i];
-> > > +		ret = ioctl(self->fd, PCITEST_WRITE, &param);
-> > > +		EXPECT_EQ(1, ret) {
-> > > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > > +			final++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ASSERT_EQ(0, final);
-> > > +}
-> > > +
-> > > +TEST_F(device, COPY_TEST)
-> > > +{
-> > > +	int final = 0;
-> > > +	int ret = -EINVAL;
-> > > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > > +
-> > > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > > +	ASSERT_EQ(1, ret);
-> > > +
-> > > +	struct xfer_param param;
-> > > +
-> > > +	param.flag = 0;
-> > > +
-> > > +	for (int i = 0; i < 5; i++) {
-> > > +		param.size = SIZE[i];
-> > > +		ret = ioctl(self->fd, PCITEST_COPY, &param);
-> > > +		EXPECT_EQ(1, ret) {
-> > > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > > +			final++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ASSERT_EQ(0, final);
-> > > +}
-> > > +TEST_HARNESS_MAIN
-> > >
+> FYI,
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> Elad.
+> 
+> -----Original Message-----
+> From: Pali Rohár <pali@kernel.org> 
+> Sent: Tuesday, October 4, 2022 11:40 AM
+> To: Elad Nachman <enachman@marvell.com>; Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; Krzysztof Wilczyński <kw@linux.com>; linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround for PCIe Completion Timeout
+> 
+> + Elad
+> 
+> Could you please look at Lorenzo's comments and help with this fix?
+> 
+> On Tuesday 04 October 2022 10:02:32 Lorenzo Pieralisi wrote:
+> > On Mon, Oct 03, 2022 at 11:14:12PM +0200, Pali Rohár wrote:
+> > > Lorenzo, is something more needed for this patch? As it workarounds 
+> > > crashing it is really needed to have it in mainline and backports.
+> > 
+> > Yes, a clear explanation from Marvell about what this is actually 
+> > fixing - it took me a while to go through the whole thread but I still 
+> > don't understand what this patch actually does and why.
+> > 
+> > An Erratum workaround (if there is any) should define and explain a SW 
+> > workaround.
+> > 
+> > (1) Bjorn's concerns in relation to PCI memory model weren't addressed
+> > (2) We don't add undocumented memory barriers to the kernel to "minimize
+> >     risks". Either we fix a bug or we don't. If we do, write that down
+> >     and document why the barrier is there and the issue it solves.
+> > 
+> > I understand that basically you are reverse engineering a HW bug but I 
+> > am afraid we can't fix the kernel this way - more so with patches 
+> > going to be backported to stable kernels.
+> > 
+> > Lorenzo
+> > 
+> > > On Wednesday 28 September 2022 14:05:10 Elad Nachman wrote:
+> > > > Reviewed-by: Elad Nachman <enachman@marvell.com>
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > Elad.
+> > > > 
+> > > > -----Original Message-----
+> > > > From: Pali Rohár <pali@kernel.org>
+> > > > Sent: Monday, September 26, 2022 3:35 PM
+> > > > To: Elad Nachman <enachman@marvell.com>
+> > > > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>; Lorenzo 
+> > > > Pieralisi <lpieralisi@kernel.org>; Bjorn Helgaas 
+> > > > <bhelgaas@google.com>; Krzysztof Wilczyński <kw@linux.com>; Rob 
+> > > > Herring <robh@kernel.org>; linux-pci@vger.kernel.org; 
+> > > > linux-arm-kernel@lists.infradead.org; 
+> > > > linux-kernel@vger.kernel.org; Gregory Clement 
+> > > > <gregory.clement@bootlin.com>; Marek Behún <kabel@kernel.org>; 
+> > > > Remi Pommarel <repk@triplefau.lt>; Xogium <contact@xogium.me>; 
+> > > > Tomasz Maciej Nowak <tmn505@gmail.com>
+> > > > Subject: [EXT] Re: [PATCH v2] PCI: aardvark: Implement workaround 
+> > > > for PCIe Completion Timeout
+> > > > 
+> > > > External Email
+> > > > 
+> > > > ------------------------------------------------------------------
+> > > > ---- Hello Elad, could you please review this patch? I have 
+> > > > implemented it according your instructions, including that full memory barrier as you described.
+> > > > 
+> > > > On Tuesday 02 August 2022 14:38:16 Pali Rohár wrote:
+> > > > > Marvell Armada 3700 Functional Errata, Guidelines, and 
+> > > > > Restrictions document describes in erratum 3.12 PCIe Completion Timeout (Ref #:
+> > > > > 251), that PCIe IP does not support a strong-ordered model for inbound posted vs.
+> > > > > outbound completion.
+> > > > > 
+> > > > > As a workaround for this erratum, DIS_ORD_CHK flag in Debug Mux 
+> > > > > Control register must be set. It disables the ordering check in 
+> > > > > the core between Completions and Posted requests received from the link.
+> > > > > 
+> > > > > Marvell also suggests to do full memory barrier at the beginning 
+> > > > > of aardvark summary interrupt handler before calling interrupt 
+> > > > > handlers of endpoint drivers in order to minimize the risk for 
+> > > > > the race condition documented in the Erratum between the DMA 
+> > > > > done status reading and the completion of writing to the host memory.
+> > > > > 
+> > > > > More details about this issue and suggested workarounds are in discussion:
+> > > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel
+> > > > > .org_l 
+> > > > > inux-2Dpci_BN9PR18MB425154FE5019DCAF2028A1D5DB8D9-40BN9PR18MB425
+> > > > > 1.namp 
+> > > > > rd18.prod.outlook.com_t_-23u&d=DwIDaQ&c=nKjWec2b6R0mOyPaz7xtfQ&r
+> > > > > =eTeNT
+> > > > > LEK5-TxXczjOcKPhANIFtlB9pP4lq9qhdlFrwQ&m=bjgkhgPgOjqCEsbHYHONCZM
+> > > > > iFDX72 
+> > > > > MztWaE0AvWBktQVn3zKEDtUdn02Kx_KJ14B&s=SToGsDGEObwbZGilVtVZPyME8j
+> > > > > NiRgrq
+> > > > > 4SDYvqqT0TA&e=
+> > > > > 
+> > > > > It was reported that enabling this workaround fixes instability 
+> > > > > issues and "Unhandled fault" errors when using 60 GHz WiFi 
+> > > > > 802.11ad card with Qualcomm
+> > > > > QCA6335 chip under significant load which were caused by 
+> > > > > interrupt status stuck in the outbound CMPLT queue traced back to this erratum.
+> > > > > 
+> > > > > This workaround fixes also kernel panic triggered after some 
+> > > > > minutes of usage 5 GHz WiFi 802.11ax card with Mediatek MT7915 chip:
+> > > > > 
+> > > > >     Internal error: synchronous external abort: 96000210 [#1] SMP
+> > > > >     Kernel panic - not syncing: Fatal exception in interrupt
+> > > > > 
+> > > > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > > Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host 
+> > > > > controller
+> > > > > driver")
+> > > > > Cc: stable@vger.kernel.org
+> > > > > ---
+> > > > >  drivers/pci/controller/pci-aardvark.c | 10 ++++++++++
+> > > > >  1 file changed, 10 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > > index 060936ef01fe..3ae8a85ec72e 100644
+> > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > @@ -210,6 +210,8 @@ enum {
+> > > > >  };
+> > > > >  
+> > > > >  #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
+> > > > > +#define DEBUG_MUX_CTRL_REG			(LMI_BASE_ADDR + 0x208)
+> > > > > +#define     DIS_ORD_CHK				BIT(30)
+> > > > >  
+> > > > >  /* PCIe core controller registers */
+> > > > >  #define CTRL_CORE_BASE_ADDR			0x18000
+> > > > > @@ -558,6 +560,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > > > >  		PCIE_CORE_CTRL2_TD_ENABLE;
+> > > > >  	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+> > > > >  
+> > > > > +	/* Disable ordering checks, workaround for erratum 3.12 "PCIe completion timeout" */
+> > > > > +	reg = advk_readl(pcie, DEBUG_MUX_CTRL_REG);
+> > > > > +	reg |= DIS_ORD_CHK;
+> > > > > +	advk_writel(pcie, reg, DEBUG_MUX_CTRL_REG);
+> > > > > +
+> > > > >  	/* Set lane X1 */
+> > > > >  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> > > > >  	reg &= ~LANE_CNT_MSK;
+> > > > > @@ -1581,6 +1588,9 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
+> > > > >  	struct advk_pcie *pcie = arg;
+> > > > >  	u32 status;
+> > > > >  
+> > > > > +	/* Full memory barrier (ARM dsb sy), workaround for erratum 3.12 "PCIe completion timeout" */
+> > > > > +	mb();
+> > > > > +
+> > > > >  	status = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
+> > > > >  	if (!(status & PCIE_IRQ_CORE_INT))
+> > > > >  		return IRQ_NONE;
+> > > > > --
+> > > > > 2.20.1
+> > > > > 
+> > > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.
+> > > org_mailman_listinfo_linux-2Darm-2Dkernel&d=DwIDaQ&c=nKjWec2b6R0mOyP
+> > > az7xtfQ&r=eTeNTLEK5-TxXczjOcKPhANIFtlB9pP4lq9qhdlFrwQ&m=2NzkT9KLO26k
+> > > efUOw2nIeSeRnJVZLxEiBXqEoRvDQ0ueww6n4YaXWgAN1uCJX20o&s=nczACS_2jERbA
+> > > -c4Gfar0-HTA4PtvZdJmsBv8jhW8G0&e=
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
