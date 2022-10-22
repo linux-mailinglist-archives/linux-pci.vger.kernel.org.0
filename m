@@ -2,95 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EBC608AD9
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 11:08:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12186608A98
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 11:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232479AbiJVJI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Oct 2022 05:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
+        id S231696AbiJVJCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Oct 2022 05:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbiJVJHs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 05:07:48 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7DAA530071A;
-        Sat, 22 Oct 2022 01:21:52 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.32])
-        by gateway (Coremail) with SMTP id _____8BxHdn8olNjPp0BAA--.6980S3;
-        Sat, 22 Oct 2022 15:59:56 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1f7olNjLlUDAA--.13337S6;
-        Sat, 22 Oct 2022 15:59:56 +0800 (CST)
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        with ESMTP id S234989AbiJVJBb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 05:01:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1165B2F82C4;
+        Sat, 22 Oct 2022 01:17:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0259860B6B;
+        Sat, 22 Oct 2022 08:06:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F93C433D7;
+        Sat, 22 Oct 2022 08:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666425972;
+        bh=0sc7pZ0kQbpvTSEgZwUB5XBCnmITI1rrNWQTuHQ/qqI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jWTd6UfwV5jSwf9RzNKM3PEVuQd7ABwLDPhl41KZjwVeaOICugwADv/ExK0iSEEpD
+         Ei+by3btZkM5xJWabuYfWHeqg9F9yewRpqapyfji9NHKiLzOd/BCT+RIz/7Mmn7+qQ
+         hBjtbb1bxrRtOfynABPXPWr5WnVlCHXIHpb6cBaSjl3g/GZP7TxYthKgq/5MnzT0SQ
+         0H5SC8HWiUQIp6XVyqoeJ/A5ci0UyFb9dU04o8nphudFFuV4MSVfhJSx7Q0xg091YV
+         nEEcy337NxsHE0j36FIH5sgrW05x6ooj2E5/aXVkFxgNhvFPH6HW4OcQhVfczkEXVV
+         qn4CboXOd9GiQ==
+Received: by mail-ed1-f42.google.com with SMTP id e18so13797707edj.3;
+        Sat, 22 Oct 2022 01:06:12 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3tIhBFquF1e5lnoRy9xUSzV2JZUBGArcMuY+lWo3htGV796mXU
+        ZHRhgzRIAHEhvpHgGEJbgAhdgj1Mc2ICL8AsNlo=
+X-Google-Smtp-Source: AMsMyM5emVi0xiH/tcLk8WIfKcO6mBG6El1sDLRfAWJwDsTRbazvgH+a8vqAbytV7mhHndxHo9l+sidtvpnDv3t7wGg=
+X-Received: by 2002:a17:907:a06e:b0:79f:e42d:8d54 with SMTP id
+ ia14-20020a170907a06e00b0079fe42d8d54mr2885325ejc.72.1666425970661; Sat, 22
+ Oct 2022 01:06:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221022075955.11726-1-lvjianmin@loongson.cn>
+In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Sat, 22 Oct 2022 16:05:58 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7DrvgXwuGe5ayAKjP2YdNPoaT3xZg1vU2RDjReNkV9PQ@mail.gmail.com>
+Message-ID: <CAAhV-H7DrvgXwuGe5ayAKjP2YdNPoaT3xZg1vU2RDjReNkV9PQ@mail.gmail.com>
+Subject: Re: [PATCH V5 0/4] irqchip: Support to set irq type for ACPI path
+To:     Jianmin Lv <lvjianmin@loongson.cn>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Len Brown <lenb@kernel.org>, rafael@kernel.org,
         linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH V5 4/4] irqchip/loongson-liointc: Support to set IRQ type for ACPI path
-Date:   Sat, 22 Oct 2022 15:59:55 +0800
-Message-Id: <20221022075955.11726-5-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
-References: <20221022075955.11726-1-lvjianmin@loongson.cn>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx_1f7olNjLlUDAA--.13337S6
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7XF4DXF15XrWxCF4Dtry5Arb_yoWfKwc_u3
-        yIgwnxGa4rZF1xJr97Ww1YvrWI9aykW3WqgF45uasIy3y8W343urW7AwnxJa93KrW0vFZ7
-        AF1F9rySya47tjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-        6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-        w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-        kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-        07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
-        JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-        YxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For ACPI path, the xlate callback used IRQ_TYPE_NONE and ignored
-the IRQ type in intspec[1]. For supporting to set type for
-IRQs of the irqdomain, intspec[1] should be used to get IRQ
-type.
+For the whole series:
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
----
- drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 0da8716f8f24..838c8fa2d868 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -167,7 +167,12 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
- 	if (WARN_ON(intsize < 1))
- 		return -EINVAL;
- 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
--	*out_type = IRQ_TYPE_NONE;
-+
-+	if (intsize > 1)
-+		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+	else
-+		*out_type = IRQ_TYPE_NONE;
-+
- 	return 0;
- }
- 
--- 
-2.31.1
-
+On Sat, Oct 22, 2022 at 4:00 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
+>
+> For ACPI path of pch-pic and liointc driver, setting irq
+> type is not supported yet, so the patch series add code
+> to implement it.
+>
+> And a bug in translate callback of irqchip/loongson-pch-pic, which
+> is introduced by previous patch, is fixed.
+>
+> GSI for legacy irqs of PCI devices are mapped in pch-pic domain, after
+> supporting setting_irq_type for pch-pic domain, we add the workaround
+> for LoongArch based PCI controller with high-level trigger intterrupt
+> so that the high-level trigger type is passed into acpi_register_gsi().
+>
+> V1 -> V2
+> - Change comment information and fix a bug for DT path in patch[1].
+>
+> V2 -> V3
+> - Separate original patch[1] to three patches[1][2][3].
+>
+> V3 -> V4
+> - Improve commit log
+>
+> V4 -> V5
+> - Improve commit log for patch[1]
+>
+> Jianmin Lv (4):
+>   ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
+>   irqchip/loongson-pch-pic: fix translate callback for DT path
+>   irqchip/loongson-pch-pic: Support to set IRQ type for ACPI path
+>   irqchip/loongson-liointc: Support to set IRQ type for ACPI path
+>
+>  drivers/acpi/pci_irq.c                 |  6 ++++--
+>  drivers/irqchip/irq-loongson-liointc.c |  7 ++++++-
+>  drivers/irqchip/irq-loongson-pch-pic.c | 14 ++++++++++----
+>  3 files changed, 20 insertions(+), 7 deletions(-)
+>
+> --
+> 2.31.1
+>
+>
