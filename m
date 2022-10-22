@@ -2,139 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6795608CB4
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 13:33:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5105E608EC8
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 19:20:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbiJVLd1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Oct 2022 07:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
+        id S229615AbiJVRUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Oct 2022 13:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbiJVLdH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 07:33:07 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B9635CA
-        for <linux-pci@vger.kernel.org>; Sat, 22 Oct 2022 04:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666437218; x=1697973218;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JHIzt8ymeztBZThL/F24h91M0JFo/zsfSPfHDo93AMI=;
-  b=I4U3mLkZBHAt2/AbCaRru/XPoO69dygt3o9GjcHQa8o8Md0j0sECnCVx
-   AOhJeKVpkU/BRkIAAA0JKXqwKo6mLMfpFUbkF9ERLZOCOi1q/1JWk89p1
-   p0G7jBmgVcoGaSMJ1u2xVuREgXjCYBN4WlHRXJHzHrylScstFSNGg8p49
-   /dzAGQ/fY0dx4S1D7aZWQk8JmY/Jz6WW0c1Kwei09vX2L7sUzOdLWDsR1
-   JFuBrpBFh9hEbRRw25ffdPNUQe43FsZmLD011vBuVfbszGrr5CvPn6ovG
-   BQwn9IbdlLbxenY3NoBPTkRRqLYYFrHLByf2iFNAHwc7UpaLxlEROyn9s
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369243197"
-X-IronPort-AV: E=Sophos;i="5.95,205,1661842800"; 
-   d="scan'208";a="369243197"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2022 04:13:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="773343581"
-X-IronPort-AV: E=Sophos;i="5.95,205,1661842800"; 
-   d="scan'208";a="773343581"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2022 04:13:36 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1omCRb-0003ag-3D;
-        Sat, 22 Oct 2022 11:13:35 +0000
-Date:   Sat, 22 Oct 2022 19:12:38 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:wip/bjorn-22-10-config-of] BUILD SUCCESS
- f9864e8f2ce05244bc0e15e6593972f07dfcea8c
-Message-ID: <6353d026.Ieh/yVjHE3mUxBIS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229491AbiJVRUO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 13:20:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716D75AA0B;
+        Sat, 22 Oct 2022 10:20:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EEB1E6098A;
+        Sat, 22 Oct 2022 17:20:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 011ABC433C1;
+        Sat, 22 Oct 2022 17:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666459207;
+        bh=RJ1xIcUnAPVVHdSTPRNEDx0prZV40DFafeYZNSpgeqo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pyepfrxCi11xg4UElYMhfcJzhE7NUckpxB8nZ0zHXUwhO0nvw7FtQOQrvnRKiaGAl
+         tB3gOFb13ejCAde2h+3uRZlXbAXE2M4kUWdKnX9Pgl2XiKlmi1cQ5ui2CSndL2Vngy
+         uHF+IcHZg2e3MOu0pGEEe7Yrz8Wyria0ZUdRyulheeoYCr8LOitbWdrazChYILlMvA
+         DJlWKEsdEfuq/uFi7lZ9HMVqv61Gx0GW103L7PT0iWC3v5z5CaiA5ZGRaaqARU8QIF
+         ykqf9HrD99pP+RQ8MFNU09TzrfGUYRZFjCvCgtaV0S16Yj5IEgtenoVtreiQIJX+Zc
+         vcv10mYh+5GfQ==
+Date:   Sat, 22 Oct 2022 12:20:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mehta Sanju <Sanju.Mehta@amd.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2] PCI/ACPI: Don't assume D3 support if a device is
+ power manageable
+Message-ID: <20221022172005.GA456826@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20221020201111.22861-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-22-10-config-of
-branch HEAD: f9864e8f2ce05244bc0e15e6593972f07dfcea8c  PCI: Drop controller CONFIG_OF dependencies
+[+cc Lukas, in case you have comment on acpi_pci_power_manageable()]
 
-elapsed time: 725m
+There's a little bit of cognitive dissonance between the subject and
+the comment line:
 
-configs tested: 58
-configs skipped: 2
+  PCI/ACPI: Don't assume D3 support if a device is power manageable
+  +	/* Assume D3 support if the bridge is power-manageable by ACPI. */
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I suggest tweaking the subject to mention the actual issue here.  It
+looks like it might be something to do with _S0W?
 
-gcc tested configs:
-arc                                 defconfig
-alpha                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-s390                                defconfig
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-i386                                defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                               rhel-8.3
-s390                             allmodconfig
-arc                              allyesconfig
-arc                  randconfig-r043-20221022
-alpha                            allyesconfig
-m68k                             allyesconfig
-i386                          randconfig-a001
-arm                                 defconfig
-riscv                randconfig-r042-20221022
-m68k                             allmodconfig
-x86_64                           rhel-8.3-kvm
-powerpc                           allnoconfig
-x86_64                           rhel-8.3-syz
-s390                             allyesconfig
-x86_64                         rhel-8.3-kunit
-powerpc                          allmodconfig
-arm64                            allyesconfig
-mips                             allyesconfig
-i386                          randconfig-a003
-s390                 randconfig-r044-20221022
-arm                              allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                             allyesconfig
-x86_64                        randconfig-a013
-sh                               allmodconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a006
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-arc                  randconfig-r043-20221019
-i386                          randconfig-a012
-i386                          randconfig-a016
+On Thu, Oct 20, 2022 at 03:11:11PM -0500, Mario Limonciello wrote:
+> On some firmware configurations where D3 is not supported for
+> "AMD Pink Sardine" the PCIe root port for tunneling will still be
+> opted into runtime PM since `acpi_pci_bridge_d3` returns true.
 
-clang tested configs:
-hexagon              randconfig-r041-20221022
-hexagon              randconfig-r045-20221022
-i386                          randconfig-a002
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a004
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
+This paragraph sounds like it describes where you found the problem,
+but I don't think it helps us understand what the problem *is* or how
+to make sure the patch will work on other systems.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> This later causes the device link between the USB4 router and the
+> PCIe root port for tunneling to misbehave.  The USB4 router may
+> enter D3 via runtime PM, but the PCIe root port for tunneling
+> remains in D0.  The expectation is the USB4 router should also
+> remain in D0 since the PCIe root port for tunneling remained in D0.
+
+I'm not very familiar with device links.  How does the link misbehave?
+Is the link doing something wrong, or is it just that we're putting
+one of the devices in the wrong power state?
+
+I assume the USB4 router would be a descendant of the Root Port.
+Generally descendants can be in lower-power states than their parents.
+What expresses the constraint that the router must stay in D0 because
+its parent is in D0?
+
+> `acpi_pci_bridge_d3` has a number of checks, but starts out with an
+> assumption that if a device is power manageable introduced from
+> commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for D3 if power
+> managed by ACPI") that it will support D3.  This is not a valid
+> assumption, as the PCIe root port for tunneling has power resources
+> but does not support D3hot or D3cold.
+
+It looks like acpi_pci_power_manageable(dev) means "the device has
+_PS0 or _PR0".  Currently we assume that means we can put dev in D3.
+
+And I think you're saying that assumption is a little bit too
+aggressive because if _S0W says the device can't wake from D3hot or
+D3cold, we should *not* use D3?
+
+> Instead of making this assertion from the power resources check
+> immediately, move the check to later on, which will have validated
+> that D3hot or D3cold can actually be reached.
+
+IIUC the intervening code doesn't check whether D3hot/D3cold can be
+*reached*, but whether the device can *wake* from D3hot/D3cold.
+
+> This fixes the USB4 router going into D3 when the firmware says that
+> the PCIe root port for tunneling can't handle it.
+
+For maintenance purposes, I think it will be helpful to know
+specifically which devices are involved (e.g., the PCI bus/device/fns
+would show the PCI relationship) and how the firmware says the Root
+Port can't handle D3.  I assume this would be _S0W?
+
+Maybe even a pidgin example of the ACPI pieces involved here, e.g.,
+
+  RP01._PR0
+  RP01._S0W (0x0)    # in S0, can wake from D0 only
+
+> Fixes: dff6139015dc6 ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Just return value of acpi_pci_power_manageable
+>  * Remove extra word in commit message
+> ---
+>  drivers/pci/pci-acpi.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a46fec776ad77..8c6aec50dd471 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+>  		return false;
+>  
+> -	/* Assume D3 support if the bridge is power-manageable by ACPI. */
+> -	if (acpi_pci_power_manageable(dev))
+> -		return true;
+> -
+>  	rpdev = pcie_find_root_port(dev);
+>  	if (!rpdev)
+>  		return false;
+> @@ -1023,7 +1019,8 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	    obj->integer.value == 1)
+>  		return true;
+>  
+> -	return false;
+> +	/* Assume D3 support if the bridge is power-manageable by ACPI. */
+> +	return acpi_pci_power_manageable(dev);
+>  }
+>  
+>  int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+> -- 
+> 2.34.1
+> 
