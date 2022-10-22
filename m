@@ -2,74 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD28608320
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 03:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B9BB608378
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 04:05:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbiJVB2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Oct 2022 21:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47496 "EHLO
+        id S229683AbiJVCFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Oct 2022 22:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229865AbiJVB2j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 21:28:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7AE2A5683;
-        Fri, 21 Oct 2022 18:28:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CEAD1B82DB5;
-        Sat, 22 Oct 2022 01:28:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E94BC433C1;
-        Sat, 22 Oct 2022 01:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666402115;
-        bh=2Sk/3lIYamfUY5C9LLGc0MR2yjRE7JKe3t3JGmktUuw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=vR7uD+1OYU+EQSJbKZ4AlsvQTT1SepsMwkaiNQ1fb+hZHn1qPC82wlbCP+DpZaAL4
-         PJZkO0upV7O1+WlpZO2IWdRCaksXVFnvwgpK9cS7+Nr4H57Ujl7M8hW7zA/zRKBbRc
-         EJ2fnPz+MnVtv++VgBn0YtQjgPlrP6sgC9JAbU4bWY7isczNKmLL6jUTZVQvee49qM
-         rByIgOeoknWYK+gv2t7MdFodtbdOlh9Sv6B+vn7tjeMXCkI/srebqtosovkVivEgql
-         o+rMjt9jO+34114f94SuEJAhABSHxQhtuL4srJWTfLT6+FfWZfn99RyTxHB2h9Rs1z
-         iiKHXK4H5Hjmg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6FDC5E270DF;
-        Sat, 22 Oct 2022 01:28:35 +0000 (UTC)
-Subject: Re: [GIT PULL] ACPI fixes for v6.1-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0h6OWoyO3om5GjsU-6+jPcXPiR-p+4LA22YD6-ptpnhbg@mail.gmail.com>
-References: <CAJZ5v0h6OWoyO3om5GjsU-6+jPcXPiR-p+4LA22YD6-ptpnhbg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0h6OWoyO3om5GjsU-6+jPcXPiR-p+4LA22YD6-ptpnhbg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.1-rc2
-X-PR-Tracked-Commit-Id: 3f8deab61ea86d738a1e7fdf95e9ad2bf08d14b8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9d6e681d33943e7e5b26b945e680a71311683795
-Message-Id: <166640211544.11783.7532023669913523373.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Oct 2022 01:28:35 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229535AbiJVCFp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Oct 2022 22:05:45 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67EEF23AB5A;
+        Fri, 21 Oct 2022 19:05:42 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.32])
+        by gateway (Coremail) with SMTP id _____8Cxbbf1T1Nju5EBAA--.1939S3;
+        Sat, 22 Oct 2022 10:05:41 +0800 (CST)
+Received: from [10.20.42.32] (unknown [10.20.42.32])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxj+D0T1NjQCgDAA--.12570S3;
+        Sat, 22 Oct 2022 10:05:40 +0800 (CST)
+Subject: Re: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ
+ polarity
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, rafael@kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20221021120129.GA185586@bhelgaas>
+From:   Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <8362ab48-7769-8139-8ca9-aca75147a853@loongson.cn>
+Date:   Sat, 22 Oct 2022 10:05:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20221021120129.GA185586@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Bxj+D0T1NjQCgDAA--.12570S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJr1UAF45uw4Dtr4xJFyrJFb_yoW8JFWkpF
+        WYg3WayF4Dtw45Zrn7ta1UA3WYyF43trsxJws8A3yrW3s0vw15Xr18tayrKF93CrZ7A340
+        vFySv348u3WYkrJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
+        e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
+        aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+        xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+        6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Fri, 21 Oct 2022 20:48:42 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.1-rc2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9d6e681d33943e7e5b26b945e680a71311683795
+On 2022/10/21 下午8:01, Bjorn Helgaas wrote:
+> On Fri, Oct 21, 2022 at 09:58:57AM +0800, Jianmin Lv wrote:
+>> On 2022/10/21 上午12:47, Bjorn Helgaas wrote:
+>>> On Thu, Oct 20, 2022 at 04:22:02PM +0800, Jianmin Lv wrote:
+>>>> On LoongArch ACPI based systems, the PCI devices (e.g. sata
+>>>> controlers and PCI-to-to PCI bridge controlers) existed in
+>>>> Loongson chipsets output high-level interrupt signal to the
+>>>> interrupt controller they connected to,
+> 
+>>> The point is that one should be able to write this code from a spec,
+>>> without having to empirically discover the interrupt polarity.  What
+>>> spec tells you about using ACTIVE_HIGH here?
+>>>
+>> Yes, no mentions for the inverter in ACPI spec, the description about
+>> device interrupt type can be found in Loongson chipset manual:
+>>
+>> https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongson-7A1000-usermanual-EN/interrupt-controller/device-interrupt-types.adoc
+> 
+> That's the kind of reference I was looking for.  The link to HTML is
+> convenient in some ways, but since specs evolve over time and URLs are
+> ephemeral, I think a citation like "Loongson 7A1000 Bridge User Manual
+> v2.00, sec 5.3" is more likely to be useful far in the future.
+> 
+Ok, good suggestion, thanks.
 
-Thank you!
+> Bjorn
+> 
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
