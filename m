@@ -2,96 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7E91608B94
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 12:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6795608CB4
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Oct 2022 13:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230393AbiJVK0T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Oct 2022 06:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37160 "EHLO
+        id S230305AbiJVLd1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Oct 2022 07:33:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230160AbiJVKZm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 06:25:42 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E098930A40E;
-        Sat, 22 Oct 2022 02:41:19 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.32])
-        by gateway (Coremail) with SMTP id _____8Bxnrf8olNjMp0BAA--.2161S3;
-        Sat, 22 Oct 2022 15:59:56 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1f7olNjLlUDAA--.13337S4;
-        Sat, 22 Oct 2022 15:59:55 +0800 (CST)
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>, rafael@kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH V5 2/4] irqchip/loongson-pch-pic: fix translate callback for DT path
-Date:   Sat, 22 Oct 2022 15:59:53 +0800
-Message-Id: <20221022075955.11726-3-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
-References: <20221022075955.11726-1-lvjianmin@loongson.cn>
+        with ESMTP id S230020AbiJVLdH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Oct 2022 07:33:07 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B9635CA
+        for <linux-pci@vger.kernel.org>; Sat, 22 Oct 2022 04:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666437218; x=1697973218;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JHIzt8ymeztBZThL/F24h91M0JFo/zsfSPfHDo93AMI=;
+  b=I4U3mLkZBHAt2/AbCaRru/XPoO69dygt3o9GjcHQa8o8Md0j0sECnCVx
+   AOhJeKVpkU/BRkIAAA0JKXqwKo6mLMfpFUbkF9ERLZOCOi1q/1JWk89p1
+   p0G7jBmgVcoGaSMJ1u2xVuREgXjCYBN4WlHRXJHzHrylScstFSNGg8p49
+   /dzAGQ/fY0dx4S1D7aZWQk8JmY/Jz6WW0c1Kwei09vX2L7sUzOdLWDsR1
+   JFuBrpBFh9hEbRRw25ffdPNUQe43FsZmLD011vBuVfbszGrr5CvPn6ovG
+   BQwn9IbdlLbxenY3NoBPTkRRqLYYFrHLByf2iFNAHwc7UpaLxlEROyn9s
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369243197"
+X-IronPort-AV: E=Sophos;i="5.95,205,1661842800"; 
+   d="scan'208";a="369243197"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2022 04:13:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="773343581"
+X-IronPort-AV: E=Sophos;i="5.95,205,1661842800"; 
+   d="scan'208";a="773343581"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2022 04:13:36 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1omCRb-0003ag-3D;
+        Sat, 22 Oct 2022 11:13:35 +0000
+Date:   Sat, 22 Oct 2022 19:12:38 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:wip/bjorn-22-10-config-of] BUILD SUCCESS
+ f9864e8f2ce05244bc0e15e6593972f07dfcea8c
+Message-ID: <6353d026.Ieh/yVjHE3mUxBIS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx_1f7olNjLlUDAA--.13337S4
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr15GF4rZr43JFyxZF1rCrg_yoWktFb_uF
-        1SqFn3Kw17Zr1Iq3y8Kr4rXF9rta4Du3WvkFs5Aay5GayUXayxAr1Svw4fJa9rGFWUAF1f
-        C395ur1xZF4I9jkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-        6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-        w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-        kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-        07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8
-        JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-        YxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In DT path of translate callback, if fwspec->param_count==1
-and of_node is non-null, fwspec->param[1] will be accessed,
-which is introduced from previous commit bcdd75c596c8
-(irqchip/loongson-pch-pic: Add ACPI init support).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-22-10-config-of
+branch HEAD: f9864e8f2ce05244bc0e15e6593972f07dfcea8c  PCI: Drop controller CONFIG_OF dependencies
 
-Before the patch, for non-null of_node, translate callback
-(use irq_domain_translate_twocell()) will return -EINVAL if
-fwspec->param_count < 2, so the check in the patch is added.
+elapsed time: 725m
 
-Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
----
- drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
- 1 file changed, 3 insertions(+)
+configs tested: 58
+configs skipped: 2
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index c01b9c257005..03493cda65a3 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -159,6 +159,9 @@ static int pch_pic_domain_translate(struct irq_domain *d,
- 		return -EINVAL;
- 
- 	if (of_node) {
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
-+
- 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
- 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
- 	} else {
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+alpha                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+s390                                defconfig
+x86_64                           allyesconfig
+x86_64                          rhel-8.3-func
+i386                                defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                               rhel-8.3
+s390                             allmodconfig
+arc                              allyesconfig
+arc                  randconfig-r043-20221022
+alpha                            allyesconfig
+m68k                             allyesconfig
+i386                          randconfig-a001
+arm                                 defconfig
+riscv                randconfig-r042-20221022
+m68k                             allmodconfig
+x86_64                           rhel-8.3-kvm
+powerpc                           allnoconfig
+x86_64                           rhel-8.3-syz
+s390                             allyesconfig
+x86_64                         rhel-8.3-kunit
+powerpc                          allmodconfig
+arm64                            allyesconfig
+mips                             allyesconfig
+i386                          randconfig-a003
+s390                 randconfig-r044-20221022
+arm                              allyesconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                             allyesconfig
+x86_64                        randconfig-a013
+sh                               allmodconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a006
+i386                          randconfig-a005
+x86_64                        randconfig-a015
+i386                          randconfig-a014
+arc                  randconfig-r043-20221019
+i386                          randconfig-a012
+i386                          randconfig-a016
+
+clang tested configs:
+hexagon              randconfig-r041-20221022
+hexagon              randconfig-r045-20221022
+i386                          randconfig-a002
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a004
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+
 -- 
-2.31.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
