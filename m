@@ -2,229 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32EDF60B1D3
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 18:38:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F70860B4A5
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 19:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234340AbiJXQi0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Oct 2022 12:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        id S230199AbiJXR7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 13:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232519AbiJXQiE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 12:38:04 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974C9C8208;
-        Mon, 24 Oct 2022 08:25:44 -0700 (PDT)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MwvcM3MgZz6897v;
-        Mon, 24 Oct 2022 20:33:07 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Mon, 24 Oct 2022 14:36:34 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 24 Oct
- 2022 13:36:34 +0100
-Date:   Mon, 24 Oct 2022 13:36:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
-        <alison.schofield@intel.com>, <bwidawsk@kernel.org>,
-        <vishal.l.verma@intel.com>, <a.manzanares@samsung.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221024133633.00000467@huawei.com>
-In-Reply-To: <6355f3b933235_1d21294da@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20221018030010.20913-1-dave@stgolabs.net>
-        <20221018030010.20913-2-dave@stgolabs.net>
-        <63546939ea062_1419294f6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-        <Y1XX1tVLQoYmYnSM@iweiny-mobl>
-        <6355f3b933235_1d21294da@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S231331AbiJXR6l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 13:58:41 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766D814D1C0;
+        Mon, 24 Oct 2022 09:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666629549; x=1698165549;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=wP7GcARxnBDRGVQtKaGTP/lRpE9CMir6AoJ6BmEdSMU=;
+  b=KAP5Or2dvlchwip01cLp/oWKq0S9G/kSMVJWYoHvzNHKvpgwU8weXbp3
+   ZdnhY5sggIz62/eedFcCGzuadiHWhMMSm4vcS5GiKvu0g6i/TFhKG8vFc
+   MpB0cmoERXedHe1BMGAuip+QIC/0h4mPhYxGABu1lQa6zke3EGT2ffZVh
+   9B2hkLoBbCKSbbRFARtuDer5tbECWvlp7fn599fLjItlBopU/ne2PxKJn
+   g6DyKorsik5s8lIzHzGsoEPvQGaAkz22hJDMGGFTiqvah1CJAsCrTlqi3
+   UahYIYHMzzlnKLAhtvS+j8dKDz6SiGGZ2MfU0hlLzJflc0UxpOxaR099O
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="393783364"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="393783364"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 09:37:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="609257578"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="609257578"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2022 09:37:32 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 24 Oct 2022 09:37:32 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 24 Oct 2022 09:37:31 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Mon, 24 Oct 2022 09:37:31 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Mon, 24 Oct 2022 09:37:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i7FX4Dcys7KpARIYeWgyTQ3TzEZx5iP3Z/6yAc9vd22xEoYBYTxLhGwAfBmYO8vMTC3k2C8v6CFaf0d/1Is1EJvbZ1eS6YxhCjZGuiGlH+IPNQetfnxgNb/YGzEUNfJn+9sgrue0mK6bsjnN/YzR9sfpePAICp2KlJCf+H1sf9q6BEHuPrJRMG2qDzEFFA6Wk2OJA40q9TIwjvVFwS/3/NdyOBqTchOlGX/sZMr8uMKgtQhUuYgVwUB9vFjHG08BOmkojf4/NQx9hh3Ba+EBx76bp+EbAC0IG1qwr9vytXua77tch6AoZcUNEXiia5c1mVTOyYkQzUxemsz3vB3vbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K9IfnsDeFwVQ1W1jxqWlUVBS49FENYsoTk2vabXknpU=;
+ b=ZOu26kWe1vDtw4SlNbsttoHt2lIun0ywDQklibf4IjwyKuNoao1Ye7FYvMFFNsi4ARxcIOGDcBpgxnRxa5uFo3qlvlMmC9zvm5DuI4LtgPQybvFcm4VFZ6byy4cS4Va1XBuxAba6Ics8oMNvM8macorqyXnIhB5Hc+J1tVTy6SBba/lL2Zv9FkGqPkFWJVWPZe0xCXgyfF9gp19DNpU89Mk+HQTnFL1Gwc1XBeBObgi2TfjrDRlCgiZH58htWMor0m1/9RR/WBV08188gekW/i4Qj/P+jGEq6ykfKz2+I0WTiGtosg5KKBiIFDONR1Kpi1dV3eHxKzxY5EeE3fCLfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by SA2PR11MB4809.namprd11.prod.outlook.com
+ (2603:10b6:806:112::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.21; Mon, 24 Oct
+ 2022 16:37:30 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::7d5a:684d:99f7:4e83%12]) with mapi id 15.20.5746.023; Mon, 24 Oct
+ 2022 16:37:30 +0000
+Date:   Mon, 24 Oct 2022 09:37:25 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mm@kvack.org>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        "Jason Ekstrand" <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Martin Oliveira" <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Stephen Bates" <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: RE: [PATCH v11 1/9] mm: allow multiple error returns in
+ try_grab_page()
+Message-ID: <6356bf459ba_1d21294c1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20221021174116.7200-1-logang@deltatee.com>
+ <20221021174116.7200-2-logang@deltatee.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20221021174116.7200-2-logang@deltatee.com>
+X-ClientProxiedBy: BYAPR01CA0040.prod.exchangelabs.com (2603:10b6:a03:94::17)
+ To MWHPR1101MB2126.namprd11.prod.outlook.com (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SA2PR11MB4809:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33c2f555-6dbe-46f3-d38f-08dab5de0ae5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1Z744B31IQuppiOaAxweFV3XWQ7kvsJFgEfcqO/QcIdusmJvXlPXdfY/HooYiq52kFjjAOTmRrmrh5instDnoEB3TT+ToN5Vm6rpzhXhpgYN3ieVMZ9Fl4pdLgDXzIjml3HiIzASnB2qJCswfYCFE3EVFilfoyY9LQSK26LGhP7vxJ8aYR8qPyz5Of/RDZk68pe61LiC8qqUY6dlFT2WWIm2NCLCOJNhnznq4JgSEqRyw4dyMTh/gi2wxbY+cqTEaELWnY7nWGucNKcB9wKJs+ync+fLkhgFMX7KRDquFmF25uIaFtR0m3eobQ9XayBkTEpbu9AlXIXM/bnM8osM1zjbjupC9C7GfuWSAH2DknC5DKKD+LK6fY0aJjeUgHQgU1wFp5Ua6Ap6oFNj/kXDg3kvZNvUuMQEcxnrdlKnj87t8k4aQ+V2IFh06UYmgA8mFz7eYyR7nbeQ1d8yRVjSf095jiURcLbHsnor6U3zMECYKznPI2ZzHIiu7fvmEwOI4B95LBExmRJq3ypmxwx3vP89qQeUrhCmzX5AMnyhOMUD48S1/0C6OTrP9oz1tiauJCNPdBjJ34zKNs97iTs1lUWia5qAxe3dPbRAruWuXfmd4eoW95kEE7CNBJqiCs2k9jJcvq/oSH7Y4070N2cQHoKawp3dr4PlGJETI8kbRcatOwH7oA1kDYhzKjACioeYYQkKpKdECZ70pbBKTyB6ig==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(136003)(39860400002)(396003)(366004)(376002)(451199015)(6512007)(6666004)(6506007)(478600001)(9686003)(26005)(6486002)(2906002)(86362001)(82960400001)(38100700002)(5660300002)(186003)(83380400001)(316002)(41300700001)(66476007)(4326008)(8676002)(54906003)(7416002)(4744005)(66946007)(66556008)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?A/YEdXvkRo4OLxjovpCuZZ1rvAKwZKXrEfiFOUqsIuwidQY3/Y9PnFZKBbD4?=
+ =?us-ascii?Q?RQXwB3qiNlrNwPX6361tgPhv7LpaWlWPZcEUX+bW3/pWjyymk8P9xS3Z3dG+?=
+ =?us-ascii?Q?a6ptj+qmKhAcYK3tCeG8FQwhNmplXAGnXZ9cBfmlKbwMNia4ToZoBlFQQ+lX?=
+ =?us-ascii?Q?yT3CzIKfrT8Q3FHEG9HIkrgOIM/k6M3pauxVZzFgetp6oEU+QzpR32IQisey?=
+ =?us-ascii?Q?K03ljkff3mALZuqfHGwYb3ID1nDvywGkuibbHfCb2nAS4720mAeWgJhQYH68?=
+ =?us-ascii?Q?LbJCmewlYfrtZkd4IkQqReZXk0EK07f0yiLKThxLCr5/UQswV8ubpbb4UvSq?=
+ =?us-ascii?Q?biYQsRlKqK/UOy6it/BbuzFaRIBTCDtn380qauCirmrv9ycnp8nU8OVXAHqb?=
+ =?us-ascii?Q?sLU5OjML1H1Xj2RNzT+Wu8OOVNo+SqnQoO8TE14kS51t1uLwTo9r1y3WUcfo?=
+ =?us-ascii?Q?iw9WFzeZoWqqwx/CvQKYL+5nCErgDI/pXgCR9ybICzcgEYO6/IDX2PlO3MEy?=
+ =?us-ascii?Q?yXag91hQ3ik63Kzf3seuRfDeBXk2rFoOcZ/cyeUl4+0ZsaY2nz0B1LKGWcLn?=
+ =?us-ascii?Q?96WNNtP1yQRSXJRkQgiwzWHortzfFa8ILWxMugcVxEVhjo6aDdNS00//U7FV?=
+ =?us-ascii?Q?yj1VRsY1VRwuqXovZsTtSdTpfa81lto0S6hUMKay6G1yAw+XrNY5cWCEx9hK?=
+ =?us-ascii?Q?MglZTfSeY3iOruAr8/xTJWlLLtd0EqMU36v5W5+xRS1ESkRWndSg/wbyLdlI?=
+ =?us-ascii?Q?THm/gTOQuvJ+IPIhUN4adE/MCAx0dCMnzgSFmYDtBNT1dZiSW6CzbFzS1LGJ?=
+ =?us-ascii?Q?0VhArncRQMKEvRirpUlFOk0+1wss8Z/0cLreTKGKWtGI6p4vgoXRelpjU1Qn?=
+ =?us-ascii?Q?5nPlIjYPNrAba1yzauYyPFw7ptxe371p+0ydV7RVrGAooZp5UEIwp6VlFenH?=
+ =?us-ascii?Q?VxLZjm8LBVX7nUlHmgoc2n/dP792hSz/HULKNRJ/VnmVovtxqXaIc2UOSaNy?=
+ =?us-ascii?Q?v9lErrAWMujpd/mEUjLeOjDSfBfSG3tM5bBwzhzyZWK++WWhfI/S2ls+zEVF?=
+ =?us-ascii?Q?CaSSULy/SnO8GnbCTzLSve+a4eIJxk1cdFLk5IQbxGg7cS0E1HsjbGbWEdd7?=
+ =?us-ascii?Q?gjWKkH9x6afVQVQ9y16d8KyUVehgp06e79cPGqf60cRHRPgMc7SUL8h9KXFZ?=
+ =?us-ascii?Q?2tj3GP+QkJ9182OMPz9T2Af0ywHf22vdNnY814FnOFEeKfqPDiehOkzTagkT?=
+ =?us-ascii?Q?xvvEWaJuLRFJiQt8CN+Ftyb2LAOleISKBm+hBWYrfVgrtx2o5J22d3janyj4?=
+ =?us-ascii?Q?unpE1pOGC04Mt7zVBXytqsQQmphKHzCEUkzUPun4iUOALUITclhYbDuZGkYu?=
+ =?us-ascii?Q?LybaLSy8/C/S3ogiPZL+4GlHT7DdvAQ4aKb5hIzrY66km+yG0fssMO+9r5lu?=
+ =?us-ascii?Q?2XzYDdZdK+R7ttqnr0SF2GDC/CKZG+AtnXjZlWvhQE41FtE2bZNeKM2K9Qda?=
+ =?us-ascii?Q?IcJv4x5AMaU1is4tGjAd+FVJCuz6lryN0Bg7wZIlMdiFrWs9NQLnRVtLV+fB?=
+ =?us-ascii?Q?pY4AYRmI1Ew8j1sT9xgo9wLmYBTPPaHp7VgRMYFEumy29dYGFe37ydQ2YDAS?=
+ =?us-ascii?Q?hw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33c2f555-6dbe-46f3-d38f-08dab5de0ae5
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 16:37:29.8891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DsIbt8jTlFMhASR125g7PbjVuzmPvjXaWjvWFg2AiW5OOZO9zxOPUFG2JR9l0yl3nfuZcM+eAHTEeN+3WdLywCmGN6ZNxUCEAVnSaAjBIjY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4809
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 23 Oct 2022 19:08:57 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Ira Weiny wrote:
-> > On Sat, Oct 22, 2022 at 03:05:45PM -0700, Dan Williams wrote:  
-> > > Davidlohr Bueso wrote:  
-> > > > Introduce a generic irq table for CXL components/features that can have
-> > > > standard irq support - DOE requires dynamic vector sizing and is not
-> > > > considered here. For now the table is empty.
-> > > > 
-> > > > Create an infrastructure to query the max vectors required for the CXL
-> > > > device. Upon successful allocation, users can plug in their respective isr
-> > > > at any point thereafter, which is supported by a new cxlds->has_irq flag,
-> > > > for example, if the irq setup is not done in the PCI driver, such as
-> > > > the case of the CXL-PMU.
-> > > > 
-> > > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > > ---
-> > > >  drivers/cxl/cxlmem.h |  3 ++
-> > > >  drivers/cxl/pci.c    | 72 ++++++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 75 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index 88e3a8e54b6a..72b69b003302 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h
-> > > > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
-> > > >   * @info: Cached DVSEC information about the device.
-> > > >   * @serial: PCIe Device Serial Number
-> > > >   * @doe_mbs: PCI DOE mailbox array
-> > > > + * @has_irq: PCIe MSI-X/MSI support
-> > > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> > > >   *
-> > > >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > > > @@ -247,6 +248,8 @@ struct cxl_dev_state {
-> > > >  
-> > > >  	struct xarray doe_mbs;
-> > > >  
-> > > > +	bool has_irq;
-> > > > +
-> > > >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> > > >  };
-> > > >  
-> > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > > index faeb5d9d7a7a..9c3e95ebaa26 100644
-> > > > --- a/drivers/cxl/pci.c
-> > > > +++ b/drivers/cxl/pci.c
-> > > > @@ -428,6 +428,73 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
-> > > >  	}
-> > > >  }
-> > > >  
-> > > > +/**
-> > > > + * struct cxl_irq_cap - CXL feature that is capable of receiving MSI-X/MSI irqs.
-> > > > + *
-> > > > + * @name: Name of the device/component generating this interrupt.
-> > > > + * @get_max_msgnum: Get the feature's largest interrupt message number.  If the
-> > > > + *		    feature does not have the Interrupt Supported bit set, then
-> > > > + *		    return -1.
-> > > > + */
-> > > > +struct cxl_irq_cap {
-> > > > +	const char *name;
-> > > > +	int (*get_max_msgnum)(struct cxl_dev_state *cxlds);  
-> > > 
-> > > Why is this a callback, why not just have the features populate their
-> > > irq numbers?  
-> > 
-> > I think we have decided to forgo the callback but I'm not sure what you mean by
-> > 'populate their irq numbers'?
-> >   
-> > >   
-> > > > +};
-> > > > +
-> > > > +static const struct cxl_irq_cap cxl_irq_cap_table[] = {
-> > > > +	NULL
-> > > > +};
-> > > > +
-> > > > +static void cxl_pci_free_irq_vectors(void *data)
-> > > > +{
-> > > > +	pci_free_irq_vectors(data);
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * Attempt to allocate the largest amount of necessary vectors.
-> > > > + *
-> > > > + * Returns 0 upon a successful allocation of *all* vectors, or a
-> > > > + * negative value otherwise.
-> > > > + */
-> > > > +static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > > > +{
-> > > > +	struct device *dev = cxlds->dev;
-> > > > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > > > +	int rc, i, vectors = -1;
-> > > > +
-> > > > +	for (i = 0; i < ARRAY_SIZE(cxl_irq_cap_table); i++) {
-> > > > +		int irq;
-> > > > +
-> > > > +		if (!cxl_irq_cap_table[i].get_max_msgnum)
-> > > > +			continue;
-> > > > +
-> > > > +		irq = cxl_irq_cap_table[i].get_max_msgnum(cxlds);
-> > > > +		vectors = max_t(int, irq, vectors);
-> > > > +	}  
-> > > 
-> > > Forgive me if I have missed something, I only look at interrupt enable
-> > > code once every few years, and the APIs are always a bit different, but
-> > > is this not too early to read the message number? The number is not
-> > > stable until either MSI or MSI-X has been selected below at
-> > > pci_alloc_irq_vectors() time?  
-> >  
-> > Well I keep getting wrapped around the axle on this one too.
-> > 
-> > This all started back when Jonathan originally attempted to allocate the
-> > maximum number of vectors a device _could_ allocate.  But it was recommended that
-> > we determine the max number first then allocate that number.
-> > 
-> > This seems like a chicken and egg issue.  How is the number not stable before
-> > calling pci_alloc_irq_vectors() when you need the max msg number in that call?  
+Logan Gunthorpe wrote:
+> In order to add checks for P2PDMA memory into try_grab_page(), expand
+> the error return from a bool to an int/error code. Update all the
+> callsites handle change in usage.
 > 
-> Are we talking about the same thing? I am talking about the value in the
-> "Interrupt Message Number" field. That depends on whether MSI or MSI-X
-> gets enabled. The number of vectors the device can support is static.
-> 
-> Since CXL is such an a la carte spec I think this is situation to just
-> specify a large number of amx vectors to pci_alloc_irq_vectors() and
-> then find out after the fact if all of the interrupt generators that
-> today's cxl_pci knows about in the device each got their own vector.
+> Also remove the WARN_ON_ONCE() call at the callsites seeing there
+> already is a WARN_ON_ONCE() inside the function if it fails.
 
-I'd misunderstood how this worked and not read the spec :( I wrongly thought portdrv
-did the query first and allocated the vectors after, but that's not
-the case.  It first allocates max entries, then frees them all and then
-allocates the ones that we find present.
-We should probably look to do something similar to that though I'm not sure
-even that code is always optimal.
+Looks good,
 
-https://elixir.bootlin.com/linux/v6.1-rc2/source/drivers/pci/pcie/portdrv_core.c#L101
-
-In short that calls:
-/* Allocate the maximum possible number of MSI/MSI-X vectors */
-nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
-			PCI_IRQ_MSIX | PCI_IRQ_MSI);
-
-/* See how many and which Interrupt Message Numbers we actually use */
-nvec = pcie_message_numbers(dev, mask, &pme, &aer, &dpc);
-
-if (nvec != nr_entries) {
-	pci_free_irq_vectors(dev);
-
-	nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
-			PCI_IRQ_MSIX | PCI_IRQ_MSI);
-}
-
-My worry here is that the implicit assumption is that the vectors won't
-move if we reduce the overall number of vectors we are asking for...
-
-However, imagine the case that we have a feature the driver doesn't know
-about that was previously at a higher vector.  After reducing the vectors
-allocated the hardware might decide that feature needs it's own vector whereas
-some others can be combined.  Hence we'd end up with a less than ideal packing
-for the features we actually support.
-
-Could do something iterative to solve this if it actually matters (increase
-number of vectors until the layout matches what we get with max possible vectors).
-
-+CC linux-pci and Bjorn for their take on this.  Maybe I'm over thinking things
-and in reality this never happens.
-
-Jonathan
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
