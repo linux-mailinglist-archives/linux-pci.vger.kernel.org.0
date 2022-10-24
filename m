@@ -2,171 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0974609CA1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 10:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E25D609FEE
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 13:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbiJXI2m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Oct 2022 04:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55820 "EHLO
+        id S230100AbiJXLNH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 07:13:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230337AbiJXI2U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 04:28:20 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DEB1CFF6;
-        Mon, 24 Oct 2022 01:28:13 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 40DBB220E61;
-        Mon, 24 Oct 2022 10:27:24 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9604220E93;
-        Mon, 24 Oct 2022 10:27:23 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 21D631820F58;
-        Mon, 24 Oct 2022 16:27:22 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
-        kw@linux.com, frank.li@nxp.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: [RESEND v4 14/14] PCI: imx6: Add i.MX8MP PCIe EP support
-Date:   Mon, 24 Oct 2022 16:06:43 +0800
-Message-Id: <1666598803-1912-15-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1666598803-1912-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1666598803-1912-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229947AbiJXLNF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 07:13:05 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1562E3BC6E;
+        Mon, 24 Oct 2022 04:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666609974; x=1698145974;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IDfM8jGZjDfRkbfYuPxY5RjqRTTZCt2OQ32W3baC7Dc=;
+  b=UwEGJkGgeLJmqQ31dTaoV2h9gdgbGVk73k4DeY8YVUDtjgvfGKlMoSU3
+   ryMoJGrWYuEvWvAjU3woTnFs9dUntjTcmOFd3Hm9dsSTNHP35aTWAwCaY
+   dHW720OfuFillBINz6ZkA0leRP1m5A+Au03XqAQphjYtHtMNgVa+QFGOP
+   n5a46vbczN92k1F03nNdwwnclLCA1fGNNOPqd6NuLRhgeslsEoWOlSQkw
+   270Xzg+wNGlwXFwZvb6ru/r9sHy2RqH1zzPKAxJvzfybNPzhCdPZkgZF2
+   sAqJyl5A0gWgBdd6mXGukboN6uGcrClS4Fj5uCnV0NbeJaYVbzpw1QyXY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="307380897"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="307380897"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 04:12:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="626038379"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="626038379"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 24 Oct 2022 04:12:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id A6EE1291; Mon, 24 Oct 2022 14:13:10 +0300 (EEST)
+Date:   Mon, 24 Oct 2022 14:13:10 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
+ <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+ <20221014154858.000079f2@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221014154858.000079f2@huawei.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the i.MX8MP PCIe EP support.
+Hi,
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:
+> > Thanks for the detailed report! I wonder if you could try the below
+> > patch and see if it changes anything?
+> Thanks for the quick response.
+> 
+> Doesn't fix it unfortunately.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 3f01cf3776ec..3f04b9ebfd0f 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -54,6 +54,7 @@ enum imx6_pcie_variants {
- 	IMX8MP,
- 	IMX8MQ_EP,
- 	IMX8MM_EP,
-+	IMX8MP_EP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -158,7 +159,8 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
- 		imx6_pcie->drvdata->variant != IMX8MQ_EP &&
- 		imx6_pcie->drvdata->variant != IMX8MM &&
- 		imx6_pcie->drvdata->variant != IMX8MM_EP &&
--		imx6_pcie->drvdata->variant != IMX8MP);
-+		imx6_pcie->drvdata->variant != IMX8MP &&
-+		imx6_pcie->drvdata->variant != IMX8MP_EP);
- 	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
- }
- 
-@@ -323,6 +325,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		/*
- 		 * The PHY initialization had been done in the PHY
- 		 * driver, break here directly.
-@@ -584,6 +587,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
- 		if (ret) {
- 			dev_err(dev, "unable to enable pcie_aux clock\n");
-@@ -631,6 +635,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		clk_disable_unprepare(imx6_pcie->pcie_aux);
- 		break;
- 	default:
-@@ -701,6 +706,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	case IMX6SX:
-@@ -779,6 +785,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		break;
- 	}
- 
-@@ -831,6 +838,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_deassert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -853,6 +861,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		reset_control_assert(imx6_pcie->apps_reset);
- 		break;
- 	}
-@@ -1104,6 +1113,7 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ_EP:
- 	case IMX8MM_EP:
-+	case IMX8MP_EP:
- 		pcie_dbi2_offset = SZ_1M;
- 		break;
- 	default:
-@@ -1318,6 +1328,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	case IMX8MM:
- 	case IMX8MM_EP:
- 	case IMX8MP:
-+	case IMX8MP_EP:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux))
- 			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-@@ -1487,6 +1498,11 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.mode = DW_PCIE_EP_TYPE,
- 		.gpr = "fsl,imx8mm-iomuxc-gpr",
- 	},
-+	[IMX8MP_EP] = {
-+		.variant = IMX8MP_EP,
-+		.mode = DW_PCIE_EP_TYPE,
-+		.gpr = "fsl,imx8mp-iomuxc-gpr",
-+	},
- };
- 
- static const struct of_device_id imx6_pcie_of_match[] = {
-@@ -1499,6 +1515,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
- 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
- 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
-+	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
- 	{},
- };
- 
--- 
-2.25.1
+I'm back now.
 
+Trying to reproduce this with mainline kernel (arm64 defconfig) and the
+following command line:
+
+qemu-system-aarch64 \
+        -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+        -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
+        -nographic -no-reboot  \
+        -kernel Image \
+        -initrd rootfs.cpio.bz2 \
+        -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
+        -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+        -device e1000,bus=root_port13,addr=0.1 \
+        -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
+        -device e1000,bus=fun1
+
+But the resulting PCIe topology is pretty flat:
+
+# lspci
+00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
+00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
+
+I wonder what I'm missing here? Do I need to enable additional drivers
+to get the topology to resemble yours?
