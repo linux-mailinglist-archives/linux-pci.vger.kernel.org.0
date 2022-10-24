@@ -2,49 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77AEB60BD6C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 00:31:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE6560BDCF
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 00:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231583AbiJXWbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Oct 2022 18:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
+        id S229810AbiJXWuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 18:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230379AbiJXWbA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 18:31:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C311EEDB;
-        Mon, 24 Oct 2022 13:53:36 -0700 (PDT)
+        with ESMTP id S230305AbiJXWt1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 18:49:27 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ABF16B65C
+        for <linux-pci@vger.kernel.org>; Mon, 24 Oct 2022 14:11:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ABBE5B81256;
-        Mon, 24 Oct 2022 20:15:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A42FC433C1;
-        Mon, 24 Oct 2022 20:15:23 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id AB5F9CE1626
+        for <linux-pci@vger.kernel.org>; Mon, 24 Oct 2022 20:45:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D3DC433D7;
+        Mon, 24 Oct 2022 20:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666642523;
-        bh=xEWdBM9qSYgzpaNASrM84NyeJRDhAIn4IvuxzVCKFW8=;
+        s=k20201202; t=1666644336;
+        bh=QKzuXrExD6Y4a2PJjuLvU/WiHn9m3W/7UuBFYy5WFMk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ealXhwo+7w+BBr6C8mTNl1Mvzk79zJiz9HehraOdQsitv2YRDKBCV32FunWoLP8DP
-         tpcLU3ciyHsMyMNaMhfP519qy6vNKBIukiZoPkaffPP9V7DmK7MTMKY2xyLYYaq6fi
-         CP7QOmLwdUKHb+Be+3nSsPeBvvKXDNCjNMnR3QlEyQeh+Zi93oDehE1JKPvrvhLjzh
-         wz8xTp1rW4aUed6E+o7dFbZvBCdwHafzDQJqOqJgb32L2CpTVQpD8GVIdGnjR83EaR
-         jKiFi9siO8V6KWy7vzHvTqvpxIw5d8/GSHmxonO1zi23tl0QzH6LmkhO3UUn7/6WRI
-         X6MpziUpWbJNQ==
-Date:   Mon, 24 Oct 2022 15:15:21 -0500
+        b=RKudoxf02Y3pKhn8O4gBjRmoyke3gXAIKoFazPyGrUJVYn9PSzcTGcMaMtdsvjwAY
+         bfkMEW8bDOXAftt9QRzXByuDPyenr7iJaHeKPMNqBaI3lvepwNfmnmWjzy8xFQtFHh
+         1kVJjqDul8CRueHzmylkBbGZBKF/wvv64VhUT878RdB25NTEwYjK/ruLJaX+tfIwvd
+         hFPwFCrzW7k6dQwHxCQLDSnxkTtcqAmDpMuyG8JVqczoj+YIybp2IouJVmQbnPaNxn
+         TA38JrUeMfp9ts1CnkZWDFbpnBWCMCUsC4lXIR957J2TP0fhpuw7VrnWtmeQZ9S5wH
+         xtbnu60xycsxA==
+Date:   Mon, 24 Oct 2022 15:45:34 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Stefan Roese <sr@denx.de>, Lukas Wunner <lukas@wunner.de>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/3] PCI/portdrv: Squash into portdrv.c
-Message-ID: <20221024201521.GA587383@bhelgaas>
+To:     francisco.munoz.ruiz@linux.intel.com
+Cc:     lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
+        linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+Subject: Re: [PATCH] PCI: vmd: Fix secondary bus reset for Intel bridges
+Message-ID: <20221024204534.GA589134@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221019204127.44463-1-helgaas@kernel.org>
+In-Reply-To: <20220923203757.4918-1-francisco.munoz.ruiz@linux.intel.com>
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,32 +52,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 03:41:24PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Sep 23, 2022 at 01:37:57PM -0700, francisco.munoz.ruiz@linux.intel.com wrote:
+> From: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
 > 
-> The PCIe portdrv is split across portdrv_core.c and portdrv_pci.c, but
-> neither is very big and it's a hassle to figure out which to look at.
-> 
-> Squash them into a single portdrv.c file.  Make functions static and
-> non-exported when possible, and move some private things out of portdrv.h.
-> 
-> Please comment.
-> 
-> Bjorn Helgaas (3):
->   PCI/portdrv: Squash into portdrv.c
->   PCI/portdrv: Move private things to portdrv.c
->   PCI/portdrv: Unexport pcie_port_service_register(),
->     pcie_port_service_unregister()
-> 
->  drivers/pci/pcie/Makefile                     |   2 +-
->  .../pci/pcie/{portdrv_core.c => portdrv.c}    | 263 +++++++++++++++++-
->  drivers/pci/pcie/portdrv.h                    |  19 --
->  drivers/pci/pcie/portdrv_pci.c                | 252 -----------------
->  4 files changed, 253 insertions(+), 283 deletions(-)
->  rename drivers/pci/pcie/{portdrv_core.c => portdrv.c} (69%)
->  delete mode 100644 drivers/pci/pcie/portdrv_pci.c
+> The reset was never applied in the current implementation because Intel
+> Bridges owned by VMD are parentless. Internally, the reset API applies
+> a reset to the parent of the pci device supplied as argument, but in this
+> case it failed because there wasn't a parent. This change feeds a child
+> device of an Intel Bridge to the reset API and internally the reset is
+> applied to its parent.
 
-I applied these to pci/portdrv for v6.2 with Reviewed-Bys from
-Christoph and Keith.  Thanks for taking a look!
+What kind of problem does this fix?  I guess some devices below a VMD
+need to be reset before we can use them?
 
-Bjorn
+As a rule, Linux doesn't reset PCI devices at boot, so I'm just
+wondering what's different about these.
+
+If this fixes a problem, it's also nice if we can include a symptom in
+the commit log so if people are seeing the problem, they can find the
+solution, or distros can tell whether they need to include it.
+
+> Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index e06e9f4fc50f..34d6ba675440 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -859,8 +859,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	pci_scan_child_bus(vmd->bus);
+>  	vmd_domain_reset(vmd);
+> -	list_for_each_entry(child, &vmd->bus->children, node)
+> -		pci_reset_bus(child->self);
+> +
+> +	list_for_each_entry(child, &vmd->bus->children, node) {
+> +		if (!list_empty(&child->devices)) {
+> +			pci_reset_bus(list_first_entry(&child->devices,
+> +						       struct pci_dev,
+> +						       bus_list));
+> +			break;
+> +		}
+> +	}
+> +
+>  	pci_assign_unassigned_bus_resources(vmd->bus);
+>  
+>  	/*
+> -- 
+> 2.25.1
+> 
