@@ -2,91 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BAB860B54E
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 20:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63C7160B957
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 22:09:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231848AbiJXSUZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Oct 2022 14:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        id S230433AbiJXUJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 16:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231922AbiJXSUG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 14:20:06 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9537E168E7D;
-        Mon, 24 Oct 2022 10:01:09 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id w196so11449353oiw.8;
-        Mon, 24 Oct 2022 10:01:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dx6LYEVmSa7aPnXgjIsaYATnB91kNAEC3z+4P3iEVx8=;
-        b=tnwjpnpIQv0V6/x2fYiPVwK//njAFs4wyZ1m6kDDSkf9QUwMqTjdeQUdz1GF+ZHVbY
-         xRKtZuspWdd+I7k76W6qEeRp2/07yqBhhN3BSlbqQCTSfYzM/RWwY0OV6SDtV4gWgtWA
-         KQwFBjFpdIzSZ2AfV2/QIew0/H1Wvve3/VqVaTqm3VpkxcAzX2dN6SgIHspGjzSKijTl
-         8b0sRiyOTsBNz32MMc3XpHvHtuuUkRdNHT1udATak7aT8DNI1/bCtgfYIYOzI/1hc3Ap
-         O+Vo1eSgdILg86DjBrXym5/syPyZFw0PGM9Uo5Kk7x8g4sOd4YEP/JOO/hD5wkIuIXkK
-         FP9w==
-X-Gm-Message-State: ACrzQf3HGq32PYObXPMIiP/4ww9aXCMVVNnmlB40wtHiQ5WnaLDrfwmz
-        F8VIfwCHfdDIf6tQdY9Zzg==
-X-Google-Smtp-Source: AMsMyM4AoQEOIVEJTtKN+YpYtuZJl99lmxHOkq47yMx12y9QyP6L/hdpspII5Lb6ViTc5tnpcSoCBw==
-X-Received: by 2002:a05:6808:2123:b0:355:15ed:480a with SMTP id r35-20020a056808212300b0035515ed480amr26599738oiw.38.1666630701234;
-        Mon, 24 Oct 2022 09:58:21 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e16-20020a4ada10000000b00425678b9c4bsm229613oou.0.2022.10.24.09.58.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 09:58:20 -0700 (PDT)
-Received: (nullmailer pid 1912730 invoked by uid 1000);
-        Mon, 24 Oct 2022 16:58:21 -0000
-Date:   Mon, 24 Oct 2022 11:58:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-        Brian Masney <bmasney@redhat.com>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom: Add SC8280XP/SA8540P
- interconnects
-Message-ID: <166663069851.1912618.1488020304842795022.robh@kernel.org>
-References: <20221021064616.6380-1-johan+linaro@kernel.org>
- <20221021064616.6380-2-johan+linaro@kernel.org>
+        with ESMTP id S233998AbiJXUI7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 16:08:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F99CB4481;
+        Mon, 24 Oct 2022 11:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=smrlip5a13obHQefsrQCDEQn5FVgi9wQ3jfaysBd41A=; b=NsKy3KADUVtTLDLcow8PjYW4Wo
+        u6xSIAOYezInwqNo4+VT4wXNh9YuZGynjlYH9HyRLsxjXAu7kOE3YYpM5vo2KK5Pd+utDaLWiQbYC
+        HRXXEhnWxE4UH/sbLmRBRQr0Xt9ABDoMTGEbbr4YxdTsO1AI5D+O2/MoLsnrLCzvQ/823wQayvkRq
+        FhklZ7JXqNnbcsXc9bH5iJMN03RBwLg5kZ7KeA8EJBlppNQ3vcpgBt2Jj3NjIoakO14Nx+KJKtJ9m
+        GrXYA5oVoFe3jLO7ovLun05d0vuXmlnCFUL7TNGWThrId8XaRc6F1+Ve1ZxMF/YkvUsUQ3HPSO1r2
+        lA9+dfiQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1omzUq-0026gk-I2; Mon, 24 Oct 2022 15:36:12 +0000
+Date:   Mon, 24 Oct 2022 08:36:12 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH 06/12] swiotlb: Remove bounce buffer remapping for Hyper-V
+Message-ID: <Y1aw7L5IdpjFpQvw@infradead.org>
+References: <1666288635-72591-1-git-send-email-mikelley@microsoft.com>
+ <1666288635-72591-7-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221021064616.6380-2-johan+linaro@kernel.org>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <1666288635-72591-7-git-send-email-mikelley@microsoft.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 21 Oct 2022 08:46:15 +0200, Johan Hovold wrote:
-> Add the missing SC8280XP/SA8540P "pcie-mem" and "cpu-pcie" interconnect
-> paths to the bindings.
+On Thu, Oct 20, 2022 at 10:57:09AM -0700, Michael Kelley wrote:
+> With changes to how Hyper-V guest VMs flip memory between private
+> (encrypted) and shared (decrypted), creating a second kernel virtual
+> mapping for shared memory is no longer necessary. Everything needed
+> for the transition to shared is handled by set_memory_decrypted().
 > 
-> Fixes: 76d777ae045e ("dt-bindings: PCI: qcom: Add SC8280XP to binding")
-> Fixes: 76c4207f4085 ("dt-bindings: PCI: qcom: Add SA8540P to binding")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> As such, remove swiotlb_unencrypted_base and the associated
+> code.
 > 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'm more than glad that we can kill this code:
+
+Acked-by: Christoph Hellwig <hch@lst.de>
