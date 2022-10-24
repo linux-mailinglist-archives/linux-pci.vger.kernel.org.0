@@ -2,210 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0A3F609744
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 01:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 257B2609A2C
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 08:03:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiJWX10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Oct 2022 19:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
+        id S229875AbiJXGDg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 02:03:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbiJWX1Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Oct 2022 19:27:25 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE8961713;
-        Sun, 23 Oct 2022 16:27:20 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id a13so25481245edj.0;
-        Sun, 23 Oct 2022 16:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7iyv6pLHUBbgESpB7JB72bYJbis0tyU09CNwJiXEDM=;
-        b=CoFo213eBE00ntw45QBY1gNGx5qi3iC2DSNkjPXd3LI7XAgYBRV/Ko2ip5kF4x74pq
-         SQEFw0CJfk8JpUg24Q0cUGqUQxVEIkwelYK/h6tUdpaJC08UmxARrbMGjF9iQohV9thG
-         Rr5YKSkrgfJ+CAN6SQv4kQLOkd1So000EWUQNi5h7w/dgQg2J5AbEEKkh9z22NLBWDss
-         bb877kfyTTmNmWNNElrv1A+aRXJuIPP4HY7LVEAT0Nc9eXXCoO3PXYoq+J6CsaRAR2uC
-         1wUAeHt9EvixTb4cg2rNT6qaYiA486XYZv7wr13//uQ5yXF+qzpYs9CZ8/b1gEBdeEQ0
-         YIew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r7iyv6pLHUBbgESpB7JB72bYJbis0tyU09CNwJiXEDM=;
-        b=my9JtlJhbQLJ/n8SCXXyTiwNVXsAwVnek5IeSHFc8USGF0TMYy9J5hyHcGMcxtLuDN
-         0FdQ8MC/vwlymAUK9orR3BAklADXHmHJFWSoOSsm6HoTcIaX2jl0lseMK1AINW7nymXq
-         9qmkPpQGyy7xPd7/MA3znuNf+8VnnVHZsreES/T+Oo4lDZ99YB7GzYpX9hzLoFlsOk20
-         ApEKwGU4ylL+iIPUSACGkk9sx+IaeRcYZD38N1FmDV7rNGhI2rifWrECdnSgd5MrZucl
-         TpEnUGPIOTFFqImWEXxzS6oJA9OYGKfqrSGG7Qom0IffdkwuTLqx9/BNbN4dZZwiCH3V
-         ZEow==
-X-Gm-Message-State: ACrzQf0V1yZpv7ECuZo4SitHEgoQ62rnu42gTdliiJ2jV8Kk3P9x+mjP
-        1bffiH7lyqQCaHHl+Is/jQi9YLPDXRtnwWweC6U=
-X-Google-Smtp-Source: AMsMyM7XeZUFA2THcAbqqTH0GuKnXsqwRj2Ff97GJP5fJ5EYSZwPC8nc4rLfVdhgst/1bRna3ZqCeK5oJyfxIgFuOrI=
-X-Received: by 2002:a17:907:2c4a:b0:78d:f5c2:70d1 with SMTP id
- hf10-20020a1709072c4a00b0078df5c270d1mr25514305ejc.198.1666567638547; Sun, 23
- Oct 2022 16:27:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221020103120.1541862-1-dmitry.baryshkov@linaro.org> <20221020103120.1541862-4-dmitry.baryshkov@linaro.org>
-In-Reply-To: <20221020103120.1541862-4-dmitry.baryshkov@linaro.org>
-From:   Han Jingoo <jingoohan1@gmail.com>
-Date:   Sun, 23 Oct 2022 16:27:07 -0700
-Message-ID: <CAPOBaE5Zg+r0F35MvKWAozFa9x4xvym1LbA_UHvUSmnLbTpqzA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] PCI: qcom: Use clk_bulk_ API for 2.3.2 clocks handling
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230183AbiJXGDf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 02:03:35 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C8C5AC48;
+        Sun, 23 Oct 2022 23:03:34 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A2CDD217410;
+        Mon, 24 Oct 2022 08:03:32 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6AA9E21740F;
+        Mon, 24 Oct 2022 08:03:32 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 91BFA180226C;
+        Mon, 24 Oct 2022 14:03:30 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, marex@denx.de, tharvey@gateworks.com,
+        vkoul@kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        shawnguo@kernel.org, alexander.stein@ew.tq-group.com,
+        richard.leitner@linux.dev
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com,
+        Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH v1] soc: imx: imx8mp-blk-ctrl: Add PCIe SYSPLL configurations
+Date:   Mon, 24 Oct 2022 13:43:09 +0800
+Message-Id: <1666590189-1364-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 20, 2022 Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
->
-> Change hand-coded implementation of bulk clocks to use the existing
-> clk_bulk_* API.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 68 ++++++--------------------
->  1 file changed, 15 insertions(+), 53 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 74588438db07..eee4d2179e90 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -139,11 +139,9 @@ struct qcom_pcie_resources_1_0_0 {
->  };
->
->  #define QCOM_PCIE_2_3_2_MAX_SUPPLY     2
-> +#define QCOM_PCIE_2_3_2_MAX_CLOCKS     4
->  struct qcom_pcie_resources_2_3_2 {
-> -       struct clk *aux_clk;
-> -       struct clk *master_clk;
-> -       struct clk *slave_clk;
-> -       struct clk *cfg_clk;
-> +       struct clk_bulk_data clks[QCOM_PCIE_2_3_2_MAX_CLOCKS];
->         struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
->  };
->
-> @@ -571,21 +569,14 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
->         if (ret)
->                 return ret;
->
-> -       res->aux_clk = devm_clk_get(dev, "aux");
-> -       if (IS_ERR(res->aux_clk))
-> -               return PTR_ERR(res->aux_clk);
-> -
-> -       res->cfg_clk = devm_clk_get(dev, "cfg");
-> -       if (IS_ERR(res->cfg_clk))
-> -               return PTR_ERR(res->cfg_clk);
-> -
-> -       res->master_clk = devm_clk_get(dev, "bus_master");
-> -       if (IS_ERR(res->master_clk))
-> -               return PTR_ERR(res->master_clk);
-> +       res->clks[0].id = "aux";
-> +       res->clks[1].id = "cfg";
-> +       res->clks[2].id = "master";
+Add PCIe SYSPLL configurations, thus the internal SYSPLL can be used as
+i.MX8MP PCIe reference clock.
 
-Hi Dmitry,
+The following properties of PHY dts node should be changed accordingly.
+  - Set 'fsl,refclk-pad-mode' as '<IMX8_PCIE_REFCLK_PAD_OUTPUT>'.
+  - Change 'clocks' to '<&clk IMX8MP_CLK_HSIO_ROOT>'.
 
-I just have a simple question on clock names. The original clock name
-is 'bus_master', while your patch uses just 'master' as the clock name.
-As far as I know, the clock names are defined by clock side, not device
-driver side. Is it intentional? If so, would you please explain why it is ok?
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+---
+Base on 6.1-rc1, and the following PHY changes [1],
+the PCIe works fine when SYSPLL is used as reference clock on i.MX8MP
+EVK board(schematic-46370) after removing R131/R132/R137/R138, and
+populating R135/R136.
 
-> +       res->clks[3].id = "slave";
+[1] https://patchwork.kernel.org/project/linux-pci/cover/1665625622-20551-1-git-send-email-hongxing.zhu@nxp.com/
+---
+ drivers/soc/imx/imx8mp-blk-ctrl.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Ditto.
+diff --git a/drivers/soc/imx/imx8mp-blk-ctrl.c b/drivers/soc/imx/imx8mp-blk-ctrl.c
+index 0e3b6ba22f94..5ad20a8ea25e 100644
+--- a/drivers/soc/imx/imx8mp-blk-ctrl.c
++++ b/drivers/soc/imx/imx8mp-blk-ctrl.c
+@@ -21,6 +21,16 @@
+ #define  USB_CLOCK_MODULE_EN	BIT(1)
+ #define  PCIE_PHY_APB_RST	BIT(4)
+ #define  PCIE_PHY_INIT_RST	BIT(5)
++#define GPR_REG2		0x8
++#define  P_PLL_MASK		GENMASK(5, 0)
++#define  M_PLL_MASK		GENMASK(15, 6)
++#define  S_PLL_MASK		GENMASK(18, 16)
++#define  P_PLL			(0xc << 0)
++#define  M_PLL			(0x320 << 6)
++#define  S_PLL			(0x4 << 16)
++#define GPR_REG3		0xc
++#define  PLL_CKE		BIT(17)
++#define  PLL_RST		BIT(31)
+ 
+ struct imx8mp_blk_ctrl_domain;
+ 
+@@ -86,6 +96,18 @@ static void imx8mp_hsio_blk_ctrl_power_on(struct imx8mp_blk_ctrl *bc,
+ 	case IMX8MP_HSIOBLK_PD_PCIE_PHY:
+ 		regmap_set_bits(bc->regmap, GPR_REG0,
+ 				PCIE_PHY_APB_RST | PCIE_PHY_INIT_RST);
++
++		/* Set the PLL configurations, P = 12, M = 800, S = 4. */
++		regmap_update_bits(bc->regmap, GPR_REG2,
++				   P_PLL_MASK | M_PLL_MASK | S_PLL_MASK,
++				   P_PLL | M_PLL | S_PLL);
++		udelay(1);
++
++		regmap_update_bits(bc->regmap, GPR_REG3, PLL_RST, PLL_RST);
++		udelay(10);
++
++		/* Set 1b'1 to pll_cke of GPR_REG3 */
++		regmap_update_bits(bc->regmap, GPR_REG3, PLL_CKE, PLL_CKE);
+ 		break;
+ 	default:
+ 		break;
+-- 
+2.25.1
 
-Thank you.
-
-Best regards,
-Jingoo Han
-
->
-> -       res->slave_clk = devm_clk_get(dev, "bus_slave");
-> -       if (IS_ERR(res->slave_clk))
-> -               return PTR_ERR(res->slave_clk);
-> +       ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> +       if (ret < 0)
-> +               return ret;
->
->         return 0;
->  }
-> @@ -594,11 +585,7 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
->  {
->         struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
->
-> -       clk_disable_unprepare(res->slave_clk);
-> -       clk_disable_unprepare(res->master_clk);
-> -       clk_disable_unprepare(res->cfg_clk);
-> -       clk_disable_unprepare(res->aux_clk);
-> -
-> +       clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
->         regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
->  }
->
-> @@ -615,40 +602,15 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
->                 return ret;
->         }
->
-> -       ret = clk_prepare_enable(res->aux_clk);
-> -       if (ret) {
-> -               dev_err(dev, "cannot prepare/enable aux clock\n");
-> -               goto err_aux_clk;
-> -       }
-> -
-> -       ret = clk_prepare_enable(res->cfg_clk);
-> -       if (ret) {
-> -               dev_err(dev, "cannot prepare/enable cfg clock\n");
-> -               goto err_cfg_clk;
-> -       }
-> -
-> -       ret = clk_prepare_enable(res->master_clk);
-> -       if (ret) {
-> -               dev_err(dev, "cannot prepare/enable master clock\n");
-> -               goto err_master_clk;
-> -       }
-> -
-> -       ret = clk_prepare_enable(res->slave_clk);
-> -       if (ret) {
-> -               dev_err(dev, "cannot prepare/enable slave clock\n");
-> -               goto err_slave_clk;
-> +       ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +       if (ret < 0) {
-> +               dev_err(dev, "cannot prepare/enable clocks\n");
-> +               goto err_clks;
->         }
->
->         return 0;
->
-> -err_slave_clk:
-> -       clk_disable_unprepare(res->master_clk);
-> -err_master_clk:
-> -       clk_disable_unprepare(res->cfg_clk);
-> -err_cfg_clk:
-> -       clk_disable_unprepare(res->aux_clk);
-> -
-> -err_aux_clk:
-> +err_clks:
->         regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
->
->         return ret;
-> --
-> 2.35.1
->
