@@ -2,151 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D470660BBBB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 23:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B842760BBE0
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Oct 2022 23:17:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232174AbiJXVLo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Oct 2022 17:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        id S233581AbiJXVRL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Oct 2022 17:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232457AbiJXVLV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 17:11:21 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2054.outbound.protection.outlook.com [40.107.243.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851976E2FB;
-        Mon, 24 Oct 2022 12:17:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YTeKsNGQ+5BHHHvGc+JEyiG3h7thRs7cgUk7fqW2zD+BtUrqfw6oi0cM0xlDU38X5Zva4JpO08yu5RTUV2jgIcXPOqV5b1qyjR+hyzeQaS6hNmL0VDFbxBu+nQXsOQTkIqUYnrCJ9qw2whRyTFx2EBWLUUpx506tyQodFKV8PrCVovXqlpJJQVULEnGMMCg6CvFhHl6UKgeq1dOzfp19SBojTAvEKKmv+HKRNCg2chX6yrQhxqOLcq79x1mFfGmF1pdngj4pJuiswo4aQQkZFOO+Hyj+d25swoHudbt3L0IxmNSUE91HVGvunSDKD8jwksexqfzh5d+Xac/maXkxYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DM3OpcHV4qrDNwgMk6RAho/sAjTTyDZMU6e3TTHgZ3M=;
- b=UMzazzyyuFhl0InA8qrrB8+KW3CCXUbFX8cYrsC/6ogf2hUX+1OE/+AcXBJ5k/AYLspHkikQJImms7bE94I6VmBNUDRkdZqRmNPI+lvt7TgTEJjTtH7Ud7ICzKP8hSKpKOfJy54TDEfGwxVSUlbg9bH2w7i5WUbi52z9F+8RpZWsxHfySxaUstdFHuKfQR6iTXmfMfYl9z6tb09xovyCJtu4J/Rmci+cQ1q2oWQK8LyWRGxD6Q6uU7SU9HTXQSktunFSOt8mgZMGZnh8kTp4k8whUNzjEuenjzLNZOwlFaiSVXJAW3SYZa2BMdq2m+xvwLodwpARXaY40ZILLVkeMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=lst.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DM3OpcHV4qrDNwgMk6RAho/sAjTTyDZMU6e3TTHgZ3M=;
- b=MtsnlUrRc63uVWAQ9RQn8LJoIC5uAG9R1Mjc8VL8ANy68XLCh53hND4/Nv+kdOVgedIwqwjId79gW06g+CMW00aI4iFOso6JIHiPpvQ32AO0cXtiXabzO3VPJ/6MnhLRwIQ1uYJEFEtL3A7CVw0+jbPwk31rOmb3QcUXP8EwlmCgrEdFqhnzhdIFZETqXDZC3hf8bExLWqCjortfW+MgbrY3ZhywzpoStWQhkyF+XTaHyeZj2gW/2hnGkjR6Z11R/A0DBSFRAbNgeEOILoK1OoGVV8MDHfajT9bYyc8+OIa78ZtouxKhpqpqP4Q1u3RcRYsc5RwAXEi+bGHq01zryA==
-Received: from DM5PR08CA0038.namprd08.prod.outlook.com (2603:10b6:4:60::27) by
- CH3PR12MB7571.namprd12.prod.outlook.com (2603:10b6:610:147::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5746.21; Mon, 24 Oct 2022 19:16:09 +0000
-Received: from DM6NAM11FT068.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:60:cafe::1b) by DM5PR08CA0038.outlook.office365.com
- (2603:10b6:4:60::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15 via Frontend
- Transport; Mon, 24 Oct 2022 19:16:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DM6NAM11FT068.mail.protection.outlook.com (10.13.173.67) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5746.16 via Frontend Transport; Mon, 24 Oct 2022 19:16:08 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Mon, 24 Oct
- 2022 12:15:57 -0700
-Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 24 Oct
- 2022 12:15:56 -0700
-Message-ID: <743ad0e5-6936-9287-d093-2ce1c2a3e32d@nvidia.com>
-Date:   Mon, 24 Oct 2022 12:15:56 -0700
+        with ESMTP id S230055AbiJXVQi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Oct 2022 17:16:38 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E82D2873;
+        Mon, 24 Oct 2022 12:22:26 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-13b103a3e5dso13022572fac.2;
+        Mon, 24 Oct 2022 12:22:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kWGGk3FSvDrDNlj7m3/+RkyTCBK7scHSBvuDcHj894A=;
+        b=b4w07ECEL03vaL+fIShk3B86XWVGaNU7T0f0Qa95NYvELT8+MnL/baxzCp/jT7Zv2j
+         HWmnvcUqjrZ+NLP7HoJO46H/SPWNhrVKDloccB8bHgYDDBuQik9dn8+FBOMRFpIV6iuv
+         QBUqZDGiOotKn4/g6qpzZfkT2+wd3uaB/s4Owad52xC2T6haFx7+cwnMFTXDrKH6+A9t
+         pqeFZcCwHRMwzKY6OQrbHya14zAJzBxj8aNO75KbRGSAWj6Kjs7Uyz9ZuiF/UYFnGBXi
+         R1ELUcR1ntfPNAu2wLbJZxBYtd4cW/Pjckn28ci6z3heRm+jFrcDyPl088iOka3UX84E
+         QBWQ==
+X-Gm-Message-State: ACrzQf0gn6clAisML1EuKVl6Ht6m8rs4kYVIMyVoVjemD0nFBn8bFZMb
+        P5GNqt6lm+Fh8m6ASajNng==
+X-Google-Smtp-Source: AMsMyM7Kon71TlhiViOgQoNGKfyW7PqeyYXqSISfxJSgf75N31P+dvtYVbGx3ovjnog4dpNSMlMyYA==
+X-Received: by 2002:a05:6870:f692:b0:13a:f2be:7b49 with SMTP id el18-20020a056870f69200b0013af2be7b49mr15736513oab.77.1666639275109;
+        Mon, 24 Oct 2022 12:21:15 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id r40-20020a05683044a800b0066194e0e1casm102893otv.75.2022.10.24.12.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 12:21:14 -0700 (PDT)
+Received: (nullmailer pid 2069404 invoked by uid 1000);
+        Mon, 24 Oct 2022 19:21:15 -0000
+Date:   Mon, 24 Oct 2022 14:21:15 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sam Shih <Sam.Shih@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: mediatek-gen3: add SoC based clock
+ config
+Message-ID: <166663927468.2069331.7937155894835281223.robh@kernel.org>
+References: <20221023170234.83621-1-linux@fw-web.de>
+ <20221023170234.83621-2-linux@fw-web.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v11 0/9] Userspace P2PDMA with O_DIRECT NVMe devices
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>,
-        Logan Gunthorpe <logang@deltatee.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        "Jason Ekstrand" <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Martin Oliveira" <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Stephen Bates" <sbates@raithlin.com>, <viro@zeniv.linux.org.uk>
-References: <20221021174116.7200-1-logang@deltatee.com>
- <20221024150320.GA26731@lst.de>
-From:   John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20221024150320.GA26731@lst.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.230.35]
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT068:EE_|CH3PR12MB7571:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2a06d9f-ab78-4ebf-82ef-08dab5f434e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yLKsnIim759zFaUk9UGIFahRAASYeyVKOHj6HewX6jWkfIZpeeucfUW7GFxB2X+KQR4/Kuk3ObvE87Me9a1PaNlx7BdDuvNfNWSCzQut6Zh/pDKlApdAKhsJzXtH0tDnnOE135sWKHZKdtanJChJmD/r+RGchJbYSxW4p8yTJ1ud53nBtOX93yWbKjRoEAJVFGQrSxOlazobWT/5pYq4jW6viZ0MrF8+PEF3cLmpSCGmTng0XvZh9pHiMhBkQRWq9E2pmnCMW7XbxxXpmARErrsxLCvKcQiBY/YuPcuEc7sTFRDiW0b9+yqxxKD53TxRR1RhsZfHKGgs5t+vE38k1Sdamc09kEsywN18PoM27Yk5gGD6Fz6rfL1EQCLaX8sqahkyvuLLhpcQ7MBBmD4HXWZO8S9HTg2mGS4BXEKl8vRJLdaZb3lM6i8nbF9Vgaif3Oa/Dydv2114KflgUbUS6U69ghS/LLVX/esVk18pA9JBi+xZ2xJhEB7D6Pl/UeNP+PrSQZBA/+J+q+bWmAdSnelfR0OWxYS4nGmdgnWpoJHMI4C64tK342Tx01S5I7E+nTg/+AWbiJvdmqNZizLSE3ZCTvgiqPCcWRxjYs+wrhfjX4r8c65Wa5R8TubHZdWT+F85wobNSJNnSliY3zD5A5CfDOqS9sY1Y1dYfz2njzTYXnjyesgq2tlYxa3/61oGMigbqN1vsiPv2lF7/R7JDarCISrm1n5ysTorUCMVrgltT333p1ofgtMAdr3SugSWJpSpSJkmnGLUO2qSHW//1flZyvqbNtneHF1LJI8CVnwVhcT8sjci2KN/pWdIuVkFA641xMgnZSIKs0w76ZBwVeL8dH86c4HDkAMgPiUi2S+rYwatwSZQw+HXH5ObQm+//GRFtQFtg5iFVRpbfiJMbD6YqgUDRZ0HnvgARa/TYlc=
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(376002)(136003)(346002)(396003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(36756003)(31686004)(66899015)(356005)(36860700001)(41300700001)(16526019)(82310400005)(47076005)(478600001)(8676002)(86362001)(7636003)(966005)(82740400003)(31696002)(83380400001)(8936002)(5660300002)(186003)(2906002)(40460700003)(53546011)(336012)(2616005)(70206006)(70586007)(4326008)(7416002)(4744005)(426003)(40480700001)(316002)(16576012)(26005)(54906003)(110136005)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 19:16:08.8953
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2a06d9f-ab78-4ebf-82ef-08dab5f434e6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT068.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7571
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221023170234.83621-2-linux@fw-web.de>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/24/22 08:03, Christoph Hellwig wrote:
-> The series looks good to me know. How do we want to handle it?  I think
-> we need a special branch somewhere (maybe in the block or mm trees?)
-> so that we can base the other iov_iter work from John on it.  Also
-> Al has a whole bunch of iov_iter changes that we probably want on
-> the same branch as well, although some of those (READ vs WRITE fixups)
-> look like 6.1 material to me.
+On Sun, 23 Oct 2022 19:02:32 +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> The PCIe driver covers different SOC which needing different clock
+> configs. Define them based on compatible.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  .../bindings/pci/mediatek-pcie-gen3.yaml      | 48 ++++++++++++++-----
+>  1 file changed, 36 insertions(+), 12 deletions(-)
 > 
 
-A little earlier, Jens graciously offered [1] to provide a topic branch,
-such as:
-
-     for-6.2/block-gup [2]
-
-(I've moved the name forward from 6.1 to 6.2, because that discussion
-was 7 weeks ago.)
-
-
-[1] https://lore.kernel.org/ae675a01-90e6-4af1-6c43-660b3a6c7b72@kernel.dk
-[2] https://lore.kernel.org/55a2d67f-9a12-9fe6-d73b-8c3f5eb36f31@kernel.dk
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Reviewed-by: Rob Herring <robh@kernel.org>
