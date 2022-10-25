@@ -2,205 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D29C60CBF3
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 14:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2986D60CCBE
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 14:55:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231797AbiJYMft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 08:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        id S232468AbiJYMz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 08:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231717AbiJYMfs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 08:35:48 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C9A1870A0;
-        Tue, 25 Oct 2022 05:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666701347; x=1698237347;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NWtuBKIvAI5JY/GHIG0db5ifhbCnkmUNenneTorvLZY=;
-  b=TCKFY5m4W8QXM5rqdNBR2H2/PBPR4rZNBS1Xf//CnUEChdxPsPig3e7b
-   DDjVH1/g7oj9HqbgDBJirdeVEmtfMvmtlsugbQhWfpLrEP6QhVCVBDQZK
-   jGMbD0JfoI+emCRby0k9tWdK4xeuJYRMYCa02ZkGHvXjHcePkGflLFXDF
-   3nn/U8I5TtrzUwmAdIq6sy1vxJV0XE1RmcmDptiXJYCOLDlOAvaEvcmxn
-   INgGf6Ma7AovC/E+aNiMw/HO+gfvk/YoI8dtypSCndm5HUaUbPLdKRJL+
-   C3j77Cub8XCJyW8hCvVRYcMkPM83oLiNWPuc7P10+n4acgtXYI8P6PbHp
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="290963219"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="290963219"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 05:35:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="631614369"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="631614369"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 25 Oct 2022 05:35:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id D7909291; Tue, 25 Oct 2022 15:36:06 +0300 (EEST)
-Date:   Tue, 25 Oct 2022 15:36:06 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linuxarm@huawei.com
-Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
- resources for root buses too
-Message-ID: <Y1fYNsjmUFZsvteT@black.fi.intel.com>
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
- <20220905080232.36087-5-mika.westerberg@linux.intel.com>
- <20221014124553.0000696f@huawei.com>
- <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
- <20221014154858.000079f2@huawei.com>
- <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
- <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+        with ESMTP id S232469AbiJYMzj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 08:55:39 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F278BB489A
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 05:51:50 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29PCpffT034240;
+        Tue, 25 Oct 2022 07:51:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1666702301;
+        bh=HgP27iUh3ikV8+Pj3Lp8cBDsKGF6jEt7/MSPqaVezi8=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=EzAKrWMkkMtDLtQ4t3KQRhcOaIVwl/3c5JS3PK7onGnrlNrx6nmFCaUP1UvQ+zQCf
+         GKJntwnQPQ/v2Wt5f6QZK1l6dpVQsDuiOG6N3GFO08w8/Ovr9pB+UDKCcD69oGo0a4
+         3a8TVW7/VwhWnv0k0nGY1tE1mL09OvmDudNDXKPA=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29PCpf6G110709
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Oct 2022 07:51:41 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 25
+ Oct 2022 07:51:40 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Tue, 25 Oct 2022 07:51:40 -0500
+Received: from ubuntu (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id 29PCpXut112594;
+        Tue, 25 Oct 2022 07:51:35 -0500
+Date:   Tue, 25 Oct 2022 05:51:31 -0700
+From:   Matt Ranostay <mranostay@ti.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+CC:     <robh@kernel.org>, <tjoseph@cadence.com>, <nm@ti.com>,
+        <a-verma1@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] PCI: j721e: Add PCIe 4x lane selection support
+Message-ID: <Y1fb0/ZBoy68AYV4@ubuntu>
+References: <20221020012911.305139-1-mranostay@ti.com>
+ <20221020012911.305139-2-mranostay@ti.com>
+ <e33dc6fd-1227-e01f-715e-947fac2fd233@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <e33dc6fd-1227-e01f-715e-947fac2fd233@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
-> On Mon, Oct 24, 2022 at 02:13:10PM +0300, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:
-> > > > Thanks for the detailed report! I wonder if you could try the below
-> > > > patch and see if it changes anything?
-> > > Thanks for the quick response.
-> > > 
-> > > Doesn't fix it unfortunately.
-> > 
-> > I'm back now.
-> > 
-> > Trying to reproduce this with mainline kernel (arm64 defconfig) and the
-> > following command line:
-> > 
-> > qemu-system-aarch64 \
-> >         -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
-> >         -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
-> >         -nographic -no-reboot  \
-> >         -kernel Image \
-> >         -initrd rootfs.cpio.bz2 \
-> >         -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
-> >         -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
-> >         -device e1000,bus=root_port13,addr=0.1 \
-> >         -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
-> >         -device e1000,bus=fun1
-> > 
-> > But the resulting PCIe topology is pretty flat:
-> > 
-> > # lspci
-> > 00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
-> > 00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
-> > 
-> > I wonder what I'm missing here? Do I need to enable additional drivers
-> > to get the topology to resemble yours?
+On Tue, Oct 25, 2022 at 05:23:20PM +0530, Vignesh Raghavendra wrote:
+> Hi Matt,
 > 
-> Nevermind, I was missing one \ in the command line ;-) Now I can see the
-> topology similar to yours.
+> On 20/10/22 6:59 am, Matt Ranostay wrote:
+> > Add support for setting of two-bit field that allows selection of 4x
+> > lane PCIe which was previously limited to only 2x lanes.
+> > 
+> > Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> > ---
+> >  drivers/pci/controller/cadence/pci-j721e.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> > index a82f845cc4b5..d9b1527421c3 100644
+> > --- a/drivers/pci/controller/cadence/pci-j721e.c
+> > +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> > @@ -43,7 +43,6 @@ enum link_status {
+> >  };
+> >  
+> >  #define J721E_MODE_RC			BIT(7)
+> > -#define LANE_COUNT_MASK			BIT(8)
+> >  #define LANE_COUNT(n)			((n) << 8)
+> >  
+> >  #define GENERATION_SEL_MASK		GENMASK(1, 0)
+> > @@ -207,11 +206,15 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+> >  {
+> >  	struct device *dev = pcie->cdns_pcie->dev;
+> >  	u32 lanes = pcie->num_lanes;
+> > +	u32 mask = GENMASK(8, 8);
+> >  	u32 val = 0;
+> >  	int ret;
+> >  
+> > +	if (lanes == 4)
+> > +		mask = GENMASK(9, 8);
+> 
+> 
+> Shouldn't we decide "mask" based on max_lanes added in 2/3 (ie how many
+> lanes HW can support and thus width of this bit field) instead of
+> num_lanes? Hypothetically, what if bootloader / other entity has set MSb
+> but Linux is restricted to 2 lanes in DT?
 
-I think I know what the problem is now - there is a multifunction device
-with the switch upstream port and the resource distribution code is not
-prepared to handle such (not sure how common this is in real hardware
-but allowed by the PCIe spec).
+Ah yes that is a very good point, and the mask should be based on max_lanes.
 
-Simple fix would be just ignore all resource distribution if we
-encounter such topologies but I think can still allow it, just by
-accounting the resources reserved for the multifunction device(s).
+Will fix up in v4...
 
-Can you try on your side so that you revert this revert:
+- Matt
 
-  5632e2beaf9d ("Revert "PCI: Distribute available resources for root buses, too"")
-
-and then apply the below patch and see if the problem goes away? Thanks!
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index dc6a30ee6edf..a7ca3fecf259 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1833,10 +1833,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
- 	 * bridges below.
- 	 */
- 	if (hotplug_bridges + normal_bridges == 1) {
--		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
--		if (dev->subordinate)
--			pci_bus_distribute_available_resources(dev->subordinate,
--				add_list, io, mmio, mmio_pref);
-+		/* Upstream port must be the first */
-+		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-+		if (!bridge->subordinate)
-+			return;
-+
-+		/*
-+		 * It is possible to have switch upstream port as a part
-+		 * of multifunction device, although not too common. For
-+		 * this reason reduce the resources occupied by the
-+		 * other functions before distributing the rest.
-+		 */
-+		list_for_each_entry(dev, &bus->devices, bus_list) {
-+			int i;
-+
-+			if (dev == bridge)
-+				continue;
-+
-+			/*
-+			 * It should be multifunction but if not stop
-+			 * the distribution and bail out.
-+			 */
-+			if (!dev->multifunction)
-+				return;
-+
-+			for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+				const struct resource *dev_res = &dev->resource[i];
-+				resource_size_t dev_sz;
-+				struct resource *b_res;
-+
-+				if (dev_res->flags & IORESOURCE_IO) {
-+					b_res = &io;
-+				} else if (dev_res->flags & IORESOURCE_MEM) {
-+					if (dev_res->flags & IORESOURCE_PREFETCH)
-+						b_res = &mmio_pref;
-+					else
-+						b_res = &mmio;
-+				} else {
-+					continue;
-+				}
-+
-+				/* Size aligned to bridge window */
-+				align = pci_resource_alignment(bridge, b_res);
-+				dev_sz = ALIGN(resource_size(dev_res), align);
-+
-+				pci_dbg(dev, "%pR aligned to %llx\n", dev_res,
-+					dev_sz);
-+
-+				if (dev_sz >= resource_size(b_res))
-+					memset(b_res, 0, sizeof(*b_res));
-+				else
-+					b_res->end -= dev_sz;
-+
-+				pci_dbg(bridge, "updated available to %pR\n", b_res);
-+			}
-+		}
-+
-+		pci_bus_distribute_available_resources(bridge->subordinate,
-+						       add_list, io, mmio,
-+						       mmio_pref);
- 		return;
- 	}
- 
+> 
+> > +
+> >  	val = LANE_COUNT(lanes - 1);
+> > -	ret = regmap_update_bits(syscon, offset, LANE_COUNT_MASK, val);
+> > +	ret = regmap_update_bits(syscon, offset, mask, val);
+> >  	if (ret)
+> >  		dev_err(dev, "failed to set link count\n");
+> >  
