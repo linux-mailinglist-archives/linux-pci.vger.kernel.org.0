@@ -2,61 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 437E360CF90
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 16:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57A5460CF92
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 16:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232127AbiJYOv0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 10:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
+        id S232910AbiJYOvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 10:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbiJYOvZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 10:51:25 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F8119E005
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:24 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso7482683pjg.5
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:24 -0700 (PDT)
+        with ESMTP id S232876AbiJYOva (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 10:51:30 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9255E1A20AA
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:29 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id 130so1681281pfu.8
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xlR6S9guDT9sPWfcvESvWKmdq7t2wt4CcZ/x6tOD8xg=;
-        b=X8hhfHjP0ZTomxWkO4/xuAcDDkxtY8PakMk51H+wqHBEn4jVYn2wMHVizShCttm02p
-         RlSOodLMjzDprEhF00Y08hBCBy/rUHPuNPpvEVN7yoJLWsuEK0VKflDMgQTpNfPyZG8X
-         NcoxL++w7sMiyvAv4n9x34NbvvOb2wwEB680t2KzQAXLHYf9W+gt8t3YBCS7/rX+TKAr
-         ZFb/b+oxQajUVk5pOeGS94yP96EU93RgXWslI1p9TRbrCQzbFCiGPkk4iIBjjkUmUBIE
-         /ykkGGBlkfe7C/6EiYpOx8jlUjzUOf3wSp215wI9ohcP8AFDRQlwOu2/Y328fv8p8aY6
-         0qqA==
+        bh=jlONzOG1Sfig+UyBXL2V5B2sybs7pn6sgdhK0vy4e48=;
+        b=L37DM/hgXDmzR5hLLsgWEwzvZg7/FD4jPz3U3YlRCDu+vIAHyT8zpE9qbH/LBNhaY/
+         2N6lR1HgTyDoWSxWAD/FQi81drHaZpmOSqjamnWyDrqcCAJdy0B5qmwfPlC7JEbd6Rbr
+         fwMOLbaUnp0HEkhTDEVgP4muugSNAgVjuPymKFl1EEJTyFub36iSPFbBcmGWm9ZBbE8W
+         UNxF+9KsobFWG125JxOehz588g45HreQ1+LaQ9ivOmheEhQtkwJMNcgc8qbsQAVycpm9
+         Ksb5NPlU0c7oi6PJI8MfUYnracno5TH+b9Dy5BI9bcHlUJnhI+x06XcNYdhgYBM+YQRh
+         y48A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xlR6S9guDT9sPWfcvESvWKmdq7t2wt4CcZ/x6tOD8xg=;
-        b=BpLWjNabC37JYVzixJ87MAoHKfSvpH0f0SXjx12xVs7tkwjwsbN8iTg+aCKA8khub1
-         zUb09k6UUHW8qXFXDYUuImmVzfmpwoPF7zZvCLhllq5nNVzkW0vZ3nOcrpg8qi1LvOLL
-         QqMPvOrhWI6oxulI0nJP/yriIu7Y4adGwfs0DN1qg9tu77jF2BhXFWWDNUQ3hYTewp7R
-         lxI/DCzo5qsMnK8y7rRhM0y7WxWphIsD6XIbyd4H556kn1UfeKPVZ+3wi3Lrwsbw3V7t
-         olQEzqwDOTalSEoBbuqCBToB818DsWPemHPOcBaLwn5u5UV1JnmrpuEPRN+IA4KoS0kq
-         flcA==
-X-Gm-Message-State: ACrzQf1sGYNdUBOGZmQqJqvq3VjwA3/H8fhMDwBH1MYKIhf/KDS0mMl6
-        getg2Yl1HEcNAg2P8QeKmLct
-X-Google-Smtp-Source: AMsMyM4DgEweMnPWakcf68XJgk0hgLxtXUagZ9Nbzs4lrDl+Vh1j4S1Zz79bYf0vSQiYXBcvvHpAlA==
-X-Received: by 2002:a17:902:bd05:b0:179:bbad:acff with SMTP id p5-20020a170902bd0500b00179bbadacffmr38091051pls.170.1666709483815;
-        Tue, 25 Oct 2022 07:51:23 -0700 (PDT)
+        bh=jlONzOG1Sfig+UyBXL2V5B2sybs7pn6sgdhK0vy4e48=;
+        b=6jeTtPRoFlL+qY8j+5yJO1LC+BNPxfAsen4MB1+lmn2qINxshHoqCF9MM/eu2ARsKT
+         q5e4Vufw5jEftXJG/utyiPR9HbRzhN60Oyn3oAeroNYsXe2qj3LXetXu3xMZhNCbf8UU
+         aehx15KI0dNDXVzujtjAjA3oXKS6BI4H55Uu6o5t9Y+8JuhK0SlIOUlXk+oU0uz7FJ4j
+         VJtmqsEUaZkYs3fVFjc+l5AL2s8eM1thL2PQuMjQz0oPZTf7irE/wBnWZAbMucdH/Bh0
+         7+e1orJ0MCq8VHfMJ4XpNcLU1eQ83d2UUeerJD4VxZ6r26FwJ0xSjJFs+g9hFyhDoGU4
+         ZxBQ==
+X-Gm-Message-State: ACrzQf3oWG+5V0rvSE/gIGEKas+BlYWnE3lDJYADRgWCHAnnZhxCKsfZ
+        Rl6Wu/XliTm9v30yCFh9wx+7
+X-Google-Smtp-Source: AMsMyM4dWj73Tinf1Jcql1LP/j08/Q+rLk42PwNzX3jkdB7U4c8Ta/ElbCQ8PQkbgpZ1oWAAFjTsfg==
+X-Received: by 2002:a63:a13:0:b0:440:a593:b79f with SMTP id 19-20020a630a13000000b00440a593b79fmr32533408pgk.557.1666709489059;
+        Tue, 25 Oct 2022 07:51:29 -0700 (PDT)
 Received: from localhost.localdomain ([117.193.208.236])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170903110e00b00180cf894b67sm1318765plh.130.2022.10.25.07.51.19
+        by smtp.gmail.com with ESMTPSA id n14-20020a170903110e00b00180cf894b67sm1318765plh.130.2022.10.25.07.51.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 07:51:22 -0700 (PDT)
+        Tue, 25 Oct 2022 07:51:28 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com, robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to threaded IRQ handler
-Date:   Tue, 25 Oct 2022 20:20:58 +0530
-Message-Id: <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 3/5] PCI: endpoint: Use a separate lock for protecting epc->pci_epf list
+Date:   Tue, 25 Oct 2022 20:20:59 +0530
+Message-Id: <20221025145101.116393-4-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
 References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
@@ -72,61 +73,106 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-dw_pcie_ep_linkup() may take more time to execute depending on the EPF
-driver implementation. Calling this API in the hard IRQ handler is not
-encouraged since the hard IRQ handlers are supposed to complete quickly.
+The EPC controller maintains a list of EPF drivers added to it. For
+protecting this list against the concurrent accesses, the epc->lock
+(used for protecting epc_ops) has been used so far. Since there were
+no users trying to use epc_ops and modify the pci_epf list simultaneously,
+this was not an issue.
 
-So move the dw_pcie_ep_linkup() call to threaded IRQ handler.
+But with the addition of callback mechanism for passing the events, this
+will be a problem. Because the pci_epf list needs to be iterated first
+for getting hold of the EPF driver and then the relevant event specific
+callback needs to be called for the driver.
 
+If the same epc->lock is used, then it will result in a deadlock scenario.
+
+For instance,
+
+...
+	mutex_lock(&epc->lock);
+	list_for_each_entry(epf, &epc->pci_epf, list) {
+		epf->event_ops->core_init(epf);
+		|
+		|-> pci_epc_set_bar();
+			|
+			|-> mutex_lock(&epc->lock) # DEADLOCK
+...
+
+So to fix this issue, use a separate lock called "list_lock" for
+protecting the pci_epf list against the concurrent accesses. This lock
+will also be used by the callback mechanism.
+
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 9 +++++----
+ include/linux/pci-epc.h             | 2 ++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 1b6b437823d2..a0d231b7a435 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -287,6 +287,7 @@ struct tegra_pcie_dw {
- 	struct gpio_desc *pex_refclk_sel_gpiod;
- 	unsigned int pex_rst_irq;
- 	int ep_state;
-+	long link_status;
- };
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 3bc9273d0a08..6cce430d431b 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -613,7 +613,7 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 	if (type == SECONDARY_INTERFACE && epf->sec_epc)
+ 		return -EBUSY;
  
- static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
-@@ -450,9 +451,13 @@ static void pex_ep_event_hot_rst_done(struct tegra_pcie_dw *pcie)
- static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
- {
- 	struct tegra_pcie_dw *pcie = arg;
-+	struct dw_pcie_ep *ep = &pcie->pci.ep;
- 	struct dw_pcie *pci = &pcie->pci;
- 	u32 val, speed;
+-	mutex_lock(&epc->lock);
++	mutex_lock(&epc->list_lock);
+ 	func_no = find_first_zero_bit(&epc->function_num_map,
+ 				      BITS_PER_LONG);
+ 	if (func_no >= BITS_PER_LONG) {
+@@ -640,7 +640,7 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
  
-+	if (test_and_clear_bit(0, &pcie->link_status))
-+		dw_pcie_ep_linkup(ep);
-+
- 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
- 		PCI_EXP_LNKSTA_CLS;
- 	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-@@ -499,7 +504,6 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
- static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
- {
- 	struct tegra_pcie_dw *pcie = arg;
--	struct dw_pcie_ep *ep = &pcie->pci.ep;
- 	int spurious = 1;
- 	u32 status_l0, status_l1, link_status;
+ 	list_add_tail(list, &epc->pci_epf);
+ ret:
+-	mutex_unlock(&epc->lock);
++	mutex_unlock(&epc->list_lock);
  
-@@ -515,7 +519,8 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
- 			link_status = appl_readl(pcie, APPL_LINK_STATUS);
- 			if (link_status & APPL_LINK_STATUS_RDLH_LINK_UP) {
- 				dev_dbg(pcie->dev, "Link is up with Host\n");
--				dw_pcie_ep_linkup(ep);
-+				set_bit(0, &pcie->link_status);
-+				return IRQ_WAKE_THREAD;
- 			}
- 		}
+ 	return ret;
+ }
+@@ -672,11 +672,11 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 		list = &epf->sec_epc_list;
+ 	}
  
+-	mutex_lock(&epc->lock);
++	mutex_lock(&epc->list_lock);
+ 	clear_bit(func_no, &epc->function_num_map);
+ 	list_del(list);
+ 	epf->epc = NULL;
+-	mutex_unlock(&epc->lock);
++	mutex_unlock(&epc->list_lock);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
+ 
+@@ -773,6 +773,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ 	}
+ 
+ 	mutex_init(&epc->lock);
++	mutex_init(&epc->list_lock);
+ 	INIT_LIST_HEAD(&epc->pci_epf);
+ 	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
+ 
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index a48778e1a4ee..fe729dfe509b 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -122,6 +122,7 @@ struct pci_epc_mem {
+  * struct pci_epc - represents the PCI EPC device
+  * @dev: PCI EPC device
+  * @pci_epf: list of endpoint functions present in this EPC device
++ * list_lock: Mutex for protecting pci_epf list
+  * @ops: function pointers for performing endpoint operations
+  * @windows: array of address space of the endpoint controller
+  * @mem: first window of the endpoint controller, which corresponds to
+@@ -139,6 +140,7 @@ struct pci_epc_mem {
+ struct pci_epc {
+ 	struct device			dev;
+ 	struct list_head		pci_epf;
++	struct mutex			list_lock;
+ 	const struct pci_epc_ops	*ops;
+ 	struct pci_epc_mem		**windows;
+ 	struct pci_epc_mem		*mem;
 -- 
 2.25.1
 
