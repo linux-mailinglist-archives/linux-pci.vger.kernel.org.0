@@ -2,121 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2986D60CCBE
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 14:55:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82EE060CD56
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 15:23:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232468AbiJYMz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 08:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
+        id S232806AbiJYNXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 09:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232469AbiJYMzj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 08:55:39 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F278BB489A
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 05:51:50 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29PCpffT034240;
-        Tue, 25 Oct 2022 07:51:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1666702301;
-        bh=HgP27iUh3ikV8+Pj3Lp8cBDsKGF6jEt7/MSPqaVezi8=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=EzAKrWMkkMtDLtQ4t3KQRhcOaIVwl/3c5JS3PK7onGnrlNrx6nmFCaUP1UvQ+zQCf
-         GKJntwnQPQ/v2Wt5f6QZK1l6dpVQsDuiOG6N3GFO08w8/Ovr9pB+UDKCcD69oGo0a4
-         3a8TVW7/VwhWnv0k0nGY1tE1mL09OvmDudNDXKPA=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29PCpf6G110709
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Oct 2022 07:51:41 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 25
- Oct 2022 07:51:40 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Tue, 25 Oct 2022 07:51:40 -0500
-Received: from ubuntu (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id 29PCpXut112594;
-        Tue, 25 Oct 2022 07:51:35 -0500
-Date:   Tue, 25 Oct 2022 05:51:31 -0700
-From:   Matt Ranostay <mranostay@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-CC:     <robh@kernel.org>, <tjoseph@cadence.com>, <nm@ti.com>,
-        <a-verma1@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] PCI: j721e: Add PCIe 4x lane selection support
-Message-ID: <Y1fb0/ZBoy68AYV4@ubuntu>
-References: <20221020012911.305139-1-mranostay@ti.com>
- <20221020012911.305139-2-mranostay@ti.com>
- <e33dc6fd-1227-e01f-715e-947fac2fd233@ti.com>
+        with ESMTP id S232796AbiJYNXd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 09:23:33 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC9E175372;
+        Tue, 25 Oct 2022 06:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666704212; x=1698240212;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7kwGhb0MRXm9tgMVHmxlCE5h5+VLUT9HgPyhSTdDvmc=;
+  b=Z9h7bH4opqJcV8OW5Gfhz4q4RSIxC89wZuYXQltRKt71VheF7vzAjB1E
+   OrSWOfx3UBRHQG6JFlBjRhFdvEEh6Kyv+ELf1EW/aopajcMcnSKQaUetp
+   9M/cyH99D0+DeVAa6mALbfQNSRl7W0VmQngIxJCuesL5H/9Xf2sqYhMuW
+   JfrBHaaFL2SFWYMWvLXFPTtcuK4Cyg/YKOz5yef3SQCwmAtRk1Zy7+xOX
+   v5kXjEW3ZH7jWGDC2rZm0V7yK95maKfUXCsyf4qV3PU9lEdXqqBeQPlvx
+   rQOOR3bfhhWKS8ePHv5SIN6uLUoqXvA3BcYXPQHxsj6rKle51hqSZPHpm
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="308763591"
+X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
+   d="scan'208";a="308763591"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 06:23:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="806660191"
+X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
+   d="scan'208";a="806660191"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 25 Oct 2022 06:23:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1onJtv-00215d-1v;
+        Tue, 25 Oct 2022 16:23:27 +0300
+Date:   Tue, 25 Oct 2022 16:23:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y1fjT6eyV8KVlNRp@smile.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
+ <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+ <20221014154858.000079f2@huawei.com>
+ <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+ <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+ <Y1fYNsjmUFZsvteT@black.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e33dc6fd-1227-e01f-715e-947fac2fd233@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Y1fYNsjmUFZsvteT@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 05:23:20PM +0530, Vignesh Raghavendra wrote:
-> Hi Matt,
-> 
-> On 20/10/22 6:59 am, Matt Ranostay wrote:
-> > Add support for setting of two-bit field that allows selection of 4x
-> > lane PCIe which was previously limited to only 2x lanes.
-> > 
-> > Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> > ---
-> >  drivers/pci/controller/cadence/pci-j721e.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > index a82f845cc4b5..d9b1527421c3 100644
-> > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > @@ -43,7 +43,6 @@ enum link_status {
-> >  };
-> >  
-> >  #define J721E_MODE_RC			BIT(7)
-> > -#define LANE_COUNT_MASK			BIT(8)
-> >  #define LANE_COUNT(n)			((n) << 8)
-> >  
-> >  #define GENERATION_SEL_MASK		GENMASK(1, 0)
-> > @@ -207,11 +206,15 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
-> >  {
-> >  	struct device *dev = pcie->cdns_pcie->dev;
-> >  	u32 lanes = pcie->num_lanes;
-> > +	u32 mask = GENMASK(8, 8);
-> >  	u32 val = 0;
-> >  	int ret;
-> >  
-> > +	if (lanes == 4)
-> > +		mask = GENMASK(9, 8);
-> 
-> 
-> Shouldn't we decide "mask" based on max_lanes added in 2/3 (ie how many
-> lanes HW can support and thus width of this bit field) instead of
-> num_lanes? Hypothetically, what if bootloader / other entity has set MSb
-> but Linux is restricted to 2 lanes in DT?
+On Tue, Oct 25, 2022 at 03:36:06PM +0300, Mika Westerberg wrote:
+> On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
 
-Ah yes that is a very good point, and the mask should be based on max_lanes.
+Just for the record in case this code will formally go out
 
-Will fix up in v4...
+...
 
-- Matt
+> +			for (i = 0; i < PCI_ROM_RESOURCE; i++) {
+> +				const struct resource *dev_res = &dev->resource[i];
 
-> 
-> > +
-> >  	val = LANE_COUNT(lanes - 1);
-> > -	ret = regmap_update_bits(syscon, offset, LANE_COUNT_MASK, val);
-> > +	ret = regmap_update_bits(syscon, offset, mask, val);
-> >  	if (ret)
-> >  		dev_err(dev, "failed to set link count\n");
-> >  
+I believe this is a good candidate to have
+
+#define for_each_pci_dev_resource(dev, res)			\
+	for (unsigned int i = 0;				\
+	     res = &(dev)->resource[i], i < PCI_ROM_RESOURCE;	\
+	     i++)
+
+Since we have many places in the kernel with such a snippet.
+
+> +			}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
