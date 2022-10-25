@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1AA260C416
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 08:53:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC59260C41B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 08:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231394AbiJYGx5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 02:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53410 "EHLO
+        id S231414AbiJYGx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 02:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbiJYGxy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 02:53:54 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE61C4332A;
-        Mon, 24 Oct 2022 23:53:52 -0700 (PDT)
+        with ESMTP id S231398AbiJYGx5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 02:53:57 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC728437E0;
+        Mon, 24 Oct 2022 23:53:55 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fb74m58qKYf33zF2Is5CSesvCtN5VkQ8gAOOtCi1zZ1wESv8YS5ZHYnZ4XbU/6CtPVvmzlhP2Mp0h+sXcD32qVJ8YTdG0DqpjKjIdfOFifaBK/oF8ey4PcUy++WCi2tOxWHrnNYcsJzjNN8zMzGr8bNUWDykJoz8nfHw4RFbYZySJC1PFXj8MBFDYiPZ/CbARe7Bk58yGBfTH6CpJ1F5J7w/KqmYLMUyA9vITQXtHFQ8WVO53SLYz90UxvN4Bt2YfEDEp3TAp+t8MKxs5K3uIQHqicRdr+t+znCZ+0PW+vhDa5Nuy22bSdm6+ZS2pAHLvn5QLyPWwpH/jt4YZwJyaA==
+ b=mLYCC2ZNnYFzwNAMsXHL1lZbTD138xgIncNDQFAyvd5qW/i4RsQGzwHWB8adMCHdSgSQ6/jzxh+XVEXUMcmXvC7ZJbqraSUz6C4jqrSCfnE9yrlm/uCnFU2EmduMWXGBmabtNF2GXZ6wk98Kof/e9XjkCmQEpPr2Gjhpx3/Cuhc1K2i+WhNCz3B/q3ZHVNGKksSvWjwwL5J0k3Oqt9xU2IzYRpbElzuf3ftm+a8QGWbhtyB9s9V5oQt6pGW8HSRqQ/8gjOyxepxKKRGLHZv5r6c67WiShkcUwUcMbcZ50YgThvlQbLvti87x7WuOzglh/qxdXfkU1ACxdXpzU7VyAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UH/cfqf9ieuKLueHLHhaOcJB6Bv30CVf3bh3wwEhjIA=;
- b=N2IBSDXvaweFkbKW6GR2LlV2HzZnaTBtFqf4z/pX3gj4BJZCvTBla6ePo3qzTuIVdXftRt15El+ERgCP6IPP4rWL9x8wDp/toQ9G5FGuL0zFg17YRf4zGVFodDHm4dzA+lLtl7RpBfEVCx3tMdjYukDhVLbDP1toak+Bk4UTf1Q4gsu+mAUE6qKmHbB56cZc2V/eNVtN85/uKghvsvv7ju+wbeBn5s6v8kJyjXFRSm13LJjoNn1JyojGIZt5ZkF1UeialRJQ+G+YWwRbsnrnG9tWPLiLvzZ/gp3ejXMDoxDysECHH0xoo2DbJd6DcyZN+iJRUEpVU3wAKsC7pri+rg==
+ bh=r424ozFlp8CoQXRkRVuBvLkXFlZUchFIHoYw+54Td3I=;
+ b=USlvQ02H7PkbBn8K8hAttsIys/NR0G8Kf6h8UF9vtR2OLo4GYoaII/ZR2CBB+uA2y7iNRWHEZWfeNcE7SjKyQwBLiNHImSPRzssASLYguSUFkkULwli9xSuFASkfmsYaBlEbllSACeoqIjjehhC6fBnGafOrAIKJ46CiTVmRzgHA0T3PUcxtu2JQsCymd/6NdtswUxnwn4lBr32chlhz6EgWZ1Zxb8NGhJrx0TmPmP8NCI9IxcY/ntk+qyuFW9BeMFy2ntJU2nCfPo2oeqwIDPm8xjTBoQWq2tB9KSFz1MaxV3khyxbK73KUerDhC3dmTNcHWugBabPIVprE3I1vFw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UH/cfqf9ieuKLueHLHhaOcJB6Bv30CVf3bh3wwEhjIA=;
- b=miZDp6/SVgateYEdAUper6stg5CKenVfiw/Pt1lfqR/GOvaYLdzP63ePofIBBWq8s8aZnDDxHt5BSdcjM6u0RYCqLIZ6fxUFQMCxr70og4w8M4eBjGsGPZ2YAlvAG38EQW91Lo93kctX8MTQCzI+IYPml57oyIuSFna8Tc24Q7c=
-Received: from DS7PR05CA0079.namprd05.prod.outlook.com (2603:10b6:8:57::9) by
- BL1PR12MB5239.namprd12.prod.outlook.com (2603:10b6:208:315::24) with
+ bh=r424ozFlp8CoQXRkRVuBvLkXFlZUchFIHoYw+54Td3I=;
+ b=IZjqIaWSUhKPD+1N2GfbLHHhaZjkJcVIRHCguyauZEIBfyqXH2GRx7jT+WZ0mZPJZ1TnGVrqr/9YL2M2L3zDMOe6Q9KTCrCvPAHksZCyAR19PpTpVqw3mo9XDeC7D7pwhftdfwCcGdP9lM2aAgaosDDDEVaiGfm701Xxu0S9DuE=
+Received: from DM6PR18CA0019.namprd18.prod.outlook.com (2603:10b6:5:15b::32)
+ by IA1PR12MB7590.namprd12.prod.outlook.com (2603:10b6:208:42a::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Tue, 25 Oct
- 2022 06:53:50 +0000
-Received: from DM6NAM11FT026.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:57:cafe::b6) by DS7PR05CA0079.outlook.office365.com
- (2603:10b6:8:57::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.8 via Frontend
- Transport; Tue, 25 Oct 2022 06:53:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27; Tue, 25 Oct
+ 2022 06:53:53 +0000
+Received: from DM6NAM11FT081.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:15b:cafe::7f) by DM6PR18CA0019.outlook.office365.com
+ (2603:10b6:5:15b::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.21 via Frontend
+ Transport; Tue, 25 Oct 2022 06:53:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,25 +46,25 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT026.mail.protection.outlook.com (10.13.172.161) with Microsoft SMTP
+ DM6NAM11FT081.mail.protection.outlook.com (10.13.172.136) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 06:53:50 +0000
+ 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 06:53:53 +0000
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 25 Oct
- 2022 01:53:49 -0500
+ 2022 01:53:52 -0500
 Received: from xhdbharatku40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Tue, 25 Oct 2022 01:53:46 -0500
+ Transport; Tue, 25 Oct 2022 01:53:50 -0500
 From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <krzysztof.kozlowski@linaro.org>
 CC:     <bhelgaas@google.com>, <michals@xilinx.com>, <robh+dt@kernel.org>,
         <lorenzo.pieralisi@arm.com>, <bharat.kumar.gogada@amd.com>,
         "Thippeswamy Havalige" <thippeswamy.havalige@amd.com>
-Subject: [PATCH 06/13] microblaze/PCI: Remove unused allocation & free of PCI host bridge structure
-Date:   Tue, 25 Oct 2022 12:22:07 +0530
-Message-ID: <20221025065214.4663-7-thippeswamy.havalige@amd.com>
+Subject: [PATCH 07/13] microblaze/PCI: Remove unused PCI BIOS resource allocation
+Date:   Tue, 25 Oct 2022 12:22:08 +0530
+Message-ID: <20221025065214.4663-8-thippeswamy.havalige@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221025065214.4663-1-thippeswamy.havalige@amd.com>
 References: <20221025065214.4663-1-thippeswamy.havalige@amd.com>
@@ -72,23 +72,23 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT026:EE_|BL1PR12MB5239:EE_
-X-MS-Office365-Filtering-Correlation-Id: 304f5851-1a0e-4d50-9752-08dab655ac3e
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT081:EE_|IA1PR12MB7590:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b11959b-26d4-47f5-25ae-08dab655ae34
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8Gw17mJxEDPptZf/ce2yGk1qGPeBaZXmAsJ4etBikbIeN0NYwhHgg6aeyiTLd279vlbba8E+GTbPI+mgPepX7hOI05yVAwUSvq6IJTt4pgz4JR02OGzBpMMDMWOjEHfCJXnVG8hUWBpNZOM7dq6zaJxh16FvEr3RZejDhOryPmoZagZcPkLAc4aEY7avSzHLEqhIuwYir4SkXMR+Jxzc/7Rv9y4eOKVzLWYq6jp0D2M7gvEXQySngm1Rvz/OxLiuODZzzQWo6duUHD+BoIj5ftjT6m4Jkec7M1lNf454/QRrg/WAcuYlSTKR3QBN18nYtRAZQLug+E3mW9KgqFCA2pueFUV3y8lO/UJZa8c8I3mQLmpH6Kq6nVz9cmkxhLHc391f7N6fo6Nd/Aq7iwV8Z722jMteKZ05dIpW6LrI5pLvDEsfYDlLEO0WlApjd4Ra0i41PO41kfHhxZJIKydci5gvGbzqNMs3CRGtlIteoImJl1nnXIn4oyxchmMcjxdMdfaugO736L1sh0/jBW4RWFcV9dOnQmI2czLBSi20Yeubzs6GVzpWDp5DoNw2fE+LGKIrT4ZGjiOrGWoov686SJ15gTST0A2N6me9zSLG9pEtzVPwD13iyKFrhIty2U0Bzl4yqRFFW0WN1AImcgxDj8NPWqwL2a+YOtZFHXAWKsQhby2S36Ls87MfzQ+J1utVU4rSU2nl9CMwxulITPZQkmdniOs3zTb5YD9Kj5XpHCHONx81fipnwQZPguMlUbTAMgMBsY8imimrvMnz3Y9bdnWALXkzEjZy0LkGJNcZLVS8DhuiCaU35L4jTzL+Nq0LupgHwgpse7THoKNtafGMZw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(39860400002)(346002)(376002)(451199015)(36840700001)(40470700004)(46966006)(82310400005)(2906002)(36756003)(2616005)(70206006)(70586007)(44832011)(5660300002)(82740400003)(8676002)(36860700001)(8936002)(41300700001)(4326008)(110136005)(54906003)(6666004)(40480700001)(86362001)(47076005)(316002)(478600001)(26005)(186003)(1076003)(336012)(81166007)(356005)(40460700003)(426003)(83380400001)(21314003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: MfGebZlJ86LDXKmseJBQWBGsoLyqpxTe+W0NnxvTOJMHyLEPv2zncKlqulWxRIrcQ+c9HOCi3gsFaeddjIuLTVGj98vZqtIOCv5dX28ZZPzbAautX9KQGRUoNxc2XktQF+9M4LFHFgNZKgPP9czp4l16IK60dJMScKZwA10fMdZQSEaZO4iSuwxBKyBvPvpErXb4YQLz9hx0mBCfFGTIfTEsIFZfcPpYDCvNbFhj0J9AeqO7O5PJACMCmdTiksZiqNMpojk24/2B5dmFwu1kvvuOp19d0hpgemELYZaMTodQ33cIKZO2YLNLjfQZpXabntb+kXHUyvofuTv33/5smeKdrprvmcvjVpKIJu9wBZBXwpAfSEK7kLQIpMW6BlFN7Cx7WoPB1yZfvGpXx4Q7rdrfc9fkEOCh76RJhwsHT+6CypDh6F31cWlXSElSMXGwQqKyz05pvea6Crqbc4pedGv18VX70pLKXeqOJI6ne6fyt4ZgIGxnHNqb9+P3j0gt4q/3GBlWOv4Z3X4lM4NY/9S8XTLhionYGCewLxLimLgdYrIEz6+1wEeIXUNXD3csarKeuOG+pAwMI1Kc2ZOFTqFEaQ4N8uAJAKO0eJX6R3QbZxdCsMMFyEkNzBQS52Lp1ifPeOEib1n80Hl9BFD/EIAkBmT2KhmLdQYBGh8XmBiBbxQzyT37UmNzTTkfGzTaUuBOUOrIt+HifpNSsmpZA3RwuCknLFLqEgdLEisw8EfoXJJEwTZoWM9qYMDXZn/aYLtIL+p7Da8lZa6EQj0a6e+OhB2sbLCtrAZ2NE5UjcZnt++APzyX+xYqiJAp979+
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(136003)(376002)(451199015)(36840700001)(46966006)(40470700004)(426003)(2616005)(336012)(40480700001)(356005)(81166007)(40460700003)(36756003)(478600001)(110136005)(316002)(54906003)(82740400003)(86362001)(6666004)(36860700001)(30864003)(82310400005)(83380400001)(47076005)(1076003)(186003)(8676002)(26005)(8936002)(41300700001)(44832011)(4326008)(2906002)(70586007)(5660300002)(70206006)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 06:53:50.3823
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 06:53:53.6693
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 304f5851-1a0e-4d50-9752-08dab655ac3e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b11959b-26d4-47f5-25ae-08dab655ae34
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT026.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT081.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5239
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7590
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
@@ -99,101 +99,571 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove unused allocation and freeing of PCI host bridge structure.
+Remove PCI BIOSn unused code which provide's resource allocation for
+all pci bus and pci host controller memory initialization.
 
 Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 ---
- arch/microblaze/include/asm/pci-bridge.h |  5 -----
- arch/microblaze/pci/pci-common.c         | 29 -----------------------------
- arch/microblaze/pci/xilinx_pci.c         |  6 ------
- 3 files changed, 40 deletions(-)
+ arch/microblaze/include/asm/pci-bridge.h |   2 -
+ arch/microblaze/include/asm/pci.h        |   4 -
+ arch/microblaze/pci/pci-common.c         | 489 -------------------------------
+ 3 files changed, 495 deletions(-)
 
 diff --git a/arch/microblaze/include/asm/pci-bridge.h b/arch/microblaze/include/asm/pci-bridge.h
-index 252bcc1..018c632 100644
+index 018c632..170369d 100644
 --- a/arch/microblaze/include/asm/pci-bridge.h
 +++ b/arch/microblaze/include/asm/pci-bridge.h
-@@ -25,7 +25,6 @@ static inline int pcibios_vaddr_is_ioport(void __iomem *address)
-  */
- struct pci_controller {
- 	struct pci_bus *bus;
--	char is_dynamic;
- 	struct device_node *dn;
- 	struct list_head list_node;
- 	struct device *parent;
-@@ -98,9 +97,5 @@ extern void setup_indirect_pci(struct pci_controller *hose,
- 			       resource_size_t cfg_addr,
- 			       resource_size_t cfg_data, u32 flags);
+@@ -74,8 +74,6 @@ struct pci_controller {
+ 	 * ranges since the common pci_bus structure can't handle more
+ 	 */
+ 	struct resource io_resource;
+-	struct resource mem_resources[3];
+-	int global_number;	/* PCI domain number */
+ };
  
--/* Allocate & free a PCI host bridge structure */
--extern struct pci_controller *pcibios_alloc_controller(struct device_node *dev);
--extern void pcibios_free_controller(struct pci_controller *phb);
+ #ifdef CONFIG_PCI
+diff --git a/arch/microblaze/include/asm/pci.h b/arch/microblaze/include/asm/pci.h
+index 34337e2..6da7523 100644
+--- a/arch/microblaze/include/asm/pci.h
++++ b/arch/microblaze/include/asm/pci.h
+@@ -28,8 +28,6 @@
+ #define IOBASE_ISA_IO		3
+ #define IOBASE_ISA_MEM		4
+ 
+-#define pcibios_scan_all_fns(a, b)	0
 -
- #endif	/* __KERNEL__ */
- #endif	/* _ASM_MICROBLAZE_PCI_BRIDGE_H */
+ /*
+  * Set this to 1 if you want the kernel to re-assign all PCI
+  * bus numbers (don't do that on ppc64 yet !)
+@@ -48,8 +46,6 @@
+ #define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
+ #define arch_can_pci_mmap_io()		1
+ 
+-extern void pcibios_resource_survey(void);
+-
+ struct file;
+ 
+ /* This part of code was originally in xilinx-pci.h */
 diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 12764df0..2965892 100644
+index 2965892..085e673 100644
 --- a/arch/microblaze/pci/pci-common.c
 +++ b/arch/microblaze/pci/pci-common.c
-@@ -38,9 +38,6 @@
- static DEFINE_SPINLOCK(hose_spinlock);
- LIST_HEAD(hose_list);
+@@ -44,8 +44,6 @@
+ unsigned long isa_io_base;
+ EXPORT_SYMBOL(isa_io_base);
  
--/* XXX kill that some day ... */
--static int global_phb_number;		/* Global phb counter */
--
- /* ISA Memory physical address */
- resource_size_t isa_mem_base;
- 
-@@ -49,32 +46,6 @@
- 
- static int pci_bus_count;
- 
--struct pci_controller *pcibios_alloc_controller(struct device_node *dev)
--{
--	struct pci_controller *phb;
--
--	phb = zalloc_maybe_bootmem(sizeof(struct pci_controller), GFP_KERNEL);
--	if (!phb)
--		return NULL;
--	spin_lock(&hose_spinlock);
--	phb->global_number = global_phb_number++;
--	list_add_tail(&phb->list_node, &hose_list);
--	spin_unlock(&hose_spinlock);
--	phb->dn = dev;
--	phb->is_dynamic = mem_init_done;
--	return phb;
--}
--
--void pcibios_free_controller(struct pci_controller *phb)
--{
--	spin_lock(&hose_spinlock);
--	list_del(&phb->list_node);
--	spin_unlock(&hose_spinlock);
--
--	if (phb->is_dynamic)
--		kfree(phb);
--}
+-static int pci_bus_count;
 -
  static resource_size_t pcibios_io_size(const struct pci_controller *hose)
  {
  	return resource_size(&hose->io_resource);
-diff --git a/arch/microblaze/pci/xilinx_pci.c b/arch/microblaze/pci/xilinx_pci.c
-index f1a5112..3fa16e3 100644
---- a/arch/microblaze/pci/xilinx_pci.c
-+++ b/arch/microblaze/pci/xilinx_pci.c
-@@ -97,12 +97,6 @@ void __init xilinx_pci_init(void)
- 		return;
- 	}
+@@ -93,11 +91,6 @@ unsigned long pci_address_to_pio(phys_addr_t address)
+ }
+ EXPORT_SYMBOL_GPL(pci_address_to_pio);
  
--	hose = pcibios_alloc_controller(pci_node);
--	if (!hose) {
--		pr_err("xilinx-pci: pcibios_alloc_controller() failed\n");
+-void pcibios_set_master(struct pci_dev *dev)
+-{
+-	/* No special bus mastering setup handling */
+-}
+-
+ /*
+  * Platform support for /proc/bus/pci/X/Y mmap()s.
+  */
+@@ -117,494 +110,12 @@ int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
+-void pci_resource_to_user(const struct pci_dev *dev, int bar,
+-			  const struct resource *rsrc,
+-			  resource_size_t *start, resource_size_t *end)
+-{
+-	struct pci_bus_region region;
+-
+-	if (rsrc->flags & IORESOURCE_IO) {
+-		pcibios_resource_to_bus(dev->bus, &region,
+-					(struct resource *) rsrc);
+-		*start = region.start;
+-		*end = region.end;
 -		return;
 -	}
 -
- 	/* Setup config space */
- 	setup_indirect_pci(hose, r.start + XPLB_PCI_ADDR,
- 			   r.start + XPLB_PCI_DATA,
+-	/* We pass a CPU physical address to userland for MMIO instead of a
+-	 * BAR value because X is lame and expects to be able to use that
+-	 * to pass to /dev/mem!
+-	 *
+-	 * That means we may have 64-bit values where some apps only expect
+-	 * 32 (like X itself since it thinks only Sparc has 64-bit MMIO).
+-	 */
+-	*start = rsrc->start;
+-	*end = rsrc->end;
+-}
+-
+ /* Display the domain number in /proc */
+ int pci_proc_domain(struct pci_bus *bus)
+ {
+ 	return pci_domain_nr(bus);
+ }
+ 
+-/* This header fixup will do the resource fixup for all devices as they are
+- * probed, but not for bridge ranges
+- */
+-static void pcibios_fixup_resources(struct pci_dev *dev)
+-{
+-	struct pci_controller *hose = pci_bus_to_host(dev->bus);
+-	int i;
+-
+-	if (!hose) {
+-		pr_err("No host bridge for PCI dev %s !\n",
+-		       pci_name(dev));
+-		return;
+-	}
+-	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+-		struct resource *res = dev->resource + i;
+-		if (!res->flags)
+-			continue;
+-		if (res->start == 0) {
+-			pr_debug("PCI:%s Resource %d %016llx-%016llx [%x]",
+-				 pci_name(dev), i,
+-				 (unsigned long long)res->start,
+-				 (unsigned long long)res->end,
+-				 (unsigned int)res->flags);
+-			pr_debug("is unassigned\n");
+-			res->end -= res->start;
+-			res->start = 0;
+-			res->flags |= IORESOURCE_UNSET;
+-			continue;
+-		}
+-
+-		pr_debug("PCI:%s Resource %d %016llx-%016llx [%x]\n",
+-			 pci_name(dev), i,
+-			 (unsigned long long)res->start,
+-			 (unsigned long long)res->end,
+-			 (unsigned int)res->flags);
+-	}
+-}
+-DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID, pcibios_fixup_resources);
+-
+-int pcibios_device_add(struct pci_dev *dev)
+-{
+-	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+-
+-	return 0;
+-}
+-
+-/*
+- * Reparent resource children of pr that conflict with res
+- * under res, and make res replace those children.
+- */
+-static int __init reparent_resources(struct resource *parent,
+-				     struct resource *res)
+-{
+-	struct resource *p, **pp;
+-	struct resource **firstpp = NULL;
+-
+-	for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+-		if (p->end < res->start)
+-			continue;
+-		if (res->end < p->start)
+-			break;
+-		if (p->start < res->start || p->end > res->end)
+-			return -1;	/* not completely contained */
+-		if (firstpp == NULL)
+-			firstpp = pp;
+-	}
+-	if (firstpp == NULL)
+-		return -1;	/* didn't find any conflicting entries? */
+-	res->parent = parent;
+-	res->child = *firstpp;
+-	res->sibling = *pp;
+-	*firstpp = res;
+-	*pp = NULL;
+-	for (p = res->child; p != NULL; p = p->sibling) {
+-		p->parent = res;
+-		pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
+-			 p->name,
+-			 (unsigned long long)p->start,
+-			 (unsigned long long)p->end, res->name);
+-	}
+-	return 0;
+-}
+-
+-/*
+- *  Handle resources of PCI devices.  If the world were perfect, we could
+- *  just allocate all the resource regions and do nothing more.  It isn't.
+- *  On the other hand, we cannot just re-allocate all devices, as it would
+- *  require us to know lots of host bridge internals.  So we attempt to
+- *  keep as much of the original configuration as possible, but tweak it
+- *  when it's found to be wrong.
+- *
+- *  Known BIOS problems we have to work around:
+- *	- I/O or memory regions not configured
+- *	- regions configured, but not enabled in the command register
+- *	- bogus I/O addresses above 64K used
+- *	- expansion ROMs left enabled (this may sound harmless, but given
+- *	  the fact the PCI specs explicitly allow address decoders to be
+- *	  shared between expansion ROMs and other resource regions, it's
+- *	  at least dangerous)
+- *
+- *  Our solution:
+- *	(1) Allocate resources for all buses behind PCI-to-PCI bridges.
+- *	    This gives us fixed barriers on where we can allocate.
+- *	(2) Allocate resources for all enabled devices.  If there is
+- *	    a collision, just mark the resource as unallocated. Also
+- *	    disable expansion ROMs during this step.
+- *	(3) Try to allocate resources for disabled devices.  If the
+- *	    resources were assigned correctly, everything goes well,
+- *	    if they weren't, they won't disturb allocation of other
+- *	    resources.
+- *	(4) Assign new addresses to resources which were either
+- *	    not configured at all or misconfigured.  If explicitly
+- *	    requested by the user, configure expansion ROM address
+- *	    as well.
+- */
+-
+-static void pcibios_allocate_bus_resources(struct pci_bus *bus)
+-{
+-	struct pci_bus *b;
+-	int i;
+-	struct resource *res, *pr;
+-
+-	pr_debug("PCI: Allocating bus resources for %04x:%02x...\n",
+-		 pci_domain_nr(bus), bus->number);
+-
+-	pci_bus_for_each_resource(bus, res, i) {
+-		if (!res || !res->flags
+-		    || res->start > res->end || res->parent)
+-			continue;
+-		if (bus->parent == NULL)
+-			pr = (res->flags & IORESOURCE_IO) ?
+-				&ioport_resource : &iomem_resource;
+-		else {
+-			/* Don't bother with non-root busses when
+-			 * re-assigning all resources. We clear the
+-			 * resource flags as if they were colliding
+-			 * and as such ensure proper re-allocation
+-			 * later.
+-			 */
+-			pr = pci_find_parent_resource(bus->self, res);
+-			if (pr == res) {
+-				/* this happens when the generic PCI
+-				 * code (wrongly) decides that this
+-				 * bridge is transparent  -- paulus
+-				 */
+-				continue;
+-			}
+-		}
+-
+-		pr_debug("PCI: %s (bus %d) bridge rsrc %d: %016llx-%016llx ",
+-			 bus->self ? pci_name(bus->self) : "PHB",
+-			 bus->number, i,
+-			 (unsigned long long)res->start,
+-			 (unsigned long long)res->end);
+-		pr_debug("[0x%x], parent %p (%s)\n",
+-			 (unsigned int)res->flags,
+-			 pr, (pr && pr->name) ? pr->name : "nil");
+-
+-		if (pr && !(pr->flags & IORESOURCE_UNSET)) {
+-			struct pci_dev *dev = bus->self;
+-
+-			if (request_resource(pr, res) == 0)
+-				continue;
+-			/*
+-			 * Must be a conflict with an existing entry.
+-			 * Move that entry (or entries) under the
+-			 * bridge resource and try again.
+-			 */
+-			if (reparent_resources(pr, res) == 0)
+-				continue;
+-
+-			if (dev && i < PCI_BRIDGE_RESOURCE_NUM &&
+-			    pci_claim_bridge_resource(dev,
+-						 i + PCI_BRIDGE_RESOURCES) == 0)
+-				continue;
+-
+-		}
+-		pr_warn("PCI: Cannot allocate resource region ");
+-		pr_cont("%d of PCI bridge %d, will remap\n", i, bus->number);
+-		res->start = res->end = 0;
+-		res->flags = 0;
+-	}
+-
+-	list_for_each_entry(b, &bus->children, node)
+-		pcibios_allocate_bus_resources(b);
+-}
+-
+-static inline void alloc_resource(struct pci_dev *dev, int idx)
+-{
+-	struct resource *pr, *r = &dev->resource[idx];
+-
+-	pr_debug("PCI: Allocating %s: Resource %d: %016llx..%016llx [%x]\n",
+-		 pci_name(dev), idx,
+-		 (unsigned long long)r->start,
+-		 (unsigned long long)r->end,
+-		 (unsigned int)r->flags);
+-
+-	pr = pci_find_parent_resource(dev, r);
+-	if (!pr || (pr->flags & IORESOURCE_UNSET) ||
+-	    request_resource(pr, r) < 0) {
+-		pr_warn("PCI: Cannot allocate resource region %d ", idx);
+-		pr_cont("of device %s, will remap\n", pci_name(dev));
+-		if (pr)
+-			pr_debug("PCI:  parent is %p: %016llx-%016llx [%x]\n",
+-				 pr,
+-				 (unsigned long long)pr->start,
+-				 (unsigned long long)pr->end,
+-				 (unsigned int)pr->flags);
+-		/* We'll assign a new address later */
+-		r->flags |= IORESOURCE_UNSET;
+-		r->end -= r->start;
+-		r->start = 0;
+-	}
+-}
+-
+-static void __init pcibios_allocate_resources(int pass)
+-{
+-	struct pci_dev *dev = NULL;
+-	int idx, disabled;
+-	u16 command;
+-	struct resource *r;
+-
+-	for_each_pci_dev(dev) {
+-		pci_read_config_word(dev, PCI_COMMAND, &command);
+-		for (idx = 0; idx <= PCI_ROM_RESOURCE; idx++) {
+-			r = &dev->resource[idx];
+-			if (r->parent)		/* Already allocated */
+-				continue;
+-			if (!r->flags || (r->flags & IORESOURCE_UNSET))
+-				continue;	/* Not assigned at all */
+-			/* We only allocate ROMs on pass 1 just in case they
+-			 * have been screwed up by firmware
+-			 */
+-			if (idx == PCI_ROM_RESOURCE)
+-				disabled = 1;
+-			if (r->flags & IORESOURCE_IO)
+-				disabled = !(command & PCI_COMMAND_IO);
+-			else
+-				disabled = !(command & PCI_COMMAND_MEMORY);
+-			if (pass == disabled)
+-				alloc_resource(dev, idx);
+-		}
+-		if (pass)
+-			continue;
+-		r = &dev->resource[PCI_ROM_RESOURCE];
+-		if (r->flags) {
+-			/* Turn the ROM off, leave the resource region,
+-			 * but keep it unregistered.
+-			 */
+-			u32 reg;
+-			pci_read_config_dword(dev, dev->rom_base_reg, &reg);
+-			if (reg & PCI_ROM_ADDRESS_ENABLE) {
+-				pr_debug("PCI: Switching off ROM of %s\n",
+-					 pci_name(dev));
+-				r->flags &= ~IORESOURCE_ROM_ENABLE;
+-				pci_write_config_dword(dev, dev->rom_base_reg,
+-						reg & ~PCI_ROM_ADDRESS_ENABLE);
+-			}
+-		}
+-	}
+-}
+-
+-static void __init pcibios_reserve_legacy_regions(struct pci_bus *bus)
+-{
+-	struct pci_controller *hose = pci_bus_to_host(bus);
+-	resource_size_t	offset;
+-	struct resource *res, *pres;
+-	int i;
+-
+-	pr_debug("Reserving legacy ranges for domain %04x\n",
+-							pci_domain_nr(bus));
+-
+-	/* Check for IO */
+-	if (!(hose->io_resource.flags & IORESOURCE_IO))
+-		goto no_io;
+-	offset = (unsigned long)hose->io_base_virt - _IO_BASE;
+-	res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+-	BUG_ON(res == NULL);
+-	res->name = "Legacy IO";
+-	res->flags = IORESOURCE_IO;
+-	res->start = offset;
+-	res->end = (offset + 0xfff) & 0xfffffffful;
+-	pr_debug("Candidate legacy IO: %pR\n", res);
+-	if (request_resource(&hose->io_resource, res)) {
+-		pr_debug("PCI %04x:%02x Cannot reserve Legacy IO %pR\n",
+-		       pci_domain_nr(bus), bus->number, res);
+-		kfree(res);
+-	}
+-
+- no_io:
+-	/* Check for memory */
+-	offset = hose->pci_mem_offset;
+-	pr_debug("hose mem offset: %016llx\n", (unsigned long long)offset);
+-	for (i = 0; i < 3; i++) {
+-		pres = &hose->mem_resources[i];
+-		if (!(pres->flags & IORESOURCE_MEM))
+-			continue;
+-		pr_debug("hose mem res: %pR\n", pres);
+-		if ((pres->start - offset) <= 0xa0000 &&
+-		    (pres->end - offset) >= 0xbffff)
+-			break;
+-	}
+-	if (i >= 3)
+-		return;
+-	res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+-	BUG_ON(res == NULL);
+-	res->name = "Legacy VGA memory";
+-	res->flags = IORESOURCE_MEM;
+-	res->start = 0xa0000 + offset;
+-	res->end = 0xbffff + offset;
+-	pr_debug("Candidate VGA memory: %pR\n", res);
+-	if (request_resource(pres, res)) {
+-		pr_debug("PCI %04x:%02x Cannot reserve VGA memory %pR\n",
+-		       pci_domain_nr(bus), bus->number, res);
+-		kfree(res);
+-	}
+-}
+-
+-void __init pcibios_resource_survey(void)
+-{
+-	struct pci_bus *b;
+-
+-	/* Allocate and assign resources. If we re-assign everything, then
+-	 * we skip the allocate phase
+-	 */
+-	list_for_each_entry(b, &pci_root_buses, node)
+-		pcibios_allocate_bus_resources(b);
+-
+-	pcibios_allocate_resources(0);
+-	pcibios_allocate_resources(1);
+-
+-	/* Before we start assigning unassigned resource, we try to reserve
+-	 * the low IO area and the VGA memory area if they intersect the
+-	 * bus available resources to avoid allocating things on top of them
+-	 */
+-	list_for_each_entry(b, &pci_root_buses, node)
+-		pcibios_reserve_legacy_regions(b);
+-
+-	/* Now proceed to assigning things that were left unassigned */
+-	pr_debug("PCI: Assigning unassigned resources...\n");
+-	pci_assign_unassigned_resources();
+-}
+-
+-static void pcibios_setup_phb_resources(struct pci_controller *hose,
+-					struct list_head *resources)
+-{
+-	unsigned long io_offset;
+-	struct resource *res;
+-	int i;
+-
+-	/* Hookup PHB IO resource */
+-	res = &hose->io_resource;
+-
+-	/* Fixup IO space offset */
+-	io_offset = (unsigned long)hose->io_base_virt - isa_io_base;
+-	res->start = (res->start + io_offset) & 0xffffffffu;
+-	res->end = (res->end + io_offset) & 0xffffffffu;
+-
+-	if (!res->flags) {
+-		pr_warn("PCI: I/O resource not set for host ");
+-		pr_cont("bridge %pOF (domain %d)\n",
+-			hose->dn, hose->global_number);
+-		/* Workaround for lack of IO resource only on 32-bit */
+-		res->start = (unsigned long)hose->io_base_virt - isa_io_base;
+-		res->end = res->start + IO_SPACE_LIMIT;
+-		res->flags = IORESOURCE_IO;
+-	}
+-	pci_add_resource_offset(resources, res,
+-		(__force resource_size_t)(hose->io_base_virt - _IO_BASE));
+-
+-	pr_debug("PCI: PHB IO resource    = %016llx-%016llx [%lx]\n",
+-		 (unsigned long long)res->start,
+-		 (unsigned long long)res->end,
+-		 (unsigned long)res->flags);
+-
+-	/* Hookup PHB Memory resources */
+-	for (i = 0; i < 3; ++i) {
+-		res = &hose->mem_resources[i];
+-		if (!res->flags) {
+-			if (i > 0)
+-				continue;
+-			pr_err("PCI: Memory resource 0 not set for ");
+-			pr_cont("host bridge %pOF (domain %d)\n",
+-				hose->dn, hose->global_number);
+-
+-			/* Workaround for lack of MEM resource only on 32-bit */
+-			res->start = hose->pci_mem_offset;
+-			res->end = (resource_size_t)-1LL;
+-			res->flags = IORESOURCE_MEM;
+-
+-		}
+-		pci_add_resource_offset(resources, res, hose->pci_mem_offset);
+-
+-		pr_debug("PCI: PHB MEM resource %d = %016llx-%016llx [%lx]\n",
+-			i, (unsigned long long)res->start,
+-			(unsigned long long)res->end,
+-			(unsigned long)res->flags);
+-	}
+-
+-	pr_debug("PCI: PHB MEM offset     = %016llx\n",
+-		 (unsigned long long)hose->pci_mem_offset);
+-	pr_debug("PCI: PHB IO  offset     = %08lx\n",
+-		 (unsigned long)hose->io_base_virt - _IO_BASE);
+-}
+-
+-static void pcibios_scan_phb(struct pci_controller *hose)
+-{
+-	LIST_HEAD(resources);
+-	struct pci_bus *bus;
+-	struct device_node *node = hose->dn;
+-
+-	pr_debug("PCI: Scanning PHB %pOF\n", node);
+-
+-	pcibios_setup_phb_resources(hose, &resources);
+-
+-	bus = pci_scan_root_bus(hose->parent, hose->first_busno,
+-				hose->ops, hose, &resources);
+-	if (bus == NULL) {
+-		pr_err("Failed to create bus for PCI domain %04x\n",
+-		       hose->global_number);
+-		pci_free_resource_list(&resources);
+-		return;
+-	}
+-	bus->busn_res.start = hose->first_busno;
+-	hose->bus = bus;
+-
+-	hose->last_busno = bus->busn_res.end;
+-}
+-
+-static int __init pcibios_init(void)
+-{
+-	struct pci_controller *hose, *tmp;
+-	int next_busno = 0;
+-
+-	pr_info("PCI: Probing PCI hardware\n");
+-
+-	/* Scan all of the recorded PCI controllers.  */
+-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		hose->last_busno = 0xff;
+-		pcibios_scan_phb(hose);
+-		if (next_busno <= hose->last_busno)
+-			next_busno = hose->last_busno + 1;
+-	}
+-	pci_bus_count = next_busno;
+-
+-	/* Call common code to handle resource allocation */
+-	pcibios_resource_survey();
+-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		if (hose->bus)
+-			pci_bus_add_devices(hose->bus);
+-	}
+-
+-	return 0;
+-}
+-
+-subsys_initcall(pcibios_init);
+-
+ static struct pci_controller *pci_bus_to_hose(int bus)
+ {
+ 	struct pci_controller *hose, *tmp;
 -- 
 1.8.3.1
 
