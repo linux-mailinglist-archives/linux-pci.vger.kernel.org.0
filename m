@@ -2,99 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7911A60C52E
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 09:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACE4060C5F2
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 09:59:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231397AbiJYHbu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 03:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
+        id S230453AbiJYH7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 03:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbiJYHbs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 03:31:48 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2082.outbound.protection.outlook.com [40.107.96.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F3B54642;
-        Tue, 25 Oct 2022 00:31:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M+0ikAcG4o8VMIaNdwWPP5LYXV7fF3BZp3kcu7Isl7jpARYIcLTCLgS9jZlpYVif1r0wYjwHb7WbGZ7p3CHtZAZqJGpei62C/+9z/7TtISlnJHtM6nh9DjIEZ/pyfJq7L4Mtm/U+bA18cEiFcwaxYvQhjI74W9zsgE4GHltzfKvk8eZ62mhD2xxgp3BynT8N82k5oKrD/JAas/mrlGzKILm4wZEsIXwiFrw/gtdZ2/Cs7h2yrtvbPdRgHhz5/WtA1tBMEZQ9vpl5aXTPrW2p7yHcYVXhQpDWVBU9EBlZwJoicRlPqCMamd6C3f1QDaQMygSqO+ZDlfoGvXyUE/eGxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6pk6QvT2VpBGlyWp/XI7MdvWsF1Z1haizUXLgIgerHY=;
- b=ggZe8vX9g7VSu94raGqG3sRlCXt9Fi445OV0Joz0zxBI1HkaOnzYIWpflcYkOL7hU+Q/nYiWS0UyMG5GrTxZsrvifnLZ0zc0IaLPsvX6xwuZ9/7MherEvSj59eaDvWLZb3YfKW1ASqwF2JDlTqZ0ly7mnkGE/I26OPsBZOliqbu7gz3dI7K9GhkNegUO+mjbobCziOTFqsme78FkrEdCBXgnp8OFDYfQTpSppOw5eEoGa/XgwBubNw/Q5uLJbbc61b5IJRZXGJWM8fSOzYBVaUplyjn5hTCvDlWJC7Z7DjwqKVk9dYJW8cT4cCm0zmWk4s1ABblrcO624EMDIuLijA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6pk6QvT2VpBGlyWp/XI7MdvWsF1Z1haizUXLgIgerHY=;
- b=KER7NHnoCR7RewoaB+d9HMAxZmcJ/YPYp2IejjVcGC60aqNA31j9KKauCgeW/5EuMKJAXg8TjQnmdMDtZfsMbMqM7fqfASiAWJfCy/UmnTqVi0L+nckL0b3+MWuANxOzvCtXeBs5qrfRA35kzJ4t9pfA2pFjArz1G0z82SMYYAE=
-Received: from DM6PR04CA0009.namprd04.prod.outlook.com (2603:10b6:5:334::14)
- by CY8PR12MB7564.namprd12.prod.outlook.com (2603:10b6:930:97::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27; Tue, 25 Oct
- 2022 07:31:44 +0000
-Received: from DM6NAM11FT069.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:334:cafe::c2) by DM6PR04CA0009.outlook.office365.com
- (2603:10b6:5:334::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27 via Frontend
- Transport; Tue, 25 Oct 2022 07:31:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT069.mail.protection.outlook.com (10.13.173.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 07:31:43 +0000
-Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 25 Oct
- 2022 02:31:40 -0500
-Message-ID: <06718d29-f3e1-db07-d537-b78290213b10@amd.com>
-Date:   Tue, 25 Oct 2022 09:31:37 +0200
+        with ESMTP id S231394AbiJYH7k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 03:59:40 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5E225C1
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y4so10533722plb.2
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cMUESaRlILiaSWwbpZuVWrzmIieCVjRDSyCQWGc52qc=;
+        b=K1WGVUEUAjRGEDecQJUkXGvrVKFuMpNXHZfEo+T64wtofDcgZTkKf9/zk+Nm42YjPH
+         uLWiltD2Yqlt0PrPaRsvVYOpGDPHPXFwVNCoZp+2kmVjYP1S7ZMAWcUDpDefvkw3vxCo
+         oCnyumVsRs1uk7TfTNzSzNLAsj9aglxXYSxnhCKvmVJhF3MzIu8Yg31gA3wBwU9RkP+c
+         ikJlzHrO0esHUkhCrd+6Dk5jO2bFni18OuIICnaTz12GrRIYLmR+XojT70M077V9NWjs
+         FlKg8QJQtsRGgE2cFhStmE4XEg9TF+z72JUBCLZmhltPXqZ+l5O/0lxleo1/dkZFhXDj
+         2gRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cMUESaRlILiaSWwbpZuVWrzmIieCVjRDSyCQWGc52qc=;
+        b=oywQ6D58Heo3E3O3/nIBmThwRN6oAE4+zsFe1samVLgzLNsQFJYUWWedKtvLmLBF0b
+         50IkWonL8gH6XH4Xoq+1h6kEw+K3XtXYJwX/qIr9psEiBGt2+Yr/Q08x3g47Krh0d5Wi
+         SVJsnAItdiY+LUHu2ezDfK6DxgLzMIWQL3kvulkuTESS7OkN4usyZf0sQJyxC6e3VfWa
+         PwJK6lJu2VTPkbbohuXNXSo7WOAv5QSuwdcoOwnt90w1YCVYnLaLWZ4edmL36Kq2RqPI
+         vdU+g/VYDIATl7jyvHbxum76gsl8HPk5aYnGMKBRfq1sFd1bw1ECaIfuuosytDguQEjy
+         VFHA==
+X-Gm-Message-State: ACrzQf1UJ2Kgky+c4PIKJ9kfwKmW6JUHZi2QOf3D4ZIvDVkgwLSvr0Ts
+        CKfT+KhbGNq/qGrf6XoaYgGP
+X-Google-Smtp-Source: AMsMyM4MfcpJpHJgKg4DNjFnqy2evZXRi10iSPyt9sQmowEhgrwDYbpGxSaO0VypGb/OUGNyDRB1/A==
+X-Received: by 2002:a17:90b:380b:b0:20d:7364:796f with SMTP id mq11-20020a17090b380b00b0020d7364796fmr41812019pjb.13.1666684777244;
+        Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
+Received: from thinkpad ([117.193.211.146])
+        by smtp.gmail.com with ESMTPSA id x23-20020aa78f17000000b0056baca45977sm908046pfr.21.2022.10.25.00.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 00:59:36 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 13:29:30 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA
+ controllers support
+Message-ID: <20221025075930.GB221610@thinkpad>
+References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH 00/13] Remove unused microblaze PCIe bus architecture
-Content-Language: en-US
-To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <krzysztof.kozlowski@linaro.org>
-CC:     <bhelgaas@google.com>, <michals@xilinx.com>, <robh+dt@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <bharat.kumar.gogada@amd.com>
-References: <20221025065214.4663-1-thippeswamy.havalige@amd.com>
-From:   Michal Simek <michal.simek@amd.com>
-In-Reply-To: <20221025065214.4663-1-thippeswamy.havalige@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT069:EE_|CY8PR12MB7564:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8fab3ab7-51ef-46ed-63f7-08dab65af76c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4RI7sWuMXgZYpEW2wEg+PiWA96K1Q/nGtC7v2ctZRMuP0CZRoLdeIBKR71AsrEMtHirbfqZh/Ac+viFwDQZPMTW745x4FH4jKQ0nP6iPL05SAQ8OOhhDkwN79+5sf5FyGIcjgkgGL2f8IMCteQF5W1LBw/erkCWMk/IN8PlL28O++v0CUTnqPjS8Fz+ywSeRDpH7CqqVQnURsI2w2Q6EGLVZim0PMwdX4fZW+nqyrTR3ktZM0HyB/lO7s0Z2wbbNLEArt2ehxZ3ZgEzf4xz560ahNOegfPQP2Q4gnW1CO6l+206QKIs+KKGcX46KUYTnQ/Za+RGvQSec1YI0x5Nhpl/wwG74iwa/bASggcmrBCa35761A6+R7yAJ/kSo56dO2gyHVLXXTCOg/ClwMCN6yb8iSSJxAxxydiTm+pbcoMa/jh1c5hQICDT5ysY33QaTv7YUztu3UoNbHBUqfomMmEtq/V3t7pwG+U3/VrkKwQmAq3SMVSclopyooNJkb/PFTxASibfICOxM1KKqxKPeoi/k3vpCLm7iavTiLyI1NwhHBtn2hA+dS/uBHD8c8pYpP6RbHuiqdIY/4vIItuTxiETjnNCynMCBMads1LG9yBQR419i/fWfiqwCPYiF9J0QH7XSiB58n0SXbb1VEJ0AZUyoxrNLIt8BmQKyUtmerXPCVspsmr/wGt7lNbvkOB6CMhIvVymzgdAV++eSLCLLU20FGdbh7YvSqS7WMvopxg2hmu8HKryYyJp1bsSYStBEFL61oy8qYiIv2AmAnDIGnqfn4zCxkW9ObDHtCf+ITf4XU/H5BTR12M4m7dt7Hz4GxBGw0gGFihUKJSQB8aMWxw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(376002)(39860400002)(136003)(451199015)(46966006)(36840700001)(40470700004)(47076005)(82310400005)(426003)(44832011)(316002)(16576012)(2616005)(110136005)(40460700003)(54906003)(36860700001)(41300700001)(8936002)(36756003)(26005)(336012)(16526019)(2906002)(40480700001)(6666004)(186003)(5660300002)(31696002)(4326008)(8676002)(70586007)(53546011)(86362001)(70206006)(81166007)(31686004)(82740400003)(478600001)(356005)(83380400001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 07:31:43.7765
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fab3ab7-51ef-46ed-63f7-08dab65af76c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT069.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7564
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -102,53 +82,178 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Mon, Aug 22, 2022 at 09:53:08PM +0300, Serge Semin wrote:
+> This is a final patchset in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
+> 
+> [1: Done v5] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
+> Merged: kernel 6.0-rc1
+> [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
+> Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
+> Merged: kernel 6.0-rc1
+> [3: In-review v5] PCI: dwc: Add generic resources and Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru/
+> [4: Done v5] dmaengine: dw-edma: Add RP/EP local DMA support
+> Link: ---you are looking at it---
+> 
+> Note it is very recommended to merge the patchsets in the same order as
+> they are listed in the set above in order to have them applied smoothly.
+> Nothing prevents them from being reviewed synchronously though.
+> 
+> Please note originally this series was self content, but due to Frank
+> being a bit faster in his work submission I had to rebase my patchset onto
+> his one. So now this patchset turns to be dependent on the Frank' work:
+> 
+> Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
+> 
+> Here is a short summary regarding this patchset. The series starts with
+> fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
+> initializes the LL/DT base addresses for the platforms with not matching
+> CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+> method to get a correct base address. After that you can find a series of
+> the interleaved xfers fixes. It turned out the interleaved transfers
+> implementation didn't work quite correctly from the very beginning for
+> instance missing src/dst addresses initialization, etc. In the framework
+> of the next two patches we suggest to add a new platform-specific
+> callback - pci_address() and use it to convert the CPU address to the PCIe
+> space address. It is at least required for the DW eDMA remote End-point
+> setup on the platforms with not-matching CPU/PCIe address spaces. In case
+> of the DW eDMA local RP/EP setup the conversion will be done automatically
+> by the outbound iATU (if no DMA-bypass flag is specified for the
+> corresponding iATU window). Then we introduce a set of the patches to make
+> the DebugFS part of the code supporting the multi-eDMA controllers
+> platforms. It starts with several cleanup patches and is closed joining
+> the Read/Write channels into a single DMA-device as they originally should
+> have been. After that you can find the patches with adding the non-atomic
+> io-64 methods usage, dropping DT-region descriptors allocation, replacing
+> chip IDs with the device name. In addition to that in order to have the
+> eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+> dma-ranges-based memory ranges mapping since in case of the root port DT
+> node it's applicable for the peripheral PCIe devices only. Finally at the
+> series closure we introduce a generic DW eDMA controller support being
+> available in the DW PCIe Root Port/Endpoint driver.
+> 
 
-On 10/25/22 08:52, Thippeswamy Havalige wrote:
-> The current Xilinx AXI PCIe Host Bridge driver uses generic PCIe
-> subsystem framework. This driver works on both Microblaze and Zynq
-> architecture based platforms.
+Looks like this series still got stuck :( And most of the discussion is with
+patch 22/24 and it is for the Baikal platform (at present) I believe. There is
+also a discussion on 24/24, but that's not a big deal as 22/24.
+
+Can we exclude the patch 22/24 (even 24/24 if required) and merge rest in the
+meantime. The patch(es) can still be submitted separately and merged after
+reaching consensus.
+
+Thanks,
+Mani
+
+> Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Drop the patches:
+>   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+>   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+>   since they are going to be merged in in the framework of the
+>   Frank's patchset.
+> - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+>   failure."
+> - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+>   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+> - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+>   'dent'." (@Manivannan)
+> - Slightly extend the eDMA name array size. (@Manivannan)
+> - Change the specific DMA mapping comment a bit to being
+>   clearer. (@Manivannan)
+> - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+>   method."
+> - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+>   device. That happens if the driver is disabled. (@Manivannan)
+> - Add "dma" registers resource mapping procedure. (@Manivannan)
+> - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+> - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+> - Remove eDMA in the dw_pcie_ep_exit() method.
+> - Move the dw_pcie_edma_detect() method execution to the tail of the
+>   dw_pcie_ep_init() function.
 > 
-> The microblaze architecture specific code has unused PCIe host bridge
-> supported API's which are no longer needed.
+> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>   be missing on some platforms. (@Manivannan)
+> - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+>   method". A similar modification has been done in another patchset.
+> - Add more comprehensive and less regression prune eDMA block detection
+>   procedure.
+> - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
+>   resource mapping". It will be separately reviewed.
+> - Remove Manivannan tb tag from the modified patches.
+> - Rebase onto the kernel v5.18.
 > 
-> This series of patch removes unused architecture specific
-> microblaze PCIe code.
+> Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru
+> Changelog v4:
+> - Rabase onto the laters Frank Li series:
+> Link: https://lore.kernel.org/all/20220524152159.2370739-1-Frank.Li@nxp.com/
+> - Add Vinod' Ab-tag.
+> - Rebase onto the kernel v5.19-rcX.
 > 
-> Thippeswamy Havalige (13):
->    microblaze/PCI: Remove unused early_read_config_byte() et al
->      declarations
->    microblaze/PCI: Remove Null PCI config access unused functions
->    microblaze/PCI: Remove unused PCI bus scan if configured as a host
->    microblaze/PCI: Remove unused PCI legacy IO's access on a bus
->    microblaze/PCI: Remove unused device tree parsing for a host bridge
->      resources
->    microblaze/PCI: Remove unused allocation & free of PCI host bridge
->      structure
->    microblaze/PCI: Remove unused PCI BIOS resource allocation
->    microblaze/PCI: Remove unused PCI Indirect ops
->    microblaze/PCI: Remove unused pci_address_to_pio() conversion of CPU
->      address to I/O port
->    microblaze/PCI: Remove unused sys_pciconfig_iobase() and et al
->      declaration
->    microblaze/PCI: Remove unused pci_iobar_pfn() and et al declarations
->    microblaze/PCI: Remove support for Xilinx PCI host bridge
->    microblaze/PCI: Moving PCI iounmap and dependent code
+> Link: https://lore.kernel.org/linux-pci/20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru
+> Changelog v5:
+> - Just resend.
+> - Rebase onto the kernel v6.0-rc2.
 > 
->   arch/microblaze/Kconfig                  |    8 -
->   arch/microblaze/include/asm/pci-bridge.h |   92 ---
->   arch/microblaze/include/asm/pci.h        |   29 -
->   arch/microblaze/pci/Makefile             |    3 +-
->   arch/microblaze/pci/indirect_pci.c       |  158 -----
->   arch/microblaze/pci/iomap.c              |   36 +
->   arch/microblaze/pci/pci-common.c         | 1067 ------------------------------
->   arch/microblaze/pci/xilinx_pci.c         |  170 -----
->   8 files changed, 37 insertions(+), 1526 deletions(-)
->   delete mode 100644 arch/microblaze/pci/indirect_pci.c
->   delete mode 100644 arch/microblaze/pci/pci-common.c
->   delete mode 100644 arch/microblaze/pci/xilinx_pci.c
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (24):
+>   dmaengine: Fix dma_slave_config.dst_addr description
+>   dmaengine: dw-edma: Release requested IRQs on failure
+>   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+>   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+>     xfers
+>   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+>   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+>   dmaengine: dw-edma: Add CPU to PCIe bus address translation
+>   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+>     glue-driver
+>   dmaengine: dw-edma: Drop chancnt initialization
+>   dmaengine: dw-edma: Fix DebugFS reg entry type
+>   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+>   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+>   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+>   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+>   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+>   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+>   dmaengine: dw-edma: Join Write/Read channels into a single device
+>   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+>   dmaengine: dw-edma: Use non-atomic io-64 methods
+>   dmaengine: dw-edma: Drop DT-region allocation
+>   dmaengine: dw-edma: Replace chip ID number with device name
+>   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+>   dmaengine: dw-edma: Skip cleanup procedure if no private data found
+>   PCI: dwc: Add DW eDMA engine support
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
+>  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  60 +--
+>  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
+>  include/linux/dma/edma.h                      |  18 +-
+>  include/linux/dmaengine.h                     |   2 +-
+>  13 files changed, 583 insertions(+), 356 deletions(-)
+> 
+> -- 
+> 2.35.1
 > 
 
-Why are you sending it again?
-
-M
+-- 
+மணிவண்ணன் சதாசிவம்
