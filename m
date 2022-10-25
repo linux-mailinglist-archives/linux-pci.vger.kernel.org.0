@@ -2,256 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83C5A60CF98
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 16:51:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA57E60D0B8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 17:35:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiJYOvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 10:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56008 "EHLO
+        id S232842AbiJYPfd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 11:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230410AbiJYOvl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 10:51:41 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374BD1A1B0C
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:40 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso10061587pjc.0
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 07:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bw7Z4RPMjDlTxfP4goNyQMmLIpU75uA8NpA0GGnvc1U=;
-        b=a+CBb66sbj/Sz7N6QD3LS0g4wzZIu36Wff1DAp/4R6CHM51XXrgt3G/ReeeyqfhQXo
-         lU7Ln7fxIHwTcoII7sG7oxtibSdW7/F4TFwDDV4o+tfi4ksSR5Zk3hqBrfu7QrTNo+N4
-         Q9tZT04kbu9dFMGvEH7Xm/QZEj9Xi7mrq2Pba+vLo7ouPPiiJixb25LsbqK/IqhuS+Ex
-         y9YsldAAinuYOFi9tjLA0mzgnV//NrT6V1DOA8cAlIs3BNjC4RvAPDm692+I0hcS+MyN
-         H4Hcf18wj7JWAETiaWA8MsuzK7CRTjw81LXiOVt0KPq755/vc5To8c7WulgTnF3OfijI
-         ySwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bw7Z4RPMjDlTxfP4goNyQMmLIpU75uA8NpA0GGnvc1U=;
-        b=V2JxmhxtYVS3vXBE+DHMLWLyifNMmw52gpYxnk7jQodXPGHQftbwNJqGF9fhwM/F3W
-         IT6ookArmfnU7CKdNtwaW9aNmo4BQHltFW7q6P59jv8Ef7tkMz+Ke736wmq7FB0z7881
-         oRXEjiqCfneIYnzRTvlOnjAuHUYuRzLGM0+Nvy/0AWTTQSSCKKTSjHtC1cuGVamMebFJ
-         7BByYfmQ7pRe86G0b+UJVJL19lHIppX8ryt05YuYW5e0Cu0IrwYzas58I/FekvL7lxWt
-         yZXXcQQpDEVpFKQwwfV7GO03Y/J+G+iInbcwaoeaLjWV91fLo+jmK1ZsiDtxlNgbzMvR
-         J1bw==
-X-Gm-Message-State: ACrzQf2Lk96fMfu6o636yLRzrENIdZfKOee+aIwcJlKq6feq9elDZn19
-        eppBfWHQ0qaJymJ4XHRPkZHM
-X-Google-Smtp-Source: AMsMyM4AdyvwaIhdFc6WozhcvN3dJoB+2G6kQfzqZ+F6COvPU2adFuHNtkn1Zp6uGiNTUusmMvK/Bw==
-X-Received: by 2002:a17:90a:cf06:b0:212:d9ab:811b with SMTP id h6-20020a17090acf0600b00212d9ab811bmr23939171pju.65.1666709499611;
-        Tue, 25 Oct 2022 07:51:39 -0700 (PDT)
-Received: from localhost.localdomain ([117.193.208.236])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170903110e00b00180cf894b67sm1318765plh.130.2022.10.25.07.51.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 07:51:38 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 5/5] PCI: endpoint: Use link_up() callback in place of LINK_UP notifier
-Date:   Tue, 25 Oct 2022 20:21:01 +0530
-Message-Id: <20221025145101.116393-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
-References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S233263AbiJYPfc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 11:35:32 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186B8AE860;
+        Tue, 25 Oct 2022 08:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=x0Yzo3aybKV00mvxm0n+9+v1NGi8dTPJwFPa0omZxuE=; b=TECqBrsdO3eJvM/HwoglBPPjsi
+        dzMGqk2j2XncTUg3/bTvE9onc3miFg+MAkyNsga8bElyzRLnAvjYeSkIv+weqKScShndHJOo1rNGx
+        /MSeBNPOBQzoaEF+lwDkJV1MvB/MZY+2ONVduaX1mcgFn7/A3C1VwH/FXVkppjmzXuQQpe3Y2xW/O
+        KZenWN8CDqmV5JSRsm/v2dvyE5pkksWI9GfcoYs6ecrr/g1iXHiMwXwtDSS3CaUu8/T+5oC9vKi3w
+        +etNolO1BjumECdDkTpeWXLoKwzZizi4zMD4uP8rOT1DO6H+twuEbalWwlcabsXQ8ZvEWd7UI0SYP
+        CboL3j9w==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1onLxd-00H0QY-Ic; Tue, 25 Oct 2022 09:35:26 -0600
+Message-ID: <41e621bb-e836-4a86-e6db-0beed19f5ddc@deltatee.com>
+Date:   Tue, 25 Oct 2022 09:35:20 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Content-Language: en-CA
+To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20221021174116.7200-1-logang@deltatee.com>
+ <20221021174116.7200-4-logang@deltatee.com>
+ <929ac68b-cf07-8df6-e589-49b0576a50c5@nvidia.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <929ac68b-cf07-8df6-e589-49b0576a50c5@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: chaitanyak@nvidia.com, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v11 3/9] iov_iter: introduce
+ iov_iter_get_pages_[alloc_]flags()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As a part of the transition towards callback mechanism for signalling the
-events from EPC to EPF, let's use the link_up() callback in the place of
-the LINK_UP notifier. This also removes the notifier support completely
-from the PCI endpoint framework.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 33 ++++++-------------
- drivers/pci/endpoint/pci-epc-core.c           | 12 +++++--
- include/linux/pci-epc.h                       |  8 -----
- include/linux/pci-epf.h                       |  8 ++---
- 4 files changed, 22 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 868de17e1ad2..f75045f2dee3 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -826,30 +826,21 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
- 	return 0;
- }
- 
--static const struct pci_epc_event_ops pci_epf_test_event_ops = {
--	.core_init = pci_epf_test_core_init,
--};
--
--static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
--				 void *data)
-+int pci_epf_test_link_up(struct pci_epf *epf)
- {
--	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
- 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
- 
--	switch (val) {
--	case LINK_UP:
--		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
--				   msecs_to_jiffies(1));
--		break;
--
--	default:
--		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
--		return NOTIFY_BAD;
--	}
-+	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-+			   msecs_to_jiffies(1));
- 
--	return NOTIFY_OK;
-+	return 0;
- }
- 
-+static const struct pci_epc_event_ops pci_epf_test_event_ops = {
-+	.core_init = pci_epf_test_core_init,
-+	.link_up = pci_epf_test_link_up,
-+};
-+
- static int pci_epf_test_alloc_space(struct pci_epf *epf)
- {
- 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-@@ -976,12 +967,8 @@ static int pci_epf_test_bind(struct pci_epf *epf)
- 	if (ret)
- 		epf_test->dma_supported = false;
- 
--	if (linkup_notifier || core_init_notifier) {
--		epf->nb.notifier_call = pci_epf_test_notifier;
--		pci_epc_register_notifier(epc, &epf->nb);
--	} else {
-+	if (!linkup_notifier && !core_init_notifier)
- 		queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
--	}
- 
- 	return 0;
- }
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 8bb60528f530..c0954fddcc14 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -690,10 +690,19 @@ EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
-  */
- void pci_epc_linkup(struct pci_epc *epc)
- {
-+	struct pci_epf *epf;
-+
- 	if (!epc || IS_ERR(epc))
- 		return;
- 
--	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
-+	mutex_lock(&epc->list_lock);
-+	list_for_each_entry(epf, &epc->pci_epf, list) {
-+		mutex_lock(&epf->lock);
-+		if (epf->event_ops && epf->event_ops->link_up)
-+			epf->event_ops->link_up(epf);
-+		mutex_unlock(&epf->lock);
-+	}
-+	mutex_unlock(&epc->list_lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_linkup);
- 
-@@ -784,7 +793,6 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 	mutex_init(&epc->lock);
- 	mutex_init(&epc->list_lock);
- 	INIT_LIST_HEAD(&epc->pci_epf);
--	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
- 
- 	device_initialize(&epc->dev);
- 	epc->dev.class = pci_epc_class;
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index fe729dfe509b..301bb0e53707 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -135,7 +135,6 @@ struct pci_epc_mem {
-  * @group: configfs group representing the PCI EPC device
-  * @lock: mutex to protect pci_epc ops
-  * @function_num_map: bitmap to manage physical function number
-- * @notifier: used to notify EPF of any EPC events (like linkup)
-  */
- struct pci_epc {
- 	struct device			dev;
-@@ -151,7 +150,6 @@ struct pci_epc {
- 	/* mutex to protect against concurrent access of EP controller */
- 	struct mutex			lock;
- 	unsigned long			function_num_map;
--	struct atomic_notifier_head	notifier;
- };
- 
- /**
-@@ -194,12 +192,6 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
- 	return dev_get_drvdata(&epc->dev);
- }
- 
--static inline int
--pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
--{
--	return atomic_notifier_chain_register(&epc->notifier, nb);
--}
--
- struct pci_epc *
- __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 		      struct module *owner);
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index a06f3b4c8bee..bc613f0df7e3 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -17,10 +17,6 @@
- struct pci_epf;
- enum pci_epc_interface_type;
- 
--enum pci_notify_event {
--	LINK_UP,
--};
--
- enum pci_barno {
- 	NO_BAR = -1,
- 	BAR_0,
-@@ -74,9 +70,11 @@ struct pci_epf_ops {
- /**
-  * struct pci_epf_event_ops - Callbacks for capturing the EPC events
-  * @core_init: Callback for the EPC initialization complete event
-+ * @link_up: Callback for the EPC link up event
-  */
- struct pci_epc_event_ops {
- 	int (*core_init)(struct pci_epf *epf);
-+	int (*link_up)(struct pci_epf *epf);
- };
- 
- /**
-@@ -135,7 +133,6 @@ struct pci_epf_bar {
-  * @driver: the EPF driver to which this EPF device is bound
-  * @id: Pointer to the EPF device ID
-  * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
-- * @nb: notifier block to notify EPF of any EPC events (like linkup)
-  * @lock: mutex to protect pci_epf_ops
-  * @sec_epc: the secondary EPC device to which this EPF device is bound
-  * @sec_epc_list: to add pci_epf as list of PCI endpoint functions to secondary
-@@ -164,7 +161,6 @@ struct pci_epf {
- 	struct pci_epf_driver	*driver;
- 	const struct pci_epf_device_id *id;
- 	struct list_head	list;
--	struct notifier_block   nb;
- 	/* mutex to protect against concurrent access of pci_epf_ops */
- 	struct mutex		lock;
- 
--- 
-2.25.1
+On 2022-10-24 19:14, Chaitanya Kulkarni wrote:
+> On 10/21/22 10:41, Logan Gunthorpe wrote:
+>> Add iov_iter_get_pages_flags() and iov_iter_get_pages_alloc_flags()
+>> which take a flags argument that is passed to get_user_pages_fast().
+>>
+>> This is so that FOLL_PCI_P2PDMA can be passed when appropriate.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>   include/linux/uio.h |  6 ++++++
+>>   lib/iov_iter.c      | 32 ++++++++++++++++++++++++--------
+>>   2 files changed, 30 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/include/linux/uio.h b/include/linux/uio.h
+>> index 2e3134b14ffd..9ede533ce64c 100644
+>> --- a/include/linux/uio.h
+>> +++ b/include/linux/uio.h
+>> @@ -247,8 +247,14 @@ void iov_iter_pipe(struct iov_iter *i, unsigned int direction, struct pipe_inode
+>>   void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
+>>   void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
+>>   		     loff_t start, size_t count);
+>> +ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
+>> +		size_t maxsize, unsigned maxpages, size_t *start,
+>> +		unsigned gup_flags);
+>>   ssize_t iov_iter_get_pages2(struct iov_iter *i, struct page **pages,
+>>   			size_t maxsize, unsigned maxpages, size_t *start);
+>> +ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+>> +		struct page ***pages, size_t maxsize, size_t *start,
+>> +		unsigned gup_flags);
+>>   ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i, struct page ***pages,
+>>   			size_t maxsize, size_t *start);
+>>   int iov_iter_npages(const struct iov_iter *i, int maxpages);
+>> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+>> index c3ca28ca68a6..53efad017f3c 100644
+>> --- a/lib/iov_iter.c
+>> +++ b/lib/iov_iter.c
+>> @@ -1430,7 +1430,8 @@ static struct page *first_bvec_segment(const struct iov_iter *i,
+>>   
+>>   static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+>>   		   struct page ***pages, size_t maxsize,
+>> -		   unsigned int maxpages, size_t *start)
+>> +		   unsigned int maxpages, size_t *start,
+>> +		   unsigned int gup_flags)
+>>   {
+>>   	unsigned int n;
+>>   
+>> @@ -1442,7 +1443,6 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+>>   		maxsize = MAX_RW_COUNT;
+>>   
+>>   	if (likely(user_backed_iter(i))) {
+>> -		unsigned int gup_flags = 0;
+>>   		unsigned long addr;
+>>   		int res;
+>>   
+>> @@ -1492,33 +1492,49 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+>>   	return -EFAULT;
+>>   }
+>>   
+>> -ssize_t iov_iter_get_pages2(struct iov_iter *i,
+>> +ssize_t iov_iter_get_pages(struct iov_iter *i,
+>>   		   struct page **pages, size_t maxsize, unsigned maxpages,
+>> -		   size_t *start)
+>> +		   size_t *start, unsigned gup_flags)
+>>   {
+>>   	if (!maxpages)
+>>   		return 0;
+>>   	BUG_ON(!pages);
+>>   
+>> -	return __iov_iter_get_pages_alloc(i, &pages, maxsize, maxpages, start);
+>> +	return __iov_iter_get_pages_alloc(i, &pages, maxsize, maxpages,
+>> +					  start, gup_flags);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iov_iter_get_pages);
+>> +
+>> +ssize_t iov_iter_get_pages2(struct iov_iter *i, struct page **pages,
+>> +		size_t maxsize, unsigned maxpages, size_t *start)
+>> +{
+>> +	return iov_iter_get_pages(i, pages, maxsize, maxpages, start, 0);
+>>   }
+>>   EXPORT_SYMBOL(iov_iter_get_pages2);
+>>   
+>> -ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i,
+>> +ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+>>   		   struct page ***pages, size_t maxsize,
+>> -		   size_t *start)
+>> +		   size_t *start, unsigned gup_flags)
+>>   {
+>>   	ssize_t len;
+>>   
+>>   	*pages = NULL;
+>>   
+>> -	len = __iov_iter_get_pages_alloc(i, pages, maxsize, ~0U, start);
+>> +	len = __iov_iter_get_pages_alloc(i, pages, maxsize, ~0U, start,
+>> +					 gup_flags);
+>>   	if (len <= 0) {
+>>   		kvfree(*pages);
+>>   		*pages = NULL;
+>>   	}
+>>   	return len;
+>>   }
+>> +EXPORT_SYMBOL_GPL(iov_iter_get_pages_alloc);
+>> +
+>> +ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i,
+>> +		struct page ***pages, size_t maxsize, size_t *start)
+>> +{
+>> +	return iov_iter_get_pages_alloc(i, pages, maxsize, start, 0);
+>> +}
+>>   EXPORT_SYMBOL(iov_iter_get_pages_alloc2);
+> Just one minor question why not make following functions
+> EXPORT_SYMBOL_GPL() ?
+> 
+> 1. iov_iter_get_pages2()
+> 2. iov_iter_get_pages_alloc2()
 
+They previously were not GPL, so I didn't think that should be changed
+in this patch.
+
+Thanks for the review!
+
+Logan
