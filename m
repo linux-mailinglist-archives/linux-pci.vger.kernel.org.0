@@ -2,103 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1582160D5F9
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 23:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 033A060D61A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 23:25:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231628AbiJYVFs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 17:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        id S232159AbiJYVZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 17:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232169AbiJYVFq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 17:05:46 -0400
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBD77E339;
-        Tue, 25 Oct 2022 14:05:42 -0700 (PDT)
-Received: (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 396DF20002;
-        Tue, 25 Oct 2022 21:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1666731941;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AuNweShXWaeC97qVfm6xoS1jF6hfC9NTAzy5bUMmmMM=;
-        b=fWGyOa7Tw0o5Qhw4WPi/wDNzNlVBhDJwbC3BHULtLEVLKk1XZuhRDel58Fy7iFoXJ069Zt
-        BlonTxfg6bnASdGS79Z822zYFFaHQMpsfzSIEd6E0W04QVgsleCcc0Wm2f1Z8gAQUe1xyL
-        3H+lyPQrlj2+9wMJKPFrujm4Fq5eHC865XftuIQKzI9O9BOwqZOTQuLXZLq1CiUzS/zMUf
-        rac13aDaqidRXccnNHDzA9bz0VybWXYkR30Qqe2oYVlmDR9i8fS1OtCaqhDHwgtmd5BGl+
-        suRyGuze0D3AcB///F8/GqZ7FF7JYjpxXXRYpy3pOTlP4c6KmxJ9vSHsDTJ4RA==
-Date:   Tue, 25 Oct 2022 23:05:34 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
+        with ESMTP id S230157AbiJYVZg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 17:25:36 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA4184E52;
+        Tue, 25 Oct 2022 14:25:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 98E45B81F14;
+        Tue, 25 Oct 2022 21:25:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04236C433C1;
+        Tue, 25 Oct 2022 21:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666733130;
+        bh=DEGdbtQfxFm6mrAmG/COgWG2NEG9FmYT+rFk7kh1Lsg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZEmUSLDbl7PXWRU2z42RwCORzAB5ikfZUFyawsFsxaBY5YR5fRCRuZ99MIfgpqbeg
+         M1bfDhh7sbfcd7JET0GIBQBR6M/OTyfIwx0JPD/D2zWPcMZZaTVZRuFjnDPGS3AdHC
+         MhpBYdOEt8TvvtZxPhrBExZE7kLheFxEk3gP4yrBCgLsnIWMqaDFbX4wEfTAj87bzX
+         Q1/wIfZmjJiIVm9kmtBSbF4tyurM6jpKOkMbU0bKCEUCzOAPyv05DPrRPPuFnk7WR3
+         qHMD6SgTFbaDEZswnqdWMH8vel59rpQRQENUhyVCNTS+npGghEjyJGL2ra2mM09fe+
+         VvRjT6mH8M2gg==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux1394-devel@lists.sourceforge.net, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/4] PCI: mvebu: Include <linux/irqdomain.h>
- explicitly
-Message-ID: <20221025230534.290a5809@windsurf>
-In-Reply-To: <20221025185147.665365-4-helgaas@kernel.org>
-References: <20221025185147.665365-1-helgaas@kernel.org>
-        <20221025185147.665365-4-helgaas@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+Subject: [PATCH v2] firewire: ohci: convert to generic power management
+Date:   Tue, 25 Oct 2022 16:25:21 -0500
+Message-Id: <20221025212521.686779-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 Oct 2022 13:51:46 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> pci-mvebu.c uses irq_domain_add_linear() and related interfaces but relies
-> on <linux/irqdomain.h> but doesn't include it directly; it relies on the
-> fact that <linux/of_irq.h> includes it.
-> 
-> Include <linux/irqdomain.h> directly to remove this implicit dependency.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/controller/pci-mvebu.c | 1 +
->  1 file changed, 1 insertion(+)
+Convert ohci from legacy PCI power management to the generic power
+management framework.
 
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Previously, ohci used legacy PCI power management, and pci_suspend() and
+pci_resume() were responsible for both device-specific things and generic
+PCI things:
 
-Thanks!
+  pci_suspend
+    software_reset()                    <-- device-specific
+    pci_save_state(pdev)                <-- generic PCI
+    pci_set_power_state(pdev, pci_choose_state(pdev, state)) <-- generic PCI
+    pmac_ohci_off(pdev)                 <-- device-specific
 
-Thomas
+  pci_resume
+    pmac_ohci_on(pdev)                  <-- device-specific
+    pci_set_power_state(pdev, PCI_D0)   <-- generic PCI
+    pci_restore_state(pdev)             <-- generic PCI
+    ohci_enable()                       <-- device-specific
+    ...
+
+With generic power management, the PCI bus PM methods do the generic PCI
+things, and the driver needs only the device-specific part, i.e.,
+
+  suspend_devices_and_enter
+    dpm_suspend_start(PMSG_SUSPEND)
+      pci_pm_suspend                    # PCI bus .suspend() method
+        pci_suspend                     # dev->driver->pm->suspend
+          software_reset()              <-- device-specific
+          pmac_ohci_off(pdev)           <-- device-specific (DIFFERENT ORDER)
+    suspend_enter
+      dpm_suspend_noirq(PMSG_SUSPEND)
+        pci_pm_suspend_noirq            # PCI bus .suspend_noirq() method
+          pci_save_state                <-- generic PCI
+          pci_prepare_to_sleep          <-- generic PCI
+            pci_set_power_state
+    ...
+    dpm_resume_end(PMSG_RESUME)
+      pci_pm_resume                     # PCI bus .resume() method
+        pci_restore_standard_config
+          pci_set_power_state(PCI_D0)   <-- generic PCI
+          pci_restore_state             <-- generic PCI
+        pci_resume                      # dev->driver->pm->resume
+          pmac_ohci_on(pdev)            <-- device-specific (DIFFERENT ORDER)
+          ohci_enable()                 <-- device-specific
+          ...
+
+N.B. This changes the order of pmac_ohci_off() and pmac_ohci_on().
+Previously, pmac_ohci_off() was called *after* pci_save_state() and
+pci_set_power_state(), and this change calls it *before*.
+
+Similarly, pmac_ohci_on() was previously called *before*
+pci_set_power_state() and pci_restore_state() and this change calls it
+*after*.
+
+The code in pmac_ohci_on() and pmac_ohci_off() was added by ea8d006b91ac
+("firewire: fw-ohci: PPC PMac platform code").
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+
+v1 was posted at https://lore.kernel.org/r/20200720150715.624520-1-vaibhavgupta40@gmail.com
+
+Changes from v1 to v2:
+  - Convert from SIMPLE_DEV_PM_OPS() (which is deprecated) to
+    DEFINE_SIMPLE_DEV_PM_OPS() and remove __maybe_unused annotations.
+  - Expand commit log.
+
+ drivers/firewire/ohci.c | 41 +++++++++++------------------------------
+ 1 file changed, 11 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 17c9d825188b..f3cceca51e59 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -3165,7 +3165,6 @@ static int ohci_set_iso_channels(struct fw_iso_context *base, u64 *channels)
+ 	return ret;
+ }
+ 
+-#ifdef CONFIG_PM
+ static void ohci_resume_iso_dma(struct fw_ohci *ohci)
+ {
+ 	int i;
+@@ -3183,7 +3182,6 @@ static void ohci_resume_iso_dma(struct fw_ohci *ohci)
+ 			ohci_start_iso(&ctx->base, 0, ctx->sync, ctx->tags);
+ 	}
+ }
+-#endif
+ 
+ static int queue_iso_transmit(struct iso_context *ctx,
+ 			      struct fw_iso_packet *packet,
+@@ -3789,39 +3787,24 @@ static void pci_remove(struct pci_dev *dev)
+ 	dev_notice(&dev->dev, "removed fw-ohci device\n");
+ }
+ 
+-#ifdef CONFIG_PM
+-static int pci_suspend(struct pci_dev *dev, pm_message_t state)
++static int pci_suspend(struct device *dev)
+ {
+-	struct fw_ohci *ohci = pci_get_drvdata(dev);
+-	int err;
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct fw_ohci *ohci = pci_get_drvdata(pdev);
+ 
+ 	software_reset(ohci);
+-	err = pci_save_state(dev);
+-	if (err) {
+-		ohci_err(ohci, "pci_save_state failed\n");
+-		return err;
+-	}
+-	err = pci_set_power_state(dev, pci_choose_state(dev, state));
+-	if (err)
+-		ohci_err(ohci, "pci_set_power_state failed with %d\n", err);
+-	pmac_ohci_off(dev);
++	pmac_ohci_off(pdev);
+ 
+ 	return 0;
+ }
+ 
+-static int pci_resume(struct pci_dev *dev)
++static int pci_resume(struct device *dev)
+ {
+-	struct fw_ohci *ohci = pci_get_drvdata(dev);
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct fw_ohci *ohci = pci_get_drvdata(pdev);
+ 	int err;
+ 
+-	pmac_ohci_on(dev);
+-	pci_set_power_state(dev, PCI_D0);
+-	pci_restore_state(dev);
+-	err = pci_enable_device(dev);
+-	if (err) {
+-		ohci_err(ohci, "pci_enable_device failed\n");
+-		return err;
+-	}
++	pmac_ohci_on(pdev);
+ 
+ 	/* Some systems don't setup GUID register on resume from ram  */
+ 	if (!reg_read(ohci, OHCI1394_GUIDLo) &&
+@@ -3838,7 +3821,6 @@ static int pci_resume(struct pci_dev *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static const struct pci_device_id pci_table[] = {
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_FIREWIRE_OHCI, ~0) },
+@@ -3847,15 +3829,14 @@ static const struct pci_device_id pci_table[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, pci_table);
+ 
++static DEFINE_SIMPLE_DEV_PM_OPS(pci_pm_ops, pci_suspend, pci_resume);
++
+ static struct pci_driver fw_ohci_pci_driver = {
+ 	.name		= ohci_driver_name,
+ 	.id_table	= pci_table,
+ 	.probe		= pci_probe,
+ 	.remove		= pci_remove,
+-#ifdef CONFIG_PM
+-	.resume		= pci_resume,
+-	.suspend	= pci_suspend,
+-#endif
++	.driver.pm	= &pci_pm_ops,
+ };
+ 
+ static int __init fw_ohci_init(void)
 -- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
+
