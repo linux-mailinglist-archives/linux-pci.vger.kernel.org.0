@@ -2,71 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C7FB60D521
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 22:04:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A25C560D5A1
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 22:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232576AbiJYUEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 16:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58578 "EHLO
+        id S232445AbiJYUjG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 16:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230327AbiJYUED (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 16:04:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDA311A951;
-        Tue, 25 Oct 2022 13:04:03 -0700 (PDT)
+        with ESMTP id S231482AbiJYUjD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 16:39:03 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8412AC4B9;
+        Tue, 25 Oct 2022 13:39:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D9988B81EC9;
-        Tue, 25 Oct 2022 20:04:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 759C5C433C1;
-        Tue, 25 Oct 2022 20:03:54 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 532D6CE1C10;
+        Tue, 25 Oct 2022 20:39:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1190BC433C1;
+        Tue, 25 Oct 2022 20:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666728240;
-        bh=ydeW7eA2NXW+5grO0NpeP3U1RnuzRINX/JYx6xdDNJk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c/y6sBxBC/QTm/bKfHGdyAV72PYZcPBZjPPeJPC7JSSYsRIjZCNo2ukddtCYzfZml
-         RIvad+xpLP5OBp9B3fYDudUrVHUKGB++0Oa2cbVaDxjmuyPKd/YD9uPpL/4CQ8c5hz
-         LtM8I5yiXL9LiL/oSCQ0CR8OHRzsYuUaStw0syC6FreC6/LWMqdkVKbR1ZCObTolcF
-         n2IGOIXEUcWyDh1ACd3NiOdJvEhFLvUB2BTUjOwCOlzVW36lUw9G8/sCj0dc1/Khj9
-         RgRm3swgc8EeOs/68mD/Gvai5JagAmhmgd2Yk7c0TT/FcLAr9SCnbaprwxj5LmB7hA
-         hj02jgP9H8LJw==
-Date:   Tue, 25 Oct 2022 21:03:51 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
+        s=k20201202; t=1666730339;
+        bh=pNxIekC28wfpOc5Ypgdt8TBFN8v88QrFVDS9wqoB4fk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RqSfv94sp39rY9R6dfnKNtA2yzyyL+taF+AKAbt1StMoVeHrtOmoZ8ZmMBXJ3krGy
+         M280K4bsUBIoOIHOGnsOcYDpHG4zzHCwDB2UlH1lj9XqKQQ/c59IeIWCxRi/So+So1
+         9YdUIZBVduYEZ2X9LjSbAmi+lV5q17+kcrwyC8SYNJdPS5iw4NwroUyds1T3C6z0Cj
+         8dGKvrKF3RoP70esMxj9xNR3mEfVfRJFsKoSZ2eei4mESQfW7/WTW8UllreUfuXm2l
+         n3F06FCCOIHuqCd4/nW8IrlGIyY/pdfabLlj4WNAyoXrpyK0r8S/p+trjChtqiu1fm
+         Dar8mob5nL9SA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     David Airlie <airlied@redhat.com>
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 0/4] PCI: Remove unnecessary <linux/of_irq.h> includes
-Message-ID: <Y1hBJ+b4xmBRtrvF@spud>
-References: <20221025185147.665365-1-helgaas@kernel.org>
+Subject: [PATCH v2 0/8] agp: Convert to generic power management
+Date:   Tue, 25 Oct 2022 15:38:44 -0500
+Message-Id: <20221025203852.681822-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221025185147.665365-1-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -76,31 +54,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 01:51:43PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Many host controller drivers #include <linux/of_irq.h> even though they
-> don't need it.  Remove the unnecessary #includes.
-> 
-> v1: https://lore.kernel.org/all/20221019195452.37606-1-helgaas@kernel.org/
-> 
-> Changes from v1 to v2:
->   - Include <linux/irqdomain.h> explicitly in altera-msi and microchip,
->     which don't need <linux/of_irq.h> itself, but relied on it to include
->     <linux/irqdomain.h>
->   - Include <linux/irqdomain.h> explicitly in mvebu, which needs both it
->     and <linux/of_irq.h>
-> 
-> Bjorn Helgaas (4):
->   PCI: altera-msi: Include <linux/irqdomain.h> explicitly
->   PCI: microchip: Include <linux/irqdomain.h> explicitly
->   PCI: mvebu: Include <linux/irqdomain.h> explicitly
->   PCI: Remove unnecessary <linux/of_irq.h> includes
+From: Bjorn Helgaas <bhelgaas@google.com>
 
->  drivers/pci/controller/pcie-microchip-host.c | 2 +-
+Vaibhav converted several AGP drivers from legacy PCI power management to
+generic power management [1].  This series converts the rest of them.
 
-Hey Bjorn, actually did the build this time rather than visually
-inspecting... For the microchip bits:
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Thanks!
+v1 posted at [2].
+
+Changes from v1 to v2:
+  - Convert from SIMPLE_DEV_PM_OPS() (which is deprecated) to
+    DEFINE_SIMPLE_DEV_PM_OPS() and remove __maybe_unused annotations.
+
+[1] https://lore.kernel.org/all/20210112080924.1038907-1-vaibhavgupta40@gmail.com/#t
+[2] https://lore.kernel.org/all/20220607034340.307318-1-helgaas@kernel.org/
+
+Bjorn Helgaas (8):
+  agp/efficeon: Convert to generic power management
+  agp/intel: Convert to generic power management
+  agp/amd-k7: Convert to generic power management
+  agp/ati: Convert to generic power management
+  agp/nvidia: Convert to generic power management
+  agp/amd64: Update to DEFINE_SIMPLE_DEV_PM_OPS()
+  agp/sis: Update to DEFINE_SIMPLE_DEV_PM_OPS()
+  agp/via: Update to DEFINE_SIMPLE_DEV_PM_OPS()
+
+ drivers/char/agp/amd-k7-agp.c   | 24 ++++--------------------
+ drivers/char/agp/amd64-agp.c    |  6 ++----
+ drivers/char/agp/ati-agp.c      | 22 ++++------------------
+ drivers/char/agp/efficeon-agp.c | 16 ++++------------
+ drivers/char/agp/intel-agp.c    | 11 +++++------
+ drivers/char/agp/nvidia-agp.c   | 24 ++++--------------------
+ drivers/char/agp/sis-agp.c      |  7 ++-----
+ drivers/char/agp/via-agp.c      |  6 ++----
+ 8 files changed, 27 insertions(+), 89 deletions(-)
+
+-- 
+2.25.1
 
