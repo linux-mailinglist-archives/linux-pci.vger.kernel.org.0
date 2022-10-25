@@ -2,53 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F7D60C643
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 10:20:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 911C560C644
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Oct 2022 10:20:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232077AbiJYIUE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 04:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
+        id S232174AbiJYIUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 04:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232218AbiJYITw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 04:19:52 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB9E186CF
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 01:19:33 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29P8JOPj109079;
-        Tue, 25 Oct 2022 03:19:24 -0500
+        with ESMTP id S232231AbiJYITx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 04:19:53 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B203C1FFBD
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 01:19:36 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29P8JTMa070092;
+        Tue, 25 Oct 2022 03:19:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1666685964;
-        bh=Lo8LG8uU7d9jDxCZ1OnsR0Fud9O1Wp11S4jYZdQwtgw=;
-        h=From:To:CC:Subject:Date;
-        b=sBKu3uy2MiFbYwFi0k5R9FLbZTBJ6eDJOPxiyKlrTd7YaLaxIA1KYqVDsDxQCbo1u
-         s54iwEtwfBEro/kTlDY8DOeN1fBpNSHvUavpck9+xLWirIWJPvPSltWxbrx78iZXH5
-         2+p42+U3dmjPveP3/N/76eQlQjHtGhvgOp0ysbtE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29P8JOO2016610
+        s=ti-com-17Q1; t=1666685969;
+        bh=jCWkY5R6TsH+iUxXTDsq4CnE4emNeERuVnIGyTw0K1Q=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=DNon2lSyE+NDjVQYmvxljkYgE1H3M6tU1JFQllJgxT/kT9HGCRr8Q/srovUbrcwwy
+         VacAG7KXjz4h52TmIiyv9bcS2m4u+NfvDqxEgPJcpysHSn9BkX/7LYfS6nGQGXiukZ
+         G7i+mI3DvzSUC+dMPyfb17lYAmwBOBkAI7RKsghc=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29P8JTxt111961
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Oct 2022 03:19:24 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 25 Oct 2022 03:19:29 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 25
- Oct 2022 03:19:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2022 03:19:28 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Tue, 25 Oct 2022 03:19:23 -0500
+ Frontend Transport; Tue, 25 Oct 2022 03:19:28 -0500
 Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29P8JJfl025443;
-        Tue, 25 Oct 2022 03:19:21 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29P8JP9V022252;
+        Tue, 25 Oct 2022 03:19:27 -0500
 From:   Matt Ranostay <mranostay@ti.com>
 To:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>
 CC:     <linux-pci@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Matt Ranostay <mranostay@ti.com>
-Subject: [PATCH RESEND v2 0/2] dt-bindings: PCI: ti,j721e-pci-*: resolve unexpected property warnings
-Date:   Tue, 25 Oct 2022 01:19:07 -0700
-Message-ID: <20221025081909.404107-1-mranostay@ti.com>
+        Matt Ranostay <mranostay@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH RESEND v2 1/2] dt-bindings: PCI: ti,j721e-pci-host: add interrupt controller definition
+Date:   Tue, 25 Oct 2022 01:19:08 -0700
+Message-ID: <20221025081909.404107-2-mranostay@ti.com>
 X-Mailer: git-send-email 2.38.GIT
+In-Reply-To: <20221025081909.404107-1-mranostay@ti.com>
+References: <20221025081909.404107-1-mranostay@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -63,22 +65,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Resolve unexpected property warnings related to interrupts in both J721E PCI EP and host
-yaml files.
+Add missing 'interrupt-controller' property and related subnodes to resolve
+the following warning:
 
-Changes from v1:
-* Fix typo in commit message
-* Add missing Cc to maintainers
+arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dtb: pcie@2910000: Unevaluated properties are not allowed ('interrupt-controller' was unexpected)
+        From schema: Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
 
-Matt Ranostay (2):
-  dt-bindings: PCI: ti,j721e-pci-host: add interrupt controller
-    definition
-  dt-bindings: PCI: ti,j721e-pci-*: Add missing interrupt properties
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Matt Ranostay <mranostay@ti.com>
+---
+ .../devicetree/bindings/pci/ti,j721e-pci-host.yaml  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- .../bindings/pci/ti,j721e-pci-ep.yaml         |  7 +++++++
- .../bindings/pci/ti,j721e-pci-host.yaml       | 20 +++++++++++++++++++
- 2 files changed, 27 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index 2115d5a3f0e1..0f5914a22c14 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -76,6 +76,19 @@ properties:
+ 
+   msi-map: true
+ 
++  interrupt-controller:
++    type: object
++    additionalProperties: false
++
++    properties:
++      interrupt-controller: true
++
++      '#interrupt-cells':
++        const: 1
++
++      interrupts:
++        maxItems: 1
++
+ required:
+   - compatible
+   - reg
 -- 
 2.38.GIT
 
