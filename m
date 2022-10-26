@@ -2,147 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 576AE60DA96
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 07:31:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 757A160DAFD
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 08:11:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232523AbiJZFbH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Oct 2022 01:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55044 "EHLO
+        id S233081AbiJZGLi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Oct 2022 02:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232201AbiJZFbG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 01:31:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95BF87E814;
-        Tue, 25 Oct 2022 22:31:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A34ACB81CF1;
-        Wed, 26 Oct 2022 05:31:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 649DEC433D7;
-        Wed, 26 Oct 2022 05:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666762260;
-        bh=RdsVKGr0DKlgl6WpaDh170LCu3U34tEkshFDVWtm758=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rgNTr7masNG4Olgab5jNl69ohTUd82wAW378pvkSSfOHf16i5MTG6xu4qyCQRYREb
-         Xm6CPVo3XY4jqvQJtUTf96I9td8dzIWvwot0iKm4GjRYUvq2lpswW5LFqtMADG5LMH
-         UM+AEkxmhnIFio230Z4XTsp/dfEQ23EdIA/TZvYT3ZNVZH3WK/wcVJ+VPhRuqhclBs
-         wYLI/eluFiGFCZOeK0MW3heFQ1stHGrJko/7TFM1jKM8REAydjMDNiBJpDABcvAm9a
-         fxv4fCEmAM9IM3ituuMexB1pWO8rrLLMow53SYM+Vob93p6+y/XnOOpeTTOf/0DW0u
-         nlXLjXzu8tibw==
-Date:   Wed, 26 Oct 2022 11:00:46 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, Sergey.Semin@baikalelectronics.ru,
-        dmitry.baryshkov@linaro.org, linmq006@gmail.com,
-        ffclaire1224@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 2/3] PCI: qcom-ep: Refactor EP initialization
- completion
-Message-ID: <20221026053046.GB5179@thinkpad>
-References: <20221013175712.7539-1-vidyas@nvidia.com>
- <20221013175712.7539-3-vidyas@nvidia.com>
+        with ESMTP id S233058AbiJZGLf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 02:11:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82D39187D
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 23:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666764693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=tgxjTxvjPTIXV3SFnxEgSVVrpV7F4tmAX7ZyULG30rc=;
+        b=SdSUi0O4MA9/tas3PnzYpICORP81feS8oq5/E74DcZ8CrGr3Y6i/C0oW/JGfYVYw90ZZwZ
+        fq6L7d+mQ6js0ngFzzJduukBM5/sSfGYGS4izq9bbXzvFb0KN63OQnjjj5V7dMMmubyZ9Y
+        TGEFW2iZbECtPuiNAgX2IpNH6P5cZK8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-547-i6hdlVpOPD2RDIS9CDNhKQ-1; Wed, 26 Oct 2022 02:11:26 -0400
+X-MC-Unique: i6hdlVpOPD2RDIS9CDNhKQ-1
+Received: by mail-wm1-f72.google.com with SMTP id az11-20020a05600c600b00b003c6e3d4d5b1so5742257wmb.7
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 23:11:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tgxjTxvjPTIXV3SFnxEgSVVrpV7F4tmAX7ZyULG30rc=;
+        b=BpbIr66w0BLDHGPIJr7RPqr48tnqOHJGfbUoTdn/18bj2D7+ghIc7zxKnK6H+KOOiz
+         7hpyGpDCrQ0deLiu6EeKJY2UEzdKgXIPoEcoo/y5AICtP8W2q+H4yGiJPNKKUYF70WYb
+         1PihChbKzQxvvT8eA5+19HbagrK755R/RZ6zBzZ1o9Ul6z4K6Tsckm1cNn1cr4hGqRPd
+         cUGNrwf33L9+0/a0onoTbwWehWUwCeqzUSRArSa0sl0cd2F08o8D453VezALjcMelzZ4
+         Zj7b+SRS22Nhqr4SWe618YQZDnla5BOQepKIez0edRIu94J1Nl4mhf6+bBTJztcTkBii
+         pNDg==
+X-Gm-Message-State: ACrzQf2ofrcqqFQWh0+zoZz4fkUuE4dJveFenWvhVETas2CPD58HxLCK
+        XrCi5Maiz6PSHDXovwt6BGqkGCu/QKq30Sf0P/h7LSh8VRj0ZEYAT6vT/FwGM16Sb1rzhfWnn0O
+        b8s5AWCjLYb/WbhAxnfUL
+X-Received: by 2002:a7b:c4c2:0:b0:3b4:fdc4:6df9 with SMTP id g2-20020a7bc4c2000000b003b4fdc46df9mr1144874wmk.123.1666764685202;
+        Tue, 25 Oct 2022 23:11:25 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4tKOgv6LG6yDzRB4SfCpvOtNOSzGhpZ+gmNtnfJO420cl+gvCgYi3AQLSQoYEKN8lRFg/eEg==
+X-Received: by 2002:a7b:c4c2:0:b0:3b4:fdc4:6df9 with SMTP id g2-20020a7bc4c2000000b003b4fdc46df9mr1144857wmk.123.1666764684970;
+        Tue, 25 Oct 2022 23:11:24 -0700 (PDT)
+Received: from redhat.com ([2.55.3.42])
+        by smtp.gmail.com with ESMTPSA id p8-20020a05600c2e8800b003c64c186206sm915339wmn.16.2022.10.25.23.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 23:11:24 -0700 (PDT)
+Date:   Wed, 26 Oct 2022 02:11:21 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Wei Gong <gongwei833x@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v2] pci: fix device presence detection for VFs
+Message-ID: <20221026060912.173250-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221013175712.7539-3-vidyas@nvidia.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 11:27:11PM +0530, Vidya Sagar wrote:
-> Move the post initialization code to .ep_init_late() call back and call
-> only dw_pcie_ep_init_notify() which internally takes care of calling
-> dw_pcie_ep_init_complete().
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V5:
-> * None
-> 
-> V4:
-> * New patch in this series
-> 
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 27 ++++++++++++++---------
->  1 file changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index e33eb3871309..c418b20042aa 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -361,22 +361,12 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->  	      PARF_INT_ALL_LINK_UP;
->  	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_MASK);
->  
-> -	ret = dw_pcie_ep_init_complete(&pcie_ep->pci.ep);
-> +	ret = dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
->  	if (ret) {
->  		dev_err(dev, "Failed to complete initialization: %d\n", ret);
->  		goto err_disable_resources;
->  	}
->  
-> -	/*
-> -	 * The physical address of the MMIO region which is exposed as the BAR
-> -	 * should be written to MHI BASE registers.
-> -	 */
-> -	writel_relaxed(pcie_ep->mmio_res->start,
-> -		       pcie_ep->parf + PARF_MHI_BASE_ADDR_LOWER);
-> -	writel_relaxed(0, pcie_ep->parf + PARF_MHI_BASE_ADDR_UPPER);
+virtio uses the same driver for VFs and PFs.  Accordingly,
+pci_device_is_present is used to detect device presence. This function
+isn't currently working properly for VFs since it attempts reading
+device and vendor ID. As VFs are present if and only if PF is present,
+just return the value for that device.
 
-Writes to the MHI base addresses are required before starting LTSSM and not
-necessarily before core_init notifier. So you could just leave this code here
-and get rid of .ep_init_late() callback.
+Reported-by: Wei Gong <gongwei833x@gmail.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
 
-And you should also rebase the series on top of v6.1-rcX as I've added few more
-code in this function.
+Wei Gong, thanks for your testing of the RFC!
+As I made a small change, would appreciate re-testing.
 
-Thanks,
-Mani
+Thanks!
 
-> -
-> -	dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
-> -
->  	/* Enable LTSSM */
->  	val = readl_relaxed(pcie_ep->parf + PARF_LTSSM);
->  	val |= BIT(8);
-> @@ -643,8 +633,23 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
->  		dw_pcie_ep_reset_bar(pci, bar);
->  }
->  
-> +static void qcom_pcie_ep_init_late(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> +
-> +	/*
-> +	 * The physical address of the MMIO region which is exposed as the BAR
-> +	 * should be written to MHI BASE registers.
-> +	 */
-> +	writel_relaxed(pcie_ep->mmio_res->start,
-> +		       pcie_ep->parf + PARF_MHI_BASE_ADDR_LOWER);
-> +	writel_relaxed(0, pcie_ep->parf + PARF_MHI_BASE_ADDR_UPPER);
-> +}
-> +
->  static const struct dw_pcie_ep_ops pci_ep_ops = {
->  	.ep_init = qcom_pcie_ep_init,
-> +	.ep_init_late = qcom_pcie_ep_init_late,
->  	.raise_irq = qcom_pcie_ep_raise_irq,
->  	.get_features = qcom_pcie_epc_get_features,
->  };
-> -- 
-> 2.17.1
-> 
+changes from RFC:
+	use pci_physfn() wrapper to make the code build without PCI_IOV
 
+
+ drivers/pci/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 2127aba3550b..899b3f52e84e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6445,8 +6445,13 @@ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
+ 
+ bool pci_device_is_present(struct pci_dev *pdev)
+ {
++	struct pci_dev *physfn = pci_physfn(pdev);
+ 	u32 v;
+ 
++	/* Not a PF? Switch to the PF. */
++	if (physfn != pdev)
++		return pci_device_is_present(physfn);
++
+ 	if (pci_dev_is_disconnected(pdev))
+ 		return false;
+ 	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
 -- 
-மணிவண்ணன் சதாசிவம்
+MST
+
