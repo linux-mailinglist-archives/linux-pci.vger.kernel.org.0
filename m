@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2BC860D901
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 03:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D8460D903
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 03:59:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232691AbiJZB7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Oct 2022 21:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58856 "EHLO
+        id S231549AbiJZB7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Oct 2022 21:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231926AbiJZB7Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 21:59:25 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514FEB8E
-        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 18:59:24 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29Q1xDsF062017;
-        Tue, 25 Oct 2022 20:59:13 -0500
+        with ESMTP id S231861AbiJZB7j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Oct 2022 21:59:39 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7EB95
+        for <linux-pci@vger.kernel.org>; Tue, 25 Oct 2022 18:59:29 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29Q1xJ2Y046355;
+        Tue, 25 Oct 2022 20:59:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1666749553;
-        bh=+DX3Io643NNp6wNGOrlHO1ZLqEwP3sqUj46EJgm6hlY=;
+        s=ti-com-17Q1; t=1666749559;
+        bh=L/iYrKU14tcjE8iWVPNSLkK7DEnDJN6/AKjlSRE0Yd0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=yjdryqFdHL6ANrxsRPq97Qi6H48IPI2piTANAAP5HMc9timbj4934HK4dUz633Qax
-         uU+HKof2SK5qOyrWlp5UYy85ZPnq2EOVBpWhwRUbnyyRr/DCUGP5aiQLTKpAYX2zmJ
-         Ojh+GXjFXHddE8a2+LZ3DdBLuy2hV7x39p8axvws=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29Q1xDAB009917
+        b=N87YnfUOeARHm8hon+TUFnMElzMEKV3yqmIdtiqzQXmAP6SRgKMnWTmqGMj/a/0Fw
+         IlfDM3cLOyEH5HublbHK0z+6/pIinT9XVNz5hvkQC3NYw6rHkQQz1kMJGdTgpZcLP0
+         Kq36QDCmTegFtUWllMpfMqklWK+rJcOgn67Jyq6k=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29Q1xJWQ017758
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Oct 2022 20:59:13 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 25 Oct 2022 20:59:19 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 25
- Oct 2022 20:59:12 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2022 20:59:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Tue, 25 Oct 2022 20:59:13 -0500
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29Q1x9GW040060;
-        Tue, 25 Oct 2022 20:59:11 -0500
+ Frontend Transport; Tue, 25 Oct 2022 20:59:18 -0500
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29Q1xEaC058277;
+        Tue, 25 Oct 2022 20:59:17 -0500
 From:   Matt Ranostay <mranostay@ti.com>
 To:     <vigneshr@ti.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
         <kw@linux.com>, <bhelgaas@google.com>
 CC:     <linux-pci@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Matt Ranostay <mranostay@ti.com>
-Subject: [PATCH v4 2/3] PCI: j721e: Add PCIe 4x lane selection support
-Date:   Tue, 25 Oct 2022 18:58:49 -0700
-Message-ID: <20221026015850.591044-3-mranostay@ti.com>
+Subject: [PATCH v4 3/3] PCI: j721e: Add warnings on num-lanes misconfiguration
+Date:   Tue, 25 Oct 2022 18:58:50 -0700
+Message-ID: <20221026015850.591044-4-mranostay@ti.com>
 X-Mailer: git-send-email 2.38.GIT
 In-Reply-To: <20221026015850.591044-1-mranostay@ti.com>
 References: <20221026015850.591044-1-mranostay@ti.com>
@@ -65,60 +65,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support for setting of two-bit field that allows selection of 4x
-lane PCIe which was previously limited to only 2x lanes.
+Added dev_warn messages to alert of devicetree misconfigurations
+for incorrect num-lanes setting, or the lack of one being defined.
 
 Signed-off-by: Matt Ranostay <mranostay@ti.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/pci/controller/cadence/pci-j721e.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 07151eb3518a..397e456af439 100644
+index 397e456af439..5a3e257055e4 100644
 --- a/drivers/pci/controller/cadence/pci-j721e.c
 +++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -43,7 +43,6 @@ enum link_status {
- };
+@@ -442,9 +442,16 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 	pcie->user_cfg_base = base;
  
- #define J721E_MODE_RC			BIT(7)
--#define LANE_COUNT_MASK			BIT(8)
- #define LANE_COUNT(n)			((n) << 8)
- 
- #define GENERATION_SEL_MASK		GENMASK(1, 0)
-@@ -53,6 +52,7 @@ struct j721e_pcie {
- 	struct clk		*refclk;
- 	u32			mode;
- 	u32			num_lanes;
-+	u32			max_lanes;
- 	void __iomem		*user_cfg_base;
- 	void __iomem		*intd_cfg_base;
- 	u32			linkdown_irq_regfield;
-@@ -206,11 +206,15 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
- {
- 	struct device *dev = pcie->cdns_pcie->dev;
- 	u32 lanes = pcie->num_lanes;
-+	u32 mask = GENMASK(8, 8);
- 	u32 val = 0;
- 	int ret;
- 
-+	if (pcie->max_lanes == 4)
-+		mask = GENMASK(9, 8);
-+
- 	val = LANE_COUNT(lanes - 1);
--	ret = regmap_update_bits(syscon, offset, LANE_COUNT_MASK, val);
-+	ret = regmap_update_bits(syscon, offset, mask, val);
- 	if (ret)
- 		dev_err(dev, "failed to set link count\n");
- 
-@@ -440,6 +444,8 @@ static int j721e_pcie_probe(struct platform_device *pdev)
  	ret = of_property_read_u32(node, "num-lanes", &num_lanes);
- 	if (ret || num_lanes > data->max_lanes)
+-	if (ret || num_lanes > data->max_lanes)
++	if (ret) {
++		dev_warn(dev, "no num-lanes defined, defaulting to 1\n");
  		num_lanes = 1;
-+
-+	pcie->max_lanes = data->max_lanes;
++	}
+ 
++	if (num_lanes > data->max_lanes) {
++		dev_warn(dev, "defined num-lanes %u is greater than the allowed maximum of %u, defaulting to 1\n",
++			 num_lanes, data->max_lanes);
++		num_lanes = 1;
++	}
+ 	pcie->max_lanes = data->max_lanes;
  	pcie->num_lanes = num_lanes;
  
- 	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48)))
 -- 
 2.38.GIT
 
