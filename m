@@ -2,232 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AEE60EAC1
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 23:20:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC0E60EAF8
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 23:52:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232773AbiJZVUV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Oct 2022 17:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
+        id S233552AbiJZVwb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Oct 2022 17:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231926AbiJZVUU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 17:20:20 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D60053D35;
-        Wed, 26 Oct 2022 14:20:16 -0700 (PDT)
+        with ESMTP id S233548AbiJZVwa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 17:52:30 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2078.outbound.protection.outlook.com [40.107.220.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A3896203;
+        Wed, 26 Oct 2022 14:52:29 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D/Rb1b40g662pcE/SOqlxQHr/oYw5oCQk+d8LV3OMuyqoW8vndSGB4rETe2wIZ9BveN5RHrBOy16UepsxJue2GMgOIOUHouO9472Npe3dRBvB4cV1mN4iUgZnHGYnK76at75wrrAHAguh6h7qXfdk/TdVv30n9NcivU156sCnzVmpJWbczuXIXu8OPzAOGyO8SK5Ruql/10wImMJWz67ZGeu38pve8pC1RpN3OmKeSdnvSFoQWNSsvAmjX8paDDYN3YJX+TivEbhEh0RvQSBA+fu777rXy87+HBZg62kLughlG4am33va+2LzBhZyIhasRxhh+DnMxiPKhVyY+vfCQ==
+ b=SnLyDVCV4Uzpx0ZOGK2qvQlvcpXatmvJ4YraPtEAeCr4gr02TaS8FoeScc1sFSPE6JzBg4m7K9qMeOKtVVCjXGMF7UlnKUBFrJPnregMwX8fJjU9pv567aOwkJyb6g6MNUSRHtkKO0e6jm0/joaSG/I/N6V6zVNVaP7sNNEp40fqekghdeTm06oPenEBY5XwoAldt9uWBT36zIFBHZ9c79gx0ws23Xlqz/NUerQtp0BXVFfRmp/zczg+lfYlwcd7oBxnfZB0unm4vR4qy8ryJE+qd1DiW+s2KH2zzIWKBvTh7l4UH2d3Q9FpwEbhSk/EibqEqM5iwHOw6J6d2+ejCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EifrWoPEprlqCmpq19Fh8fV6Yp/5JdnqscwIQSf4Ggg=;
- b=mE/+HbnXkwJc7NMB+A258cSoEc4+xXOAsy4sdZz4rw8CNwndV24zynDxGZvYAhfEpE4sdxIo2eBMw/OXOwMEnH7dAPvaUfJFjDOLwJ7Def16O8yDl8wbubmenBNx2EfoGqT6FoxunnPU/jJzsTip5+vkX78qwMjuYHpaO7o+v7qtwqjFVBSYmG3uBU+CdLtZwr4hiaw5+MLg+rmDxzy7kvs8Up2PxzhzeNEKjBp0H3rezcKKUnMlrnyUtSqo9aCkQkzbmSR0aKKJFKncHO+/7xG/VFk944Rk+OJ0KF2uBmDf+O6aw9KA1pyeVtWxxL7dkEVSEByOVFUznqLo7qH13g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=BtpT16z2IwOhfNjfbroj61fDbyDNuGPcQZ74E21akNE=;
+ b=aww8TsQxKIkFhEsCr5jl7op1slU8tV6FSgRjadJtUJwm9CvMiGFXPKJsPATwlfaMPLG7SBcJmL2hn8gQpyjoyhJqhJCuLVII38FoD4CZBtQZv2DBA2wpCUyb3ofpH8DQURCneA93F6YPvpfLZTZO39u0CBPaTfS28oOFDwcEd87Fe+poJOr1X6ofc6xzwyM68+YjbLOmYCmB6rFRpcXkWGF6g/IuEIZny8//hgEZ0rV85m0mNSf0XovqtQ6u7WBg1hsAvoNH3wfTeI31t0JxqG4ZP+3ZYuN2dxIVr4f1ds5yXCbKMS8Bjp66gNGNcYSoNQgpbOMx4v7afyuNBBmvYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EifrWoPEprlqCmpq19Fh8fV6Yp/5JdnqscwIQSf4Ggg=;
- b=FfYRUOtTlH+v+pxRgzbGSBbwX+vNIuAD9jWYgM1xDZ0mJ+Iy2UPMsGQXL15MvDuf//nY+uM8vAJ0DPsrtjXHmqIh6nL87frswRVKoSZVhjjCek2TwjoMEHNhvWH4MMAswMPnBQA1ivHzRVStGzsUP72BxH7a5/7wT0S3z6MvU4c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4502.namprd12.prod.outlook.com (2603:10b6:208:263::20)
- by DS0PR12MB7512.namprd12.prod.outlook.com (2603:10b6:8:13a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Wed, 26 Oct
- 2022 21:20:13 +0000
-Received: from MN2PR12MB4502.namprd12.prod.outlook.com
- ([fe80::ff07:a59a:76b4:f06]) by MN2PR12MB4502.namprd12.prod.outlook.com
- ([fe80::ff07:a59a:76b4:f06%7]) with mapi id 15.20.5746.023; Wed, 26 Oct 2022
- 21:20:13 +0000
-Message-ID: <3e636a7d-85b9-6d6f-964f-f072438fa856@amd.com>
-Date:   Wed, 26 Oct 2022 14:20:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH RFC 0/2] Generate device tree node for pci devicesgain,
-Content-Language: en-US
-To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helgaas@kernel.org, max.zhen@amd.com,
-        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
-        trix@redhat.com,
-        "Steen.Hegelund@microchip.com" <Steen.Hegelund@microchip.com>,
-        "Horatiu.Vultur@microchip.com" <Horatiu.Vultur@microchip.com>,
-        "Allan.Nielsen@microchip.com" <Allan.Nielsen@microchip.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-References: <1661809417-11370-1-git-send-email-lizhi.hou@amd.com>
- <1d9faa2e-e3fc-d104-c85f-4035233848d6@gmail.com>
- <ca35a14d-501d-265e-b196-a87e1e994cd0@amd.com>
- <78211af5-171c-ef4f-a8c2-17f63dc479bc@gmail.com>
- <20221010104210.68edf825@fixe.home>
- <0d571d21-507d-fcc5-bf58-d02f958de28a@gmail.com>
- <20221013100245.14c509ec@fixe.home>
- <c427fd85-3746-bf26-e4a3-9b2aa53f6572@gmail.com>
- <CAL_Jsq+aiJbrna6kpvb9k=KWUwMH-k8_Y_W1+HkJpHyGEee7NA@mail.gmail.com>
- <fbfb817c-6f09-32d0-fafc-7d37618e2886@gmail.com>
- <20221017091820.07144242@fixe.home>
-From:   Sonal Santan <sonal.santan@amd.com>
-In-Reply-To: <20221017091820.07144242@fixe.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PH0PR07CA0052.namprd07.prod.outlook.com
- (2603:10b6:510:e::27) To MN2PR12MB4502.namprd12.prod.outlook.com
- (2603:10b6:208:263::20)
+ bh=BtpT16z2IwOhfNjfbroj61fDbyDNuGPcQZ74E21akNE=;
+ b=SmBvG6Nx4SunMR/08wojnnP73trx0CB0pqxIE3U3zO+YeCL4M/cDOmwkk+kTmH5qZ4b221Ww3Gw9HkVk2tFe/J8az921vQStAcRMgaJOh5dLzQjyoJ5mGGhWNzubsw/5XfzROjl/8QrrH/c2N1gch1UGgtnDgLXtLVsh7PuR0wA=
+Received: from DM6PR18CA0016.namprd18.prod.outlook.com (2603:10b6:5:15b::29)
+ by DM4PR12MB5963.namprd12.prod.outlook.com (2603:10b6:8:6a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5723.29; Wed, 26 Oct 2022 21:52:26 +0000
+Received: from DM6NAM11FT107.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:15b:cafe::a4) by DM6PR18CA0016.outlook.office365.com
+ (2603:10b6:5:15b::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.21 via Frontend
+ Transport; Wed, 26 Oct 2022 21:52:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT107.mail.protection.outlook.com (10.13.172.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5746.16 via Frontend Transport; Wed, 26 Oct 2022 21:52:26 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 26 Oct
+ 2022 16:52:25 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <mario.limonciello@amd.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Len Brown" <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mehta Sanju <Sanju.Mehta@amd.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] PCI/ACPI: PCI/ACPI: Validate devices with power resources support D3
+Date:   Wed, 26 Oct 2022 16:52:37 -0500
+Message-ID: <20221026215237.18556-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4502:EE_|DS0PR12MB7512:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0c22eb5-e749-45b0-663b-08dab797de98
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT107:EE_|DM4PR12MB5963:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3ff3ea2-1662-4c39-757c-08dab79c5f4a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5jXJa2LMpmDEQdTaCJQdtMpwA3L0jzyjzjEP1ro+l3beLP2WzxUhDkeQiaP2+YOqw91WaPm/sA51VW7ns/HKVNCEn0xzf7zfVeCCgkTJMjfQroC/E4gmzO79N9TfyoRQRj/7FEanG+1SVmVPz1SnEUSwC4pwT5D/WCaS0pdyMJdGw8kT5UyqRkwZO4gbyfv0D5LeSrWGyQSH94L3HCjF2JEPepcMi8hJ5koQAn2Le00mPxjIsjm5dteDMOR4uZSs8n16i8zZny+IxEyjcG9QWAbr/egKMNTfG5MJi1EyZl+udYdjKhkHyFQXq4AChRfPPvPC458Jcxl6TToRDCv6rMmk3C8DivEiX4JoBkMq3cw5HKvEdQeIP1BR1eflq3xvPo6eDnByvEAwg7S4WQ1zuG06jvn8JpvWE18LExoA4TXfbmCu3Pgy6UYW39IkKLcvQoA+fviNzL6KL+WNRPsOZs4iIwXmmRQkUxRywRjTOPl/KjL2gZ1uM62+QbxpWpBEe2O96NTfNYEK5sx5YYK3lDiRkJiGugIbKdvpVMahIUtX/nMNzxiKJeCsG2PFbDsh4Nq/RFoBrNXW09Oz8YK/Dy0mFXAV1g/5nFGjbEpS4BN5pqK5IygiuYPYNdw/L9d+W229AzcVI1DHUGUP97VdSIOi6I2Tu9we0kyVFVt+WSOXiKlcEu/9K0+xEb7ZJIBAWc+eF+QcvjBpV6EF7yiu5bhJTzhbPjzkCULTvXzgkeSRlF2QeIxD+BVJhjBYaCUkjUmHvBjM2vsEdPIbpkL8fuCrBN3R2sVfQsXSwoqKKwI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(451199015)(7416002)(2616005)(6506007)(86362001)(31686004)(66556008)(66946007)(66476007)(5660300002)(53546011)(186003)(83380400001)(66574015)(4326008)(44832011)(6486002)(478600001)(36756003)(8676002)(38100700002)(110136005)(41300700001)(31696002)(2906002)(54906003)(6666004)(8936002)(6512007)(26005)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V3ZWaUNOWjJtU2pJd093VHk5Tmg5dzVaUVNBWGw0My9raHB4TFlzWThoV3BU?=
- =?utf-8?B?aXNxeVkzZExFbGgvYmRHd3VwMzByOGVvS3cwYy95OEV3Vldrem82UW4yNnUw?=
- =?utf-8?B?RXp6Ukt2NHJQajFQNk04NFltUFU2Rlh0TTNpNUhmbzM2djBZR0RLYkV2SDlr?=
- =?utf-8?B?M29WK2dPREgzVkhZOWcvV2VxQXhrVVNPRHFwSzM2dXhtSzZLZDVQdzh4VElt?=
- =?utf-8?B?OG5WSXVzTDRnY2JWQm1DSFlITzlGS25uUEx3UWhGYmdIbnZsTnJjaC9aeVNR?=
- =?utf-8?B?RnpURE1VZXk1NVdYaDN4dmNBVzNDRTJxYUtTWGdncVJkTkF5WmFLMDdWZzNa?=
- =?utf-8?B?bHN3dHRzbUJwTEJ0bThWbU9rdVRjNGY5WHF1Rklva3E2U2JRNXdIN0lCM1Y0?=
- =?utf-8?B?Z1hJR0lnM0d0L2FZSW9zdGcvOVNiM0dDZG4yblFaZTVlRlpESW5COXBveUxF?=
- =?utf-8?B?azZObkQ1dWxUSU1VNUg4RXE0dG15cFl4MXJwVWg1bnMvMi8xUitMTG9wazUr?=
- =?utf-8?B?NFpDWDVwQjR0SUJJUjlWZE9OVDM2SmVDU2F4MW8xbm94eGplUU9kMU5peHRG?=
- =?utf-8?B?aFROZlphSnRlWmIzL1dURXlzbXpvTDlaeGpweHRJSUNwM2l3WVNDdzAvb0Q2?=
- =?utf-8?B?eDdEcVprWnpRUGlXeEQxMXBabTZXdDVUMXFBNzMzZS95ZHBiT2NEamcxNzZq?=
- =?utf-8?B?UUxabFR6azJlYTY0VnFST05HVUp0TERIZzhXY1d1UC93UkM4bzExbXBOeGJY?=
- =?utf-8?B?S1dBWExuQmE5SGRFc29aWEVNL1l5SUFXWTB2aXpxcTdtYTIra2hndE5oTDdC?=
- =?utf-8?B?TTBwcnZQcjBKdS9oQWJOTWpWcUgxVUkxcUJJc2toZksvTUtocDVrNjY0Y0Z2?=
- =?utf-8?B?UG4yOFhXcXVPL2FVN1RJS082aWtEV1BlUitpdVgvb3pLc1I2Q0JWTFRqMDgz?=
- =?utf-8?B?NkgyWGpzN2hZQ25RTXAyQlFLeklEZThhdDZCTU9vRWpXZE5TZzZWVkNONDdq?=
- =?utf-8?B?WDI3RVl5T0ZTMFZFeUVxQWdKT25UeUlRcUpsTUQrZ0FLc2tNbk5vSGZmeXF2?=
- =?utf-8?B?c1U0aG9JcVkyb2w0SXhLM1lQTWloMUpVVnMwOWRHU2duWDBOcDFUbFVmeTJt?=
- =?utf-8?B?V0gwNzBIVGFaTXQ2MlprbmtSOVZHOU5IU3hxQ01OVEVrNXVlYkw2UUF4cjlI?=
- =?utf-8?B?NEtHWEU4RVplaWY3bi9naEhoVklqYWNsN1JRT21sbFBaVXNmZUx0MDJQWDhw?=
- =?utf-8?B?Nm1kb1FXZTFsOFlBQVZ3d25mUmNaVVc5NnhEQWlZWk9kSk5RMkQzV1RnbHJ4?=
- =?utf-8?B?Ly9jSHI5Tk4zdmpZbEFHQ0E3V0NFQTBJUmtPSm5RTnZmNTlpUFhxOXJqcWZE?=
- =?utf-8?B?cXd1eFJmeENqL1VDSzR5ZWx3SnN4ZGhIZFlyQzYwWnlNRGpRVkhUVzhqblZh?=
- =?utf-8?B?cXpmWnhTb0FLQm9SV2FzRmFqeThWTk55dGl2U1c3TGtsT0o4OW5yUGFPYmdR?=
- =?utf-8?B?WFJWd1ZKVVA5QkRwVFRIKzNvTUFyTmJ5RFh3a04vR1M0b25oTUpVRkMyUGxH?=
- =?utf-8?B?Vjk2ZDJiN0NpVnN3T2FYTXlTU21hRHllTGJCZTdvS1dIelFlWUcvdkZhQzNZ?=
- =?utf-8?B?Y2tkaHJ0V3dTVjV6T053b1JMMUJPYXhVSkdMNTZCMmcyWVdOSEM3YStZQldn?=
- =?utf-8?B?cVFKMURkVUczNVlOZ0lVTldBbjArVGtoMU8xTm9BeHVXZ0JVUEFuUUZzTmds?=
- =?utf-8?B?TmMxWWtSN29FbzdSUWZhdlhEa3pPUnIvN0FmWEpEU1dWN1gwYkpUdXlWS09T?=
- =?utf-8?B?Uzdib0cyY1Vjc2ZCODhKazFDRDRvbDlHZjQxWmw5QTgySlE2SkZSOTU2THFW?=
- =?utf-8?B?eXVoOXFqZWlnTVVJUFZLNDdRQlRJaW0vSTdueitraFJ2azRhaXE0QUhyQnFw?=
- =?utf-8?B?OXAzWW5hdERmQXZ5YmRyeWZMSlNFTFR2RXRMdWRwQWJKbWhkTDI0U0JtOXNh?=
- =?utf-8?B?c2cxc1QybkpPeFg1OXZtK1hhaTJlMjlEdFVzamphY1BtYlJBUmFsRStCMWFC?=
- =?utf-8?B?SHl2Z0g1eUhnWEwwZitDWFBFaWxTQTY3aTRRSjhNQnZHTVA4TUJJZTVxZDBz?=
- =?utf-8?Q?TDpQaASgZQHzdyE4scs6BpCiW?=
+X-Microsoft-Antispam-Message-Info: m4NLf5u8Y/Z2OSmTsdtDQAY1W1pwL41EipaRMRkiacbtdmfCql0LcsVaPbhl3dSh/IzqITwKUBuZEkzfjFWOIbe27XL5APqeG0S+K2CpkjzRnE0KjtLWjobAjyTC4+trT5wG7d1EAETQCFmLbjH8gdwZta16K0NyFrD96Wo1D+MhORPWqUBkRgYfmoMfxmc127a5U6SWHmYymTNvq3yxlJ8macrxWehZUC3A7qMIV9Jih2imj+je78XSXXP1ssH+NjVqhPtASzcgLKfcs0CTVIklC3T9PnBqcy1s7lGxEj0yU+8tJY9yFMAc3ojbNectxzPFHp8Tn9X78oRKrRItl8X9h9diCpkmTQCbXvnrKyALo2hqFtpek6VAZR0GPF7E7e41w0aUIbr6iRNvtb2X5HSqVvNcdC4qDnR5CDfRiNM6LPnvjnDOw5zgZVy14Q7PSLMUVsQXgmEVr6dnDpMK5WJEkceVrY8C36gC7Q9euIa2FCzaKTNtPbEtTtrrdMwDPummCTnlOHz+2bvLiZuMeUE+enrjzyZg0gX1pSkECyY5u5kG1i+CG1uEuaWfA+7JKPsW0Hfltf2qyKzBstTJKgMUBbNmQ0J1m/mmPQUmg00jt0biDxEDxRUS0HFw22AjGGwqWq7kCsLDY4AVfAHBNOYrjLFWbypaoy0hvGHxtQJDI1jEDCYPEjWSWsqpcIJdU0V93QIKgE+sIKfj3KZBh2sn9c/YnHi3okJ5ZlinDpqA/2j2sGEzekfoD5ikzwxtLfM/ePnLciwwRMuBUG2TplbjuQ69J/dBPKjVhxkMSu43dymO/H203OfptkErWjAQpPOiOG1K4RQAH4lAoCN5OaYf5U/apwjEQwwAAjLOvcsk51/xTjtwTCTTck58MmNh
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(376002)(39860400002)(136003)(451199015)(46966006)(40470700004)(36840700001)(16526019)(83380400001)(316002)(336012)(8676002)(54906003)(186003)(86362001)(15650500001)(36756003)(110136005)(40460700003)(44832011)(7696005)(426003)(8936002)(70206006)(2906002)(66574015)(5660300002)(40480700001)(70586007)(19627235002)(2616005)(26005)(1076003)(6666004)(47076005)(41300700001)(82740400003)(82310400005)(4326008)(36860700001)(81166007)(356005)(966005)(478600001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0c22eb5-e749-45b0-663b-08dab797de98
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4502.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 21:20:13.0070
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 21:52:26.7061
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3ff3ea2-1662-4c39-757c-08dab79c5f4a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fO7FM/EIgj2AYFESdJMOcBOPRsrpCxVJdZhSeeSjP7XQvkZEM9V0oWRGqBfgKFeo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7512
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT107.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5963
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED,URI_TRY_3LD
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/17/22 00:18, Clément Léger wrote:
-> Le Fri, 14 Oct 2022 13:52:50 -0500,
-> Frank Rowand <frowand.list@gmail.com> a écrit :
-> 
->> On 10/14/22 12:33, Rob Herring wrote:
->>> On Thu, Oct 13, 2022 at 12:28 PM Frank Rowand <frowand.list@gmail.com> wrote:  
->>>>
->>>> On 10/13/22 03:02, Clément Léger wrote:  
->>>>> Le Thu, 13 Oct 2022 01:05:26 -0500,
->>>>> Frank Rowand <frowand.list@gmail.com> a écrit :
->>>>>  
->>>>>>> This would also require two different descriptions of the same card
->>>>>>> (for ACPI and device-tree) and would require the final user to create a
->>>>>>> specific overlay for its device based on the PCI slots the card is
->>>>>>> plugged in.  
->>>>>>
->>>>>> One of the many missing pieces of overlay support.  There have been several
->>>>>> discussion of how to describe a "socket" in a device tree that a device
->>>>>> could be plugged into, where a single device tree subtree .dtb could be
->>>>>> relocated to one or more different socket locations.  Thus in this
->>>>>> case a single overlay could be relocated to various PCI slots.
->>>>>>
->>>>>> I don't expect be getting involved in any future efforts around sockets
->>>>>> (see my following comment for why).
->>>>>>  
->>>>>>>
->>>>>>> The solution we proposed (Lizhi and I) allows to overcome these
->>>>>>> problems and is way easier to use. Fixing the potential bugs that might
->>>>>>> exists in the overlay layer seems a way better idea that just pushing  
->>>>>>
->>>>>> It is not potential bugs.  The current run time overlay implementation is
->>>>>> proof of concept quality and completeness.  It is not production ready.
->>>>>>
->>>>>> I got an opportunity for early retirement a couple of weeks ago.  My first
->>>>>> inclination was to continue the same level of device tree maintainership,
->>>>>> but I am quickly realizing that there are other activities that I would
->>>>>> like to devote my time and energy to.  I will continue to support Rob with
->>>>>> minor patch reviews and testing, and potentially finishing up some
->>>>>> improvements to unittest.  On the other hand, bringing run time overlay
->>>>>> support to product quality would be a major investment of my time that I
->>>>>> am not willing to continue.  
->>>>>
->>>>> Hi Frank,
->>>>>
->>>>> This explains your position on the overlay support and I can
->>>>> certainly understand it ! Regarding the fact that it would enter  
->>>>
->>>> No, my position on the technical aspects of overlay support is totally
->>>> unchanged.
->>>>
->>>> The only thing that has changed is that my time will not be available to
->>>> assist in future overlay related work.  The burden for this will fall
->>>> more on Rob than it has in the past.  
->>>
->>> s/Rob/someone that steps up to maintain the overlay code/
->>>   
->>>>> "production", the devices we are talking about are not really
->>>>> widespread yet? This would be a good opportunity to gather feedback
->>>>> early and improve the support gradually. We could probably even be able
->>>>> to support improvements in the overlay code if needed I guess.  
->>>>
->>>> That is avoiding my point about the current implementation being
->>>> proof of concept.  
->>>   
->>
->>
->>> I think it would be better to talk in terms of under what conditions
->>> the overlay support is adequate (for production) rather than a blanket
->>> statement that it is not-production ready.   
->>
->> I sort of agree.  Use of run time overlays has been narrowly supported
->> for use by a limited set of very cautious developers in a very constrained
->> usage.
-> 
-> As a first working point, could we potentially restrict drivers to only
-> insert an overlay but not remove it ? It would be quite limited, but
-> as you pointed out, the multiple load/unload (or FPGA reconfiguration)
-> will only happen during development. Under "normal" condition, we could
-> expect the FPGA to be configured once during the system runtime. The
-> same goes for our PCI card which uses an existing SoC, we can probably
-> assume that it is going to be plugged once for all during the system
-> runtime.
-> 
-> This would limit the problems that might happen due to dynamic
-> insertion/removal of the overlay.
-> 
-We would need "limited" overlay removal support to handle driver unload or device hotplug. Limited removal support will also be needed for Alveo use case in order to handle FPGA reconfiguration in production environment.
+Firmware typically advertises that ACPI devices that represent PCIe
+devices can support D3 by a combination of the value returned by
+_S0W as well as the HotPlugSupportInD3 _DSD [1].
 
--Sonal
+`acpi_pci_bridge_d3` looks for this combination but also contains
+an assumption that if an ACPI device contains power resources the PCIe
+device it's associated with can support D3.  This was introduced
+from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
+D3 if power managed by ACPI").
+
+Some firmware configurations for "AMD Pink Sardine" do not support
+wake from D3 in _S0W for the ACPI device representing the PCIe root
+port used for tunneling. The PCIe device will still be opted into
+runtime PM in the kernel [2] because of the logic within
+`acpi_pci_bridge_d3`. This currently happens because the ACPI
+device contains power resources.
+
+When the thunderbolt driver is loaded two device links are created:
+* USB4 router <-> PCIe root port for tunneling
+* USB4 router <-> XHCI PCIe device
+
+These device links are created because the ACPI devices declare the
+`usb4-host-interface` _DSD [3]. For both links the USB4 router is the
+supplier and these other devices are the consumers.
+Here is a demonstration of this topology that occurs:
+
+|
+├─ 00:03.1
+|       | "PCIe root port used for tunneling"
+|       | ACPI Path: \_SB_.PCI0.GP11
+|       | ACPI Power Resources: Yes
+|       | ACPI _S0W return value: 0
+|       | Device Links: supplier:pci:0000:c4:00.5
+|       └─ PCIe Power state: D0
+└─ 00:08.3
+        | ACPI Path: \_SB_.PCI0.GP19
+        ├─ PCIe Power state: D0
+        ├─ c4:00.3
+        |       | "XHCI PCIe device used for tunneling"
+        |       | ACPI Path: \_SB_.PCI0.GP19.XHC3
+        |       | ACPI Power Resources: Yes
+        |       | ACPI _S0W return value: 4
+        |       | Device Links: supplier:pci:0000:c4:00.5
+        |       └─ PCIe Power state: D3cold
+        └─ c4:00.5
+                | "USB4 Router"
+                | ACPI Path: \_SB_.PCI0.GP19.NHI0
+                | ACPI Power Resources: Yes
+                | ACPI _S0W return value: 4
+                | Device Links: consumer:pci:0000:00:03.1 consumer:pci:0000:c4:00.3
+                └─ PCIe Power state: D3cold
+
+Currently runtime PM is allowed for all of these devices.  This means that
+when all consumers are idle long enough, they will enter their deepest allowed
+sleep state. Once all consumers are in their deepest allowed sleep state the
+suppliers will enter the deepest sleep state as well.
+
+* The PCIe root port for tunneling doesn't support waking from D3hot or
+  D3cold so it stays in D0.
+* The XHCI PCIe device supports wakeup from D3cold so it goes to D3cold.
+* Both consumers are in their deepest state and the USB4 router supports
+  wakeup from D3cold, so it goes into this state.
+
+The expectation is the USB4 router should have also remained in D0 since
+the PCIe root port for tunneling remained in D0 and a device link exists
+between the two devices.
+
+Instead of making the assertion that the device can support D3 (and thus
+runtime PM) solely from the presence of ACPI power resources, move the check
+to later on in the function, which will have validated that the ACPI device
+supports wake from D3hot or D3cold.
+
+This fix prevents the USB4 router being put into D3 when the firmware
+says that ACPI device representing the PCIe root port for tunneling can't
+handle it while still allowing ACPI devices that don't have the
+HotplugSupportInD3 _DSD to also enter D3 if they have power resources that
+can wake from D3.
+
+Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3 [1]
+Link: https://github.com/torvalds/linux/blob/v6.1-rc1/drivers/pci/pcie/portdrv_pci.c#L126 [2]
+Link: https://github.com/torvalds/linux/blob/v6.1-rc1/drivers/thunderbolt/acpi.c#L29 [3]
+Fixes: dff6139015dc6 ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v3->v4:
+ * Pick up tags
+ * Add more details to the commit message
+v2->v3:
+ * Reword commit message
+v1->v2:
+ * Just return value of acpi_pci_power_manageable (Rafael)
+ * Remove extra word in commit message
+---
+ drivers/pci/pci-acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index a46fec776ad77..8c6aec50dd471 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+ 		return false;
+ 
+-	/* Assume D3 support if the bridge is power-manageable by ACPI. */
+-	if (acpi_pci_power_manageable(dev))
+-		return true;
+-
+ 	rpdev = pcie_find_root_port(dev);
+ 	if (!rpdev)
+ 		return false;
+@@ -1023,7 +1019,8 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	    obj->integer.value == 1)
+ 		return true;
+ 
+-	return false;
++	/* Assume D3 support if the bridge is power-manageable by ACPI. */
++	return acpi_pci_power_manageable(dev);
+ }
+ 
+ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+-- 
+2.34.1
+
