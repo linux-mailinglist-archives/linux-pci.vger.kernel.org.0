@@ -2,173 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE0F60DEE4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 12:35:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5911760DF57
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 13:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231706AbiJZKfw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Oct 2022 06:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42372 "EHLO
+        id S233153AbiJZLRD convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 26 Oct 2022 07:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233308AbiJZKfv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 06:35:51 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A92844F7
-        for <linux-pci@vger.kernel.org>; Wed, 26 Oct 2022 03:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666780550; x=1698316550;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hYZ82ThIi+oUDd18Vbnhg8eoYFuJvenGBQxTuip2V9Y=;
-  b=Di4mze8oxm6ciYdiL3rdekVb1RdN5u3hVgxa1SasQPZHOmCyDmRGus42
-   tDdlfYo+x41tgXG6nZ5VmlIm0+uIERLcsSYxQe/bMFk4KDVoYUYkGyHxu
-   bHvonXOHAp+mcP3X+jo0M1/NZU2Y2mGXZW4hWXeg+lfLSXqIrZfywBMwr
-   JCdQdvgjw+nrIOKoIjopOFpQabuKyVBMvuQO8EerXMwduhXbJrvYZMzdr
-   0CEXilteYjwQG4mfMl4NiDh3AZqGt7+hnAjQKqt5zoyCE3TEym/vJrBbg
-   dOmhHRgEQ6TCQBeNS29L2WjZIDsNGVEA1oVvBZHdw08zjcwSSyLlQY3Da
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="295320894"
-X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="295320894"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 03:35:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="721203515"
-X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="721203515"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Oct 2022 03:35:48 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ondlD-0007Is-2T;
-        Wed, 26 Oct 2022 10:35:47 +0000
-Date:   Wed, 26 Oct 2022 18:34:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 7ef674962273621c58e0586e674277843a7f572e
-Message-ID: <63590d4a.JcPxPzP5/1Dxj/tb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233210AbiJZLRB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 07:17:01 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A319185B;
+        Wed, 26 Oct 2022 04:17:00 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id o2so10198615qkk.10;
+        Wed, 26 Oct 2022 04:17:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bkc8jxMr2p6wy1sRq7AUIm9TzPToZYJ54wpY7zhIe7M=;
+        b=okIQpk88CukLyRLQlj6tQCb9S9y0qYVOkSH/Bq5gsQKgW4Y71LxCUd2RloCIUIYkUv
+         KkHZd+jT12ttmDZF0iMbG7pvjx99gWVp2K5xJLTEPXOcEU0gLckfRkUVBR+EM03ljEfE
+         yaVGufqC2mClaLwh2HsqXvyn2CIddOJeTFe9C7UWHmBdo8PpvxnKNWnIGefTpTDNaZMR
+         Us5JPvlIRrgliFYZzAgDRuGgooe61hQMdGtHUMsZaYYMSBh/UPfL0hBfttR3gL9AnRot
+         WjMyGMcTIofz5S1818qYac9EhCjnLrtc4zkMtxcCr6elE2H1/3E7WbvYN/tAp4nyuzdO
+         2/Xw==
+X-Gm-Message-State: ACrzQf0p36iWrOR3gg+sBskbfs+BIJaxPTFY4RskIsEwqdVfVvXT4vPs
+        RR/ij3ZzBTZTd5PZVIffBUCIDeetpjmc4lvtKeE3LoIq
+X-Google-Smtp-Source: AMsMyM6fUqqeJOG0uDJp7tM0ShfTGW7AHW/hrkgyrqrWJCztj5e71zwgscXRycTffepa26BPFVd9UIcmMujBH9yxuVY=
+X-Received: by 2002:a05:620a:d89:b0:6cf:c98b:744c with SMTP id
+ q9-20020a05620a0d8900b006cfc98b744cmr29776452qkl.443.1666783019193; Wed, 26
+ Oct 2022 04:16:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20221025221054.12377-1-mario.limonciello@amd.com>
+In-Reply-To: <20221025221054.12377-1-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Oct 2022 13:16:45 +0200
+Message-ID: <CAJZ5v0iy6WwujE6kwJ2i=A4Cjmvnvi9UgovNp_NzW759MZ-7Aw@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/ACPI: PCI/ACPI: Validate devices with power
+ resources support D3
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mehta Sanju <Sanju.Mehta@amd.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 7ef674962273621c58e0586e674277843a7f572e  Merge branch 'pci/portdrv'
+On Wed, Oct 26, 2022 at 12:10 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Firmware typically advertises that PCIe devices can support D3
+> by a combination of the value returned by _S0W as well as the
+> HotPlugSupportInD3 _DSD.
+>
+> `acpi_pci_bridge_d3` looks for this combination but also contains
+> an assumption that if a device contains power resources it can support
+> D3.  This was introduced from commit c6e331312ebf ("PCI/ACPI: Whitelist
+> hotplug ports for D3 if power managed by ACPI").
+>
+> On some firmware configurations for "AMD Pink Sardine" D3 is not
+> supported for wake in _S0W for the PCIe root port for tunneling.
+> However the device will still be opted into runtime PM since
+> `acpi_pci_bridge_d3` returns since the ACPI device contains power
+> resources.
+>
+> When the thunderbolt driver is loaded a device link between the USB4
+> router and the PCIe root port for tunneling is created where the PCIe
+> root port for tunneling is the consumer and the USB4 router is the
+> supplier.  Here is a demonstration of this topology that occurs:
+>
+> ├─ 0000:00:03.1
+> |       | ACPI Path: \_SB_.PCI0.GP11 (Supports "0" in _S0W)
+> |       | Device Links: supplier:pci:0000:c4:00.5
+> |       └─ D0 (Runtime PM enabled)
+> ├─ 0000:00:04.1
+> |       | ACPI Path: \_SB_.PCI0.GP12 (Supports "0" in _S0W)
+> |       | Device Links: supplier:pci:0000:c4:00.6
+> |       └─ D0 (Runtime PM enabled)
+> ├─ 0000:00:08.3
+> |       | ACPI Path: \_SB_.PCI0.GP19
+> |       ├─ D0 (Runtime PM disabled)
+> |       ├─ 0000:c4:00.3
+> |       |       | ACPI Path: \_SB_.PCI0.GP19.XHC3
+> |       |       | Device Links: supplier:pci:0000:c4:00.5
+> |       |       └─ D3cold (Runtime PM enabled)
+> |       ├─ 0000:c4:00.4
+> |       |       | ACPI Path: \_SB_.PCI0.GP19.XHC4
+> |       |       | Device Links: supplier:pci:0000:c4:00.6
+> |       |       └─ D3cold (Runtime PM enabled)
+> |       ├─ 0000:c4:00.5
+> |       |       | ACPI Path: \_SB_.PCI0.GP19.NHI0 (Supports "4" in _S0W)
+> |       |       | Device Links: consumer:pci:0000:00:03.1 consumer:pci:0000:c4:00.3
+> |       |       └─ D3cold (Runtime PM enabled)
+> |       └─ 0000:c4:00.6
+> |               | ACPI Path: \_SB_.PCI0.GP19.NHI1 (Supports "4" in _S0W)
+> |               | Device Links: consumer:pci:0000:c4:00.4 consumer:pci:0000:00:04.1
+> |               └─ D3cold (Runtime PM enabled)
+>
+> Allowing the PCIe root port for tunneling to go into runtime PM (even if
+> it doesn't support D3) allows the USB4 router to also go into runtime PM.
+> The PCIe root port for tunneling stays in D0 but is in runtime PM. Due to
+> the device link the USB4 router transitions to D3cold when this happens.
+>
+> The expectation is the USB4 router should have also remained in D0 since
+> the PCIe root port for tunneling remained in D0.
+>
+> Instead of making this assertion from the power resources check
+> immediately, move the check to later on, which will have validated
+> that the device supports wake from D3hot or D3cold.
+>
+> This fix prevents the USB4 router going into D3 when the firmware says that
+> the PCIe root port for tunneling can't handle it while still allowing
+> system that don't have the HotplugSupportInD3 _DSD to also enter D3 if they
+> have power resources that can wake from D3.
+>
+> Fixes: dff6139015dc6 ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-elapsed time: 725m
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-configs tested: 91
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-s390                             allmodconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-sh                               allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-ia64                             allmodconfig
-x86_64                           rhel-8.3-syz
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-i386                                defconfig
-x86_64                              defconfig
-m68k                             allyesconfig
-arc                  randconfig-r043-20221025
-x86_64                               rhel-8.3
-i386                 randconfig-a011-20221024
-i386                 randconfig-a014-20221024
-x86_64                           allyesconfig
-i386                 randconfig-a013-20221024
-i386                             allyesconfig
-i386                 randconfig-a012-20221024
-i386                 randconfig-a016-20221024
-i386                 randconfig-a015-20221024
-x86_64               randconfig-a013-20221024
-x86_64               randconfig-a012-20221024
-x86_64               randconfig-a011-20221024
-x86_64               randconfig-a014-20221024
-x86_64               randconfig-a015-20221024
-x86_64               randconfig-a016-20221024
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-m68k                        mvme147_defconfig
-powerpc                   motionpro_defconfig
-mips                         cobalt_defconfig
-mips                    maltaup_xpa_defconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-i386                             alldefconfig
-arm                      integrator_defconfig
-openrisc                 simple_smp_defconfig
-mips                          rb532_defconfig
-sh                        edosk7705_defconfig
-i386                          randconfig-c001
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arm                       omap2plus_defconfig
-arm                              allmodconfig
-nios2                         3c120_defconfig
-powerpc                    klondike_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-
-clang tested configs:
-hexagon              randconfig-r041-20221025
-riscv                randconfig-r042-20221025
-hexagon              randconfig-r045-20221025
-s390                 randconfig-r044-20221025
-x86_64               randconfig-a001-20221024
-x86_64               randconfig-a003-20221024
-x86_64               randconfig-a004-20221024
-x86_64               randconfig-a002-20221024
-x86_64               randconfig-a005-20221024
-x86_64               randconfig-a006-20221024
-i386                 randconfig-a001-20221024
-i386                 randconfig-a002-20221024
-i386                 randconfig-a003-20221024
-i386                 randconfig-a004-20221024
-i386                 randconfig-a006-20221024
-i386                 randconfig-a005-20221024
-mips                malta_qemu_32r6_defconfig
-arm                        spear3xx_defconfig
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-k001
-powerpc                      ppc64e_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> ---
+> v2->v3:
+>  * Reword commit message
+> v1->v2:
+>  * Just return value of acpi_pci_power_manageable (Rafael)
+>  * Remove extra word in commit message
+> ---
+>  drivers/pci/pci-acpi.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a46fec776ad77..8c6aec50dd471 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>         if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+>                 return false;
+>
+> -       /* Assume D3 support if the bridge is power-manageable by ACPI. */
+> -       if (acpi_pci_power_manageable(dev))
+> -               return true;
+> -
+>         rpdev = pcie_find_root_port(dev);
+>         if (!rpdev)
+>                 return false;
+> @@ -1023,7 +1019,8 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>             obj->integer.value == 1)
+>                 return true;
+>
+> -       return false;
+> +       /* Assume D3 support if the bridge is power-manageable by ACPI. */
+> +       return acpi_pci_power_manageable(dev);
+>  }
+>
+>  int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+> --
+> 2.34.1
+>
