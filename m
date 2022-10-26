@@ -2,174 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5911760DF57
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 13:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6D860DFDA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Oct 2022 13:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233153AbiJZLRD convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 26 Oct 2022 07:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
+        id S233111AbiJZLm5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Oct 2022 07:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233210AbiJZLRB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 07:17:01 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A319185B;
-        Wed, 26 Oct 2022 04:17:00 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id o2so10198615qkk.10;
-        Wed, 26 Oct 2022 04:17:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bkc8jxMr2p6wy1sRq7AUIm9TzPToZYJ54wpY7zhIe7M=;
-        b=okIQpk88CukLyRLQlj6tQCb9S9y0qYVOkSH/Bq5gsQKgW4Y71LxCUd2RloCIUIYkUv
-         KkHZd+jT12ttmDZF0iMbG7pvjx99gWVp2K5xJLTEPXOcEU0gLckfRkUVBR+EM03ljEfE
-         yaVGufqC2mClaLwh2HsqXvyn2CIddOJeTFe9C7UWHmBdo8PpvxnKNWnIGefTpTDNaZMR
-         Us5JPvlIRrgliFYZzAgDRuGgooe61hQMdGtHUMsZaYYMSBh/UPfL0hBfttR3gL9AnRot
-         WjMyGMcTIofz5S1818qYac9EhCjnLrtc4zkMtxcCr6elE2H1/3E7WbvYN/tAp4nyuzdO
-         2/Xw==
-X-Gm-Message-State: ACrzQf0p36iWrOR3gg+sBskbfs+BIJaxPTFY4RskIsEwqdVfVvXT4vPs
-        RR/ij3ZzBTZTd5PZVIffBUCIDeetpjmc4lvtKeE3LoIq
-X-Google-Smtp-Source: AMsMyM6fUqqeJOG0uDJp7tM0ShfTGW7AHW/hrkgyrqrWJCztj5e71zwgscXRycTffepa26BPFVd9UIcmMujBH9yxuVY=
-X-Received: by 2002:a05:620a:d89:b0:6cf:c98b:744c with SMTP id
- q9-20020a05620a0d8900b006cfc98b744cmr29776452qkl.443.1666783019193; Wed, 26
- Oct 2022 04:16:59 -0700 (PDT)
+        with ESMTP id S233610AbiJZLk4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Oct 2022 07:40:56 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E284D4A3D;
+        Wed, 26 Oct 2022 04:39:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NVJMXgKyQ4S1u1qaujpfIsJ9rodwT07ekTkB5aZame9pTqvYY/25wVQIjXqzqeFg9OuMj0ljJoEdB6zUmyKeW4BGwMpRAzdiMrvSwSp+TuCRnb4FrF8xamXX+qzAOMW95/ohMLInFdLtowjcrnnz9+BQ6gP6b3W95WDyyS/7yBOIKGGOC5vU5r1Sr1BFeGJMa+G9ACSzY81ll/Te16XoePWXxVewdUYGePBIkycLylSGOKKmp+m3wGFSfN9d79ytiuIDQ03inMMf5z6Z3/mVLt4TXfDvJyeTxPZuE9FKMDkltRYYRC9eLhGZrjrXP4x9TGMus7T1MA1fJTv5GUQlqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DepCOVTTzvl/xm1EsORri/lj0OyM0aa1wtrVJsz4RM8=;
+ b=hRNvmJnjBWUos9sfMAHjUUU/I60okN9D7k6ysApkTT7N9JwZGlFrv2epRf0f+xzwGVrBsYKWDFsXYemkSEoOwalksssDF3PYn5ybZz2NSqScjePf59k661VSOfPW08Xt6b4D+iGg8oglLJvokTRCg3ar4lV/rB+XUe4m4Eq5h7Jxvuo6YC9cxU+/ErscLmpneNGMprF93XTeb5J++MGc6JIIbIQE72rPiOYhhWHGirrFpKDQsbF3AiGb/0AmYOw9Y6+abi12GmWBWOWVwBqkPdfZU5fDGsKuR3ljxzluFdtJG8yBkoCA2k7bqFL9k3BcSbKJLUK6+GtHq5uLLDbOmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DepCOVTTzvl/xm1EsORri/lj0OyM0aa1wtrVJsz4RM8=;
+ b=ZP8/vD2BjQrnrPngtvY938O5cwd/WZS8jyqusel2CgetVbN3SEOKMVj8YrAqriHWYQzxkkBv5OjRs675PMCtgSCDA0eQXobDsOKPcRhmP1nfcG5jXAmbD8NaDOCsHJ+o/42XxPayFtFgnPg7E4Lgtd1RIETOuofuBzNneP8s0+fv8HauC4fHb82/aMMEF7DboV5xNix2Pq8us4iuFH+hkbDvj1BQRTd6qcWEm3ahr8v1rcJ09GSjpmwukQ8S2sm9WMo8xeNbexBS/g2f/I54N88QlXq/m424fSQz7IEQhnYqMdV2LBlSlKaiHUOV7L+TGOQ4AypH9HeI3RMmR7dZdA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
+ DM4PR12MB6112.namprd12.prod.outlook.com (2603:10b6:8:aa::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5746.23; Wed, 26 Oct 2022 11:39:21 +0000
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::c0e5:f111:3e59:7c66]) by CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::c0e5:f111:3e59:7c66%6]) with mapi id 15.20.5746.023; Wed, 26 Oct 2022
+ 11:39:20 +0000
+Message-ID: <8670e757-7275-57eb-3f5c-0a21ba354e37@nvidia.com>
+Date:   Wed, 26 Oct 2022 12:39:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V1] PCI: dwc: Use dev_info for PCIe link down event
+ logging
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org
+Cc:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, treding@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20221018164329.GA3808783@bhelgaas>
+From:   Jon Hunter <jonathanh@nvidia.com>
+In-Reply-To: <20221018164329.GA3808783@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0145.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9::13) To CO6PR12MB5444.namprd12.prod.outlook.com
+ (2603:10b6:5:35e::8)
 MIME-Version: 1.0
-References: <20221025221054.12377-1-mario.limonciello@amd.com>
-In-Reply-To: <20221025221054.12377-1-mario.limonciello@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Oct 2022 13:16:45 +0200
-Message-ID: <CAJZ5v0iy6WwujE6kwJ2i=A4Cjmvnvi9UgovNp_NzW759MZ-7Aw@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|DM4PR12MB6112:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03c5bf6c-b97e-4417-4161-08dab746b8fb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Nk4gWPsUUVX3AeJivswH1vhvRAO/3Db03GNkW+t/xPhazQxMk3uY2EQy5NZAnRoGOxw6pjn4+OhWzX/vLzKVwApPAMPL+0F7Q48wOFHNtkS4K2KYesUTDL+yKJtlDuiNxzOu+iC/LMt+xsfyDQ3Qx2IYGeexYnJd7pbO3aC3aaA2L11BGtN35Dxlxt8/vHoP3mdrNV3gg+cVdogVFp0IJoTamMKlu1kz4Y1zEnlNiqCvJOSt11s+0kqt3+rFsD2y9fQFqk00jW5HT6Qp4/3QhbIHTCW3oMYQCMqVj1TxJub0Tw12ly1+7yTBHghbUD7T4o3G14OoxZOp/apjRD5NQiniK3Vw6nnOKQFbRW2Wlw2wzn0qo/x9mibMR/K++HYcIBXRc8eY72NbR+YNygfthNIZKjb4+64ZLM10TlbVs0yxeivvzz3B4YnzZa6MV7I6XH+hvWuUyZ4p6RbBZJtmVa+zTKBB1HYNFdhl/EULGF3TlTXce+YZbUCbMt000E3QzJByWMolaA4Wa30CrHmGwTLJm8SDAkDQINYtPI4yKOCE47wdBRKGCcKXu34qOL4gXTgkCfYEZ0Lwr8la2Jyb+IGSRRsEXYxnambUqxEd/FkrQIOunZYjJWgoGJ0E4HMbMhpwnjTvhdM/+5E+VWVdMqPgsRCT6nutCjFZSgZ9+jtnTBxUL6R4Jbl/qiFoflBWdBGCox8WiBbwxeU9vleaFOEO/bb8EYaYm560ZNQjLNBQe4dshT1/YmMXxPMZuvVEmEf07strxIgPtqmqj1PkajhCRrCI1ZbO2Oyy5pTIcfI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(451199015)(2616005)(7416002)(31686004)(66946007)(66556008)(66476007)(6506007)(53546011)(186003)(83380400001)(5660300002)(36756003)(478600001)(6486002)(4326008)(8676002)(86362001)(2906002)(8936002)(41300700001)(6666004)(31696002)(38100700002)(316002)(54906003)(6512007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MTlPcXBHK3A1Q3dzd0dSUHN6SVh1Z3hZQ2o4dmdyU1FlSTR1QlEzTFlMTEZo?=
+ =?utf-8?B?YWdXc1dDWE5MNFFHbFVwZnFEM2sranJXZ2UxZHVPQ1RqUm5UbHFBU1JvZW1L?=
+ =?utf-8?B?NVRROUEyVXFMYUtuVXI5Qi91MWtPR3NwK0o3TEVJMTNEVTBUb2tCSzZ2RU1P?=
+ =?utf-8?B?Q25MZEE0UlNQbzNnRmRRTjV2dGI1T3JVcVlLRFFGc0llSVVlOUwyYXRodHpn?=
+ =?utf-8?B?R1NUYloxR1BvK3N4cjZsQ0Ywci9oc2F0WXRTemJHdVk0ZUN0bVl4VjNqRXAy?=
+ =?utf-8?B?YTYybWo1U0lYWFducXJjYTlaWngxU3NaZWxIZkdocDZNMitvTmorK0JuOHda?=
+ =?utf-8?B?RVB0aGhtVFR1Y2ZqL1l1bTVCODdNVUNIMnhSdUN2QmRLZSsvRXlKamlFMW5m?=
+ =?utf-8?B?U2NORXRaazJMNWhVR1owTzlhTnlYdEtlYVExbmZlcEtMZGcxajFPS2E1WlJr?=
+ =?utf-8?B?TUtzMVIwME8wTTExYXZqdnBXRnNicEQySFFubmdOMU93eU93U016QjFiL3Ju?=
+ =?utf-8?B?cEp5RFJGc3JodUpiSkdZS2hka3gxL21kRzNXSG1ldWZvaXZpaVZlTTBqWWd5?=
+ =?utf-8?B?UVBvaWtPYmRNcy8wbnFjaGNhYnRNSVRKSDNGaGxnUlowQmZsYW1Qd3BJY2sy?=
+ =?utf-8?B?WU9GdkV5Zzk5emppeWdwWkVVaEppRmtSY3IrbzhkRTltbTZ2MlFlUTJHQTVU?=
+ =?utf-8?B?Wm1Ddks2M0U5S2NmaXFRYkFyK0VGNnNMejhjcEl3MzVUZWxDbUVpS0VzRkFJ?=
+ =?utf-8?B?ZklsL2hNZnNvT1FIb3lNMWtYbU1KbVZBNUhVYmt1czU4NHBaY3YrY3VWaFp6?=
+ =?utf-8?B?OFRKNDBHck5JOHV1UVhUcUJTc0lDRzA3QXBwN3FpS2N2UlNmVkZabXVNUCtj?=
+ =?utf-8?B?dDVzZ3AxSitCclFuQ1duWVIxYlBHVTBXbVpvM3N3NHExTkp3VVB4T2s4Qk5j?=
+ =?utf-8?B?K1FjR2Y4QjgwL04xUGZ2dGoyUnI4YmpoUkk0Z3BhTnF0OVpnY1ZUY2picUtC?=
+ =?utf-8?B?bzdPSVh3WWZsa2tyaTZWY0NIQTcraVZyWWExSFd2WTIvUUZzdlBPSU5IRlNB?=
+ =?utf-8?B?bU5LZlIyMXllRWZON3ZpeHpTQlRiWHBvWWdMWFVXTnlaYVliaUFvNGpVTTU3?=
+ =?utf-8?B?TjR2aXNKdC9XR01XQ2lsMThhaTVEdTVJRWU3YkExc0hjNS84WmZQRVo0Q1ZP?=
+ =?utf-8?B?ZEV3QmZTUXFTMk5oQkE2cnQxY2tnN2ZsSC9ma29rdFFOTTM4SDViTmh6TTRF?=
+ =?utf-8?B?QlBnaGRRcDQyWlV5RFoyUDZ5OStkZFBLdXM0RFV5U2Fqd0duRmRpMHRpY3N1?=
+ =?utf-8?B?WEtGbmNBMnBJZ0gwOTFTYmlldnJEZ0M1RXVzRkV4YThGYlZqVllkU0h5MkFQ?=
+ =?utf-8?B?Zm9wSHVJMjVKRXhWMVRubzFEZTdZQXhtSkZTTFdzcGVPejl1WTVEVWFSNnRu?=
+ =?utf-8?B?U04wTUFMWXo3TElRUlQ3SWw2cEpLRlJIaCtGb3VieWVhcVVSMW9FckQzd2s0?=
+ =?utf-8?B?VG5lVEY1QnBGUkgySXB3SFVaclZoK0xQMVhlVmNKOXF4VkFkbllrR1RsM2U0?=
+ =?utf-8?B?bDRlVTdxZitlbHVJaGZibEZscDAxdk16STJ2dTV6TWR0NVJTSUtzSmVXbHFU?=
+ =?utf-8?B?b2RhL2ZMWWZUUUw1MWlTcUFCRmlCOWc5MldqaEhuekRwRVF2bUk3K0RFOHo1?=
+ =?utf-8?B?NW44WTJmRnhoV0NmR0NjQ2ZMdU5acXc4NGx3NEs2eU1DRE1xTTFjd3gwOHY5?=
+ =?utf-8?B?cDl0L25WV2RaZGdteGZud0tURjRQazJmWWlLcThycjkxeEowOGVRWGhiRjJD?=
+ =?utf-8?B?VWFNeXZ0c0txTlBvQWRDSFVabnFSeUJvazc5dUM0U0QyREtsNEZpVE1xekg4?=
+ =?utf-8?B?dmNmTWRBSjk1NEIvT1FDT2c0cmRkelpKZldoUVlrWGFsUGdDMGc3UUtqMC9D?=
+ =?utf-8?B?dktmbFJwKy9rVU93VnhlbjdXL1BPWVhBV0pJNitBaHo2VjNvcW5CdUxPUis2?=
+ =?utf-8?B?OEgyeDArdnZVMUNPMGpRZGw1eDFxVER3bDhGcW5SVWpUTURJMjdsUTlOcllR?=
+ =?utf-8?B?SlQyRURTZDJKMjJnbXlBT01aUGZRRFBXclFyZkM1RXJOL1BHNkhYUXpKeTZZ?=
+ =?utf-8?B?eXp3dUh3Zy9RTCtFM3VodHRBOTV0Y3hPUjhmM2xiZ0lUeVpra1F0Tkh6RnNq?=
+ =?utf-8?Q?L1os93WEk46qiIbupdydSYbxjNchF/wNRDTpm6O5TArH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03c5bf6c-b97e-4417-4161-08dab746b8fb
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 11:39:20.8863
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nHxFvGi+PkIDlnVO1VZH/tbc75gHfdO5feDAfECJ1uJ2AYdbll3jBX5E0DkIt8U1/HKd282HdSMsIlp3FzFHGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6112
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 12:10 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> Firmware typically advertises that PCIe devices can support D3
-> by a combination of the value returned by _S0W as well as the
-> HotPlugSupportInD3 _DSD.
->
-> `acpi_pci_bridge_d3` looks for this combination but also contains
-> an assumption that if a device contains power resources it can support
-> D3.  This was introduced from commit c6e331312ebf ("PCI/ACPI: Whitelist
-> hotplug ports for D3 if power managed by ACPI").
->
-> On some firmware configurations for "AMD Pink Sardine" D3 is not
-> supported for wake in _S0W for the PCIe root port for tunneling.
-> However the device will still be opted into runtime PM since
-> `acpi_pci_bridge_d3` returns since the ACPI device contains power
-> resources.
->
-> When the thunderbolt driver is loaded a device link between the USB4
-> router and the PCIe root port for tunneling is created where the PCIe
-> root port for tunneling is the consumer and the USB4 router is the
-> supplier.  Here is a demonstration of this topology that occurs:
->
-> ├─ 0000:00:03.1
-> |       | ACPI Path: \_SB_.PCI0.GP11 (Supports "0" in _S0W)
-> |       | Device Links: supplier:pci:0000:c4:00.5
-> |       └─ D0 (Runtime PM enabled)
-> ├─ 0000:00:04.1
-> |       | ACPI Path: \_SB_.PCI0.GP12 (Supports "0" in _S0W)
-> |       | Device Links: supplier:pci:0000:c4:00.6
-> |       └─ D0 (Runtime PM enabled)
-> ├─ 0000:00:08.3
-> |       | ACPI Path: \_SB_.PCI0.GP19
-> |       ├─ D0 (Runtime PM disabled)
-> |       ├─ 0000:c4:00.3
-> |       |       | ACPI Path: \_SB_.PCI0.GP19.XHC3
-> |       |       | Device Links: supplier:pci:0000:c4:00.5
-> |       |       └─ D3cold (Runtime PM enabled)
-> |       ├─ 0000:c4:00.4
-> |       |       | ACPI Path: \_SB_.PCI0.GP19.XHC4
-> |       |       | Device Links: supplier:pci:0000:c4:00.6
-> |       |       └─ D3cold (Runtime PM enabled)
-> |       ├─ 0000:c4:00.5
-> |       |       | ACPI Path: \_SB_.PCI0.GP19.NHI0 (Supports "4" in _S0W)
-> |       |       | Device Links: consumer:pci:0000:00:03.1 consumer:pci:0000:c4:00.3
-> |       |       └─ D3cold (Runtime PM enabled)
-> |       └─ 0000:c4:00.6
-> |               | ACPI Path: \_SB_.PCI0.GP19.NHI1 (Supports "4" in _S0W)
-> |               | Device Links: consumer:pci:0000:c4:00.4 consumer:pci:0000:00:04.1
-> |               └─ D3cold (Runtime PM enabled)
->
-> Allowing the PCIe root port for tunneling to go into runtime PM (even if
-> it doesn't support D3) allows the USB4 router to also go into runtime PM.
-> The PCIe root port for tunneling stays in D0 but is in runtime PM. Due to
-> the device link the USB4 router transitions to D3cold when this happens.
->
-> The expectation is the USB4 router should have also remained in D0 since
-> the PCIe root port for tunneling remained in D0.
->
-> Instead of making this assertion from the power resources check
-> immediately, move the check to later on, which will have validated
-> that the device supports wake from D3hot or D3cold.
->
-> This fix prevents the USB4 router going into D3 when the firmware says that
-> the PCIe root port for tunneling can't handle it while still allowing
-> system that don't have the HotplugSupportInD3 _DSD to also enter D3 if they
-> have power resources that can wake from D3.
->
-> Fixes: dff6139015dc6 ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Hi Lorenzo,
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 18/10/2022 17:43, Bjorn Helgaas wrote:
+> On Tue, Oct 18, 2022 at 07:21:54AM +0100, Jon Hunter wrote:
+>> Hi Bjorn,
+>>
+>> On 13/09/2022 11:12, Vidya Sagar wrote:
+>>> Some of the platforms (like Tegra194 and Tegra234) have open slots and
+>>> not having an endpoint connected to the slot is not an error.
+>>> So, changing the macro from dev_err to dev_info to log the event.
+>>>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>> index 650a7f22f9d0..25154555aa7a 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>> @@ -456,7 +456,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>>>    	}
+>>>    	if (retries >= LINK_WAIT_MAX_RETRIES) {
+>>> -		dev_err(pci->dev, "Phy link never came up\n");
+>>> +		dev_info(pci->dev, "Phy link never came up\n");
+>>>    		return -ETIMEDOUT;
+>>>    	}
+>>
+>>
+>> Are you OK to take this change?
+> 
+> When this came up, Lorenzo was in the middle of a big move and I was
+> covering for him while he was unavailable.  But he's back, and I'm
+> sure he will resolve this soon.
+> 
+> Personally I'm OK either way.
+> 
+> Bjorn
 
-> ---
-> v2->v3:
->  * Reword commit message
-> v1->v2:
->  * Just return value of acpi_pci_power_manageable (Rafael)
->  * Remove extra word in commit message
-> ---
->  drivers/pci/pci-acpi.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index a46fec776ad77..8c6aec50dd471 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->         if (acpi_pci_disabled || !dev->is_hotplug_bridge)
->                 return false;
->
-> -       /* Assume D3 support if the bridge is power-manageable by ACPI. */
-> -       if (acpi_pci_power_manageable(dev))
-> -               return true;
-> -
->         rpdev = pcie_find_root_port(dev);
->         if (!rpdev)
->                 return false;
-> @@ -1023,7 +1019,8 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->             obj->integer.value == 1)
->                 return true;
->
-> -       return false;
-> +       /* Assume D3 support if the bridge is power-manageable by ACPI. */
-> +       return acpi_pci_power_manageable(dev);
->  }
->
->  int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
-> --
-> 2.34.1
->
+
+Can we come to a conclusion on this?
+
+We have tests that fail when errors/warning messages are reported. We 
+can choose to ignore these errors, but given that this is not an error 
+in this case, we were thinking it is better to make it informational.
+
+Thanks
+Jon
+
+-- 
+nvpublic
