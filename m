@@ -2,49 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C48D460F857
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 15:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D9E60F942
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 15:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235329AbiJ0NEP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Oct 2022 09:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
+        id S236212AbiJ0Nib (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Oct 2022 09:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235983AbiJ0NEF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 09:04:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13C0176BB4;
-        Thu, 27 Oct 2022 06:04:04 -0700 (PDT)
+        with ESMTP id S236203AbiJ0Nia (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 09:38:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E454B181488;
+        Thu, 27 Oct 2022 06:38:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9EC93B82639;
-        Thu, 27 Oct 2022 13:04:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9330DC433C1;
-        Thu, 27 Oct 2022 13:03:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8A036B82633;
+        Thu, 27 Oct 2022 13:38:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 722B2C433C1;
+        Thu, 27 Oct 2022 13:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666875842;
-        bh=OAxDKBFnJC3maqHQlQTnDwTTUNOHtUtm62TtbtaDNPs=;
+        s=k20201202; t=1666877907;
+        bh=pllUkLfz45ydi2Wi6jpPnGPo9M25t+6/Kw3UeVHzGdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxbNcG/Ttc7tLVRsBb1zUFM2tgQBeCHv8Uol2cHgeMyeAO3/+m6wNxIEGA5J+NJJY
-         idHFV3HCtYhZQhDK2h+3GVLMAasonJ57EzJS/9hcJG1DC4A5eVkykk8BeZcgh8E3s9
-         0N4BXx5dtQK1H9u5szQwpUBEDkWmYRgumKgXMziUOnrecqa0Gwf5PJnbv0MUHTEfKC
-         lHfMdmxJ0lT+yQpHNPV0QZV3Q5Wn7TbEuvbFYFAZVp0ZGwLWKPz7/qDV0J4sQoPWeP
-         zUEaaLV1cdpaFbHvQMoxWMI1kCzdsCBxlVPylDgYw9+tvfobObOIorEbIW5ok73lbP
-         VtDDm6N3UxB0A==
+        b=XA5Ckkqd0MKG04G1je+NRuX1YlckWLju0xK3x3oUFbwBzEWP6CCfNDpPs4an9dpok
+         zTBWBixFCPVT6QiWgG06RRjmUVE+7QhKtLZW6B7yG60cj4z+DP30OQiyW+scbCLjhc
+         /E23kdKoDTQanhEvTGk+kVSkBlzowin0Wcf+oPMRuHMB4/tpgnkvmmiqqPZ4NF0Vcq
+         p942/XBiczoyTBgTKPBfe9CjdC6F5DbIXfIVQwcdzJ4ryHBrcqdU5Jp1Lva0Po2bTn
+         L/okQRXRP0jU38kGSHQZ8g9LmY5hxfULdWp2a9lD5utiwTnV0uXe3TVXFuRzmMBt6V
+         TjROlYhclurRw==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     bhelgaas@google.com,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        kw@linux.com, kishon@ti.com
+To:     Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Richard Weinberger <richard@nod.at>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH v3] PCI: endpoint: Fix WARN() when an endpoint driver is removed
-Date:   Thu, 27 Oct 2022 15:03:55 +0200
-Message-Id: <166687580188.843137.5076771530958034530.b4-ty@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: (subset) [PATCH v1 00/11] Get rid of [devm_]gpiod_get_from_of_node() public APIs
+Date:   Thu, 27 Oct 2022 15:38:11 +0200
+Message-Id: <166687787352.847482.10005684512699510391.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220623003817.298173-1-yoshihiro.shimoda.uh@renesas.com>
-References: <20220623003817.298173-1-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -57,20 +85,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jun 2022 09:38:17 +0900, Yoshihiro Shimoda wrote:
-> Since there is no release callback defined for the PCI EPC device,
-> the below warning is thrown by driver core when a PCI endpoint driver is
-> removed:
+On Sun, 4 Sep 2022 23:30:52 -0700, Dmitry Torokhov wrote:
+> I would like to stop exporting OF-specific [devm_]gpiod_get_from_of_node()
+> so that gpiolib can be cleaned a bit. We can do that by switching drivers
+> to use generic fwnode API ([devm_]fwnode_gpiod_get()). By doing so we open
+> the door to augmenting device tree and ACPI information through secondary
+> software properties (once we teach gpiolib how to handle those).
 > 
->   Device 'e65d0000.pcie-ep' does not have a release() function, it is broken and must be fixed. See Documentation/core-api/kobject.rst.
->   WARNING: CPU: 0 PID: 139 at drivers/base/core.c:2232 device_release+0x78/0x8c
+> I hope that relevant maintainers will take patches through their trees and
+> then we could merge the last one some time after -rc1.
 > 
 > [...]
 
-Applied to pci/endpoint, thanks!
+Applied to pci/tegra, thanks!
 
-[1/1] PCI: endpoint: Fix WARN() when an endpoint driver is removed
-      https://git.kernel.org/lpieralisi/pci/c/7711cbb4862a
+[01/11] PCI: tegra: switch to using devm_fwnode_gpiod_get
+        https://git.kernel.org/lpieralisi/pci/c/16e3f4077965
 
 Thanks,
 Lorenzo
