@@ -2,126 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CC960EF76
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 07:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAE1D60EFCA
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 08:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233668AbiJ0FYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Oct 2022 01:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54602 "EHLO
+        id S234268AbiJ0GEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Oct 2022 02:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbiJ0FYL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 01:24:11 -0400
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2170015A324;
-        Wed, 26 Oct 2022 22:24:09 -0700 (PDT)
+        with ESMTP id S234482AbiJ0GDq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 02:03:46 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B4747CA80;
+        Wed, 26 Oct 2022 23:03:44 -0700 (PDT)
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id B5FA02800C974;
-        Thu, 27 Oct 2022 07:24:07 +0200 (CEST)
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id B51CE300018BB;
+        Thu, 27 Oct 2022 08:03:42 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id AA95E43217; Thu, 27 Oct 2022 07:24:07 +0200 (CEST)
-Date:   Thu, 27 Oct 2022 07:24:07 +0200
+        id AA99F30110; Thu, 27 Oct 2022 08:03:42 +0200 (CEST)
+Date:   Thu, 27 Oct 2022 08:03:42 +0200
 From:   Lukas Wunner <lukas@wunner.de>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-Message-ID: <20221027052407.GA18319@wunner.de>
-References: <20221026215237.18556-1-mario.limonciello@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux1394-devel@lists.sourceforge.net, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] firewire: ohci: convert to generic power management
+Message-ID: <20221027060342.GA444@wunner.de>
+References: <20221025212521.686779-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221026215237.18556-1-mario.limonciello@amd.com>
+In-Reply-To: <20221025212521.686779-1-helgaas@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 04:52:37PM -0500, Mario Limonciello wrote:
-> Firmware typically advertises that ACPI devices that represent PCIe
-> devices can support D3 by a combination of the value returned by
-> _S0W as well as the HotPlugSupportInD3 _DSD [1].
+On Tue, Oct 25, 2022 at 04:25:21PM -0500, Bjorn Helgaas wrote:
+> N.B. This changes the order of pmac_ohci_off() and pmac_ohci_on().
+> Previously, pmac_ohci_off() was called *after* pci_save_state() and
+> pci_set_power_state(), and this change calls it *before*.
 > 
-> `acpi_pci_bridge_d3` looks for this combination but also contains
-> an assumption that if an ACPI device contains power resources the PCIe
-> device it's associated with can support D3.  This was introduced
-> from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
-> D3 if power managed by ACPI").
-> 
-> Some firmware configurations for "AMD Pink Sardine" do not support
-> wake from D3 in _S0W for the ACPI device representing the PCIe root
-> port used for tunneling. The PCIe device will still be opted into
-> runtime PM in the kernel [2] because of the logic within
-> `acpi_pci_bridge_d3`. This currently happens because the ACPI
-> device contains power resources.
+> Similarly, pmac_ohci_on() was previously called *before*
+> pci_set_power_state() and pci_restore_state() and this change calls it
+> *after*.
 
-So put briefly, in acpi_pci_bridge_d3() we fail to take wake capabilities
-into account and blindly assume that a bridge can be runtime suspended
-to D3 if it is power-manageable by ACPI.
+Seems likely the ordering change may break things.
 
-By moving the acpi_pci_power_manageable() below the wake capabilities
-checks, we avoid runtime suspending a bridge that is not wakeup capable.
+pmac_ohci_on/off() toggles PMAC_FTR_1394_ENABLE, which is defined as:
 
-The more verbose explanation in the commit message is useful to
-understand how the issue was exposed, but it somewhat obscures
-the issue itself.
+ * enable/disable the firewire cell of an uninorth ASIC.
 
+It sounds like it will cut power to the firewire controller and I'd
+expect that pci_save_state() will then not be able to access config
+space.
 
-> When the thunderbolt driver is loaded two device links are created:
-> * USB4 router <-> PCIe root port for tunneling
-> * USB4 router <-> XHCI PCIe device
+The only way to make this work is to define a struct dev_pm_domain
+whose ->suspend_noirq callback first invokes the pci_bus_type
+->suspend_noirq callback and then cuts power to the firewire cell
+by calling pmac_ohci_off().
 
-Those double arrows are a little misleading, a device link is
-unidirectional, so it's really <-- and not <->.
+I've done something like this for Thunderbolt power management on
+x86 Macs a few years back but didn't get around to upstream it so far:
 
-
-> Currently runtime PM is allowed for all of these devices.  This means that
-> when all consumers are idle long enough, they will enter their deepest allowed
-> sleep state. Once all consumers are in their deepest allowed sleep state the
-> suppliers will enter the deepest sleep state as well.
-> 
-> * The PCIe root port for tunneling doesn't support waking from D3hot or
->   D3cold so it stays in D0.
-
-Huh?  I thought it's runtime suspended to D3hot even though it should stay
-runtime resumed in D0 because it's not wakeup capable in D3hot?
-
-
-> * The XHCI PCIe device supports wakeup from D3cold so it goes to D3cold.
-> * Both consumers are in their deepest state and the USB4 router supports
->   wakeup from D3cold, so it goes into this state.
-> 
-> The expectation is the USB4 router should have also remained in D0 since
-> the PCIe root port for tunneling remained in D0 and a device link exists
-> between the two devices.
-
-This paragraph sounds like the problem is the router runtime suspended.
-IIUC the router could only runtime suspend because its consumer, the
-Root Port, runtime suspended.  By preventing the Root Port from runtime
-suspending, you're implicitly preventing it's supplier (the router)
-from suspending.
-
-
-> Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3 [1]
-> Link: https://github.com/torvalds/linux/blob/v6.1-rc1/drivers/pci/pcie/portdrv_pci.c#L126 [2]
-> Link: https://github.com/torvalds/linux/blob/v6.1-rc1/drivers/thunderbolt/acpi.c#L29 [3]
-
-I think git.kernel.org links are preferred to 3rd party hosting services.
+https://github.com/l1k/linux/commit/4db7f0b1f5c9
 
 Thanks,
 
