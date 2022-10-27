@@ -2,97 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D76C260EEE5
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 06:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69B0660EEF2
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 06:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234421AbiJ0EGB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Oct 2022 00:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38888 "EHLO
+        id S233500AbiJ0ESA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Oct 2022 00:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233782AbiJ0EFz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 00:05:55 -0400
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FCA7FFAE
-        for <linux-pci@vger.kernel.org>; Wed, 26 Oct 2022 21:05:52 -0700 (PDT)
-X-ASG-Debug-ID: 1666840590-1eb14e7e6353350001-0c9NHn
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id dcSdmVLfPpBzSFVa (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Oct 2022 11:16:31 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Thu, 27 Oct
- 2022 11:16:30 +0800
-Received: from localhost.localdomain (10.32.64.1) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Thu, 27 Oct
- 2022 11:16:28 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-From:   LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.7
-To:     <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-        <ying.huang@intel.com>, <rdunlap@infradead.org>,
-        <bhelgaas@google.com>, <linux-acpi@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@acpica.org>
-CC:     <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>,
-        <ErosZhang@zhaoxin.com>, leoliu-oc <leoliu-oc@zhaoxin.com>
-Subject: [PATCH 5/5] ACPI/PCI: config pcie devices's aer register
-Date:   Thu, 27 Oct 2022 11:16:28 +0800
-X-ASG-Orig-Subj: [PATCH 5/5] ACPI/PCI: config pcie devices's aer register
-Message-ID: <20221027031628.2856297-1-LeoLiu-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S229456AbiJ0ER5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 00:17:57 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C165A0330;
+        Wed, 26 Oct 2022 21:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666844277; x=1698380277;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=c2WM3jy4H4MuU5+8696owJAO8S+vMks/LJZNj3CcUtI=;
+  b=l94wk7x/b5r35T7ZXFhj05SI//9AKy0D4514rjvzy7BVqZkzCFvUHIWT
+   Ycu/AgI5/Oy5SckxGpqJrhqXfOLBr8t3EQxOzxxFceYhCEIJBqwcA+k6c
+   wlo+lExZGxjb35ObhDEZ9fhfB8x2oPMwxnrhXhMvKW9Ok1ZUkuj8870Fu
+   7AtcbueRAKWcEmlzSEH6ej891VqPNdOWSmZY+cocZWtDvx8KS6WycV/Ic
+   lvdRFdaCr3oWosWxZf2KTObznjRhCDdsTWZ3zf2ozQW+N7mSnLWVpQAwE
+   yGZQz7bhb9HhkDG7MtK1KWw59jLPxKV1e+BBgPgr57kzpFETZJg/A4KNU
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="306855089"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="306855089"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 21:17:48 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="737518965"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="737518965"
+Received: from holmeskx-mobl.amr.corp.intel.com (HELO [10.209.105.249]) ([10.209.105.249])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 21:17:36 -0700
+Message-ID: <a0f29483-9557-9900-bcb7-ec832dc5d2d1@linux.intel.com>
+Date:   Wed, 26 Oct 2022 21:17:36 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.32.64.1]
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1666840590
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 774
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.4589 1.0000 0.0000
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101705
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.2.2
+Subject: Re: [PATCH 0/5] Parse the PCIE AER structure and set to relevant
+ registers
+Content-Language: en-US
+To:     LeoLiu-oc <LeoLiu-oc@zhaoxin.com>, rafael@kernel.org,
+        lenb@kernel.org, james.morse@arm.com, tony.luck@intel.com,
+        bp@alien8.de, robert.moore@intel.com, ying.huang@intel.com,
+        rdunlap@infradead.org, bhelgaas@google.com,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@acpica.org
+Cc:     CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com
+References: <20221027031458.2855599-1-LeoLiu-oc@zhaoxin.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20221027031458.2855599-1-LeoLiu-oc@zhaoxin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: leoliu-oc <leoliu-oc@zhaoxin.com>
 
-In order to write the PCI Express Root Port/Device/Bridge AER Structure
-record to relevant devices's aer registers, call the func
-pci_acpi_program_hest_aer_params() for every pcie devices.
 
-Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
----
- drivers/pci/probe.c | 1 +
- 1 file changed, 1 insertion(+)
+On 10/26/22 8:14 PM, LeoLiu-oc wrote:
+> From: leoliu-oc <leoliu-oc@zhaoxin.com>
+> 
+> HEST PCIE AER error source information describes the Uncorrectable Error 
+> Severity, CorrectableError Mask and other aer register's value to write to the
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b66fa42c4b1f..02bf9180e96d 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2263,6 +2263,7 @@ static void pci_configure_device(struct pci_dev *dev)
- 	pci_configure_serr(dev);
- 
- 	pci_acpi_program_hp_params(dev);
-+	pci_acpi_program_hest_aer_params(dev);
- }
- 
- static void pci_release_capabilities(struct pci_dev *dev)
+/s/CorrectableError/Correctable Error
+/s/aer/AER
+
+> bridge's Correctable Error Mask register.
+
+Can you add spec reference?
+
+> 
+> leoliu-oc (5):
+>   ACPI/APEI: Add apei_hest_parse_aer()
+>   ACPI/APEI: remove static from apei_hest_parse()
+>   ACPI/PCI: Add AER bits #defines for PCIE/PCI-X bridges
+>   ACPI/PCI: Add pci_acpi_program_hest_aer_params()
+>   ACPI/PCI: config pcie devices's aer register
+> 
+>  drivers/acpi/apei/hest.c      | 121 +++++++++++++++++++++++++++++++++-
+>  drivers/pci/pci-acpi.c        |  92 ++++++++++++++++++++++++++
+>  drivers/pci/pci.h             |   5 ++
+>  drivers/pci/probe.c           |   1 +
+>  include/acpi/actbl1.h         |  69 +++++++++++++++++++
+>  include/acpi/apei.h           |   9 +++
+>  include/uapi/linux/pci_regs.h |   5 ++
+>  7 files changed, 300 insertions(+), 2 deletions(-)
+> 
+
 -- 
-2.20.1
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
