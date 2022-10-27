@@ -2,98 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC3F610486
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 23:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E2C61049D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Oct 2022 23:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236277AbiJ0VgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Oct 2022 17:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        id S235786AbiJ0Vky (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Oct 2022 17:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236191AbiJ0VgZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 17:36:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB1F5F113;
-        Thu, 27 Oct 2022 14:36:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DC086624EC;
-        Thu, 27 Oct 2022 21:36:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00638C433D6;
-        Thu, 27 Oct 2022 21:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666906583;
-        bh=d+99Qklp1XvLTs5hzjLB/CTz9UM6Vp6GAr9OOIx8fNY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KC66wXZdXYcDgawaSO+aUS27v4e+yS1UvhLRjbeCDLDfEMLfg+pdBqzvstCPxGY4J
-         yWHwLfUgNMj1ommkw2Sxymy1hLEvLDgIHEcjKB6FQJUVFeKLqLdtddCxVcplG7wXwA
-         aH8+5VsPOfiqPHOfpVEB13uqNDXnuCv7pGAhYZR1CR5o3LjsYZfRL+dt4a1FqevkOY
-         v5vpsfW5kKSMZFSGC7MCQTDSiAbGUncz5dnFwrHcWwGp0sv0EGs1I1YXoVGGo7U/fP
-         NzmunzziJR1YI6b+7ldr25Gs5o95nHmV02oXhUZ1JhPZRX7zeNsFosbzh5CLldySCP
-         ghkFW/BXcKO3g==
-Date:   Thu, 27 Oct 2022 16:36:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux1394-devel@lists.sourceforge.net, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] firewire: ohci: convert to generic power management
-Message-ID: <20221027213620.GA842366@bhelgaas>
+        with ESMTP id S235922AbiJ0Vky (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Oct 2022 17:40:54 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE6C7A531
+        for <linux-pci@vger.kernel.org>; Thu, 27 Oct 2022 14:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666906853; x=1698442853;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dRNay84As9yLANjpHsUbwodOV7B5itEmkDHnCCnDRaA=;
+  b=L6BKsGcOjXpC2jJyeQjmCBPWpHWpV1h65e5aZjP56WYV1n+PiVW+7S5b
+   uBiEsu0in3AMb/tEQiZ+Sq1w5hEfK5N1rqgsfcvN1DndSSQduw8qkhWTB
+   FNl6jfVv2lSZbDNTJBNmffXsoBC2QubdHwUkPS7pVQRTDTDuvf/2Af0KX
+   B3xdvOLhMmsdnRGYIlzYONprCyLYSygH0rnc8lE93gPAhT4rhYy3Y6kS/
+   bHFCtcbAodTGvzq0FN9jq36nsv/3lU6Z+7NHmca8vd3MZO4cE/4Fe50x8
+   syNqmZ7aAxlKkMioKl0BG8JgzooQ9A7R8T23LRztxsOJcWcLOltPeMM/V
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="308339669"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="308339669"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 14:40:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="583706967"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="583706967"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 27 Oct 2022 14:40:51 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ooAcN-0009CP-0p;
+        Thu, 27 Oct 2022 21:40:51 +0000
+Date:   Fri, 28 Oct 2022 05:40:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/dt] BUILD SUCCESS
+ 598418e6035622c0dc735764f0f1b7293c0c7d48
+Message-ID: <635afadb.QFS4L0BYVZBmYy89%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221027060342.GA444@wunner.de>
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 08:03:42AM +0200, Lukas Wunner wrote:
-> On Tue, Oct 25, 2022 at 04:25:21PM -0500, Bjorn Helgaas wrote:
-> > N.B. This changes the order of pmac_ohci_off() and pmac_ohci_on().
-> > Previously, pmac_ohci_off() was called *after* pci_save_state() and
-> > pci_set_power_state(), and this change calls it *before*.
-> > 
-> > Similarly, pmac_ohci_on() was previously called *before*
-> > pci_set_power_state() and pci_restore_state() and this change calls it
-> > *after*.
-> 
-> Seems likely the ordering change may break things.
-> 
-> pmac_ohci_on/off() toggles PMAC_FTR_1394_ENABLE, which is defined as:
-> 
->  * enable/disable the firewire cell of an uninorth ASIC.
-> 
-> It sounds like it will cut power to the firewire controller and I'd
-> expect that pci_save_state() will then not be able to access config
-> space.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dt
+branch HEAD: 598418e6035622c0dc735764f0f1b7293c0c7d48  dt-bindings: PCI: ti,j721e-pci-*: Add missing interrupt properties
 
-Yeah, definitely a risk, so I won't merge this myself since I have no
-insight or way to test it.
+elapsed time: 720m
 
-> The only way to make this work is to define a struct dev_pm_domain
-> whose ->suspend_noirq callback first invokes the pci_bus_type
-> ->suspend_noirq callback and then cuts power to the firewire cell
-> by calling pmac_ohci_off().
-> 
-> I've done something like this for Thunderbolt power management on
-> x86 Macs a few years back but didn't get around to upstream it so far:
-> 
-> https://github.com/l1k/linux/commit/4db7f0b1f5c9
+configs tested: 104
+configs skipped: 3
 
-Wow, that's some impressive reverse engineering and work!
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-We're not quite there yet, but if we ever get to the point where this
-driver is the only thing preventing us from removing the PCI legacy PM
-hooks, I think I'd be inclined to just sacrifice PM completely for
-this driver.  I can't really see putting in the kind of work you did
-for Thunderbolt.
+gcc tested configs:
+arc                                 defconfig
+powerpc                          allmodconfig
+i386                                defconfig
+s390                             allmodconfig
+alpha                               defconfig
+mips                             allyesconfig
+s390                                defconfig
+um                             i386_defconfig
+arc                  randconfig-r043-20221027
+powerpc                           allnoconfig
+s390                             allyesconfig
+sh                               allmodconfig
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+arm                                 defconfig
+arc                              allyesconfig
+x86_64                        randconfig-a002
+alpha                            allyesconfig
+x86_64                              defconfig
+arm64                            allyesconfig
+x86_64                        randconfig-a006
+m68k                             allmodconfig
+arm                              allyesconfig
+x86_64                        randconfig-a004
+x86_64                           rhel-8.3-kvm
+m68k                             allyesconfig
+x86_64                           rhel-8.3-syz
+x86_64                               rhel-8.3
+x86_64                        randconfig-a013
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a011
+x86_64                           allyesconfig
+x86_64                        randconfig-a015
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                             allyesconfig
+ia64                             allmodconfig
+i386                          randconfig-a005
+powerpc                    amigaone_defconfig
+sh                           se7724_defconfig
+sh                          rsk7201_defconfig
+m68k                            q40_defconfig
+arm                           imxrt_defconfig
+arm                         assabet_defconfig
+arm                          gemini_defconfig
+sparc                             allnoconfig
+m68k                        m5272c3_defconfig
+xtensa                    smp_lx200_defconfig
+arm                            hisi_defconfig
+alpha                            alldefconfig
+powerpc                 mpc834x_mds_defconfig
+sparc                               defconfig
+arc                              alldefconfig
+arm                            pleb_defconfig
+mips                      maltasmvp_defconfig
+m68k                       m5208evb_defconfig
+riscv                               defconfig
+sh                        dreamcast_defconfig
+powerpc                 canyonlands_defconfig
+arc                  randconfig-r043-20221026
+s390                 randconfig-r044-20221026
+riscv                randconfig-r042-20221026
+i386                          randconfig-c001
+mips                 randconfig-c004-20221026
+m68k                         amcore_defconfig
+m68k                           sun3_defconfig
+microblaze                      mmu_defconfig
+mips                         bigsur_defconfig
+sh                             shx3_defconfig
+openrisc                  or1klitex_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
 
-Bjorn
+clang tested configs:
+hexagon              randconfig-r041-20221027
+hexagon              randconfig-r045-20221027
+s390                 randconfig-r044-20221027
+riscv                randconfig-r042-20221027
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+x86_64                        randconfig-a014
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+hexagon              randconfig-r041-20221026
+hexagon              randconfig-r045-20221026
+powerpc                      pmac32_defconfig
+mips                      bmips_stb_defconfig
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
