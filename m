@@ -2,70 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADEB610FD4
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Oct 2022 13:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A12B8610FE7
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Oct 2022 13:42:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbiJ1Lgr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Oct 2022 07:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
+        id S229787AbiJ1LmS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Oct 2022 07:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbiJ1Lgq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Oct 2022 07:36:46 -0400
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9B31BF859
-        for <linux-pci@vger.kernel.org>; Fri, 28 Oct 2022 04:36:44 -0700 (PDT)
-X-ASG-Debug-ID: 1666957000-086e23532653f60001-0c9NHn
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id mfrDrxpG1r2GxzZG (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Fri, 28 Oct 2022 19:36:40 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Fri, 28 Oct
- 2022 19:36:40 +0800
-Received: from [10.32.56.18] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Fri, 28 Oct
- 2022 19:36:38 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Message-ID: <5a601e85-cd6c-2d42-a2db-d706a64718c9@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.56.18
-Date:   Fri, 28 Oct 2022 19:36:38 +0800
+        with ESMTP id S229964AbiJ1LmQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Oct 2022 07:42:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79791D1E2E;
+        Fri, 28 Oct 2022 04:42:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C2C5627EB;
+        Fri, 28 Oct 2022 11:42:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF58DC433C1;
+        Fri, 28 Oct 2022 11:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666957334;
+        bh=j5oyUBGYEDvyaMjSOM8jXa9mUm9PaDf/2SpF9C28fug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TTE5UUdfIiUDky5NmRxijg+BuPNiIOp9asdTm3Rz6Mup/Loeeliyw4zUzXSH0/ZOb
+         z2JjC28Z5aBJtgkofForKoMLzv8H0lAz+q0+DvUiL9OKt/8kzImY6jMFs+FI1S7uZS
+         mGjMANlZ8Eak2MePpmqKLpKfcpVtvbjPcXmKnI45sVl4QmFpVsBnM0O7+92OFToqWb
+         xhfpvi5j+px/xS/WdWu2DHEPWlwVbJa3llaxgsQgVawHLGGwUI9ebLvsTmkoqMkAH5
+         jNidf/+7fR33jdoaAGygyTBgG6HxWeghuyFsQH2no8IhpKvJcOneG1bNPuKbZCd5FN
+         x4vti3KeUkwQg==
+Date:   Fri, 28 Oct 2022 17:12:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, mani@kernel.org,
+        Sergey.Semin@baikalelectronics.ru, ffclaire1224@gmail.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 08/21] phy: tegra: p2u: Set ENABLE_L2_EXIT_RATE_CHANGE
+ in calibration
+Message-ID: <Y1vAEh3NRiB5mrM7@matsya>
+References: <20221013183854.21087-1-vidyas@nvidia.com>
+ <20221013183854.21087-9-vidyas@nvidia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH 1/5] ACPI/APEI: Add apei_hest_parse_aer()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH 1/5] ACPI/APEI: Add apei_hest_parse_aer()
-CC:     <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-        <ying.huang@intel.com>, <rdunlap@infradead.org>,
-        <bhelgaas@google.com>, <linux-acpi@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@acpica.org>, <CobeChen@zhaoxin.com>,
-        <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>
-References: <20221027220746.GA844491@bhelgaas>
-From:   LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-In-Reply-To: <20221027220746.GA844491@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [125.76.214.122]
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1666957000
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 2739
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.4890 1.0000 0.0000
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101737
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221013183854.21087-9-vidyas@nvidia.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,98 +59,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 14-10-22, 00:08, Vidya Sagar wrote:
+> Set ENABLE_L2_EXIT_RATE_CHANGE register bit to request UPHY PLL rate change
+> to Gen1 during initialization. This helps in the below surprise link down
+> cases,
+>   - Surprise link down happens at Gen3/Gen4 link speed.
+>   - Surprise link down happens and external REFCLK is cut off, which causes
+> UPHY PLL rate to deviate to an invalid rate.
 
+This looks okay to me and I can go ahead and apply, PCI patches can come
+thru PCI tree and whenever ready use .calibrate() ?
 
-在 2022/10/28 6:07, Bjorn Helgaas 写道:
-> On Thu, Oct 27, 2022 at 11:15:18AM +0800, LeoLiu-oc wrote:
->> From: leoliu-oc <leoliu-oc@zhaoxin.com>
->>
->> apei_hest_parse_aer() is used to parse and record the PCI Express AER
->> Structure in the HEST Table.
->>
->> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
->> ---
->>   drivers/acpi/apei/hest.c | 119 ++++++++++++++++++++++++++++++++++++++-
->>   include/acpi/actbl1.h    |  69 +++++++++++++++++++++++
->>   include/acpi/apei.h      |   7 +++
->>   3 files changed, 194 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
->> index 6aef1ee5e1bd..0bfdc18758f5 100644
->> --- a/drivers/acpi/apei/hest.c
->> +++ b/drivers/acpi/apei/hest.c
->> @@ -25,6 +25,7 @@
->>   #include <linux/platform_device.h>
->>   #include <acpi/apei.h>
->>   #include <acpi/ghes.h>
->> +#include <linux/pci.h>
->>   
->>   #include "apei-internal.h"
->>   
->> @@ -86,7 +87,48 @@ static int hest_esrc_len(struct acpi_hest_header *hest_hdr)
->>   	return len;
->>   };
->>   
->> -typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
->> +static inline bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr)
 > 
-> Drop "inline" here and below.  This is not a performance path, so it's
-> more clutter than it's worth.
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * Removed "Reported-by: kernel test robot <lkp@intel.com>" based on Bjorn's review comment
+> * Reworded the commit message
+> 
+> V2:
+> * Addressed review comment from test bot and Vinod
+> 
+>  drivers/phy/tegra/phy-tegra194-p2u.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+> index 1415ca71de38..633e6b747275 100644
+> --- a/drivers/phy/tegra/phy-tegra194-p2u.c
+> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/phy/phy.h>
+>  
+>  #define P2U_CONTROL_CMN			0x74
+> +#define P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE		BIT(13)
+>  #define P2U_CONTROL_CMN_SKP_SIZE_PROTECTION_EN			BIT(20)
+>  
+>  #define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
+> @@ -85,8 +86,21 @@ static int tegra_p2u_power_on(struct phy *x)
+>  	return 0;
+>  }
+>  
+> +static int tegra_p2u_calibrate(struct phy *x)
+> +{
+> +	struct tegra_p2u *phy = phy_get_drvdata(x);
+> +	u32 val;
+> +
+> +	val = p2u_readl(phy, P2U_CONTROL_CMN);
+> +	val |= P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE;
+> +	p2u_writel(phy, val, P2U_CONTROL_CMN);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct phy_ops ops = {
+>  	.power_on = tegra_p2u_power_on,
+> +	.calibrate = tegra_p2u_calibrate,
+>  	.owner = THIS_MODULE,
+>  };
+>  
+> -- 
+> 2.17.1
 
-Yes, I agree with it. Will fix it in the next version.
-
-Thanks
-leoliu-oc
-
->> +static inline bool hest_match_pci(struct acpi_hest_header *hest_hdr,
->> +		struct acpi_hest_aer_common *p, struct pci_dev *pci)
->> +{
->> +	if (hest_match_type(hest_hdr, pci))
->> +		return(hest_match_pci_devfn(p, pci));
-> 
-> No need for parens around hest_match_pci_devfn().
-> 
->> +	else
-> 
-> You can drop the else, too.
-> 
-
-Yes, Agree with it. I will also fix it in the next version.
-
-Thanks
-leoliu-oc
->> +		return false;
->> +}
-> 
->> + * apei_hest_parse_aer - Find the AER structure in the HEST Table and
->> + * match it with the PCI device.
->> + *
->> + * @hest_hdr: To save the acpi aer error source in hest table
->> + *
->> + * Return 1 if the pci dev matched with the acpi aer error source in
->> + * hest table, else return 0.
-> 
-> In comments and commit logs,
-> 
->    s/pci/PCI/
->    s/aer/AER/
->    s/acpi/ACPI/
->    s/hest/HEST/
->    s/HEST Table/HEST/ (since the "T" in "HEST" stands for "Table")
-> 
->> +/* HEST Sub-structure for PCIE EndPoint Structure (6) */
-> 
-> PCIe Root Port, if I'm following this correctly.
-> 
->> +/* HEST Sub-structure for PCIE EndPoint Structure (7) */
-> 
-> PCIe Endpoint.
-> 
->> +/* HEST Sub-structure for PCIE/PCI Bridge Structure (8) */
-> 
-> PCIe/PCI-X Bridge
-
-Got it, will modify it in the next version.
-
-Thanks
-leoliu-oc
+-- 
+~Vinod
