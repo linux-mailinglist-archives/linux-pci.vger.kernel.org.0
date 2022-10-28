@@ -2,50 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B1B611876
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Oct 2022 18:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 404C26118EB
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Oct 2022 19:09:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbiJ1Q6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Oct 2022 12:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
+        id S231186AbiJ1RJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Oct 2022 13:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiJ1Q6Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Oct 2022 12:58:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F341CC76F;
-        Fri, 28 Oct 2022 09:57:58 -0700 (PDT)
+        with ESMTP id S231172AbiJ1RJa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Oct 2022 13:09:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9DA237FB1;
+        Fri, 28 Oct 2022 10:06:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B0BBBB82BAF;
-        Fri, 28 Oct 2022 16:57:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23436C433B5;
-        Fri, 28 Oct 2022 16:57:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3120DB82B8F;
+        Fri, 28 Oct 2022 17:06:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2148C433C1;
+        Fri, 28 Oct 2022 17:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666976275;
-        bh=f6QxoPZM16FkHAtZfmG9jqMgLXfpHxawFf5SQdBOWC4=;
+        s=k20201202; t=1666976808;
+        bh=qrYBe3FQd2LFQCnU0ZqAp4miEqAlwMF6aGPtr+QClD8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V6rlBW4rH0wMLLonaaEynw4AvVpx8OGAG7Po7M8owcLQpNi7LF4QXhNF/e35y5aEK
-         lcoBjR89hcnbdjDJK0934TiAXM1ljogZZq7lDXV8nt7CgVUk2LGakUa35rcn+wpbm+
-         PZZ9Rh7Asdo0QFMwbpZl/vuPheoIeExxj4hRzfAAnez2Oae+zW8rmdzfjGRsB16QT2
-         thnUvPeskXQfdRbUAu/QmH7mDyZ0DVTfsA2QRZ07T/jCwR5yThO62kzZfC9b/eJPGY
-         vhymvrYuXY4S6S2tt3msmdckqcDqffhavAuRPWRBOOtAd/rrMyeN+i9hHALUOeDCRL
-         IQhrvBd+vLdeA==
-Date:   Fri, 28 Oct 2022 11:57:53 -0500
+        b=sWwTdSt/ReHpRI0HFbC8plyoeupkpPL2SYH7ZhvkFwUBvKkssKwYQ5ktcFcSdW9DH
+         XUX4zAESAhEIDN6n9tYZAWn08ijQl+MI3vb1uvWg5Bs3NdECsXS+DQH6S6gjX1yYPy
+         28BaUEvVp3YP92EGSbUp56MPsBcHrjlg3yA2t4rER3pQw1J+v+ZPia+jY3kMKUTPIW
+         KjSpLCVfQuSVYKVngbhv99c36iynkqoKAEEWvFqAqVrHKsTmez4irq9NbZfYnDzuq8
+         pN9302tinvFN1NF7FfD75w5Lor6WPo9nnu4gFU1o++4EWAVm5Dn+GV6jLHnIcvE4yk
+         DKNFtY3EPIcWQ==
+Date:   Fri, 28 Oct 2022 12:06:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V1 2/2] PCI: designware-ep: Disable PTM capabilities for
- EP mode
-Message-ID: <20221028165753.GA897928@bhelgaas>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Om Prakash Singh <omp@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: pci-epf-test: Register notifier if only
+ core_init_notifier is enabled
+Message-ID: <20221028170647.GA898435@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220919143340.4527-3-vidyas@nvidia.com>
+In-Reply-To: <20220825090101.20474-1-hayashi.kunihiko@socionext.com>
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,72 +57,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 08:03:40PM +0530, Vidya Sagar wrote:
-> Dual mode DesignWare PCIe IP has PTM capability enabled (if supported) even
-> in the EP mode. The PCIe compliance for the EP mode expects PTM
-> capabilities (ROOT_CAPABLE, RES_CAPABLE, CLK_GRAN) be disabled.
-> Hence disable PTM for the EP mode.
+On Thu, Aug 25, 2022 at 06:01:01PM +0900, Kunihiko Hayashi wrote:
+> Need to register pci_epf_test_notifier function event if only
+> core_init_notifier is enabled.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Fixes: 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer core initialization")
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Acked-by: Om Prakash Singh <omp@nvidia.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 7e9529ae3824..dc3057b18f36 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -646,7 +646,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  	struct dw_pcie_ep_func *ep_func;
->  	struct device *dev = pci->dev;
->  	struct pci_epc *epc = ep->epc;
-> -	unsigned int offset;
-> +	unsigned int offset, ptm_cap_base;
->  	unsigned int nbars;
->  	u8 hdr_type;
->  	u8 func_no;
-> @@ -698,6 +698,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  	}
+> This patch is a part of series "PCI: endpoint: Fix core_init_notifier feature".
+> The rest of the patches have been withdrawn.
+> 
+> Changes since v2:
+> - Add Acked-by lines
+> 
+> Changes since v1:
+> - Add Acked-by lines
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 36b1801a061b..55283d2379a6 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -979,7 +979,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	if (ret)
+>  		epf_test->dma_supported = false;
 >  
->  	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> +	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
->  
->  	dw_pcie_dbi_ro_wr_en(pci);
->  
-> @@ -710,6 +711,22 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
->  	}
->  
-> +	/*
-> +	 * PTM responder capability can be disabled only after disabling
-> +	 * PTM root capability.
-> +	 */
-> +	if (ptm_cap_base) {
-> +		dw_pcie_dbi_ro_wr_en(pci);
-> +		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> +		reg &= ~PCI_PTM_CAP_ROOT;
-> +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> +
-> +		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> +		reg &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
-> +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> +		dw_pcie_dbi_ro_wr_dis(pci);
+> -	if (linkup_notifier) {
+> +	if (linkup_notifier || core_init_notifier) {
+>  		epf->nb.notifier_call = pci_epf_test_notifier;
+>  		pci_epc_register_notifier(epc, &epf->nb);
 
-Per spec, PTM Responder Capable, PTM Root Capable, and Local Clock
-Granularity may only be set for Root Ports, RCRBs, and Switches (PCIe
-r6.0, sec 7.9.15.2).
+Why does pci_epc_register_notifier() even exist?  It's not used at all
+except for this test code.
 
-And this is just a matter of making an Endpoint comply with the spec,
-i.e., configures the Endpoint so it doesn't advertise that it can be a
-PTM Responder, right?
+It would be better if infrastructure like this were connected with
+some user of it.
 
-But the Endpoint probably still *can* be a PTM Requester?
-
-> +	}
-> +
->  	dw_pcie_setup(pci);
->  	dw_pcie_dbi_ro_wr_dis(pci);
->  
+>  	} else {
 > -- 
 > 2.17.1
 > 
