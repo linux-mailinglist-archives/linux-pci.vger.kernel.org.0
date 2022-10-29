@@ -2,96 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53422612271
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 13:35:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5BC61230B
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 14:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiJ2Lfo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Oct 2022 07:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
+        id S229571AbiJ2Mx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Oct 2022 08:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbiJ2Lfm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 07:35:42 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B845A2C5
-        for <linux-pci@vger.kernel.org>; Sat, 29 Oct 2022 04:35:41 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id d59-20020a17090a6f4100b00213202d77e1so12113411pjk.2
-        for <linux-pci@vger.kernel.org>; Sat, 29 Oct 2022 04:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aHrf4/ua/bP2fhJLYsi8YFH+OWTvuSQYXS/+2VW1Ev0=;
-        b=I9g+VCSV+zesHYNJbKc0yUccjLk+eGuoOnslD2rsd70ar/2uFJMsBaW0frPa64wRLe
-         QDg6ZpHO7EyYw2zXffiRuarpAS6Z+j2p2We44drdVTMS37msLfy4EfjEN4PqcicHiToW
-         K85/dU0TAaYSBXuEuJWSi9Sv3XbSAoz38KtZ7UZOvTjGZkia4T4c2u9GPtlVv6RuYvly
-         yhGdkTfznbcncwWJefsxChmiaadeH072yj9Z90p7Txzggf6R4iYs++4rjc9nDeqoAE95
-         Db3QVeHoc7emPHPBhGWz+SrwkugflA8G1+vTegg5lL6kX1afMkLzMwMctxcUE5T02aB/
-         LQ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aHrf4/ua/bP2fhJLYsi8YFH+OWTvuSQYXS/+2VW1Ev0=;
-        b=iINI5JL29yd7kl977fvDE5twunZdP5jsLXUhYTYRjiS8joKjuyZYUHJsssX/8E69Pb
-         FJoNgrffbM2ergvhGnvU9x5U2ZwOf/E7J73xKQ1Bqhdu2FZovmUMTjIz2abBqR0cjoB6
-         laMcfVPbk2LRwYR3KkLXuB+EQ197YSLzGK/pvOp4fkG0BpZh713/Fzzrxqx44MJoH/QL
-         kb8dsis5Xcmc6bi5OnTi0u6BiaPLKFXwVqnoeSbyeFApaQ6uDegNZyEPuBj0RbdC9R97
-         DjlZ8wntPnl4LSznKK1/d+bAjoqbnUJixXu0UJHvclJFjSVSmGo90bcp4nt6OBsmCb1E
-         xLZA==
-X-Gm-Message-State: ACrzQf3BoOq9RwJawIM3QSU1SsDRJzheGs/bOMsuTyIdr2d68xbexZTy
-        r/+lqJ9WMfH0Gp1xVYw47XqN
-X-Google-Smtp-Source: AMsMyM71NxDrO34qEW6NTTZhgP2jTUdSMzjgUKJGZTImNZWgB5kLuzzT+FIYqH5UnqXJvBhQv8FVNA==
-X-Received: by 2002:a17:90a:5781:b0:20a:9962:bb4a with SMTP id g1-20020a17090a578100b0020a9962bb4amr20838383pji.185.1667043340967;
-        Sat, 29 Oct 2022 04:35:40 -0700 (PDT)
-Received: from localhost.localdomain ([117.193.208.18])
-        by smtp.gmail.com with ESMTPSA id y189-20020a6264c6000000b00540f96b7936sm1045888pfb.30.2022.10.29.04.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Oct 2022 04:35:39 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johan+linaro@kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH] PCI: qcom: Add async probe support
-Date:   Sat, 29 Oct 2022 17:05:20 +0530
-Message-Id: <20221029113520.242970-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229489AbiJ2Mx6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 08:53:58 -0400
+Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77B961134;
+        Sat, 29 Oct 2022 05:53:56 -0700 (PDT)
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+        by mxout1.routing.net (Postfix) with ESMTP id D5568419DC;
+        Sat, 29 Oct 2022 12:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1667048034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F28icF3t/ZJZnzJ1jYpuHgDKBjTOtvEe+03X+Age5+w=;
+        b=wj2UQE2uO0w5HijBktCAoeLWvP1KpoV15b52aDP6+K735D6tOSmTiFqWGdCdeftwnpxkFv
+        2Q2f4PTCw6/M5S1VuPQ95IMqeW/7gIhojcVrUt+42jRrNLw9tTI8WSsFd2Aeb6s4G10YLm
+        5ZfYvWP+RBTMwHVC0UarXgw0cQBV48U=
+Received: from frank-G5.. (fttx-pool-217.61.156.178.bambit.de [217.61.156.178])
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id DEF623600A1;
+        Sat, 29 Oct 2022 12:53:52 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/2] rework mtk pcie-gen3 bindings and support mt7986
+Date:   Sat, 29 Oct 2022 14:53:46 +0200
+Message-Id: <20221029125348.36362-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Mail-ID: 292954b1-9310-4712-9c4c-012164a8cf71
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Qcom PCIe RC driver waits for the PHY link to be up during the probe. This
-consumes several milliseconds during boot. So add async probe support so
-that other drivers can load in parallel while this driver waits for the
-link to be up.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+This Series prepares support for mt7986 PCIe which is basicly gen3 PCIe
+but with slightly differnt clock configuration.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index f711acacaeaf..e0b8d6dc4ce2 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1768,6 +1768,7 @@ static struct platform_driver qcom_pcie_driver = {
- 		.name = "qcom-pcie",
- 		.suppress_bind_attrs = true,
- 		.of_match_table = qcom_pcie_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
- builtin_platform_driver(qcom_pcie_driver);
+To make differences better to read i split the exiting bindings which
+has already different settings with a compatible switch and then add a
+new one for mt7986.
+
+v2:
+- fixed typo in part 1 (SoC based config)
+- squashed part2+3 (compatible and clock config for mt7986)
+
+v3:
+- fixed problem with fallback-compatible not compatible to main
+
+Frank Wunderlich (2):
+  dt-bindings: PCI: mediatek-gen3: add SoC based clock config
+  dt-bindings: PCI: mediatek-gen3: add support for mt7986
+
+ .../bindings/pci/mediatek-pcie-gen3.yaml      | 64 +++++++++++++++----
+ 1 file changed, 52 insertions(+), 12 deletions(-)
+
 -- 
-2.25.1
+2.34.1
 
