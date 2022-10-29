@@ -2,137 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD276124CB
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 19:58:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B65B561256B
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 23:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiJ2R63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Oct 2022 13:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50688 "EHLO
+        id S229727AbiJ2VNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Oct 2022 17:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbiJ2R60 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 13:58:26 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9308459EB9;
-        Sat, 29 Oct 2022 10:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1667066289;
-        bh=gbLUknNhYDzToI8QX7zIFAAM+RoOhWqq4U9N2tWYqrY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=J05y90sHfOuBW1dagMH1QWKbygXKo3NM4skXufIWKzOJ50SGhdfo0k3Qvs99hOT9N
-         Ig0ftYRsTbhyrnlOI0x/6JsqTxYqbAVGdZ7XeE6pq+Cyh5fC19AgDDbevyRcyitnFg
-         aOpdgdFJzazkN3qB8tmRb0pE7zLiPVYA3WE8zdImrOn+uxMZqRRqMzEEQWLUQc+Dss
-         zaZ0tXiLE15RohZqms/Kj7p0vOVQlA4HJETmLIYrp3wE/CJyIWtWc22uuQ1V10fpD5
-         5YdTGBi9fDRX7kCCDYirdRn1eCAgb46eTW3v1wclgy0YmczgTg0rq1vq6C8XAQN70w
-         3COzWQo/bgSPQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from frank-G5 ([217.61.156.178]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MDywu-1owVan1VqO-009zKI; Sat, 29
- Oct 2022 19:58:09 +0200
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S229489AbiJ2VNR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 17:13:17 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361123CBFC
+        for <linux-pci@vger.kernel.org>; Sat, 29 Oct 2022 14:13:16 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id b2so13569016lfp.6
+        for <linux-pci@vger.kernel.org>; Sat, 29 Oct 2022 14:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mq8Mg06fdD8FFSs+dwD1ITMKqlWnIs/wVZyIglcsiPc=;
+        b=po6WXVw9WSHq/UQZyPh9zCXDgLHvb4PeMI38LBF4vn0NS5ZDPMaKDJgzN4ctT4wZKw
+         spnRodfwn+6y/mYskrqV/NDQu+SZ/Xy9z9+xkVzewoRaA7oXZcSZSuT/q/BiJy5CjkzQ
+         MZ4Y+SPB85ndhYiqLj8ZYx3hgZNsKdJXZubR9t/kV8vZ5+vpZRzjc8kiw/GvTRdDEMo1
+         uDSnYQbb/0NTsYzszJEfbv5IKehB1E/RyQ+fvg/CzJHER0ajcAc3UrJygAejKVP+ER3r
+         NlUPeAk/7CknWx65tjHv1EQy9QMiVZU7sk1GjLYgk9q4Ai3r9pjEOr+FIoDswROARauU
+         Qkjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mq8Mg06fdD8FFSs+dwD1ITMKqlWnIs/wVZyIglcsiPc=;
+        b=ZdPX6mX5t39kwOM1zJuXrTqxX3t24P6VN4Eb/2FuX9v4WerPqYL13FpI717w6kzAlk
+         IMiF6f8mt6Xd0coNATCn0qZ4vTn8cTH/J2YvD5Nm9DlsJzc2CZf2Yakktk2y+ZIOAiWX
+         xyxGdHF9qpIhsy/hc4NVaAbU4rCU2HowU0wQJY8Jjp3cVvfIqs8HNFkliMoD/8MOzoTk
+         evT1HwZckpCTwLUBBJdEirxHjCwsVfr0PPaWAaEdcxvFUSf6caiF5oZdAzZRyY3HxjQf
+         8YPz7Y7KdZTOjbAK4HA/hBExrROZX2fVU59uTWLoYeu2yAZeLxjH7D7qMfUIZj/nF2Nb
+         boGw==
+X-Gm-Message-State: ACrzQf0YeU6ERPUm/8OUUFct+uv/netemxbveWGHHAfvOGJGvKu2VzVs
+        +xH0VxoEQKhlWqa4qIsB3TyDZw==
+X-Google-Smtp-Source: AMsMyM46iI4lf7SmclXK+EHWE1Atz1jHMgUHdPOMtJSyDkqEgBOlRePWkwbCVNxvvkAnY6D4+s/FNg==
+X-Received: by 2002:a05:6512:2102:b0:4a2:48a2:2cc1 with SMTP id q2-20020a056512210200b004a248a22cc1mr2379585lfr.167.1667077994504;
+        Sat, 29 Oct 2022 14:13:14 -0700 (PDT)
+Received: from localhost.localdomain ([195.165.23.90])
+        by smtp.gmail.com with ESMTPSA id j14-20020a05651231ce00b004a480c8f770sm433508lfe.210.2022.10.29.14.13.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Oct 2022 14:13:14 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/2] dt-bindings: PCI: mediatek-gen3: add support for mt7986
-Date:   Sat, 29 Oct 2022 19:58:06 +0200
-Message-Id: <20221029175806.14899-3-frank-w@public-files.de>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221029175806.14899-1-frank-w@public-files.de>
-References: <20221029175806.14899-1-frank-w@public-files.de>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v1 0/7] PCI/phy: Add support for PCI on sm8350 platform
+Date:   Sun, 30 Oct 2022 00:13:05 +0300
+Message-Id: <20221029211312.929862-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:M/8pyPHZeBy0oSZJMA11WuM41/YmWM8SAUTdo0nAh26A+VhWuFN
- VUrLwFwRtVtMl8Lb05bPaTo6Ly7GqelfUJIRpUtyiGaeczpB914xJ1gKujlpp9R4hjAyqtz
- c66xvAbooTVN5TZQc+zo8C9BSplX8Rf0GxzI16qRaIaye2irKh7FWdHy/Oz/bzjaJAJf+Q3
- q769wPKHXM4npSkXp1F9A==
-UI-OutboundReport: notjunk:1;M01:P0:sEB2PEL8bqg=;ekmgBYoYBWf9sUt1XO4Psf+cuK5
- 2lyAB5EiVbpwX2rCsOIEuIY14q/9synZZ38f6UWvsLJXML4H/tjrvgZNnnDwnad5F1N1jlBum
- sW+G9WnUTgc/BtUoGuogvnH07Og0csQ10MCThKItQbD5v9sZ+oHz4WaqfXeip6L2uP/+q8bw/
- 2nblADu9rtaNLkZuKOZzCJ6c7mDHmn84+BBGy79SjVImXJW20pNF0GUOy7TGVqPAWN/NWv/3A
- NYILctiWtjbHixqQSpho/XP4TNh4vSAHDQ67fuvAEal1lxrtvvCCgEOK8CS6Hq+ByKKYC8iMR
- gM4TTwEpJ/boYXmc6x+JiiewGajvO1HMT5iaQ6zOTPsARkbe9EGpeFj+RH7Mxupne32v+DGXE
- vPhpSx+WJk28T69aSzaX7WUsZ0NIdtSOYUNlocALIaR6RZwy66a35KEAvadckHtxo+y97rR1Z
- 0MrKFEnHCykWPA78jKMlA4I/bPSo0TjInvq7ogGom7NuOYj/ITF/U/4tgeCMBZ124PW7lpk2P
- PptZDy1U19aLRaFg/qTz7raHccn2SaBoujH/JLtam9CPPho27gCnvclgr6j0Td0NYQcyxBuX+
- 225OXpzDKElNn1w5Y1ZpQVhTgFaUPyKOKHc0lqwODdOwvu+MZ6YfVsI/16zX5714dG/AoJLT3
- YJlSMDnpw7ytqn/OyhDP8ynurM0LmPmxHbZ7xIUMv8BTQDwUWov7yAO1fhOa9ZoeKBSVIiQun
- LUcPwvFhL+jpbc5cijskbDTIBUtp+V36njUwydMdXAcKkvjOpqDAOwxXIVNSV/nZCy4tWz5Oz
- 7S0lqWIWBSavjXpAxSmlzVcOg3E14e8Lcq61l4p9RXF+kimQ4knSSItoayZrCV7xj3b9t48Dm
- DV6tIHcdMYAovyj78trKZglcgWVqYTOmwz9oXoQ+PUpcc+WFd4jAuBjr5Ma0ZBtL1kG0lp83E
- ndS3I6yjgflfUOjGWeEjSnk927w=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add compatible string and clock-definition for mt7986. It needs 4 clocks
-for PCIe, define them in binding.
+SM8350 is one of the recent Qualcomm platforms which lacks PCIe support.
+Use sm8450 PHY tables to add support for the PCIe hosts on Qualcomm SM8350 platform.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-=2D--
-v2:
-- squashed patch 2+3 (compatible and clock definition)
-=2D--
- .../bindings/pci/mediatek-pcie-gen3.yaml        | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Note: the PCIe0 table is based on the v2.1 tables, so it might work
+incorrectly on earlier platforms.
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml=
- b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 5d7369debff2..f7a02019daea 100644
-=2D-- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -48,6 +48,7 @@ properties:
-     oneOf:
-       - items:
-           - enum:
-+              - mediatek,mt7986-pcie
-               - mediatek,mt8188-pcie
-               - mediatek,mt8195-pcie
-           - const: mediatek,mt8192-pcie
-@@ -78,9 +79,11 @@ properties:
-       - const: mac
+Dependencies:
+- phy/next
+- https://lore.kernel.org/all/20221028133603.18470-1-johan+linaro@kernel.org/
 
-   clocks:
-+    minItems: 4
-     maxItems: 6
+Dmitry Baryshkov (7):
+  dt-bindings: PCI: qcom: Add sm8350 to bindings
+  dt-bindings: phy: qcom,qmp-pcie: add sm8350 bindings
+  PCI: qcom: Add support for SM8350
+  phy: qcom-qmp-pcie: split and rename the sm8450 gen3 PHY config tables
+  phy: qcom-qmp-pcie: add support for sm8350 platform
+  arm64: dts: qcom: sm8350: add PCIe devices
+  arm64: dts: qcom: sm8350-hdk: enable PCIe devices
 
-   clock-names:
-+    minItems: 4
-     maxItems: 6
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  54 ++++
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  22 ++
+ arch/arm64/boot/dts/qcom/sm8350-hdk.dts       |  16 ++
+ arch/arm64/boot/dts/qcom/sm8350.dtsi          | 248 +++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 164 ++++++++++--
+ 6 files changed, 487 insertions(+), 18 deletions(-)
 
-   assigned-clocks:
-@@ -160,6 +163,20 @@ allOf:
-             - const: tl_32k
-             - const: peri_26m
-             - const: peri_mem
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mediatek,mt7986-pcie
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pl_250m
-+            - const: tl_26m
-+            - const: peri_26m
-+            - const: top_133m
 
- unevaluatedProperties: false
-
-=2D-
-2.34.1
+base-commit: 25dcaf94448f41f1634e8e44f28f37b1aff4bc2c
+prerequisite-patch-id: 2653b8544469dbf460318520629a991707063a74
+prerequisite-patch-id: 8e104dd9bcbfc111a3e3a40e653b7529bc43c2da
+prerequisite-patch-id: a20eaeb1d3c239365d6941e0b78bd735d80ac16c
+prerequisite-patch-id: 564c51aafef04658f6f72a90680640f77117c8eb
+prerequisite-patch-id: 6d7542be2843ccfd1f649d2dc85230e640adf5f1
+prerequisite-patch-id: e36118b08045416bf3d79a2c69b7f1b2009d6945
+prerequisite-patch-id: d48963bb923f85108a8f0d574e92dc63ce341483
+prerequisite-patch-id: d8dfcbc4413e5a29ed9d4c2a50f5e6cdec0d261a
+prerequisite-patch-id: 0493226b1dd5989626619e598650d98e165a9c1b
+prerequisite-patch-id: 7264ed9ab2e1fc6c25db45812c6834f36590e72e
+prerequisite-patch-id: 2784713a211929f0b253674742a7bf0966e02c22
+prerequisite-patch-id: 454b9956cd3d4c4cdc4f39e746175a5d6a1ca084
+prerequisite-patch-id: ce69ae926fb095edd2f3699cfe28e9e75719985c
+prerequisite-patch-id: 0286a9947535ee3be9f58b8a06f7b3018d1309d8
+prerequisite-patch-id: 9d0856ce66a0603950eaa4024057c1cf1f84ed95
+-- 
+2.35.1
 
