@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A787F612451
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 17:53:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC7716124C1
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Oct 2022 19:56:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbiJ2PxB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Oct 2022 11:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41846 "EHLO
+        id S229497AbiJ2Rz5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Oct 2022 13:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiJ2PxA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 11:53:00 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBDB2BE19;
-        Sat, 29 Oct 2022 08:52:56 -0700 (PDT)
+        with ESMTP id S229483AbiJ2Rz4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Oct 2022 13:55:56 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE076B48;
+        Sat, 29 Oct 2022 10:55:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1667058753;
+        s=s31663417; t=1667066124;
         bh=Kycf1XZFridgEvLb9sjdHDeiaD0OdfNkXClfb9amqkM=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=hw0j53BVtFbC1xnqlHkNqtba6jEmor1AECidmrkh3ggV/tYuIXNsb8DlqLOBpKPUW
-         qCWZo+dk/rPSKumoAY/NC0zkXxDY5wUdATd7JhGrjWuNHiOWF/KMjA9CJZDhsikVji
-         cv9zyWW+2NbST3BAi67O9QIqegtE7QctujJUP47s5mhxwPAsqBEokJsWep8BCIdbqH
-         3Pa8np+C5TMVSc1gsq+O4BepvCsB1Drrz/+dxf700LTOdmKVmwIAiT+T53men9WeMK
-         T7b2guUVjmFG/VDi74Jz/cH18ymAKWoyclI0GScHy1hKulDNheWxyYwGt5BOirElK4
-         1B6uzTaVebU9A==
+        b=a95ybDL6/m6NouR77Vfx/jrjpFe+vsBdD/+3panVqt9YNUw3PMjZysOt8njrj1aMt
+         iQpVwmgSmAPG3zy7QNXbzJpaPRI+yQQoxyf5bRsA9sW05OVtnOtqFgRRSdVgYRaozu
+         c5yrYq19bS46YJt5pcTTgKXFQlJnRJ1dGmZNFokvWRdZEex+pY/wvaxKXxc8IAfZxh
+         2SkeDqXOBR2oQhvclZ8JYRvltBviOjtbtLcP5rOkMoEXy1YDdi0Qad4IsB6Pmq7nfT
+         LgmIWHvf9eFnmQqUBWh0nWN5B9T0ao4Xs93bPOTgl2kcW9yzupreJbeRq8fPBCaJ1G
+         poNPNV1Ac8pRQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from frank-G5 ([217.61.156.178]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N33ET-1pBism26KD-013Kf9; Sat, 29
- Oct 2022 17:52:33 +0200
+Received: from frank-G5 ([217.61.156.178]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIMfW-1os7qq0I7w-00EJMD; Sat, 29
+ Oct 2022 19:55:24 +0200
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -40,30 +40,30 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Subject: [PATCH v3 0/2] rework mtk pcie-gen3 bindings and support mt7986
-Date:   Sat, 29 Oct 2022 17:52:23 +0200
-Message-Id: <20221029155225.7104-1-frank-w@public-files.de>
+Date:   Sat, 29 Oct 2022 19:55:13 +0200
+Message-Id: <20221029175515.14526-1-frank-w@public-files.de>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:diT2Gefmafn/nZ+zWz2K9Sc7U/zf7MWKJVX6SrzI9Fk1bXLYPHD
- o1XqCd1Ag1j6hIDROr6UzLx43dkgDd+7JZu8NSLvyAnG0dWiBqAt6v6JouGaJnzBzBOHM0z
- 8rpAcRv0Lvsx/BrnBOQ0xX8cIUBToqff+sTKW5AFQlVRIsTpRLRNNhRBw1uJKGOP2cQz7R1
- jvWHNfvQf7mBWY31E5Gag==
-UI-OutboundReport: notjunk:1;M01:P0:n9GfSGB0G2w=;ZjGUNKuL/LJM8mRrT1iGH82btnK
- OAESaaRGx0UxdcBWNW8gvgEleJGJ7JSxpxUDkfzScm4UyQx960VlXBPZdnn277knBdtd75ZFN
- JAqdy+H7R7LdBgDqhaRg5jDwtLulhJkDLOKFBWc2CdJ+xHQnHrQbhYhQUykQQ8hD+LtNADit2
- k9GHCzwCSg1ff0+QzbJ3IhqhdT8Zbj/3wN2juKSfKm9C/Yguq4JDfPxEqP1vss+5yt8Pyv+Bj
- OV+KDHtSb4nKE2ZzkGR4d/N+VMSFd5pxdlHv/oDFShf0w762npceEPhwgCoCsf9AC8ipPq2ix
- MI0tByo+oUv+q8qKF7lyV5o80T+mmnTYABJKXKIzUUR8pfD8QZkJ5Axv5To9iiPPtr9ppEf2l
- 6ORf0/7bn5WIsuPFTl6cem2Oq45KyKNfrhVy1BTPvRbbw2eHIB8p/hChp08eR1tsjgeO93eME
- koNIk4u/VaE5wT681X+m3YuBjdWUT2llAEb1H2kqfshYkLOGYD3N49lsNwPjOfMhQqYVYdmYg
- UnYArzVoC0Nfb6KBbZJdZHuCQpCYcUf43kCZJU7+BHsTVm3pFRqv/8JIF8gRuQIhKPtF6GfHn
- a61q1Gu67yI1BZU0TwYcLngRqfPHomE2B/e+7qtFZTHlWXwzeNHEy/qvpA4HS8WDdc6ibuk+Q
- 9hhmlvZElw+EVqNVlTK67K245fQelDUOQHScvnadyeUTMO6JZKqLslJ4DJgO88zjdKkwGlgcH
- id4TO/fGhHwPb6sq9TsDvxrjb8isAbB2XSPSRwlJt5Z0q+s7F5M2R5HDg82QOnYh/uVEyoOcC
- 61Ci5VJhKnH/Llqixke9UI1RPR/DQJK3HhYkG3B7+wo+NYwD0j+Gvo2QqVgHGNx8I4xSxwPg+
- KCd0Ow5Fy0ulNWXqEd+TwkpUVe6vHsT8V0Oda9gRQI7TkSDHzDKoW47tto9M9R1gj+jwyd1tq
- 3RyW6rsdbQB/IO2sBzMomyTlX9c=
+X-Provags-ID: V03:K1:KxEWb7itPFWpTFXDzdkAlZkhTG+OLCfGNO1UX1xRxoigacLZp9n
+ BHAdDh48FNV7BvYDFaZKZDAtM7nqke88BIiDjCNhLmveo9xisVCE3CzkDCw5JIxop09tCGn
+ Of5NB7MZNqULn+zl8Wa3RI8EJgXmUbdmSmEnOX0vqbcsBBCne0xeq0syWyZXq6zbgKQaOhx
+ qmr9cuOq9bdLj5o/oPjiw==
+UI-OutboundReport: notjunk:1;M01:P0:UgbdyR0oegs=;WsBLUDG5xSh2G2iV4ajaVN6GcL4
+ RxEPfjzboRWB7yNWnDB5IEJ1h+CD0fSkRtJYJXIaABYBJYdEBYi3a2gHL85n+yac2sgXPQVqh
+ 6st5Yuj+ipW3YPHU8DHQKAPH2avYDAwPd4aue9SKqFYaWwfcWgwd2IZRGJ1Qa0hbGlbb4Lcz1
+ 2IQdWus23mLM94MjwqSZlaCrODvisBHSLypch6jTUwJYH3m/BzvMz0UEY1pSp+6Sm/QilzOUm
+ hUm910tYeWJxWUyBtqAtddpV9HlyzQ+55ZKuTpgoMdCftvq2n2SPB9xMSrkDSp2idUXE0Wz8v
+ 0ZfF6n3UYi0qFJBsxvbhLvIiJjcVYOVw3RQKRpmKy1qLgLIiPn60Bq0KHXR0w2LkUhJII1u32
+ CFUl9EhdcnxdCmmRs48RwiCd23E388r66pgLb1qlH4PFjax9Ff16zoPD0BdyfKOEpMCNWw/b1
+ 0myOWaYZEZftAqJ8Jrif3zkr4DpJXY4jEYgH9IykGANnxzCJdHKAYbTSHLHsZs0d8iGIjvXv6
+ SfSG/M9SlUqZJlbGTt2g2HN4zg4m/USyGBwEKwgwdPjuUgIW8LWXo8t1soi1s+abWwT3IVPNt
+ N1rHMSB6rxr+oebOTrMrcCilwWJqLLuhWqiYGqqsCIO3pUJVx1NfGx8SvNR+noWNpsaxjZmor
+ JoaDvEz5huovWu9hBe6ukU54JpLVM1SUKuF5gvQNP5V++k9gV8f+uXuiDUbS//b6LOutVe+yN
+ IzoAGooUqgFONwiR/hD6kNjuH+dd/ZK9bXQgq17J/f7ZpaOa01hZ9zzEAxLGFmRiNqUPUGwcj
+ lgR8d1RtVMZV+nw9j+9hyQjLyRuwqVv+J3gzR0Pj4zmOU6fGR/perUtEm1dUbCDjIdSHf8Eq2
+ LDEuZdIvTi9j8KNkIUICEMGDWwSNkoZGAGqHIMN+9A9CYPaQktS1DWOSEUpDBQ2J8ouf4YOI0
+ 6d7U9g==
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
