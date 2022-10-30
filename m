@@ -2,61 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E38AF612927
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Oct 2022 09:38:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1999361292A
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Oct 2022 09:39:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbiJ3Iip (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 30 Oct 2022 04:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
+        id S229757AbiJ3Ijm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 30 Oct 2022 04:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiJ3Iio (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 Oct 2022 04:38:44 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6DDA0;
-        Sun, 30 Oct 2022 01:38:43 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E56E968AFE; Sun, 30 Oct 2022 09:38:38 +0100 (CET)
-Date:   Sun, 30 Oct 2022 09:38:38 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
-        alison.schofield@intel.com, bwidawsk@kernel.org,
-        vishal.l.verma@intel.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221030083838.GD4949@lst.de>
-References: <20221024133633.00000467@huawei.com> <20221025232535.GA579167@bhelgaas>
+        with ESMTP id S229667AbiJ3Ijl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 Oct 2022 04:39:41 -0400
+Received: from fx306.security-mail.net (smtpout30.security-mail.net [85.31.212.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6296A0
+        for <linux-pci@vger.kernel.org>; Sun, 30 Oct 2022 01:39:37 -0700 (PDT)
+Received: from localhost (fx306.security-mail.net [127.0.0.1])
+        by fx306.security-mail.net (Postfix) with ESMTP id E37DA312B1C
+        for <linux-pci@vger.kernel.org>; Sun, 30 Oct 2022 09:39:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+        s=sec-sig-email; t=1667119175;
+        bh=h9v36uR/+PgLshxmrPJH89X6FE4JeipAiLOEa2J4iRM=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject;
+        b=HaKGT8aBOpSfIa/lCvpt3CI3U43Ev8nOmhUFl5BnII90yVTNc3Qqmxlp4hq6AH6yj
+         lM85kZLSWavCSy6J+oGaZxIJR73+s1WTE0Xw87PWgMEcZuCtdtAOAsoLycpamOKYps
+         WE3qOZElFSWE9swLS0ZsatxvY66ALZ52TdXh/HIQ=
+Received: from fx306 (fx306.security-mail.net [127.0.0.1]) by
+ fx306.security-mail.net (Postfix) with ESMTP id A9C4C312B25; Sun, 30 Oct
+ 2022 09:39:35 +0100 (CET)
+Received: from zimbra2.kalray.eu (unknown [217.181.231.53]) by
+ fx306.security-mail.net (Postfix) with ESMTPS id 2EE03312B24; Sun, 30 Oct
+ 2022 09:39:35 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1]) by
+ zimbra2.kalray.eu (Postfix) with ESMTPS id 02BBD27E0267; Sun, 30 Oct 2022
+ 09:39:35 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1]) by zimbra2.kalray.eu
+ (Postfix) with ESMTP id D8A0827E02C8; Sun, 30 Oct 2022 09:39:34 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1]) by localhost
+ (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026) with ESMTP id
+ A13bI_SsvGbu; Sun, 30 Oct 2022 09:39:34 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1]) by
+ zimbra2.kalray.eu (Postfix) with ESMTP id BDEE227E0267; Sun, 30 Oct 2022
+ 09:39:34 +0100 (CET)
+X-Virus-Scanned: E-securemail
+Secumail-id: <5196.635e3847.2cade.0>
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu D8A0827E02C8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=4F334102-7B72-11EB-A74E-42D0B9747555; t=1667119174;
+ bh=zSYQyCy0bsfqPuG7SZ5cMDa8o7qeMNDxE9bO+09UwJI=;
+ h=Date:From:To:Message-ID:MIME-Version;
+ b=4aFdK63phSa6xbQKyDynBmgGybpZUsHhzIDbID8IcfpVMXFNj85EjsJmZyPXEix1b
+ qjRlNETdV9COEXuG8j73CuXKUCtBmlB5AYbSeqXGaYopry3d+OAqhuBq7vSjXDM6j/
+ bwBxvEzN1dEl+q9wR99Fy9dY42xdUPhR5RNlC0MZ98qI81DpiUFzbH/qQ5263AmMM4
+ YK2mGwMJKR07CbNcdJYwquxuv2thAcj4mX9GMf6o3LkpACBDqUDudVuTQ74VXoy22A
+ 6jq5el09kKYv1iCBX2ItZK+7+ibFKZY2KTHrzWiNGPzPfJhF3TGXM8+vjNM3+k1fzJ
+ ekU4DnMiEcYzQ==
+Date:   Sun, 30 Oct 2022 09:39:33 +0100 (CET)
+From:   Alex Michon <amichon@kalrayinc.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     michael haeuptle <michael.haeuptle@hpe.com>,
+        CS1PR8401MB07283E5AFD950C136FFC565E95C60 
+        <CS1PR8401MB07283E5AFD950C136FFC565E95C60@cs1pr8401mb0728.namprd84.prod.outlook.com>,
+        dstein <dstein@hpe.com>, linux-pci <linux-pci@vger.kernel.org>,
+        lukas <lukas@wunner.de>
+Message-ID: <496564878.633246.1667119173775.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20221030082818.GB4949@lst.de>
+References: <492110694.79456.1666778757292.JavaMail.zimbra@kalray.eu>
+ <20221030082818.GB4949@lst.de>
+Subject: Re: Deadlock during PCIe hot remove
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221025232535.GA579167@bhelgaas>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 9.0.0_GA_4373 (ZimbraWebClient - FF105
+ (Linux)/9.0.0_GA_4373)
+Thread-Topic: Deadlock during PCIe hot remove
+Thread-Index: Ghub1TcnbDBLq0craJEE8UVPRql0+Q==
+X-ALTERMIMEV2_out: done
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 06:25:35PM -0500, Bjorn Helgaas wrote:
-> Is this cxl code allocating vectors for devices that might also be
-> claimed by portdrv?  I assume not because that sounds like a problem.
+Sorry, I wanted to reply to this thread: https://lore.kernel.org/linux-pci/CS1PR8401MB07283E5AFD950C136FFC565E95C60@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM/
+but it looks like something went wrong with the email delivery.
+
+----- Original Message -----
+From: "Christoph Hellwig" <hch@lst.de>
+To: "Alex Michon" <amichon@kalrayinc.com>
+Cc: "michael haeuptle" <michael.haeuptle@hpe.com>, "CS1PR8401MB07283E5AFD950C136FFC565E95C60" <CS1PR8401MB07283E5AFD950C136FFC565E95C60@cs1pr8401mb0728.namprd84.prod.outlook.com>, "dstein" <dstein@hpe.com>, "hch" <hch@lst.de>, "linux-pci" <linux-pci@vger.kernel.org>, "lukas" <lukas@wunner.de>
+Sent: Sunday, October 30, 2022 9:28:18 AM
+Subject: Re: Deadlock during PCIe hot remove
+
+On Wed, Oct 26, 2022 at 12:05:57PM +0200, Alex Michon wrote:
+> Hello, 
 > 
-> Ugh.  I always feel like the portdrv design must be sub-optimal
-> because this seems so hard to do cleanly.
+> Is there any update on this bug ? 
 
-Yes, portdrv is a mess.  And I fear we really need to bite the bullet
-rather sooner than later to sort much of this out by lifting all the
-logic to the core and just keep the "drivers" around for sysfs
-pretence.
+What is "this bug"?
 
-And I think CXL is trying to run into a similar (but not quiete as bad)
-mess with it's overly modular approach.  In either case the right
-thing would be to do anough early setup to find the requird number of
-interrupts and highest interrupt number and just request that once.
+
+
+
