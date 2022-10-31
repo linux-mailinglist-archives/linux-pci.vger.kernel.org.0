@@ -2,99 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 641606140B8
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 23:34:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F252C6140E9
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 23:53:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiJaWeV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 18:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50546 "EHLO
+        id S229668AbiJaWxd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 18:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiJaWeU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 18:34:20 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2051.outbound.protection.outlook.com [40.107.96.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874C5F5F;
-        Mon, 31 Oct 2022 15:34:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mLwo43qbVn5bm2luEgDwPyOuvc4z0/asTvUeFN1zRuhJ2/yro9t4KJgFuWT2NNwWSRcC9VGh8OibfTZKAAq+wkGW7y4uBPJXHrrhEZZoXB5rMWjBmXKO2cndrts/U24R3hjcZS2ipPdey7W6/hNM2+8TbC1PyJjkURCjrBYcZQXgLdFedlZJrDe/35UgK6BRvTR06pxD3A+CoenClPi+sfxKfgSAGsv16UjtpyUK4UDYZGHREe5BWlmK+XK+QNX4mX4PD6OW/rf2I8fndj7gi1Kgbee8aTkLGlZnBCSvf4p3uSvhiir/XNCQqi3x4uG7leawxHdzXioJJ6tPXuZDfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DuDgPxzL7NQ4WxC1tePuoGRGTIvqKDvX9DTLGPAOO3I=;
- b=V2bJNDU4SVll1wpC3ZcolMphp1QzTPj4SVMfOO5Hd4vPFoup2A97J2+MpOaIXYl6RAhzPw2OMaJenGgsqexrWdCnM1pg8D1fEyNcOspK99OkqiEbHq5gXvRU1Wokzcxs1ot8DBbMgFaJ5mID1Y9gxtgryL0V8zjRFWF6zemarNFeFQmNVTooyPaYZa3qgOIBysfgenB/+zrD8m00lRP7eedhjgMWmceghsrm46No0NYP23720xs2oqPgrnVYDJaMLGXcayYJyn6MHrcLPtcAX3ms6fd8i19WQvUB7hWfAJ8paJN5nVZs4iKhfiJVG+ACVm2YhR7J/Fdd4mza7vLlzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DuDgPxzL7NQ4WxC1tePuoGRGTIvqKDvX9DTLGPAOO3I=;
- b=wq1VBaKyk9PPDpfMmCItGpPy7vPfPpHq0pvqBX9pwP0zfvthLK8OuU3SJtPVTZPr5lYqGJRxmifs5e6QrRr48dONfbB/YE4n13VMsDmdMrW1eu6fzy2+NQUeIV2qjbGQnb7HtldOG9MNmcmLOextA1LDjvaZQHJr21YSMZ/+JSk=
-Received: from MW4PR03CA0171.namprd03.prod.outlook.com (2603:10b6:303:8d::26)
- by BN9PR12MB5243.namprd12.prod.outlook.com (2603:10b6:408:100::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Mon, 31 Oct
- 2022 22:34:15 +0000
-Received: from CO1NAM11FT071.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8d:cafe::45) by MW4PR03CA0171.outlook.office365.com
- (2603:10b6:303:8d::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15 via Frontend
- Transport; Mon, 31 Oct 2022 22:34:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT071.mail.protection.outlook.com (10.13.175.56) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5769.14 via Frontend Transport; Mon, 31 Oct 2022 22:34:15 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 31 Oct
- 2022 17:34:11 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <mario.limonciello@amd.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Len Brown" <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power resources support D3
-Date:   Mon, 31 Oct 2022 17:33:55 -0500
-Message-ID: <20221031223356.32570-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229452AbiJaWxc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 18:53:32 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29321120B8;
+        Mon, 31 Oct 2022 15:53:31 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 78so11909985pgb.13;
+        Mon, 31 Oct 2022 15:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8tdLudMN3YggMh4aeH+ycxFhI/pCELi7bzTmwhADkFE=;
+        b=FHDJhmrN2A88HStVzW85W2zIcOXn7E9dnmI90tKytH/ZGBp5zBn9dZqTGskyihKRJn
+         gum5GFedpJKG6DsDBz4NwyKcTjLhwgxlWonlD5sPZjB+ZRReBoi1aqN1tEvZK3dboCtf
+         bPZvMvljPzbeK2m56ZZpDT16fHqmoNlSmoid+g4ATV5MAmFDf7G/BeZXI0G2ty3tIfvk
+         tl6PdTEGDxlxMWaX5lsqS6ZpBAPze6p+aZJ4BYPvsgtdHGLxyl+MbisjxJqZTzSpGYll
+         6Tc70cDyuwFXqB0dc4k1TRX9djqPajLOS1rIrOXAMMY6AxpWQSAmrfeuA8+JSlm8hJkp
+         auwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8tdLudMN3YggMh4aeH+ycxFhI/pCELi7bzTmwhADkFE=;
+        b=Wp42OJTyfPiUg2OahCKiQODPEvr33uL8gQOJZpDPGOI1itIlcGXN0LKhmdOmK10KPw
+         3exBxMyluBAjuZe19jidyFEnDpKqAiPocVk3DaW7lvv9TrKkKlb344+wL4byDk9+7rCs
+         6ip/EXFSocxex65pjl23d8PKHNLpRrOmOY4+xVwY3nnD8gkNL8v5dqEsasjOaGSDvq+l
+         kX5+xC75oT3VyB9r0ffKIaucLNup1NBP7d7iZZrujJjCyIv0ndUFdzHoLMwJ0sGDnjhj
+         IgY0ztCx40dBrynwnS+6gM8NJvVSHq8Jypamd+Wt7TdatZjYUPoTPUudEcT0yfoVazDB
+         YyCg==
+X-Gm-Message-State: ACrzQf2FTJ9skA/7vjlSFZVv17u0ZzPpqavX0ila/wx/uesOjt4u7yN4
+        uqnHg3mh97RwkXy9RDdri3LUrepTzQuJ6Zy77w8=
+X-Google-Smtp-Source: AMsMyM6KMQ70L92GO/j4skIG5lj+U10qmAvPS/CuJ3pM/4aDrVAzh8pWDRAA/6k48+CdWxlqXyB7QUhZBgJ+UnBciSs=
+X-Received: by 2002:a63:4517:0:b0:464:4f06:a0f1 with SMTP id
+ s23-20020a634517000000b004644f06a0f1mr14107055pga.509.1667256810431; Mon, 31
+ Oct 2022 15:53:30 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAP03XeoDZvocZczcOJfM5L7mwH-W050zye7UXq29AhG6dm4Qug@mail.gmail.com>
+ <CAErSpo73E9ZF+NdA+ZC9+JPhhhC=1o=Z9zAGP33ZgZzYwjj=-Q@mail.gmail.com>
+In-Reply-To: <CAErSpo73E9ZF+NdA+ZC9+JPhhhC=1o=Z9zAGP33ZgZzYwjj=-Q@mail.gmail.com>
+From:   Christopher Obbard <obbardc@gmail.com>
+Date:   Mon, 31 Oct 2022 22:53:19 +0000
+Message-ID: <CAP03XeoKZgS5YmWZrOUAz-D5nF9aj=HrJfZ0ELJKk72RT4F_Xg@mail.gmail.com>
+Subject: Re: linux: System doesn't resume from suspend anymore with "PCI/PM:
+ Do not call pci_update_current_state() from pci_power_up()"
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT071:EE_|BN9PR12MB5243:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6d12e04-46e6-497e-441b-08dabb900aa6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QDU1eniuaazJn0pnlL9NkYUraizIELJkaKTv89VtK1aUkYqzLh8fecizLh2/WmdXzK5+vHptVIKUa+w+k4NUquSGZt40GQ0tYx0TcDOUFHWP8bgfiNrJtavJNLVqzcYizG0hxLYWOr81CDUmTO7mwv2WnxP+RcoVglBQtc681YoFB6a004OD0sDoCUC4I02X1cStpdwy0/xzRUvwIR1YCyUIJXY0zmyQ6YYquxS/3tUJrmqzjJoL39li5W38hQE5P+Pv2FaKu0dDbIk+3R+472YcMD+1hGFbZzxDhRiihDVU0HMD/5K6Fm8GO8fQ/23dava/Jn8me9uPFROCZPb6ZrhvSu6VmMlF11bwU3LSihN0HK0ZYc+69ZJSa2RIZuV9lut5f3ytzL2XyM1rGbu+2EW/U81nR1ZUOjo6QSXAiEa9VhDzjE9Wm869Fps6YN/0MvZ7EBdm+XP/QeU4BsYpsa6Aw6J/DIujWCOoTbmR2q+YvMR5MH6esd2Ar+b1n6Zg2SqZAiZjKONHcvtA7p2SWviVLQFhG/gdoMLjVdN3EhRZ+MSlRcrCLSQpM05iRT8rF/mNVLHq6N89r7zVBTXMAZAn77Mvcu/4wDs4lBQ2ZOTb7U23qv/eQUAegneB8y8rFbS4yIMFdhAv7HrLqz65LxgvPer4gNPdjImLTlInFPM6sZ02LOrGAKPAoKqBlM3s9wqXRuRhqe5LyuJUlXrrEH1MvpnJ3LZNRXpStBTpiGFZKYInrdJRkicIKAMHw6AQ0/eE3+455MvmWV4iStRTfFmaOoZawC/gXc9nPWg9eOQPjdkwq32KTiIuhNu9lGPZOHGXSq897/FUlZO9VgmoKjOvSDklVy9nWNuchwBZBR3rSOE/NEM6HOxSqV2mK3vX
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(376002)(346002)(396003)(451199015)(40470700004)(46966006)(36840700001)(66574015)(86362001)(356005)(81166007)(82740400003)(40480700001)(36756003)(2906002)(966005)(44832011)(6666004)(15650500001)(70206006)(4326008)(40460700003)(8676002)(19627235002)(5660300002)(8936002)(478600001)(7696005)(41300700001)(54906003)(316002)(110136005)(82310400005)(36860700001)(186003)(2616005)(70586007)(1076003)(16526019)(26005)(47076005)(83380400001)(336012)(426003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2022 22:34:15.2981
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6d12e04-46e6-497e-441b-08dabb900aa6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT071.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5243
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URI_TRY_3LD autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -102,136 +68,221 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Firmware typically advertises that ACPI devices that represent PCIe
-devices can support D3 by a combination of the value returned by
-_S0W as well as the HotPlugSupportInD3 _DSD [1].
+Hi Bjorn,
 
-`acpi_pci_bridge_d3` looks for this combination but also contains
-an assumption that if an ACPI device contains power resources the PCIe
-device it's associated with can support D3.  This was introduced
-from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
-D3 if power managed by ACPI").
+On Mon, 31 Oct 2022 at 16:35, Bjorn Helgaas <bhelgaas@google.com> wrote:
+>
+> On Fri, Oct 28, 2022 at 6:40 PM Christopher Obbard <obbardc@gmail.com> wrote:
+> >
+> > Hi!
+> >
+> > With recent kernels, my machine no longer wakes from suspend properly.
+> > It wakes from e.g. a USB keyboard but then just hangs.
+> > Once hung, the numlock key on the keyboard is illuminated but doesn't
+> > react to changes, no errors are recorded in the journal and the SSH
+> > server no longer works.
+>
+> It's best if you can cc: linux-pci@vger.kernel.org and
+> linux-pm@vger.kernel.org.  I didn't do it for you in case you don't
+> want to expose your email address.
 
-Some firmware configurations for "AMD Pink Sardine" do not support
-wake from D3 in _S0W for the ACPI device representing the PCIe root
-port used for tunneling. The PCIe device will still be opted into
-runtime PM in the kernel [2] because of the logic within
-`acpi_pci_bridge_d3`. This currently happens because the ACPI
-device contains power resources.
+Apologies, I will make sure to CC the list next time.
+In any case, I have CC'd the lists in my reply here, which includes
+the original submission and your reply above. If that is not
+acceptable and you think I should post another mail please let me
+know.
 
-When the thunderbolt driver is loaded two device links are created:
-* USB4 router <- PCIe root port for tunneling
-* USB4 router <- XHCI PCIe device
 
-These device links are created because the ACPI devices declare the
-`usb4-host-interface` _DSD [3]. For both links the USB4 router is the
-supplier and these other devices are the consumers.
-Here is a demonstration of this topology that occurs:
+> It sounds like you may have bisected this issue to 0b59193548e6.  If
+> so, that's incredibly helpful, thank you!  Can you also verify that
+> reverting 0b59193548e6 resolves the problem?
 
-|
-├─ 00:03.1
-|       | "PCIe root port used for tunneling"
-|       | ACPI Path: \_SB_.PCI0.GP11
-|       | ACPI Power Resources: Yes
-|       | ACPI _S0W return value: 0
-|       | Device Links: supplier:pci:0000:c4:00.5
-|       └─ PCIe Power state: D0
-└─ 00:08.3
-        | ACPI Path: \_SB_.PCI0.GP19
-        ├─ PCIe Power state: D0
-        ├─ c4:00.3
-        |       | "XHCI PCIe device used for tunneling"
-        |       | ACPI Path: \_SB_.PCI0.GP19.XHC3
-        |       | ACPI Power Resources: Yes
-        |       | ACPI _S0W return value: 4
-        |       | Device Links: supplier:pci:0000:c4:00.5
-        |       └─ PCIe Power state: D3cold
-        └─ c4:00.5
-                | "USB4 Router"
-                | ACPI Path: \_SB_.PCI0.GP19.NHI0
-                | ACPI Power Resources: Yes
-                | ACPI _S0W return value: 4
-                | Device Links: consumer:pci:0000:00:03.1 consumer:pci:0000:c4:00.3
-                └─ PCIe Power state: D3cold
+Right, I bisected the issue to that commit. Unfortunately the patch
+didn't revert cleanly; I can't really revert it without modifying the
+other parts of the code. Your help would be appreciated; I can test
+any patches.
 
-Currently runtime PM is allowed for all of these devices.  This means that
-when all consumers are idle long enough, they will runtime suspend to
-enter their deepest allowed sleep state. Once all consumers are in their
-deepest allowed sleep state the suppliers will enter the deepest sleep
-state as well.
 
-* The PCIe root port for tunneling doesn't support waking from D3hot or
-  D3cold so although runtime suspended it stays in D0.
-* The XHCI PCIe device supports wakeup from D3cold so it runtime suspends
-  to D3cold.
-* Both consumers are in their deepest state and the USB4 router supports
-  wakeup from D3cold, so it runtime suspends into this state.
+> If I understand correctly, there's no obvious problem with suspend.
+> When you attempt resume by pressing a key on a USB keyboard, you do
+> see a change (numlock indicator illuminates), but the machine is
+> otherwise hung and does not resume.
 
-At least for AMD's case the hardware designer's expectation is the USB4
-router should have also remained in D0 since the PCIe root port for
-tunneling remained in D0 and a device link exists between the two devices.
-The current Linux behavior is undefined.
+Exactly that. I only tried waking up by pressing a key on the USB
+keyboard (that will become important later...)
 
-Instead of making the assertion that the device can support D3 (and thus
-runtime PM) solely from the presence of ACPI power resources, move the check
-to later on in the function, which will have validated that the ACPI device
-supports wake from D3hot or D3cold.
 
-This fix prevents the USB4 router being put into D3 when the firmware
-says that ACPI device representing the PCIe root port for tunneling can't
-handle it while still allowing ACPI devices that don't have the
-HotplugSupportInD3 _DSD to also enter D3 if they have power resources that
-can wake from D3.
+> Right?  If it is hung, how can
+> you tell that no errors are recorded in the journal?
 
-Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3 [1]
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/portdrv_pci.c?id=v6.0#n126 [2]
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/thunderbolt/acpi.c?id=v6.0#n29 [3]
-Fixes: dff6139015dc6 ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v4->v5:
- * Update github->git.kernel.org
- * Correct arrow direction
- * Clarify some commit message comments from Lukas' feedback.
-v3->v4:
- * Pick up tags
- * Add more details to the commit message
-v2->v3:
- * Reword commit message
-v1->v2:
- * Just return value of acpi_pci_power_manageable (Rafael)
- * Remove extra word in commit message
----
- drivers/pci/pci-acpi.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Unfortunately after spending far too long looking in the manual and at
+the motherboard itself, there appears to be no onboard serial port for
+a console.
+I've enabled persistent journal flushing to disk, but unfortunately I
+think the disk is also offline or systemd misses the flush when the
+system hangs.
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index a46fec776ad77..8c6aec50dd471 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
- 		return false;
- 
--	/* Assume D3 support if the bridge is power-manageable by ACPI. */
--	if (acpi_pci_power_manageable(dev))
--		return true;
--
- 	rpdev = pcie_find_root_port(dev);
- 	if (!rpdev)
- 		return false;
-@@ -1023,7 +1019,8 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	    obj->integer.value == 1)
- 		return true;
- 
--	return false;
-+	/* Assume D3 support if the bridge is power-manageable by ACPI. */
-+	return acpi_pci_power_manageable(dev);
- }
- 
- int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
--- 
-2.34.1
+I re-seated the PCI graphics card and generally inspected inside the case too.
+I enabled the onboard VGA (rather than the PCI graphics card) and I
+got a console on the screen after the resume, where I could print the
+dmesg output.
+Something very odd happened this time: when it was in suspend I woke
+it up by pressing the power button (rather than pressing a key on the
+USB keyboard), and the machine seemed to hang for a few seconds but
+eventually recovered.
 
+Now it seems to always recover even by pressing a key on the USB
+keyboard. I can't explain why it now works...
+I attached a snippet of the kernel log (from a recent mainline) below,
+if it's of any use. I will keep stress testing and report back in a
+week or so in case there are further issues.
+
+
+Thanks,
+
+Chris
+
+> > I did a rebase from 5.17 (which worked) and latest linux release, and
+s/rebase/bisect/ (please blame too much wine)
+
+
+
+> > found that the regression was introduced with "PCI/PM: Do not call
+> > pci_update_current_state() from pci_power_up()"
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0b59193548e63957101aae5e4fc47151fce4a629
+> >
+> > My machine is running latest debian unstable, but this also happens
+> > with a fedora install.
+> > The machine is quite old, with a BIOS from 2015, but this shouldn't
+> > matter when running linux, right? :-)
+> >
+> > Specs:
+> > Asus H81I-Plus motherboard
+> > Intel Core i5-4460 3.20GHz
+> > AMD RX 580 Graphics card
+> >
+> > chris@nemesis:~$ lspci
+> > 00:00.0 Host bridge: Intel Corporation 4th Gen Core Processor DRAM
+> > Controller (rev 06)
+> > 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v3/4th Gen Core
+> > Processor PCI Express x16 Controller (rev 06)
+> > 00:14.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset
+> > Family USB xHCI (rev 05)
+> > 00:16.0 Communication controller: Intel Corporation 8 Series/C220
+> > Series Chipset Family MEI Controller #1 (rev 04)
+> > 00:1a.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset
+> > Family USB EHCI #2 (rev 05)
+> > 00:1b.0 Audio device: Intel Corporation 8 Series/C220 Series Chipset
+> > High Definition Audio Controller (rev 05)
+> > 00:1c.0 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset
+> > Family PCI Express Root Port #1 (rev d5)
+> > 00:1c.1 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset
+> > Family PCI Express Root Port #2 (rev d5)
+> > 00:1c.2 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset
+> > Family PCI Express Root Port #3 (rev d5)
+> > 00:1d.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset
+> > Family USB EHCI #1 (rev 05)
+> > 00:1f.0 ISA bridge: Intel Corporation H81 Express LPC Controller (rev 05)
+> > 00:1f.2 SATA controller: Intel Corporation 8 Series/C220 Series
+> > Chipset Family 6-port SATA Controller 1 [AHCI mode] (rev 05)
+> > 00:1f.3 SMBus: Intel Corporation 8 Series/C220 Series Chipset Family
+> > SMBus Controller (rev 05)
+> > 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> > [AMD/ATI] Ellesmere [Radeon RX 470/480/570/570X/580/580X/590] (rev e7)
+> > 01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
+> > HDMI Audio [Radeon RX 470/480 / 570/580/590]
+> > 03:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller
+> > 04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
+> > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0c)
+
+[  165.979399] PM: suspend entry (deep)
+[  165.992100] Filesystems sync: 0.012 seconds
+[  165.992270] Freezing user space processes ... (elapsed 0.022 seconds) done.
+[  166.014460] OOM killer disabled.
+[  166.014461] Freezing remaining freezable tasks ... (elapsed 1.792
+seconds) done.
+[  167.807460] printk: Suspending console(s) (use no_console_suspend to debug)
+[  167.822466] sd 5:0:0:0: [sdc] Synchronizing SCSI cache
+[  167.822527] sd 1:0:0:0: [sdb] Synchronizing SCSI cache
+[  167.822569] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+[  167.822644] sd 1:0:0:0: [sdb] Stopping disk
+[  167.822661] sd 0:0:0:0: [sda] Stopping disk
+[  167.823179] sd 5:0:0:0: [sdc] Stopping disk
+[  168.134479] amdgpu 0000:01:00.0: amdgpu: PCI CONFIG reset
+[  168.174469] ACPI: PM: Preparing to enter system sleep state S3
+[  168.175702] ACPI: PM: Saving platform NVS memory
+[  168.175868] Disabling non-boot CPUs ...
+[  168.177960] smpboot: CPU 1 is now offline
+[  168.181184] smpboot: CPU 2 is now offline
+[  168.184122] smpboot: CPU 3 is now offline
+[  168.187647] ACPI: PM: Low-level resume complete
+[  168.187663] ACPI: PM: Restoring platform NVS memory
+[  168.188070] Enabling non-boot CPUs ...
+[  168.188112] x86: Booting SMP configuration:
+[  168.188112] smpboot: Booting Node 0 Processor 1 APIC 0x2
+[  168.189911] CPU1 is up
+[  168.189945] smpboot: Booting Node 0 Processor 2 APIC 0x4
+[  168.191771] CPU2 is up
+[  168.191795] smpboot: Booting Node 0 Processor 3 APIC 0x6
+[  168.193660] CPU3 is up
+[  168.194504] ACPI: PM: Waking up from system sleep state S3
+[  168.195400] pcieport 0000:00:1c.0: Enabling MPC IRBNCE
+[  168.195403] pcieport 0000:00:1c.0: Intel PCH root port ACS workaround enabled
+[  168.195418] pcieport 0000:00:1c.1: Enabling MPC IRBNCE
+[  168.195421] pcieport 0000:00:1c.1: Intel PCH root port ACS workaround enabled
+[  168.195427] pcieport 0000:00:1c.2: Enabling MPC IRBNCE
+[  168.195430] pcieport 0000:00:1c.2: Intel PCH root port ACS workaround enabled
+[  168.196557] pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
+[  168.196937] sd 0:0:0:0: [sda] Starting disk
+[  168.196949] sd 1:0:0:0: [sdb] Starting disk
+[  168.196966] sd 5:0:0:0: [sdc] Starting disk
+[  168.329792] [drm] PCIE GART of 256M enabled (table at 0x000000F400000000).
+[  168.623385] ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+[  168.623476] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  168.623657] ata2: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  168.624202] ACPI BIOS Error (bug): Could not resolve symbol
+[\_SB.PCI0.SAT0.SPT5._GTF.DSSP], AE_NOT_FOUND (20220331/psargs-330)
+[  168.624207] ACPI Error: Aborting method \_SB.PCI0.SAT0.SPT5._GTF
+due to previous error (AE_NOT_FOUND) (20220331/psparse-529)
+[  168.625118] ACPI BIOS Error (bug): Could not resolve symbol
+[\_SB.PCI0.SAT0.SPT5._GTF.DSSP], AE_NOT_FOUND (20220331/psargs-330)
+[  168.625123] ACPI Error: Aborting method \_SB.PCI0.SAT0.SPT5._GTF
+due to previous error (AE_NOT_FOUND) (20220331/psparse-529)
+[  168.625844] ata6.00: configured for UDMA/133
+[  168.627065] ata1.00: configured for UDMA/133
+[  168.632236] ata2.00: configured for UDMA/133
+[  169.249068] [drm] Fence fallback timer expired on ring sdma0
+[  169.761067] [drm] Fence fallback timer expired on ring sdma0
+[  170.273065] [drm] Fence fallback timer expired on ring sdma0
+[  170.397071] pcieport 0000:00:1c.0: pciehp: Slot(0): No link
+[  170.785067] [drm] Fence fallback timer expired on ring sdma0
+[  171.297067] [drm] Fence fallback timer expired on ring sdma0
+[  171.809065] [drm] Fence fallback timer expired on ring sdma0
+[  172.321066] [drm] Fence fallback timer expired on ring sdma0
+[  172.833067] [drm] Fence fallback timer expired on ring sdma0
+[  173.345066] [drm] Fence fallback timer expired on ring sdma0
+[  173.857066] [drm] Fence fallback timer expired on ring sdma0
+[  174.369067] [drm] Fence fallback timer expired on ring sdma0
+[  174.881066] [drm] Fence fallback timer expired on ring sdma0
+[  175.393065] [drm] Fence fallback timer expired on ring sdma0
+[  175.905067] [drm] Fence fallback timer expired on ring sdma0
+[  176.417067] [drm] Fence fallback timer expired on ring sdma0
+[  176.929067] [drm] Fence fallback timer expired on ring sdma0
+[  177.441066] [drm] Fence fallback timer expired on ring sdma0
+[  177.953065] [drm] Fence fallback timer expired on ring sdma0
+[  178.465066] [drm] Fence fallback timer expired on ring sdma0
+[  178.605683] [drm] UVD and UVD ENC initialized successfully.
+[  178.705717] [drm] VCE initialized successfully.
+[  178.747462] OOM killer enabled.
+[  178.747464] Restarting tasks ... done.
+[  178.759450] random: crng reseeded on system resumption
+[  178.759541] PM: suspend exit
+[  178.901090] Generic FE-GE Realtek PHY r8169-0-400:00: attached PHY
+driver (mii_bus:phy_addr=r8169-0-400:00, irq=MAC)
+[  179.101213] r8169 0000:04:00.0 enp4s0: Link is Down
+[  181.722347] r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full -
+flow control rx/tx
+[  181.722355] IPv6: ADDRCONF(NETDEV_CHANGE): enp4s0: link becomes ready
+
+> > Thanks for any help...
+> > Chris
