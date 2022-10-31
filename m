@@ -2,46 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6A52613985
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 15:59:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 592CC613A41
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbiJaO7E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 10:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37596 "EHLO
+        id S231517AbiJaPkD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 11:40:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231548AbiJaO6y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 10:58:54 -0400
+        with ESMTP id S230175AbiJaPkB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:01 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C461007E;
-        Mon, 31 Oct 2022 07:58:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F947647C;
+        Mon, 31 Oct 2022 08:40:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F40D6129A;
-        Mon, 31 Oct 2022 14:58:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE66AC433C1;
-        Mon, 31 Oct 2022 14:58:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BFC4E612BB;
+        Mon, 31 Oct 2022 15:40:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E88C433D6;
+        Mon, 31 Oct 2022 15:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667228331;
-        bh=VaFf9tn+Bj0AffYRxXpHKMYUAVZ3jvNp9khf7/eIj24=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=m0oC/WdNyXKCfl5xqM9xBJt4vJJCJgosb4xIb2MtWYcGkD5Vl6DyhRrbydzdy8s0i
-         2WyNWIKZfbyJp0rPGezfb0vw9uNyaxXGC1OK2TNIWizYuVq/gt/q3o0Yuj9r91KS1b
-         mpRCSsjseZkDNVoTj2WCAAd3VvaN1QlHx4EFnz4wIQgTMgxW9pLnFRIPtCRRc50eps
-         9F5KEE/qW+l6JOTz5mchHA8Yp8hU3EHTNomiuRUomlK+ijrzqnukluBei5idJglt6I
-         jcJTHy/VocDhRFT9yEW1PagzyA85LOBrxUGrOCqiTN4PyqVzfeY+Ni1dFrobCcYXRN
-         G3S5Ybm76hTMw==
-Date:   Mon, 31 Oct 2022 09:58:49 -0500
+        s=k20201202; t=1667230800;
+        bh=TRH6TIzTeBtUUYfj015oHC/R+NopKv1SaiciTdGHOko=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gBpe/EbWifFcqhZ5BfRCBjri8ndaXtmIESwYRZe0ZJ/9QH9yy43OtvvIPJ84QuRsJ
+         qVblgIXNCeupWoDgfDRLD4sck8pombdDoeizoKGqhqlscyYPs1rJkUfCQG4MdNPZIQ
+         yAf5JPUuETdzsUBeVKU79ABam7BGmVbLXj20/7GmPUPjZ/M2IfEUXZFATexoA4Smaq
+         CQ6K94+0hZWszeCNqHZU7WW8Qj4zVQNZz5DTKAD5rA4KIiJuVJyWaBIznzyfE86ljD
+         FuiFCdMTQRTBI7IxLbavbOxp3k0//rn3wkSegSXlN51xFdxjfPPHNjAIQ6Aj0KX1EF
+         k/xrwa/o+K15A==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Slark Xiao <slark_xiao@163.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v2] PCI: Add vendor ID for Quectel and Cinterion
-Message-ID: <20221031145849.GA1094273@bhelgaas>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v3 0/5] PCI: Remove unnecessary <linux/of_irq.h> includes
+Date:   Mon, 31 Oct 2022 10:39:49 -0500
+Message-Id: <20221031153954.1163623-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a4b4099.3628.1842d4c7cc5.Coremail.slark_xiao@163.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,35 +73,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 05:08:18PM +0800, Slark Xiao wrote:
-> At 2022-10-29 00:06:21, "Bjorn Helgaas" <helgaas@kernel.org> wrote:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> >I think the best thing here would be two patches.  One patch would add
-> >PCI_VENDOR_ID_THALES to pci_ids.h and also add a use of it in the MHI
-> >driver.  The second patch would do the same for PCI_VENDOR_ID_QUECTEL.
-> >
-> >Then each one is logically self-contained.
->
-> I must make sure these ids are applied, then I could commit the
-> changes in MHI driver side. Otherwise it will cause build error.
->
-> So I combine QUECTEL with THALES as a single patch. Shall I separate
-> it from each other? 1 for PCI IDs, and another for MHI change. It
-> would be better, I think.
+Many host controller drivers #include <linux/of_irq.h> even though they
+don't need it.  Remove the unnecessary #includes.
 
-Make two patches:
+v2: https://lore.kernel.org/r/20221025185147.665365-1-helgaas@kernel.org/
+v1: https://lore.kernel.org/r/20221019195452.37606-1-helgaas@kernel.org/
 
-  - A single patch that adds PCI_VENDOR_ID_THALES to pci_ids.h and
-    also adds a use of it in the MHI driver.
+Changes from v2 to v3:
+  - Include <linux/irqdomain.h> explicitly in xgene-msi, which doesn't need
+    <linux/of_irq.h> itself, but relied on it to include
+    <linux/irqdomain.h>.  On x86, this was covered up by the fact that
+    <linux/msi.h> includes <asm/msi.h>, which includes <asm/irqdomain.h>,
+    which includes <linux/irqdomain.h>.  But on parisc, <asm/msi.h> is
+    actually asm-generic/msi.h, which does *not* include
+    <linux/irqdomain.h>
+  - Pick up tags from Conor Dooley and Thomas Petazzoni
 
-  - A single patch that adds PCI_VENDOR_ID_QUECTEL to pci_ids.h and
-    also adds a use of it in the MHI driver.
+Changes from v1 to v2:
+  - Include <linux/irqdomain.h> explicitly in altera-msi and microchip,
+    which don't need <linux/of_irq.h> itself, but relied on it to include
+    <linux/irqdomain.h>
+  - Include <linux/irqdomain.h> explicitly in mvebu, which needs both it
+    and <linux/of_irq.h>
 
-That way there's no possibility of build error and no need to
-coordinate patches.
+Bjorn Helgaas (5):
+  PCI: altera-msi: Include <linux/irqdomain.h> explicitly
+  PCI: microchip: Include <linux/irqdomain.h> explicitly
+  PCI: mvebu: Include <linux/irqdomain.h> explicitly
+  PCI: xgene-msi: Include <linux/irqdomain.h> explicitly
+  PCI: Remove unnecessary <linux/of_irq.h> includes
 
-Similar previous work:
+ drivers/pci/controller/cadence/pci-j721e.c   | 1 -
+ drivers/pci/controller/dwc/pci-layerscape.c  | 1 -
+ drivers/pci/controller/dwc/pcie-armada8k.c   | 1 -
+ drivers/pci/controller/dwc/pcie-tegra194.c   | 1 -
+ drivers/pci/controller/pci-mvebu.c           | 1 +
+ drivers/pci/controller/pci-v3-semi.c         | 1 -
+ drivers/pci/controller/pci-xgene-msi.c       | 2 +-
+ drivers/pci/controller/pci-xgene.c           | 1 -
+ drivers/pci/controller/pcie-altera-msi.c     | 2 +-
+ drivers/pci/controller/pcie-iproc-platform.c | 1 -
+ drivers/pci/controller/pcie-iproc.c          | 1 -
+ drivers/pci/controller/pcie-microchip-host.c | 2 +-
+ drivers/pci/controller/pcie-rockchip-host.c  | 1 -
+ drivers/pci/controller/pcie-xilinx-cpm.c     | 1 -
+ drivers/pci/controller/pcie-xilinx-nwl.c     | 1 -
+ 15 files changed, 4 insertions(+), 14 deletions(-)
 
-  https://git.kernel.org/linus/fae74feacd2d ("hisi_acc_qm: Move VF PCI device IDs to common header")
-  https://git.kernel.org/linus/d3826a95222c ("nfp: add support for NFP3800/NFP3803 PCIe devices")
-  https://git.kernel.org/linus/4fb0abfee424 ("x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and (A0h-AFh) PCI IDs")
+-- 
+2.25.1
+
