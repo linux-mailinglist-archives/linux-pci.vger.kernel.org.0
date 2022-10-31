@@ -2,102 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA0461323D
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 10:08:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 866B361349F
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 12:39:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbiJaJI5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 05:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
+        id S230194AbiJaLjd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 07:39:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiJaJI4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 05:08:56 -0400
-Received: from m13110.mail.163.com (m13110.mail.163.com [220.181.13.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4140C764F;
-        Mon, 31 Oct 2022 02:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=KeBEt
-        PRBjJu2aojXJFEa7CWPaJM5bjIAmqL0ScS+3Fg=; b=N20e9PL7PlaAHCOuU4CNt
-        ay9WbbGrMbr1m6RIhXJ5LmmWDeZCtpO966Tmty4kxC28MGrzfH/lMngN4WAHI6lh
-        Tf34KQO72Pey+By8+DXTVEiCr0TPFJKvCBYq+s63X5hlT8PagHUNXG2s0+45+Dht
-        yhiQuJ/WRHH8oJeOhPkOMc=
-Received: from slark_xiao$163.com ( [223.104.77.211] ) by
- ajax-webmail-wmsvr110 (Coremail) ; Mon, 31 Oct 2022 17:08:18 +0800 (CST)
-X-Originating-IP: [223.104.77.211]
-Date:   Mon, 31 Oct 2022 17:08:18 +0800 (CST)
-From:   "Slark Xiao" <slark_xiao@163.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        with ESMTP id S230454AbiJaLjb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 07:39:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BE9E0C5;
+        Mon, 31 Oct 2022 04:39:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8790CB815F0;
+        Mon, 31 Oct 2022 11:39:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C5AC433D6;
+        Mon, 31 Oct 2022 11:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667216366;
+        bh=HQjPeXhuMJaa8KQ0K5CAMhQSgd66kySqnVI3CnJ4el4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=m0AePBMIKMtLXG91e5QuTc7jTQQbEIBSwclsWUvc520seRK4+w16BFyc0M/yUT4Ov
+         b/K7brNnoGgy/zUu1+dLsJctx6Ao3ykO6+rp8rG8A1j5tdX7UYANxZ21ID6hMnSQME
+         X+jJ6qZrddNz1AroVY+eNQrFerJT5SUBT95SiqPhOT3BC75/5Pvwq25FQ8AZpF57b6
+         R/XbMMhR4Gh+Z2XeEJs5bV5gFhonLIh+2SiVQaRuU4gwCHBc2PpADcOyT/ziV/YWh0
+         o6IoeAzzEwDAuzIl4tS/x3BfNrXNkCjoPlJXV6oaoEx8prtMPveOBnYAIE4OpMFV04
+         aDhizHCgpVFOA==
+Date:   Mon, 31 Oct 2022 06:39:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc:     Jon Derrick <jonathan.derrick@linux.dev>,
+        Adrian Huang <ahuang12@lenovo.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v2] PCI: Add vendor ID for Quectel and Cinterion
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
- Copyright (c) 2002-2022 www.mailtech.cn 163com
-In-Reply-To: <20221028160621.GA892468@bhelgaas>
-References: <20221028160621.GA892468@bhelgaas>
-X-NTES-SC: AL_QuydBf6buEoi7iKcZekWkkcRjuo+UMC0vfgh249fPJs0pCvO6zs+WFBlBkf/+smIMRuUnze3VQBL48BfRY9zfK2EL38cInWozauHOO4WnNVx
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+Subject: [bugzilla-daemon@kernel.org: [Bug 216644] New: Host OS hangs when
+ enabling VMD in UEFI setup]
+Message-ID: <20221031113924.GA1081013@bhelgaas>
 MIME-Version: 1.0
-Message-ID: <7a4b4099.3628.1842d4c7cc5.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: bsGowAAHSwSCkF9jQzRCAA--.53186W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiGRurZFyPfKWSXAAAsJ
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CgoKCgoKCgoKCgoKCgoKCkF0IDIwMjItMTAtMjkgMDA6MDY6MjEsICJCam9ybiBIZWxnYWFzIiA8
-aGVsZ2Fhc0BrZXJuZWwub3JnPiB3cm90ZToKPk9uIEZyaSwgT2N0IDI4LCAyMDIyIGF0IDEwOjM3
-OjExQU0gKzA4MDAsIFNsYXJrIFhpYW8gd3JvdGU6Cj4+IEluIE1ISSBkcml2ZXIsIHRoZXJlIGFy
-ZSBzb21lIGNvbXBhbmllcyBwcm9kdWN0IHN0aWxsIGRvIG5vdCBoYXZlIHRoZWlyCj4+ICBvd24g
-UENJIHZlbmRvciBtYWNyby4gU28gd2UgYWRkIGl0IGhlcmUgdG8gbWFrZSB0aGUgY29kZSBuZWF0
-LiBSZWYgSUQKPj4gIGNvdWxkIGJlIGZvdW5kIGluIGxpbmsgaHR0cHM6Ly9wY2lzaWcuY29tL21l
-bWJlcnNoaXAvbWVtYmVyLWNvbXBhbmllcwo+PiAgYW5kIGh0dHBzOi8vcGNpaWRzLnNvdXJjZWZv
-cmdlLm5ldC9wY2kuaWRzIC4gVGhhbGVzIHVzZSBDaW50ZXJpb24gYXMKPj4gdGhlaXIgSU9UIG1v
-ZGVtIGNhcmQncyB0cmFkZW1hcmsuIFNvIHlvdSB3aWxsIGZpbmQgMHgxMjY5IGJlbG9uZ3MgdG8K
-Pj4gVGhhbGVzLiBBY3R1YWxseSwgQ2ludGVyaW9uIGJlbG9uZ3MgdG8gR2VtYWx0bywgYW5kIEdl
-bWFsdG8gYmVsb25ncyB0bwo+PiAgVGhhbGVzLgo+Cj5UaGVyZSBzaG91bGQgbm90IGJlIHNwYWNl
-cyBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZXNlIGxpbmVzLgo+Cj5Eb24ndCBib3RoZXIgd2l0aCB0
-aGUgc291cmNlZm9yZ2UgVVJMOyBJIGRvbid0IHRoaW5rIHRoYXQncyByZWFsbHkKPnVzZWZ1bCBo
-ZXJlLgogVGhlIHNwYWNlIGlzc3VlIHdpbGwgYmUgZml4ZWQgaW4gbmV4dCBwYXRjaC4KPgo+PiBT
-aWduZWQtb2ZmLWJ5OiBTbGFyayBYaWFvIDxzbGFya194aWFvQDE2My5jb20+Cj4+IC0tLQo+PiAg
-aW5jbHVkZS9saW51eC9wY2lfaWRzLmggfCA0ICsrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGlu
-c2VydGlvbnMoKykKPj4gCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaCBi
-L2luY2x1ZGUvbGludXgvcGNpX2lkcy5oCj4+IGluZGV4IGIzNjJkOTBlYjliMC4uOWUyYjYyODZm
-NTNmIDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaAo+PiArKysgYi9pbmNs
-dWRlL2xpbnV4L3BjaV9pZHMuaAo+PiBAQCAtMTc2NSw2ICsxNzY1LDggQEAKPj4gICNkZWZpbmUg
-UENJX1ZFTkRPUl9JRF9TQVRTQUdFTQkJMHgxMjY3Cj4+ICAjZGVmaW5lIFBDSV9ERVZJQ0VfSURf
-U0FUU0FHRU1fTklDQ1kJMHgxMDE2Cj4+ICAKPj4gKyNkZWZpbmUgUENJX1ZFTkRPUl9JRF9DSU5U
-RVJJT04JCTB4MTI2OQkvKiBDZWxsdWFyIE1vZHVsZXMqLwo+Cj5UaGlzIHNob3VsZCBpZGVudGlm
-eSB0aGUgKnZlbmRvciosIG5vdCBhIHRyYWRlbWFyayBmb3IgYSBzcGVjaWZpYwo+cHJvZHVjdCBs
-aW5lLiAgQW5kIGl0IHNob3VsZCBjb3JyZXNwb25kIHNvbWVob3cgd2l0aCB0aGUgUENJLVNJRwo+
-cmVnaXN0cmF0aW9uLiAgU28gSSB0aGluayBQQ0lfVkVORE9SX0lEX1RIQUxFUyB3b3VsZCBiZSBt
-b3JlCj5hcHByb3ByaWF0ZSBoZXJlLgo+ClllYWgsIGN1cnJlbnRseSBpdCdzIHVzZWQgYnkgSU9U
-IG1vZHVsZXMgd2hpY2ggc3VwcG9ydCBQQ0lFLiBCdXQgd2UKY2FuJ3Qga25vdyBpZiB0aGV5IHdp
-bGwgdXNlIHRoaXMgVklEIGZvciBvdGhlciBub24tSU9UIG1vZHVsZXMgcHJvZHVjdC4KVGhhbGVz
-IHdvdWxkIGJlIGJldHRlci4KCj5JIHRoaW5rIHRoZSBiZXN0IHRoaW5nIGhlcmUgd291bGQgYmUg
-dHdvIHBhdGNoZXMuICBPbmUgcGF0Y2ggd291bGQgYWRkCj5QQ0lfVkVORE9SX0lEX1RIQUxFUyB0
-byBwY2lfaWRzLmggYW5kIGFsc28gYWRkIGEgdXNlIG9mIGl0IGluIHRoZSBNSEkKPmRyaXZlci4g
-IFRoZSBzZWNvbmQgcGF0Y2ggd291bGQgZG8gdGhlIHNhbWUgZm9yIFBDSV9WRU5ET1JfSURfUVVF
-Q1RFTC4KPgo+VGhlbiBlYWNoIG9uZSBpcyBsb2dpY2FsbHkgc2VsZi1jb250YWluZWQuCkkgbXVz
-dCBtYWtlIHN1cmUgdGhlc2UgaWRzIGFyZSBhcHBsaWVkLCB0aGVuIEkgY291bGQgY29tbWl0IHRo
-ZSBjaGFuZ2VzIGluIE1ISQpkcml2ZXIgc2lkZS4gT3RoZXJ3aXNlIGl0IHdpbGwgY2F1c2UgYnVp
-bGQgZXJyb3IuClNvIEkgY29tYmluZSBRVUVDVEVMIHdpdGggVEhBTEVTIGFzIGEgc2luZ2xlIHBh
-dGNoLiBTaGFsbCBJIHNlcGFyYXRlIGl0IGZyb20KZWFjaCBvdGhlcj8gMSBmb3IgUENJIElEcywg
-YW5kIGFub3RoZXIgZm9yIE1ISSBjaGFuZ2UuIEl0IHdvdWxkIGJlIGJldHRlciwgSSB0aGluay4K
-Pgo+PiAgI2RlZmluZSBQQ0lfVkVORE9SX0lEX0VOU09OSVEJCTB4MTI3NAo+PiAgI2RlZmluZSBQ
-Q0lfREVWSUNFX0lEX0VOU09OSVFfQ1Q1ODgwCTB4NTg4MAo+PiAgI2RlZmluZSBQQ0lfREVWSUNF
-X0lEX0VOU09OSVFfRVMxMzcwCTB4NTAwMAo+PiBAQCAtMjU4NSw2ICsyNTg3LDggQEAKPj4gICNk
-ZWZpbmUgUENJX1ZFTkRPUl9JRF9URUtSQU0JCTB4MWRlMQo+PiAgI2RlZmluZSBQQ0lfREVWSUNF
-X0lEX1RFS1JBTV9EQzI5MAkweGRjMjkKPj4gIAo+PiArI2RlZmluZSBQQ0lfVkVORE9SX0lEX1FV
-RUNURUwJCTB4MWVhYwo+PiArCj4+ICAjZGVmaW5lIFBDSV9WRU5ET1JfSURfVEVIVVRJCQkweDFm
-YzkKPj4gICNkZWZpbmUgUENJX0RFVklDRV9JRF9URUhVVElfMzAwOQkweDMwMDkKPj4gICNkZWZp
-bmUgUENJX0RFVklDRV9JRF9URUhVVElfMzAxMAkweDMwMTAKPj4gLS0gCj4+IDIuMzQuMQo+PiAK
+Thanks, Adrian, for the bisection and detailed debugging!
 
+----- Forwarded message from bugzilla-daemon@kernel.org -----
+
+https://bugzilla.kernel.org/show_bug.cgi?id=216644
+
+           Summary: Host OS hangs when enabling VMD in UEFI setup
+    Kernel Version: 6.1-rc2
+        Regression: No
+
+Created attachment 303108
+  --> https://bugzilla.kernel.org/attachment.cgi?id=303108&action=edit
+OS Log (Serial Log)
+
+When enabling VMD in BIOS setup, the host OS cannot boot successfully with the
+following error message:
+
+[    8.986310] vmd 0000:64:05.5: PCI host bridge to bus 10000:00
+...
+[    9.674113] vmd 0000:64:05.5: Bound to PCI domain 10000
+...
+[   33.592638] DMAR: VT-d detected Invalidation Queue Error: Reason f
+[   33.592640] DMAR: VT-d detected Invalidation Time-out Error: SID ffff
+[   33.599853] DMAR: VT-d detected Invalidation Completion Error: SID ffff
+[   33.607339] DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
+[   33.621143] DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
+[   33.627366] DMAR: Invalidation Time-out Error (ITE) cleared
+
+
+*** Hardware Info ***
+Platform: skylake-D purley platform
+VMD: 8086:201d
+    # lspci -s 0000:64:05.5 -nn
+    0000:64:05.5 RAID bus controller [0104]: Intel Corporation Volume
+Management 
+    Device NVMe RAID Controller [8086:201d] (rev 04)
+
+
+*** Detail Info ***
+`git bisect` points the following offending patch (commit: 6aab5622296b):
+
+commit 6aab5622296b990024ee67dd7efa7d143e7558d0
+Author: Nirmal Patel <nirmal.patel@linux.intel.com>
+Date:   Tue Nov 16 15:11:36 2021 -0700
+
+    PCI: vmd: Clean up domain before enumeration
+
+    During VT-d pass-through, the VMD driver occasionally fails to
+    enumerate underlying NVMe devices when repetitive reboots are
+    performed in the guest OS. The issue can be resolved by resetting
+    VMD root ports for proper enumeration and triggering secondary bus
+    reset which will also propagate reset through downstream bridges.
+
+    Link:
+https://lore.kernel.org/r/20211116221136.85134-1-nirmal.patel@linux.intel.com
+    Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+    Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+    Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
+
+
+*** Debugging Info ***
+1. Reverting 6aab5622296b on top of 6.1-rc2 can fix the issue.
+
+2. Comment out for calling vmd_domain_reset() can also fix the issue. So, it
+looks like the function memset_io() causes the issue.
+
+static void vmd_domain_reset(struct vmd_dev *vmd)
+{
+        ...
+        for (bus = 0; bus < max_buses; bus++) {
+                for (dev = 0; dev < 32; dev++) {
+                                ...
+
+                                memset_io(base + PCI_IO_BASE, 0,
+                                          PCI_ROM_ADDRESS1 - PCI_IO_BASE);
+                        }
+                }
+        }
+}
+
+3. pci_reset_bus() returns -25 because 'slot' or 'bus->self' is NULL. 
+
+4. We have 4 disks attached to VMD:
+# nvme list
+Node                  Generic               SN                   Model         
+                          Namespace Usage                      Format          
+FW Rev
+--------------------- --------------------- --------------------
+---------------------------------------- --------- --------------------------
+---------------- --------
+/dev/nvme3n1          /dev/ng3n1            222639A46A39        
+Micron_7450_MTFDKBA960TFR                1          11.48  GB / 960.20  GB   
+512   B +  0 B   E2MU111
+/dev/nvme2n1          /dev/ng2n1            222639A46A30        
+Micron_7450_MTFDKBA960TFR                1           4.18  GB / 960.20  GB   
+512   B +  0 B   E2MU111
+/dev/nvme1n1          /dev/ng1n1            BTLJ849201CE1P0I     SSDPELKX010T8L
+                          1           1.00  TB /   1.00  TB    512   B +  0 B  
+VCV1LZ37
+/dev/nvme0n1          /dev/ng0n1            BTLJ849201BS1P0I     SSDPELKX010T8L
+                          1           1.00  TB /   1.00  TB    512   B +  0 B  
+VCV1LZ37
+
+Any thoughts? Thanks for the help.
+
+----- End forwarded message -----
