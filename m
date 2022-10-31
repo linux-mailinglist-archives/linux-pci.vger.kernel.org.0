@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57AE7613A4A
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA09613A4E
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbiJaPkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 11:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45932 "EHLO
+        id S231948AbiJaPkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 11:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231871AbiJaPkH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB662659C;
-        Mon, 31 Oct 2022 08:40:06 -0700 (PDT)
+        with ESMTP id S231889AbiJaPkK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C6311828;
+        Mon, 31 Oct 2022 08:40:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 69F25B818F0;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 24A5CB818ED;
+        Mon, 31 Oct 2022 15:40:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B1FC43141;
         Mon, 31 Oct 2022 15:40:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD48C433D6;
-        Mon, 31 Oct 2022 15:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667230804;
-        bh=Ry1yPEx/VrNVXc5mpZkvv9i5ZTht3Zoh5muiCVNjxzA=;
+        s=k20201202; t=1667230805;
+        bh=d2qwTVjIOLKmzm2jp8sYlOBb+EYG7A7QejDW//F0bVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oy/IOnLMkbQ7kxnquoU/2edARkafOXHPiIJq2OqrpQkGiZgvJexhCdpjG37prwLLg
-         NDs1zg8tIRJwDr4H2monx6M6P8WUjH2T7eQqaJdK09Xcd2VfnZuWzcImqEgbPl1epE
-         wtcqpp0KKL8gbtORGYeoBMBfhHw3ZZyLXzvEEPVY8v8P1GgOvMBS+UX3sP9ySSwaLm
-         NsOrv2PW/Mhv9f+24QK03QLBoS7u+WNhKL9A5ps0SHLGjArc22j4hUnA4LCWzgwVhf
-         yKkEneeNNyULguuHRvrB6p0UvlVwEimpyZJT6DK5dETWRXrdNtSTaeacaQ/l6qRItH
-         2vzfLen3Rxu9g==
+        b=Xx6ewcqT8jUXOJmJKlk1a/DS5oUrpS9k0H8XxYkycnfRz8fZSVPkuLBscXAB6uZg8
+         COdRhuwSrkmb8zeVOEMlaypMNnmwUDmU6YRlvwNthETWisXBy7kX/ho+YYwTFDG6By
+         klqgObmuRyn0Whg0qtZEvlTetbtwEXLN2RjoSduTg1ztMtxgTac5FIytRQY8iaAyrO
+         sr44zA32UrGTNx52JUtpzrzYsm6g8Si2Tpn9MbVxC7DSvVwyY2VuC2/QGk0DQzSdVi
+         GbIMiHBI7VYixt1UzYD8L9MX7/zn4TXWByLI5sPpKRoVF7iGkuyAgY0pDH9ciKX+HG
+         npICMhPsu3P9w==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -58,9 +58,9 @@ Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
         linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 2/5] PCI: microchip: Include <linux/irqdomain.h> explicitly
-Date:   Mon, 31 Oct 2022 10:39:51 -0500
-Message-Id: <20221031153954.1163623-3-helgaas@kernel.org>
+Subject: [PATCH v3 3/5] PCI: mvebu: Include <linux/irqdomain.h> explicitly
+Date:   Mon, 31 Oct 2022 10:39:52 -0500
+Message-Id: <20221031153954.1163623-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221031153954.1163623-1-helgaas@kernel.org>
 References: <20221031153954.1163623-1-helgaas@kernel.org>
@@ -77,32 +77,30 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-pcie-microchip-host.c uses irq_domain_add_linear() and related interfaces,
-so it needs <linux/irqdomain.h> but doesn't include it directly; it relies
-on the fact that <linux/of_irq.h> includes it.
+pci-mvebu.c uses irq_domain_add_linear() and related interfaces but relies
+on <linux/irqdomain.h> but doesn't include it directly; it relies on the
+fact that <linux/of_irq.h> includes it.
 
-But pcie-microchip-host.c *doesn't* need <linux/of_irq.h> itself.  Include
-<linux/irqdomain.h> directly to remove this implicit dependency so a future
-patch can drop <linux/of_irq.h>.
+Include <linux/irqdomain.h> directly to remove this implicit dependency.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 1 +
+ drivers/pci/controller/pci-mvebu.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 7263d175b5ad..57b2a62f52c8 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/clk.h>
- #include <linux/irqchip/chained_irq.h>
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 1ced73726a26..73db99035c2b 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/gpio.h>
+ #include <linux/init.h>
 +#include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
+ #include <linux/mbus.h>
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
 -- 
 2.25.1
 
