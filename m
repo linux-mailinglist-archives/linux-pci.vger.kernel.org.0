@@ -2,116 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9457614020
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 22:49:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C0B461401F
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 22:47:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbiJaVtJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 17:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48314 "EHLO
+        id S229668AbiJaVrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 17:47:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbiJaVtI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 17:49:08 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5435C13DD7
-        for <linux-pci@vger.kernel.org>; Mon, 31 Oct 2022 14:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667252948; x=1698788948;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eGkxWvaxKV20uZTjktHtbaON8wam2e0PKrrvX+5D3O8=;
-  b=Z66lRC78kOw5GLhJlHLN2mGpeJPBsIek200KEVvW4/eOz2O2Cyq6koiS
-   LAfyeDAyIFYXBIpikeAnH03/DxsC2BSf2MZCci6DA8zKFT9srb6riyjLg
-   N6m9Hl0oAiRMdSkAlxfy/GI31EZjMMztbcHN0SmlVAGR07d65sxmTDDaP
-   6G7USYnsU6yIb40udpbkt9Y0uJC6C9S+Rz5LsJ0BVTCPGcZrpayq3JrIr
-   pWsaTti/IIaWxqC+vppsVIkeGTn63zJZB2ImZriA2OKdnzRu1FwCRLJ0H
-   e3dT80/L/gsoZQjsUOsHhXmy6hHL2+/pdrw4ZLVkdcywcLErliOF7OpMb
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="307732431"
-X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
-   d="scan'208";a="307732431"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 14:49:08 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="584802331"
-X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
-   d="scan'208";a="584802331"
-Received: from francisco-wc.ch.intel.com ([10.2.230.36])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 14:49:07 -0700
-From:   francisco.munoz.ruiz@linux.intel.com
-To:     helgaas@kernel.org
-Cc:     lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
-        linux-pci@vger.kernel.org,
-        Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>
-Subject: [PATCH V2] PCI: vmd: Fix secondary bus reset for Intel bridges
-Date:   Mon, 31 Oct 2022 14:45:01 -0700
-Message-Id: <20221031214501.28279-1-francisco.munoz.ruiz@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221024204534.GA589134@bhelgaas>
-References: <20221024204534.GA589134@bhelgaas>
+        with ESMTP id S229515AbiJaVrS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 17:47:18 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E02140BA
+        for <linux-pci@vger.kernel.org>; Mon, 31 Oct 2022 14:47:17 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-3321c2a8d4cso120331757b3.5
+        for <linux-pci@vger.kernel.org>; Mon, 31 Oct 2022 14:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xzOjqeyFvqhS705oPAWJ0GddjV0BZAQlCXe8zauSjnY=;
+        b=WAbGR+86/wS/wQn7NrfO9yBuZ+LEYr45wjJW9kgI4iX5MZNea4xPjGtAJaGK3+cn3c
+         SmSPMD8A0+vNkwDFroz0sXZ8z9omzzXaaxX2l4NT5hVlKiBficeb09H9Jnk2DIex2HFS
+         WaZxiMcXacucddwHPOR5jnmrayrlc7eWEhvqaeh08KyqbPjj8Vr95h/idSDU6TWp82jX
+         mDkoPTBCJi52hQ8d/6nKlbv3P2VMMm97OTg4oqQM7IfMvW8r/EeXnA9qR2WiD+N4j31g
+         6506QrUb65Fg7gf+Nqu0r73/K3ho38WNv1Exws4/S2nQT98RpCFmQfI/fIugsGhobUzR
+         mJXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xzOjqeyFvqhS705oPAWJ0GddjV0BZAQlCXe8zauSjnY=;
+        b=RoVHR85z6146PRM4kuEl9CujmZGm5HVw72FkHCrtuCgA+wYqHnaqG7fVynj56aM2bw
+         XUG3evarQ8F6qXqkRWhZkbhQ3XHS4LVtcgLJ9vZEUt/bk2xPBRVrqcRcq+lRD8+L1CYT
+         nO2JeyqUFx35BXGZi4x0fkCYq0bpgxhzZz65dSteFW3d+wo3JkVfIE8fHMJMNYGvVljj
+         8L3h8nNB+Hew3dAplm0BgKO6pQcdf3CrP/OotiawlK8R8UbFf2YJzbKQCEuQW7MKr5Jr
+         ZnUuXT/nJ8hhnPsSIINNSKdoZl5/hw5pUAkwYSFVs6yWSbnvb4H/B69XZPVsiq4EtPdh
+         J77A==
+X-Gm-Message-State: ACrzQf2wowTKLcXQX8BFdassLrvHfN3Mf00bKk/22nZiN0owJRKF0+BE
+        7/r1iESM3ihQCIsHSiGdB9aCWYiEa6ZOhi6Rfwai1Q==
+X-Google-Smtp-Source: AMsMyM7WB8VP+s71qqDXHCNxNVqxxxMFfsqDw3nJpW8eHHM9Hbbq60q6Hu6nkcqqaQfIZF+eDstm2AASBcHNwD09E48=
+X-Received: by 2002:a81:7804:0:b0:369:1074:e2b with SMTP id
+ t4-20020a817804000000b0036910740e2bmr15334789ywc.127.1667252836424; Mon, 31
+ Oct 2022 14:47:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221029211312.929862-1-dmitry.baryshkov@linaro.org>
+ <20221029211312.929862-2-dmitry.baryshkov@linaro.org> <20221031214055.GA3613285-robh@kernel.org>
+In-Reply-To: <20221031214055.GA3613285-robh@kernel.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 1 Nov 2022 00:47:05 +0300
+Message-ID: <CAA8EJpqt+UvWHwd90Cdm3iCi2sbxbwbC3ADY6PW053Tw8r94VA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] dt-bindings: PCI: qcom: Add sm8350 to bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+On Tue, 1 Nov 2022 at 00:40, Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Oct 30, 2022 at 12:13:06AM +0300, Dmitry Baryshkov wrote:
+> > Add bindings for two PCIe hosts on SM8350 platform. The only difference
+> > between them is in the aggre0 clock, which warrants the oneOf clause for
+> > the clocks properties.
+> >
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > index 54f07852d279..55bf5958ef79 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > @@ -32,6 +32,7 @@ properties:
+> >        - qcom,pcie-sdm845
+> >        - qcom,pcie-sm8150
+> >        - qcom,pcie-sm8250
+> > +      - qcom,pcie-sm8350
+> >        - qcom,pcie-sm8450-pcie0
+> >        - qcom,pcie-sm8450-pcie1
+> >        - qcom,pcie-ipq6018
+> > @@ -185,6 +186,7 @@ allOf:
+> >                - qcom,pcie-sc8180x
+> >                - qcom,pcie-sc8280xp
+> >                - qcom,pcie-sm8250
+> > +              - qcom,pcie-sm8350
+> >                - qcom,pcie-sm8450-pcie0
+> >                - qcom,pcie-sm8450-pcie1
+> >      then:
+> > @@ -540,6 +542,57 @@ allOf:
+> >            items:
+> >              - const: pci # PCIe core reset
+> >
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - qcom,pcie-sm8350
+> > +    then:
+> > +      oneOf:
+> > +          # Unfortunately the "optional" ref clock is used in the middle of the list
+> > +        - properties:
+> > +            clocks:
+> > +              maxItems: 13
+> > +            clock-names:
+> > +              items:
+> > +                - const: pipe # PIPE clock
+> > +                - const: pipe_mux # PIPE MUX
+> > +                - const: phy_pipe # PIPE output clock
+> > +                - const: ref # REFERENCE clock
+> > +                - const: aux # Auxiliary clock
+> > +                - const: cfg # Configuration clock
+> > +                - const: bus_master # Master AXI clock
+> > +                - const: bus_slave # Slave AXI clock
+> > +                - const: slave_q2a # Slave Q2A clock
+> > +                - const: tbu # PCIe TBU clock
+> > +                - const: ddrss_sf_tbu # PCIe SF TBU clock
+> > +                - const: aggre0 # Aggre NoC PCIe0 AXI clock
+>
+> 'enum: [ aggre0, aggre1 ]' and 'minItems: 12' would eliminate the 2nd
+> case. There's a implicit requirement that string names are unique (by
+> default).
 
-The reset was never applied in the current implementation because Intel
-Bridges owned by VMD are parentless. Internally, pci_reset_bus applies
-a reset to the parent of the pci device supplied as argument, but in this
-case it failed because there wasn't a parent.
+Wouldn't it also allow a single 'aggre0' string?
 
-In more detail, this change allows the VMD driver to enumerate NVMe devices
-in pass-through configurations when host reboots are performed. Commit id
-“6aab5622296b990024ee67dd7efa7d143e7558d0” attempted to fix this, but
-later we discovered that the code inside pci_reset_bus wasn’t triggering
-secondary bus resets.  Therefore, we updated the parameters passed to
-it, and now NVMe SSDs attached to VMD bridges are properly enumerated in
-VT-d pass-through scenarios.
+>
+> > +                - const: aggre1 # Aggre NoC PCIe1 AXI clock
+> > +        - properties:
+> > +            clocks:
+> > +              maxItems: 12
+> > +            clock-names:
+> > +              items:
+> > +                - const: pipe # PIPE clock
+> > +                - const: pipe_mux # PIPE MUX
+> > +                - const: phy_pipe # PIPE output clock
+> > +                - const: ref # REFERENCE clock
+> > +                - const: aux # Auxiliary clock
+> > +                - const: cfg # Configuration clock
+> > +                - const: bus_master # Master AXI clock
+> > +                - const: bus_slave # Slave AXI clock
+> > +                - const: slave_q2a # Slave Q2A clock
+> > +                - const: tbu # PCIe TBU clock
+> > +                - const: ddrss_sf_tbu # PCIe SF TBU clock
+> > +                - const: aggre1 # Aggre NoC PCIe1 AXI clock
+> > +      properties:
+> > +        resets:
+> > +          maxItems: 1
+> > +        reset-names:
+> > +          items:
+> > +            - const: pci # PCIe core reset
+> > +
+> >    - if:
+> >        properties:
+> >          compatible:
+> > @@ -670,6 +723,7 @@ allOf:
+> >                - qcom,pcie-sdm845
+> >                - qcom,pcie-sm8150
+> >                - qcom,pcie-sm8250
+> > +              - qcom,pcie-sm8350
+> >                - qcom,pcie-sm8450-pcie0
+> >                - qcom,pcie-sm8450-pcie1
+> >      then:
+> > --
+> > 2.35.1
+> >
+> >
 
-Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
-Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
----
- drivers/pci/controller/vmd.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index e06e9f4fc50f..34d6ba675440 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -859,8 +859,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 
- 	pci_scan_child_bus(vmd->bus);
- 	vmd_domain_reset(vmd);
--	list_for_each_entry(child, &vmd->bus->children, node)
--		pci_reset_bus(child->self);
-+
-+	list_for_each_entry(child, &vmd->bus->children, node) {
-+		if (!list_empty(&child->devices)) {
-+			pci_reset_bus(list_first_entry(&child->devices,
-+						       struct pci_dev,
-+						       bus_list));
-+			break;
-+		}
-+	}
-+
- 	pci_assign_unassigned_bus_resources(vmd->bus);
- 
- 	/*
+
 -- 
-2.25.1
-
-Hi Bjorn,
-
-I updated the commit message with more details. Hopefully, this will 
-clarify its purpose.
-
-Thanks,
-Francisco.
+With best wishes
+Dmitry
