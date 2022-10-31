@@ -2,270 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08FC2613A56
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0A0613A5C
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:41:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231966AbiJaPk2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 11:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46010 "EHLO
+        id S231921AbiJaPlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 11:41:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231901AbiJaPkO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF6F11A01;
-        Mon, 31 Oct 2022 08:40:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DA148B818F0;
-        Mon, 31 Oct 2022 15:40:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D751C433C1;
-        Mon, 31 Oct 2022 15:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667230809;
-        bh=E9tojarincoSMS24j3RHNxidQvPWn4XpnyUgXJA5+30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQqq4InZ/kYs4ThGgsePZUNLFgiadoZAmvKwXPjPZCqbAmSZ5ILQUOu04WkFWvYow
-         wdgjXat438oY8ksyzjLPYAbxiasKDpBSkttyteCNtBIN2jVkeZoJPvOMuSjthmWeo3
-         iWOzmqdrPGZNobCrFIlW3sVqtb8l6Qyjjd3sWPYSaPz2X+zt3oSkqeolEhSiLkrYo6
-         6R6SV9hICUKD71OBUs9qeQ++MWWETe5rSLqlyVRJFjw7K4Ek6YRD6GEhyBQRrcC3gx
-         7PbkF50iWH9mr8ZKrI2lCjD1AB53yrRGkDS1ywJQ/TBg93UDjSvqOb8061YMdfMCrG
-         iuZBwGEUBwDng==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 5/5] PCI: Remove unnecessary <linux/of_irq.h> includes
-Date:   Mon, 31 Oct 2022 10:39:54 -0500
-Message-Id: <20221031153954.1163623-6-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221031153954.1163623-1-helgaas@kernel.org>
-References: <20221031153954.1163623-1-helgaas@kernel.org>
+        with ESMTP id S231962AbiJaPlD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:41:03 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4676598;
+        Mon, 31 Oct 2022 08:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667230850; x=1698766850;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vsRtz59r9+hBD/aRtnV2XsZe5ltc86zFnduMHYgvoqU=;
+  b=jnZGJ/ou2d8Aa6BUdQroHFxQTTbDudOHV3OsAdmlWdO8+5CodKlFzauc
+   6aGW9bWC8dzMlG0uuGUjzsLl/MoDgyo78VXv91Sg9NNk3MDFeLLwHfb2G
+   Nlyvl9DLlq6i33rGeKM/YvCX0eHU62Hm/g1qRtUZCYL4XWXldu5cY72ak
+   MSHf8EgVsk59jlypiglIhhcXWnzynw+vtVzswcEYus/DlIavVm9z84Z4u
+   1u+l6xtQmvGXmhXSV7t1mqoR/wGpXSoYiAK1Kk73+RZVoFBWiTvr/dYTI
+   FL69HZ++H3mfk7+A6GpzjvxXZwWWcKpmKPkna5tUp8pYjFnfHVlyaScK1
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="395242924"
+X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
+   d="scan'208";a="395242924"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 08:40:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="878774354"
+X-IronPort-AV: E=Sophos;i="5.95,228,1661842800"; 
+   d="scan'208";a="878774354"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2022 08:40:49 -0700
+Received: from maheshgo-mobl.amr.corp.intel.com (unknown [10.255.229.142])
+        by linux.intel.com (Postfix) with ESMTP id 491C6580BDF;
+        Mon, 31 Oct 2022 08:40:49 -0700 (PDT)
+Message-ID: <ddd1c452d8843fa137bc294b04ee5195967e4b67.camel@linux.intel.com>
+Subject: Re: [PATCH V7 3/4] PCI: vmd: Add vmd_device_data
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Christoph Hellwig <hch@infradead.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, michael.a.bottini@intel.com,
+        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 31 Oct 2022 08:40:49 -0700
+In-Reply-To: <Y19zcYqxk7LcGQfG@infradead.org>
+References: <20221025004411.2910026-4-david.e.box@linux.intel.com>
+         <20221028191308.GA903098@bhelgaas> <Y19zcYqxk7LcGQfG@infradead.org>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, 2022-10-31 at 00:04 -0700, Christoph Hellwig wrote:
+> On Fri, Oct 28, 2022 at 02:13:08PM -0500, Bjorn Helgaas wrote:
+> > It looks like these devices come in families where several device IDs
+> > share the same features.  I think this would be more readable if you
+> > defined each family outside this table and simply referenced the
+> > family here.  E.g., you could do something like:
+> > 
+> >   static struct vmd_device_data vmd_v1 = {
+> >     .features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+> > 		VMD_FEAT_HAS_BUS_RESTRICTIONS |
+> > 		VMD_FEAT_OFFSET_FIRST_VECTOR,
+> >   };
+> > 
+> >   {PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+> >     .driver_data = (kernel_ulong_t) &vmd_v1,
+> > 
+> > Then you can add VMD_FEAT_BIOS_PM_QUIRK and the .ltr value in one place
+> > instead of repeating it a half dozen times.
+> 
+> I wonder why we need the ltr field at all.  For those that set it
+> is always the same value, so it could just be a quirk flag to set it.
 
-Many host controller drivers #include <linux/of_irq.h> even though they
-don't need it.  Remove the unnecessary #includes.
+Yeah, this makes sense particularly since this isn't intended as a permanent
+fix. I'll get rid of it.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/cadence/pci-j721e.c   | 1 -
- drivers/pci/controller/dwc/pci-layerscape.c  | 1 -
- drivers/pci/controller/dwc/pcie-armada8k.c   | 1 -
- drivers/pci/controller/dwc/pcie-tegra194.c   | 1 -
- drivers/pci/controller/pci-v3-semi.c         | 1 -
- drivers/pci/controller/pci-xgene-msi.c       | 1 -
- drivers/pci/controller/pci-xgene.c           | 1 -
- drivers/pci/controller/pcie-altera-msi.c     | 1 -
- drivers/pci/controller/pcie-iproc-platform.c | 1 -
- drivers/pci/controller/pcie-iproc.c          | 1 -
- drivers/pci/controller/pcie-microchip-host.c | 1 -
- drivers/pci/controller/pcie-rockchip-host.c  | 1 -
- drivers/pci/controller/pcie-xilinx-cpm.c     | 1 -
- drivers/pci/controller/pcie-xilinx-nwl.c     | 1 -
- 14 files changed, 14 deletions(-)
+> 
+> Tat being said I think thegrouping makes a lot of sense, but I'd just
+> do it with a #define for the set of common quirk flags.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index a82f845cc4b5..cc83a8925ce0 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -15,7 +15,6 @@
- #include <linux/mfd/syscon.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 879b8692f96a..ed5fb492fe08 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -13,7 +13,6 @@
- #include <linux/init.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
--#include <linux/of_irq.h>
- #include <linux/of_address.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index dc469ef8e99b..5c999e15c357 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -21,7 +21,6 @@
- #include <linux/platform_device.h>
- #include <linux/resource.h>
- #include <linux/of_pci.h>
--#include <linux/of_irq.h>
- 
- #include "pcie-designware.h"
- 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 1b6b437823d2..02d78a12b6e7 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -21,7 +21,6 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
--#include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index 154a5398633c..784fcf35599c 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -22,7 +22,6 @@
- #include <linux/kernel.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-index bacb14e558ee..d7987b281f79 100644
---- a/drivers/pci/controller/pci-xgene-msi.c
-+++ b/drivers/pci/controller/pci-xgene-msi.c
-@@ -11,7 +11,6 @@
- #include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/msi.h>
--#include <linux/of_irq.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index 549d3bd6d1c2..887b4941ff32 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -14,7 +14,6 @@
- #include <linux/init.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/pci-acpi.h>
-diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-index 4366e042e98b..65e8a20cc442 100644
---- a/drivers/pci/controller/pcie-altera-msi.c
-+++ b/drivers/pci/controller/pcie-altera-msi.c
-@@ -14,7 +14,6 @@
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
--#include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-index 538115246c79..4142a73e611d 100644
---- a/drivers/pci/controller/pcie-iproc-platform.c
-+++ b/drivers/pci/controller/pcie-iproc-platform.c
-@@ -12,7 +12,6 @@
- #include <linux/platform_device.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
--#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
- 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 2519201b0e51..83029bdfd884 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -18,7 +18,6 @@
- #include <linux/platform_device.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
--#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
- 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 57b2a62f52c8..0ebf7015e9af 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -13,7 +13,6 @@
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
--#include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 7352b5ff8d35..c96c0f454570 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -28,7 +28,6 @@
- #include <linux/of_device.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
--#include <linux/of_irq.h>
- #include <linux/pci.h>
- #include <linux/pci_ids.h>
- #include <linux/phy/phy.h>
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index e4ab48041eb6..4a787a941674 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -16,7 +16,6 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
--#include <linux/of_irq.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/pci-ecam.h>
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 40d070e54ad2..f0271b6c6f8d 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -17,7 +17,6 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
--#include <linux/of_irq.h>
- #include <linux/pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
--- 
-2.25.1
+Works for me. I'll create a VMD_FEATS_CLIENT group but I'll keep the ltr quirk
+separate since future client systems won't be using it.
+
+David
 
