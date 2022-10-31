@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6AA613A44
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57AE7613A4A
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Oct 2022 16:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231713AbiJaPkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 11:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
+        id S231915AbiJaPkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 11:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbiJaPkF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD88659E;
-        Mon, 31 Oct 2022 08:40:04 -0700 (PDT)
+        with ESMTP id S231871AbiJaPkH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 11:40:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB662659C;
+        Mon, 31 Oct 2022 08:40:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6C7DBB818EE;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 69F25B818F0;
+        Mon, 31 Oct 2022 15:40:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD48C433D6;
         Mon, 31 Oct 2022 15:40:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0BEC433C1;
-        Mon, 31 Oct 2022 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667230802;
-        bh=w401ZqDLSQ8ZKux9B2AAv7FrlhU6ZkoTx88TnOOAwyI=;
+        s=k20201202; t=1667230804;
+        bh=Ry1yPEx/VrNVXc5mpZkvv9i5ZTht3Zoh5muiCVNjxzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RtGAXtHNEmUI43QINAf/8bggmgt+lk2tn1SsHUkQCBFC+kZhhYjO1Mi/RbC4KG8AV
-         +5qQjvfsJ9S/l6cQV9IkifW+lL8Z7boAMRmHArljQE62/kYaoF5LZIskX6342JcPCk
-         pQuvJf7CG5T/e03DNuLgyngik9ijeO4JsY+IiuCGRDMH3Z+uhRuT0YvshZ8UTjD5YG
-         nqOVl5st593g5shoVfxRsH72Y67K2r2bq46MxAWg5qG168GWCkvOAoVokF6uILY0bG
-         MWj7+TvKxH6JZPhO60qE7ZdeLMm6vbjM+sg8CU7Qs5eEhqdp1Kq99G98/6ega3Kp8E
-         8igJhZfDXDzGQ==
+        b=oy/IOnLMkbQ7kxnquoU/2edARkafOXHPiIJq2OqrpQkGiZgvJexhCdpjG37prwLLg
+         NDs1zg8tIRJwDr4H2monx6M6P8WUjH2T7eQqaJdK09Xcd2VfnZuWzcImqEgbPl1epE
+         wtcqpp0KKL8gbtORGYeoBMBfhHw3ZZyLXzvEEPVY8v8P1GgOvMBS+UX3sP9ySSwaLm
+         NsOrv2PW/Mhv9f+24QK03QLBoS7u+WNhKL9A5ps0SHLGjArc22j4hUnA4LCWzgwVhf
+         yKkEneeNNyULguuHRvrB6p0UvlVwEimpyZJT6DK5dETWRXrdNtSTaeacaQ/l6qRItH
+         2vzfLen3Rxu9g==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -58,9 +58,9 @@ Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
         linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 1/5] PCI: altera-msi: Include <linux/irqdomain.h> explicitly
-Date:   Mon, 31 Oct 2022 10:39:50 -0500
-Message-Id: <20221031153954.1163623-2-helgaas@kernel.org>
+Subject: [PATCH v3 2/5] PCI: microchip: Include <linux/irqdomain.h> explicitly
+Date:   Mon, 31 Oct 2022 10:39:51 -0500
+Message-Id: <20221031153954.1163623-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221031153954.1163623-1-helgaas@kernel.org>
 References: <20221031153954.1163623-1-helgaas@kernel.org>
@@ -77,31 +77,32 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-pcie-altera-msi.c uses irq_domain_add_linear() and related interfaces, so
-it needs <linux/irqdomain.h> but doesn't include it directly; it relies on
-the fact that <linux/of_irq.h> includes it.
+pcie-microchip-host.c uses irq_domain_add_linear() and related interfaces,
+so it needs <linux/irqdomain.h> but doesn't include it directly; it relies
+on the fact that <linux/of_irq.h> includes it.
 
-But pcie-altera-msi.c *doesn't* need <linux/of_irq.h> itself.  Include
+But pcie-microchip-host.c *doesn't* need <linux/of_irq.h> itself.  Include
 <linux/irqdomain.h> directly to remove this implicit dependency so a future
 patch can drop <linux/of_irq.h>.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/pcie-altera-msi.c | 1 +
+ drivers/pci/controller/pcie-microchip-host.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-index 7b1d3ebc34ec..4366e042e98b 100644
---- a/drivers/pci/controller/pcie-altera-msi.c
-+++ b/drivers/pci/controller/pcie-altera-msi.c
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 7263d175b5ad..57b2a62f52c8 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
 @@ -9,6 +9,7 @@
  
- #include <linux/interrupt.h>
+ #include <linux/clk.h>
  #include <linux/irqchip/chained_irq.h>
 +#include <linux/irqdomain.h>
- #include <linux/init.h>
  #include <linux/module.h>
  #include <linux/msi.h>
+ #include <linux/of_address.h>
 -- 
 2.25.1
 
