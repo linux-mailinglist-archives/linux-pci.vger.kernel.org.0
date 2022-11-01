@@ -2,113 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E121614502
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 08:25:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5DFE614537
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 08:47:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbiKAHZ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 03:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
+        id S229819AbiKAHr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 03:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbiKAHZY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 03:25:24 -0400
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2B214D2C
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 00:25:22 -0700 (PDT)
-X-ASG-Debug-ID: 1667287519-1eb14e7e6464290001-0c9NHn
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id ANfyOyV56KqKhGxX (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 01 Nov 2022 15:25:19 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Tue, 1 Nov
- 2022 15:25:19 +0800
-Received: from [10.32.56.18] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Tue, 1 Nov
- 2022 15:25:17 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <9429d525-5e06-95a2-3340-f6e2b6009f76@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.56.18
-Date:   Tue, 1 Nov 2022 15:25:17 +0800
+        with ESMTP id S229534AbiKAHr4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 03:47:56 -0400
+Received: from smtp.smtpout.orange.fr (smtp-11.smtpout.orange.fr [80.12.242.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201FF17E2B
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 00:47:54 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id pm00o8nsx42kJpm00oEoLN; Tue, 01 Nov 2022 08:47:53 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 01 Nov 2022 08:47:53 +0100
+X-ME-IP: 86.243.100.34
+Message-ID: <67fdf851-961d-2f4b-591f-4939e1937e68@wanadoo.fr>
+Date:   Tue, 1 Nov 2022 08:47:51 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH 0/5] Parse the PCIE AER structure and set to relevant
- registers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH 0/5] Parse the PCIE AER structure and set to relevant
- registers
-CC:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, <rafael@kernel.org>,
-        <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
-        <bp@alien8.de>, <robert.moore@intel.com>, <ying.huang@intel.com>,
-        <rdunlap@infradead.org>, <bhelgaas@google.com>,
-        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devel@acpica.org>,
-        <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>,
-        <ErosZhang@zhaoxin.com>
-References: <20221028151512.GA889708@bhelgaas>
-From:   LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-In-Reply-To: <20221028151512.GA889708@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH RFC V2 1/3] of: dynamic: Add of_create_node() and
+ of_destroy_node()
+To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, frowand.list@gmail.com, helgaas@kernel.org
+Cc:     clement.leger@bootlin.com, max.zhen@amd.com, sonal.santan@amd.com,
+        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
+        trix@redhat.com
+References: <1665598440-47410-1-git-send-email-lizhi.hou@amd.com>
+ <1665598440-47410-2-git-send-email-lizhi.hou@amd.com>
+Content-Language: fr
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <1665598440-47410-2-git-send-email-lizhi.hou@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [125.76.214.122]
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1667287519
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1356
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.4904 1.0000 0.0000
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101826
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Le 12/10/2022 à 20:13, Lizhi Hou a écrit :
+> of_create_node() creates device node and apply to base tree dynamically.
+> The parent device node and full name are required for creating the node.
+> And the caller can also provide a property array for the node.
+> 
+> Inside this function, it creates a changeset. Then the new device node
+> and properties are added to the changeset and applied to base tree. The
+> pointer of this changeset is saved in device node private data.
+> 
+> of_destroy_node() removes the node created by of_create_node() from the
+> base tree and free it. It gets the changeset pointer from device node
+> private data and call of_changeset_destroy() to free everything.
+> 
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
+> Signed-off-by: Max Zhen <max.zhen@amd.com>
+> Signed-off-by: Brian Xu <brian.xu@amd.com>
+> ---
+>   drivers/of/dynamic.c | 80 ++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/of.h   |  4 +++
+>   2 files changed, 84 insertions(+)
+> 
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index cd3821a6444f..eca28b723706 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -934,3 +934,83 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(of_changeset_action);
+> +
+> +/**
+> + * of_create_node - Dynamically create a device node and apply it to base tree
+> + *
+> + * @parent: Pointer to parent device node
+> + * @full_name: Full name of device node
+> + * @props: Pointer to property array
+> + *
+> + * Return: Pointer to the created device node or NULL in case of an error.
+> + */
+> +struct device_node *of_create_node(struct device_node *parent,
+> +				   const char *full_name,
+> +				   struct property *props)
+> +{
+> +	struct of_changeset *cset;
+> +	struct property *new_pp;
+> +	struct device_node *np;
+> +	int ret, i;
+> +
+> +	cset = kzalloc(sizeof(*cset), GFP_KERNEL);
 
+Hi,
 
-在 2022/10/28 23:15, Bjorn Helgaas 写道:
-> On Fri, Oct 28, 2022 at 07:19:25PM +0800, LeoLiuoc wrote:
->> 在 2022/10/27 12:17, Sathyanarayanan Kuppuswamy 写道:
->>> On 10/26/22 8:14 PM, LeoLiu-oc wrote:
-> 
->>> Can you add spec reference?
->>>
->> Please refer to Section 18.3.2 ACPI Error Source of acpi spec v6.3. Links to
->> the online versions of ACPI Spec 6.3 is
->> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/18_ACPI_Platform_Error_Interfaces/error-source-discovery.html#acpi-error-source.
->>
->> Section 18.3.2.4 describes PCI Express Root Port AER Structure, section
->> 18.3.2.5 describes PCI Express Device AER Structure, section 18.3.2.6
->> describes PCI Express/PCI-X Bridge AER Structure.
-> 
-> Thanks.  It's OK to have the spec references in the email thread, but
-> the real point is that they should be in the commit log and, when it
-> makes sense, in code comments.
-> 
-> Cite the most recent spec version when you can.  In this case, I think
-> it is ACPI r6.5.
-> 
-> Personally I don't really care for URL references because they tend to
-> get stale over time as websites are reorganized and domains change.
-> Something like "ACPI r6.5, sec 18.3.2.4" is unambiguous and will
-> remain usable forever.
-> 
-> Bjorn
+kmalloc() would be enough. of_changeset_init() below already calls 
+memset().
 
-Got it. Thanks for your advice. This will be modified in the next version.
+> +	if (!cset)
+> +		return NULL;
+> +
+> +	of_changeset_init(cset);
+> +
+> +	np = __of_node_dup(NULL, full_name);
+> +	if (!np)
+> +		goto failed;
 
-Thanks
-leoliu-oc
+'cset' seems to be leaking if __of_node_dup() fails.
+
+> +	np->parent = parent;
+> +
+> +	ret = of_changeset_attach_node(cset, np);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	if (props) {
+> +		for (i = 0; props[i].name; i++) {
+> +			new_pp = __of_prop_dup(&props[i], GFP_KERNEL);
+> +			if (!new_pp)
+> +				goto failed;
+> +			ret = of_changeset_add_property(cset, np, new_pp);
+> +			if (ret) {
+> +				kfree(new_pp->name);
+> +				kfree(new_pp->value);
+> +				kfree(new_pp);
+> +				goto failed;
+> +			}
+> +		}
+> +	}
+> +
+> +	ret = of_changeset_apply(cset);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	np->data = cset;
+> +
+> +	return np;
+> +
+> +failed:
+> +	of_changeset_destroy(cset);
+> +	if (np)
+> +		of_node_put(np);
+> +
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * of_destroy_node - Destroy a dynamically created device node
+> + *
+> + * @np: Pointer to dynamically created device node
+> + *
+> + */
+> +void of_destroy_node(struct device_node *np)
+> +{
+> +	struct of_changeset *cset;
+> +
+> +	cset = (struct of_changeset *)np->data;
+> +	of_changeset_destroy(cset);
+> +	of_node_put(np);
+> +	kfree(cset);
+> +}
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 766d002bddb9..493ef957c1a8 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -1475,6 +1475,10 @@ extern int of_changeset_revert(struct of_changeset *ocs);
+>   extern int of_changeset_action(struct of_changeset *ocs,
+>   		unsigned long action, struct device_node *np,
+>   		struct property *prop);
+> +struct device_node *of_create_node(struct device_node *parent,
+> +				   const char *full_name,
+> +				   struct property *props);
+> +void of_destroy_node(struct device_node *np);
+>   
+>   static inline int of_changeset_attach_node(struct of_changeset *ocs,
+>   		struct device_node *np)
+
