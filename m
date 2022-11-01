@@ -2,114 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 740DB614592
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 09:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 825BD614591
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 09:18:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbiKAIUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 04:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        id S229789AbiKAISw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 04:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiKAIUn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 04:20:43 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AC918394;
-        Tue,  1 Nov 2022 01:20:42 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B81A1A03D2;
-        Tue,  1 Nov 2022 09:20:41 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F38281A03FE;
-        Tue,  1 Nov 2022 09:20:40 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id A0624180222A;
-        Tue,  1 Nov 2022 16:20:39 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v1] PCI: imx6: Set MSI enable bit of RC in resume
-Date:   Tue,  1 Nov 2022 15:59:55 +0800
-Message-Id: <1667289595-12440-1-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229767AbiKAISv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 04:18:51 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1358913E3F
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 01:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1667290730; x=1698826730;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VxmOCBHt2Q4/KSgdaoSHMuS+Z0XKovciEuh7B9eatWE=;
+  b=Bmxey7znivWlSHF59l/QQiQ9f6+wAa0LVsg4obe36eCSz81Tx0PROAmb
+   GVlllr4mj0ipt3EM6fQFg10ItoIP1Xivnp+Ho/j29mbqZnJeZy3BCoxS3
+   vLD4dNob3wcWGcbGpPxtbDWwwfnRdUzqf8pjeoPjQ0iqi+yU0TgF0Z5fu
+   HaLZDar+QQ+lxT9gyUjmo2VWWMA0J6NM6520zVlWmiz/DPUgFfgUwQOqm
+   V/3T2x8DXs9eC97iaL6O5jOR0UiaO27XgTDR9UnsUYPsm4eQA+bYafJho
+   pJeQJv3uKYo2lPy2j9b8QAEnAXeHN7k/a8IrBf5UDagTW8v37hOkT2PtJ
+   w==;
+X-IronPort-AV: E=Sophos;i="5.95,230,1661810400"; 
+   d="scan'208";a="27082943"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 01 Nov 2022 09:18:48 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 01 Nov 2022 09:18:48 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 01 Nov 2022 09:18:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1667290728; x=1698826728;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VxmOCBHt2Q4/KSgdaoSHMuS+Z0XKovciEuh7B9eatWE=;
+  b=J2siX6eU4ySCCaqZN3Vr581xX4T6spebMbMA4cZ+MhAQvJAdhM56hmM0
+   jkmuQ8ar9G5AQ+/3fQ1G98/IdqBRwFJvl/q1KxFEJeoQ1xCXYkz+DFmu/
+   TbtcjexWriajy2BOvNjhd2F9pFWyThZ1lQRy4Ebd8JUIOKg6GTQ00ReJL
+   Cm0PwuJ+M81BjKKpIZoPIgPf0LX08/wGdVKB/qci37U923KO3o9Wrw3LY
+   VmLlkc+V6njN5JjVWZgMmqAYTqwQt7LTDE3VYWLelCebWtrbfjhWaqfCD
+   Nt9+QQvMZ/mv/rAUCCCKpMtJ+xR07LVyYIrsGO1Cx1bQEg+Bq/672Nk1a
+   A==;
+X-IronPort-AV: E=Sophos;i="5.95,230,1661810400"; 
+   d="scan'208";a="27082942"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 01 Nov 2022 09:18:47 +0100
+Received: from steina-w.tq-net.de (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id A21EE280056;
+        Tue,  1 Nov 2022 09:18:47 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 1/1] PCI: dwc: reduce log severity level if no link came up
+Date:   Tue,  1 Nov 2022 09:18:44 +0100
+Message-Id: <20221101081844.265264-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The MSI Enable bit controls delivery of MSI interrupts from components
-below the Root Port. This bit might lost during the suspend, should be
-re-configured during resume.
+Commit 14c4ad125cf9 ("PCI: dwc: Log link speed and width if it comes up")
+changed the severity from info to error. If no device is attached this
+error always is recorded which is not an error in this case.
 
-Encapsulate the MSI enable set into a standalone function, and invoke it
-in both probe and resume.
-
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Fixes: 14c4ad125cf9 ("PCI: dwc: Log link speed and width if it comes up")
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 2616585ca5f8..dba15546075f 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1041,6 +1041,21 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
- 	usleep_range(1000, 10000);
- }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 9e4d96e5a3f5a..432aead68d1fd 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -448,7 +448,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+ 	}
  
-+static void pci_imx_set_msi_en(struct dw_pcie *pci)
-+{
-+	u8 offset;
-+	u16 val;
-+
-+	if (pci_msi_enabled()) {
-+		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-+		dw_pcie_dbi_ro_wr_en(pci);
-+		val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
-+		val |= PCI_MSI_FLAGS_ENABLE;
-+		dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
-+		dw_pcie_dbi_ro_wr_dis(pci);
-+	}
-+}
-+
- static int imx6_pcie_suspend_noirq(struct device *dev)
- {
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
-@@ -1073,6 +1088,7 @@ static int imx6_pcie_resume_noirq(struct device *dev)
- 	if (imx6_pcie->link_is_up)
- 		imx6_pcie_start_link(imx6_pcie->pci);
+ 	if (retries >= LINK_WAIT_MAX_RETRIES) {
+-		dev_err(pci->dev, "Phy link never came up\n");
++		dev_info(pci->dev, "Phy link never came up\n");
+ 		return -ETIMEDOUT;
+ 	}
  
-+	pci_imx_set_msi_en(imx6_pcie->pci);
- 	return 0;
- }
- 
-@@ -1090,7 +1106,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	struct resource *dbi_base;
- 	struct device_node *node = dev->of_node;
- 	int ret;
--	u16 val;
- 
- 	imx6_pcie = devm_kzalloc(dev, sizeof(*imx6_pcie), GFP_KERNEL);
- 	if (!imx6_pcie)
-@@ -1282,12 +1297,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	if (pci_msi_enabled()) {
--		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
--		val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
--		val |= PCI_MSI_FLAGS_ENABLE;
--		dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
--	}
-+	pci_imx_set_msi_en(pci);
- 
- 	return 0;
- }
 -- 
-2.25.1
+2.34.1
 
