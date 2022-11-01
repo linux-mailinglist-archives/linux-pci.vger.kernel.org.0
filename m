@@ -2,142 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 727B361421E
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 01:08:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAE326142FD
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 02:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbiKAAIq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Oct 2022 20:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48024 "EHLO
+        id S229505AbiKAB7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Oct 2022 21:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229727AbiKAAI1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 20:08:27 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2055.outbound.protection.outlook.com [40.107.94.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8501274C;
-        Mon, 31 Oct 2022 17:08:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FIEUudF4H6aybkCaPBXVQ4c+08dSIVtzLYDzJLxJ+HMS4KqBMsIp5ZcXQ7qGW3ijyv4l447a4OmWL7KAH9r6SOILHEVvaL1Hr+x/svhveMRT1YfgPD4ILxPTaozVr/NNd3PN6+Z06STeDDr5rn0KvwPgEss20YeoFRJmN/ys1jVVDUK09hddRI0DSNwN2wlO9C2GL+6wjrzY9jhYA6bYonN858waB0KD/YSO7qAk09A3n9hAok6PrxA9T65X8UDv9ue1KyyirQtVUztaDV/j3yPyYEsBUFjmBP4ROcs5KNqNrmEAf+R7US3yM6MLTEOPbBU4R+LkqgYjF8IqI7bVtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9cWJzDMZpOrsQ51GHHzkjNef53mdTyoqh33A6NJGnwk=;
- b=W3fBqhma14MVvnIgaDMeZYJy9aGPb6rtkWetgBEHG1wcfCAhGNuwijpWdaRaf8u7arXqOMhjRItNSq9fdZZkokPkFwFfaCcQjPsMmmSmgWqcNerIIyq7ouTx2+/+SCsY+R/vxwmxkHH00gJPXG0g1ulnQ55KuRPnfK6/WRUgPt8Lk9FkBpnLO9IvIDFPZVHDwiuswYLBaV61DPELnj6bO8Lm3QcZCqhy07OzrzCyZB8dSERWh0XCu27Xw2uMylM9oYyeCAQrzdHh/IgMBdDb6u1dbH2GerGv24dCnup1J/nN34uo7GgHifCg1WSVT8KhWVE1TH5WcZ2fVYxSknglzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9cWJzDMZpOrsQ51GHHzkjNef53mdTyoqh33A6NJGnwk=;
- b=D5ghAgsuCNTWvzoiRkyRc46sjgzDinAJbasd+w0NuEWp28PTGIrBSKIVpF6Xh9HQeXvRrosM3Ftt34HcqOw5udcnGIWWW0xgqWBAyx1lEK2/qrKdWC7OjYxQgxjKYAuC23csCMrVzp2+pKW14pmnIpO2kXfF5jrqN7dWnCQyUss=
-Received: from MW4PR04CA0216.namprd04.prod.outlook.com (2603:10b6:303:87::11)
- by PH8PR12MB6673.namprd12.prod.outlook.com (2603:10b6:510:1c0::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Tue, 1 Nov
- 2022 00:08:24 +0000
-Received: from CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:87:cafe::2c) by MW4PR04CA0216.outlook.office365.com
- (2603:10b6:303:87::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19 via Frontend
- Transport; Tue, 1 Nov 2022 00:08:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT032.mail.protection.outlook.com (10.13.174.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5769.14 via Frontend Transport; Tue, 1 Nov 2022 00:08:24 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 31 Oct
- 2022 19:08:21 -0500
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <oohall@gmail.com>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Kuppuswamy Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>,
-        "Smita Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH 2/2] PCI:pciehp: Clear 10-bit tags unconditionally on a hot-plug event
-Date:   Tue, 1 Nov 2022 00:07:19 +0000
-Message-ID: <20221101000719.36828-3-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221101000719.36828-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20221101000719.36828-1-Smita.KoralahalliChannabasappa@amd.com>
+        with ESMTP id S229475AbiKAB7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Oct 2022 21:59:34 -0400
+Received: from m12-11.163.com (m12-11.163.com [220.181.12.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DA417C0D;
+        Mon, 31 Oct 2022 18:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=N0hM1
+        nAyAcqMRYO7veUovn/zmY6ZVwxa+Voc4ePVpJI=; b=IYAMurcCVuXtOuUl63xR5
+        kHW1ymWFPAyu2WW1rHRe4sznEJAGjEV18jCrgVqI4Fz4nWpePH3QsrqvuycjlHRc
+        P1azNnpe3w7hYH+yXSxDLvX22eBaSULt+De6bDjccVFWGoJPyYlTRacFSK9HwqYo
+        Vc5qJwGN99zEyrT+NkHNwo=
+Received: from jbd-ThinkPad-X1-Nano-Gen-1.. (unknown [223.104.68.52])
+        by smtp7 (Coremail) with SMTP id C8CowABnLfJlfWBjwnq9PA--.32038S2;
+        Tue, 01 Nov 2022 09:59:02 +0800 (CST)
+From:   Slark Xiao <slark_xiao@163.com>
+To:     mani@kernel.org, quic_hemantk@quicinc.com, bhelgaas@google.com,
+        loic.poulain@linaro.org
+Cc:     dnlplm@gmail.com, yonglin.tan@outlook.com, mhi@lists.linux.dev,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Slark Xiao <slark_xiao@163.com>
+Subject: [PATCH v3] PCI: Add vendor ID for THALES
+Date:   Tue,  1 Nov 2022 09:58:58 +0800
+Message-Id: <20221101015858.6777-1-slark_xiao@163.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT032:EE_|PH8PR12MB6673:EE_
-X-MS-Office365-Filtering-Correlation-Id: 637601dc-b3de-4580-8048-08dabb9d3199
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: icIqI6oc6nOSotqGltCC/htx2628iZsOKWXGyd84Yv3yttJ38dNdPhYmK4yw22oXVIJGGr+3ydRSCe8VSQLX5FFQdmWbLkLwP2GoQYl0XLhUzlbS5vGP3++DBxxx03BWF+f7Zn18fo880/E6dByzxNM3gB+CIlOqQeDvDRpkEDKCnAF5Ba8YnxUsmDYkPjvL4iBKbLTuTW5snBgbmmhlX618Zc/fP6szFGImBp7DdQZTEcNGTkpf5j3s4BJf8YCT5q3tryGCgCYgPk+jgBJtVpXOfIrH0vOZKtYiA++WFq9O2JpVQMqtaFuN3hf8sMQmrJhnmkfS6EnFyzrLKwkgzn4dA1AODtpSkwtV4G6ZB0yH0CzLswa5gEgdFJXHBk7eIVi6S1Z2mTO5yu9rp6huj8Y0twPKo3fk6MtSNDamf2/WR5Dh3IFvufgBiRTawfkixI1PIcWBzaLeEXQzruuPlaE494uqM6J+8kmXs8r5zE+hoUeg+8V3tPcGdp/jZpBLNax5b93Z/SOl9Th6yLMRSmZlMb2xo5OkjItw/3k+JDbqvs4Mj3cRpNl5DVXIuP9sat+sXNGa3LvTOzZlLkwUPkP3ZLij7uDrzqS4AAsEuGvu/7VxVNfadQbQg3DvjKTVTCP6PDtBN0PIUIUlvb31RPMYlx5+n7vsVskLCepkIU36+v+e7wGo5kqwl/v6M5ksC3505xATUK4IJokrQjWd8rfMjgNOnpebYnjKszwENNxPamahLYyEvYMAQRz/CsOgkq8m54IinVEHn6qoTAyzkqJw0T43QmUGTentU6BmmCE=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(136003)(376002)(39860400002)(451199015)(36840700001)(40470700004)(46966006)(40480700001)(478600001)(54906003)(70586007)(316002)(70206006)(110136005)(86362001)(7696005)(4326008)(8676002)(426003)(47076005)(82310400005)(2906002)(336012)(36860700001)(26005)(40460700003)(41300700001)(356005)(81166007)(1076003)(16526019)(186003)(2616005)(82740400003)(83380400001)(8936002)(36756003)(5660300002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2022 00:08:24.1187
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 637601dc-b3de-4580-8048-08dabb9d3199
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6673
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: C8CowABnLfJlfWBjwnq9PA--.32038S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KrWDWr45uFyDWF1rAw4DXFb_yoW5Jr4xpF
+        s0krW0yF4kJF4Ut3yvyF9ruF95Aa1DCFy5Kwn3Kw1F9F4Dta1Fgrn7ur4YvFyakayvqrWa
+        qF1Du3yqgayqyaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEuc_UUUUUU=
+X-Originating-IP: [223.104.68.52]
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/xtbCdQ+sZGBbF-yaewAAsD
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Clear 10-bit tags unconditionally as there is no guarantee that the next
-device inserted will support this feature.
+In MHI driver, there are some companies' product still do not have their
+own PCI vendor macro. So we add it here to make the code neat. Ref ID
+could be found in link https://pcisig.com/membership/member-companies.
+We must clear that CINTERION belongs to THALES in case confusing user.
+There are some descriptions about that in below link:
+https://www.thalesgroup.com/en/markets/digital-identity-and-security/iot/iot-connectivity/products
 
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
 ---
- drivers/pci/pcie/dpc.c        | 3 ++-
- include/uapi/linux/pci_regs.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+v3: Separate different vendors into different patch, and change macro
+from CINTERION to THALES.
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index e422876f51ad..8e02a32134ab 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -331,7 +331,8 @@ static void pciehp_handle_surprise_removal(struct pci_dev *pdev)
- 	 * and any newly added component may not be an ARI device.
- 	 */
- 	pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
--				   (PCI_EXP_DEVCTL2_ARI | PCI_EXP_DEVCTL2_ATOMIC_REQ));
-+				   (PCI_EXP_DEVCTL2_ARI | PCI_EXP_DEVCTL2_ATOMIC_REQ |
-+				    PCI_EXP_DEVCTL2_TAG_REQ_EN));
+v2: Update vendor ID to the right location sorted by numeric value.
+---
+ drivers/bus/mhi/host/pci_generic.c | 8 ++++----
+ include/linux/pci_ids.h            | 2 ++
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+index caa4ce28cf9e..3ad39f5ac63b 100644
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
+@@ -583,16 +583,16 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0d9),
+ 		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx65_info },
+ 	/* MV31-W (Cinterion) */
+-	{ PCI_DEVICE(0x1269, 0x00b3),
++	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00b3),
+ 		.driver_data = (kernel_ulong_t) &mhi_mv31_info },
+ 	/* MV31-W (Cinterion), based on new baseline */
+-	{ PCI_DEVICE(0x1269, 0x00b4),
++	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00b4),
+ 		.driver_data = (kernel_ulong_t) &mhi_mv31_info },
+ 	/* MV32-WA (Cinterion) */
+-	{ PCI_DEVICE(0x1269, 0x00ba),
++	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00ba),
+ 		.driver_data = (kernel_ulong_t) &mhi_mv32_info },
+ 	/* MV32-WB (Cinterion) */
+-	{ PCI_DEVICE(0x1269, 0x00bb),
++	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00bb),
+ 		.driver_data = (kernel_ulong_t) &mhi_mv32_info },
+ 	{  }
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index b362d90eb9b0..298c8cae66ff 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1765,6 +1765,8 @@
+ #define PCI_VENDOR_ID_SATSAGEM		0x1267
+ #define PCI_DEVICE_ID_SATSAGEM_NICCY	0x1016
  
- 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
- 			      PCI_EXP_DPC_STATUS_TRIGGER);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 57b8e2ffb1dd..65e1075b7db1 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -668,6 +668,7 @@
- #define  PCI_EXP_DEVCTL2_IDO_REQ_EN	0x0100	/* Allow IDO for requests */
- #define  PCI_EXP_DEVCTL2_IDO_CMP_EN	0x0200	/* Allow IDO for completions */
- #define  PCI_EXP_DEVCTL2_LTR_EN		0x0400	/* Enable LTR mechanism */
-+#define  PCI_EXP_DEVCTL2_TAG_REQ_EN	0x1000  /* Allow 10 Tags for Requester */
- #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
- #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
- #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
++#define PCI_VENDOR_ID_THALES		0x1269
++
+ #define PCI_VENDOR_ID_ENSONIQ		0x1274
+ #define PCI_DEVICE_ID_ENSONIQ_CT5880	0x5880
+ #define PCI_DEVICE_ID_ENSONIQ_ES1370	0x5000
 -- 
-2.17.1
+2.34.1
 
