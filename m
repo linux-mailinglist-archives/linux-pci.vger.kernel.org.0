@@ -2,186 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5DFE614537
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 08:47:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 740DB614592
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 09:20:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbiKAHr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 03:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
+        id S229542AbiKAIUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 04:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbiKAHr4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 03:47:56 -0400
-Received: from smtp.smtpout.orange.fr (smtp-11.smtpout.orange.fr [80.12.242.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201FF17E2B
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 00:47:54 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.100.34])
-        by smtp.orange.fr with ESMTPA
-        id pm00o8nsx42kJpm00oEoLN; Tue, 01 Nov 2022 08:47:53 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 01 Nov 2022 08:47:53 +0100
-X-ME-IP: 86.243.100.34
-Message-ID: <67fdf851-961d-2f4b-591f-4939e1937e68@wanadoo.fr>
-Date:   Tue, 1 Nov 2022 08:47:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH RFC V2 1/3] of: dynamic: Add of_create_node() and
- of_destroy_node()
-To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, frowand.list@gmail.com, helgaas@kernel.org
-Cc:     clement.leger@bootlin.com, max.zhen@amd.com, sonal.santan@amd.com,
-        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
-        trix@redhat.com
-References: <1665598440-47410-1-git-send-email-lizhi.hou@amd.com>
- <1665598440-47410-2-git-send-email-lizhi.hou@amd.com>
-Content-Language: fr
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <1665598440-47410-2-git-send-email-lizhi.hou@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229462AbiKAIUn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 04:20:43 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AC918394;
+        Tue,  1 Nov 2022 01:20:42 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B81A1A03D2;
+        Tue,  1 Nov 2022 09:20:41 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F38281A03FE;
+        Tue,  1 Nov 2022 09:20:40 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id A0624180222A;
+        Tue,  1 Nov 2022 16:20:39 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: [PATCH v1] PCI: imx6: Set MSI enable bit of RC in resume
+Date:   Tue,  1 Nov 2022 15:59:55 +0800
+Message-Id: <1667289595-12440-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le 12/10/2022 à 20:13, Lizhi Hou a écrit :
-> of_create_node() creates device node and apply to base tree dynamically.
-> The parent device node and full name are required for creating the node.
-> And the caller can also provide a property array for the node.
-> 
-> Inside this function, it creates a changeset. Then the new device node
-> and properties are added to the changeset and applied to base tree. The
-> pointer of this changeset is saved in device node private data.
-> 
-> of_destroy_node() removes the node created by of_create_node() from the
-> base tree and free it. It gets the changeset pointer from device node
-> private data and call of_changeset_destroy() to free everything.
-> 
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-> Signed-off-by: Max Zhen <max.zhen@amd.com>
-> Signed-off-by: Brian Xu <brian.xu@amd.com>
-> ---
->   drivers/of/dynamic.c | 80 ++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/of.h   |  4 +++
->   2 files changed, 84 insertions(+)
-> 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index cd3821a6444f..eca28b723706 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -934,3 +934,83 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(of_changeset_action);
-> +
-> +/**
-> + * of_create_node - Dynamically create a device node and apply it to base tree
-> + *
-> + * @parent: Pointer to parent device node
-> + * @full_name: Full name of device node
-> + * @props: Pointer to property array
-> + *
-> + * Return: Pointer to the created device node or NULL in case of an error.
-> + */
-> +struct device_node *of_create_node(struct device_node *parent,
-> +				   const char *full_name,
-> +				   struct property *props)
-> +{
-> +	struct of_changeset *cset;
-> +	struct property *new_pp;
-> +	struct device_node *np;
-> +	int ret, i;
-> +
-> +	cset = kzalloc(sizeof(*cset), GFP_KERNEL);
+The MSI Enable bit controls delivery of MSI interrupts from components
+below the Root Port. This bit might lost during the suspend, should be
+re-configured during resume.
 
-Hi,
+Encapsulate the MSI enable set into a standalone function, and invoke it
+in both probe and resume.
 
-kmalloc() would be enough. of_changeset_init() below already calls 
-memset().
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-> +	if (!cset)
-> +		return NULL;
-> +
-> +	of_changeset_init(cset);
-> +
-> +	np = __of_node_dup(NULL, full_name);
-> +	if (!np)
-> +		goto failed;
-
-'cset' seems to be leaking if __of_node_dup() fails.
-
-> +	np->parent = parent;
-> +
-> +	ret = of_changeset_attach_node(cset, np);
-> +	if (ret)
-> +		goto failed;
-> +
-> +	if (props) {
-> +		for (i = 0; props[i].name; i++) {
-> +			new_pp = __of_prop_dup(&props[i], GFP_KERNEL);
-> +			if (!new_pp)
-> +				goto failed;
-> +			ret = of_changeset_add_property(cset, np, new_pp);
-> +			if (ret) {
-> +				kfree(new_pp->name);
-> +				kfree(new_pp->value);
-> +				kfree(new_pp);
-> +				goto failed;
-> +			}
-> +		}
-> +	}
-> +
-> +	ret = of_changeset_apply(cset);
-> +	if (ret)
-> +		goto failed;
-> +
-> +	np->data = cset;
-> +
-> +	return np;
-> +
-> +failed:
-> +	of_changeset_destroy(cset);
-> +	if (np)
-> +		of_node_put(np);
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * of_destroy_node - Destroy a dynamically created device node
-> + *
-> + * @np: Pointer to dynamically created device node
-> + *
-> + */
-> +void of_destroy_node(struct device_node *np)
-> +{
-> +	struct of_changeset *cset;
-> +
-> +	cset = (struct of_changeset *)np->data;
-> +	of_changeset_destroy(cset);
-> +	of_node_put(np);
-> +	kfree(cset);
-> +}
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 766d002bddb9..493ef957c1a8 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -1475,6 +1475,10 @@ extern int of_changeset_revert(struct of_changeset *ocs);
->   extern int of_changeset_action(struct of_changeset *ocs,
->   		unsigned long action, struct device_node *np,
->   		struct property *prop);
-> +struct device_node *of_create_node(struct device_node *parent,
-> +				   const char *full_name,
-> +				   struct property *props);
-> +void of_destroy_node(struct device_node *np);
->   
->   static inline int of_changeset_attach_node(struct of_changeset *ocs,
->   		struct device_node *np)
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 2616585ca5f8..dba15546075f 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1041,6 +1041,21 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
+ 	usleep_range(1000, 10000);
+ }
+ 
++static void pci_imx_set_msi_en(struct dw_pcie *pci)
++{
++	u8 offset;
++	u16 val;
++
++	if (pci_msi_enabled()) {
++		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
++		dw_pcie_dbi_ro_wr_en(pci);
++		val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
++		val |= PCI_MSI_FLAGS_ENABLE;
++		dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
++		dw_pcie_dbi_ro_wr_dis(pci);
++	}
++}
++
+ static int imx6_pcie_suspend_noirq(struct device *dev)
+ {
+ 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
+@@ -1073,6 +1088,7 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+ 	if (imx6_pcie->link_is_up)
+ 		imx6_pcie_start_link(imx6_pcie->pci);
+ 
++	pci_imx_set_msi_en(imx6_pcie->pci);
+ 	return 0;
+ }
+ 
+@@ -1090,7 +1106,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	struct resource *dbi_base;
+ 	struct device_node *node = dev->of_node;
+ 	int ret;
+-	u16 val;
+ 
+ 	imx6_pcie = devm_kzalloc(dev, sizeof(*imx6_pcie), GFP_KERNEL);
+ 	if (!imx6_pcie)
+@@ -1282,12 +1297,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (pci_msi_enabled()) {
+-		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+-		val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
+-		val |= PCI_MSI_FLAGS_ENABLE;
+-		dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
+-	}
++	pci_imx_set_msi_en(pci);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
