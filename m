@@ -2,44 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4809F6146F7
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 10:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCBFD614750
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 10:57:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbiKAJlY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 05:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        id S229452AbiKAJ5k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 05:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230347AbiKAJkT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 05:40:19 -0400
+        with ESMTP id S230458AbiKAJ5i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 05:57:38 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4774919288
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 02:40:06 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682EA193D9
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 02:57:37 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1opnka-0007Kh-Ma; Tue, 01 Nov 2022 10:40:04 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        id 1opo1X-0001zj-NH; Tue, 01 Nov 2022 10:57:35 +0100
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1opnka-0003Bi-D9; Tue, 01 Nov 2022 10:40:04 +0100
-Date:   Tue, 1 Nov 2022 10:40:04 +0100
+        id 1opo1X-001eHO-JE; Tue, 01 Nov 2022 10:57:34 +0100
+Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1opo1V-001qVr-W2; Tue, 01 Nov 2022 10:57:33 +0100
 From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] PCI/sysfs: Fix double free in error path
-Message-ID: <20221101094004.GD9130@pengutronix.de>
-References: <20221007065618.2169880-1-s.hauer@pengutronix.de>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH v2] PCI: imx6: Initialize PHY before deasserting core reset
+Date:   Tue,  1 Nov 2022 10:57:14 +0100
+Message-Id: <20221101095714.440001-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221007065618.2169880-1-s.hauer@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: sha@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pci@vger.kernel.org
@@ -51,58 +54,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+When the PHY is the reference clock provider then it must be initialized
+and powered on before the reset on the client is deasserted, otherwise
+the link will never come up. The order was changed in cf236e0c0d59.
+Restore the correct order to make the driver work again on boards where
+the PHY provides the reference clock. This also changes the order for
+boards where the Soc is the PHY reference clock divider, but this
+shouldn't do any harm.
 
-On Fri, Oct 07, 2022 at 08:56:18AM +0200, Sascha Hauer wrote:
-> When pci_create_attr() fails then pci_remove_resource_files() is called
-> which will iterate over the res_attr[_wc] arrays and frees every non
-> NULL entry. To avoid a double free here we have to set the failed entry
-> to NULL in pci_create_attr() when freeing it.
-> 
-> Fixes: b562ec8f74e4 ("PCI: Don't leak memory if sysfs_create_bin_file() fails")
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: <stable@vger.kernel.org>
-> ---
->  drivers/pci/pci-sysfs.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+Fixes: cf236e0c0d59 ("PCI: imx6: Do not hide PHY driver callbacks and refine the error handling")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Tested-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
 
-Any input to this one? There's this long unfixed race condition
-described here:
+Notes:
+    Changes since v1:
+    - Change subject
+    - s/phy/PHY/
+    - Add explanation that the order is also changed for boards where the
+      SoC is the PHY reference clock provider
 
-https://patchwork.kernel.org/project/linux-pci/patch/20200716110423.xtfyb3n6tn5ixedh@pali/#23547255
+ drivers/pci/controller/dwc/pci-imx6.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-And this patch at least prevents my system from crashing when this race
-condition occurs.
-
-Sascha
-
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index fc804e08e3cb5..a07381d46ddae 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1196,8 +1196,13 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
->  	res_attr->size = pci_resource_len(pdev, num);
->  	res_attr->private = (void *)(unsigned long)num;
->  	retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
-> -	if (retval)
-> +	if (retval) {
-> +		if (write_combine)
-> +			pdev->res_attr_wc[num] = NULL;
-> +		else
-> +			pdev->res_attr[num] = NULL;
->  		kfree(res_attr);
-> +	}
->  
->  	return retval;
->  }
-> -- 
-> 2.30.2
-> 
-> 
-
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 2616585ca5f8a..1dde5c579edc8 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -952,12 +952,6 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
+ 		}
+ 	}
+ 
+-	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
+-	if (ret < 0) {
+-		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
+-		goto err_phy_off;
+-	}
+-
+ 	if (imx6_pcie->phy) {
+ 		ret = phy_power_on(imx6_pcie->phy);
+ 		if (ret) {
+@@ -965,6 +959,13 @@ static int imx6_pcie_host_init(struct dw_pcie_rp *pp)
+ 			goto err_phy_off;
+ 		}
+ 	}
++
++	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
++	if (ret < 0) {
++		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
++		goto err_phy_off;
++	}
++
+ 	imx6_setup_phy_mpll(imx6_pcie);
+ 
+ 	return 0;
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.30.2
+
