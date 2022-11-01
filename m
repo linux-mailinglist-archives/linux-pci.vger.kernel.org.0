@@ -2,81 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84AD96145E6
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 09:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0BEE61460F
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 09:55:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbiKAIpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 04:45:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        id S229905AbiKAIzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 04:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbiKAIpC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 04:45:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E50514D2C
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 01:45:02 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1opmt4-000898-5T; Tue, 01 Nov 2022 09:44:46 +0100
-Message-ID: <ae0fd778eb31416eedb248e2cd4faef576174937.camel@pengutronix.de>
-Subject: Re: [PATCH v1] soc: imx: imx8mp-blk-ctrl: Add PCIe SYSPLL
- configurations
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     marex@denx.de, tharvey@gateworks.com, vkoul@kernel.org,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        alexander.stein@ew.tq-group.com, richard.leitner@linux.dev,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Date:   Tue, 01 Nov 2022 09:44:41 +0100
-In-Reply-To: <20221029084514.GT125525@dragon>
-References: <1666590189-1364-1-git-send-email-hongxing.zhu@nxp.com>
-         <20221029084514.GT125525@dragon>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S229865AbiKAIzJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 04:55:09 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9BB17E26
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 01:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1667292907; x=1698828907;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=K+x2Ofw5qdZUuBP0BAOiF748sLcTlo52/7bG8uS2Gcw=;
+  b=KiCfWYyRgbPcA6RGL+36D253x8g3se9cATJH2hVL35UvfuDF8JRpSdCM
+   ZcB+kXEjG3gzPCyI+6I+Dj8A4oYFJ7mHttYG5B5gpscxXR8WFYTm2hsqF
+   fWLHaZIH1tnRcTeS3yU+fWH9jbarZOyIH8iHX+ZiJkk2Sj4QNoWmZoF/m
+   C/n70LD7i5L5hMUbZzzOADaWQR2uQzJgtY8j9+ObACZ1v0qVJXyuksJHg
+   KHUK6b8iekiRDgCU72oX6lYx3PKYENJCEFmgScpkLR+XyCveouA21wbS4
+   DFKoScCOztkqV3h0jIYH4Yl9SeoRMl03XykOkP9acTNMsSaXLprvwndcY
+   A==;
+X-IronPort-AV: E=Sophos;i="5.95,230,1661810400"; 
+   d="scan'208";a="27083240"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 01 Nov 2022 09:55:05 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 01 Nov 2022 09:55:05 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 01 Nov 2022 09:55:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1667292905; x=1698828905;
+  h=from:to:cc:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding:subject;
+  bh=K+x2Ofw5qdZUuBP0BAOiF748sLcTlo52/7bG8uS2Gcw=;
+  b=TdIsQVuz/KkkvLh9cLdEYW6i979A2h1TJwUugwSDyL8OBIsH+BeVcr5h
+   kFFMI4wEcTAYiajuj/HQjHCZttH8Aa8/mQq/eWN1SLfSXbR/BnUZz7vYt
+   7WC4tEXIxgTohP6jAzrOn71d+Bm5zB4J2lzRNqbLu+j7Kn2kDxrrmxagK
+   PeZdHs6UduAAc4XOAklpDpLGffazCT7H75IfvxUWnyBzOvCgRiYUfw/eB
+   Yd5GoZqkZNxFoRK9zvPYNampOsw/aZbI181foxuV3MDr5KNGAq5q5vn7o
+   w/4c7GhaE2n34Y2zHeRXddWskX5pSQUOj9zKbR13Fa0l8VDONl4dFpbsf
+   A==;
+X-IronPort-AV: E=Sophos;i="5.95,230,1661810400"; 
+   d="scan'208";a="27083239"
+Subject: Re: Re: [PATCH 1/1] PCI: dwc: reduce log severity level if no link came up
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 01 Nov 2022 09:55:05 +0100
+Received: from steina-w.localnet (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 125FC280056;
+        Tue,  1 Nov 2022 09:55:04 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org
+Date:   Tue, 01 Nov 2022 09:55:03 +0100
+Message-ID: <5874911.lOV4Wx5bFT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <41c536dd-99c4-9fa5-39cc-2aea5b5e015b@nvidia.com>
+References: <20221101081844.265264-1-alexander.stein@ew.tq-group.com> <41c536dd-99c4-9fa5-39cc-2aea5b5e015b@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Shawn, Richard,
+Hi Vidya,
 
-Am Samstag, dem 29.10.2022 um 16:45 +0800 schrieb Shawn Guo:
-> On Mon, Oct 24, 2022 at 01:43:09PM +0800, Richard Zhu wrote:
-> > Add PCIe SYSPLL configurations, thus the internal SYSPLL can be used as
-> > i.MX8MP PCIe reference clock.
-> > 
-> > The following properties of PHY dts node should be changed accordingly.
-> >   - Set 'fsl,refclk-pad-mode' as '<IMX8_PCIE_REFCLK_PAD_OUTPUT>'.
-> >   - Change 'clocks' to '<&clk IMX8MP_CLK_HSIO_ROOT>'.
-> > 
-> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Am Dienstag, 1. November 2022, 09:27:50 CET schrieb Vidya Sagar:
+> Hi Alexander,
+> Thanks for the patch, but, we already have a patch for it here
 > 
-> Applied, thanks!
+> https://patchwork.kernel.org/project/linux-pci/patch/20220913101237.4337-1-v
+> idyas@nvidia.com/
+> 
+> and discussion is going on there.
 
-Sorry for the late reply, but I'm not really happy with the fact that
-the PLL is now unconditionally enabled, even though it is only needed
-when there is no external reference clock source.
-I fear that this will be hard to correct later on as the DT abstraction
-is wrong, as IMX8MP_CLK_HSIO_ROOT is NOT the reference clock for the
-PHY, but the PLL generated clock, which isn't properly exposed with
-this series.
+Ah, I wasn't aware of that. Thanks for the link and sorry for the noise.
 
-I'm not happy to see this going in in the current state and if not too
-late would like to ask Shawn to remove it from the tree again.
+Thanks,
+Alexander
 
-Regards,
-Lucas
+> Thanks,
+> Vidya Sagar
+> 
+> On 11/1/2022 1:48 PM, Alexander Stein wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > Commit 14c4ad125cf9 ("PCI: dwc: Log link speed and width if it comes up")
+> > changed the severity from info to error. If no device is attached this
+> > error always is recorded which is not an error in this case.
+> > 
+> > Fixes: 14c4ad125cf9 ("PCI: dwc: Log link speed and width if it comes up")
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > ---
+> > 
+> >   drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > b/drivers/pci/controller/dwc/pcie-designware.c index
+> > 9e4d96e5a3f5a..432aead68d1fd 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -448,7 +448,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > 
+> >          }
+> >          
+> >          if (retries >= LINK_WAIT_MAX_RETRIES) {
+> > 
+> > -               dev_err(pci->dev, "Phy link never came up\n");
+> > +               dev_info(pci->dev, "Phy link never came up\n");
+> > 
+> >                  return -ETIMEDOUT;
+> >          
+> >          }
+> > 
+> > --
+> > 2.34.1
+
+
+
 
