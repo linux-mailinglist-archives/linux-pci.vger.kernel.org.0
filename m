@@ -2,52 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DDE16146B0
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 10:32:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4809F6146F7
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 10:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbiKAJcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 05:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
+        id S230470AbiKAJlY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 05:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbiKAJcM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 05:32:12 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Nov 2022 02:32:11 PDT
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D38FE18E37
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 02:32:11 -0700 (PDT)
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 01 Nov 2022 18:31:08 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 6115C2059027;
-        Tue,  1 Nov 2022 18:31:08 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 1 Nov 2022 18:31:08 +0900
-Received: from [10.212.156.238] (unknown [10.212.156.238])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 051EAB62AE;
-        Tue,  1 Nov 2022 18:31:07 +0900 (JST)
-Subject: Re: [PATCH v3] PCI: pci-epf-test: Register notifier if only
- core_init_notifier is enabled
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Om Prakash Singh <omp@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221028170647.GA898435@bhelgaas>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <0faa0138-ae2b-42e0-d378-665527f0b660@socionext.com>
-Date:   Tue, 1 Nov 2022 18:31:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        with ESMTP id S230347AbiKAJkT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 05:40:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4774919288
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 02:40:06 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1opnka-0007Kh-Ma; Tue, 01 Nov 2022 10:40:04 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1opnka-0003Bi-D9; Tue, 01 Nov 2022 10:40:04 +0100
+Date:   Tue, 1 Nov 2022 10:40:04 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Fix double free in error path
+Message-ID: <20221101094004.GD9130@pengutronix.de>
+References: <20221007065618.2169880-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20221028170647.GA898435@bhelgaas>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221007065618.2169880-1-s.hauer@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,57 +53,56 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-On 2022/10/29 2:06, Bjorn Helgaas wrote:
-> On Thu, Aug 25, 2022 at 06:01:01PM +0900, Kunihiko Hayashi wrote:
->> Need to register pci_epf_test_notifier function event if only
->> core_init_notifier is enabled.
->>
->> Fixes: 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer core
-> initialization")
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> Acked-by: Om Prakash Singh <omp@nvidia.com>
->> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> This patch is a part of series "PCI: endpoint: Fix core_init_notifier
-> feature".
->> The rest of the patches have been withdrawn.
->>
->> Changes since v2:
->> - Add Acked-by lines
->>
->> Changes since v1:
->> - Add Acked-by lines
->>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
-> b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index 36b1801a061b..55283d2379a6 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -979,7 +979,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   	if (ret)
->>   		epf_test->dma_supported = false;
->>   
->> -	if (linkup_notifier) {
->> +	if (linkup_notifier || core_init_notifier) {
->>   		epf->nb.notifier_call = pci_epf_test_notifier;
->>   		pci_epc_register_notifier(epc, &epf->nb);
+On Fri, Oct 07, 2022 at 08:56:18AM +0200, Sascha Hauer wrote:
+> When pci_create_attr() fails then pci_remove_resource_files() is called
+> which will iterate over the res_attr[_wc] arrays and frees every non
+> NULL entry. To avoid a double free here we have to set the failed entry
+> to NULL in pci_create_attr() when freeing it.
 > 
-> Why does pci_epc_register_notifier() even exist?  It's not used at all
-> except for this test code.
+> Fixes: b562ec8f74e4 ("PCI: Don't leak memory if sysfs_create_bin_file() fails")
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/pci/pci-sysfs.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+
+Any input to this one? There's this long unfixed race condition
+described here:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20200716110423.xtfyb3n6tn5ixedh@pali/#23547255
+
+And this patch at least prevents my system from crashing when this race
+condition occurs.
+
+Sascha
+
 > 
-> It would be better if infrastructure like this were connected with
-> some user of it.
-This call was added by the commit 5779dd0a7dbd
-("PCI: endpoint: Use notification chain mechanism to notify EPC events to EPF").
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index fc804e08e3cb5..a07381d46ddae 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1196,8 +1196,13 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
+>  	res_attr->size = pci_resource_len(pdev, num);
+>  	res_attr->private = (void *)(unsigned long)num;
+>  	retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
+> -	if (retval)
+> +	if (retval) {
+> +		if (write_combine)
+> +			pdev->res_attr_wc[num] = NULL;
+> +		else
+> +			pdev->res_attr[num] = NULL;
+>  		kfree(res_attr);
+> +	}
+>  
+>  	return retval;
+>  }
+> -- 
+> 2.30.2
+> 
+> 
 
-I haven't followed the discussion, however, this commit say:
-"This will also enable to add more events (in addition to linkup) in the future."
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
