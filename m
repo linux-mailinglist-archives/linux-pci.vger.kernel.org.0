@@ -2,311 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0FC8614C28
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 15:02:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA0C614C2C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 15:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230057AbiKAOCf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 10:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
+        id S230148AbiKAODr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 10:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiKAOCe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 10:02:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D531D1A396;
-        Tue,  1 Nov 2022 07:02:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7360E6159E;
-        Tue,  1 Nov 2022 14:02:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CC7C433D6;
-        Tue,  1 Nov 2022 14:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667311350;
-        bh=aZCgu4m6YVaQfw9jrn1zqs+zdDtcp3UPLh7KlkmZxQQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SJ1qPRW93E+z3I8eURkfRPQtK0UxqL18X315Ovu3QGQjPZfvq7sq9J+uDNvfh7yaG
-         8IXjbfDRsqH2c45QY5lJy0txsGGWN2RM39l/8X/8ma/f6jXCav4q2cEHr7enZjr2Ab
-         KdgkQcsZNibkRdGnoG8TYTKnJNNKFycqySwuert7h6NPhpKCO2TsSYAcAZ/Dij8CSa
-         +eYn/+aX3MfNBrrJJ0WOkUOiONs+aU9Tef1eDXx7gYS4KFLVea3uOnL5PAhxgU8Ueb
-         B2AbJA0xAQ0wmuQ5jpwSuFe8gkiOYMrGWghP5KPlcB4o5xwbMSJuMhREwxWG7MhMCl
-         o1jNiQjWWBZ3w==
-Date:   Tue, 1 Nov 2022 19:32:16 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Aman Gupta <aman1.gupta@samsung.com>
-Cc:     shradha.t@samsung.com, pankaj.dubey@samsung.com, kishon@ti.com,
-        lpieralisi@kernel.org, kw@linux.com, shuah@kernel.org,
-        linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
- endpoint driver test
-Message-ID: <20221101140216.GO54667@thinkpad>
-References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
- <20221007053934.5188-1-aman1.gupta@samsung.com>
+        with ESMTP id S230122AbiKAODp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 10:03:45 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C6820D
+        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 07:03:43 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id 17so9291717pfv.4
+        for <linux-pci@vger.kernel.org>; Tue, 01 Nov 2022 07:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=25r7x71BJUlLmcpTtBOvRX5e+DPvRIUazgMCBLedLV4=;
+        b=EHwHs/eoA11NfprJ9r1RMuqVDVLi0ivOmk0YkDR3SUc3U9iRkiJGI94psFRKl236UT
+         vQxQS3jZob54t5+AdBe16s2vlW9OeUY1WMPnEdaACC8JnhyXclYxM2A2a/2wa0/CPmz5
+         lt6WXqPUP+dIao3FBfzp5JvqE/lOgpdSKteL0ivNn0fc2pLZbMUwH5JdL2Jh/LudZRg7
+         MD+9RhtwiRQDC3Sxwdo8Qzy3xGH4eZUR5RzV0tcGzrdzzWUmuOKx8c4GQnHY6dTAmS8x
+         FpAUQSsHtyh3AjSKYABvn4UeuchTHjiowBuSJ9De/iAXtM0Py4ma9Vqzt7PLTM8j8cWD
+         iU8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=25r7x71BJUlLmcpTtBOvRX5e+DPvRIUazgMCBLedLV4=;
+        b=Wy44s2NLgQqH3iTCEmOzORyT6+29lVX5cTcm3eATVASaEB58ix7YGB5aaaRV/EJ+fX
+         /qJaWXhtHw/wiB11cwQpxW69wz2Au+9gN2DlfkDLXjUh8VY6OMOWA1HiBYe1scWeADIY
+         /XRASwnnXr7OTGkXknuREL3Xz0KJV6MqUjD0F4b26JSIEOStVkfvNeICuKYkp911qDqD
+         +1Eyrn00gU45JfqE/ceU4OJaKahkARLG0AZ438z4jEWlJvAbA3XUCKFIDDEfl54RroAE
+         ycK8BEh01+J21DkCAWTbTGZ88suMIMmkebkMmLceE/ZF0DEAG4jSU0B4D59dWz9a5hXC
+         Sj4w==
+X-Gm-Message-State: ACrzQf1ILLZOhHq6s5lgkOuPm25rMLyGU3NvQhv+UF+J2WasnUs/iTXE
+        vkpok0qp2SwbII7oVYj/gyoI
+X-Google-Smtp-Source: AMsMyM7Wa/jVKlqcT3G0BD15kt2pJPA8yGLcpyUm+ILPa0nW4abZp6r43DQwzw3XDd68Ihms2ZnLFg==
+X-Received: by 2002:a05:6a00:1d06:b0:56b:ec38:27e9 with SMTP id a6-20020a056a001d0600b0056bec3827e9mr19659995pfx.71.1667311422902;
+        Tue, 01 Nov 2022 07:03:42 -0700 (PDT)
+Received: from thinkpad ([117.193.209.178])
+        by smtp.gmail.com with ESMTPSA id c7-20020a17090a020700b002132f3e71c6sm6058590pjc.52.2022.11.01.07.03.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 07:03:41 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 19:33:34 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     kishon@ti.com, gregkh@linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mie@igel.co.jp, kw@linux.com
+Subject: Re: [PATCH v2 0/5] pci_endpoint_test: Fix the return value of IOCTLs
+Message-ID: <20221101140334.GP54667@thinkpad>
+References: <20220824123010.51763-1-manivannan.sadhasivam@linaro.org>
+ <Yxs7JlQ8jzNNwvdi@lpieralisi>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221007053934.5188-1-aman1.gupta@samsung.com>
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Yxs7JlQ8jzNNwvdi@lpieralisi>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 07, 2022 at 11:09:34AM +0530, Aman Gupta wrote:
-> This patch enables the support to perform selftest on PCIe endpoint
-> driver present in the system. The following tests are currently
-> performed by the selftest utility
+On Fri, Sep 09, 2022 at 03:09:58PM +0200, Lorenzo Pieralisi wrote:
+> On Wed, Aug 24, 2022 at 06:00:05PM +0530, Manivannan Sadhasivam wrote:
+> > During the review of a patch for pci_endpoint_test driver [1], Greg spotted
+> > the wrong usage of the return value of IOCTLs in the driver. This series
+> > fixes that by returning 0 for success and negative error code for failure.
+> > Relevant change is also made to the userspace tool and the Documentation.
+> > 
+> > Along with those, there are couple more patches fixing other small issues
+> > I noted.
+> > 
+> > NOTE: I have just compile tested this series. So it'd be good if someone
+> > can test it on the PCI endpoint setup.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > [1] https://lore.kernel.org/all/20220816100617.90720-1-mie@igel.co.jp/
+> > 
+> > Changes in v2:
+> > 
+> > * Fixed the error numbers in pci_endpoint_test
+> > * Added Fixes tag and CCed stable list for relevant patches. The patches
+> >   should get backported until 5.10 kernel only. Since for the LTS kernels
+> >   before that, the pci_endpoint_test driver was not supporting all commands.
+> > 
+> > Manivannan Sadhasivam (5):
+> >   misc: pci_endpoint_test: Fix the return value of IOCTL
+> >   tools: PCI: Fix parsing the return value of IOCTLs
+> >   Documentation: PCI: endpoint: Use the correct return value of
+> >     pcitest.sh
+> >   misc: pci_endpoint_test: Remove unnecessary WARN_ON
+> >   tools: PCI: Fix memory leak
+> > 
+> >  Documentation/PCI/endpoint/pci-test-howto.rst | 152 ++++++++--------
+> >  drivers/misc/pci_endpoint_test.c              | 167 ++++++++----------
+> >  tools/pci/pcitest.c                           |  48 ++---
+> >  3 files changed, 179 insertions(+), 188 deletions(-)
 > 
-> 1. BAR Tests (BAR0 to BAR5)
-> 2. MSI Interrupt Tests (MSI1 to MSI32)
-> 3. Read Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 4. Write Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 5. Copy Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> May I ask where are we with this thread ? I have noticed some key
+> comments from Greg that need addressing so I'd expect a new version.
 > 
-> Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
-> Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-> ---
->  tools/testing/selftests/Makefile           |   1 +
->  tools/testing/selftests/pci/.gitignore     |   1 +
->  tools/testing/selftests/pci/Makefile       |   7 +
->  tools/testing/selftests/pci/pci-selftest.c | 167 +++++++++++++++++++++
->  4 files changed, 176 insertions(+)
->  create mode 100644 tools/testing/selftests/pci/.gitignore
->  create mode 100644 tools/testing/selftests/pci/Makefile
->  create mode 100644 tools/testing/selftests/pci/pci-selftest.c
-> 
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index c2064a35688b..81584169a80f 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -49,6 +49,7 @@ TARGETS += net/forwarding
->  TARGETS += net/mptcp
->  TARGETS += netfilter
->  TARGETS += nsfs
-> +TARGETS += pci
->  TARGETS += pidfd
->  TARGETS += pid_namespace
->  TARGETS += powerpc
-> diff --git a/tools/testing/selftests/pci/.gitignore b/tools/testing/selftests/pci/.gitignore
-> new file mode 100644
-> index 000000000000..db01411b8200
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/.gitignore
-> @@ -0,0 +1 @@
-> +pci-selftest
-> diff --git a/tools/testing/selftests/pci/Makefile b/tools/testing/selftests/pci/Makefile
-> new file mode 100644
-> index 000000000000..76b7725a45ae
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/Makefile
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +CFLAGS += -O2 -Wl,-no-as-needed -Wall
-> +LDFLAGS += -lrt -lpthread -lm
-> +
-> +TEST_GEN_PROGS = pci-selftest
-> +
-> +include ../lib.mk
-> diff --git a/tools/testing/selftests/pci/pci-selftest.c b/tools/testing/selftests/pci/pci-selftest.c
-> new file mode 100644
-> index 000000000000..73e8f3eb1982
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/pci-selftest.c
 
-endpoint-test.c
-
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Endpoint Driver Test Program
-> + *
-> + * Copyright (c) 2022 Samsung Electronics Co., Ltd.
-> + *             https://www.samsung.com
-> + * Author: Aman Gupta <aman1.gupta@samsung.com>
-> + */
-> +
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <sys/ioctl.h>
-> +#include <unistd.h>
-> +
-> +#include "../kselftest_harness.h"
-> +
-> +#define PCITEST_BAR		_IO('P', 0x1)
-> +#define PCITEST_LEGACY_IRQ	_IO('P', 0x2)
-> +#define PCITEST_MSI		_IOW('P', 0x3, int)
-> +#define PCITEST_WRITE		_IOW('P', 0x4, unsigned long)
-> +#define PCITEST_READ		_IOW('P', 0x5, unsigned long)
-> +#define PCITEST_COPY		_IOW('P', 0x6, unsigned long)
-> +#define PCITEST_MSIX		_IOW('P', 0x7, int)
-> +#define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
-> +#define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
-> +#define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> +
-> +static char *test_device = "/dev/pci-endpoint-test.0";
-> +
-> +struct xfer_param {
-> +	unsigned long size;
-> +	unsigned char flag;
-> +	};
-
-Align '}'
-
-> +
-> +FIXTURE(device)
-> +{
-> +	int fd;
-> +};
-> +
-> +FIXTURE_SETUP(device)
-> +{
-> +
-> +	self->fd = open(test_device, O_RDWR);
-> +
-> +	ASSERT_NE(-1, self->fd) {
-> +		TH_LOG("Can't open PCI Endpoint Test device\n");
-> +	}
-> +}
-> +
-> +FIXTURE_TEARDOWN(device)
-> +{
-> +	close(self->fd);
-> +}
-> +
-> +TEST_F(device, BAR_TEST)
-> +{
-> +	int ret = -EINVAL;
-
-Ininitialization not required here and also in other functions.
-
-> +	int final = 0;
-> +
-> +	for (int i = 0; i <= 5; i++) {
-> +		ret = ioctl(self->fd, PCITEST_BAR, i);
-> +
-> +		EXPECT_EQ(1, ret) {
-
-The return value of all these IOCTL's are going to change when [1] get's merged.
-
-[1] https://lore.kernel.org/linux-pci/20220824123010.51763-1-manivannan.sadhasivam@linaro.org/
-
-I'd suggest to resubmit this selftest after that.
+Sorry for the late response. Yes, there will be a new version.
 
 Thanks,
 Mani
 
-> +			TH_LOG("TEST FAILED FOR BAR %d\n", i);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, MSI_TEST)
-> +{
-> +	int ret = -EINVAL;
-> +	int final = 0;
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	for (int i = 1; i <= 32; i++) {
-> +		ret = ioctl(self->fd, PCITEST_MSI, i);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR MSI%d\n", i);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, READ_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_READ, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, WRITE_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_WRITE, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, COPY_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_COPY, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +TEST_HARNESS_MAIN
-> -- 
-> 2.17.1
-> 
+> Thanks,
+> Lorenzo
 
 -- 
 மணிவண்ணன் சதாசிவம்
