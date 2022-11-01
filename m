@@ -2,344 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE4F615072
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 18:19:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65A02615075
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Nov 2022 18:20:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbiKARTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Nov 2022 13:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
+        id S230189AbiKARUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Nov 2022 13:20:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230103AbiKARTq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 13:19:46 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304C01B1D6
-        for <linux-pci@vger.kernel.org>; Tue,  1 Nov 2022 10:19:44 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id 4so14207248pli.0
-        for <linux-pci@vger.kernel.org>; Tue, 01 Nov 2022 10:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZVQMtxAX0cz9FjK9FW34ZgL1oeVKjljPlqZDl/bW6Vs=;
-        b=Yg1BorMt9Bq3vhlJ/TGHdm6AB1DAR89bAgWGD/pXCjW1qkUmmNGeulvcZize7tJV4b
-         /REZwpw/ER2In/bKmLAgg99aPSBFj4eM9o2WRXgip9XN0c6wnsTjlJ52nHzLyQdaLzmX
-         48PmvbR1/qjmuD9uAUShNOlw0U2tsPNely5wDjMc96FAVKg9We9va5d91i6KSYToVNxP
-         Wj2ofVnQf/JJXAdigcX3/RHmIezSU3qwWj0h4E06jtKcrOe4Z14QvbUJ+RtaJdgnnaWU
-         9LLvDk5xxuTSn+mdvL5zyZK9Bk56oLYd0p7LjwEwZEEIJ6xttAlSpmLfCYnIedK85lok
-         zo3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZVQMtxAX0cz9FjK9FW34ZgL1oeVKjljPlqZDl/bW6Vs=;
-        b=5hUpMXr3A8EvKCLJI+pw6H4xFn+mF0ApeMgIOym62yxDr6jsUC7h0oivZJksxvxCT3
-         o1IlIdFxMhiYOsMD+PQ+Qnrc7ji4DzVdYVSELuDCKyJ6MOQvBv74D42Or+0jt5PmPmhL
-         rUbP2B0FTUb91Kafve2EHUOLMILX1kzLMce5/jrYJz97Dc2ZQOKbmvxK3bfd8qn6hGVQ
-         IS7B+1ZUg+EQ/74UQbZLObgZv+/ky8osZ1+2MYl6KDbN9obiLLps5MNKjdJ9n6i3S6Y8
-         Kbw7mpXiysARRDgIKzYPHykKVXTB6l6H2pgCCElhE1UVRpoZFIj2yNa8nJYbmXibYnmF
-         wg2w==
-X-Gm-Message-State: ACrzQf041KTQs3NUDdr8ZXS3gyNRI+cPnPxkfz/9seMjk0eIu4sBLjDU
-        gENkMBlygR4q17QutzGp19uN
-X-Google-Smtp-Source: AMsMyM6/yLAYPuI6i+qmsOfTvcRI1qfUb+M7ezSiw/3cPccVW7uP4pIy+aoZdw63h0idu7TmlMH7Hg==
-X-Received: by 2002:a17:902:9b8a:b0:170:f343:ba14 with SMTP id y10-20020a1709029b8a00b00170f343ba14mr163251plp.70.1667323183401;
-        Tue, 01 Nov 2022 10:19:43 -0700 (PDT)
-Received: from thinkpad ([117.193.209.178])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170902e54e00b0017f57787a4asm6608725plf.229.2022.11.01.10.19.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 10:19:42 -0700 (PDT)
-Date:   Tue, 1 Nov 2022 22:49:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Aman Gupta <aman1.gupta@samsung.com>, shradha.t@samsung.com,
-        pankaj.dubey@samsung.com, kishon@ti.com, lpieralisi@kernel.org,
-        kw@linux.com, shuah@kernel.org, linux-pci@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
- endpoint driver test
-Message-ID: <20221101171933.GD244012@thinkpad>
-References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
- <20221007053934.5188-1-aman1.gupta@samsung.com>
- <20221101140216.GO54667@thinkpad>
+        with ESMTP id S230208AbiKARUK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Nov 2022 13:20:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D4E120BC;
+        Tue,  1 Nov 2022 10:20:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AE1C616C5;
+        Tue,  1 Nov 2022 17:20:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55712C433D6;
+        Tue,  1 Nov 2022 17:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667323208;
+        bh=6Ox0RK2nHYNTq+CojRZxn6uouOLCK0z2hofyLg6s9pw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aEqSnZK9GHE9Ki2EeNO3PXNWlzGZ7ienJ9IatNJOFvk+GT03v5syVeix1XS5mmdKl
+         pAhtLIAzKWp5sm/4HLiTb9CyhE7Waqey4R16fVfN1xD9/Z/aV55mr4xoEiSDjpUeH8
+         CuOLWXpZNN660V8VvgPKTZL2dTeQtHFuabJboFzb9fopg0KWQZi1AwNIV/JeqzOBi3
+         71LBPx6Z4p+oeZhyAWcs/NOVIFus1/2/nb2EQ3TGqvYcR5Yg3dK5nQIxuZqum53WRs
+         R/PHg9t8yc7vjcYyDgOsQe+fnNwAmNgIId38CkIUyS2QdD0eDf2JrD0MOaS5+DPbLa
+         hSEpz/bqUKpeg==
+Date:   Tue, 1 Nov 2022 12:20:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     mani@kernel.org, allenbh@gmail.com, bhelgaas@google.com,
+        dave.jiang@intel.com, imx@lists.linux.dev, jdmason@kudzu.us,
+        kw@linux.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
+        ntb@lists.linux.dev
+Subject: Re: [PATCH v15 0/7]  pci-epf-vntb clean up
+Message-ID: <20221101172006.GA1264778@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221101140216.GO54667@thinkpad>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221101165709.983416-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 07:32:16PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Oct 07, 2022 at 11:09:34AM +0530, Aman Gupta wrote:
-> > This patch enables the support to perform selftest on PCIe endpoint
-> > driver present in the system. The following tests are currently
-> > performed by the selftest utility
-> > 
-> > 1. BAR Tests (BAR0 to BAR5)
-> > 2. MSI Interrupt Tests (MSI1 to MSI32)
-> > 3. Read Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > 4. Write Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > 5. Copy Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> > 
-> > Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
-> > Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-> > ---
-> >  tools/testing/selftests/Makefile           |   1 +
-> >  tools/testing/selftests/pci/.gitignore     |   1 +
-> >  tools/testing/selftests/pci/Makefile       |   7 +
-> >  tools/testing/selftests/pci/pci-selftest.c | 167 +++++++++++++++++++++
-> >  4 files changed, 176 insertions(+)
-> >  create mode 100644 tools/testing/selftests/pci/.gitignore
-> >  create mode 100644 tools/testing/selftests/pci/Makefile
-> >  create mode 100644 tools/testing/selftests/pci/pci-selftest.c
-> > 
-> > diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> > index c2064a35688b..81584169a80f 100644
-> > --- a/tools/testing/selftests/Makefile
-> > +++ b/tools/testing/selftests/Makefile
-> > @@ -49,6 +49,7 @@ TARGETS += net/forwarding
-> >  TARGETS += net/mptcp
-> >  TARGETS += netfilter
-> >  TARGETS += nsfs
-> > +TARGETS += pci
-> >  TARGETS += pidfd
-> >  TARGETS += pid_namespace
-> >  TARGETS += powerpc
-> > diff --git a/tools/testing/selftests/pci/.gitignore b/tools/testing/selftests/pci/.gitignore
-> > new file mode 100644
-> > index 000000000000..db01411b8200
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/pci/.gitignore
-> > @@ -0,0 +1 @@
-> > +pci-selftest
-> > diff --git a/tools/testing/selftests/pci/Makefile b/tools/testing/selftests/pci/Makefile
-> > new file mode 100644
-> > index 000000000000..76b7725a45ae
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/pci/Makefile
-> > @@ -0,0 +1,7 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +CFLAGS += -O2 -Wl,-no-as-needed -Wall
-> > +LDFLAGS += -lrt -lpthread -lm
-> > +
-> > +TEST_GEN_PROGS = pci-selftest
-> > +
-> > +include ../lib.mk
-> > diff --git a/tools/testing/selftests/pci/pci-selftest.c b/tools/testing/selftests/pci/pci-selftest.c
-> > new file mode 100644
-> > index 000000000000..73e8f3eb1982
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/pci/pci-selftest.c
+On Tue, Nov 01, 2022 at 12:57:02PM -0400, Frank Li wrote:
+> continue patch series https://www.spinics.net/lists/linux-pci/msg130372.html
+> https://www.spinics.net/lists/linux-pci/msg130924.html
 > 
-> endpoint-test.c
+> Lorenzo suggest create new series. Version number continue from old one
 > 
-> > @@ -0,0 +1,167 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PCI Endpoint Driver Test Program
-> > + *
-> > + * Copyright (c) 2022 Samsung Electronics Co., Ltd.
-> > + *             https://www.samsung.com
-> > + * Author: Aman Gupta <aman1.gupta@samsung.com>
-> > + */
-> > +
-> > +#include <errno.h>
-> > +#include <fcntl.h>
-> > +#include <stdbool.h>
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <sys/ioctl.h>
-> > +#include <unistd.h>
-> > +
-> > +#include "../kselftest_harness.h"
-> > +
-> > +#define PCITEST_BAR		_IO('P', 0x1)
-> > +#define PCITEST_LEGACY_IRQ	_IO('P', 0x2)
-> > +#define PCITEST_MSI		_IOW('P', 0x3, int)
-> > +#define PCITEST_WRITE		_IOW('P', 0x4, unsigned long)
-> > +#define PCITEST_READ		_IOW('P', 0x5, unsigned long)
-> > +#define PCITEST_COPY		_IOW('P', 0x6, unsigned long)
-> > +#define PCITEST_MSIX		_IOW('P', 0x7, int)
-> > +#define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
-> > +#define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
-> > +#define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> > +
-> > +static char *test_device = "/dev/pci-endpoint-test.0";
-> > +
-> > +struct xfer_param {
-> > +	unsigned long size;
-> > +	unsigned char flag;
-> > +	};
+> Change from v14-v15
+>   Fixed according to Manivannan Sadhasivam's comments, except endian
+> problem. Endian problem is out of this patch series scope.
+>   kernel test robot report sparse build warning problem already fixed
+> at patch 6 and 7.
 > 
-> Align '}'
+> Change from v13-v14
+>   split spare warning fix to two patch
+>   remove local variable reorder
 > 
-> > +
-> > +FIXTURE(device)
-> > +{
-> > +	int fd;
-> > +};
-> > +
-> > +FIXTURE_SETUP(device)
-> > +{
-> > +
-> > +	self->fd = open(test_device, O_RDWR);
-> > +
-> > +	ASSERT_NE(-1, self->fd) {
-> > +		TH_LOG("Can't open PCI Endpoint Test device\n");
-> > +	}
-> > +}
-> > +
-> > +FIXTURE_TEARDOWN(device)
-> > +{
-> > +	close(self->fd);
-> > +}
-> > +
-> > +TEST_F(device, BAR_TEST)
-> > +{
-> > +	int ret = -EINVAL;
-> 
-> Ininitialization not required here and also in other functions.
-> 
-> > +	int final = 0;
-> > +
-> > +	for (int i = 0; i <= 5; i++) {
-> > +		ret = ioctl(self->fd, PCITEST_BAR, i);
-> > +
-> > +		EXPECT_EQ(1, ret) {
-> 
-> The return value of all these IOCTL's are going to change when [1] get's merged.
-> 
-> [1] https://lore.kernel.org/linux-pci/20220824123010.51763-1-manivannan.sadhasivam@linaro.org/
-> 
-> I'd suggest to resubmit this selftest after that.
-> 
+> Frank Li (7):
+>   PCI: endpoint: pci-epf-vntb: Clean up kernel_doc warning
+>   PCI: endpoint: pci-epf-vntb: Fix indentation of the struct
+>     epf_ntb_ctrl
+>   PCI: endpoint: pci-epf-vntb: fix call pci_epc_mem_free_addr at err
+>     path
+>   PCI: endpoint: pci-epf-vntb: remove unused field epf_db_phy
+>   PCI: endpoint: pci-epf-vntb: replace hardcode 4 with sizeof(u32)
+>   PCI: endpoint: pci-epf-vntb: fix sparse build warning at epf_db
+>   PCI: endpoint: pci-epf-vntb: fix sparse build warning at ntb->reg
 
-Looks like we might end up removing the tests under tools/pci and just use this
-one. I will CC you on the v3 of PCI test cleanup series. Please rebase this
-patch on top of that and post after incorporating the review comments.
+Please capitalize your subject lines consistently.  You have two
+capitalized:
 
-Thanks,
-Mani
+> PCI: endpoint: pci-epf-vntb: Clean up ...
+> PCI: endpoint: pci-epf-vntb: Fix indentation ...
 
-> Thanks,
-> Mani
-> 
-> > +			TH_LOG("TEST FAILED FOR BAR %d\n", i);
-> > +			final++;
-> > +		}
-> > +	}
-> > +
-> > +	ASSERT_EQ(0, final);
-> > +}
-> > +
-> > +TEST_F(device, MSI_TEST)
-> > +{
-> > +	int ret = -EINVAL;
-> > +	int final = 0;
-> > +
-> > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > +	ASSERT_EQ(1, ret);
-> > +
-> > +	for (int i = 1; i <= 32; i++) {
-> > +		ret = ioctl(self->fd, PCITEST_MSI, i);
-> > +		EXPECT_EQ(1, ret) {
-> > +			TH_LOG("TEST FAILED FOR MSI%d\n", i);
-> > +			final++;
-> > +		}
-> > +	}
-> > +
-> > +	ASSERT_EQ(0, final);
-> > +}
-> > +
-> > +TEST_F(device, READ_TEST)
-> > +{
-> > +	int final = 0;
-> > +	int ret = -EINVAL;
-> > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > +
-> > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > +	ASSERT_EQ(1, ret);
-> > +
-> > +	struct xfer_param param;
-> > +
-> > +	param.flag = 0;
-> > +	for (int i = 0; i < 5; i++) {
-> > +		param.size = SIZE[i];
-> > +		ret = ioctl(self->fd, PCITEST_READ, &param);
-> > +		EXPECT_EQ(1, ret) {
-> > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > +			final++;
-> > +		}
-> > +	}
-> > +
-> > +	ASSERT_EQ(0, final);
-> > +}
-> > +
-> > +TEST_F(device, WRITE_TEST)
-> > +{
-> > +	int final = 0;
-> > +	int ret = -EINVAL;
-> > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > +
-> > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > +	ASSERT_EQ(1, ret);
-> > +
-> > +	struct xfer_param param;
-> > +
-> > +	param.flag = 0;
-> > +
-> > +	for (int i = 0; i < 5; i++) {
-> > +		param.size = SIZE[i];
-> > +		ret = ioctl(self->fd, PCITEST_WRITE, &param);
-> > +		EXPECT_EQ(1, ret) {
-> > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > +			final++;
-> > +		}
-> > +	}
-> > +
-> > +	ASSERT_EQ(0, final);
-> > +}
-> > +
-> > +TEST_F(device, COPY_TEST)
-> > +{
-> > +	int final = 0;
-> > +	int ret = -EINVAL;
-> > +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> > +
-> > +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> > +	ASSERT_EQ(1, ret);
-> > +
-> > +	struct xfer_param param;
-> > +
-> > +	param.flag = 0;
-> > +
-> > +	for (int i = 0; i < 5; i++) {
-> > +		param.size = SIZE[i];
-> > +		ret = ioctl(self->fd, PCITEST_COPY, &param);
-> > +		EXPECT_EQ(1, ret) {
-> > +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> > +			final++;
-> > +		}
-> > +	}
-> > +
-> > +	ASSERT_EQ(0, final);
-> > +}
-> > +TEST_HARNESS_MAIN
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+and a bunch that aren't:
 
--- 
-மணிவண்ணன் சதாசிவம்
+> PCI: endpoint: pci-epf-vntb: fix call ...
+> PCI: endpoint: pci-epf-vntb: remove unused ...
+> ...
+
+Also add "()" after function names:
+
+  PCI: endpoint: pci-epf-vntb: fix call pci_epc_mem_free_addr() ...
