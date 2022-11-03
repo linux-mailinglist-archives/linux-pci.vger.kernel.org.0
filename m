@@ -2,48 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FAAB618B33
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 23:14:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC20618CA0
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 00:13:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiKCWOe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Nov 2022 18:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
+        id S229553AbiKCXNm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Nov 2022 19:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbiKCWOd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 18:14:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD77E21261
-        for <linux-pci@vger.kernel.org>; Thu,  3 Nov 2022 15:14:32 -0700 (PDT)
+        with ESMTP id S229501AbiKCXNm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 19:13:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E37BFD;
+        Thu,  3 Nov 2022 16:13:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 655826203F
-        for <linux-pci@vger.kernel.org>; Thu,  3 Nov 2022 22:14:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E265C433C1;
-        Thu,  3 Nov 2022 22:14:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D6DB9B8298F;
+        Thu,  3 Nov 2022 23:13:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3723EC433C1;
+        Thu,  3 Nov 2022 23:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667513671;
-        bh=9JRR7uTuRBJrFx6A7yH7xbaljidoBRxx0tTlKNY/yec=;
+        s=k20201202; t=1667517217;
+        bh=8CZON2C0IF5f0BOR8o+RFFGhy6gqE9zuBEcqSMfZ90o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hF/vsKcwr4MAr4VAbRDotIZCUd0Z71BHlCgYiEIUKlCr3McthLrbe94iJ1M6lpjOR
-         hhqshammH+dlC4dtEr09BWtRu9/cKRSoE+LF2/c6+IzRzI3T08W/WDB24U6jj6AtCU
-         HYzeF5JRNuz6GEIPgPGkMI2tCdYbzUWTu8/8Ivsx0Rb/1RWIoU4Wi5fHBTQJyLP30+
-         ESsnQvAlqn8lgQQQz0ECtdyHWHXnFvjAQVsOY0i/0XvG7bmtSKChz8p/PgpZsIwpMr
-         fratGDgwpgNHWTmz4v3MeZzsxiH/6dY4L5aZ0AacqeVMzUWSv1YwwhrJL9RzYBZqkb
-         kiSDsctAJfNmg==
-Date:   Thu, 3 Nov 2022 17:14:29 -0500
+        b=FGJkMxkYmdrkIAiua9tvgx2JjfBoaQNsNtEnft75DeMFuYfTZvyZWoEp2sCLhh0ff
+         HrX0tDBaQo99nc2OCGTIZ0P1LkfOthatW4QKOCHUmJyjOnl6ZAbfhUcSuJJ4oBNS3p
+         H/oycpUuk2mnYJnu+wSxJ8sHQVMb136QLIApHC6RZzTnj9kENuz/yfEJ2xaTan72oR
+         k4oFSGvCnHFWqpgqOhPIBPNEgxCXcgX6fWvFBARLTj2+CaJjde/yZZQJQRXJFqlujb
+         aiaCs413FqIIcIH0yrkQZ73pOXQR9tu5E4lijsYFK1k9p3MTX2+Afk05TYx9sGADUK
+         5HhQVbGb6TXAw==
+Date:   Thu, 3 Nov 2022 18:13:35 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tyler Hicks <code@tyhicks.com>
-Cc:     Keith Busch <kbusch@kernel.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI: Align MPS to upstream bridge for SAFE and
- PERFORMANCE mode
-Message-ID: <20221103221429.GA47218@bhelgaas>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Stefan Roese <sr@denx.de>,
+        Jim Wilson <wilson@tuliptree.org>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] PCI: Work around PCIe link training failures
+Message-ID: <20221103231335.GA51625@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221027225149.GA846989@bhelgaas>
+In-Reply-To: <alpine.DEB.2.21.2209130050380.60554@angie.orcam.me.uk>
 X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -53,41 +54,227 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 05:51:49PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 25, 2022 at 12:07:47AM -0500, Tyler Hicks wrote:
-> > On 2022-10-20 15:24:37, Bjorn Helgaas wrote:
+[+cc Pali]
 
-> > I've been talking to the firmware folks on why SAFE mode was selected,
-> > based on Keith's question from Wednesday. From what I've been told,
-> > U-Boot doesn't seed the RP MPS with a value so the kernel sees a value
-> > of 128 for p_mps in pci_configure_mps() when using the DEFAULT mode.
-> > Apparently UEFI does seed the RP MPS but we don't get that with U-Boot.
-> > Therefore, SAFE mode was selected to get an initial, tuned RP MPS value
-> > set to 256.
+On Sat, Sep 17, 2022 at 01:03:38PM +0100, Maciej W. Rozycki wrote:
+> Attempt to handle cases such as with a downstream port of the ASMedia 
+> ASM2824 PCIe switch where link training never completes and the link 
+> continues switching between speeds indefinitely with the data link layer 
+> never reaching the active state.
 > 
-> Are there any devices below the RP at the time we set MPS=256?
+> It has been observed with a downstream port of the ASMedia ASM2824 Gen 3 
+> switch wired to the upstream port of the Pericom PI7C9X2G304 Gen 2 
+> switch, using a Delock Riser Card PCI Express x1 > 2 x PCIe x1 device, 
+> P/N 41433, wired to a SiFive HiFive Unmatched board.  In this setup the 
+> switches are supposed to negotiate the link speed of preferably 5.0GT/s, 
+> falling back to 2.5GT/s.
 > 
-> > > A subsequent hot-add will do nothing in pci_configure_mps(), and
-> > > pcie_bus_configure_settings() looks like it would set the RP and EP
-> > > MPS to the minimum of the RP and EP MPS_Supported.
-> > > 
-> > > Is that what you see?  What would you like to see instead?
-> > 
-> > No, not quite. After hot-add, we see the EP MPS set to 128 with SAFE
-> > mode even though the RP MPS is 256.
+> Instead the link continues oscillating between the two speeds, at the 
+> rate of 34-35 times per second, with link training reported repeatedly 
+> active ~84% of the time.  Forcibly limiting the target link speed to 
+> 2.5GT/s with the upstream ASM2824 device however makes the two switches 
+> communicate correctly.  Removing the speed restriction afterwards makes 
+> the two devices switch to 5.0GT/s then.
 > 
-> Can you add the relevant topology here so we can work through the
-> concrete details?  Is the endpoint hot-added directly below a Root
-> Port?  Or is there a switch involved?  What are the MPS_Supported
-> values for all the devices?  If there's a switch in the picture, it
-> looks like we currently restrict to 128, I think because it's possible
-> an endpoint that can only do 128 may be added.
+> Make use of these observations then and detect the inability to train 
+> the link, by checking for the Data Link Layer Link Active status bit 
+> being off while the Link Bandwidth Management Status indicating that 
+> hardware has changed the link speed or width in an attempt to correct 
+> unreliable link operation.
+> 
+> Restrict the speed to 2.5GT/s then with the Target Link Speed field, 
+> request a retrain and wait 200ms for the data link to go up.  If this 
+> turns out successful, then lift the restriction, letting the devices 
+> negotiate a higher speed.
+> 
+> Also check for a 2.5GT/s speed restriction the firmware may have already 
+> arranged and lift it too with ports of devices known to continue working 
+> afterwards, currently the ASM2824 only, that already report their data 
+> link being up.
 
-Ping?  I'd like to talk about a concrete scenario.  It's too hard for
-me to imagine all the possible things that could go wrong.
+This quirk is run at boot-time and resume-time.  What happens after a
+Secondary Bus Reset, as is done by pci_reset_secondary_bus()?
 
-I guess part of what's interesting here is that things work better
-when firmware has already configured MPS?  It doesn't seem like we
-should *depend* on firmware having done that.
+PCIe r6.0, sec 7.5.1.3.13, says "setting Secondary Bus Reset triggers
+a hot reset on the corresponding PCI Express Port".  Sec 4.2.7 says
+LinkUp is 0 in the LTSSM Hot Reset state, and the Hot Reset state
+leads to Detect, so it looks like this reset would cause the link to
+go down and come back up.
+
+Can you tell if that's what happens?  Does the link negotiation fail
+then, too?
+
+If it does fail then, I don't know how hard we need to work to fix it.
+Maybe we just accept it?  Or maybe we need a "quirk-after-reset" phase
+or something?
 
 Bjorn
+
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.2203022037020.56670@angie.orcam.me.uk/
+> Link: https://source.denx.de/u-boot/u-boot/-/commit/a398a51ccc68
+> ---
+> Changes from v4:
+> 
+> - Remove <linux/bug.h> inclusion no longer needed.
+> 
+> - Make the quirk generic based on probing device features rather than 
+>   specific to the ASM2824 part only; take the Retrain Link bit erratum 
+>   into account.
+> 
+> - Still lift the 2.5GT/s speed restriction with the ASM2824 only.
+> 
+> - Increase retrain timeout from 200ms to 1s (PCIE_LINK_RETRAIN_TIMEOUT).
+> 
+> - Remove retrain success notification.
+> 
+> - Use PCIe helpers rather than generic PCI functions throughout.
+> 
+> - Trim down and update the wording of the change description for the 
+>   switch from an ASM2824-specific to a generic fixup.
+> 
+> Changes from v3:
+> 
+> - Remove the <linux/pci_ids.h> entry for the ASM2824.
+> 
+> Changes from v2:
+> 
+> - Regenerate for 5.17-rc2 for a merge conflict.
+> 
+> - Replace BUG_ON for a missing PCI Express capability with WARN_ON and an
+>   early return.
+> 
+> Changes from v1:
+> 
+> - Regenerate for a merge conflict.
+> ---
+>  drivers/pci/quirks.c |  118 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> linux-pcie-asm2824-manual-retrain.diff
+> Index: linux-macro/drivers/pci/quirks.c
+> ===================================================================
+> --- linux-macro.orig/drivers/pci/quirks.c
+> +++ linux-macro/drivers/pci/quirks.c
+> @@ -5956,3 +5956,121 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+>  #endif
+> +
+> +/*
+> + * Retrain the link of a downstream PCIe port by hand if necessary.
+> + *
+> + * This is needed at least where a downstream port of the ASMedia ASM2824
+> + * Gen 3 switch is wired to the upstream port of the Pericom PI7C9X2G304
+> + * Gen 2 switch, and observed with the Delock Riser Card PCI Express x1 >
+> + * 2 x PCIe x1 device, P/N 41433, plugged into the SiFive HiFive Unmatched
+> + * board.
+> + *
+> + * In such a configuration the switches are supposed to negotiate the link
+> + * speed of preferably 5.0GT/s, falling back to 2.5GT/s.  However the link
+> + * continues switching between the two speeds indefinitely and the data
+> + * link layer never reaches the active state, with link training reported
+> + * repeatedly active ~84% of the time.  Forcing the target link speed to
+> + * 2.5GT/s with the upstream ASM2824 device makes the two switches talk to
+> + * each other correctly however.  And more interestingly retraining with a
+> + * higher target link speed afterwards lets the two successfully negotiate
+> + * 5.0GT/s.
+> + *
+> + * With the ASM2824 we can rely on the otherwise optional Data Link Layer
+> + * Link Active status bit and in the failed link training scenario it will
+> + * be off along with the Link Bandwidth Management Status indicating that
+> + * hardware has changed the link speed or width in an attempt to correct
+> + * unreliable link operation.  For a port that has been left unconnected
+> + * both bits will be clear.  So use this information to detect the problem
+> + * rather than polling the Link Training bit and watching out for flips or
+> + * at least the active status.
+> + *
+> + * Since the exact nature of the problem isn't known and in principle this
+> + * could trigger where an ASM2824 device is downstream rather upstream,
+> + * apply this erratum workaround to any downstream ports as long as they
+> + * support Link Active reporting and have the Link Control 2 register.
+> + * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
+> + * request a retrain and wait 200ms for the data link to go up.
+> + *
+> + * If this turns out successful and we know by the Vendor:Device ID it is
+> + * safe to do so, then lift the restriction, letting the devices negotiate
+> + * a higher speed.  Also check for a similar 2.5GT/s speed restriction the
+> + * firmware may have already arranged and lift it with ports that already
+> + * report their data link being up.
+> + */
+> +static void pcie_downstream_link_retrain(struct pci_dev *dev)
+> +{
+> +	static const struct pci_device_id ids[] = {
+> +		{ PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
+> +		{}
+> +	};
+> +	u16 lnksta, lnkctl2;
+> +	u32 lnkcap;
+> +
+> +	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev)
+> +	    || !pcie_cap_has_lnkctl2(dev))
+> +		return;
+> +
+> +	/* It's too early yet to use `dev->link_active_reporting'.  */
+> +	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+> +	if (!(lnkcap & PCI_EXP_LNKCAP_DLLLARC))
+> +		return;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> +	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
+> +	    PCI_EXP_LNKSTA_LBMS) {
+> +		unsigned long timeout;
+> +		u16 lnkctl;
+> +
+> +		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
+> +
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> +		lnkctl |= PCI_EXP_LNKCTL_RL;
+> +		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+> +		lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
+> +		/*
+> +		 * Due to an erratum in some devices the Retrain Link bit
+> +		 * needs to be cleared again manually to allow the link
+> +		 * training to succeed.
+> +		 */
+> +		lnkctl &= ~PCI_EXP_LNKCTL_RL;
+> +		if (dev->clear_retrain_link)
+> +			pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
+> +						   lnkctl);
+> +
+> +		timeout = jiffies + PCIE_LINK_RETRAIN_TIMEOUT;
+> +		do {
+> +			pcie_capability_read_word(dev, PCI_EXP_LNKSTA,
+> +					     &lnksta);
+> +			if (lnksta & PCI_EXP_LNKSTA_DLLLA)
+> +				break;
+> +			usleep_range(10000, 20000);
+> +		} while (time_before(jiffies, timeout));
+> +
+> +		if (!(lnksta & PCI_EXP_LNKSTA_DLLLA)) {
+> +			pci_info(dev, "retraining failed\n");
+> +			return;
+> +		}
+> +	}
+> +
+> +	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+> +	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+> +	    pci_match_id(ids, dev)) {
+> +		u16 lnkctl;
+> +
+> +		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> +		lnkctl |= PCI_EXP_LNKCTL_RL;
+> +		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+> +		lnkctl2 |= lnkcap & PCI_EXP_LNKCAP_SLS;
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID,
+> +			 pcie_downstream_link_retrain);
+> +DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_ANY_ID, PCI_ANY_ID,
+> +			       pcie_downstream_link_retrain);
