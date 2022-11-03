@@ -2,117 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69FF26187EC
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 19:49:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53633618815
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 19:59:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbiKCStO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Nov 2022 14:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
+        id S230435AbiKCS7q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Nov 2022 14:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbiKCStN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 14:49:13 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2572A5FCB;
-        Thu,  3 Nov 2022 11:49:11 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id i12so1766246qvs.2;
-        Thu, 03 Nov 2022 11:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RgFweYo8BPv/simqwg3LitRGCnbkeK6PBgZnWlFwSt0=;
-        b=YfVj6TbmVYuK4sXs/J284r/DTNdatQdTQnYEdrpdPPb1Rd+uB3g4jXDJjcd0bOglOj
-         FcKnolF5l1VbZGm7mQDVQe1FeoFtcVj1dYIyfdqWn8PB78ZiOLH2GXIESIMRUr2r+QYg
-         Kp7T0PXMWJmhlzrAdNvmMOCxqLC1GPSHDtuJoiAUempt+gdRuWpyPb/lkWICxO8z2U7x
-         pT1qJ8Mydrdlo+02kXP96jrT00bqGKLiZmSfqtrC1sevb9eYZcoRRLJ7CSGccLw5RKWh
-         IMBlMYsOUiR/wuhxBiLJHUjzj1fNwHxgjO4ey0Tas3ZUnwJz0wpmSgdau9KqYwygThaU
-         sjag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RgFweYo8BPv/simqwg3LitRGCnbkeK6PBgZnWlFwSt0=;
-        b=SBf9Ui8AC0ftax8JZ6nI+Da4sR721N6a56VU668lEcIxz6fC3/HP4FClY7Glc+dtNL
-         SMF2ehkjgoihE3Z63Liol3CDofRqxQDIUzdSCK8ceYHDtkiLMym6yR+MhcQFJWF8fAn6
-         /aoDzPkz7w2bnHvcizH22vTKvjmFbb+ctR0bdl16zXAQIjEgjU2p2xwYGvomYxYD16Jc
-         wv6yxWuHcO4WhrTRpR/ZPHAlxAZ/yQOHt8jJ5/7ugubxtDZXTa6epfmQna2+QG7HMsDT
-         hmb2rjmT+OXsQDT3rXih2nFoul8F+os/P/BACLHuMfg+gkb7M5gH4xFBB66JQt8I8gmM
-         MaDg==
-X-Gm-Message-State: ACrzQf3f6FYqOLeLtDhPoFO6nJpVRhIbBqj7C2iySTz3+ZDCLe4784S4
-        x0rqdAkz9uUztFSl6CvRoFk=
-X-Google-Smtp-Source: AMsMyM7H34w6zt9aB0ytsxTAd8VZba1ZEApMzwB9wYsRBodisO4s/uNaNVjJLHnbJXdZb1+CXDxpBw==
-X-Received: by 2002:ad4:5963:0:b0:4bc:1a6b:2011 with SMTP id eq3-20020ad45963000000b004bc1a6b2011mr11235383qvb.79.1667501350205;
-        Thu, 03 Nov 2022 11:49:10 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id bl12-20020a05620a1a8c00b006ed61f18651sm1280476qkb.16.2022.11.03.11.49.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Nov 2022 11:49:09 -0700 (PDT)
-Message-ID: <6535ae14-3b09-3b17-d121-b75f433045fb@gmail.com>
-Date:   Thu, 3 Nov 2022 11:48:56 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v2 5/5] PCI: brcmstb: Set RCB_{MPS,64B}_MODE bits
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        with ESMTP id S229954AbiKCS7p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 14:59:45 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1B7FD3C;
+        Thu,  3 Nov 2022 11:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667501985; x=1699037985;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=iDzJkwIYDgDj9s9QyYyQqMun6Fj8NrFnD6UKX0fcnAs=;
+  b=U1Umt9qku3GYocruQL5t/15455Rny7EXR4FHjNANVPsZL25YbnUAmdw7
+   qIzTFjDWCpBgRXNs3Vbg1eHClJd1/n5Wa49RgzySMT3ePursA7PQg7cXD
+   sLjdAwNydWb/Vt1ChnQmxLcAQf95L6jvAT4KX6UtC4kwn8aujIzJrWwQS
+   bKdewFI+vEeeGUC9VHlUrHdjxCqn0dn86Rca8THquoXv8VgMtdbmbVFFA
+   w1kxOgKcc3YhgFBkK3NoJ0GO4PBXfg2QNkTCPW9PFJjwIfH5yf9PfE5vf
+   IVlV/x38M2FJ9Zjdqc1379zmLj14WK/LfvvHm6CIVsSp/Xex+l6bFwfEf
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="293099746"
+X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
+   d="scan'208";a="293099746"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 11:59:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="724055696"
+X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
+   d="scan'208";a="724055696"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Nov 2022 11:59:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oqfR8-006zVP-0o;
+        Thu, 03 Nov 2022 20:59:34 +0200
+Date:   Thu, 3 Nov 2022 20:59:33 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20221014192730.GA3488778@bhelgaas>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20221014192730.GA3488778@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v2 4/4] pcmcia: Convert to use
+ pci_bus_for_each_resource_p()
+Message-ID: <Y2QPlZ0mhLvKw7X5@smile.fi.intel.com>
+References: <20221103164644.70554-1-andriy.shevchenko@linux.intel.com>
+ <20221103164644.70554-5-andriy.shevchenko@linux.intel.com>
+ <Y2P0XCNJvTVuziO7@owl.dominikbrodowski.net>
+ <Y2P2ja26ikNecTsv@smile.fi.intel.com>
+ <Y2QImB0OLakzz1+F@rocinante>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y2QImB0OLakzz1+F@rocinante>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/14/22 12:27, Bjorn Helgaas wrote:
-> On Fri, Oct 14, 2022 at 03:16:35PM -0400, Jim Quinlan wrote:
->> On Thu, Oct 13, 2022 at 10:12 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>> On Tue, Oct 11, 2022 at 02:42:10PM -0400, Jim Quinlan wrote:
->>>> Set RCB_MPS mode bit so that data for PCIe read requests up to the size of
->>>> the Maximum Payload Size (MPS) are returned in one completion, and data for
->>>> PCIe read requests greater than the MPS are split at the specified Read
->>>> Completion Boundary setting.
->>>>
->>>> Set RCB_64B so that the Read Compeletion Boundary is 64B.
->>>
->>> s/Compeletion/Completion/
->>
->> Hi Bjorn,
->>
->> TIL that checkpatch.pl only flags misspelled words only if they match
->> its list of misspelled words.
->> I've modified my checkpatch.pl wrapper script to use aspell to better
->> address my typos.
->> At any rate, do you mind if I add some new commits for V3?
-> 
-> Fine with me, I think Lorenzo will look at these again after v6.1-rc1
-> is tagged this weekend.
+On Fri, Nov 04, 2022 at 03:29:44AM +0900, Krzysztof Wilczyński wrote:
 
-Lorenzo, any chance to get those patches reviewed and/or merged? Thanks!
+> > > > -
+> > > > -	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
+> > > > -		res = s->cb_dev->bus->resource[i];
+> > > > -#else
+> > > > -	pci_bus_for_each_resource(s->cb_dev->bus, res, i) {
+> > > >  #endif
+> > > > +
+> > > > +	pci_bus_for_each_resource_p(s->cb_dev->bus, res) {
+> > > >  		if (!res)
+> > > >  			continue;
+> > > 
+> > > Doesn't this remove the proper iterator for X86? Even if that is the right
+> > > thing to do, it needs an explict explanation.
+> > 
+> > I dunno what was in 2010, but reading code now I have found no differences in
+> > the logic on how resources are being iterated in these two pieces of code.
+> 
+> This code is over a decade old (13 years old to be precise) and there was
+> something odd between Bjorn's and Jesse's patches, as per:
+> 
+>   89a74ecccd1f ("PCI: add pci_bus_for_each_resource(), remove direct bus->resource[] refs")
+>   cf26e8dc4194 ("pcmcia: do not autoadd root PCI bus resources")
+
+Yeah, thanks for pointing out to the other patch from the same 2010 year.
+It seems the code was completely identical that time, now it uses more
+sophisticated way of getting bus resources, but it's kept the same for
+the resources under PCI_BRIDGE_RESOURCE_NUM threshold.
+
+> > But fine, I will add a line to a commit message about this change.
+> 
+> I wouldn't, personally.  The change you are proposing is self-explanatory
+> and somewhat in-line with what is there already - unless I am also reading
+> the current implementation wrong.
+
+But it wouldn't be harmful either.
+
+> That said, Dominik is the maintainer of PCMCIA driver, so his is the last
+> word, so to speak. :)
+> 
+> > Considering this is done, can you issue your conditional tag so I will
+> > incorporate it in v3?
+> 
+> No need, really.  Again, unless Dominik thinks otherwise.
+
+I think that what is wanted to have to get his tag.
+
+Thanks for review, both of you, guys!
+
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
 
