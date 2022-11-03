@@ -2,223 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AAE761741D
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 03:18:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 628A86174A1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 03:57:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbiKCCSd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Nov 2022 22:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56188 "EHLO
+        id S231294AbiKCC5M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Nov 2022 22:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiKCCS2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Nov 2022 22:18:28 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119BE13D48;
-        Wed,  2 Nov 2022 19:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667441907; x=1698977907;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=aEiHMG/t7yyno42B1YTG/JN48w91eX/H9maLsZ24Sp0=;
-  b=mMsfE7DPPMYcfi/Ii0kcUlolsfkUNNfdpDmA7EcRKiHEqsMbCdeVtIRk
-   Qs5CyXpnBkA+g4c0G+x9fNEu1vWUsI+KTzOrr8z1OZz/DMq0WfHO+gKcz
-   mdEZ75Y2AE4aUxEYeyqsGTU6FpnZ+WdR3jBbPoVBp1AcyA58dVZwMkSjs
-   UB3PQfdysXnrfSdgMTzZMlsBsSmohnLAtn1BeKgdZtH2AHPxO6wsv9TPY
-   NhcRZKWd2tVPfq77Qol0XDRGQZUdWXPFZfJHQ2b2GXkeCJ75rrHeEHVvU
-   Rfh+HEb7GDuHamdtXYPnlkaA183sJycUDR+Vv8rYICq0j7o7a6krxEExc
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="292886417"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="292886417"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 19:18:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="585619408"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="585619408"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 02 Nov 2022 19:18:24 -0700
-Received: from debox1-desk4.intel.com (unknown [10.212.195.54])
-        by linux.intel.com (Postfix) with ESMTP id B46F4580DBD;
-        Wed,  2 Nov 2022 19:18:23 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, david.e.box@linux.intel.com,
-        michael.a.bottini@intel.com, rafael@kernel.org, me@adhityamohan.in
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V8 4/4] PCI: vmd: Add quirk to configure PCIe ASPM and LTR
-Date:   Wed,  2 Nov 2022 19:18:22 -0700
-Message-Id: <20221103021822.308586-5-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221103021822.308586-1-david.e.box@linux.intel.com>
-References: <20221103021822.308586-1-david.e.box@linux.intel.com>
+        with ESMTP id S230261AbiKCC5L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Nov 2022 22:57:11 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74177559E;
+        Wed,  2 Nov 2022 19:57:10 -0700 (PDT)
+X-UUID: f1cc097f141e45d984274d226bdccd2e-20221103
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=B0ypRIAyBeXMSvb0l7UowvJTfhEVeBMR45ZyeATiyEc=;
+        b=rQ6WKelqcIrNZp68OnrvRXIWOidb9wCCGnOVkLaR6QWXnn/9vVcFH2VjNUx0qussaCiPph9x4FBCWO7ayeI2Trp+X9XbcwgzlLG/toOmXGUPFGGb2/lcTuh9uptzrHqy1mqFzF6VOHYB55Iz9lHs9l2xedYADd5KlMQaKfvFfrA=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.12,REQID:aa1e6f58-e1ee-4cda-bed7-a27315dc9498,IP:0,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-5
+X-CID-META: VersionHash:62cd327,CLOUDID:9fee7581-3116-4fbc-b86b-83475c3df513,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: f1cc097f141e45d984274d226bdccd2e-20221103
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 607985636; Thu, 03 Nov 2022 10:57:05 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Thu, 3 Nov 2022 10:57:04 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.15 via Frontend Transport; Thu, 3 Nov 2022 10:57:04 +0800
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        Tinghan Shen <tinghan.shen@mediatek.com>
+Subject: [PATCH v5 0/3] Add driver nodes for MT8195 SoC
+Date:   Thu, 3 Nov 2022 10:56:53 +0800
+Message-ID: <20221103025656.8714-1-tinghan.shen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe ports reserved for VMD use are not visible to BIOS and therefore not
-configured to enable PCIe ASPM or LTR values (which BIOS will configure if
-they are not set). Lack of this programming results in high power
-consumption on laptops as reported in bugzilla.  For affected products use
-pci_enable_link_state to set the allowed link states for devices on the
-root ports. Also set the LTR value to the maximum value needed for the SoC.
+Add pcie and venc nodes for MT8195 SoC.
 
-This is a workaround for products from Rocket Lake through Alder Lake.
-Raptor Lake, the latest product at this time, has already implemented LTR
-configuring in BIOS. Future products will move ASPM configuration back to
-BIOS as well.  As this solution is intended for laptops, support is not
-added for hotplug or for devices downstream of a switch on the root port.
+This series is based on linux-next/next-20221028.
+Depends on https://lore.kernel.org/all/20221001030752.14486-1-irui.wang@mediatek.com/ 
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=212355
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215063
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=213717
+v4 -> v5:
+- update reset-names of pcie yaml
 
-Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
-Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+v3 -> v4:
+- update resets of pcie node
+
+v2 -> v3:
+- update pcie iommu-map-mask
+
+v1 -> v2:
+- remove 8195 example from pcie yaml
+- update reset-names of pcie yaml
+- add resets and reset-names to pcie node 
+- rename venc node
+
 ---
- V8
-  - Removed struct vmd_device_data patch. Instead use #define for the LTR
-    value which is the same across all products needing the quirk.
- V7
-  - No change
- V6
-  - Set ASPM first before setting LTR. This is needed because some
-    devices may only have LTR set by BIOS and not ASPM
-  - Skip setting the LTR if the current LTR in non-zero.
- V5
-  - Provide the LTR value as driver data.
-  - Use DWORD for the config space write to avoid PCI WORD access bug.
-  - Set ASPM links firsts, enabling all link states, before setting a
-    default LTR if the capability is present
-  - Add kernel message that VMD is setting the device LTR.
- V4
-  - Refactor vmd_enable_apsm() to exit early, making the lines shorter
-    and more readable. Suggested by Christoph.
- V3
-  - No changes
- V2
-  - Use return status to print pci_info message if ASPM cannot be enabled.
-  - Add missing static declaration, caught by lkp@intel.com
- drivers/pci/controller/vmd.c | 64 ++++++++++++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 86f3085db014..cba57e3091f6 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -66,12 +66,22 @@ enum vmd_features {
- 	 * interrupt handling.
- 	 */
- 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-+
-+	/*
-+	 * Enable ASPM on the PCIE root ports and set the default LTR of the
-+	 * storage devices on platforms where these values are not configured by
-+	 * BIOS. This is needed for laptops, which require these settings for
-+	 * proper power management of the SoC.
-+	 */
-+	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
- };
- 
- #define VMD_FEATS_CLIENT	(VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |	\
- 				 VMD_FEAT_HAS_BUS_RESTRICTIONS |	\
- 				 VMD_FEAT_OFFSET_FIRST_VECTOR)
- 
-+#define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
-+
- static DEFINE_IDA(vmd_instance_ida);
- 
- /*
-@@ -713,6 +723,46 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
- 	vmd_bridge->native_dpc = root_bridge->native_dpc;
- }
- 
-+/*
-+ * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-+ */
-+static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-+{
-+	unsigned long features = *(unsigned long *)userdata;
-+	u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
-+	u32 ltr_reg;
-+	int pos;
-+
-+	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
-+		return 0;
-+
-+	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-+	if (!pos)
-+		return 0;
-+
-+	/*
-+	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-+	 * so the LTR quirk is not needed.
-+	 */
-+	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-+	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-+		return 0;
-+
-+	/*
-+	 * Set the default values to the maximum required by the platform to
-+	 * allow the deepest power management savings. Write as a DWORD where
-+	 * the lower word is the max snoop latency and the upper word is the
-+	 * max non-snoop latency.
-+	 */
-+	ltr_reg = (ltr << 16) | ltr;
-+	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-+	pci_info(pdev, "VMD: Default LTR value set by driver\n");
-+
-+	return 0;
-+}
-+
- static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- {
- 	struct pci_sysdata *sd = &vmd->sysdata;
-@@ -867,6 +917,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		pci_reset_bus(child->self);
- 	pci_assign_unassigned_bus_resources(vmd->bus);
- 
-+	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-+
- 	/*
- 	 * VMD root buses are virtual and don't return true on pci_is_pcie()
- 	 * and will fail pcie_bus_configure_settings() early. It can instead be
-@@ -1005,17 +1057,17 @@ static const struct pci_device_id vmd_ids[] = {
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
- 				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
- 	{PCI_VDEVICE(INTEL, 0x467f),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{PCI_VDEVICE(INTEL, 0x4c3d),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{PCI_VDEVICE(INTEL, 0xa77f),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{PCI_VDEVICE(INTEL, 0x7d0b),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{PCI_VDEVICE(INTEL, 0xad0b),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
--		.driver_data = VMD_FEATS_CLIENT,},
-+		.driver_data = VMD_FEATS_CLIENT | VMD_FEAT_BIOS_PM_QUIRK,},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
+Jianjun Wang (1):
+  dt-bindings: PCI: mediatek-gen3: Support mt8195
+
+Tinghan Shen (2):
+  arm64: dts: mt8195: Add pcie and pcie phy nodes
+  arm64: dts: mt8195: Add venc node
+
+ .../bindings/pci/mediatek-pcie-gen3.yaml      |  13 +-
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi      | 174 ++++++++++++++++++
+ 2 files changed, 185 insertions(+), 2 deletions(-)
+
 -- 
-2.25.1
+2.18.0
 
