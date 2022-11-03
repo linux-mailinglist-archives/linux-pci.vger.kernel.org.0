@@ -2,214 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A087617AD3
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 11:30:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E87E1617AD7
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 11:32:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbiKCKaA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Nov 2022 06:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50526 "EHLO
+        id S230521AbiKCKcg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Nov 2022 06:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbiKCK37 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 06:29:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FD0DF31
-        for <linux-pci@vger.kernel.org>; Thu,  3 Nov 2022 03:29:58 -0700 (PDT)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1oqXTv-0007JU-G1; Thu, 03 Nov 2022 11:29:55 +0100
-Message-ID: <c288913f-46fc-32a8-d1bf-515d6522b462@pengutronix.de>
-Date:   Thu, 3 Nov 2022 11:29:54 +0100
+        with ESMTP id S229745AbiKCKcf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 06:32:35 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7884FDF34
+        for <linux-pci@vger.kernel.org>; Thu,  3 Nov 2022 03:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667471554; x=1699007554;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0qoSDSzgkyVZU1lr5PQGbJKlPX8Fkq7Yx4H/maVYt0s=;
+  b=CSDwAaGcAHKDUAL1hi8TRaL6yA6qkRILzw9WIuzeIzBn7Kg+jui9DiRv
+   JFsjWH0ShWur70WXDcHRqYWZ6Wym6cUTJZeGu3Jbm7eDJNyfbdgjrWUNE
+   1HRwAtrRVMiQjcD/kiwfkEl93ov45hO/ngZK1QSJ4+oYfDIEjHp2t2rfq
+   tuEPuGJoFOai4Onzoio+nA+fcS031Ath5vWEcbu+LqgJJ/iMm8wibaUhK
+   8kuLpdt99UyMzOXhgsiOO4dmT6Zoxt4skauHVsXluhkkuFtMdVpf782f8
+   RHheyGEXRcuVaty9Jhl2x7mM3pqK5/Oy+IZ/HsDWMWBa/miCkFvwc1Ki4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="289359453"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="289359453"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 03:32:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="665919792"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="665919792"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 03 Nov 2022 03:32:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id C4638155; Thu,  3 Nov 2022 12:32:54 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 1/2] PCI: Take multifunction devices into account when distributing resources
+Date:   Thu,  3 Nov 2022 12:32:53 +0200
+Message-Id: <20221103103254.30497-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v1] PCI: imx6: Keep the GPIO regulator always on
-Content-Language: en-US
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1667455698-14578-1-git-send-email-hongxing.zhu@nxp.com>
- <ff2f43f9-b04e-a224-02c2-d446a68c5337@pengutronix.de>
- <AS8PR04MB8676B8B896C3A4F2F4BAF6D28C389@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <AS8PR04MB8676B8B896C3A4F2F4BAF6D28C389@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Richard,
+It is possible to have PCIe switch upstream port a multifunction device.
+The resource distribution code does not take this into account properly
+and therefore it expands the upstream port resource windows too much,
+not leaving space for the other functions (in the multifunction device)
+and this leads to an issue that Jonathan reported. He runs QEMU with
+the following topoology (QEMU parameters):
 
-On 03.11.22 09:05, Hongxing Zhu wrote:
->> -----Original Message-----
->> From: Ahmad Fatoum <a.fatoum@pengutronix.de>
->> On 03.11.22 07:08, Richard Zhu wrote:
->>> Some WIFI modules load their firmware once in probe, and can't be
->>> powered off during suspend. Otherwise, these WIFI modules wouldn't be
->>> functional anymore after resume back.
->>
->> The brcmfmac OTOH, reprobes when resuming from suspend. Before this patch,
->> AFAIU, it should've been possible for the EP to go into D3cold during suspend.
->> This may no longer be possible when we keep vpcie powered.
->>
-> Oh, understood. In the other words, the EP wouldn't be in D3 mode when vpcie
->  is always powered on, right?
-> Thanks for your detailed explains.
+ -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2	\
+ -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on	\
+ -device e1000,bus=root_port13,addr=0.1 			\
+ -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3	\
+ -device e1000,bus=fun1
 
-D3cold specifically, which is the state the device enters when supply voltage
-is cut. Devices enter D3hot programmatically and in this case device
-supply voltage remains powered.
+The first e1000 NIC here is another function in the switch upstream
+port. This leads to following errors:
 
->> Prior to a4bb720eeb1e, vpcie was briefly toggled during PCIe core reset
->> sequence, so aforementioned WiFi modules that don't reprobe over resume
->> should've been broken by that too? If so, I don't see how it fixes that commit
->> as everything that is broken now was broken before that commit as well. After
->> this patch however, modules that can accept vpcie being toggled can't benefit
->> from some of the power saving.
-> The WIFI modules that don't re-probe over resume are always broken, if the
->  vpcie is toggled during suspend/resume, I think.
-> 
-> BTW, is the re-probe over resume mandatory requirements for EP devices
-> (for example, WIFI modules)?
+  pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
+  pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
+  pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
+  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
 
-I only looked at brcmfmac.
+Fix this by taking into account the possible multifunction devices when
+uptream port resources are distributed.
 
-> I'm curious that how the WIFI remote wake up going on if the WIFI module
->  is totally powered off.
+Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+Hi,
 
-Device may be in D3cold, but link is at L2, so there's still auxiliary
-power for device to support wake on (wired) LAN. No idea how prevalent
-this is for Wake on Wireless LAN.
+This is the formal patch that resulted from the discussion here:
 
->> Why can't users with this issue use a regulator-always-on regulator instead?
-> Yes, you're right.
-> One regulator-always-on regulator is a good idea.
+https://lore.kernel.org/linux-pci/20220905080232.36087-5-mika.westerberg@linux.intel.com/T/#m724289d0ee0c1ae07628744c283116e60efaeaf1
 
-That's what I do on my side as well, because we didn't want the interface
-to briefly disappear and reappear during suspend.
+Only change from that version is that we loop through all resources of
+the multifunction device.
 
-Cheers,
-Ahmad
+ drivers/pci/setup-bus.c | 63 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 59 insertions(+), 4 deletions(-)
 
-> 
->>
->>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
->>> ---
->>>  drivers/pci/controller/dwc/pci-imx6.c | 24 ++++++++----------------
->>>  1 file changed, 8 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c
->>> b/drivers/pci/controller/dwc/pci-imx6.c
->>> index 2616585ca5f8..94a89bbf381d 100644
->>> --- a/drivers/pci/controller/dwc/pci-imx6.c
->>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
->>> @@ -926,22 +926,13 @@ static int imx6_pcie_host_init(struct dw_pcie_rp
->> *pp)
->>>  	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
->>>  	int ret;
->>>
->>> -	if (imx6_pcie->vpcie) {
->>> -		ret = regulator_enable(imx6_pcie->vpcie);
->>> -		if (ret) {
->>> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
->>> -				ret);
->>> -			return ret;
->>> -		}
->>> -	}
->>> -
->>>  	imx6_pcie_assert_core_reset(imx6_pcie);
->>>  	imx6_pcie_init_phy(imx6_pcie);
->>>
->>>  	ret = imx6_pcie_clk_enable(imx6_pcie);
->>>  	if (ret) {
->>>  		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
->>> -		goto err_reg_disable;
->>> +		return ret;
->>>  	}
->>>
->>>  	if (imx6_pcie->phy) {
->>> @@ -974,9 +965,6 @@ static int imx6_pcie_host_init(struct dw_pcie_rp
->> *pp)
->>>  		phy_exit(imx6_pcie->phy);
->>>  err_clk_disable:
->>>  	imx6_pcie_clk_disable(imx6_pcie);
->>> -err_reg_disable:
->>> -	if (imx6_pcie->vpcie)
->>> -		regulator_disable(imx6_pcie->vpcie);
->>>  	return ret;
->>>  }
->>>
->>> @@ -991,9 +979,6 @@ static void imx6_pcie_host_exit(struct dw_pcie_rp
->> *pp)
->>>  		phy_exit(imx6_pcie->phy);
->>>  	}
->>>  	imx6_pcie_clk_disable(imx6_pcie);
->>> -
->>> -	if (imx6_pcie->vpcie)
->>> -		regulator_disable(imx6_pcie->vpcie);
->>>  }
->>>
->>>  static const struct dw_pcie_host_ops imx6_pcie_host_ops = { @@
->>> -1263,6 +1248,13 @@ static int imx6_pcie_probe(struct platform_device
->> *pdev)
->>>  		if (PTR_ERR(imx6_pcie->vpcie) != -ENODEV)
->>>  			return PTR_ERR(imx6_pcie->vpcie);
->>>  		imx6_pcie->vpcie = NULL;
->>> +	} else {
->>> +		ret = regulator_enable(imx6_pcie->vpcie);
->>> +		if (ret) {
->>> +			dev_err(dev, "failed to enable vpcie regulator: %d\n",
->>> +				ret);
->>> +			return ret;
->>> +		}
->>
->> Shouldn't the regulator enable be undone if the probe later fails?
->>
-> Yes, it's required.
-> Thanks a lot for your comments.
-> 
-> Richard Zhu
-> Best Regards
->> Cheers,
->> Ahmad
->>
->> --
->> Pengutronix e.K.                           |
->> |
->> Steuerwalder Str. 21                       |
->> https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.pe
->> ngutronix.de%2F&amp;data=05%7C01%7Chongxing.zhu%40nxp.com%7C06f5
->> 363342c9464bca5a08dabd69bdb5%7C686ea1d3bc2b4c6fa92cd99c5c301635
->> %7C0%7C0%7C638030559094875195%7CUnknown%7CTWFpbGZsb3d8eyJW
->> IjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
->> 000%7C%7C%7C&amp;sdata=36fpveVBgKraYIeEJjMSiPA10azBfhhHrNVYTaocN
->> nQ%3D&amp;reserved=0  |
->> 31137 Hildesheim, Germany                  | Phone:
->> +49-5121-206917-0    |
->> Amtsgericht Hildesheim, HRA 2686           | Fax:
->> +49-5121-206917-5555 |
-> 
-
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index b4096598dbcb..c8787b187ee4 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1830,10 +1830,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 * bridges below.
+ 	 */
+ 	if (hotplug_bridges + normal_bridges == 1) {
+-		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+-		if (dev->subordinate)
+-			pci_bus_distribute_available_resources(dev->subordinate,
+-				add_list, io, mmio, mmio_pref);
++		/* Upstream port must be the first */
++		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
++		if (!bridge->subordinate)
++			return;
++
++		/*
++		 * It is possible to have switch upstream port as a part
++		 * of a multifunction device. For this reason reduce the
++		 * resources occupied by the other functions before
++		 * distributing the rest.
++		 */
++		list_for_each_entry(dev, &bus->devices, bus_list) {
++			int i;
++
++			if (dev == bridge)
++				continue;
++
++			/*
++			 * It should be multifunction but if not stop
++			 * the distribution and bail out.
++			 */
++			if (!dev->multifunction)
++				return;
++
++			for (i = 0; i < PCI_NUM_RESOURCES; i++) {
++				const struct resource *dev_res = &dev->resource[i];
++				resource_size_t dev_sz;
++				struct resource *b_res;
++
++				if (dev_res->flags & IORESOURCE_IO) {
++					b_res = &io;
++				} else if (dev_res->flags & IORESOURCE_MEM) {
++					if (dev_res->flags & IORESOURCE_PREFETCH)
++						b_res = &mmio_pref;
++					else
++						b_res = &mmio;
++				} else {
++					continue;
++				}
++
++				/* Size aligned to bridge window */
++				align = pci_resource_alignment(bridge, b_res);
++				dev_sz = ALIGN(resource_size(dev_res), align);
++
++				pci_dbg(dev, "%pR aligned to %llx\n", dev_res,
++					(unsigned long long)dev_sz);
++
++				if (dev_sz >= resource_size(b_res))
++					memset(b_res, 0, sizeof(*b_res));
++				else
++					b_res->end -= dev_sz;
++
++				pci_dbg(bridge, "updated available to %pR\n", b_res);
++			}
++		}
++
++		pci_bus_distribute_available_resources(bridge->subordinate,
++						       add_list, io, mmio,
++						       mmio_pref);
+ 		return;
+ 	}
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.35.1
 
