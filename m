@@ -2,110 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 979FF61870E
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 19:05:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835C361871D
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Nov 2022 19:09:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbiKCSFi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Nov 2022 14:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
+        id S230194AbiKCSJm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Nov 2022 14:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbiKCSEo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 14:04:44 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A026375;
-        Thu,  3 Nov 2022 11:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667498521; x=1699034521;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yb2Mq3fbpPtLAnjCVdV2BEIMFU/XQ1cYRIu5k0HafqM=;
-  b=l5Hr56ToEJs+/CdNN7Zywr/zrd1fxLDUPoQCFG/B9iGuOzEjjvmRuRqJ
-   4YBKXfi//cNu1ha6Gpn7s7C9Gk/ytC+jm6tEctcha4YEs4w/ui6Q5pM+6
-   WsqkD7TWduTuJJ7n6zsDKQqh0RuMYT2TbwVNDLLkZaldHd0nFlgYyNRBj
-   THatTJGf5qwAUJ2i7M/uJe3kDI5Ar8VZO3HGKPI/eXSLCZ/LDWI9cH3Su
-   D659FUND4L7Ha7sJsCkNS1pjrmpgIPN3nGk4UooVymOPidGWXStBzo6md
-   O7Shjcgyz4pMQj/L7o8g5AOaHkLbaiH+P3mImGVPaK3VcPcZY/UvsUNjQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="290150790"
-X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="290150790"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 11:01:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="740290898"
-X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="740290898"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Nov 2022 11:01:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oqeWy-006xtO-3D;
-        Thu, 03 Nov 2022 20:01:33 +0200
-Date:   Thu, 3 Nov 2022 20:01:32 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
+        with ESMTP id S231531AbiKCSJI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Nov 2022 14:09:08 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD08B267A;
+        Thu,  3 Nov 2022 11:08:38 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N3BXQ49CSz67KdQ;
+        Fri,  4 Nov 2022 02:06:30 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Thu, 3 Nov 2022 19:08:36 +0100
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 3 Nov
+ 2022 18:08:36 +0000
+Date:   Thu, 3 Nov 2022 18:08:35 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>, <bwidawsk@kernel.org>,
+        <vishal.l.verma@intel.com>, <a.manzanares@samsung.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v2 4/4] pcmcia: Convert to use
- pci_bus_for_each_resource_p()
-Message-ID: <Y2QB/BxfKCjckaaU@smile.fi.intel.com>
-References: <20221103164644.70554-1-andriy.shevchenko@linux.intel.com>
- <20221103164644.70554-5-andriy.shevchenko@linux.intel.com>
- <Y2P0XCNJvTVuziO7@owl.dominikbrodowski.net>
- <Y2P2ja26ikNecTsv@smile.fi.intel.com>
- <Y2P5mRt//Pp6XTLT@owl.dominikbrodowski.net>
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] cxl/pci: Add generic MSI-X/MSI irq support
+Message-ID: <20221103180835.000078f6@Huawei.com>
+In-Reply-To: <20221102171524.thsz2kwtirhxn7ee@offworld>
+References: <20221024133633.00000467@huawei.com>
+        <20221025232535.GA579167@bhelgaas>
+        <20221102171524.thsz2kwtirhxn7ee@offworld>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2P5mRt//Pp6XTLT@owl.dominikbrodowski.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 06:25:45PM +0100, Dominik Brodowski wrote:
-> Am Thu, Nov 03, 2022 at 07:12:45PM +0200 schrieb Andy Shevchenko:
-> > On Thu, Nov 03, 2022 at 06:03:24PM +0100, Dominik Brodowski wrote:
+On Wed, 2 Nov 2022 10:15:24 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-...
-
-> > Considering this is done, can you issue your conditional tag so I will
-> > incorporate it in v3?
+> On Tue, 25 Oct 2022, Bjorn Helgaas wrote:
 > 
-> Certainly, feel free to add
+> >> In short that calls:
+> >> /* Allocate the maximum possible number of MSI/MSI-X vectors */
+> >> nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
+> >>			PCI_IRQ_MSIX | PCI_IRQ_MSI);
+> >>
+> >> /* See how many and which Interrupt Message Numbers we actually use */
+> >> nvec = pcie_message_numbers(dev, mask, &pme, &aer, &dpc);
+> >>
+> >> if (nvec != nr_entries) {
+> >>	pci_free_irq_vectors(dev);
+> >>
+> >>	nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
+> >>			PCI_IRQ_MSIX | PCI_IRQ_MSI);
+> >> }
+> >>
+> >> My worry here is that the implicit assumption is that the vectors
+> >> won't move if we reduce the overall number of vectors we are asking
+> >> for...  
 > 
-> 	Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
+> This would also apply to what is currently in portdrv machinery, no?
+> 
+> >>
+> >> However, imagine the case that we have a feature the driver doesn't
+> >> know about that was previously at a higher vector.  After reducing
+> >> the vectors allocated the hardware might decide that feature needs
+> >> its own vector whereas some others can be combined.  Hence we'd end
+> >> up with a less than ideal packing for the features we actually
+> >> support.
+> >>
+> >> Could do something iterative to solve this if it actually matters
+> >> (increase number of vectors until the layout matches what we get
+> >> with max possible vectors).  
+> 
+> Maybe do a bounded retry loop until we get stable value?
+> 
+> retry = 1;
+> do {
+> 	pci_alloc_irq_vectors(1, 32);
+> 	nvecs = get_max_msgnum(); // max(pmu, events, mbox, isolation)
+> 	pci_free_irq_vectors();
+> 
+> 	pci_alloc_irq_vectors(nvecs, nvecs);
+> 	new_nvecs = get_max_msgnum();
+> 
+> 	if (likely(new_nvecs == nvecs))
+> 		return 0;
+> 
+> 	pci_free_irq_vectors();
+> }  while (retry--);
+> 
+> return -1; // no irq support
 
-Thank you for the review!
+Yup. That's pretty much what I was thinking - if we care :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> But yeah I'm not sure how much we actually care about this. 
 
+That was my feeling. This might be worth a comment to say that
+it's not guaranteed to be optimal (in portdrv), but probably 
+a won't fix.
 
+Jonathan
