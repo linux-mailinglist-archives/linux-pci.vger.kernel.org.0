@@ -2,170 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0566196AF
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 13:58:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21F3A619B2A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 16:14:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiKDM6Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Nov 2022 08:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38436 "EHLO
+        id S232452AbiKDPOZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Nov 2022 11:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbiKDM6Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 08:58:24 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C196BFF
-        for <linux-pci@vger.kernel.org>; Fri,  4 Nov 2022 05:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667566700; x=1699102700;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fGymz2eImI9yriT1o2PbdLz0lkYDWGVJ6CYgtrjSUMY=;
-  b=c9tTxoLgA0rt3y0QTeGMlkRB/lQWosJI9tCwrN4rSfIPrMExZNqOqUNe
-   1+fIEA+Vf2xZce+IiN1GtQ0hrfNxpDqR+wo86HY2uXaF16Wb6qigOCZTL
-   A8twbeSNb5B132bIK6vKJxHBGAbhP1ejODRtjwRdoIdnwgqhEyYFqPFBe
-   Dc5vqZjO/DaeWwG2v8U2xz4BaIqWv26VVePMLtyAygA5NJkEzm/KsVvEX
-   qZbnc5oAse/qrjmWbmGys1dnsvyl2GEjHZyxy2tBT9Aiss6vVpOUvIt5o
-   V+XYS2v9N2rXkFIv5adVmK5JMYkM838W83gxRf1OBI3iu2lj5FfR1gb9n
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="293285816"
-X-IronPort-AV: E=Sophos;i="5.96,137,1665471600"; 
-   d="scan'208";a="293285816"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 05:58:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="586177522"
-X-IronPort-AV: E=Sophos;i="5.96,137,1665471600"; 
-   d="scan'208";a="586177522"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 04 Nov 2022 05:58:19 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oqwH4-000GzJ-1h;
-        Fri, 04 Nov 2022 12:58:18 +0000
-Date:   Fri, 04 Nov 2022 20:57:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
- a009d44bb8129bbad6de73bdaceef6e63f7eca4f
-Message-ID: <63650c2f.YyjRNHidQhrqx+Rg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232461AbiKDPOX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 11:14:23 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62D85F48
+        for <linux-pci@vger.kernel.org>; Fri,  4 Nov 2022 08:14:16 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id 8so3240841qka.1
+        for <linux-pci@vger.kernel.org>; Fri, 04 Nov 2022 08:14:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSAQ8HyevbU1SRu/HWCnDYZ7sesPwd2iwJjeHcOhri0=;
+        b=p9CminsN53qrFplpvggdvKqaLyOKNBrntrAp19vf9oPCrthGfFnypEKUwZg9xGCMK4
+         tlAkh8aPlPv6bgVXnI5olTf9u/Jk3rpBLNGmBUk91noqbdvwrZpf2j+aV2dTz+9PhwK4
+         +Ox755t9PDNDs+dx3ML4giDlVS5Mg55PCenbf87phpCV68riMhHT7ZLZcGZxvWVOstDC
+         P46DQiP2YhibJHquAwbiwmnurl22WpSdPMvsQuY28y/29wsdM9RlKYMyEzBTV1X2Coxj
+         nRQR27JtXxOwDZPkoCu95H2QrUb7E4jwsH7jm2Zhnz+qwD/bN7hNDaxtbe+eMo2s11wI
+         xEYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSAQ8HyevbU1SRu/HWCnDYZ7sesPwd2iwJjeHcOhri0=;
+        b=S4qJ2m1MC89AwuqhfRhkOKfJprtPNOUMmLk+wUjqp7JJuwC65xF0UMCvQTDaLouGIT
+         8eVl2i/18iUEj5u/sHvZwiWpVsFBdYk7XH/tKQ8+iv/n38FOgq9eQENlVQpS+vTS78Ho
+         28w4SovXzOSL5OU3zlt4mg8XIXoMZgv/5+SewGsItiPbHuThx7mT8JOH+XyXuNIPCV4j
+         6IH7p4pbP9NVlXfUFUDOmr4tAHRD88+gMIZwqZYVmnQBk+8kkAdc2DLYiumrtfzoYWoJ
+         GJuc7Fdl6bvXxeHwoCpo3GFcnGkU9kzJOQ8L6w2X+X+e3wv2aW24XYcGEHuc+cUvedP9
+         zaWg==
+X-Gm-Message-State: ACrzQf3xfVV2oEajqHaaUoSt5Ojqdc0RdTuUW/zu71j7ErG+HqdtYS2D
+        ZA0efQrxKLJO0qp6Z7Zpfgg5OA==
+X-Google-Smtp-Source: AMsMyM6iKfQ55uRl1/mtMB2lg88XM5Tn9yhOcXnHuhJnX4Ds+U0VSJAiSVrSxyVuJsRIDOFlmYrIxw==
+X-Received: by 2002:a37:a8d2:0:b0:6f9:75d0:fddb with SMTP id r201-20020a37a8d2000000b006f975d0fddbmr27055868qke.101.1667574855536;
+        Fri, 04 Nov 2022 08:14:15 -0700 (PDT)
+Received: from ?IPV6:2601:586:5000:570:aad6:acd8:4ed9:299b? ([2601:586:5000:570:aad6:acd8:4ed9:299b])
+        by smtp.gmail.com with ESMTPSA id e22-20020a05622a111600b003996aa171b9sm2579338qty.97.2022.11.04.08.14.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 08:14:14 -0700 (PDT)
+Message-ID: <e17dbc8c-b2ba-6acf-7b56-85a246aaa765@linaro.org>
+Date:   Fri, 4 Nov 2022 11:14:12 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: xilinx-pcie: Convert to YAML
+ schemas of Xilinx AXI PCIe Root Port Bridge
+Content-Language: en-US
+To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     bhelgaas@google.com, michals@xilinx.com, robh+dt@kernel.org,
+        nagaradhesh.yeleswarapu@amd.com, bharat.kumar.gogada@amd.com
+References: <20221104044135.469797-1-thippeswamy.havalige@amd.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221104044135.469797-1-thippeswamy.havalige@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: a009d44bb8129bbad6de73bdaceef6e63f7eca4f  PCI: Access Link 2 registers only for devices with Links
+On 04/11/2022 00:41, Thippeswamy Havalige wrote:
+> Convert to YAML dtschemas of Xilinx AXI PCIe Root Port Bridge
+> dt binding.
+> 
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> ---
 
-elapsed time: 722m
 
-configs tested: 89
-configs skipped: 4
+> +
+> +title: Xilinx AXI PCIe Root Port Bridge
+> +
+> +maintainers:
+> +  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: xlnx,axi-pcie-host-1.00.a
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  ranges:
+> +    items:
+> +      - description: |
+> +          ranges for the PCI memory regions (I/O space region is not
+> +          supported by hardware)
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-controller:
+> +    description: identifies the node as an interrupt controller
+> +    type: object
+> +    properties:
+> +      interrupt-controller: true
+> +
+> +      "#address-cells":
+> +        const: 0
+> +
+> +      "#interrupt-cells":
+> +        const: 1
+> +
+> +    required:
+> +      - 'interrupt-controller'
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Use same style of quotes as in other places, either ' or "
 
-gcc tested configs:
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-arc                                 defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-s390                             allmodconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-x86_64                           rhel-8.3-syz
-sh                               allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-s390                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a004
-x86_64                           allyesconfig
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a014
-x86_64                        randconfig-a006
-i386                          randconfig-a012
-i386                          randconfig-a016
-m68k                             allyesconfig
-arm                                 defconfig
-riscv                randconfig-r042-20221104
-s390                 randconfig-r044-20221104
-arc                  randconfig-r043-20221104
-arm                              allyesconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-i386                             allyesconfig
-powerpc                     taishan_defconfig
-xtensa                  cadence_csp_defconfig
-m68k                        m5307c3_defconfig
-xtensa                         virt_defconfig
-m68k                           sun3_defconfig
-arm                        keystone_defconfig
-arm                        spear6xx_defconfig
-m68k                                defconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-c001
-powerpc              randconfig-c003-20221104
-s390                       zfcpdump_defconfig
-powerpc                    amigaone_defconfig
-sh                            titan_defconfig
-m68k                          amiga_defconfig
-mips                           gcw0_defconfig
-arm                          pxa910_defconfig
-m68k                        m5407c3_defconfig
-arm                           u8500_defconfig
-sh                           se7751_defconfig
-nios2                            allyesconfig
-sh                           se7619_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-riscv                    nommu_virt_defconfig
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ranges
+> +  - interrupts
+> +  - interrupt-map
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    pcie@50000000 {
+> +        compatible = "xlnx,axi-pcie-host-1.00.a";
+> +        reg = < 0x50000000 0x1000000 >;
 
-clang tested configs:
-i386                          randconfig-a013
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a011
-hexagon              randconfig-r041-20221102
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20221104
-hexagon              randconfig-r045-20221104
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-mips                       rbtx49xx_defconfig
-arm                       cns3420vb_defconfig
-arm                     am200epdkit_defconfig
-x86_64                        randconfig-k001
+Still wrong - no spaces around <>
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Best regards,
+Krzysztof
+
