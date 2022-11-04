@@ -2,179 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C98076194DA
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 11:53:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C534619593
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 12:46:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231707AbiKDKxw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Nov 2022 06:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34486 "EHLO
+        id S231689AbiKDLqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Nov 2022 07:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231617AbiKDKxt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 06:53:49 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C331C62C4;
-        Fri,  4 Nov 2022 03:53:47 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.77])
-        by gateway (Coremail) with SMTP id _____8Cxbbc672RjsX0EAA--.10308S3;
-        Fri, 04 Nov 2022 18:53:46 +0800 (CST)
-Received: from loongson-PC.loongson.cn (unknown [10.20.42.77])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPuI072RjPmkNAA--.37600S2;
-        Fri, 04 Nov 2022 18:53:46 +0800 (CST)
-From:   Liu Peibao <liupeibao@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCI: loongson: skip scanning unavailable child device
-Date:   Fri,  4 Nov 2022 18:53:40 +0800
-Message-Id: <20221104105340.20610-1-liupeibao@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S231683AbiKDLqR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 07:46:17 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795FB2CDE6;
+        Fri,  4 Nov 2022 04:46:15 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id B91368508B;
+        Fri,  4 Nov 2022 12:46:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1667562373;
+        bh=pumMTjtf9WLT5Pdgy5NFVGx0xDoNEndclDGx6qBWuFs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mJt/MdeEg679KBL5LhTiQ7DJFhCVh+6XsWPbMo9d5/Be79DngcO1Q3K9WSoMiYaBz
+         EpeSIjFf7HX2qvwfvQWuSZKb1hksJFsF2Yry9uioeEuHuw47HuEBnDUXQf21bY1d3q
+         TbOjW9uCCLGIN+8RPqVzhkRmgtNq2VzzMYp93aWOe+F3kq0EJ8v7CP0t+cELJsg0e+
+         ORSyHIm0BJINUfiD5PljgMK4eXxwcp8KKcmF0kc6g3B8f0UZgThjS0v3lPCHdw35C7
+         6aRaLMg0cyxTPSKm6qsJCYgxo2jdGmmrQJfG/lw/U7BjwGKRNkjoYuH0fnDYWVusRp
+         HKJec2vnqG7Xw==
+Message-ID: <fe14e8ba-10e5-94e8-9ca6-04acee0b05e2@denx.de>
+Date:   Fri, 4 Nov 2022 12:41:01 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxPuI072RjPmkNAA--.37600S2
-X-CM-SenderInfo: xolx1vpled0qxorr0wxvrqhubq/1tbiAQAACmNjr2MbmQABsE
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4fJrWrGw17Gr1ktFWfuFg_yoW5AF1xpF
-        W3Aay3Kr48tr1S9ws5t3yUCF1a9Fs7u3s3JFZ7Cwn3Kr9Fy340gFy8JF1jv3ySyrW8WF1a
-        qFyvgr48CF4UJF7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-        kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-        07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8
-        JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-        YxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 2/3] dt-bindings: imx6q-pcie: Handle various PD
+ configurations
+Content-Language: en-US
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+References: <20221102215729.147335-1-marex@denx.de>
+ <CAL_JsqLg893rWwEQhgf_9=78WNiA7bstqPVvP6SQe4SyAhhyUw@mail.gmail.com>
+ <2908d3ff-f476-4750-90cf-1554492c69c9@denx.de> <2911185.BEx9A2HvPv@steina-w>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <2911185.BEx9A2HvPv@steina-w>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI Controller of 2k1000 could not mask devices by
-setting vender id or device id in configuration space header
-as invalid values. When there are pins shareble between
-the platform device and PCI device, if the platform device
-is preferred, we should not scan this PCI device. In the
-above scene, add `status = "disabled"` property in DT node
-of this PCI device.
+On 11/4/22 08:19, Alexander Stein wrote:
+> Hi Marek,
+> 
+> Am Donnerstag, 3. November 2022, 17:25:46 CET schrieb Marek Vasut:
+>> On 11/3/22 13:32, Rob Herring wrote:
+>>> On Thu, Nov 3, 2022 at 3:29 AM Alexander Stein
+>>>
+>>> <alexander.stein@ew.tq-group.com> wrote:
+>>>> Hi Marek,
+>>>>
+>>>> Am Mittwoch, 2. November 2022, 22:57:28 CET schrieb Marek Vasut:
+>>>>> The i.MX SoCs have various power domain configurations routed into
+>>>>> the PCIe IP. MX6SX is the only one which contains 2 domains and also
+>>>>> uses power-domain-names. MX6QDL do not use any domains. All the rest
+>>>>> uses one domain and does not use power-domain-names anymore.
+>>>>>
+>>>>> Document all those configurations in the DT binding document.
+>>>>>
+>>>>> Signed-off-by: Marek Vasut <marex@denx.de>
+>>>>> ---
+>>>>> Cc: Fabio Estevam <festevam@gmail.com>
+>>>>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>>>>> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>> Cc: Shawn Guo <shawnguo@kernel.org>
+>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>> Cc: NXP Linux Team <linux-imx@nxp.com>
+>>>>> To: devicetree@vger.kernel.org
+>>>>> ---
+>>>>>
+>>>>>    .../bindings/pci/fsl,imx6q-pcie.yaml          | 47 ++++++++++++++-----
+>>>>>    1 file changed, 34 insertions(+), 13 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>>>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml index
+>>>>> 1cfea8ca72576..fc8d4d7b80b38 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>>>>>
+>>>>> @@ -68,19 +68,6 @@ properties:
+>>>>>        description: A phandle to an fsl,imx7d-pcie-phy node. Additional
+>>>>>        
+>>>>>          required properties for imx7d-pcie and imx8mq-pcie.
+>>>>>
+>>>>> -  power-domains:
+>>>>> -    items:
+>>>>> -      - description: The phandle pointing to the DISPLAY domain for
+>>>>> -          imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
+>>>>> -          imx8mq-pcie.
+>>>>> -      - description: The phandle pointing to the PCIE_PHY power domains
+>>>>> -          for imx6sx-pcie.
+>>>>> -
+>>>>> -  power-domain-names:
+>>>>> -    items:
+>>>>> -      - const: pcie
+>>>>> -      - const: pcie_phy
+>>>>> -
+>>>>>
+>>>>>      resets:
+>>>>>        maxItems: 3
+>>>>>        description: Phandles to PCIe-related reset lines exposed by SRC
+>>>>>
+>>>>> @@ -241,6 +228,40 @@ allOf:
+>>>>>                    - const: pcie_bus
+>>>>>                    - const: pcie_phy
+>>>>>
+>>>>> +  - if:
+>>>>> +      properties:
+>>>>> +        compatible:
+>>>>> +          contains:
+>>>>> +            const: fsl,imx6sx-pcie
+>>>>> +    then:
+>>>>> +      properties:
+>>>>> +        power-domains:
+>>>>> +          items:
+>>>>> +            - description: The phandle pointing to the DISPLAY domain
+>>>>> for
+>>>>> +                imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie
+>>>>> and
+>>>>> +                imx8mq-pcie.
+>>>>> +            - description: The phandle pointing to the PCIE_PHY power
+>>>>> domains +                for imx6sx-pcie.
+>>>>> +        power-domain-names:
+>>>>> +          items:
+>>>>> +            - const: pcie
+>>>>> +            - const: pcie_phy
+>>>>> +    else:
+>>>>> +      if:
+>>>>> +        not:
+>>>>> +          properties:
+>>>>> +            compatible:
+>>>>> +              contains:
+>>>>> +                enum:
+>>>>> +                  - fsl,imx6q-pcie
+>>>>> +                  - fsl,imx6qp-pcie
+>>>>> +      then:
+>>>>> +        properties:
+>>>>> +          power-domains:
+>>>>> +            description: |
+>>>>> +               The phandle pointing to the DISPLAY domain for
+>>>>> imx6sx-pcie,
+>>>>> to +               PCIE_PHY power domain for imx7d-pcie and imx8mq-pcie.
+>>>>> +
+>>>>
+>>>> Doesn't it makes more sense to keep the power-domains descriptions in the
+>>>> common part on top, as before, but adjust minItems/maxItems for each
+>>>> compatible?
+>>>
+>>> Yes. Keep properties defined at the top level.
+>>
+>> The problem I keep running into here is that if I apply patch like below
+>> (basically what you and Alex are suggesting), I get this warning:
+>>
+>> arch/arm64/boot/dts/freescale/imx8mm-board.dtb: pcie@33800000:
+>> power-domains: [[86]] is too short
+> 
+> I guess you need this:
+>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -65,6 +65,7 @@ properties:
+>         required properties for imx7d-pcie and imx8mq-pcie.
+>   
+>     power-domains:
+> +    minItems: 1
+>       items:
+>         - description: The phandle pointing to the DISPLAY domain for
+>             imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
+> 
+> I have a similar WIP change on my tree which add 'minItems: 1' to power-
+> domains and also sets 'maxItems: 1' to power-domains for everything being not
+> fsl,imx6sx-pcie.
 
-Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
----
-V2 -> V3: 1. use list_for_each_entry() for more clearly.
-          2. fix wrong use of sizeof().
-V1 -> V2: use existing property "status" instead of adding new property.
-
-
- drivers/pci/controller/pci-loongson.c | 55 +++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 05c50408f13b..c7dd88eac885 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -40,11 +40,21 @@ struct loongson_pci_data {
- 	struct pci_ops *ops;
- };
- 
-+#ifdef CONFIG_OF
-+struct mask_entry {
-+	struct list_head entry;
-+	unsigned int devfn;
-+};
-+#endif
-+
- struct loongson_pci {
- 	void __iomem *cfg0_base;
- 	void __iomem *cfg1_base;
- 	struct platform_device *pdev;
- 	const struct loongson_pci_data *data;
-+#ifdef CONFIG_OF
-+	struct list_head masklist;
-+#endif
- };
- 
- /* Fixup wrong class code in PCIe bridges */
-@@ -194,6 +204,18 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
- 			return NULL;
- 	}
- 
-+#ifdef CONFIG_OF
-+	/* Don't access devices in masklist */
-+	if (pci_is_root_bus(bus)) {
-+		struct mask_entry *entry;
-+
-+		list_for_each_entry(entry, &priv->masklist, entry) {
-+			if (devfn == entry->devfn)
-+				return NULL;
-+		}
-+	}
-+#endif
-+
- 	/* CFG0 can only access standard space */
- 	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
- 		return cfg0_map(priv, bus, devfn, where);
-@@ -206,6 +228,36 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
- }
- 
- #ifdef CONFIG_OF
-+static int setup_masklist(struct loongson_pci *priv)
-+{
-+	struct device *dev = &priv->pdev->dev;
-+	struct device_node *dn, *parent = dev->of_node;
-+	struct mask_entry *entry;
-+	int devfn;
-+
-+	INIT_LIST_HEAD(&priv->masklist);
-+
-+	for_each_child_of_node(parent, dn) {
-+		/*
-+		 * if device is not available, add this to masklist
-+		 * to avoid scanning it.
-+		 */
-+		if (!of_device_is_available(dn)) {
-+			devfn = of_pci_get_devfn(dn);
-+			if (devfn < 0)
-+				continue;
-+
-+			entry = devm_kzalloc(dev, sizeof(*entry), GFP_KERNEL);
-+			if (!entry)
-+				return -ENOMEM;
-+
-+			entry->devfn = devfn;
-+			list_add_tail(&entry->entry, &priv->masklist);
-+		}
-+	}
-+
-+	return 0;
-+}
- 
- static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- {
-@@ -305,6 +357,9 @@ static int loongson_pci_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (setup_masklist(priv))
-+		return -ENOMEM;
-+
- 	bridge->sysdata = priv;
- 	bridge->ops = priv->data->ops;
- 	bridge->map_irq = loongson_map_irq;
--- 
-2.20.1
-
+This is what I was missing, thanks.
