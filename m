@@ -2,115 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F3D619C30
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 16:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 205EE619E5C
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 18:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231324AbiKDPxn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Nov 2022 11:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58876 "EHLO
+        id S231825AbiKDRVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Nov 2022 13:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbiKDPxm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 11:53:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7892F037;
-        Fri,  4 Nov 2022 08:53:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F1B76226E;
-        Fri,  4 Nov 2022 15:53:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D52DAC433D7;
-        Fri,  4 Nov 2022 15:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667577221;
-        bh=D/kjrbnhZKfEDME4djvX1K9wKrkFOfyBSZWAGGVtnsY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MzSDONcqj6q7b1xz8pbVGGl5Koc3y/dSFR/1iuRTl2mSslZZvJ7os9YGjk0jP+WiH
-         khcd4dhlG4oso27eMJeDQuwmPLrE2/GFEoL98vtXUQk9GIjcCo5yC7Buz0KzYWJqXy
-         jNOXp78XRGnRDnUY2sC9FIchMaHg3LLDMQUEL2uztgrwuShFB7CDwW/AQVEv40FuLX
-         bRfmtumwWrrGsapKUMtpbIOLyidodXNTQyzRGwFslfJF8Ar/ZSAJNup51UqRjUSUCD
-         wLyFQnATZQFu0JPVzLdI2ALp4LWZRwlw+A/2q043ZKacp6Rgxge89SeNQs30LnXoeF
-         2NbdWZrch7xsQ==
-Date:   Fri, 4 Nov 2022 10:53:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Christophe Fergeau <cfergeau@redhat.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Clear PCI_STATUS when setting up the device
-Message-ID: <20221104155339.GA95864@bhelgaas>
+        with ESMTP id S231623AbiKDRVE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 13:21:04 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B2D4199D
+        for <linux-pci@vger.kernel.org>; Fri,  4 Nov 2022 10:20:59 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso5089589pjc.5
+        for <linux-pci@vger.kernel.org>; Fri, 04 Nov 2022 10:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OczEUwDaDCJagzs0QtMr8aHYN/ko8ymZX7lVummJVOs=;
+        b=uAw80S9vBEJp3aHojoMEpA/68sS1rwm2/DWeE+ULXnA6VihFLM1tIcWa71PfRN9kBY
+         0Dv2ncNI3cIHP1goXyeXZom0/uBfoDaO30ASdZEL4aGfHRhvJUIMCG8nrQlvfooqmoJO
+         hUAuGLtFkFgLnDesYbOIb/h2RG1W4Vfgffao9TGfEveZhdIZofkxgjiB9PJaysiRvxez
+         qh27EMHRn8B9dhv5bFV0Gj3bOcrEvWTaLB9Ua8Lz3QnnrjBVMODvXVdUSprTVXviQ9hj
+         D+qpWlXKArSY4d+JaCwNiIRypZgFLSZR3fDUcNuaeyz///hny0BZ0cHpkYlDAwWb4Z7k
+         HJqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OczEUwDaDCJagzs0QtMr8aHYN/ko8ymZX7lVummJVOs=;
+        b=qtjQcZlmB58QQ40Oszp/wt5gBBVhnSDUXCsIziIrNkm/RGG33MVE3f2U94gdp3CqWx
+         QEER2Sc60f5h5e0JL2szeMVtYFC987GvvaLLKY5TPdh+tlo4obbg0mhtII4X5oxHyJdB
+         eQdo4TCDuItnW7Kgfi+o7tS60SU8g/JYrdr2AVyz+xzeh/HjjQ9ya39xfZ3EKbIEFrxL
+         nUxswTPNx+jBHFLbryxuXd++DsDf9UztgiuWc58LVepOBHuRQJO459tfOpkpO+xN8Gmv
+         Y61AnJNR4GWvRSWIGw0gNM5ldatyU/1+RbDK+iRCQLqwaGfACZ3ONqOHLOBtsaNlmBDW
+         Qqdw==
+X-Gm-Message-State: ACrzQf35oPJ0jc/mzr1AvJQa7mV0Kmk3aKK3Rf3aOljM1cFieCCzhM5F
+        gc0noT/L199FEpGKgEtmaGGE3Q==
+X-Google-Smtp-Source: AMsMyM7qXmb1tKLbXoG2RN7MYH+OBDKZmahcKO3ZgUlIGFzbY77VBHGSlWccWa4sVOHz9dNTYKbNgg==
+X-Received: by 2002:a17:90a:6045:b0:212:fe9a:5792 with SMTP id h5-20020a17090a604500b00212fe9a5792mr53370678pjm.178.1667582458816;
+        Fri, 04 Nov 2022 10:20:58 -0700 (PDT)
+Received: from [10.255.167.72] ([139.177.225.230])
+        by smtp.gmail.com with ESMTPSA id x16-20020aa79a50000000b0056e0ff577edsm2990000pfj.43.2022.11.04.10.20.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 10:20:58 -0700 (PDT)
+Message-ID: <17b88750-53c2-0653-045a-dde921e37e0c@bytedance.com>
+Date:   Sat, 5 Nov 2022 01:20:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517043738.2308499-1-kai.heng.feng@canonical.com>
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.0
+Subject: Re: [PATCH v3 0/9] PCI/AER: Fix and optimize usage of status clearing
+ api
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     ruscur@russell.cc, oohall@gmail.com, fancer.lancer@gmail.com,
+        jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
+        james.smart@broadcom.com, dick.kennedy@broadcom.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ntb@lists.linux.dev, linux-scsi@vger.kernel.org
+References: <20220928105946.12469-1-chenzhuo.1@bytedance.com>
+Content-Language: en-US
+From:   Zhuo Chen <chenzhuo.1@bytedance.com>
+In-Reply-To: <20220928105946.12469-1-chenzhuo.1@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 17, 2022 at 12:37:38PM +0800, Kai-Heng Feng wrote:
-> We are seeing Master Abort bit is set on Intel I350 ethernet device and its
-> root port right after boot, probably happened during BIOS phase:
-> 
-> 00:06.0 PCI bridge [0604]: Intel Corporation Device [8086:464d] (rev 05) (prog-if 00 [Normal decode])
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-> 
-> 6e:00.0 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
->         Subsystem: Intel Corporation Ethernet Server Adapter I350-T2 [8086:00a2]
->         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-> 
-> 6e:00.1 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
->         Subsystem: Intel Corporation Ethernet Server Adapter I350-T2 [8086:00a2]
->         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-> 
-> And the Master Abort bit is cleared after S3.
-> 
-> Since there's no functional impact found, clear the PCI_STATUS to treat
-> it anew at setting up.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215989
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Hi Bjorn, a gentle reminder.
 
-This patch appeared in v6.0 as 6cd514e58f12 ("PCI: Clear PCI_STATUS
-when setting up device").  Christophe reported in the bugzilla that it
-causes boot failures:
+Thanks and regards.
 
-> --- Comment #3 from Christophe Fergeau (cfergeau@redhat.com) ---
-> This commit
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6c
-> d514e58f12b211d638dbf6f791fa18d854f09c
-> references this issue.
-> This commit causes boot failures when trying to start linux guests with Apple's
-> hypervisor framework (for example using https://github.com/evansm7/vftool ).
-> After reverting it, I can successfully boot 6.1-rc kernels on my macOS12 x86_64
-> macbook. With this commit, the VM fails to start, additional details in
-> https://bugzilla.redhat.com/show_bug.cgi?id=2137803
-
-
-> ---
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
+On 9/28/22 6:59 PM, Zhuo Chen wrote:
+> Hello.
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 17a969942d370..414f659dc8735 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1890,6 +1890,9 @@ int pci_setup_device(struct pci_dev *dev)
->  
->  	dev->broken_intx_masking = pci_intx_mask_broken(dev);
->  
-> +	/* Clear errors left from system firmware */
-> +	pci_write_config_word(dev, PCI_STATUS, 0xffff);
-> +
->  	switch (dev->hdr_type) {		    /* header type */
->  	case PCI_HEADER_TYPE_NORMAL:		    /* standard header */
->  		if (class == PCI_CLASS_BRIDGE_PCI)
-> -- 
-> 2.34.1
+> Here comes patch v3, which contains some fixes and optimizations of
+> aer api usage. The v1 and v2 can be found on the mailing list.
 > 
+> v3:
+> - Modifications to comments proposed by Sathyanarayanan. Remove
+>    pci_aer_clear_nonfatal_status() call in NTB and improve commit log.
+> 
+> v2:
+> - Modifications to comments proposed by Bjorn. Split patch into more
+>    obvious parts.
+> 
+> Zhuo Chen (9):
+>    PCI/AER: Add pci_aer_clear_uncorrect_error_status() to PCI core
+>    PCI/DPC: Use pci_aer_clear_uncorrect_error_status() to clear
+>      uncorrectable error status
+>    NTB: Remove pci_aer_clear_nonfatal_status() call
+>    scsi: lpfc: Change to use pci_aer_clear_uncorrect_error_status()
+>    PCI/AER: Unexport pci_aer_clear_nonfatal_status()
+>    PCI/AER: Move check inside pcie_clear_device_status().
+>    PCI/AER: Use pcie_aer_is_native() to judge whether OS owns AER
+>    PCI/ERR: Clear fatal error status when pci_channel_io_frozen
+>    PCI/AER: Refine status clearing process with api
+> 
+>   drivers/ntb/hw/idt/ntb_hw_idt.c |  2 --
+>   drivers/pci/pci.c               |  7 +++--
+>   drivers/pci/pci.h               |  2 ++
+>   drivers/pci/pcie/aer.c          | 45 +++++++++++++++++++--------------
+>   drivers/pci/pcie/dpc.c          |  3 +--
+>   drivers/pci/pcie/err.c          | 15 ++++-------
+>   drivers/pci/pcie/portdrv_core.c |  3 +--
+>   drivers/scsi/lpfc/lpfc_attr.c   |  4 +--
+>   include/linux/aer.h             |  4 +--
+>   9 files changed, 44 insertions(+), 41 deletions(-)
+> 
+
+-- 
+Zhuo Chen
