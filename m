@@ -2,289 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0906191BC
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 08:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC82C6191ED
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 08:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbiKDHTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Nov 2022 03:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
+        id S230291AbiKDH2D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Nov 2022 03:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiKDHTO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 03:19:14 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6819B27916;
-        Fri,  4 Nov 2022 00:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1667546351; x=1699082351;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R0yqydx+O0k9fNWZ/yQ6A//nOTWddN8lKx5pQ56sZaE=;
-  b=mZmkaVMU820Yj4KEhi0/wPsusxBdxKHW7r+DQkvNPfKkFaYwhuR35obi
-   JQw4zd4pwRfZrtYzll2AeBXtmT9ukDe1ZAC8yBHdSkNh3CH0fUjFGCAcy
-   39sNFqUYLb9dHbkoL99dArO+w5ybA+08aXGfCxThcWfoANDH8L47rpJ+d
-   X5AG6QoHqaF6xwt+u/D9AiSM/W9lB1qW/BXhIuZdf/QRs9rDt8EPiCWCw
-   iEZy7ioI84lEpu88QzvwKoicacwezSVEUQj8Ih7zA/pXPyDfyux56vt5i
-   +YHe52qbL1hwvpKv3Xv7EyOvWjmrVzlCBg4w6ta3N3C1wcq6yVbc0NqZG
-   g==;
-X-IronPort-AV: E=Sophos;i="5.96,136,1665439200"; 
-   d="scan'208";a="27152894"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 Nov 2022 08:19:09 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 04 Nov 2022 08:19:09 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 04 Nov 2022 08:19:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1667546349; x=1699082349;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R0yqydx+O0k9fNWZ/yQ6A//nOTWddN8lKx5pQ56sZaE=;
-  b=GPU2bH14o3c1W9hVrUhcDtrfAicaIZrm06ry+nrOydTQXiJYB7AkJxJ3
-   1EF+NSzpUxgsjqypq8gNeFReUY+2Moygbgtg+RscNvYrqJGSd7kRdRJir
-   eqiEUa6IoNO+Jhgf3ndISeKomjD8I8OqvwcykNHKsv/wZsp4ZVp57D+cB
-   kOXB4kMcMbDi1a5Zofv3OLpKUJCkpvd0sXDFvRWyxOEKwCcnn1Qt5SuVP
-   a5836qGcHHBauUxAdjXCbSkvld6S2Y0Z70FwHSRj0xmrFPjhqu/EmCaE0
-   FgwVDj0nTWhVoafTc6+PWstA4ErQ+HnTJHQYHdtxQJ07gf2BDsQYxK44s
-   w==;
-X-IronPort-AV: E=Sophos;i="5.96,136,1665439200"; 
-   d="scan'208";a="27152893"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 Nov 2022 08:19:09 +0100
-Received: from steina-w.localnet (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id A1596280056;
-        Fri,  4 Nov 2022 08:19:08 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] dt-bindings: imx6q-pcie: Handle various PD configurations
-Date:   Fri, 04 Nov 2022 08:19:07 +0100
-Message-ID: <2911185.BEx9A2HvPv@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <2908d3ff-f476-4750-90cf-1554492c69c9@denx.de>
-References: <20221102215729.147335-1-marex@denx.de> <CAL_JsqLg893rWwEQhgf_9=78WNiA7bstqPVvP6SQe4SyAhhyUw@mail.gmail.com> <2908d3ff-f476-4750-90cf-1554492c69c9@denx.de>
+        with ESMTP id S230035AbiKDH1l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 03:27:41 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A3AC2A70D;
+        Fri,  4 Nov 2022 00:27:37 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.77])
+        by gateway (Coremail) with SMTP id _____8BxfdrovmRjDW4EAA--.15553S3;
+        Fri, 04 Nov 2022 15:27:36 +0800 (CST)
+Received: from loongson-PC.loongson.cn (unknown [10.20.42.77])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJlfivmRj5lANAA--.19331S2;
+        Fri, 04 Nov 2022 15:27:35 +0800 (CST)
+From:   Liu Peibao <liupeibao@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] PCI: loongson: skip scanning unavailable child device
+Date:   Fri,  4 Nov 2022 15:27:30 +0800
+Message-Id: <20221104072730.14631-1-liupeibao@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxJlfivmRj5lANAA--.19331S2
+X-CM-SenderInfo: xolx1vpled0qxorr0wxvrqhubq/1tbiAQATCmNjr2MLBQAFsf
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4fJrWrGw17Jry5Ww45Wrg_yoW5AryDpF
+        W3Aay3Kr4rtr1I9ws5t3yUCr1a9Fsa93s3JFs7Cwnagr9Fy3y0gFy8JF1jy3ySyrW8WF1a
+        qFWvgr48CF4UJFUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+        xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+        1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+        6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+        AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+        vjxU466zUUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marek,
+The PCI Controller of 2k1000 could not mask devices by
+setting vender id or device id in configuration space header
+as invalid values. When there are pins shareble between
+the platform device and PCI device, if the platform device
+is preferred, we should not scan this PCI device. In the
+above scene, add `status = "disabled"` property in DT node
+of this PCI device.
 
-Am Donnerstag, 3. November 2022, 17:25:46 CET schrieb Marek Vasut:
-> On 11/3/22 13:32, Rob Herring wrote:
-> > On Thu, Nov 3, 2022 at 3:29 AM Alexander Stein
-> > 
-> > <alexander.stein@ew.tq-group.com> wrote:
-> >> Hi Marek,
-> >> 
-> >> Am Mittwoch, 2. November 2022, 22:57:28 CET schrieb Marek Vasut:
-> >>> The i.MX SoCs have various power domain configurations routed into
-> >>> the PCIe IP. MX6SX is the only one which contains 2 domains and also
-> >>> uses power-domain-names. MX6QDL do not use any domains. All the rest
-> >>> uses one domain and does not use power-domain-names anymore.
-> >>> 
-> >>> Document all those configurations in the DT binding document.
-> >>> 
-> >>> Signed-off-by: Marek Vasut <marex@denx.de>
-> >>> ---
-> >>> Cc: Fabio Estevam <festevam@gmail.com>
-> >>> Cc: Lucas Stach <l.stach@pengutronix.de>
-> >>> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> >>> Cc: Rob Herring <robh+dt@kernel.org>
-> >>> Cc: Shawn Guo <shawnguo@kernel.org>
-> >>> Cc: linux-arm-kernel@lists.infradead.org
-> >>> Cc: NXP Linux Team <linux-imx@nxp.com>
-> >>> To: devicetree@vger.kernel.org
-> >>> ---
-> >>> 
-> >>>   .../bindings/pci/fsl,imx6q-pcie.yaml          | 47 ++++++++++++++-----
-> >>>   1 file changed, 34 insertions(+), 13 deletions(-)
-> >>> 
-> >>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> >>> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml index
-> >>> 1cfea8ca72576..fc8d4d7b80b38 100644
-> >>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> >>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> >>> 
-> >>> @@ -68,19 +68,6 @@ properties:
-> >>>       description: A phandle to an fsl,imx7d-pcie-phy node. Additional
-> >>>       
-> >>>         required properties for imx7d-pcie and imx8mq-pcie.
-> >>> 
-> >>> -  power-domains:
-> >>> -    items:
-> >>> -      - description: The phandle pointing to the DISPLAY domain for
-> >>> -          imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
-> >>> -          imx8mq-pcie.
-> >>> -      - description: The phandle pointing to the PCIE_PHY power domains
-> >>> -          for imx6sx-pcie.
-> >>> -
-> >>> -  power-domain-names:
-> >>> -    items:
-> >>> -      - const: pcie
-> >>> -      - const: pcie_phy
-> >>> -
-> >>> 
-> >>>     resets:
-> >>>       maxItems: 3
-> >>>       description: Phandles to PCIe-related reset lines exposed by SRC
-> >>> 
-> >>> @@ -241,6 +228,40 @@ allOf:
-> >>>                   - const: pcie_bus
-> >>>                   - const: pcie_phy
-> >>> 
-> >>> +  - if:
-> >>> +      properties:
-> >>> +        compatible:
-> >>> +          contains:
-> >>> +            const: fsl,imx6sx-pcie
-> >>> +    then:
-> >>> +      properties:
-> >>> +        power-domains:
-> >>> +          items:
-> >>> +            - description: The phandle pointing to the DISPLAY domain
-> >>> for
-> >>> +                imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie
-> >>> and
-> >>> +                imx8mq-pcie.
-> >>> +            - description: The phandle pointing to the PCIE_PHY power
-> >>> domains +                for imx6sx-pcie.
-> >>> +        power-domain-names:
-> >>> +          items:
-> >>> +            - const: pcie
-> >>> +            - const: pcie_phy
-> >>> +    else:
-> >>> +      if:
-> >>> +        not:
-> >>> +          properties:
-> >>> +            compatible:
-> >>> +              contains:
-> >>> +                enum:
-> >>> +                  - fsl,imx6q-pcie
-> >>> +                  - fsl,imx6qp-pcie
-> >>> +      then:
-> >>> +        properties:
-> >>> +          power-domains:
-> >>> +            description: |
-> >>> +               The phandle pointing to the DISPLAY domain for
-> >>> imx6sx-pcie,
-> >>> to +               PCIE_PHY power domain for imx7d-pcie and imx8mq-pcie.
-> >>> +
-> >> 
-> >> Doesn't it makes more sense to keep the power-domains descriptions in the
-> >> common part on top, as before, but adjust minItems/maxItems for each
-> >> compatible?
-> > 
-> > Yes. Keep properties defined at the top level.
-> 
-> The problem I keep running into here is that if I apply patch like below
-> (basically what you and Alex are suggesting), I get this warning:
-> 
-> arch/arm64/boot/dts/freescale/imx8mm-board.dtb: pcie@33800000:
-> power-domains: [[86]] is too short
+Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+---
+V1 -> V2: use existing property "status" instead of adding new property.
 
-I guess you need this:
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-@@ -65,6 +65,7 @@ properties:
-       required properties for imx7d-pcie and imx8mq-pcie.
+ drivers/pci/controller/pci-loongson.c | 57 +++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 05c50408f13b..cde8a8691867 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -40,11 +40,21 @@ struct loongson_pci_data {
+ 	struct pci_ops *ops;
+ };
  
-   power-domains:
-+    minItems: 1
-     items:
-       - description: The phandle pointing to the DISPLAY domain for
-           imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
-
-I have a similar WIP change on my tree which add 'minItems: 1' to power-
-domains and also sets 'maxItems: 1' to power-domains for everything being not 
-fsl,imx6sx-pcie.
-
-Best regards,
-Alexander
-
-> I think that's because power-domains: contains items: and to validate
-> that imx8mm.dtsi with pcie@33800000 { power-domains = <&pgc_pcie>; };, I
-> would need to get rid of those items: ? Which is what I did in the
-> aforementioned patch for imx8m, that's why I removed it from the common
-> part.
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> index 12c7baba489aa..ec5e8dfe541ea 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> @@ -68,6 +68,18 @@ properties:
->       description: A phandle to an fsl,imx7d-pcie-phy node. Additional
->         required properties for imx7d-pcie and imx8mq-pcie.
-> 
-> +  power-domains:
-> +    items:
-> +      - description: The phandle pointing to the DISPLAY domain for
-> +          imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
-> +          imx8mq-pcie.
-> +      - description: The phandle pointing to the PCIE_PHY power domains
-> +          for imx6sx-pcie.
-> +  power-domain-names:
-> +    items:
-> +      - const: pcie
-> +      - const: pcie_phy
-> +
->     resets:
->       maxItems: 2
->       description: Phandles to PCIe-related reset lines exposed by SRC
-> @@ -235,16 +247,11 @@ allOf:
->       then:
->         properties:
->           power-domains:
-> -          items:
-> -            - description: The phandle pointing to the DISPLAY domain for
-> -                imx6sx-pcie, to PCIE_PHY power domain for imx7d-pcie and
-> -                imx8mq-pcie.
-> -            - description: The phandle pointing to the PCIE_PHY power
-> domains
-> -                for imx6sx-pcie.
-> +          minItems: 2
-> +          maxItems: 2
->           power-domain-names:
-> -          items:
-> -            - const: pcie
-> -            - const: pcie_phy
-> +          minItems: 2
-> +          maxItems: 2
->       else:
->         if:
->           not:
-> @@ -257,9 +264,8 @@ allOf:
->         then:
->           properties:
->             power-domains:
-> -            description: |
-> -               The phandle pointing to the DISPLAY domain for
-> imx6sx-pcie, to
-> -               PCIE_PHY power domain for imx7d-pcie and imx8mq-pcie.
-> +            minItems: 1
-> +            maxItems: 1
-> 
->     - if:
->         properties:
-
-
-
++#ifdef CONFIG_OF
++struct mask_entry {
++	struct list_head entry;
++	unsigned int devfn;
++};
++#endif
++
+ struct loongson_pci {
+ 	void __iomem *cfg0_base;
+ 	void __iomem *cfg1_base;
+ 	struct platform_device *pdev;
+ 	const struct loongson_pci_data *data;
++#ifdef CONFIG_OF
++	struct list_head masklist;
++#endif
+ };
+ 
+ /* Fixup wrong class code in PCIe bridges */
+@@ -194,6 +204,20 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
+ 			return NULL;
+ 	}
+ 
++#ifdef CONFIG_OF
++	/* Don't access devices in masklist */
++	if (pci_is_root_bus(bus)) {
++		struct list_head *list;
++		struct mask_entry *entry;
++
++		list_for_each(list, &priv->masklist) {
++			entry = list_entry(list, struct mask_entry, entry);
++			if (devfn == entry->devfn)
++				return NULL;
++		}
++	}
++#endif
++
+ 	/* CFG0 can only access standard space */
+ 	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+ 		return cfg0_map(priv, bus, devfn, where);
+@@ -206,6 +230,36 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
+ }
+ 
+ #ifdef CONFIG_OF
++static int setup_masklist(struct loongson_pci *priv)
++{
++	struct device *dev = &priv->pdev->dev;
++	struct device_node *dn, *parent = dev->of_node;
++	struct mask_entry *entry;
++	int devfn;
++
++	INIT_LIST_HEAD(&priv->masklist);
++
++	for_each_child_of_node(parent, dn) {
++		/*
++		 * if device is not available, add this to masklist
++		 * to avoid scanning it.
++		 */
++		if (!of_device_is_available(dn)) {
++			devfn = of_pci_get_devfn(dn);
++			if (devfn < 0)
++				continue;
++
++			entry = devm_kzalloc(dev, sizeof(entry), GFP_KERNEL);
++			if (!entry)
++				return -ENOMEM;
++
++			entry->devfn = devfn;
++			list_add_tail(&entry->entry, &priv->masklist);
++		}
++	}
++
++	return 0;
++}
+ 
+ static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ {
+@@ -305,6 +359,9 @@ static int loongson_pci_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (setup_masklist(priv))
++		return -ENOMEM;
++
+ 	bridge->sysdata = priv;
+ 	bridge->ops = priv->data->ops;
+ 	bridge->map_irq = loongson_map_irq;
+-- 
+2.20.1
 
