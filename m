@@ -2,120 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7969D619446
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 11:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F826194B7
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Nov 2022 11:43:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbiKDKPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Nov 2022 06:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        id S230064AbiKDKni (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Nov 2022 06:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229756AbiKDKPm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 06:15:42 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9ABE2A26C;
-        Fri,  4 Nov 2022 03:15:38 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 17CFA100B0552;
-        Fri,  4 Nov 2022 11:15:37 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id E63B23269D; Fri,  4 Nov 2022 11:15:36 +0100 (CET)
-Date:   Fri, 4 Nov 2022 11:15:36 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>
-Subject: Re: [PATCH 1/2] PCI: pciehp: Add support for OS-First Hotplug and
- AER/DPC
-Message-ID: <20221104101536.GA11363@wunner.de>
-References: <20221101000719.36828-1-Smita.KoralahalliChannabasappa@amd.com>
- <20221101000719.36828-2-Smita.KoralahalliChannabasappa@amd.com>
+        with ESMTP id S229485AbiKDKnh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Nov 2022 06:43:37 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2361F2654F;
+        Fri,  4 Nov 2022 03:43:34 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.77])
+        by gateway (Coremail) with SMTP id _____8CxrrfV7GRjXn0EAA--.10538S3;
+        Fri, 04 Nov 2022 18:43:33 +0800 (CST)
+Received: from [10.20.42.77] (unknown [10.20.42.77])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxj+DV7GRjqmgNAA--.37553S3;
+        Fri, 04 Nov 2022 18:43:33 +0800 (CST)
+Subject: Re: [PATCH v2 1/1] PCI: loongson: skip scanning unavailable child
+ device
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20221104072730.14631-1-liupeibao@loongson.cn>
+ <d2f7deb7-ebe0-d880-1c4b-a210d65c6223@wanadoo.fr>
+From:   Liu Peibao <liupeibao@loongson.cn>
+Message-ID: <ea68d96d-a77e-aa68-0850-31bc232d4946@loongson.cn>
+Date:   Fri, 4 Nov 2022 18:43:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221101000719.36828-2-Smita.KoralahalliChannabasappa@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <d2f7deb7-ebe0-d880-1c4b-a210d65c6223@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Bxj+DV7GRjqmgNAA--.37553S3
+X-CM-SenderInfo: xolx1vpled0qxorr0wxvrqhubq/1tbiAQAACmNjr2MbmQAAsF
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw4xury3AF4fuw4DKF4xCrg_yoW8Zw4UpF
+        n5JFWUGrW8Jrn5Jr18tryUJFy5Zr1DJ3Z8Jr18uF1Utr47Ar10gr1UXr1q9ryUJr48Gr1U
+        Jr1UXrnrZr17JrDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
+        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+        AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
+        FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
+        aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0b6pPUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 12:07:18AM +0000, Smita Koralahalli wrote:
-> The implementation is as follows: On an async remove a DPC is triggered as
-> a side-effect along with an MSI to the OS. Determine it's an async remove
-> by checking for DPC Trigger Status in DPC Status Register and Surprise
-> Down Error Status in AER Uncorrected Error Status to be non-zero. If true,
-> treat the DPC event as a side-effect of async remove, clear the error
-> status registers and continue with hot-plug tear down routines. If not,
-> follow the existing routine to handle AER/DPC errors.
+On 11/4/22 4:43 PM, Christophe JAILLET wrote:
+> Le 04/11/2022 à 08:27, Liu Peibao a écrit :
+>>   +#ifdef CONFIG_OF
+>> +    /* Don't access devices in masklist */
+>> +    if (pci_is_root_bus(bus)) {
+>> +        struct list_head *list;
+>> +        struct mask_entry *entry;
+>> +
+>> +        list_for_each(list, &priv->masklist) {
+>> +            entry = list_entry(list, struct mask_entry, entry);
+> 
+> Hi,
+> 
+> list_for_each_entry() is slighly less verbose.
+> 
 
-Instead of having the OS recognize and filter Surprise Down events,
-it would also be possible to simply set the Surprise Down bit in the
-Uncorrectable Error Mask Register.  This could be constrained to
-Downstream Ports capable of surprise removal, i.e. those where the
-is_hotplug_bridge in struct pci_dev is set.  And that check and the
-register change could be performed in pci_dpc_init().
+OK, I will update the patch with list_for_each_entry().
 
-Have you considered such an alternative approach?  If you have, what
-was the reason to prefer the more complex solution you're proposing?
+>> +            if (devfn == entry->devfn)
+>> +                return NULL;
+>> +        }
+>> +    }
+>> +#endif
+>> +
+>>       /* CFG0 can only access standard space */
+>>       if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+>>           return cfg0_map(priv, bus, devfn, where);
+>> @@ -206,6 +230,36 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
+>>   }
+>>     #ifdef CONFIG_OF
+>> +static int setup_masklist(struct loongson_pci *priv)
+>> +{
+>> +    struct device *dev = &priv->pdev->dev;
+>> +    struct device_node *dn, *parent = dev->of_node;
+>> +    struct mask_entry *entry;
+>> +    int devfn;
+>> +
+>> +    INIT_LIST_HEAD(&priv->masklist);
+>> +
+>> +    for_each_child_of_node(parent, dn) {
+>> +        /*
+>> +         * if device is not available, add this to masklist
+>> +         * to avoid scanning it.
+>> +         */
+>> +        if (!of_device_is_available(dn)) {
+>> +            devfn = of_pci_get_devfn(dn);
+>> +            if (devfn < 0)
+>> +                continue;
+>> +
+>> +            entry = devm_kzalloc(dev, sizeof(entry), GFP_KERNEL);
+> 
+> sizeof(*entry)?
+>
 
+That really is a bug, thanks!
 
-> +static void pci_clear_surpdn_errors(struct pci_dev *pdev)
-> +{
-> +	u16 reg16;
-> +	u32 reg32;
-> +
-> +	pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, reg32);
-> +
-> +	pci_read_config_word(pdev, PCI_STATUS, &reg16);
-> +	pci_write_config_word(pdev, PCI_STATUS, reg16);
-> +
-> +	pcie_capability_read_word(pdev, PCI_EXP_DEVSTA, &reg16);
-> +	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, reg16);
-> +}
+BR,
+Peibao
+ 
+>> +            if (!entry)
+>> +                return -ENOMEM;
+>> +
 
-I don't understand why PCI_STATUS and PCI_EXP_DEVSTA need to be
-touched here?
-
-
-> +static void pciehp_handle_surprise_removal(struct pci_dev *pdev)
-
-Since this function is located in dpc.c and is strictly called from
-other functions in the same file, it should be prefixed dpc_, not
-pciehp_.
-
-
-> +	/*
-> +	 * According to Section 6.13 and 6.15 of the PCIe Base Spec 6.0,
-> +	 * following a hot-plug event, clear the ARI Forwarding Enable bit
-> +	 * and AtomicOp Requester Enable as its not determined whether the
-> +	 * next device inserted will support these capabilities. AtomicOp
-> +	 * capabilities are not supported on PCI Express to PCI/PCI-X Bridges
-> +	 * and any newly added component may not be an ARI device.
-> +	 */
-> +	pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
-> +				   (PCI_EXP_DEVCTL2_ARI | PCI_EXP_DEVCTL2_ATOMIC_REQ));
-
-That looks like a reasonable change, but it belongs in a separate
-patch.  And I think it should be performed as part of (de-)enumeration,
-not as part of DPC error handling.  What about Downstream Ports which
-are not DPC-capable, I guess the bits should be cleared as well, no?
-
-How about clearing the bits in pciehp_unconfigure_device()?
-
-Thanks,
-
-Lukas
