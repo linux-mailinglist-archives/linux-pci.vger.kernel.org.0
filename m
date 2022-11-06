@@ -2,54 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DEFF61E78D
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 00:25:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E39661E795
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 00:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbiKFXZl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Nov 2022 18:25:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41100 "EHLO
+        id S230115AbiKFX2d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Nov 2022 18:28:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKFXZj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Nov 2022 18:25:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B226664C0;
-        Sun,  6 Nov 2022 15:25:38 -0800 (PST)
+        with ESMTP id S230024AbiKFX2c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Nov 2022 18:28:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D19635B;
+        Sun,  6 Nov 2022 15:28:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 45A4C60DD7;
-        Sun,  6 Nov 2022 23:25:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DEE6C433D6;
-        Sun,  6 Nov 2022 23:25:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18E94B80D69;
+        Sun,  6 Nov 2022 23:28:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E12FC433D6;
+        Sun,  6 Nov 2022 23:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667777137;
-        bh=8QTjaoznKmYvPhqQLhP3/+GZ18ZGgT5Ym5i6QFRuXrQ=;
+        s=k20201202; t=1667777307;
+        bh=3Cd2pgUygkB4hpu5zj8Mcl7NTGFw2u8uR5Ty1Bp3ClQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BOAH4PEV6QSz+GT34lJH3ok4phfLX9JGn1t4PZqmRGgVdneH64+IgQttyVwCgc5+B
-         uEPG4Y1k3KFijlYrIQI3Omt31Q0hVmDXDGHIwoz5GDfqR73Sj+lOGmurQPg7Mrk2kF
-         mUj/yLxwGS0j5FyH7oCB6KzRh91KqtxZ8/2Zuld9NrRJmnsbikOSyh8nspVivtAl/C
-         PzOw191RQH+Na/pTiuKT7D5kywZMPs00VYdReaSKvjsMP5VcFs/fUAge0eKHHEI7uz
-         P0EjAsIwLiV70HvJvMluA6/NwxowyEHKZOhl08yfj3MgFOzVLYdy6l3AO/jKn4RKf6
-         slIAXb+pjpqrA==
+        b=aFJU8jeYmL8IiEbZgaZyhNW9UdTViNEfDOvsC0oWDH9BVeKXZPcNbJFFf0fgreBJ+
+         UBd+dlQsh5BiyuBFTgHZCDWRc9igRo36Hyc08+4kXVSs6raLKXFVIY493qY20RZfxd
+         9FLc4rTF5lds3P4wWqSiLBB/4wuooo0rEMH6R8htn/Y6pu0sgubNg2QqcuTsaVQLAR
+         90KDqvKIX1Z8ZHkT56T+ZLXJIVZGAzELNPH7o/Fzp5sGz+RazF48gukFGXNpNfiTtN
+         Mx8MZZEvOSXD+jsehkLmNPtMsM+itr+nDHYhEB4J2M/cozviqiNQYvQDXoBxDj+e5W
+         0G8RK88EHdYRQ==
 Received: by pali.im (Postfix)
-        id 5C3AC858; Mon,  7 Nov 2022 00:25:34 +0100 (CET)
-Date:   Mon, 7 Nov 2022 00:25:34 +0100
+        id 9A5F8858; Mon,  7 Nov 2022 00:28:24 +0100 (CET)
+Date:   Mon, 7 Nov 2022 00:28:24 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
- interrupt handler
-Message-ID: <20221106232534.iqzjehhumxzocwru@pali>
-References: <20220524122817.7199-1-pali@kernel.org>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Mauri Sandberg <maukka@ext.kapsi.fi>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/7] PCI: mvebu: add support for orion soc
+Message-ID: <20221106232824.du4uou6pf77rqu45@pali>
+References: <20220718202843.6766-1-maukka@ext.kapsi.fi>
+ <20220905192310.22786-1-pali@kernel.org>
+ <Y1qRaBowB2EBS6Sg@lpieralisi>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220524122817.7199-1-pali@kernel.org>
+In-Reply-To: <Y1qRaBowB2EBS6Sg@lpieralisi>
 User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -60,118 +68,71 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 24 May 2022 14:28:17 Pali Rohár wrote:
-> Same as in commit a3b69dd0ad62 ("Revert "PCI: aardvark: Rewrite IRQ code to
-> chained IRQ handler"") for pci-aardvark driver, use devm_request_irq()
-> instead of chained IRQ handler in pci-mvebu.c driver.
+On Thursday 27 October 2022 16:10:48 Lorenzo Pieralisi wrote:
+> On Mon, Sep 05, 2022 at 09:23:03PM +0200, Pali Rohár wrote:
+> > Hello! This patch series add support for Orion PCIe controller into
+> > pci-mvebu.c driver. V3 version has completely rewritten pci-mvebu.c code
+> > to parse all physical addresses from device tree files according to
+> > mvebu-pci.txt documentation, allow access to all extended PCIe config
+> > space registers and use modern kernel API pci_remap_cfgspace() and
+> > mvebu_mbus_add_window_by_id() fir mapping PCIe config space.
+> > 
+> > Most of Marvell device tree code in pci-mvebu.c is giant magic, but it was
+> > there because this change and it is de-facto API between dts files and
+> > kernel used for a long time. Note that it is misused according to PCI
+> > device tree bindings, but we have to follow this Marvell bindings to do
+> > not introduce backward incompatibility issues for other non-Orion
+> > platforms.
+> > 
+> > Mauri tested these changes on DNS323 board with both DT and non-DT builds.
+> > PCIe AER is working too (one of the feature which proved that access to
+> > extended PCIe config registers is working fine).
+> > 
+> > After this patch is accepted we are planning to look at existing Orion
+> > arch specific code and covert it to use this new DT based pci-mvebu.c
+> > code. Later this would allow to kill arch specific Orion PCIe code,
+> > which is in arch/arm/plat-orion/pcie.c and parts also in file
+> > arch/arm/mach-orion5x/pci.c (shared with old-PCI bus code).
+> > 
+> > This patch series depends on another patches:
+> > https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
+> > https://lore.kernel.org/linux-pci/20220817230036.817-3-pali@kernel.org/
 > 
-> This change fixes affinity support and allows to pin interrupts from
-> different PCIe controllers to different CPU cores.
-> 
-> Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
-> Hello Bjorn! This is basically same issue as for pci-aardvark.c:
-> https://lore.kernel.org/linux-pci/20220515125815.30157-1-pali@kernel.org/#t
+> Can this series be rebased please on top of v6.1-rc1 so that we can merge it ?
 
-Hello! Half year passed since introduced commit in Fixes line, issue is
-still there and for pci-mvebu.c was not fixed yet. For pci-aardvark.c
-was fixed.
+IIRC above two dependent patches still applies on master branch and this
+patch series applies on above two dependent patches.
 
-I do not see any progress in alternative solution for this issue and
-therefore this patch is still relevant.
-
-Moreover requirement to use devm_request_irq() is needed also for other
-pci-mvebu.c patches which are waiting on the list, due to nature of
-shared interrupt line. For example:
-https://lore.kernel.org/linux-pci/20220830123639.4zpvvvlrsaqs2rls@pali/
-
-> I tested this patch with pci=nomsi in cmdline (to force kernel to use
-> legacy intx instead of MSI) on A385 and checked that I can set affinity
-> via /proc/irq/XX/smp_affinity file for every mvebu pcie controller to
-> different CPU and legacy interrupts from different cards/controllers
-> were handled by different CPUs.
+> Thanks,
+> Lorenzo
 > 
-> I think that this is important on Armada XP platforms which have many
-> independent PCIe controllers (IIRC up to 10) and many cores (up to 4).
-> ---
->  drivers/pci/controller/pci-mvebu.c | 30 +++++++++++++++++-------------
->  1 file changed, 17 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 8f76d4bda356..de67ea39fea5 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -1017,16 +1017,13 @@ static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
->  	return 0;
->  }
->  
-> -static void mvebu_pcie_irq_handler(struct irq_desc *desc)
-> +static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
->  {
-> -	struct mvebu_pcie_port *port = irq_desc_get_handler_data(desc);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct mvebu_pcie_port *port = arg;
->  	struct device *dev = &port->pcie->pdev->dev;
->  	u32 cause, unmask, status;
->  	int i;
->  
-> -	chained_irq_enter(chip, desc);
-> -
->  	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
->  	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
->  	status = cause & unmask;
-> @@ -1040,7 +1037,7 @@ static void mvebu_pcie_irq_handler(struct irq_desc *desc)
->  			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
->  	}
->  
-> -	chained_irq_exit(chip, desc);
-> +	return status ? IRQ_HANDLED : IRQ_NONE;
->  }
->  
->  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> @@ -1490,9 +1487,20 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
->  				mvebu_pcie_powerdown(port);
->  				continue;
->  			}
-> -			irq_set_chained_handler_and_data(irq,
-> -							 mvebu_pcie_irq_handler,
-> -							 port);
-> +
-> +			ret = devm_request_irq(dev, irq, mvebu_pcie_irq_handler,
-> +					       IRQF_SHARED | IRQF_NO_THREAD,
-> +					       port->name, port);
-> +			if (ret) {
-> +				dev_err(dev, "%s: cannot register interrupt handler: %d\n",
-> +					port->name, ret);
-> +				irq_domain_remove(port->intx_irq_domain);
-> +				pci_bridge_emul_cleanup(&port->bridge);
-> +				devm_iounmap(dev, port->base);
-> +				port->base = NULL;
-> +				mvebu_pcie_powerdown(port);
-> +				continue;
-> +			}
->  		}
->  
->  		/*
-> @@ -1599,7 +1607,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
->  
->  	for (i = 0; i < pcie->nports; i++) {
->  		struct mvebu_pcie_port *port = &pcie->ports[i];
-> -		int irq = port->intx_irq;
->  
->  		if (!port->base)
->  			continue;
-> @@ -1615,9 +1622,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
->  		/* Clear all interrupt causes. */
->  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
->  
-> -		if (irq > 0)
-> -			irq_set_chained_handler_and_data(irq, NULL, NULL);
-> -
->  		/* Remove IRQ domains. */
->  		if (port->intx_irq_domain)
->  			irq_domain_remove(port->intx_irq_domain);
-> -- 
-> 2.20.1
-> 
+> > Mauri Sandberg (2):
+> >   bus: mvebu-mbus: add configuration space aperture
+> >   dt-bindings: PCI: mvebu: Add orion5x compatible
+> > 
+> > Pali Rohár (5):
+> >   ARM: orion: Move PCIe mbus window mapping from orion5x_setup_wins() to
+> >     pcie_setup()
+> >   PCI: mvebu: Remove unused busn member
+> >   PCI: mvebu: Cleanup error handling in mvebu_pcie_probe()
+> >   PCI: mvebu: Add support for Orion PCIe controller
+> >   ARM: dts: orion5x: Add PCIe node
+> > 
+> >  .../devicetree/bindings/pci/mvebu-pci.txt     |   4 +-
+> >  arch/arm/boot/dts/orion5x.dtsi                |  51 +++++
+> >  arch/arm/mach-orion5x/common.c                |  13 --
+> >  arch/arm/mach-orion5x/pci.c                   |  14 ++
+> >  drivers/bus/mvebu-mbus.c                      |  26 ++-
+> >  drivers/pci/controller/Kconfig                |   4 +-
+> >  drivers/pci/controller/pci-mvebu.c            | 202 ++++++++++++++----
+> >  include/linux/mbus.h                          |   1 +
+> >  8 files changed, 256 insertions(+), 59 deletions(-)
+> > 
+> > -- 
+> > 2.20.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
