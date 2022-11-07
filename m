@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED9C620075
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:10:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0135E62008E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:11:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbiKGVKk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Nov 2022 16:10:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
+        id S233444AbiKGVLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Nov 2022 16:11:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233248AbiKGVKX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:10:23 -0500
+        with ESMTP id S233393AbiKGVKm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:10:42 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77F042E9FE;
-        Mon,  7 Nov 2022 13:07:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 585592E9FB;
+        Mon,  7 Nov 2022 13:07:33 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id BBD89E0EBE;
-        Mon,  7 Nov 2022 23:50:16 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id EE1C7E0EBF;
+        Mon,  7 Nov 2022 23:50:17 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=mo5sTg4ej3YEE6ZtonzVJt/tH0+N7EC/Uv1zxfzBxXM=; b=NgIwwUMuYlZr
-        BnVbeoVt7EudEeVFT5oGCzAzLEW+cKT9MgkuLz8AUy91GzJBM+sIPyhRUgL5qXbR
-        TViJX3bx5Ck1WUYwRvKUxQolJ23pz1UqnSI7M5fUFPienen9Frz5/BNUFwL+ChOD
-        nQm6pk5NqO9mqlLnOOQ/HcajM+cDVWI=
+         bh=f3HmE+YUxq4Lafv6aqVMdTE5GMZ5MpJe5vrdZl4j4hM=; b=Am1st8CDHAlf
+        IwS+FWhtjCm90CEQevXG4fOz/I4mfvlr1hTG1mNphMHy2jzF1fx7vuj1aiazwYxS
+        m0Itnb2WcDNM1vL4QD1tZfE+1luKQuMpM5i6cAH4+jXkif9fKdSdmnQfj6vl8t0i
+        0PB7jK17jKpLsFLJGRHyCN7JHOKp+JM=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id AB032E0E1D;
-        Mon,  7 Nov 2022 23:50:16 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id DEEDAE0E1D;
+        Mon,  7 Nov 2022 23:50:17 +0300 (MSK)
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:16 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:17 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -49,9 +49,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 10/20] dt-bindings: PCI: dwc: Add reg/reg-names common properties
-Date:   Mon, 7 Nov 2022 23:49:24 +0300
-Message-ID: <20221107204934.32655-11-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 11/20] dt-bindings: PCI: dwc: Add clocks/resets common properties
+Date:   Mon, 7 Nov 2022 23:49:25 +0300
+Message-ID: <20221107204934.32655-12-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
@@ -69,28 +69,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Even though there is a more-or-less limited set of the CSR spaces can be
-defined for each DW PCIe controller the generic DT-schema currently
-doesn't specify much limitations on the reg-space names used for one or
-another range. In order to prevent the vendor-specific controller schemas
-further deviation from the generic interface let's fix that by introducing
-the reg-names definition in the common DW PCIe DT-schemas and preserving
-the generic "reg" and "reg-names" properties in there. New DW PCIe device
-DT-bindings are encouraged to use the generic set of the CSR spaces
-defined in the generic DW PCIe RP/EP DT-bindings, while the already
-available vendor-specific DT-bindings can still apple the common
-DT-schemas.
+DW PCIe RP/EP reference manuals explicit define all the clocks and reset
+requirements in [1] and [2]. Seeing the DW PCIe vendor-specific
+DT-bindings have already started assigning random names to the same set of
+the clocks and resets lines, let's define a generic names sets and add
+them to the DW PCIe common DT-schema.
 
-Note the number of reg/reg-names items need to be changed in the DW PCIe
-EP DT-schema since aside with the "dbi" CSRs space these arrays can have
-"dbi2", "addr_space", "atu", etc ranges.
-
-Also note since there are DW PCIe-based vendor-specific DT-bindings with
-the custom names assigned to the same CSR resources we have no much choice
-but to add them to the generic DT-schemas in order to have the schemas
-being applicable for such devices. These names are marked as
+Note since there are DW PCI-based vendor-specific DT-bindings with the
+custom names assigned to the same clocks and resets resources we have no
+much choice but to add them to the generic DT-schemas in order to have the
+schemas being applicable for such devices. These names are marked as
 vendor-specific and should be avoided being used in new bindings in favor
 of the generic names.
+
+[1] Synopsys DesignWare Cores PCI Express Controller Databook - DWC PCIe
+Root Port, Version 5.40a, March 2019, p.55 - 78.
+[2] Synopsys DesignWare Cores PCI Express Controller Databook - DWC PCIe
+Endpoint, Version 5.40a, March 2019, p.58 - 81.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
@@ -100,251 +95,183 @@ Changelog v3:
 - This is a new patch unpinned from the next one:
   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
   by the Rob' request. (@Rob)
-- Split up reg-names in the same way as the interrupt-names: common,
-  Root Port and Endpoint specific names. (@Rob)
 - Drop synonymous from the names list since the device schemas create
   their own enumerations anyway.
 
 Changelog v5:
-- Add platform-specific reg names, but mark them as deprecated.
+- Add platform-specific clock/reset names, but mark them as deprecated.
 
 Changelog v6:
-- Move the common reg-names definitions to the RP/EP schemas. Thus drop
+- Move the common *-names definitions to the RP/EP schemas. Thus drop
   the 'definitions' property. (@Rob)
 - Drop the 'deprecated' keywords from the vendor-specific names. (@Rob)
 ---
- .../bindings/pci/snps,dw-pcie-common.yaml     | 22 +++++
- .../bindings/pci/snps,dw-pcie-ep.yaml         | 82 +++++++++++++++++--
- .../devicetree/bindings/pci/snps,dw-pcie.yaml | 78 ++++++++++++++++--
- 3 files changed, 169 insertions(+), 13 deletions(-)
+ .../bindings/pci/snps,dw-pcie-common.yaml     | 120 ++++++++++++++++++
+ .../bindings/pci/snps,dw-pcie-ep.yaml         |   6 +
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   2 -
+ 3 files changed, 126 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-index 4646fb14e817..13c41cd50e54 100644
+index 13c41cd50e54..4d9efcea3859 100644
 --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
 +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-@@ -17,6 +17,28 @@ description:
- select: false
+@@ -58,6 +58,126 @@ properties:
+     minItems: 1
+     maxItems: 26
  
- properties:
-+  reg:
++  clocks:
 +    description:
-+      DWC PCIe CSR space is normally accessed over the dedicated Data Bus
-+      Interface - DBI. In accordance with the reference manual the register
-+      configuration space belongs to the Configuration-Dependent Module (CDM)
-+      and is split up into several sub-parts Standard PCIe configuration
-+      space, Port Logic Registers (PL), Shadow Config-space Registers,
-+      iATU/eDMA registers. The particular sub-space is selected by the
-+      CDM/ELBI (dbi_cs) and CS2 (dbi_cs2) signals (selector bits). Such
-+      configuration provides a flexible interface for the system engineers to
-+      either map the particular space at a desired MMIO address or just leave
-+      them in a contiguous memory space if pure Native or AXI Bridge DBI access
-+      is selected. Note the PCIe CFG-space, PL and Shadow registers are
-+      specific for each activated function, while the rest of the sub-spaces
-+      are common for all of them (if there are more than one).
-+    minItems: 2
-+    maxItems: 6
++      DWC PCIe reference manual explicitly defines a set of the clocks required
++      to get the controller working correctly. In general all of them can
++      be divided into two groups':' application and core clocks. Note the
++      platforms may have some of the clock sources unspecified in case if the
++      corresponding domains are fed up from a common clock source.
++    minItems: 1
++    maxItems: 7
 +
-+  reg-names:
-+    minItems: 2
-+    maxItems: 6
++  clock-names:
++    minItems: 1
++    maxItems: 7
++    items:
++      oneOf:
++        - description:
++            Data Bus Interface (DBI) clock. Clock signal for the AXI-bus
++            interface of the Configuration-Dependent Module, which is
++            basically the set of the controller CSRs.
++          const: dbi
++        - description:
++            Application AXI-bus Master interface clock. Basically this is
++            a clock for the controller DMA interface (PCI-to-CPU).
++          const: mstr
++        - description:
++            Application AXI-bus Slave interface clock. This is a clock for
++            the CPU-to-PCI memory IO interface.
++          const: slv
++        - description:
++            Controller Core-PCS PIPE interface clock. It's normally
++            supplied by an external PCS-PHY.
++          const: pipe
++        - description:
++            Controller Primary clock. It's assumed that all controller input
++            signals (except resets) are synchronous to this clock.
++          const: core
++        - description:
++            Auxiliary clock for the controller PMC domain. The controller
++            partitioning implies having some parts to operate with this
++            clock in some power management states.
++          const: aux
++        - description:
++            Generic reference clock. In case if there are several
++            interfaces fed up with a common clock source it's advisable to
++            define it with this name (for instance pipe, core and aux can
++            be connected to a single source of the periodic signal).
++          const: ref
++        - description:
++            Clock for the PHY registers interface. Originally this is
++            a PHY-viewport-based interface, but some platform may have
++            specifically designed one.
++          const: phy_reg
++        - description:
++            Vendor-specific clock names. Consider using the generic names
++            above for new bindings.
++          oneOf:
++            - description: See native 'dbi' clock for details
++              enum: [ pcie, pcie_apb_sys, aclk_dbi ]
++            - description: See native 'mstr/slv' clock for details
++              enum: [ pcie_bus, pcie_inbound_axi, pcie_aclk, aclk_mst, aclk_slv ]
++            - description: See native 'pipe' clock for details
++              enum: [ pcie_phy, pcie_phy_ref, link ]
++            - description: See native 'aux' clock for details
++              enum: [ pcie_aux ]
++            - description: See native 'ref' clock for details.
++              enum: [ gio ]
++            - description: See nativs 'phy_reg' clock for details
++              enum: [ pcie_apb_phy, pclk ]
 +
-   interrupts:
++  resets:
++    description:
++      DWC PCIe reference manual explicitly defines a set of the reset
++      signals required to be de-asserted to properly activate the controller
++      sub-parts. All of these signals can be divided into two sub-groups':'
++      application and core resets with respect to the main sub-domains they
++      are supposed to reset. Note the platforms may have some of these signals
++      unspecified in case if they are automatically handled or aggregated into
++      a comprehensive control module.
++    minItems: 1
++    maxItems: 10
++
++  reset-names:
++    minItems: 1
++    maxItems: 10
++    items:
++      oneOf:
++        - description: Data Bus Interface (DBI) domain reset
++          const: dbi
++        - description: AXI-bus Master interface reset
++          const: mstr
++        - description: AXI-bus Slave interface reset
++          const: slv
++        - description: Application-dependent interface reset
++          const: app
++        - description: Controller Non-sticky CSR flags reset
++          const: non-sticky
++        - description: Controller sticky CSR flags reset
++          const: sticky
++        - description: PIPE-interface (Core-PCS) logic reset
++          const: pipe
++        - description:
++            Controller primary reset (resets everything except PMC module)
++          const: core
++        - description: PCS/PHY block reset
++          const: phy
++        - description: PMC hot reset signal
++          const: hot
++        - description: Cold reset signal
++          const: pwr
++        - description:
++            Vendor-specific reset names. Consider using the generic names
++            above for new bindings.
++          oneOf:
++            - description: See native 'app' reset for details
++              enum: [ apps, gio, apb ]
++            - description: See native 'phy' reset for details
++              enum: [ pciephy, link ]
++            - description: See native 'pwr' reset for details
++              enum: [ turnoff ]
++
+   phys:
      description:
-       There are two main sub-blocks which are normally capable of
+       There can be up to the number of possible lanes PHYs specified placed in
 diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-index 7d3f8fc8b7b4..f4d7eb2dec4d 100644
+index f4d7eb2dec4d..8fc2151691a4 100644
 --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
 +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-@@ -28,18 +28,86 @@ allOf:
+@@ -180,6 +180,12 @@ examples:
+       interrupts = <23>, <24>;
+       interrupt-names = "dma0", "dma1";
  
- properties:
-   reg:
--    description: |
--      It should contain Data Bus Interface (dbi) and config registers for all
--      versions.
--      For designware core version >= 4.80, it may contain ATU address space.
-+    description:
-+      DBI, DBI2 reg-spaces and outbound memory window are required for the
-+      normal controller functioning. iATU memory IO region is also required
-+      if the space is unrolled (IP-core version >= 4.80a).
-     minItems: 2
--    maxItems: 4
-+    maxItems: 5
++      clocks = <&sys_clk 12>, <&sys_clk 24>;
++      clock-names = "dbi", "ref";
++
++      resets = <&sys_rst 12>, <&sys_rst 24>;
++      reset-names = "dbi", "phy";
++
+       phys = <&pcie_phy0>, <&pcie_phy1>, <&pcie_phy2>, <&pcie_phy3>;
+       phy-names = "pcie0", "pcie1", "pcie2", "pcie3";
  
-   reg-names:
-     minItems: 2
--    maxItems: 4
-+    maxItems: 5
-     items:
--      enum: [dbi, dbi2, config, atu, addr_space, link, atu_dma, appl]
-+      oneOf:
-+        - description:
-+            Basic DWC PCIe controller configuration-space accessible over
-+            the DBI interface. This memory space is either activated with
-+            CDM/ELBI = 0 and CS2 = 0 or is a contiguous memory region
-+            with all spaces. Note iATU/eDMA CSRs are indirectly accessible
-+            via the PL viewports on the DWC PCIe controllers older than
-+            v4.80a.
-+          const: dbi
-+        - description:
-+            Shadow DWC PCIe config-space registers. This space is selected
-+            by setting CDM/ELBI = 0 and CS2 = 1. This is an intermix of
-+            the PCI-SIG PCIe CFG-space with the shadow registers for some
-+            PCI Header space, PCI Standard and Extended Structures. It's
-+            mainly relevant for the end-point controller configuration,
-+            but still there are some shadow registers available for the
-+            Root Port mode too.
-+          const: dbi2
-+        - description:
-+            External Local Bus registers. It's an application-dependent
-+            registers normally defined by the platform engineers. The space
-+            can be selected by setting CDM/ELBI = 1 and CS2 = 0 wires or can
-+            be accessed over some platform-specific means (for instance
-+            as a part of a system controller).
-+          enum: [ elbi, app ]
-+        - description:
-+            iATU/eDMA registers common for all device functions. It's an
-+            unrolled memory space with the internal Address Translation
-+            Unit and Enhanced DMA, which is selected by setting CDM/ELBI = 1
-+            and CS2 = 1. For IP-core releases prior v4.80a, these registers
-+            have been programmed via an indirect addressing scheme using a
-+            set of viewport CSRs mapped into the PL space. Note iATU is
-+            normally mapped to the 0x0 address of this region, while eDMA
-+            is available at 0x80000 base address.
-+          const: atu
-+        - description:
-+            Platform-specific eDMA registers. Some platforms may have eDMA
-+            CSRs mapped in a non-standard base address. The registers offset
-+            can be changed or the MS/LS-bits of the address can be attached
-+            in an additional RTL block before the MEM-IO transactions reach
-+            the DW PCIe slave interface.
-+          const: dma
-+        - description:
-+            PHY/PCS configuration registers. Some platforms can have the
-+            PCS and PHY CSRs accessible over a dedicated memory mapped
-+            region, but mainly these registers are indirectly accessible
-+            either by means of the embedded PHY viewport schema or by some
-+            platform-specific method.
-+          const: phy
-+        - description:
-+            Outbound iATU-capable memory-region which will be used to
-+            generate various application-specific traffic on the PCIe bus
-+            hierarchy. It's usage scenario depends on the endpoint
-+            functionality, for instance it can be used to create MSI(X)
-+            messages.
-+          const: addr_space
-+        - description:
-+            Vendor-specific CSR names. Consider using the generic names above
-+            for new bindings.
-+          oneOf:
-+            - description: See native 'elbi/app' CSR region for details.
-+              enum: [ link, appl ]
-+            - description: See native 'atu' CSR region for details.
-+              enum: [ atu_dma ]
-+    allOf:
-+      - contains:
-+          const: dbi
-+      - contains:
-+          const: addr_space
- 
-   interrupts:
-     description:
 diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-index fa1db57b2b97..59d3bbb5883a 100644
+index 59d3bbb5883a..c62c8fe517ae 100644
 --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-@@ -28,10 +28,10 @@ allOf:
+@@ -195,8 +195,6 @@ properties:
+       - contains:
+           const: msi
  
- properties:
-   reg:
--    description: |
--      It should contain Data Bus Interface (dbi) and config registers for all
--      versions.
--      For designware core version >= 4.80, it may contain ATU address space.
-+    description:
-+      At least DBI reg-space and peripheral devices CFG-space outbound window
-+      are required for the normal controller work. iATU memory IO region is
-+      also required if the space is unrolled (IP-core version >= 4.80a).
-     minItems: 2
-     maxItems: 5
+-  clocks: true
+-
+ additionalProperties: true
  
-@@ -39,8 +39,74 @@ properties:
-     minItems: 2
-     maxItems: 5
-     items:
--      enum: [ dbi, dbi2, config, atu, atu_dma, app, appl, elbi, mgmt, ctrl,
--              parf, cfg, link, ulreg, smu, mpu, apb, phy ]
-+      oneOf:
-+        - description:
-+            Basic DWC PCIe controller configuration-space accessible over
-+            the DBI interface. This memory space is either activated with
-+            CDM/ELBI = 0 and CS2 = 0 or is a contiguous memory region
-+            with all spaces. Note iATU/eDMA CSRs are indirectly accessible
-+            via the PL viewports on the DWC PCIe controllers older than
-+            v4.80a.
-+          const: dbi
-+        - description:
-+            Shadow DWC PCIe config-space registers. This space is selected
-+            by setting CDM/ELBI = 0 and CS2 = 1. This is an intermix of
-+            the PCI-SIG PCIe CFG-space with the shadow registers for some
-+            PCI Header space, PCI Standard and Extended Structures. It's
-+            mainly relevant for the end-point controller configuration,
-+            but still there are some shadow registers available for the
-+            Root Port mode too.
-+          const: dbi2
-+        - description:
-+            External Local Bus registers. It's an application-dependent
-+            registers normally defined by the platform engineers. The space
-+            can be selected by setting CDM/ELBI = 1 and CS2 = 0 wires or can
-+            be accessed over some platform-specific means (for instance
-+            as a part of a system controller).
-+          enum: [ elbi, app ]
-+        - description:
-+            iATU/eDMA registers common for all device functions. It's an
-+            unrolled memory space with the internal Address Translation
-+            Unit and Enhanced DMA, which is selected by setting CDM/ELBI = 1
-+            and CS2 = 1. For IP-core releases prior v4.80a, these registers
-+            have been programmed via an indirect addressing scheme using a
-+            set of viewport CSRs mapped into the PL space. Note iATU is
-+            normally mapped to the 0x0 address of this region, while eDMA
-+            is available at 0x80000 base address.
-+          const: atu
-+        - description:
-+            Platform-specific eDMA registers. Some platforms may have eDMA
-+            CSRs mapped in a non-standard base address. The registers offset
-+            can be changed or the MS/LS-bits of the address can be attached
-+            in an additional RTL block before the MEM-IO transactions reach
-+            the DW PCIe slave interface.
-+          const: dma
-+        - description:
-+            PHY/PCS configuration registers. Some platforms can have the
-+            PCS and PHY CSRs accessible over a dedicated memory mapped
-+            region, but mainly these registers are indirectly accessible
-+            either by means of the embedded PHY viewport schema or by some
-+            platform-specific method.
-+          const: phy
-+        - description:
-+            Outbound iATU-capable memory-region which will be used to access
-+            the peripheral PCIe devices configuration space.
-+          const: config
-+        - description:
-+            Vendor-specific CSR names. Consider using the generic names above
-+            for new bindings.
-+          oneOf:
-+            - description: See native 'elbi/app' CSR region for details.
-+              enum: [ apb, mgmt, link, ulreg, appl ]
-+            - description: See native 'atu' CSR region for details.
-+              enum: [ atu_dma ]
-+            - description: Syscon-related CSR regions.
-+              enum: [ smu, mpu ]
-+    allOf:
-+      - contains:
-+          const: dbi
-+      - contains:
-+          const: config
- 
-   interrupts:
-     description:
+ required:
 -- 
 2.38.0
 
