@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA88620078
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:10:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3A36620063
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbiKGVKk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Nov 2022 16:10:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
+        id S233278AbiKGVJF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Nov 2022 16:09:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233160AbiKGVKX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:10:23 -0500
+        with ESMTP id S233291AbiKGVIo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:08:44 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B33F42ED5B;
-        Mon,  7 Nov 2022 13:07:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DCA4F31F8F;
+        Mon,  7 Nov 2022 13:06:38 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 5C541E0EC1;
-        Mon,  7 Nov 2022 23:50:19 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 3E1A0E0EC2;
+        Mon,  7 Nov 2022 23:50:20 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=nxclbE4vzrdkXnoD0ltRgjxGVl8kLexbHxVlPZyxAM0=; b=nPNg0hvw7r2+
-        zmcLmiS8m17n0n3h3tXkvUPliwh7jWatlc3KJsXOOFSIRVtwGjULFYgJavFTC0jI
-        hEHQ1iyttv2q2N/n/wwlVpRqqQdfNyEmLJYrUvaK6UEemEyK2RsYC9XnUGEIxoaG
-        sGzp2xn3aEyO/nGfWyALuz++fc3Flnc=
+         bh=XMiyDuj1jqNV0kcUyI6gbMUAguOXpMvdHGqgB4INjTY=; b=ZociVB/7oxwT
+        87LeqGZtexWGnNhDm17PcwRI6TIwASud+6KDL4xiVkfDbppAZ5eVchAAhCW8VR05
+        Unb89Bh9aFl4D8eoEWN8JkguYhDOVtkIiwZnxANUkbaO5YYB/rEKHAhupQGl9EUX
+        TRJS0BueoInj+QB27fh0t/iNnsjEkq8=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 48A65E0E1D;
-        Mon,  7 Nov 2022 23:50:19 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 307EFE0E1D;
+        Mon,  7 Nov 2022 23:50:20 +0300 (MSK)
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:18 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:19 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -39,11 +39,8 @@ To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>
+        Serge Semin <fancer.lancer@gmail.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -51,12 +48,10 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>
-Subject: [PATCH v6 13/20] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
-Date:   Mon, 7 Nov 2022 23:49:27 +0300
-Message-ID: <20221107204934.32655-14-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 14/20] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
+Date:   Mon, 7 Nov 2022 23:49:28 +0300
+Message-ID: <20221107204934.32655-15-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
@@ -74,43 +69,217 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As the DT-bindings description states the Rockchip PCIe controller is
-based on the DW PCIe RP IP-core thus its DT-nodes are supposed to be
-compatible with the common DW PCIe controller schema. Let's make sure they
-are evaluated against it by referring to the snps,dw-pcie.yaml schema in
-the allOf sub-schemas composition.
+Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
+link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
+controller is supposed to be fed up with four clock sources: DBI
+peripheral clock, AXI application Tx/Rx clocks and external PHY/core
+reference clock generating the 100MHz signal. In addition to that the
+platform provide a way to reset each part of the controller:
+sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
+Hot/Power reset signal. The Root Port controller is equipped with multiple
+IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
+equalization request and eDMA ones. The registers space is accessed over
+the DBI interface. There can be no more than four inbound or outbound iATU
+windows configured.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Rob Herring <robh@kernel.org>
 
 ---
 
-Changelog v3:
-- This is a new patch created on v3 lap of the series.
+Changelog v2:
+- Rename 'syscon' property to 'baikal,bt1-syscon'.
+- Fix the 'compatible' property definition to being more specific about
+  what strings are supposed to be used. Due to that we had to add the
+  select property to evaluate the schema against the Baikal-T1 PCIe DT
+  nodes only.
 
 Changelog v5:
-- Apply snps,dw-pcie.yaml instead of the snps,dw-pcie-common.yaml schema.
+- Drop generic fallback names from the compatible property constraints.
+  (@Rob)
+- Define ordered {reg,interrupt,clock,reset}-names properties. (@Rob)
+- Drop minItems from the clocks and reset properties, since it equals
+  to the maxItems for them.
+- Drop num-ob-windows and num-ib-windows properties constraint. (@Rob)
 ---
- Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/pci/baikal,bt1-pcie.yaml         | 168 ++++++++++++++++++
+ 1 file changed, 168 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index bc0a9d1db750..2be72ae1169f 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -14,10 +14,10 @@ maintainers:
- description: |+
-   RK3568 SoC PCIe host controller is based on the Synopsys DesignWare
-   PCIe IP and thus inherits all the common properties defined in
--  designware-pcie.txt.
-+  snps,dw-pcie.yaml.
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
+diff --git a/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+new file mode 100644
+index 000000000000..8eaa07ae9774
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+@@ -0,0 +1,168 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/baikal,bt1-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Baikal-T1 PCIe Root Port Controller
++
++maintainers:
++  - Serge Semin <fancer.lancer@gmail.com>
++
++description:
++  Embedded into Baikal-T1 SoC Root Complex controller with a single port
++  activated. It's based on the DWC RC PCIe v4.60a IP-core, which is configured
++  to have just a single Root Port function and is capable of establishing the
++  link up to Gen.3 speed on x4 lanes. It doesn't have embedded clock and reset
++  control module, so the proper interface initialization is supposed to be
++  performed by software. There four in- and four outbound iATU regions
++  which can be used to emit all required TLP types on the PCIe bus.
++
++allOf:
 +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
- 
- properties:
-   compatible:
++
++properties:
++  compatible:
++    const: baikal,bt1-pcie
++
++  reg:
++    description:
++      DBI, DBI2 and at least 4KB outbound iATU-capable region for the
++      peripheral devices CFG-space access.
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: dbi2
++      - const: config
++
++  interrupts:
++    description:
++      MSI, AER, PME, Hot-plug, Link Bandwidth Management, Link Equalization
++      request and eight Read/Write eDMA IRQ lines are available.
++    maxItems: 14
++
++  interrupt-names:
++    items:
++      - const: dma0
++      - const: dma1
++      - const: dma2
++      - const: dma3
++      - const: dma4
++      - const: dma5
++      - const: dma6
++      - const: dma7
++      - const: msi
++      - const: aer
++      - const: pme
++      - const: hp
++      - const: bw_mg
++      - const: l_eq
++
++  clocks:
++    description:
++      DBI (attached to the APB bus), AXI-bus master and slave interfaces
++      are fed up by the dedicated application clocks. A common reference
++      clock signal is supposed to be attached to the corresponding Ref-pad
++      of the SoC. It will be redistributed amongst the controller core
++      sub-modules (pipe, core, aux, etc).
++    maxItems: 4
++
++  clock-names:
++    items:
++      - const: dbi
++      - const: mstr
++      - const: slv
++      - const: ref
++
++  resets:
++    description:
++      A comprehensive controller reset logic is supposed to be implemented
++      by software, so almost all the possible application and core reset
++      signals are exposed via the system CCU module.
++    maxItems: 9
++
++  reset-names:
++    items:
++      - const: mstr
++      - const: slv
++      - const: pwr
++      - const: hot
++      - const: phy
++      - const: core
++      - const: pipe
++      - const: sticky
++      - const: non-sticky
++
++  baikal,bt1-syscon:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the Baikal-T1 System Controller DT node. It's required to
++      access some additional PM, Reset-related and LTSSM signals.
++
++  num-lanes:
++    maximum: 4
++
++  max-link-speed:
++    maximum: 3
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++    pcie@1f052000 {
++      compatible = "baikal,bt1-pcie";
++      device_type = "pci";
++      reg = <0x1f052000 0x1000>, <0x1f053000 0x1000>, <0x1bdbf000 0x1000>;
++      reg-names = "dbi", "dbi2", "config";
++      #address-cells = <3>;
++      #size-cells = <2>;
++      ranges = <0x81000000 0 0x00000000 0x1bdb0000 0 0x00008000>,
++               <0x82000000 0 0x20000000 0x08000000 0 0x13db0000>;
++      bus-range = <0x0 0xff>;
++
++      interrupts = <GIC_SHARED 80 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 81 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 82 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 83 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 84 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 85 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 86 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 87 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 88 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 89 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 90 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 91 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 92 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SHARED 93 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "dma0", "dma1", "dma2", "dma3",
++                        "dma4", "dma5", "dma6", "dma7",
++                        "msi", "aer", "pme", "hp", "bw_mg",
++                        "l_eq";
++
++      clocks = <&ccu_sys 1>, <&ccu_axi 6>, <&ccu_axi 7>, <&clk_pcie>;
++      clock-names = "dbi", "mstr", "slv", "ref";
++
++      resets = <&ccu_axi 6>, <&ccu_axi 7>, <&ccu_sys 7>, <&ccu_sys 10>,
++               <&ccu_sys 4>, <&ccu_sys 6>, <&ccu_sys 5>, <&ccu_sys 8>,
++               <&ccu_sys 9>;
++      reset-names = "mstr", "slv", "pwr", "hot", "phy", "core", "pipe",
++                    "sticky", "non-sticky";
++
++      reset-gpios = <&port0 0 GPIO_ACTIVE_LOW>;
++
++      num-lanes = <4>;
++      max-link-speed = <3>;
++    };
++...
 -- 
 2.38.0
 
