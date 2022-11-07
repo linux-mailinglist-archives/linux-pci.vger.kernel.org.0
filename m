@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A36620063
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:09:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C52E620093
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 22:11:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233278AbiKGVJF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Nov 2022 16:09:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
+        id S233412AbiKGVLi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Nov 2022 16:11:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233291AbiKGVIo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:08:44 -0500
+        with ESMTP id S233396AbiKGVKm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 16:10:42 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DCA4F31F8F;
-        Mon,  7 Nov 2022 13:06:38 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D60EF2F01D;
+        Mon,  7 Nov 2022 13:07:34 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 3E1A0E0EC2;
-        Mon,  7 Nov 2022 23:50:20 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 0F84CE0EC3;
+        Mon,  7 Nov 2022 23:50:31 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=XMiyDuj1jqNV0kcUyI6gbMUAguOXpMvdHGqgB4INjTY=; b=ZociVB/7oxwT
-        87LeqGZtexWGnNhDm17PcwRI6TIwASud+6KDL4xiVkfDbppAZ5eVchAAhCW8VR05
-        Unb89Bh9aFl4D8eoEWN8JkguYhDOVtkIiwZnxANUkbaO5YYB/rEKHAhupQGl9EUX
-        TRJS0BueoInj+QB27fh0t/iNnsjEkq8=
+         bh=y2bf1BWKKwVBNU57SfjxLIaMy7aGjOfbhd5OgbFdg78=; b=lAW80hz6D+GH
+        eR5WS1z3CDjBmps067DpnMrVHt28BxgMzEhpaEqA4utaH/b4AADldLDQpoHuPWak
+        PzqfyCZHEYyrDayL86RZSn3A30ilJpyBZhpjd+8GmzGAhNmtrEdygNEWG/dcfUAE
+        Pqv3kG+IXyC2j+hBalKhrnIVGGbtD2Q=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 307EFE0E1D;
-        Mon,  7 Nov 2022 23:50:20 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id EC4FFE0E1D;
+        Mon,  7 Nov 2022 23:50:30 +0300 (MSK)
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:19 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 7 Nov 2022 23:50:30 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -39,19 +39,20 @@ To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Serge Semin <fancer.lancer@gmail.com>
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 14/20] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
-Date:   Mon, 7 Nov 2022 23:49:28 +0300
-Message-ID: <20221107204934.32655-15-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 15/20] PCI: dwc: Introduce dma-ranges property support for RC-host
+Date:   Mon, 7 Nov 2022 23:49:29 +0300
+Message-ID: <20221107204934.32655-16-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
@@ -69,217 +70,211 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
-link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
-controller is supposed to be fed up with four clock sources: DBI
-peripheral clock, AXI application Tx/Rx clocks and external PHY/core
-reference clock generating the 100MHz signal. In addition to that the
-platform provide a way to reset each part of the controller:
-sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
-Hot/Power reset signal. The Root Port controller is equipped with multiple
-IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
-equalization request and eDMA ones. The registers space is accessed over
-the DBI interface. There can be no more than four inbound or outbound iATU
-windows configured.
+In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
+property has the same format as the "ranges" property. The only difference
+is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
+memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
+property. Even though the DW PCIe controllers are normally equipped with
+the internal Address Translation Unit which inbound and outbound tables
+can be used to implement both properties semantics, it was surprising for
+me to discover that the host-related part of the DW PCIe driver currently
+supports the "ranges" property only while the "dma-ranges" windows are
+just ignored. Having the "dma-ranges" supported in the driver would be
+very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
+mapping and require a customized PCIe memory layout. So let's fix that by
+introducing the "dma-ranges" property support.
+
+First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
+dw_pcie_prog_ep_inbound_atu() and create a new version of the
+dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for the
+RC and EP controllers respectively in the same way as it has been
+developed for the outbound ATU setup methods.
+
+Secondly aside with the memory window index and type the new
+dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
+and size as its arguments. These parameters define the PCIe and CPU memory
+ranges which will be used to setup the respective inbound ATU mapping. The
+passed parameters need to be verified against the ATU ranges constraints
+in the same way as it is done for the outbound ranges.
+
+Finally the DMA-ranges detected for the PCIe controller need to be
+converted to the inbound ATU entries during the host controller
+initialization procedure. It will be done in the framework of the
+dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
+need to disable all the inbound ATU entries in order to prevent unexpected
+PCIe TLPs translations defined by some third party software like
+bootloaders.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 ---
 
-Changelog v2:
-- Rename 'syscon' property to 'baikal,bt1-syscon'.
-- Fix the 'compatible' property definition to being more specific about
-  what strings are supposed to be used. Due to that we had to add the
-  select property to evaluate the schema against the Baikal-T1 PCIe DT
-  nodes only.
-
-Changelog v5:
-- Drop generic fallback names from the compatible property constraints.
-  (@Rob)
-- Define ordered {reg,interrupt,clock,reset}-names properties. (@Rob)
-- Drop minItems from the clocks and reset properties, since it equals
-  to the maxItems for them.
-- Drop num-ob-windows and num-ib-windows properties constraint. (@Rob)
+Changelog v3:
+- Drop inbound iATU window size alignment constraint. (@Manivannan)
 ---
- .../bindings/pci/baikal,bt1-pcie.yaml         | 168 ++++++++++++++++++
- 1 file changed, 168 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+ .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
+ drivers/pci/controller/dwc/pcie-designware.c  | 56 ++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
+ 4 files changed, 89 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
-new file mode 100644
-index 000000000000..8eaa07ae9774
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
-@@ -0,0 +1,168 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/baikal,bt1-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 83ddb190292e..237bb01d7852 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -171,8 +171,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
+-				       cpu_addr, bar);
++	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
++					  cpu_addr, bar);
+ 	if (ret < 0) {
+ 		dev_err(pci->dev, "Failed to program IB window\n");
+ 		return ret;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 39f3b37d4033..ea923c25e12d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -643,12 +643,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	}
+ 
+ 	/*
+-	 * Ensure all outbound windows are disabled before proceeding with
+-	 * the MEM/IO ranges setups.
++	 * Ensure all out/inbound windows are disabled before proceeding with
++	 * the MEM/IO (dma-)ranges setups.
+ 	 */
+ 	for (i = 0; i < pci->num_ob_windows; i++)
+ 		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
+ 
++	for (i = 0; i < pci->num_ib_windows; i++)
++		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
 +
-+title: Baikal-T1 PCIe Root Port Controller
+ 	i = 0;
+ 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+ 		if (resource_type(entry->res) != IORESOURCE_MEM)
+@@ -685,9 +688,32 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	}
+ 
+ 	if (pci->num_ob_windows <= i)
+-		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
++		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+ 			 pci->num_ob_windows);
+ 
++	i = 0;
++	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
++		if (resource_type(entry->res) != IORESOURCE_MEM)
++			continue;
 +
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
++		if (pci->num_ib_windows <= i)
++			break;
 +
-+description:
-+  Embedded into Baikal-T1 SoC Root Complex controller with a single port
-+  activated. It's based on the DWC RC PCIe v4.60a IP-core, which is configured
-+  to have just a single Root Port function and is capable of establishing the
-+  link up to Gen.3 speed on x4 lanes. It doesn't have embedded clock and reset
-+  control module, so the proper interface initialization is supposed to be
-+  performed by software. There four in- and four outbound iATU regions
-+  which can be used to emit all required TLP types on the PCIe bus.
++		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
++					       entry->res->start,
++					       entry->res->start - entry->offset,
++					       resource_size(entry->res));
++		if (ret) {
++			dev_err(pci->dev, "Failed to set DMA range %pr\n",
++				entry->res);
++			return ret;
++		}
++	}
 +
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++	if (pci->num_ib_windows <= i)
++		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
++			 pci->num_ib_windows);
 +
-+properties:
-+  compatible:
-+    const: baikal,bt1-pcie
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c6725c519a47..ca830ee794a7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -393,8 +393,60 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+ 	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+ }
+ 
+-int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int type, u64 cpu_addr, u8 bar)
++int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
++			     u64 cpu_addr, u64 pci_addr, u64 size)
++{
++	u64 limit_addr = pci_addr + size - 1;
++	u32 retries, val;
 +
-+  reg:
-+    description:
-+      DBI, DBI2 and at least 4KB outbound iATU-capable region for the
-+      peripheral devices CFG-space access.
-+    maxItems: 3
++	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
++	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
++	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
++		return -EINVAL;
++	}
 +
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: dbi2
-+      - const: config
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_BASE,
++			      lower_32_bits(pci_addr));
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_BASE,
++			      upper_32_bits(pci_addr));
 +
-+  interrupts:
-+    description:
-+      MSI, AER, PME, Hot-plug, Link Bandwidth Management, Link Equalization
-+      request and eight Read/Write eDMA IRQ lines are available.
-+    maxItems: 14
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LIMIT,
++			      lower_32_bits(limit_addr));
++	if (dw_pcie_ver_is_ge(pci, 460A))
++		dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_LIMIT,
++				      upper_32_bits(limit_addr));
 +
-+  interrupt-names:
-+    items:
-+      - const: dma0
-+      - const: dma1
-+      - const: dma2
-+      - const: dma3
-+      - const: dma4
-+      - const: dma5
-+      - const: dma6
-+      - const: dma7
-+      - const: msi
-+      - const: aer
-+      - const: pme
-+      - const: hp
-+      - const: bw_mg
-+      - const: l_eq
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
++			      lower_32_bits(cpu_addr));
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_TARGET,
++			      upper_32_bits(cpu_addr));
 +
-+  clocks:
-+    description:
-+      DBI (attached to the APB bus), AXI-bus master and slave interfaces
-+      are fed up by the dedicated application clocks. A common reference
-+      clock signal is supposed to be attached to the corresponding Ref-pad
-+      of the SoC. It will be redistributed amongst the controller core
-+      sub-modules (pipe, core, aux, etc).
-+    maxItems: 4
++	val = type;
++	if (upper_32_bits(limit_addr) > upper_32_bits(pci_addr) &&
++	    dw_pcie_ver_is_ge(pci, 460A))
++		val |= PCIE_ATU_INCREASE_REGION_SIZE;
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL1, val);
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
 +
-+  clock-names:
-+    items:
-+      - const: dbi
-+      - const: mstr
-+      - const: slv
-+      - const: ref
++	/*
++	 * Make sure ATU enable takes effect before any subsequent config
++	 * and I/O accesses.
++	 */
++	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
++		val = dw_pcie_readl_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2);
++		if (val & PCIE_ATU_ENABLE)
++			return 0;
 +
-+  resets:
-+    description:
-+      A comprehensive controller reset logic is supposed to be implemented
-+      by software, so almost all the possible application and core reset
-+      signals are exposed via the system CCU module.
-+    maxItems: 9
++		mdelay(LINK_WAIT_IATU);
++	}
 +
-+  reset-names:
-+    items:
-+      - const: mstr
-+      - const: slv
-+      - const: pwr
-+      - const: hot
-+      - const: phy
-+      - const: core
-+      - const: pipe
-+      - const: sticky
-+      - const: non-sticky
++	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
 +
-+  baikal,bt1-syscon:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the Baikal-T1 System Controller DT node. It's required to
-+      access some additional PM, Reset-related and LTSSM signals.
++	return -ETIMEDOUT;
++}
 +
-+  num-lanes:
-+    maximum: 4
-+
-+  max-link-speed:
-+    maximum: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    pcie@1f052000 {
-+      compatible = "baikal,bt1-pcie";
-+      device_type = "pci";
-+      reg = <0x1f052000 0x1000>, <0x1f053000 0x1000>, <0x1bdbf000 0x1000>;
-+      reg-names = "dbi", "dbi2", "config";
-+      #address-cells = <3>;
-+      #size-cells = <2>;
-+      ranges = <0x81000000 0 0x00000000 0x1bdb0000 0 0x00008000>,
-+               <0x82000000 0 0x20000000 0x08000000 0 0x13db0000>;
-+      bus-range = <0x0 0xff>;
-+
-+      interrupts = <GIC_SHARED 80 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 81 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 82 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 83 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 84 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 85 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 86 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 87 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 88 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 89 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 90 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 91 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 92 IRQ_TYPE_LEVEL_HIGH>,
-+                   <GIC_SHARED 93 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "dma0", "dma1", "dma2", "dma3",
-+                        "dma4", "dma5", "dma6", "dma7",
-+                        "msi", "aer", "pme", "hp", "bw_mg",
-+                        "l_eq";
-+
-+      clocks = <&ccu_sys 1>, <&ccu_axi 6>, <&ccu_axi 7>, <&clk_pcie>;
-+      clock-names = "dbi", "mstr", "slv", "ref";
-+
-+      resets = <&ccu_axi 6>, <&ccu_axi 7>, <&ccu_sys 7>, <&ccu_sys 10>,
-+               <&ccu_sys 4>, <&ccu_sys 6>, <&ccu_sys 5>, <&ccu_sys 8>,
-+               <&ccu_sys 9>;
-+      reset-names = "mstr", "slv", "pwr", "hot", "phy", "core", "pipe",
-+                    "sticky", "non-sticky";
-+
-+      reset-gpios = <&port0 0 GPIO_ACTIVE_LOW>;
-+
-+      num-lanes = <4>;
-+      max-link-speed = <3>;
-+    };
-+...
++int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				int type, u64 cpu_addr, u8 bar)
+ {
+ 	u32 retries, val;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index a871ae7eb59e..37801bbce854 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -346,8 +346,10 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+ 			      u64 cpu_addr, u64 pci_addr, u64 size);
+ int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ 				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+-int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int type, u64 cpu_addr, u8 bar);
++int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
++			     u64 cpu_addr, u64 pci_addr, u64 size);
++int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				int type, u64 cpu_addr, u8 bar);
+ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+ void dw_pcie_setup(struct dw_pcie *pci);
+ void dw_pcie_iatu_detect(struct dw_pcie *pci);
 -- 
 2.38.0
 
