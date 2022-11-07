@@ -2,73 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5893661FCE3
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 19:10:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B80BC61FD80
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Nov 2022 19:27:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbiKGSKA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Nov 2022 13:10:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
+        id S230512AbiKGS1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Nov 2022 13:27:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232701AbiKGSJi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 13:09:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2061D264BB;
-        Mon,  7 Nov 2022 10:06:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A445611EE;
-        Mon,  7 Nov 2022 18:06:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86128C433C1;
-        Mon,  7 Nov 2022 18:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667844375;
-        bh=SDj38zhZ2y6S5wzKuopT3v98OgXjZ5t/qd6hJPfIq1Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gXtmlImi+vjgkpCX3LhfMyz3zFTfaEbT4u/U6S8Pw9RvpKVbkdsOYDOrzCs9ms5Ev
-         73rDkC0ASYixrRLsG4wPx1kv9Lt8nE9oBHLEQY/jKrHD6+w83nCK5tW6rmfD1khPHa
-         AnUPD9FtPcjhWJOC35YDIMYOTUL3ELWV2Me0J8fowbOzfHO0I1jL+PsxKT7xA5NWoz
-         Cw4GRFQtad1E8VEFMIgwchcxZwifrcGntDmUeJBRYSqcf3NOI+1piCumZyU2HUZR18
-         CGhJl4lKkdwH4P4vVily6EKSX9jSDZMEbtt1GuZe3bIGAKnpzeGgIj7xZ8duX9KhiC
-         80Akdomf9Dh+g==
-Date:   Mon, 7 Nov 2022 12:06:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Cc:     wse@tuxedocomputers.com, Konrad J Hambrick <kjhambrick@gmail.com>,
-        linux-usb@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Thunderbolt DMAR errors (bugzilla 214259)
-Message-ID: <20221107180613.GA406714@bhelgaas>
+        with ESMTP id S232409AbiKGS1o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Nov 2022 13:27:44 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A317ED95
+        for <linux-pci@vger.kernel.org>; Mon,  7 Nov 2022 10:27:43 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="312272308"
+X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
+   d="scan'208";a="312272308"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 10:27:42 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="965268085"
+X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
+   d="scan'208";a="965268085"
+Received: from ykhasin-mobl.amr.corp.intel.com (HELO fmmunozr-desk.intel.com) ([10.212.16.43])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 10:27:39 -0800
+From:   Francisco@vger.kernel.org, Munoz@vger.kernel.org,
+        Ruiz@vger.kernel.org
+To:     helgaas@kernel.org
+Cc:     lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
+        linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+Subject: [PATCH] PCI: vmd: Disable MSI remapping after suspend
+Date:   Mon,  7 Nov 2022 10:27:35 -0800
+Message-Id: <20221107182735.381552-1-francisco.munoz.ruiz@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,FROM_ADDR_WS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-See https://bugzilla.kernel.org/show_bug.cgi?id=214259
-From comment 42 of this bugzilla:
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
 
-v6.1-rc4 on On Clevo X170KM Barebone:
+MSI remapping is disbaled by VMD driver for intel's icelake and
+newer systems in order to improve performance by setting MSI_RMP_DIS
+bit. By design MSI_RMP_DIS bit of VMCONFIG registers is cleared.
+The same register gets cleared when system is put in S3 power state.
+VMD driver needs to set this register again in order to avoid
+interrupt issues with devices behind VMD if MSI remapping was
+disabled before.
 
-  [    0.000000] BIOS-e820: [mem 0x00000000694af000-0x000000006b2fefff] reserved
-  [    0.739226] pci 0000:05:00.0: [8086:1137] type 00 class 0x0c0340
-  [    0.739266] pci 0000:05:00.0: reg 0x10: [mem 0x425a000000-0x425a03ffff 64bit pref]
-  [    0.739288] pci 0000:05:00.0: reg 0x18: [mem 0x425a040000-0x425a040fff 64bit pref]
-  [    1.587809] DMAR: [DMA Write NO_PASID] Request device [05:00.0] fault addr 0x69974000 [fault reason 0x05] PTE Write access is not set
-  [   23.594763] DMAR: [DMA Write NO_PASID] Request device [05:00.0] fault addr 0x69974000 [fault reason 0x05] PTE Write access is not set
-  [   44.074761] DMAR: [DMA Write NO_PASID] Request device [05:00.0] fault addr 0x69974000 [fault reason 0x05] PTE Write access is not set
-  [   64.554820] DMAR: [DMA Write NO_PASID] Request device [05:00.0] fault addr 0x69974000 [fault reason 0x05] PTE Write access is not set
-  [   85.031314] thunderbolt 0000:05:00.0: failed to send driver ready to ICM
-  [   85.031403] thunderbolt: probe of 0000:05:00.0 failed with error -110
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+Reviewed-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The initial report from wse@ was on v5.15 (faults at the exact same
-address).
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e06e9f4fc50f..247012b343fd 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -980,6 +980,9 @@ static int vmd_resume(struct device *dev)
+ 	struct vmd_dev *vmd = pci_get_drvdata(pdev);
+ 	int err, i;
+ 
++	if (!vmd->irq_domain)
++		vmd_set_msi_remapping(vmd, false);
++
+ 	for (i = 0; i < vmd->msix_count; i++) {
+ 		err = devm_request_irq(dev, vmd->irqs[i].virq,
+ 				       vmd_irq, IRQF_NO_THREAD,
+-- 
+2.34.1
+
