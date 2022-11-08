@@ -2,158 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D13C62101E
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:17:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 602256210B8
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:30:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233982AbiKHMRa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 07:17:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
+        id S232693AbiKHMar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 07:30:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233718AbiKHMR0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:17:26 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745C72F3AD
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:17:25 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id p12so8518221plq.4
-        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 04:17:25 -0800 (PST)
+        with ESMTP id S233326AbiKHMaq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:30:46 -0500
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F2412AA2
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:30:45 -0800 (PST)
+Received: by mail-qv1-xf2a.google.com with SMTP id n18so10093396qvt.11
+        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 04:30:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GPBwlCnaRzpGXtG/LFrZj3940KhkGa8TifjWi+E9sjk=;
-        b=v0q9FyjQWUO79ZSOvqbbQE1MM/k6W/uFmQdd/8txQLmopVW578DvpwhDCxDRO7iarn
-         rQrgc0p7V0rRBvoQavgZEhAUjISCnnAFn/WS02Ba4CSFCrSJdPTb8ppckkSGhJb+0VLK
-         lVBbXuJgADrcBIqKwsSKww6kgglNHpxXISLkHKFmC20FjpmDW5GucTiM2JDynzGZxBkP
-         xAhL/ykpRXosLZDZD3Y55O35+5rTmG/KTGM5f+3/n1Y+Sz2JgbFaoZ/vKMHkNwRDzHrX
-         OhXiLACK+cAzCAuLYrTu61YFxIrwWleJV6x8ovg80TURTmoYNNmuRND9p1Eu1fN7WPWX
-         DU7g==
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=avxTG4r/jC6yWQnk9p7A88nTROiymC+fPSCQIc4d/pBWTNu7pC3a9BaZPI0IpzDXFJ
+         4ZI95wIk4BOnSCfa7EN7yCncA4ghMXNMzrt0GKwDQLJQRHN1xAWs8pwEGI+qov6DLNDd
+         AlDkq0+X4hWfxkeHgYHBZd7u3wepYWT7a9vcA3MjQ7UP4ENbTUaI29LHIp5TdH5DCUcT
+         gBBkIbBgb7wEQuQSAvi/beAoNNJM7eFeWlwScMbMUdIFf60O7MiAuHykpLINOG+YDAD6
+         wNQEU9QhziwHlOnI01VVYK914CwyyQFWbWIARihESvTQd2/8CulFFIOkSHSu6owfMAht
+         LCTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GPBwlCnaRzpGXtG/LFrZj3940KhkGa8TifjWi+E9sjk=;
-        b=jwgM4i/EuAcq6D/HgU8+cGANTd1UrQcly0StxVIbEN+/1OUFKqy/v23crUKP6j7x4A
-         B43lhSpF7mF54IZbpei6MuzPdTUnIQDMXpq6MflTPydYBlRo+xXrGVBnRid5i40ul86f
-         n4dxEDYh8OuHjIuBZehqxz0RY6PPK10+rqcCe/MEEZEwrNO2WzG67JsroSehpe32m9tQ
-         cv/Q/9Rh48CS3LvTaogK8Z/+otqBv/pJNuNfaVqvnktYJyyvM7i65MlEET2qwEABKp3d
-         zeKxS0RMYtvDwacXVECuVXvWdgodu1HHfdwR1RdisovK6nmr/eaFcYhDgxpA2gKG6zck
-         B5Zw==
-X-Gm-Message-State: ACrzQf0+dVPSgP+YC21f2xpZkJuT9iBNlFtMcsVhrBcZvrmTCL6eJa8f
-        yhw48GhrwShyaJf6N1HiQDEf
-X-Google-Smtp-Source: AMsMyM4Id0s61/8FGRatsxuqkroG+/gT4oaAzG5R6Qmy/cXgH2NN62Weju9wZAkjmDJ0SHJLCxBNIA==
-X-Received: by 2002:a17:902:8e84:b0:178:57e4:805b with SMTP id bg4-20020a1709028e8400b0017857e4805bmr55823734plb.144.1667909844774;
-        Tue, 08 Nov 2022 04:17:24 -0800 (PST)
-Received: from thinkpad ([117.207.25.46])
-        by smtp.gmail.com with ESMTPSA id g12-20020a17090a714c00b0020a7d076bfesm5961701pjs.2.2022.11.08.04.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 04:17:23 -0800 (PST)
-Date:   Tue, 8 Nov 2022 17:47:18 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Om Prakash Singh <omp@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: pci-epf-test: Register notifier if only
- core_init_notifier is enabled
-Message-ID: <20221108121718.GB29115@thinkpad>
-References: <0faa0138-ae2b-42e0-d378-665527f0b660@socionext.com>
- <20221102230902.GA6576@bhelgaas>
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=ZmgOJexJeQU4jZjfpvWUP5MABbbxr9MZ2pY3tG1GI+Dspc7CsL9h/NrBju8ynKfPl7
+         zk2Jcb4I2ocII+osbAhGqkOVIqs66lOr9f3BKHef3eKHjDrbflFXCSQ27DumXOBb8uPf
+         HC8hhbloEDaMIli8ZS+0PEgdVzrxuVPv+ama76tEnZBBuuqaF173tPKKRPsv0HuZfV7I
+         e6HHbFxAIhukFX4pAKeJl2R8AoUv8mm8wGladr7Brq8AdXUMRbwu+9JLiUMlMLqdTSTI
+         /+v9r7hHfZgk3Ege2fcdbUCTYFGVSB8oX5HzkmtHutasBDAUcbc+7Sd4flhBbC/QC+g5
+         PD5Q==
+X-Gm-Message-State: ACrzQf0npme4r4hOVCnzlws6ovWjfN2VwjIuqWP8xSg3AnZWSMpLi3A/
+        JscvpImCIBSs5akKI4OlqX0AaF4HlPVqCpGWyvwaHTN21o1GFA==
+X-Google-Smtp-Source: AMsMyM4tFWIcasBN6H0uOfS3KfwEagHKpMXgvPFfTJtQp01/m+oy4bNKWgvj08uKMYwPImmRUQO1ph762CK7TQafZCw=
+X-Received: by 2002:a05:6214:c41:b0:4bb:92b0:3873 with SMTP id
+ r1-20020a0562140c4100b004bb92b03873mr50133618qvj.76.1667910644939; Tue, 08
+ Nov 2022 04:30:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221102230902.GA6576@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6214:2f8a:b0:4bb:6e86:8303 with HTTP; Tue, 8 Nov 2022
+ 04:30:44 -0800 (PST)
+Reply-To: mr.abraham022@gmail.com
+From:   Mr Abraham <mr.abraham2021@gmail.com>
+Date:   Tue, 8 Nov 2022 12:30:44 +0000
+Message-ID: <CAJ2UK+YQrU+m80Jr9F88pmyg95Ah3T7mpoMN7BzsFsC8cTqA6Q@mail.gmail.com>
+Subject: Greeting
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:f2a listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4964]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mr.abraham022[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [mr.abraham2021[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mr.abraham2021[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 02, 2022 at 06:09:02PM -0500, Bjorn Helgaas wrote:
-> On Tue, Nov 01, 2022 at 06:31:07PM +0900, Kunihiko Hayashi wrote:
-> > Hi Bjorn,
-> > 
-> > On 2022/10/29 2:06, Bjorn Helgaas wrote:
-> > > On Thu, Aug 25, 2022 at 06:01:01PM +0900, Kunihiko Hayashi wrote:
-> > > > Need to register pci_epf_test_notifier function event if only
-> > > > core_init_notifier is enabled.
-> > > > 
-> > > > Fixes: 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer core
-> > > initialization")
-> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > > Acked-by: Om Prakash Singh <omp@nvidia.com>
-> > > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > > ---
-> > > >   drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
-> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > This patch is a part of series "PCI: endpoint: Fix core_init_notifier
-> > > feature".
-> > > > The rest of the patches have been withdrawn.
-> > > > 
-> > > > Changes since v2:
-> > > > - Add Acked-by lines
-> > > > 
-> > > > Changes since v1:
-> > > > - Add Acked-by lines
-> > > > 
-> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > index 36b1801a061b..55283d2379a6 100644
-> > > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > @@ -979,7 +979,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> > > >   	if (ret)
-> > > >   		epf_test->dma_supported = false;
-> > > > -	if (linkup_notifier) {
-> > > > +	if (linkup_notifier || core_init_notifier) {
-> > > >   		epf->nb.notifier_call = pci_epf_test_notifier;
-> > > >   		pci_epc_register_notifier(epc, &epf->nb);
-> > > 
-> > > Why does pci_epc_register_notifier() even exist?  It's not used at all
-> > > except for this test code.
-> > > 
-> > > It would be better if infrastructure like this were connected with
-> > > some user of it.
-> >
-> > This call was added by the commit 5779dd0a7dbd
-> > ("PCI: endpoint: Use notification chain mechanism to notify EPC events to EPF").
-> > 
-> > I haven't followed the discussion, however, this commit say: "This
-> > will also enable to add more events (in addition to linkup) in the
-> > future."
-> 
-> 5779dd0a7dbd was 2.5 years ago.  It was probably a mistake to merge it
-> then.  Usually we add infrastructure when we have a user for it,
-> either in the very same patch or at least in a subsequent patch of the
-> series.  
-> 
-> But Lorenzo has already merged this, so I guess this is moot.
-> 
-> He probably wouldn't object to a second patch that removes the fixed
-> infrastructure if nobody uses it.  We can easily resurrect it if a
-> need arises, and if that happens, we'll be glad that it has been
-> fixed!
-> 
-
-I'm planning to submit a new EPF driver that makes use of this infrastructure
-(although the callback mechanism).
-
-Thanks,
-Mani
-
-> Bjorn
-
--- 
-மணிவண்ணன் சதாசிவம்
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Regard, Mr.Abraham
