@@ -2,182 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2A46621E80
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 22:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8218D621E48
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 22:11:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbiKHVX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 16:23:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47320 "EHLO
+        id S229551AbiKHVLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 16:11:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbiKHVX1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 16:23:27 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4FB621B1;
-        Tue,  8 Nov 2022 13:23:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZTYrjxsdY3ZWAJla9PFZKJxOR/h6PSltcDrw+WirPNNifB/IEpT8rGHTKV0nmfp8jF8DjxVMr9s7ls55PcvmSM8y8sOHZ2hILNHA5aIC5+oF8RiDIt8x7RX4637kQjVqQHkBKnYCjuYH4nQo8L/dUC81tgAwGw8IdwmTdPXS/CtVI9zBGHXIUhea5Fcy740AinEUgcZkxCJkTWnwHyT8MyGMN7TiPyRNHmBD7A/8VUHsv0e/xXvyvdH+Qy6o1jPUXN2TXBeP3zArNoAjjFdZabDJ43EQqpsTlR5cDKgwSEFfa4OGZjSEzAKh4nDlP0BLEN1iZgiE4D9ISbuv1xTgxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=odZzxDeh1zcp76hiTbsRYGkPv6bL7N13q9oyJD7M7E8=;
- b=WzTT3PM53fC0mkZpgHjwTr6D9NwH3t+nltao4hZ1FAKc7HYdPFYMNuqtd4OQ45OYsOTp0n+8DOa4V4BVHCmjm5Y5khHoY2zTk2xaZ4aSqBW7NSz0ehXyxE6Ht8AGnQ4q1B0t6JPc5oPVmwkTDPG6nekhhL3ytCLjWZn/xOniEdkPlObb8SB4AV90tHEpZj2yMEtqvaOhOg19VLvv/QhbhDV1Jgkz8QH79v1JK6+f+jRp1p43AURV6PD9bkdW195HA3fxOg0T1i/V/TIBjTSIugd/MxqAm2vvEll4wvYsJ/5lp3t61dCbYIieoT9goHTbrjQoZDJ/MCRaT/PvomPLaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=odZzxDeh1zcp76hiTbsRYGkPv6bL7N13q9oyJD7M7E8=;
- b=l3lflR169bonYijzi4DL5yCU8hcojkw+UiIm148G0qvL+8G1GhRfHFkKFx58bj4w7nEolnVrUt69Ayf6TyjVercXa81X9ZycwSlxEDWtyhxfDyTWrAJZo405RGZ5n+oY+fpz4mSeVOruTzVkfvhqvLbQ4NUBaht+IkF75AnxkjM=
-Received: from MW3PR06CA0007.namprd06.prod.outlook.com (2603:10b6:303:2a::12)
- by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22; Tue, 8 Nov
- 2022 21:23:22 +0000
-Received: from CO1NAM11FT025.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:2a:cafe::7a) by MW3PR06CA0007.outlook.office365.com
- (2603:10b6:303:2a::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22 via Frontend
- Transport; Tue, 8 Nov 2022 21:23:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT025.mail.protection.outlook.com (10.13.175.232) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5791.20 via Frontend Transport; Tue, 8 Nov 2022 21:23:22 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 8 Nov
- 2022 14:50:50 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 8 Nov
- 2022 14:50:49 -0600
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Tue, 8 Nov 2022 14:50:48 -0600
-Message-ID: <ad614a7b-2a40-31a0-a624-779403d91498@amd.com>
-Date:   Tue, 8 Nov 2022 12:50:43 -0800
+        with ESMTP id S229533AbiKHVLe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 16:11:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CBF3C6FE
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 13:11:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5393261796
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 21:11:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868B8C433D6;
+        Tue,  8 Nov 2022 21:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667941892;
+        bh=fe8RyaXeCMWVPPuRtO/tR3bFN0DZpW7Rm5LGPyyUTpM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vNATASlgCulDQmUW6Upk5NK92gLNBmt4by/A0X7jpw9nWW5qhMtlusBJ7EP8F2RuW
+         CtsWRC3MR+I8PcvACAz13ZWjA6QMJic86qD8m6HaB0LXdlD0fwJ/ZUboF5QjXI+lWR
+         eEV5nx1TIoDbRb4Su3qOhvbx369RG+NYYFrUzPkBRn8sHoQvwG5vLwQETC+IdiOS1Z
+         61mXwxh/KOXlg73HPKy4Dt1TzOPhjhFOKWdztDOkDIiectJYbqfd7GpMXXXsL6rcdf
+         d79eLRFEj6cotfQChnoXFo3D7fpAotpJvoXesQaqV/xlNUm9BxR6lOjRmTU9cdZ8PB
+         5p0EA2x02/NhA==
+Date:   Tue, 8 Nov 2022 15:11:30 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Take multifunction devices into account when
+ distributing resources
+Message-ID: <20221108211130.GA501583@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH RFC V3 2/2] PCI: Create device tree node for selected
- devices
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
-        <frowand.list@gmail.com>, <clement.leger@bootlin.com>,
-        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>, <stefano.stabellini@xilinx.com>,
-        <trix@redhat.com>
-References: <20221107210559.GA419452@bhelgaas>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <20221107210559.GA419452@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT025:EE_|DM4PR12MB6591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31cb8d0d-9958-4073-7acf-08dac1cf76c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: k2N/sEIIo20KuYbKlPWgIv3mg7g36+b66kEe7eLB0BcHer8hWsnI3hpPLx/LxJiHTTH7argh+zmk4iLWakmB9/kXT+VS+sUxCRXNBb3cpPpG8He8ggO+3PozcQwl2ytnzM6DNQU1rrRitqvmqymca/IJi1Gx3yIQ+1o5qkLtlRbmntiRA+0Ew42tqsWBzhYb9Q2Oc0tMFJCzoIv11i7k3zr1GkkBI0jao+kH8nYoXVOUrGAzOhvqwi0drAifujgaDApRtkFvqRH+/sqOVvivVhqCvKsx4x3sQVzpC1K+xkFK/Td+IW5INHMVa7GvfOcu+kyePIYl0RgvPLDkLixUUisLBtdMlJnx1biNrJXH4w9NdYW5Dxpp7sDhE0alwx4Ny1ZuihhshEk69IX6XMz5QK86NfoDGsQYYfYypW0PfgZpSRSRMmDVtQE2ImMTGreN5eZatP5xqkEJOcDnR6/JlaIJnMWy+wQ/XZ0yca7kkV6IHqyz910NSjLPa/RjsVcw8HfFjev7FQuFYSRdqX87N+M/D+kTzX2Q0/2BCUMUbFKDip6O7N1rT2SbL3Y8xpJo7GrSXg5XHhGDDRdNgaXKgaooHLVGLj+ZKWLbRkl191RTqGZzM2lUuVMs7Rx8AXfGHOasMA8kgcdZkl0vBVzsTmUXFd9WAQ4O3dA9zwJUSq9kdi/rMoER+/4klxqXBfL7PmbVAyRYl4RaKLpT2EDdCPtv4VxGqjnYfDJv0dod8to6u9KVeAL9vaQBMiViDde2FmThg7aScx59ryyWQwlYwcvqN4jtF+esXK0W9ys++3zzyQbnXhtT5JWFmmY0dutSiDa6SRxmdCctXhXZk4+ZlA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(136003)(376002)(346002)(451199015)(36840700001)(46966006)(40470700004)(44832011)(2616005)(6916009)(478600001)(47076005)(70586007)(426003)(8936002)(26005)(54906003)(41300700001)(186003)(4326008)(8676002)(83380400001)(5660300002)(336012)(2906002)(70206006)(31696002)(40480700001)(86362001)(82310400005)(36756003)(356005)(36860700001)(81166007)(6666004)(316002)(82740400003)(53546011)(31686004)(16576012)(40460700003)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2022 21:23:22.0115
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31cb8d0d-9958-4073-7acf-08dac1cf76c7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT025.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221103103254.30497-1-mika.westerberg@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Nov 03, 2022 at 12:32:53PM +0200, Mika Westerberg wrote:
+> It is possible to have PCIe switch upstream port a multifunction device.
 
-Thanks for your comments. I will fix all these with next submission.
+I can't quite parse this.  I guess the point is that a Switch Upstream
+Port may be one of the functions of a multifunction device?
 
-Lizhi
+> The resource distribution code does not take this into account properly
+> and therefore it expands the upstream port resource windows too much,
+> not leaving space for the other functions (in the multifunction device)
+> and this leads to an issue that Jonathan reported. He runs QEMU with
+> the following topoology (QEMU parameters):
+> 
+>  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2	\
+>  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on	\
+>  -device e1000,bus=root_port13,addr=0.1 			\
+>  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3	\
+>  -device e1000,bus=fun1
+> 
+> The first e1000 NIC here is another function in the switch upstream
+> port. This leads to following errors:
+> 
+>   pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
+>   pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
+>   pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
+>   e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
+> 
+> Fix this by taking into account the possible multifunction devices when
+> uptream port resources are distributed.
 
-On 11/7/22 13:05, Bjorn Helgaas wrote:
-> On Fri, Nov 04, 2022 at 08:24:14AM -0700, Lizhi Hou wrote:
->> The PCIe endpoint device such as Xilinx Alveo PCIe card maps the register
->> spaces from multiple hardware peripherals to its PCIe BAR. Normally,
->> the PCI core discovers devices and BARs using the PCI enumeration process.
->> There is no infrastructure to discover the hardware peripherals that are
->> present in a PCI device, and which can be accessed through the PCI BARs.
->>
->> For Alveo PCIe card, the card firmware provides a flattened device tree to
->> describe the hardware peripherals on its BARs. The Alveo card driver can
->> load this flattened device tree and leverage device tree framework to
->> generate platform devices for the hardware peripherals eventually.
->>
->> Apparently, the device tree framework requires a device tree node for the
->> PCIe device. Thus, it can generate the device tree nodes for hardware
->> peripherals underneath. Because PCIe is self discoverable bus, there might
->> not be a device tree node created for PCIe devices. This patch is to add
->> support to generate device tree node for PCIe devices. It introduces a
->> kernel option. When the option is turned on, the kernel will generate
-> Specify the kernel option here.  These last two sentences should
-> probably be a separate paragraph because they say specifically what
-> this patch does.
->
->> device tree nodes for PCI bridges unconditionally.
->> It will also generate
->> a device tree node for Xilinx Alveo U50 by using PCI quirks.
-> I think I would split the Xilinx Alveo U50 quirk to a separate patch
-> from the infrastructure and make this patch more generic.
->
->> +config PCI_DYNAMIC_OF_NODES
->> +	bool "Device tree node for PCI devices"
->> +	depends on OF
->> +	select OF_DYNAMIC
->> +	help
->> +	  This option enables support for generating device tree nodes for some
->> +	  PCI devices. Thus, the driver of this kind can load and overlay
->> +	  flattened device tree for its downstream devices.
->> +
->> +	  Once this option is selected, the device tree nodes will be generated
->> +	  for all PCI/PCIE bridges.
-> PCI/PCIe
->
-> Actually, in this context (and in the commit log), you should just say
-> "PCI" because there's nothing PCIe-specific here.
->
->> +void of_pci_make_dev_node(struct pci_dev *pdev)
->> +{
->> +	struct device_node *parent, *dt_node = NULL;
->> +	const char *pci_type = "dev";
->> +	struct of_changeset *cset;
->> +	const char *full_name;
->> +	int ret;
->> +
->> +	/*
->> +	 * if there is already a device tree node linked to this device,
->> +	 * return immediately.
-> s/if there/If there/
->
->> +	 */
->> +	if (pci_device_to_OF_node(pdev))
->> +		return;
->> +
->> +	/* check if there is device tree node for parent device */
-> s/check/Check/
->
-> Follow the style of the file, which is "capitalize English sentences."
+Can you include the link to Jonathan's report?
+
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> Hi,
+> 
+> This is the formal patch that resulted from the discussion here:
+> 
+> https://lore.kernel.org/linux-pci/20220905080232.36087-5-mika.westerberg@linux.intel.com/T/#m724289d0ee0c1ae07628744c283116e60efaeaf1
+> 
+> Only change from that version is that we loop through all resources of
+> the multifunction device.
+> 
+>  drivers/pci/setup-bus.c | 63 ++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 59 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index b4096598dbcb..c8787b187ee4 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1830,10 +1830,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+>  	 * bridges below.
+>  	 */
+>  	if (hotplug_bridges + normal_bridges == 1) {
+> -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> -		if (dev->subordinate)
+> -			pci_bus_distribute_available_resources(dev->subordinate,
+> -				add_list, io, mmio, mmio_pref);
+> +		/* Upstream port must be the first */
+
+Do you have any citation or reasoning for this handy?  We had this
+assumption before, and it seems true that an Upstream Port must be
+Function 0 because a variety of Link-related things have to be in
+Function 0, e.g., ARI ASPM Control, ARI Clock PM, Autonomous Width
+Disable, Flit Mode Disable, LTR Enable, OBFF Enable, etc.  But those
+are all pretty oblique.
+
+I guess it's better to have the comment than not, but is the sort of
+assertion that makes one wonder why it is true.
+
+> +		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> +		if (!bridge->subordinate)
+> +			return;
+> +
+> +		/*
+> +		 * It is possible to have switch upstream port as a part
+> +		 * of a multifunction device. For this reason reduce the
+> +		 * resources occupied by the other functions before
+> +		 * distributing the rest.
+
+The space consumed by the peer functions of the Switch Upstream Port
+is determined by their BAR sizes, so I don't think we actually reduce
+that.
+
+I *think* the point here is to reduce the space available for
+distribution by the amount required by the peers of the Switch
+Upstream Port, right?  I.e., "mmio" is the amount of space we have to
+distribute, and before splitting it across devices on the secondary
+bus, we need to save out the space required for peers on the primary
+bus.
+
+> +		 */
+> +		list_for_each_entry(dev, &bus->devices, bus_list) {
+> +			int i;
+> +
+> +			if (dev == bridge)
+> +				continue;
+> +
+> +			/*
+> +			 * It should be multifunction but if not stop
+> +			 * the distribution and bail out.
+> +			 */
+> +			if (!dev->multifunction)
+> +				return;
+
+Why do we bother with this?  If there are multiple devices on the bus,
+don't we want to consider them all, regardless of whether
+dev->multifunction is set?  It seems like a gratuitous check.
+
+> +			for (i = 0; i < PCI_NUM_RESOURCES; i++) {
+> +				const struct resource *dev_res = &dev->resource[i];
+> +				resource_size_t dev_sz;
+> +				struct resource *b_res;
+> +
+> +				if (dev_res->flags & IORESOURCE_IO) {
+> +					b_res = &io;
+> +				} else if (dev_res->flags & IORESOURCE_MEM) {
+> +					if (dev_res->flags & IORESOURCE_PREFETCH)
+> +						b_res = &mmio_pref;
+> +					else
+> +						b_res = &mmio;
+> +				} else {
+> +					continue;
+> +				}
+> +
+> +				/* Size aligned to bridge window */
+> +				align = pci_resource_alignment(bridge, b_res);
+> +				dev_sz = ALIGN(resource_size(dev_res), align);
+> +
+> +				pci_dbg(dev, "%pR aligned to %llx\n", dev_res,
+
+%#llx to avoid confusion and match other output.
+
+> +					(unsigned long long)dev_sz);
+> +
+> +				if (dev_sz >= resource_size(b_res))
+> +					memset(b_res, 0, sizeof(*b_res));
+> +				else
+> +					b_res->end -= dev_sz;
+> +
+> +				pci_dbg(bridge, "updated available to %pR\n", b_res);
+> +			}
+> +		}
+> +
+> +		pci_bus_distribute_available_resources(bridge->subordinate,
+> +						       add_list, io, mmio,
+> +						       mmio_pref);
+>  		return;
+>  	}
+>  
+> -- 
+> 2.35.1
+> 
