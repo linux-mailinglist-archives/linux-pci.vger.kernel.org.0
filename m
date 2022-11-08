@@ -2,105 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D26B5620EA1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 12:21:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F279621001
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:12:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233902AbiKHLVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 06:21:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
+        id S233333AbiKHMMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 07:12:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233792AbiKHLVK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 06:21:10 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21FAE49B69
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 03:21:09 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id n85so11377066yba.1
-        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 03:21:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
-        b=GUxI4j6deoOLvskfcxOAacPXYy0iC2fNeb+ijy+BQHkJEFNnhgkcEJzDjh+nzWEPv8
-         d9wknxZUE/0e+iv/PlaR5UlPzhWCO2j1GIEamPhm/JkeXmxSGY007nkEliCRNFZF9yJo
-         qlanCExK/GpgMfA5/riloseNZ+fFUvFHdD4h6tBF9Vf9toKh8QVVTX/2lq1WpHir/t7r
-         t5x318icOhiaYhK98x8oPzSGiq/VQ4yMTqcPPS5KL3PLZDr1F/OT43qs/D8i9+ZIDA7a
-         JBAm7U0O8fujxztoQ/c+B9NFAGEHsb1UhFIx3MUIv2KM9SQs8V3DpMnnTN2LmHMBNNa0
-         SvNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
-        b=EqtfrtehG58dJV1ebeuPdTIdc0Je3bWggGsjFT5ucD06migRoH+pujM6+EqfN2kDnc
-         9d2/xt+3SHGMhOT66CI5s4ecLpsVCB5RbWqtefW9VlRbokh0P+oIH0ccO/5Y9ae9w3P4
-         nzUGj48G6S+oVRT9WXzyJXp4AXBE83ap0n94NMZ464mLsi5tzwLJfNADXP063kPT0iI/
-         5NWWXlGEPCZllnF5h/bRdzuGLlHYmnatq1YGoLiTtkZ/wkx/4skCQu5e4jUTD2x8krZ1
-         IknCd2YviuXX3/wzj8gnNM76AYBhWzwCqZzCq/J6pNMQbLyGzKOOZx0xqXyy6hoPK/Vo
-         EkxQ==
-X-Gm-Message-State: ACrzQf1LmSsg8WKGhVpFut6EWnnWk1oiPbDcXdirFgzGlEVC4nRY8HLo
-        WgXZE1MihjqdofHY5PXp8BXtane1wM9uHeAu0vk=
-X-Google-Smtp-Source: AMsMyM53Tuy1uMOgbaJOsr203CIke0n/6WpB5PRBf/ygJRv8n7QNRICVqEs2RpX9yk7uFRy90cpsnSHrl1RE3OoXY0k=
-X-Received: by 2002:a25:be03:0:b0:6d2:5835:301f with SMTP id
- h3-20020a25be03000000b006d25835301fmr758388ybk.336.1667906468325; Tue, 08 Nov
- 2022 03:21:08 -0800 (PST)
+        with ESMTP id S232896AbiKHMMx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:12:53 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5850FE02
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667909571; x=1699445571;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Xqc/yjBwOQfxrRUkEluJe1lkk+LHksPgYfwZg0ctVP8=;
+  b=M4hS5006uqToNmE0hn2GT0zhlrK5NdwgEYUwuUVkmB5oJnyhSab98uvF
+   TvvBL1Li/rXg+JsQITo3hCaoB+r5ozKPrCbSIdzGToMz3qm9yaS/LG0Az
+   l1XRJz+8fZIyUuVkz4WyD66uIdEorX3euQOyMUynIDGjLV8mRjgqujbBF
+   cujM4mXDErJCCkV7/LkLK4Mt2hP8IGLLWHJK3OcyL8rH94kkzaaRqawLM
+   dyHnkEKkh4gAThG5lZnrQ6/31F0HvF6TaqEFwfkWEIdEsIxp7B0HSs9o6
+   QCsgX8ASfmtiHhlH+jS9p/j6mHita+EHjIvEssDSpuDi5fQB4EwlPUwiE
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="312469322"
+X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
+   d="scan'208";a="312469322"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 04:12:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="667567147"
+X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
+   d="scan'208";a="667567147"
+Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 08 Nov 2022 04:12:50 -0800
+Received: from kbuild by e783503266e8 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1osNTF-0000KG-1B;
+        Tue, 08 Nov 2022 12:12:49 +0000
+Date:   Tue, 08 Nov 2022 20:12:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
+ 3702266d504e1336cc4446326881ee437eaf83dd
+Message-ID: <636a47ad.UocsB2qjv/cFWvK2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Received: by 2002:a05:7010:a38a:b0:313:c983:1d7e with HTTP; Tue, 8 Nov 2022
- 03:21:07 -0800 (PST)
-Reply-To: mrinvest1010@gmail.com
-From:   "K. A. Mr. Kairi" <ctocik2@gmail.com>
-Date:   Tue, 8 Nov 2022 03:21:07 -0800
-Message-ID: <CAC9COZfcn4Z4pvY7wMShb0=-8JKT9cj0t-+kbiiyfHMnsKe+ZA@mail.gmail.com>
-Subject: Re: My Response..
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b35 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mrinvest1010[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [ctocik2[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [ctocik2[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
+branch HEAD: 3702266d504e1336cc4446326881ee437eaf83dd  PCI: Assign PCI domain IDs by ida_alloc()
+
+Warning ids grouped by kconfigs:
+
+clang_recent_errors
+`-- riscv-randconfig-r042-20221107
+    `-- drivers-pci-probe.c:warning:variable-err-is-used-uninitialized-whenever-if-condition-is-true
+
+elapsed time: 720m
+
+configs tested: 40
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+ia64                             allmodconfig
+arc                                 defconfig
+arc                  randconfig-r043-20221107
+alpha                               defconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+s390                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+s390                             allmodconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+powerpc                          allmodconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+s390                             allyesconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+
+clang tested configs:
+hexagon              randconfig-r041-20221107
+x86_64               randconfig-a014-20221107
+x86_64               randconfig-a011-20221107
+x86_64               randconfig-a013-20221107
+x86_64               randconfig-a012-20221107
+x86_64               randconfig-a015-20221107
+x86_64               randconfig-a016-20221107
+s390                 randconfig-r044-20221107
+riscv                randconfig-r042-20221107
+hexagon              randconfig-r045-20221107
+
 -- 
-Hi
-
-How are you with your family, I have a serious client, whom will be
-interested to invest in your country, I got your Details through the
-Investment Network and world Global Business directory.
-
-If you are interested for more details.....
-
-Sincerely,
-Kairi Andrew
+0-DAY CI Kernel Test Service
+https://01.org/lkp
