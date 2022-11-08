@@ -2,113 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAEC62100F
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:14:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D13C62101E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:17:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233979AbiKHMOy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 07:14:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
+        id S233982AbiKHMRa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 07:17:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233970AbiKHMOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:14:51 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB783E081
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:14:48 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id y13so13639969pfp.7
-        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 04:14:48 -0800 (PST)
+        with ESMTP id S233718AbiKHMR0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:17:26 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745C72F3AD
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:17:25 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id p12so8518221plq.4
+        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 04:17:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=SGI9zJafSo+dT15R0+N5O4QPZGOTZV+sWCo0eHtQqjw=;
-        b=AS4fZ0Z7h9A3PzUkADaZKLSWmUHkX5WwU3/AoS+QyE8gcmEd5ivuv1r4W074jUR7qw
-         /7BPoRPtUC2STKq+oD4AapwtFGUFQdIJ3SnPKJLTFEMbfmvHerd2gBbR1HphxonSlulM
-         vrUctbIFYaTlOBkFi7RdU+MjGsnzbu9BLFQYPgXNReTXOkFIARm1D7bCCFx1QCXNX+KP
-         W++CvkdOBoZZuer7udcfa+SeoRwSlfadRuuM0OcAZIqUo2yuEHWE0+AHse9Z792DRtig
-         nyaECi0pbg08VYfhrBnXqQDimEnLxPgKr5yGQ+jWJtX7sHwh+kaR8SKWC/q3g1HICJgi
-         ws6Q==
+        bh=GPBwlCnaRzpGXtG/LFrZj3940KhkGa8TifjWi+E9sjk=;
+        b=v0q9FyjQWUO79ZSOvqbbQE1MM/k6W/uFmQdd/8txQLmopVW578DvpwhDCxDRO7iarn
+         rQrgc0p7V0rRBvoQavgZEhAUjISCnnAFn/WS02Ba4CSFCrSJdPTb8ppckkSGhJb+0VLK
+         lVBbXuJgADrcBIqKwsSKww6kgglNHpxXISLkHKFmC20FjpmDW5GucTiM2JDynzGZxBkP
+         xAhL/ykpRXosLZDZD3Y55O35+5rTmG/KTGM5f+3/n1Y+Sz2JgbFaoZ/vKMHkNwRDzHrX
+         OhXiLACK+cAzCAuLYrTu61YFxIrwWleJV6x8ovg80TURTmoYNNmuRND9p1Eu1fN7WPWX
+         DU7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGI9zJafSo+dT15R0+N5O4QPZGOTZV+sWCo0eHtQqjw=;
-        b=frDfDAesrsCZAAiClvhiahRTclybRFDdav5k/WFxENYQp5QuaqPoIC6e1Y0OPEPHaF
-         8evheT9hVErmcOTjz7OL+zOG5MprymSSjA+ioMIpd4Oct6VNWSL6Jkc6cpvVcHlnesGm
-         dr/SWfv/GIzW7IcSoBbPk+OkZlV7YMYV5/3wcd2eqrgvT0bXHGO4skz8dgrKVM/U12b2
-         wvXsl2GmweNBdUoxx9TBUXklnGyIMpz63c9HJCBbvkLHZztgw/m1Z3Qg8Nrr+Bu9SmtX
-         XG0EdMwjrJKLsnMC+rQFgwMknoeCx8b1PyqZAl0LJWikCFtdiMQWfaqNM+3rLNFIE61B
-         mqqA==
-X-Gm-Message-State: ACrzQf1YpcqrCJ3q63J0K5li//3tbih9snIGk76RHL831TKmdygRdT9j
-        WfT976woxqlTqJDKfVxCCgql
-X-Google-Smtp-Source: AMsMyM72cbUVS1RNPoLSQ1s1UzXxY6tDH1n3KjTEErRKCD5Ox/XWtUcpfspBUgWrZxaLFJHljP4EWQ==
-X-Received: by 2002:a63:5a63:0:b0:42f:e143:80d4 with SMTP id k35-20020a635a63000000b0042fe14380d4mr48808447pgm.456.1667909687929;
-        Tue, 08 Nov 2022 04:14:47 -0800 (PST)
+        bh=GPBwlCnaRzpGXtG/LFrZj3940KhkGa8TifjWi+E9sjk=;
+        b=jwgM4i/EuAcq6D/HgU8+cGANTd1UrQcly0StxVIbEN+/1OUFKqy/v23crUKP6j7x4A
+         B43lhSpF7mF54IZbpei6MuzPdTUnIQDMXpq6MflTPydYBlRo+xXrGVBnRid5i40ul86f
+         n4dxEDYh8OuHjIuBZehqxz0RY6PPK10+rqcCe/MEEZEwrNO2WzG67JsroSehpe32m9tQ
+         cv/Q/9Rh48CS3LvTaogK8Z/+otqBv/pJNuNfaVqvnktYJyyvM7i65MlEET2qwEABKp3d
+         zeKxS0RMYtvDwacXVECuVXvWdgodu1HHfdwR1RdisovK6nmr/eaFcYhDgxpA2gKG6zck
+         B5Zw==
+X-Gm-Message-State: ACrzQf0+dVPSgP+YC21f2xpZkJuT9iBNlFtMcsVhrBcZvrmTCL6eJa8f
+        yhw48GhrwShyaJf6N1HiQDEf
+X-Google-Smtp-Source: AMsMyM4Id0s61/8FGRatsxuqkroG+/gT4oaAzG5R6Qmy/cXgH2NN62Weju9wZAkjmDJ0SHJLCxBNIA==
+X-Received: by 2002:a17:902:8e84:b0:178:57e4:805b with SMTP id bg4-20020a1709028e8400b0017857e4805bmr55823734plb.144.1667909844774;
+        Tue, 08 Nov 2022 04:17:24 -0800 (PST)
 Received: from thinkpad ([117.207.25.46])
-        by smtp.gmail.com with ESMTPSA id f5-20020a655505000000b00434760ee36asm5619378pgr.16.2022.11.08.04.14.43
+        by smtp.gmail.com with ESMTPSA id g12-20020a17090a714c00b0020a7d076bfesm5961701pjs.2.2022.11.08.04.17.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 04:14:46 -0800 (PST)
-Date:   Tue, 8 Nov 2022 17:44:40 +0530
+        Tue, 08 Nov 2022 04:17:23 -0800 (PST)
+Date:   Tue, 8 Nov 2022 17:47:18 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com
-Subject: Re: [PATCH v4 0/5] PCI: endpoint: Rework the EPC to EPF notification
-Message-ID: <20221108121440.GA29115@thinkpad>
-References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
- <20221107202853.GA416802@bhelgaas>
+Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Om Prakash Singh <omp@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: pci-epf-test: Register notifier if only
+ core_init_notifier is enabled
+Message-ID: <20221108121718.GB29115@thinkpad>
+References: <0faa0138-ae2b-42e0-d378-665527f0b660@socionext.com>
+ <20221102230902.GA6576@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221107202853.GA416802@bhelgaas>
+In-Reply-To: <20221102230902.GA6576@bhelgaas>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 07, 2022 at 02:28:53PM -0600, Bjorn Helgaas wrote:
-> On Tue, Oct 25, 2022 at 08:20:56PM +0530, Manivannan Sadhasivam wrote:
-> > Hello,
+On Wed, Nov 02, 2022 at 06:09:02PM -0500, Bjorn Helgaas wrote:
+> On Tue, Nov 01, 2022 at 06:31:07PM +0900, Kunihiko Hayashi wrote:
+> > Hi Bjorn,
 > > 
-> > During the review of the patch that fixes DBI access in PCI EP, Rob
-> > suggested [1] using a fixed interface for passing the events from EPC to
-> > EPF instead of the in-kernel notifiers.
-> 
-> > Manivannan Sadhasivam (5):
-> >   PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ
-> >   PCI: tegra194: Move dw_pcie_ep_linkup() to threaded IRQ handler
-> >   PCI: endpoint: Use a separate lock for protecting epc->pci_epf list
-> >   PCI: endpoint: Use callback mechanism for passing events from EPC to
-> >     EPF
-> >   PCI: endpoint: Use link_up() callback in place of LINK_UP notifier
+> > On 2022/10/29 2:06, Bjorn Helgaas wrote:
+> > > On Thu, Aug 25, 2022 at 06:01:01PM +0900, Kunihiko Hayashi wrote:
+> > > > Need to register pci_epf_test_notifier function event if only
+> > > > core_init_notifier is enabled.
+> > > > 
+> > > > Fixes: 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer core
+> > > initialization")
+> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > > Acked-by: Om Prakash Singh <omp@nvidia.com>
+> > > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > > > ---
+> > > >   drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > This patch is a part of series "PCI: endpoint: Fix core_init_notifier
+> > > feature".
+> > > > The rest of the patches have been withdrawn.
+> > > > 
+> > > > Changes since v2:
+> > > > - Add Acked-by lines
+> > > > 
+> > > > Changes since v1:
+> > > > - Add Acked-by lines
+> > > > 
+> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > > index 36b1801a061b..55283d2379a6 100644
+> > > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > > @@ -979,7 +979,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > > >   	if (ret)
+> > > >   		epf_test->dma_supported = false;
+> > > > -	if (linkup_notifier) {
+> > > > +	if (linkup_notifier || core_init_notifier) {
+> > > >   		epf->nb.notifier_call = pci_epf_test_notifier;
+> > > >   		pci_epc_register_notifier(epc, &epf->nb);
+> > > 
+> > > Why does pci_epc_register_notifier() even exist?  It's not used at all
+> > > except for this test code.
+> > > 
+> > > It would be better if infrastructure like this were connected with
+> > > some user of it.
+> >
+> > This call was added by the commit 5779dd0a7dbd
+> > ("PCI: endpoint: Use notification chain mechanism to notify EPC events to EPF").
 > > 
-> >  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
-> >  drivers/pci/controller/dwc/pcie-tegra194.c    |  9 ++++-
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 38 ++++++-------------
-> >  drivers/pci/endpoint/pci-epc-core.c           | 32 ++++++++++++----
-> >  include/linux/pci-epc.h                       | 10 +----
-> >  include/linux/pci-epf.h                       | 19 ++++++----
-> >  6 files changed, 59 insertions(+), 51 deletions(-)
+> > I haven't followed the discussion, however, this commit say: "This
+> > will also enable to add more events (in addition to linkup) in the
+> > future."
 > 
-> Doesn't apply cleanly on v6.1-rc1.  Does it depend on something else?
+> 5779dd0a7dbd was 2.5 years ago.  It was probably a mistake to merge it
+> then.  Usually we add infrastructure when we have a user for it,
+> either in the very same patch or at least in a subsequent patch of the
+> series.  
+> 
+> But Lorenzo has already merged this, so I guess this is moot.
+> 
+> He probably wouldn't object to a second patch that removes the fixed
+> infrastructure if nobody uses it.  We can easily resurrect it if a
+> need arises, and if that happens, we'll be glad that it has been
+> fixed!
+> 
 
-Yes, this patch:
-https://lore.kernel.org/linux-pci/20220825090101.20474-1-hayashi.kunihiko@socionext.com/
-
-Since this patch is already merged by Lorenzo, I based this series on top of
-that. If that's not required, I can send a new version without that patch.
-
-Let me know.
+I'm planning to submit a new EPF driver that makes use of this infrastructure
+(although the callback mechanism).
 
 Thanks,
 Mani
+
+> Bjorn
 
 -- 
 மணிவண்ணன் சதாசிவம்
