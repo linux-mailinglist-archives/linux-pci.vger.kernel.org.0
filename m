@@ -2,150 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B65D2620AD6
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 09:02:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 593D7620CB0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 10:53:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233660AbiKHICk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 03:02:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57760 "EHLO
+        id S233333AbiKHJxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 04:53:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233203AbiKHICj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 03:02:39 -0500
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32039A19C;
-        Tue,  8 Nov 2022 00:02:38 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2A882Ew8073665;
-        Tue, 8 Nov 2022 02:02:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1667894534;
-        bh=6XtgOCmcOebxwTAMGJJaIMOr0LLKjuEqe0CutpmiHJw=;
-        h=Date:From:To:CC:References:In-Reply-To:Subject;
-        b=YeT4DHP31A8Jg2MIMMb4/GYngYbVDu91nQYu6SAfl0cssK01FXOuSwXfoZ7vGpFwp
-         QaE8e8WLrnwXw1iIi9q7XO6B+ttX51x7NFuJZa+waFbHgjoaKCwiKGAsTf7847i68s
-         tgtBEVwFGL+1+06RmRt0qJhlsgtJ3oBeonlIiw5A=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2A882EbO016525
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Nov 2022 02:02:14 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 8 Nov
- 2022 02:02:13 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Tue, 8 Nov 2022 02:02:13 -0600
-Received: from [172.24.223.232] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2A8826rl032224;
-        Tue, 8 Nov 2022 02:02:07 -0600
-Message-ID: <5d049f9c-f86e-990d-6e81-168606172d63@ti.com>
-Date:   Tue, 8 Nov 2022 13:32:06 +0530
+        with ESMTP id S232641AbiKHJxG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 04:53:06 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B233BC
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 01:53:04 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 40C62100E5F4C;
+        Tue,  8 Nov 2022 10:53:02 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 1EA602D936; Tue,  8 Nov 2022 10:53:02 +0100 (CET)
+Date:   Tue, 8 Nov 2022 10:53:02 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     James Puthukattukaran <james.puthukattukaran@oracle.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: sysfs interface to force power off
+Message-ID: <20221108095302.GA29279@wunner.de>
+References: <e0a2c30b-7741-4a89-1f7a-aa5eb7c5e4e3@oracle.com>
+ <20221107204129.GA417338@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Dominic Rath <dominic.rath@ibv-augsburg.net>,
-        Rob Herring <robh@kernel.org>
-CC:     <krzysztof.kozlowski+dt@linaro.org>, <tjoseph@cadence.com>,
-        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <nm@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        Alexander Bahle <bahle@ibv-augsburg.de>,
-        Dominic Rath <rath@ibv-augsburg.de>
-References: <20221013062649.303184-1-dominic.rath@ibv-augsburg.de>
- <20221013062649.303184-2-dominic.rath@ibv-augsburg.de>
- <20221013191249.GA38183-robh@kernel.org> <20221014134114.GA307620@JADEVM-DRA>
-Content-Language: en-US
-In-Reply-To: <20221014134114.GA307620@JADEVM-DRA>
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cdns: Add PHY latency properties
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221107204129.GA417338@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dominic,
+On Mon, Nov 07, 2022 at 02:41:29PM -0600, Bjorn Helgaas wrote:
+> On Fri, Nov 04, 2022 at 07:08:34PM -0400, James Puthukattukaran wrote:
+> > Looking to solve a problem where we have nvme drives that are hung
+> > in the field and we are not sure of the root cause but the working
+> > theory is that the controller is "bad" and not responding properly
+> > to commands. The nvme driver times out on outstanding IO requests
+> > and as part of recovery, attempts to reset the controller and
+> > reinitialize the device. The reset controller also hangs like here
+> > --   
+> > 
+> > ernel:info: [10419813.132341] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
+> > kernel:warning: [10419813.132342] Call Trace:
+> > kernel:warning: [10419813.132345]  __schedule+0x2bc/0x89b
+> > kernel:warning: [10419813.132348]  schedule+0x36/0x7c
+> > kernel:warning: [10419813.132351]  blk_mq_freeze_queue_wait+0x4b/0xaa
+> > kernel:warning: [10419813.132353]  ? remove_wait_queue+0x60/0x60
+> > kernel:warning: [10419813.132359]  nvme_wait_freeze+0x33/0x50 [nvme_core]
+> > kernel:warning: [10419813.132362]  nvme_reset_work+0x802/0xd84 [nvme]
+> > kernel:warning: [10419813.132364]  ? __switch_to_asm+0x40/0x62
+> > kernel:warning: [10419813.132365]  ? __switch_to_asm+0x34/0x62
+> > kernel:warning: [10419813.132367]  ? __switch_to+0x9b/0x505
+> > kernel:warning: [10419813.132368]  ? __switch_to_asm+0x40/0x62
+> > kernel:warning: [10419813.132370]  ? __switch_to_asm+0x40/0x62
+> > kernel:warning: [10419813.132372]  process_one_work+0x169/0x399
+> > kernel:warning: [10419813.132374]  worker_thread+0x4d/0x3e5
+> > kernel:warning: [10419813.132377]  kthread+0x105/0x138
+> > kernel:warning: [10419813.132379]  ? rescuer_thread+0x380/0x375
+> > kernel:warning: [10419813.132380]  ? kthread_bind+0x20/0x15
+> > kernel:warning: [10419813.132382]  ret_from_fork+0x24/0x49
+> > ...
+> > 
+> > So, I tried to hot power off the device via
+> > "echo 0 > /sys/bus/pci/slots/X/power" -- the thread also hangs
+> > waiting for the nvme reset thread to finish (like so) -- 
+> 
+> Looks like this "power" sysfs file could use some documentation.  I
+> couldn't find anything in Documentation/ABI/testing/ that seems to
+> cover it.
 
-On 14/10/22 7:11 pm, Dominic Rath wrote:
-> On Thu, Oct 13, 2022 at 02:12:49PM -0500, Rob Herring wrote:
->> On Thu, Oct 13, 2022 at 08:26:47AM +0200, Dominic Rath wrote:
->>> From: Alexander Bahle <bahle@ibv-augsburg.de>
->>>
->>> Add "cdns,tx-phy-latency-ps" and "cdns,rx-phy-latency-ps" DT bindings for
->>> setting the PCIe PHY latencies.
->>> The properties expect a list of uint32 PHY latencies in picoseconds for
->>> every supported speed starting at PCIe Gen1, e.g.:
->>>
->>>   max-link-speed = <2>;
->>>   tx-phy-latency-ps = <100000 200000>; /* Gen1: 100ns, Gen2: 200ns */
->>>   rx-phy-latency-ps = <150000 250000>; /* Gen1: 150ns, Gen2: 250ns */
->>
->> These are a property of the PHY or PCI host? Sounds like PHY to me and 
->> that should be in the PHY node. No reason the PCI driver can't go read 
->> PHY node properties.
-> 
-> I'm actually not sure if this a property of the PHY, the PCIe host, or
-> of the combination of the two.
-> 
+That sysfs attribute was introduced in early 2002, I guess we were
+less diligent with documentation back then:
 
-Latency is mostly related to propogation latency through SERDES PCS and
-PMA layers.
+http://git.kernel.org/tglx/history/c/a8a2069f432c
 
-> We thought about adding this property to the PHY, too, but we didn't
-> know how to handle cases where a single PCIe host is linked with
-> multiple PHYs for multi-lane configurations (see TI's AM65x for
-> example). Which PHYs latency would you use to configure this PCIe RC?
-
-On AM65x, all lanes go through SERDES of same design (but just different
-instances) and thus latencies will remain same across lanes as the PCS
-and PMA logics are same. So, the delays are not lane specific
-
-> 
-> Personally I don't have a very strong opinion either way - we just
-> didn't know any better than to put this into the PCIe host that needs
-> it. If you think this is better put into the PHY node we can of course
-> send a new version of this patch.
-> 
-
-I don't have a preference here...  Delays are dependent on PHYs being
-used but something that host needs, will leave it to framework
-maintainers.
-
-> Is there any binding that specifies "generic" PCIe properties, similar
-> to ethernet-phy.yaml? We couldn't find any.
-> 
-> I guess in the AM64x case the "PHY" is serdes0_pcie_link below serdes0:
-> 
-> &serdes0 {
->         serdes0_pcie_link: phy@0 {
-> 	...
-> 
-> This seems to be described by bindings/phy/phy-cadence-torrent.yaml.
-> 
-> Should we add a generic (without cdns) tx/rx-phy-latency-ps property
-> there?
-> 
->> If PTM is a standard PCIe thing, then I don't think these should be 
->> Cadence specific. IOW, drop 'cdns'. 
-> 
-> Yes, it is a standard PCIe thing, but we haven't seen that many
-> implementations yet, so we didn't want to pretend to know what this
-> looks like in the generic case. We can of course drop 'cdns'.
-
-PTM is definitely standard and vendor specific prefix don't make sense
-to me.
-
-> 
-> Best Regards,
-> 
-> Dominic & Alexander
+(search for power_write_file() in the commit)
 
 
+The problem here is in the NVMe / block layer, not the PCI layer.
+nvme_wait_freeze() calls blk_mq_freeze_queue_wait(), but obviously
+it should call blk_mq_freeze_queue_wait_timeout() instead and handle
+a timeout by retiring any outstanding I/O requests to the drive and
+marking it as dead.
+
+
+> > kernel:warning: [10419813.158116]  __schedule+0x2bc/0x89b
+> > kernel:warning: [10419813.158119]  schedule+0x36/0x7c
+> > kernel:warning: [10419813.158122]  schedule_timeout+0x1f6/0x31f
+> > kernel:warning: [10419813.158124]  ? sched_clock_cpu+0x11/0xa5
+> > kernel:warning: [10419813.158126]  ? try_to_wake_up+0x59/0x505
+> > kernel:warning: [10419813.158130]  wait_for_completion+0x12b/0x18a
+> > kernel:warning: [10419813.158132]  ? wake_up_q+0x80/0x73
+> > kernel:warning: [10419813.158134]  flush_work+0x122/0x1a7
+> > kernel:warning: [10419813.158137]  ? wake_up_worker+0x30/0x2b
+> > kernel:warning: [10419813.158141]  nvme_remove+0x71/0x100 [nvme]
+> > kernel:warning: [10419813.158146]  pci_device_remove+0x3e/0xb6
+> > kernel:warning: [10419813.158149]  device_release_driver_internal+0x134/0x1eb
+> > kernel:warning: [10419813.158151]  device_release_driver+0x12/0x14
+> > kernel:warning: [10419813.158155]  pci_stop_bus_device+0x7c/0x96
+> > kernel:warning: [10419813.158158]  pci_stop_bus_device+0x39/0x96
+> > kernel:warning: [10419813.158164]  pci_stop_and_remove_bus_device+0x12/0x1d
+> > kernel:warning: [10419813.158167]  pciehp_unconfigure_device+0x7a/0x1d7
+> > kernel:warning: [10419813.158169]  pciehp_disable_slot+0x52/0xca
+> > kernel:warning: [10419813.158171]  pciehp_sysfs_disable_slot+0x67/0x112
+> > kernel:warning: [10419813.158174]  disable_slot+0x12/0x14
+> > kernel:warning: [10419813.158175]  power_write_file+0x6e/0xf8
+> > kernel:warning: [10419813.158179]  pci_slot_attr_store+0x24/0x2e
+> > kernel:warning: [10419813.158180]  sysfs_kf_write+0x3f/0x46
+> > kernel:warning: [10419813.158182]  kernfs_fop_write+0x124/0x1a3
+> > kernel:warning: [10419813.158184]  __vfs_write+0x3a/0x16d
+> > kernel:warning: [10419813.158187]  ? audit_filter_syscall+0x33/0xce
+> > kernel:warning: [10419813.158189]  vfs_write+0xb2/0x1a1
+> > 
+> > Is there a way to force power off the device instead of the
+> > "graceful" approach? Obviously, we don't want to reset the system
+> > and don't have physical access to the device.  
+> > 
+> > Would it make sense to create a "force power off" in
+> > /sys/bus/pci/slots/X which basically
+
+The power attribute in sysfs already does what you want, but when
+unbinding the nvme driver from the device, the flush_work() call
+waits for nvme_reset_work() to finish.  And because that's stuck,
+unbinding also gets stuck.  Again, the solution is a code fix
+in the NVMe / block layer, so the proper mailing list to ask
+would be linux-nvme and linux-block.
+
+Thanks,
+
+Lukas
