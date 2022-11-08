@@ -2,52 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8218D621E48
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 22:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D61621F47
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 23:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiKHVLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 16:11:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
+        id S230328AbiKHWan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 17:30:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiKHVLe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 16:11:34 -0500
+        with ESMTP id S230341AbiKHWaP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 17:30:15 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CBF3C6FE
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 13:11:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFD051C00;
+        Tue,  8 Nov 2022 14:29:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5393261796
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 21:11:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868B8C433D6;
-        Tue,  8 Nov 2022 21:11:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E623617A3;
+        Tue,  8 Nov 2022 22:29:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F00BC433D6;
+        Tue,  8 Nov 2022 22:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667941892;
-        bh=fe8RyaXeCMWVPPuRtO/tR3bFN0DZpW7Rm5LGPyyUTpM=;
+        s=k20201202; t=1667946586;
+        bh=BqvLW4jV5m1Bw96AoPI7MuAfx2h0xX+8YgylNPLrHPk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vNATASlgCulDQmUW6Upk5NK92gLNBmt4by/A0X7jpw9nWW5qhMtlusBJ7EP8F2RuW
-         CtsWRC3MR+I8PcvACAz13ZWjA6QMJic86qD8m6HaB0LXdlD0fwJ/ZUboF5QjXI+lWR
-         eEV5nx1TIoDbRb4Su3qOhvbx369RG+NYYFrUzPkBRn8sHoQvwG5vLwQETC+IdiOS1Z
-         61mXwxh/KOXlg73HPKy4Dt1TzOPhjhFOKWdztDOkDIiectJYbqfd7GpMXXXsL6rcdf
-         d79eLRFEj6cotfQChnoXFo3D7fpAotpJvoXesQaqV/xlNUm9BxR6lOjRmTU9cdZ8PB
-         5p0EA2x02/NhA==
-Date:   Tue, 8 Nov 2022 15:11:30 -0600
+        b=ALUXgK44ZlDy0Hq1JR65VSfRXW0YJEhV1L57HIyNALpCiXaedEt2EiQIlXZmytvMb
+         P7KANRx4MVmAgcYLibZnaI5nYHBpVk9QtRmCsvE9qS/CJENQCoiA9aZNGIfIAJqhbS
+         WFVnSh93jYn4RmX8alKaebzoNU+3ufrs0YNhbHM5YwRrMs5EavX/r0BApua83/yLtR
+         LBl+98l5WSe47pbVmTJO28XR/UYFQTAXhoGXvZAfi02qqqC3aJqNUA9/ScmgNgRakW
+         u6BRMgp6+LGEg+tsO8qj+09+uIhXGUMf260kQLjH6p89Q5PYLIbo9BlRgSAh1FI2Di
+         hAt+MWp3lOSBw==
+Date:   Tue, 8 Nov 2022 16:29:44 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Take multifunction devices into account when
- distributing resources
-Message-ID: <20221108211130.GA501583@bhelgaas>
+To:     Nathan Rossi <nathan@nathanrossi.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Rossi <nathan.rossi@digi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/ASPM: Wait for data link active after retraining
+Message-ID: <20221108222944.GA504625@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221103103254.30497-1-mika.westerberg@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220602065544.2552771-1-nathan@nathanrossi.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,156 +53,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 12:32:53PM +0200, Mika Westerberg wrote:
-> It is possible to have PCIe switch upstream port a multifunction device.
-
-I can't quite parse this.  I guess the point is that a Switch Upstream
-Port may be one of the functions of a multifunction device?
-
-> The resource distribution code does not take this into account properly
-> and therefore it expands the upstream port resource windows too much,
-> not leaving space for the other functions (in the multifunction device)
-> and this leads to an issue that Jonathan reported. He runs QEMU with
-> the following topoology (QEMU parameters):
+On Thu, Jun 02, 2022 at 06:55:44AM +0000, Nathan Rossi wrote:
+> From: Nathan Rossi <nathan.rossi@digi.com>
 > 
->  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2	\
->  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on	\
->  -device e1000,bus=root_port13,addr=0.1 			\
->  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3	\
->  -device e1000,bus=fun1
+> When retraining the link either the child or the parent device may have
+> the data link layer state machine of the respective devices move out of
+> the active state despite the physical link training being completed.
+> Depending on how long is takes for the devices to return to the active
+> state, the device may not be ready and any further reads/writes to the
+> device can fail.
 > 
-> The first e1000 NIC here is another function in the switch upstream
-> port. This leads to following errors:
+> This issue is present with the pci-mvebu controller paired with a device
+> supporting ASPM but without advertising the Slot Clock, where during
+> boot the pcie_aspm_cap_init call would cause common clocks to be made
+> consistent and then retrain the link. However the data link layer would
+> not be active before any device initialization (e.g. ASPM capability
+> queries, BAR configuration) causing improper configuration of the device
+> without error.
 > 
->   pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
->   pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
->   pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
->   e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
+> To ensure the child device is accessible, after the link retraining use
+> pcie_wait_for_link to perform the associated state checks and any needed
+> delays.
 > 
-> Fix this by taking into account the possible multifunction devices when
-> uptream port resources are distributed.
-
-Can you include the link to Jonathan's report?
-
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Nathan Rossi <nathan.rossi@digi.com>
 > ---
-> Hi,
+>  drivers/pci/pcie/aspm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> This is the formal patch that resulted from the discussion here:
-> 
-> https://lore.kernel.org/linux-pci/20220905080232.36087-5-mika.westerberg@linux.intel.com/T/#m724289d0ee0c1ae07628744c283116e60efaeaf1
-> 
-> Only change from that version is that we loop through all resources of
-> the multifunction device.
-> 
->  drivers/pci/setup-bus.c | 63 ++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 59 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index b4096598dbcb..c8787b187ee4 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1830,10 +1830,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->  	 * bridges below.
->  	 */
->  	if (hotplug_bridges + normal_bridges == 1) {
-> -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> -		if (dev->subordinate)
-> -			pci_bus_distribute_available_resources(dev->subordinate,
-> -				add_list, io, mmio, mmio_pref);
-> +		/* Upstream port must be the first */
-
-Do you have any citation or reasoning for this handy?  We had this
-assumption before, and it seems true that an Upstream Port must be
-Function 0 because a variety of Link-related things have to be in
-Function 0, e.g., ARI ASPM Control, ARI Clock PM, Autonomous Width
-Disable, Flit Mode Disable, LTR Enable, OBFF Enable, etc.  But those
-are all pretty oblique.
-
-I guess it's better to have the comment than not, but is the sort of
-assertion that makes one wonder why it is true.
-
-> +		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> +		if (!bridge->subordinate)
-> +			return;
-> +
-> +		/*
-> +		 * It is possible to have switch upstream port as a part
-> +		 * of a multifunction device. For this reason reduce the
-> +		 * resources occupied by the other functions before
-> +		 * distributing the rest.
-
-The space consumed by the peer functions of the Switch Upstream Port
-is determined by their BAR sizes, so I don't think we actually reduce
-that.
-
-I *think* the point here is to reduce the space available for
-distribution by the amount required by the peers of the Switch
-Upstream Port, right?  I.e., "mmio" is the amount of space we have to
-distribute, and before splitting it across devices on the secondary
-bus, we need to save out the space required for peers on the primary
-bus.
-
-> +		 */
-> +		list_for_each_entry(dev, &bus->devices, bus_list) {
-> +			int i;
-> +
-> +			if (dev == bridge)
-> +				continue;
-> +
-> +			/*
-> +			 * It should be multifunction but if not stop
-> +			 * the distribution and bail out.
-> +			 */
-> +			if (!dev->multifunction)
-> +				return;
-
-Why do we bother with this?  If there are multiple devices on the bus,
-don't we want to consider them all, regardless of whether
-dev->multifunction is set?  It seems like a gratuitous check.
-
-> +			for (i = 0; i < PCI_NUM_RESOURCES; i++) {
-> +				const struct resource *dev_res = &dev->resource[i];
-> +				resource_size_t dev_sz;
-> +				struct resource *b_res;
-> +
-> +				if (dev_res->flags & IORESOURCE_IO) {
-> +					b_res = &io;
-> +				} else if (dev_res->flags & IORESOURCE_MEM) {
-> +					if (dev_res->flags & IORESOURCE_PREFETCH)
-> +						b_res = &mmio_pref;
-> +					else
-> +						b_res = &mmio;
-> +				} else {
-> +					continue;
-> +				}
-> +
-> +				/* Size aligned to bridge window */
-> +				align = pci_resource_alignment(bridge, b_res);
-> +				dev_sz = ALIGN(resource_size(dev_res), align);
-> +
-> +				pci_dbg(dev, "%pR aligned to %llx\n", dev_res,
-
-%#llx to avoid confusion and match other output.
-
-> +					(unsigned long long)dev_sz);
-> +
-> +				if (dev_sz >= resource_size(b_res))
-> +					memset(b_res, 0, sizeof(*b_res));
-> +				else
-> +					b_res->end -= dev_sz;
-> +
-> +				pci_dbg(bridge, "updated available to %pR\n", b_res);
-> +			}
-> +		}
-> +
-> +		pci_bus_distribute_available_resources(bridge->subordinate,
-> +						       add_list, io, mmio,
-> +						       mmio_pref);
->  		return;
->  	}
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a96b7424c9..4b8a1810be 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -288,7 +288,8 @@ static void pcie_aspm_configure_common_clock(struct pcie_link_state *link)
+>  		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+>  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
 >  
-> -- 
-> 2.35.1
-> 
+> -	if (pcie_retrain_link(link))
+> +	/* Retrain link and then wait for the link to become active */
+> +	if (pcie_retrain_link(link) && pcie_wait_for_link(parent, true))
+
+pcie_retrain_link() waits for PCI_EXP_LNKSTA_LT (Link Training) to be
+cleared, which means the LTSSM has exited the Configuration/Recovery
+state.  pcie_wait_for_link() waits for PCI_EXP_LNKSTA_DLLLA (Data Link
+Layer Link Active) to be set, which means the link is in DL_Active.
+
+I don't see an explicit procedure in the spec for determining when
+a link retrain is complete, but from PCIe r6.0, sec 6.2.11 (DPC):
+
+  After software releases the Downstream Port from DPC, the Port’s
+  LTSSM must transition to the Detect state, where the Link will
+  attempt to retrain. Software can use Data Link Layer State Changed
+  interrupts, DL_ACTIVE ERR_COR signaling, or both, to signal when the
+  Link reaches the DL_Active state again.
+
+and sec 6.6:
+
+  On the completion of Link Training (entering the DL_Active state,
+  see Section 3.2), a component must be able to receive and process
+  TLPs and DLLPs.
+
+The only use mentioned in the spec for the Link Training bit is the
+implementation note in sec 7.5.3.7 about avoiding race conditions when
+using the Retrain Link bit, where software should poll Link Training
+until it returns to zero before setting the Retrain Link bit to change
+link parameters.
+
+And I think you're absolutely right that what we *want* here is the
+data link layer DL_Active state, not just the link layer L0 state.
+
+This all makes me think that checking the Link Training bit might be
+the wrong thing to begin with.
+
+Of course, the Data Link Layer Link Active bit wasn't added until PCIe
+r1.1, and even now it's optional.  Without it, I don't know if there's
+a way to make sure the link is in DL_Active.
+
+Maybe pcie_retrain_link() should wait for Data Link Layer Link Active
+if it is supported, and use the existing behavior of waiting for Link
+Training to be cleared otherwise?
+
+>  		return;
+>  
+>  	/* Training failed. Restore common clock configurations */
+> ---
+> 2.36.1
