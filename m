@@ -2,99 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B32A622548
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 09:26:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22BCC62270D
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 10:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbiKII0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 03:26:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39512 "EHLO
+        id S229981AbiKIJc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 04:32:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbiKII0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 03:26:33 -0500
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A1E13D52
-        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 00:26:32 -0800 (PST)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2A98QK11114296;
-        Wed, 9 Nov 2022 02:26:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1667982380;
-        bh=hlEm72WqMoZKFSWrfJiaow4wqktKLw+YOG3Ivwy4ACE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uLI6is7rKQq7CjSfxfXpLNQRvjiAgDQZmBOqbOVak7iiZbeWQmvXjgzc4WAR/B8MS
-         tlSlYWWotXPAH+n55FqmMFQFGbmbuDpYV+D8213y62QbR4RyEoc1f1UrO9N8eTKJBd
-         72z85knjLGz/qtBKcqyIVdAuhA4yNsqvG53sIfsk=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2A98QK82039242
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Nov 2022 02:26:20 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 9 Nov
- 2022 02:26:20 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Wed, 9 Nov 2022 02:26:20 -0600
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2A98QHlX039434;
-        Wed, 9 Nov 2022 02:26:18 -0600
-From:   Matt Ranostay <mranostay@ti.com>
-To:     <vigneshr@ti.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Matt Ranostay <mranostay@ti.com>
-Subject: [PATCH v5 4/4] PCI: j721e: Add warnings on num-lanes misconfiguration
-Date:   Wed, 9 Nov 2022 00:25:56 -0800
-Message-ID: <20221109082556.29265-5-mranostay@ti.com>
-X-Mailer: git-send-email 2.38.GIT
-In-Reply-To: <20221109082556.29265-1-mranostay@ti.com>
-References: <20221109082556.29265-1-mranostay@ti.com>
+        with ESMTP id S229835AbiKIJc1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 04:32:27 -0500
+X-Greylist: delayed 88597 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Nov 2022 01:32:26 PST
+Received: from mail.lokoho.com (mail.lokoho.com [217.61.105.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B779322B04
+        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 01:32:26 -0800 (PST)
+Received: by mail.lokoho.com (Postfix, from userid 1001)
+        id D2D1F829EF; Tue,  8 Nov 2022 08:55:40 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
+        t=1667897747; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
+        h=Date:From:To:Subject:From;
+        b=l3N/v8e8SQxsY5m4GO5sPHF8pZoRAOriQ72c6A2F2dHKKbnJq2DLEbv68DxDgI05I
+         ajbNUNVLq/h9OQT4rdt0XfFSbunIchwfdnkkTcGjc2hmwosO51imj028OZo6bZVcHP
+         rKshFJtMsRd9tKiF0GG+qel4r3iDgv8q89MgAlf5IQnNwpj4JRKOIFl36LWKAyRZar
+         Yhp2PC/wNYQOTpjKKeNStStc8mAQvjpAQu55InFLGP4YJQibWjj0daQnckBLi66j2i
+         lpHVkFVT8syWc/nanUvm1kVrXfm+t/I8lMPe3wsGkGSbnkgffCuw8hKPFffu04VBAD
+         VMjJN7l41cBHA==
+Received: by mail.lokoho.com for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 08:55:33 GMT
+Message-ID: <20221108074500-0.1.24.5nx2.0.sfpx2bm9tn@lokoho.com>
+Date:   Tue,  8 Nov 2022 08:55:33 GMT
+From:   "Adam Charachuta" <adam.charachuta@lokoho.com>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
+X-Mailer: mail.lokoho.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_VALIDITY_RPBL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Added dev_warn messages to alert of misconfigurations for incorrect number
-of lanes setting, or the lack of one being defined.
+Dzie=C5=84 dobry,
 
-Signed-off-by: Matt Ranostay <mranostay@ti.com>
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 83b8100afaff..f6320ad75587 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -465,9 +465,16 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 	pcie->user_cfg_base = base;
- 
- 	ret = of_property_read_u32(node, "num-lanes", &num_lanes);
--	if (ret || num_lanes > data->max_lanes)
-+	if (ret) {
-+		dev_warn(dev, "no num-lanes defined, defaulting to 1\n");
- 		num_lanes = 1;
-+	}
- 
-+	if (num_lanes > data->max_lanes) {
-+		dev_warn(dev, "defined num-lanes %u is greater than the allowed maximum of %u, defaulting to 1\n",
-+			 num_lanes, data->max_lanes);
-+		num_lanes = 1;
-+	}
- 	pcie->max_lanes = data->max_lanes;
- 	pcie->num_lanes = num_lanes;
- 
--- 
-2.38.GIT
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+
+
+Pozdrawiam
+Adam Charachuta
