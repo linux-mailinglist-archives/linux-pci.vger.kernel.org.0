@@ -2,127 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F279621001
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:12:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CAEC62100F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 13:14:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233333AbiKHMMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 07:12:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        id S233979AbiKHMOy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 07:14:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232896AbiKHMMx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:12:53 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5850FE02
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:12:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667909571; x=1699445571;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Xqc/yjBwOQfxrRUkEluJe1lkk+LHksPgYfwZg0ctVP8=;
-  b=M4hS5006uqToNmE0hn2GT0zhlrK5NdwgEYUwuUVkmB5oJnyhSab98uvF
-   TvvBL1Li/rXg+JsQITo3hCaoB+r5ozKPrCbSIdzGToMz3qm9yaS/LG0Az
-   l1XRJz+8fZIyUuVkz4WyD66uIdEorX3euQOyMUynIDGjLV8mRjgqujbBF
-   cujM4mXDErJCCkV7/LkLK4Mt2hP8IGLLWHJK3OcyL8rH94kkzaaRqawLM
-   dyHnkEKkh4gAThG5lZnrQ6/31F0HvF6TaqEFwfkWEIdEsIxp7B0HSs9o6
-   QCsgX8ASfmtiHhlH+jS9p/j6mHita+EHjIvEssDSpuDi5fQB4EwlPUwiE
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="312469322"
-X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
-   d="scan'208";a="312469322"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 04:12:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="667567147"
-X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
-   d="scan'208";a="667567147"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 08 Nov 2022 04:12:50 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1osNTF-0000KG-1B;
-        Tue, 08 Nov 2022 12:12:49 +0000
-Date:   Tue, 08 Nov 2022 20:12:29 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S233970AbiKHMOv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 07:14:51 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB783E081
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 04:14:48 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id y13so13639969pfp.7
+        for <linux-pci@vger.kernel.org>; Tue, 08 Nov 2022 04:14:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SGI9zJafSo+dT15R0+N5O4QPZGOTZV+sWCo0eHtQqjw=;
+        b=AS4fZ0Z7h9A3PzUkADaZKLSWmUHkX5WwU3/AoS+QyE8gcmEd5ivuv1r4W074jUR7qw
+         /7BPoRPtUC2STKq+oD4AapwtFGUFQdIJ3SnPKJLTFEMbfmvHerd2gBbR1HphxonSlulM
+         vrUctbIFYaTlOBkFi7RdU+MjGsnzbu9BLFQYPgXNReTXOkFIARm1D7bCCFx1QCXNX+KP
+         W++CvkdOBoZZuer7udcfa+SeoRwSlfadRuuM0OcAZIqUo2yuEHWE0+AHse9Z792DRtig
+         nyaECi0pbg08VYfhrBnXqQDimEnLxPgKr5yGQ+jWJtX7sHwh+kaR8SKWC/q3g1HICJgi
+         ws6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SGI9zJafSo+dT15R0+N5O4QPZGOTZV+sWCo0eHtQqjw=;
+        b=frDfDAesrsCZAAiClvhiahRTclybRFDdav5k/WFxENYQp5QuaqPoIC6e1Y0OPEPHaF
+         8evheT9hVErmcOTjz7OL+zOG5MprymSSjA+ioMIpd4Oct6VNWSL6Jkc6cpvVcHlnesGm
+         dr/SWfv/GIzW7IcSoBbPk+OkZlV7YMYV5/3wcd2eqrgvT0bXHGO4skz8dgrKVM/U12b2
+         wvXsl2GmweNBdUoxx9TBUXklnGyIMpz63c9HJCBbvkLHZztgw/m1Z3Qg8Nrr+Bu9SmtX
+         XG0EdMwjrJKLsnMC+rQFgwMknoeCx8b1PyqZAl0LJWikCFtdiMQWfaqNM+3rLNFIE61B
+         mqqA==
+X-Gm-Message-State: ACrzQf1YpcqrCJ3q63J0K5li//3tbih9snIGk76RHL831TKmdygRdT9j
+        WfT976woxqlTqJDKfVxCCgql
+X-Google-Smtp-Source: AMsMyM72cbUVS1RNPoLSQ1s1UzXxY6tDH1n3KjTEErRKCD5Ox/XWtUcpfspBUgWrZxaLFJHljP4EWQ==
+X-Received: by 2002:a63:5a63:0:b0:42f:e143:80d4 with SMTP id k35-20020a635a63000000b0042fe14380d4mr48808447pgm.456.1667909687929;
+        Tue, 08 Nov 2022 04:14:47 -0800 (PST)
+Received: from thinkpad ([117.207.25.46])
+        by smtp.gmail.com with ESMTPSA id f5-20020a655505000000b00434760ee36asm5619378pgr.16.2022.11.08.04.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 04:14:46 -0800 (PST)
+Date:   Tue, 8 Nov 2022 17:44:40 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
- 3702266d504e1336cc4446326881ee437eaf83dd
-Message-ID: <636a47ad.UocsB2qjv/cFWvK2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com
+Subject: Re: [PATCH v4 0/5] PCI: endpoint: Rework the EPC to EPF notification
+Message-ID: <20221108121440.GA29115@thinkpad>
+References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
+ <20221107202853.GA416802@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221107202853.GA416802@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: 3702266d504e1336cc4446326881ee437eaf83dd  PCI: Assign PCI domain IDs by ida_alloc()
+On Mon, Nov 07, 2022 at 02:28:53PM -0600, Bjorn Helgaas wrote:
+> On Tue, Oct 25, 2022 at 08:20:56PM +0530, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > During the review of the patch that fixes DBI access in PCI EP, Rob
+> > suggested [1] using a fixed interface for passing the events from EPC to
+> > EPF instead of the in-kernel notifiers.
+> 
+> > Manivannan Sadhasivam (5):
+> >   PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ
+> >   PCI: tegra194: Move dw_pcie_ep_linkup() to threaded IRQ handler
+> >   PCI: endpoint: Use a separate lock for protecting epc->pci_epf list
+> >   PCI: endpoint: Use callback mechanism for passing events from EPC to
+> >     EPF
+> >   PCI: endpoint: Use link_up() callback in place of LINK_UP notifier
+> > 
+> >  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
+> >  drivers/pci/controller/dwc/pcie-tegra194.c    |  9 ++++-
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 38 ++++++-------------
+> >  drivers/pci/endpoint/pci-epc-core.c           | 32 ++++++++++++----
+> >  include/linux/pci-epc.h                       | 10 +----
+> >  include/linux/pci-epf.h                       | 19 ++++++----
+> >  6 files changed, 59 insertions(+), 51 deletions(-)
+> 
+> Doesn't apply cleanly on v6.1-rc1.  Does it depend on something else?
 
-Warning ids grouped by kconfigs:
+Yes, this patch:
+https://lore.kernel.org/linux-pci/20220825090101.20474-1-hayashi.kunihiko@socionext.com/
 
-clang_recent_errors
-`-- riscv-randconfig-r042-20221107
-    `-- drivers-pci-probe.c:warning:variable-err-is-used-uninitialized-whenever-if-condition-is-true
+Since this patch is already merged by Lorenzo, I based this series on top of
+that. If that's not required, I can send a new version without that patch.
 
-elapsed time: 720m
+Let me know.
 
-configs tested: 40
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-ia64                             allmodconfig
-arc                                 defconfig
-arc                  randconfig-r043-20221107
-alpha                               defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-s390                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-s390                             allmodconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-powerpc                          allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-s390                             allyesconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20221107
-x86_64               randconfig-a014-20221107
-x86_64               randconfig-a011-20221107
-x86_64               randconfig-a013-20221107
-x86_64               randconfig-a012-20221107
-x86_64               randconfig-a015-20221107
-x86_64               randconfig-a016-20221107
-s390                 randconfig-r044-20221107
-riscv                randconfig-r042-20221107
-hexagon              randconfig-r045-20221107
+Thanks,
+Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+மணிவண்ணன் சதாசிவம்
