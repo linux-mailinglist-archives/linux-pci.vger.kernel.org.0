@@ -2,49 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2E9B62192B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 17:12:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 978DE621A04
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 18:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233736AbiKHQMt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 11:12:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50436 "EHLO
+        id S233704AbiKHRGZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 12:06:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234578AbiKHQMs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 11:12:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3084FF87
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 08:12:48 -0800 (PST)
+        with ESMTP id S231341AbiKHRGY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 12:06:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B632D1B7AD
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 09:06:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C06D8615F0
-        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 16:12:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D66C433D6;
-        Tue,  8 Nov 2022 16:12:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53891616F3
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 17:06:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD81C433D6;
+        Tue,  8 Nov 2022 17:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667923967;
-        bh=nvy6oRQX03hPUL9Rh+Si6o6pX8guUolTc4YGF6bT3Lo=;
+        s=k20201202; t=1667927182;
+        bh=E+bZsqTRa32Dj6VxSOdNs9JRYHbzHOK4jtOCaPVc9Kg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C1SLdWqYUeOx1bCz90z4wPUh7ioagitYPOXE3BURGIDMunQdmDxfAamlU/gYTaJtc
-         Dl7aury599CENr+D5cZFKKv1gE7iuRPP0/BhyRV42krnUei5irU8ndMYeKjQi1Qvvv
-         3T58onG/hecEgUSQQyL67Vyqz1m4oqdCclLTgQtlvN4UQL/yidpymODw0hxk/ZFHaf
-         /FPAjxFHcv42XlvDyLXwNdPQrkcfOujn6K7kuuV1sv/Jx+eMOqi5c/LFSsS/Rh9ekz
-         xElSWnYZZO4VslqovNv/svg/cE/KkqlIHRs5Hz1t/Mf5dn9aKB4fVdvFmG7nBA4RrJ
-         g5g2ZtIomzY5w==
-Date:   Tue, 8 Nov 2022 09:12:44 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     James Puthukattukaran <james.puthukattukaran@oracle.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [External] : Re: sysfs interface to force power off
-Message-ID: <Y2p//Eqa9HGRmwWW@kbusch-mbp>
-References: <20221107204129.GA417338@bhelgaas>
- <0081d0f6-871f-3d07-1af7-0e8e41f5d983@oracle.com>
+        b=GKqBYV0/A+LFG5w8O6GNy3XMhJ3Dpkr04OFMSE9klnws6UxOnbB4YnYw9ipOxfJpv
+         LVQLFVGIqmcYvVHEPogEnGrOPjQg/WxEy90IXFMDigcQ7OdLuwAkTZcANFHRRnMlPc
+         JsHXrBEpNQvyAFvy3oTqNb16c1JGpbbF1T7VrjNQiH+uQ7oQMAXpLW7K66foYfUNRy
+         0uCmzzjTlCaKTYzegD9kBMk3prcj4v41ATK3yHMdybMznqEhEBsl+NGeUe8EaCrpmk
+         eluURC/dJ6l7IKn5+fR5OKbqlC7/zyGDR1WrHlGeRFZ/GRngUKmkIp03rVnqYGDRE0
+         GBO8hAbBpQSFg==
+Received: by pali.im (Postfix)
+        id 82E1D818; Tue,  8 Nov 2022 18:06:19 +0100 (CET)
+Date:   Tue, 8 Nov 2022 18:06:19 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org
+Subject: Re: [helgaas-pci:pci/enumeration 3/3] drivers/pci/probe.c:909:6:
+ warning: variable 'err' is used uninitialized whenever 'if' condition is
+ true
+Message-ID: <20221108170619.jmcfvcuggkwjfo7j@pali>
+References: <202211081120.s8hX7ZW3-lkp@intel.com>
+ <20221108130816.GA464595@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0081d0f6-871f-3d07-1af7-0e8e41f5d983@oracle.com>
+In-Reply-To: <20221108130816.GA464595@bhelgaas>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,23 +58,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 07, 2022 at 04:14:54PM -0500, James Puthukattukaran wrote:
+On Tuesday 08 November 2022 07:08:16 Bjorn Helgaas wrote:
+> Why did the bot tell me the build was *SUCCESSFUL* even though this is
+> clearly a problem?  Here's the "success" message:
 > 
-> There is a path to disable the controller and that code ran but did
-> not help. I checked wit the nvme folks and Keith mentioned that there
-> might be an issue with the nvme queue management. Unfortunately, we
-> can't try newer kernels in the field. So, looking for a way to just
-> "shut off the device" when we have scenarios like this where we can't
-> untangle the mess. 
+>   https://lore.kernel.org/all/636a47ad.UocsB2qjv%2FcFWvK2%25lkp@intel.com/
+> 
+> On Tue, Nov 08, 2022 at 03:21:20PM +0800, kernel test robot wrote:
+> 
+> > >> drivers/pci/probe.c:909:6: warning: variable 'err' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+> >            if (bus->domain_nr < 0)
+> >                ^~~~~~~~~~~~~~~~~~
+> 
+> I set "err = -EINVAL" here; let me know if you prefer something
+> different.
 
-Well, I didn't request you try new kernels in the field. I asked if you
-could experiment with a newer one on a development machine to confirm if
-the bug was fixed by some of the significant changes in this path so
-that we could confirm a reason to port to stable. You're going to have
-to change your kernel to fix this observation, so it would be worth the
-effort to know if the changes being considered actually address the
-problem.
+Hello! I agree that there is missing err= assignment.
 
-If you're just looking for a work-around for this specific scenario,
-sorry, I don't think we'll find one. You should just avoid this scenario
-if you can't change your kernel.
+Instead of -EINVAL you can use also bus->domain_nr as it is negative and
+would contained error code (from ida_alloc() call).
