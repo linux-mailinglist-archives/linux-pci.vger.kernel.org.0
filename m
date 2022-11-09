@@ -2,135 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A9AB621F5F
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Nov 2022 23:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C00262212F
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 02:09:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiKHWcp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 17:32:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
+        id S229560AbiKIBJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 20:09:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbiKHWcf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 17:32:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A691A15A3E;
-        Tue,  8 Nov 2022 14:32:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 42ED9617CF;
-        Tue,  8 Nov 2022 22:32:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFF5C4314A;
-        Tue,  8 Nov 2022 22:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667946753;
-        bh=C7cfJNnFHnwN+Dt+RBevE2dF73eXyltwRwAzsZdY/0M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hRwIVGcA/z119YdQcE4otRl/Y3HMv6/1zWWvYRwOs5guBXJh2SMBsNXs8iZetc9X9
-         N1E5aUqiyNMt0LCstBvFWq0c1cqPuVxP8rNqHQPim1z1Lr9ftMOyyJ/hPGjEBPOq5V
-         6RUPb6sOrlpMywK3vZVnfccdhDfYFMWohA+4AxkPOQkCHZeN7BkjlkEmxH0OGRJioA
-         U9jATc70EYJ4rGP929dE0UF/3Eea6XaixISj0SSXymTPzj4AHMvs9wcmAUSsljYwrW
-         RaWT/YKWWoIfkCSvkqI6LXC6c0GoSt22XH751dM2n6M+px2f7Kp9B+919EOUUa2FKC
-         w/9wPsgvl30SQ==
-Received: by mail-lj1-f171.google.com with SMTP id c25so23198562ljr.8;
-        Tue, 08 Nov 2022 14:32:33 -0800 (PST)
-X-Gm-Message-State: ACrzQf0FvKD3vjgLg2MKNZ2PI6hbKW5DFX21Dy96KiNKLddDXX1T+Zyr
-        A2+pYgiAJuWF2XUe1kqghUXZ1bqE6O3VsRkwEg==
-X-Google-Smtp-Source: AMsMyM79MD2K3KPMVXymYEssotlGplfJ1g3Tr8XMyNdqkAYV8JnBI2uYKzWBlsni9BR1wivgUkvUZa8W2XAfVOuMFMc=
-X-Received: by 2002:a2e:9a85:0:b0:275:1343:df71 with SMTP id
- p5-20020a2e9a85000000b002751343df71mr7582015lji.215.1667946751374; Tue, 08
- Nov 2022 14:32:31 -0800 (PST)
+        with ESMTP id S229556AbiKIBJy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 20:09:54 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FCE61753;
+        Tue,  8 Nov 2022 17:09:53 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id l2so15670720pld.13;
+        Tue, 08 Nov 2022 17:09:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jOb8CdCVvGjEFSrtUYMypDotXZ7Qmr/ylq+lPB8RqYI=;
+        b=FbGhI1U07I2Ib7bngG++TzwNALRWAG0ey7HTAkwEHDkP7glq1VjzOOEBTsqy2WRtIe
+         vhlu+x25dhyOBCn548HzBbokiqoaSNd2lx6wDF/bHFq9tMs0qT7GumSLBJl0zYNHl3xy
+         kMUEnEJmLcQ5GCBAqzrYLn5QroXFP9FIAAozBf87CuD4DFpsRiAjgbEknWZhVDmKOSQm
+         rFSYHPwA+WpHr062xQEuJWsNOL1FnNarF517pgTiNSfIy3QVDNnXX713dGqcOcsZgJKr
+         zzuXZE9NyLRQvQKrpG4KAV+BIK9hXubYcCzbsZV0OMpXoTZcZiPzEj3yg9UV8xeA2L4j
+         kgIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jOb8CdCVvGjEFSrtUYMypDotXZ7Qmr/ylq+lPB8RqYI=;
+        b=mZeUBC1/DcHxoKim4Wh9UBREGUS4rJGW7zvGKn6xZLB6vnhN1rqSH+8ToMWQyqgkod
+         hrbZ/9Mt/JyxUc3acEtg34LC/6R9nw9ut1AE5ihic8aTBV6NHp17zOB7EjW5hvFKSish
+         4jev2CX7I3FrdXArvgVFBfSKqhk1BnK+q3LO+yd/xtm2htsAnPMTLHzJbYItvDlVrju0
+         neDZPo0M/g5rADOl+aLLrp8yYO0klU3s3TBsdCoZEy9qpVJDVOr0a7qw69qLTccTVegN
+         kO7wo4bVSLDppLkh572v8PzRWLrK80BgJeAF6l9I5D0i0vUfizMayBCAjh5SOtf0e+PM
+         ZkvA==
+X-Gm-Message-State: ACrzQf2zg9bTgGtEAGkY0JZHg3Ul3WtmOEUvQhKkjW0SIpl5KBqTTYVL
+        4pqE21OeecplRq7rS9V2yn4=
+X-Google-Smtp-Source: AMsMyM5QmJtSIiQCEKD5mUUNC6x3o97LkqpzN4dvxk0Zr+DUBLK/5FoU74/JfI3A+Ob7hrszMaJdDA==
+X-Received: by 2002:a17:902:9891:b0:17d:a81a:5dca with SMTP id s17-20020a170902989100b0017da81a5dcamr1082825plp.15.1667956192963;
+        Tue, 08 Nov 2022 17:09:52 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id n14-20020a17090ac68e00b002135de3013fsm6677073pjt.32.2022.11.08.17.09.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Nov 2022 17:09:52 -0800 (PST)
+Message-ID: <845b8952-5bd1-2744-c57d-760494823015@gmail.com>
+Date:   Wed, 9 Nov 2022 09:09:40 +0800
 MIME-Version: 1.0
-References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
- <20221107204934.32655-10-Sergey.Semin@baikalelectronics.ru>
- <TYBPR01MB5341E18D15BF78FFD6FA9782D83F9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20221108135218.v3jsla67372wt7ny@mobilestation>
-In-Reply-To: <20221108135218.v3jsla67372wt7ny@mobilestation>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Nov 2022 16:32:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLC04=JA6b0ezsm06-SUsEQix=hZLwTgVDuswa_+41qgg@mail.gmail.com>
-Message-ID: <CAL_JsqLC04=JA6b0ezsm06-SUsEQix=hZLwTgVDuswa_+41qgg@mail.gmail.com>
-Subject: Re: [PATCH v6 09/20] dt-bindings: PCI: dwc: Add interrupts/interrupt-names
- common properties
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH 05/12] x86/hyperv: Change vTOM handling to use standard
+ coco mechanisms
+Content-Language: en-US
+To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+References: <1666288635-72591-1-git-send-email-mikelley@microsoft.com>
+ <1666288635-72591-6-git-send-email-mikelley@microsoft.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <1666288635-72591-6-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 8, 2022 at 7:52 AM Serge Semin <fancer.lancer@gmail.com> wrote:
->
-> Hi Yoshihiro
->
-> On Tue, Nov 08, 2022 at 12:40:54PM +0000, Yoshihiro Shimoda wrote:
-> > Hi Serge,
-> >
-> > > From: Serge Semin, Sent: Tuesday, November 8, 2022 5:49 AM
-> > >
-> > > Currently the 'interrupts' and 'interrupt-names' properties are defined
-> > > being too generic to really describe any actual IRQ interface. Moreover
-> > > the DW PCIe End-point devices are left with no IRQ signals. All of that
-> > > can be fixed by adding the IRQ-related properties to the common DW PCIe
-> > > DT-schemas in accordance with the hardware reference manual. The DW PCIe
-> > > common DT-schema will contain the generic properties definitions with just
-> > > a number of entries per property, while the DW PCIe RP/EP-specific schemas
-> > > will have the particular number of items and the generic resource names
-> > > listed.
-> > >
-> > > Note since there are DW PCI-based vendor-specific DT-bindings with the
-> > > custom names assigned to the same IRQ resources we have no much choice but
-> > > to add them to the generic DT-schemas in order to have the schemas being
-> > > applicable for such devices. These names are marked as vendor-specific and
-> > > should be avoided being used in new bindings in favor of the generic
-> > > names.
-> > >
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > >
-> > > ---
-> > >
-> > > Note without the next dtschema tool fix
-> > >
-> > > --- a/lib.py 2022-09-29 15:17:13.100033810 +0300
-> > > +++ b/lib.py     2022-09-29 15:19:54.886172794 +0300
-> >
->
-> > JFYI.
-> >
-> > git am command could not work correctly by this lib.py file:
-> > ---
-> > Applying: dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
-> > error: lib.py: does not exist in index
-> > Patch failed at 0001 dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
-> > ---
-> >
-> > If I used patch command and skipped the lib.py, it could apply this patch correctly.
->
-> Got it. Thanks for the note. I'll either drop this part on the next
-> patchset revision (hopefully Rob will do something about that by then)
-> or make it less looking like a patch so git am wouldn't be confused.
+On 10/21/2022 1:57 AM, Michael Kelley wrote:
+> Hyper-V guests on AMD SEV-SNP hardware have the option of using the
+> "virtual Top Of Memory" (vTOM) feature specified by the SEV-SNP
+> architecture. With vTOM, shared vs. private memory accesses are
+> controlled by splitting the guest physical address space into two
+> halves.  vTOM is the dividing line where the uppermost bit of the
+> physical address space is set; e.g., with 47 bits of guest physical
+> address space, vTOM is 0x40000000000 (bit 46 is set).  Guest phyiscal
+> memory is accessible at two parallel physical addresses -- one below
+> vTOM and one above vTOM.  Accesses below vTOM are private (encrypted)
+> while accesses above vTOM are shared (decrypted). In this sense, vTOM
+> is like the GPA.SHARED bit in Intel TDX.
+> 
+> Support for Hyper-V guests using vTOM was added to the Linux kernel in
+> two patch sets[1][2]. This support treats the vTOM bit as part of
+> the physical address. For accessing shared (decrypted) memory, these
+> patch sets create a second kernel virtual mapping that maps to physical
+> addresses above vTOM.
+> 
+> A better approach is to treat the vTOM bit as a protection flag, not
+> as part of the physical address. This new approach is like the approach
+> for the GPA.SHARED bit in Intel TDX. Rather than creating a second kernel
+> virtual mapping, the existing mapping is updated using recently added
+> coco mechanisms.  When memory is changed between private and shared using
+> set_memory_decrypted() and set_memory_encrypted(), the PTEs for the
+> existing kernel mapping are changed to add or remove the vTOM bit
+> in the guest physical address, just as with TDX. The hypercalls to
+> change the memory status on the host side are made using the existing
+> callback mechanism. Everything just works, with a minor tweak to map
+> the I/O APIC to use private accesses.
+> 
+> To accomplish the switch in approach, the following must be done in
+> in this single patch:
+> 
+> * Update Hyper-V initialization to set the cc _mask based on vTOM
+>    and do other coco initialization.
+> 
+> * Update physical_mask so the vTOM bit is no longer treated as part
+>    of the physical address
+> 
+> * Update cc_mkenc() and cc_mkdec() to be active for Hyper-V guests.
+>    This makes the vTOM bit part of the protection flags.
+> 
+> * Code already exists to make hypercalls to inform Hyper-V about pages
+>    changing between shared and private.  Update this code to run as a
+>    callback from __set_memory_enc_pgtable().
+> 
+> * Remove the Hyper-V special case from __set_memory_enc_dec(), and
+>    make the normal case active for Hyper-V VMs, which have
+>    CC_ATTR_GUEST_MEM_ENCRYPT, but not CC_ATTR_MEM_ENCRYPT.
+> 
+> [1]https://lore.kernel.org/all/20211025122116.264793-1-ltykernel@gmail.com/
+> [2]https://lore.kernel.org/all/20211213071407.314309-1-ltykernel@gmail.com/
+> 
+> Signed-off-by: Michael Kelley<mikelley@microsoft.com>
+> ---
 
-Now fixed in main branch. Thanks for the report.
-
-Rob
+Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
