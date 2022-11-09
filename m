@@ -2,149 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C00262212F
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 02:09:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 869DA62219E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 03:06:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbiKIBJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Nov 2022 20:09:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52074 "EHLO
+        id S229616AbiKICGQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Nov 2022 21:06:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiKIBJy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 20:09:54 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FCE61753;
-        Tue,  8 Nov 2022 17:09:53 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id l2so15670720pld.13;
-        Tue, 08 Nov 2022 17:09:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jOb8CdCVvGjEFSrtUYMypDotXZ7Qmr/ylq+lPB8RqYI=;
-        b=FbGhI1U07I2Ib7bngG++TzwNALRWAG0ey7HTAkwEHDkP7glq1VjzOOEBTsqy2WRtIe
-         vhlu+x25dhyOBCn548HzBbokiqoaSNd2lx6wDF/bHFq9tMs0qT7GumSLBJl0zYNHl3xy
-         kMUEnEJmLcQ5GCBAqzrYLn5QroXFP9FIAAozBf87CuD4DFpsRiAjgbEknWZhVDmKOSQm
-         rFSYHPwA+WpHr062xQEuJWsNOL1FnNarF517pgTiNSfIy3QVDNnXX713dGqcOcsZgJKr
-         zzuXZE9NyLRQvQKrpG4KAV+BIK9hXubYcCzbsZV0OMpXoTZcZiPzEj3yg9UV8xeA2L4j
-         kgIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jOb8CdCVvGjEFSrtUYMypDotXZ7Qmr/ylq+lPB8RqYI=;
-        b=mZeUBC1/DcHxoKim4Wh9UBREGUS4rJGW7zvGKn6xZLB6vnhN1rqSH+8ToMWQyqgkod
-         hrbZ/9Mt/JyxUc3acEtg34LC/6R9nw9ut1AE5ihic8aTBV6NHp17zOB7EjW5hvFKSish
-         4jev2CX7I3FrdXArvgVFBfSKqhk1BnK+q3LO+yd/xtm2htsAnPMTLHzJbYItvDlVrju0
-         neDZPo0M/g5rADOl+aLLrp8yYO0klU3s3TBsdCoZEy9qpVJDVOr0a7qw69qLTccTVegN
-         kO7wo4bVSLDppLkh572v8PzRWLrK80BgJeAF6l9I5D0i0vUfizMayBCAjh5SOtf0e+PM
-         ZkvA==
-X-Gm-Message-State: ACrzQf2zg9bTgGtEAGkY0JZHg3Ul3WtmOEUvQhKkjW0SIpl5KBqTTYVL
-        4pqE21OeecplRq7rS9V2yn4=
-X-Google-Smtp-Source: AMsMyM5QmJtSIiQCEKD5mUUNC6x3o97LkqpzN4dvxk0Zr+DUBLK/5FoU74/JfI3A+Ob7hrszMaJdDA==
-X-Received: by 2002:a17:902:9891:b0:17d:a81a:5dca with SMTP id s17-20020a170902989100b0017da81a5dcamr1082825plp.15.1667956192963;
-        Tue, 08 Nov 2022 17:09:52 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id n14-20020a17090ac68e00b002135de3013fsm6677073pjt.32.2022.11.08.17.09.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Nov 2022 17:09:52 -0800 (PST)
-Message-ID: <845b8952-5bd1-2744-c57d-760494823015@gmail.com>
-Date:   Wed, 9 Nov 2022 09:09:40 +0800
+        with ESMTP id S229605AbiKICGP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Nov 2022 21:06:15 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B58E663E1
+        for <linux-pci@vger.kernel.org>; Tue,  8 Nov 2022 18:06:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667959574; x=1699495574;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Pm9Xx33hquGWk7Hq5GQn69H75EAiYNbKzFuvcuZa5Zw=;
+  b=e5RItmcaQ1kCbafzhMwfzn9hgbbj6t7aXI7XZI5TCuXSXIZ84miQOEKs
+   8IwyDD+ScxHUpAKWFCKLBcIrtDDRUgVIJ0dBnkVRIxBryKK5TYAfrHU9c
+   GuWr9q0sQjE1uHGMfI77JeobASsIt2Zwf0Dkxp6qAs7Qcp/aq/CsZ8yHm
+   6eDREbi5O/uqtv8AtMnEA38HvJVoy37RTF1pqg2nfzWT3g1h8BIkZZiL2
+   TaHaPWj2WmoKuc4MFufJxhiEs4J0HZbE/rescbaOVsTPFJVaxPNZ+dVB1
+   WaSMYfSshnCPxPUldISjKWJb+kGf44ezq36HI4g4NJs+d5dNIlFF5RHDJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="298382475"
+X-IronPort-AV: E=Sophos;i="5.96,149,1665471600"; 
+   d="scan'208";a="298382475"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 18:06:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="705522564"
+X-IronPort-AV: E=Sophos;i="5.96,149,1665471600"; 
+   d="scan'208";a="705522564"
+Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Nov 2022 18:06:11 -0800
+Received: from kbuild by e783503266e8 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1osaTi-0000uX-2K;
+        Wed, 09 Nov 2022 02:06:10 +0000
+Date:   Wed, 09 Nov 2022 10:05:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
+ ca0e4e8931b914ada1456d597535e26903623f17
+Message-ID: <636b0b06.fXVtsjLgeKCQtt/F%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH 05/12] x86/hyperv: Change vTOM handling to use standard
- coco mechanisms
-Content-Language: en-US
-To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
-        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
-        isaku.yamahata@intel.com, dan.j.williams@intel.com,
-        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-        iommu@lists.linux.dev
-References: <1666288635-72591-1-git-send-email-mikelley@microsoft.com>
- <1666288635-72591-6-git-send-email-mikelley@microsoft.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <1666288635-72591-6-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/21/2022 1:57 AM, Michael Kelley wrote:
-> Hyper-V guests on AMD SEV-SNP hardware have the option of using the
-> "virtual Top Of Memory" (vTOM) feature specified by the SEV-SNP
-> architecture. With vTOM, shared vs. private memory accesses are
-> controlled by splitting the guest physical address space into two
-> halves.  vTOM is the dividing line where the uppermost bit of the
-> physical address space is set; e.g., with 47 bits of guest physical
-> address space, vTOM is 0x40000000000 (bit 46 is set).  Guest phyiscal
-> memory is accessible at two parallel physical addresses -- one below
-> vTOM and one above vTOM.  Accesses below vTOM are private (encrypted)
-> while accesses above vTOM are shared (decrypted). In this sense, vTOM
-> is like the GPA.SHARED bit in Intel TDX.
-> 
-> Support for Hyper-V guests using vTOM was added to the Linux kernel in
-> two patch sets[1][2]. This support treats the vTOM bit as part of
-> the physical address. For accessing shared (decrypted) memory, these
-> patch sets create a second kernel virtual mapping that maps to physical
-> addresses above vTOM.
-> 
-> A better approach is to treat the vTOM bit as a protection flag, not
-> as part of the physical address. This new approach is like the approach
-> for the GPA.SHARED bit in Intel TDX. Rather than creating a second kernel
-> virtual mapping, the existing mapping is updated using recently added
-> coco mechanisms.  When memory is changed between private and shared using
-> set_memory_decrypted() and set_memory_encrypted(), the PTEs for the
-> existing kernel mapping are changed to add or remove the vTOM bit
-> in the guest physical address, just as with TDX. The hypercalls to
-> change the memory status on the host side are made using the existing
-> callback mechanism. Everything just works, with a minor tweak to map
-> the I/O APIC to use private accesses.
-> 
-> To accomplish the switch in approach, the following must be done in
-> in this single patch:
-> 
-> * Update Hyper-V initialization to set the cc _mask based on vTOM
->    and do other coco initialization.
-> 
-> * Update physical_mask so the vTOM bit is no longer treated as part
->    of the physical address
-> 
-> * Update cc_mkenc() and cc_mkdec() to be active for Hyper-V guests.
->    This makes the vTOM bit part of the protection flags.
-> 
-> * Code already exists to make hypercalls to inform Hyper-V about pages
->    changing between shared and private.  Update this code to run as a
->    callback from __set_memory_enc_pgtable().
-> 
-> * Remove the Hyper-V special case from __set_memory_enc_dec(), and
->    make the normal case active for Hyper-V VMs, which have
->    CC_ATTR_GUEST_MEM_ENCRYPT, but not CC_ATTR_MEM_ENCRYPT.
-> 
-> [1]https://lore.kernel.org/all/20211025122116.264793-1-ltykernel@gmail.com/
-> [2]https://lore.kernel.org/all/20211213071407.314309-1-ltykernel@gmail.com/
-> 
-> Signed-off-by: Michael Kelley<mikelley@microsoft.com>
-> ---
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
+branch HEAD: ca0e4e8931b914ada1456d597535e26903623f17  PCI: Assign PCI domain IDs by ida_alloc()
 
-Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+elapsed time: 728m
+
+configs tested: 121
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                            allnoconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+ia64                             allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+powerpc                    sam440ep_defconfig
+arm                             ezx_defconfig
+sh                        edosk7705_defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+sh                          rsk7203_defconfig
+powerpc                     asp8347_defconfig
+nios2                            alldefconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+arc                              alldefconfig
+sh                           se7751_defconfig
+powerpc                 linkstation_defconfig
+sh                           se7206_defconfig
+ia64                         bigsur_defconfig
+sh                          rsk7269_defconfig
+arm                        shmobile_defconfig
+arm                         at91_dt_defconfig
+mips                      loongson3_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                     sequoia_defconfig
+powerpc                     mpc83xx_defconfig
+powerpc                       holly_defconfig
+arm                             rpc_defconfig
+i386                 randconfig-a001-20221107
+i386                 randconfig-a006-20221107
+i386                 randconfig-a003-20221107
+i386                 randconfig-a002-20221107
+i386                 randconfig-a005-20221107
+i386                 randconfig-a004-20221107
+arm                        cerfcube_defconfig
+arm                       aspeed_g5_defconfig
+parisc                generic-32bit_defconfig
+mips                           xway_defconfig
+mips                          rb532_defconfig
+sparc                       sparc32_defconfig
+csky                             alldefconfig
+sh                           se7712_defconfig
+arm                          exynos_defconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a006-20221107
+x86_64               randconfig-a001-20221107
+x86_64               randconfig-a004-20221107
+x86_64               randconfig-a003-20221107
+x86_64               randconfig-a005-20221107
+x86_64               randconfig-a002-20221107
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+xtensa                           allyesconfig
+powerpc                      makalu_defconfig
+powerpc                       maple_defconfig
+arm                        trizeps4_defconfig
+arm                           sunxi_defconfig
+arc                        vdk_hs38_defconfig
+m68k                        m5272c3_defconfig
+arm                      integrator_defconfig
+powerpc                        cell_defconfig
+powerpc                     rainier_defconfig
+
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+powerpc                     tqm8560_defconfig
+arm                           omap1_defconfig
+mips                     cu1000-neo_defconfig
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+hexagon              randconfig-r041-20221108
+hexagon              randconfig-r045-20221108
+x86_64                        randconfig-k001
+riscv                randconfig-r042-20221107
+hexagon              randconfig-r041-20221107
+hexagon              randconfig-r045-20221107
+s390                 randconfig-r044-20221107
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+mips                          ath25_defconfig
+arm                       imx_v4_v5_defconfig
+arm                          moxart_defconfig
+mips                        qi_lb60_defconfig
+arm                         mv78xx0_defconfig
+powerpc                 mpc836x_rdk_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
