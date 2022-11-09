@@ -2,148 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A1FE6231E8
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:52:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00B1562327D
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 19:33:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbiKIRwK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 12:52:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35252 "EHLO
+        id S229809AbiKISdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 13:33:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbiKIRwJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:52:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD5E9FDF
-        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 09:52:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2286B80AE1
-        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 17:52:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6009AC433B5;
-        Wed,  9 Nov 2022 17:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668016325;
-        bh=44Eab1vCaH84NeYBMMsFGmGcoxn+rXWkIsJWD04IPzI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Xqg+9fXpGX4NJzQcOEsw8hOPv77I2h+KpLYI9yL+d6Hl67B8VwTJ5EQDu1da7g0Ic
-         6wrsMVL6Ibst+F7gzNo5DZOPrvBiMoNXZo4kOHHACTEDqBXT4HekzKVBm+i+6WWrdT
-         vG6ii3RE9zfh3HMJGrGZQHe9gjniWH6MSPAXw4jQL1ULLgoXMG/l66M6pJ6q+UoaAt
-         nazLsgXgnw076WG72FA3vL/OTkr/bC02wzZFKH9x/gOm7hf3Nl/1U9D5aYZ7zuZQmJ
-         C3xZux/4PsogYASBrTbO0R68S1EuxcuBBodT7DGjS5NhpWVdTZJ8AgTOKEEr0vu1wo
-         cbwOjsq5vyBxg==
-Date:   Wed, 9 Nov 2022 11:52:04 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Li Ming <ming4.li@intel.com>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        ira.weiny@intel.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/DOE: adjust data object length
-Message-ID: <20221109175204.GA568218@bhelgaas>
+        with ESMTP id S231182AbiKISdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 13:33:31 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1CA5580
+        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 10:33:30 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id q9so17503876pfg.5
+        for <linux-pci@vger.kernel.org>; Wed, 09 Nov 2022 10:33:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FHp5Q2wOQy0KMZQlD30NsVfoIRug5gwk53ibb7cieWI=;
+        b=Kii37SevvA7bc8LA5fR8u9bJRXykNhlhfF6YHQSyXl62ImyXzbUda3785EJz8uzhh3
+         69zKPRTy3mrNBKumMEyOsuNn5B6+1UUh67uIk8dvoPYphmxpis3TXp2SFyIkwu6Inszv
+         GaE072uorf+pfDiDWt/3qEBYtBR2wFG36f9V1MFmtR0F56Nds344w3immMLHM6i1qPNX
+         9X330aao4iGbTZdV6W6m6ZZNnyS5NKoo4LmkB+8/osfYwU5ApsrTZF7AH8oUH6m31IzI
+         Fvv/1EhdnP7y9srrnQvbiKhrPZq7eI5wae2MrkxsD3zZBbbzxs8h25CL0p/LMiunBPlb
+         2sFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FHp5Q2wOQy0KMZQlD30NsVfoIRug5gwk53ibb7cieWI=;
+        b=LNgtIUfyfa3F+3otUbBPfnSEdL7jvOlHy7jRLi2+YJnEqZbjE1PocDDaBQDoeNBujL
+         Q9Y9Kf5YvzIejWxJEWe5yEraHC30ha/cbF2w2t19/Ok7lh/YNUy6JGcnmX1ktJ0BTQpi
+         gGDDAH/+s0Mr9PHSnh4bmrheXGZw9k8pGNZ8g3ak6te9D2tkZ3MFI/MmelwexUmkAk+y
+         9brXsiaUea9loXMZ48HRywT+HUzq6Dpp6TgYPFfAaXuDB/0vQVZ/iRYBFtWSkxmoACaM
+         eommci9MqcODLuHKiKldctgpNJzsOBYoe7fUwKcDuxz8g0QwnSNoMBZHcb7d7Zu6IIP/
+         +rxQ==
+X-Gm-Message-State: ACrzQf2AvoLfjDG/OHDv4iiYVuxfdECTkOexPEeMgisL4Mw4lgkotKbs
+        AhFv2k8wR26W11wPDkvDzr/O5Q==
+X-Google-Smtp-Source: AMsMyM7hU2AShV4UZ4WTmMAwHQxYL4v/lW/DeBqUTu/MwpyWv2SRw77PxU9vDpozEEBwxy5XwsEB7g==
+X-Received: by 2002:a63:187:0:b0:43b:cf3c:c64d with SMTP id 129-20020a630187000000b0043bcf3cc64dmr52910762pgb.359.1668018810159;
+        Wed, 09 Nov 2022 10:33:30 -0800 (PST)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id l5-20020a170903120500b0018863dbf3b0sm4977252plh.45.2022.11.09.10.33.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Nov 2022 10:33:29 -0800 (PST)
+Message-ID: <2e7ccd49-b37b-2837-4baf-27a76f177c4f@kernel.dk>
+Date:   Wed, 9 Nov 2022 11:33:26 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221109022044.1827423-1-ming4.li@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH v11 0/9] Userspace P2PDMA with O_DIRECT NVMe devices
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>, viro@zeniv.linux.org.uk
+References: <20221021174116.7200-1-logang@deltatee.com>
+ <20221024150320.GA26731@lst.de>
+ <743ad0e5-6936-9287-d093-2ce1c2a3e32d@nvidia.com>
+ <20221108065618.GA20283@lst.de>
+ <ee9f817f-1573-f3f6-9b20-b4b2b2053eb6@deltatee.com>
+Content-Language: en-US
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ee9f817f-1573-f3f6-9b20-b4b2b2053eb6@deltatee.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 10:20:44AM +0800, Li Ming wrote:
-> The value of data object length 0x0 indicates 2^18 dwords being
-> transferred, it is introduced in PCIe r6.0,sec 6.30.1. This patch
-> adjusts the value of data object length for the above case on both
-> sending side and receiving side.
+On 11/9/22 10:28 AM, Logan Gunthorpe wrote:
+> @add Jens
 > 
-> Besides, it is unnecessary to check whether length is greater than
-> SZ_1M while receiving a response data object, because length from LENGTH
-> field of data object header, max value is 2^18.
+> On 2022-11-07 23:56, Christoph Hellwig wrote:
+>> On Mon, Oct 24, 2022 at 12:15:56PM -0700, John Hubbard wrote:
+>>> A little earlier, Jens graciously offered [1] to provide a topic branch,
+>>> such as:
+>>>
+>>>     for-6.2/block-gup [2]
+>>>
+>>> (I've moved the name forward from 6.1 to 6.2, because that discussion
+>>> was 7 weeks ago.)
+>>
+>> So what are we going to do with this series?  It would be sad to miss
+>> the merge window again.
 > 
-> Signed-off-by: Li Ming <ming4.li@intel.com>
-> ---
->  drivers/pci/doe.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index e402f05068a5..204cbc570f63 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -29,6 +29,9 @@
->  #define PCI_DOE_FLAG_CANCEL	0
->  #define PCI_DOE_FLAG_DEAD	1
->  
-> +/* Max data object length is 2^18 dwords */
-> +#define PCI_DOE_MAX_LENGTH	(2 << 18)
+> I noticed Jens wasn't copied on this series. I've added him. It would be
+> nice to get this in someone's tree soon.
 
-2 ^  18 == 262144
-2 << 18 == 524288
+I took a look and the series looks fine to me.
 
->  /**
->   * struct pci_doe_mb - State for a single DOE mailbox
->   *
-> @@ -107,6 +110,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
->  {
->  	struct pci_dev *pdev = doe_mb->pdev;
->  	int offset = doe_mb->cap_offset;
-> +	u32 length;
->  	u32 val;
->  	int i;
->  
-> @@ -128,10 +132,12 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
->  		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
->  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
->  	/* Length is 2 DW of header + length of payload in DW */
-> +	length = 2 + task->request_pl_sz / sizeof(u32);
-> +	if (length == PCI_DOE_MAX_LENGTH)
-> +		length = 0;
+-- 
+Jens Axboe
 
-Do you check for overflow anywhere?  What if length is
-PCI_DOE_MAX_LENGTH + 1?
 
->  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
->  			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
-> -					  2 + task->request_pl_sz /
-> -						sizeof(u32)));
-> +					  length);
->  	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
->  		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
->  				       task->request_pl[i]);
-> @@ -178,7 +184,10 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->  	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
->  
->  	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
-> -	if (length > SZ_1M || length < 2)
-> +	/* A value of 0x0 indicates max data object length */
-> +	if (!length)
-> +		length = PCI_DOE_MAX_LENGTH;
-> +	if (length < 2)
->  		return -EIO;
->  
->  	/* First 2 dwords have already been read */
-> @@ -520,8 +529,12 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	/*
->  	 * DOE requests must be a whole number of DW and the response needs to
->  	 * be big enough for at least 1 DW
-> +	 *
-> +	 * Max data object length is 1MB, and data object header occupies 8B,
-> +	 * thus request_pl_sz should not be greater than 1MB - 8B.
->  	 */
-> -	if (task->request_pl_sz % sizeof(u32) ||
-> +	if (task->request_pl_sz > SZ_1M - 8 ||
-> +	    task->request_pl_sz % sizeof(u32) ||
-
-Oh, I see, this looks like the check for overflow.  It would be nice
-if it were expressed in terms of PCI_DOE_MAX_LENGTH somehow.
-
-It would also be nice, but maybe not practical, to have it closer to
-the FIELD_PREP above so it's more obvious that we never try to encode
-something too big.
-
->  	    task->response_pl_sz < sizeof(u32))
->  		return -EINVAL;
->  
-> -- 
-> 2.25.1
-> 
