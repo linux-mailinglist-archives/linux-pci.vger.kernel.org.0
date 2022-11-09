@@ -2,46 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2927B623183
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:30:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0096262318D
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:35:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbiKIRae (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 12:30:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
+        id S231302AbiKIRfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 12:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiKIRad (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:30:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183DE18B30;
-        Wed,  9 Nov 2022 09:30:32 -0800 (PST)
+        with ESMTP id S229586AbiKIRe7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:34:59 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB8A1277E;
+        Wed,  9 Nov 2022 09:34:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9504A61BFE;
-        Wed,  9 Nov 2022 17:30:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A6EC433D7;
-        Wed,  9 Nov 2022 17:30:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DA988B81D8D;
+        Wed,  9 Nov 2022 17:34:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BAEC433D6;
+        Wed,  9 Nov 2022 17:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668015031;
-        bh=8nPe6VvksWmj0E/lWrSziGPjcD5oZYO77KhcHYqjwPU=;
+        s=k20201202; t=1668015295;
+        bh=2YeAZ5JtIG3UTD1FNcPGU8CejucOfM4E/A0PR7O1NEU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iNafGOGPNwWLS+qT5K6pkQo6hku2Koxk+OTRVggoHpe++ml3RhH3AwR3f0zNJQVen
-         NxrjuBzOwFOGeO/k0a82OUGN5erm64wP6YzDhFjrpNvUewYFVmiK7X7F+ehgKamhfC
-         iX08Ssuc9qSmSIea7PfHehmoZbLTU5mrpLtTtpHqishCq3CXP8zj5lgfNV3TG0Hi+n
-         NWMBn9/gGnxAYLOtV1gxbJrm/veMY37OUfpeO9jo/G47VBCNKnb7zFS3OcrtMOoe/p
-         6MeZsL9h9qIFJsai7QDRYBnWEOjL4LipZ5DlswmYQbb4b5Ox7CdPQkzPJYG5WUxgHx
-         6Iyl3cLTLIHNg==
-Date:   Wed, 9 Nov 2022 11:30:29 -0600
+        b=crN09haXGM4WFsCgmxf7Jb7VF2bTo0Z7Lju0kgSXDqnKVJRU/Suj/eXCTfYYK64h2
+         TXLvTaJKrdA/EiJpHmk8YtE724ykr1r5KmEkUyYAs3SSde43jBwnyjPAlWmXl2HAWy
+         PE6qpDxqVR4CkIFerS/4mXt/B2IyfWV7YHkzrNmy+p01j1JX1EWDdkE5VxUDjrgtlu
+         zKCm5mtSEfAQZDASMbLZvNa52TFtGFaOjLJY7g7wqTSYqepVjLV/v6xgRBm8lWMhMZ
+         Il8A2ZUk8AA75faByplAKaO2cC17aaKHn6EyIFXxPbxEMulQjHDHkXcMv6k5tn6340
+         LASEfoZ7yuOig==
+Date:   Wed, 9 Nov 2022 11:34:54 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Wei Gong <gongwei833x@gmail.com>, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] pci: fix device presence detection for VFs
-Message-ID: <20221109173029.GA554381@bhelgaas>
+To:     Nathan Rossi <nathan@nathanrossi.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Rossi <nathan.rossi@digi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH] PCI/ASPM: Wait for data link active after retraining
+Message-ID: <20221109173454.GA567052@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221109020614-mutt-send-email-mst@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221108222944.GA504625@bhelgaas>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,73 +54,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 02:10:30AM -0500, Michael S. Tsirkin wrote:
-> On Tue, Nov 08, 2022 at 11:12:34PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Nov 09, 2022 at 04:36:17AM +0000, Wei Gong wrote:
-> > > O Tue, Nov 08, 2022 at 01:02:35PM -0500, Michael S. Tsirkin wrote:
-> > > > On Tue, Nov 08, 2022 at 11:58:53AM -0600, Bjorn Helgaas wrote:
-> > > > > On Tue, Nov 08, 2022 at 10:19:07AM -0500, Michael S. Tsirkin wrote:
-> > > > > > On Tue, Nov 08, 2022 at 09:02:28AM -0600, Bjorn Helgaas wrote:
-> > > > > > > On Tue, Nov 08, 2022 at 08:53:00AM -0600, Bjorn Helgaas wrote:
-> > > > > > > > On Wed, Oct 26, 2022 at 02:11:21AM -0400, Michael S. Tsirkin wrote:
-> > > > > > > > > virtio uses the same driver for VFs and PFs.
-> > > > > > > > > Accordingly, pci_device_is_present is used to detect
-> > > > > > > > > device presence. This function isn't currently working
-> > > > > > > > > properly for VFs since it attempts reading device and
-> > > > > > > > > vendor ID.
-> > > > > > > > 
-> > > > > > > > > As VFs are present if and only if PF is present,
-> > > > > > > > > just return the value for that device.
-> > > > > > > > 
-> > > > > > > > VFs are only present when the PF is present *and* the PF
-> > > > > > > > has VF Enable set.  Do you care about the possibility that
-> > > > > > > > VF Enable has been cleared?
-> > > > > 
-> > > > > I think you missed this question.
-> > > > 
-> > > > I was hoping Wei will answer that, I don't have the hardware.
-> > > 
-> > > In my case I don't care that VF Enable has been cleared.
+[+cc Maciej for similar retrain issue]
+
+On Tue, Nov 08, 2022 at 04:29:44PM -0600, Bjorn Helgaas wrote:
+> On Thu, Jun 02, 2022 at 06:55:44AM +0000, Nathan Rossi wrote:
+> > From: Nathan Rossi <nathan.rossi@digi.com>
 > > 
-> > OK, let me rephrase that :)
+> > When retraining the link either the child or the parent device may have
+> > the data link layer state machine of the respective devices move out of
+> > the active state despite the physical link training being completed.
+> > Depending on how long is takes for the devices to return to the active
+> > state, the device may not be ready and any further reads/writes to the
+> > device can fail.
 > > 
-> > I think pci_device_is_present(VF) should return "false" if the PF is
-> > present but VFs are disabled.
+> > This issue is present with the pci-mvebu controller paired with a device
+> > supporting ASPM but without advertising the Slot Clock, where during
+> > boot the pcie_aspm_cap_init call would cause common clocks to be made
+> > consistent and then retrain the link. However the data link layer would
+> > not be active before any device initialization (e.g. ASPM capability
+> > queries, BAR configuration) causing improper configuration of the device
+> > without error.
 > > 
-> > If you think it should return "true" when the PF is present and VFs
-> > are disabled, we should explain why.
+> > To ensure the child device is accessible, after the link retraining use
+> > pcie_wait_for_link to perform the associated state checks and any needed
+> > delays.
 > > 
-> > We would also need to fix the commit log, because "VFs are present if
-> > and only if PF is present" is not actually true.  "VFs are present
-> > only if PF is present" is true, but "VFs are present if PF is present"
-> > is not.
+> > Signed-off-by: Nathan Rossi <nathan.rossi@digi.com>
+> > ---
+> >  drivers/pci/pcie/aspm.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index a96b7424c9..4b8a1810be 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -288,7 +288,8 @@ static void pcie_aspm_configure_common_clock(struct pcie_link_state *link)
+> >  		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+> >  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> >  
+> > -	if (pcie_retrain_link(link))
+> > +	/* Retrain link and then wait for the link to become active */
+> > +	if (pcie_retrain_link(link) && pcie_wait_for_link(parent, true))
 > 
-> Bjorn, I don't really understand the question.
+> pcie_retrain_link() waits for PCI_EXP_LNKSTA_LT (Link Training) to be
+> cleared, which means the LTSSM has exited the Configuration/Recovery
+> state.  pcie_wait_for_link() waits for PCI_EXP_LNKSTA_DLLLA (Data Link
+> Layer Link Active) to be set, which means the link is in DL_Active.
 > 
-> How does one get a vf pointer without enabling sriov?
-> They are only created by sriov_add_vfs after calling
-> pcibios_sriov_enable.
+> I don't see an explicit procedure in the spec for determining when
+> a link retrain is complete, but from PCIe r6.0, sec 6.2.11 (DPC):
+> 
+>   After software releases the Downstream Port from DPC, the Port’s
+>   LTSSM must transition to the Detect state, where the Link will
+>   attempt to retrain. Software can use Data Link Layer State Changed
+>   interrupts, DL_ACTIVE ERR_COR signaling, or both, to signal when the
+>   Link reaches the DL_Active state again.
+> 
+> and sec 6.6:
+> 
+>   On the completion of Link Training (entering the DL_Active state,
+>   see Section 3.2), a component must be able to receive and process
+>   TLPs and DLLPs.
+> 
+> The only use mentioned in the spec for the Link Training bit is the
+> implementation note in sec 7.5.3.7 about avoiding race conditions when
+> using the Retrain Link bit, where software should poll Link Training
+> until it returns to zero before setting the Retrain Link bit to change
+> link parameters.
+> 
+> And I think you're absolutely right that what we *want* here is the
+> data link layer DL_Active state, not just the link layer L0 state.
+> 
+> This all makes me think that checking the Link Training bit might be
+> the wrong thing to begin with.
+> 
+> Of course, the Data Link Layer Link Active bit wasn't added until PCIe
+> r1.1, and even now it's optional.  Without it, I don't know if there's
+> a way to make sure the link is in DL_Active.
+> 
+> Maybe pcie_retrain_link() should wait for Data Link Layer Link Active
+> if it is supported, and use the existing behavior of waiting for Link
+> Training to be cleared otherwise?
 
-Oh, I think I see where you're coming from.  The fact that we have a
-VF pointer means VFs were enabled in the past, and as long as the PF
-is still present, the VFs should still be enabled.
+Nathan, I meant to cc you on this thread, which is doing something
+very similar.  Just FYI:
 
-Since the continued existence of the VF device depends on VF Enable, I
-guess my question is whether we need to worry about VF Enable being
-cleared, e.g., via sysfs reset or a buggy PF driver.
-
-Taking a step back, I don't understand the
-"if (!pci_device_is_present()) virtio_break_device()" strategy because
-checking for device presence is always unreliable.  I assume the
-consumer of vq->broken, e.g., virtnet_send_command(), would see a
-failed PCI read that probably returns ~0 data.  Could it not check for
-that and then figure out whether that's valid data or an error
-indication?
-
-It looks like today, virtnet_send_command() might sit in that "while"
-loop calling virtqueue_get_buf() repeatedly until virtio_pci_remove()
-notices the device is gone and marks it broken.  Something must be
-failing in virtqueue_get_buf() in that interval between the device
-disappearing and virtio_pci_remove() noticing it.
-
-Bjorn
+https://lore.kernel.org/all/alpine.DEB.2.21.2209130050380.60554@angie.orcam.me.uk/
