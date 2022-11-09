@@ -2,103 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 912E762317B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:28:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2927B623183
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:30:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbiKIR2X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 12:28:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
+        id S230190AbiKIRae (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 12:30:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbiKIR2U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:28:20 -0500
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04AE4222B5;
-        Wed,  9 Nov 2022 09:28:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=goQlOFtxbQ70s6qs8WyNomLKzg8ycDnIQrZuP0F/u1I=; b=StYuk9GAypb3Q3akkOeGTjtq49
-        vtnZhlI+piIoIgt9OpmkR8zQm3tnpHLE3Ljgi7MOfNIP9fqfgGX6wGq/SuqWyIE0SIrUMq+wvM1Ta
-        IEZFVo2ZF0I9lAF0gVNZKXJL35f/3JNbUbvtOH81nDK/xsZhDOWn2wBerwFnTzEgjM8jsUc2tXRAH
-        5N8TzeSk2ICu3Kmd00L/zM0/Gd87fugyhSLTkk/GLX2jxDfki6RDAw6iKCnrJmuml1RH3hpK7TiUq
-        mD9qMMdMy6U6VNIVvZ1v04scxKyQ8GIq5a2Mu2CQ5ZBi6QSIlXUsf3zy9yAFQxFJVxEk2EgnD1gjr
-        R+RFVEQg==;
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1osos1-00BLVo-C7; Wed, 09 Nov 2022 10:28:14 -0700
-Message-ID: <ee9f817f-1573-f3f6-9b20-b4b2b2053eb6@deltatee.com>
-Date:   Wed, 9 Nov 2022 10:28:07 -0700
+        with ESMTP id S229586AbiKIRad (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:30:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183DE18B30;
+        Wed,  9 Nov 2022 09:30:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9504A61BFE;
+        Wed,  9 Nov 2022 17:30:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A6EC433D7;
+        Wed,  9 Nov 2022 17:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668015031;
+        bh=8nPe6VvksWmj0E/lWrSziGPjcD5oZYO77KhcHYqjwPU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iNafGOGPNwWLS+qT5K6pkQo6hku2Koxk+OTRVggoHpe++ml3RhH3AwR3f0zNJQVen
+         NxrjuBzOwFOGeO/k0a82OUGN5erm64wP6YzDhFjrpNvUewYFVmiK7X7F+ehgKamhfC
+         iX08Ssuc9qSmSIea7PfHehmoZbLTU5mrpLtTtpHqishCq3CXP8zj5lgfNV3TG0Hi+n
+         NWMBn9/gGnxAYLOtV1gxbJrm/veMY37OUfpeO9jo/G47VBCNKnb7zFS3OcrtMOoe/p
+         6MeZsL9h9qIFJsai7QDRYBnWEOjL4LipZ5DlswmYQbb4b5Ox7CdPQkzPJYG5WUxgHx
+         6Iyl3cLTLIHNg==
+Date:   Wed, 9 Nov 2022 11:30:29 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Wei Gong <gongwei833x@gmail.com>, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci: fix device presence detection for VFs
+Message-ID: <20221109173029.GA554381@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>, John Hubbard <jhubbard@nvidia.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Bates <sbates@raithlin.com>, viro@zeniv.linux.org.uk
-References: <20221021174116.7200-1-logang@deltatee.com>
- <20221024150320.GA26731@lst.de>
- <743ad0e5-6936-9287-d093-2ce1c2a3e32d@nvidia.com>
- <20221108065618.GA20283@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20221108065618.GA20283@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: hch@lst.de, jhubbard@nvidia.com, axboe@kernel.dk, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, sbates@raithlin.com, viro@zeniv.linux.org.uk
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221109020614-mutt-send-email-mst@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v11 0/9] Userspace P2PDMA with O_DIRECT NVMe devices
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-@add Jens
-
-On 2022-11-07 23:56, Christoph Hellwig wrote:
-> On Mon, Oct 24, 2022 at 12:15:56PM -0700, John Hubbard wrote:
->> A little earlier, Jens graciously offered [1] to provide a topic branch,
->> such as:
->>
->>     for-6.2/block-gup [2]
->>
->> (I've moved the name forward from 6.1 to 6.2, because that discussion
->> was 7 weeks ago.)
+On Wed, Nov 09, 2022 at 02:10:30AM -0500, Michael S. Tsirkin wrote:
+> On Tue, Nov 08, 2022 at 11:12:34PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Nov 09, 2022 at 04:36:17AM +0000, Wei Gong wrote:
+> > > O Tue, Nov 08, 2022 at 01:02:35PM -0500, Michael S. Tsirkin wrote:
+> > > > On Tue, Nov 08, 2022 at 11:58:53AM -0600, Bjorn Helgaas wrote:
+> > > > > On Tue, Nov 08, 2022 at 10:19:07AM -0500, Michael S. Tsirkin wrote:
+> > > > > > On Tue, Nov 08, 2022 at 09:02:28AM -0600, Bjorn Helgaas wrote:
+> > > > > > > On Tue, Nov 08, 2022 at 08:53:00AM -0600, Bjorn Helgaas wrote:
+> > > > > > > > On Wed, Oct 26, 2022 at 02:11:21AM -0400, Michael S. Tsirkin wrote:
+> > > > > > > > > virtio uses the same driver for VFs and PFs.
+> > > > > > > > > Accordingly, pci_device_is_present is used to detect
+> > > > > > > > > device presence. This function isn't currently working
+> > > > > > > > > properly for VFs since it attempts reading device and
+> > > > > > > > > vendor ID.
+> > > > > > > > 
+> > > > > > > > > As VFs are present if and only if PF is present,
+> > > > > > > > > just return the value for that device.
+> > > > > > > > 
+> > > > > > > > VFs are only present when the PF is present *and* the PF
+> > > > > > > > has VF Enable set.  Do you care about the possibility that
+> > > > > > > > VF Enable has been cleared?
+> > > > > 
+> > > > > I think you missed this question.
+> > > > 
+> > > > I was hoping Wei will answer that, I don't have the hardware.
+> > > 
+> > > In my case I don't care that VF Enable has been cleared.
+> > 
+> > OK, let me rephrase that :)
+> > 
+> > I think pci_device_is_present(VF) should return "false" if the PF is
+> > present but VFs are disabled.
+> > 
+> > If you think it should return "true" when the PF is present and VFs
+> > are disabled, we should explain why.
+> > 
+> > We would also need to fix the commit log, because "VFs are present if
+> > and only if PF is present" is not actually true.  "VFs are present
+> > only if PF is present" is true, but "VFs are present if PF is present"
+> > is not.
 > 
-> So what are we going to do with this series?  It would be sad to miss
-> the merge window again.
+> Bjorn, I don't really understand the question.
+> 
+> How does one get a vf pointer without enabling sriov?
+> They are only created by sriov_add_vfs after calling
+> pcibios_sriov_enable.
 
-I noticed Jens wasn't copied on this series. I've added him. It would be
-nice to get this in someone's tree soon.
+Oh, I think I see where you're coming from.  The fact that we have a
+VF pointer means VFs were enabled in the past, and as long as the PF
+is still present, the VFs should still be enabled.
 
-Thanks!
+Since the continued existence of the VF device depends on VF Enable, I
+guess my question is whether we need to worry about VF Enable being
+cleared, e.g., via sysfs reset or a buggy PF driver.
 
-Logan
+Taking a step back, I don't understand the
+"if (!pci_device_is_present()) virtio_break_device()" strategy because
+checking for device presence is always unreliable.  I assume the
+consumer of vq->broken, e.g., virtnet_send_command(), would see a
+failed PCI read that probably returns ~0 data.  Could it not check for
+that and then figure out whether that's valid data or an error
+indication?
+
+It looks like today, virtnet_send_command() might sit in that "while"
+loop calling virtqueue_get_buf() repeatedly until virtio_pci_remove()
+notices the device is gone and marks it broken.  Something must be
+failing in virtqueue_get_buf() in that interval between the device
+disappearing and virtio_pci_remove() noticing it.
+
+Bjorn
