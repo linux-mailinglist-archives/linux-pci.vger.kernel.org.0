@@ -2,110 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAAC6623793
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 00:36:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC53862379E
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 00:42:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbiKIXgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 18:36:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        id S229835AbiKIXmO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 18:42:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231611AbiKIXgG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 18:36:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DB11900A;
-        Wed,  9 Nov 2022 15:36:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A58FD61D26;
-        Wed,  9 Nov 2022 23:36:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6D9C433D7;
-        Wed,  9 Nov 2022 23:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668036960;
-        bh=xDaxbcsvS5ooeLilCDV2eAZ/B+4PrNvT4W6swBS6lEY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eksR+SPp/aGE7EDrxbFI7LiRn8uucTy4DAXqhXbf9V9fZPcCwI97bPBuJXIdtOMeF
-         QqQOm7DP4m/jQGkp/XAW8Lb9WCx+xtkjKiIOMbAC0jJbbIxNXrW3YIIEK7MpP3+Tw/
-         afsdoIB/DmF26A79pJuqmFKDwjD3wHuWEfQb7J9vK0+s4OcZqFlhqhIkebE8XA0z4h
-         49nIyMh/XfhqplAV+RAxzA/35BexnLw35iUkzUjPAJNDiSRtFRCyIxHANlD8i/8ZiR
-         5HVmAu6vcpq1nVdqDmtA2ZdsMNWNIuZOVUocI9YXXwBgIQQj+/8k4thDAcFg2H94Mz
-         80rcoY+RtBRlA==
-Date:   Wed, 9 Nov 2022 17:35:58 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1
- support
-Message-ID: <20221109233558.GA581582@bhelgaas>
+        with ESMTP id S229556AbiKIXmN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 18:42:13 -0500
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C272D741
+        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 15:42:13 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 4CFFB3200955;
+        Wed,  9 Nov 2022 18:42:09 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 09 Nov 2022 18:42:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
+        cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1668037328; x=1668123728; bh=+pZyUNAp1v
+        s4PEJAOC6J6SmXC2JO2ckuc1mWQfT/a2g=; b=0F3KlWsxliGnawcoUdq0HQkje0
+        ePXFvAXUWRZOShX8gWHte/i5FHLEI/O4UZR3H8nG89eKBpzG+EQ/ARTWjuUSRW2h
+        5EMV90DbpJ+C45rDi/7MUzNm34vSicSa2/Gr5R15aqPZabVu87d1Cz2t8JIlyhFR
+        Y1UksWeEKQSA9RNMQbtuvioVIwPUkPkQ1bcQCHU5iGxZE/7wnHq3mh6Y7FmbcjVW
+        4knIAIS1aCr/KaKpl7IKjwoiEjBVTKp1xHJ9cYofsLYTSkjG7qSHjUJiYkQirNZg
+        JI+o0LH1Q3JQBNpDEp9Y0y8R9L/KazH3Jm7hhjBU3y/Ekg/1FPjkZfaj8fIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1668037328; x=1668123728; bh=+pZyUNAp1vs4PEJAOC6J6SmXC2JO
+        2ckuc1mWQfT/a2g=; b=boij4X2rcz8AOx+G8Fw8LikCi39HLWnD2kyQtV6QTUnI
+        PKkkPYzTi3bA8t+ePWaruP4W+UoALTvV6O6jSDE7nIxRTAqhVZWHOCpdcIrHBAo/
+        Eqvwk2oi5HqMzCosHLjU+pdsxh1E1kLaHUjocpcoTluTOsWRmPCx0iYUFo+NeGMK
+        44Tme4Hw/HXpz+1by2z7twDDjjwQ5lXjbvfzMNY35n68nKvE6m7UC4MWZGWkgTxF
+        tFktdUEWRNG/3NIFRgKLKPs1A66cNiz9nCX+VVU3LpvvRqWynqxD8kfeBsNbemMR
+        4Mbj3A56yh5JnrM4ne4iVPbrdchx4VYmIqkBv/GT8A==
+X-ME-Sender: <xms:0DpsY-Ti5vy4L2lwH3f35PKTQpF1gToV9IaAKgVmsbqpiJ1T3dlCLQ>
+    <xme:0DpsYzyPTUiqfTKfqA3zqRH7NnaXkDinSiPVSYZsLB5h-duEu4oGsapLX83DOxwIW
+    AcORT5xsklQVqO7e40>
+X-ME-Received: <xmr:0DpsY708ZoLgbmolo98DqzrjwQYLHDE0nnFhdqS3JLi-_KM5K1ax-OZPrEU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrfeefgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpedfvfihlhgv
+    rhcujfhitghkshculdfoihgtrhhoshhofhhtmddfuceotghouggvsehthihhihgtkhhsrd
+    gtohhmqeenucggtffrrghtthgvrhhnpefgudehjedtleettdeikeeitedvheejheettdek
+    gedtveefieelledtgfduteetveenucffohhmrghinhepheduvddrphhinhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghouggvsehthihh
+    ihgtkhhsrdgtohhm
+X-ME-Proxy: <xmx:0DpsY6AWOYliv206BJxBUEjH5ZX-YcURhch-ru_1wH865_OzbumZpw>
+    <xmx:0DpsY3gmZo8mPVhGjuK4sqijqWcNsKSzyOWr_SXkyUUTcuPPX3Uzqw>
+    <xmx:0DpsY2rNlNzczxvvoLozAYf8CT89CNsUerYmdwR_GkzA33QDay4wRw>
+    <xmx:0DpsY3efRYCTOSyc8OFlKTmMwtnYT4tfuTQrUUwDMwCgm5RcxSP9AA>
+Feedback-ID: i78e14604:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 9 Nov 2022 18:42:07 -0500 (EST)
+Date:   Wed, 9 Nov 2022 17:41:46 -0600
+From:   "Tyler Hicks (Microsoft)" <code@tyhicks.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH] PCI: Align MPS to upstream bridge for SAFE and
+ PERFORMANCE mode
+Message-ID: <20221109234146.qkdx5qw4vjdehlgh@sequoia>
+References: <20221027225149.GA846989@bhelgaas>
+ <20221103221429.GA47218@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221109104059.766720-10-rrichter@amd.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221103221429.GA47218@bhelgaas>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 11:40:59AM +0100, Robert Richter wrote:
-> From: Terry Bowman <terry.bowman@amd.com>
+On 2022-11-03 17:14:29, Bjorn Helgaas wrote:
+> On Thu, Oct 27, 2022 at 05:51:49PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Oct 25, 2022 at 12:07:47AM -0500, Tyler Hicks wrote:
+> > > On 2022-10-20 15:24:37, Bjorn Helgaas wrote:
 > 
-> ACPI includes a CXL _OSC support procedure to communicate the available
-> CXL support to FW. The CXL support _OSC includes a field to indicate
-> CXL1.1 RCH RCD support. The OS sets this bit to 1 if it supports access
-> to RCD and RCH Port registers.[1] FW can potentially change it's operation
+> > > I've been talking to the firmware folks on why SAFE mode was selected,
+> > > based on Keith's question from Wednesday. From what I've been told,
+> > > U-Boot doesn't seed the RP MPS with a value so the kernel sees a value
+> > > of 128 for p_mps in pci_configure_mps() when using the DEFAULT mode.
+> > > Apparently UEFI does seed the RP MPS but we don't get that with U-Boot.
+> > > Therefore, SAFE mode was selected to get an initial, tuned RP MPS value
+> > > set to 256.
+> > 
+> > Are there any devices below the RP at the time we set MPS=256?
+> > 
+> > > > A subsequent hot-add will do nothing in pci_configure_mps(), and
+> > > > pcie_bus_configure_settings() looks like it would set the RP and EP
+> > > > MPS to the minimum of the RP and EP MPS_Supported.
+> > > > 
+> > > > Is that what you see?  What would you like to see instead?
+> > > 
+> > > No, not quite. After hot-add, we see the EP MPS set to 128 with SAFE
+> > > mode even though the RP MPS is 256.
+> > 
+> > Can you add the relevant topology here so we can work through the
+> > concrete details?
 
-s/it's/its/
+# lspci -t
+-[0000:00]---00.0-[01-ff]--+-00.0
+                           +-00.1
+                           +-00.2
+                           +-00.3
+                           \-00.4
 
-> depending on the _OSC support setting reported by the OS.
+
+> > Is the endpoint hot-added directly below a Root Port?  Or is there a
+> > switch involved?
+
+There's not a switch involved. The multifunction endpoint is hot-added directly
+below the root port.
+
+> > What are the MPS_Supported values for all the devices?  If there's a switch
+> > in the picture, it looks like we currently restrict to 128, I think because
+> > it's possible an endpoint that can only do 128 may be added.
+
+0000:00's MPS_Supported value is 256.
+
+The multifunction endpoint's MPS_Supported is 512.
+
+> Ping?  I'd like to talk about a concrete scenario.  It's too hard for
+> me to imagine all the possible things that could go wrong.
+
+Sorry for the slow reply here. Thanks for your interest in getting more
+details.
+
+> I guess part of what's interesting here is that things work better
+> when firmware has already configured MPS?  It doesn't seem like we
+> should *depend* on firmware having done that.
+
+Our firmware folks felt the same way.
+
+Tyler
+
 > 
-> The ACPI driver does not currently set the ACPI _OSC support to indicate
-> CXL1.1 RCD RCH support. Change the capability reported to include CXL1.1.
-
-Eight instances of "support" above seems like it might be more than
-necessary.
-
-I don't know the history, but OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT and
-OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT seem like sort of weird names
-since they don't match the spec at all ("RCD and RCH Port Register
-Access Supported" and "CXL VH Register Access Supported").
-
-> [1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/acpi/pci_root.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index c8385ef54c37..094a59b216ae 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -492,6 +492,7 @@ static u32 calculate_cxl_support(void)
->  	u32 support;
->  
->  	support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
-> +	support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
->  	if (pci_aer_available())
->  		support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
->  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> -- 
-> 2.30.2
-> 
+> Bjorn
