@@ -2,152 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC53862379E
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 00:42:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79F7E6237A8
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 00:46:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbiKIXmO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 18:42:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44484 "EHLO
+        id S229516AbiKIXqy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 18:46:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiKIXmN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 18:42:13 -0500
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C272D741
-        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 15:42:13 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 4CFFB3200955;
-        Wed,  9 Nov 2022 18:42:09 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 09 Nov 2022 18:42:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
-        cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1668037328; x=1668123728; bh=+pZyUNAp1v
-        s4PEJAOC6J6SmXC2JO2ckuc1mWQfT/a2g=; b=0F3KlWsxliGnawcoUdq0HQkje0
-        ePXFvAXUWRZOShX8gWHte/i5FHLEI/O4UZR3H8nG89eKBpzG+EQ/ARTWjuUSRW2h
-        5EMV90DbpJ+C45rDi/7MUzNm34vSicSa2/Gr5R15aqPZabVu87d1Cz2t8JIlyhFR
-        Y1UksWeEKQSA9RNMQbtuvioVIwPUkPkQ1bcQCHU5iGxZE/7wnHq3mh6Y7FmbcjVW
-        4knIAIS1aCr/KaKpl7IKjwoiEjBVTKp1xHJ9cYofsLYTSkjG7qSHjUJiYkQirNZg
-        JI+o0LH1Q3JQBNpDEp9Y0y8R9L/KazH3Jm7hhjBU3y/Ekg/1FPjkZfaj8fIg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1668037328; x=1668123728; bh=+pZyUNAp1vs4PEJAOC6J6SmXC2JO
-        2ckuc1mWQfT/a2g=; b=boij4X2rcz8AOx+G8Fw8LikCi39HLWnD2kyQtV6QTUnI
-        PKkkPYzTi3bA8t+ePWaruP4W+UoALTvV6O6jSDE7nIxRTAqhVZWHOCpdcIrHBAo/
-        Eqvwk2oi5HqMzCosHLjU+pdsxh1E1kLaHUjocpcoTluTOsWRmPCx0iYUFo+NeGMK
-        44Tme4Hw/HXpz+1by2z7twDDjjwQ5lXjbvfzMNY35n68nKvE6m7UC4MWZGWkgTxF
-        tFktdUEWRNG/3NIFRgKLKPs1A66cNiz9nCX+VVU3LpvvRqWynqxD8kfeBsNbemMR
-        4Mbj3A56yh5JnrM4ne4iVPbrdchx4VYmIqkBv/GT8A==
-X-ME-Sender: <xms:0DpsY-Ti5vy4L2lwH3f35PKTQpF1gToV9IaAKgVmsbqpiJ1T3dlCLQ>
-    <xme:0DpsYzyPTUiqfTKfqA3zqRH7NnaXkDinSiPVSYZsLB5h-duEu4oGsapLX83DOxwIW
-    AcORT5xsklQVqO7e40>
-X-ME-Received: <xmr:0DpsY708ZoLgbmolo98DqzrjwQYLHDE0nnFhdqS3JLi-_KM5K1ax-OZPrEU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrfeefgddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpedfvfihlhgv
-    rhcujfhitghkshculdfoihgtrhhoshhofhhtmddfuceotghouggvsehthihhihgtkhhsrd
-    gtohhmqeenucggtffrrghtthgvrhhnpefgudehjedtleettdeikeeitedvheejheettdek
-    gedtveefieelledtgfduteetveenucffohhmrghinhepheduvddrphhinhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghouggvsehthihh
-    ihgtkhhsrdgtohhm
-X-ME-Proxy: <xmx:0DpsY6AWOYliv206BJxBUEjH5ZX-YcURhch-ru_1wH865_OzbumZpw>
-    <xmx:0DpsY3gmZo8mPVhGjuK4sqijqWcNsKSzyOWr_SXkyUUTcuPPX3Uzqw>
-    <xmx:0DpsY2rNlNzczxvvoLozAYf8CT89CNsUerYmdwR_GkzA33QDay4wRw>
-    <xmx:0DpsY3efRYCTOSyc8OFlKTmMwtnYT4tfuTQrUUwDMwCgm5RcxSP9AA>
-Feedback-ID: i78e14604:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 9 Nov 2022 18:42:07 -0500 (EST)
-Date:   Wed, 9 Nov 2022 17:41:46 -0600
-From:   "Tyler Hicks (Microsoft)" <code@tyhicks.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI: Align MPS to upstream bridge for SAFE and
- PERFORMANCE mode
-Message-ID: <20221109234146.qkdx5qw4vjdehlgh@sequoia>
-References: <20221027225149.GA846989@bhelgaas>
- <20221103221429.GA47218@bhelgaas>
+        with ESMTP id S229452AbiKIXqx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 18:46:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53829654B;
+        Wed,  9 Nov 2022 15:46:52 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0FBD61D22;
+        Wed,  9 Nov 2022 23:46:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F92AC433C1;
+        Wed,  9 Nov 2022 23:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668037611;
+        bh=JcxGzPO6Cd16TxVvX67Wl9duYpJlfmwyedOx+YzFaAE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qVs5UUTu4tf62brkdoXTy6/39Hc2M5O/RBn9/15aC2Ng771sM8T+RTA0hxYazI7RN
+         IV19FIJnCBwPA7s1Y6f/n8CDJRaUvLLypToRMzOHn6rPNTV0jWI1Uad+ESe/GAe6/0
+         zCH7tJoT/0yPgugZMsHer02VNKTWUPfZU+NgdZIi2kbsbch1Nor7WIQdVReEJG9Yng
+         e8QFPPaJNIzb85DkROVRH+IAUKuTs/UGLyOxMmSUTecge1K6pe5AdnscL1JkTt4WLy
+         Q4zXUxxsa58cgFkpblvzXdyhe/+pvYNBkYoel2t6Xg19Mb8B2JDZnK0u8t/eBUdwSr
+         oi9F/QvQ9XTEQ==
+Date:   Wed, 9 Nov 2022 17:46:49 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rui Ma <Rui.Ma@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Alexander.Deucher@amd.com, bhelgaas@google.com
+Subject: Re: [PATCH] PCI/IOV: Decrease VF memory BAR size to save host memory
+ occupied by PTEs
+Message-ID: <20221109234649.GA584052@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221103221429.GA47218@bhelgaas>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221011112325.992317-1-Rui.Ma@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-11-03 17:14:29, Bjorn Helgaas wrote:
-> On Thu, Oct 27, 2022 at 05:51:49PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Oct 25, 2022 at 12:07:47AM -0500, Tyler Hicks wrote:
-> > > On 2022-10-20 15:24:37, Bjorn Helgaas wrote:
+On Tue, Oct 11, 2022 at 07:23:25PM +0800, Rui Ma wrote:
+> In some certain SR-IOV scene, when the device physical space(such as Video
+> RAM)is fixed, as the number of VFs increases, some device driver may decrease
+> actual BAR memory space used by each VF. However, the VF BAR memory mapping is
+> always based on the usual BAR probing algorithm in PCIe spec. So do not map this
+> unneeded memory can save host memory which occupied by PTEs. Although each PTE
+> only occupies a few bytes of space on its own, a large number of PTEs can still
+> take up a lot of space.
+
+Dropping this for now until we resolve whether this is working around
+a KVM bug as Alex suggests:
+
+https://lore.kernel.org/r/BL1PR12MB51446437265DD1E8AA0794E9F7239@BL1PR12MB5144.namprd12.prod.outlook.com
+
+> Signed-off-by: Rui Ma <Rui.Ma@amd.com>
+> ---
+>  drivers/pci/iov.c    | 14 ++++++++++++--
+>  drivers/pci/pci.h    | 15 +++++++++++++++
+>  drivers/pci/quirks.c | 37 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 64 insertions(+), 2 deletions(-)
 > 
-> > > I've been talking to the firmware folks on why SAFE mode was selected,
-> > > based on Keith's question from Wednesday. From what I've been told,
-> > > U-Boot doesn't seed the RP MPS with a value so the kernel sees a value
-> > > of 128 for p_mps in pci_configure_mps() when using the DEFAULT mode.
-> > > Apparently UEFI does seed the RP MPS but we don't get that with U-Boot.
-> > > Therefore, SAFE mode was selected to get an initial, tuned RP MPS value
-> > > set to 256.
-> > 
-> > Are there any devices below the RP at the time we set MPS=256?
-> > 
-> > > > A subsequent hot-add will do nothing in pci_configure_mps(), and
-> > > > pcie_bus_configure_settings() looks like it would set the RP and EP
-> > > > MPS to the minimum of the RP and EP MPS_Supported.
-> > > > 
-> > > > Is that what you see?  What would you like to see instead?
-> > > 
-> > > No, not quite. After hot-add, we see the EP MPS set to 128 with SAFE
-> > > mode even though the RP MPS is 256.
-> > 
-> > Can you add the relevant topology here so we can work through the
-> > concrete details?
-
-# lspci -t
--[0000:00]---00.0-[01-ff]--+-00.0
-                           +-00.1
-                           +-00.2
-                           +-00.3
-                           \-00.4
-
-
-> > Is the endpoint hot-added directly below a Root Port?  Or is there a
-> > switch involved?
-
-There's not a switch involved. The multifunction endpoint is hot-added directly
-below the root port.
-
-> > What are the MPS_Supported values for all the devices?  If there's a switch
-> > in the picture, it looks like we currently restrict to 128, I think because
-> > it's possible an endpoint that can only do 128 may be added.
-
-0000:00's MPS_Supported value is 256.
-
-The multifunction endpoint's MPS_Supported is 512.
-
-> Ping?  I'd like to talk about a concrete scenario.  It's too hard for
-> me to imagine all the possible things that could go wrong.
-
-Sorry for the slow reply here. Thanks for your interest in getting more
-details.
-
-> I guess part of what's interesting here is that things work better
-> when firmware has already configured MPS?  It doesn't seem like we
-> should *depend* on firmware having done that.
-
-Our firmware folks felt the same way.
-
-Tyler
-
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 952217572113..92a69e51d85c 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -296,6 +296,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	struct pci_sriov *iov = dev->sriov;
+>  	struct pci_bus *bus;
+>  
+> +    /*
+> +     * Some SR-IOV device's BAR map range is larger than they can actually use.
+> +     * This extra BAR space occupy too much reverse mapping size(physical page
+> +     * back to the PTEs). So add a divisor shift parameter to resize the request
+> +     * resource of VF according to num of VFs.
+> +     */
+> +	u16 shift = 1;
+> +
+>  	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
+>  	if (!bus)
+>  		goto failed;
+> @@ -328,8 +336,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  		virtfn->resource[i].name = pci_name(virtfn);
+>  		virtfn->resource[i].flags = res->flags;
+>  		size = pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
+> +		shift = 1;
+> +		shift = virtfn_get_shift(dev, iov->num_VFs, i);
+>  		virtfn->resource[i].start = res->start + size * id;
+> -		virtfn->resource[i].end = virtfn->resource[i].start + size - 1;
+> +		virtfn->resource[i].end = virtfn->resource[i].start + (size >> (shift - 1)) - 1;
+>  		rc = request_resource(res, &virtfn->resource[i]);
+>  		BUG_ON(rc);
+>  	}
+> @@ -680,12 +690,12 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+>  	msleep(100);
+>  	pci_cfg_access_unlock(dev);
+>  
+> +	iov->num_VFs = nr_virtfn;
+>  	rc = sriov_add_vfs(dev, initial);
+>  	if (rc)
+>  		goto err_pcibios;
+>  
+>  	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> -	iov->num_VFs = nr_virtfn;
+>  
+>  	return 0;
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3d60cabde1a1..befc67a280eb 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -603,6 +603,21 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, bool probe)
+>  }
+>  #endif
+>  
+> +struct virtfn_get_shift_methods {
+> +	u16 vendor;
+> +	u16 device;
+> +	u16 (*get_shift)(struct pci_dev *dev, u16 arg, int arg2);
+> +};
+> +
+> +#ifdef CONFIG_PCI_QUIRKS
+> +u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2);
+> +#else
+> +static inline u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2)
+> +{
+> +	return (u16)1;
+> +}
+> +#endif
+> +
+>  #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
+>  int acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
+>  			  struct resource *res);
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index da829274fc66..3466738c1c54 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4085,6 +4085,43 @@ int pci_dev_specific_reset(struct pci_dev *dev, bool probe)
+>  	return -ENOTTY;
+>  }
+>  
+> +static u16 resize_vf_bar0(struct pci_dev *dev, u16 num_VFs, int bar_num)
+> +{
+> +	u16 shift = 1;
+> +
+> +	if (bar_num == 0) {
+> +		while ((1 << shift) <= num_VFs)
+> +			shift += 1;
+> +	}
+> +	pci_info(dev, "with %d VFs, VF BAR%d get shift: %d\n", num_VFs, bar_num, shift);
+> +	return shift;
+> +}
+> +
+> +static const struct virtfn_get_shift_methods virtfn_get_shift_methods[] = {
+> +	{ PCI_VENDOR_ID_ATI, 0x73a1, resize_vf_bar0},
+> +	{ 0 }
+> +};
+> +
+> +/*
+> + * Get shift num to calculate SR-IOV device BAR. Sometimes the BAR size for
+> + * SR-IOV device is too large and we want to calculate the size to define
+> + * the end of virtfn.
+> + */
+> +u16 virtfn_get_shift(struct pci_dev *dev, u16 arg1, int arg2)
+> +{
+> +	const struct virtfn_get_shift_methods *i;
+> +
+> +	for (i = virtfn_get_shift_methods; i->get_shift; i++) {
+> +		if ((i->vendor == dev->vendor ||
+> +		     i->vendor == (u16)PCI_ANY_ID) &&
+> +		    (i->device == dev->device ||
+> +		     i->device == (u16)PCI_ANY_ID))
+> +			return i->get_shift(dev, arg1, arg2);
+> +	}
+> +
+> +	return (u16)1;
+> +}
+> +
+>  static void quirk_dma_func0_alias(struct pci_dev *dev)
+>  {
+>  	if (PCI_FUNC(dev->devfn) != 0)
+> -- 
+> 2.25.1
 > 
-> Bjorn
