@@ -2,163 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8F26231E5
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:50:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1FE6231E8
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Nov 2022 18:52:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbiKIRum (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Nov 2022 12:50:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
+        id S229850AbiKIRwK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Nov 2022 12:52:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbiKIRue (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:50:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B99DBB3
-        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 09:49:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668016176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1+dtq26cOHViC7MMC06CZ0KeR+b2Q/p3nrVuuPwQv2U=;
-        b=NL1EwbAh+qEIof6JGYobfU27Ik/aMyOs/QxcTBNZJJbx/iSdvgdgNzps+eyJPJsNIpKOLZ
-        Q/VWNgDxbaXyrKErLvp3sYVVkfXK150N8M4Do1Qv0mrNwveRZXSbHNpEX6UFiyR9eh4HO6
-        Tg+QBlswv4cC4slh6DK9koCzNTpM7Zw=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-258-pDy65k4xMAOI_hGxXpkspA-1; Wed, 09 Nov 2022 12:49:35 -0500
-X-MC-Unique: pDy65k4xMAOI_hGxXpkspA-1
-Received: by mail-qv1-f72.google.com with SMTP id ln3-20020a0562145a8300b004b8c29a7d50so12207424qvb.15
-        for <linux-pci@vger.kernel.org>; Wed, 09 Nov 2022 09:49:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1+dtq26cOHViC7MMC06CZ0KeR+b2Q/p3nrVuuPwQv2U=;
-        b=Jg0r9L9Op90i2zA+/YuhTnEwlGeN1KXVlo3FQvXdk+O+nwJxFMT56n31KbMP+O1yJL
-         NdrO//0wJYq+ZJS/X2j/R3tfWtGhLk7fbCpHMot2NE7MX3hLeqcOBA1AavvvWVamx5mS
-         6yfp1R6ioec8kB0hcXmJhhxK8j9BGN93sg9kqLZdeu3j4ZIQeiWGE29WuvcTuBtqWw5s
-         zMWq43CIvotQOEmjRYi4w5UfXXjd42DpOyJsvPq3/FFKCfs8Y2+8vpADnnY/HCAlgkZO
-         vbZ6Iiqem7QkDYdRLYKS/JENkexlyTtC69m0B66GveDQ8A4Tvmwrv7KWex2baVRtCi/U
-         F/Ng==
-X-Gm-Message-State: ACrzQf3mdoNCCJvKTy2L5cg2rjfL1YSArSrdmKPPFvBW0rdtwCEXntfJ
-        lXln1NLFAwJx27Vpw5/tS3Pw499q2Bf9tke2J5NuVkuy6dNoyKJGgN+oaxInDn7hZZKAMgrQZE5
-        TL5BeoXN2YGusP31voY5C
-X-Received: by 2002:a05:620a:208d:b0:6fa:b41e:8a02 with SMTP id e13-20020a05620a208d00b006fab41e8a02mr15491284qka.540.1668016171677;
-        Wed, 09 Nov 2022 09:49:31 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM4IS4VBS1CYlf0r8rb8sLXJK1uvZEJYaJucuYdB6gBD8fjx4zwhxQLRwyvQuNm0SdVqZaleTA==
-X-Received: by 2002:a05:620a:208d:b0:6fa:b41e:8a02 with SMTP id e13-20020a05620a208d00b006fab41e8a02mr15491259qka.540.1668016171349;
-        Wed, 09 Nov 2022 09:49:31 -0800 (PST)
-Received: from redhat.com ([185.195.59.47])
-        by smtp.gmail.com with ESMTPSA id v22-20020a05620a441600b006eeaf9160d6sm11660121qkp.24.2022.11.09.09.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 09:49:31 -0800 (PST)
-Date:   Wed, 9 Nov 2022 12:49:26 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Wei Gong <gongwei833x@gmail.com>, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] pci: fix device presence detection for VFs
-Message-ID: <20221109124803-mutt-send-email-mst@kernel.org>
-References: <20221109020614-mutt-send-email-mst@kernel.org>
- <20221109173029.GA554381@bhelgaas>
+        with ESMTP id S230222AbiKIRwJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Nov 2022 12:52:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD5E9FDF
+        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 09:52:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D2286B80AE1
+        for <linux-pci@vger.kernel.org>; Wed,  9 Nov 2022 17:52:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6009AC433B5;
+        Wed,  9 Nov 2022 17:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668016325;
+        bh=44Eab1vCaH84NeYBMMsFGmGcoxn+rXWkIsJWD04IPzI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Xqg+9fXpGX4NJzQcOEsw8hOPv77I2h+KpLYI9yL+d6Hl67B8VwTJ5EQDu1da7g0Ic
+         6wrsMVL6Ibst+F7gzNo5DZOPrvBiMoNXZo4kOHHACTEDqBXT4HekzKVBm+i+6WWrdT
+         vG6ii3RE9zfh3HMJGrGZQHe9gjniWH6MSPAXw4jQL1ULLgoXMG/l66M6pJ6q+UoaAt
+         nazLsgXgnw076WG72FA3vL/OTkr/bC02wzZFKH9x/gOm7hf3Nl/1U9D5aYZ7zuZQmJ
+         C3xZux/4PsogYASBrTbO0R68S1EuxcuBBodT7DGjS5NhpWVdTZJ8AgTOKEEr0vu1wo
+         cbwOjsq5vyBxg==
+Date:   Wed, 9 Nov 2022 11:52:04 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Li Ming <ming4.li@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        ira.weiny@intel.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/DOE: adjust data object length
+Message-ID: <20221109175204.GA568218@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221109173029.GA554381@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221109022044.1827423-1-ming4.li@intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 11:30:29AM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 09, 2022 at 02:10:30AM -0500, Michael S. Tsirkin wrote:
-> > On Tue, Nov 08, 2022 at 11:12:34PM -0600, Bjorn Helgaas wrote:
-> > > On Wed, Nov 09, 2022 at 04:36:17AM +0000, Wei Gong wrote:
-> > > > O Tue, Nov 08, 2022 at 01:02:35PM -0500, Michael S. Tsirkin wrote:
-> > > > > On Tue, Nov 08, 2022 at 11:58:53AM -0600, Bjorn Helgaas wrote:
-> > > > > > On Tue, Nov 08, 2022 at 10:19:07AM -0500, Michael S. Tsirkin wrote:
-> > > > > > > On Tue, Nov 08, 2022 at 09:02:28AM -0600, Bjorn Helgaas wrote:
-> > > > > > > > On Tue, Nov 08, 2022 at 08:53:00AM -0600, Bjorn Helgaas wrote:
-> > > > > > > > > On Wed, Oct 26, 2022 at 02:11:21AM -0400, Michael S. Tsirkin wrote:
-> > > > > > > > > > virtio uses the same driver for VFs and PFs.
-> > > > > > > > > > Accordingly, pci_device_is_present is used to detect
-> > > > > > > > > > device presence. This function isn't currently working
-> > > > > > > > > > properly for VFs since it attempts reading device and
-> > > > > > > > > > vendor ID.
-> > > > > > > > > 
-> > > > > > > > > > As VFs are present if and only if PF is present,
-> > > > > > > > > > just return the value for that device.
-> > > > > > > > > 
-> > > > > > > > > VFs are only present when the PF is present *and* the PF
-> > > > > > > > > has VF Enable set.  Do you care about the possibility that
-> > > > > > > > > VF Enable has been cleared?
-> > > > > > 
-> > > > > > I think you missed this question.
-> > > > > 
-> > > > > I was hoping Wei will answer that, I don't have the hardware.
-> > > > 
-> > > > In my case I don't care that VF Enable has been cleared.
-> > > 
-> > > OK, let me rephrase that :)
-> > > 
-> > > I think pci_device_is_present(VF) should return "false" if the PF is
-> > > present but VFs are disabled.
-> > > 
-> > > If you think it should return "true" when the PF is present and VFs
-> > > are disabled, we should explain why.
-> > > 
-> > > We would also need to fix the commit log, because "VFs are present if
-> > > and only if PF is present" is not actually true.  "VFs are present
-> > > only if PF is present" is true, but "VFs are present if PF is present"
-> > > is not.
-> > 
-> > Bjorn, I don't really understand the question.
-> > 
-> > How does one get a vf pointer without enabling sriov?
-> > They are only created by sriov_add_vfs after calling
-> > pcibios_sriov_enable.
+On Wed, Nov 09, 2022 at 10:20:44AM +0800, Li Ming wrote:
+> The value of data object length 0x0 indicates 2^18 dwords being
+> transferred, it is introduced in PCIe r6.0,sec 6.30.1. This patch
+> adjusts the value of data object length for the above case on both
+> sending side and receiving side.
 > 
-> Oh, I think I see where you're coming from.  The fact that we have a
-> VF pointer means VFs were enabled in the past, and as long as the PF
-> is still present, the VFs should still be enabled.
+> Besides, it is unnecessary to check whether length is greater than
+> SZ_1M while receiving a response data object, because length from LENGTH
+> field of data object header, max value is 2^18.
 > 
-> Since the continued existence of the VF device depends on VF Enable, I
-> guess my question is whether we need to worry about VF Enable being
-> cleared, e.g., via sysfs reset or a buggy PF driver.
+> Signed-off-by: Li Ming <ming4.li@intel.com>
+> ---
+>  drivers/pci/doe.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
-> Taking a step back, I don't understand the
-> "if (!pci_device_is_present()) virtio_break_device()" strategy because
-> checking for device presence is always unreliable.
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index e402f05068a5..204cbc570f63 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -29,6 +29,9 @@
+>  #define PCI_DOE_FLAG_CANCEL	0
+>  #define PCI_DOE_FLAG_DEAD	1
+>  
+> +/* Max data object length is 2^18 dwords */
+> +#define PCI_DOE_MAX_LENGTH	(2 << 18)
 
-The point is to break out of loops.
+2 ^  18 == 262144
+2 << 18 == 524288
 
+>  /**
+>   * struct pci_doe_mb - State for a single DOE mailbox
+>   *
+> @@ -107,6 +110,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  {
+>  	struct pci_dev *pdev = doe_mb->pdev;
+>  	int offset = doe_mb->cap_offset;
+> +	u32 length;
+>  	u32 val;
+>  	int i;
+>  
+> @@ -128,10 +132,12 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+>  	/* Length is 2 DW of header + length of payload in DW */
+> +	length = 2 + task->request_pl_sz / sizeof(u32);
+> +	if (length == PCI_DOE_MAX_LENGTH)
+> +		length = 0;
 
->  I assume the
-> consumer of vq->broken, e.g., virtnet_send_command(), would see a
-> failed PCI read that probably returns ~0 data.  Could it not check for
-> that and then figure out whether that's valid data or an error
-> indication?
+Do you check for overflow anywhere?  What if length is
+PCI_DOE_MAX_LENGTH + 1?
 
-No, it's not doing any reads - it is waiting for a DMA.
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+>  			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+> -					  2 + task->request_pl_sz /
+> -						sizeof(u32)));
+> +					  length);
+>  	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
+>  		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+>  				       task->request_pl[i]);
+> @@ -178,7 +184,10 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+>  
+>  	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> -	if (length > SZ_1M || length < 2)
+> +	/* A value of 0x0 indicates max data object length */
+> +	if (!length)
+> +		length = PCI_DOE_MAX_LENGTH;
+> +	if (length < 2)
+>  		return -EIO;
+>  
+>  	/* First 2 dwords have already been read */
+> @@ -520,8 +529,12 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+>  	/*
+>  	 * DOE requests must be a whole number of DW and the response needs to
+>  	 * be big enough for at least 1 DW
+> +	 *
+> +	 * Max data object length is 1MB, and data object header occupies 8B,
+> +	 * thus request_pl_sz should not be greater than 1MB - 8B.
+>  	 */
+> -	if (task->request_pl_sz % sizeof(u32) ||
+> +	if (task->request_pl_sz > SZ_1M - 8 ||
+> +	    task->request_pl_sz % sizeof(u32) ||
 
-> It looks like today, virtnet_send_command() might sit in that "while"
-> loop calling virtqueue_get_buf() repeatedly until virtio_pci_remove()
-> notices the device is gone and marks it broken.  Something must be
-> failing in virtqueue_get_buf() in that interval between the device
-> disappearing and virtio_pci_remove() noticing it.
+Oh, I see, this looks like the check for overflow.  It would be nice
+if it were expressed in terms of PCI_DOE_MAX_LENGTH somehow.
+
+It would also be nice, but maybe not practical, to have it closer to
+the FIELD_PREP above so it's more obvious that we never try to encode
+something too big.
+
+>  	    task->response_pl_sz < sizeof(u32))
+>  		return -EINVAL;
+>  
+> -- 
+> 2.25.1
 > 
-> Bjorn
-
-Nope - it is just doing posted writes, these disappear into thin ether
-if there's no target.
-
--- 
-MST
-
