@@ -2,202 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B5D624B8B
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 21:17:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 521DD624C27
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 21:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231734AbiKJURI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 15:17:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
+        id S229558AbiKJUuB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 15:50:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230012AbiKJURH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 15:17:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBAB53EED
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 12:16:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668111362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PkpNiTy02Kl92bzGrUkAFIk/Fo/N4N8FwYswcHibr9s=;
-        b=F75NC5ncTK85u2hlvmi4F7IcjisMee9DXcF+tsL62Z/TVM5kBnzK+c3pgmGV9ClA7nlRuq
-        uBr+x5LFMXFCtDzMdadB7jSgwTsogr7bNi4PQj70Gyu3TUHIARvTL0bjAA/cEouVpV+LOz
-        tCDHYN4dFydhPlx/qXTj6/vgQIG+dm4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-111-MhbvQ4BRM-uROACk5N8wqg-1; Thu, 10 Nov 2022 15:16:01 -0500
-X-MC-Unique: MhbvQ4BRM-uROACk5N8wqg-1
-Received: by mail-wr1-f69.google.com with SMTP id s7-20020adfa287000000b00236c367fcddso635840wra.6
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 12:16:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PkpNiTy02Kl92bzGrUkAFIk/Fo/N4N8FwYswcHibr9s=;
-        b=L4t2K5yujqXXI7/LU5djbrEgEq8Uv2r5ko/T+8+xcNefIJnlSVwwFvKU/XWD/gMO74
-         Cz3DGEOYyMRn4ID8b23n1fiLXb7BsRxWTTwoDZ+IdmrVE1Zj+LKCY9bxEn2aQYxD4j4B
-         1epS3WB4plYP4mUgCquUzB9E9UyoY9tbUX/jazXIfPKuZrJWlJrJ9P1kokh3Es657JJh
-         T/5izjx0VASUsVGhEXxtR2LvK7a58BN+VEiTqXdLmPH2uqq7TIJETWqs7UNmTHb+v69G
-         HANz6amULJf4bbwMaXtsnwsRHxj6g/cKajxcZAS7Q/G8CZos6Czry5wgWnoI+kr5zuMM
-         1cwg==
-X-Gm-Message-State: ACrzQf1vpB4i5OYuIJWCDWrEEOeClBoPWyL7+VhdOJGspV+CrxTRltBC
-        JTimtgIWFVcUXBJ425TTB0xidIzELMzhUx8IN/yNOQzprjaudWjKE+YTrGjddqDJQosz22tnqjU
-        0ZlliLRnya4+R4hJdoNyR
-X-Received: by 2002:a5d:59ae:0:b0:236:6861:a89d with SMTP id p14-20020a5d59ae000000b002366861a89dmr43774499wrr.437.1668111359830;
-        Thu, 10 Nov 2022 12:15:59 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM6S3ENztY75wDSVKFfDNx9eFsb13CNbSGZAMisdkZIMlXDXXSCYTktknl3xbMoyl64iAmazgg==
-X-Received: by 2002:a5d:59ae:0:b0:236:6861:a89d with SMTP id p14-20020a5d59ae000000b002366861a89dmr43774490wrr.437.1668111359531;
-        Thu, 10 Nov 2022 12:15:59 -0800 (PST)
-Received: from redhat.com ([2.52.3.250])
-        by smtp.gmail.com with ESMTPSA id p16-20020adfe610000000b002364c77bc96sm86110wrm.33.2022.11.10.12.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 12:15:58 -0800 (PST)
-Date:   Thu, 10 Nov 2022 15:15:55 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Wei Gong <gongwei833x@gmail.com>, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] pci: fix device presence detection for VFs
-Message-ID: <20221110144700-mutt-send-email-mst@kernel.org>
-References: <20221108044819.GA861843@zander>
- <20221110193547.GA631336@bhelgaas>
+        with ESMTP id S229461AbiKJUuA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 15:50:00 -0500
+Received: from na01-obe.outbound.protection.outlook.com (mail-westcentralusazon11020021.outbound.protection.outlook.com [40.93.198.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030EB45A35;
+        Thu, 10 Nov 2022 12:49:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N7g60CCJv/NeBZy4ln8nXPZDAeSJZz/lGLD2tkmQ24cmM+yCiQq51Nc3ZVqM6T+YOH4fO7l8uistnw6VCf7e76HZOntViTUwPNNNB4F8+2Zx7NAa9k/7xK6I5whvKPgX9GGsd6FwmO5YVVujpHJjPVqBsxD2c984PYaovxtbFPnevB2oS/SE1VtHNQO4RnDI2wx+/RHyPtchYbzcQK0sUztaN5wnsg3INoaep+7dEXTTdN+LIszyY+gNyWZbpEOrJPaf+L7S+GK9ZJvZAEmKBa14yNwTR4YUIUUUmiPY+8O2+LlXF0u9vj5PhMe3FELl4Ohu0Rj3HXGIl5AVvYUWgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zyqxfsYfMxcsSkgWhmLt/sw6Xk/lbRfvYswAKDTymPc=;
+ b=g5cEcew+IktRr5hmv4o1aflMnx0l0CIF/EoI25rCAuQ5pgeCrdkcOd8vwbEqzIcDfYVqteZrmi7MtXUcy4wjlOq8HXR+ns55EPycOPdDoNNEmHzJKq+FcyhWhnqHBcfPij6mRwfK2+Oqz+nXOYB8tVTS80bMyXTUlxQ4bM76RURNg+sQvkV+WeMZDf7jzvm/9sjxeWcFD3aMYFjeo62/dyBY/60gmnWNWqTKmhPzP8OOhdSkgVZEVhjAUPxtsGLIH1oqzjgg8EoqqGIlEcJ+8+on3w1OIAWUrH2nRJxKemmlgHkKGufwbhAHE3Xufke2+XJYZRp44vFv0h0+hMPmzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zyqxfsYfMxcsSkgWhmLt/sw6Xk/lbRfvYswAKDTymPc=;
+ b=iB4zxprjR6nyHL+VeHdn4H1PTVG8m3Trkxpzj/eaOEYueTsCEvqcudB1fhZwXxNWR2JB0yh7pJjzPoQ45XMQGLjnL+GeqWqAIAyNLlH71nHdX4FtW+T9dsmyDSByo6y8i6ACsOpt7AxQhCQlaz+w3UKNnjs39ODAgPd8xEdhVf4=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MW4PR21MB2060.namprd21.prod.outlook.com (2603:10b6:303:11f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.2; Thu, 10 Nov
+ 2022 20:49:56 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::ac9b:6fe1:dca5:b817]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::ac9b:6fe1:dca5:b817%6]) with mapi id 15.20.5834.002; Thu, 10 Nov 2022
+ 20:49:56 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
+        "quic_carlv@quicinc.com" <quic_carlv@quicinc.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>
+Subject: RE: [PATCH v3] PCI: hv: Only reuse existing IRTE allocation for
+ Multi-MSI
+Thread-Topic: [PATCH v3] PCI: hv: Only reuse existing IRTE allocation for
+ Multi-MSI
+Thread-Index: AQHY8J0alQKzFek9kkuOCBwYhpuQEq4vaxEQgAk84PA=
+Date:   Thu, 10 Nov 2022 20:49:56 +0000
+Message-ID: <SA1PR21MB13352616E4DC28DD0D9372ADBF019@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20221104222953.11356-1-decui@microsoft.com>
+ <BYAPR21MB1688378A6403AC46FDF41B7CD73B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB1688378A6403AC46FDF41B7CD73B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=35228208-0f21-4b36-b68f-17ffd3e36c8d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-04T23:35:39Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MW4PR21MB2060:EE_
+x-ms-office365-filtering-correlation-id: 111840dd-b682-4452-848b-08dac35d204f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kaqU5hKh08AxIXSrWKTDeRnkWlzeMePo3SGMFrL5Mj710k6XECQyXuga02vgef575OX5rwLLziTi6Rh6Dnn3L5NZRHefD+WL3p23gaI+fD0C96/fQKXtxal4TbFWWuQGARqWvmFtolPudbFRVaVuSYCcB74sYd28t+Lgx6wf14+3oo42lLVZgXnBowHGhZu0q150KiGZnDicxR0u1yvzYNRTOnPKKtSAAUtt6ivpCvMptf15n4FW34XWJcX5zVypV/z75Fk9f51DebqjBfHfHFXBlw4XFMWQxtIWc3aF+1e4cj8NlXdAVYDeOekgQTuKOBbpvKXCKxTmibAdO85rcUKpKOkjE0LZnH/GETIQ0Rn1Rxa0vRJHvppkGUIHAxhhNCHP2hZTtwVI1ZenbL35bA5if8nT1GQDsM9VG+SLUiE+GqCx6CMPCtv8RSRHZ3/e6qu2gfRGu/12PuRGN87y8xyIYKW9rTY4KN1kgN9whriN5PdsKpO6oF6ztWTj7U2Kys3JdMnBgzZ98iCY8Sv3uIM9UE7a/kdt6jlrCv5CNblwlrcqq5VkvJKtcXuE5ojhkVukr3LoGk2kgAdRiXGJX3hg/u7g8RjXmc5pGWIJRYn9+7o+u9N1UPH0Dkg6J/Or9Jw08FxrI/VB8rT1udm2b3y9XQfkRLxwUsrAb8CMAZiXq/rB7dvnYPD9Yw8ROo1L52OqDRaUrPdH5ao8QiWp2nablMa2Sa5/j+5GMKpxpX+GFvHpgIn++F+qgCdprpdrIBfPIVoL39yL3KFwRCYMSCG/AIVjXEOPfmeBJhj7oBfN+rgtPPHna0FbMU5Ai1/tq6yi1NUBC7WEytbeYx06vQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(451199015)(921005)(186003)(86362001)(82950400001)(26005)(38070700005)(38100700002)(122000001)(6506007)(10290500003)(4744005)(82960400001)(83380400001)(8990500004)(7416002)(2906002)(52536014)(5660300002)(8676002)(8936002)(66476007)(55016003)(7696005)(478600001)(64756008)(66556008)(41300700001)(76116006)(6636002)(110136005)(9686003)(316002)(66446008)(71200400001)(66946007)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?4tnsrjM/XmLD6kUPhBr7p7ElGV1xGK0oRKiN8BR9oX/Wv+g3NCGxohiVxkch?=
+ =?us-ascii?Q?LvXYlpBj1S9PrhmDw7BTRocE/IRcxYmYoKFHBDzc+TFYHW1skwODB5Kzdob5?=
+ =?us-ascii?Q?b/HhcD8PcXMtWwJf7Ssbl77t4RBC5gM6DXuha8qO/B7hxiqki2SiyYUGqImS?=
+ =?us-ascii?Q?dy4z3KTOCpR8uLgsjb6h8/+EzdIslimNZz7uIxe+45tEkeRbXFkCP3Owz0bm?=
+ =?us-ascii?Q?UTzbE6imznnGhOLDlK/u+8KJsD1Yh24RfbFTr8OAXMdRcoRgq6aP3JT0kPv2?=
+ =?us-ascii?Q?iZiRg+Nk3xgq0XGzF+JvWbCd9qz7zqD+4B5D0avJ1aS3b6UdfPz8oAkLL0rw?=
+ =?us-ascii?Q?LNLsqYTkeIvGNcUuxyDLwF8NBZk+ZOdXfN0kO8PF5vQUrQNwKhfmJtF5tLlY?=
+ =?us-ascii?Q?RuifDbq2axFMXK9uaHEoNighZPrwMuA4iRZUVhSSkAcc3uhVaGXbL7HIlpq9?=
+ =?us-ascii?Q?wbFmFHrMFuFv5rtRInO4BIbj66/t+Jg+8042icCsOZ484E1B8OJl7H8CIknN?=
+ =?us-ascii?Q?lv/HtkdQJP1vZAGrBHXWE3aIVTfF4VMSKObs/5JSVnz/Pah7cqXOaoNn15fe?=
+ =?us-ascii?Q?m/X5N66a0w5ptlNsx6gsmjsFo13/pyMu5+Sesu7shre3nQYG365Ev+ErB1RS?=
+ =?us-ascii?Q?EqNxxp8e6v9mWITIwkZXKbcxTvYHPWGorx2Xum2trcxKN6Yt0NoEP9NJ5LV0?=
+ =?us-ascii?Q?ShrJRT/Kdz2dhWxGottQ1j71E6aC6j8y3YNuSbmC621su2AP/0TaRqNgZQtX?=
+ =?us-ascii?Q?JBauCkTV+9DTxDoB+EZRl6UehDy9oIXD2mU0SVjv9zL2D6CnRSgkZLRX+VEs?=
+ =?us-ascii?Q?WGaSGKqwA8P6BZ8avJyZrUM10mOxLwC9Z8qmAT7a/AUs094eO5MwQ6d+JCEI?=
+ =?us-ascii?Q?Xu/rv0CieZiqOU7LEXaBc7TD6DJYUGhCwHIOC7vC6gYz8I9V86z3UimG8kyi?=
+ =?us-ascii?Q?fvWU9YYGfuV4ZxzRqRda0quEUwVtlqlU4JhxRjljOknvOic7Ps7QOY6lBKBA?=
+ =?us-ascii?Q?WNUJmFV/I8Rq87TNOkLY3UCxhCgjHzpaDw8DepZkuSTC2OihcOqQ2cCNWlm8?=
+ =?us-ascii?Q?G6SG8+eJrgAiQbFAd4aKMuK18z378FBdvGDYn607EKUaH1TEUrRCGABXZWeq?=
+ =?us-ascii?Q?tfLcc6Tn4zQQfaSfUMAR8yfPzwLPEu+jdaILJjA/iEdyW4YUrUid0Ciw8gWp?=
+ =?us-ascii?Q?+qHVVVndjOxHv8JxzCmDaeDTXerNK4u9h2wIDKYAwzBMUsUZ/aJtoYCerRxm?=
+ =?us-ascii?Q?CoVXzETM7mhHnzZNwZDydix2/Jjpmzx2g+nLniUKSExUd/UlPRcr4tQE0d2g?=
+ =?us-ascii?Q?qp8qb5pzKsbEMzwfD6gvl35u0ztnefnFVn6ZOW5o8whxHpwP2HC45Gg6PEN7?=
+ =?us-ascii?Q?VbcLszcLbIrXsCaaGrGslWPZ1mybsKL65sAlCvQcZaT25Tn+CgOaCHiMcQT5?=
+ =?us-ascii?Q?PXjAZAKdlA9HDyZPw581mIArKYViEzFe11W31i8DMEzbswH/Nbo5eW4BCvu0?=
+ =?us-ascii?Q?Jgns2WEQGgQ+2sluUSS6I6xKmyp7r5rjHmNdKRbtFGLsa0OIabXewi3gIiSv?=
+ =?us-ascii?Q?pMChb0BivDxaYX5ssAn+RHdRaTFO0agWBdOK3BdE?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221110193547.GA631336@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 111840dd-b682-4452-848b-08dac35d204f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2022 20:49:56.7647
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LR3kiIba+h0ph3VzvqyQH3Y8xlfoojrFmhUwnQ2GhOrRGJG8HD5YPOZjnQW4GSfGWz/wuan6j5lAK7uYFifP1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB2060
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 01:35:47PM -0600, Bjorn Helgaas wrote:
-> Hi Wei,
-> 
-> I can't quite parse this.  Is the problem that you had some virtio I/O
-> in progress, you wrote "0" to /sys/.../sriov_numvfs, and the virtio
-> I/O operation hangs?
-
-I think so. I also think that just attempting to
-remove the module or to unbind the driver from it
-will have the same effect.
-
-> Is there any indication to the user, e.g., softlockup oops?
-> 
-> More questions below.
-> 
-> On Tue, Nov 08, 2022 at 04:52:16AM +0000, Wei Gong wrote:
-> 
-> > according to sriov's protocol specification vendor_id and
-> > device_id field in all VFs return FFFFh when read
-> > so when vf devs is in the pci_device_is_present,it will be
-> > misjudged as surprise removeal
-> > 
-> > when io is issued on the vf, normally disable virtio_blk vf
-> > devs,at this time the disable opration will hang. and virtio
-> > blk dev io hang.
+> Sent: Friday, November 4, 2022 4:38 PM
+> > ...
+> >   Bjorn, Lorenzo, it would be great to have your Ack. The patch needs t=
+o go
+> >   through the Hyper-V tree because it's rebased to another hv_pci patch
+> >  (which only exists in the Hyper-V tree for now):
+> >       e70af8d040d2 ("PCI: hv: Fix the definition of vector in
+> >  hv_compose_msi_msg()")
 > >
-> > task:bash            state:D stack:    0 pid: 1773 ppid:  1241 flags:0x00004002
-> > Call Trace:
-> >  <TASK>
-> >  __schedule+0x2ee/0x900
-> >  schedule+0x4f/0xc0
-> >  blk_mq_freeze_queue_wait+0x69/0xa0
-> >  ? wait_woken+0x80/0x80
-> >  blk_mq_freeze_queue+0x1b/0x20
-> >  blk_cleanup_queue+0x3d/0xd0
-> >  virtblk_remove+0x3c/0xb0 [virtio_blk]
-> >  virtio_dev_remove+0x4b/0x80
-> >  device_release_driver_internal+0x103/0x1d0
-> >  device_release_driver+0x12/0x20
-> >  bus_remove_device+0xe1/0x150
-> >  device_del+0x192/0x3f0
-> >  device_unregister+0x1b/0x60
-> >  unregister_virtio_device+0x18/0x30
-> >  virtio_pci_remove+0x41/0x80
-> >  pci_device_remove+0x3e/0xb0
-> >  device_release_driver_internal+0x103/0x1d0
-> >  device_release_driver+0x12/0x20
-> >  pci_stop_bus_device+0x79/0xa0
-> >  pci_stop_and_remove_bus_device+0x13/0x20
-> >  pci_iov_remove_virtfn+0xc5/0x130
-> >  ? pci_get_device+0x4a/0x60
-> >  sriov_disable+0x33/0xf0
-> >  pci_disable_sriov+0x26/0x30
-> >  virtio_pci_sriov_configure+0x6f/0xa0
-> >  sriov_numvfs_store+0x104/0x140
-> >  dev_attr_store+0x17/0x30
-> >  sysfs_kf_write+0x3e/0x50
-> >  kernfs_fop_write_iter+0x138/0x1c0
-> >  new_sync_write+0x117/0x1b0
-> >  vfs_write+0x185/0x250
-> >  ksys_write+0x67/0xe0
-> >  __x64_sys_write+0x1a/0x20
-> >  do_syscall_64+0x61/0xb0
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > RIP: 0033:0x7f21bd1f3ba4
-> > RSP: 002b:00007ffd34a24188 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
-> > RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f21bd1f3ba4
-> > RDX: 0000000000000002 RSI: 0000560305040800 RDI: 0000000000000001
-> > RBP: 0000560305040800 R08: 000056030503fd50 R09: 0000000000000073
-> > R10: 00000000ffffffff R11: 0000000000000202 R12: 0000000000000002
-> > R13: 00007f21bd2de760 R14: 00007f21bd2da5e0 R15: 00007f21bd2d99e0
-> > 
-> > when virtio_blk is performing io, as long as there two stages of:
-> > 1. dispatch io. queue_usage_counter++;
-> > 2. io is completed after receiving the interrupt. queue_usage_counter--;
-> > 
-> > disable virtio_blk vfs:
-> >   if(!pci_device_is_present(pci_dev))
-> >     virtio_break_device(&vp_dev->vdev);
-> > virtqueue for vf devs will be marked broken.
-> > the interrupt notification io is end. Since it is judged that the
-> > virtqueue has been marked as broken, the completed io will not be
-> > performed.
-> > So queue_usage_counter will not be cleared.
-> > when the disk is removed at the same time, the queue will be frozen,
-> > and you must wait for the queue_usage_counter to be cleared.
-> > Therefore, it leads to the removeal of hang.
-> 
-> I want to follow along in the code, but I need some hints.
-> 
-> "queue_usage_counter" looks like it's supposed to be a symbol, but I
-> can't find it.
+> >   BTW, Michael has some other hv_pci patches, which would also need go
+> >  through the Hyper-V tree:
+> >
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-I think it refers to q->q_usage_counter in blk core.
-
-> Where (which function) is the I/O dispatched and queue_usage_counter
-> incremented?  Where is queue_usage_counter decremented?
-> 
-> Prior to this change pci_device_is_present(VF) returned "false"
-> (because the VF Vendor ID is 0xffff); after the change it will return
-> "true" (because it will look at the PF Vendor ID instead).
-> 
-> Previously virtio_pci_remove() called virtio_break_device().  I guess
-> that meant the virtio I/O operation will never be completed?
-> 
-> But if we don't call virtio_break_device(), the virtio I/O operation
-> *will* be completed?
-> 
-> Bjorn
-
-It's completed anyway - nothing special happened at the device
-level - but driver does not detect it.
-
-Calling virtio_break_device will mark all queues as broken, as
-a result attempts to check whether operation completed
-will return false.
-
-This probably means we need to work on handling surprise removal
-better in virtio blk - since it looks like actual suprise
-removal will hang too. But that I think is a separate issue.
-
--- 
-MST
-
+Hi Bjorn, Lorenzo, if you have no objection to the patch, I suggest Wei mer=
+ge
+it through the Hyper-V tree early next week.
