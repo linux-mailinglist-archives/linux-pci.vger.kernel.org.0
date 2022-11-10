@@ -2,57 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B40624258
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 13:26:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A5FD6242F5
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 14:10:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbiKJM0v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 07:26:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43232 "EHLO
+        id S230439AbiKJNKo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 08:10:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbiKJM0u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 07:26:50 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B105247;
-        Thu, 10 Nov 2022 04:26:49 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id j4so2989200lfk.0;
-        Thu, 10 Nov 2022 04:26:49 -0800 (PST)
+        with ESMTP id S230444AbiKJNKa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 08:10:30 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D5E78323;
+        Thu, 10 Nov 2022 05:10:11 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id g12so3140578lfh.3;
+        Thu, 10 Nov 2022 05:10:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cBWGKY5TCpH3N2aAaFzNlY4Ec3j6NJwE2FJiVksSqjU=;
-        b=KsFjUK6L2YvmLNvcIsZqsenkxt5c7MAETbW0sqIVLJXRaiho8t/rqQ5C4bv3rjIGm1
-         KeJChIZKCh9aSqvAVtN8+xAdjmlLn4OF8wwbjKuzhi8ilWbK0hvwGhVu/O0N+/FBGCA8
-         wMMGrZHuAaTJ2VWZTz5h0QWkC5HiHBxSK8B5x5MYIWrOV1QQ6Tn5JDaihea+cJdPOJY1
-         +GR1rf6sVZyMLL5b33pHlv2DLdEop+tNdInqGAqd2piJc1SOfRLqnrBxtLWrD8Vq4b7N
-         atvNaf6VX5/mks426n8Lb1s0jtRSOKV3n4EFWN5E9mBxYoCTJux9RTT5jVXVTgiKNQIp
-         6Blw==
+        bh=r6oojRd9wGjZywldLmfsnpu/d0gdtcDmLaZ/t1Ckm/8=;
+        b=WrQfiHN1je8hcTWn349PJTeQ5pqYf7LIw4xZgFyloVr+CwHHboDuy5eQUnSGOvtSBp
+         /uoTOZ0iDX8Cp0JG8uI0I/VzBn3ui5i8GSltRGXluubbbppWVARUiEWj9NLeU5KzlF1B
+         Rgs/Mb/n94u7KhdfZl4+EZ+jmQ+DOX2ENJXK7Tg/qhX3wNbcpNk7NUB2AG3KqVuoevX5
+         gtMFc5CMXHLPV2my5hnq9Dah+LCOcuhyXkPVFHTWId2EShP/bXELds96hQ5uybOSr7MZ
+         gy4PQ19nWcXas5ThU+9RPEZ6Yy1ZBsn0CltHUDPZqTq4lhYOe6diw5yXzoQeuOfzzuAB
+         a+Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cBWGKY5TCpH3N2aAaFzNlY4Ec3j6NJwE2FJiVksSqjU=;
-        b=VtjzaaH7Uhw2TuYZ3A6Vv1w4eaSOw/ZLp/naZ1SAo2z4Jc1zVfGopOu69r7bU7KtcM
-         BDS0M0cHprWw2KoP53X71ku7VkvdofpjvLRBORiroXZ29YMmhgrgWSH9K05drabi4B5r
-         QsVhUDHiV+48chFH8HUd7W9JzgxYzFN5SFI9z3eEPBog8nw7EZXNI4jw20KgQFrAdE2K
-         JgJeH8MAvFECvdgG+nTXrICEQp1gBB/Vg9Oi3JHrhqEgYoSZuvwUxjg9bc16kjW9WnjG
-         YQTD+/+2NJxGjYJKI9303pcIHYG8xcHHdg3gctg4P2Myt9+NLsrAxRIGvjkrJ5vci2oy
-         5ixw==
-X-Gm-Message-State: ACrzQf37QI5/IZhIoDCGJvXqrgWwoRHWMdyAjOkk1MicN9vU8a/PwKDc
-        UFQpC8OEZBhE5wLs6leAg9Maehk/M/5nDA==
-X-Google-Smtp-Source: AMsMyM6pAGRiXqJ28AUdihDAzdraAKjZwwLt+ZQ0nsnVwICGWaTOTdw8V/Al69afRI0sMye0LZIDAw==
-X-Received: by 2002:a19:660a:0:b0:4aa:9a70:bcca with SMTP id a10-20020a19660a000000b004aa9a70bccamr21009972lfc.520.1668083207733;
-        Thu, 10 Nov 2022 04:26:47 -0800 (PST)
+        bh=r6oojRd9wGjZywldLmfsnpu/d0gdtcDmLaZ/t1Ckm/8=;
+        b=Rz9rzwc347166bRDRP/0dPMb1UdxMhKcdjU30FGotZAvzhT2cljFX+Mg9bkq+JF3d7
+         wZyFM2/2/wCLgcKwX4Zi/AEA/f5wa+8kivm8C6Lwa/Dqv+HW0aN1TzHZm+6f2u5idytJ
+         KJqigbTlZzOeJ+2DcDQTkf5K2zonHXBVcNSK1rwVD/qbIQmI9bFUHVXtpp9cgpiApKzq
+         6DO1cAVyyYgfBfG4ZXIqM8iDPKlyMtP+xGRzoT/H53fFQXhsKh/Un+xbhkLeq7UNd7Vu
+         wOq8oxASSn8jKn0j759AS5wlho0UkiKD1NWZdxbGz1ZqMtyPsE3g6lXYdRH81xFfimwo
+         gB1Q==
+X-Gm-Message-State: ACrzQf31mFtpt8+HNWSekqI3QZSR4oMid5X5f7GszTnpW1BKI02pEbHR
+        67XWz+5obotX11ONXNeU6DU=
+X-Google-Smtp-Source: AMsMyM7nyWffXx6XzKoDvbegcOD16IIRre08SE7TZFAZBi3ghAI7hnDoKNgXLl7xvlwWOFCXwk3V5g==
+X-Received: by 2002:a19:6708:0:b0:4a2:5be6:c0bf with SMTP id b8-20020a196708000000b004a25be6c0bfmr1576839lfc.390.1668085810123;
+        Thu, 10 Nov 2022 05:10:10 -0800 (PST)
 Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
-        by smtp.gmail.com with ESMTPSA id j23-20020a056512345700b00492d064e8f8sm2741049lfr.263.2022.11.10.04.26.46
+        by smtp.gmail.com with ESMTPSA id c15-20020a056512238f00b004979da67114sm2734508lfv.255.2022.11.10.05.10.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 04:26:47 -0800 (PST)
-Date:   Thu, 10 Nov 2022 15:26:44 +0300
+        Thu, 10 Nov 2022 05:10:09 -0800 (PST)
+Date:   Thu, 10 Nov 2022 16:10:06 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -60,27 +61,25 @@ Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 09/20] dt-bindings: PCI: dwc: Add
- interrupts/interrupt-names common properties
-Message-ID: <20221110122644.37eopjsjzewy4fvv@mobilestation>
+Subject: Re: [PATCH v6 17/20] PCI: dwc: Introduce generic resources getter
+Message-ID: <20221110131006.dkwrelulzrm52fwd@mobilestation>
 References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
- <20221107204934.32655-10-Sergey.Semin@baikalelectronics.ru>
- <TYBPR01MB5341E18D15BF78FFD6FA9782D83F9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20221108135218.v3jsla67372wt7ny@mobilestation>
- <CAL_JsqLC04=JA6b0ezsm06-SUsEQix=hZLwTgVDuswa_+41qgg@mail.gmail.com>
+ <20221107204934.32655-18-Sergey.Semin@baikalelectronics.ru>
+ <TYBPR01MB534178751E369DA4C031AE77D83E9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLC04=JA6b0ezsm06-SUsEQix=hZLwTgVDuswa_+41qgg@mail.gmail.com>
+In-Reply-To: <TYBPR01MB534178751E369DA4C031AE77D83E9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -91,63 +90,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 04:32:22PM -0600, Rob Herring wrote:
-> On Tue, Nov 8, 2022 at 7:52 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > Hi Yoshihiro
-> >
-> > On Tue, Nov 08, 2022 at 12:40:54PM +0000, Yoshihiro Shimoda wrote:
-> > > Hi Serge,
-> > >
-> > > > From: Serge Semin, Sent: Tuesday, November 8, 2022 5:49 AM
-> > > >
-> > > > Currently the 'interrupts' and 'interrupt-names' properties are defined
-> > > > being too generic to really describe any actual IRQ interface. Moreover
-> > > > the DW PCIe End-point devices are left with no IRQ signals. All of that
-> > > > can be fixed by adding the IRQ-related properties to the common DW PCIe
-> > > > DT-schemas in accordance with the hardware reference manual. The DW PCIe
-> > > > common DT-schema will contain the generic properties definitions with just
-> > > > a number of entries per property, while the DW PCIe RP/EP-specific schemas
-> > > > will have the particular number of items and the generic resource names
-> > > > listed.
-> > > >
-> > > > Note since there are DW PCI-based vendor-specific DT-bindings with the
-> > > > custom names assigned to the same IRQ resources we have no much choice but
-> > > > to add them to the generic DT-schemas in order to have the schemas being
-> > > > applicable for such devices. These names are marked as vendor-specific and
-> > > > should be avoided being used in new bindings in favor of the generic
-> > > > names.
-> > > >
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > >
-> > > > ---
-> > > >
-> > > > Note without the next dtschema tool fix
-> > > >
-> > > > --- a/lib.py 2022-09-29 15:17:13.100033810 +0300
-> > > > +++ b/lib.py     2022-09-29 15:19:54.886172794 +0300
-> > >
-> >
-> > > JFYI.
-> > >
-> > > git am command could not work correctly by this lib.py file:
-> > > ---
-> > > Applying: dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
-> > > error: lib.py: does not exist in index
-> > > Patch failed at 0001 dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
-> > > ---
-> > >
-> > > If I used patch command and skipped the lib.py, it could apply this patch correctly.
-> >
-> > Got it. Thanks for the note. I'll either drop this part on the next
-> > patchset revision (hopefully Rob will do something about that by then)
-> > or make it less looking like a patch so git am wouldn't be confused.
-> 
-> Now fixed in main branch. Thanks for the report.
+Hi Yoshihiro
 
-Ok. I'll drop that chunk from v7 then.
+On Wed, Nov 09, 2022 at 02:17:45AM +0000, Yoshihiro Shimoda wrote:
+> Hi Serge,
+> 
+> > From: Serge Semin, Sent: Tuesday, November 8, 2022 5:50 AM
+> > 
+> > Currently the DW PCIe Root Port and Endpoint CSR spaces are retrieved in
+> > the separate parts of the DW PCIe core driver. It doesn't really make
+> > sense since the both controller types have identical set of the core CSR
+> > regions: DBI, DBI CS2 and iATU/eDMA. Thus we can simplify the DW PCIe Host
+> > and EP initialization methods by moving the platform-specific registers
+> > space getting and mapping into a common method. It gets to be even more
+> > justified seeing the CSRs base address pointers are preserved in the
+> > common DW PCIe descriptor. Note all the OF-based common DW PCIe settings
+> > initialization will be moved to the new method too in order to have a
+> > single function for all the generic platform properties handling in single
+> > place.
+> > 
+> > A nice side-effect of this change is that the pcie-designware-host.c and
+> > pcie-designware-ep.c drivers are cleaned up from all the direct dw_pcie
+> > storage modification, which makes the DW PCIe core, Root Port and Endpoint
+> > modules more coherent.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created on v3 lap of the series.
+> > 
+> > Changelog v4:
+> > - Convert the method name from dw_pcie_get_res() to
+> >   dw_pcie_get_resources(). (@Bjorn)
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 26 +------
+> >  .../pci/controller/dwc/pcie-designware-host.c | 15 +---
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 75 ++++++++++++++-----
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  3 +
+> >  4 files changed, 65 insertions(+), 54 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 237bb01d7852..80a64b63c055 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -13,8 +13,6 @@
+> >  #include <linux/pci-epc.h>
+> >  #include <linux/pci-epf.h>
+> > 
+> > -#include "../../pci.h"
+> > -
+> >  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+> >  {
+> >  	struct pci_epc *epc = ep->epc;
+> > @@ -688,29 +686,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> >  	struct device *dev = pci->dev;
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> > -	struct device_node *np = dev->of_node;
+> 
+> Removing this np causes the following build error if CONFIG_PCIE_DW_EP is enabled:
+> ---
+>   CC      drivers/pci/controller/dwc/pcie-designware-ep.o
+> drivers/pci/controller/dwc/pcie-designware-ep.c: In function 'dw_pcie_ep_init':
+> drivers/pci/controller/dwc/pcie-designware-ep.c:751:35: error: 'np' undeclared (first use in this function); did you mean 'ep'?
+>   751 |         ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>       |                                   ^~
+>       |                                   ep
+> drivers/pci/controller/dwc/pcie-designware-ep.c:751:35: note: each undeclared identifier is reported only once for each function it appears in
+> ---
+> 
+> So, we should keep the np or use "dev->of_node" to the of_property_read_u8().
+
+Indeed. Thanks for noticing that. I'll fix it in v7.
 
 -Sergey
 
 > 
-> Rob
+> Best regards,
+> Yoshihiro Shimoda
+> 
