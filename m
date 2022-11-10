@@ -2,61 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B509624804
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 18:11:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3B562480A
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 18:14:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231472AbiKJRLT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 12:11:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
+        id S229638AbiKJROx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 12:14:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231605AbiKJRLA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 12:11:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6503A4B99C;
-        Thu, 10 Nov 2022 09:11:00 -0800 (PST)
+        with ESMTP id S229461AbiKJROw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 12:14:52 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCA61145C
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 09:14:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1EF05B82262;
-        Thu, 10 Nov 2022 17:10:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72471C433C1;
-        Thu, 10 Nov 2022 17:10:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5732161CE4
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 17:14:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A84C433C1;
+        Thu, 10 Nov 2022 17:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668100257;
-        bh=P8y8CmJlU1McSlaWZVB7GCSFqlAlNFeM9PX3F9Pd8os=;
+        s=k20201202; t=1668100490;
+        bh=IKcIyH17GeNOygv4ZCCJvlbwVchegQq2z60oFv//HiI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P6gBEt2gyjfaimTUJQyL8IZ/tKscp3q3rD26rwLD3nqyOlMwSa3z+WoxfnuFoYLle
-         pafSGwemv1ZRlaoYejad//tDxt0XPA0GHRlVqw3yLahE/7FFYiZAaDPm2FGr3nPPMQ
-         idw8CKAZ2exFA62rIqoLOeeVPVSnAtPCErizURgUMSHog3XIc+S1iAaZeJNK1YYIA4
-         8pVcsqwKCYYJcNQoxxm3QHYySTCG96RSvsthF6XUr3wA8rV/frTnGii1lHQj8l82+p
-         qymNTKgP71JhVzbvbtD53ApNYHjA+IpFPb7H4ZNeIOz4L2ygU9oUW9j1dFi61bxGzu
-         h8q0tBtCcOwbQ==
-Date:   Thu, 10 Nov 2022 11:10:55 -0600
+        b=VO70PDel4vgmb7xX2fQAp++IYLrn9mkI2lsscs9BMGPdHqLb4LWNFko8EHS7yFDy7
+         /z4V6xEQH05J4QLQJ16d/NfciXH+9I0Khv9/6f8MZ4Yy97nV0QwxWoyYqjIaqaurL6
+         WHxwxcQvPmMq2/BJquw81qlLwdg7rSjeVSJvi3CLX/Avq7YQE2XL0Zkqzmg5kv7vZW
+         MjUKWUp/xeooOW0lB1blESN9e78W11TGcnoXudKk437wnCT8Z9hR3rq521DGXNzB5i
+         NEjADoa/bc6k3dtC7AuWqcg2/P887n7/5SKjV4I8r+pn93tnBCov7roR9ukyLf9XH9
+         yCBrVPhZ62q2w==
+Date:   Thu, 10 Nov 2022 11:14:48 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "rrichter@amd.com" <rrichter@amd.com>,
-        "terry.bowman@amd.com" <terry.bowman@amd.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 9/9] cxl/acpi: Set ACPI's CXL _OSC to indicate CXL1.1
- support
-Message-ID: <20221110171055.GA627971@bhelgaas>
+To:     "Li, Ming" <ming4.li@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        ira.weiny@intel.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/DOE: adjust data object length
+Message-ID: <20221110171448.GA628197@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4d0da6a410ca49c1b70628a2a4814bdf2cbfce58.camel@intel.com>
+In-Reply-To: <4e83c0ea-6d40-f26a-5a30-29234c9d92a2@intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -66,18 +51,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 12:51:02AM +0000, Verma, Vishal L wrote:
-> On Wed, 2022-11-09 at 17:35 -0600, Bjorn Helgaas wrote:
+On Thu, Nov 10, 2022 at 09:27:52AM +0800, Li, Ming wrote:
+> On 11/10/2022 1:52 AM, Bjorn Helgaas wrote:
+> > On Wed, Nov 09, 2022 at 10:20:44AM +0800, Li Ming wrote:
+> >> The value of data object length 0x0 indicates 2^18 dwords being
+> >> transferred, it is introduced in PCIe r6.0,sec 6.30.1. This patch
+> >> adjusts the value of data object length for the above case on both
+> >> sending side and receiving side.
+> >>
+> >> Besides, it is unnecessary to check whether length is greater than
+> >> SZ_1M while receiving a response data object, because length from LENGTH
+> >> field of data object header, max value is 2^18.
+> >>
+> >> Signed-off-by: Li Ming <ming4.li@intel.com>
+> >> ---
+> >>  drivers/pci/doe.c | 21 +++++++++++++++++----
+> >>  1 file changed, 17 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> >> index e402f05068a5..204cbc570f63 100644
+> >> --- a/drivers/pci/doe.c
+> >> +++ b/drivers/pci/doe.c
+> >> @@ -29,6 +29,9 @@
+> >>  #define PCI_DOE_FLAG_CANCEL	0
+> >>  #define PCI_DOE_FLAG_DEAD	1
+> >>  
+> >> +/* Max data object length is 2^18 dwords */
+> >> +#define PCI_DOE_MAX_LENGTH	(2 << 18)
 
-> > I don't know the history, but OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT and
-> > OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT seem like sort of weird names
-> > since they don't match the spec at all ("RCD and RCH Port Register
-> > Access Supported" and "CXL VH Register Access Supported").
-> 
-> Ah the RCH/RCD and VH terminology was only introduced in the CXL-3.0
-> spec. When the above defines were added, the spec was at 2.0, and it
-> used the descriptions: "CXL 1.1 Port Register Access supported", and
-> "CXL 2.0 Port/Device Register Access supported" (Table 217 in 2.0).
+> >>  /**
+> >>   * struct pci_doe_mb - State for a single DOE mailbox
+> >>   *
+> >> @@ -107,6 +110,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+> >>  {
+> >>  	struct pci_dev *pdev = doe_mb->pdev;
+> >>  	int offset = doe_mb->cap_offset;
+> >> +	u32 length;
+> >>  	u32 val;
+> >>  	int i;
+> >>  
+> >> @@ -128,10 +132,12 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+> >>  		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
+> >>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+> >>  	/* Length is 2 DW of header + length of payload in DW */
+> >> +	length = 2 + task->request_pl_sz / sizeof(u32);
+> >> +	if (length == PCI_DOE_MAX_LENGTH)
+> >> +		length = 0;
+> > 
+> > Do you check for overflow anywhere?  What if length is
+> > PCI_DOE_MAX_LENGTH + 1?
+> > 
+> >>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+> >>  			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+> >> -					  2 + task->request_pl_sz /
+> >> -						sizeof(u32)));
+> >> +					  length);
+> >>  	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
+> >>  		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+> >>  				       task->request_pl[i]);
+> >> @@ -178,7 +184,10 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+> >>  	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> >>  
+> >>  	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> >> -	if (length > SZ_1M || length < 2)
+> >> +	/* A value of 0x0 indicates max data object length */
+> >> +	if (!length)
+> >> +		length = PCI_DOE_MAX_LENGTH;
+> >> +	if (length < 2)
+> >>  		return -EIO;
+> >>  
+> >>  	/* First 2 dwords have already been read */
+> >> @@ -520,8 +529,12 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> >>  	/*
+> >>  	 * DOE requests must be a whole number of DW and the response needs to
+> >>  	 * be big enough for at least 1 DW
+> >> +	 *
+> >> +	 * Max data object length is 1MB, and data object header occupies 8B,
+> >> +	 * thus request_pl_sz should not be greater than 1MB - 8B.
+> >>  	 */
+> >> -	if (task->request_pl_sz % sizeof(u32) ||
+> >> +	if (task->request_pl_sz > SZ_1M - 8 ||
+> >> +	    task->request_pl_sz % sizeof(u32) ||
+> > 
+> > Oh, I see, this looks like the check for overflow.  It would be nice
+> > if it were expressed in terms of PCI_DOE_MAX_LENGTH somehow.
+> > 
+> > It would also be nice, but maybe not practical, to have it closer to
+> > the FIELD_PREP above so it's more obvious that we never try to encode
+> > something too big.
+> > 
+> here is the beginning of a task, and starting to check
+> task->request_pl_sz, so I put request_pl_sz overflow checking here.
+>
+> do you mean that we keep task->request_pl_sz % sizeof(u32) here and
+> move request_pl_sz overflow checking to closer to the FIELD_PREP
+> above?
 
-Haha, that's annoying :)  I didn't dig back through the old versions.
-I guess CXL folks can decide whether to keep the old names or update.
+Yes, that's what I meant.
+
+I think the more important thing is to do the check using
+PCI_DOE_MAX_LENGTH if possible so the connection is obvious and
+consistent.
