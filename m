@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3165624C91
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:07:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59109624CA1
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:10:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232138AbiKJVHp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 16:07:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
+        id S231955AbiKJVKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 16:10:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232103AbiKJVHh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:07:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6872258BD6;
-        Thu, 10 Nov 2022 13:07:36 -0800 (PST)
+        with ESMTP id S231243AbiKJVKk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:10:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CD5A1
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 13:10:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E1134B8238E;
-        Thu, 10 Nov 2022 21:07:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E41C433C1;
-        Thu, 10 Nov 2022 21:07:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57E5F61E57
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 21:10:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65930C433D6;
+        Thu, 10 Nov 2022 21:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668114453;
-        bh=9J/8mtPefAQqogh4jFlbGu4+fqQ9vN2bfV5hD1uWbrI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZWu+EBIa70QL4S8G0ObyISCrLNZ0uU2/EmFiyH5ZJv4RsNowDJ7nogF6AphwUiSPy
-         madpFJ0j6Pl83dzdkBcyB6rPKS1MfeUytJaSrA+0ba8o0On0bVyDrq5HK5UB9r6vrC
-         c3NGAGSqgOpw59O+lsYebPWLj0Dvluoe1wXxzjOk0O4SJ6NTld+GIztG62bvXQ5sCz
-         qtIM4Vw9KVpUkcFe5vdLGRwPSU2wpIBWII7ZxZELKelwdbpUa+oe63tY54ORtOlUjP
-         F4Mz0vK4t9DegeViF+JS6PHMFSaSN1kz1rIuMAlzPJiE5aIf9T4VSxh9SGuEPeIH2d
-         Q91vXEvBMEjVA==
-Date:   Thu, 10 Nov 2022 15:07:31 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Liu Peibao <liupeibao@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: loongson: Skip scanning unavailable child devices
-Message-ID: <20221110210731.GA672063@bhelgaas>
+        s=k20201202; t=1668114637;
+        bh=SN686j/YswxVXuGnUWa6bGwBPJA3NM3iGYkGG3uoDhI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T/SxwzsqQ/sSaYwFG7cnOxh8knktKe/iwBgeSsxz/180rTsEuodSwBCkTu2FRNJIm
+         yiOVBj3l+84iS7ekSoXZOTVaQELBoLHDVUYzBjcWUiy+zGUZiKC/yMReJnonwQu5GA
+         YkS6FuOsTM9DDVBFnmcK2tHKbx+p4ptbTEQPCZilnT4fLlXCCYC/d4zm6PXEy//d9t
+         giLZ3HzkRnTx7uogg845gz7rS2yCwF0Ug3NDRhzjM1V/pXSmYNZEjjg8jbxItjJuLL
+         Ie5xpCaZFgJnXnO5JQ2ZkoM6DPo84tJXK6LrnbVuaiPcJptcLX6Tk066pDIhKVO4Fo
+         lgMSSgwN3QpqA==
+Received: by pali.im (Postfix)
+        id 8FD9A856; Thu, 10 Nov 2022 22:10:34 +0100 (CET)
+Date:   Thu, 10 Nov 2022 22:10:34 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2 1/7] PCI: Allow for indirecting capability registers
+Message-ID: <20221110211034.5y2z6ilgiys2jcw2@pali>
+References: <20221110195015.207-1-jonathan.derrick@linux.dev>
+ <20221110195015.207-2-jonathan.derrick@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221108064240.8030-1-liupeibao@loongson.cn>
+In-Reply-To: <20221110195015.207-2-jonathan.derrick@linux.dev>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,49 +59,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 02:42:40PM +0800, Liu Peibao wrote:
-> The PCI Controller of 2k1000 could not mask devices by setting vender ID or
-> device ID in configuration space header as invalid values. When there are
-> pins shareable between the platform device and PCI device, if the platform
-> device is preferred, we should not scan this PCI device. In the above
-> scene, add `status = "disabled"` property in DT node of this PCI device.
-> 
-> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+On Thursday 10 November 2022 12:50:09 Jonathan Derrick wrote:
+> Allow another driver to provide alternative operations when doing
+> capability register reads and writes. The intention is to have
+> pcie_bridge_emul provide alternate handlers for the Slot Capabilities, Slot
+> Control, and Slot Status registers. Alternate handlers can return > 0 if
+> unhandled, errno on error, or 0 on success. This could potentially be
+> used to handle quirks in a different manner.
+
+I think that this change should not be needed. Controller drivers
+pci-mvebu.c and pci-aardvark.c already provides those alternative
+operations when doing capability read and write, and it is working
+without need to touch pci/access.c file. They directly register
+pci_bridge_emul_init() device and then callbacks of this emulated bridge
+either touches config space HW registers or provide some emulation layer
+(for capabilities which are not provided by HW config space).
+
+This approach (which is already in use) has one big advantage: There is
+no need to touch common pci/access.c code, it only modifies code for
+specific HW - controller driver which needs that bridge emulator. All
+other HW platforms are unaffected / untouched. Whole emulator code is
+separated from the core pci access code.
+
+This is just my opinion, maybe Bjorn has different idea. I just wanted
+to show how it is implemented in existing drivers.
+
+> Signed-off-by: Jonathan Derrick <jonathan.derrick@linux.dev>
 > ---
-> V3 -> V4: 1. get rid of the masklist and search the status property
-> 	  directly.
->           2. check the status property only when accessing the vendor ID.
-> V2 -> V3: 1. use list_for_each_entry() for more clearly.
->           2. fix wrong use of sizeof().
-> V1 -> V2: use existing property "status" instead of adding new property.
+>  drivers/pci/access.c | 29 +++++++++++++++++++++++++++++
+>  include/linux/pci.h  | 11 +++++++++++
+>  2 files changed, 40 insertions(+)
 > 
->  drivers/pci/controller/pci-loongson.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 05c50408f13b..efca0b3b5a29 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -194,6 +194,17 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
->  			return NULL;
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 708c7529647f..dbfea6824bd4 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -424,6 +424,17 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
+>  		return ret;
 >  	}
 >  
-> +#ifdef CONFIG_OF
-> +	/* Don't access disabled devices. */
-> +	if (pci_is_root_bus(bus) && where == PCI_VENDOR_ID) {
-> +		struct device_node *dn;
-> +
-> +		dn = of_pci_find_child_device(bus->dev.of_node, devfn);
-> +		if (dn && !of_device_is_available(dn))
-> +			return NULL;
+> +	if (dev->caps_rw_ops) {
+> +		u32 reg;
+> +		ret = dev->caps_rw_ops->read(dev, pos, 4, &reg);
+> +		if (!ret) {
+> +			*val = reg & 0xffff;
+> +			return ret;
+> +		} else if (ret < 0) {
+> +			return ret;
+> +		}
 > +	}
-> +#endif
-
-Looks nice and simple, thanks for trying this out.
-
->  	/* CFG0 can only access standard space */
->  	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
->  		return cfg0_map(priv, bus, devfn, where);
+> +
+>  	/*
+>  	 * For Functions that do not implement the Slot Capabilities,
+>  	 * Slot Status, and Slot Control registers, these spaces must
+> @@ -459,6 +470,12 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
+>  		return ret;
+>  	}
+>  
+> +	if (dev->caps_rw_ops) {
+> +		ret = dev->caps_rw_ops->read(dev, pos, 4, val);
+> +		if (ret <= 0)
+> +			return ret;
+> +	}
+> +
+>  	if (pci_is_pcie(dev) && pcie_downstream_port(dev) &&
+>  	    pos == PCI_EXP_SLTSTA)
+>  		*val = PCI_EXP_SLTSTA_PDS;
+> @@ -475,6 +492,12 @@ int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val)
+>  	if (!pcie_capability_reg_implemented(dev, pos))
+>  		return 0;
+>  
+> +	if (dev->caps_rw_ops) {
+> +		int ret = dev->caps_rw_ops->write(dev, pos, 2, val);
+> +		if (ret <= 0)
+> +			return ret;
+> +	}
+> +
+>  	return pci_write_config_word(dev, pci_pcie_cap(dev) + pos, val);
+>  }
+>  EXPORT_SYMBOL(pcie_capability_write_word);
+> @@ -487,6 +510,12 @@ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
+>  	if (!pcie_capability_reg_implemented(dev, pos))
+>  		return 0;
+>  
+> +	if (dev->caps_rw_ops) {
+> +		int ret = dev->caps_rw_ops->write(dev, pos, 4, val);
+> +		if (ret <= 0)
+> +			return ret;
+> +	}
+> +
+>  	return pci_write_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+>  }
+>  EXPORT_SYMBOL(pcie_capability_write_dword);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 2bda4a4e47e8..ff47ef83ab38 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -311,6 +311,15 @@ struct pci_vpd {
+>  	u8		cap;
+>  };
+>  
+> +/*
+> + * Capability reads/write redirect
+> + * Returns 0, errno, or > 0 if unhandled
+> + */
+> +struct caps_rw_ops {
+> +	int (*read)(struct pci_dev *dev, int pos, int len, u32 *val);
+> +	int (*write)(struct pci_dev *dev, int pos, int len, u32 val);
+> +};
+> +
+>  struct irq_affinity;
+>  struct pcie_link_state;
+>  struct pci_sriov;
+> @@ -523,6 +532,8 @@ struct pci_dev {
+>  
+>  	/* These methods index pci_reset_fn_methods[] */
+>  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+> +
+> +	struct caps_rw_ops *caps_rw_ops;
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
 > -- 
-> 2.20.1
+> 2.30.2
 > 
