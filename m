@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C16C624AFD
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 20:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A255A624B02
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 20:53:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbiKJTxe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 14:53:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        id S229757AbiKJTxi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 14:53:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230422AbiKJTxc (ORCPT
+        with ESMTP id S231262AbiKJTxc (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 14:53:32 -0500
-Received: from resdmta-h1p-028597.sys.comcast.net (resdmta-h1p-028597.sys.comcast.net [IPv6:2001:558:fd02:2446::d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDBA47336
+Received: from resdmta-h1p-028598.sys.comcast.net (resdmta-h1p-028598.sys.comcast.net [IPv6:2001:558:fd02:2446::e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B0B48770
         for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 11:53:19 -0800 (PST)
 Received: from resomta-h1p-027912.sys.comcast.net ([96.102.179.201])
-        by resdmta-h1p-028597.sys.comcast.net with ESMTP
-        id tCeRofXGGwwPvtDZYoNduH; Thu, 10 Nov 2022 19:50:48 +0000
+        by resdmta-h1p-028598.sys.comcast.net with ESMTP
+        id tC1fo6ojOpchHtDZYoLN1D; Thu, 10 Nov 2022 19:50:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=comcastmailservice.net; s=20211018a; t=1668109848;
-        bh=Way0DAlL2ACj9a+XKDlJAFMBT/Xv2jTSB4J5Mymp4EY=;
+        bh=NLTClUwuOqPb+DvZnmkPWSVY7cPj58FgQv8QIi+tOjY=;
         h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
          Xfinity-Spam-Result;
-        b=Jd6DCUAG1EkFhnB4AtYmQsa2gV+f9s1dU+Qe29DVxNiCCp1H1JKQ325+arJXxBaP5
-         rM0o/eaJ35AcKCpgUsZ4GYYiXedDt3XPoBojxGbI9WXoPzAB+2Hu5W+f+p/OJSYE2m
-         WugCtQmLeouW7Qdni7pvejpSQfID/9HWDqZ7B8JSyoxyosJpHZ4QPPdmPTRp+wzgJs
-         hZgCi2xhs8qxi1uwIEYWFaOdIq+4tomSW5ii12obDBNy3x8BlCKQjNR/75A/AcSRLs
-         oaua5iy6WkCNy9i8wKIa7VmQPCjdygtLARKu1ZNzpkYoYt/5fIw9hwSR4ep6BQ3F2E
-         GSQcsqLRQKaGw==
+        b=kAyw+IFh8QzXJh/D8lEvh5kTU9KLSZ9sd88a2FE5QRToVPVeC3zvTpav5/+TTuOBZ
+         rYHNyRVNziuwpmr+2XSQKxLjlJ+qq71P97i4izyad/0/MsCUo189Q0WD11mZuch4Iq
+         PgT9AKTf0xdOAhSBfwuyAt11rKUeZCpsGAfTU2mS1CxniLSwrA/aYpaMZZC4h/I9ha
+         d3dkTcHXVPIqa3MZ/jT5Ybvd6dB8FT4bjOHlyjiVY0ROKd8ffNhc+nbEP+KuAs0C4I
+         Tg/O353UDIXTyYc6geY28fOBhN4k7Y5vzpQR8ewMr+6FcBmWja02okYVEq35Pd5xfZ
+         3eXf3sqvIjmag==
 Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
         by resomta-h1p-027912.sys.comcast.net with ESMTPA
-        id tDZ4oZTHiVTvltDZDoklht; Thu, 10 Nov 2022 19:50:28 +0000
-X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvgedrfeeggddufeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvehomhgtrghsthdqtfgvshhipdfqfgfvpdfpqffurfetoffkrfenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomheplfhonhgrthhhrghnucffvghrrhhitghkuceojhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvqeenucggtffrrghtthgvrhhnpedtteeljeffgfffveehhfetveefuedvheevffffhedtjeeuvdevgfeftddtheeftdenucfkphepjedurddvtdehrddukedurdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehjuggvrhhrihgtkhdqmhhosghlgedrrghmrhdrtghorhhprdhinhhtvghlrdgtohhmpdhinhgvthepjedurddvtdehrddukedurdehtddpmhgrihhlfhhrohhmpehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehvihguhigrshesnhhvihguihgrrdgtohhmpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhrvghniihordhpihgvrhgrlhhishhisegrrhhmrdgtohhmpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+        id tDZ4oZTHiVTvltDZEoklhz; Thu, 10 Nov 2022 19:50:29 +0000
+X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvgedrfeeggddufeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvehomhgtrghsthdqtfgvshhipdfqfgfvpdfpqffurfetoffkrfenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomheplfhonhgrthhhrghnucffvghrrhhitghkuceojhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvqeenucggtffrrghtthgvrhhnpedtteeljeffgfffveehhfetveefuedvheevffffhedtjeeuvdevgfeftddtheeftdenucfkphepjedurddvtdehrddukedurdehtdenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhephhgvlhhopehjuggvrhhrihgtkhdqmhhosghlgedrrghmrhdrtghorhhprdhinhhtvghlrdgtohhmpdhinhgvthepjedurddvtdehrddukedurdehtddpmhgrihhlfhhrohhmpehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehvihguhigrshesnhhvihguihgrrdgtohhmpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhrvghniihordhpihgvrhgrlhhishhisegrrhhmrdgtohhmpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
  hugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsseifuhhnnhgvrhdruggvpdhrtghpthhtohepphgrlhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvh
 X-Xfinity-VMeta: sc=-100.00;st=legit
 From:   Jonathan Derrick <jonathan.derrick@linux.dev>
@@ -42,9 +42,9 @@ Cc:     Manivannan Sadhasivam <mani@kernel.org>,
         <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: [PATCH v2 1/7] PCI: Allow for indirecting capability registers
-Date:   Thu, 10 Nov 2022 12:50:09 -0700
-Message-Id: <20221110195015.207-2-jonathan.derrick@linux.dev>
+Subject: [PATCH v2 2/7] PCI: Add pcie_port_slot_emulated stub
+Date:   Thu, 10 Nov 2022 12:50:10 -0700
+Message-Id: <20221110195015.207-3-jonathan.derrick@linux.dev>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221110195015.207-1-jonathan.derrick@linux.dev>
 References: <20221110195015.207-1-jonathan.derrick@linux.dev>
@@ -59,109 +59,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allow another driver to provide alternative operations when doing
-capability register reads and writes. The intention is to have
-pcie_bridge_emul provide alternate handlers for the Slot Capabilities, Slot
-Control, and Slot Status registers. Alternate handlers can return > 0 if
-unhandled, errno on error, or 0 on success. This could potentially be
-used to handle quirks in a different manner.
+Add the checks to allow an emulated slot. An emulated slot will use
+native Hotplug, AER, and PME services. It also needs to specify itself
+as a hotplug bridge in order for bridge sizing to account for hotplug
+reserved windows.
 
 Signed-off-by: Jonathan Derrick <jonathan.derrick@linux.dev>
 ---
- drivers/pci/access.c | 29 +++++++++++++++++++++++++++++
- include/linux/pci.h  | 11 +++++++++++
- 2 files changed, 40 insertions(+)
+ drivers/pci/pci-acpi.c          | 3 +++
+ drivers/pci/pcie/portdrv_core.c | 9 ++++++---
+ drivers/pci/probe.c             | 2 +-
+ include/linux/pci.h             | 2 ++
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 708c7529647f..dbfea6824bd4 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -424,6 +424,17 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
- 		return ret;
- 	}
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index a46fec776ad7..77a3c9e39966 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -798,6 +798,9 @@ bool pciehp_is_native(struct pci_dev *bridge)
+ 	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+ 		return false;
  
-+	if (dev->caps_rw_ops) {
-+		u32 reg;
-+		ret = dev->caps_rw_ops->read(dev, pos, 4, &reg);
-+		if (!ret) {
-+			*val = reg & 0xffff;
-+			return ret;
-+		} else if (ret < 0) {
-+			return ret;
-+		}
-+	}
++	if (pcie_port_slot_emulated(bridge))
++		return true;
 +
- 	/*
- 	 * For Functions that do not implement the Slot Capabilities,
- 	 * Slot Status, and Slot Control registers, these spaces must
-@@ -459,6 +470,12 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
- 		return ret;
- 	}
+ 	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+ 	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+ 		return false;
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 1ac7fec47d6f..b3c1e7d4ff10 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -209,7 +209,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	int services = 0;
  
-+	if (dev->caps_rw_ops) {
-+		ret = dev->caps_rw_ops->read(dev, pos, 4, val);
-+		if (ret <= 0)
-+			return ret;
-+	}
-+
- 	if (pci_is_pcie(dev) && pcie_downstream_port(dev) &&
- 	    pos == PCI_EXP_SLTSTA)
- 		*val = PCI_EXP_SLTSTA_PDS;
-@@ -475,6 +492,12 @@ int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val)
- 	if (!pcie_capability_reg_implemented(dev, pos))
- 		return 0;
+ 	if (dev->is_hotplug_bridge &&
+-	    (pcie_ports_native || host->native_pcie_hotplug)) {
++	    (pcie_ports_native || pcie_port_slot_emulated(dev) ||
++	     host->native_pcie_hotplug)) {
+ 		services |= PCIE_PORT_SERVICE_HP;
  
-+	if (dev->caps_rw_ops) {
-+		int ret = dev->caps_rw_ops->write(dev, pos, 2, val);
-+		if (ret <= 0)
-+			return ret;
-+	}
-+
- 	return pci_write_config_word(dev, pci_pcie_cap(dev) + pos, val);
+ 		/*
+@@ -222,14 +223,16 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 
+ #ifdef CONFIG_PCIEAER
+ 	if (dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer))
++	    (pcie_ports_native || pcie_port_slot_emulated(dev) ||
++	     host->native_aer))
+ 		services |= PCIE_PORT_SERVICE_AER;
+ #endif
+ 
+ 	/* Root Ports and Root Complex Event Collectors may generate PMEs */
+ 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+-	    (pcie_ports_native || host->native_pme)) {
++	    (pcie_ports_native || pcie_port_slot_emulated(dev) ||
++	     host->native_pme)) {
+ 		services |= PCIE_PORT_SERVICE_PME;
+ 
+ 		/*
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b66fa42c4b1f..86ac4d223eba 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1574,7 +1574,7 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
+ 	u32 reg32;
+ 
+ 	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
+-	if (reg32 & PCI_EXP_SLTCAP_HPC)
++	if (reg32 & PCI_EXP_SLTCAP_HPC || pcie_port_slot_emulated(pdev))
+ 		pdev->is_hotplug_bridge = 1;
  }
- EXPORT_SYMBOL(pcie_capability_write_word);
-@@ -487,6 +510,12 @@ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
- 	if (!pcie_capability_reg_implemented(dev, pos))
- 		return 0;
  
-+	if (dev->caps_rw_ops) {
-+		int ret = dev->caps_rw_ops->write(dev, pos, 4, val);
-+		if (ret <= 0)
-+			return ret;
-+	}
-+
- 	return pci_write_config_dword(dev, pci_pcie_cap(dev) + pos, val);
- }
- EXPORT_SYMBOL(pcie_capability_write_dword);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2bda4a4e47e8..ff47ef83ab38 100644
+index ff47ef83ab38..09f704337955 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -311,6 +311,15 @@ struct pci_vpd {
- 	u8		cap;
- };
+@@ -1655,6 +1655,8 @@ extern bool pcie_ports_native;
+ #define pcie_ports_native	false
+ #endif
  
-+/*
-+ * Capability reads/write redirect
-+ * Returns 0, errno, or > 0 if unhandled
-+ */
-+struct caps_rw_ops {
-+	int (*read)(struct pci_dev *dev, int pos, int len, u32 *val);
-+	int (*write)(struct pci_dev *dev, int pos, int len, u32 val);
-+};
++#define pcie_port_slot_emulated(dev) false
 +
- struct irq_affinity;
- struct pcie_link_state;
- struct pci_sriov;
-@@ -523,6 +532,8 @@ struct pci_dev {
- 
- 	/* These methods index pci_reset_fn_methods[] */
- 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
-+
-+	struct caps_rw_ops *caps_rw_ops;
- };
- 
- static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+ #define PCIE_LINK_STATE_L0S		BIT(0)
+ #define PCIE_LINK_STATE_L1		BIT(1)
+ #define PCIE_LINK_STATE_CLKPM		BIT(2)
 -- 
 2.30.2
 
