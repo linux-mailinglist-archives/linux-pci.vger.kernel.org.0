@@ -2,55 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4E2624C54
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:02:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBD51624C57
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:02:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231688AbiKJVCV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 16:02:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
+        id S231181AbiKJVCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 16:02:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231860AbiKJVCT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:02:19 -0500
+        with ESMTP id S230435AbiKJVCl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:02:41 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE545EFA
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 13:02:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1098A45EE4;
+        Thu, 10 Nov 2022 13:02:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0832AB8224F
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 21:02:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFAFC433C1;
-        Thu, 10 Nov 2022 21:02:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B9A1FB82381;
+        Thu, 10 Nov 2022 21:02:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFFAC433C1;
+        Thu, 10 Nov 2022 21:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668114135;
-        bh=tINnwNKzRqIRaSW5ZEl650mulWBp1Qe/aVQyhkrRyxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UPufBiFZ7Qcfx03lwzYqf8LMW29ZkSN66RRH49RnjCblrw4/WZhKcNi2+qtXTI15T
-         xBh9buD0xObRt8hn1VdjgPS2QbTxRCFneHBCo2yNQ5R+azffD/DWp2J/Exd8gM7g0D
-         yDqM4JL77TANMPDJFXUW5lqkLduxKwRdM8IgrHbmf6dEEaVdeAOjQ5nDBD/82AFFtH
-         dlpcBj3pyGJK+UHP5D4YrnA9aqhYJonqn7P9F6EkxNciyusbGHZR6/gnRz4pwLwxoW
-         WEYD9MvnKWchIWDHlqe9Wn59zi+wSuxPJ7NcFcbiyVSX3rZ4f2Rn5tTIFvHgOgq9PE
-         HWpaCLidnu18w==
-Received: by pali.im (Postfix)
-        id 30CD7856; Thu, 10 Nov 2022 22:02:12 +0100 (CET)
-Date:   Thu, 10 Nov 2022 22:02:12 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v2 5/7] PCI: pci-bridge-emul: Provide a helper to set
- behavior
-Message-ID: <20221110210212.2jpllczct5pggob4@pali>
-References: <20221110195015.207-1-jonathan.derrick@linux.dev>
- <20221110195015.207-6-jonathan.derrick@linux.dev>
+        s=k20201202; t=1668114157;
+        bh=dFjwsB2x4Vktj11UP1nFbKy1JuZUspP3pjwcHIsSSnc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iJwMckJy0uCcByLR5dTqb/sLhh/p4neWekIYZaZ3yeonbwH09ch8EqoG8ecGOC/gh
+         LxSdAJBLbKmEE3CXGDI3A7Vc6BCxXLJ/bsFq5hQJgqS/nai15IhiKGetEeKH4+vpT2
+         j9Ld+7uAe0Uz9IipZQ/88pm8pLqURo9XzvxQWuunebeReJqpcbJfuCN8BWniAwIWF9
+         a+ZwQoYjb1mS5vRmT3xSXjeYdGWxfBo/pZQHhYRV38fM2nHaPFfGhzmt8f50haLCEQ
+         7sSMDQr3yt4Z74/HTNY4ceRxsq+32kGBXwaNszYjSX1Y2pvyiMxqjjRM7Gykh+Y6zM
+         XSZjD4/Y6CHGA==
+Date:   Thu, 10 Nov 2022 15:02:35 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Joyce Ooi <joyce.ooi@intel.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/5] PCI: Remove unnecessary <linux/of_irq.h> includes
+Message-ID: <20221110210235.GA671572@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221110195015.207-6-jonathan.derrick@linux.dev>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20221031153954.1163623-1-helgaas@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,89 +74,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 10 November 2022 12:50:13 Jonathan Derrick wrote:
-> Add a handler to set behavior of a PCI or PCIe register. Add the
-> appropriate enums to specify the register's Read-Only, Read-Write, and
-> Write-1-to-Clear behaviors.
+On Mon, Oct 31, 2022 at 10:39:49AM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Signed-off-by: Jonathan Derrick <jonathan.derrick@linux.dev>
-
-I do not think that this is the correct way. Drivers should not need to
-tell bridge emulator that some register is read-only or read-write.
-Bridge emulator has already all required information in its internal
-structures.
-
-If there is a need to tell bridge emulator to "emulate" some optional
-feature, for example hot plug capabilities, then it would be better to
-extend pci_bridge_emul_init() flags and let init function to correctly
-fill all behavior bits. There is already PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
-flag which modify bridge prefetchable bits.
-
-In my opinion, all standard PCI/PCIe behavior bits should be in
-pci-bridge-emul.c source file and drivers should not modify them.
-I think that this approach makes implementation lot of cleaner.
-
-> ---
->  drivers/pci/pci-bridge-emul.c | 19 +++++++++++++++++++
->  drivers/pci/pci-bridge-emul.h | 10 ++++++++++
->  2 files changed, 29 insertions(+)
+> Many host controller drivers #include <linux/of_irq.h> even though they
+> don't need it.  Remove the unnecessary #includes.
 > 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index 9334b2dd4764..3c1a683ece66 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -46,6 +46,25 @@ struct pci_bridge_reg_behavior {
->  	u32 w1c;
->  };
->  
-> +void pci_bridge_emul_set_reg_behavior(struct pci_bridge_emul *bridge,
-> +				      bool pcie, int reg, u32 val,
-> +				      enum pci_bridge_emul_reg_behavior type)
-> +{
-> +	struct pci_bridge_reg_behavior *behavior;
-> +
-> +	if (pcie)
-> +		behavior = &bridge->pcie_cap_regs_behavior[reg / 4];
-> +	else
-> +		behavior = &bridge->pci_regs_behavior[reg / 4];
-> +
-> +	if (type == PCI_BRIDGE_EMUL_REG_BEHAVIOR_RO)
-> +		behavior->ro = val;
-> +	else if (type == PCI_BRIDGE_EMUL_REG_BEHAVIOR_RW)
-> +		behavior->rw = val;
-> +	else /* PCI_BRIDGE_EMUL_REG_BEHAVIOR_W1C */
-> +		behavior->w1c = val;
-> +}
-> +
->  static const
->  struct pci_bridge_reg_behavior pci_regs_behavior[PCI_STD_HEADER_SIZEOF / 4] = {
->  	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
-> diff --git a/drivers/pci/pci-bridge-emul.h b/drivers/pci/pci-bridge-emul.h
-> index 2a0e59c7f0d9..b2401d58518c 100644
-> --- a/drivers/pci/pci-bridge-emul.h
-> +++ b/drivers/pci/pci-bridge-emul.h
-> @@ -72,6 +72,12 @@ struct pci_bridge_emul;
->  typedef enum { PCI_BRIDGE_EMUL_HANDLED,
->  	       PCI_BRIDGE_EMUL_NOT_HANDLED } pci_bridge_emul_read_status_t;
->  
-> +enum pci_bridge_emul_reg_behavior {
-> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_RO,
-> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_RW,
-> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_W1C,
-> +};
-> +
->  struct pci_bridge_emul_ops {
->  	/*
->  	 * Called when reading from the regular PCI bridge
-> @@ -161,4 +167,8 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
->  int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
->  			       int size, u32 value);
->  
-> +void pci_bridge_emul_set_reg_behavior(struct pci_bridge_emul *bridge,
-> +				      bool pcie, int reg, u32 val,
-> +				      enum pci_bridge_emul_reg_behavior type);
-> +
->  #endif /* __PCI_BRIDGE_EMUL_H__ */
-> -- 
-> 2.30.2
+> v2: https://lore.kernel.org/r/20221025185147.665365-1-helgaas@kernel.org/
+> v1: https://lore.kernel.org/r/20221019195452.37606-1-helgaas@kernel.org/
 > 
+> Changes from v2 to v3:
+>   - Include <linux/irqdomain.h> explicitly in xgene-msi, which doesn't need
+>     <linux/of_irq.h> itself, but relied on it to include
+>     <linux/irqdomain.h>.  On x86, this was covered up by the fact that
+>     <linux/msi.h> includes <asm/msi.h>, which includes <asm/irqdomain.h>,
+>     which includes <linux/irqdomain.h>.  But on parisc, <asm/msi.h> is
+>     actually asm-generic/msi.h, which does *not* include
+>     <linux/irqdomain.h>
+>   - Pick up tags from Conor Dooley and Thomas Petazzoni
+> 
+> Changes from v1 to v2:
+>   - Include <linux/irqdomain.h> explicitly in altera-msi and microchip,
+>     which don't need <linux/of_irq.h> itself, but relied on it to include
+>     <linux/irqdomain.h>
+>   - Include <linux/irqdomain.h> explicitly in mvebu, which needs both it
+>     and <linux/of_irq.h>
+> 
+> Bjorn Helgaas (5):
+>   PCI: altera-msi: Include <linux/irqdomain.h> explicitly
+>   PCI: microchip: Include <linux/irqdomain.h> explicitly
+>   PCI: mvebu: Include <linux/irqdomain.h> explicitly
+>   PCI: xgene-msi: Include <linux/irqdomain.h> explicitly
+>   PCI: Remove unnecessary <linux/of_irq.h> includes
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c   | 1 -
+>  drivers/pci/controller/dwc/pci-layerscape.c  | 1 -
+>  drivers/pci/controller/dwc/pcie-armada8k.c   | 1 -
+>  drivers/pci/controller/dwc/pcie-tegra194.c   | 1 -
+>  drivers/pci/controller/pci-mvebu.c           | 1 +
+>  drivers/pci/controller/pci-v3-semi.c         | 1 -
+>  drivers/pci/controller/pci-xgene-msi.c       | 2 +-
+>  drivers/pci/controller/pci-xgene.c           | 1 -
+>  drivers/pci/controller/pcie-altera-msi.c     | 2 +-
+>  drivers/pci/controller/pcie-iproc-platform.c | 1 -
+>  drivers/pci/controller/pcie-iproc.c          | 1 -
+>  drivers/pci/controller/pcie-microchip-host.c | 2 +-
+>  drivers/pci/controller/pcie-rockchip-host.c  | 1 -
+>  drivers/pci/controller/pcie-xilinx-cpm.c     | 1 -
+>  drivers/pci/controller/pcie-xilinx-nwl.c     | 1 -
+>  15 files changed, 4 insertions(+), 14 deletions(-)
+
+I put these on a pci/kbuild branch that I propose to merge in after
+everything else.  Lorenzo, let me know if you prefer another approach.
+
+Bjorn
