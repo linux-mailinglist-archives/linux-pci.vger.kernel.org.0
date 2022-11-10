@@ -2,118 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48581624C51
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:01:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B4E2624C54
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 22:02:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231428AbiKJVBl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 16:01:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
+        id S231688AbiKJVCV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 16:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231342AbiKJVBk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:01:40 -0500
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F325431EE9;
-        Thu, 10 Nov 2022 13:01:39 -0800 (PST)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-13b23e29e36so3494852fac.8;
-        Thu, 10 Nov 2022 13:01:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXJtyHEr+ciozyD19jwAQk+e1bvRNjgF+Op8DGPG9rY=;
-        b=u3+LnnzPZwMxzAVjd7w7nd/DI1fXgGySZc6+XwvVYBdLLdaLBHpTtKglL27naKLCeM
-         OhhmJ48cl3Mh+WDTCCefFT7uw9aivVGFBHuIB5B/anuV0fFvffKh2FPxKxrYAXqvo0MJ
-         gdCxZ7bLL93aLwNfByqZ+RgqnnP95hMo185OD4RsWeJ50a6GzPRopqQf6SmwYG+qJH4x
-         FXYCT+JMk8gwYnTQV+CqfcQbqzMguftocwbqtDv0SFU2DsUhnCp8C9MJ7ad7A52lrh7P
-         ba8WAggy18RGmydnqWKwuvSADttGDjYyEHl/hVUx6Q+GEMZY4BgnC+MIdXttNz9SXMLy
-         3LMw==
-X-Gm-Message-State: ACrzQf3bigu260Zw+Pa6/cnQjOBJbE9SpGHLnGLPqBfKAPDi7ieIBsYM
-        xPgH9NiINwqeKZvi6sdfpQ==
-X-Google-Smtp-Source: AMsMyM4ngmuAwOYwkleFC9q+x5ykJa6ii8672Wg9jIR4LOg7CXPbbjbsf8Mjpcq5XmD/jiaAnb8HXA==
-X-Received: by 2002:a05:6870:7b89:b0:132:32c5:42ad with SMTP id jf9-20020a0568707b8900b0013232c542admr2131456oab.123.1668114099169;
-        Thu, 10 Nov 2022 13:01:39 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id s83-20020aca5e56000000b0035028730c90sm223079oib.1.2022.11.10.13.01.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 13:01:38 -0800 (PST)
-Received: (nullmailer pid 976711 invoked by uid 1000);
-        Thu, 10 Nov 2022 21:01:40 -0000
-Date:   Thu, 10 Nov 2022 15:01:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        caihuoqing <caihuoqing@baidu.com>, linux-kernel@vger.kernel.org,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        devicetree@vger.kernel.org,
+        with ESMTP id S231860AbiKJVCT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 16:02:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE545EFA
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 13:02:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0832AB8224F
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 21:02:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFAFC433C1;
+        Thu, 10 Nov 2022 21:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668114135;
+        bh=tINnwNKzRqIRaSW5ZEl650mulWBp1Qe/aVQyhkrRyxc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UPufBiFZ7Qcfx03lwzYqf8LMW29ZkSN66RRH49RnjCblrw4/WZhKcNi2+qtXTI15T
+         xBh9buD0xObRt8hn1VdjgPS2QbTxRCFneHBCo2yNQ5R+azffD/DWp2J/Exd8gM7g0D
+         yDqM4JL77TANMPDJFXUW5lqkLduxKwRdM8IgrHbmf6dEEaVdeAOjQ5nDBD/82AFFtH
+         dlpcBj3pyGJK+UHP5D4YrnA9aqhYJonqn7P9F6EkxNciyusbGHZR6/gnRz4pwLwxoW
+         WEYD9MvnKWchIWDHlqe9Wn59zi+wSuxPJ7NcFcbiyVSX3rZ4f2Rn5tTIFvHgOgq9PE
+         HWpaCLidnu18w==
+Received: by pali.im (Postfix)
+        id 30CD7856; Thu, 10 Nov 2022 22:02:12 +0100 (CET)
+Date:   Thu, 10 Nov 2022 22:02:12 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 05/20] dt-bindings: PCI: dwc: Add phys/phy-names
- common properties
-Message-ID: <166811409796.976609.332316910295244271.robh@kernel.org>
-References: <20221107204934.32655-1-Sergey.Semin@baikalelectronics.ru>
- <20221107204934.32655-6-Sergey.Semin@baikalelectronics.ru>
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2 5/7] PCI: pci-bridge-emul: Provide a helper to set
+ behavior
+Message-ID: <20221110210212.2jpllczct5pggob4@pali>
+References: <20221110195015.207-1-jonathan.derrick@linux.dev>
+ <20221110195015.207-6-jonathan.derrick@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221107204934.32655-6-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221110195015.207-6-jonathan.derrick@linux.dev>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thursday 10 November 2022 12:50:13 Jonathan Derrick wrote:
+> Add a handler to set behavior of a PCI or PCIe register. Add the
+> appropriate enums to specify the register's Read-Only, Read-Write, and
+> Write-1-to-Clear behaviors.
+> 
+> Signed-off-by: Jonathan Derrick <jonathan.derrick@linux.dev>
 
-On Mon, 07 Nov 2022 23:49:19 +0300, Serge Semin wrote:
-> It's normal to have the DW PCIe RP/EP DT-nodes equipped with the explicit
-> PHY phandle references. There can be up to 16 PHYs attach in accordance
-> with the maximum number of supported PCIe lanes. Let's extend the common
-> DW PCIe controller schema with the 'phys' and 'phy-names' properties
-> definition. There two types PHY names are defined: preferred generic names
-> '^pcie[0-9]+$' and non-preferred vendor-specific names
-> '^pcie([0-9]+|-?phy[0-9]*)?$' so to match the names currently supported by
-> the DW PCIe platform drivers ("pcie": meson; "pciephy": qcom, imx6;
-> "pcie-phy": uniphier, rockchip, spear13xx; "pcie": intel-gw; "pcie-phy%d":
-> keystone, dra7xx; "pcie": histb, etc).
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch unpinned from the next one:
->   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
->   by the Rob' request. (@Rob)
-> 
-> Changelog v5:
-> - Add a note about having line-based PHY phandles order. (@Rob)
-> - Prefer 'pcie[0-9]+' PHY-names over the rest of the cases. (@Rob)
-> 
-> Changelog v6:
-> - Add the Nvidia Tegra194-specific "p2u-[0-7]" phy-names too. (@DT-tbot)
-> - Drop 'deprecated' keywords from the vendor-specific names. (@Rob)
-> ---
->  .../bindings/pci/snps,dw-pcie-common.yaml     | 24 +++++++++++++++++++
->  .../bindings/pci/snps,dw-pcie-ep.yaml         |  3 +++
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  3 +++
->  3 files changed, 30 insertions(+)
-> 
+I do not think that this is the correct way. Drivers should not need to
+tell bridge emulator that some register is read-only or read-write.
+Bridge emulator has already all required information in its internal
+structures.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+If there is a need to tell bridge emulator to "emulate" some optional
+feature, for example hot plug capabilities, then it would be better to
+extend pci_bridge_emul_init() flags and let init function to correctly
+fill all behavior bits. There is already PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
+flag which modify bridge prefetchable bits.
+
+In my opinion, all standard PCI/PCIe behavior bits should be in
+pci-bridge-emul.c source file and drivers should not modify them.
+I think that this approach makes implementation lot of cleaner.
+
+> ---
+>  drivers/pci/pci-bridge-emul.c | 19 +++++++++++++++++++
+>  drivers/pci/pci-bridge-emul.h | 10 ++++++++++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+> index 9334b2dd4764..3c1a683ece66 100644
+> --- a/drivers/pci/pci-bridge-emul.c
+> +++ b/drivers/pci/pci-bridge-emul.c
+> @@ -46,6 +46,25 @@ struct pci_bridge_reg_behavior {
+>  	u32 w1c;
+>  };
+>  
+> +void pci_bridge_emul_set_reg_behavior(struct pci_bridge_emul *bridge,
+> +				      bool pcie, int reg, u32 val,
+> +				      enum pci_bridge_emul_reg_behavior type)
+> +{
+> +	struct pci_bridge_reg_behavior *behavior;
+> +
+> +	if (pcie)
+> +		behavior = &bridge->pcie_cap_regs_behavior[reg / 4];
+> +	else
+> +		behavior = &bridge->pci_regs_behavior[reg / 4];
+> +
+> +	if (type == PCI_BRIDGE_EMUL_REG_BEHAVIOR_RO)
+> +		behavior->ro = val;
+> +	else if (type == PCI_BRIDGE_EMUL_REG_BEHAVIOR_RW)
+> +		behavior->rw = val;
+> +	else /* PCI_BRIDGE_EMUL_REG_BEHAVIOR_W1C */
+> +		behavior->w1c = val;
+> +}
+> +
+>  static const
+>  struct pci_bridge_reg_behavior pci_regs_behavior[PCI_STD_HEADER_SIZEOF / 4] = {
+>  	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
+> diff --git a/drivers/pci/pci-bridge-emul.h b/drivers/pci/pci-bridge-emul.h
+> index 2a0e59c7f0d9..b2401d58518c 100644
+> --- a/drivers/pci/pci-bridge-emul.h
+> +++ b/drivers/pci/pci-bridge-emul.h
+> @@ -72,6 +72,12 @@ struct pci_bridge_emul;
+>  typedef enum { PCI_BRIDGE_EMUL_HANDLED,
+>  	       PCI_BRIDGE_EMUL_NOT_HANDLED } pci_bridge_emul_read_status_t;
+>  
+> +enum pci_bridge_emul_reg_behavior {
+> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_RO,
+> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_RW,
+> +	PCI_BRIDGE_EMUL_REG_BEHAVIOR_W1C,
+> +};
+> +
+>  struct pci_bridge_emul_ops {
+>  	/*
+>  	 * Called when reading from the regular PCI bridge
+> @@ -161,4 +167,8 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
+>  int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
+>  			       int size, u32 value);
+>  
+> +void pci_bridge_emul_set_reg_behavior(struct pci_bridge_emul *bridge,
+> +				      bool pcie, int reg, u32 val,
+> +				      enum pci_bridge_emul_reg_behavior type);
+> +
+>  #endif /* __PCI_BRIDGE_EMUL_H__ */
+> -- 
+> 2.30.2
+> 
