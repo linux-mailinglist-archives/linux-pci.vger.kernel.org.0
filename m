@@ -2,85 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FD162441B
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 15:20:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9BEC624536
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Nov 2022 16:10:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231159AbiKJOUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Nov 2022 09:20:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
+        id S231220AbiKJPKM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Nov 2022 10:10:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbiKJOUP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 09:20:15 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2571A388
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 06:20:14 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id f37so3509429lfv.8
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 06:20:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GKIM7k+YSkhSJchQG59Vcw7ysRCT3D7i5Em2qQX+ntk=;
-        b=gOf/GguwT/ZqoSTDal1pRPsRe+sI+lt0qA65Q11J6hdecTXMqYYSNEwDEGH1ODv8ZZ
-         NOqAIQtICm+O4yp5H1Xn6MAJoBmzgWxC09D/4yQh8VKBr9Ivs2HEuHXRQD7hf+fDJQt2
-         7EOvBqo84G1TWsDEEpFCxMmKOKk2mBEYXPzPjvDpDzpQxbVkx1SxB2ae4AJDLHB1aHaM
-         2gSIrNUyjCRw8BjEgwey6qGlKFpdBOlwFu4Dfo7qUqwvSJpoTANoGsI+52JT9kTPsX8J
-         ogO+RK+maF8sXinpSDDMQ2/zK3XlSSGGSKARBVUTqnQxrj82a0X7Ke0wHg3qXZAUaLUA
-         SIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKIM7k+YSkhSJchQG59Vcw7ysRCT3D7i5Em2qQX+ntk=;
-        b=dQUJY0XRi0aFt5Y/KIpoEYEXqxtC8qicXHvw9V2c4nfBkpT8ntRFwbiiwDTqyb+nym
-         aCsEayNePwU/CgVxBWkAKbbmJeTyL6YMpnNJji4ChBOHuWiVpEPsAKQGGcUulKfSpYTG
-         3gEjxVskv5w8EIUDjkacWh6MQWOxH+OuUJzjShH231lRC6bjUeX9wXAJvJ9ZLr4mpyPz
-         CSxWHp3U2Nbzupl0wcP8to/8D1+XFedruYYdkIYChLHX/9d7yOjf0VyaFzTTMv3t69R4
-         Kj+RRcnZ6zo7xtVBEVwVvswWdMgvMV3dX6jq1NQa/aY76GBgWkrRH1Y5LA2bvdemAECL
-         ri5A==
-X-Gm-Message-State: ANoB5pmS7p55ABEzh5v+fkOOV1ZtKayNPVQL3blGrZha110AKXH04j39
-        BKXFIBlqCGps2KeV9FMuC+RcKA==
-X-Google-Smtp-Source: AA0mqf6UHa2taM8UHFO2M6pHk/KOhKDjydLDTxwianehLxR0LBkkmXjWc7S9lghiT8p+wT4pPK35JQ==
-X-Received: by 2002:a05:6512:3b0f:b0:4b3:b6db:8ca7 with SMTP id f15-20020a0565123b0f00b004b3b6db8ca7mr1217969lfv.590.1668090012679;
-        Thu, 10 Nov 2022 06:20:12 -0800 (PST)
-Received: from [10.10.15.130] ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id u28-20020a2eb81c000000b0026dc7b59d8esm2700050ljo.22.2022.11.10.06.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 06:20:12 -0800 (PST)
-Message-ID: <37fe9a22-7ca0-e4e5-ebff-4eb56dbb74eb@linaro.org>
-Date:   Thu, 10 Nov 2022 17:20:11 +0300
+        with ESMTP id S230522AbiKJPKH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 10:10:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6143F2717C;
+        Thu, 10 Nov 2022 07:10:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 06444B821FB;
+        Thu, 10 Nov 2022 15:10:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D3D2C433D6;
+        Thu, 10 Nov 2022 15:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668093004;
+        bh=AujrZuiZFbSEohYd8bfXHsNpILj3znFX233QjbyReEQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gXXMSViqmZAEi4zuSiUdSq7wVA9hX0k5e5JI5jzTr/Te0YSPg0IpE0KYGMCaz+15Y
+         n178IZ4e6iauMJKAWG7d7fs2yrwaalFa96WIT/HTL24gZpY2KDRxXOAaacOi/un43q
+         f8ZPoXLnVoComDLlJv1n9+GOMNZpFNXcJi7KQosSds/4Cir51tKUciYkbnj3bDZCq0
+         dFTSXL1QiQFR7w5cnVFJKgo/OueZ14pRXm+Ed0V/RfTUsbzMZ8M7wuPnzv0sKxerpx
+         Di5m2py2A6rIJsUTYffbiNdH+BpIGz2Dq1w6Uq8y5fnnTpghkYppS5mHrZ26EFCjSc
+         TxGePKL2BstjA==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, andersson@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        kw@linux.com, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Fix error message for reset_control_assert()
+Date:   Thu, 10 Nov 2022 16:09:55 +0100
+Message-Id: <166809298014.141188.2697758587497219.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221109094039.25753-1-manivannan.sadhasivam@linaro.org>
+References: <20221109094039.25753-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: sm8350: add PCIe devices
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org
-References: <20221110103345.729018-1-dmitry.baryshkov@linaro.org>
- <20221110103345.729018-8-dmitry.baryshkov@linaro.org>
- <Y2zYHEZDbNoGumTl@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <Y2zYHEZDbNoGumTl@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,49 +55,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/11/2022 13:53, Johan Hovold wrote:
-> On Thu, Nov 10, 2022 at 01:33:44PM +0300, Dmitry Baryshkov wrote:
->> Add PCIe0 and PCIe1 (and corresponding PHY) devices found on SM8350
->> platform. The PCIe0 is a 1-lane Gen3 host, PCIe1 is a 2-lane Gen3 host.
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8350.dtsi | 246 ++++++++++++++++++++++++++-
->>   1 file changed, 244 insertions(+), 2 deletions(-)
+On Wed, 9 Nov 2022 15:10:39 +0530, Manivannan Sadhasivam wrote:
+> Fix the error message to mention "assert" instead of "deassert".
 > 
->> @@ -1761,6 +1957,52 @@ tlmm: pinctrl@f100000 {
->>   			gpio-ranges = <&tlmm 0 0 204>;
->>   			wakeup-parent = <&pdc>;
->>   
->> +			pcie0_default_state: pcie0-default-state {
->> +				perst-pins {
->> +					pins = "gpio94";
->> +					function = "gpio";
->> +					drive-strength = <2>;
->> +					bias-pull-down;
->> +				};
->> +
->> +				clkreq-pins {
->> +					pins = "gpio95";
->> +					function = "pcie0_clkreqn";
->> +					drive-strength = <2>;
->> +					bias-pull-up;
->> +				};
->> +
->> +				wake-pins {
->> +					pins = "gpio96";
->> +					function = "gpio";
->> +					drive-strength = <2>;
->> +					bias-pull-up;
->> +				};
->> +			};
 > 
-> The pinconfig should go in the board file.
 
-Usually yes. However for the PCIe we usually put them into the main 
-.dtsi. See sm8[124]50.dtsi.
+Applied to pci/dwc, thanks!
 
--- 
-With best wishes
-Dmitry
+[1/1] PCI: qcom: Fix error message for reset_control_assert()
+      https://git.kernel.org/lpieralisi/pci/c/fba31beab357
 
+Thanks,
+Lorenzo
