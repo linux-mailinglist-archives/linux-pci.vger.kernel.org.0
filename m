@@ -2,101 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF3AC62531E
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 06:37:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2418625380
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 07:22:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231777AbiKKFh2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 00:37:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
+        id S232836AbiKKGWa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 01:22:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbiKKFh0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 00:37:26 -0500
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2065.outbound.protection.outlook.com [40.107.101.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC01864A2B;
-        Thu, 10 Nov 2022 21:37:24 -0800 (PST)
+        with ESMTP id S230303AbiKKGWX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 01:22:23 -0500
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11022018.outbound.protection.outlook.com [52.101.53.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD8A663CF;
+        Thu, 10 Nov 2022 22:22:22 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aPL9G6eY8bx1ZIL/f2TP2Kn1CzDw1jQ/7uhRqYbhjFx3CmizR/Keq+wH8hUfW3RtOyE0MgesypQ/XVg9Oima8aXoLToz6jRFvqqfVprNInxg444xeq0mLNT3SkLjpVU5GGEZdTHLrdUvKM+voOwJsmrmLufV3VnDIoeGKLK/l1sCKo1qYMYLA+moSyvGSvaHlfq7gG2gKq0sGCE/csrmHY7/3KSmxnVSR/aVE0Ni0XhRsqiFdu9KVF8vRWQIuwXOe+QNtr5/wqzKE3RtybHScDiunVK/kB95mq+54Kqyv4QLr6jRzt0zX3t7lBI3tVoVyFLJpipAAtL4uWlRzeQL7Q==
+ b=LLelYF1r1+JEX1LadeeJ/b+hFJuRDpOWEAgw4z9QjTCd5vk38cxXp98uu2qbCXtkdPO18+vH1azyr+/76w78H6fKXBY8aZ2VePejoiudr+o7ytTZPCLcxjQ582JlLSMogN3dClsbWnfkEoV0ejdNpjMIm64XZb8aiJAtvaBgC0+UgCSrDZ/9QIOmMvyIftV6k1PUf2rWayl8HWbCCloRbSlEZFDowJZBxoZJul3F1D1S1h1o89ReZ4S8RZUQxgocVvrWFDh6qxBkp6tqlQxqC5SOPdrVbTBZTLHgA4Jk5WYGD+A95wGuxvBvvvhK77d6wGMH30hHKZqr0Z0/G8zBjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=taz/J4gZ722glgLXRIimXriPXeEAZv1K5B1ajraYkf4=;
- b=h2R8oK8/wP56gDZVnlRxKR3PcmthVqL54KDQJ4is6IHJGLljz3Di4A4kKDm7AjH7IZKk4/8Bff97GlikqdneRcVWWgWhweiX1Dz6ROceu2t7HC2UEPJl6D8mjNs0a9n5miFcKa7RdMkp2kO3tVpS2JGWRRtNG53qdaaB4bxGgVciOuP9Seaq52t4hJ+Ryg7l1U5ht58PxLXgJnrLgwGvOO5VhDW5mKB5Sur/SULM4ozkWl9VWwdG+eTopNj8zNa9xVurp/oFlezKVGLB0lb+dOh3BoVc/4e/TkePArnZs8iTiGzDyez20DtMo+Oqb8Wf7YE8Dv5elVtfr+pRleLnaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=s3HhMK3z+9LYIWEVDiSqYzVhym9msgayXbL2cWDGX9o=;
+ b=mJNy8+ufLfL4pgSTMc2RmfkEShN1OyoB1Jcp1uteB9UmEyFGSwOM8KhxOTlvv0uK8Uwa9hLlGSepoDlhBX6ElpBIhwVfdEui6wr/VDKnQcuxgqIvHeonFuqRu38RqibPYbQqzF3i4Nc06AtnEgd1imvXuK3DeoaiMpC6GUqX3VQYdSZKWsdio2YzMpHEIeksvfY8IYpZymdSDOxJUaG5w6EEK/FlPICRpl8RfnhdcnHM6JymD9oeZRwozyzxLYoMCHtp3uw7CTM5el+FYlrShTZoSvWYBlNBDxoO8J69+ZEhNzJVZvTAlYsHkNuKsWOnPE7U1fRGZC5XEGRPKBkiPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taz/J4gZ722glgLXRIimXriPXeEAZv1K5B1ajraYkf4=;
- b=msp68y0o6Z+bSvXzs2OSlG04xeUJWBHVqqMsu0fs0XGXRHMpgRt00P+bjZvoL8p8+/xFYi6Nng4oJ0G4TRstkT0tuMGuug0YJ/bv35RM6FxawQKOXZPdILbzRr/DsgPrWo0rY3jqhmGFaePHDwZ+OCzkH4Y2OvY7ZrGuYE1mt/c=
-Received: from DM5PR07CA0092.namprd07.prod.outlook.com (2603:10b6:4:ae::21) by
- PH7PR12MB5904.namprd12.prod.outlook.com (2603:10b6:510:1d8::19) with
+ bh=s3HhMK3z+9LYIWEVDiSqYzVhym9msgayXbL2cWDGX9o=;
+ b=LdA0w94MlAdqTmZnFBLUcQQ2GhjtreKbNnJCGtSbWBlS4JOIzXFGTMGu3RczYjYL+FpHwikWvbe1lI0SsgTRwNTSTsk5QvbWVvXyElEA00WT+jy9Nt9Dt+eN0ywEwONj2zSREJtS3N63XXYeDG7u2nT7gA3T2izCeZJZ/kODLHQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by MW4PR21MB1857.namprd21.prod.outlook.com (2603:10b6:303:74::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.13; Fri, 11 Nov
- 2022 05:37:22 +0000
-Received: from DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:ae:cafe::7) by DM5PR07CA0092.outlook.office365.com
- (2603:10b6:4:ae::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.24 via Frontend
- Transport; Fri, 11 Nov 2022 05:37:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT089.mail.protection.outlook.com (10.13.173.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5813.12 via Frontend Transport; Fri, 11 Nov 2022 05:37:21 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 10 Nov
- 2022 23:37:21 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 10 Nov
- 2022 21:37:20 -0800
-Received: from xhdarjunv40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Thu, 10 Nov 2022 23:37:18 -0600
-From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <krzysztof.kozlowski@linaro.org>
-CC:     <bhelgaas@google.com>, <michals@xilinx.com>, <robh+dt@kernel.org>,
-        <nagaradhesh.yeleswarapu@amd.com>, <bharat.kumar.gogada@amd.com>,
-        Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Subject: [PATCH v6 2/2] dt-bindings: PCI: xilinx-nwl: Convert to YAML schemas of Xilinx NWL PCIe Root Port Bridge
-Date:   Fri, 11 Nov 2022 11:07:09 +0530
-Message-ID: <20221111053709.1474323-2-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221111053709.1474323-1-thippeswamy.havalige@amd.com>
-References: <20221111053709.1474323-1-thippeswamy.havalige@amd.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.2; Fri, 11 Nov
+ 2022 06:22:09 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::c3e3:a6ef:232c:299b]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::c3e3:a6ef:232c:299b%7]) with mapi id 15.20.5834.002; Fri, 11 Nov 2022
+ 06:22:08 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v2 00/12] Drivers: hv: Add PCI pass-thru support to Hyper-V Confidential VMs
+Date:   Thu, 10 Nov 2022 22:21:29 -0800
+Message-Id: <1668147701-4583-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Content-Type: text/plain
-X-EOPAttributedMessage: 0
+X-ClientProxiedBy: MW4PR04CA0329.namprd04.prod.outlook.com
+ (2603:10b6:303:82::34) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT089:EE_|PH7PR12MB5904:EE_
-X-MS-Office365-Filtering-Correlation-Id: 044035c6-9f35-4a6b-302d-08dac3a6ce53
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|MW4PR21MB1857:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5cc2c1d-d8e1-45ff-b4dd-08dac3ad0f6c
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nyuJHZtf5eub8/f+WXaXpgHTXPoFn2ft+V8xQOL1Z226WLw4Cilk+24+wAbd21w9R0Y8zMC2l01pNcVO/10qAYgMfhuI+ANl1KyujtC1qq173xpOSYlejyNz3TuaAU/4mb+E7ms+/N8SDzNO2kCRGyQALCkrdo4qsTkwAqTt2Kr+6y113XbsucL0sikahOY2A0h8IHJAiZwlEHPiMSdMUsNNJ+ubSPoTy9kEMYtvkXrTum7OJatEM35H5NWuDcVUwWk4X3jko1r6+nl3GA7IxO47jMyslKUs301cdkpOj9xW2EVMlVApbTse/ggTbdTFbWxMAeg8yWkxXSllz3uFsJ1gn/bDLzD3wXiSABuRanc+h2XFbuLguaMVGn2U73Wg88u8V1vh3kgsr+FlNV9zA5bGf8GzWulNux81XjZnRoytFWNRuiNRk2mX+CzWyC1AS6SepUFUHJsd1FUAaYzhzK7bhc/hOSz98sEpFroWiyHtPgz2rKlO7Q9euqUlKpg8hbMXCh0w3YsZOB3qPWY8kKDPUO4umBzDBrCkUrgWVinJ+92AxZvKyCk1XB0Up3F15wHhAOEylnWm4WAZgOLokj2cdALfm6KsICWiQ8+6o9D4PHwgqOURndwGPLXRgR21SyKa4P/fgl4hZKhYXOfps3QVvz7ikeLpOSW+ondFyW8EcMZilHOtiXdNvjM8QEFnAr6D6i5rNZvxyWoRTpx3ERkH6AtQJp5Cc1YZKySiFch5KMpwlHGNJNJ9RkTkweJhiTJWfD+x00f9/dUs51DfoPygGHK0CoWyb5rw28OAZmYjkzQ/j5MoFF6fmlEI9EhMVCmC6jKG4ta22c9xDsXZupnXgrXlkBZFh9SRYHUTs0hht+Q3XbFRcWTQdZ57veIJ
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(39860400002)(346002)(136003)(451199015)(46966006)(40470700004)(36840700001)(86362001)(36756003)(36860700001)(5660300002)(8936002)(44832011)(2906002)(47076005)(2616005)(1076003)(336012)(426003)(186003)(83380400001)(82740400003)(356005)(81166007)(54906003)(4326008)(110136005)(316002)(82310400005)(478600001)(40480700001)(40460700003)(8676002)(41300700001)(70586007)(70206006)(966005)(26005)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2022 05:37:21.9111
+X-Microsoft-Antispam-Message-Info: PbWGQkcw3whk0cMpiFSXlegugWv4tdCwVfe1vHKODpHP8w2jHavj4Xv2HJkgzSLfm/8/5wxZWQRp9C0Ef7yrPJiHko6sslQ3wovK0zXU4cO66s3LHyFhD3e1pVinSKjHMfDXUtnZhM0cCYThn/FM45SogjX11quSp3OIYqVqunEsDrj+fpSOmWm588Ia0lIDuG2ntN5vtuLIk/94oUOea061g0VrlC5fZp7b11LNMjZF7GYa4etfNpTl2oGWrT7Evax3L4lNwKq7b/3A3MNrHT43zQPar16iQtf/nkx0/HwdDAuN0zdM3pBSWD0lOnqLwgFvc1ztSYHWEGwpsIFtQAUUNiYGCq5egbszDYg66UGN4zsl3MQLN3O0EWwONEF5NVxJklYcY14jx0eZ9oXcvCsnViyqkS9DFfC9l+slsamqOr5uXlZKgM2jaLWnB0DSguAPFLy6PqkrC00KF5pW3+KT8cmpQU6BntzbZv/3DimEZTZZOO8to+fomIN/h3XrdDG5MAiGHJs7dEPhA2UL2w0Ibiy9dYVd/5mdR1UlXRJKVodz2syn9fXVqkJMq/0XvkZVqh/QOA9UsG4mrC1CL/tjgFXyxxkse21L/KC1IkEYBqXZPUS2osNRRFASVz+7pTVsAck9aLCKtiFsfuMvgVDo08rZ7ndlLbAcdd4DWJ6woVEJejhjyMsF3ghZHoYHg9IoTcWrnZN/m4P+lgInPhz7xEOYjTwCgrEsrbTKlMT+7Un/c6YuZ5LI+e9a7xi/ChH/Vpk3AzxtjfTNX0sZwQu3VrUJ7j+U0m77lygTtiLcywKbdLk2okE2mVmjWQ0CsTG91ON4wcA96v+Nuzn3qJQO762vJM0xpaK8GPPIlyrS2eA/chCyGtJbbDpkCcLV2jr94LDSIOf2Cg+7FjHLnQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(451199015)(83380400001)(52116002)(26005)(6666004)(6512007)(186003)(38100700002)(107886003)(2616005)(7406005)(2906002)(316002)(7416002)(6506007)(10290500003)(6486002)(66946007)(66476007)(5660300002)(966005)(8936002)(41300700001)(8676002)(4326008)(66556008)(478600001)(38350700002)(36756003)(86362001)(921005)(82960400001)(82950400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ufQA+92Bm5tOKtXrdnwRrwInUbZC5f1fK9zZGinaq1IcGDo69WsDk1WGlsGj?=
+ =?us-ascii?Q?NFunbmN7Y/NwKKHdetQ2+WuRMinnk2T0rXiDi2Vrq1yViKEy0RlR21Tn5kv4?=
+ =?us-ascii?Q?pJdGhg+lKmjVkacgfYn9RA6809JWx07+45xtnDupiJbydR9sYo8jXN4VcKBb?=
+ =?us-ascii?Q?2lLemtNQ62lX6rBttK1r9lgiFA5tSDPfHTDJ+4vkzY7n7K+VaWv2do3qtgMY?=
+ =?us-ascii?Q?Or4MalD6/X25ZxjI83BaD+dLqw6d6QM9JIQN6g5xOqsxUxOMrUGnmRdG+2ic?=
+ =?us-ascii?Q?bVUpnnBlgEBhBXKPp+sruvCylKD5WLgh1qUTLCKMbeG6Oh2Dlq1WOPXsYJls?=
+ =?us-ascii?Q?Gr7eyZRhDqCkj0862nEQtGL5Fs3JSke7XgV4gBID2Dvo9YW0Ss26oqM2KnlL?=
+ =?us-ascii?Q?ZAutvCA97IQOvFJnMHxwytygEW6ChoCKn+eo9wObxxhAVhoKsZlGDVc1gFh/?=
+ =?us-ascii?Q?auLwcowvEcKaeF5lz3vIGcLkuiLt3lf11gvjj45bR8GqJKGOtyIwyaNYUidI?=
+ =?us-ascii?Q?bmvO7PCpQjtAkuSJYOgXwuADYKuOpcffM8aRsscBP2S/rvc39MW/IYYAF0Pv?=
+ =?us-ascii?Q?Yb1koCWhBJyunT6AcA5Qh1W08Da8Pfi4XST93JztpvZzTyg1+jwt6c6jki73?=
+ =?us-ascii?Q?C+Uc6MD+BUJhtbg0LNePmGLg53ZRkSeaZJXP+oZtpFRPDuSIp3uY+QI/391T?=
+ =?us-ascii?Q?8OBQ0WaUcZZqDywkwZk/Q3KRo2Qn7QtKX0hVM4BhV5+sju6edr/csHFL7rky?=
+ =?us-ascii?Q?SSMT/ScE3+VOhmdWd3ioMOXiwvWu9RcQCliRE8EnAVuy+M5aCgVtewV/nB5J?=
+ =?us-ascii?Q?gjqw/o82EEoKk1lfnZMtW7qCpIK3WfiNTTjN0T9RNtKZsCW4IPB+AeRY70E9?=
+ =?us-ascii?Q?AhO4usmbu2qtZBwCXq1U3J1KlXJIW0NsFlJac74OjrdfqHH/Y1pKiZ5zVKSq?=
+ =?us-ascii?Q?5PiErGKcx+HY/ORT39DLBQR3RDuJG7+8eRRrM1cKDoITlxSs8atocnxZww6s?=
+ =?us-ascii?Q?ztkHnkYqzdghT+EsH54/kfPnQNfwfHBXDjG9rNyyBk9zksgcMmi8mHFE40xH?=
+ =?us-ascii?Q?nXU0V0Ucv1Ll7gTq/3I60HuMUf08GLztVMizY/0/62WXp/w1Iw0WZPHSYlbR?=
+ =?us-ascii?Q?puni3Ori15TJf9gXuiAcL34EbM5O/QmVz9MQM84KAV1M3nQXecoH4GuuYtrd?=
+ =?us-ascii?Q?NLCnk1VUzBKriTnsFZeJDDSUHEmjS7KqtBLJ9IfwZ9XWZR91N5Ibhztm2uGt?=
+ =?us-ascii?Q?dfrNdO/VaFVFvpyIk2+IBb1spNbzMyxUe77S7p5cgrUr7gvpWAE4b/qrCkNF?=
+ =?us-ascii?Q?Nem/bto+/IDcr0814Sreq0QYpBGMOtfA0XmnuyQrJCz32anNSJ8NZnypXOiG?=
+ =?us-ascii?Q?Xs3rq0rVU+BMugfL2cXumRLzy8I4tHFzSrQEMx6L+u74kZ+IkJN47tu8IX1H?=
+ =?us-ascii?Q?Tv2nuol0PIcbFM5cgNOkKnhloxpzfgRP0VPgLSFXtsK1sN5oXvaZC+O9X4YK?=
+ =?us-ascii?Q?U6E7oGwOEnkeeMitPOiVKhPwE1a1Vjq1f9fvPQlqCQvP9Iv0XetZwnVK/MD6?=
+ =?us-ascii?Q?CpSVd3vn7KE9w8KniCLSUtLdF9yqeV3Wy5ZZ9B7WSJdJLHykJUlo6+jqsy47?=
+ =?us-ascii?Q?bw=3D=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5cc2c1d-d8e1-45ff-b4dd-08dac3ad0f6c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2022 06:22:08.5793
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 044035c6-9f35-4a6b-302d-08dac3a6ce53
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5904
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ViYAb52pzuDovFr8L+ae1s9XN+7Xj2pS03v3EavAzOV1kRywDuPxJUFgLZAdN5JK0GucTwWcLmyDSsXMVV+89A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1857
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -104,254 +127,174 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert to YAML schemas for Xilinx NWL PCIe Root Port Bridge
-dt binding.
+This patch series adds support for PCI pass-thru devices to Hyper-V
+Confidential VMs (also called "Isolation VMs"). But in preparation, it
+first changes how private (encrypted) vs. shared (decrypted) memory is
+handled in Hyper-V SEV-SNP guest VMs. The new approach builds on the
+confidential computing (coco) mechanisms introduced in the 5.19 kernel
+for TDX support and significantly reduces the amount of Hyper-V specific
+code. Furthermore, with this new approach a proposed RFC patch set for
+generic DMA layer functionality[1] is no longer necessary.
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Background
+==========
+Hyper-V guests on AMD SEV-SNP hardware have the option of using the
+"virtual Top Of Memory" (vTOM) feature specified by the SEV-SNP
+architecture. With vTOM, shared vs. private memory accesses are
+controlled by splitting the guest physical address space into two
+halves.  vTOM is the dividing line where the uppermost bit of the
+physical address space is set; e.g., with 47 bits of guest physical
+address space, vTOM is 0x40000000000 (bit 46 is set).  Guest phyiscal
+memory is accessible at two parallel physical addresses -- one below
+vTOM and one above vTOM.  Accesses below vTOM are private (encrypted)
+while accesses above vTOM are shared (decrypted). In this sense, vTOM
+is like the GPA.SHARED bit in Intel TDX.
+
+In Hyper-V's use of vTOM, the normal guest OS runs at VMPL2, while
+a Hyper-V provided "paravisor" runs at VMPL0 in the guest VM. (VMPL is
+Virtual Machine Privilege Level. See AMD's SEV-SNP spec for more
+details.) The paravisor provides emulation for various system devices
+like the I/O APIC as part of the guest VM.  Accesses to such devices
+made by the normal guest OS trap to the paravisor and are emulated in
+the guest VM context instead of in the Hyper-V host. This emulation is
+invisible to the normal guest OS, but with the quirk that memory mapped
+I/O accesses to these devices must be treated as private, not shared as
+would be the case for other device accesses.
+
+Support for Hyper-V guests using vTOM was added to the Linux kernel
+in two patch sets[2][3]. This support treats the vTOM bit as part of
+the physical address.  For accessing shared (decrypted) memory, the core
+approach is to create a second kernel virtual mapping that maps to
+parallel physical addresses above vTOM, while leaving the original
+mapping unchanged.  Most of the code for creating that second virtual
+mapping is confined to Hyper-V specific areas, but there are are also
+changes to generic swiotlb code.
+
+Changes in this patch set
+=========================
+In preparation for supporting PCI pass-thru devices, this patch set
+changes the core approach for handling vTOM. In the new approach,
+the vTOM bit is treated as a protection flag, and not as part of
+the physical address. This new approach is like the approach for
+the GPA.SHARED bit in Intel TDX.  Furthermore, there's no need to
+create a second kernel virtual mapping.  When memory is changed
+between private and shared using set_memory_decrypted() and
+set_memory_encrypted(), the PTEs for the existing kernel mapping
+are changed to add or remove the vTOM bit just as with TDX. The
+hypercalls to change the memory status on the host side are made
+using the existing callback mechanism. Everything just works, with
+a minor tweak to map the I/O APIC to use private accesses as mentioned
+above.
+
+With the new handling of vTOM in place, existing Hyper-V code that
+creates the second kernel virtual mapping still works, but it is now
+redundant as the original kernel virtual mapping (as updated) maps
+to the same physical address. To simplify things going forward, this
+patch set removes the code that creates the second kernel virtual
+mapping. And since a second kernel virtual mapping is no longer
+needed, changes to the DMA layer proposed as an RFC[1] are no
+longer needed.
+
+Finally, to support PCI pass-thru in a Confidential VM, Hyper-V
+requires that all accesses to PCI config space be emulated using
+a hypercall.  This patch set adds functions to invoke those
+hypercalls and uses them in the config space access functions
+in the Hyper-V PCI driver. Lastly, the Hyper-V PCI driver is
+marked as allowed to be used in a Confidential VM.  The Hyper-V
+PCI driver has been hardened against a malicious Hyper-V in a
+previous patch set.[4]
+
+Patch Organization
+==================
+Patch 1 fixes a bug in __ioremap_caller() that affects the
+existing Hyper-V code after the change to treat the vTOM bit as
+a protection flag. Fixing the bug allows the old code to continue
+to run until later patches in the series remove or update it.
+This sequencing avoids the need to enable the new approach and
+remove the old code in a single large patch.
+
+Patch 2 handles the I/O APIC quirk by defining a new CC_ATTR enum
+member that is set only when running on Hyper-V.
+
+Patch 3 does some simple reordering of code to facilitate Patch 5.
+
+Patch 4 tweaks calls to vmap_pfn() in the old Hyper-V code that
+are deleted in later patches in the series. Like Patch 1, this
+patch helps avoid the need to enable the new approach and remove
+the old code in a single large patch.
+
+Patch 5 enables the new approach to handling vTOM for Hyper-V
+guest VMs.
+
+Patches 6 thru 9 remove existing code for creating a second
+kernel virtual mapping.
+
+Patch 10 updates existing code so that it no longer assumes that
+the vTOM bit is part of the physical address.
+
+Patch 11 adds the new hypercalls for accessing MMIO Config Space.
+
+Patch 12 updates the PCI Hyper-V driver to use the new hypercalls
+and enables the PCI Hyper-V driver to be used in a Confidential VM.
+
+[1] https://lore.kernel.org/lkml/20220706195027.76026-1-parri.andrea@gmail.com/
+[2] https://lore.kernel.org/all/20211025122116.264793-1-ltykernel@gmail.com/
+[3] https://lore.kernel.org/all/20211213071407.314309-1-ltykernel@gmail.com/
+[4] https://lore.kernel.org/all/20220511223207.3386-1-parri.andrea@gmail.com/
+
 ---
-changes in v6:
-Added maxItems to clocks property.
 
- .../bindings/pci/xilinx-nwl-pcie.txt          |  73 ---------
- .../bindings/pci/xlnx,nwl-pcie.yaml           | 149 ++++++++++++++++++
- 2 files changed, 149 insertions(+), 73 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
+Changes in v2:
+* Patch 11: Include more detail in the error message if an MMIO
+  hypercall fails. [Bjorn Helgaas]
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-deleted file mode 100644
-index f56f8c58c5d9..000000000000
---- a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-+++ /dev/null
-@@ -1,73 +0,0 @@
--* Xilinx NWL PCIe Root Port Bridge DT description
--
--Required properties:
--- compatible: Should contain "xlnx,nwl-pcie-2.11"
--- #address-cells: Address representation for root ports, set to <3>
--- #size-cells: Size representation for root ports, set to <2>
--- #interrupt-cells: specifies the number of cells needed to encode an
--	interrupt source. The value must be 1.
--- reg: Should contain Bridge, PCIe Controller registers location,
--	configuration space, and length
--- reg-names: Must include the following entries:
--	"breg": bridge registers
--	"pcireg": PCIe controller registers
--	"cfg": configuration space region
--- device_type: must be "pci"
--- interrupts: Should contain NWL PCIe interrupt
--- interrupt-names: Must include the following entries:
--	"msi1, msi0": interrupt asserted when an MSI is received
--	"intx": interrupt asserted when a legacy interrupt is received
--	"misc": interrupt asserted when miscellaneous interrupt is received
--- interrupt-map-mask and interrupt-map: standard PCI properties to define the
--	mapping of the PCI interface to interrupt numbers.
--- ranges: ranges for the PCI memory regions (I/O space region is not
--	supported by hardware)
--	Please refer to the standard PCI bus binding document for a more
--	detailed explanation
--- msi-controller: indicates that this is MSI controller node
--- msi-parent:  MSI parent of the root complex itself
--- legacy-interrupt-controller: Interrupt controller device node for Legacy
--	interrupts
--	- interrupt-controller: identifies the node as an interrupt controller
--	- #interrupt-cells: should be set to 1
--	- #address-cells: specifies the number of cells needed to encode an
--		address. The value must be 0.
--
--Optional properties:
--- dma-coherent: present if DMA operations are coherent
--- clocks: Input clock specifier. Refer to common clock bindings
--
--Example:
--++++++++
--
--nwl_pcie: pcie@fd0e0000 {
--	#address-cells = <3>;
--	#size-cells = <2>;
--	compatible = "xlnx,nwl-pcie-2.11";
--	#interrupt-cells = <1>;
--	msi-controller;
--	device_type = "pci";
--	interrupt-parent = <&gic>;
--	interrupts = <0 114 4>, <0 115 4>, <0 116 4>, <0 117 4>, <0 118 4>;
--	interrupt-names = "msi0", "msi1", "intx", "dummy", "misc";
--	interrupt-map-mask = <0x0 0x0 0x0 0x7>;
--	interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
--			<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
--			<0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
--			<0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
--
--	msi-parent = <&nwl_pcie>;
--	reg = <0x0 0xfd0e0000 0x0 0x1000>,
--	      <0x0 0xfd480000 0x0 0x1000>,
--	      <0x80 0x00000000 0x0 0x1000000>;
--	reg-names = "breg", "pcireg", "cfg";
--	ranges = <0x02000000 0x00000000 0xe0000000 0x00000000 0xe0000000 0x00000000 0x10000000  /* non-prefetchable memory */
--		  0x43000000 0x00000006 0x00000000 0x00000006 0x00000000 0x00000002 0x00000000>;/* prefetchable memory */
--
--	pcie_intc: legacy-interrupt-controller {
--		interrupt-controller;
--		#address-cells = <0>;
--		#interrupt-cells = <1>;
--	};
--
--};
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-new file mode 100644
-index 000000000000..897602559b37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/xlnx,nwl-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx NWL PCIe Root Port Bridge
-+
-+maintainers:
-+  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: xlnx,nwl-pcie-2.11
-+
-+  reg:
-+    items:
-+      - description: PCIe bridge registers location.
-+      - description: PCIe Controller registers location.
-+      - description: PCIe Configuration space region.
-+
-+  reg-names:
-+    items:
-+      - const: breg
-+      - const: pcireg
-+      - const: cfg
-+
-+  interrupts:
-+    items:
-+      - description: interrupt asserted when miscellaneous interrupt is received
-+      - description: unused interrupt(dummy)
-+      - description: interrupt asserted when a legacy interrupt is received
-+      - description: msi1 interrupt asserted when an MSI is received
-+      - description: msi0 interrupt asserted when an MSI is received
-+
-+  interrupt-names:
-+    items:
-+      - const: misc
-+      - const: dummy
-+      - const: intx
-+      - const: msi1
-+      - const: msi0
-+
-+  interrupt-map-mask:
-+    items:
-+      - const: 0
-+      - const: 0
-+      - const: 0
-+      - const: 7
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  msi-parent:
-+    description: MSI controller the device is capable of using.
-+
-+  interrupt-map:
-+    maxItems: 4
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  iommus:
-+    maxItems: 1
-+
-+  dma-coherent:
-+    description: optional, only needed if DMA operations are coherent.
-+
-+  clocks:
-+    maxItems: 1
-+    description: optional, input clock specifier.
-+
-+  legacy-interrupt-controller:
-+    description: Interrupt controller node for handling legacy PCI interrupts.
-+    type: object
-+    properties:
-+      "#address-cells":
-+        const: 0
-+
-+      "#interrupt-cells":
-+        const: 1
-+
-+      "interrupt-controller": true
-+
-+    required:
-+      - "#address-cells"
-+      - "#interrupt-cells"
-+      - interrupt-controller
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - "#interrupt-cells"
-+  - interrupt-map
-+  - interrupt-map-mask
-+  - msi-controller
-+  - power-domains
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/xlnx-zynqmp-power.h>
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        nwl_pcie: pcie@fd0e0000 {
-+            compatible = "xlnx,nwl-pcie-2.11";
-+            reg = <0x0 0xfd0e0000 0x0 0x1000>,
-+                  <0x0 0xfd480000 0x0 0x1000>,
-+                  <0x80 0x00000000 0x0 0x1000000>;
-+            reg-names = "breg", "pcireg", "cfg";
-+            ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
-+                     <0x43000000 0x00000006 0x0 0x00000006 0x0 0x00000002 0x0>;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            #interrupt-cells = <1>;
-+            msi-controller;
-+            device_type = "pci";
-+            interrupt-parent = <&gic>;
-+            interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 116 IRQ_TYPE_EDGE_RISING>,
-+                         <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 115 IRQ_TYPE_EDGE_RISING>,
-+                         <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "misc", "dummy", "intx", "msi1", "msi0";
-+            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+            interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
-+                            <0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
-+                            <0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
-+                            <0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
-+            msi-parent = <&nwl_pcie>;
-+            power-domains = <&zynqmp_firmware PD_PCIE>;
-+            iommus = <&smmu 0x4d0>;
-+            pcie_intc: legacy-interrupt-controller {
-+                interrupt-controller;
-+                #address-cells = <0>;
-+                #interrupt-cells = <1>;
-+            };
-+        };
-+    };
+* Patch 12: Restore removed memory barriers. It seems like these
+  barriers should not be needed because of the spin_unlock() calls,
+  but commit bdd74440d9e8 indicates that they are. This patch series
+  will leave the barriers unchanged; whether they are really needed
+  can be sorted out separately. [Boqun Feng]
+
+
+Michael Kelley (12):
+  x86/ioremap: Fix page aligned size calculation in __ioremap_caller()
+  x86/ioapic: Gate decrypted mapping on cc_platform_has() attribute
+  x86/hyperv: Reorder code in prep for subsequent patch
+  Drivers: hv: Explicitly request decrypted in vmap_pfn() calls
+  x86/hyperv: Change vTOM handling to use standard coco mechanisms
+  swiotlb: Remove bounce buffer remapping for Hyper-V
+  Drivers: hv: vmbus: Remove second mapping of VMBus monitor pages
+  Drivers: hv: vmbus: Remove second way of mapping ring buffers
+  hv_netvsc: Remove second mapping of send and recv buffers
+  Drivers: hv: Don't remap addresses that are above shared_gpa_boundary
+  PCI: hv: Add hypercalls to read/write MMIO space
+  PCI: hv: Enable PCI pass-thru devices in Confidential VMs
+
+ arch/x86/coco/core.c                |  10 +-
+ arch/x86/hyperv/hv_init.c           |   7 +-
+ arch/x86/hyperv/ivm.c               | 121 +++++++++----------
+ arch/x86/include/asm/hyperv-tlfs.h  |   3 +
+ arch/x86/include/asm/mshyperv.h     |   8 +-
+ arch/x86/kernel/apic/io_apic.c      |   3 +-
+ arch/x86/kernel/cpu/mshyperv.c      |  22 ++--
+ arch/x86/mm/ioremap.c               |   2 +-
+ arch/x86/mm/pat/set_memory.c        |   6 +-
+ drivers/hv/Kconfig                  |   1 -
+ drivers/hv/channel_mgmt.c           |   2 +-
+ drivers/hv/connection.c             | 113 +++++-------------
+ drivers/hv/hv.c                     |  23 ++--
+ drivers/hv/hv_common.c              |  11 --
+ drivers/hv/hyperv_vmbus.h           |   2 -
+ drivers/hv/ring_buffer.c            |  62 ++++------
+ drivers/net/hyperv/hyperv_net.h     |   2 -
+ drivers/net/hyperv/netvsc.c         |  48 +-------
+ drivers/pci/controller/pci-hyperv.c | 232 ++++++++++++++++++++++++++----------
+ include/asm-generic/hyperv-tlfs.h   |  22 ++++
+ include/asm-generic/mshyperv.h      |   2 -
+ include/linux/cc_platform.h         |  13 ++
+ include/linux/swiotlb.h             |   2 -
+ kernel/dma/swiotlb.c                |  45 +------
+ 24 files changed, 358 insertions(+), 404 deletions(-)
+
 -- 
-2.25.1
+1.8.3.1
 
