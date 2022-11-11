@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE046258FE
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 12:02:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51BF7625903
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 12:02:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233297AbiKKLCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 06:02:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
+        id S233430AbiKKLCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 06:02:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233744AbiKKLCF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 06:02:05 -0500
+        with ESMTP id S233048AbiKKLC3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 06:02:29 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63A4B7E6;
-        Fri, 11 Nov 2022 03:02:04 -0800 (PST)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N7whT3RCkz685b0;
-        Fri, 11 Nov 2022 18:59:53 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08A5532FA;
+        Fri, 11 Nov 2022 03:02:28 -0800 (PST)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N7whx3tW8z67L71;
+        Fri, 11 Nov 2022 19:00:17 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 11 Nov 2022 12:02:02 +0100
+ 15.1.2375.31; Fri, 11 Nov 2022 12:02:26 +0100
 Received: from localhost (10.45.151.252) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 11 Nov
- 2022 11:02:01 +0000
-Date:   Fri, 11 Nov 2022 11:02:00 +0000
+ 2022 11:02:25 +0000
+Date:   Fri, 11 Nov 2022 11:02:24 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Yicong Yang <yangyicong@huawei.com>
 CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>, <liuqi6124@gmail.com>,
@@ -79,7 +79,10 @@ Annoying though it is to do, this should be a precusors to the changes added ear
 in this series - or drop the fixes tag. I'd argue that 'ugly' isn't something that
 we need to potentially backport fixes to.
 
-Change itself looks fine though.
+Change itself looks fine though. FWIW
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 
 > ---
 >  .../admin-guide/perf/hisi-pcie-pmu.rst        | 80 ++++++++++---------
