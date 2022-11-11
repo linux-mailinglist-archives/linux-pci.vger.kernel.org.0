@@ -2,48 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44D85626524
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 00:07:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8049662659F
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 00:39:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233223AbiKKXHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 18:07:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40496 "EHLO
+        id S233900AbiKKXjO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 18:39:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232825AbiKKXHI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 18:07:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A869A10043;
-        Fri, 11 Nov 2022 15:07:07 -0800 (PST)
+        with ESMTP id S230105AbiKKXjN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 18:39:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F27E2B623;
+        Fri, 11 Nov 2022 15:39:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5A186B8280A;
-        Fri, 11 Nov 2022 23:07:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5A9C433C1;
-        Fri, 11 Nov 2022 23:07:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D207FB82836;
+        Fri, 11 Nov 2022 23:39:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB48C433C1;
+        Fri, 11 Nov 2022 23:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668208025;
-        bh=AtyavD70yq8p5n3eMQenR0qcYb2AOclvoplL63PZfxg=;
+        s=k20201202; t=1668209949;
+        bh=Vlb+/7QojmhhvH1wfSO9VCLJ7Gp43IqzkXJWqxZOk0c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Z2T/nebNripLE2jgqC4NPNq7dEYBUxdPRp35UBsyyxz17ASisnasE89B6QgfLHwr5
-         X5ifsCBsEiqTqgKLNRQr7RzDvrZfZkvkMNsRNM78n0xwcq9ZoKYofUfjMNXxZPrDAY
-         3ootNH6aE+kUEYywHNfoB5K5VCC9pumOJkI0PFVHOUu38LvKUtkuzGxvP5+wqWC4Zf
-         YNbydP7OMkKDlW5DqbnLxDdBhtoJG5YJrJ/IWFEz+sGP/D6ZSUlWpRCywMXJBAGsig
-         45eAyckmQWt8KCuSgeU3RcFCtcgYk+rcRwmfUTDXcjq4jUQDFJwrqvj5nMCao/HpuP
-         yTwB+tKo1+8Pg==
-Date:   Fri, 11 Nov 2022 17:07:03 -0600
+        b=DDta3/Dz1CRlZBWgtSaqjUxwEJCUBrvTLhf6rLi5V6AIPcQoLraYaQN2FK+pXV14N
+         sh/2rxaYiZrJRFXkdYH7zi7f3Y7tSJuED20GyZiNYt1rbqOHU6+cJ2rI7UxsGVV5YA
+         atztOz3slba/5EuGcfJ9KSx5VWjjZhg+xVd8K/q6ijvWFR3UP1thFKg4Zf8V8xlvzO
+         6vH6J1PcvgKA7UDLZkxPEdTcARWY2s3efkbfKwns6MK4xkIhatNqG58rzaWBpJY02m
+         P4g3flw86vTnoTs4KhQzqLLviznl5MG/qEbIJDA+Y9sTRsWwEBe07OdlAhZZOQb9/D
+         uTdnowRJ99v1Q==
+Date:   Fri, 11 Nov 2022 17:39:07 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Longpeng(Mike)" <longpeng2@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jianjay.zhou@huawei.com,
-        zhuangshengen@huawei.com, arei.gonglei@huawei.com,
-        yechuan@huawei.com, huangzhichao@huawei.com, xiehong@huawei.com
-Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
-Message-ID: <20221111230703.GA759162@bhelgaas>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Wei Gong <gongwei833x@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci: fix device presence detection for VFs
+Message-ID: <20221111233907.GA763281@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221111142722.1172-1-longpeng2@huawei.com>
+In-Reply-To: <20221026060912.173250-1-mst@redhat.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -53,42 +51,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 10:27:18PM +0800, Longpeng(Mike) wrote:
-> From: Longpeng <longpeng2@huawei.com>
+On Wed, Oct 26, 2022 at 02:11:21AM -0400, Michael S. Tsirkin wrote:
+> virtio uses the same driver for VFs and PFs.  Accordingly,
+> pci_device_is_present is used to detect device presence. This function
+> isn't currently working properly for VFs since it attempts reading
+> device and vendor ID. As VFs are present if and only if PF is present,
+> just return the value for that device.
 > 
-> We can enable SRIOV and add VFs by /sys/bus/pci/devices/..../sriov_numvfs, but
-> this operation needs to spend lots of time if there has a large amount of VFs.      
->                                                             
-> For example, if the machine has 10 PFs and 250 VFs per-PF, enable all the VFs
-> concurrently would cost about 200-250ms. However most of them are not need to be
-> used at the moment, so we can enable SRIOV first but add VFs on demand.
-> 
-> This series introduces two interfaces:
-> 1. sriov_numvfs_no_scan: enable SRIOV without add the VFs.
-> 2. sriov_scan_vf_id: add a specific VF.
-> 
-> Longpeng (4):
->   pci/sriov: extract sriov_numvfs common helper
->   pci/sriov: add vf_bitmap to mark the vf id allocation
->   pci/sriov: add sriov_numfs_no_scan interface
->   pci/sriov: add sriov_scan_vf_id interface
+> Reported-by: Wei Gong <gongwei833x@gmail.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-When you respond to Leon's questions, please also spend a little time
-to look at the iov.c history and coding style and follow it, so we
-don't have to waste time commenting on or fixing trivial things.
+Applied as below to pci/enumeration for v6.2, thanks!
 
-For example, there are no previous subject lines for that file that
-start with "pci/sriov".  Don't make up a new prefix; use what's been
-done in the past.  And follow the style of capitalizing the first word
-after the prefix.
+commit 98b04dd0b457 ("PCI: Fix pci_device_is_present() for VFs by checking PF")
+Author: Michael S. Tsirkin <mst@redhat.com>
+Date:   Wed Oct 26 02:11:21 2022 -0400
 
-There are a few comments that look like they are more than 80 columns.
-Again unlike everything else in the file.
+    PCI: Fix pci_device_is_present() for VFs by checking PF
+    
+    pci_device_is_present() previously didn't work for VFs because it reads the
+    Vendor and Device ID, which are 0xffff for VFs, which looks like they
+    aren't present.  Check the PF instead.
+    
+    Wei Gong reported that if virtio I/O is in progress when the driver is
+    unbound or "0" is written to /sys/.../sriov_numvfs, the virtio I/O
+    operation hangs, which may result in output like this:
+    
+      task:bash state:D stack:    0 pid: 1773 ppid:  1241 flags:0x00004002
+      Call Trace:
+       schedule+0x4f/0xc0
+       blk_mq_freeze_queue_wait+0x69/0xa0
+       blk_mq_freeze_queue+0x1b/0x20
+       blk_cleanup_queue+0x3d/0xd0
+       virtblk_remove+0x3c/0xb0 [virtio_blk]
+       virtio_dev_remove+0x4b/0x80
+       ...
+       device_unregister+0x1b/0x60
+       unregister_virtio_device+0x18/0x30
+       virtio_pci_remove+0x41/0x80
+       pci_device_remove+0x3e/0xb0
+    
+    This happened because pci_device_is_present(VF) returned "false" in
+    virtio_pci_remove(), so it called virtio_break_device().  The broken vq
+    meant that vring_interrupt() skipped the vq.callback() that would have
+    completed the virtio I/O operation via virtblk_done().
+    
+    [bhelgaas: commit log, simplify to always use pci_physfn(), add stable tag]
+    Link: https://lore.kernel.org/r/20221026060912.173250-1-mst@redhat.com
+    Reported-by: Wei Gong <gongwei833x@gmail.com>
+    Tested-by: Wei Gong <gongwei833x@gmail.com>
+    Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Cc: stable@vger.kernel.org
 
-The PCIe spec spells it "SR-IOV", not "sriov".  Do the same in your
-commit logs and comments.
-
-Capitalize "VF" consistently.  I see "VF" and "vf" used randomly.
-
-Sysfs changes require documention updates, e.g., in
-Documentation/ABI/testing/sysfs-bus-pci.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9f3cc829dfee..fba95486caaf 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6447,6 +6447,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
+ {
+ 	u32 v;
+ 
++	/* Check PF if pdev is a VF, since VF Vendor/Device IDs are 0xffff */
++	pdev = pci_physfn(pdev);
+ 	if (pci_dev_is_disconnected(pdev))
+ 		return false;
+ 	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
