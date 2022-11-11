@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C20A6252DC
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 05:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B95676252DA
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 05:51:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbiKKEu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S230055AbiKKEu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 10 Nov 2022 23:50:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231979AbiKKEu6 (ORCPT
+        with ESMTP id S231860AbiKKEu6 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Nov 2022 23:50:58 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD683FB97
-        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 20:50:56 -0800 (PST)
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC07330554
+        for <linux-pci@vger.kernel.org>; Thu, 10 Nov 2022 20:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668142256; x=1699678256;
+  t=1668142255; x=1699678255;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=pjWMLLrH8TOciSX9zUVWhqRzchf6pIxVVhOvDencpHg=;
-  b=Ptka8y3OymFqlsuuG6KXEMPGrmxfba6/jVWu6esh/7qR3tQcWZFyldqS
-   Z0K5yOPP/pFhmawSAmjzkPOs9fA/SvZ/UzvJJqwE0dXJQaYT23v05yMQU
-   PfVjoP+JIV4KNeWhsEaNu5t/25HmhShmGKnxQqbX/9zsQ+TS90zvkyjej
-   i/DwjLVASw2VihbxKB8fS72cMDJrz97HSNO4mBBDo5m2HrrlL3brauxSn
-   DoHLb7PCWiVkWa08XO4rL8krhvr4zacEFGeSmUasMplKhpB5ZK1kCWZ7u
-   oMzT+UboJ3Ae+WEfZ8fmf/yZbBJ7zTmQUyq6eb4bcPZ1MNJfU/wo4N82f
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="291927813"
+  bh=NqOZwj8Muy3GTjRUIG4j2DCfw1ysd9SqvRGEFme/HL8=;
+  b=bvhudb7vLL+zNBofWXP98aFPZnumGPW4uWDWGbXMGiUnul3Mkmy4BB3/
+   bS7HWsC1fQQ888+0/NnEwoEFzbyfoGaGNMnVrsOPo4EdHp2eT6liFTMq5
+   yAwhuIAkZhjuNUV1IlfIfpYNSGIuvPFnH/CdkNbSM/rUWcgGE7m3XnJD+
+   4EmS/WoUrzIk8o7X1QyBMAJrFY6xm5j1fNExi9fRxUGBGmAJN4nvMDNtW
+   0X2GclP4caPxDSSzVj9QYklki08qcLxvzR68u1zw3SyG1oDrzaBjFSDup
+   5W+o96A44LorG48JSbj6N5EfwfMLLuSURC4RojtZERkrYli0nOaFvacS0
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="375784878"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="291927813"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 20:50:55 -0800
+   d="scan'208";a="375784878"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 20:50:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="706420830"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="762547619"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="706420830"
+   d="scan'208";a="762547619"
 Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2022 20:50:54 -0800
+  by orsmga004.jf.intel.com with ESMTP; 10 Nov 2022 20:50:54 -0800
 Received: from kbuild by e783503266e8 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1otM0D-0003af-1I;
+        id 1otM0D-0003aw-1p;
         Fri, 11 Nov 2022 04:50:53 +0000
-Date:   Fri, 11 Nov 2022 12:50:30 +0800
+Date:   Fri, 11 Nov 2022 12:50:51 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [lpieralisi-pci:pci/dwc] BUILD SUCCESS
- 8405d8f0956d227c3355d9bdbabc23f79f721ce4
-Message-ID: <636dd496.ArkzfcLPIkGaSBUT%lkp@intel.com>
+Subject: [lpieralisi-pci:pci/dt] BUILD SUCCESS
+ 72f542ac4f39fb42b8a6380ac8d9b3c39019d2d6
+Message-ID: <636dd4ab.103491BhLAk3GE8P%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,8 +62,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
-branch HEAD: 8405d8f0956d227c3355d9bdbabc23f79f721ce4  PCI: dwc: Use dev_info for PCIe link down event logging
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dt
+branch HEAD: 72f542ac4f39fb42b8a6380ac8d9b3c39019d2d6  dt-bindings: PCI: Add host mode device-id for j721s2 platform
 
 elapsed time: 726m
 
