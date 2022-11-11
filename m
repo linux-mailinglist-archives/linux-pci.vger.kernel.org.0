@@ -2,139 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 383CC625901
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 12:02:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE046258FE
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 12:02:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbiKKLCJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 06:02:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58570 "EHLO
+        id S233297AbiKKLCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 06:02:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233597AbiKKLCJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 06:02:09 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A665B589
-        for <linux-pci@vger.kernel.org>; Fri, 11 Nov 2022 03:02:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668164528; x=1699700528;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KhoHGNx2rCq9Bq6QscjQ0GP8Eyxalls9rPudg+TnWwM=;
-  b=b0xd+4C0esevCmstKjE3+BSOFjE1bxCSLKiXZb4p7OXTSdKuuxO0JtMj
-   hxl8cWGH08Ry1MTI+FCet0hX+g0YtDnhKo7tBjo29QfZ1JSxZKYePHJQr
-   1qy38CLDi8INVit/4kP29MMx1bcFed7h2aup+khtQscO/50orCrYBJQ4y
-   lso335k+/vz1cKtOk9Uj0Y95D4Ks26tIlfvj+7TDAxx96nbjhiYNvb31i
-   2dFyMMpKM3b7WNNvVzkQPxF0a4lLSLqCb3c95ckuC2lM9sIJiUXehHMCI
-   L+qf9yevgNLaKhFTMjttVTNGAsRQshYgt1Eew8HeggGkGM6lQmYfL1ruR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="313365238"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="313365238"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 03:02:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="706510550"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="706510550"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Nov 2022 03:02:04 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1otRnQ-0003sr-0v;
-        Fri, 11 Nov 2022 11:02:04 +0000
-Date:   Fri, 11 Nov 2022 19:01:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 90a36dd86b60063faf5a8b48e015b38f30f9b6e5
-Message-ID: <636e2ba4.q7pTB1tH4/ZaigSn%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233744AbiKKLCF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 06:02:05 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63A4B7E6;
+        Fri, 11 Nov 2022 03:02:04 -0800 (PST)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4N7whT3RCkz685b0;
+        Fri, 11 Nov 2022 18:59:53 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 11 Nov 2022 12:02:02 +0100
+Received: from localhost (10.45.151.252) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 11 Nov
+ 2022 11:02:01 +0000
+Date:   Fri, 11 Nov 2022 11:02:00 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>, <liuqi6124@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>, <bagasdotme@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>, <f.fangjian@huawei.com>,
+        <prime.zeng@huawei.com>, <shenyang39@huawei.com>
+Subject: Re: [PATCH v2 4/4] Documentation: perf: Indent filter options list
+ of hisi-pcie-pmu
+Message-ID: <20221111110200.000047fd@Huawei.com>
+In-Reply-To: <20221110085109.45227-5-yangyicong@huawei.com>
+References: <20221110085109.45227-1-yangyicong@huawei.com>
+        <20221110085109.45227-5-yangyicong@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.45.151.252]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 90a36dd86b60063faf5a8b48e015b38f30f9b6e5  Merge branch 'remotes/lorenzo/pci/misc'
+On Thu, 10 Nov 2022 16:51:09 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-elapsed time: 830m
+> From: Bagas Sanjaya <bagasdotme@gmail.com>
+> 
+> The "Filter options" list have a rather ugly indentation. Also, the first
+> paragraph after list name is rendered without separator (as continuation
+> from the name).
+> 
+> Align the list by indenting the list items and add a blank line
+> separator for each list name.
+> 
+> Fixes: c8602008e247 ("docs: perf: Add description for HiSilicon PCIe PMU driver")
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Annoying though it is to do, this should be a precusors to the changes added earlier
+in this series - or drop the fixes tag. I'd argue that 'ugly' isn't something that
+we need to potentially backport fixes to.
 
-configs tested: 58
-configs skipped: 2
+Change itself looks fine though.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ---
+>  .../admin-guide/perf/hisi-pcie-pmu.rst        | 80 ++++++++++---------
+>  1 file changed, 43 insertions(+), 37 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/perf/hisi-pcie-pmu.rst b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+> index b3615230a4f6..7e863662e2d4 100644
+> --- a/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+> +++ b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+> @@ -48,62 +48,68 @@ Filter options
+>  --------------
+>  
+>  1. Target filter
+> -PMU could only monitor the performance of traffic downstream target Root Ports
+> -or downstream target Endpoint. PCIe PMU driver support "port" and "bdf"
+> -interfaces for users, and these two interfaces aren't supported at the same
+> -time.
+>  
+> --port
+> -"port" filter can be used in all PCIe PMU events, target Root Port can be
+> -selected by configuring the 16-bits-bitmap "port". Multi ports can be selected
+> -for AP-layer-events, and only one port can be selected for TL/DL-layer-events.
+> +   PMU could only monitor the performance of traffic downstream target Root
+> +   Ports or downstream target Endpoint. PCIe PMU driver support "port" and
+> +   "bdf" interfaces for users, and these two interfaces aren't supported at the
+> +   same time.
+>  
+> -For example, if target Root Port is 0000:00:00.0 (x8 lanes), bit0 of bitmap
+> -should be set, port=0x1; if target Root Port is 0000:00:04.0 (x4 lanes),
+> -bit8 is set, port=0x100; if these two Root Ports are both monitored, port=0x101.
+> +   - port
+>  
+> -Example usage of perf::
+> +     "port" filter can be used in all PCIe PMU events, target Root Port can be
+> +     selected by configuring the 16-bits-bitmap "port". Multi ports can be
+> +     selected for AP-layer-events, and only one port can be selected for
+> +     TL/DL-layer-events.
+>  
+> -  $# perf stat -e hisi_pcie0_core0/rx_mwr_latency,port=0x1/ sleep 5
+> +     For example, if target Root Port is 0000:00:00.0 (x8 lanes), bit0 of
+> +     bitmap should be set, port=0x1; if target Root Port is 0000:00:04.0 (x4
+> +     lanes), bit8 is set, port=0x100; if these two Root Ports are both
+> +     monitored, port=0x101.
+>  
+> --bdf
+> +     Example usage of perf::
+>  
+> -"bdf" filter can only be used in bandwidth events, target Endpoint is selected
+> -by configuring BDF to "bdf". Counter only counts the bandwidth of message
+> -requested by target Endpoint.
+> +       $# perf stat -e hisi_pcie0_core0/rx_mwr_latency,port=0x1/ sleep 5
+>  
+> -For example, "bdf=0x3900" means BDF of target Endpoint is 0000:39:00.0.
+> +   - bdf
+>  
+> -Example usage of perf::
+> +     "bdf" filter can only be used in bandwidth events, target Endpoint is
+> +     selected by configuring BDF to "bdf". Counter only counts the bandwidth of
+> +     message requested by target Endpoint.
+> +
+> +     For example, "bdf=0x3900" means BDF of target Endpoint is 0000:39:00.0.
+>  
+> -  $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,bdf=0x3900/ sleep 5
+> +     Example usage of perf::
+> +
+> +       $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,bdf=0x3900/ sleep 5
+>  
+>  2. Trigger filter
+> -Event statistics start when the first time TLP length is greater/smaller
+> -than trigger condition. You can set the trigger condition by writing "trig_len",
+> -and set the trigger mode by writing "trig_mode". This filter can only be used
+> -in bandwidth events.
+>  
+> -For example, "trig_len=4" means trigger condition is 2^4 DW, "trig_mode=0"
+> -means statistics start when TLP length > trigger condition, "trig_mode=1"
+> -means start when TLP length < condition.
+> +   Event statistics start when the first time TLP length is greater/smaller
+> +   than trigger condition. You can set the trigger condition by writing
+> +   "trig_len", and set the trigger mode by writing "trig_mode". This filter can
+> +   only be used in bandwidth events.
+>  
+> -Example usage of perf::
+> +   For example, "trig_len=4" means trigger condition is 2^4 DW, "trig_mode=0"
+> +   means statistics start when TLP length > trigger condition, "trig_mode=1"
+> +   means start when TLP length < condition.
+>  
+> -  $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,trig_len=0x4,trig_mode=1/ sleep 5
+> +   Example usage of perf::
+> +
+> +     $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,trig_len=0x4,trig_mode=1/ sleep 5
+>  
+>  3. Threshold filter
+> -Counter counts when TLP length within the specified range. You can set the
+> -threshold by writing "thr_len", and set the threshold mode by writing
+> -"thr_mode". This filter can only be used in bandwidth events.
+>  
+> -For example, "thr_len=4" means threshold is 2^4 DW, "thr_mode=0" means
+> -counter counts when TLP length >= threshold, and "thr_mode=1" means counts
+> -when TLP length < threshold.
+> +   Counter counts when TLP length within the specified range. You can set the
+> +   threshold by writing "thr_len", and set the threshold mode by writing
+> +   "thr_mode". This filter can only be used in bandwidth events.
+>  
+> -Example usage of perf::
+> +   For example, "thr_len=4" means threshold is 2^4 DW, "thr_mode=0" means
+> +   counter counts when TLP length >= threshold, and "thr_mode=1" means counts
+> +   when TLP length < threshold.
+> +
+> +   Example usage of perf::
+>  
+> -  $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,thr_len=0x4,thr_mode=1/ sleep 5
+> +     $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,thr_len=0x4,thr_mode=1/ sleep 5
+>  
+>  4. TLP Length filter
+>  
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-alpha                               defconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-s390                             allmodconfig
-s390                                defconfig
-powerpc                           allnoconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-m68k                             allyesconfig
-s390                             allyesconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a001
-ia64                             allmodconfig
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                              defconfig
-i386                                defconfig
-arc                  randconfig-r043-20221110
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                               rhel-8.3
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                           allyesconfig
-x86_64                        randconfig-a006
-i386                             allyesconfig
-m68k                             allmodconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-
-clang tested configs:
-x86_64                        randconfig-a012
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-riscv                randconfig-r042-20221110
-i386                          randconfig-a013
-i386                          randconfig-a011
-hexagon              randconfig-r041-20221110
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20221110
-x86_64                        randconfig-a003
-s390                 randconfig-r044-20221110
-x86_64                        randconfig-a005
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
