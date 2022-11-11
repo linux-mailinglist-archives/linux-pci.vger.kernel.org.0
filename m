@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82474625C3F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:03:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65951625C3C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:03:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233716AbiKKOC7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:02:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43518 "EHLO
+        id S234134AbiKKODB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 09:03:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234112AbiKKOBx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:01:53 -0500
+        with ESMTP id S234440AbiKKOCO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:02:14 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83228845C7;
-        Fri, 11 Nov 2022 05:57:10 -0800 (PST)
-Message-ID: <20221111132707.005001510@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7508F89639;
+        Fri, 11 Nov 2022 05:57:26 -0800 (PST)
+Message-ID: <20221111132707.060879997@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668175025;
+        s=2020; t=1668175026;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=7CXvgfTszY3LslvHbPboJUjb59ZlVQ1XORNlFYSydbs=;
-        b=Agv68rl7CQm4sjgpbWZA2zBJxntMTk8mKSY602PayvrRRyQNfmK6JasYanB3VY9nVbQfDj
-        VlX/FV//rKxxyJc2J6IZvMB/vWG26i5zPuLzap/UX0+J0tw9DaIteiN4sIleRn3ZenaAv3
-        9ai3s76aknsKpTN3l0Hgi3wSrImjy/D9K4IYYCA3R/qrsSEqz5QK3spbIVbb/L7SCNwK3t
-        G+2MeXJnHh8eljbgb3LsHeb6rEBPGzLfJyLba+yd7Ba7Dk8SEqB6GRhfcJ6mfA3k2XD2XM
-        TPs1i81pOJMIUjQjHlAiFOAzw0ooqh/fpEfnDymEhJVgRgfjeEMxg2j/N43gEg==
+         references:references; bh=Dc0ZFlk2JAPmF0v24u3+k7yycgC6/ipKg9qXDEwD/vU=;
+        b=b2qWOR5rNY5l6QrwV6LOsW8z1NZcuuv0BlXBZwQiTd2ku+0bUb+htoJlY82AP7ueKMnTFh
+        mRrrvZVXzCf/H0WXVARBTsFzszjAWVWufbREofX13hvwsueXQDy7RA0nRAXr40RYK7K8LW
+        epyChfCzDuIFMBqaN4t9mmEUeP1lNF+5SikOV0yvv2n+D43TQ2sveI7y/jgo2jw8W3b39R
+        WA6gqwi28G8sjaoJtA7hQ2hoe5zAcHxK0E5GxBcnm7gALFr8r3kGOsv2yPLgJA5UOPMqlW
+        67atN9UkO2yPH6BHxWWvWp40wP3toNsME0HJbjSZBJtpiDWpWyp5jEB7yycSmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668175025;
+        s=2020e; t=1668175026;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=7CXvgfTszY3LslvHbPboJUjb59ZlVQ1XORNlFYSydbs=;
-        b=LgqWWQEySgEZ5F9eCmSn1EOhVpouemmYgUmw/9/nAKuTrgu8/zuhKwoz5e6f1YFwbyYVyh
-        G2q5r5gIL3SLohBw==
+         references:references; bh=Dc0ZFlk2JAPmF0v24u3+k7yycgC6/ipKg9qXDEwD/vU=;
+        b=bzCbLBwMp9PgBIKr8pHnkMh9R/cMZQMZPxHvt/cZq6d8HW8BhFofScW9NdUFgmteXW2y6e
+        0AvvhHSeFhGyk+BA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -50,11 +50,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: [patch 17/20] platform-msi: Switch to the domain id aware MSI interfaces
+Subject: [patch 18/20] bus: fsl-mc-msi: Switch to domain id aware interfaces
 References: <20221111131813.914374272@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 11 Nov 2022 14:57:04 +0100 (CET)
+Date:   Fri, 11 Nov 2022 14:57:06 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,35 +64,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ahmed S. Darwish <darwi@linutronix.de>
-
 Switch to the new domain id aware interfaces to phase out the previous
-ones. No functional change.
+ones.
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Get rid of the MSI descriptor and domain checks as the core code detects
+these issues anyway.
+
+No functional change.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/base/platform-msi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/fsl-mc/fsl-mc-msi.c |   25 +++----------------------
+ 1 file changed, 3 insertions(+), 22 deletions(-)
 
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -213,7 +213,7 @@ int platform_msi_domain_alloc_irqs(struc
- 	if (err)
- 		return err;
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -213,21 +213,8 @@ struct irq_domain *fsl_mc_find_msi_domai
  
--	err = msi_domain_alloc_irqs(dev->msi.domain, dev, nvec);
-+	err = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN, 0, nvec - 1);
- 	if (err)
- 		platform_msi_free_priv_data(dev);
- 
-@@ -227,7 +227,7 @@ EXPORT_SYMBOL_GPL(platform_msi_domain_al
-  */
- void platform_msi_domain_free_irqs(struct device *dev)
+ int fsl_mc_msi_domain_alloc_irqs(struct device *dev,  unsigned int irq_count)
  {
--	msi_domain_free_irqs(dev->msi.domain, dev);
+-	struct irq_domain *msi_domain;
+-	int error;
++	int error = msi_setup_device_data(dev);
+ 
+-	msi_domain = dev_get_msi_domain(dev);
+-	if (!msi_domain)
+-		return -EINVAL;
+-
+-	error = msi_setup_device_data(dev);
+-	if (error)
+-		return error;
+-
+-	msi_lock_descs(dev);
+-	if (msi_first_desc(dev, MSI_DESC_ALL))
+-		error = -EINVAL;
+-	msi_unlock_descs(dev);
+ 	if (error)
+ 		return error;
+ 
+@@ -235,7 +222,7 @@ int fsl_mc_msi_domain_alloc_irqs(struct
+ 	 * NOTE: Calling this function will trigger the invocation of the
+ 	 * its_fsl_mc_msi_prepare() callback
+ 	 */
+-	error = msi_domain_alloc_irqs(msi_domain, dev, irq_count);
++	error = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN, 0, irq_count - 1);
+ 
+ 	if (error)
+ 		dev_err(dev, "Failed to allocate IRQs\n");
+@@ -244,11 +231,5 @@ int fsl_mc_msi_domain_alloc_irqs(struct
+ 
+ void fsl_mc_msi_domain_free_irqs(struct device *dev)
+ {
+-	struct irq_domain *msi_domain;
+-
+-	msi_domain = dev_get_msi_domain(dev);
+-	if (!msi_domain)
+-		return;
+-
+-	msi_domain_free_irqs(msi_domain, dev);
 +	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
- 	platform_msi_free_priv_data(dev);
  }
- EXPORT_SYMBOL_GPL(platform_msi_domain_free_irqs);
 
