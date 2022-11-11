@@ -2,170 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6EED625DCF
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 16:04:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57D93625E3A
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 16:21:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234823AbiKKPEf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 10:04:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
+        id S233750AbiKKPVV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 10:21:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234900AbiKKPDz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 10:03:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21C87F556;
-        Fri, 11 Nov 2022 07:01:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA1F061FFF;
-        Fri, 11 Nov 2022 15:01:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C0BC433D7;
-        Fri, 11 Nov 2022 15:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668178883;
-        bh=3IpjaTnl0Pjxf4MekfmGVUqIt/pNy0uUtZS+fnyoQHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VajMEA22U/Utg14uq5jSsHUpldLMZT6ifoAgAby85B+8j8I2p5gHiuUAr5vRPPkyp
-         CzgOR6e7M9/ejoSFAPFdwsr7Y3LdB8Z9Pb2uKjDQ7siJt8kq9ZfWbIsoMfUwa3U+JA
-         A2wLVSTTeKNUthcPqZ6Vwksy3eJoJAqKGbdNa7n54F65vpPIQSCKSRv+hIqOYRAsn1
-         vNQ1Y8myyNnK2Oty8cIND0IYa49YZ/ZJPSniRpxDHWZoCNjFq4eq9m+QZrj0YehwBx
-         9TYKgpS5DuCl3giZHdUH0UR1c7sUOz2w9uFsXemYahKYP/iew+SbJHijtbtrWJWqIQ
-         bQ3SGuvKt6Oyw==
-Date:   Fri, 11 Nov 2022 16:01:15 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        with ESMTP id S233436AbiKKPUv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 10:20:51 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0329E845D6;
+        Fri, 11 Nov 2022 07:20:20 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id e129so4633783pgc.9;
+        Fri, 11 Nov 2022 07:20:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LcP2H7grsqOhDWc1kPXnn8Vqq+kt2chyg0TKAA6Cf+8=;
+        b=haeKry4tyfwLPDg6LhjNWDpM9ibrP1Ny4oIqSgQ2jesvxpaVShZpH0YK0dE/2qk4HW
+         HDI9dYx2vkHbL+vxdZ9kX7KG45nQyteYWf7ih/S7qDipt/io015129pDCNAvPShkXcSQ
+         kh+eLT3yqDAHK6+m1pFeYsStZ170RmAzV4GqpziXi9wwpe9VOUbmR2FHhrLr4KrBhdOV
+         sbwA4MchUNh+vqnw/TxZPa3WvtDorqQvaHhMK+ap4kLZJ2KeEgqITLJkDi8QMnd9bxoO
+         xBiosOUJtDhUJ6PbdRRwis5W/1TCRpxGRQCJeQ28CyjMJHZnghl3AW8ilIvXW/eF2due
+         FYjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LcP2H7grsqOhDWc1kPXnn8Vqq+kt2chyg0TKAA6Cf+8=;
+        b=2+89b3GCCqy9dvJwRqjEBUFU1odCt2fKh9L9Lu3xMaF6iFCmK0r86cWz2CaSIDqNuW
+         5sgUqjOBexkBc5SLdnnZf5GV1Dn6h54Y3ugQYfIF7fQaNAvHxuNP84ImYYKoSHHUQdxz
+         QWA1E/a0GYnbmrJZobM8k+3BBP/DR5rv1cgN/IyEvjYDM3yKGT0dee25pgYlg5nQBuKy
+         EW6SyyqbQWEhl5Z5X53lAzdMLx7DX96tiD07K4azkGCOLT5lZRPHhNoJafHzgoDlc+io
+         +SHxImB7JfiQ86Rbu3LCUHy50teJDk/UkGLzSx7fv2wV8wO+RIbWHwNxj+nJACnNzJ/P
+         48Ww==
+X-Gm-Message-State: ANoB5pm21NDT0bFs1ct90pRiWYgtWc+9Mg4lLTubx2q9OQQ9Sl5qJTSL
+        vvm8aNPcpwn52VrksCizcEE=
+X-Google-Smtp-Source: AA0mqf5RoqIc5bSBbu0M5ZgiQ19m/Rg7FA5rDDGl6Mj8yWFwlwBHQzb1nNCnog6zpbr7oXbU2ND2hg==
+X-Received: by 2002:a62:d0c3:0:b0:56b:94f5:400c with SMTP id p186-20020a62d0c3000000b0056b94f5400cmr3143731pfg.31.1668180019782;
+        Fri, 11 Nov 2022 07:20:19 -0800 (PST)
+Received: from ?IPv6:::1? ([2601:647:5e00:1473:a573:286d:8e6e:60ef])
+        by smtp.gmail.com with ESMTPSA id t16-20020a17090340d000b001784a45511asm1858212pld.79.2022.11.11.07.20.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Nov 2022 07:20:19 -0800 (PST)
+Date:   Fri, 11 Nov 2022 07:20:16 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC:     Shawn Guo <shawn.guo@linaro.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/2] PCI: histb: switch to using gpiod API
-Message-ID: <Y25juwnlU+ujvue9@lpieralisi>
-References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Y25juwnlU+ujvue9@lpieralisi>
+References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com> <Y25juwnlU+ujvue9@lpieralisi>
+Message-ID: <8C194ACD-6146-4DB1-A81F-7817E7D25FCE@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 01:43:00PM -0700, Dmitry Torokhov wrote:
-> This patch switches the driver away from legacy gpio/of_gpio API to
-> gpiod API, and removes use of of_get_named_gpio_flags() which I want to
-> make private to gpiolib.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On November 11, 2022 7:01:15 AM PST, Lorenzo Pieralisi <lpieralisi@kernel=
+=2Eorg> wrote:
+>On Tue, Sep 06, 2022 at 01:43:00PM -0700, Dmitry Torokhov wrote:
+>> This patch switches the driver away from legacy gpio/of_gpio API to
+>> gpiod API, and removes use of of_get_named_gpio_flags() which I want to
+>> make private to gpiolib=2E
+>>=20
+>> Signed-off-by: Dmitry Torokhov <dmitry=2Etorokhov@gmail=2Ecom>
+>
+>Should I pick this up ? On patch (2/2) I am not sure we reached
+>a consensus - please let me know=2E
 
-Should I pick this up ? On patch (2/2) I am not sure we reached
-a consensus - please let me know.
 
-Thanks,
-Lorenzo
+Could you pick just this patch (1/2) for now - I owe Pali a respin on the =
+other one, but as far as I remember there was no material disagreement on t=
+he patches themselves, just a discussion how to change gpiod API to be more=
+ expressive=2E
 
-> ---
->  drivers/pci/controller/dwc/pcie-histb.c | 39 ++++++++++++-------------
->  1 file changed, 19 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-> index e2b80f10030d..43c27812dd6d 100644
-> --- a/drivers/pci/controller/dwc/pcie-histb.c
-> +++ b/drivers/pci/controller/dwc/pcie-histb.c
-> @@ -10,11 +10,11 @@
->  
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> @@ -60,7 +60,7 @@ struct histb_pcie {
->  	struct reset_control *sys_reset;
->  	struct reset_control *bus_reset;
->  	void __iomem *ctrl;
-> -	int reset_gpio;
-> +	struct gpio_desc *reset_gpio;
->  	struct regulator *vpcie;
->  };
->  
-> @@ -212,8 +212,8 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
->  	clk_disable_unprepare(hipcie->sys_clk);
->  	clk_disable_unprepare(hipcie->bus_clk);
->  
-> -	if (gpio_is_valid(hipcie->reset_gpio))
-> -		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
-> +	if (hipcie->reset_gpio)
-> +		gpiod_set_value_cansleep(hipcie->reset_gpio, 1);
->  
->  	if (hipcie->vpcie)
->  		regulator_disable(hipcie->vpcie);
-> @@ -235,8 +235,8 @@ static int histb_pcie_host_enable(struct dw_pcie_rp *pp)
->  		}
->  	}
->  
-> -	if (gpio_is_valid(hipcie->reset_gpio))
-> -		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
-> +	if (hipcie->reset_gpio)
-> +		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
->  
->  	ret = clk_prepare_enable(hipcie->bus_clk);
->  	if (ret) {
-> @@ -298,10 +298,7 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  	struct histb_pcie *hipcie;
->  	struct dw_pcie *pci;
->  	struct dw_pcie_rp *pp;
-> -	struct device_node *np = pdev->dev.of_node;
->  	struct device *dev = &pdev->dev;
-> -	enum of_gpio_flags of_flags;
-> -	unsigned long flag = GPIOF_DIR_OUT;
->  	int ret;
->  
->  	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
-> @@ -336,17 +333,19 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  		hipcie->vpcie = NULL;
->  	}
->  
-> -	hipcie->reset_gpio = of_get_named_gpio_flags(np,
-> -				"reset-gpios", 0, &of_flags);
-> -	if (of_flags & OF_GPIO_ACTIVE_LOW)
-> -		flag |= GPIOF_ACTIVE_LOW;
-> -	if (gpio_is_valid(hipcie->reset_gpio)) {
-> -		ret = devm_gpio_request_one(dev, hipcie->reset_gpio,
-> -				flag, "PCIe device power control");
-> -		if (ret) {
-> -			dev_err(dev, "unable to request gpio\n");
-> -			return ret;
-> -		}
-> +	hipcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> +						     GPIOD_OUT_HIGH);
-> +	ret = PTR_ERR_OR_ZERO(hipcie->reset_gpio);
-> +	if (ret) {
-> +		dev_err(dev, "unable to request reset gpio: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_set_consumer_name(hipcie->reset_gpio,
-> +				      "PCIe device power control");
-> +	if (ret) {
-> +		dev_err(dev, "unable to set reset gpio name: %d\n", ret);
-> +		return ret;
->  	}
->  
->  	hipcie->aux_clk = devm_clk_get(dev, "aux");
-> -- 
-> 2.37.2.789.g6183377224-goog
-> 
+Thanks=2E
+
+--=20
+Dmitry
