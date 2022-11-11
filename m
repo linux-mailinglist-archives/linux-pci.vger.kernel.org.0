@@ -2,46 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 815D3625D00
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6EED625DCF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 16:04:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234348AbiKKO1g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:27:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
+        id S234823AbiKKPEf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 10:04:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232372AbiKKO1b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:27:31 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418F1BB4;
-        Fri, 11 Nov 2022 06:27:31 -0800 (PST)
-Received: from kwepemi100025.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N81Ck5sMrzbngJ;
-        Fri, 11 Nov 2022 22:23:46 +0800 (CST)
-Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.148.223) by
- kwepemi100025.china.huawei.com (7.221.188.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 11 Nov 2022 22:27:28 +0800
-From:   "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jianjay.zhou@huawei.com>, <zhuangshengen@huawei.com>,
-        <arei.gonglei@huawei.com>, <yechuan@huawei.com>,
-        <huangzhichao@huawei.com>, <xiehong@huawei.com>,
-        Longpeng <longpeng2@huawei.com>
-Subject: [RFC 4/4] pci/sriov: add sriov_scan_vf_id interface
-Date:   Fri, 11 Nov 2022 22:27:22 +0800
-Message-ID: <20221111142722.1172-5-longpeng2@huawei.com>
-X-Mailer: git-send-email 2.25.0.windows.1
-In-Reply-To: <20221111142722.1172-1-longpeng2@huawei.com>
-References: <20221111142722.1172-1-longpeng2@huawei.com>
+        with ESMTP id S234900AbiKKPDz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 10:03:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21C87F556;
+        Fri, 11 Nov 2022 07:01:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA1F061FFF;
+        Fri, 11 Nov 2022 15:01:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C0BC433D7;
+        Fri, 11 Nov 2022 15:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668178883;
+        bh=3IpjaTnl0Pjxf4MekfmGVUqIt/pNy0uUtZS+fnyoQHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VajMEA22U/Utg14uq5jSsHUpldLMZT6ifoAgAby85B+8j8I2p5gHiuUAr5vRPPkyp
+         CzgOR6e7M9/ejoSFAPFdwsr7Y3LdB8Z9Pb2uKjDQ7siJt8kq9ZfWbIsoMfUwa3U+JA
+         A2wLVSTTeKNUthcPqZ6Vwksy3eJoJAqKGbdNa7n54F65vpPIQSCKSRv+hIqOYRAsn1
+         vNQ1Y8myyNnK2Oty8cIND0IYa49YZ/ZJPSniRpxDHWZoCNjFq4eq9m+QZrj0YehwBx
+         9TYKgpS5DuCl3giZHdUH0UR1c7sUOz2w9uFsXemYahKYP/iew+SbJHijtbtrWJWqIQ
+         bQ3SGuvKt6Oyw==
+Date:   Fri, 11 Nov 2022 16:01:15 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: histb: switch to using gpiod API
+Message-ID: <Y25juwnlU+ujvue9@lpieralisi>
+References: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.148.223]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi100025.china.huawei.com (7.221.188.158)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220906204301.3736813-1-dmitry.torokhov@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,91 +59,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
+On Tue, Sep 06, 2022 at 01:43:00PM -0700, Dmitry Torokhov wrote:
+> This patch switches the driver away from legacy gpio/of_gpio API to
+> gpiod API, and removes use of of_get_named_gpio_flags() which I want to
+> make private to gpiolib.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-The users can add a specific VF through the sriov_scan_vf_id interface.
+Should I pick this up ? On patch (2/2) I am not sure we reached
+a consensus - please let me know.
 
-For example:
- echo 4 > /sys/bus/pci/devices/0000\:65\:00.0/sriov_scan_vf_id
- ( Add VF4 into the system. )
+Thanks,
+Lorenzo
 
-Signed-off-by: Longpeng <longpeng2@huawei.com>
----
- drivers/pci/iov.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index cb24d4b60e0d..2b585b3a9ad8 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -553,6 +553,51 @@ static ssize_t sriov_numvfs_no_scan_show(struct device *dev,
- 	return sriov_numvfs_show(dev, attr, buf);
- }
- 
-+static ssize_t sriov_scan_vf_id_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	u16 vf_id;
-+	ssize_t ret;
-+
-+	if (kstrtou16(buf, 0, &vf_id) < 0)
-+		return -EINVAL;
-+
-+	device_lock(&pdev->dev);
-+
-+	if (!pdev->sriov->num_VFs) {
-+		ret = -ENOENT;
-+		goto exit;
-+	}
-+
-+	if (vf_id >= pdev->sriov->num_VFs) {
-+		ret = -ENODEV;
-+		goto exit;
-+	}
-+
-+	if (test_bit(vf_id, pdev->sriov->vf_bitmap)) {
-+		ret = -EEXIST;
-+		goto exit;
-+	}
-+
-+	device_unlock(&pdev->dev);
-+
-+	/* Already scanned VF0 when enabling VFs */
-+	if (vf_id == 0)
-+		return count;
-+
-+	ret = pci_iov_add_virtfn(pdev, vf_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+
-+exit:
-+	device_unlock(&pdev->dev);
-+	return ret;
-+}
-+
- static ssize_t sriov_offset_show(struct device *dev,
- 				 struct device_attribute *attr,
- 				 char *buf)
-@@ -607,6 +652,7 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
- static DEVICE_ATTR_RO(sriov_totalvfs);
- static DEVICE_ATTR_RW(sriov_numvfs);
- static DEVICE_ATTR_RW(sriov_numvfs_no_scan);
-+static DEVICE_ATTR_WO(sriov_scan_vf_id);
- static DEVICE_ATTR_RO(sriov_offset);
- static DEVICE_ATTR_RO(sriov_stride);
- static DEVICE_ATTR_RO(sriov_vf_device);
-@@ -616,6 +662,7 @@ static struct attribute *sriov_pf_dev_attrs[] = {
- 	&dev_attr_sriov_totalvfs.attr,
- 	&dev_attr_sriov_numvfs.attr,
- 	&dev_attr_sriov_numvfs_no_scan.attr,
-+	&dev_attr_sriov_scan_vf_id.attr,
- 	&dev_attr_sriov_offset.attr,
- 	&dev_attr_sriov_stride.attr,
- 	&dev_attr_sriov_vf_device.attr,
--- 
-2.23.0
-
+> ---
+>  drivers/pci/controller/dwc/pcie-histb.c | 39 ++++++++++++-------------
+>  1 file changed, 19 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index e2b80f10030d..43c27812dd6d 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -10,11 +10,11 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> @@ -60,7 +60,7 @@ struct histb_pcie {
+>  	struct reset_control *sys_reset;
+>  	struct reset_control *bus_reset;
+>  	void __iomem *ctrl;
+> -	int reset_gpio;
+> +	struct gpio_desc *reset_gpio;
+>  	struct regulator *vpcie;
+>  };
+>  
+> @@ -212,8 +212,8 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+>  	clk_disable_unprepare(hipcie->sys_clk);
+>  	clk_disable_unprepare(hipcie->bus_clk);
+>  
+> -	if (gpio_is_valid(hipcie->reset_gpio))
+> -		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
+> +	if (hipcie->reset_gpio)
+> +		gpiod_set_value_cansleep(hipcie->reset_gpio, 1);
+>  
+>  	if (hipcie->vpcie)
+>  		regulator_disable(hipcie->vpcie);
+> @@ -235,8 +235,8 @@ static int histb_pcie_host_enable(struct dw_pcie_rp *pp)
+>  		}
+>  	}
+>  
+> -	if (gpio_is_valid(hipcie->reset_gpio))
+> -		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
+> +	if (hipcie->reset_gpio)
+> +		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
+>  
+>  	ret = clk_prepare_enable(hipcie->bus_clk);
+>  	if (ret) {
+> @@ -298,10 +298,7 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  	struct histb_pcie *hipcie;
+>  	struct dw_pcie *pci;
+>  	struct dw_pcie_rp *pp;
+> -	struct device_node *np = pdev->dev.of_node;
+>  	struct device *dev = &pdev->dev;
+> -	enum of_gpio_flags of_flags;
+> -	unsigned long flag = GPIOF_DIR_OUT;
+>  	int ret;
+>  
+>  	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
+> @@ -336,17 +333,19 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  		hipcie->vpcie = NULL;
+>  	}
+>  
+> -	hipcie->reset_gpio = of_get_named_gpio_flags(np,
+> -				"reset-gpios", 0, &of_flags);
+> -	if (of_flags & OF_GPIO_ACTIVE_LOW)
+> -		flag |= GPIOF_ACTIVE_LOW;
+> -	if (gpio_is_valid(hipcie->reset_gpio)) {
+> -		ret = devm_gpio_request_one(dev, hipcie->reset_gpio,
+> -				flag, "PCIe device power control");
+> -		if (ret) {
+> -			dev_err(dev, "unable to request gpio\n");
+> -			return ret;
+> -		}
+> +	hipcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +						     GPIOD_OUT_HIGH);
+> +	ret = PTR_ERR_OR_ZERO(hipcie->reset_gpio);
+> +	if (ret) {
+> +		dev_err(dev, "unable to request reset gpio: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiod_set_consumer_name(hipcie->reset_gpio,
+> +				      "PCIe device power control");
+> +	if (ret) {
+> +		dev_err(dev, "unable to set reset gpio name: %d\n", ret);
+> +		return ret;
+>  	}
+>  
+>  	hipcie->aux_clk = devm_clk_get(dev, "aux");
+> -- 
+> 2.37.2.789.g6183377224-goog
+> 
