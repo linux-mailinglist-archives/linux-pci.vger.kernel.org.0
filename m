@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38340625C2F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:01:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B692625C31
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:01:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234186AbiKKOBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:01:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        id S234160AbiKKOBv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 09:01:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234005AbiKKOA6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:00:58 -0500
+        with ESMTP id S234278AbiKKOBL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:01:11 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B59121271;
-        Fri, 11 Nov 2022 05:56:53 -0800 (PST)
-Message-ID: <20221111132706.556889434@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DEF391D2;
+        Fri, 11 Nov 2022 05:56:55 -0800 (PST)
+Message-ID: <20221111132706.612934166@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668175012;
+        s=2020; t=1668175013;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=TkOvIxWq7blX++8C4usdFqhmn0pf5LlrWLBigdC6jNU=;
-        b=QwvsjN+SeJTunL4JDRi3zuYoEkPYRBE3sGQtDBitAJztwrnQqvJFDprVJ3r+G23bUHKTXz
-        WVnLTw5f30eDVfgihTfJPYh/Z0QsjvMKw0FT4fEiroiX9FQQRB/8S59doOI0R+CVgPo2Ij
-        HcLqirBVszrOQRk/9x7L5bfx3ZMse96fIUFurtJqHM7ZxxOKTJm6Vtjt6BgEVeszKHG4VH
-        Zi9+KnBbJNUfAlznj2A0WtgtSI3seDWQFduF5C3BGlCDTdk+RzJklqNTZo67B5WY4Z60+k
-        695kbAKVQ2MzHgWCxy8XHJHwnSSyLy8JdX6CUPZFaY6qQVf6NhgpZrLnLuOzfQ==
+         references:references; bh=ZAg32d9i/2td2oqLXP4twAnBQvJWwD8NcSLXlUrJbYg=;
+        b=wTMg281eWp6mj4p8XCRYsGLuKaE18bBJPfh2mwDMgfgBIRGhzgaW5KoLmNiJ9Yi2sfgHvE
+        J9n2fQpOecsWGH9hD1tiP8fayfvIJKg4xn8ck9M1HOXvrP/NN2Su3SNaOBENX/5yU2h6DE
+        QkG5EqNjZEmxgyeRQTiXfXRjJl4fevozjBLTZgNFFnpC1GPgoZrU9Y+uY/sHFI5Esc4GXW
+        coxMdGZzk7LurScp8P/AAJ4zDZduFW1awQQk3UUky5HbjaBUVGBTPa3VTS6hDJSQz0hAj/
+        7jpr2mLZROQn7FP2LQxeF+nYEyn1uJB2K9oLB1HSxynXrmaJSr83/2clZ+pLsA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668175012;
+        s=2020e; t=1668175013;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=TkOvIxWq7blX++8C4usdFqhmn0pf5LlrWLBigdC6jNU=;
-        b=8rRBWR4SmnZKR1bVKLF8pwofRIJbqCo+qdlwtD/+742M8HKIZZrdG3K1eaeFfog27xHxWo
-        L9y1Jro0COuGinAw==
+         references:references; bh=ZAg32d9i/2td2oqLXP4twAnBQvJWwD8NcSLXlUrJbYg=;
+        b=Snso0XSvIOhypHm6eejQQUk8CRZleoczwyIEvsFyEbzA9VmrArOSf7KE5UJ8Izdy89gkuy
+        MiuJ5SHtSSSlczCA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -50,11 +50,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: [patch 09/20] genirq/msi: Make msi_get_virq() device domain aware
+Subject: [patch 10/20] genirq/msi: Rename msi_add_msi_desc() to msi_insert_msi_desc()
 References: <20221111131813.914374272@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 11 Nov 2022 14:56:51 +0100 (CET)
+Date:   Fri, 11 Nov 2022 14:56:53 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,93 +64,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ahmed S. Darwish <darwi@linutronix.de>
+This reflects the functionality better. No functional change.
 
-In preparation of the upcoming per device multi MSI domain support, change
-the interface to support lookups based on domain id and zero based index
-within the domain.
-
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/msi_api.h |   14 +++++++++++++-
- kernel/irq/msi.c        |   24 ++++++++++++++++++------
- 2 files changed, 31 insertions(+), 7 deletions(-)
+ drivers/pci/msi/msi.c            |    4 ++--
+ drivers/soc/ti/ti_sci_inta_msi.c |    4 ++--
+ include/linux/msi.h              |    2 +-
+ kernel/irq/msi.c                 |    6 ++++--
+ 4 files changed, 9 insertions(+), 7 deletions(-)
 
---- a/include/linux/msi_api.h
-+++ b/include/linux/msi_api.h
-@@ -18,6 +18,18 @@ enum msi_domain_ids {
- 	MSI_MAX_DEVICE_IRQDOMAINS,
- };
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -308,7 +308,7 @@ static int msi_setup_msi_desc(struct pci
+ 	if (desc.pci.msi_attrib.can_mask)
+ 		pci_read_config_dword(dev, desc.pci.mask_pos, &desc.pci.msi_mask);
  
--unsigned int msi_get_virq(struct device *dev, unsigned int index);
-+unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index);
-+
-+/**
-+ * msi_get_virq - Lookup the Linux interrupt number for a MSI index on the default interrupt domain
-+ * @dev:	Device for which the lookup happens
-+ * @index:	The MSI index to lookup
-+ *
-+ * Return: The Linux interrupt number on success (> 0), 0 if not found
-+ */
-+static inline unsigned int msi_get_virq(struct device *dev, unsigned int index)
-+{
-+	return msi_domain_get_virq(dev, MSI_DEFAULT_DOMAIN, index);
-+}
+-	return msi_add_msi_desc(&dev->dev, &desc);
++	return msi_insert_msi_desc(&dev->dev, &desc);
+ }
  
+ static int msi_verify_entries(struct pci_dev *dev)
+@@ -591,7 +591,7 @@ static int msix_setup_msi_descs(struct p
+ 			desc.pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+ 		}
+ 
+-		ret = msi_add_msi_desc(&dev->dev, &desc);
++		ret = msi_insert_msi_desc(&dev->dev, &desc);
+ 		if (ret)
+ 			break;
+ 	}
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -73,13 +73,13 @@ static int ti_sci_inta_msi_alloc_descs(s
+ 	for (set = 0; set < res->sets; set++) {
+ 		for (i = 0; i < res->desc[set].num; i++, count++) {
+ 			msi_desc.msi_index = res->desc[set].start + i;
+-			if (msi_add_msi_desc(dev, &msi_desc))
++			if (msi_insert_msi_desc(dev, &msi_desc))
+ 				goto fail;
+ 		}
+ 
+ 		for (i = 0; i < res->desc[set].num_sec; i++, count++) {
+ 			msi_desc.msi_index = res->desc[set].start_sec + i;
+-			if (msi_add_msi_desc(dev, &msi_desc))
++			if (msi_insert_msi_desc(dev, &msi_desc))
+ 				goto fail;
+ 		}
+ 	}
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -274,7 +274,7 @@ static inline void msi_desc_set_iommu_co
+ }
  #endif
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -351,25 +351,37 @@ struct msi_desc *msi_next_desc(struct de
- EXPORT_SYMBOL_GPL(msi_next_desc);
+ 
+-int msi_add_msi_desc(struct device *dev, struct msi_desc *init_desc);
++int msi_insert_msi_desc(struct device *dev, struct msi_desc *init_desc);
+ void msi_free_msi_descs_range(struct device *dev, unsigned int first_index, unsigned int last_index);
  
  /**
-- * msi_get_virq - Return Linux interrupt number of a MSI interrupt
-+ * msi_domain_get_virq - Lookup the Linux interrupt number for a MSI index on a interrupt domain
-  * @dev:	Device to operate on
-+ * @domid:	Domain ID of the interrupt domain associated to the device
-  * @index:	MSI interrupt index to look for (0-based)
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -100,13 +100,15 @@ static int msi_insert_desc(struct msi_de
+ }
+ 
+ /**
+- * msi_add_msi_desc - Allocate and initialize a MSI descriptor
++ * msi_insert_msi_desc - Allocate and initialize a MSI descriptor and
++ *			 insert it at @init_desc->msi_index
++ *
+  * @dev:	Pointer to the device for which the descriptor is allocated
+  * @init_desc:	Pointer to an MSI descriptor to initialize the new descriptor
   *
-  * Return: The Linux interrupt number on success (> 0), 0 if not found
+  * Return: 0 on success or an appropriate failure code.
   */
--unsigned int msi_get_virq(struct device *dev, unsigned int index)
-+unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index)
+-int msi_add_msi_desc(struct device *dev, struct msi_desc *init_desc)
++int msi_insert_msi_desc(struct device *dev, struct msi_desc *init_desc)
  {
  	struct msi_desc *desc;
- 	unsigned int ret = 0;
--	bool pcimsi;
-+	bool pcimsi = false;
-+	int base;
  
- 	if (!dev->msi.data)
- 		return 0;
- 
--	pcimsi = dev_is_pci(dev) ? to_pci_dev(dev)->msi_enabled : false;
-+	if (WARN_ON_ONCE(index >= MSI_MAX_INDEX))
-+		return 0;
-+
-+	/* This check is only valid for the PCI default MSI domain */
-+	if (dev_is_pci(dev) && domid == MSI_DEFAULT_DOMAIN)
-+		pcimsi = to_pci_dev(dev)->msi_enabled;
- 
- 	msi_lock_descs(dev);
--	desc = xa_load(&dev->msi.data->__store, pcimsi ? 0 : index);
-+
-+	base = msi_get_domain_base_index(dev, domid);
-+	if (base < 0)
-+		return 0;
-+
-+	desc = xa_load(&dev->msi.data->__store, base + pcimsi ? 0 : index);
- 	if (desc && desc->irq) {
- 		/*
- 		 * PCI-MSI has only one descriptor for multiple interrupts.
-@@ -386,7 +398,7 @@ unsigned int msi_get_virq(struct device
- 	msi_unlock_descs(dev);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(msi_get_virq);
-+EXPORT_SYMBOL_GPL(msi_domain_get_virq);
- 
- #ifdef CONFIG_SYSFS
- static struct attribute *msi_dev_attrs[] = {
 
