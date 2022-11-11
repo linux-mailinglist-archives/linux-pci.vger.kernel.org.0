@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E2E9625C25
+	by mail.lfdr.de (Postfix) with ESMTP id 7A155625C26
 	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:01:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234137AbiKKOBK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:01:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43418 "EHLO
+        id S234277AbiKKOBL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 09:01:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234099AbiKKOAf (ORCPT
+        with ESMTP id S234049AbiKKOAf (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:00:35 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E737F814FD;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC2F8D7ED;
         Fri, 11 Nov 2022 05:56:48 -0800 (PST)
-Message-ID: <20221111132706.332816984@linutronix.de>
+Message-ID: <20221111132706.388892782@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668175005;
+        s=2020; t=1668175007;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=+CkTPHTMXOvRSl4YB673TzHqsVFLjHUDowE8deLkwuw=;
-        b=gNnRb6mrbonmhBd8GR2CBf2YUwkoKxyhGHRH2Vew6IAJ1aoaNsG72PZxdV2iXRLVZ4Uh4q
-        vxD/3XMxd+I5f2oUt+iysBur2W5wdQun2frxS2K99K1IFc5OKycKQeMjQYt7e9hv5AxA3u
-        vrzWBUYAkXPOwUVn+/Dj6HyJ1sDgCECZwBQux++n0bUmd7CaQpT8KAjQqNibNkNZWNJQpH
-        YEPnK+UtxPITgqJ01xgYSVgI9NG6OgyLq5KJC6oqZ4yg7eluvoKEdu7FmdNcUX0xtFRfiF
-        amonQVthSLuzmJlWs5l55YkXYmKz3ayecVpRHTlqjQi1j4jfj1Kd5BFoWnXRCg==
+         references:references; bh=+dAWZkN6cGNqJWgbyj9Oq+MbyBZuRhS/MrnxspMqy9E=;
+        b=v1PtI44g/Am1qxyq/3b/TdkupIjQY/gl40s7ApESbrvv3cabUzkAHZp05hF9W8FAV9F5hi
+        TV6cYF44shMIAfq2CjPKvZ9+Pjwp0Io/AXIalqCz+iXrqAbTNpzskxa2Q9O69cy3dSn+oe
+        NWWwWqHUeSKNwojTyq8r0/fGYUtWJfNIjmIzMZ5lw+N4IA/iqTZ9h5RbMVpDc9D7wgjQV2
+        mf43Xq8KvSl3iC+x89XCKH9pf5GoxjLEQ7KXwM0xoOEtTCyCIQNUG1Wp4Ctc4/5Z6KMCcx
+        zQuLN3Mi72N5o/tU7l0Nh1H4ED+cNSw3WAnyexd6nDQDj+1hPM3rc13e12+2Ng==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668175005;
+        s=2020e; t=1668175007;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=+CkTPHTMXOvRSl4YB673TzHqsVFLjHUDowE8deLkwuw=;
-        b=8IPFVf2Sz/jfFvdgpzjQUfkbUjKJhpZNKH+G9byBcUzBkUSLl+f2JohdhaKYFUMabfMsNd
-        JRIcUopJmj64EPCg==
+         references:references; bh=+dAWZkN6cGNqJWgbyj9Oq+MbyBZuRhS/MrnxspMqy9E=;
+        b=Y/gXDXsYJF6Sa5UVN981gmV3cjImDqIc0W/tEeW5iVObyX3LNvGJBgS91vBPGFLMIwAEXH
+        5JI1s/z7pzJ2nfDw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -50,11 +50,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: [patch 05/20] genirq/irqdomain: Provide IRQ_DOMAIN_FLAG_MSI_DEVICE
+Subject: [patch 06/20] genirq/msi: Check for invalid MSI parent domain usage
 References: <20221111131813.914374272@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 11 Nov 2022 14:56:45 +0100 (CET)
+Date:   Fri, 11 Nov 2022 14:56:46 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,48 +64,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Similar to marking parent MSI domains it's required to identify per device
-domains. Add flag and helpers.
+In the upcoming per device MSI domain concept the MSI parent domains are
+not allowed to be used as regular MSI domains where the MSI allocation/free
+operations are applicable.
+
+Add appropriate checks.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/irqdomain.h |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ kernel/irq/msi.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -192,6 +192,9 @@ enum {
- 	/* Irq domain is a MSI parent domain */
- 	IRQ_DOMAIN_FLAG_MSI_PARENT	= (1 << 8),
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -937,13 +937,21 @@ int msi_domain_alloc_irqs_descs_locked(s
  
-+	/* Irq domain is a MSI device domain */
-+	IRQ_DOMAIN_FLAG_MSI_DEVICE	= (1 << 9),
+ 	lockdep_assert_held(&dev->msi.data->mutex);
+ 
++	if (WARN_ON_ONCE(irq_domain_is_msi_parent(domain))) {
++		ret = -EINVAL;
++		goto free;
++	}
 +
- 	/*
- 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
- 	 * for implementation specific purposes and ignored by the
-@@ -559,6 +562,11 @@ static inline bool irq_domain_is_msi_par
- 	return domain->flags & IRQ_DOMAIN_FLAG_MSI_PARENT;
++	/* Frees allocated descriptors in case of failure. */
+ 	ret = msi_domain_add_simple_msi_descs(info, dev, nvec);
+ 	if (ret)
+ 		return ret;
+ 
+ 	ret = ops->domain_alloc_irqs(domain, dev, nvec);
+-	if (ret)
+-		msi_domain_free_irqs_descs_locked(domain, dev);
++	if (!ret)
++		return 0;
++free:
++	msi_domain_free_irqs_descs_locked(domain, dev);
+ 	return ret;
  }
  
-+static inline bool irq_domain_is_msi_device(struct irq_domain *domain)
-+{
-+	return domain->flags & IRQ_DOMAIN_FLAG_MSI_DEVICE;
-+}
-+
- #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
- static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
- 			unsigned int nr_irqs, int node, void *arg)
-@@ -609,6 +617,11 @@ static inline bool irq_domain_is_msi_par
- {
- 	return false;
- }
-+
-+static inline bool irq_domain_is_msi_device(struct irq_domain *domain)
-+{
-+	return false;
-+}
+@@ -1013,6 +1021,9 @@ void msi_domain_free_irqs_descs_locked(s
  
- #endif	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
+ 	lockdep_assert_held(&dev->msi.data->mutex);
  
++	if (WARN_ON_ONCE(irq_domain_is_msi_parent(domain)))
++		return;
++
+ 	ops->domain_free_irqs(domain, dev);
+ 	if (ops->msi_post_free)
+ 		ops->msi_post_free(domain, dev);
 
