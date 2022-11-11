@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC2BE625C1F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:00:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D1A625C20
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:00:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234179AbiKKOAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:00:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43284 "EHLO
+        id S234261AbiKKOA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 09:00:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233783AbiKKOA3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:00:29 -0500
+        with ESMTP id S230270AbiKKOAa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:00:30 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD7F7F554;
-        Fri, 11 Nov 2022 05:56:44 -0800 (PST)
-Message-ID: <20221111132706.220687198@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCCE56EDD;
+        Fri, 11 Nov 2022 05:56:45 -0800 (PST)
+Message-ID: <20221111132706.276545278@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668175002;
+        s=2020; t=1668175004;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=+wWUy0xddNMXZ4KiuU4oL7F6PKUict1lpTyY0niJbHA=;
-        b=4Ve/5OQD46++Ka7BIfp6pYk3HWqMRwK4G/JS7GSgmA9f3Mu3CWK7KMTuwExQ7K4rujCAeG
-        bJeGyjMRNgVEUB/cWXx6B6xThz7osKQ6aIyXmmfaVHyqAJfz43nfgHXnWujZ+YGMoQUNar
-        WL9Gz+YoeFb5iiMMatgSx9F6yY5BrM0FKyOf5fdjVPl4tOq2k+cNduEb3syKLcmVNwVU8V
-        E3ngIzlwgGsjgUBDx0j4pVFQ+mjBcjmut7w8pTWgQy7L4QLKAgLRbdBolqpsak4MTJVXSa
-        5/D4aUp85YEa28AhVS3vwSYQCupki/2oycF8jbAekLNqa3kydN8CTkT8QL3W6Q==
+         references:references; bh=zA5ha748LKhDmb5FPzI8a0g9w0FaiptQdqB8uQ3jTXw=;
+        b=EbvSbUXW9nFHqG2WDwQcBgXL97thkoo4raFmOln8yVqrphIoC0l+9hZHMP5m9yUF/GECc4
+        KewKET9LzTLaaXlMfLo6KTDhrcxx4M5+mX+9+vH3yYqyIGJ/ZqTeq2DmusSXPt1Z68YxgY
+        gm2HvOi0toYYKQZQ96JGxXlsPwFT9gZusZx6nLe+KC+CcnkaRsxW5Uc9XoWBoK0wRPgpYj
+        J9QRr2LKPx5Q804UiQ1NffH88HSjiEsfcQn5mEmtNTxXFAgI6qhyQc/nQJlD73AOgazk1w
+        bu8MzrlM0qKn3suCr6/sTsQSpD4UC91v1Vt+zPorCA7ZbBpnJ9Sh7zdcWOaIyA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668175002;
+        s=2020e; t=1668175004;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=+wWUy0xddNMXZ4KiuU4oL7F6PKUict1lpTyY0niJbHA=;
-        b=pOkuRxfa/fpZvtbipaYIMhhpLDSFbLFUaARwteFpOtcpeRYQ2BCkJnMVLmqAnRuYtneAF3
-        OFRQsDkKeuwdxdBg==
+         references:references; bh=zA5ha748LKhDmb5FPzI8a0g9w0FaiptQdqB8uQ3jTXw=;
+        b=T9IEE38gSYKi57w85Y2z1rWZQqe1G0LxfHLdyp2W+2FRPXDVlQDagn6EzBEVSfUZrqqmvL
+        KkP6szVnXinU4rAg==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -50,11 +50,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: [patch 03/20] genirq/msi: Create msi_api.h
+Subject: [patch 04/20] genirq/irqdomain: Provide IRQ_DOMAIN_FLAG_MSI_PARENT
 References: <20221111131813.914374272@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 11 Nov 2022 14:56:42 +0100 (CET)
+Date:   Fri, 11 Nov 2022 14:56:43 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,57 +64,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Create a API header for MSI specific functions which are relevant to device
-drivers.
+The new PCI/IMS (Interrupt Message Store) functionality is allowing
+hardware vendors to provide implementation specific storage for the MSI
+messages. This can be device memory and also host/guest memory, e.g. in
+queue memory which is shared with the hardware.
+
+This requires device specific MSI interrupt domains, which cannot be
+achived by expanding the existing PCI/MSI interrupt domain concept which is
+a global interrupt domain shared by all PCI devices on a particular (IOMMU)
+segment:
+
+                                         |--- device 1
+     [Vector]---[Remapping]---[PCI/MSI]--|...
+                                         |--- device N
+
+This works because the PCI/MSI[-X] space is uniform, but falls apart with
+PCI/IMS which is implementation defined and must be available along with
+PCI/MSI[-X] on the same device.
+
+To support PCI/MSI[-X] plus PCI/IMS on the same device it is required to
+rework the PCI/MSI interrupt domain hierarchy concept in the following way:
+
+                              |--- [PCI/MSI] device 1
+     [Vector]---[Remapping]---|...
+                              |--- [PCI/MSI] device N
+
+That allows in the next step to create multiple interrupt domains per device:
+
+
+                              |--- [PCI/MSI] device 1
+                              |--- [PCI/IMS] device 1
+     [Vector]---[Remapping]---|...
+                              |--- [PCI/MSI] device N
+                              |--- [PCI/IMS] device N
+
+So the domain which previously created the global PCI/MSI domain must now
+act as parent domain for the per device domains.
+
+The hierarchy depth is the same as before, but the PCI/MSI domains are then
+device specific and not longer global.
+
+Provide IRQ_DOMAIN_FLAG_MSI_PARENT, which allows to identify these parent
+domains, along with helpers to query it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/msi.h     |    6 ++++--
- include/linux/msi_api.h |   15 +++++++++++++++
- 2 files changed, 19 insertions(+), 2 deletions(-)
-
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -13,11 +13,14 @@
-  *
-  * Regular device drivers have no business with any of these functions and
-  * especially storing MSI descriptor pointers in random code is considered
-- * abuse. The only function which is relevant for drivers is msi_get_virq().
-+ * abuse.
-+ *
-+ * Device driver relevant functions are available in <linux/msi_api.h>
-  */
+ include/linux/irqdomain.h |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -189,6 +189,9 @@ enum {
+ 	/* Irq domain doesn't translate anything */
+ 	IRQ_DOMAIN_FLAG_NO_MAP		= (1 << 6),
  
- #include <linux/irqdomain_defs.h>
- #include <linux/cpumask.h>
-+#include <linux/msi_api.h>
- #include <linux/xarray.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
-@@ -184,7 +187,6 @@ struct msi_device_data {
++	/* Irq domain is a MSI parent domain */
++	IRQ_DOMAIN_FLAG_MSI_PARENT	= (1 << 8),
++
+ 	/*
+ 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
+ 	 * for implementation specific purposes and ignored by the
+@@ -551,6 +554,11 @@ static inline bool irq_domain_is_msi_rem
  
- int msi_setup_device_data(struct device *dev);
+ extern bool irq_domain_hierarchical_is_msi_remap(struct irq_domain *domain);
  
--unsigned int msi_get_virq(struct device *dev, unsigned int index);
- void msi_lock_descs(struct device *dev);
- void msi_unlock_descs(struct device *dev);
++static inline bool irq_domain_is_msi_parent(struct irq_domain *domain)
++{
++	return domain->flags & IRQ_DOMAIN_FLAG_MSI_PARENT;
++}
++
+ #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
+ static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
+ 			unsigned int nr_irqs, int node, void *arg)
+@@ -596,6 +604,12 @@ irq_domain_hierarchical_is_msi_remap(str
+ {
+ 	return false;
+ }
++
++static inline bool irq_domain_is_msi_parent(struct irq_domain *domain)
++{
++	return false;
++}
++
+ #endif	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
  
---- /dev/null
-+++ b/include/linux/msi_api.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef LINUX_MSI_API_H
-+#define LINUX_MSI_API_H
-+
-+/*
-+ * APIs which are relevant for device driver code for allocating and
-+ * freeing MSI interrupts and querying the associations between
-+ * hardware/software MSI indices and the Linux interrupt number.
-+ */
-+
-+struct device;
-+
-+unsigned int msi_get_virq(struct device *dev, unsigned int index);
-+
-+#endif
+ #else /* CONFIG_IRQ_DOMAIN */
 
