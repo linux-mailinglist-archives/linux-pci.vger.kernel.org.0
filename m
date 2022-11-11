@@ -2,56 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 836E4625CD7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:21:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CAB6625CFC
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 15:27:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234471AbiKKOVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 09:21:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
+        id S233705AbiKKO1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 09:27:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234497AbiKKOVb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:21:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD23391F8;
-        Fri, 11 Nov 2022 06:12:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7B3461FE2;
-        Fri, 11 Nov 2022 14:12:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 190C0C433D6;
-        Fri, 11 Nov 2022 14:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668175925;
-        bh=WAd2AYa8S4taz0elUVTwqEBq+wYIB9mqbkD9M3zK2u0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6Huf1RI0OOaM1olOX7NVqvOguysOcK98u/zds/K81EFra/5WrvbzAX/bPkLv1toQ
-         xVSVf9vhf/RX39Z0olTzjxGuzNQFg14t5FMj/Z+WGJMadaCWnxODNkFnxD+ByPw1Ko
-         17QKR9+A1fKQmURaxLCM23yno/O1blfEHCOxwK3gw0tEn5K7SUDiEGTtBslmoDPfU0
-         W3Vy7GfuxXUq4bzoF6k2sYN9OTxh1ehALTAflJNa5OM28aQ+sAOX3mpoUXJf5pfFpu
-         aBlgDA+7vDvHzto9QHhLIOByO0iKLMnnIOcbm75MadCqKzYNdbRvg/z1x49z7/71nN
-         ayn9HPu4483ZA==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Shunsuke Mie <mie@igel.co.jp>, Jon Mason <jdmason@kudzu.us>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: fix Kconfig indent style
-Date:   Fri, 11 Nov 2022 15:11:57 +0100
-Message-Id: <166817589315.218084.10094910873903826248.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220815025006.48167-1-mie@igel.co.jp>
-References: <20220815025006.48167-1-mie@igel.co.jp>
+        with ESMTP id S231840AbiKKO1a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 09:27:30 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DA8C1;
+        Fri, 11 Nov 2022 06:27:28 -0800 (PST)
+Received: from kwepemi100025.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N81Cg3gHNzbnfm;
+        Fri, 11 Nov 2022 22:23:43 +0800 (CST)
+Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.148.223) by
+ kwepemi100025.china.huawei.com (7.221.188.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 11 Nov 2022 22:27:25 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jianjay.zhou@huawei.com>, <zhuangshengen@huawei.com>,
+        <arei.gonglei@huawei.com>, <yechuan@huawei.com>,
+        <huangzhichao@huawei.com>, <xiehong@huawei.com>,
+        Longpeng <longpeng2@huawei.com>
+Subject: [RFC 0/4] pci/sriov: support VFs dynamic addition
+Date:   Fri, 11 Nov 2022 22:27:18 +0800
+Message-ID: <20221111142722.1172-1-longpeng2@huawei.com>
+X-Mailer: git-send-email 2.25.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.148.223]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi100025.china.huawei.com (7.221.188.158)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,17 +47,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 15 Aug 2022 11:50:06 +0900, Shunsuke Mie wrote:
-> Change to follow the Kconfig style guide. This patch fixes to use tab
-> rather than space to indent, while help text is indented an additional
-> two spaces.
-> 
-> 
+From: Longpeng <longpeng2@huawei.com>
 
-Applied to pci/misc, thanks!
+We can enable SRIOV and add VFs by /sys/bus/pci/devices/..../sriov_numvfs, but
+this operation needs to spend lots of time if there has a large amount of VFs.      
+                                                            
+For example, if the machine has 10 PFs and 250 VFs per-PF, enable all the VFs
+concurrently would cost about 200-250ms. However most of them are not need to be
+used at the moment, so we can enable SRIOV first but add VFs on demand.
 
-[1/1] PCI: endpoint: fix Kconfig indent style
-      https://git.kernel.org/lpieralisi/pci/c/2759ddf7535d
+This series introduces two interfaces:
+1. sriov_numvfs_no_scan: enable SRIOV without add the VFs.
+2. sriov_scan_vf_id: add a specific VF.
 
-Thanks,
-Lorenzo
+Longpeng (4):
+  pci/sriov: extract sriov_numvfs common helper
+  pci/sriov: add vf_bitmap to mark the vf id allocation
+  pci/sriov: add sriov_numfs_no_scan interface
+  pci/sriov: add sriov_scan_vf_id interface
+
+ drivers/pci/iov.c | 162 +++++++++++++++++++++++++++++++++++++++++-----
+ drivers/pci/pci.h |   1 +
+ 2 files changed, 148 insertions(+), 15 deletions(-)
+
+-- 
+2.23.0
+
