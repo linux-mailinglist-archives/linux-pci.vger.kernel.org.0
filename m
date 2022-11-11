@@ -2,54 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA20C6263C2
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 22:42:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D186263C7
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 22:48:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbiKKVmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 16:42:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
+        id S232372AbiKKVsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 16:48:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232372AbiKKVmO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 16:42:14 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0632E627F7;
-        Fri, 11 Nov 2022 13:42:14 -0800 (PST)
+        with ESMTP id S231625AbiKKVsV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 16:48:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 866571147F
+        for <linux-pci@vger.kernel.org>; Fri, 11 Nov 2022 13:48:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 61759B827FB;
-        Fri, 11 Nov 2022 21:42:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EC1C433D6;
-        Fri, 11 Nov 2022 21:42:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1CC39620FF
+        for <linux-pci@vger.kernel.org>; Fri, 11 Nov 2022 21:48:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44758C433D6;
+        Fri, 11 Nov 2022 21:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668202930;
-        bh=cYMaPDX0W9LPdkEux2CBvkLVgOG4dFnW48WsrbjtPu4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=f1icSkwnHQ2Bfr1yLVBA4XMr5L9uaAJ6TYNdX7XXUogUZWk1unWiQKkmqX076U1nW
-         aWEnEpkzICXV30Ta0iLtgJeKHWfJ6rbI7f8yOCTnlUS/KRFv1hP9qn58Yr/Y9yd6ND
-         lEJ1JFctVQHkrZMXdw6+LvFgZoMdDP2yOsODT9udNHiulxbfqeLzBuHUYzipXnJRh7
-         gG36qHM/uLih5F/eZKL7JKITijLYFL3qTSRzrF5H0rsnfyjeqF+NjIIZKvZM0558Fo
-         he+waLkFNQnUtmWys4FlKLxdItx6LtQDtxSHoK31dCLMDl57flgaqMUFG/5Vcs/Inl
-         KlfPcgA5WWbhA==
-Date:   Fri, 11 Nov 2022 15:42:09 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-Message-ID: <20221111214209.GA748269@bhelgaas>
+        s=k20201202; t=1668203299;
+        bh=PZglyOhtUcn6TLGHSUgx5ruKsD3szT5I1T60pNTZY3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C3HeT2N0mG2yLnIWF+iY+SJ54rRDu76Omg7IQ3b4guTnZo/PGL3KHlF8TMR4ricCs
+         m/+V+BFU8VNPw6orBlTPUV99SXwJ2M97tJ+A1H1Q0F8C8gdzbVw0o0eUaUI5IwjTSS
+         QAUGM+eVkiBZA9TLJYXCL/CVNkLlBKXVmkenn4nlsy5/0P9Hem4yWV/bnLks/iGLG9
+         K64t7pkwQoXKAUyXrWuHTu6NP4gDRLPv+fzqv0pkGzVmZQFvOGft5ehrq0brnxiyEi
+         ikhzO8cURzD4cMpHgj68YkImTWyWvtad3x322v5hQ1rdbKDQeV0ttsIvsWrPP6jli0
+         yb6zlE+oNyIgQ==
+Received: by pali.im (Postfix)
+        id 34D9C818; Fri, 11 Nov 2022 22:48:16 +0100 (CET)
+Date:   Fri, 11 Nov 2022 22:48:16 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
+Subject: Re: IORESOURCE_WINDOW for PCI-to-PCI bridges
+Message-ID: <20221111214816.65fi63ffgvr6nbj2@pali>
+References: <20221111200945.qlholxaoa2ecrfm4@pali>
+ <20221111210555.GA744899@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5754039e-e3c6-cdb8-8d64-6332b0093940@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221111210555.GA744899@bhelgaas>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,34 +58,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 12:58:28PM -0600, Limonciello, Mario wrote:
-> On 11/11/2022 11:41, Bjorn Helgaas wrote:
-> > On Mon, Oct 31, 2022 at 05:33:55PM -0500, Mario Limonciello wrote:
-> > > Firmware typically advertises that ACPI devices that represent PCIe
-> > > devices can support D3 by a combination of the value returned by
-> > > _S0W as well as the HotPlugSupportInD3 _DSD [1].
+On Friday 11 November 2022 15:05:55 Bjorn Helgaas wrote:
+> On Fri, Nov 11, 2022 at 09:09:45PM +0100, Pali Rohár wrote:
+> > On Thursday 20 January 2022 15:02:12 Bjorn Helgaas wrote:
+> > > On Thu, Jan 20, 2022 at 09:45:05PM +0100, Pali Rohár wrote:
+> 
+> [trimmed material; beginning of thread is at
+> https://lore.kernel.org/r/20211220155448.1233-3-pali@kernel.org]
+> 
+> > > > Meanwhile I found out that in linux/ioport.h file is IORESOURCE_WINDOW
+> > > > constant with comment /* forwarded by bridge */
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/ioport.h?h=v5.15#n56
+> > > > 
+> > > > But apparently it is not set for resources behind PCI bridges and
+> > > > therefore it is not available in column of "resources" sysfs file.
+> > > > 
+> > > > So maybe instead of adding new sysfs files, it would be better way to
+> > > > implement this flag and export it in flags column of "resources" file
+> > > > for every row which belongs to resources behind bridges?
 > > > 
-> > > `acpi_pci_bridge_d3` looks for this combination but also contains
-> > > an assumption that if an ACPI device contains power resources the PCIe
-> > > device it's associated with can support D3.  This was introduced
-> > > from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
-> > > D3 if power managed by ACPI").
-> > > 
-> > > Some firmware configurations for "AMD Pink Sardine" do not support
-> > > wake from D3 in _S0W for the ACPI device representing the PCIe root
-> > > port used for tunneling. The PCIe device will still be opted into
-> > > runtime PM in the kernel [2] because of the logic within
-> > > `acpi_pci_bridge_d3`. This currently happens because the ACPI
-> > > device contains power resources.
+> > > I looked at that, too.  Today we only set IORESOURCE_WINDOW for host
+> > > bridge windows.  Maybe it could be set for PCI-to-PCI bridge windows,
+> > > too.  Would have to audit users to make sure it wouldn't break
+> > > anything.
+> > 
+> > Hello Bjorn, I would like to remind this older issue. Did you have a time
+> > to audit usage of IORESOURCE_WINDOW? Some flag for resource forwarding
+> > windows in PCI-to-PCI bridges would really help userspace application to
+> > distinguish between IO/MEM BARs an IO/MEM forwarding windows.
+> 
+> I had forgotten all about this issue.  IIUC, the ultimate goal here
+> is to help lspci distinguish between an I/O window that's disabled and
+> one that's enabled at [io 0x0000-0x0fff].
+> 
+> I have not done the research to see whether it would be safe to set
+> IORESOURCE_WINDOW for PCI-to-PCI bridge windows.  I'm sorry if I left
+> the impression that I intended to do that.  I would welcome your help
+> to do that.
+> 
+> Bjorn
 
-Wait.  Is this as simple as just recognizing that:
+Ok, do you have some resources or other information at which I should
+look? I just do not know where to start or what to check for that
+research.
 
-  _PS0 means the OS has a knob to put the device in D0, but it doesn't
-  mean the device can wake itself from a low-power state.  The OS has
-  to use _S0W to learn the device's ability to wake itself.
-
-If that's enough, maybe we don't need to complicate this with all the
-Thunderbolt and device link stuff.  Which would be great, because the
-code change itself has nothing to do with those things.
-
-Bjorn
+I looked into kernel sources and the only places where is code checking
+for IORESOURCE_WINDOW is ACPI related: arch/arm64/kernel/pci.c and
+drivers/pnp/resource.c. And I do not fully understand how is ACPI
+connected with PCI resources at this level. Other places which check
+(lib/vsprintf.c and drivers/pnp/interface.c) just use it for
+printf-formats.
