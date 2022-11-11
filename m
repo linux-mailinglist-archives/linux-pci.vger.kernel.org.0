@@ -2,184 +2,331 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0039625AC1
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 13:56:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1BA4625B8C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Nov 2022 14:54:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233220AbiKKM4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 07:56:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        id S233438AbiKKNyU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 08:54:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233518AbiKKM4p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 07:56:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641B17E9B2;
-        Fri, 11 Nov 2022 04:56:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 42BF261FB7;
-        Fri, 11 Nov 2022 12:56:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA4DC433C1;
-        Fri, 11 Nov 2022 12:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668171402;
-        bh=GZJjoXeY92/wbEWKodrjM/CxinxDfJeWCSKEhT/weGA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EfgC7U+h3qFbloGBBqd7bP4ir8ilTncbWTxwGcjWHmekLads9w3xh4//+sotqYa2b
-         wMvM71TCvCTEySTV69a9ygtndNunJMgon2Mh4QOb0D1t/Qu/etI5vH61e1jELdSrE+
-         Bg5X9XGq7IkrZyWdAhA2lrlfQ19pDTbCOV/Mlm9h4dGgzmUgjwvaIKSvaEeLI4xLaZ
-         7rKAjXEP7boQCHRi2SPPeMbch9pQl4CQbO3FiEvu8yHfM+bHRanmHXMY0W6Y63g0LU
-         j6rRjb9zbF7VaC7yKb/O9guIeHwmK94IgsBIpFjAynIgmzguMDt1XQA3ocND+v56Og
-         2pQgwhGdMFKGw==
-Date:   Fri, 11 Nov 2022 13:56:36 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        with ESMTP id S232949AbiKKNyT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 08:54:19 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF602B25B;
+        Fri, 11 Nov 2022 05:54:17 -0800 (PST)
+Message-ID: <20221111120501.026511281@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1668174854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=xhd7tt5iYhuOseDykf3XQcxTHhVcl7xTwFlqd8IrPto=;
+        b=DmQ9IkLmiKdLbn4YWyKiu6yv5Mu+/J5pzCDxk4dUJL328B8EJXmr7XiCzfZ0cWgufJVs5V
+        TsiEjifWga1s/oNXmXz43ItsGAuFM5/nD+cCElBqCht2QBntwnvAQPPYtdNEPA7EhlQZGB
+        u+WlVuKGFNH2nQfb9Zg5E1QsGliZ8icKwECPobCWAi0ePwenyeFv7Whs5yBXRFmZ0FNz80
+        +evuCOcPk/9uZzOHKqdS5hL2nhn41/8sJDSBmnH8OC/TZFdkYohndFGnzHXU2r4ZP2IOqR
+        IrtUA24HuXX3qhEAu8v8nQ5FAgY7rFsc/vVck77BNtOlJ4CT6nuhgAy5M54mHQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1668174854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=xhd7tt5iYhuOseDykf3XQcxTHhVcl7xTwFlqd8IrPto=;
+        b=1yDPujhbELGZVjXIkh+KOi77aJIIbepWxtaRFHvr3ChKKnJexoCyIC/rVlRX+4Bd+JwM9w
+        FVbM33Uj6J+iPcBg==
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
- interrupt handler
-Message-ID: <Y25GhJuzInbEz0vs@lpieralisi>
-References: <20220709143151.qhoa7vjcidxadrvt@pali>
- <20220709234430.GA489657@bhelgaas>
- <20220710000659.vxmlsvoin26tdiqw@pali>
- <20220829165109.fzrgguchg4otbbab@pali>
- <20220911154516.tu2b7qhsnk6mdtui@pali>
- <Yx7nXJRHN1sWCkVq@lpieralisi>
- <20220912084808.mmi42l7sp657dz6i@pali>
- <Yx70E4nBtKoVVmhO@lpieralisi>
- <20220912090306.fto5k3rj6jrbq3rj@pali>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220912090306.fto5k3rj6jrbq3rj@pali>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [patch 00/39] genirq, PCI/MSI: Support for per device MSI and PCI/IMS
+ - Part 1 cleanups
+Date:   Fri, 11 Nov 2022 14:54:13 +0100 (CET)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 12, 2022 at 11:03:06AM +0200, Pali Rohár wrote:
-> On Monday 12 September 2022 10:55:47 Lorenzo Pieralisi wrote:
-> > On Mon, Sep 12, 2022 at 10:48:08AM +0200, Pali Rohár wrote:
-> > > On Monday 12 September 2022 10:01:32 Lorenzo Pieralisi wrote:
-> > > > On Sun, Sep 11, 2022 at 05:45:16PM +0200, Pali Rohár wrote:
-> > > > > On Monday 29 August 2022 18:51:09 Pali Rohár wrote:
-> > > > > > On Sunday 10 July 2022 02:06:59 Pali Rohár wrote:
-> > > > > > > On Saturday 09 July 2022 18:44:30 Bjorn Helgaas wrote:
-> > > > > > > > [+cc Marc, since he commented on this]
-> > > > > > > > 
-> > > > > > > > On Sat, Jul 09, 2022 at 04:31:51PM +0200, Pali Rohár wrote:
-> > > > > > > > > On Friday 01 July 2022 16:29:41 Pali Rohár wrote:
-> > > > > > > > > > On Thursday 23 June 2022 11:27:47 Bjorn Helgaas wrote:
-> > > > > > > > > > > On Tue, May 24, 2022 at 02:28:17PM +0200, Pali Rohár wrote:
-> > > > > > > > > > > > Same as in commit a3b69dd0ad62 ("Revert "PCI: aardvark: Rewrite IRQ code to
-> > > > > > > > > > > > chained IRQ handler"") for pci-aardvark driver, use devm_request_irq()
-> > > > > > > > > > > > instead of chained IRQ handler in pci-mvebu.c driver.
-> > > > > > > > > > > >
-> > > > > > > > > > > > This change fixes affinity support and allows to pin interrupts from
-> > > > > > > > > > > > different PCIe controllers to different CPU cores.
-> > > > > > > > > > > 
-> > > > > > > > > > > Several other drivers use irq_set_chained_handler_and_data().  Do any
-> > > > > > > > > > > of them need similar changes?  The commit log suggests that using
-> > > > > > > > > > > chained IRQ handlers breaks affinity support.  But perhaps that's not
-> > > > > > > > > > > the case and the real culprit is some other difference between mvebu
-> > > > > > > > > > > and the other drivers.
-> > > > > > > > > > 
-> > > > > > > > > > And there is another reason to not use irq_set_chained_handler_and_data
-> > > > > > > > > > and instead use devm_request_irq(). Armada XP has some interrupts
-> > > > > > > > > > shared and it looks like that irq_set_chained_handler_and_data() API
-> > > > > > > > > > does not handle shared interrupt sources too.
-> > > > > > > > > > 
-> > > > > > > > > > I can update commit message to mention also this fact.
-> > > > > > > > > 
-> > > > > > > > > Anything needed from me to improve this fix?
-> > > > > > > > 
-> > > > > > > > My impression from Marc's response [1] was that this patch would
-> > > > > > > > "break the contract the kernel has with userspace" and he didn't think
-> > > > > > > > this was acceptable.  But maybe I'm not understanding it correctly.
-> > > > > > > 
-> > > > > > > This is argument which Marc use when he does not have any argument.
-> > > > > > > 
-> > > > > > > Support for dedicated INTx into pci-mvebu.c was introduced just recently
-> > > > > > > and I used irq_set_chained_handler_and_data() just because I thought it
-> > > > > > > is a good idea and did not know about all those issues with it. So there
-> > > > > > > cannot be any breakage by this patch.
-> > > > > > > 
-> > > > > > > I already converted other pci-aardvark.c driver to use
-> > > > > > > irq_set_chained_handler_and_data() API because wanted it... But at the
-> > > > > > > end _that conversion_ caused breakage of afinity support and so this
-> > > > > > > conversion had to be reverted:
-> > > > > > > https://lore.kernel.org/linux-pci/20220515125815.30157-1-pali@kernel.org/#t
-> > > > > > > 
-> > > > > > > Based on his past decisions, above suggestions which cause _real_
-> > > > > > > breakage and his expressions like mvebu should be put into the trash,
-> > > > > > > I'm not going to listen him anymore. The only breaking is done by him.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > There are two arguments why to not use irq_set_chained_handler_and_data:
-> > > > > > > 
-> > > > > > > 1) It does not support afinity and therefore has negative performance
-> > > > > > >    impact on Armada platforms with more CPUs and more PCIe ports.
-> > > > > > > 
-> > > > > > > 2) It does not support shared interrupts and therefore it will break
-> > > > > > >    hardware on which interrupt lines are shares (mostly Armada XP).
-> > > > > > > 
-> > > > > > > So these issues have to be fixed and currently I see only option to
-> > > > > > > switch irq_set_chained_handler_and_data() to devm_request_irq() which I
-> > > > > > > did in this fixup patch.
-> > > > > > 
-> > > > > > Any progress here? This patch is waiting here since end of May and if
-> > > > > > something is going to be broken then it is this fact of ignoring reported
-> > > > > > issues and proposed patch. Do you better solution how to fix commit
-> > > > > > ec075262648f?
-> > > > > 
-> > > > > After two weeks I'm reminding this fix patch again...
-> > > > 
-> > > > There is no point complaining about something you were asked
-> > > > to change, really - there is not.
-> > > > 
-> > > > You were given feedback, feel free to ignore it, it won't help
-> > > > getting this patch upstream - it is as simple as that, sorry.
-> > > > 
-> > > > Thanks,
-> > > > Lorenzo
-> > > 
-> > > I'm not sure if I understand you, what do you mean that all patches
-> > > which depends on this are now automatically rejected or what?
-> > 
-> > I am not merging this code unless it is acked by an IRQ maintainer.
-> > 
-> > Is it clear enough ?
-> > 
-> > Thanks,
-> > Lorenzo
-> 
-> So, could you then propose a solution how to fix this issue to allow one
-> interrupt to be shared with more devices, like it is needed for some
-> Armada platforms? Because I do not see a way how to do it without
-> IRQF_SHARED and without shared interrupt it is not possible to implement
-> any other pending features.
-> 
-> I'm feeling that since May there is just conclusion that all development
-> on the mvebu must be stopped as more people here do not like this
-> hardware and trying to do remove it or at least make it orphan.
+Hi!
 
-Marc gave you a solution - we are going round in circles, it is getting
-boring, honestly.
+This is a three part series which provides support for per device MSI
+interrupt domains. This solves conceptual problems of the current PCI/MSI
+design which are in the way of providing support for PCI/MSI[-X] and
+the upcoming PCI/IMS mechanism on the same device.
 
-https://lore.kernel.org/linux-pci/874k0bf7f7.wl-maz@kernel.org
+IMS (Interrupt Message Store] is a new specification which allows device
+manufactures to provide implementaton defined storage for MSI messages
+contrary to the uniform and specification defined storage mechanisms for
+PCI/MSI and PCI/MSI-X. IMS not only allows to overcome the size limitions
+of the MSI-X table, but also gives the device manufacturer the freedom to
+store the message in arbitrary places, even in host memory which is shared
+with the device.
 
-Either you implement what he asks for or I drop this patch and all
-dependent ones from the PCI queue - apologies.
+There have been several attempts to glue this into the current MSI code,
+but after lengthy discussions in various threads:
 
-Lorenzo
+  https://lore.kernel.org/all/20211126230957.239391799@linutronix.de
+  https://lore.kernel.org/all/MWHPR11MB188603D0D809C1079F5817DC8C099@MWHPR11MB1886.namprd11.prod.outlook.com
+  https://lore.kernel.org/all/160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com
+
+it turned out that there is a fundamental design problem in the current
+PCI/MSI-X implementation. This needs some historical background.
+
+When PCI/MSI[-X] support was added around 2003 interrupt management was
+completely different from what we have today in the actively developed
+architectures. Interrupt management was completely architecture specific
+and while there were attempts to create common infrastructure the
+commonalities were rudimental and just providing shared data structures and
+interfaces so that drivers could be written in an architecture agnostic
+way.
+
+The initial PCI/MSI[-X] support obviously plugged into this model which
+resulted in some basic shared infrastructure in the PCI core code for
+setting up MSI descriptors, which are a pure software construct for holding
+data relevant for a particular MSI interrupt, but the actual association to
+Linux interrupts was completely architecture specific. This model is still
+supported today to keep museum architectures and notorious stranglers
+alive.
+
+In 2013 Intel tried to add support for hotplugable IO/APICs to the kernel
+which was creating yet another architecture specific mechanism and resulted
+in an unholy mess on top of the existing horrors of x86 interrupt handling.
+The x86 interrupt management code was already an uncomprehensible maze of
+indirections between the CPU vector management, interrupt remapping and the
+actual IO/APIC and PCI/MSI[-X] implementation.
+
+At roughly the same time ARM struggled with the ever growing SoC specific
+extensions which were glued on top of the architected GIC interrupt
+controller.
+
+This resulted in a fundamental redesign of interrupt management and
+provided the today prevailing concept of hierarchical interrupt
+domains. This allows to disentangle the interactions between x86 vector
+domain and interrupt remapping and also allowed ARM to handle the zoo of
+SoC specific interrupt components in a sane way.
+
+The concept of hierarchical interrupt domains aims to encapsulate the
+functionality of particual IP blocks which are involved in interrupt
+delivery so that they become extensible and pluggable. The X86
+encapsulation looks like this:
+
+                                         |--- device 1
+     [Vector]---[Remapping]---[PCI/MSI]--|...
+                                         |--- device N
+
+where the remapping domain is an optional component and in case that it is
+not available the PCI/MSI[-X] domains have the vector domain as their
+parent. This reduced the required interaction between the domains pretty
+much to the initialization phase where it is obviously required to
+establish the proper parent relation ship in the components of the
+hierarchy.
+
+While in most cases the model is strictly representing the chain of IP
+blocks and abstracting them so they can be plugged together to form a
+hierarchy, the design stopped short on PCI/MSI[-X]. Looking at the hardware
+it's clear that the actual PCI/MSI[-X] interrupt controller is not a global
+entity, but strict a per PCI device entity.
+
+Here we took a short cut on the hierarchical model and went for the easy
+solution of providing "global" PCI/MSI domains which was possible because
+the PCI/MSI[-X] handling is uniform accross the devices. This also allowed
+to keep the existing PCI/MSI[-X] infrastructure mostly unchanged which in
+turn made it simple to keep the existing architecture specific management
+alive.
+
+A similar problem was created in the ARM world with support for IP block
+specific message storage. Instead of going all the way to stack a IP block
+specific domain on top of the generic MSI domain this ended in a construct
+which provides a "global" platform MSI domain which allows overriding the
+irq_write_msi_msg() callback per allocation.
+
+In course of the lengthy discussions we identified other abuse of the MSI
+infrastructure in wireless drivers, NTB etc. where support for
+implementation specific message storage was just mindlessly glued into the
+existing infrastructure. Some of this just works by chance on particular
+platforms but will fail in hard to diagnose ways when the driver is used
+on platforms where the underlying MSI interrupt management code does not
+expect the creative abuse.
+
+Another shortcoming of todays PCI/MSI-X support is the inability to
+allocate or free individual vectors after the initial enablement of
+MSI-X. This results in an works by chance implementation of VFIO (PCI
+passthrough) where interrupts on the host side are not set up upfront to
+avoid resource exhaustion. They are expanded at runtime when the guest
+actually tries to use them. The way how this is implemented is that the
+host disables MSI-X and the enables it with a larger number of vectors
+again. That works by chance because most device drivers set up all
+interrupts before the device actually will utilize them. But that's not
+universally true because some drivers allocate a large enough number of
+vectors but do not utilize them until it's actually required,
+e.g. acceleration support. But at that point other interrupts of the device
+might be in active use and the MSI-X disable/enable dance can just result
+in losing interrupts and therefore hard to diagnose subtle problems.
+
+Last but not least the "global" PCI/MSI-X domain approach prevents to
+utilize PCI/MSI[-X] and PCI/IMS on the same device due to the fact that IMS
+is not longer providing a uniform storage and configuration model.
+
+The solution to this is to implement the missing step and switch from
+global MSI domains to per device MSI domains. The resulting hierarchy then
+looks like this:
+
+                              |--- [PCI/MSI] device 1
+     [Vector]---[Remapping]---|...
+                              |--- [PCI/MSI] device N
+
+which in turn allows provide support for multiple domains per device:
+
+                              |--- [PCI/MSI] device 1
+                              |--- [PCI/IMS] device 1
+     [Vector]---[Remapping]---|...
+                              |--- [PCI/MSI] device N
+                              |--- [PCI/IMS] device N
+
+To achieve this and to provide solutions for the other identified issues,
+e.g. VFIO, this needs a major overhaul of the affected infrastructure.
+
+The 90+ patches series is split into three parts for submission:
+
+  1) General cleanups of the core infrastructure and the PCI/MSI code
+
+  2) Preparatory changes for per device (multiple) MSI domain support
+     including a complete replacement of the MSI core interfaces
+     switching from a domain pointer based to a domain ID based model
+     and providing support for proper range based allocation/free
+
+  3) The actual implementation for per device domains, the conversion of
+     the PCI/MSI-X infrastructure, dynamic allocation/free for MSI-X,
+     initial support for PCI/IMS and enablement for X86. Plus a demo
+     IMS driver for IDXD.
+
+The three parts are available from git:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v1-part1
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v1-part2
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v1-part3
+
+To complete the picture we went all the way and converted ARM64 including
+the platform-MSI horrors over to the new model. It's barely tested in a VM
+(at least the PCI/MSI-X) part can be validated that way. For the rest this
+just compiles and we can't do much more as we lack hardware. The reason why
+this conversion was done is to ensure that the design, the underlying data
+structures and the resulting interfaces are correct and can handle the
+requirements of ARM64. The result looks pretty good and while the initial
+support does not cover some of the oddball issues of the ARM64 zoo, it
+turned out that the extra functionality required is just extending the
+provided infrastructure but does not require any design changes. This is
+also available from git for the adventurous, but be warned that it might
+eat your harddisk, confuse your cat and make your kids miss the bus:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v1-arm
+
+This is not going to be posted as its work in progress. It's provided for
+reference and for Marc to play with.
+
+We did look into NTB and other places like VFIO, but did not come around to
+actually convert them over partly because of lack of time, but also because
+the code is simply incomprehensible.
+
+We tested the creation of a secondary MSI domain with a mockup driver, but
+again due to lack of hardware there is no way to validate any functionality.
+
+The dynamic allocation/free of MSI-X interrupts post MSI-X enable was
+tested by hacking up a device driver and allocating only one interrupt at
+MSI-X enable time and then allocate the rest with the new interfaces. Also
+the dynamic free was tested that way.
+
+Note, that dynamic allocation of MSI-X interrupt requires opt-in of the
+underlying MSI parent domain. It is neither supported on the legacy
+architecture specific MSI mechanism, which is still in use on ia64, sparc,
+PPC and a few subarchitectures of MIPS.
+
+The reason why this cannot be supported unconditionally is that due to the
+history of PCI/MSI support in the kernel there are many implementations
+which expect that MSI[-X] enable is a one off operation which allocates and
+associates all required interrupts right at that point. Even architectures
+which utilize hierarchical irq domains have such assumptions which are in
+some cases even enforced through the underlying hypervisor/firmware.
+
+IMS is opt-in too and it requires that the architecture/platform has been
+converted to the per device MSI model and the underlying interrupt domains
+have the necessary support in place, which might never happen for ia64 and
+some parts of MIPS, SPARC, PPC and S390.
+
+That means driver writers have to be careful about the limitiations of
+this. For dynamic MSI-X allocation/free there is a query interface. For IMS
+domains that's momentarily just the domain creation failing with an error
+code. If necessary for driver conveniance then implementing a query
+interface is trivial enough.
+
+Enough of history and theory. Here comes part 1:
+
+This is just a cleanup and a reorganisation of the PCI/MSI code which
+became quite an unreadable mess over time. There is no intentional
+functional change in this series.
+
+It's just a separate step to make the subsequent changes in the
+infrastructure easier both to implement and to review.
+
+Thanks,
+
+	tglx
+----
+ Documentation/PCI/msi-howto.rst         |   10 
+ arch/powerpc/platforms/pseries/msi.c    |    7 
+ arch/um/drivers/Kconfig                 |    1 
+ arch/um/include/asm/pci.h               |    2 
+ arch/x86/Kconfig                        |    1 
+ arch/x86/include/asm/irqdomain.h        |    4 
+ arch/x86/include/asm/pci.h              |    4 
+ arch/x86/kernel/apic/msi.c              |   11 
+ arch/x86/kernel/apic/vector.c           |    4 
+ drivers/base/Makefile                   |    2 
+ drivers/base/platform-msi.c             |    2 
+ drivers/bus/fsl-mc/Kconfig              |    2 
+ drivers/dma/Kconfig                     |    2 
+ drivers/dma/qcom/hidma.c                |    8 
+ drivers/iommu/Kconfig                   |    2 
+ drivers/iommu/amd/iommu.c               |   10 
+ drivers/iommu/intel/irq_remapping.c     |   10 
+ drivers/irqchip/Kconfig                 |    6 
+ drivers/mailbox/Kconfig                 |    2 
+ drivers/pci/Kconfig                     |    7 
+ drivers/pci/controller/Kconfig          |   30 -
+ drivers/pci/controller/dwc/Kconfig      |   48 -
+ drivers/pci/controller/mobiveil/Kconfig |    6 
+ drivers/pci/controller/pci-hyperv.c     |   15 
+ drivers/pci/msi/Makefile                |    3 
+ drivers/pci/msi/api.c                   |  336 +++++++++++
+ drivers/pci/msi/irqdomain.c             |   91 +--
+ drivers/pci/msi/msi.c                   |  949 +++++++++++---------------------
+ drivers/pci/msi/msi.h                   |  110 +++
+ drivers/pci/probe.c                     |    2 
+ drivers/perf/Kconfig                    |    2 
+ drivers/soc/ti/Kconfig                  |    2 
+ include/asm-generic/msi.h               |    4 
+ include/linux/device.h                  |    8 
+ include/linux/gpio/driver.h             |    2 
+ include/linux/irqdomain.h               |   31 -
+ include/linux/irqdomain_defs.h          |   26 
+ include/linux/msi.h                     |   85 +-
+ include/linux/pci.h                     |   17 
+ kernel/irq/Kconfig                      |    7 
+ kernel/irq/msi.c                        |   60 --
+ 41 files changed, 992 insertions(+), 939 deletions(-)
