@@ -2,85 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7DB6269EA
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 15:30:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 442FD6269EB
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 15:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231240AbiKLOak (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Nov 2022 09:30:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
+        id S234853AbiKLOal (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Nov 2022 09:30:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbiKLOaj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 09:30:39 -0500
+        with ESMTP id S234747AbiKLOal (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 09:30:41 -0500
 Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C361A83E;
-        Sat, 12 Nov 2022 06:30:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E7C1A83E;
+        Sat, 12 Nov 2022 06:30:39 -0800 (PST)
 X-Sender-Id: dreamhost|x-authsender|ian@linux.cowan.aero
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 6D4B1821BE8;
-        Sat, 12 Nov 2022 14:30:36 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 572A0201769;
+        Sat, 12 Nov 2022 14:30:39 +0000 (UTC)
 Received: from pdx1-sub0-mail-a218.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id EDE02821BC8;
-        Sat, 12 Nov 2022 14:30:35 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1668263436; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id E0002201C06;
+        Sat, 12 Nov 2022 14:30:38 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1668263438; a=rsa-sha256;
         cv=none;
-        b=LowArWQR1ubo44tvwjck1xopghn3KIdT/ec/1qbIkFTFfuVy9Wqe9xY5kv9T/FubsVKP19
-        CTLRtLLe8MTdLH+PqiShrgoNSdNtFTQyC/tNYZ2k23um5amFfhdyt/njFvVzI73DMWeF5g
-        bNCyN+38LKqecyF9u81AV+8HFDV9Hd+RBF/4ZzZR/VBAXR/fCHejj3xAabBILXCL1nG/nq
-        MN6IOWASpxG2ujgG5UPxYiD/V/6pZP0hRPD/Bu61/jstFX6mbR7ZYzXC9z9nGroMf9JZMD
-        RWtPVXml3ANwwvt6cDYf/TcBqG59L+P66cwaFI4RiwJZfYPWTLP2SbWF585ETw==
+        b=bDbj0ovzR8m5yweB7/gcXHpa0RvoAGpP6ldzpSDs8GV7o5qpaSn4kjfA2MSyxRe40I7vTl
+        exjmy9XzZaKCmpT4pRpoCl0/ZSfPYPlD3Py0UvoN7tOtaFUBx4u+FdukhrxL5RbhWeIWzF
+        Ezemq/ZjlZuQTcbOanppdXQJ6N6lFgZA23Cd43IZvmF+3HSWuu2DJuRaEyO6znlcR1Q2RL
+        Dj21NwCskpUeEH8AuW+1y7bHCUmePXJTuKgDZeA1iDCFy7trWkS65Q/TX7g4p6u7+nIBO8
+        92nCDincfGNoYmWkr+SY3YhiOlU8VcxqikHlKL0BHaK+TaC4l5eiOo6Cpf7Crg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1668263436;
+        s=arc-2022; t=1668263438;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=iFOu58EziI41+nlF3fAgrd3T4bqfAOOprYCBnpz0jLw=;
-        b=kRhcyMeGuTngjCA9taCj4RfHet0Plv65yglkHtmN9bNeF0t6BnYVxLWbD+GLO0iuFReJUa
-        0gWmEIL6HIk55Mv3BL7sd2PBhcSlMYQuVoXyS0wplOlwvy69lXTGQfZOu73O2qwmmwrZ45
-        uW8mjiWhWwAtR7RdJfxw6bYQ0WutgmoaKrJxBJfmSeybVFWlg0WGQxCoEXu4FY+E/XeBIv
-        thdVyLQRCrpUxt8SNFbGUkaiScWfGrNmJiw/X3Lz088YuN7HKaIqlomZeC38+QfrI+jvfV
-        hAOcrcIeHh5S0kvb2UT5p5IY6fNK0upV0jhJe58sVyZIpp9GdoYuYyCjrAWeWA==
+        bh=D3Xr03eLr426oQvYQ3eI2Of6RqoxNDQolv691ZaKJpU=;
+        b=t3ULH7I6G/oysyfSjt/+OFay5mna2BkHFxnIuh5bz/tzHQkeHlroe8vULh5v40ZHOxKNn3
+        dIF0ziWo8zTdL9/LCyrntBTs7FzB9EDAyq+qB+ORO/JzlNJSj6sPIkm+Y07kUYJ/7o1MF0
+        42p6xvVgTne73Rzom9k5H0D+QmRq6v0xwiPpXE6XxJIXPIT6j1XySt3yMisW4MjomqEuUV
+        WzgWgfueUfy2/Lq3sbG1MBm1YKLU4KZ3VMUGL/csq/Vn+64OoyyIMJf1wDyS86JmienroQ
+        rVfZZ9G7PCrgOjz0mVpoW9i0FM+wiNOKpqlAQ//bfypH0imU2N+EvFB2LTUpfw==
 ARC-Authentication-Results: i=1;
-        rspamd-7f9bbcf788-8nkdq;
+        rspamd-7f9bbcf788-6fwcn;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=ian@linux.cowan.aero
 X-Sender-Id: dreamhost|x-authsender|ian@linux.cowan.aero
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|ian@linux.cowan.aero
 X-MailChannels-Auth-Id: dreamhost
-X-Lyrical-Minister: 2842be025922d1d6_1668263436215_1143567332
-X-MC-Loop-Signature: 1668263436215:652404706
-X-MC-Ingress-Time: 1668263436215
+X-Name-Cold: 2adb1a1e20f0e52c_1668263439166_2745515620
+X-MC-Loop-Signature: 1668263439166:4284031045
+X-MC-Ingress-Time: 1668263439166
 Received: from pdx1-sub0-mail-a218.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.97.48.91 (trex/6.7.1);
-        Sat, 12 Nov 2022 14:30:36 +0000
+        by 100.99.229.20 (trex/6.7.1);
+        Sat, 12 Nov 2022 14:30:39 +0000
 Received: from rhino.lan (dsl-50-5-144-34.fuse.net [50.5.144.34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: ian@linux.cowan.aero)
-        by pdx1-sub0-mail-a218.dreamhost.com (Postfix) with ESMTPSA id 4N8dK72fNmz24;
-        Sat, 12 Nov 2022 06:30:35 -0800 (PST)
+        by pdx1-sub0-mail-a218.dreamhost.com (Postfix) with ESMTPSA id 4N8dKB255yz1M;
+        Sat, 12 Nov 2022 06:30:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.cowan.aero;
-        s=dreamhost; t=1668263435;
-        bh=iFOu58EziI41+nlF3fAgrd3T4bqfAOOprYCBnpz0jLw=;
+        s=dreamhost; t=1668263438;
+        bh=D3Xr03eLr426oQvYQ3eI2Of6RqoxNDQolv691ZaKJpU=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=nls1JS0aLZb+tSYINzICUgT6sbb4yRC96UOnJwHbgUJ9ayXFU0tx6BgwtGEZoUFHN
-         XIF3/U3Ecl3i73/9Uz8T1Hel/+w+JikGVQoKUkCfcTUYoWB0pex5W4Yv10eXUN63bA
-         EUCQiN5XesqQJB0VwtsRolOxZ4EldBnjXR94+XwM0OadaGeputFrPXxSppc7Z1+oQt
-         7oq/drfy5PI2JoxOD8cq9LeJyl01J62AMSeA1vbDqrfooSl3I2IvdB2tLj819Vgi9n
-         n4fgeO1mePLoChbL/5k3ZbmczN/Tr3VaSN27olcDwksXESGDjgJVmR25nhZytA68bY
-         JD6lZESOdpbCw==
+        b=T++3iiweLkJGr7u3ODBpW2LLaNmWW2YQ2ShrPdmFT/MQE3SwkU1kDqSkLRdsl82sW
+         c404EJjNyr1aUJ+ONJrap9e02AfXMU7aBwVVXrEENtyH372YsaygRfstiddBgdmRc5
+         GfUFPH4zPrBr3mxPXQ2mZY3Dy7DHfu+4Dj/oboq3Vi4DtS1RMrDr2/MRoj5R0XCobA
+         qwcCiq6k4DmO9Z/BbwiQ9KPPohAAfrYWJFkM3OOfZs2z2BRsG0wMnavBEh4asixxyc
+         Lz8yROk9Zamw5T2fyGwe2SJ07TZ5wpQre6iH6a2kqxhPJ8BZI6+rhX3+StjTs9uv4a
+         nEAUA785fNigQ==
 From:   Ian Cowan <ian@linux.cowan.aero>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ian Cowan <ian@linux.cowan.aero>
-Subject: [PATCH 1/3] PCI: SHPC: remove unused get_mode1_ECC_cap callback declaration
-Date:   Sat, 12 Nov 2022 09:28:57 -0500
-Message-Id: <20221112142859.319733-2-ian@linux.cowan.aero>
+Subject: [PATCH 2/3] PCI: SHPC: remove unused get_mode1_ECC_cap callback from definition
+Date:   Sat, 12 Nov 2022 09:28:58 -0500
+Message-Id: <20221112142859.319733-3-ian@linux.cowan.aero>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221112142859.319733-1-ian@linux.cowan.aero>
 References: <20221112142859.319733-1-ian@linux.cowan.aero>
@@ -96,51 +96,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The ->get_mode1_ECC_cap callback in the shpchp_hpc_ops struct is never
-called so we'll remove it. This removes that callback from the
-declaration of the struct in the shpc module.
+The ->get_mode1_ECC_cap callback is never used in the shpchp_hpc_ops
+struct, so we can remove that. This removes that from the hpc_ops struct
+definition in the shpc module.
 
 Signed-off-by: Ian Cowan <ian@linux.cowan.aero>
 ---
- drivers/pci/hotplug/shpchp_hpc.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/pci/hotplug/shpchp.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/shpchp_hpc.c b/drivers/pci/hotplug/shpchp_hpc.c
-index bd7557ca4910..48e4daefc44a 100644
---- a/drivers/pci/hotplug/shpchp_hpc.c
-+++ b/drivers/pci/hotplug/shpchp_hpc.c
-@@ -489,23 +489,6 @@ static int hpc_get_adapter_speed(struct slot *slot, enum pci_bus_speed *value)
- 	return retval;
- }
- 
--static int hpc_get_mode1_ECC_cap(struct slot *slot, u8 *mode)
--{
--	int retval = 0;
--	struct controller *ctrl = slot->ctrl;
--	u16 sec_bus_status = shpc_readw(ctrl, SEC_BUS_CONFIG);
--	u8 pi = shpc_readb(ctrl, PROG_INTERFACE);
--
--	if (pi == 2) {
--		*mode = (sec_bus_status & 0x0100) >> 8;
--	} else {
--		retval = -1;
--	}
--
--	ctrl_dbg(ctrl, "Mode 1 ECC cap = %d\n", *mode);
--	return retval;
--}
--
- static int hpc_query_power_fault(struct slot *slot)
- {
- 	struct controller *ctrl = slot->ctrl;
-@@ -900,7 +883,6 @@ static const struct hpc_ops shpchp_hpc_ops = {
- 	.get_adapter_status		= hpc_get_adapter_status,
- 
- 	.get_adapter_speed		= hpc_get_adapter_speed,
--	.get_mode1_ECC_cap		= hpc_get_mode1_ECC_cap,
- 	.get_prog_int			= hpc_get_prog_int,
- 
- 	.query_power_fault		= hpc_query_power_fault,
+diff --git a/drivers/pci/hotplug/shpchp.h b/drivers/pci/hotplug/shpchp.h
+index 6e85885b554c..3a97f455336e 100644
+--- a/drivers/pci/hotplug/shpchp.h
++++ b/drivers/pci/hotplug/shpchp.h
+@@ -311,7 +311,6 @@ struct hpc_ops {
+ 	int (*get_latch_status)(struct slot *slot, u8 *status);
+ 	int (*get_adapter_status)(struct slot *slot, u8 *status);
+ 	int (*get_adapter_speed)(struct slot *slot, enum pci_bus_speed *speed);
+-	int (*get_mode1_ECC_cap)(struct slot *slot, u8 *mode);
+ 	int (*get_prog_int)(struct slot *slot, u8 *prog_int);
+ 	int (*query_power_fault)(struct slot *slot);
+ 	void (*green_led_on)(struct slot *slot);
 -- 
 2.38.1
 
