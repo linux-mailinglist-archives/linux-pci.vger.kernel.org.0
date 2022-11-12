@@ -2,171 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3388C6268D8
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 11:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4E0B626919
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 12:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234695AbiKLKXT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Nov 2022 05:23:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46588 "EHLO
+        id S233681AbiKLLSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Nov 2022 06:18:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234824AbiKLKXB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 05:23:01 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1EA4FF91
-        for <linux-pci@vger.kernel.org>; Sat, 12 Nov 2022 02:22:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668248562; x=1699784562;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2Ts2eZ8YVojtnvOmvW+KmrLydB++OVDrQk2+opxrzcY=;
-  b=nZbD7z8xazLiusx3F+FLsfA6l/e8qEUKqEKk6uQ09r9qX62RohF/eI+W
-   3XYrY27+naZLq14GtNHLAhOKlWV3pt04vV4vHtpcgMIGj1sWXe0DgSWHo
-   lRBVoa5RkW0uapzZSxq8uQGAddqWGuuaMmdn4QWY0LQ30nW836hAUBTDk
-   fHdqhcsKAVDP7ZzsiiPvfRncUMq9d2jpR0tD5P3tKIDhe5LnL1qeUvHId
-   YZF7UG+mDzqEhbF88Oy2NELrhUt5unttQp3f022r41ZtMlPn8eZI0aXcp
-   6m1gp47w/cFVt6X6Vt7GJpdbbhdqfY6v+JrsVs3yIxjOvC9hPxmcSShbg
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="299235632"
-X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
-   d="scan'208";a="299235632"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 02:22:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="743526050"
-X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
-   d="scan'208";a="743526050"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2022 02:22:40 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1otneq-0004mZ-0x;
-        Sat, 12 Nov 2022 10:22:40 +0000
-Date:   Sat, 12 Nov 2022 18:21:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 7ef4a88327bb37d6ee710f4126975a65a60e9ac7
-Message-ID: <636f73ba.FDUmOIXYh34ixYAE%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234864AbiKLLSc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 06:18:32 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7283A222;
+        Sat, 12 Nov 2022 03:18:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
+        s=s31663417; t=1668251878;
+        bh=pCQDOALh79Wg0//BO+hwd+gUI9nb61JMC5A9n1oxDJo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=tC3jbkeFkyX2cGN5JP1yoh4sVVWUa5ymY5NF+It/5QcNljZdruXu1yBVIN1g7T1qe
+         A9EZgSPfohPm/l3mHuWUeS7927l1fYBKiP92ZCzzfkBYfSPL6g9MJKb5L6xUFkg/Ev
+         Zs83RBF1wRw1eWZzTCO53hJPyo4Qyx3iucl4Ubpg5VuJb9njcoms2FNpgpo8MArnfT
+         Ih2beDS9/awFyP+bWyZYtoxCk7MOHZUYLjpGuqCRsGAkmR0KZBHzVSThSGMoyPOes6
+         t0lAgaAU0zI5LXWOfKpRfmNlOZ2VWyBKNCcj8LM4bWG+heAeLkxJpZx8861Zjdh7Mk
+         sjTeHAcdWDPbg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [157.180.227.41] ([157.180.227.41]) by web-mail.gmx.net
+ (3c-app-gmx-bs18.server.lan [172.19.170.70]) (via HTTP); Sat, 12 Nov 2022
+ 12:17:58 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Message-ID: <trinity-33afde2b-7023-45f4-844c-db49f68e38aa-1668251877983@3c-app-gmx-bs18>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     linux-mediatek@lists.infradead.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org
+Subject: Aw: [PATCH v4 02/11] dt-bindings: phy: mediatek,tphy: add support
+ for mt7986
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 12 Nov 2022 12:17:58 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20221112091518.7846-3-linux@fw-web.de>
+References: <20221112091518.7846-1-linux@fw-web.de>
+ <20221112091518.7846-3-linux@fw-web.de>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:IdjKRZAc4G6HLMosS9W3l4ACXAgHyMBKtsfZjV4glKnOIzpgLETAF/Ge5C5uC/JhQ6zhZ
+ /Zvg98qbTZFOmoFYCHzhZG5sxbYMoGDfz5NyaC58aArUlPzICX8mFJZzw2ZfO9S3lKXGy3BetKKi
+ 339Em2xQ9y3WF05mYO60eRivo3jDP2APs7nYnDZn9c/qjxP/IGwmfTaMoq30YO1xt8nfdyTEj7R7
+ O9m8Dghdk8Dqr+rq2rF69B43EIqlU6iSuD3jvw35BgDi6pJ7SDX59buR56WIYe8gzXP8s1CDX/Oa
+ Ik=
+UI-OutboundReport: notjunk:1;M01:P0:Wc91JkxEs9I=;xIIdT2P6VfTS19OEOCIzPeazsU1
+ n1qm5hLpvysdWBP1oqyWMAFpe5vNdlKFVrtIPzSrbmEmH2ED6XNLsi46eP617uq7hhQJH/zBM
+ DS8FrSx2mFuk38mJsDr4xMLcinXuQswZN/dpJH/qHFTSHwxlonxzT24tZNsYn2UABe0C4Ulgk
+ rlbfKzC1cEbF9kYOWByhDvnWQKEq0RvuB9QM3uPOFiXec3DAchkKMrwJIRgtG+z5bjs5EkHll
+ 6DoZGD9DgxJxQ5ToSH2nKlNyq52WLWXYWWikIJCano2QLV816u2+i2L72C/h4nXsUsdDIP5d/
+ CBeRv6+U3qcDm4Pi6RnFU/xgqFNqsLdKIlYRRRcB24qZt0aBPpnJlkwGU4YMGgnCjbdEW/Dex
+ sqRrXwV3Kqyssq6xwMvlQd5Yp3Acgw0BNy3gv7p6bwO7DtrMVf3PUNmsurROoX42gHKseyAc7
+ qskz+HyFSwMlwl3EUGwgviSYfHjp2BpBLjyhAh6EhgLuKpQR9f1rc3f1W8txvGBN/7W6gywdq
+ LTdwp3Sisurq1EyHwhxINCvnziH6Kvx9X8316+4ipx1QJwO/918v99elQFXmL+c5Qxh2AxP9d
+ dnXPTRbigZEa/VgW4Pd/W+bw9nLTlAggS5LA1w7ZrJ65ybPFvJobDAdrN4tdk9lfoJb1uillM
+ UsfOV8TItHB+Moe2oYOJzqyH3aS17kHLAq0SIXMuhYHiujRTCLsfZ5/oMjepyVcm+s5fQ95T6
+ QGAQg5UQxreUGlHKg/3bGRhWCzrRRevxxfmd4FCOhM5vhi7vSEb5YfTDJZpH1LqIX0ebqHQM+
+ sCXz0Qoiz9HGFjvpLC87PgYg==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 7ef4a88327bb37d6ee710f4126975a65a60e9ac7  Merge branch 'pci/kbuild'
+i've noticed that i missed the Ack from Krzysztof i've got in v1 [1]
 
-elapsed time: 723m
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-configs tested: 89
-configs skipped: 3
+[1] https://patchwork.kernel.org/project/linux-mediatek/patch/20221017104141.7338-2-linux@fw-web.de/
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                           rhel-8.3-kvm
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-arc                                 defconfig
-alpha                               defconfig
-arm                                 defconfig
-s390                                defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allmodconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-i386                                defconfig
-x86_64                               rhel-8.3
-s390                             allyesconfig
-x86_64                        randconfig-a013
-x86_64                              defconfig
-powerpc                          allmodconfig
-arm64                            allyesconfig
-x86_64                        randconfig-a011
-i386                          randconfig-a014
-mips                             allyesconfig
-arc                  randconfig-r043-20221111
-powerpc                           allnoconfig
-arm                              allyesconfig
-i386                          randconfig-a001
-sh                               allmodconfig
-riscv                randconfig-r042-20221111
-x86_64                        randconfig-a015
-s390                 randconfig-r044-20221111
-i386                          randconfig-a012
-i386                          randconfig-a003
-i386                          randconfig-a016
-i386                          randconfig-a005
-m68k                             allyesconfig
-x86_64                           allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-i386                             allyesconfig
-ia64                             allmodconfig
-x86_64                            allnoconfig
-i386                          randconfig-c001
-powerpc                      ppc40x_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                     tqm8541_defconfig
-sh                            hp6xx_defconfig
-arc                          axs103_defconfig
-powerpc                     asp8347_defconfig
-arm                         axm55xx_defconfig
-parisc                           alldefconfig
-parisc64                            defconfig
-openrisc                            defconfig
-openrisc                  or1klitex_defconfig
-m68k                          hp300_defconfig
-arm                         at91_dt_defconfig
-m68k                       m5275evb_defconfig
-powerpc                 linkstation_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-hexagon              randconfig-r041-20221111
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-x86_64                        randconfig-a012
-hexagon              randconfig-r045-20221111
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-k001
-arm                           omap1_defconfig
-arm                     am200epdkit_defconfig
-powerpc                 mpc8272_ads_defconfig
-mips                           ip27_defconfig
-riscv                            alldefconfig
-powerpc                      ppc44x_defconfig
-mips                           rs90_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+regards Frank
