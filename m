@@ -2,190 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 418366265C7
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 01:05:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC106265DA
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 01:11:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbiKLAFi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 19:05:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        id S234479AbiKLALl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 19:11:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233965AbiKLAF3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 19:05:29 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8662B1BA
-        for <linux-pci@vger.kernel.org>; Fri, 11 Nov 2022 16:05:28 -0800 (PST)
+        with ESMTP id S234537AbiKLALh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 19:11:37 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052DA54B1A;
+        Fri, 11 Nov 2022 16:11:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668211528; x=1699747528;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8llSxST3aJ2TewiqKYN2Zr+kww+xLvaN/VEh1h71d+o=;
-  b=LX5jOX8foMCW3F0SNxYnTWz3RgJE8+MfrRALXHumihPWPI0Q7bxn0QrN
-   y5WiMj+w/yMFMw1NpN4IkKmGB+rOeojkvQUDErDqba/rvJCZ0A+HsfUVu
-   u75fegQd5kV6BbhTafXS2WsadeB3a08iwqdYuJkS4ityv3TqGo3EtG1cC
-   w9ydnm0Pd/5mB2UUHAHeMi4iKC7BpjvpeCwtj8lFMp4rhm5ksb07ayiF1
-   qKXIf5GtJYVFQKYlZXUdbplErHR/o/C4hhlZnIjuqkMYFf5w33VIPj8ds
-   BFSPRwFRXcZL/KKKhGxAbJ1qs06LZfFSgJFICaUgj/PVxyZi/YE8ClCjv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="292083363"
+  t=1668211896; x=1699747896;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=LiZwmYGwAznYW6wrpo4GEBOGDwQrkWj7tTELRkONMMw=;
+  b=Ny7JK8HlDrFRt5trB8P87UdEy36SRNwkKbkK5Q6HUb6MMK14SVOHUwh3
+   YwcA3jc/+4bWBtgh3ELR1LQQPAvwQPpboqLBIN5+4faSnMzEaIDsi7CTe
+   PBPo6CuEA6LRF0XCasaoKb8VbqnQCx72bVXujZA95PMZpfxDqor5pWOAR
+   QNbQFX8WCnVhcA6sqRPWokmzpDYKBpoXFP+rMJQUhONGwNck04YG8Sz62
+   2q+9vg9NIa27tBBAhpc5KETG7ui7BqMaJFac/+eskgR3slGU+1xoej/Zp
+   kNivApIiDEkX3/TwBg3GID0Bz7t/i7IadFNZge/bkB+2mz67W/VYVFyL6
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="313484745"
 X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
-   d="scan'208";a="292083363"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:05:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="668939215"
+   d="scan'208";a="313484745"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:11:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="615617910"
 X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
-   d="scan'208";a="668939215"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 11 Nov 2022 16:05:25 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ote1V-0004Nq-0W;
-        Sat, 12 Nov 2022 00:05:25 +0000
-Date:   Sat, 12 Nov 2022 08:04:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [lpieralisi-pci:pci/qcom] BUILD SUCCESS
- c4860af88d0cb1bb006df12615c5515ae509f73b
-Message-ID: <636ee311.pLCUqkZ0hgFWkUSK%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="615617910"
+Received: from nmpoonaw-mobl1.amr.corp.intel.com (HELO [10.252.134.46]) ([10.252.134.46])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:11:33 -0800
+Message-ID: <7d621ab2-6717-c6b6-5c3c-90af4c2f4afc@intel.com>
+Date:   Fri, 11 Nov 2022 16:11:32 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 01/12] x86/ioremap: Fix page aligned size calculation
+ in __ioremap_caller()
+Content-Language: en-US
+To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, luto@kernel.org, peterz@infradead.org,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+References: <1668147701-4583-1-git-send-email-mikelley@microsoft.com>
+ <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/qcom
-branch HEAD: c4860af88d0cb1bb006df12615c5515ae509f73b  PCI: qcom: Add basic interconnect support
+On 11/10/22 22:21, Michael Kelley wrote:
+> If applying the PHYSICAL_PAGE_MASK to the phys_addr argument causes
+> upper bits to be masked out, the re-calculation of size to account for
+> page alignment is incorrect because the same bits are not masked out
+> in last_addr.
+> 
+> Fix this by masking the page aligned last_addr as well.
 
-elapsed time: 720m
+This makes sense at first glance.
 
-configs tested: 109
-configs skipped: 3
+How did you notice this?  What is the impact to users?  Did the bug
+actually cause you some trouble or was it by inspection?  Do you have a
+sense of how many folks might be impacted?  Any thoughts on how it
+lasted for 14+ years?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For the functionality of the mapping, I guess 'size' doesn't really
+matter because even a 1-byte 'size' will map a page.  The other fallout
+would be from memtype_reserve() reserving too little.  But, that's
+unlikely to matter for small mappings because even though:
 
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-m68k                             allmodconfig
-x86_64                        randconfig-a015
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-mips                             allyesconfig
-i386                          randconfig-a016
-i386                          randconfig-a001
-m68k                             allyesconfig
-powerpc                          allmodconfig
-arc                  randconfig-r043-20221111
-i386                          randconfig-a003
-riscv                randconfig-r042-20221111
-i386                          randconfig-a005
-s390                 randconfig-r044-20221111
-i386                                defconfig
-sh                               allmodconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-arc                          axs103_defconfig
-powerpc                 mpc834x_mds_defconfig
-openrisc                         alldefconfig
-ia64                             allmodconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                            allnoconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                      integrator_defconfig
-sh                           se7724_defconfig
-arc                          axs101_defconfig
-loongarch                 loongson3_defconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                             allyesconfig
-sh                         apsh4a3a_defconfig
-loongarch                        alldefconfig
-nios2                               defconfig
-arm                            pleb_defconfig
-i386                          randconfig-c001
-arm                       imx_v6_v7_defconfig
-mips                 decstation_r4k_defconfig
-arm                        oxnas_v6_defconfig
-mips                 randconfig-c004-20221111
-m68k                          hp300_defconfig
-arm                         at91_dt_defconfig
-powerpc                          allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-sh                          r7780mp_defconfig
-arm                           u8500_defconfig
-mips                           gcw0_defconfig
-mips                     loongson1b_defconfig
-m68k                       m5208evb_defconfig
-mips                           jazz_defconfig
-mips                      loongson3_defconfig
-powerpc                      cm5200_defconfig
-arm                           sunxi_defconfig
-mips                            gpr_defconfig
-sparc                       sparc32_defconfig
-arm                        spear6xx_defconfig
-powerpc                     mpc83xx_defconfig
+	ioremap(0x1800, 0x800);
 
-clang tested configs:
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-i386                          randconfig-a011
-hexagon              randconfig-r041-20221111
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a004
-hexagon              randconfig-r045-20221111
-i386                          randconfig-a006
-x86_64                        randconfig-k001
-arm                           sama7_defconfig
-arm                          pcm027_defconfig
-arm                           omap1_defconfig
-arm                       netwinder_defconfig
-mips                        qi_lb60_defconfig
-mips                  cavium_octeon_defconfig
-powerpc                     skiroot_defconfig
-powerpc                  mpc866_ads_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-powerpc                     ppa8548_defconfig
-riscv                            alldefconfig
-powerpc                      ppc44x_defconfig
-mips                           rs90_defconfig
-arm                          sp7021_defconfig
-powerpc                 mpc8560_ads_defconfig
+would end up just reserving 0x1000->0x1800, it still wouldn't allow
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+	ioremap(0x1000, 0x800);
+
+to succeed because *both* of them would end up trying to reserve the
+beginning of the page.  Basically, the first caller effectively reserves
+the whole page and any second user will fail.
+
+So the other place it would matter would be for mappings that span two
+pages, say:
+
+	ioremap(0x1fff, 0x2)
+
+But I guess those aren't very common.  Most large ioremap() callers seem
+to already have base and size page-aligned.
+
+Anyway, sorry to make so much of a big deal about a one-liner.  But,
+these decade-old bugs really make me wonder how they stuck around for so
+long.
+
+I'd be curious if you thought about this too while putting together this
+fox.
