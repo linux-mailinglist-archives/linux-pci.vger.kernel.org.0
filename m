@@ -2,169 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9853C62697F
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 13:47:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F3C6269ED
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 15:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234627AbiKLMrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Nov 2022 07:47:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54186 "EHLO
+        id S231252AbiKLOan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Nov 2022 09:30:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbiKLMrr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 07:47:47 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79EB19C07
-        for <linux-pci@vger.kernel.org>; Sat, 12 Nov 2022 04:47:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668257266; x=1699793266;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pyf4CRRnFiALDs/dGFVnyM4WvVidL/3EhejFG5IEQVM=;
-  b=hUMeO6sNZWZudyBHKPhoU3WRaXzxKH43q9UFOsKeu1OKNx2+qACs3G5X
-   pwF7DF8hxdfpBM3xtk6h2+MqUa47zU3XRMtxblDmxo4kUg6Qk70atpP8F
-   vGyeTKsfTHrXT3hvY0CI/bGU8GdtMY44zkFv0UgyxH0oBcWgcvCJvA509
-   aZaOWn6563X0/B/wwlsYs7Isn5eiKqY4RWrshRC0rw7QSaWqiv1/g1yr2
-   GFt3/pc1Zr6fLk5ECoZz0ZrnH4/MzmmNrn7vVRgztvnPkPJ8y7QP8Ogxt
-   +FsfbvYkfz/qNE0knCx0Ud9yN93mbJ72uwqSX5K2fVvdM+Fj9mFpTCQEt
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="398020213"
-X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
-   d="scan'208";a="398020213"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 04:47:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="727028701"
-X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
-   d="scan'208";a="727028701"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Nov 2022 04:47:45 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1otpvE-0004vF-36;
-        Sat, 12 Nov 2022 12:47:44 +0000
-Date:   Sat, 12 Nov 2022 20:47:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
- 98b04dd0b4577894520493d96bc4623387767445
-Message-ID: <636f95e6.eQOnnI7SD956HU5s%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234884AbiKLOam (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Nov 2022 09:30:42 -0500
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56F81A82E;
+        Sat, 12 Nov 2022 06:30:35 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|ian@linux.cowan.aero
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 4F84642068;
+        Sat, 12 Nov 2022 14:30:32 +0000 (UTC)
+Received: from pdx1-sub0-mail-a218.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id D29E042075;
+        Sat, 12 Nov 2022 14:30:31 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1668263431; a=rsa-sha256;
+        cv=none;
+        b=HCL1BAe1H/pzDrmFmWsj09mX0qwNjoLNeHGTxPhDTtih2wB7n+nwok5WdmrKxHnKWk00Kl
+        S4AiNOsxpBvwFRqFZzCwhFo1hqdMKrnEuxOeXsYqke4cGTp0ummjXdYKDp90WDFrd0C0H7
+        fmRRxCpNSL62T9wRbFXFLbzC6i8HNHTFF7f4bv5ljBW0YAcrHPIoS6efGNGjhIFvMqmo6t
+        +5AgFZMwicsx6Vpy8lR6PTx9EpSPuH6JZt1ZxtEa7lTNYqcugXBBFK638mTLssv0pPB+fc
+        H73dzHX6EXWks1F9RrlOEPewTYzSV4PG33Y0s61bWtDdJ+CK6KLcFFwNkCxgUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1668263431;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=mW17fZSHLBiDKN0vvyrLRRUmL3lhsMJhAt2HzFGSejY=;
+        b=Prz8dkb7lN8KKeeE6CkmLLZDYgSRUqtug1CtWEO7AtkvB5OVt8tWUtA9nILOt+6Eso/Xg2
+        BfPJjux0853ORrQ1RflIUhoCTotvAaCHlbLPSlnDnnBPeG0jui3LR7dy7lhoQiBk93sEGq
+        NI3ZmG5Yew1DH5orGqyvq27Bg62i6oLucpS2UHW88eqtIeTEAxAZZd/3hjhvj4DG/T5cpp
+        nk8Nl7aL/lpW7UhWTbRguTeyRs9TQgjzV1MFkHBbu7+OS0tZilab9CkEQT0v59lmuVFhLG
+        h3xSce3MUN54jugC03AXq6BvqCzLOSCItbKepd6v0gdXq8zgthvAUn7EzZiAng==
+ARC-Authentication-Results: i=1;
+        rspamd-7f9bbcf788-s7lzd;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=ian@linux.cowan.aero
+X-Sender-Id: dreamhost|x-authsender|ian@linux.cowan.aero
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|ian@linux.cowan.aero
+X-MailChannels-Auth-Id: dreamhost
+X-Lettuce-Abiding: 2c043aca72c057ef_1668263432105_2405489284
+X-MC-Loop-Signature: 1668263432105:464200031
+X-MC-Ingress-Time: 1668263432105
+Received: from pdx1-sub0-mail-a218.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.109.196.213 (trex/6.7.1);
+        Sat, 12 Nov 2022 14:30:32 +0000
+Received: from rhino.lan (dsl-50-5-144-34.fuse.net [50.5.144.34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ian@linux.cowan.aero)
+        by pdx1-sub0-mail-a218.dreamhost.com (Postfix) with ESMTPSA id 4N8dK31RSvz1M;
+        Sat, 12 Nov 2022 06:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.cowan.aero;
+        s=dreamhost; t=1668263431;
+        bh=mW17fZSHLBiDKN0vvyrLRRUmL3lhsMJhAt2HzFGSejY=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=re4lm+fkEqqzkw6hVZVtSC/qj9RJ6i2Yq1kMYFf9kxcc5qTuqRYK4+PWDQwrgvmBE
+         ZBGyX5eF/PIWZ4DyJAWXPDZvTDW2fn2anaIKs3NnAaiGx4mVdpsLVVqUzDJvojXADC
+         mJ6yO2EhGY9RH90eY7qDOG+2zFqPow7T5JZJM8ceuVxa9PRyff4gq7vHzZyInRvQvv
+         xdNjkuQunAMxqXajb2pEUlWrNgvt+uKi92pfZxLMQoc7DRBEOfwVS0paOhBkNzthOg
+         xxerRL0JRJAs6PceyhAq5AQ/Naj7dTGWbT9Q+auMA0zud32cGK1yePfAabagwNbGdN
+         KfIRRyXPdU2pA==
+From:   Ian Cowan <ian@linux.cowan.aero>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ian Cowan <ian@linux.cowan.aero>
+Subject: [PATCH 0/3] PCI: SHPC: removed unused get_mode1_ECC_cap callback
+Date:   Sat, 12 Nov 2022 09:28:56 -0500
+Message-Id: <20221112142859.319733-1-ian@linux.cowan.aero>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: 98b04dd0b4577894520493d96bc4623387767445  PCI: Fix pci_device_is_present() for VFs by checking PF
+In the SHPC module, the get_mode1_ECC_cap callback is never used from
+the hpc_ops struct, so this patch series removes that callback from both the
+definition of the struct and the definition of the shpchp_hps_ops
+struct. Additionally, this removes the reference in the TODO of the SHPC
+module.
 
-elapsed time: 721m
+Ian Cowan (3):
+  PCI: SHPC: remove unused get_mode1_ECC_cap callback declaration
+  PCI: SHPC: remove unused get_mode1_ECC_cap callback from definition
+  PCI: SHPC: update todo
 
-configs tested: 88
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                        randconfig-a004
-arc                                 defconfig
-x86_64                        randconfig-a002
-arm                                 defconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-x86_64                        randconfig-a006
-i386                                defconfig
-powerpc                          allmodconfig
-arc                  randconfig-r043-20221111
-x86_64                              defconfig
-mips                             allyesconfig
-riscv                randconfig-r042-20221111
-sh                               allmodconfig
-s390                 randconfig-r044-20221111
-m68k                             allyesconfig
-arm                              allyesconfig
-x86_64                          rhel-8.3-func
-alpha                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-arm64                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-ia64                             allmodconfig
-x86_64                               rhel-8.3
-s390                                defconfig
-s390                             allmodconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                             allyesconfig
-i386                          randconfig-a016
-x86_64                           allyesconfig
-s390                             allyesconfig
-x86_64                            allnoconfig
-arm                         axm55xx_defconfig
-parisc                           alldefconfig
-parisc64                            defconfig
-openrisc                            defconfig
-openrisc                  or1klitex_defconfig
-m68k                          hp300_defconfig
-arm                         at91_dt_defconfig
-m68k                       m5275evb_defconfig
-powerpc                 linkstation_defconfig
-i386                          randconfig-c001
-arm                      footbridge_defconfig
-sh                        apsh4ad0a_defconfig
-sh                   rts7751r2dplus_defconfig
-sh                        sh7757lcr_defconfig
-mips                      fuloong2e_defconfig
-mips                            gpr_defconfig
-arm                       imx_v6_v7_defconfig
-mips                 decstation_r4k_defconfig
-arm                        oxnas_v6_defconfig
-m68k                       m5208evb_defconfig
-mips                           jazz_defconfig
-mips                      loongson3_defconfig
-powerpc                      cm5200_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a014
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a004
-x86_64                        randconfig-a005
-i386                          randconfig-a006
-x86_64                        randconfig-a001
-hexagon              randconfig-r041-20221111
-x86_64                        randconfig-a003
-hexagon              randconfig-r045-20221111
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-k001
-mips                        qi_lb60_defconfig
-mips                  cavium_octeon_defconfig
-powerpc                     skiroot_defconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                  mpc885_ads_defconfig
+ drivers/pci/hotplug/TODO         |  3 ---
+ drivers/pci/hotplug/shpchp.h     |  1 -
+ drivers/pci/hotplug/shpchp_hpc.c | 18 ------------------
+ 3 files changed, 22 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.38.1
+
