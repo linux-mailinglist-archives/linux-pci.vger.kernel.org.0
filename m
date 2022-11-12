@@ -2,106 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0AC26265BE
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 00:54:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 434BB6265C3
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Nov 2022 01:04:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbiKKXyc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Nov 2022 18:54:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
+        id S232918AbiKLAE3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Nov 2022 19:04:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234714AbiKKXyb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 18:54:31 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FCFE087;
-        Fri, 11 Nov 2022 15:54:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22A3CB82865;
-        Fri, 11 Nov 2022 23:54:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F06C433C1;
-        Fri, 11 Nov 2022 23:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668210866;
-        bh=n9rlg2Dp22rShleywetYNqZbZzrEq6i3fmhDrN5LHUY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=G1BsGh35H/FvER66OzB4YdXN7WKPIP6Lpg4XsFACM46lQV1aSq1gEzkzbDrCpJDf4
-         rfxOgJQRldk6Zg5I7EXjel+xkbkV6kXdQfvQQeSgNJKOyOL1jbpdva64s5mIgiLPMp
-         qxyExEg+0nedDAHDm0l21sAjiLCB101OaKdYU4hTSktUzfquX96ppNgZDUnT2d6Jos
-         zHgrSjeq7MNM9h+0Y5sCT5Mxu2nmh27ky+w8KcNUpL+Tk9+pUUYrME/8x33EnmQ6Da
-         iioIP/jmop1iSxFRpX960OD/4bDFp67lRPCHnxN8HneFmsSVtBNJru40t5TOO5RDx8
-         F7Z5RT2kQdPqQ==
-Date:   Fri, 11 Nov 2022 17:54:25 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiaochun Lee <lixiaochun.2888@163.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: Re: [PATCH v1] PCI: Set no io resource for bridges that behind VMD
- controller
-Message-ID: <20221111235425.GA764316@bhelgaas>
+        with ESMTP id S230103AbiKLAE2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Nov 2022 19:04:28 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC990252B0
+        for <linux-pci@vger.kernel.org>; Fri, 11 Nov 2022 16:04:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668211467; x=1699747467;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nGqHA8c7rm2pphsTgGLkOtvyaozmy1TYWh2DEc1xehs=;
+  b=S3tneIsJ8mpXIyYbFLZ98axv1vmkE3yAap7PjOLyCuBt9rzaJFrWxTv1
+   UKx59mnAcDJfo8FoayJmCNZz8vy1eKj79pByeDI/IjkFTgCGFKBf5YVI/
+   XHcPNwb2Pwgt6n3U4YL8M/6Lz70VBRg2n9rWUX7GFSwPyw4TdBAY4Inc6
+   VJ/sGEvR4n8l/QKNVRL+kRXE6iAsr4UykqwoqaWy3UYYIeXeatCg+aeK4
+   z2ealxXsQS+Vbx76+Vgtgb++iKwW6r43SSnC5T3K7ZISD31NuLagk64aN
+   lfLV97DuSfvK03Q8aBW9HQ/97RkfUf/+Wh1rfLTmeivEW+c1FgckjYRnw
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="312828686"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="312828686"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:04:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="637721919"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="637721919"
+Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 11 Nov 2022 16:04:25 -0800
+Received: from kbuild by e783503266e8 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ote0X-0004NV-05;
+        Sat, 12 Nov 2022 00:04:25 +0000
+Date:   Sat, 12 Nov 2022 08:04:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/brcmstb] BUILD SUCCESS
+ 602fb860945fd6dce7989fcd3727d5fe4282f785
+Message-ID: <636ee307.Q6QDaLxj9/mzdpMb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1663075485-20591-1-git-send-email-lixiaochun.2888@163.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 09:24:45PM +0800, Xiaochun Lee wrote:
-> From: Xiaochun Lee <lixc17@lenovo.com>
-> 
-> When enable VMDs on Intel CPUs, VMD controllers(8086:28c0) be
-> recognized by VMD driver and there are many failed messages of
-> BAR 13 when scan the bridges and assign IO resource behind it
-> as listed below, the bridge wants to get 0x6000 as its IO
-> resource, but there is no IO resources on the host bridge.
-> 
-> VMD host bridge resources:
-> vmd 0000:64:00.5: PCI host bridge to bus 10000:80
-> pci_bus 10000:80: root bus resource [bus 80-9f]
-> pci_bus 10000:80: root bus resource [mem 0xe0000000-0xe1ffffff]
-> pci_bus 10000:80: root bus resource [mem 0x24ffff02010-0x24fffffffff 64bit]
-> 
-> Failed messages of BAR#13:
-> pci 10000:80:02.0: BAR 13: no space for [io  size 0x1000]
-> pci 10000:80:02.0: BAR 13: failed to assign [io  size 0x1000]
-> pci 10000:80:03.0: BAR 13: no space for [io  size 0x1000]
-> pci 10000:80:03.0: BAR 13: failed to assign [io  size 0x1000]
-> 
-> VMD-enabled root ports use
-> Enhanced Configuration Access Mechanism (ECAM) access
-> PCI Express configuration space, and offer VMD_CFGBAR as
-> base of PCI Express configuration space for the bridges
-> behind it. The configuration space includes IO resources,
-> but these IO resources are not actually used on X86,
-> especially the NVMes as device connected on this hot plug
-> bridges, and it can result in BAR#13 assign IO resource
-> failed. So we clear IO resources by setting an IO base value
-> greater than limit to these bridges. Hence, we can leverage
-> kernel parameter "pci=hpiosize=0KB" to avoid this failed
-> messages show out.
-> 
-> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/brcmstb
+branch HEAD: 602fb860945fd6dce7989fcd3727d5fe4282f785  PCI: brcmstb: Set RCB_{MPS,64B}_MODE bits
 
-Some of the discussion here got lost because of email issues.  Lore
-has some:
-https://lore.kernel.org/all/1663075485-20591-1-git-send-email-lixiaochun.2888@163.com/T/#u,
-and patchwork has a v2 with a little more discussion:
-https://patchwork.kernel.org/project/linux-pci/patch/1664288166-7432-1-git-send-email-lixiaochun.2888@163.com/
+elapsed time: 720m
 
-But the v2 patch doesn't seem to have made it to the mailing lists or
-to lore (https://lore.kernel.org/all/?q=f%3Alixc17) and I don't apply
-things until they appear on the mailing list.
+configs tested: 100
+configs skipped: 3
 
-I *would* like to get rid of those "no space" and "failed to assign"
-messages.  This is an issue for platforms other than VMD, too.  Just
-an FYI that you need to follow up on this if we want make progress.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Bjorn
+gcc tested configs:
+arc                                 defconfig
+alpha                               defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+s390                                defconfig
+s390                             allmodconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+arc                  randconfig-r043-20221111
+riscv                randconfig-r042-20221111
+s390                 randconfig-r044-20221111
+s390                             allyesconfig
+alpha                            allyesconfig
+sh                               allmodconfig
+arc                              allyesconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+arc                          axs103_defconfig
+powerpc                 mpc834x_mds_defconfig
+openrisc                         alldefconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+ia64                             allmodconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                            allnoconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                      integrator_defconfig
+sh                           se7724_defconfig
+arc                          axs101_defconfig
+loongarch                 loongson3_defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                             allyesconfig
+i386                                defconfig
+sh                         apsh4a3a_defconfig
+loongarch                        alldefconfig
+nios2                               defconfig
+arm                            pleb_defconfig
+i386                          randconfig-c001
+arm                       imx_v6_v7_defconfig
+mips                 decstation_r4k_defconfig
+arm                        oxnas_v6_defconfig
+m68k                          hp300_defconfig
+arm                         at91_dt_defconfig
+mips                 randconfig-c004-20221111
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+sh                          r7780mp_defconfig
+arm                           u8500_defconfig
+mips                           gcw0_defconfig
+mips                     loongson1b_defconfig
+m68k                       m5208evb_defconfig
+mips                           jazz_defconfig
+mips                      loongson3_defconfig
+powerpc                      cm5200_defconfig
+arm                           sunxi_defconfig
+mips                            gpr_defconfig
+sparc                       sparc32_defconfig
+arm                        spear6xx_defconfig
+powerpc                     mpc83xx_defconfig
+
+clang tested configs:
+hexagon              randconfig-r045-20221111
+hexagon              randconfig-r041-20221111
+x86_64                        randconfig-k001
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+arm                           sama7_defconfig
+arm                          pcm027_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+arm                           omap1_defconfig
+arm                       netwinder_defconfig
+mips                        qi_lb60_defconfig
+mips                  cavium_octeon_defconfig
+powerpc                     skiroot_defconfig
+powerpc                  mpc866_ads_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+powerpc                     ppa8548_defconfig
+riscv                            alldefconfig
+powerpc                      ppc44x_defconfig
+mips                           rs90_defconfig
+arm                          sp7021_defconfig
+powerpc                 mpc8560_ads_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
