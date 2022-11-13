@@ -2,107 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F7F2626FB2
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Nov 2022 14:26:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15553626FD9
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Nov 2022 14:47:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235338AbiKMNZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Nov 2022 08:25:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
+        id S235310AbiKMNrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Nov 2022 08:47:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234213AbiKMNZ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Nov 2022 08:25:58 -0500
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 459C0F021
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 05:25:58 -0800 (PST)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-13bd19c3b68so10010465fac.7
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 05:25:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0+PAI4rgqgu8lkz8iluiDX4+RYG6mJwQ4g48BRbmTMI=;
-        b=SAyPmAn226k9aGHA5xqcKLPu6K5IzJd+MGB7z2RcLWURtkbA4hQz/ZON4lnJ7tF462
-         jt3/5J9mfu2EV7rwjOvpPkZoe59FTkdDf/K+naxDEX7J0LOuetih5b6L4aRoIIapkQt3
-         oG8xJ3XbRPrvR2Pt9iN83ekIP17e55vSwFpuLokHYmk/inh3ifltPA7jJ3Jh2cG65kM5
-         CWVpwB46MgOfZndq9JKa7BvGusflWDvqJzkwH0OU/NfXP6pwRHwuedXOSp+nNK3A+tv3
-         LX+4+TOSoL9vhkKc+QQQAtM0pU619tue2kKDaY+HkckY94TNH/ioGfHDjzO+zfPG58Y+
-         WfOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+PAI4rgqgu8lkz8iluiDX4+RYG6mJwQ4g48BRbmTMI=;
-        b=1DsbVyeGeZ/ZUemC1IHxTFgKDHLr+2yCAbVcuCa2/+CGQutxeqs0R5wtqSxJXKTajr
-         Gfj5T/xK0nqqLIWzDrV6jMCGPmMjgU9xRy3qgNhajFSxTzw4jseX72Hmy0lPX6mxq3Lr
-         PIPb3EJfDgMW7VVRspu+CT86cLvysIqtIdw2Mbq9RnXyO9Hzi001USRLbxGDvVbbjaHR
-         WeDB+5AVWLzea0UfUeKbH96/PVQ5Zd7paVHX4ykPjoG9CCGyj+nYFqKYb0jgncJKFRSm
-         WR6sOAWiwac1wr2tCGPf2SX0i2Ycihoktmsxraou3nCRZvyD2C3XQs4yh9iHDyrmMuQs
-         ZCsw==
-X-Gm-Message-State: ANoB5pnqadD6CZ0vX6bdAGDKbDpmqdc66tDlIldCQGDqZEa2+pcEYK02
-        tIYDd10sBCU3ZlaCLsKS/VcLqn0ExsNjzm88Dvg=
-X-Google-Smtp-Source: AA0mqf40QsY/+eBkbpZnc7320YXp8qgSZJIyS5L82NdBcdUoyAGpYOSRJZCzsHh2R3oZPPBbmGed+Vl+1/8Spn2Hd0M=
-X-Received: by 2002:a05:6870:1e87:b0:137:5188:e062 with SMTP id
- pb7-20020a0568701e8700b001375188e062mr4901800oab.297.1668345957565; Sun, 13
- Nov 2022 05:25:57 -0800 (PST)
+        with ESMTP id S235214AbiKMNrS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Nov 2022 08:47:18 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B756430;
+        Sun, 13 Nov 2022 05:47:16 -0800 (PST)
+Received: from kwepemi100025.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N9DDK5rcKzqSNJ;
+        Sun, 13 Nov 2022 21:43:29 +0800 (CST)
+Received: from [10.174.148.223] (10.174.148.223) by
+ kwepemi100025.china.huawei.com (7.221.188.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sun, 13 Nov 2022 21:47:13 +0800
+Message-ID: <0b2202bf-18d3-b288-9605-279208165080@huawei.com>
+Date:   Sun, 13 Nov 2022 21:47:12 +0800
 MIME-Version: 1.0
-Received: by 2002:ac9:41c1:0:0:0:0:0 with HTTP; Sun, 13 Nov 2022 05:25:57
- -0800 (PST)
-Reply-To: illuminatiinitiationcenter8@gmail.com
-From:   Garry Lee <ssekittojoseph48@gmail.com>
-Date:   Sun, 13 Nov 2022 16:25:57 +0300
-Message-ID: <CAHuu0JiFE6P=LMbxEhGixNTzR=sVWOTMFz6Nv7fe0AFnzQ7MgQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,
-        UNDISC_FREEM,UPPERCASE_75_100 autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2001:4860:4864:20:0:0:0:34 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [illuminatiinitiationcenter8[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [ssekittojoseph48[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [ssekittojoseph48[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 UPPERCASE_75_100 message body is 75-100% uppercase
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
-        *      information
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <jianjay.zhou@huawei.com>,
+        <zhuangshengen@huawei.com>, <arei.gonglei@huawei.com>,
+        <yechuan@huawei.com>, <huangzhichao@huawei.com>,
+        <xiehong@huawei.com>
+References: <20221111142722.1172-1-longpeng2@huawei.com>
+ <Y256ty6xGyUpkFn9@unreal>
+From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+In-Reply-To: <Y256ty6xGyUpkFn9@unreal>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.148.223]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100025.china.huawei.com (7.221.188.158)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-DO YOU WANT TO BE RICH AND FAMOUS? JOIN THE GREAT ILLUMINATI ORDER OF
-RICHES, POWER/FAME  NOW AND ACHIEVE ALL YOUR DREAMS? IF YES EMAIL US :
-MAIL: illuminatiinitiationcenter8@gmail.com
+Hi leon,
 
-YOUR FULL NAME:
-PHONE NUMBER :
-COUNTRY :
-GENDER:
+在 2022/11/12 0:39, Leon Romanovsky 写道:
+> On Fri, Nov 11, 2022 at 10:27:18PM +0800, Longpeng(Mike) wrote:
+>> From: Longpeng <longpeng2@huawei.com>
+>>
+>> We can enable SRIOV and add VFs by /sys/bus/pci/devices/..../sriov_numvfs, but
+>> this operation needs to spend lots of time if there has a large amount of VFs.
+>>                                                              
+>> For example, if the machine has 10 PFs and 250 VFs per-PF, enable all the VFs
+>> concurrently would cost about 200-250ms. However most of them are not need to be
+>> used at the moment, so we can enable SRIOV first but add VFs on demand.
+> 
+> It is unclear what took 200-250ms, is it physical VF creation or bind of
+> the driver to these VFs?
+>
+It is neither. In our test, we already created physical VFs before, so 
+we skipped the 100ms waiting when writing PCI_SRIOV_CTRL. And our driver 
+only probes PF, it just returns an error if the function is VF.
+
+The hotspot is the sriov_add_vfs (but no driver probe in fact) which is 
+a long procedure. Each step costs only a little, but the total cost is 
+not acceptable in some time-sensitive cases.
+
+What’s more, the sriov_add_vfs adds the VFs of a PF one by one. So we 
+can mostly support 10 concurrent calls if there has 10 PFs.
+
+> If the latter, you can try with sriov_drivers_autoprobe set to true. This is how
+> ennoblement of large SR-IOV systems is done.
+>  > Also PCI spec declares "VF enable" bit, which is applicable to all VFs
+> associated to that PF, see section "9.3.3.3.1 VF Enable".
+> 
+> Thanks
+> 
+>>
+>> This series introduces two interfaces:
+>> 1. sriov_numvfs_no_scan: enable SRIOV without add the VFs.
+>> 2. sriov_scan_vf_id: add a specific VF.
+>>
+>> Longpeng (4):
+>>    pci/sriov: extract sriov_numvfs common helper
+>>    pci/sriov: add vf_bitmap to mark the vf id allocation
+>>    pci/sriov: add sriov_numfs_no_scan interface
+>>    pci/sriov: add sriov_scan_vf_id interface
+>>
+>>   drivers/pci/iov.c | 162 +++++++++++++++++++++++++++++++++++++++++-----
+>>   drivers/pci/pci.h |   1 +
+>>   2 files changed, 148 insertions(+), 15 deletions(-)
+>>
+>> -- 
+>> 2.23.0
+>>
+> .
