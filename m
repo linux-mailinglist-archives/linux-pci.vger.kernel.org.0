@@ -2,158 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA49A62766B
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 08:33:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0409762768C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 08:44:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235667AbiKNHd1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 02:33:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
+        id S235717AbiKNHoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 02:44:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235468AbiKNHd0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 02:33:26 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864F2B2
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 23:33:23 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id b185so10219544pfb.9
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 23:33:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ci7EEHbshcFehJfZ1vhA/3zbDhlLQ5SlERB0/duNlh8=;
-        b=y3sTF4hmY4khAQzxD5W0lpR+G1orJovJ5WNYYWsHTSyjMcgBjhMkaiOKdjckMTBiSh
-         vh2JE+gHWRkYtjJoGRqNcDFThmcgZ3HDTXz4t768hG1xHySziZr6AG6FeEXAHrWsdLcY
-         SoFCnu7xK8reZ4yDWPnDrdBf/SDCBNPE+xlm3Qsz/JZglETSwzmQ5uRroMSLDpE3gk/e
-         Qt9aUnUTI21HApCAfmG9Ea0xI5FsXzBMCinDKk0fGzcoHt1oqpAXXut11zfY0T/wZcol
-         5gaB+iO7F/tNZyVlMi2ANbPrZljhp4bUCyrGnGb4yq2dlMZhj3TYphO8NvVFGWUy0HW7
-         gB4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ci7EEHbshcFehJfZ1vhA/3zbDhlLQ5SlERB0/duNlh8=;
-        b=1UNoZ7Z3vEPqZFoNGraM62NdpmGo+feHuDVolFU9G9XnL5kqNaQnTmSyOakmyEuNVL
-         j16YRgex+Avcd92+s0ykUcQFS4n4tirI4oNdwQI6CLezbSNriBMMT9810Ym4czA6e/69
-         wQc+/qisE8GZ4iRfUvWLt8z5gtIUyyEtdIVzqsWpXzkpjoMpD3WLTg4YX9T+mjlOee9N
-         ngPRT0cSYOjaDYs/Atw+j8NRsHHIDhBuL4YfAOzUet0LfLWa48pOqYOd/gQx8rCAepyw
-         6GGkw5t7BGfqrJr2+Ggfob+uGWt2WtCV3el1Ax8jFPAEbbIivb8T3aPHDI7/6FI/GtW7
-         AGYQ==
-X-Gm-Message-State: ANoB5plFc0VsxMng9Zz8olHKE43XZB1kBxVnl0Gr6DqCRHRiQ6VhrsOG
-        176Pj7VV5OnvwGgnpRcypqJQ
-X-Google-Smtp-Source: AA0mqf7pnXSPJUmcLy5E7oq1swZ5WkTvgCA6ttdHUuKrnr9k9Qhvivs0XObyuY2+UptCt2a0b/0dqg==
-X-Received: by 2002:aa7:8813:0:b0:56b:f64b:b385 with SMTP id c19-20020aa78813000000b0056bf64bb385mr12648979pfo.68.1668411202990;
-        Sun, 13 Nov 2022 23:33:22 -0800 (PST)
-Received: from thinkpad ([117.248.0.54])
-        by smtp.gmail.com with ESMTPSA id w7-20020a654107000000b0043ae1797e2bsm5215425pgp.63.2022.11.13.23.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Nov 2022 23:33:21 -0800 (PST)
-Date:   Mon, 14 Nov 2022 13:03:16 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com,
-        kishon@kernel.org, bhelgaas@google.com
-Subject: Re: [PATCH v4 0/5] PCI: endpoint: Rework the EPC to EPF notification
-Message-ID: <20221114073316.GI3869@thinkpad>
-References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S236052AbiKNHoC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 02:44:02 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E75F118E23;
+        Sun, 13 Nov 2022 23:43:59 -0800 (PST)
+Received: from loongson.cn (unknown [10.20.42.77])
+        by gateway (Coremail) with SMTP id _____8AxzNi+8XFjRNUGAA--.20591S3;
+        Mon, 14 Nov 2022 15:43:58 +0800 (CST)
+Received: from loongson-PC.loongson.cn (unknown [10.20.42.77])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+Cy8XFjOWISAA--.49681S2;
+        Mon, 14 Nov 2022 15:43:57 +0800 (CST)
+From:   Liu Peibao <liupeibao@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>,
+        wanghongliang <wanghongliang@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V5] PCI: loongson: Skip scanning unavailable child devices
+Date:   Mon, 14 Nov 2022 15:43:46 +0800
+Message-Id: <20221114074346.23008-1-liupeibao@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8Axf+Cy8XFjOWISAA--.49681S2
+X-CM-SenderInfo: xolx1vpled0qxorr0wxvrqhubq/1tbiAQAKCmNw3mQNdwAAsS
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Kr4fWw48Gw48JFyfZw4kXrb_yoW8ZFykpF
+        W3JFWakrWkKFyIkanIq348C3Wa9anrK395Jrs7CrnF93ZxC345Wr97CFyFq343trW8A3WY
+        vF1jgr18GF4UJF7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+        xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+        1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+        6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+        AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+        vjxU4oGQDUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 08:20:56PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> During the review of the patch that fixes DBI access in PCI EP, Rob
-> suggested [1] using a fixed interface for passing the events from EPC to
-> EPF instead of the in-kernel notifiers.
-> 
-> This series introduces a simple callback based mechanism for passing the
-> events from EPC to EPF. This interface is chosen for satisfying the below
-> requirements:
-> 
-> 1. The notification has to reach the EPF drivers without any additional
-> latency.
-> 2. The context of the caller (EPC) needs to be preserved while passing the
-> notifications.
-> 
-> With the existing notifier mechanism, the 1st case can be satisfied since
-> notifiers aren't adding any huge overhead. But the 2nd case is clearly not
-> satisfied, because the current atomic notifiers forces the EPF
-> notification context to be atomic even though the caller (EPC) may not be
-> in atomic context. In the notification function, the EPF drivers are
-> required to call several EPC APIs that might sleep and this triggers a
-> sleeping in atomic bug during runtime.
-> 
-> The above issue could be fixed by using a blocking notifier instead of
-> atomic, but that proposal was not accepted either [2].
-> 
-> So instead of working around the issues within the notifiers, let's get rid
-> of it and use the callback mechanism.
-> 
-> NOTE: DRA7xx and TEGRA194 drivers are only compile tested. Testing this series
-> on the real platforms is greatly appreciated.
-> 
+The PCI Controller of 2K1000 could not mask devices by setting vender ID or
+device ID in configuration space header as invalid values. When there are
+pins shareable between the platform device and the on chip PCI device, if
+the platform device is preferred, we should not scan this PCI device. In
+the above scene, add `status = "disabled"` property in DT node of this PCI
+device.
 
-Lorenzo, can this series be merged for v6.2 since all the patches are reviewed
-now?
+Before this patch, to solve the above problem, we treat the on chip PCI
+devices as platform devices with fixed address assigned by the BIOS. When
+there is device not preferred, add the `status = "disabled"` property in DT
+node. In kernel, the PCI host bridge only scans slot 9/A/B/C/D/E that are
+bridges. Overall, this looks not much elegant.
 
-Thanks,
-Mani
+Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+---
+V4 -> V5: make the issue we are facing clear in commit log.
+V3 -> V4: 1. get rid of the masklist and search the status property
+	  directly.
+          2. check the status property only when accessing the vendor ID.
+V2 -> V3: 1. use list_for_each_entry() for more clearly.
+          2. fix wrong use of sizeof().
+V1 -> V2: use existing property "status" instead of adding new property.
 
-> Thanks,
-> Mani
-> 
-> [1] https://lore.kernel.org/all/20220802072426.GA2494@thinkpad/T/#mfa3a5b3a9694798a562c36b228f595b6a571477d
-> [2] https://lore.kernel.org/all/20220228055240.24774-1-manivannan.sadhasivam@linaro.org
-> 
-> Changes in v4:
-> 
-> * Added check for the presence of event_ops before involing the callbacks (Kishon)
-> * Added return with IRQ_WAKE_THREAD when link_up event is found in the hard irq
->   handler of tegra194 driver (Vidya)
-> * Collected review tags
-> 
-> Changes in v3:
-> 
-> * As Kishon spotted, fixed the DRA7xx driver and also the TEGRA194 driver to
->   call the LINK_UP callback in threaded IRQ handler.
-> 
-> Changes in v2:
-> 
-> * Introduced a new "list_lock" for protecting the epc->pci_epf list and
->   used it in the callback mechanism.
-> 
-> Manivannan Sadhasivam (5):
->   PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ
->   PCI: tegra194: Move dw_pcie_ep_linkup() to threaded IRQ handler
->   PCI: endpoint: Use a separate lock for protecting epc->pci_epf list
->   PCI: endpoint: Use callback mechanism for passing events from EPC to
->     EPF
->   PCI: endpoint: Use link_up() callback in place of LINK_UP notifier
-> 
->  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
->  drivers/pci/controller/dwc/pcie-tegra194.c    |  9 ++++-
->  drivers/pci/endpoint/functions/pci-epf-test.c | 38 ++++++-------------
->  drivers/pci/endpoint/pci-epc-core.c           | 32 ++++++++++++----
->  include/linux/pci-epc.h                       | 10 +----
->  include/linux/pci-epf.h                       | 19 ++++++----
->  6 files changed, 59 insertions(+), 51 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+ drivers/pci/controller/pci-loongson.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 05c50408f13b..efca0b3b5a29 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -194,6 +194,17 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
+ 			return NULL;
+ 	}
+ 
++#ifdef CONFIG_OF
++	/* Don't access disabled devices. */
++	if (pci_is_root_bus(bus) && where == PCI_VENDOR_ID) {
++		struct device_node *dn;
++
++		dn = of_pci_find_child_device(bus->dev.of_node, devfn);
++		if (dn && !of_device_is_available(dn))
++			return NULL;
++	}
++#endif
++
+ 	/* CFG0 can only access standard space */
+ 	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+ 		return cfg0_map(priv, bus, devfn, where);
 -- 
-மணிவண்ணன் சதாசிவம்
+2.20.1
+
