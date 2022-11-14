@@ -2,213 +2,316 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E208628700
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 18:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3F3862879A
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 18:58:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237297AbiKNRZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 12:25:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60466 "EHLO
+        id S237837AbiKNR6H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 12:58:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237581AbiKNRZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 12:25:32 -0500
-Received: from DM6PR05CU003-vft-obe.outbound.protection.outlook.com (mail-centralusazon11023015.outbound.protection.outlook.com [52.101.64.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8481571D;
-        Mon, 14 Nov 2022 09:25:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQm6OcUzl1i2GL2jZyktkzyUMqqjYJKys7PSpUjrueWRHJPHbzSxaaKm+bWfqrWXFxlGxUbtxC3LnaXm+P6FQscGxaCQrpO3BHPFWq2IfermDXCgRN32jxwCvlsjN5sIBhWerflZBta7bgOo1W5H/hipCcIIWy/9+dqgFfaNCxbVQk06JZMx/Pr0NR1jarFgH7LMA++O9eWwiS45+9+OZO4yB5afC+j+Wmh+CnvhA5Ir+BhJ7MfiS11tTPK7jZ1IH27pogn5ZSlvmkQ++u9QLxhYMEWwygM9ygZyqy+jfU9+4Mpvbp8GBlBZAZJcyIVcY+tICJeXNqeRJg/xDFsF4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yE9D6MUPl49ZGLTRjsAW+RaQsowmBQ97HZprGamDnqw=;
- b=QNrx6YEQK0VLRw7G7ziOTdI+7KHAveS9AwoL9Y4QPPDkJvEUTpgwVlGPi4JSmTs0LdGI3Vwj4PL4TWwIQ5xJR+TMXIz3wroUKf20BqXhd7p2NxQX7z5roNPpHV5vcXKNdHoODdctHzI/i9jOmcSFoTC+eWeys7SDxmAwArPWPlE9kSAfbdHtxXEyeeIbII6rZkg+CyRQxyIP2cLZGtmUEvBXoXFdlrkxfvId3ykSmq9cQhliwKxB2MNRTlGrOJL23UGUG8axqunUHYKeR0gr8swqe5oDaMhRJwSbKW93WOHfxf/frLP5oDiwhQnjvOYaoJNcj/olAsWiNmSP9a0u2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yE9D6MUPl49ZGLTRjsAW+RaQsowmBQ97HZprGamDnqw=;
- b=js/c4R9LOFKd0kwIHAjmTuRX7GG31hCn8CGICTaUQlXnrZrdo2zQJ8VDI1IGYxmSlDF7WlCAdPFi+utKw4ILxt+Jxw9KndhBpAk3iscf/rTHDYIjuxrf9wzCXlahvzB2IuzvZMapwnqGT/RFmfT7nQcVVeI2/sIZDHlMnbiEZyk=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by MN2PR21MB1405.namprd21.prod.outlook.com (2603:10b6:208:203::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.5; Mon, 14 Nov
- 2022 17:25:19 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::6468:9200:b217:b5b7]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::6468:9200:b217:b5b7%3]) with mapi id 15.20.5834.006; Mon, 14 Nov 2022
- 17:25:19 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [PATCH v2 01/12] x86/ioremap: Fix page aligned size calculation
- in __ioremap_caller()
-Thread-Topic: [PATCH v2 01/12] x86/ioremap: Fix page aligned size calculation
- in __ioremap_caller()
-Thread-Index: AQHY9ZXvB05GbI897ESEeyxWArQdDq4+pF2AgAADf1CAAAFrgIAAAVqg
-Date:   Mon, 14 Nov 2022 17:25:19 +0000
-Message-ID: <BYAPR21MB1688B9B05B7796FD8D7D50DDD7059@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1668147701-4583-1-git-send-email-mikelley@microsoft.com>
- <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
- <feca1a0a-b9b2-44d9-30e9-c6a6aa11f6cd@intel.com>
- <BYAPR21MB1688430B2111541FE68D3569D7059@BYAPR21MB1688.namprd21.prod.outlook.com>
- <10a4eb94-4764-717b-7c20-64a3d895b3d1@intel.com>
-In-Reply-To: <10a4eb94-4764-717b-7c20-64a3d895b3d1@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e87849b4-1bc4-480a-aebc-14a92cc1e05f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-14T17:02:38Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|MN2PR21MB1405:EE_
-x-ms-office365-filtering-correlation-id: 1ab02955-91a6-4211-7085-08dac66533e2
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: spVAqXorag2rRJp9RAjoSSrUr16G9qheWNQW7TeeHe7pBIpn69PIGh88ZupbLUljqgJtwtpZF1O8LAfg1mKxkww2rdXCc5E0WK0CWhC+LD0T2NnQ9kOZf0KlgrZLM99eqjMU8mxriRIf1BmiF7HPzGozaA4ZFiRoFY+WPJrysQPYB0EQK4xeH325njplgz2pR2dtnzXMGkRXDt18ky7T1OU++QVuD61NNRQJaUIOXGiYTCTNF1wrZL3AMDVp9Bjp83FFMFYEYsDoL+/dTJgRUWgCWYN0cHTZNagTNRnS2es4xocgN+gctIdz4nBlZMYGArpFFSNrf2jbJ/cF8nC1jyjBzZVi/I8iDys720WgIxrOoM4CGhJhG+rLvKT+9YoDEtHiKbcdeHivQyF6QikLhua3rX1mgM6vbPmjJ8WYw3LoLz3lurbvExbO6L2Gyj748HxCSeEc9kHfl06//SVHvG6Mdlmqd3ll4XINe9w3XIEL/3+2FGGRgOoXc7xvQEIeGXiUwLeNt4xcBXrbcxUeRzE0Cmy0NWghUuEWK9Ggv0SU+2d7h+QDDcG6bJ8E/e8GtE4Ix84EQ5Jk+qF6XzbIDMId1JFo45aq5oy6rbf5NpuORHkjHfWLPxWoJpzebC2Y2rd6G1Os7+exQaKBuwsuOjwXaFYE/haHDIL0N345hBDPUES9jIrHn8iVs/DX0BYM1/6bnNRaIfprfSZ9cNMw8s8T8oIu9IMxlieC1OiVdmI8nImIFyswvkdD0CN7fPZNqW/baCYFqmzSHZuk8ouEW2t1ZyD4Q09IoqmxY0ZCAzvmOUjIdkOu+RrnW8NUKUiYlsyDSO4C/y5g1xUka7uc1w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(451199015)(38100700002)(82960400001)(8990500004)(82950400001)(921005)(38070700005)(478600001)(66556008)(66476007)(66446008)(316002)(71200400001)(2906002)(64756008)(122000001)(66946007)(76116006)(8676002)(7406005)(7416002)(6506007)(86362001)(9686003)(5660300002)(55016003)(7696005)(110136005)(26005)(53546011)(8936002)(186003)(52536014)(33656002)(10290500003)(41300700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QTR3OGt0WllsL0N1S0dwWDN1eE5YczJ3WHhtTit5dU4yenBVNEVSajQ5Y3py?=
- =?utf-8?B?OVdNZUw3bDNKeHF6QW42eGJLVUFGS0lwbDVOaThna2hOZjY0Y2NEczQzckM5?=
- =?utf-8?B?dlozUTR5dmk2K3FCVVRGeURLK3ZSblZyand2WnNSQXZJeTB2SFlWeFU5Rktx?=
- =?utf-8?B?cWg5Z2tQR0hlT1UzTHUrbGVTZG0zd1Z3ZndJcWNteDFEMHhvY1IvQzFlb01u?=
- =?utf-8?B?K0hVdnlFcTFHQzhuMHpNL1pPTFllUFZkdkY5VnJHT0lja2ExOFJFQVNSaVVr?=
- =?utf-8?B?SHNMOFU4ZDdNaVQvNGpxUUtOZUhzSkZPdFpxNjRJSlVXMVlNUlVJYVU2OGtX?=
- =?utf-8?B?bEJrVE1BckZ5QlpsRE4wZ1JYRE5YOVVIeGRPWXo0UG1NTGxVYUcyRUFHUXc2?=
- =?utf-8?B?Q0JZbGw1OCtGSStwcFR5VDI1QUwyYnhoYWRFczBJTWgzSXlKK3daL0hTbTFR?=
- =?utf-8?B?ODZiemVzdzhTKzhUcVFWbzVZYk9tL2U1bXFOc0xLOVJ4eGV5ZjFmWVpvOUFl?=
- =?utf-8?B?MHNubnF1bWhpT203MUluSGtDSDF5RmgzY01abm9nTk1TYzhYOG5BT2pLbzBK?=
- =?utf-8?B?cFZjazU3Y0Z0ejZQRGJ4d2FHTmtXcWUxVzYzYUtkc01lV09kU0RBdUtvWCsw?=
- =?utf-8?B?SUVCS1dwZzNsQ0UrQVAwNkIzT1gzYzhFcDZvTlBuT2M2K2RWeDNRL1pxdmV2?=
- =?utf-8?B?Ym1YZ2Z6bW9mRlA1QWdJSDhiRlJOUmdSb0tOcEFhZUhQV2tiQ1kvR0xEcWo2?=
- =?utf-8?B?ODFnU3dtUHdvbzRlTkQ5OFlWYk44T1dlVWxUNUFXVG5Yc2kycVlwSG1xb3Qz?=
- =?utf-8?B?Q3ZUWkJGTkRHUEhodEYxNm1IRmFpNDNDOUI5blFGeUpSbWJuYVF6MzFXdnY0?=
- =?utf-8?B?dWtsWlNxSSs0L2t1NnNTVytzTngwWXNhVEt3eVc2cE1OWGw1MCthWCtLa0Z6?=
- =?utf-8?B?RUZaRU5UL29NeXR6MWhEeXVWelJhc1JnK29WbUdUK0g4Vy9pOFlTOUxvWTVK?=
- =?utf-8?B?WWMwdVhOTzgyQlZlaHdVZHFMUk9PQmFWSEZUSVFwSU5YMFh6RSt4YVVMOG9h?=
- =?utf-8?B?ZTNpUDNRSElvZzlpVjFFNUs1M1RScnd2VDRYZU5LajJVVVo3anAxbENFZlZn?=
- =?utf-8?B?dlBraFVTOTVWalZpUVkvSHIxN2RWdUNwMTJ4bzNQKzNUU3RsN05UNWxEMjQv?=
- =?utf-8?B?UDVTSGhGdXZodkxMb09lTlB4Zi9kMzQ0MmdlMFViSjE0aTk2NjZ3dXJ2RGov?=
- =?utf-8?B?cmNwTGltQW5oWkZJUFlDZFBDVjVtQUlWSnQvY3Y5M0FVTFNpSEwxNTN6Sm9v?=
- =?utf-8?B?Z2hvb0Jweks3MGsrSFQyS0g5ekJIN3Q4Ky9SRGNlK29tWkRrV0JPQzBybHhi?=
- =?utf-8?B?MU5uMDVWLzcxbDR3anlqcmN5U25DQ0dNb3h3YzBYbVZpVi9UM2lZZjJKK0Ex?=
- =?utf-8?B?N0hPZlFwTkR3eVU2bGVJemVXVGU4RVFabWNmTUtmK3ZQZFc0Rk05eXVrdzly?=
- =?utf-8?B?QmxuMW1BRWVneDFvQnZBY0JjdTdFck9wYmkybzIyL1hkY05QZFZqVUVLQ3hF?=
- =?utf-8?B?TG9HR3psRSsxNi9pYUNzTlRhS3l2RkRlU0RqT3JIZDZlV0ZERjN6M05LZXpN?=
- =?utf-8?B?WnlianZtWE1YK282UEZYQ0krTk93SWhicFVHYnliVHh5cXFkajlMTTJEZFNQ?=
- =?utf-8?B?N3ovOUJTTGpTV3oyZzFGYnQ4K3VGd2JSampJVWFKay9DOUEzSmJZY3FyZ1pB?=
- =?utf-8?B?d2ZVK0U2TGdCRGE2Nzk4L0tJNDJ4UlhvNmo2UmRQbUF2OGVXYzFURHNuK3U2?=
- =?utf-8?B?WUpqdnNmYzVzVmNkM2thbWE4SCtKMGFPUXAvYkhRNUthTkpGMVpZZDdvcUts?=
- =?utf-8?B?L1R5UG5IYXp5Wk8weHBzOHE4YktoampNeFZBZnAyZ1V2UE5PNmlXK0g0c2Yv?=
- =?utf-8?B?Y1UyMmE1QUxKSU56VmVGaEdxSHN4b2p0TTVFc281bkk4SWlXUnpFdVlra2pG?=
- =?utf-8?B?UEY5L1BjdHhwa2JEZjVxeTBoT285OWJzUVZzZUlhQUhPWUxReEREVmFTcFVn?=
- =?utf-8?B?OGFnNFA5UHBqU3QwQ0ZyZ3prLzZTZnJONmVyb2plNVBKOGV1UjBkT2tFY3Vw?=
- =?utf-8?B?ZXhMU0ZDdTlPNy9xdzFqZTcrMEpwME03d01Bamo2OWlraWw5SWZselpQWTNt?=
- =?utf-8?B?WUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S237783AbiKNR5j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 12:57:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C1525EBA;
+        Mon, 14 Nov 2022 09:57:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 452E76131B;
+        Mon, 14 Nov 2022 17:57:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A05C433C1;
+        Mon, 14 Nov 2022 17:57:30 +0000 (UTC)
+Date:   Mon, 14 Nov 2022 23:27:21 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, caihuoqing <caihuoqing@baidu.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 15/20] PCI: dwc: Introduce dma-ranges property support
+ for RC-host
+Message-ID: <20221114175721.GA5305@thinkpad>
+References: <20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru>
+ <20221113191301.5526-16-Sergey.Semin@baikalelectronics.ru>
+ <20221114063915.GC3869@thinkpad>
+ <20221114083227.j4ynx6wjwfwseqqy@mobilestation>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ab02955-91a6-4211-7085-08dac66533e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2022 17:25:19.0340
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rHsPxQ+tyqz/HPvp6AOoV4JnS07BE3MWKIJtHrtWmOInEVMXv5dQ4DeA9LGhspTwAJD+4NJlc7anxMVTEZoavGIClGbubg08b+pJVgi3BVk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1405
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221114083227.j4ynx6wjwfwseqqy@mobilestation>
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGludGVsLmNvbT4gU2VudDogTW9uZGF5LCBO
-b3ZlbWJlciAxNCwgMjAyMiA4OjU4IEFNDQo+IA0KPiBPbiAxMS8xNC8yMiAwODo1MywgTWljaGFl
-bCBLZWxsZXkgKExJTlVYKSB3cm90ZToNCj4gPj4gQmVjYXVzZSwgZmlyc3Qgb2YgYWxsLCB0aGF0
-ICJNYXBwaW5ncyBoYXZlIHRvIGJlIHBhZ2UtYWxpZ25lZCIgdGhpbmcgaXMNCj4gPj4gKG5vdykg
-ZG9pbmcgbW9yZSB0aGFuIHBhZ2UtYWxpZ25pbmcgdGhpbmdzLiAgU2Vjb25kLCB0aGUgbW9tZW50
-IHlvdSBtYXNrDQo+ID4+IG91dCB0aGUgbWV0YWRhdGEgYml0cywgdGhlICdzaXplJyBjYWxjdWxh
-dGlvbiBnZXRzIGhhcmRlci4gIERvaW5nIGl0IGluDQo+ID4+IHR3byBwaGFzZXMgKHBhZ2UgYWxp
-Z25tZW50IGZvbGxvd2VkIGJ5IG1ldGFkYXRhIGJpdCBtYXNraW5nKSBicmVha3MgdXANCj4gPj4g
-dGhlIHR3byBsb2dpY2FsIG9wZXJhdGlvbnMuDQo+ID4+DQo+ID4gV29yayBmb3IgbWUuICBXaWxs
-IGRvIHRoaXMgaW4gdjMuDQo+IA0KPiBLaXJpbGwgYWxzbyBtYWRlIGEgZ29vZCBwb2ludCBhYm91
-dCBURFg6IGl0IGlzbid0IGFmZmVjdGVkIGJ5IHRoaXMNCj4gYmVjYXVzZSBpdCBhbHdheXMgcGFz
-c2VzICpyZWFsKiAobm8gbWV0YWRhdGEgYml0cyBzZXQpIHBoeXNpY2FsDQo+IGFkZHJlc3NlcyBp
-biBoZXJlLiAgQ291bGQgeW91IGRvdWJsZSBjaGVjayB0aGF0IHlvdSBkb24ndCB3YW50IHRvIGRv
-IHRoZQ0KPiBzYW1lIGZvciB5b3VyIGNvZGU/DQo+IA0KDQpZZXMsIHdlIHdhbnQgdG8gZG8gdGhl
-IHNhbWUgZm9yIHRoZSBIeXBlci1WIHZUT00gY29kZS4gICBBbmQgd2hlbiB0aGlzDQpmdWxsIHBh
-dGNoIHNldCBpcyBhcHBsaWVkLCB3ZSdyZSBvbmx5IHBhc3NpbmcgaW4gKnJlYWwqIHBoeXNpY2Fs
-IGFkZHJlc3NlcyBhbmQNCmFyZSBub3QgZGVwZW5kaW5nIG9uIF9faW9yZW1hcF9jYWxsZXIoKSBk
-b2luZyBhbnkgbWFza2luZy4NCg0KQnV0IHRoaXMgcGF0Y2ggc2V0IGlzIGV4ZWN1dGluZyBhIHRy
-YW5zaXRpb24gZnJvbSBjdXJyZW50IGNvZGUsIHdoaWNoIHBhc3Nlcw0KcGh5c2ljYWwgYWRkcmVz
-c2VzIHdpdGggbWV0YWRhdGEgYml0cyBzZXQgKGkuZS4sIHRoZSB2VE9NIGJpdCksIHRvIHRoZSBu
-ZXcNCmFwcHJvYWNoLCB3aGljaCBkb2VzIG5vdC4gIFRoZXJlIGFyZSBzZXZlcmFsIHBsYWNlcyBp
-biB0aGUgY3VycmVudCBIeXBlci1WDQp2VE9NIGNvZGUgdGhhdCBuZWVkIGNoYW5nZXMgdG8gbWFr
-ZSB0aGlzIHRyYW5zaXRpb24uICBUaGVzZSBjaGFuZ2VzIGFyZQ0Kbm9uLXRyaXZpYWwsIGFuZCBJ
-IGRvbid0IHdhbnQgdG8gaGF2ZSB0byBjcmFtIHRoZW0gYWxsIGludG8gb25lIGJpZyBwYXRjaC4N
-CkJ5IG1ha2luZyB0aGlzIGZpeCwgdGhlIGN1cnJlbnQgY29kZSBjb250aW51ZXMgdG8gd29yayB0
-aHJvdWdob3V0IHRoaXMNCnBhdGNoIHNlcmllcyB3aGlsZSB0aGUgY2hhbmdlcyBhcmUgaW5jcmVt
-ZW50YWxseSBtYWRlIGluIG11bHRpcGxlDQppbmRpdmlkdWFsIHBhdGNoZXMuICBCdXQgd2hlbiBp
-dCdzIGFsbCBkb25lLCB3ZSB3b24ndCBiZSBwYXNzaW5nIGFueQ0KcGh5c2ljYWwgYWRkcmVzc2Vz
-IHdpdGggdGhlIHZUT00gYml0IHNldC4NCg0KTm90ZSB0aGF0IGN1cnJlbnQgY29kZSB3b3JrcyBh
-bmQgZG9lc24ndCBoaXQgdGhlIGJ1ZyBiZWNhdXNlIHRoZQ0KZ2xvYmFsIHZhcmlhYmxlIHBoeXNp
-Y2FsX21hc2sgaW5jbHVkZXMgdGhlIHZUT00gYml0IGFzIHBhcnQgb2YgdGhlDQpwaHlzaWNhbCBh
-ZGRyZXNzLiAgQnV0IFBhdGNoIDUgb2YgdGhlIHNlcmllcyByZW1vdmVzIHRoZSB2VE9NIGJpdA0K
-ZnJvbSBwaHlzaWNhbF9tYXNrLiAgQXQgdGhhdCBwb2ludCwgdGhlIGN1cnJlbnQgX19pb3JlbWFw
-X2NhbGxlcigpDQpjb2RlIGJyZWFrcyBkdWUgdG8gdGhlIGJ1Zy4gIEJ5IGZpeGluZyB0aGUgYnVn
-LCB0aGUgY3VycmVudCBIeXBlci1WDQp2VE9NIGNvZGUgY29udGludWVzIHRvIHdvcmsgdW50aWwg
-YWxsIHRoZSBjaGFuZ2VzIGNhbiBiZSBjb21wbGV0ZWQNCih3aGljaCBpcyBQYXRjaCAxMCBvZiB0
-aGUgc2VyaWVzKS4NCg0KUGVyaGFwcyBpdCdzIGNvbnZvbHV0ZWQsIGJ1dCBiYXNpY2FsbHkgSSdt
-IHRyeWluZyB0byBhdm9pZCBoYXZpbmcgdG8gbWVyZ2UNClBhdGNoZXMgNSB0aHJ1IDEwIGludG8g
-b25lIGJpZyBwYXRjaC4gIEFuZCBzaW5jZSB0aGUgY3VycmVudA0KX19pb3JlbWFwX2NhbGxlcigp
-IGlzIHdyb25nIGFueXdheSwgZml4aW5nIGl0IG1hZGUgZXZlcnl0aGluZyBzbW9vdGhlci4NCg0K
-TWljaGFlbA0KDQo=
+On Mon, Nov 14, 2022 at 11:32:27AM +0300, Serge Semin wrote:
+> On Mon, Nov 14, 2022 at 12:09:15PM +0530, Manivannan Sadhasivam wrote:
+> > On Sun, Nov 13, 2022 at 10:12:56PM +0300, Serge Semin wrote:
+> > > In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
+> > > property has the same format as the "ranges" property. The only difference
+> > > is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
+> > > memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
+> > > property. Even though the DW PCIe controllers are normally equipped with
+> > > the internal Address Translation Unit which inbound and outbound tables
+> > > can be used to implement both properties semantics, it was surprising for
+> > > me to discover that the host-related part of the DW PCIe driver currently
+> > > supports the "ranges" property only while the "dma-ranges" windows are
+> > > just ignored. Having the "dma-ranges" supported in the driver would be
+> > > very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
+> > > mapping and require a customized PCIe memory layout. So let's fix that by
+> > > introducing the "dma-ranges" property support.
+> > > 
+> > > First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
+> > > dw_pcie_prog_ep_inbound_atu() and create a new version of the
+> > > dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for the
+> > > RC and EP controllers respectively in the same way as it has been
+> > > developed for the outbound ATU setup methods.
+> > > 
+> > 
+> 
+> > I think you should split the function renaming part into a separate patch.
+> 
+> Don't see this necessary especially at the current stage of the
+> patchset. Without this modification the renaming isn't required. So
+> should a revert-patch is applied both of the updates will be undone.
+> 
+
+There is no necessity for both API renaming and dma-ranges implementation to be
+in the same patch as long as first one is functionally independent. But I'll
+defer it to you.
+
+> > 
+> > > Secondly aside with the memory window index and type the new
+> > > dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
+> > > and size as its arguments. These parameters define the PCIe and CPU memory
+> > > ranges which will be used to setup the respective inbound ATU mapping. The
+> > > passed parameters need to be verified against the ATU ranges constraints
+> > > in the same way as it is done for the outbound ranges.
+> > > 
+> > > Finally the DMA-ranges detected for the PCIe controller need to be
+> > > converted to the inbound ATU entries during the host controller
+> > > initialization procedure. It will be done in the framework of the
+> > > dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
+> > > need to disable all the inbound ATU entries in order to prevent unexpected
+> > > PCIe TLPs translations defined by some third party software like
+> > > bootloaders.
+> > > 
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > ---
+> > > 
+> > > Changelog v3:
+> > > - Drop inbound iATU window size alignment constraint. (@Manivannan)
+> > > ---
+> > >  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+> > >  .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-designware.c  | 56 ++++++++++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
+> > >  4 files changed, 89 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > index 83ddb190292e..237bb01d7852 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > @@ -171,8 +171,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> > >  		return -EINVAL;
+> > >  	}
+> > >  
+> > > -	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
+> > > -				       cpu_addr, bar);
+> > > +	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
+> > > +					  cpu_addr, bar);
+> > >  	if (ret < 0) {
+> > >  		dev_err(pci->dev, "Failed to program IB window\n");
+> > >  		return ret;
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 39f3b37d4033..ea923c25e12d 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -643,12 +643,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> > >  	}
+> > >  
+> > >  	/*
+> > > -	 * Ensure all outbound windows are disabled before proceeding with
+> > > -	 * the MEM/IO ranges setups.
+> > > +	 * Ensure all out/inbound windows are disabled before proceeding with
+> > > +	 * the MEM/IO (dma-)ranges setups.
+> > >  	 */
+> > >  	for (i = 0; i < pci->num_ob_windows; i++)
+> > >  		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
+> > >  
+> > > +	for (i = 0; i < pci->num_ib_windows; i++)
+> > > +		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
+> > > +
+> > >  	i = 0;
+> > >  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+> > >  		if (resource_type(entry->res) != IORESOURCE_MEM)
+> > > @@ -685,9 +688,32 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> > >  	}
+> > >  
+> > >  	if (pci->num_ob_windows <= i)
+> > > -		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
+> > > +		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+> > >  			 pci->num_ob_windows);
+> > >  
+> > > +	i = 0;
+> > > +	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
+> > > +		if (resource_type(entry->res) != IORESOURCE_MEM)
+> > > +			continue;
+> > > +
+> > > +		if (pci->num_ib_windows <= i)
+> > > +			break;
+> > > +
+> > > +		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
+> > > +					       entry->res->start,
+> > > +					       entry->res->start - entry->offset,
+> > > +					       resource_size(entry->res));
+> > > +		if (ret) {
+> > > +			dev_err(pci->dev, "Failed to set DMA range %pr\n",
+> > > +				entry->res);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (pci->num_ib_windows <= i)
+> > > +		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
+> > 
+> 
+> > s/Dma/dma
+> 
+> Well, I could also make it like DMA-ranges. It depends on what you
+> imply by the message. I've made it looking like the Ranges-related
+> counterpart.
+> 
+
+Either "DMA" or "dma" looks good. I haven't seen "Dma" mostly.
+
+Thanks,
+Mani
+
+> -Sergey
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > +			 pci->num_ib_windows);
+> > > +
+> > >  	return 0;
+> > >  }
+> > >  
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index c6725c519a47..ca830ee794a7 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -393,8 +393,60 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+> > >  	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+> > >  }
+> > >  
+> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > -			     int type, u64 cpu_addr, u8 bar)
+> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> > > +			     u64 cpu_addr, u64 pci_addr, u64 size)
+> > > +{
+> > > +	u64 limit_addr = pci_addr + size - 1;
+> > > +	u32 retries, val;
+> > > +
+> > > +	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
+> > > +	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > > +	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_BASE,
+> > > +			      lower_32_bits(pci_addr));
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_BASE,
+> > > +			      upper_32_bits(pci_addr));
+> > > +
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LIMIT,
+> > > +			      lower_32_bits(limit_addr));
+> > > +	if (dw_pcie_ver_is_ge(pci, 460A))
+> > > +		dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_LIMIT,
+> > > +				      upper_32_bits(limit_addr));
+> > > +
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
+> > > +			      lower_32_bits(cpu_addr));
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_TARGET,
+> > > +			      upper_32_bits(cpu_addr));
+> > > +
+> > > +	val = type;
+> > > +	if (upper_32_bits(limit_addr) > upper_32_bits(pci_addr) &&
+> > > +	    dw_pcie_ver_is_ge(pci, 460A))
+> > > +		val |= PCIE_ATU_INCREASE_REGION_SIZE;
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL1, val);
+> > > +	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
+> > > +
+> > > +	/*
+> > > +	 * Make sure ATU enable takes effect before any subsequent config
+> > > +	 * and I/O accesses.
+> > > +	 */
+> > > +	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
+> > > +		val = dw_pcie_readl_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2);
+> > > +		if (val & PCIE_ATU_ENABLE)
+> > > +			return 0;
+> > > +
+> > > +		mdelay(LINK_WAIT_IATU);
+> > > +	}
+> > > +
+> > > +	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
+> > > +
+> > > +	return -ETIMEDOUT;
+> > > +}
+> > > +
+> > > +int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > +				int type, u64 cpu_addr, u8 bar)
+> > >  {
+> > >  	u32 retries, val;
+> > >  
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index a871ae7eb59e..37801bbce854 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -346,8 +346,10 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> > >  			      u64 cpu_addr, u64 pci_addr, u64 size);
+> > >  int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > >  				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > -			     int type, u64 cpu_addr, u8 bar);
+> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> > > +			     u64 cpu_addr, u64 pci_addr, u64 size);
+> > > +int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > +				int type, u64 cpu_addr, u8 bar);
+> > >  void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+> > >  void dw_pcie_setup(struct dw_pcie *pci);
+> > >  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+> > > -- 
+> > > 2.38.1
+> > > 
+> > > 
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
+
+-- 
+மணிவண்ணன் சதாசிவம்
