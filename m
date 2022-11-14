@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A86FE62846B
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 16:54:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E7C862846F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 16:54:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237251AbiKNPyG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 10:54:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39754 "EHLO
+        id S237250AbiKNPyN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 10:54:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237250AbiKNPyE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 10:54:04 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4B52DAB5;
-        Mon, 14 Nov 2022 07:54:04 -0800 (PST)
+        with ESMTP id S237269AbiKNPyL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 10:54:11 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5072E9F1;
+        Mon, 14 Nov 2022 07:54:09 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bfEyb7rKXKo52ICgujlro6QxKi3L9MGSF3vTkXPNbskd5kxzCf/uRRdOWVuqaK5yRUoq/yQHBjeYd92GoVo45wdjuY6GBQ1fmnZeS1o3Kp3078kHkP1HIE1n3HlQ6qD5Va2ZgoSCa/0Xm1zu09rtoy9bbKLB2I/GUnafKTrfED66aqhr4mES9rJ7W8LU5mgsoKLCEgITVg+75CxSxzxq4o+J7kMhbR1wnYw4E0jIZbUksLoWkyFEZr5WV39pF4KsCNEDeg5JSuEl1XTVmNhKhTccemoiKj0emXkS8ylYIoZiMH7NDb6B82+9Qso4OTeWwBCYDucnYd929Ipty2+EWA==
+ b=g6SYWen3icZZQq+q5aR2hpK8UWCzKEeCzPSVNXmqm14LMfK7SgYuq23q7Lm03vGQg0sITbRhJHt34MxeJZhLrM1uqWw3VCkSLmrn5UwyaH/BiFEWvOYIvrKenoGL5qQdg8mtWX8yyWbu8VCxhMZJXiTsfDWBDibU8MGHAtbvgWX7ThWZDsjPE26WTWByK8yv2m+R7cZ9oSVQNEB2tp4dgXUAW/ywiW5km8NxGfCkubtgM/Dhni8ZAEmbcmcFCD4XInqprhV1BqUHXZjlPjqraLDbGevdjTRXPJ28nAnc7ZxZfXj9Hh7DP7bMmHYZMH+dmYBThFb7W/b9Tu251XIRiw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DhsmSgAR7koWgTw29s0ixTi17EfH0IbLcNqcPDCa0Rk=;
- b=kjmvMRR2MKUEZXE+9zux4Rt+lO1/XlNvs3R5+tPpfkZg6/h5hPtqFCSn2a9qgAVtteN6prvB9AR3p2+cmM8/iK5fSRMkBpVG6LiNiOrdpHUkyMVcybVnBDBmGDB1WacICmjWh87o4NG4ES1MdNlPXZzpDYg5wXedLa6fETjG5IdPdo8OoBF4m0uROYae233/VKU4bNMPEeM4l0ltoI/yCxvvdRlkir8lFo1+avHe95X+bIohKqjKVgJaDrKOM880HIpQkOXUWycXP6k4MSo/UiwQvRSeM+MOGF+cDM03LMmdKvvdB0Dtut5Gkr3xpuCn58QP4fVHpCkDNrUyRagelQ==
+ bh=at8nVNeSBehtwHReWKUQmBvADwEDthY0tdztznSvF+k=;
+ b=Jj9woRUPUJSnkzd3S3IHjEsBrz479R+MWuHqnYmHSeHGv0wQi/ifzA8jm4E/NFjSqQbJr6bHW7eAlccspFJPmmWolaYRMRJ0ZFWD10SKTvnuYf1NeypVnJbQCDsfLZ2bwwdoeMavwQ5X/KPqFdwXa+QPwvgY31o49LrJ5BONbVLsnnFoJNskjG0t9gwAOdgFM+svjDTFw/dRytzky6TLdv7IVzoH59h1zwLukHAGwrSEM2hO3vFw5cf2BGaUF+9XZiKuHnzN+pPzd0Yt1nCg6keoDm2WawqyCt9NXeDOIVQxCC087bOo2M6xL+qXuqK6Q9WYTIc0Yq7N0UzpZsLRZg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -28,18 +28,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DhsmSgAR7koWgTw29s0ixTi17EfH0IbLcNqcPDCa0Rk=;
- b=sBez4S5wPA7BqszTXuHFAqDiUWSGHdgGBGHVMVnaQgc5uLPZypBsN6j0AZvme2D3dJUe3ZIOc7Y8Qv/3UTg63cDOt8uVHmW2llYu7TbEb0DpZvjKvqIXYRgz7QlDDR7Sgrs7nTx7FFLAymdHEDpZtOdU0oVC3BUVRjN5+K2tw3M3HoRe1/s4Z5X4HXRg3NkU0KbtSJjwwPBgrWgTGJJWVoROcV+NygRc6EeGg5odU7oLJEZcNnp61wmpUzZ2mCJ0MEFm0udxZ/8bV8+Sd230obSPtiA9yx6dDhUc+enQlXTdzq6gDF1Hf2fhEbZ+ii6ORpv1x9ISCtVe8PNeJfFT7g==
-Received: from DM6PR02CA0060.namprd02.prod.outlook.com (2603:10b6:5:177::37)
- by DS7PR12MB6358.namprd12.prod.outlook.com (2603:10b6:8:95::22) with
+ bh=at8nVNeSBehtwHReWKUQmBvADwEDthY0tdztznSvF+k=;
+ b=Iu+WnuSnthyGwtHNy0cdXMAlFE3+aRqpsUJIxZDy2iyIS6yr+EUrnlOfu8E8aQigQg1U0n+SLCGfE5UXgnhZHeDJSnH+yIkml749F+yhDF13dEtFJ8HRnbNSc31dUeKo4bHhblY4Ec1lQN7aC+13bSUjCfwovUjWiBlw/HLhs66uiCfinxkJj6UAWyhPqKsJpwOYW0xajW79ZMR27/LsA63Ds9v2sy2/cAe+6D4b94MjphM8CUGsztYcMKzMHLXUX2xTJJwwaAgKD2TWn0El3AO6uFznEG9fQ7Sdv/I9EraFS/LU1CW6We1jBWVpunBSxwA52jHyqRpS7uv0CqBlHw==
+Received: from DM6PR04CA0016.namprd04.prod.outlook.com (2603:10b6:5:334::21)
+ by IA1PR12MB7568.namprd12.prod.outlook.com (2603:10b6:208:42c::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Mon, 14 Nov
- 2022 15:54:02 +0000
-Received: from DM6NAM11FT099.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:177:cafe::d) by DM6PR02CA0060.outlook.office365.com
- (2603:10b6:5:177::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.13; Mon, 14 Nov
+ 2022 15:54:05 +0000
+Received: from DM6NAM11FT086.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:334:cafe::de) by DM6PR04CA0016.outlook.office365.com
+ (2603:10b6:5:334::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
- Transport; Mon, 14 Nov 2022 15:54:02 +0000
+ Transport; Mon, 14 Nov 2022 15:54:05 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -47,20 +47,20 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- DM6NAM11FT099.mail.protection.outlook.com (10.13.172.241) with Microsoft SMTP
+ DM6NAM11FT086.mail.protection.outlook.com (10.13.173.75) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5813.12 via Frontend Transport; Mon, 14 Nov 2022 15:54:01 +0000
+ 15.20.5813.12 via Frontend Transport; Mon, 14 Nov 2022 15:54:05 +0000
 Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 14 Nov
- 2022 07:53:49 -0800
+ 2022 07:53:52 -0800
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
  (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 14 Nov
- 2022 07:53:49 -0800
+ 2022 07:53:51 -0800
 Received: from moonraker.nvidia.com (10.127.8.14) by mail.nvidia.com
  (10.129.68.8) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Mon, 14 Nov 2022 07:53:47 -0800
+ Transport; Mon, 14 Nov 2022 07:53:49 -0800
 From:   Jon Hunter <jonathanh@nvidia.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>, <vidyas@nvidia.com>,
         <mmaddireddy@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
-Date:   Mon, 14 Nov 2022 15:53:32 +0000
-Message-ID: <20221114155333.234496-2-jonathanh@nvidia.com>
+Subject: [PATCH V3 2/2] arm64: tegra: Add ECAM aperture info for all the PCIe controllers
+Date:   Mon, 14 Nov 2022 15:53:33 +0000
+Message-ID: <20221114155333.234496-3-jonathanh@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221114155333.234496-1-jonathanh@nvidia.com>
 References: <20221114155333.234496-1-jonathanh@nvidia.com>
@@ -80,23 +80,23 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT099:EE_|DS7PR12MB6358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 373f5910-6889-4fdf-195c-08dac658733a
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT086:EE_|IA1PR12MB7568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b2a147b-652c-44aa-046c-08dac6587546
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W9UeuwgvtG3tORLo8KxN7JllW4ZTc5pTR6A3v1FzGuIa4EhUVjsWx8D71gRgGe5BDP8gyj40cv2CvCHfDmll6PI1alALO4FU8+sQ4iiLhRw9TvNa4w+sD5EyzydfqNQhrJxD8p/5yI4hKCoyj7mGDStIDOqgcjMbsFs88PwSc1sBjqlKZR6P8m4Kz8rWIwJbe7EkDfjFtr96hN8u+LXdZcsTnl4XCr3VJ7kQQ8GJYiB3CWnoREhMmxQPQnimAGNb4fYCs6ygEuHxL/Z6E1TVqLpyfsS89WJUwgZmqh5dG4VE6snS6g5Q/sYzByhd/OqXhAlv178IBe1CM1jmakHevoGgy8ZeWzrtSQFk2DdVobI2yKLHYLFI4Iw1I8uyNl3/h2bjNcv6jwrKIAGEQthtNfOv1tYlKz9XdXmjRor63FlzQNx9pcuC0d3zGCwB0CVNJJ4Kz8bYs9jfOa7EQzcDJJGGcu+kpenjgAzIdmPKsoLkXW6tt12d9fRsf2yyX/H2Mt75WibV3fLlMCOIZMt5SPCnj+JTniGidqRRgZbKcIcLoNClk/g3Es9I/Bovl4fhpa/sAlyL0hhDpdwyLkN36zdkfZf+q7hkHsBVwYlGev2D08ewMdJY+rJt+dVy+fkBBo1c7eO3HBla8PrvFozXUzl88t/ldfxZY2JCEJyPShHRXSLfjXo1/L7xyUixPeHCRVM4PfjwaDqrutd7nU+4sb53BLoLy4ny3roOtkEyydw4VfJr2LAFC8xlGfJaaG2zr0LDyp/sdfr9XgN3PZOG6w==
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(136003)(376002)(396003)(451199015)(46966006)(40470700004)(36840700001)(107886003)(6666004)(82740400003)(356005)(7636003)(7696005)(41300700001)(47076005)(8936002)(426003)(83380400001)(5660300002)(478600001)(110136005)(54906003)(336012)(26005)(82310400005)(36860700001)(40460700003)(86362001)(316002)(2616005)(40480700001)(36756003)(70586007)(186003)(8676002)(4326008)(2906002)(1076003)(70206006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: WF3pt8euxqtctLuflsx5yejszGTtV+5wIgsz5ODpVDQiodUlFJqpZqS6vJBC7iYTlDyE/onoDIVRnnU8e4N5TW5veDmCTMo9iLlG0137VuyQXjI7DbZJIba7282p2+p/+DCPsr93PBIjReUsHtvT3fKOd+X6RCTJcLbFpF4cY7w7zCjWOMOB+HO2SweCMKhrzxqyyYu0Zbk1RMUwzRRXuiQhmGkpBrZsqRlPItGk2RRXRXn1iMMOmN0UvodG+iDCiz2VMZN0EUu3DKcrdY8jaHD8xiOv5zbPvfUeHK1WFVek7Jg0jFzUnHiY4lGZt8nmK3sKdy6SkoYrjT9LTM2GuKIVPiZgjxQMMF0OpkrFM/9EqjwbcrYNzU75UbJDnohjnKi2U6AKRAmdLrmvUZfoEv3ep5oe/0ITECDo8/7O8daP3BznVZpNynapwr+P/tYXz6NFKe4baeST0iUrVCa4X3JWnwOmOKV7eMfRqDSSfWmAHkqdA/2d8RenQ8S4DInU6ONKBc8FqY5Fk3QOHqUnSIbwJWOBfb4j87b+8g5BxJJhUH1uq+P1eaRIffbSYkOQ9BtsIIPTeLeJaeqEO/jRRjixjHgN5MZp4ka453wRqyCZmiV2NFbbSQTiHjLS0tSboWp3fWVB5J/bcbQeQ/QougqVDS7vScpG8LhUIhLIiGAVSfem5WJzku/Ne+uWRTaQPuWFkmxDF/0iZWYo/11fbu9Ec5R3yGgHe0faRXwwdcFu5wAuwixQNxJ7bt5Sqr2gmAB5kFYsbbvMAMl9LM29dg==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(39860400002)(376002)(346002)(451199015)(36840700001)(40470700004)(46966006)(8936002)(5660300002)(2616005)(41300700001)(36860700001)(7636003)(40460700003)(82740400003)(82310400005)(47076005)(356005)(36756003)(2906002)(426003)(336012)(86362001)(186003)(40480700001)(1076003)(83380400001)(107886003)(6666004)(110136005)(70586007)(8676002)(4326008)(316002)(70206006)(26005)(7696005)(478600001)(54906003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 15:54:01.7549
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 15:54:05.1884
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 373f5910-6889-4fdf-195c-08dac658733a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b2a147b-652c-44aa-046c-08dac6587546
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT099.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT086.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6358
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7568
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -109,108 +109,156 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Vidya Sagar <vidyas@nvidia.com>
 
-Add support for ECAM aperture that is only supported for Tegra234
-devices.
+Add the ECAM aperture information for all the PCIe controllers of
+Tegra234.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 ---
 Changes since V2:
-- Avoid duplication of reg items and reg-names
+- None
 Changes since V1:
-- Restricted the ECAM aperture to only Tegra234 devices that support it.
+- None
 
- .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
- .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
- 2 files changed, 33 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi | 55 ++++++++++++++----------
+ 1 file changed, 33 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-index 75da3e8eecb9..fe81d52c7277 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-@@ -27,6 +27,7 @@ properties:
-       - nvidia,tegra234-pcie
+diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+index ed7676c9521b..37afe1e03700 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+@@ -2235,8 +2235,9 @@ pcie@140a0000 {
+ 		reg = <0x00 0x140a0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x2a000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x2a040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x2a080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x2a080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x35 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-   reg:
-+    minItems: 4
-     items:
-       - description: controller's application logic registers
-       - description: configuration registers
-@@ -35,13 +36,16 @@ properties:
-           available for software access.
-       - description: aperture where the Root Port's own configuration
-           registers are available.
-+      - description: aperture to access the configuration space through ECAM.
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2288,8 +2289,9 @@ pcie@140c0000 {
+ 		reg = <0x00 0x140c0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x2c000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x2c040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x2c080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x2c080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x38 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-   reg-names:
-+    minItems: 4
-     items:
-       - const: appl
-       - const: config
-       - const: atu_dma
-       - const: dbi
-+      - const: ecam
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2341,8 +2343,9 @@ pcie@140e0000 {
+ 		reg = <0x00 0x140e0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x2e000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x2e040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x2e080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x2e080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x3b 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-   interrupts:
-     items:
-@@ -202,6 +206,31 @@ properties:
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2394,8 +2397,9 @@ pcie@14100000 {
+ 		reg = <0x00 0x14100000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x30000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x30040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x30080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x30080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x20 0xb0000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
- allOf:
-   - $ref: /schemas/pci/snps,dw-pcie.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra194-pcie
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 4
-+        reg-names:
-+          maxItems: 4
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra234-pcie
-+    then:
-+      properties:
-+        reg:
-+          minItems: 5
-+        reg-names:
-+          minItems: 5
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2447,8 +2451,9 @@ pcie@14120000 {
+ 		reg = <0x00 0x14120000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x32000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x32040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x32080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x32080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x20 0xf0000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
- unevaluatedProperties: false
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2500,8 +2505,9 @@ pcie@14140000 {
+ 		reg = <0x00 0x14140000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x34000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x34040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x34080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x34080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x21 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-@@ -305,8 +334,9 @@ examples:
-             reg = <0x00 0x14160000 0x0 0x00020000>, /* appl registers (128K)      */
-                   <0x00 0x36000000 0x0 0x00040000>, /* configuration space (256K) */
-                   <0x00 0x36040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
--                  <0x00 0x36080000 0x0 0x00040000>; /* DBI reg space (256K)       */
--            reg-names = "appl", "config", "atu_dma", "dbi";
-+                  <0x00 0x36080000 0x0 0x00040000>, /* DBI reg space (256K)       */
-+                  <0x24 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
-+            reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2553,8 +2559,9 @@ pcie@14160000 {
+ 		reg = <0x00 0x14160000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x36000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x36040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x36080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x36080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x24 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-             #address-cells = <3>;
-             #size-cells = <2>;
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-index 7287d395e1b6..7e0b015f1414 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-@@ -35,7 +35,7 @@ properties:
-     maxItems: 5
-     items:
-       enum: [ dbi, dbi2, config, atu, atu_dma, app, appl, elbi, mgmt, ctrl,
--              parf, cfg, link, ulreg, smu, mpu, apb, phy ]
-+              parf, cfg, link, ulreg, smu, mpu, apb, phy, ecam ]
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2606,8 +2613,9 @@ pcie@14180000 {
+ 		reg = <0x00 0x14180000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x38000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x38040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x38080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x38080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x27 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
  
-   num-lanes:
-     description: |
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2659,8 +2667,9 @@ pcie@141a0000 {
+ 		reg = <0x00 0x141a0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x3a000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x3a040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x3a080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x3a080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x2b 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
+ 
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2712,8 +2721,9 @@ pcie@141c0000 {
+ 		reg = <0x00 0x141c0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x3c000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x3c040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x3c080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x3c080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x2e 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
+ 
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -2765,8 +2775,9 @@ pcie@141e0000 {
+ 		reg = <0x00 0x141e0000 0x0 0x00020000>, /* appl registers (128K)      */
+ 		      <0x00 0x3e000000 0x0 0x00040000>, /* configuration space (256K) */
+ 		      <0x00 0x3e040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+-		      <0x00 0x3e080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+-		reg-names = "appl", "config", "atu_dma", "dbi";
++		      <0x00 0x3e080000 0x0 0x00040000>, /* DBI reg space (256K)       */
++		      <0x32 0x30000000 0x0 0x10000000>; /* ECAM (256MB)               */
++		reg-names = "appl", "config", "atu_dma", "dbi", "ecam";
+ 
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
 -- 
 2.25.1
 
