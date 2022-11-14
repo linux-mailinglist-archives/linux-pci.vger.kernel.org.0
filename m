@@ -2,208 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85A54628263
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 15:23:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B7C628401
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 16:34:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236053AbiKNOXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 09:23:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34948 "EHLO
+        id S235709AbiKNPeQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 10:34:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235873AbiKNOXe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 09:23:34 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF9430F
-        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 06:23:31 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id d3so13400714ljl.1
-        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 06:23:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W18q2oxupdQ12Nl0RSmIe5LepBZSz0XtViretQW+Res=;
-        b=uLUyCI+Aay2MbUcYcAyI0OX5pQbbyEv049uGs0QtVcSr2ZXZoCXFztooT1E4tDfVAk
-         k1T0lWJPx2QInO6JMUKtbnS8esR3CiEkaTzx4fD9Dshbgsu/10ayw1LDcL5mp5PIeos3
-         P2w4dAoxzykDVwPMBkcjBbu0sUzRo5uI/Uf7Q+MlGS5BJKl6VGtvdlBjQlrig4wgJikD
-         JYV98tUad9ejnm89iUyFj8286iG9LheLRPBxWtFtpVbg08rPvYhl6FvSUasuxm+BZcKZ
-         WsLuHanrElbaTLVl0zA4JXFsXSTGERHFA2jmup/6GYAaYoUw4GqyhgefnXz6QlKtLZcV
-         G4lA==
+        with ESMTP id S236007AbiKNPeL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 10:34:11 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D3151170;
+        Mon, 14 Nov 2022 07:34:10 -0800 (PST)
+Received: by mail-qv1-f50.google.com with SMTP id o8so7964228qvw.5;
+        Mon, 14 Nov 2022 07:34:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W18q2oxupdQ12Nl0RSmIe5LepBZSz0XtViretQW+Res=;
-        b=D/pl4tOIki8YuCUenvY72yZBCEFjd/PDcPtz/Un1Yitf1aeXiOXzm4bpE68R12nOLY
-         Dq1xel0KMb35DDUBeyWmMiThgQB9rreJgXkh8gZkHpk+w+yxflcta8tBJqixWDrdMeso
-         IEALgb9xbXQddVqgUvulOdSwlZmSoTtaz9ZXtklmXMzb26kPkOwXCUurlhO2+iZpfOW7
-         vQWknmu61UMgYJ1imffjMDNdya6DuBRu5g/lDjlW+xORQVRm3uxh8eerzl0axDIyRWmy
-         FPS3FaSMHhjYnXFS+qkoYAtYcZ11hCGOWXT+wdSG5lFfbKOWH+ASq3LIYmliUG/I+IK+
-         JruQ==
-X-Gm-Message-State: ANoB5plczWn9NZNxT8UK8C4kfn7tiJY5lnGhrBfVHY0QeNoOg+FCZoBU
-        BwXo9EMdXN3SjZyOE0VHJxmK3A==
-X-Google-Smtp-Source: AA0mqf7N+uxS1/tolR2OQnty7ew64ZdZzboeRa4wsYDocUn7cnnmIFDpkApY3SaSpwHCrQOxeU1jcw==
-X-Received: by 2002:a2e:a914:0:b0:278:f109:2844 with SMTP id j20-20020a2ea914000000b00278f1092844mr3039847ljq.224.1668435809714;
-        Mon, 14 Nov 2022 06:23:29 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id p6-20020a056512138600b004a05767bc07sm1838155lfa.28.2022.11.14.06.23.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Nov 2022 06:23:29 -0800 (PST)
-Message-ID: <d8edc185-52cd-ffa1-7b46-2ec84d0d712c@linaro.org>
-Date:   Mon, 14 Nov 2022 15:23:25 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KOfoaOPTc0krweU3P8wUkVTnZoULqG3PmNlXhu4M7TI=;
+        b=KY05PUqOp7FWcbU7eUfMaqVEef9rV8wBfLzgKHHluppi7/vDpdWTOIGrvfkqnqDDU2
+         8n7f2mT4Zt4XV1XN9KPNNCcewmrgz1Sv4HBaQIi4vUkAM3lYehWLuMoA0WIRc8rlpEdq
+         u6nkKIB9ijGdD7hx+wd0uukJ6zK0a16wXKRKP55+/9jE4xd2hJ5F7Fe5yrDW0QpC8WBl
+         qMiXAhpdO4YllgFW4NhLrZFqx19l0DcvnqxMLEXwmOnu50wvOyo6mJCgSfK67I0VQEgJ
+         +Mrm+ZxHTpsgHT55GjvVSQAehoHuSp0KeJYoo8Qi5Xe8uxJb4U+Cj5hmLHXnsqFqC3ew
+         z/bA==
+X-Gm-Message-State: ANoB5plRbehmcoiHx8zHLCm8enOR/KMg81r8oSnC4q7eOD7wpqxCjIOK
+        FUC2SrZntK8ZkkLlTgarMcs33eEfWJzQnCtvAVA=
+X-Google-Smtp-Source: AA0mqf6Nf71NA2JkPO/KxpfY/G2pWuerSOGZllPXl2qRNpfXA+FqSdXKHatBGpZ1xnWnxU3Yw6FuOoOu4fzhLgr8QcE=
+X-Received: by 2002:a0c:e606:0:b0:4b1:a9ac:21de with SMTP id
+ z6-20020a0ce606000000b004b1a9ac21demr12899948qvm.119.1668440049335; Mon, 14
+ Nov 2022 07:34:09 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V2 1/2] dt-bindings: PCI: tegra234: Add ECAM support
-Content-Language: en-US
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
-        mmaddireddy@nvidia.com
-References: <20221114140916.200395-1-jonathanh@nvidia.com>
- <20221114140916.200395-2-jonathanh@nvidia.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221114140916.200395-2-jonathanh@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <5754039e-e3c6-cdb8-8d64-6332b0093940@amd.com> <20221111214209.GA748269@bhelgaas>
+In-Reply-To: <20221111214209.GA748269@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 14 Nov 2022 16:33:52 +0100
+Message-ID: <CAJZ5v0g834K4ZBrEvhAbJhvGBVyq53nreG+xeBufXKQXA3VtrQ@mail.gmail.com>
+Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
+ resources support D3
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mehta Sanju <Sanju.Mehta@amd.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/11/2022 15:09, Jon Hunter wrote:
-> From: Vidya Sagar <vidyas@nvidia.com>
-> 
-> Add support for ECAM aperture that is only supported for Tegra234
-> devices.
-> 
-> Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
-> Changes since V1:
-> - Restricted the ECAM aperture to only Tegra234 devices that support it.
-> 
->  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 76 +++++++++++++++----
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
->  2 files changed, 62 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> index 75da3e8eecb9..7ae0f37f5364 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> @@ -27,21 +27,12 @@ properties:
->        - nvidia,tegra234-pcie
->  
->    reg:
-> -    items:
-> -      - description: controller's application logic registers
-> -      - description: configuration registers
-> -      - description: iATU and DMA registers. This is where the iATU (internal
-> -          Address Translation Unit) registers of the PCIe core are made
-> -          available for software access.
-> -      - description: aperture where the Root Port's own configuration
-> -          registers are available.
-> +    minItems: 4
-> +    maxItems: 5
->  
->    reg-names:
-> -    items:
-> -      - const: appl
-> -      - const: config
-> -      - const: atu_dma
-> -      - const: dbi
-> +    minItems: 4
-> +    maxItems: 5
->  
->    interrupts:
->      items:
-> @@ -202,6 +193,60 @@ properties:
->  
->  allOf:
->    - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra194-pcie
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 4
-> +          maxItems: 4
+On Fri, Nov 11, 2022 at 10:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Nov 11, 2022 at 12:58:28PM -0600, Limonciello, Mario wrote:
+> > On 11/11/2022 11:41, Bjorn Helgaas wrote:
+> > > On Mon, Oct 31, 2022 at 05:33:55PM -0500, Mario Limonciello wrote:
+> > > > Firmware typically advertises that ACPI devices that represent PCIe
+> > > > devices can support D3 by a combination of the value returned by
+> > > > _S0W as well as the HotPlugSupportInD3 _DSD [1].
+> > > >
+> > > > `acpi_pci_bridge_d3` looks for this combination but also contains
+> > > > an assumption that if an ACPI device contains power resources the PCIe
+> > > > device it's associated with can support D3.  This was introduced
+> > > > from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
+> > > > D3 if power managed by ACPI").
+> > > >
+> > > > Some firmware configurations for "AMD Pink Sardine" do not support
+> > > > wake from D3 in _S0W for the ACPI device representing the PCIe root
+> > > > port used for tunneling. The PCIe device will still be opted into
+> > > > runtime PM in the kernel [2] because of the logic within
+> > > > `acpi_pci_bridge_d3`. This currently happens because the ACPI
+> > > > device contains power resources.
+>
+> Wait.  Is this as simple as just recognizing that:
+>
+>   _PS0 means the OS has a knob to put the device in D0, but it doesn't
+>   mean the device can wake itself from a low-power state.  The OS has
+>   to use _S0W to learn the device's ability to wake itself.
 
-How you wrote it, you do not need min/maxItems here, because you have
-items below. However see further comment.
+It is.
 
-> +          items:
-> +            - description: controller's application logic registers
-> +            - description: configuration registers
-> +            - description: iATU and DMA registers. This is where the iATU (internal
-> +                Address Translation Unit) registers of the PCIe core are made
-> +                available for software access.
-> +            - description: aperture where the Root Port's own configuration
-> +                registers are available.
-> +        reg-names:
-> +          items:
-> +            - const: appl
-> +            - const: config
-> +            - const: atu_dma
-> +            - const: dbi
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra234-pcie
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 5
-> +          maxItems: 5
+> If that's enough, maybe we don't need to complicate this with all the
+> Thunderbolt and device link stuff.  Which would be great, because the
+> code change itself has nothing to do with those things.
 
-Similar issue.
-
-> +          items:
-> +            - description: controller's application logic registers
-> +            - description: configuration registers
-> +            - description: iATU and DMA registers. This is where the iATU (internal
-> +                Address Translation Unit) registers of the PCIe core are made
-> +                available for software access.
-> +            - description: aperture where the Root Port's own configuration
-> +                registers are available.
-> +            - description: aperture to access the configuration space through ECAM.
-
-This is unnecessarily duplicated. You can keep the descriptions of items
-and reg-names items in top level (with min 4 and max 5) and restrict
-maxItems for 194 and minItems for 234 here.
-
-
-> +        reg-names:
-> +          items:
-> +            - const: appl
-> +            - const: config
-> +            - const: atu_dma
-> +            - const: dbi
-> +            - const: ecam
-> +
-
-No need for blank line.
->  
->  unevaluatedProperties: false
->  
-
-Best regards,
-Krzysztof
-
+Indeed.
