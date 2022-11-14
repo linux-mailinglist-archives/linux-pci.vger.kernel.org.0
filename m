@@ -2,194 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ECDC62751B
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 05:00:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AEE7627526
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 05:03:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235769AbiKNEAV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Nov 2022 23:00:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        id S235560AbiKNEDc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Nov 2022 23:03:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235782AbiKNEAN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Nov 2022 23:00:13 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C6612AFD
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 20:00:09 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id e13so6556160edj.7
-        for <linux-pci@vger.kernel.org>; Sun, 13 Nov 2022 20:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nathanrossi.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t32Vju5XIgtrJ4jgA9bvoDKcNVYN0sL+9zOrih8YQXY=;
-        b=CMA5IyCyGJHr/SsizAbheGNFPyx9JCmnZqxdXIktai3oYWi5BkddRDpuDHV2etUgLZ
-         b/RqScmBCWFae1tZja4l50ohZVPHtyTC9X2N37rzguLHL8PRT96Jqs8HT9rF2CWUISbN
-         ZJtkcz+Xh06JRi0ndmcnEkN8gk+1wYE+DCQF/T2Db9h128kPVCPsHwowMPpMS/t3Days
-         Up1WZRTWb6fC8Wu/ZEbGJhCH3HRSSq4lUDMRqiR4926bgi2lltptBiw68lodAGyLJPKZ
-         gh2Lr1ptl5XDE/7GObR3Hp3S4gs8r0WmK4sXrHR/DuneK1hNa2VRY8cMGDj9XkXimx45
-         Ap+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t32Vju5XIgtrJ4jgA9bvoDKcNVYN0sL+9zOrih8YQXY=;
-        b=b8b0cPy0GRgMFH5tdk6lD5YMpFQPs/YxgMlxuU+x8WwylqSEAOeBSw+EbZ9kc61KkL
-         KU+2RM2HRCoDGdC9P024dhfQzn/+o1TH8HpZZ3C6jPUSuzc7TSr/uXhF38Mhpbm0L2HV
-         pOomlwIDVpD4kEFkCIMo5QlBQbJXIb5l2e6c1qWT1Qpl08TqJ1j3s1HVAT585lCjdiGz
-         6Kgnv9QAsocsGC2FwVaEqnxXylryHu31+Mw2EfSQNH2t3aNSyXQRPy9xj8mRwnj5J69S
-         ziV5tHfVzScjUCyO52Sa0stHXte6MWb5PIUDT8N517M00oPBJrJRpeorrhWx8l0gKlQo
-         3g6w==
-X-Gm-Message-State: ANoB5pkihfBUk19Q6FTAEOV6hE6D+URO6x+WsNVcXnBAw7ddGZWiChpc
-        43lX08n1leLvNbbaz2Z+XHVW0QaLKyTV+Xj3X4980w==
-X-Google-Smtp-Source: AA0mqf49FgaOQeHHb4SP9TWrnK2IZIiBDuO6awnQb988Y/hSJ9phcAa7GbZQcewAyTneCWB7a+mVnYTxAH6NEg6LVMc=
-X-Received: by 2002:a50:d485:0:b0:461:af68:9bcd with SMTP id
- s5-20020a50d485000000b00461af689bcdmr10222403edi.67.1668398408026; Sun, 13
- Nov 2022 20:00:08 -0800 (PST)
+        with ESMTP id S235772AbiKNED3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Nov 2022 23:03:29 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 07169185;
+        Sun, 13 Nov 2022 20:03:24 -0800 (PST)
+Received: from loongson.cn (unknown [10.20.42.77])
+        by gateway (Coremail) with SMTP id _____8DxOdgLvnFjbcsGAA--.18764S3;
+        Mon, 14 Nov 2022 12:03:23 +0800 (CST)
+Received: from [10.20.42.77] (unknown [10.20.42.77])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+AJvnFjX0ISAA--.49417S3;
+        Mon, 14 Nov 2022 12:03:21 +0800 (CST)
+Subject: Re: [PATCH V4] PCI: loongson: Skip scanning unavailable child devices
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20221110231351.GA681551@bhelgaas>
+ <dfd408ed-5c2c-c73a-b901-6641ae7aae5f@flygoat.com>
+From:   Liu Peibao <liupeibao@loongson.cn>
+Message-ID: <855be31e-d3fe-bd7f-3abf-f07413973bd5@loongson.cn>
+Date:   Mon, 14 Nov 2022 12:03:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20221108222944.GA504625@bhelgaas> <20221109173454.GA567052@bhelgaas>
-In-Reply-To: <20221109173454.GA567052@bhelgaas>
-From:   Nathan Rossi <nathan@nathanrossi.com>
-Date:   Mon, 14 Nov 2022 13:59:56 +1000
-Message-ID: <CA+aJhH2EEE_n5T0PAcOr5RQbfOzEKF67ckcWMTbP_NesQ5ggtw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ASPM: Wait for data link active after retraining
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Rossi <nathan.rossi@digi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <dfd408ed-5c2c-c73a-b901-6641ae7aae5f@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Axf+AJvnFjX0ISAA--.49417S3
+X-CM-SenderInfo: xolx1vpled0qxorr0wxvrqhubq/1tbiAQAKCmNw3mQJaAAAsJ
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZw45tr18JFyDZw1UZrW7twb_yoWrXF45pF
+        95JFWakFZ5Kr18Kw1qqw18ZFy2yr4kJayDXrn5GF12krnIvr1jgry0vF1q9ry3Jr4kJF1j
+        vF1jga47ZF45ZaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+        87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 10 Nov 2022 at 03:34, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Maciej for similar retrain issue]
->
-> On Tue, Nov 08, 2022 at 04:29:44PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Jun 02, 2022 at 06:55:44AM +0000, Nathan Rossi wrote:
-> > > From: Nathan Rossi <nathan.rossi@digi.com>
-> > >
-> > > When retraining the link either the child or the parent device may ha=
-ve
-> > > the data link layer state machine of the respective devices move out =
-of
-> > > the active state despite the physical link training being completed.
-> > > Depending on how long is takes for the devices to return to the activ=
-e
-> > > state, the device may not be ready and any further reads/writes to th=
-e
-> > > device can fail.
-> > >
-> > > This issue is present with the pci-mvebu controller paired with a dev=
-ice
-> > > supporting ASPM but without advertising the Slot Clock, where during
-> > > boot the pcie_aspm_cap_init call would cause common clocks to be made
-> > > consistent and then retrain the link. However the data link layer wou=
-ld
-> > > not be active before any device initialization (e.g. ASPM capability
-> > > queries, BAR configuration) causing improper configuration of the dev=
-ice
-> > > without error.
-> > >
-> > > To ensure the child device is accessible, after the link retraining u=
-se
-> > > pcie_wait_for_link to perform the associated state checks and any nee=
-ded
-> > > delays.
-> > >
-> > > Signed-off-by: Nathan Rossi <nathan.rossi@digi.com>
-> > > ---
-> > >  drivers/pci/pcie/aspm.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > index a96b7424c9..4b8a1810be 100644
-> > > --- a/drivers/pci/pcie/aspm.c
-> > > +++ b/drivers/pci/pcie/aspm.c
-> > > @@ -288,7 +288,8 @@ static void pcie_aspm_configure_common_clock(stru=
-ct pcie_link_state *link)
-> > >             reg16 &=3D ~PCI_EXP_LNKCTL_CCC;
-> > >     pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-> > >
-> > > -   if (pcie_retrain_link(link))
-> > > +   /* Retrain link and then wait for the link to become active */
-> > > +   if (pcie_retrain_link(link) && pcie_wait_for_link(parent, true))
-> >
-> > pcie_retrain_link() waits for PCI_EXP_LNKSTA_LT (Link Training) to be
-> > cleared, which means the LTSSM has exited the Configuration/Recovery
-> > state.  pcie_wait_for_link() waits for PCI_EXP_LNKSTA_DLLLA (Data Link
-> > Layer Link Active) to be set, which means the link is in DL_Active.
-> >
-> > I don't see an explicit procedure in the spec for determining when
-> > a link retrain is complete, but from PCIe r6.0, sec 6.2.11 (DPC):
-> >
-> >   After software releases the Downstream Port from DPC, the Port=E2=80=
-=99s
-> >   LTSSM must transition to the Detect state, where the Link will
-> >   attempt to retrain. Software can use Data Link Layer State Changed
-> >   interrupts, DL_ACTIVE ERR_COR signaling, or both, to signal when the
-> >   Link reaches the DL_Active state again.
-> >
-> > and sec 6.6:
-> >
-> >   On the completion of Link Training (entering the DL_Active state,
-> >   see Section 3.2), a component must be able to receive and process
-> >   TLPs and DLLPs.
-> >
-> > The only use mentioned in the spec for the Link Training bit is the
-> > implementation note in sec 7.5.3.7 about avoiding race conditions when
-> > using the Retrain Link bit, where software should poll Link Training
-> > until it returns to zero before setting the Retrain Link bit to change
-> > link parameters.
-> >
-> > And I think you're absolutely right that what we *want* here is the
-> > data link layer DL_Active state, not just the link layer L0 state.
-> >
-> > This all makes me think that checking the Link Training bit might be
-> > the wrong thing to begin with.
-> >
-> > Of course, the Data Link Layer Link Active bit wasn't added until PCIe
-> > r1.1, and even now it's optional.  Without it, I don't know if there's
-> > a way to make sure the link is in DL_Active.
+On 11/12/22 12:06 AM, Jiaxun Yang wrote:
+> 
+> 
+> 在 2022/11/10 23:13, Bjorn Helgaas 写道:
+>> On Thu, Nov 10, 2022 at 11:00:45PM +0000, Jiaxun Yang wrote:
+>>> 在2022年11月10日十一月 下午9:07，Bjorn Helgaas写道：
+>>>> On Tue, Nov 08, 2022 at 02:42:40PM +0800, Liu Peibao wrote:
+>>>>> The PCI Controller of 2k1000 could not mask devices by setting vender ID or
+>>>>> device ID in configuration space header as invalid values. When there are
+>>>>> pins shareable between the platform device and PCI device, if the platform
+>>>>> device is preferred, we should not scan this PCI device. In the above
+>>>>> scene, add `status = "disabled"` property in DT node of this PCI device.
+>>>>>
+>>>>> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+>>>>> ---
+>>>>> V3 -> V4: 1. get rid of the masklist and search the status property
+>>>>>       directly.
+>>>>>            2. check the status property only when accessing the vendor ID.
+>>>>> V2 -> V3: 1. use list_for_each_entry() for more clearly.
+>>>>>            2. fix wrong use of sizeof().
+>>>>> V1 -> V2: use existing property "status" instead of adding new property.
+>>>>>
+>>>>>   drivers/pci/controller/pci-loongson.c | 11 +++++++++++
+>>>>>   1 file changed, 11 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>>>>> index 05c50408f13b..efca0b3b5a29 100644
+>>>>> --- a/drivers/pci/controller/pci-loongson.c
+>>>>> +++ b/drivers/pci/controller/pci-loongson.c
+>>>>> @@ -194,6 +194,17 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
+>>>>>               return NULL;
+>>>>>       }
+>>>>>   +#ifdef CONFIG_OF
+>>>>> +    /* Don't access disabled devices. */
+>>>>> +    if (pci_is_root_bus(bus) && where == PCI_VENDOR_ID) {
+>>>>> +        struct device_node *dn;
+>>>>> +
+>>>>> +        dn = of_pci_find_child_device(bus->dev.of_node, devfn);
+>>>>> +        if (dn && !of_device_is_available(dn))
+>>>>> +            return NULL;
+>>>>> +    }
+>>>>> +#endif
+>>>> Looks nice and simple, thanks for trying this out.
+>>> Should we make this into common PCI code?
+>>> I guess Loongson won’t be the last platform having such problem.
+>> I think we should wait until somebody else has this problem.
+>>
+>> It's not a completely trivial situation because if the device uses PCI
+>> memory or I/O space, we have to worry about how that space is handled.
+>> Does the BIOS assign that space?  Is it included in the host bridge
+>> _CRS or "ranges" properties?  If the device is below any PCI bridges
+>> (I don't think that's the case in your situation), how does the space
+>> it requires get routed through the bridges?
+> 
+> I believe in this case the address is assigned by BIOS and they are out of ranges
+> properties of host bridge. Those are all on chip devices so there won't be any
+> bridges.
+> 
+> @Peibao, can you please confirm this? I was never able to boot mainline kernel
+> on my LS2K board.
+> 
+> Thanks.
+> - Jiaxun
+> 
 
-My understanding is there is no way to check for the DL_Active state
-on these devices. Which is why pcie_wait_for_link_delay uses a fixed
-delay in that case.
+@Jiaxun,
 
-> >
-> > Maybe pcie_retrain_link() should wait for Data Link Layer Link Active
-> > if it is supported, and use the existing behavior of waiting for Link
-> > Training to be cleared otherwise?
+Yes, the same as you said totally.
 
-I think it still makes sense for pcie_retrain_link to wait for the
-Link Training bit, since it is typical for the retraining to never go
-to a LTSSM state where the LinkUp is 0 (e.g. Recovery ->
-Configuration), thus the Data Link Layer will stay in DL_Active. But
-it is still important to wait for the link training to complete in
-that case, but also because the training may not cause the Data Link
-state to change immediately.
+Did you notice the following patch? The liointc of LS2K can't work after
+commit b2c4c3969fd7 ("irqchip/loongson-liointc: irqchip add 2.0 version"),
+which may cause the booting failure. 
+https://lore.kernel.org/all/20221104110712.23300-1-liupeibao@loongson.cn/
 
-However since DLLLA reporting is optional, it is probably ideal if the
-pcie_retrain_link only calls pcie_wait_for_link if reporting is
-available? This would avoid the fixed delay of 1s upon link retraining
-for devices without reporting, which is unnecessary in the majority of
-cases.
+In fact, I am developing this on the LoongArch compatible board LS2K1000LA.
+I boot the mainline kernel basing my FDT supporting patch set for LoongArch
+and the BIOS following current LoongArch booting protocol :).
 
-Thanks,
-Nathan
+BR,
+Peibao
 
+> 
+>>
+>> It would be nice to say something in this commit log about whether
+>> these are issues on your platform.
+>>
 
->
-> Nathan, I meant to cc you on this thread, which is doing something
-> very similar.  Just FYI:
->
-> https://lore.kernel.org/all/alpine.DEB.2.21.2209130050380.60554@angie.orc=
-am.me.uk/
+@Bjorn,
+
+Thanks!
+
+I will update commit log in the next patch to clear the issue on our platform,
+which is absolutely what Jiaxun has described above.
+
+BR,
+Peibao
+
