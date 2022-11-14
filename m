@@ -2,79 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F7FC627B76
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 12:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F8F1627B7B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 12:07:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236566AbiKNLGQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 06:06:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60838 "EHLO
+        id S236624AbiKNLHH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 06:07:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236271AbiKNLGP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 06:06:15 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41131EED3
-        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 03:06:14 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id io19so9726774plb.8
-        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 03:06:14 -0800 (PST)
+        with ESMTP id S236006AbiKNLHC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 06:07:02 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CBD1EEED
+        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 03:07:00 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso13467160pjc.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 03:07:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:cc:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KfFvid/s/EazTIm5SJZ8j+8OoeKKY3JzPToO5BRuUw4=;
-        b=QPewNo2ksaUisA6qY43wocst55uxRBFul8b1t4eaKbBKQ3hZCkBH+oeKN7kGV0+2vV
-         x1kC34OUKfeDbonXRNyhwR50iucLrgoZLboIRZv3Eb7M3iVnc+V2pU0WEtonimSnNPXt
-         Kb6MRwcAY96NVeoRFUFNJtB/4471P8ob5cCWmkT/lDTwUja5LNRkmIEkH21/nZ0PZ51h
-         KZMdNmdpyNy9zHzCDWdaf8Kaowl9plBGgjyb3psgtFOACQRfSstdW4vKl8lq/fdLo9kS
-         ZbBKXfYpgTWgrjb2hw2q+zhKNWmLymI1jdqctKC8PpjpqbRTQL85cd9CWj3eDIy2nuWI
-         sDjg==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MkiR3wHiiW1PYTQ7TE0X6JrLq1vnHDKlS/zuy1ypUvQ=;
+        b=ZyksGHtPdVe30jSTgBir0r6zjbL2u5GpgzS6sid5bMO3qTdKn3E/3GkV/i3dPVbdIk
+         RsGErEozMC3CakHQBZoiCYtATnxPpYCBd+IucCJ9ZuaQSWUq4pfCBp/NTMDK/Cv7qXw9
+         5soHBfyk3f0ZRFpK1JDNpN8a3MUnSPhZcDjP7hcLzQmyTOB7zBY2NIhRn5NJB3i88QEW
+         uHe3xe3Cp+S6p9sz5gne5a/sseMiLdvXDYwRxYM/upoVE/afbaOLEji0SIlHpKOngidm
+         uO/Ito79czfU+1qwEEdq9xI5eXwdEsfaysfzdHOeIBwIpL5qwMg9hT40U3hyBJLxpup5
+         FHAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:cc:to:from:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KfFvid/s/EazTIm5SJZ8j+8OoeKKY3JzPToO5BRuUw4=;
-        b=z49mJG6Sd45AEYxMjrpuycP+HabuNSN0UFiS78nMV9beZgHgvi35n8tAXaeBEitqEA
-         3OR3BURJKsC4g3V03jlkz51VfR/20dvD3dicu71tkx0SDiWSuGiAWISnotlk8sz2CYlc
-         hQvTsKHInGMsNMnC78Uw0PSVFlHDovKPM/4lGy9zscVSW3SyQ6ZHe0Lb1pojdtaw5mkl
-         GFw2irkCGggj99YJUKXcLfZkFX08RmlCeLuRBKSTGO2/C2pBAYPJ78pMFMLUoeI6o59D
-         d2Ep1lkOIOqEALNOe78oM07tgJvgIr7q++Kl47xxoEjqbslcDsvebJ9QmiXZzKf4XFGT
-         Ppeg==
-X-Gm-Message-State: ANoB5pl1QCYIwLxWxqrAukIeeU+8zP0RG4jW1EmR24Sps9HWvHkIhKPu
-        hyNTaM/HEiFmnhPKpK7s0YDRID4KcxIo
-X-Google-Smtp-Source: AA0mqf5iGyOp1bdT7o4fiJvNrahYywkH4PXJpd2e3cUjFCPXEO4+SggeuqOW1kUhyGBIb6XUm5TvAQ==
-X-Received: by 2002:a17:902:a508:b0:188:9542:515 with SMTP id s8-20020a170902a50800b0018895420515mr13404204plq.102.1668423974133;
-        Mon, 14 Nov 2022 03:06:14 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MkiR3wHiiW1PYTQ7TE0X6JrLq1vnHDKlS/zuy1ypUvQ=;
+        b=gpE82ieqE6UDjqRQRRwOOjmMIcFGSSCGwkxaSbNA77L8ti31bxFNDOuhD1RMWR9XzQ
+         1ft1n2e8EzDPrxq+hfQgciRyKH3JWzBoFA1M78TkKH+4EyGB2R3uc/NIOxbK7uB1QUIG
+         Axi56jRTCNkm64DwPKwlwx+m+DkEDfu1vvxKLCCCkwG8sWo3gl5tKtBGJ18LatWrY8wq
+         gvSD1DEQbRd2cF1+PP1vDeb4eCDBuZ/pUeipbC5D9TuGfTEsd181AZ1sGo1aZB7fjxTk
+         5LcvHeW4XT/OAcPtwrd+ruqcxSf5dMvkStkbIixzyK0bukbVzLvYK6FWS62MUiwmX7ur
+         Brnw==
+X-Gm-Message-State: ANoB5pkVl20yMPs/OSFQZbktEluZ2LUONzHbEjp0oUbIJniGR5LXyngH
+        jZ5pwbuTH8gAXgpjYGX1yJ1T
+X-Google-Smtp-Source: AA0mqf5eoKaaLhLXcQHHPo+28RlJ+upBEvK/afNrX2kqhp8MLM29+9/SV1+DyMsD+pEiLuFQDG7UuA==
+X-Received: by 2002:a17:902:7843:b0:187:282c:9b9c with SMTP id e3-20020a170902784300b00187282c9b9cmr13283212pln.29.1668424019854;
+        Mon, 14 Nov 2022 03:06:59 -0800 (PST)
 Received: from thinkpad ([117.248.0.54])
-        by smtp.gmail.com with ESMTPSA id k15-20020aa7998f000000b0056bd95259d6sm6435405pfh.189.2022.11.14.03.06.09
+        by smtp.gmail.com with ESMTPSA id y2-20020a62ce02000000b0056bbd286cf4sm6362246pfg.167.2022.11.14.03.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 03:06:13 -0800 (PST)
-Date:   Mon, 14 Nov 2022 16:36:07 +0530
+        Mon, 14 Nov 2022 03:06:58 -0800 (PST)
+Date:   Mon, 14 Nov 2022 16:36:54 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     vidyas@nvidia.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
-        lpieralisi@kernel.org, bhelgaas@google.com
-Message-ID: <20221114110607.GK3869@thinkpad>
+        kw@linux.com, robh@kernel.org, lpieralisi@kernel.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to
+ threaded IRQ handler
+Message-ID: <20221114110654.GL3869@thinkpad>
+References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
+ <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MISSING_SUBJECT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
-
-Bcc: 
-Subject: Re: [PATCH v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to
- threaded IRQ handler
-Reply-To: 
-In-Reply-To: <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
 
 On Tue, Oct 25, 2022 at 08:20:58PM +0530, Manivannan Sadhasivam wrote:
 > dw_pcie_ep_linkup() may take more time to execute depending on the EPF
@@ -84,12 +82,6 @@ On Tue, Oct 25, 2022 at 08:20:58PM +0530, Manivannan Sadhasivam wrote:
 > So move the dw_pcie_ep_linkup() call to threaded IRQ handler.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Vidya, could you please review this patch?
-
-Thanks,
-Mani
-
 > ---
 >  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++++--
 >  1 file changed, 7 insertions(+), 2 deletions(-)
