@@ -2,195 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB701628248
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 15:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85A54628263
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 15:23:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235551AbiKNOUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 09:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60344 "EHLO
+        id S236053AbiKNOXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 09:23:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235655AbiKNOUy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 09:20:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFF12648F;
-        Mon, 14 Nov 2022 06:20:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4EBE1B81037;
-        Mon, 14 Nov 2022 14:20:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69824C433D6;
-        Mon, 14 Nov 2022 14:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668435649;
-        bh=1CjNVAfl+FbwwhLndGvbB/RFBabuGv5j8MFhxpZDmqg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=crbX8sWNnafv0SSSkoKCKUiCkqpL5Wi4aRfp5jXETFWh5h94pveylNaccIZEvB5u0
-         vC8D/pZ3gjhcMMTYkp5n4NVY7t+Bbrlns3gOuIS0Qf7J4L8MKU3+i35tzMOsIZiUff
-         o3WMRQkMI/RrjsQN+tR+Y/KJ41Q/dGHDSEy2OAD1Q7ZitbcG5hkHYgjyokMNT8GJnO
-         09dm3OXwt0cn18aV5eCIcGLtxEJeEVrGzak28NscC3YBcy0Tmg24gMWNBi1xseU0Bc
-         O8ChIXd83VnRLSXRy8ss98u2iazc1ARpArhi32rPecWv+Mw/frKenH4HPKLFmT/6d3
-         H8b2s2o4E3gHA==
-Date:   Mon, 14 Nov 2022 16:20:45 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jianjay.zhou@huawei.com,
-        zhuangshengen@huawei.com, arei.gonglei@huawei.com,
-        yechuan@huawei.com, huangzhichao@huawei.com, xiehong@huawei.com
-Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
-Message-ID: <Y3JOvTfBwpaldtZJ@unreal>
-References: <20221111142722.1172-1-longpeng2@huawei.com>
- <Y256ty6xGyUpkFn9@unreal>
- <0b2202bf-18d3-b288-9605-279208165080@huawei.com>
- <Y3Hoi4zGFY4Fz1l4@unreal>
- <d7327d46-deb5-dc75-21c3-1f351d7da108@huawei.com>
- <Y3I+Fs0/dXH/hnpL@unreal>
- <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com>
+        with ESMTP id S235873AbiKNOXe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 09:23:34 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF9430F
+        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 06:23:31 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id d3so13400714ljl.1
+        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 06:23:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W18q2oxupdQ12Nl0RSmIe5LepBZSz0XtViretQW+Res=;
+        b=uLUyCI+Aay2MbUcYcAyI0OX5pQbbyEv049uGs0QtVcSr2ZXZoCXFztooT1E4tDfVAk
+         k1T0lWJPx2QInO6JMUKtbnS8esR3CiEkaTzx4fD9Dshbgsu/10ayw1LDcL5mp5PIeos3
+         P2w4dAoxzykDVwPMBkcjBbu0sUzRo5uI/Uf7Q+MlGS5BJKl6VGtvdlBjQlrig4wgJikD
+         JYV98tUad9ejnm89iUyFj8286iG9LheLRPBxWtFtpVbg08rPvYhl6FvSUasuxm+BZcKZ
+         WsLuHanrElbaTLVl0zA4JXFsXSTGERHFA2jmup/6GYAaYoUw4GqyhgefnXz6QlKtLZcV
+         G4lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W18q2oxupdQ12Nl0RSmIe5LepBZSz0XtViretQW+Res=;
+        b=D/pl4tOIki8YuCUenvY72yZBCEFjd/PDcPtz/Un1Yitf1aeXiOXzm4bpE68R12nOLY
+         Dq1xel0KMb35DDUBeyWmMiThgQB9rreJgXkh8gZkHpk+w+yxflcta8tBJqixWDrdMeso
+         IEALgb9xbXQddVqgUvulOdSwlZmSoTtaz9ZXtklmXMzb26kPkOwXCUurlhO2+iZpfOW7
+         vQWknmu61UMgYJ1imffjMDNdya6DuBRu5g/lDjlW+xORQVRm3uxh8eerzl0axDIyRWmy
+         FPS3FaSMHhjYnXFS+qkoYAtYcZ11hCGOWXT+wdSG5lFfbKOWH+ASq3LIYmliUG/I+IK+
+         JruQ==
+X-Gm-Message-State: ANoB5plczWn9NZNxT8UK8C4kfn7tiJY5lnGhrBfVHY0QeNoOg+FCZoBU
+        BwXo9EMdXN3SjZyOE0VHJxmK3A==
+X-Google-Smtp-Source: AA0mqf7N+uxS1/tolR2OQnty7ew64ZdZzboeRa4wsYDocUn7cnnmIFDpkApY3SaSpwHCrQOxeU1jcw==
+X-Received: by 2002:a2e:a914:0:b0:278:f109:2844 with SMTP id j20-20020a2ea914000000b00278f1092844mr3039847ljq.224.1668435809714;
+        Mon, 14 Nov 2022 06:23:29 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id p6-20020a056512138600b004a05767bc07sm1838155lfa.28.2022.11.14.06.23.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Nov 2022 06:23:29 -0800 (PST)
+Message-ID: <d8edc185-52cd-ffa1-7b46-2ec84d0d712c@linaro.org>
+Date:   Mon, 14 Nov 2022 15:23:25 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH V2 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+Content-Language: en-US
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+References: <20221114140916.200395-1-jonathanh@nvidia.com>
+ <20221114140916.200395-2-jonathanh@nvidia.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221114140916.200395-2-jonathanh@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 10:06:49PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
+On 14/11/2022 15:09, Jon Hunter wrote:
+> From: Vidya Sagar <vidyas@nvidia.com>
 > 
+> Add support for ECAM aperture that is only supported for Tegra234
+> devices.
 > 
-> 在 2022/11/14 21:09, Leon Romanovsky 写道:
-> > On Mon, Nov 14, 2022 at 08:38:42PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
-> > > 
-> > > 
-> > > 在 2022/11/14 15:04, Leon Romanovsky 写道:
-> > > > On Sun, Nov 13, 2022 at 09:47:12PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
-> > > > > Hi leon,
-> > > > > 
-> > > > > 在 2022/11/12 0:39, Leon Romanovsky 写道:
-> > > > > > On Fri, Nov 11, 2022 at 10:27:18PM +0800, Longpeng(Mike) wrote:
-> > > > > > > From: Longpeng <longpeng2@huawei.com>
-> > > > > > > 
-> > > > > > > We can enable SRIOV and add VFs by /sys/bus/pci/devices/..../sriov_numvfs, but
-> > > > > > > this operation needs to spend lots of time if there has a large amount of VFs.
-> > > > > > > For example, if the machine has 10 PFs and 250 VFs per-PF, enable all the VFs
-> > > > > > > concurrently would cost about 200-250ms. However most of them are not need to be
-> > > > > > > used at the moment, so we can enable SRIOV first but add VFs on demand.
-> > > > > > 
-> > > > > > It is unclear what took 200-250ms, is it physical VF creation or bind of
-> > > > > > the driver to these VFs?
-> > > > > > 
-> > > > > It is neither. In our test, we already created physical VFs before, so we
-> > > > > skipped the 100ms waiting when writing PCI_SRIOV_CTRL. And our driver only
-> > > > > probes PF, it just returns an error if the function is VF.
-> > > > 
-> > > > It means that you didn't try sriov_drivers_autoprobe. Once it is set to
-> > > > true, It won't even try to probe VFs.
-> > > > 
-> > > > > 
-> > > > > The hotspot is the sriov_add_vfs (but no driver probe in fact) which is a
-> > > > > long procedure. Each step costs only a little, but the total cost is not
-> > > > > acceptable in some time-sensitive cases.
-> > > > 
-> > > > This is also cryptic to me. In standard SR-IOV deployment, all VFs are
-> > > > created and configured while operator booted the machine with sriov_drivers_autoprobe
-> > > > set to false. Once this machine is ready, VFs are assigned to relevant VMs/users
-> > > > through orchestration SW (IMHO, it is supported by all orchestration SW).
-> > > > 
-> > > > And only last part (assigning to users) is time-sensitive operation.
-> > > > 
-> > > The VF creation and configuration are also time-sensitive in some cases, for
-> > > example, the hypervisor live update case (such as [1]):
-> > >   save VMs -> kexec -> restore VMs
-> > > 
-> > > After the new kernel starts, the VFs must be added into the system, and then
-> > > assign the original VFs to the QEMU. This means we must enable all 2K+ VFs
-> > > at once and increase the downtime.
-> > > 
-> > > If we can enable the VFs that are used by existing VMs then restore the VMs
-> > > and enable other unused VFs at last, the downtime would be significantly
-> > > reduced.
-> > > 
-> > > [1] https://static.sched.com/hosted_files/kvmforum2022/65/kvmforum2022-Preserving%20IOMMU%20states%20during%20kexec%20reboot-v4.pdf
-> > 
-> > Like it is written in presentation, the standard way of doing it is done
-> > by VFIO live migration feature, where 2K+ VMs are migrated to another server
-> > at the time first server is scheduled for maintenance.
-> > 
-> Live migration is not the best choice in production environment, it's too
-> heavy. Some cloud providers prefer to using hypervisor live update in their
-> system, such as AWS's nitro hypervisor.
+> Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> Changes since V1:
+> - Restricted the ECAM aperture to only Tegra234 devices that support it.
+> 
+>  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 76 +++++++++++++++----
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+>  2 files changed, 62 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> index 75da3e8eecb9..7ae0f37f5364 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> @@ -27,21 +27,12 @@ properties:
+>        - nvidia,tegra234-pcie
+>  
+>    reg:
+> -    items:
+> -      - description: controller's application logic registers
+> -      - description: configuration registers
+> -      - description: iATU and DMA registers. This is where the iATU (internal
+> -          Address Translation Unit) registers of the PCIe core are made
+> -          available for software access.
+> -      - description: aperture where the Root Port's own configuration
+> -          registers are available.
+> +    minItems: 4
+> +    maxItems: 5
+>  
+>    reg-names:
+> -    items:
+> -      - const: appl
+> -      - const: config
+> -      - const: atu_dma
+> -      - const: dbi
+> +    minItems: 4
+> +    maxItems: 5
+>  
+>    interrupts:
+>      items:
+> @@ -202,6 +193,60 @@ properties:
+>  
+>  allOf:
+>    - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra194-pcie
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 4
+> +          maxItems: 4
 
-How is AWS nitro relevant to our discussion about adding sysfs file to Linux?
-Can you please point us to the source code of that hypervisor? Does it even
-run on Linux?
+How you wrote it, you do not need min/maxItems here, because you have
+items below. However see further comment.
 
-Anyway, I'm aware of big cloud providers who are pretty happy with live
-migration in production.
+> +          items:
+> +            - description: controller's application logic registers
+> +            - description: configuration registers
+> +            - description: iATU and DMA registers. This is where the iATU (internal
+> +                Address Translation Unit) registers of the PCIe core are made
+> +                available for software access.
+> +            - description: aperture where the Root Port's own configuration
+> +                registers are available.
+> +        reg-names:
+> +          items:
+> +            - const: appl
+> +            - const: config
+> +            - const: atu_dma
+> +            - const: dbi
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra234-pcie
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 5
+> +          maxItems: 5
 
-> 
-> > However, even in live update case mentioned in the presentation, you
-> > should disable ALL PFs/VFs and enable ALL PFs/VFs at the same time,
-> > so you don't need per-VF id enable knob.
-> > 
-> The presentation is just a reference, some points could be optimized
-> including disable PFs/VFs and enable PFs/VFs.
-> 
-> Hypervisor live update can finish in less than 1 second, so the cost of
-> disabling PFs/VFs and enabling PFs/VFs (~200-250ms or even worst) is too
-> high.
-> 
-> > > 
-> > > > > 
-> > > > > What’s more, the sriov_add_vfs adds the VFs of a PF one by one. So we can
-> > > > > mostly support 10 concurrent calls if there has 10 PFs.
-> > > > 
-> > > > I wondered, are you using real HW? or QEMU SR-IOV? What is your server
-> > > > that supports such large number of VFs?
-> > > > 
-> > > Physical device. Some devices in the market support the large number of VFs,
-> > > especially in the hardware offloading area, e.g DPU/IPU. I think the SR-IOV
-> > > software should keep pace with times too.
-> > 
-> > Our devices (and Intel too) support many VFs too. The thing is that
-> > servers are unlikely to be able to support 10 physical devices with 2K+
-> > VFs. There are many limitations that will make such is not usable.
-> > Like, global MSI-X pool and PCI bandwidth to support all these devices.
-> > 
-> > > 
-> > > > BTW, Your change will probably break all SR-IOV devices in the market as
-> > > > they rely on PCI subsystem to have VFs ready and configured.
-> > > > 
-> > > I see, but maybe this change could be a choice for some users.
-> > 
-> > It should come with relevant driver changes and very strong justification why
-> > such functionality is needed now and can't be achieved by anything else
-> > except user-facing sysfs.
-> > 
-> Adding 2K+ VFs to the sysfs need too much time.
-> 
-> Look at the bottomhalf of the hypervisor live update:
-> kexec --> add 2K VFs --> restore VMs
-> 
-> The downtime can be reduced if the sequence is:
-> kexec --> add 100 VFs（the VMs used） --> resotre VMs --> add 1.9K VFs
+Similar issue.
 
-Addition of VFs is serial operation, you can fire your VMs once you
-counted 100 VFs in sysfs directory.
+> +          items:
+> +            - description: controller's application logic registers
+> +            - description: configuration registers
+> +            - description: iATU and DMA registers. This is where the iATU (internal
+> +                Address Translation Unit) registers of the PCIe core are made
+> +                available for software access.
+> +            - description: aperture where the Root Port's own configuration
+> +                registers are available.
+> +            - description: aperture to access the configuration space through ECAM.
 
-> 
-> 
-> > I don't see anything in this presentation and discussion that supports
-> > need of such UAPI.
-> >  > Thanks
-> > 
-> > > 
-> > > > Thanks
-> > > > .
-> > .
+This is unnecessarily duplicated. You can keep the descriptions of items
+and reg-names items in top level (with min 4 and max 5) and restrict
+maxItems for 194 and minItems for 234 here.
+
+
+> +        reg-names:
+> +          items:
+> +            - const: appl
+> +            - const: config
+> +            - const: atu_dma
+> +            - const: dbi
+> +            - const: ecam
+> +
+
+No need for blank line.
+>  
+>  unevaluatedProperties: false
+>  
+
+Best regards,
+Krzysztof
+
