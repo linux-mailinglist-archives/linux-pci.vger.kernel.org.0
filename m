@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2E1E6287AE
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 19:00:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D6376287CA
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 19:04:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238091AbiKNSAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 13:00:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56396 "EHLO
+        id S238420AbiKNSEO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 13:04:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237909AbiKNR7u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 12:59:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59A127B2E;
-        Mon, 14 Nov 2022 09:59:46 -0800 (PST)
+        with ESMTP id S238263AbiKNSDT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 13:03:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126C82B622;
+        Mon, 14 Nov 2022 10:02:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4303561331;
-        Mon, 14 Nov 2022 17:59:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FE6C433C1;
-        Mon, 14 Nov 2022 17:59:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 73FB0B8107E;
+        Mon, 14 Nov 2022 18:02:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BABC433D7;
+        Mon, 14 Nov 2022 18:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668448785;
-        bh=e173ROKukEUUj9RQQoI/lX82KYy/bM84YFLsDMettg4=;
+        s=k20201202; t=1668448924;
+        bh=WprjM543i7GuzvRawzwImksjZFno/T5c11rRzQwvdN8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h9+MkNgNeZPoFeI7rcWLtZu9yGw1G2+6Urmw4TF7PMm8aJAEEu7uv6HAzWfBLnMC8
-         yVafXESaQd3pGWBwb5lwRnTkLjSPh9/WnDUjqHG1CIe5wO1uayECmHznhFjY178vJK
-         Ar5jDh4iieZWpj6D18gX9tm71r9zcgu4AjfTmre69pwcmt96caUyH/RlAqH03RY16j
-         iYK4d0NZDUuOVpkCKJMuLjIiZd+QUnyPh0kI5NX8MOCc9lc3t7yhDpbwtepds2wNW9
-         fnK0Ho781Hw64GSUJvW8bWcbJIVTN0WgOlktW6f5t1C6BNU0GNqK3gShejHIMFAerc
-         uLzPXr1R+Vn2Q==
-Date:   Mon, 14 Nov 2022 23:29:29 +0530
+        b=Ufxdo9ZC0XbnM1xLOLuwupjOaKv/wn9KPbldhQSLzjCYN6jjiMkHq1LfD4NUG0LJN
+         7Ylj3PIj68cKRaD+wrxBfQ0cy0h8uFK9RAOCheSR/aCJCc/JfGKYiIK4dneAjQPb3F
+         n4futn2ACU2MRErO4roUgoXFAHgOQwoQR0ZqzbCWWE4qQITAIythPpQ/dRkWMk+JMU
+         XUIuGw8PIkClNFd7+o7k9H9bEAJ3mL7CpLltYsTSG9Z7a5DgxT0AVtz8acNv5MCRa1
+         iRQnaX71urjtPSqK8wQD4Kte2BrjTDrCiYM5ig6DacS9a4HDw/NUXNBU4oZ3b5H+8W
+         SVitR4CfJrBKQ==
+Date:   Mon, 14 Nov 2022 23:31:48 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Serge Semin <fancer.lancer@gmail.com>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -53,17 +53,18 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 17/20] PCI: dwc: Introduce generic resources getter
-Message-ID: <20221114175929.GB5305@thinkpad>
+Subject: Re: [PATCH v7 19/20] PCI: dwc: Introduce generic platform clocks and
+ resets
+Message-ID: <20221114180148.GC5305@thinkpad>
 References: <20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru>
- <20221113191301.5526-18-Sergey.Semin@baikalelectronics.ru>
- <20221114064654.GE3869@thinkpad>
- <20221114083903.r2vyuyotwkf52jk7@mobilestation>
+ <20221113191301.5526-20-Sergey.Semin@baikalelectronics.ru>
+ <20221114070115.GG3869@thinkpad>
+ <20221114093759.kyxdb4ijfvm4bytk@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221114083903.r2vyuyotwkf52jk7@mobilestation>
+In-Reply-To: <20221114093759.kyxdb4ijfvm4bytk@mobilestation>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -73,38 +74,161 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 11:39:03AM +0300, Serge Semin wrote:
-> On Mon, Nov 14, 2022 at 12:16:54PM +0530, Manivannan Sadhasivam wrote:
-> > On Sun, Nov 13, 2022 at 10:12:58PM +0300, Serge Semin wrote:
-> > > Currently the DW PCIe Root Port and Endpoint CSR spaces are retrieved in
-> > > the separate parts of the DW PCIe core driver. It doesn't really make
-> > > sense since the both controller types have identical set of the core CSR
-> > > regions: DBI, DBI CS2 and iATU/eDMA. Thus we can simplify the DW PCIe Host
-> > > and EP initialization methods by moving the platform-specific registers
-> > > space getting and mapping into a common method. It gets to be even more
-> > > justified seeing the CSRs base address pointers are preserved in the
-> > > common DW PCIe descriptor. Note all the OF-based common DW PCIe settings
-> > > initialization will be moved to the new method too in order to have a
-> > > single function for all the generic platform properties handling in single
-> > > place.
+On Mon, Nov 14, 2022 at 12:37:59PM +0300, Serge Semin wrote:
+> On Mon, Nov 14, 2022 at 12:31:15PM +0530, Manivannan Sadhasivam wrote:
+> > On Sun, Nov 13, 2022 at 10:13:00PM +0300, Serge Semin wrote:
+> > > Currently almost each platform driver uses its own resets and clocks
+> > > naming in order to get the corresponding descriptors. It makes the code
+> > > harder to maintain and comprehend especially seeing the DWC PCIe core main
+> > > resets and clocks signals set hasn't changed much for about at least one
+> > > major IP-core release. So in order to organize things around these signals
+> > > we suggest to create a generic interface for them in accordance with the
+> > > naming introduced in the DWC PCIe IP-core reference manual:
 > > > 
-> > > A nice side-effect of this change is that the pcie-designware-host.c and
-> > > pcie-designware-ep.c drivers are cleaned up from all the direct dw_pcie
-> > > storage modification, which makes the DW PCIe core, Root Port and Endpoint
-> > > modules more coherent.
+> > > Application clocks:
+> > > - "dbi"  - data bus interface clock (on some DWC PCIe platforms it's
+> > >            referred as "pclk", "pcie", "sys", "ahb", "cfg", "iface",
+> > >            "gio", "reg", "pcie_apb_sys");
+> > > - "mstr" - AXI-bus master interface clock (some DWC PCIe glue drivers
+> > >            refer to this clock as "port", "bus", "pcie_bus",
+> > >            "bus_master/master_bus/axi_m", "pcie_aclk");
+> > > - "slv"  - AXI-bus slave interface clock (also called as "port", "bus",
+> > >            "pcie_bus", "bus_slave/slave_bus/axi_s", "pcie_aclk",
+> > >            "pcie_inbound_axi").
+> > > 
+> > > Core clocks:
+> > > - "pipe" - core-PCS PIPE interface clock coming from external PHY (it's
+> > >            normally named by the platform drivers as just "pipe");
+> > > - "core" - primary clock of the controller (none of the platform drivers
+> > >            declare such a clock but in accordance with the ref. manual
+> > >            the devices may have it separately specified);
+> > > - "aux"  - auxiliary PMC domain clock (it is named by some platforms as
+> > >            "pcie_aux" and just "aux");
+> > > - "ref"  - Generic reference clock (it is a generic clock source, which
+> > >            can be used as a signal source for multiple interfaces, some
+> > >            platforms call it as "ref", "general", "pcie_phy",
+> > >            "pcie_phy_ref").
+> > > 
+> > > Application resets:
+> > > - "dbi"  - Data-bus interface reset (it's CSR interface clock and is
+> > >            normally called as "apb" though technically it's not APB but
+> > >            DWC PCIe-specific interface);
+> > > - "mstr" - AXI-bus master reset (some platforms call it as "port", "apps",
+> > >            "bus", "axi_m");
+> > > - "slv"  - ABI-bus slave reset (some platforms call it as "port", "apps",
+> > >            "bus", "axi_s").
+> > > 
+> > > Core resets:
+> > > - "non-sticky" - non-sticky CSR flags reset;
+> > > - "sticky"     - sticky CSR flags reset;
+> > > - "pipe"       - PIPE-interface (Core-PCS) logic reset (some platforms
+> > >                  call it just "pipe");
+> > > - "core"       - controller primary reset (resets everything except PMC
+> > >                  module, some platforms refer to this signal as "soft",
+> > >                  "pci");
+> > > - "phy"        - PCS/PHY block reset (strictly speaking it is normally
+> > >                  connected to the input of an external block, but the
+> > >                  reference manual says it must be available for the PMC
+> > >                  working correctly, some existing platforms call it
+> > >                  "pciephy", "phy", "link");
+> > > - "hot"        - PMC hot reset signal (also called as "sleep");
+> > > - "pwr"        - cold reset signal (can be referred as "pwr", "turnoff").
+> > > 
+> > > Bus reset:
+> > > - "perst" - PCIe standard signal used to reset the PCIe peripheral
+> > >             devices.
+> > > 
+> > > As you can see each platform uses it's own naming for basically the same
+> > > set of the signals. In the framework of this commit we suggest to add a
+> > > set of the clocks and reset signals resources, corresponding names and
+> > > identifiers for each denoted entity. At current stage the platforms will
+> > > be able to use the provided infrastructure to automatically request all
+> > > these resources and manipulate with them in the Host/EP init callbacks.
+> > > Alas it isn't that easy to create a common cold/hot reset procedure due to
+> > > too many platform-specifics in the procedure, like the external flags
+> > > exposure and the delays requirement.
 > > > 
 > > 
 > 
-> > You have clubbed both generic resource API and introducing CDM_CHECK flag.
-> > Please split them into separate patches.
+> > I'm not really sure if this generification is going to help. For instance, in
+> > Qcom platforms we have some required clocks and some optional clocks and that
+> > too differs with each SoC. For sure you can add logic in the core dwc driver to
+> > handle those cases but that starting to do that will add a pile of mess to the
+> > dwc driver.
 > 
-> This modification is a part of the new method dw_pcie_get_resources().
-> Without that method there is no point in adding the new flag. So no.
-> It's better to have all of it in a single patch as a part of creating
-> a coherent resources getter method.
+> It will help to place the order to the clock and reset naming, which
+> in its turn will improve the driver readability and maintainability.
+> Almost all the platforms get/check clocks and resets from the
+> same set defined in the DW PCIe HW-manual (including the Qcom ones).
+> The difference just in the names the developers used. Since the names
+> is a contract (a part of the DT-bindings) which can't be changed that
+> easy, we can't just update the already available drivers. But at the
+> very least we can unify the DT-bindings and the resources names
+> defined in there (which is already done and acked by Rob), provide a
+> generic driver API and persuade the new drivers developers to be using
+> the interface with already available names.
+> 
+> As I already said many times for the last year. The clocks are mainly
+> the same, but the way they are used to enable the interfaces (timings,
+> order, etc) can be platform-specific. It's possible for the
+> HW-designers in the framework of their platforms to re-use a
+> clocks/resets generation module provided by Synopsys, but even
+> Synopsys says that it's not always applicable. So practically the
+> platform-designers prefer to omit the module and provide a direct
+> control to the clocks and resets wires. Our platform is another
+> example of such approach.
+> 
+> Note you are still able to check whether the corresponding
+> clocks/resets are available for your device just by checking the
+> pointers.
+> 
+> > 
+> > IMO, if the dwc driver is not going to use these clocks, like controlling the
+> > clocks/resets, then there is no point in keeping the resource acquiring part in
+> > it.
+> 
+> Baikal-T1 will use these clocks and resets. The generic DWC PCIe
+> Host/EP driver will provide a simple and ready-to-use API to request
+> and check the clocks and resets. The new drivers will supposed to use
+> it too. Thus eventually we'll get at least the modern drivers using
+> the same names which will make the DW PCIe driver more readable and
+> maintainable. Meanwhile the old drivers alas will have to be left
+> with their platform-specific names since we can't change the
+> DT-bindings.
+> 
+> In anyway all of these has already been discussed with Rob. Here is
+> what he said:
+> 
+> On Mon, May 16, 2022 at 05:29:20PM -0500, Rob Herring wrote:
+> > No doubt there is way to much variation here (ummm, Qcom!). Some 
+> > standardization of names in (new) bindings would be good. That's where 
+> > we should be defining names IMO.
+> 
+> > On the driver side, I'd like to see the DW core handle clocks/resets/phys 
+> > at least for the easy cases of just turn on/off all the clocks and 
+> > toggle all resets. Perhaps even more minimally, move the clk/reset 
+> > struct pointers to the DWC core.
+> 
+> Due to the platform-specific order and timings I don't think it's
+> possible to create some generic clocks/resets enable/disable method.
+> It could be done, but it will be too complex with many-platform specific
+> hooks, callbacks, flags, etc. I even can't think of such interface
+> even for already available drivers, not to say for some future designs.
+> But the names and the handlers storage could be unified for sure.
+> 
+> Note eventually, if anybody would be concerned about a full
+> unification, the already available drivers could be converted to using
+> the provided here API just on the level of the clock/reset IDs, but
+> the names will have to be left as is alas.
+> 
+> Also note my very first version of this patch provided just the clocks
+> and reset names and their IDs without the corresponding resource
+> request. Rob suggested to at least provide a generic request
+> procedure. That's what I did in one of the subsequent patchset
+> revisions.
 > 
 
-Same comment as previous patch. I'll defer it to you.
+Okay then. I failed to go through the previous discussions, sorry about that.
 
 Thanks,
 Mani
@@ -116,267 +240,217 @@ Mani
 > > Mani
 > > 
 > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
 > > > 
 > > > ---
 > > > 
 > > > Changelog v3:
-> > > - This is a new patch created on v3 lap of the series.
-> > > 
-> > > Changelog v4:
-> > > - Convert the method name from dw_pcie_get_res() to
-> > >   dw_pcie_get_resources(). (@Bjorn)
-> > > 
-> > > Changelog v7:
-> > > - Get back device.of_node pointer to the dw_pcie_ep_init() method.
-> > >   (@Yoshihiro)
+> > > - Add a method to at least request the generic clocks and resets. (@Rob)
+> > > - Add GPIO-based PERST# signal support.
 > > > ---
-> > >  .../pci/controller/dwc/pcie-designware-ep.c   | 25 +------
-> > >  .../pci/controller/dwc/pcie-designware-host.c | 15 +---
-> > >  drivers/pci/controller/dwc/pcie-designware.c  | 75 ++++++++++++++-----
-> > >  drivers/pci/controller/dwc/pcie-designware.h  |  3 +
-> > >  4 files changed, 65 insertions(+), 53 deletions(-)
+> > >  drivers/pci/controller/dwc/pcie-designware.c | 91 ++++++++++++++++++++
+> > >  drivers/pci/controller/dwc/pcie-designware.h | 42 +++++++++
+> > >  2 files changed, 133 insertions(+)
 > > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 237bb01d7852..f68d1ab83bb3 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -13,8 +13,6 @@
-> > >  #include <linux/pci-epc.h>
-> > >  #include <linux/pci-epf.h>
-> > >  
-> > > -#include "../../pci.h"
-> > > -
-> > >  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > >  {
-> > >  	struct pci_epc *epc = ep->epc;
-> > > @@ -694,23 +692,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >  
-> > >  	INIT_LIST_HEAD(&ep->func_list);
-> > >  
-> > > -	if (!pci->dbi_base) {
-> > > -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> > > -		pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> > > -		if (IS_ERR(pci->dbi_base))
-> > > -			return PTR_ERR(pci->dbi_base);
-> > > -	}
-> > > -
-> > > -	if (!pci->dbi_base2) {
-> > > -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> > > -		if (!res) {
-> > > -			pci->dbi_base2 = pci->dbi_base + SZ_4K;
-> > > -		} else {
-> > > -			pci->dbi_base2 = devm_pci_remap_cfg_resource(dev, res);
-> > > -			if (IS_ERR(pci->dbi_base2))
-> > > -				return PTR_ERR(pci->dbi_base2);
-> > > -		}
-> > > -	}
-> > > +	ret = dw_pcie_get_resources(pci);
-> > > +	if (ret)
-> > > +		return ret;
-> > >  
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-> > >  	if (!res)
-> > > @@ -739,9 +723,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >  		return -ENOMEM;
-> > >  	ep->outbound_addr = addr;
-> > >  
-> > > -	if (pci->link_gen < 1)
-> > > -		pci->link_gen = of_pci_get_max_link_speed(np);
-> > > -
-> > >  	epc = devm_pci_epc_create(dev, &epc_ops);
-> > >  	if (IS_ERR(epc)) {
-> > >  		dev_err(dev, "Failed to create epc device\n");
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index ea923c25e12d..3ab6ae3712c4 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -16,7 +16,6 @@
-> > >  #include <linux/pci_regs.h>
-> > >  #include <linux/platform_device.h>
-> > >  
-> > > -#include "../../pci.h"
-> > >  #include "pcie-designware.h"
-> > >  
-> > >  static struct pci_ops dw_pcie_ops;
-> > > @@ -395,6 +394,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> > >  
-> > >  	raw_spin_lock_init(&pp->lock);
-> > >  
-> > > +	ret = dw_pcie_get_resources(pci);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> > >  	if (res) {
-> > >  		pp->cfg0_size = resource_size(res);
-> > > @@ -408,13 +411,6 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> > >  		return -ENODEV;
-> > >  	}
-> > >  
-> > > -	if (!pci->dbi_base) {
-> > > -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> > > -		pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> > > -		if (IS_ERR(pci->dbi_base))
-> > > -			return PTR_ERR(pci->dbi_base);
-> > > -	}
-> > > -
-> > >  	bridge = devm_pci_alloc_host_bridge(dev, 0);
-> > >  	if (!bridge)
-> > >  		return -ENOMEM;
-> > > @@ -429,9 +425,6 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> > >  		pp->io_base = pci_pio_to_address(win->res->start);
-> > >  	}
-> > >  
-> > > -	if (pci->link_gen < 1)
-> > > -		pci->link_gen = of_pci_get_max_link_speed(np);
-> > > -
-> > >  	/* Set default bus ops */
-> > >  	bridge->ops = &dw_pcie_ops;
-> > >  	bridge->child_ops = &dw_child_pcie_ops;
 > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 9d78e7ca61e1..a8436027434d 100644
+> > > index d31f9d41d5cb..1e06ccf2dc9e 100644
 > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
 > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -11,6 +11,7 @@
+> > > @@ -10,7 +10,9 @@
+> > >  
 > > >  #include <linux/align.h>
 > > >  #include <linux/bitops.h>
+> > > +#include <linux/clk.h>
 > > >  #include <linux/delay.h>
-> > > +#include <linux/ioport.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/ioport.h>
 > > >  #include <linux/of.h>
 > > >  #include <linux/of_platform.h>
-> > >  #include <linux/sizes.h>
-> > > @@ -19,6 +20,59 @@
+> > > @@ -20,11 +22,89 @@
 > > >  #include "../../pci.h"
 > > >  #include "pcie-designware.h"
 > > >  
-> > > +int dw_pcie_get_resources(struct dw_pcie *pci)
+> > > +static const char * const dw_pcie_app_clks[DW_PCIE_NUM_APP_CLKS] = {
+> > > +	[DW_PCIE_DBI_CLK] = "dbi",
+> > > +	[DW_PCIE_MSTR_CLK] = "mstr",
+> > > +	[DW_PCIE_SLV_CLK] = "slv",
+> > > +};
+> > > +
+> > > +static const char * const dw_pcie_core_clks[DW_PCIE_NUM_CORE_CLKS] = {
+> > > +	[DW_PCIE_PIPE_CLK] = "pipe",
+> > > +	[DW_PCIE_CORE_CLK] = "core",
+> > > +	[DW_PCIE_AUX_CLK] = "aux",
+> > > +	[DW_PCIE_REF_CLK] = "ref",
+> > > +};
+> > > +
+> > > +static const char * const dw_pcie_app_rsts[DW_PCIE_NUM_APP_RSTS] = {
+> > > +	[DW_PCIE_DBI_RST] = "dbi",
+> > > +	[DW_PCIE_MSTR_RST] = "mstr",
+> > > +	[DW_PCIE_SLV_RST] = "slv",
+> > > +};
+> > > +
+> > > +static const char * const dw_pcie_core_rsts[DW_PCIE_NUM_CORE_RSTS] = {
+> > > +	[DW_PCIE_NON_STICKY_RST] = "non-sticky",
+> > > +	[DW_PCIE_STICKY_RST] = "sticky",
+> > > +	[DW_PCIE_CORE_RST] = "core",
+> > > +	[DW_PCIE_PIPE_RST] = "pipe",
+> > > +	[DW_PCIE_PHY_RST] = "phy",
+> > > +	[DW_PCIE_HOT_RST] = "hot",
+> > > +	[DW_PCIE_PWR_RST] = "pwr",
+> > > +};
+> > > +
+> > > +static int dw_pcie_get_clocks(struct dw_pcie *pci)
 > > > +{
-> > > +	struct platform_device *pdev = to_platform_device(pci->dev);
-> > > +	struct device_node *np = dev_of_node(pci->dev);
-> > > +	struct resource *res;
+> > > +	int i, ret;
 > > > +
-> > > +	if (!pci->dbi_base) {
-> > > +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> > > +		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
-> > > +		if (IS_ERR(pci->dbi_base))
-> > > +			return PTR_ERR(pci->dbi_base);
-> > > +	}
+> > > +	for (i = 0; i < DW_PCIE_NUM_APP_CLKS; i++)
+> > > +		pci->app_clks[i].id = dw_pcie_app_clks[i];
 > > > +
-> > > +	/* DBI2 is mainly useful for the endpoint controller */
-> > > +	if (!pci->dbi_base2) {
-> > > +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> > > +		if (res) {
-> > > +			pci->dbi_base2 = devm_pci_remap_cfg_resource(pci->dev, res);
-> > > +			if (IS_ERR(pci->dbi_base2))
-> > > +				return PTR_ERR(pci->dbi_base2);
-> > > +		} else {
-> > > +			pci->dbi_base2 = pci->dbi_base + SZ_4K;
-> > > +		}
-> > > +	}
+> > > +	for (i = 0; i < DW_PCIE_NUM_CORE_CLKS; i++)
+> > > +		pci->core_clks[i].id = dw_pcie_core_clks[i];
 > > > +
-> > > +	/* For non-unrolled iATU/eDMA platforms this range will be ignored */
-> > > +	if (!pci->atu_base) {
-> > > +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> > > +		if (res) {
-> > > +			pci->atu_size = resource_size(res);
-> > > +			pci->atu_base = devm_ioremap_resource(pci->dev, res);
-> > > +			if (IS_ERR(pci->atu_base))
-> > > +				return PTR_ERR(pci->atu_base);
-> > > +		} else {
-> > > +			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-> > > +		}
-> > > +	}
+> > > +	ret = devm_clk_bulk_get_optional(pci->dev, DW_PCIE_NUM_APP_CLKS,
+> > > +					 pci->app_clks);
+> > > +	if (ret)
+> > > +		return ret;
 > > > +
-> > > +	/* Set a default value suitable for at most 8 in and 8 out windows */
-> > > +	if (!pci->atu_size)
-> > > +		pci->atu_size = SZ_4K;
+> > > +	return devm_clk_bulk_get_optional(pci->dev, DW_PCIE_NUM_CORE_CLKS,
+> > > +					  pci->core_clks);
+> > > +}
 > > > +
-> > > +	if (pci->link_gen < 1)
-> > > +		pci->link_gen = of_pci_get_max_link_speed(np);
+> > > +static int dw_pcie_get_resets(struct dw_pcie *pci)
+> > > +{
+> > > +	int i, ret;
 > > > +
-> > > +	of_property_read_u32(np, "num-lanes", &pci->num_lanes);
+> > > +	for (i = 0; i < DW_PCIE_NUM_APP_RSTS; i++)
+> > > +		pci->app_rsts[i].id = dw_pcie_app_rsts[i];
 > > > +
-> > > +	if (of_property_read_bool(np, "snps,enable-cdm-check"))
-> > > +		dw_pcie_cap_set(pci, CDM_CHECK);
+> > > +	for (i = 0; i < DW_PCIE_NUM_CORE_RSTS; i++)
+> > > +		pci->core_rsts[i].id = dw_pcie_core_rsts[i];
+> > > +
+> > > +	ret = devm_reset_control_bulk_get_optional_shared(pci->dev,
+> > > +							  DW_PCIE_NUM_APP_RSTS,
+> > > +							  pci->app_rsts);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = devm_reset_control_bulk_get_optional_exclusive(pci->dev,
+> > > +							     DW_PCIE_NUM_CORE_RSTS,
+> > > +							     pci->core_rsts);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	pci->pe_rst = devm_gpiod_get_optional(pci->dev, "reset", GPIOD_OUT_HIGH);
+> > > +	if (IS_ERR(pci->pe_rst))
+> > > +		return PTR_ERR(pci->pe_rst);
 > > > +
 > > > +	return 0;
 > > > +}
 > > > +
-> > >  void dw_pcie_version_detect(struct dw_pcie *pci)
+> > >  int dw_pcie_get_resources(struct dw_pcie *pci)
 > > >  {
-> > >  	u32 ver;
-> > > @@ -639,25 +693,8 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
+> > >  	struct platform_device *pdev = to_platform_device(pci->dev);
+> > >  	struct device_node *np = dev_of_node(pci->dev);
+> > >  	struct resource *res;
+> > > +	int ret;
 > > >  
-> > >  void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> > >  {
-> > > -	struct platform_device *pdev = to_platform_device(pci->dev);
-> > > -
-> > >  	if (dw_pcie_iatu_unroll_enabled(pci)) {
-> > >  		dw_pcie_cap_set(pci, IATU_UNROLL);
-> > > -
-> > > -		if (!pci->atu_base) {
-> > > -			struct resource *res =
-> > > -				platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> > > -			if (res) {
-> > > -				pci->atu_size = resource_size(res);
-> > > -				pci->atu_base = devm_ioremap_resource(pci->dev, res);
-> > > -			}
-> > > -			if (!pci->atu_base || IS_ERR(pci->atu_base))
-> > > -				pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-> > > -		}
-> > > -
-> > > -		if (!pci->atu_size)
-> > > -			/* Pick a minimal default, enough for 8 in and 8 out windows */
-> > > -			pci->atu_size = SZ_4K;
-> > >  	} else {
-> > >  		pci->atu_base = pci->dbi_base + PCIE_ATU_VIEWPORT_BASE;
-> > >  		pci->atu_size = PCIE_ATU_VIEWPORT_SIZE;
-> > > @@ -675,7 +712,6 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+> > >  	if (!pci->dbi_base) {
+> > >  		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> > > @@ -62,6 +142,17 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+> > >  	if (!pci->atu_size)
+> > >  		pci->atu_size = SZ_4K;
 > > >  
-> > >  void dw_pcie_setup(struct dw_pcie *pci)
-> > >  {
-> > > -	struct device_node *np = pci->dev->of_node;
-> > >  	u32 val;
+> > > +	/* LLDD is supposed to manually switch the clocks and resets state */
+> > > +	if (dw_pcie_cap_is(pci, REQ_RES)) {
+> > > +		ret = dw_pcie_get_clocks(pci);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		ret = dw_pcie_get_resets(pci);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +	}
+> > > +
+> > >  	if (pci->link_gen < 1)
+> > >  		pci->link_gen = of_pci_get_max_link_speed(np);
 > > >  
-> > >  	if (pci->link_gen > 0)
-> > > @@ -703,14 +739,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > >  	val |= PORT_LINK_DLL_LINK_EN;
-> > >  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> > >  
-> > > -	if (of_property_read_bool(np, "snps,enable-cdm-check")) {
-> > > +	if (dw_pcie_cap_is(pci, CDM_CHECK)) {
-> > >  		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-> > >  		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-> > >  		       PCIE_PL_CHK_REG_CHK_REG_START;
-> > >  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
-> > >  	}
-> > >  
-> > > -	of_property_read_u32(np, "num-lanes", &pci->num_lanes);
-> > >  	if (!pci->num_lanes) {
-> > >  		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-> > >  		return;
 > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index c6dddacee3b1..081f169e6021 100644
+> > > index 081f169e6021..393dfb931df6 100644
 > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
 > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -46,6 +46,7 @@
+> > > @@ -13,10 +13,13 @@
+> > >  
+> > >  #include <linux/bitfield.h>
+> > >  #include <linux/bitops.h>
+> > > +#include <linux/clk.h>
+> > >  #include <linux/dma-mapping.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/irq.h>
+> > >  #include <linux/msi.h>
+> > >  #include <linux/pci.h>
+> > > +#include <linux/reset.h>
+> > >  
+> > >  #include <linux/pci-epc.h>
+> > >  #include <linux/pci-epf.h>
+> > > @@ -45,6 +48,7 @@
+> > >  	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
 > > >  
 > > >  /* DWC PCIe controller capabilities */
+> > > +#define DW_PCIE_CAP_REQ_RES		0
 > > >  #define DW_PCIE_CAP_IATU_UNROLL		1
-> > > +#define DW_PCIE_CAP_CDM_CHECK		2
+> > >  #define DW_PCIE_CAP_CDM_CHECK		2
 > > >  
-> > >  #define dw_pcie_cap_is(_pci, _cap) \
-> > >  	test_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
-> > > @@ -338,6 +339,8 @@ struct dw_pcie {
-> > >  #define to_dw_pcie_from_ep(endpoint)   \
-> > >  		container_of((endpoint), struct dw_pcie, ep)
+> > > @@ -233,6 +237,39 @@ enum dw_pcie_device_mode {
+> > >  	DW_PCIE_RC_TYPE,
+> > >  };
 > > >  
-> > > +int dw_pcie_get_resources(struct dw_pcie *pci);
+> > > +enum dw_pcie_app_clk {
+> > > +	DW_PCIE_DBI_CLK,
+> > > +	DW_PCIE_MSTR_CLK,
+> > > +	DW_PCIE_SLV_CLK,
+> > > +	DW_PCIE_NUM_APP_CLKS
+> > > +};
 > > > +
-> > >  void dw_pcie_version_detect(struct dw_pcie *pci);
+> > > +enum dw_pcie_core_clk {
+> > > +	DW_PCIE_PIPE_CLK,
+> > > +	DW_PCIE_CORE_CLK,
+> > > +	DW_PCIE_AUX_CLK,
+> > > +	DW_PCIE_REF_CLK,
+> > > +	DW_PCIE_NUM_CORE_CLKS
+> > > +};
+> > > +
+> > > +enum dw_pcie_app_rst {
+> > > +	DW_PCIE_DBI_RST,
+> > > +	DW_PCIE_MSTR_RST,
+> > > +	DW_PCIE_SLV_RST,
+> > > +	DW_PCIE_NUM_APP_RSTS
+> > > +};
+> > > +
+> > > +enum dw_pcie_core_rst {
+> > > +	DW_PCIE_NON_STICKY_RST,
+> > > +	DW_PCIE_STICKY_RST,
+> > > +	DW_PCIE_CORE_RST,
+> > > +	DW_PCIE_PIPE_RST,
+> > > +	DW_PCIE_PHY_RST,
+> > > +	DW_PCIE_HOT_RST,
+> > > +	DW_PCIE_PWR_RST,
+> > > +	DW_PCIE_NUM_CORE_RSTS
+> > > +};
+> > > +
+> > >  struct dw_pcie_host_ops {
+> > >  	int (*host_init)(struct dw_pcie_rp *pp);
+> > >  	void (*host_deinit)(struct dw_pcie_rp *pp);
+> > > @@ -332,6 +369,11 @@ struct dw_pcie {
+> > >  	int			num_lanes;
+> > >  	int			link_gen;
+> > >  	u8			n_fts[2];
+> > > +	struct clk_bulk_data	app_clks[DW_PCIE_NUM_APP_CLKS];
+> > > +	struct clk_bulk_data	core_clks[DW_PCIE_NUM_CORE_CLKS];
+> > > +	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
+> > > +	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+> > > +	struct gpio_desc		*pe_rst;
+> > >  };
 > > >  
-> > >  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> > >  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
 > > > -- 
 > > > 2.38.1
 > > > 
