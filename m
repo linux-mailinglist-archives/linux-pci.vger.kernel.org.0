@@ -2,175 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7326281F0
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 15:07:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49ABE62820C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Nov 2022 15:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbiKNOHF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 09:07:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50434 "EHLO
+        id S236540AbiKNOJ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 09:09:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236766AbiKNOHB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 09:07:01 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C688B167C6;
-        Mon, 14 Nov 2022 06:06:56 -0800 (PST)
-Received: from kwepemi100025.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N9rhV3cSdzRpJT;
-        Mon, 14 Nov 2022 22:06:34 +0800 (CST)
-Received: from [10.174.148.223] (10.174.148.223) by
- kwepemi100025.china.huawei.com (7.221.188.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 14 Nov 2022 22:06:50 +0800
-Message-ID: <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com>
-Date:   Mon, 14 Nov 2022 22:06:49 +0800
+        with ESMTP id S236762AbiKNOJz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 09:09:55 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58322494E;
+        Mon, 14 Nov 2022 06:09:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZLozf/Qvl/B/qIhSW85HmyT/7hwkUT9+Az2bwCiM+KE70yNQTcp3ydzZ470fqJjLVsYfqEChD4WQb38ZyS739mzlHAINDKU5Hc99ns+7vsOFa1rWerurxu1PDex4Uo4VqLmrjJM6hd/TO2MIRGbzckiePsoKLj0b2i2ra6R5bSjU/7ZtbSMHGBbwfcv083kPyzsUdgzqjXQ0iBj1CXWROQ2CTzURlsOSgH9e5E/A/7WdCRaHV4/YGtaCV+9/Jg4wQPXVtIuMSendcG5ko6XYWP4Qrw6hm1PcReueQSnlczvHlII1eh5e5Txwy6NdpedVZxjRcrS8Mr4DAdv279iRlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nd7q+WVYUahmTJRq3w88mbA6xdIQgU8UdaP0lgGY7VQ=;
+ b=jbilKeJ6JYb+Z9l0tBXf1brRv28qRUzui+UEdwcLAqJ2AT06VcOf6f2lCv/sDMJe+n2Q5fRfevVryR2Gv7Q+Y0ccUNf4bmyUvfj+H9FhF8UwNiZdyZeyWI0ilUgq+Qa+LPOmp3nJCewue3QO8vkjPVpBUn/MNHLNhcvJX1XAz9TVJJallyFxPO5BUZGs+RfHeJpL1LWHbas8DVFY31SMNihB2nQa3KDDA2lWW3Q9YfwP6WqWLD/1ucOmGynD10MdMEZQST1ya9GHrbBNtygCdQ/uFHMK6Cq65ibNyNDs119s7aU2CvakLlNnX+IoFinOC89VhjbKm+BQaM5U23ZnDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nd7q+WVYUahmTJRq3w88mbA6xdIQgU8UdaP0lgGY7VQ=;
+ b=mac292z5K5myKk3EW9JwycPQgkDC5pxvlqHW0I/+U9lJn6A10afNQj8cuCodPPssGggJdy3Ue36VyzqymdCIPKKtjGXojI4kdsMuks4ISKUHkxpfZSduQabCyM5fI0KVHjQnnZnHlm+xxaAq9kvKxTBleqkQzb+pxP6cg8cEm20MdJVuAitSpyuysymyNGWtQFk22Dz62s0bxTnuMizyFfCdm+ZtibTANbN0Ts2wgHiCrypAaA/ttaXDXfbJsJsdQBgNSb3W9lod5X9dIEmYDy2lNfLz6WOEz68qQVWLT36H2pLPgofcAYuLzH5OMGwsu7cANMRxfRfYt23sd7eoyA==
+Received: from DM5PR07CA0109.namprd07.prod.outlook.com (2603:10b6:4:ae::38) by
+ SA0PR12MB4494.namprd12.prod.outlook.com (2603:10b6:806:94::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5813.17; Mon, 14 Nov 2022 14:09:53 +0000
+Received: from DM6NAM11FT048.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:ae:cafe::70) by DM5PR07CA0109.outlook.office365.com
+ (2603:10b6:4:ae::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
+ Transport; Mon, 14 Nov 2022 14:09:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DM6NAM11FT048.mail.protection.outlook.com (10.13.173.114) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5813.12 via Frontend Transport; Mon, 14 Nov 2022 14:09:52 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 14 Nov
+ 2022 06:09:52 -0800
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Mon, 14 Nov 2022 06:09:51 -0800
+Received: from moonraker.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.36 via Frontend
+ Transport; Mon, 14 Nov 2022 06:09:50 -0800
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <vidyas@nvidia.com>,
+        <mmaddireddy@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V2 0/2] Add ECAM aperture for Tegra234
+Date:   Mon, 14 Nov 2022 14:09:14 +0000
+Message-ID: <20221114140916.200395-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jianjay.zhou@huawei.com>,
-        <zhuangshengen@huawei.com>, <arei.gonglei@huawei.com>,
-        <yechuan@huawei.com>, <huangzhichao@huawei.com>,
-        <xiehong@huawei.com>
-References: <20221111142722.1172-1-longpeng2@huawei.com>
- <Y256ty6xGyUpkFn9@unreal> <0b2202bf-18d3-b288-9605-279208165080@huawei.com>
- <Y3Hoi4zGFY4Fz1l4@unreal> <d7327d46-deb5-dc75-21c3-1f351d7da108@huawei.com>
- <Y3I+Fs0/dXH/hnpL@unreal>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-In-Reply-To: <Y3I+Fs0/dXH/hnpL@unreal>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.148.223]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi100025.china.huawei.com (7.221.188.158)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT048:EE_|SA0PR12MB4494:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2cfce57c-644a-4425-3874-08dac649e684
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: epvjEUNk+lpWDztnTGtzfiscACfPjALdWGEhus1iblwFavoq+OaoqIX40aJmniHawP0xaj7ToJoSn+bS1w4VH/oKtH2gyxZHsyp1Wlk1jeeHGcIU00sJTrKM7xMczldGdiJeNr0joZWUgjeqSkgDPfH15okYoJ2z81YHpPvbedSp/aEtVr484//DfQ5RNR439IDnpHL+21Mckc+hn6FNbs3vp4g99gcbjJdpwLZs6LsFlS7J4gZLdds3fTt2utFCJVi/K136kYty7B77BneuPQdV56w2S9WrEF9pxfBPuRYUHu+NDA4x3hpQvRl5CmiVjyXOts8UW3/AFZj/az8B5yzgqTEeSlPII74WWoSD0f6NTetV2NRQwfmOkJPtaRwTIz9Q6YAYa7Z2rM+bV5sot09aHJ/gl/kNVNdN2lznftm5smgLVCCZTUViKZEZmSCcPe3DFGv5NrRUUbUMsdbBrxCvoHQNnlP7890rzOOxR9rlIfIC73Fkyobxy8berP1omE5mhGYWv/YhxwVEv03Q/3FRG4Ts6abuzROkdbCJTlEwqI3sNlgqgGajvL6K3hOVdeTWd80GGUGBnf1ekg09vjzHwayaZysGxDTx0dzVeVKzubMgBisSjlQsK0s9zXozIWd5ir0ISdNN79cJnpEmlPf+dswtgMk89Pujfv4JRews+/7vulXcloq7Pry9yIsvz1aDK3SzEXOFTSYva6tD4s1izjuRzgje8ee5jq/mYVrMGhFB8dX+al5UPci5QDwT4OOrUeqwkDnEjkMVHlD22A==
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(39860400002)(376002)(346002)(451199015)(46966006)(40470700004)(36840700001)(4744005)(2616005)(356005)(8936002)(82310400005)(478600001)(7636003)(7696005)(107886003)(6666004)(54906003)(110136005)(2906002)(40460700003)(316002)(40480700001)(36756003)(41300700001)(4326008)(70206006)(70586007)(86362001)(1076003)(186003)(5660300002)(8676002)(82740400003)(26005)(83380400001)(47076005)(336012)(36860700001)(426003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 14:09:52.7277
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cfce57c-644a-4425-3874-08dac649e684
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT048.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4494
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This series adds ECAM aperture information in both device-tree and
+documentation files for Tegra234.
 
+Vidya Sagar (2):
+  dt-bindings: PCI: tegra234: Add ECAM support
+  arm64: tegra: Add ECAM aperture info for all the PCIe controllers
 
-在 2022/11/14 21:09, Leon Romanovsky 写道:
-> On Mon, Nov 14, 2022 at 08:38:42PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
->>
->>
->> 在 2022/11/14 15:04, Leon Romanovsky 写道:
->>> On Sun, Nov 13, 2022 at 09:47:12PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
->>>> Hi leon,
->>>>
->>>> 在 2022/11/12 0:39, Leon Romanovsky 写道:
->>>>> On Fri, Nov 11, 2022 at 10:27:18PM +0800, Longpeng(Mike) wrote:
->>>>>> From: Longpeng <longpeng2@huawei.com>
->>>>>>
->>>>>> We can enable SRIOV and add VFs by /sys/bus/pci/devices/..../sriov_numvfs, but
->>>>>> this operation needs to spend lots of time if there has a large amount of VFs.
->>>>>> For example, if the machine has 10 PFs and 250 VFs per-PF, enable all the VFs
->>>>>> concurrently would cost about 200-250ms. However most of them are not need to be
->>>>>> used at the moment, so we can enable SRIOV first but add VFs on demand.
->>>>>
->>>>> It is unclear what took 200-250ms, is it physical VF creation or bind of
->>>>> the driver to these VFs?
->>>>>
->>>> It is neither. In our test, we already created physical VFs before, so we
->>>> skipped the 100ms waiting when writing PCI_SRIOV_CTRL. And our driver only
->>>> probes PF, it just returns an error if the function is VF.
->>>
->>> It means that you didn't try sriov_drivers_autoprobe. Once it is set to
->>> true, It won't even try to probe VFs.
->>>
->>>>
->>>> The hotspot is the sriov_add_vfs (but no driver probe in fact) which is a
->>>> long procedure. Each step costs only a little, but the total cost is not
->>>> acceptable in some time-sensitive cases.
->>>
->>> This is also cryptic to me. In standard SR-IOV deployment, all VFs are
->>> created and configured while operator booted the machine with sriov_drivers_autoprobe
->>> set to false. Once this machine is ready, VFs are assigned to relevant VMs/users
->>> through orchestration SW (IMHO, it is supported by all orchestration SW).
->>>
->>> And only last part (assigning to users) is time-sensitive operation.
->>>
->> The VF creation and configuration are also time-sensitive in some cases, for
->> example, the hypervisor live update case (such as [1]):
->>   save VMs -> kexec -> restore VMs
->>
->> After the new kernel starts, the VFs must be added into the system, and then
->> assign the original VFs to the QEMU. This means we must enable all 2K+ VFs
->> at once and increase the downtime.
->>
->> If we can enable the VFs that are used by existing VMs then restore the VMs
->> and enable other unused VFs at last, the downtime would be significantly
->> reduced.
->>
->> [1] https://static.sched.com/hosted_files/kvmforum2022/65/kvmforum2022-Preserving%20IOMMU%20states%20during%20kexec%20reboot-v4.pdf
-> 
-> Like it is written in presentation, the standard way of doing it is done
-> by VFIO live migration feature, where 2K+ VMs are migrated to another server
-> at the time first server is scheduled for maintenance.
-> 
-Live migration is not the best choice in production environment, it's 
-too heavy. Some cloud providers prefer to using hypervisor live update 
-in their system, such as AWS's nitro hypervisor.
+ .../bindings/pci/nvidia,tegra194-pcie.yaml    | 76 +++++++++++++++----
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      | 55 ++++++++------
+ 3 files changed, 95 insertions(+), 38 deletions(-)
 
-> However, even in live update case mentioned in the presentation, you
-> should disable ALL PFs/VFs and enable ALL PFs/VFs at the same time,
-> so you don't need per-VF id enable knob.
-> 
-The presentation is just a reference, some points could be optimized 
-including disable PFs/VFs and enable PFs/VFs.
+-- 
+2.25.1
 
-Hypervisor live update can finish in less than 1 second, so the cost of 
-disabling PFs/VFs and enabling PFs/VFs (~200-250ms or even worst) is too 
-high.
-
->>
->>>>
->>>> What’s more, the sriov_add_vfs adds the VFs of a PF one by one. So we can
->>>> mostly support 10 concurrent calls if there has 10 PFs.
->>>
->>> I wondered, are you using real HW? or QEMU SR-IOV? What is your server
->>> that supports such large number of VFs?
->>>
->> Physical device. Some devices in the market support the large number of VFs,
->> especially in the hardware offloading area, e.g DPU/IPU. I think the SR-IOV
->> software should keep pace with times too.
-> 
-> Our devices (and Intel too) support many VFs too. The thing is that
-> servers are unlikely to be able to support 10 physical devices with 2K+
-> VFs. There are many limitations that will make such is not usable.
-> Like, global MSI-X pool and PCI bandwidth to support all these devices.
-> 
->>
->>> BTW, Your change will probably break all SR-IOV devices in the market as
->>> they rely on PCI subsystem to have VFs ready and configured.
->>>
->> I see, but maybe this change could be a choice for some users.
-> 
-> It should come with relevant driver changes and very strong justification why
-> such functionality is needed now and can't be achieved by anything else
-> except user-facing sysfs.
-> 
-Adding 2K+ VFs to the sysfs need too much time.
-
-Look at the bottomhalf of the hypervisor live update:
-kexec --> add 2K VFs --> restore VMs
-
-The downtime can be reduced if the sequence is:
-kexec --> add 100 VFs（the VMs used） --> resotre VMs --> add 1.9K VFs
-
-
-> I don't see anything in this presentation and discussion that supports
-> need of such UAPI.
->  > Thanks
-> 
->>
->>> Thanks
->>> .
-> .
