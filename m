@@ -2,56 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D18B26296F0
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 12:15:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA88B629798
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 12:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbiKOLPE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 06:15:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
+        id S230297AbiKOLjK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 06:39:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230309AbiKOLOt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 06:14:49 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6935F65;
-        Tue, 15 Nov 2022 03:13:30 -0800 (PST)
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NBNlY659Gz6H72s;
-        Tue, 15 Nov 2022 19:11:05 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 15 Nov 2022 12:13:28 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 15 Nov
- 2022 11:13:28 +0000
-Date:   Tue, 15 Nov 2022 11:13:27 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/doe: Fix work struct declaration
-Message-ID: <20221115111327.00000899@Huawei.com>
-In-Reply-To: <20221115011943.1051039-1-ira.weiny@intel.com>
-References: <20221115011943.1051039-1-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229716AbiKOLjF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 06:39:05 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC74C1F9CF
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 03:39:03 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id b11so13085056pjp.2
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 03:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S03gKeB0WYsW+/K1D69U3B60HvKmvMdZR32gNUMKvwA=;
+        b=Z9g6K8xDqPVZyD4mV5SEhMpkHebEWZ9KxZnUzz2PFpC24tWb6jhuFxIRyQa3UK7+eq
+         yciKswyfBm2IZY4t93TNcP+8ZCUsIDq68JfIhD2juuPeEaO9HpHV4nuhGqGIoikxFyp7
+         gO6Thbl38+Xtlx3DGaftSFj6AP99Na7wqCSOtGPznz6Anb4j1SoQ1Qj9Y3FgiTlB21Hw
+         J6TG7tculbPc7PZ5n4QKjfTNJ0EyMVsXcQMlikMHIMVHyVlDmJvkCmyo3quiJvJXJz0r
+         VS2tn2fNbVE05UgZKstZCpkTI2n0/+k6tzNR8CZ1ZzI6xPPmN0S6NxRSQardTJmjXET9
+         2O7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S03gKeB0WYsW+/K1D69U3B60HvKmvMdZR32gNUMKvwA=;
+        b=ggXVzSpsPgxKf/2zZrHdeJXPsUpRCoShuMX2/x94NBQ9FYzCdoso7tpXoUtEUnRHJx
+         MHF5W8K91J+q+QRg0niD6HVmKc0SVp/lXecoZLn5Hmzyh/qv+GGu1ekfW2swhaI37QUz
+         XbATSI1Tz8LG8XjVG2lSqISV3PMCZibp2J8hgURHgNUGJSduHC9k1sN3fuYpWVB6RQHT
+         s/zYTL6WCZ2rLbzskkFRem5SdttCkk00tU3pLRprxkIAH/tQ7AJs9MWHST0ZePFxxUCn
+         d6RRG2YfIHPM5ibw4MGMLY5yBDiggLbO58C/ITfO3NpiFuAL6sGKq0OWcStxDDq4n+sV
+         sb2Q==
+X-Gm-Message-State: ANoB5pnTWxVrcGwnexfWmHCseNPwX1+YVcNYt0YtFBjkSSLRzANj25SN
+        K6jrE12KUR1rhvuPd7gmemk=
+X-Google-Smtp-Source: AA0mqf7Xk3XHB2MGVEcOLDob4327rIp04mZbZ/RiozqTBl77Y6Pa4X7o5EuTsR+kM9UBpdg8/A1dYg==
+X-Received: by 2002:a17:90b:394f:b0:213:6442:232a with SMTP id oe15-20020a17090b394f00b002136442232amr92249pjb.117.1668512342986;
+        Tue, 15 Nov 2022 03:39:02 -0800 (PST)
+Received: from localhost.localdomain ([220.244.252.98])
+        by smtp.gmail.com with ESMTPSA id g12-20020a63fa4c000000b004768ce9e4fasm3338023pgk.59.2022.11.15.03.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 03:39:02 -0800 (PST)
+From:   Albert Zhou <albert.zhou.50@gmail.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, lukas@wunner.de,
+        mika.westerberg@linux.intel.com
+Subject: [PATCH v4 0/2] add hotplug depedency info
+Date:   Tue, 15 Nov 2022 22:38:55 +1100
+Message-Id: <20221115113857.35800-1-albert.zhou.50@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,147 +68,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 14 Nov 2022 17:19:43 -0800
-ira.weiny@intel.com wrote:
+v3->v4: Add Mika's review tag.
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The callers of pci_doe_submit_task() allocate the pci_doe_task on the
-> stack.  This causes the work structure to be allocated on the stack
-> without pci_doe_submit_task() knowing.  Work item initialization needs
-> to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
-> how the work item is allocated.
-> 
-> Jonathan suggested creating doe task allocation macros such as
-> DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> function is not known to the callers and must be initialized correctly.
-> 
-> A follow up suggestion was to have an internal 'pci_doe_work' item
-> allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> could restrict the context where tasks are used.
-> 
-> Compromise with an intermediate step to initialize the task struct with
-> a new call pci_doe_init_task() which must be called prior to submit
-> task.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-> [2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
-> 
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Reported-by: Gregory Price <gregory.price@memverge.com>
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Looks like a good solution to me.
+v2->v3: Dependency comment made more precise and technical, as suggested
+by Mika Westerberg.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+v1->v2: I added comments that PCIe cards with USB4 or Thunderbolt also
+require the hotplug feature. I also added the "default y if USB4" line
+to the relevant config options, as suggested by Lukas Wunner.
+
+Albert Zhou (2):
+  pci: hotplug: add dependency info to Kconfig
+  pci: pcie: add dependency info to Kconfig
+
+ drivers/pci/hotplug/Kconfig | 4 +++-
+ drivers/pci/pcie/Kconfig    | 6 ++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
 
-> ---
->  drivers/cxl/core/pci.c  |  2 ++
->  drivers/pci/doe.c       | 14 ++++++++++++--
->  include/linux/pci-doe.h |  8 +++++---
->  3 files changed, 19 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9240df53ed87..a19c1fa0e2f4 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -525,6 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
->  	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
->  	int rc;
->  
-> +	pci_doe_init_task(cdat_doe, &t.task, true);
->  	rc = pci_doe_submit_task(cdat_doe, &t.task);
->  	if (rc < 0) {
->  		dev_err(dev, "DOE submit failed: %d", rc);
-> @@ -554,6 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
->  		u32 *entry;
->  		int rc;
->  
-> +		pci_doe_init_task(cdat_doe, &t.task, true);
->  		rc = pci_doe_submit_task(cdat_doe, &t.task);
->  		if (rc < 0) {
->  			dev_err(dev, "DOE submit failed: %d", rc);
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index e402f05068a5..cabeae4ae955 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -319,6 +319,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->  	};
->  	int rc;
->  
-> +	pci_doe_init_task(doe_mb, &task, true);
->  	rc = pci_doe_submit_task(doe_mb, &task);
->  	if (rc < 0)
->  		return rc;
-> @@ -495,6 +496,14 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
->  }
->  EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
->  
-> +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> +		       bool onstack)
-> +{
-> +	task->doe_mb = doe_mb;
-> +	__INIT_WORK(&task->work, doe_statemachine_work, onstack);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_doe_init_task);
-> +
->  /**
->   * pci_doe_submit_task() - Submit a task to be processed by the state machine
->   *
-> @@ -517,6 +526,9 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->  		return -EINVAL;
->  
-> +	if (WARN_ON_ONCE(task->work.func != doe_statemachine_work))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * DOE requests must be a whole number of DW and the response needs to
->  	 * be big enough for at least 1 DW
-> @@ -528,8 +540,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
->  		return -EIO;
->  
-> -	task->doe_mb = doe_mb;
-> -	INIT_WORK(&task->work, doe_statemachine_work);
->  	queue_work(doe_mb->work_queue, &task->work);
->  	return 0;
->  }
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index ed9b4df792b8..457fc0e53d64 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -31,8 +31,8 @@ struct pci_doe_mb;
->   * @rv: Return value.  Length of received response or error (bytes)
->   * @complete: Called when task is complete
->   * @private: Private data for the consumer
-> - * @work: Used internally by the mailbox
-> - * @doe_mb: Used internally by the mailbox
-> + * @work: Used internally by the mailbox [see pci_doe_init_task()]
-> + * @doe_mb: Used internally by the mailbox [see pci_doe_init_task()]
->   *
->   * The payload sizes and rv are specified in bytes with the following
->   * restrictions concerning the protocol.
-> @@ -53,7 +53,7 @@ struct pci_doe_task {
->  	void (*complete)(struct pci_doe_task *task);
->  	void *private;
->  
-> -	/* No need for the user to initialize these fields */
-> +	/* Call pci_doe_init_task() for these */
->  	struct work_struct work;
->  	struct pci_doe_mb *doe_mb;
->  };
-> @@ -72,6 +72,8 @@ struct pci_doe_task {
->  
->  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> +		       bool onstack);
->  int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
->  
->  #endif
-> 
-> base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
+base-commit: e01d50cbd6eece456843717a566a34e8b926cf0c
+-- 
+2.34.1
 
