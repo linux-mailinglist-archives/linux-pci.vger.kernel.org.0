@@ -2,129 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC4EC629930
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 13:49:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D701629942
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 13:53:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbiKOMt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 07:49:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57892 "EHLO
+        id S232452AbiKOMxS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 07:53:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiKOMt1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 07:49:27 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2394827FCF;
-        Tue, 15 Nov 2022 04:49:26 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id z14so23927504wrn.7;
-        Tue, 15 Nov 2022 04:49:26 -0800 (PST)
+        with ESMTP id S230468AbiKOMxR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 07:53:17 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7F027DEF
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 04:53:15 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id b9so17392149ljr.5
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 04:53:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vA5+0mCCYTIsaoxSUD4t74U1oJb0G7LU66XEZty9pDY=;
-        b=bWGpBF52oDY7yLZf//SeiaT9PoxV2Ckt9RJcH7gLkUVAGUaUmS/fd1zMggAhKs5DkE
-         X09qkoic8bE7JZBqpxw82GBnL217znnsEz/nUNptrTJUfL1sHemV60xq4zS55hKh+kbZ
-         EIh/+86PWmH9UfG32f+ib7X9trCctZyPQad3dAuEVcA66ysyVxKyoTYNQ77ed2hGWDeA
-         Ofg7ETPkycnuRYA1nWQQXwRIuyqu7g0G9I5HTfQe1Fm7qgKUWo97r0a7CQzK7gSa8JcN
-         lFkAtOsfW91BwkUtnYGfSLRBORBOV54/HV3lujFkkqVrmXG0le/iIwtuZs2/6bOCHJxB
-         JuDw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0aVE2Vm75FnX45DS6H+N0+bh1Fym8h1oNgifah97LI=;
+        b=TZYEMDIsfylrpXElIbq2FfxDowrQafjfPMu+JkDdlXWDvpVKBuKztENdYIxcUO2blr
+         NZt79bd1h5j/Be90jj4YHnkaq18CGKzCc9CFWZU4TdOAvfQCpuEa7eOb6j9yyyTISPK4
+         GWWcsmdWiZWMtzG6T+wh3tkxp2+Z43tRIq7JBVtjdThL8Etu1d5oLe9UtezRJM83efm6
+         9uRuCoj5/wS1vNSTVkM0XEtlqpmAV38xLp8Z5KgHWPGMfMkHHNH9jeBsb3C/8fURILRk
+         bwsapGWHSRsXgkEvqqhSjduhO9ZMnMFgKz8ILgYlQIDTVQHrRaJUR7kMNc5T8tT5o+6h
+         oP8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vA5+0mCCYTIsaoxSUD4t74U1oJb0G7LU66XEZty9pDY=;
-        b=uVgpVRSJyt885KxTEKL4pvKJN4WIRMtX12SRZkyQGb/gL+2C9C0FO2aY1/LwSx12EH
-         a0q9AreWP/E0ZDWJwn02OFjkHNSrdf60Jhnui92B/RhIXDz1H/gYZUaWbIat1Ayqnxss
-         scFAj6IskbP7KrkjBDwPMdQ7+VuoTvDok/SL/Z0cirNq4Iza5VvSiIBU+bE29RtDXN8v
-         utNAsEBgpDLnB8mlsdxV+dl3f7UipIdbuKe9VFBjf8E10UtXRSgKk66LegSNWa/q4OxD
-         AJHILHzEmDncpt5BhI12s+9vnTGIDp0N1fOWPqes6vg3NyVRqE89APV4tdvYTg1LNbLz
-         ICfw==
-X-Gm-Message-State: ANoB5plGwwUUy7IoheqpTBGYZeARjFYuNUhIieePwnmrTRsx1nE3T/TG
-        VBKJLme9AyX8CpI5yWNcIZvQ1/5josu12K/rq4s=
-X-Google-Smtp-Source: AA0mqf5nAPubHOXWmgG9YWV6ZaPZ7Zki4ub80ozH9abj8R9jmaCd64wcxPgPRiSfAfq0LSeEJotQU+AawZ0vQYT2LG0=
-X-Received: by 2002:adf:ea06:0:b0:236:6d77:b6be with SMTP id
- q6-20020adfea06000000b002366d77b6bemr10835243wrm.246.1668516564534; Tue, 15
- Nov 2022 04:49:24 -0800 (PST)
+        bh=A0aVE2Vm75FnX45DS6H+N0+bh1Fym8h1oNgifah97LI=;
+        b=f7nzARrq0O+M7bo0iUdRCrzkygapl8Re1E7TJ9fUsOGfjd7HR51KwfF/VWrZnx569G
+         gm0QZO3GIvPmzm67to2mPM3jkVPB3VNjwKhfsApfE0ygAzSQc1H/+i8v/V2cDAnEemPe
+         hjWrZ4d/XFZH/1ocXhOV6Q7Yd0qtnVwa3X7H2mNLEFmQu0F/pGdEbTWTfAt3rtuPbn/l
+         bNozwISC10hHrLvsZzHA9hf1nyn0iXb3QDhfAl1vHA2FL6uAF69RYsr5PUvIRlmIhH/m
+         6Nzp9RsxKlkCtDon8QyiX8vUjtcj6+2loIgvOd/F/+IhZYglNodA5bpEp4gGPBlrGdC8
+         gqWQ==
+X-Gm-Message-State: ANoB5pnm/1sDtft3uMDZmmGfk9cxiubV5Lva/dQ6UZ5Nl/Z/a58R40/u
+        vil+Q8Lco3LnEo+xG2ieS0kYsg==
+X-Google-Smtp-Source: AA0mqf64JEQ7hBw+k88FcuUEk+S7j1SeEfj3LtvIwpUBJaQuCyDwMTeM0NbrlrXkh3lRsm2Z685URg==
+X-Received: by 2002:a05:651c:10b8:b0:26e:8e6f:3c4 with SMTP id k24-20020a05651c10b800b0026e8e6f03c4mr5950160ljn.113.1668516793996;
+        Tue, 15 Nov 2022 04:53:13 -0800 (PST)
+Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id d8-20020a056512368800b0049110ba325asm2177224lfs.158.2022.11.15.04.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 04:53:13 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/4] dt-bindings: PCI: qcom: add MSM8998 specific compatible
+Date:   Tue, 15 Nov 2022 13:53:07 +0100
+Message-Id: <20221115125310.184012-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20221111142722.1172-1-longpeng2@huawei.com> <Y256ty6xGyUpkFn9@unreal>
- <0b2202bf-18d3-b288-9605-279208165080@huawei.com> <Y3Hoi4zGFY4Fz1l4@unreal>
- <d7327d46-deb5-dc75-21c3-1f351d7da108@huawei.com> <Y3I+Fs0/dXH/hnpL@unreal>
- <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com> <Y3JOvTfBwpaldtZJ@unreal>
- <CAOSf1CG+VGdeXGQetfMArwpafAx2yj3nmA_y7rN4SNdt=1=08w@mail.gmail.com> <Y3NOo3DaLKb219IV@unreal>
-In-Reply-To: <Y3NOo3DaLKb219IV@unreal>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 15 Nov 2022 23:49:13 +1100
-Message-ID: <CAOSf1CGLM7wpN3=RwU+osy46jX9iWTi3TWDNyaCnBFOTyBiKpg@mail.gmail.com>
-Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jianjay.zhou@huawei.com, zhuangshengen@huawei.com,
-        arei.gonglei@huawei.com, yechuan@huawei.com,
-        huangzhichao@huawei.com, xiehong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 7:32 PM Leon Romanovsky <leon@kernel.org> wrote:
->
-> On Tue, Nov 15, 2022 at 12:50:34PM +1100, Oliver O'Halloran wrote:
-> > On Tue, Nov 15, 2022 at 1:27 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > >
-> > > *snip*
-> > >
-> > > Anyway, I'm aware of big cloud providers who are pretty happy with live
-> > > migration in production.
-> >
-> > I could see someone sufficiently cloudbrained deciding that rebooting
-> > the hypervisor is fine provided the downtime doesn't violate any
-> > customer uptime SLAs. Personally I'd only be brave enough to do that
-> > for a HV hosting internal services which I know are behind a load
-> > balancer, but apparently there are people at Huawei far braver than I.
->
-> My main point in this discussion that Huawei team doesn't actually
-> provide any meaningful justification why it is great idea to add new
-> sysfs file.
+Add new compatible for MSM8998 (compatible with MSM8996) to allow
+further customizing if needed and to accurately describe the hardware.
 
-All their arguments seem to be based on trying to reduce the
-time-to-VMs when a hypervisor is kexec()ed, which is a pretty
-reasonable justification IMO.  I do have some reservations about the
-numbers they're claiming since 250ms for initializing struct pci_dev's
-for the VFs seems excessive. Unfortunately, I don't have any hardware
-that supports 2048 VFs on hand so I can't verify that claim.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 42 ++++++++++---------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
-> They use HPC as an argument but in that world, you won't
-> see many VMs on one server, as it is important to provide separate MSI-X
-> vectors and CPUs to each VM.
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 54f07852d279..0411e2e67661 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -16,25 +16,29 @@ description: |
+ 
+ properties:
+   compatible:
+-    enum:
+-      - qcom,pcie-ipq8064
+-      - qcom,pcie-ipq8064-v2
+-      - qcom,pcie-apq8064
+-      - qcom,pcie-apq8084
+-      - qcom,pcie-msm8996
+-      - qcom,pcie-ipq4019
+-      - qcom,pcie-ipq8074
+-      - qcom,pcie-qcs404
+-      - qcom,pcie-sa8540p
+-      - qcom,pcie-sc7280
+-      - qcom,pcie-sc8180x
+-      - qcom,pcie-sc8280xp
+-      - qcom,pcie-sdm845
+-      - qcom,pcie-sm8150
+-      - qcom,pcie-sm8250
+-      - qcom,pcie-sm8450-pcie0
+-      - qcom,pcie-sm8450-pcie1
+-      - qcom,pcie-ipq6018
++    oneOf:
++      - enum:
++          - qcom,pcie-ipq8064
++          - qcom,pcie-ipq8064-v2
++          - qcom,pcie-apq8064
++          - qcom,pcie-apq8084
++          - qcom,pcie-msm8996
++          - qcom,pcie-ipq4019
++          - qcom,pcie-ipq8074
++          - qcom,pcie-qcs404
++          - qcom,pcie-sa8540p
++          - qcom,pcie-sc7280
++          - qcom,pcie-sc8180x
++          - qcom,pcie-sc8280xp
++          - qcom,pcie-sdm845
++          - qcom,pcie-sm8150
++          - qcom,pcie-sm8250
++          - qcom,pcie-sm8450-pcie0
++          - qcom,pcie-sm8450-pcie1
++          - qcom,pcie-ipq6018
++      - items:
++          - const: qcom,pcie-msm8998
++          - const: qcom,pcie-msm8996
+ 
+   reg:
+     minItems: 4
+-- 
+2.34.1
 
-I don't think HPC has come up in this thread, but assuming it has: In
-the cloud "HPC" usually means "it has timesliced access to GPUs".
-Having 2k VMs sharing one or more GPUs on a single system isn't
-necessarily advisable, but if we assume only a subset of those VMs
-will actually need access to a GPU at any given time it's sort of
-reasonable.
-
-> They ask from us optimization (do not add device hierarchy for existing HW)
-> that doesn't exist in the kernel.
->
-> I would say that they are trying to meld SIOV architecture of subfunctions
-> (SFs) into PCI and SR-IOV world.
-
-I don't know what asks you're referring to, but they're not present in
-this thread. I'm going to give Longpeng the benefit of the doubt and
-assume that this series is an attempt to fix a problem he's facing
-with actual hardware that exists today. To say they should have
-implemented the device with SIOV (proprietary to Intel until March
-this year) rather than SR-IOV (standardised by PCI-SIG over a decade
-ago) is not terribly helpful to anyone. Additionally, SIOV exists
-largely to solve a problem that's an issue because Intel decided that
-all PCI devices should exist within a single PCI domain. If you don't
-have that problem SIOV is a lot less compelling.
