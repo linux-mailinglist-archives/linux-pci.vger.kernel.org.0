@@ -2,59 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A1AE62A0E9
+	by mail.lfdr.de (Postfix) with ESMTP id 24E5662A0E8
 	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 19:01:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbiKOSBY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231327AbiKOSBY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 15 Nov 2022 13:01:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236796AbiKOSA6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 13:00:58 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D362531235;
-        Tue, 15 Nov 2022 10:00:22 -0800 (PST)
+        with ESMTP id S231596AbiKOSAy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 13:00:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6530E2B0;
+        Tue, 15 Nov 2022 10:00:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8DDE9B81A59;
-        Tue, 15 Nov 2022 18:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDA4C433B5;
-        Tue, 15 Nov 2022 18:00:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B60661977;
+        Tue, 15 Nov 2022 18:00:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9A3C433C1;
+        Tue, 15 Nov 2022 18:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668535220;
-        bh=V+CDw9Lkisi0pVuYP/vfuaiILE7103hOmqneHcdz7K4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DpXCK2plJGNPu+0M8wHbEdKu/WJY4aLUaFyzENRpJWF9UhGvFSyuTVswdjCNMTCc7
-         0VBrULhtgPAfyKxtw0znCGEzu29uv4GtsBJGO8+ieSg1/usokIxocCTT/oVG9P+Svl
-         r7bMwijJTWWcoI1jRTmVCAZrqkpLUGqBVqEd2i8fdIsqRW3FcBxgaiS/2V1vQgFy+P
-         KBYscfgywKJDSbyaG95Nl1mf9nwF825DqCRlmuQNDfUK4GkfUPMfR/QqbQZFOOFy9G
-         AVg/pedgdi64bq17xeT6MOLLLbhwH8mCwwqQwwHyc359WJuK/QMp/6RCduNnqZuJR+
-         Ervg/LYaRer0g==
-Received: by mail-lj1-f170.google.com with SMTP id u2so18565322ljl.3;
-        Tue, 15 Nov 2022 10:00:20 -0800 (PST)
-X-Gm-Message-State: ANoB5pk4ymGSGobNp8w3eRdrv94uQLQBRpc+zZz2LQVAhi2agHJucZPb
-        s+7YJgv4lO0h2EO1V7LqgPyEuT52UzTUMmE77g==
-X-Google-Smtp-Source: AA0mqf4zsHpIKzELoBNtkrNEltVvWv6+X5mMUF7dvrGkfZPdg/U6t9+lLgKOIerV413GobUiXZJXyeo65Y4F6JleoLU=
-X-Received: by 2002:a2e:a80b:0:b0:275:1343:df71 with SMTP id
- l11-20020a2ea80b000000b002751343df71mr6791315ljq.215.1668535218200; Tue, 15
- Nov 2022 10:00:18 -0800 (PST)
+        s=k20201202; t=1668535217;
+        bh=QXsDGTguq09mN4sSHHgpPG8/brgbzE21EVYdVSJ3uzU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fxKlIIGq9uCKDSt9xkJtoEQs1wHMD2r/lfp4TJ2f74OQUWrwNXgBsMGeJzJT7nHlH
+         Ij9cJd4ztD2DdoT+VJxwc76ja6wpK+PE6Fa0JA51vmm1WvZla+kF1fg+pvOOTq2k41
+         VNN721p6VXYAugsrZeh030J5NnIT3oxdtSSIgX6dK3ZU6E3MJID6GNCZtFDqV7nr01
+         k9Yqvy4YM3OqzkreHA6ErDDhI0RfIO2pLdDHayHdTBiqe4K/SJ1k2NBKEn236Nem/O
+         ON2w9Qsqxc8/j1yGkpE8qoI9Gx0RMMuuwJ1ggcJNPnU+K7NFrq1uyL4lHrnGsAY9ZF
+         1tYXMXwCOh5Ag==
+Received: by pali.im (Postfix)
+        id 4DFCE805; Tue, 15 Nov 2022 19:00:14 +0100 (CET)
+Date:   Tue, 15 Nov 2022 19:00:14 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
+ devm_gpiod_get_optional()
+Message-ID: <20221115180014.ktutpo37vxwde4cy@pali>
+References: <Y3KMEZFv6dpxA+Gv@google.com>
 MIME-Version: 1.0
-References: <20221114155333.234496-1-jonathanh@nvidia.com> <20221114155333.234496-2-jonathanh@nvidia.com>
- <20221115020136.GA3973578-robh@kernel.org> <f8148686-796f-62a6-e424-733966f7db0b@nvidia.com>
-In-Reply-To: <f8148686-796f-62a6-e424-733966f7db0b@nvidia.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 15 Nov 2022 12:00:09 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+HWqLLk5dwYxNc0sKuiguT1DeTSFke+GSML5UACD=yFA@mail.gmail.com>
-Message-ID: <CAL_Jsq+HWqLLk5dwYxNc0sKuiguT1DeTSFke+GSML5UACD=yFA@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
-        mmaddireddy@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y3KMEZFv6dpxA+Gv@google.com>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,69 +61,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 10:03 AM Jon Hunter <jonathanh@nvidia.com> wrote:
->
->
-> On 15/11/2022 02:01, Rob Herring wrote:
-> > On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
-> >> From: Vidya Sagar <vidyas@nvidia.com>
-> >>
-> >> Add support for ECAM aperture that is only supported for Tegra234
-> >> devices.
-> >>
-> >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> >> Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
-> >> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> >> ---
-> >> Changes since V2:
-> >> - Avoid duplication of reg items and reg-names
-> >> Changes since V1:
-> >> - Restricted the ECAM aperture to only Tegra234 devices that support it.
-> >>
-> >>   .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
-> >>   .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
-> >>   2 files changed, 33 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> >> index 75da3e8eecb9..fe81d52c7277 100644
-> >> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> >> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
-> >> @@ -27,6 +27,7 @@ properties:
-> >>         - nvidia,tegra234-pcie
-> >>
-> >>     reg:
-> >> +    minItems: 4
-> >>       items:
-> >>         - description: controller's application logic registers
-> >>         - description: configuration registers
-> >> @@ -35,13 +36,16 @@ properties:
-> >>             available for software access.
-> >>         - description: aperture where the Root Port's own configuration
-> >>             registers are available.
-> >> +      - description: aperture to access the configuration space through ECAM.
-> >>
-> >>     reg-names:
-> >> +    minItems: 4
-> >>       items:
-> >>         - const: appl
-> >>         - const: config
-> >>         - const: atu_dma
-> >>         - const: dbi
-> >> +      - const: ecam
-> >
-> > Wouldn't this be mutually exclusive with 'config'? 'config' is not
-> > really h/w, but an just an iATU window typically.
->
-> Yes that is true, however, I was chatting with Sagar and we really need
-> both ranges to be defined.
->
-> > Where's the driver change to use this?
->
-> For Linux there is not one. However, we need this for our port of the
-> EDK2 bootloader [0] that parses device-tree and can support booting
-> Linux with either device-tree or ACPI. We wanted to have a common
-> device-tree we can use for EDK2 and Linux.
+On Monday 14 November 2022 10:42:25 Dmitry Torokhov wrote:
+> Switch the driver to the generic version of gpiod API (and away from
+> OF-specific variant), so that we can stop exporting
+> devm_gpiod_get_from_of_node().
+> 
+> Acked-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> 
+> v2:
+>  - collected reviewed-by/acked-by tags
+>  - updated commit description to remove incorrect assumption of why
+>    devm_gpiod_get_from_of_node() was used in the first place
+> 
+> This is the last user of devm_gpiod_get_from_of_node() in the mainline
+> (next), it would be great to have it in so that we can remove the API in
+> the next release cycle.
+> 
+> Thanks!
 
-Ok, makes sense.
+Just a note that more aardvark patches are waiting on the list.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> 
+>  drivers/pci/controller/pci-aardvark.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index ba36bbc5897d..5ecfac23c9fc 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -1859,20 +1859,19 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
+> -						       "reset-gpios", 0,
+> -						       GPIOD_OUT_LOW,
+> -						       "pcie1-reset");
+> +	pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+>  	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
+>  	if (ret) {
+> -		if (ret == -ENOENT) {
+> -			pcie->reset_gpio = NULL;
+> -		} else {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev, "Failed to get reset-gpio: %i\n",
+> -					ret);
+> -			return ret;
+> -		}
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get reset-gpio: %i\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
+> +	if (ret) {
+> +		dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
+> +		return ret;
+>  	}
+>  
+>  	ret = of_pci_get_max_link_speed(dev->of_node);
+> -- 
+> 2.38.1.431.g37b22c650d-goog
+> 
+> 
+> -- 
+> Dmitry
