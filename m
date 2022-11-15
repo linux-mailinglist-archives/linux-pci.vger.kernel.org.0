@@ -2,72 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DAB2628F8B
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 02:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 052D1628FA7
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 03:01:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231438AbiKOBuu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Nov 2022 20:50:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        id S231908AbiKOCBh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Nov 2022 21:01:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231254AbiKOBut (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 20:50:49 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71D4FADF;
-        Mon, 14 Nov 2022 17:50:47 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id z14so21574335wrn.7;
-        Mon, 14 Nov 2022 17:50:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qq+GIxiklIVtKUEbK8ucEWoZBn9yKo/47esIkXSbciE=;
-        b=k6ih+eBWz7VpcB3X6ZiO2pFU3Npz+47xJTh+eTEHLt+wNZBuisnW69DY5KGluoS4bg
-         6BnmD3a6wJb5yiT/WG+kVwg8pbHw9fp3hx9FLCPI/dOlSCMiZX8U2aUcT5B556pP5hY/
-         nB5kfbzIQWzG4B9tO55xwOHKTC0dKAy4d4qQyq8i7Al34QANCJLG1RUUCt5znhkBXfCi
-         c9iYNID3ZQ5HnaVVRAQWc4ivIMSYvUufjPAgs3n2xpMhH8WQvMwmh0ChHPW6tqX7GZq5
-         bo28z/b6SnirBjZumcXjeI1mfI3eESNRFjmlk/aIdMD17IdHiOMIK+ZjHW/FM1SoAlIf
-         xyFg==
+        with ESMTP id S230520AbiKOCBg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Nov 2022 21:01:36 -0500
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30F3BC8C;
+        Mon, 14 Nov 2022 18:01:35 -0800 (PST)
+Received: by mail-ot1-f43.google.com with SMTP id p10-20020a9d76ca000000b0066d6c6bce58so4719997otl.7;
+        Mon, 14 Nov 2022 18:01:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qq+GIxiklIVtKUEbK8ucEWoZBn9yKo/47esIkXSbciE=;
-        b=BnWrAWCz88Ri4PZD+1CS8u9r05KLTgxImRQ7nzdaKC77SkAOCQ14D6E7gR4gA7994C
-         /dD7oPtWbkHoRiQgBYIN25+kTnEexbgdcJk+8SdrISfArqoumv30B9Ucx/3sdfu1H/2k
-         wAON2E8f1/bOk+hBmno+EJW90SiulywbTpMELtTTbvcYTKanNpJxgd2UpXCkTIuSoGRJ
-         JXIBOT4JNMdLVRI58x0M8JxxoFitLWrABPM9n85zBA6dawZP3Vxa3qegvSukKpUds43G
-         kEpnn/9wX2iJZ9GzamECLgoIBrISDqPuyJY0rNF8sCdfJzMVKJAX7KbRIpHGYLVlvCp3
-         pv2g==
-X-Gm-Message-State: ANoB5pngwkfqAFQ5jUWlqiP7qqmkAlBr1YCuvmCNQ+u3o++qldkF7Uko
-        GmimXyE+/sNuwA8HKM/VhQetuvPgZuFaWpd9ow0=
-X-Google-Smtp-Source: AA0mqf7aq43bPMm7FbEqVbjX5qxAn2T0zciW2V19Bv1VonAMKypjCRrFvINg8lB+GIdvtZGnpgMI9nl1pEVUa4m0CAk=
-X-Received: by 2002:adf:dc09:0:b0:236:7180:6ccc with SMTP id
- t9-20020adfdc09000000b0023671806cccmr9406986wri.573.1668477046120; Mon, 14
- Nov 2022 17:50:46 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2uVoJ4OLVHwTzLXSP9dYjKjlbvNqf1vT60U41Z0zdRw=;
+        b=wfkJTTk8tzthI+wpDfbUFDSwD0BQKd7KCamuUfRhrPVtLrZELliNXtDHtD/MThShLf
+         ujyvdtKk8rf2wO9OLJpDJxKRrQHJzj0t3tXTB+rxtg5qZmE6iiXSpIc70bhFw7ST2j1w
+         GO/bNT3AgHZ/72PpNum4obL9VLh3DCX9a8O1qE3HS7qFqEKF0oJv0SpDYAUoC3CcDx/z
+         EHBUSR1CNU0qMTB/vCZJBjwxDiDuknwCgc5i0u8fpQATlPahZ8SOMt/yLr8tkGYxash3
+         Z45OfUlkLdzfiDlc9qyOjVx9Ldiv2TF7l8+z3CGCGCl6b/cvzl+Z784h+hGuv6ZZWecp
+         +Z2g==
+X-Gm-Message-State: ANoB5pnb9niTKPrquSAyLLtEVazMHQivRscX1G5YIi87zO+8Ec9lbwo3
+        /wjx0mOMxFLpW+l0LFzteQ==
+X-Google-Smtp-Source: AA0mqf6JzA4dLgXt4SaqIGaCg5RTVbpGiafLQHD3jZNJd5s9ZeAeVvF3TSwZy9klORv6Gfe4nMQ+1g==
+X-Received: by 2002:a05:6830:4ce:b0:660:ca92:f787 with SMTP id s14-20020a05683004ce00b00660ca92f787mr7710169otd.118.1668477694845;
+        Mon, 14 Nov 2022 18:01:34 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id bh39-20020a056808182700b0035ab03d9153sm4366253oib.47.2022.11.14.18.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Nov 2022 18:01:34 -0800 (PST)
+Received: (nullmailer pid 3982179 invoked by uid 1000);
+        Tue, 15 Nov 2022 02:01:36 -0000
+Date:   Mon, 14 Nov 2022 20:01:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+Message-ID: <20221115020136.GA3973578-robh@kernel.org>
+References: <20221114155333.234496-1-jonathanh@nvidia.com>
+ <20221114155333.234496-2-jonathanh@nvidia.com>
 MIME-Version: 1.0
-References: <20221111142722.1172-1-longpeng2@huawei.com> <Y256ty6xGyUpkFn9@unreal>
- <0b2202bf-18d3-b288-9605-279208165080@huawei.com> <Y3Hoi4zGFY4Fz1l4@unreal>
- <d7327d46-deb5-dc75-21c3-1f351d7da108@huawei.com> <Y3I+Fs0/dXH/hnpL@unreal>
- <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com> <Y3JOvTfBwpaldtZJ@unreal>
-In-Reply-To: <Y3JOvTfBwpaldtZJ@unreal>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 15 Nov 2022 12:50:34 +1100
-Message-ID: <CAOSf1CG+VGdeXGQetfMArwpafAx2yj3nmA_y7rN4SNdt=1=08w@mail.gmail.com>
-Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jianjay.zhou@huawei.com, zhuangshengen@huawei.com,
-        arei.gonglei@huawei.com, yechuan@huawei.com,
-        huangzhichao@huawei.com, xiehong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221114155333.234496-2-jonathanh@nvidia.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,38 +66,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 1:27 AM Leon Romanovsky <leon@kernel.org> wrote:
->
-> *snip*
->
-> Anyway, I'm aware of big cloud providers who are pretty happy with live
-> migration in production.
+On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> From: Vidya Sagar <vidyas@nvidia.com>
+> 
+> Add support for ECAM aperture that is only supported for Tegra234
+> devices.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> Changes since V2:
+> - Avoid duplication of reg items and reg-names
+> Changes since V1:
+> - Restricted the ECAM aperture to only Tegra234 devices that support it.
+> 
+>  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+>  2 files changed, 33 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> index 75da3e8eecb9..fe81d52c7277 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> @@ -27,6 +27,7 @@ properties:
+>        - nvidia,tegra234-pcie
+>  
+>    reg:
+> +    minItems: 4
+>      items:
+>        - description: controller's application logic registers
+>        - description: configuration registers
+> @@ -35,13 +36,16 @@ properties:
+>            available for software access.
+>        - description: aperture where the Root Port's own configuration
+>            registers are available.
+> +      - description: aperture to access the configuration space through ECAM.
+>  
+>    reg-names:
+> +    minItems: 4
+>      items:
+>        - const: appl
+>        - const: config
+>        - const: atu_dma
+>        - const: dbi
+> +      - const: ecam
 
-I could see someone sufficiently cloudbrained deciding that rebooting
-the hypervisor is fine provided the downtime doesn't violate any
-customer uptime SLAs. Personally I'd only be brave enough to do that
-for a HV hosting internal services which I know are behind a load
-balancer, but apparently there are people at Huawei far braver than I.
+Wouldn't this be mutually exclusive with 'config'? 'config' is not 
+really h/w, but an just an iATU window typically.
 
-> *snip*
->
-> > Adding 2K+ VFs to the sysfs need too much time.
-> >
-> > Look at the bottomhalf of the hypervisor live update:
-> > kexec --> add 2K VFs --> restore VMs
-> >
-> > The downtime can be reduced if the sequence is:
-> > kexec --> add 100 VFs=EF=BC=88the VMs used=EF=BC=89 --> resotre VMs -->=
- add 1.9K VFs
->
-> Addition of VFs is serial operation, you can fire your VMs once you
-> counted 100 VFs in sysfs directory.
+Where's the driver change to use this?
 
-I don't know if making that kind of assumption about the behaviour of
-sysfs is better or worse than just adding another knob. If at some
-point in the future the initialisation of VF pci_devs was moved to a
-workqueue or something we'd be violating that assumption without
-breaking any of the documented ABI. I guess you could argue that VFs
-being added sequentially is "ABI", but userspace has always been told
-not to make assumptions about when sysfs attributes (or nodes, I
-guess) appear since doing so is prone to races.
+Rob
