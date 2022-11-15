@@ -2,94 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F6D6629267
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 08:23:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03254629346
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 09:32:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbiKOHXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 02:23:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45252 "EHLO
+        id S231992AbiKOIcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 03:32:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231908AbiKOHXL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 02:23:11 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895E7205D8
-        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 23:23:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668496990; x=1700032990;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hTdzQb336Ir81L1D/pToAoyFaMKbM1P1rv8E6J3+34s=;
-  b=bknOgZLbzszVM5mZJTZT3XxQPcB2pO3SRJjFESxSG6v952CfhdSjy0Ds
-   5/xMTjat6XBVFPGF1H8oleFV3W1zDWACQL1OPLlcPLgR4T1ZfkbMTkgzR
-   A1NbzkNhKBA+qA85wBZJQ57isXFRfLDTCqSnBcgSpZTFM3lgVUvwJt9lT
-   DrQmXfAqRw9GgiAcCfQ2jfCYu6Bs+fsde7LI+Oh3jIYKZkduc3ZdGCKPU
-   llIbPGTfDFojDQZtASvObyKgX8aS4sJETE+WomENfeXaA4zX/1tiFb5Vp
-   atAk7EIjZH6uM1ni18Ec8g2QFc2uwaq31M5gpZrmXC6O5wNAkV5hQ5VwE
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="313993054"
-X-IronPort-AV: E=Sophos;i="5.96,165,1665471600"; 
-   d="scan'208";a="313993054"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 23:23:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="727846535"
-X-IronPort-AV: E=Sophos;i="5.96,165,1665471600"; 
-   d="scan'208";a="727846535"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Nov 2022 23:23:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5777A2F3; Tue, 15 Nov 2022 09:23:32 +0200 (EET)
-Date:   Tue, 15 Nov 2022 09:23:32 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Albert Zhou <albert.zhou.50@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v2 1/2] pci: hotplug: add dependency info to Kconfig
-Message-ID: <Y3M+dMJyvnS0uKZ2@black.fi.intel.com>
-References: <20221113112811.22266-1-albert.zhou.50@gmail.com>
- <20221113112811.22266-2-albert.zhou.50@gmail.com>
- <Y3IafGm+ewR5LJL9@black.fi.intel.com>
- <213e1035-b3c7-3d4c-5691-fd936a762745@gmail.com>
+        with ESMTP id S229664AbiKOIcm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 03:32:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7AE631F;
+        Tue, 15 Nov 2022 00:32:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0161961576;
+        Tue, 15 Nov 2022 08:32:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925F4C433C1;
+        Tue, 15 Nov 2022 08:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668501160;
+        bh=qvc4PkjbFLd4d9FhXUQJc9o0AtNm4ofX85R/Lkx1n2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aWbubnBI1qXAmT9YJM8uICvKoBgnifdj8lYcpO/3SbrGURsWQAqoILnDn9fly3wlt
+         8feq45FgKdoGQ2PxCK6uDetR0y0Cq6YXs3K6RxR/CoAONUXuq8aZ0u1+0HzBimz8uR
+         FkYQgeZBMggFeBhMhaR37zXzNqtk4vchiBQlOXnjVm8rUKakxiy6WHL11+xAblnac6
+         iZCdRdg55asb/6qEkGtKABPmLLRcy6sm2fizsRnf1MOrkIDrY7asmN0im5CeQ9m8IQ
+         vJWupfvTQBz7PrMEblCyill8286guDqdwRjrN127NB5d6zC9LjB1qkjbQERgP5OFTb
+         DsUpJ2Tv3QH0A==
+Date:   Tue, 15 Nov 2022 10:32:35 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Oliver O'Halloran <oohall@gmail.com>
+Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jianjay.zhou@huawei.com, zhuangshengen@huawei.com,
+        arei.gonglei@huawei.com, yechuan@huawei.com,
+        huangzhichao@huawei.com, xiehong@huawei.com
+Subject: Re: [RFC 0/4] pci/sriov: support VFs dynamic addition
+Message-ID: <Y3NOo3DaLKb219IV@unreal>
+References: <20221111142722.1172-1-longpeng2@huawei.com>
+ <Y256ty6xGyUpkFn9@unreal>
+ <0b2202bf-18d3-b288-9605-279208165080@huawei.com>
+ <Y3Hoi4zGFY4Fz1l4@unreal>
+ <d7327d46-deb5-dc75-21c3-1f351d7da108@huawei.com>
+ <Y3I+Fs0/dXH/hnpL@unreal>
+ <3a8efc92-eda8-9c61-50c5-5ec97e2e2342@huawei.com>
+ <Y3JOvTfBwpaldtZJ@unreal>
+ <CAOSf1CG+VGdeXGQetfMArwpafAx2yj3nmA_y7rN4SNdt=1=08w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <213e1035-b3c7-3d4c-5691-fd936a762745@gmail.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAOSf1CG+VGdeXGQetfMArwpafAx2yj3nmA_y7rN4SNdt=1=08w@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Tue, Nov 15, 2022 at 12:38:11PM +1100, Albert Zhou wrote:
-> On 14/11/22 21:37, Mika Westerberg wrote:
-> > > +	default y if USB4
-> > >   	help
-> > >   	  Say Y here if you have a motherboard with a PCI Hotplug controller.
-> > >   	  This allows you to add and remove PCI cards while the machine is
-> > > -	  powered up and running.
-> > > +	  powered up and running. Thunderbolt and USB4 PCI cards require
-> > > +	  Hotplug.
-> > I would not say they "require" this. PCIe is completely optional in USB4
-> > systems and it is perfectly fine to have host controllers or
-> > add-in-cards that don't have a single PCIe adapter.
-> > 
-> > Not objeting the patch, though. For Linux I guess it makes sense to have
-> > this like what you are suggesting. Just perhaps changing the wordirng
-> > 😉
+On Tue, Nov 15, 2022 at 12:50:34PM +1100, Oliver O'Halloran wrote:
+> On Tue, Nov 15, 2022 at 1:27 AM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > *snip*
+> >
+> > Anyway, I'm aware of big cloud providers who are pretty happy with live
+> > migration in production.
 > 
-> How about “Thunderbolt and USB4 use Hotplug”
+> I could see someone sufficiently cloudbrained deciding that rebooting
+> the hypervisor is fine provided the downtime doesn't violate any
+> customer uptime SLAs. Personally I'd only be brave enough to do that
+> for a HV hosting internal services which I know are behind a load
+> balancer, but apparently there are people at Huawei far braver than I.
 
-Or
+My main point in this discussion that Huawei team doesn't actually
+provide any meaningful justification why it is great idea to add new
+sysfs file. They use HPC as an argument, but in that world, you won't
+see many VMs on one server, as it is important to provide separate MSI-X
+vectors and CPUs to each VM.
 
-"Thunderbolt/USB4 PCIe tunneling needs Native PCIe Hotplug to be enabled"
+They ask from us optimization (do not add device hierarchy for existing HW)
+that doesn't exist in the kernel.
 
-> Do you agree with the “default y if USB4” for PCIEPORTBUS, HOTPLUG_PCI_PCIE, HOTPLUG_PCI.
+I would say that they are trying to meld SIOV architecture of subfunctions
+(SFs) into PCI and SR-IOV world.
 
-Yes, I think for Linux perspective it makes sense to have them enabled
-by default.
+Thanks
