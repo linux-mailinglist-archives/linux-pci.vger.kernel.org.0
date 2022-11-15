@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 011BF62966F
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 11:55:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49CBA629672
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 11:55:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232487AbiKOKy7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 05:54:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        id S232748AbiKOKzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 05:55:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232414AbiKOKyW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 05:54:22 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A4F20367
-        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 02:52:49 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id c15-20020a17090a1d0f00b0021365864446so13466217pjd.4
-        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 02:52:49 -0800 (PST)
+        with ESMTP id S238442AbiKOKyZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 05:54:25 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E6F286E7
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 02:52:52 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id j12so12809617plj.5
+        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 02:52:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RP4BxD3LcEMiCEy87lCVjDgMJn3TYXKFnYzLCRW3wiY=;
-        b=IJ4Bfl3Ic0R9F7NKaOn60R7B+5s+ShesYv0m9LcSc+i39GDJ8PPRd58JF1mloBNSyK
-         qAlDTiTxh9sPWA62dShSondxxKoFFNoujxOYUf46SBhr97QS7d7H+pPlso+74KmlUu3s
-         r5HtStJTw8OXqnYqxWcU26qwhRwzfXxBf2D5DUdoGjQD/Ci7OAyQ9MLikSHWqqfrBa4H
-         SXbVP5bp6nj99388eJ7IaX6/nfyMT/NXk2R9LetI/v5HJuP7ivYItB2xs2KqV4S3++/G
-         tvh34eiOXUgXN/8+NgDt9b9+r9CR46SUiIuW0CElZjosTy4YQlDroksvCZcNQlsklQDV
-         7P9g==
+        bh=lKnPzcX7JtEz9qtSfGJnTjOGFHdm/vK5OZxcuFWQzbI=;
+        b=W8iXFihzzNJe5s9bJRaRSba84dOeRPMcmV0T/zv5jAjWk8vWdmorVZjLo0TIPj93Bv
+         VjVtSlOxhPMzRFfEaeIKJQCqT+5dUL92706sbo95N4owJiL2RzsOy+IDonQyZXea2wWf
+         o72kSpNyC77vFovQBfqNOGhtcDvvyaDhG7u3f+fh2P8L/+B67Kp+/lcuU8fYVl5+Cx3m
+         pbchrUpqjfijoBqNBJyl858BX8fRRsYX9S9OUhKpnWZQ2h1mzyoUq+Q87QnLdA6UAkkh
+         f9OBoqH8yg90ofcZqjTGRzdOSkpMHZN38AULCD7b4U4xYsDr0Va+g8E4ESPV7L2mk/Mb
+         l+aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RP4BxD3LcEMiCEy87lCVjDgMJn3TYXKFnYzLCRW3wiY=;
-        b=lub4u1emwVl2uuOzlM+1uJSnZ55uzxbPUOnVhVqYKLenkzAfife6P97eaN2fftQQa6
-         T9jc7x0I8JD1birT0+2V6oEpUj+ZbLq6tXyJYJHgWDni+klS3x//6qMa0Vlr3adV1h3a
-         sKJHpKTrejYXFOkExxlnRyEIpyotaKovHcJkE8KYbKqoExISHaEVLgUaeW2hC2mhNlzX
-         eAXQHhhPU64axIyO0YkSHdhxME+lQWhyCvuJSnuCkWrhWcPhLqLCYwvlXTHa2DMnfjwe
-         Vv6FKWn+0EHh6bm2wVrtLSgzUeR2aGkFXZ1UTWasTPGfb8XiL4AA89DTL0Nw4Aon4qmz
-         diyQ==
-X-Gm-Message-State: ANoB5pnxozbDrQfnUm7Lxb7UfEce20icKMx6C4NVOJ7HMCOKQdyfOmLF
-        MPUrmozawqwcWA060quUo8g=
-X-Google-Smtp-Source: AA0mqf5MYZlEEW1TUq8REr4v+qERbdZlPzhTJGN+9k5FIYw6o+XNBtikIIjV778soz+R0S2sL64gEw==
-X-Received: by 2002:a17:902:820b:b0:176:cf64:2f39 with SMTP id x11-20020a170902820b00b00176cf642f39mr3482321pln.93.1668509569446;
-        Tue, 15 Nov 2022 02:52:49 -0800 (PST)
+        bh=lKnPzcX7JtEz9qtSfGJnTjOGFHdm/vK5OZxcuFWQzbI=;
+        b=QNZ9BbX+W4272aAnpgjppFvUymrNDPTe6N+aNb4E7NZIVtJ4rUks9fBHsvt6KQTTZN
+         XF7jPVChwkjDryBnaeo04rVf/3N44tPSIU/BY+glr4Q16QtaUsTmBlwe5sLMD2x2LXmV
+         qLNhmtXW8DbJ6+4lkZEOeOM4/orVF1W1YkHuZTQxoyfdbLkORhWa/ygyXrMbSMR2SPnI
+         x5m5xN1rNAHjEkmtPRF7/0JFV0GwJEPbjunmCdNPRGjesy+AAdp5qka63Nsf7JHxWsV6
+         kFLSV8obdLonll3yuwdSvc8676DiqW8h4+OOP9K1Xnoq2SH2M9Yh88doCXWOFt6hGkxM
+         qZbw==
+X-Gm-Message-State: ANoB5plf7RB+a6sBRaU2v+o4tzsQwNyhDJbrmDc7dlUe+WZrTdXYYNPD
+        uHdEG3VA5vsgdEFt7EZaDI2K0lX6+6KSXQ==
+X-Google-Smtp-Source: AA0mqf65OCo+MQzWvXThtTpgRg7FO6R3V9BCzT6sg3NUd4sPVzajfiplpzEFn+R4Ah7nGMVzFNocCw==
+X-Received: by 2002:a17:90a:5883:b0:213:d66b:4973 with SMTP id j3-20020a17090a588300b00213d66b4973mr179564pji.85.1668509572388;
+        Tue, 15 Nov 2022 02:52:52 -0800 (PST)
 Received: from localhost.localdomain ([220.244.252.98])
-        by smtp.gmail.com with ESMTPSA id e24-20020a63f558000000b00470275c8d6dsm7325129pgk.10.2022.11.15.02.52.46
+        by smtp.gmail.com with ESMTPSA id e24-20020a63f558000000b00470275c8d6dsm7325129pgk.10.2022.11.15.02.52.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 02:52:49 -0800 (PST)
+        Tue, 15 Nov 2022 02:52:52 -0800 (PST)
 From:   Albert Zhou <albert.zhou.50@gmail.com>
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, lukas@wunner.de,
         mika.westerberg@linux.intel.com
-Subject: [PATCH v3 1/2] pci: hotplug: add dependency info to Kconfig
-Date:   Tue, 15 Nov 2022 21:52:39 +1100
-Message-Id: <20221115105240.32638-2-albert.zhou.50@gmail.com>
+Subject: [PATCH v3 2/2] pci: pcie: add dependency info to Kconfig
+Date:   Tue, 15 Nov 2022 21:52:40 +1100
+Message-Id: <20221115105240.32638-3-albert.zhou.50@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221115105240.32638-1-albert.zhou.50@gmail.com>
 References: <20221115105240.32638-1-albert.zhou.50@gmail.com>
@@ -72,34 +72,43 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Thunderbolt/USB4 PCIe tunneling require the Hotplug feature. This is now
-recorded in the help message for HOTPLUG_PCI. Further, HOTPLUG_PCI is
-defaulted to Y if USB4 is selected.
+recorded in the help message for HOTPLUG_PCI_PCIE. Further, PCIEPORTBUS
+and HOTPLUG_PCI_PCIE are defaulted to Y if USB4 is selected.
 
 Signed-off-by: Albert Zhou <albert.zhou.50@gmail.com>
 ---
- drivers/pci/hotplug/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/Kconfig | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index 840a84bb5ee2..0b396a09ae15 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -6,10 +6,12 @@
- menuconfig HOTPLUG_PCI
- 	bool "Support for PCI Hotplug"
- 	depends on PCI && SYSFS
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 788ac8df3f9d..32cc9a31e228 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -4,20 +4,22 @@
+ #
+ config PCIEPORTBUS
+ 	bool "PCI Express Port Bus support"
 +	default y if USB4
  	help
- 	  Say Y here if you have a motherboard with a PCI Hotplug controller.
- 	  This allows you to add and remove PCI cards while the machine is
--	  powered up and running.
-+	  powered up and running. Thunderbolt/USB4 PCIe tunneling needs Native
-+	  PCIe Hotplug to be enabled. PCIe Hotplug depends on PCI Hotplug.
+ 	  This enables PCI Express Port Bus support. Users can then enable
+ 	  support for Native Hot-Plug, Advanced Error Reporting, Power
+ 	  Management Events, and Downstream Port Containment.
+-
+ #
+ # Include service Kconfig here
+ #
+ config HOTPLUG_PCI_PCIE
+ 	bool "PCI Express Hotplug driver"
+ 	depends on HOTPLUG_PCI && PCIEPORTBUS
++	default y if USB4
+ 	help
+ 	  Say Y here if you have a motherboard that supports PCI Express Native
+-	  Hotplug
++	  Hotplug. Thunderbolt/USB4 PCIe tunneling needs Native PCIe Hotplug to
++	  be enabled
  
  	  When in doubt, say N.
  
-
-base-commit: e01d50cbd6eece456843717a566a34e8b926cf0c
 -- 
 2.34.1
 
