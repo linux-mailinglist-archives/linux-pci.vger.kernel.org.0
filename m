@@ -2,226 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E851A62A32F
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 21:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A469062A35B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 21:50:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230255AbiKOUlk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 15:41:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48956 "EHLO
+        id S237902AbiKOUt6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 15:49:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbiKOUlj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 15:41:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFA212D27;
-        Tue, 15 Nov 2022 12:41:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EFF4C617C1;
-        Tue, 15 Nov 2022 20:41:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332B4C433D6;
-        Tue, 15 Nov 2022 20:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668544897;
-        bh=UirLT+h/qQSTPhdoM/GR2xuPda9LMXFhKZt+E/mrMBE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ijYbiT71+mxsXe6VTo7NOq36arByH8CfjuO17EXAcEF3soVFeYLVw28FMnveHRS1V
-         kLj0UmSOxO8rqXFGHiZzig2SufKES6KD54TI5VyGy6BlFT7EYICAuefPdZk3rM2A/+
-         hTXUDvO3ZPfgROjgiac/ORctbv7USDISLxAhnthXkhqUVj7Bw57wxkTnYxGgew/7u4
-         pahl3zLWTFLi+q/rTOpIJUWW8dLdcY2QzkGENk9jPNdGFWHmY9DKDccYuJQ3DlGf6R
-         P3po1zPf8WnE53+bgJgb4/M6mQ2WnxgrPEazlO9j2e9BMH/e87Sy3Pvpm9jA3pKVmW
-         Ib4nd3Dr1JJ5w==
-Date:   Tue, 15 Nov 2022 14:41:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/doe: Fix work struct declaration
-Message-ID: <20221115204135.GA1037921@bhelgaas>
+        with ESMTP id S238102AbiKOUt5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 15:49:57 -0500
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2049.outbound.protection.outlook.com [40.107.22.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95124A45E;
+        Tue, 15 Nov 2022 12:49:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N3z68MzlU6bVKGnL8G/C2AatB8mQoPuKuzdUTdnCQsCgXU4r5dc56Sa6tG7zXnPCjHapVPD4NNsARjfmiGaD4fR8MBCo2JwiP+rcGBs+TfnBU4wtDZqSxKnkNODssrHfoU02YtVVyZHcteYszyihMkVXheMHB6MdR9Z/MXs/Erz6LNeGkXeZfIR0EczdxAayGlrNmoGpObdNpktwcGQECrC58vG0/ZBlv6RKXmaH15Hr1CpgWQ6cdqFVvu4E1Gr8dFR7Af2LPD7dEGVqkEKkNAw51Q0ES3fe3j8HMQhjdz9rsuLqRK1ZjS1Lhxx+fIApI1yttRj3NxF2Y+OkIuG7nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h2xd2luHoS4IU1h/aS5oxjSIiXbwn2f3Yc7CXEptHyc=;
+ b=FEvybzntWPrh35Bb5YL8Oqf9C6qoMyjCovlxmyVfIYtDejGzeEVW0uSs5V546gLY/MdN+7S5YGbA2mVF+xTuJ5WKC0RQryRv4HHz00ojfffdOJrVZLBs3XwDyIIU/hdweXaeFaHk5TWgqsrSkUmdhaoGtR4zCuyB/hwr6DSmNUypb2ZQIvr+c4rDwND1T5K94Uu3NYxYxirEo8QeY4KVATRUQuuhhVqxi7j7UFjpFK0PrspxIU3k3XqE70ojFwFVOjAkOBQVnSuyZx1qkWrlMU2VLggKKIPGMh4EOQkCg/0qwn7RWpJoxYC09KYQQsJzr2WX85E/8dgfI2ePaPxtHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h2xd2luHoS4IU1h/aS5oxjSIiXbwn2f3Yc7CXEptHyc=;
+ b=KJ04HTsM20W4MIly//EmOcTHINJJxnP4NIZl60otDHrEuwi/ZTJ1vhexqwPS30xiFKMiwP7leB7NbcP6cns1/UPuDUV6qUSNDLJfHb5XtxQIW3SQiXSUYCdhzTpAB6acD1x6Y1nZOQIvPzt2+Trz4ncUc85CaAOuItA+fcyhHkA=
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
+ by AM7PR04MB7110.eurprd04.prod.outlook.com (2603:10a6:20b:119::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.15; Tue, 15 Nov
+ 2022 20:49:53 +0000
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::a405:3557:91bc:9230]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::a405:3557:91bc:9230%12]) with mapi id 15.20.5813.018; Tue, 15 Nov
+ 2022 20:49:52 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC:     "mani@kernel.org" <mani@kernel.org>,
+        "allenbh@gmail.com" <allenbh@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>
+Subject: RE: [EXT] Re: [PATCH v16 4/7] PCI: endpoint: pci-epf-vntb: remove
+ unused field epf_db_phy
+Thread-Topic: [EXT] Re: [PATCH v16 4/7] PCI: endpoint: pci-epf-vntb: remove
+ unused field epf_db_phy
+Thread-Index: AQHY7sTonrEmeP19GkSdtJORZ+azn644VMCAgAC5MsCAAIzCgIAG7pog
+Date:   Tue, 15 Nov 2022 20:49:52 +0000
+Message-ID: <HE1PR0401MB23316A12EB6890260ACB9E8888049@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <20221102141014.1025893-1-Frank.Li@nxp.com>
+ <20221102141014.1025893-5-Frank.Li@nxp.com> <Y20Yt7T0bivqUvop@lpieralisi>
+ <HE1PR0401MB23317A2372FCE691C230806E88009@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+ <Y24qJb9UisCqpdKZ@lpieralisi>
+In-Reply-To: <Y24qJb9UisCqpdKZ@lpieralisi>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|AM7PR04MB7110:EE_
+x-ms-office365-filtering-correlation-id: b6801aab-ef43-42bd-0a8d-08dac74af1d6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J+GRflNKG1FOCWcDReb++xiTMG5mX910l4GRoSNwUiWRXNIKvZdNjmDlYRZQTjWOSbNOJ/Bj60TV7KJbDAojpNTy2iiMOAnc78F5dR7E4XIsyOHgvr/xqci+V5Vlbl7QhWbaygn7vhdpTocNE06EMZi3cF64esk3eG3S3hk7lnLBUDOo0VcMvdDPkWglqBprSL4LZNy7O/wzk5uTKlNt6F/5gBrJrdrBw2HGqk4dOb1S0JMIsj3FHdv5CdMaN7jkKI59S2cLsfUR7pSEwjcG6/ZtDdivxMAbzBWA1eelIsdI+BTiQYCb+9ff5nDKHGQOENwrzqr29H84fXzjehAVJxaWah5wKaDDIJlQNvimX0xGGD/8gL7q0I0M4gxuxs4lOtfM3isB/bqid+NDjpIKOIhVI8I51U1Uo0op64oy2cQQ1gIF+LMqXf3bKXQVNKvze4ngP9puDAkY+5B0XgI8vdvc1TEEsUsh3aEqdmJ7mI3FwDrPidRea9RTAUiAIIPJzznx8LZZ7TNRodmma9GYJ1h8M52dKN+UCI1EhfLixsbAraQd96/BvZ1pbbRvF0sPlT0kOuSeJHBK8HiBYNnvnC7fe40GfCUmCNwWfQYkDPsJLPYvDuD5gUjfDUhWzD+0vAnUolqiCiBhiWds1E6Lk1sJT+0tHtP6zfDRtSnMKHg2AQmeKtpzKMhUfyyrgYQqOWNNoWBQpYqC/boK/ZxKt9kvREdW/HvV+osQyXi5AaG9EZLqwNOcCz5oIwETL2cpJEf4kGPn0ddDjMt7/v9FC+5B3OXhR9Q+kYTJwhcWCis=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(451199015)(5660300002)(316002)(6916009)(54906003)(4326008)(8676002)(41300700001)(186003)(66946007)(66446008)(66556008)(76116006)(122000001)(64756008)(66476007)(38100700002)(38070700005)(83380400001)(7416002)(8936002)(52536014)(44832011)(55016003)(33656002)(86362001)(2906002)(9686003)(7696005)(478600001)(966005)(6506007)(26005)(53546011)(71200400001)(45080400002)(55236004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?LluW0ZJDTt/VCqPxnGVah7V47UVMtKuBDQg0HZJRhA5FyuA8mpmjmWnuur1Q?=
+ =?us-ascii?Q?mEFUjLQMUU+Q76yMRFIBmann8Xe8H8vGsK5PZE+91QcIAiBZmsMlsZQhCIb+?=
+ =?us-ascii?Q?Iuq447LsCPYxv68TNxPLC1AhuYVATLQ37+TfMSXLQqiV0jq5rvmTebDqY+XQ?=
+ =?us-ascii?Q?R7gbkUYBMaOHZ3OYd9RarM1l0KD8e9uOUPsBlJSq3BKUyEaA2989/vEoUWh+?=
+ =?us-ascii?Q?ri+kJ72k+iaw11fslX4bG7LvSfavH2zH1jrRJXX+t+/rIWpIfiBvdfQpJqC2?=
+ =?us-ascii?Q?a4EE/R9WAsMRUBPKzO/eUgGYZjFuB8HvW4kIi9y5WWV5tzcgGNwDIgsE7Wi5?=
+ =?us-ascii?Q?z2cotvton9dkIgD48uxh6THtoeQCyMNlQvcEoSMBnO5v5h8kP9Zq1o5T9rSh?=
+ =?us-ascii?Q?wcebP0hY/xK51AjqwfICnU/qS0zG/JVfLYnmb/WJ53QUor9Q78mKS3e0tdCG?=
+ =?us-ascii?Q?s7WdbzoiYxeOBR8I6/2NkJexnaPWaPpNKIFKAq+5W8iwX5bW/CddVSvGOw7v?=
+ =?us-ascii?Q?1AY8TiOb4p0JGDyjqhVrx2zcdVI5eiInc70VZuzjAvikXLVQCBHj0ObV8W9U?=
+ =?us-ascii?Q?s8M5d5fhsxuJH8WtlbwVoVuCu6WsTmmv9dP/8dArlJX5GIAi7szKVQjBYDS7?=
+ =?us-ascii?Q?7Rv8L9kA5MZnx/nWnkAos17VV96iNp9b9P9ALThwZiPf5E1iaNPe+2qFK6ES?=
+ =?us-ascii?Q?mzDIKn+yzA71eknxID/l1At+nKqU10HdmPnE62Jw+5PsS08bQj542kiFr+DY?=
+ =?us-ascii?Q?ujZ0bfxmOUb38u9rhDzGHce+YsOrtx1oIqEWoV470oEdM4QpXZqKY7zMvyDb?=
+ =?us-ascii?Q?oXLlJAr0VL/5PixKNE7WyVDJwQ3mhnLSSAKnrJG2k3etLGwL7gqZzpTy0pay?=
+ =?us-ascii?Q?wzzSSx1cpjE6fWFFSWolDZmtoCrb/YOetYBeqpu7F6DXzxJgg532iBuU9VZI?=
+ =?us-ascii?Q?Wmk5DeEbkRe8wlT/rl2IllaihFE2gRVIaEAZ2WmZckWz8HIO0a8qtjErjZZa?=
+ =?us-ascii?Q?3/goMGjTDgn7ka6p4vSlMmf+voziCDHG0IQTY6FEhPAn6rPT1UjJC9GiLB03?=
+ =?us-ascii?Q?+7fsLG8H9/LsKZmK8VmEEcf783tlAqEcTmgk4AXgU5bUDX1ozBPndQBexU+N?=
+ =?us-ascii?Q?OjdtQA1paEBYLbKqbb/I0MeXQOrhjPpHhaU2yXh4SJZvSBGmMOr3g6J4PKIL?=
+ =?us-ascii?Q?zXr750xv+b2TynRXP9nP+gtcbApdqTgQ1C4HuNA3fNplOKjuV0R4/lVWTPwA?=
+ =?us-ascii?Q?QWODtuTIXn+EVWIgWBgEwakRJ7uuuZGbz35k+ECR9/wBezYfEn8Kox0HiDXm?=
+ =?us-ascii?Q?c0wUd7YrxL/6uB960/lF2FwFVNjuRmN0dL54nyhz66ijf5WPwIiq3TS/U/hk?=
+ =?us-ascii?Q?/tkE47PEyF73rgUjKjz3O25JYVJnXYnXRbk+JagpDKe05GlPzy6cNTcyiLQX?=
+ =?us-ascii?Q?HqaiQr/YlFIp+6s0Tc4X+f5thvneXboJYlSR60djAtoqia2M5PtXG6JcO72v?=
+ =?us-ascii?Q?QR5WRySv/9VXN+m3sHiebch/zqexoSgtAkQOMPIOFTlzem00C1pX9mUrlFIC?=
+ =?us-ascii?Q?gAOzUiRSV84bv+8N/6c=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3P0Hp7eK3V7xRLN@iweiny-mobl>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6801aab-ef43-42bd-0a8d-08dac74af1d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2022 20:49:52.5034
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I4dgMs2MkqG+XbTbIFRgwZNf8lnTDZruK2ZvvaQI7OkaLBvaYJf/n398Sanlo9khDKF2Z6XWxkOZg6lbi66Lrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7110
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 12:18:38PM -0800, Ira Weiny wrote:
-> On Tue, Nov 15, 2022 at 01:44:24PM -0600, Bjorn Helgaas wrote:
-> > and say something more specific than "fix struct"?
-> 
-> How about?
-> 
-> PCI/DOE: Fix initialization of work struct in pci_doe_task
 
-The importance of this has to do with whether something is on the
-stack, so I think something about that would be useful.
 
-I'm afraid this subject line bike-shedding has made you overlook my
-other questions below ...
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Sent: Friday, November 11, 2022 4:56 AM
+> To: Frank Li <frank.li@nxp.com>
+> Cc: mani@kernel.org; allenbh@gmail.com; bhelgaas@google.com;
+> dave.jiang@intel.com; helgaas@kernel.org; imx@lists.linux.dev;
+> jdmason@kudzu.us; kw@linux.com; linux-kernel@vger.kernel.org; linux-
+> pci@vger.kernel.org; ntb@lists.linux.dev
+> Subject: Re: [EXT] Re: [PATCH v16 4/7] PCI: endpoint: pci-epf-vntb: remov=
+e
+> unused field epf_db_phy
+>=20
+> Caution: EXT Email
+>=20
+> On Fri, Nov 11, 2022 at 02:39:12AM +0000, Frank Li wrote:
+> > > -----Original Message-----
+> > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > Sent: Thursday, November 10, 2022 9:29 AM
+> > > To: Frank Li <frank.li@nxp.com>
+> > > Cc: mani@kernel.org; allenbh@gmail.com; bhelgaas@google.com;
+> > > dave.jiang@intel.com; helgaas@kernel.org; imx@lists.linux.dev;
+> > > jdmason@kudzu.us; kw@linux.com; linux-kernel@vger.kernel.org; linux-
+> > > pci@vger.kernel.org; ntb@lists.linux.dev
+> > > Subject: [EXT] Re: [PATCH v16 4/7] PCI: endpoint: pci-epf-vntb: remov=
+e
+> > > unused field epf_db_phy
+> > >
+> > > Caution: EXT Email
+> > >
+> > > On Wed, Nov 02, 2022 at 10:10:11AM -0400, Frank Li wrote:
+> > > > From: Frank Li <frank.li@nxp.com>
+> > > >
+> > > > epf_db_phy is not used, so remove it
+> > >
+> > > Sentences end with a period (.). I can fix these things but
+> > > we can't spend our lives telling you how to write a commit log,
+> > > check how they are written in the PCI subsystem and follow the
+> > > pattern.
+> >
+> > [Frank Li] Do you need me send new version to fix "."? Or you will plan
+>=20
+> You don't have to write your name in brackets all the time in replies,
+> it is clear from the indentation what I am replying to and to whom.
+>=20
+> > queue these patches?
+>=20
+> I will queue them but next time I won't fix the commit log myself.
 
-> > On Mon, Nov 14, 2022 at 05:19:43PM -0800, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > The callers of pci_doe_submit_task() allocate the pci_doe_task on the
-> > > stack.  This causes the work structure to be allocated on the stack
-> > > without pci_doe_submit_task() knowing.  Work item initialization needs
-> > > to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
-> > > how the work item is allocated.
-> > > 
-> > > Jonathan suggested creating doe task allocation macros such as
-> > > DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> > > function is not known to the callers and must be initialized correctly.
-> > > 
-> > > A follow up suggestion was to have an internal 'pci_doe_work' item
-> > > allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> > > could restrict the context where tasks are used.
-> > > 
-> > > Compromise with an intermediate step to initialize the task struct with
-> > > a new call pci_doe_init_task() which must be called prior to submit
-> > > task.
-> > 
-> > I'm not really a fan of passing a parameter to say "this struct is on
-> > the stack" because that seems kind of error-prone and I don't know
-> > what the consequence of getting it wrong would be.  Sounds like it
-> > *could* be some memory corruption or reading garbage data that would
-> > be hard to debug.
-> > 
-> > Do we have cases today where pci_doe_submit_task() can't do the
-> > kzalloc() as in your patch at [3]?  If the current use cases allow a
-> > kzalloc(), why not do that now and defer this until it becomes an
-> > issue?
-> > 
-> > Bjorn
-> > 
-> > > [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-> > > [2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
-> > 
-> > [3] https://lore.kernel.org/linux-cxl/Y2AnKB88ALYm9c5L@iweiny-desk3/
-> > 
-> > > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > > Reported-by: Gregory Price <gregory.price@memverge.com>
-> > > Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > ---
-> > >  drivers/cxl/core/pci.c  |  2 ++
-> > >  drivers/pci/doe.c       | 14 ++++++++++++--
-> > >  include/linux/pci-doe.h |  8 +++++---
-> > >  3 files changed, 19 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > > index 9240df53ed87..a19c1fa0e2f4 100644
-> > > --- a/drivers/cxl/core/pci.c
-> > > +++ b/drivers/cxl/core/pci.c
-> > > @@ -525,6 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
-> > >  	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
-> > >  	int rc;
-> > >  
-> > > +	pci_doe_init_task(cdat_doe, &t.task, true);
-> > >  	rc = pci_doe_submit_task(cdat_doe, &t.task);
-> > >  	if (rc < 0) {
-> > >  		dev_err(dev, "DOE submit failed: %d", rc);
-> > > @@ -554,6 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
-> > >  		u32 *entry;
-> > >  		int rc;
-> > >  
-> > > +		pci_doe_init_task(cdat_doe, &t.task, true);
-> > >  		rc = pci_doe_submit_task(cdat_doe, &t.task);
-> > >  		if (rc < 0) {
-> > >  			dev_err(dev, "DOE submit failed: %d", rc);
-> > > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > > index e402f05068a5..cabeae4ae955 100644
-> > > --- a/drivers/pci/doe.c
-> > > +++ b/drivers/pci/doe.c
-> > > @@ -319,6 +319,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> > >  	};
-> > >  	int rc;
-> > >  
-> > > +	pci_doe_init_task(doe_mb, &task, true);
-> > >  	rc = pci_doe_submit_task(doe_mb, &task);
-> > >  	if (rc < 0)
-> > >  		return rc;
-> > > @@ -495,6 +496,14 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
-> > >  
-> > > +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> > > +		       bool onstack)
-> > > +{
-> > > +	task->doe_mb = doe_mb;
-> > > +	__INIT_WORK(&task->work, doe_statemachine_work, onstack);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(pci_doe_init_task);
-> > > +
-> > >  /**
-> > >   * pci_doe_submit_task() - Submit a task to be processed by the state machine
-> > >   *
-> > > @@ -517,6 +526,9 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > >  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
-> > >  		return -EINVAL;
-> > >  
-> > > +	if (WARN_ON_ONCE(task->work.func != doe_statemachine_work))
-> > > +		return -EINVAL;
-> > > +
-> > >  	/*
-> > >  	 * DOE requests must be a whole number of DW and the response needs to
-> > >  	 * be big enough for at least 1 DW
-> > > @@ -528,8 +540,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > >  	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
-> > >  		return -EIO;
-> > >  
-> > > -	task->doe_mb = doe_mb;
-> > > -	INIT_WORK(&task->work, doe_statemachine_work);
-> > >  	queue_work(doe_mb->work_queue, &task->work);
-> > >  	return 0;
-> > >  }
-> > > diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> > > index ed9b4df792b8..457fc0e53d64 100644
-> > > --- a/include/linux/pci-doe.h
-> > > +++ b/include/linux/pci-doe.h
-> > > @@ -31,8 +31,8 @@ struct pci_doe_mb;
-> > >   * @rv: Return value.  Length of received response or error (bytes)
-> > >   * @complete: Called when task is complete
-> > >   * @private: Private data for the consumer
-> > > - * @work: Used internally by the mailbox
-> > > - * @doe_mb: Used internally by the mailbox
-> > > + * @work: Used internally by the mailbox [see pci_doe_init_task()]
-> > > + * @doe_mb: Used internally by the mailbox [see pci_doe_init_task()]
-> > >   *
-> > >   * The payload sizes and rv are specified in bytes with the following
-> > >   * restrictions concerning the protocol.
-> > > @@ -53,7 +53,7 @@ struct pci_doe_task {
-> > >  	void (*complete)(struct pci_doe_task *task);
-> > >  	void *private;
-> > >  
-> > > -	/* No need for the user to initialize these fields */
-> > > +	/* Call pci_doe_init_task() for these */
-> > >  	struct work_struct work;
-> > >  	struct pci_doe_mb *doe_mb;
-> > >  };
-> > > @@ -72,6 +72,8 @@ struct pci_doe_task {
-> > >  
-> > >  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
-> > >  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> > > +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> > > +		       bool onstack);
-> > >  int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
-> > >  
-> > >  #endif
-> > > 
-> > > base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
-> > > -- 
-> > > 2.37.2
-> > > 
+Do you have chance to queue it? I still have one patch (enable MSI)
+depend on these patch series.=20
+
+>=20
+> > My means:
+> > Mani's below feedback will make both live easy.
+>=20
+> What feedback ? I am sorry I don't understand.
+>=20
+> Thank you,
+> Lorenzo
+>=20
+> >        >
+> >                > None use epf_db_phy and remove it.
+> >
+> >                   "epf_db_phy is not used, so remove it"
+> >
+> >                 >
+> >                 >
+> > >
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
+k
+> %2F&amp;data=3D05%7C01%7Cfrank.li%40nxp.com%7C200a354ecae54e7b1af
+> 408dac3d34892%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638
+> 037609466107831%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAi
+> LCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&a
+> mp;sdata=3D3ngvYAIP0oTTF1uwAAHFAFmBVi1FvKtgTTw1u3tDXUg%3D&amp;re
+> served=3D0
+> > > ernel.org%2Fall%2F20171026223701.GA25649%40bhelgaas-
+> > >
+> glaptop.roam.corp.google.com&amp;data=3D05%7C01%7CFrank.Li%40nxp.co
+> > >
+> m%7Ca0924bed538a494cbfd508dac3304e8e%7C686ea1d3bc2b4c6fa92cd99c
+> > >
+> 5c301635%7C0%7C0%7C638036909484154968%7CUnknown%7CTWFpbGZsb
+> > >
+> 3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0
+> > > %3D%7C3000%7C%7C%7C&amp;sdata=3DB3G7sfaSVdLDC8BG95WzpBPFO5l
+> PJ
+> > > QpThKDcEexOHfU%3D&amp;reserved=3D0
+> >
+> > [Frank Li] Thank you for your documents.
+> >
+> > >
+> > > >
+> > > > Signed-off-by: Frank Li <frank.li@nxp.com>
+> > > > Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> > > > ---
+> > > >  drivers/pci/endpoint/functions/pci-epf-vntb.c | 1 -
+> > > >  1 file changed, 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > > b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > > > index 191924a83454..ee66101cb5c4 100644
+> > > > --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > > > @@ -136,7 +136,6 @@ struct epf_ntb {
+> > > >
+> > > >       struct epf_ntb_ctrl *reg;
+> > > >
+> > > > -     phys_addr_t epf_db_phy;
+> > > >       void __iomem *epf_db;
+> > > >
+> > > >       phys_addr_t vpci_mw_phy[MAX_MW];
+> > > > --
+> > > > 2.34.1
+> > > >
