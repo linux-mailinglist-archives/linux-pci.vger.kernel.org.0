@@ -2,56 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E5662A0E8
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 19:01:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B90FC62A112
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 19:08:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbiKOSBY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 13:01:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        id S231168AbiKOSIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 13:08:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231596AbiKOSAy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 13:00:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6530E2B0;
-        Tue, 15 Nov 2022 10:00:18 -0800 (PST)
+        with ESMTP id S232820AbiKOSH5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 13:07:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D522713F73;
+        Tue, 15 Nov 2022 10:07:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B60661977;
-        Tue, 15 Nov 2022 18:00:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9A3C433C1;
-        Tue, 15 Nov 2022 18:00:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7CF04B81A5F;
+        Tue, 15 Nov 2022 18:07:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EBEC433C1;
+        Tue, 15 Nov 2022 18:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668535217;
-        bh=QXsDGTguq09mN4sSHHgpPG8/brgbzE21EVYdVSJ3uzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fxKlIIGq9uCKDSt9xkJtoEQs1wHMD2r/lfp4TJ2f74OQUWrwNXgBsMGeJzJT7nHlH
-         Ij9cJd4ztD2DdoT+VJxwc76ja6wpK+PE6Fa0JA51vmm1WvZla+kF1fg+pvOOTq2k41
-         VNN721p6VXYAugsrZeh030J5NnIT3oxdtSSIgX6dK3ZU6E3MJID6GNCZtFDqV7nr01
-         k9Yqvy4YM3OqzkreHA6ErDDhI0RfIO2pLdDHayHdTBiqe4K/SJ1k2NBKEn236Nem/O
-         ON2w9Qsqxc8/j1yGkpE8qoI9Gx0RMMuuwJ1ggcJNPnU+K7NFrq1uyL4lHrnGsAY9ZF
-         1tYXMXwCOh5Ag==
-Received: by pali.im (Postfix)
-        id 4DFCE805; Tue, 15 Nov 2022 19:00:14 +0100 (CET)
-Date:   Tue, 15 Nov 2022 19:00:14 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        s=k20201202; t=1668535656;
+        bh=gVYcutXI++9bdrHBHueMBmsjqWSHjeoLZDZVF1qz2gY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Kj7PrOhLg29hSgQ0mhZwTHKYN6ylN97waXxxyCaBF9rHt/ZmxWNR0yjFiG0VWZNBO
+         7s6k6oaT/B4M6iA8qN9H9hmXAdr2jaYHY8FxJemnY9fSFMhtRaYpNoMYO2d56BZOQb
+         qLDX6au8eVes2feP8rqwd4HC9EoOomckazimxAtkgSH2IvBMWjOBxnJFevFqH27pMg
+         XDaML34HV0P5635S0Jp0Ri0GG35qf+mzDZ9WZJXTVl+kxM/SwjVO4qrh9p2a99PM5E
+         vpWJtrjI/jAg1SLOJGYOdwbKxE+JfY9Wxb4zXiv+kXRXGDkMYh6PTMGFfBNEylgsRt
+         kRTtgyUorBxRA==
+Date:   Tue, 15 Nov 2022 12:07:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
- devm_gpiod_get_optional()
-Message-ID: <20221115180014.ktutpo37vxwde4cy@pali>
-References: <Y3KMEZFv6dpxA+Gv@google.com>
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] PCI: Drop controller CONFIG_OF dependencies
+Message-ID: <20221115180734.GA999206@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y3KMEZFv6dpxA+Gv@google.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAMuHMdVnJZGqwnC0fZTwyb1GT5Nu+4K9LND4CXU96cvYG+qEgg@mail.gmail.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,72 +54,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 14 November 2022 10:42:25 Dmitry Torokhov wrote:
-> Switch the driver to the generic version of gpiod API (and away from
-> OF-specific variant), so that we can stop exporting
-> devm_gpiod_get_from_of_node().
-> 
-> Acked-by: Pali Rohár <pali@kernel.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> 
-> v2:
->  - collected reviewed-by/acked-by tags
->  - updated commit description to remove incorrect assumption of why
->    devm_gpiod_get_from_of_node() was used in the first place
-> 
-> This is the last user of devm_gpiod_get_from_of_node() in the mainline
-> (next), it would be great to have it in so that we can remove the API in
-> the next release cycle.
-> 
-> Thanks!
+On Tue, Nov 15, 2022 at 04:56:10PM +0100, Geert Uytterhoeven wrote:
+> On Tue, Oct 25, 2022 at 9:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > Many drivers depend on OF interfaces, so they won't be functional if
+> > CONFIG_OF is not set.  But OF provides stub functions in that case, so drop
+> > the OF dependencies so we can at least compile-test the drivers.
 
-Just a note that more aardvark patches are waiting on the list.
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -8,7 +8,6 @@ config PCI_MVEBU
+> >         depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
+> >         depends on MVEBU_MBUS
+> >         depends on ARM
+> > -       depends on OF
+> 
+> This is exactly why we have the COMPILE_TEST symbol.
+> There is no point in bothering all users who configure kernels with
+> questions about drivers that won't function anyway due to missing
+> dependencies, unless the user explicitly wants to do compile-testing.
+> 
+> So all of these should become:
+> 
+>     depends on OF || COMPILE_TEST
 
-> 
->  drivers/pci/controller/pci-aardvark.c | 23 +++++++++++------------
->  1 file changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index ba36bbc5897d..5ecfac23c9fc 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -1859,20 +1859,19 @@ static int advk_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
-> -						       "reset-gpios", 0,
-> -						       GPIOD_OUT_LOW,
-> -						       "pcie1-reset");
-> +	pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
->  	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
->  	if (ret) {
-> -		if (ret == -ENOENT) {
-> -			pcie->reset_gpio = NULL;
-> -		} else {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(dev, "Failed to get reset-gpio: %i\n",
-> -					ret);
-> -			return ret;
-> -		}
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get reset-gpio: %i\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
-> +		return ret;
->  	}
->  
->  	ret = of_pci_get_max_link_speed(dev->of_node);
-> -- 
-> 2.38.1.431.g37b22c650d-goog
-> 
-> 
-> -- 
-> Dmitry
+Oh, yes, thanks for pointing this out, I totally blew it here.  I
+dropped this while we figure it out.
+
+Do you have a preference between this:
+
+  depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
+  depends on OF || COMPILE_TEST
+
+and this:
+
+  depends on ((ARCH_MVEBU || ARCH_DOVE) && OF) || COMPILE_TEST
+
+The latter seems more common and doesn't repeat "COMPILE_TEST", but I
+can see advantages to the former.
+
+Bjorn
