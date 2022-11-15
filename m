@@ -2,74 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3CE6291A6
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 06:49:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F6D6629267
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Nov 2022 08:23:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbiKOFtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 00:49:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
+        id S229847AbiKOHXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 02:23:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbiKOFtl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 00:49:41 -0500
-Received: from out199-4.us.a.mail.aliyun.com (out199-4.us.a.mail.aliyun.com [47.90.199.4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AA26398;
-        Mon, 14 Nov 2022 21:49:39 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VUrxW4l_1668491369;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VUrxW4l_1668491369)
-          by smtp.aliyun-inc.com;
-          Tue, 15 Nov 2022 13:49:36 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To:     nirmal.patel@linux.intel.com
-Cc:     jonathan.derrick@linux.dev, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] PCI: vmd: Clean up some inconsistent indenting
-Date:   Tue, 15 Nov 2022 13:48:47 +0800
-Message-Id: <20221115054847.77829-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        with ESMTP id S231908AbiKOHXL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 02:23:11 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895E7205D8
+        for <linux-pci@vger.kernel.org>; Mon, 14 Nov 2022 23:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668496990; x=1700032990;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hTdzQb336Ir81L1D/pToAoyFaMKbM1P1rv8E6J3+34s=;
+  b=bknOgZLbzszVM5mZJTZT3XxQPcB2pO3SRJjFESxSG6v952CfhdSjy0Ds
+   5/xMTjat6XBVFPGF1H8oleFV3W1zDWACQL1OPLlcPLgR4T1ZfkbMTkgzR
+   A1NbzkNhKBA+qA85wBZJQ57isXFRfLDTCqSnBcgSpZTFM3lgVUvwJt9lT
+   DrQmXfAqRw9GgiAcCfQ2jfCYu6Bs+fsde7LI+Oh3jIYKZkduc3ZdGCKPU
+   llIbPGTfDFojDQZtASvObyKgX8aS4sJETE+WomENfeXaA4zX/1tiFb5Vp
+   atAk7EIjZH6uM1ni18Ec8g2QFc2uwaq31M5gpZrmXC6O5wNAkV5hQ5VwE
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="313993054"
+X-IronPort-AV: E=Sophos;i="5.96,165,1665471600"; 
+   d="scan'208";a="313993054"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 23:23:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="727846535"
+X-IronPort-AV: E=Sophos;i="5.96,165,1665471600"; 
+   d="scan'208";a="727846535"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Nov 2022 23:23:07 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 5777A2F3; Tue, 15 Nov 2022 09:23:32 +0200 (EET)
+Date:   Tue, 15 Nov 2022 09:23:32 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Albert Zhou <albert.zhou.50@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v2 1/2] pci: hotplug: add dependency info to Kconfig
+Message-ID: <Y3M+dMJyvnS0uKZ2@black.fi.intel.com>
+References: <20221113112811.22266-1-albert.zhou.50@gmail.com>
+ <20221113112811.22266-2-albert.zhou.50@gmail.com>
+ <Y3IafGm+ewR5LJL9@black.fi.intel.com>
+ <213e1035-b3c7-3d4c-5691-fd936a762745@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <213e1035-b3c7-3d4c-5691-fd936a762745@gmail.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-No functional modification involved.
+Hi,
 
-drivers/pci/controller/vmd.c:983 vmd_resume() warn: inconsistent indenting.
+On Tue, Nov 15, 2022 at 12:38:11PM +1100, Albert Zhou wrote:
+> On 14/11/22 21:37, Mika Westerberg wrote:
+> > > +	default y if USB4
+> > >   	help
+> > >   	  Say Y here if you have a motherboard with a PCI Hotplug controller.
+> > >   	  This allows you to add and remove PCI cards while the machine is
+> > > -	  powered up and running.
+> > > +	  powered up and running. Thunderbolt and USB4 PCI cards require
+> > > +	  Hotplug.
+> > I would not say they "require" this. PCIe is completely optional in USB4
+> > systems and it is perfectly fine to have host controllers or
+> > add-in-cards that don't have a single PCIe adapter.
+> > 
+> > Not objeting the patch, though. For Linux I guess it makes sense to have
+> > this like what you are suggesting. Just perhaps changing the wordirng
+> > 😉
+> 
+> How about “Thunderbolt and USB4 use Hotplug”
 
-Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=3074
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/pci/controller/vmd.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Or
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 98e0746e681c..b7914637048a 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -980,10 +980,10 @@ static int vmd_resume(struct device *dev)
- 	struct vmd_dev *vmd = pci_get_drvdata(pdev);
- 	int err, i;
- 
--       if (vmd->irq_domain)
--               vmd_set_msi_remapping(vmd, true);
--       else
--               vmd_set_msi_remapping(vmd, false);
-+	if (vmd->irq_domain)
-+		vmd_set_msi_remapping(vmd, true);
-+	else
-+		vmd_set_msi_remapping(vmd, false);
- 
- 	for (i = 0; i < vmd->msix_count; i++) {
- 		err = devm_request_irq(dev, vmd->irqs[i].virq,
--- 
-2.20.1.7.g153144c
+"Thunderbolt/USB4 PCIe tunneling needs Native PCIe Hotplug to be enabled"
 
+> Do you agree with the “default y if USB4” for PCIEPORTBUS, HOTPLUG_PCI_PCIE, HOTPLUG_PCI.
+
+Yes, I think for Linux perspective it makes sense to have them enabled
+by default.
