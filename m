@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50DE662C045
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 15:00:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B022A62C04B
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 15:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232584AbiKPOAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 09:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
+        id S233421AbiKPOA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 09:00:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231838AbiKPN6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 08:58:18 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A183E08E;
-        Wed, 16 Nov 2022 05:55:28 -0800 (PST)
+        with ESMTP id S232190AbiKPN6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 08:58:19 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5D62E68F;
+        Wed, 16 Nov 2022 05:55:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1668606928; x=1700142928;
+  t=1668606934; x=1700142934;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Y6HW1WZTSp6NiXSWX0Zkj9hrXIMMPSXo3u43+AFaUXI=;
-  b=0ld0RnAfWkqT+/vMEbHIrHxoVMPPMFCoihfFxoh3MSyxFtuQ8/bAxwwf
-   lm2QnMGcvpZgIvPMhCL2EXKbDySg80srEBHUUg2CZSdt0nU8T91oJrYB4
-   4RI2jRYbWpnKJLGkhgGFgI3cXbfKVh9czYraurbyUgUdNH22xABFJTsBl
-   73kIXsB6vLkgPWwhLpT4DG5CtwlU418E+B2c7m1Q8R4mK/E7zTWnfzVR5
-   9I2tyzhi5mW40v3p803YmyHZT/zNDBl20Ys2mwHM8B8Nz+rTqZVdgpe07
-   90PLEK8ZL1nJBp+YpVXRvERXm1eLsGOuSRvJumD3iaxCHVFepm5ZERUn4
-   Q==;
+  bh=YW+Ic3szHI9xR0GV34+vZdYioxghthhZUaazNWwCVZU=;
+  b=1NPcKFBaH7eyZt9kxPcqecYjmVlqujj8AaFMq0FYj9HCiCOJkrmID0AR
+   dAy7KGlHOAWwS6yepy0LQQbpag3RYKXLkm02EPE3W4WCagxZCx/OU5tuj
+   RjtXaqjUMbC6LWThbxF33lziv3kRGBrkJ2tHI2GSHJD9IvsuMRBu3s1Jf
+   QeFZhha1O0IYcq1C/zgaE3PlPdwgxd5ZqBDk+5VwL+Pvbe6Wpq3xOYfp7
+   LXKxgLvdAHOntp4Fklktnn4RBcSikKCmORDChsXoB4wOqovjkakFuDpCP
+   RlzayzQTbnFUc8Kvt5YTwGG5vj6M2KiNBQ5Z3Y69O0k1Rk2s9NVlXxj7R
+   A==;
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="200047091"
+   d="scan'208";a="123709461"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2022 06:55:28 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2022 06:55:33 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 16 Nov 2022 06:55:27 -0700
+ 15.1.2507.12; Wed, 16 Nov 2022 06:55:30 -0700
 Received: from daire-X570.amer.actel.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Wed, 16 Nov 2022 06:55:25 -0700
+ 15.1.2507.12 via Frontend Transport; Wed, 16 Nov 2022 06:55:27 -0700
 From:   <daire.mcnamara@microchip.com>
 To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <paul.walmsley@sifive.com>,
@@ -46,9 +46,9 @@ To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
         <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-pci@vger.kernel.org>
 CC:     Daire McNamara <daire.mcnamara@microchip.com>
-Subject: [PATCH v1 5/9] PCI: microchip: Gather MSI information from hardware config registers
-Date:   Wed, 16 Nov 2022 13:55:00 +0000
-Message-ID: <20221116135504.258687-6-daire.mcnamara@microchip.com>
+Subject: [PATCH v1 6/9] PCI: microchip: Re-partition code between probe() and init()
+Date:   Wed, 16 Nov 2022 13:55:01 +0000
+Message-ID: <20221116135504.258687-7-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221116135504.258687-1-daire.mcnamara@microchip.com>
 References: <20221116135504.258687-1-daire.mcnamara@microchip.com>
@@ -57,8 +57,7 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,172 +66,115 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Daire McNamara <daire.mcnamara@microchip.com>
 
-The PCIe root complex on PolarFire SoC is configured at bitstream creation
-time using Libero.  Key MSI-related parameters include the number of
-MSIs (1/2/4/8/16/32) and the MSI address. In the device driver, extract
-this information from hw registers at init time, and use it to configure
-MSI system, including configuring MSI capability structure correctly in
-configuration space.
+Continuing to use pci_host_common_probe() for the PCIe root complex on
+PolarFire SoC was leading to an extremely large _init() function and
+some unnatural code flow. Re-partition so some tasks are done in
+a _probe() routine, which calls pci_host_common_probe() and then use a
+much smaller _init() function, mainly to enable interrupts after address
+translation tables are set up.
 
 Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 73 +++++++++++---------
- 1 file changed, 40 insertions(+), 33 deletions(-)
+ drivers/pci/controller/pcie-microchip-host.c | 55 ++++++++++++++------
+ 1 file changed, 38 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index ecd4d3f3e3d4..faecf419ad6f 100644
+index faecf419ad6f..73856647f321 100644
 --- a/drivers/pci/controller/pcie-microchip-host.c
 +++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -20,8 +20,7 @@
- #include "../pci.h"
- 
- /* Number of MSI IRQs */
--#define MC_NUM_MSI_IRQS				32
--#define MC_NUM_MSI_IRQS_CODED			5
-+#define MC_MAX_NUM_MSI_IRQS			32
- 
- /* PCIe Bridge Phy and Controller Phy offsets */
- #define MC_PCIE1_BRIDGE_ADDR			0x00008000u
-@@ -31,6 +30,11 @@
- #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
- 
- /* PCIe Bridge Phy Regs */
-+#define PCIE_PCI_IRQ_DW0			0xa8
-+#define  MSIX_CAP_MASK				BIT(31)
-+#define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
-+#define  NUM_MSI_MSGS_SHIFT			4
-+
- #define IMASK_LOCAL				0x180
- #define  DMA_END_ENGINE_0_MASK			0x00000000u
- #define  DMA_END_ENGINE_0_SHIFT			0
-@@ -79,7 +83,6 @@
- #define IMASK_HOST				0x188
- #define ISTATUS_HOST				0x18c
- #define IMSI_ADDR				0x190
--#define  MSI_ADDR				0x190
- #define ISTATUS_MSI				0x194
- 
- /* PCIe Master table init defines */
-@@ -156,8 +159,6 @@
- 
- /* PCIe Config space MSI capability structure */
- #define MC_MSI_CAP_CTRL_OFFSET			0xe0u
--#define  MC_MSI_MAX_Q_AVAIL			(MC_NUM_MSI_IRQS_CODED << 1)
--#define  MC_MSI_Q_SIZE				(MC_NUM_MSI_IRQS_CODED << 4)
- 
- /* Events */
- #define EVENT_PCIE_L2_EXIT			0
-@@ -257,7 +258,7 @@ struct mc_msi {
- 	struct irq_domain *dev_domain;
- 	u32 num_vectors;
- 	u64 vector_phy;
--	DECLARE_BITMAP(used, MC_NUM_MSI_IRQS);
-+	DECLARE_BITMAP(used, MC_MAX_NUM_MSI_IRQS);
- };
- 
- struct mc_pcie {
-@@ -380,25 +381,29 @@ static struct {
+@@ -381,6 +381,8 @@ static struct {
  
  static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
  
--static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *base)
-+static void mc_pcie_fixup_ecam(struct mc_pcie *port, void __iomem *ecam)
++static struct mc_pcie *port;
++
+ static void mc_pcie_fixup_ecam(struct mc_pcie *port, void __iomem *ecam)
  {
  	struct mc_msi *msi = &port->msi;
--	u32 cap_offset = MC_MSI_CAP_CTRL_OFFSET;
--	u16 msg_ctrl = readw_relaxed(base + cap_offset + PCI_MSI_FLAGS);
--
--	msg_ctrl |= PCI_MSI_FLAGS_ENABLE;
--	msg_ctrl &= ~PCI_MSI_FLAGS_QMASK;
--	msg_ctrl |= MC_MSI_MAX_Q_AVAIL;
--	msg_ctrl &= ~PCI_MSI_FLAGS_QSIZE;
--	msg_ctrl |= MC_MSI_Q_SIZE;
--	msg_ctrl |= PCI_MSI_FLAGS_64BIT;
--
--	writew_relaxed(msg_ctrl, base + cap_offset + PCI_MSI_FLAGS);
--
-+	u16 reg;
-+	u8 queue_size;
-+
-+	/* fixup msi enable flag */
-+	reg = readw_relaxed(ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
-+	reg |= PCI_MSI_FLAGS_ENABLE;
-+	writew_relaxed(reg, ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
-+
-+	/* fixup msi queue flags */
-+	queue_size = reg & PCI_MSI_FLAGS_QMASK;
-+	queue_size >>= 1;
-+	reg &= ~PCI_MSI_FLAGS_QSIZE;
-+	reg |= queue_size << 4;
-+	writew_relaxed(reg, ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
-+
-+	/* fixup msi addr fields */
- 	writel_relaxed(lower_32_bits(msi->vector_phy),
--		       base + cap_offset + PCI_MSI_ADDRESS_LO);
-+		       ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_ADDRESS_LO);
- 	writel_relaxed(upper_32_bits(msi->vector_phy),
--		       base + cap_offset + PCI_MSI_ADDRESS_HI);
-+		       ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_ADDRESS_HI);
- }
- 
- static void mc_handle_msi(struct irq_desc *desc)
-@@ -471,10 +476,7 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+@@ -1095,7 +1097,34 @@ static int mc_platform_init(struct pci_config_window *cfg)
  {
- 	struct mc_pcie *port = domain->host_data;
- 	struct mc_msi *msi = &port->msi;
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	unsigned long bit;
--	u32 val;
- 
- 	mutex_lock(&msi->lock);
- 	bit = find_first_zero_bit(msi->used, msi->num_vectors);
-@@ -488,11 +490,6 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	irq_domain_set_info(domain, virq, bit, &mc_msi_bottom_irq_chip,
- 			    domain->host_data, handle_edge_irq, NULL, NULL);
- 
--	/* Enable MSI interrupts */
--	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
--	val |= PM_MSI_INT_MSI_MASK;
--	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
--
- 	mutex_unlock(&msi->lock);
- 
- 	return 0;
-@@ -1102,6 +1099,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	struct device *dev = cfg->parent;
+ 	struct platform_device *pdev = to_platform_device(dev);
+-	struct mc_pcie *port;
++	void __iomem *bridge_base_addr =
++		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
++	int ret;
++
++	/* Configure address translation table 0 for PCIe config space */
++	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
++			     cfg->res.start,
++			     resource_size(&cfg->res));
++
++	/* Need some fixups in config space */
++	mc_pcie_fixup_ecam(port, cfg->win);
++
++	/* Configure non-config space outbound ranges */
++	ret = mc_pcie_setup_windows(pdev, port);
++	if (ret)
++		return ret;
++
++	/* address translation is up; safe to enable interrupts */
++	ret = mc_init_interrupts(pdev, port);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int mc_host_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
  	void __iomem *bridge_base_addr;
  	void __iomem *ctrl_base_addr;
  	int ret;
-+	u32 val;
- 
+@@ -1104,13 +1133,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
  	if (!port)
-@@ -1123,11 +1121,20 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
+ 		return -ENOMEM;
+-	port->dev = dev;
  
--	port->msi.vector_phy = MSI_ADDR;
--	port->msi.num_vectors = MC_NUM_MSI_IRQS;
-+	/* allow enabling msi by disabling msi-x */
-+	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+	val &= ~MSIX_CAP_MASK;
-+	writel(val, bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+
-+	/* pick num vectors from design */
-+	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+	val &= NUM_MSI_MSGS_MASK;
-+	val >>= NUM_MSI_MSGS_SHIFT;
-+
-+	port->msi.num_vectors = 1 << val;
+-	ret = mc_pcie_init_clks(dev);
+-	if (ret) {
+-		dev_err(dev, "failed to get clock resources, error %d\n", ret);
+-		return -ENODEV;
+-	}
++	port->dev = dev;
  
--	/* Hardware doesn't setup MSI by default */
--	mc_pcie_enable_msi(port, cfg->win);
-+	/* pick vector address from design */
-+	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
+ 	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(port->axi_base_addr))
+@@ -1136,16 +1160,13 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	/* pick vector address from design */
+ 	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
  
- 	/* Configure Address Translation Table 0 for PCIe config space */
- 	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
+-	/* Configure Address Translation Table 0 for PCIe config space */
+-	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
+-			     cfg->res.start, resource_size(&cfg->res));
+-
+-	ret = mc_pcie_setup_windows(pdev, port);
+-	if (ret)
+-		return ret;
++	ret = mc_pcie_init_clks(dev);
++	if (ret) {
++		dev_err(dev, "failed to get clock resources, error %d\n", ret);
++		return -ENODEV;
++	}
+ 
+-	/* address translation is up; safe to enable interrupts */
+-	return mc_init_interrupts(pdev, port);
++	return pci_host_common_probe(pdev);
+ }
+ 
+ static const struct pci_ecam_ops mc_ecam_ops = {
+@@ -1168,7 +1189,7 @@ static const struct of_device_id mc_pcie_of_match[] = {
+ MODULE_DEVICE_TABLE(of, mc_pcie_of_match);
+ 
+ static struct platform_driver mc_pcie_driver = {
+-	.probe = pci_host_common_probe,
++	.probe = mc_host_probe,
+ 	.driver = {
+ 		.name = "microchip-pcie",
+ 		.of_match_table = mc_pcie_of_match,
 -- 
 2.25.1
 
