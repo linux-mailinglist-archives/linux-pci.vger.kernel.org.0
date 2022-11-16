@@ -2,157 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1A9962B1FA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 04:55:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD3462B202
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 05:03:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231502AbiKPDzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 22:55:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50278 "EHLO
+        id S231250AbiKPEDL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 23:03:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbiKPDzl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 22:55:41 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A181822B15
-        for <linux-pci@vger.kernel.org>; Tue, 15 Nov 2022 19:55:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668570940; x=1700106940;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=EwARkjz9eNzsZjSSocG3WJ5BBxDt0Q46AUETShMFWLA=;
-  b=CIpSMisK7qFzQI3hiX8TBqDIUhrhhXkxWhf6Axtx4jSC2TPqWrGCncrj
-   Q/NTIN98h4NJs7HBx8ms1ML7IFOjTAB9YnRGbXkQklzPlSfVN4PmE+ubt
-   iANxANHBEeE8L1eVM2bLYWon7riG5aDS/COZXxPdK7Q3+/UgviKTMl6mq
-   hoPSeXndGw4zzWqPLlfriH9MPJCNxOO9dYHfDYqfVNONE/CIq3u1yJVmV
-   M3rH1um1qbX9gcCuxu3R5yoCR7oF8McKbFKhPMAoYIEvkvjDRnmcust3q
-   vn5N6CzTwsbfCYoiemaZ9iQ6IvyNAytaHgKub0C0X63UsCTb2S3X8S1rv
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="314255054"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="314255054"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 19:55:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="813931349"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="813931349"
-Received: from lkp-server01.sh.intel.com (HELO ebd99836cbe0) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 15 Nov 2022 19:55:29 -0800
-Received: from kbuild by ebd99836cbe0 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ov9WK-0001xM-1X;
-        Wed, 16 Nov 2022 03:55:28 +0000
-Date:   Wed, 16 Nov 2022 11:55:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
- e67ad9354a9b7621341adec4ac2c63d5269f835d
-Message-ID: <63745f27.XPMuDb049Wv2GwFT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229958AbiKPEDK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 23:03:10 -0500
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44391E3EC;
+        Tue, 15 Nov 2022 20:03:09 -0800 (PST)
+Received: by mail-pl1-f171.google.com with SMTP id g24so15310949plq.3;
+        Tue, 15 Nov 2022 20:03:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1zIzDKHHVNaVurdU/es7VrrKvHMyE/kDIQtf0pEpjIw=;
+        b=D+Dlj71vTioFw5aoFSqADw++/kUzanUTlYOQ7fNeSSjMyycrCR5pZhMeEJnkbqejcL
+         LCCSFSnafpI5ssaa8POK0gcuW/Pw2DoQXy3ETf5PhEBkMpA7JxjClb0TQCXu2Wa34FNU
+         paxEH9ZS+Smwlv0g1rjPoaXrow8a/svdMvaXfNRidTkqKBrFWYad/XgPkl6zJsV8VsDe
+         ktLzqza/cEzYtGUx74382Cx01ZOtKLKnJQzlcTeXkB5TSprKJ3jLyCQH8Haaa+4SiKtE
+         RmvJ+DvB7CJwQ75cNo6yH8rme3Eh9bGnpCXc6lr7VCy0DMpwD3MIByKOGAnmtW3WLsCq
+         f3qA==
+X-Gm-Message-State: ANoB5plbaNnxF6tUPO7irZmLJYu/BThk6sbTxnIKk+p0P70RfRudN0jn
+        5Vs+jCTJiw6fbpcB5ggOi8U=
+X-Google-Smtp-Source: AA0mqf6hyhoq112sIKQo2v/k51nNvfWIgxwNBEvlAx1Pthk/+MTebE7MSfBKsrWrQE5FLsqcaK8YIQ==
+X-Received: by 2002:a17:90a:3f89:b0:217:90e0:3f8c with SMTP id m9-20020a17090a3f8900b0021790e03f8cmr1687555pjc.192.1668571388739;
+        Tue, 15 Nov 2022 20:03:08 -0800 (PST)
+Received: from rocinante (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id nl8-20020a17090b384800b0020d48bc6661sm390550pjb.31.2022.11.15.20.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 20:03:08 -0800 (PST)
+Date:   Wed, 16 Nov 2022 13:03:01 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-pci@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v3 0/4] PCI: Add pci_dev_for_each_resource() helper and
+Message-ID: <Y3Rg9dGmzZl4GJU5@rocinante>
+References: <20221114185822.65038-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221114185822.65038-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: e67ad9354a9b7621341adec4ac2c63d5269f835d  PCI: pciehp: Enable by default if USB4 enabled
+Hello,
 
-elapsed time: 722m
+> Provide two new helper macros to iterate over PCI device resources and
+> convert users.
+> 
+> Looking at it, refactor existing pci_bus_for_each_resource() and convert
+> users accordingly.
+> 
+> This applies on top of this patch Mika sent out earlier:
+> https://lore.kernel.org/r/20221114115953.40236-1-mika.westerberg@linux.intel.com
+> 
+> Changelog v3:
+> - rebased on top of v2 by Mika, see above
+> - added tag to pcmcia patch (Dominik)
+[...]
 
-configs tested: 76
-configs skipped: 3
+Thank you Andy for all the improvements and Mika for the idea!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For the whole series:
+  Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                 randconfig-a001-20221114
-i386                 randconfig-a004-20221114
-i386                 randconfig-a002-20221114
-i386                 randconfig-a005-20221114
-i386                 randconfig-a006-20221114
-i386                 randconfig-a003-20221114
-m68k                             allmodconfig
-powerpc                          allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-arc                              allyesconfig
-mips                             allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-x86_64                              defconfig
-ia64                             allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-arc                  randconfig-r043-20221115
-m68k                             allyesconfig
-x86_64                            allnoconfig
-riscv                randconfig-r042-20221115
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-s390                 randconfig-r044-20221115
-x86_64                           allyesconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                      integrator_defconfig
-mips                           ci20_defconfig
-powerpc                      ppc6xx_defconfig
-sh                 kfr2r09-romimage_defconfig
-mips                     decstation_defconfig
-sh                         apsh4a3a_defconfig
-openrisc                 simple_smp_defconfig
-arm                            hisi_defconfig
-powerpc                   motionpro_defconfig
-mips                      maltasmvp_defconfig
-mips                      loongson3_defconfig
-sh                           se7721_defconfig
-arm                         axm55xx_defconfig
-parisc                              defconfig
-powerpc                       maple_defconfig
-i386                          randconfig-c001
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
+Looks very nice!
 
-clang tested configs:
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20221115
-hexagon              randconfig-r045-20221115
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-x86_64                        randconfig-k001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+	Krzysztof
