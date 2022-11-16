@@ -2,62 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D092562C16E
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 15:53:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB5C62C250
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 16:20:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233309AbiKPOxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 09:53:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43564 "EHLO
+        id S234892AbiKPPUa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 10:20:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230507AbiKPOw4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 09:52:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8393F056;
-        Wed, 16 Nov 2022 06:51:29 -0800 (PST)
+        with ESMTP id S234075AbiKPPTw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 10:19:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DAB5289C;
+        Wed, 16 Nov 2022 07:19:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 740DD61E6F;
-        Wed, 16 Nov 2022 14:51:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73A5C433D7;
-        Wed, 16 Nov 2022 14:51:28 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C023DB81DBA;
+        Wed, 16 Nov 2022 15:19:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83D0C433C1;
+        Wed, 16 Nov 2022 15:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668610288;
-        bh=ua2SmIHmfrN/HL4JmO/Y+Pm6lBJ0aqfUQvZIhIz5SZM=;
+        s=k20201202; t=1668611988;
+        bh=lqmI8EdUh2H0o0VABEygiFBMe3KsYR9v64AOL7Is7Dc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NqiCT6mXuKeFWWqBBNmLM0BHcHxB/B9ds35B2R9jcwntjfGBqPZO6cvCYxXjQy+k7
-         I2ncPP1RznmLkNGQwlJ128FdRzKPa4CFRQOm6P9nYCQY3cGVDqg3iKiRliDtnYO4D1
-         HMjaKbpwvjn8+AzPVpw/AzitRti1I7pmzsNXNqgklnNgnjPGNfUuD5Lj42fPgUkJKn
-         hlzDujD47bcjc0BLLKKqqqOJfYC+lXQym9Wd14AZMX1CUuV8mA/PvN00qTH1e6/b7G
-         K3XWIj8lou0D75QtOysU3dSKWWqZPhKdwyD2SwdxIgYqkN7gqHVDFxIoWWsjroiPpw
-         3OrOA0T5dd96A==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1ovJkh-0003Pi-63; Wed, 16 Nov 2022 15:50:59 +0100
-Date:   Wed, 16 Nov 2022 15:50:59 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] arm64: dts: qcom: sm8350-hdk: enable PCIe devices
-Message-ID: <Y3T405atm45IMsGa@hovoldconsulting.com>
-References: <20221110183158.856242-1-dmitry.baryshkov@linaro.org>
- <20221110183158.856242-9-dmitry.baryshkov@linaro.org>
+        b=J7jIYwWIlBlxBCL6G3scI/5BVg4tzIbThr4qXSItYpTx99xvJ7x0NWi59cr3t6/81
+         7/QhBJ8SC7zhcwLB8N9Y6ag78d8DxTNTHkNL7FSXoz14JTeO9ngLvBQkVnx+JLtVQl
+         hcF/U93KSkA5Ic5pMGxNKnwnJ8ozxURCBqepygR539gFXdN81Jyf1IxGUXlXOkaruj
+         /SWLYhdRnfLM16UJYmra1IUtgVmJasbfKjemoh6C6LY1JYupH9E9z4daswz6wUp2zh
+         an8Qdujmu9x9nqjISnjLjIfyYcYdy/LnQ0NIscAdsqhGH/8WHy6v7Rj/wZZl0ueFfZ
+         bC8bs3n/hB5Kw==
+Date:   Wed, 16 Nov 2022 15:19:43 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     daire.mcnamara@microchip.com
+Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org,
+        kw@linux.com, bhelgaas@google.com, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 2/9] PCI: microchip: Correct the DED and SEC interrupt
+ bit offsets
+Message-ID: <Y3T/j4P6SERh5O4j@spud>
+References: <20221116135504.258687-1-daire.mcnamara@microchip.com>
+ <20221116135504.258687-3-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221110183158.856242-9-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20221116135504.258687-3-daire.mcnamara@microchip.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -67,50 +57,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 09:31:58PM +0300, Dmitry Baryshkov wrote:
-> Enable PCIe0 and PCIe1 hosts found on SM8350 HDK board.
+On Wed, Nov 16, 2022 at 01:54:57PM +0000, daire.mcnamara@microchip.com wrote:
+> From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> The SEC and DED interrupt bits were the wrong way round so the SEC
+> interrupt handler attempted to mask, unmask, and clear the DED interrupt
+> and vice versa. Correct the bit offsets so each interrupt handler
+> operates properly.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+
+Hey Daire,
+I assume my SoB here is a hang over from me applying to our tree?
+It'll need dropping for whenever you send a v2, sorry for not noticing
+when you sent it to me before sending here.
+Conor.
+
 > ---
->  arch/arm64/boot/dts/qcom/sm8350-hdk.dts | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  drivers/pci/controller/pcie-microchip-host.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-> index 0fcf5bd88fc7..d3c851ec3501 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-> @@ -222,6 +222,26 @@ &mpss {
->  	firmware-name = "qcom/sm8350/modem.mbn";
->  };
->  
-> +&pcie0 {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0_phy {
-> +	status = "okay";
-
-The 'status' property should generally go last.
-
-> +	vdda-phy-supply = <&vreg_l5b_0p88>;
-> +	vdda-pll-supply = <&vreg_l6b_1p2>;
-> +};
-> +
-> +&pcie1 {
-> +	status = "okay";
-> +};
-> +
-> +&pcie1_phy {
-> +	status = "okay";
-
-Same here.
-
-> +	vdda-phy-supply = <&vreg_l5b_0p88>;
-> +	vdda-pll-supply = <&vreg_l6b_1p2>;
-> +};
-> +
->  &qupv3_id_0 {
->  	status = "okay";
->  };
-
-Johan
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+> index 80e7554722ca..30153fd1a2b3 100644
+> --- a/drivers/pci/controller/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -165,12 +165,12 @@
+>  #define EVENT_PCIE_DLUP_EXIT			2
+>  #define EVENT_SEC_TX_RAM_SEC_ERR		3
+>  #define EVENT_SEC_RX_RAM_SEC_ERR		4
+> -#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		5
+> -#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		6
+> +#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		5
+> +#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		6
+>  #define EVENT_DED_TX_RAM_DED_ERR		7
+>  #define EVENT_DED_RX_RAM_DED_ERR		8
+> -#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		9
+> -#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		10
+> +#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		9
+> +#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		10
+>  #define EVENT_LOCAL_DMA_END_ENGINE_0		11
+>  #define EVENT_LOCAL_DMA_END_ENGINE_1		12
+>  #define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
