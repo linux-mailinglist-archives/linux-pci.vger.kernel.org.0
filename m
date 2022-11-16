@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F11662CB6F
+	by mail.lfdr.de (Postfix) with ESMTP id F31C062CB71
 	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 21:51:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234231AbiKPUvT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 15:51:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34122 "EHLO
+        id S234244AbiKPUvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 15:51:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233934AbiKPUvK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 15:51:10 -0500
+        with ESMTP id S234040AbiKPUvM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 15:51:12 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A172627D5;
-        Wed, 16 Nov 2022 12:51:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791C963B87;
+        Wed, 16 Nov 2022 12:51:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 31682B81EB6;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2A92AB81EC1;
+        Wed, 16 Nov 2022 20:51:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95817C433D6;
         Wed, 16 Nov 2022 20:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653F1C433C1;
-        Wed, 16 Nov 2022 20:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668631866;
-        bh=8WkS0KoSIEQDcVnrOtMBRMpT1esiNNbOZ77Wa5K5uk4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YaaJM+O5UkOayhpkKt6HqIxEsHTCrkIte76musMkiVEYg8sHuWUwD56DcfzMtlphV
-         pmxm7NLHBR7iX6klYzQkdbIvEUxiEXLu2VGxkszaFBsJyeuK4GjLPdWT7c5kuaeOv1
-         BRGRGRpwDOUQyKiG9ppR+7Rd/hU6xG2G7hcSDecZlF7us+Dw8apUcqEt0vYfARdR6A
-         lu983HrqwE6rna/i/CZKeY4VLo/urpnBy7aH4Jyub2o42h1AxS23ABIRviZP7PToik
-         jln8QU6+4HhepEfGPb4Z0pgU7ow/2t+OjQhENpuDdDVB8byqLGCLsfWmFcphQkLgI/
-         F95iLfChQ9SVw==
+        s=k20201202; t=1668631868;
+        bh=m6/u2vgmMBuIIdm3mXwZ8M7e/kuC3+TOJ2k7xEqGPF8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fzKeuOjOZxzuqYLQfd4CmqiACVuym10CfQHY3frTCsUUDGehntk6guziLR4zMHr3j
+         +LDx7TVtM+lmr3YKsHOHTycfkFFnBi7QL6dUJV9hopZvLOzG7tY6Aes7geVnsMrT4A
+         4vS90YYFQsnTpgQe/50+yTHGrWdHY+M5Zoa6LUAK3IoGaIkc6u5zpiWktMH/a1yhUV
+         n2lQlz1L2zlMgyhAAQn8wTL+mvySXUZ6Yw/HHj2b6SUub8uaSq8DHdQ+AHODumUSaf
+         xyeOpWLRDA+6t7IU2dD+c7YnF14HUPIxeSdWMPuZ0W80sbfoY1+J12curKlUxVdG5L
+         LiNvyu4/wWfiw==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -40,10 +40,12 @@ Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 0/2] PCI: Allow building CONFIG_OF drivers with COMPILE_TEST
-Date:   Wed, 16 Nov 2022 14:50:58 -0600
-Message-Id: <20221116205100.1136224-1-helgaas@kernel.org>
+Subject: [PATCH v2 1/2] PCI: Drop of_match_ptr() to avoid unused variables
+Date:   Wed, 16 Nov 2022 14:50:59 -0600
+Message-Id: <20221116205100.1136224-2-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221116205100.1136224-1-helgaas@kernel.org>
+References: <20221116205100.1136224-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,30 +60,53 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Update CONFIG_OF dependencies so we can compile-test drivers (with
-CONFIG_COMPILE_TEST=y) even without CONFIG_OF being enabled.  OF provides
-stub functions when CONFIG_OF is not set.
+We have stubs for most OF interfaces even when CONFIG_OF is not set, so we
+allow building of most controller drivers in that case for compile testing.
 
-Changes from v1 to v2:
-  - Retain "depends on OF || COMPILE_TEST" instead of dropping "depends on
-    OF" completely so drivers are only offered when they are applicable or
-    COMPILE_SET is enabled (many thanks to Geert for pointing out this
-    major mistake)
+When CONFIG_OF is not set, "of_match_ptr(<match_table>)" compiles to NULL,
+which leaves <match_table> unused, resulting in errors like this:
 
-v1: https://lore.kernel.org/r/20221025191339.667614-1-helgaas@kernel.org
+  $ make W=1
+  drivers/pci/controller/pci-xgene.c:636:34: error: ‘xgene_pcie_match_table’ defined but not used [-Werror=unused-const-variable=]
 
-Bjorn Helgaas (2):
-  PCI: Drop of_match_ptr() to avoid unused variables
-  PCI: Allow building CONFIG_OF drivers with COMPILE_TEST
+Drop of_match_ptr() to avoid the unused variable warning.
 
- drivers/pci/controller/Kconfig          | 34 +++++++++++----------
- drivers/pci/controller/cadence/Kconfig  | 12 ++++----
- drivers/pci/controller/dwc/Kconfig      | 40 ++++++++++++++++---------
- drivers/pci/controller/mobiveil/Kconfig |  2 +-
- drivers/pci/controller/pci-ftpci100.c   |  2 +-
- drivers/pci/controller/pci-v3-semi.c    |  2 +-
- 6 files changed, 53 insertions(+), 39 deletions(-)
+See also 1dff012f636d ("PCI: Drop of_match_ptr() to avoid unused
+variables").
 
+Link: https://lore.kernel.org/r/20221025191339.667614-2-helgaas@kernel.org
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/controller/pci-ftpci100.c | 2 +-
+ drivers/pci/controller/pci-v3-semi.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index 0cfd9d5a497c..ecd3009df586 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -553,7 +553,7 @@ static const struct of_device_id faraday_pci_of_match[] = {
+ static struct platform_driver faraday_pci_driver = {
+ 	.driver = {
+ 		.name = "ftpci100",
+-		.of_match_table = of_match_ptr(faraday_pci_of_match),
++		.of_match_table = faraday_pci_of_match,
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe  = faraday_pci_probe,
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index 784fcf35599c..ca44b0c83d1b 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -901,7 +901,7 @@ static const struct of_device_id v3_pci_of_match[] = {
+ static struct platform_driver v3_pci_driver = {
+ 	.driver = {
+ 		.name = "pci-v3-semi",
+-		.of_match_table = of_match_ptr(v3_pci_of_match),
++		.of_match_table = v3_pci_of_match,
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe  = v3_pci_probe,
 -- 
 2.25.1
 
