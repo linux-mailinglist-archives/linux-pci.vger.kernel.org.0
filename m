@@ -2,108 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DD3462B202
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 05:03:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D899E62B209
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 05:05:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbiKPEDL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 23:03:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51386 "EHLO
+        id S229958AbiKPEF0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 23:05:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229958AbiKPEDK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 23:03:10 -0500
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44391E3EC;
-        Tue, 15 Nov 2022 20:03:09 -0800 (PST)
-Received: by mail-pl1-f171.google.com with SMTP id g24so15310949plq.3;
-        Tue, 15 Nov 2022 20:03:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1zIzDKHHVNaVurdU/es7VrrKvHMyE/kDIQtf0pEpjIw=;
-        b=D+Dlj71vTioFw5aoFSqADw++/kUzanUTlYOQ7fNeSSjMyycrCR5pZhMeEJnkbqejcL
-         LCCSFSnafpI5ssaa8POK0gcuW/Pw2DoQXy3ETf5PhEBkMpA7JxjClb0TQCXu2Wa34FNU
-         paxEH9ZS+Smwlv0g1rjPoaXrow8a/svdMvaXfNRidTkqKBrFWYad/XgPkl6zJsV8VsDe
-         ktLzqza/cEzYtGUx74382Cx01ZOtKLKnJQzlcTeXkB5TSprKJ3jLyCQH8Haaa+4SiKtE
-         RmvJ+DvB7CJwQ75cNo6yH8rme3Eh9bGnpCXc6lr7VCy0DMpwD3MIByKOGAnmtW3WLsCq
-         f3qA==
-X-Gm-Message-State: ANoB5plbaNnxF6tUPO7irZmLJYu/BThk6sbTxnIKk+p0P70RfRudN0jn
-        5Vs+jCTJiw6fbpcB5ggOi8U=
-X-Google-Smtp-Source: AA0mqf6hyhoq112sIKQo2v/k51nNvfWIgxwNBEvlAx1Pthk/+MTebE7MSfBKsrWrQE5FLsqcaK8YIQ==
-X-Received: by 2002:a17:90a:3f89:b0:217:90e0:3f8c with SMTP id m9-20020a17090a3f8900b0021790e03f8cmr1687555pjc.192.1668571388739;
-        Tue, 15 Nov 2022 20:03:08 -0800 (PST)
-Received: from rocinante (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id nl8-20020a17090b384800b0020d48bc6661sm390550pjb.31.2022.11.15.20.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 20:03:08 -0800 (PST)
-Date:   Wed, 16 Nov 2022 13:03:01 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-pci@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v3 0/4] PCI: Add pci_dev_for_each_resource() helper and
-Message-ID: <Y3Rg9dGmzZl4GJU5@rocinante>
-References: <20221114185822.65038-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230424AbiKPEFZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 23:05:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834AD2CDD5;
+        Tue, 15 Nov 2022 20:05:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 06DE260A29;
+        Wed, 16 Nov 2022 04:05:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA6BC433D6;
+        Wed, 16 Nov 2022 04:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668571522;
+        bh=kjVp3+N7XYR/1DyCEtp1GJWjE3u69DI+4L2HULDkv0w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rBTkloo7Kak4zSyB8JbEINjfdHa10NHKJN44MrWTA7J/ys3I2GFhrAGEKhJfjEgkH
+         FWh5VuOC6p8mfzlapgjAyBWqF1xopGAA6tvYRiw11Y4Vll5siKHJCKWet7PumUFU02
+         /23hMoxfoFsoa3WmGC+++b3B+hZUUEJfZ4CemftNmQhgSGsBQKCXQahYeH4oNRLhkC
+         FIhavl/pIg69yYBwe37NS7oaMW0sRlfZ/oGxhHaS0qayJhahWT6WTkf2yCWxqpBCYc
+         VjKRsjPXbGxUOcyYg5xlAbcQVhnM6oP+BTui3w7H8LhGBxbBzlsZkWAMOv+W00RO7/
+         SESt2hAdqHqwQ==
+Date:   Tue, 15 Nov 2022 22:05:20 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiaochun XC17 Li <lixc17@lenovo.com>
+Cc:     Xiaochun Lee <lixiaochun.2888@163.com>,
+        "nirmal.patel@linux.intel.com" <nirmal.patel@linux.intel.com>,
+        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [External] Re: [PATCH v1] PCI: Set no io resource for bridges
+ that behind VMD controller
+Message-ID: <20221116040520.GA1078511@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221114185822.65038-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <SEYPR03MB6877FB2A677FBBCF80E6BD3ABC079@SEYPR03MB6877.apcprd03.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
-
-> Provide two new helper macros to iterate over PCI device resources and
-> convert users.
+On Wed, Nov 16, 2022 at 03:34:34AM +0000, Xiaochun XC17 Li wrote:
+> On Sat, Nov 11, 2022 at 07:54:25, "Bjorn Helgaas" <helgaas@kernel.org> wrote:
+> > On Tue, Sep 13, 2022 at 09:24:45PM +0800, Xiaochun Lee wrote:
+> > > From: Xiaochun Lee <lixc17@lenovo.com>
+> > >
+> > > When enable VMDs on Intel CPUs, VMD controllers(8086:28c0) be
+> > > recognized by VMD driver and there are many failed messages of BAR 13
+> > > when scan the bridges and assign IO resource behind it as listed
+> > > below, the bridge wants to get 0x6000 as its IO resource, but there is
+> > > no IO resources on the host bridge.
+> > >
+> > > VMD host bridge resources:
+> > > vmd 0000:64:00.5: PCI host bridge to bus 10000:80 pci_bus 10000:80:
+> > > root bus resource [bus 80-9f] pci_bus 10000:80: root bus resource [mem
+> > > 0xe0000000-0xe1ffffff] pci_bus 10000:80: root bus resource [mem
+> > > 0x24ffff02010-0x24fffffffff 64bit]
+> > >
+> > > Failed messages of BAR#13:
+> > > pci 10000:80:02.0: BAR 13: no space for [io  size 0x1000] pci
+> > > 10000:80:02.0: BAR 13: failed to assign [io  size 0x1000] pci
+> > > 10000:80:03.0: BAR 13: no space for [io  size 0x1000] pci
+> > > 10000:80:03.0: BAR 13: failed to assign [io  size 0x1000]
+> > >
+> > > VMD-enabled root ports use
+> > > Enhanced Configuration Access Mechanism (ECAM) access PCI Express
+> > > configuration space, and offer VMD_CFGBAR as base of PCI Express
+> > > configuration space for the bridges behind it. The configuration space
+> > > includes IO resources, but these IO resources are not actually used on
+> > > X86, especially the NVMes as device connected on this hot plug
+> > > bridges, and it can result in BAR#13 assign IO resource failed. So we
+> > > clear IO resources by setting an IO base value greater than limit to
+> > > these bridges. Hence, we can leverage kernel parameter
+> > > "pci=hpiosize=0KB" to avoid this failed messages show out.
+> > >
+> > > Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+> > 
+> > Some of the discussion here got lost because of email issues.  Lore has
+> > some:
+> > https://apc01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.
+> > kernel.org%2Fall%2F1663075485-20591-1-git-send-email-
+> > lixiaochun.2888%40163.com%2FT%2F%23u&amp;data=05%7C01%7Clixc17
+> > %40lenovo.com%7C9cd095ffdb584e492dec08dac440139b%7C5c7d0b28bdf
+> > 8410caa934df372b16203%7C0%7C0%7C638038076734438158%7CUnknown
+> > %7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1ha
+> > WwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=JzWYkIsaEfINofiqo
+> > XyjEh43VjXO3HZw2JLSsmhpUiQ%3D&amp;reserved=0,
+> > and patchwork has a v2 with a little more discussion:
+> > https://apc01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
+> > hwork.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F1664288166-7432-1-
+> > git-send-email-
+> > lixiaochun.2888%40163.com%2F&amp;data=05%7C01%7Clixc17%40lenovo.
+> > com%7C9cd095ffdb584e492dec08dac440139b%7C5c7d0b28bdf8410caa934
+> > df372b16203%7C0%7C0%7C638038076734438158%7CUnknown%7CTWFpb
+> > GZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI
+> > 6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=y%2BtIsepTpyLeoHW6CrgkZz2
+> > tiMjY0TONfK7zNCKXQ90%3D&amp;reserved=0
+> > 
+> > But the v2 patch doesn't seem to have made it to the mailing lists or to
+> > lore
+> > (https://apc01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flor
+> > e.kernel.org%2Fall%2F%3Fq%3Df%253Alixc17&amp;data=05%7C01%7Clixc1
+> > 7%40lenovo.com%7C9cd095ffdb584e492dec08dac440139b%7C5c7d0b28bd
+> > f8410caa934df372b16203%7C0%7C0%7C638038076734438158%7CUnknow
+> > n%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1h
+> > aWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=zxGz1hZOD2tvQP
+> > EsbxQTzjHwQvXvqeO%2FUd6I9S%2Fj314%3D&amp;reserved=0) and I don't
+> > apply things until they appear on the mailing list.
+> > 
+> > I *would* like to get rid of those "no space" and "failed to assign"
+> > messages.  This is an issue for platforms other than VMD, too.  Just an FYI
+> > that you need to follow up on this if we want make progress.
 > 
-> Looking at it, refactor existing pci_bus_for_each_resource() and convert
-> users accordingly.
-> 
-> This applies on top of this patch Mika sent out earlier:
-> https://lore.kernel.org/r/20221114115953.40236-1-mika.westerberg@linux.intel.com
-> 
-> Changelog v3:
-> - rebased on top of v2 by Mika, see above
-> - added tag to pcmcia patch (Dominik)
-[...]
+> Thanks for your comments, so do you mean we'd better come up with a
+> solution to avoid messages like "no space" and "failed to assign" using
+> a common way, for both VMD and other platforms?
 
-Thank you Andy for all the improvements and Mika for the idea!
+I tried to say two separate things:
 
-For the whole series:
-  Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+1) It doesn't seem like a VMD-specific thing, so it would be ideal if
+the solution were generic instead of being VMD-specific.
 
-Looks very nice!
+2) Some of your previous patches didn't make it to the mailing list,
+so we couldn't really do anything with them.
 
-	Krzysztof
+Bjorn
