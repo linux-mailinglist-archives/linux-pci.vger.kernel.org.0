@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E41062CD03
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 22:49:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 040BA62CD08
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 22:49:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237885AbiKPVto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 16:49:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        id S238559AbiKPVts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 16:49:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231342AbiKPVtW (ORCPT
+        with ESMTP id S232506AbiKPVtW (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 16:49:22 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A83A61BB4;
-        Wed, 16 Nov 2022 13:48:48 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id k2so435890ejr.2;
-        Wed, 16 Nov 2022 13:48:48 -0800 (PST)
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECFC5985A;
+        Wed, 16 Nov 2022 13:48:49 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id f18so394128ejz.5;
+        Wed, 16 Nov 2022 13:48:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zruJLlJ8a35SxUsYi/AnlLXhcK2EHytmRl4aws2VY94=;
-        b=kyOPa3lUh60eEhkr7o+pUaMMxRLpUAQ66gaxw/uWejMMCBj8tDKY8zuIDzxcgDunA8
-         c0UwTpD2B1qVIssHrAzEFQghHwFQk6RS6HJe8Jcc2GUXrAYDSmOBFv7XPF+kvbT1/Hkr
-         pXjR28HbBEz2EqrH6hrhEljm+pUYcaMF8Hj/Snks7Ic0R80fs3PFaRBIR7zmvrBkf/0w
-         vao5nlgmEUsbzfxGzfNCwuCIpjS3HWRaSrpadF6jqOAFegsmniw875kFDjTbz4XWV7eG
-         +QIc32uVacO9U2ggGz1D4i1B5k6b0DOBz/YbftVyNZCVmksdgnkYT+ZqCAcsnXROIGau
-         Y9VA==
+        bh=loIeYsbIfqk2P074OtBAWf7HGIfr867twQZf+5G/rew=;
+        b=aPwVJ/UR6Vnv1p3AHkmaOpKOfKdqgLvC9LfsqTKgWaMIkZ+QNqK2KBxgGm1z/pJsaZ
+         rAlxfgPSpk9MbN0DNg1hphCCUYuSISDN9PsuF3W3J3mpKzSBW8xGhyQvcCnpVb0C36cl
+         zOKEDC8aQrmuxO2m9fdDj7GZsPUaoZVbgdgudCsSIdaZYOAXkCs6EQKv25mitRFa/bHc
+         YMpTxzmbWRzTC+IGhDZzZCKDsVT7n4txBGFSe+pWRWMp+mEk5juxJLLUGI9YPZTiiBLH
+         msD0waPDZjyjRGkPnJc4mQR3hnPPrd/cfEKGmypxd4NPezjsm5/a3LQ77t5YhB03uxOU
+         WRPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zruJLlJ8a35SxUsYi/AnlLXhcK2EHytmRl4aws2VY94=;
-        b=mgX70CH1fkyANQm+PnSmJq/6cwvowl5FmbVNQqD3R8GVNVWWvMRBs5mdFyZWBCnikE
-         zIfYodOiCBSQAqbwVCRBghAt7zxRlgQe10Kg7+ndBu5N2mq7vKaUiIXBaW6vJD8sU+To
-         mzeVq/huL40F+Av/aZKo63Inh33v5/+svjjdOu35SU7i34e+9oe0oAk+qLpvG4H+mxG+
-         RmhZfTwemJl2KF4rcWTjnxhJRSuFUqkk3x6X0oqza/hY/YOpYxyljygEak83JCr4/7Oc
-         jA+JAFBuopGMDIxF6WZqU89yA10wy/1DqQqIekdXKdG+DM+uFrkijNDTLuMod87D4528
-         X+aA==
-X-Gm-Message-State: ANoB5pn7fr2co46fUJccwH/flshV1U/BG1yc0Ci0d2aveGio643eIbTY
-        tkzyHmstUh2DLN0oN2Uu4XM=
-X-Google-Smtp-Source: AA0mqf71o5kWi/Zk9aWkbFyHvNX37a6arAehFk3futij85Uf2EAp50i3ceddljJPLJEF38UCRkCpyw==
-X-Received: by 2002:a17:906:ccd0:b0:7a3:28c7:5835 with SMTP id ot16-20020a170906ccd000b007a328c75835mr19881415ejb.32.1668635327065;
-        Wed, 16 Nov 2022 13:48:47 -0800 (PST)
+        bh=loIeYsbIfqk2P074OtBAWf7HGIfr867twQZf+5G/rew=;
+        b=YE8dJ0DPKn1sueoX0xFXdGmb2HEKZLYmsJuZ+Th3yCzf8qdfjcG3p+5l6qTQy3W+vH
+         f/Zl7evJah/EZGf3WxTeVaNX6S9RJVdJpleqjk6+SgHIp9+LKU2V9Ou6In4IPrWRiZMq
+         yPRX0ddU6rRbDahWRNDfp61Xtuxx5dWEFdGY4VrVFexojq8ipgyDX/5yPWlqrdxDJFEP
+         zX5cg3WxGiV7Dd5jw6rlICv4UoerX/5ICwTBBTzGCTZ5nYNw0uykugZsMYKwbtY9UN1G
+         GXZUPZmmwUz6Ijw8HmSvVxoCsuE9O1nfrsG3Dqgk4Ip39MhAYWcPn90LeOjSAxety6GC
+         EuWQ==
+X-Gm-Message-State: ANoB5pmXPjGOr+h9RXc0VvnThgZtdjyPz7QghhAWi1pzHyJMdJjyDvze
+        tdUZVwK+LfMpSs2u48CJ2qk=
+X-Google-Smtp-Source: AA0mqf7yO//UJKXGudN4u0MPQe8SLmp39YTSF9gtSAzsDRwB/WN65OyI7e+EzGo6XowVfnaNtKOCew==
+X-Received: by 2002:a17:906:1c85:b0:7ae:ca2f:171d with SMTP id g5-20020a1709061c8500b007aeca2f171dmr18160540ejh.353.1668635328326;
+        Wed, 16 Nov 2022 13:48:48 -0800 (PST)
 Received: from fedora.. (dh207-99-145.xnet.hr. [88.207.99.145])
-        by smtp.googlemail.com with ESMTPSA id b14-20020aa7dc0e000000b00462e1d8e914sm7931341edu.68.2022.11.16.13.48.45
+        by smtp.googlemail.com with ESMTPSA id b14-20020aa7dc0e000000b00462e1d8e914sm7931341edu.68.2022.11.16.13.48.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 13:48:46 -0800 (PST)
+        Wed, 16 Nov 2022 13:48:47 -0800 (PST)
 From:   Robert Marko <robimarko@gmail.com>
 To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         bhelgaas@google.com, robh+dt@kernel.org,
@@ -58,9 +58,9 @@ To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Robert Marko <robimarko@gmail.com>
-Subject: [PATCH 3/9] arm64: dts: qcom: ipq8074: correct Gen2 PCIe ranges
-Date:   Wed, 16 Nov 2022 22:48:35 +0100
-Message-Id: <20221116214841.1116735-3-robimarko@gmail.com>
+Subject: [PATCH 4/9] arm64: dts: qcom: ipq8074: set Gen2 PCIe pcie max-link-speed
+Date:   Wed, 16 Nov 2022 22:48:36 +0100
+Message-Id: <20221116214841.1116735-4-robimarko@gmail.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221116214841.1116735-1-robimarko@gmail.com>
 References: <20221116214841.1116735-1-robimarko@gmail.com>
@@ -76,32 +76,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Current ranges property set in Gen2 PCIe node is incorrect, replace it
-with the downstream 5.4 QCA kernel value.
+Add the generic 'max-link-speed' property to describe the Gen2 PCIe link
+generation limit.
+This allows the generic DWC code to configure the link speed correctly.
 
-Fixes: 33057e1672fe ("ARM: dts: ipq8074: Add pcie nodes")
 Signed-off-by: Robert Marko <robimarko@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 9503dfb25d50..b1decedbd080 100644
+index b1decedbd080..585e5f0a139d 100644
 --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
 +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -808,9 +808,9 @@ pcie1: pci@10000000 {
- 			phy-names = "pciephy";
+@@ -801,6 +801,7 @@ pcie1: pci@10000000 {
+ 			linux,pci-domain = <1>;
+ 			bus-range = <0x00 0xff>;
+ 			num-lanes = <1>;
++			max-link-speed = <2>;
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
  
- 			ranges = <0x81000000 0 0x10200000 0x10200000
--				  0 0x100000   /* downstream I/O */
--				  0x82000000 0 0x10300000 0x10300000
--				  0 0xd00000>; /* non-prefetchable memory */
-+				  0 0x10000>,   /* downstream I/O */
-+				 <0x82000000 0 0x10220000 0x10220000
-+				  0 0xfde0000>; /* non-prefetchable memory */
- 
- 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
 -- 
 2.38.1
 
