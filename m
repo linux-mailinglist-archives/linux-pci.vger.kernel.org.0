@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68F6D62CA7A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 21:17:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0093762CA9C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 21:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233608AbiKPURO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 15:17:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
+        id S233325AbiKPUTa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 15:19:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230287AbiKPURL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 15:17:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FAC666C95;
-        Wed, 16 Nov 2022 12:17:10 -0800 (PST)
+        with ESMTP id S229863AbiKPUT3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 15:19:29 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C054B43AEA;
+        Wed, 16 Nov 2022 12:19:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03C9D61F8C;
-        Wed, 16 Nov 2022 20:17:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CAF6C433C1;
-        Wed, 16 Nov 2022 20:17:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51CBD61F8C;
+        Wed, 16 Nov 2022 20:19:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F48C433D6;
+        Wed, 16 Nov 2022 20:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668629829;
-        bh=JCMrWzNi17gtVdAgGb8ljLb3cjAgUw/SAysa1qozUjI=;
+        s=k20201202; t=1668629967;
+        bh=xfZns+/CLbhHx47KgSYAUimVfvmMzQKOWas5PrCZtk8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SUASEvR/9cGSaHC1omhFU1BTdkOqIgpp/dvw74Pb1nG8IFwkdnUGBUPbxvhGw+ngW
-         5DtGKGAjd5WrzvHxvifvDV8xQBTISWT1fmUKBVTixbxMDDaShbohDQgl35MCOoN0xs
-         1nWFU9rBTw6ksa6Ka7FB1tJvF9yaZv2+KtwpR0TyncmnczLjJ86JdC+IDmm7goFSXd
-         ZzKDJY/esve5yc0NMPYBymqZW57+7C7fTmbHqu1Ot4+ZLYF2Hc6Qv+wU7EbTy9V+kW
-         DEQ1r9R6z66Y57k96Eggcl65oGrDgXw1mIo0wq2bHdIh3xiP1l3LTJkUHR7IRVHPZH
-         QvMjNaxmaUvmA==
-Date:   Wed, 16 Nov 2022 14:17:07 -0600
+        b=tc7RNyMIIiBFVo8Q43esoXmfqjwIHFsbBn3K4lvC5/D7N5QXtszqaz5ME1MeY1a6f
+         wo4lYTNF0ihqf14R1Y8sc7ypXKQ+HZKa6WHOq6VWE32UAdKTisaHW8DwSVkbMV4KZO
+         3xPK/rWEARYIhtBiNHSXKMc0LxZuEsynDSJ7l0FFhtteOeaMUKOIlYhNl6KvOGqcIA
+         eiczxoTtV2AizB6FlTem64juQ3MDS3CO6sK/CanMrgRrgmRny90QZVJCIC135h1J5r
+         wGuepEj5CPbSmSrjVaMkTBjau4DJc08rwpX8BKeN3teu8/SRfUi75j5kMo+QN/QQQl
+         Yw/KwjUmt6dBQ==
+Date:   Wed, 16 Nov 2022 14:19:26 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
@@ -50,13 +50,13 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: Re: [patch 28/33] PCI/MSI: Provide IMS (Interrupt Message Store)
- support
-Message-ID: <20221116201707.GA1133795@bhelgaas>
+Subject: Re: [patch 25/33] PCI/MSI: Provide post-enable dynamic allocation
+ interfaces for MSI-X
+Message-ID: <20221116201926.GA1133983@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221111135206.855773120@linutronix.de>
+In-Reply-To: <20221111135206.688367117@linutronix.de>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -66,163 +66,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 02:58:55PM +0100, Thomas Gleixner wrote:
-> IMS (Interrupt Message Store) is a new specification which allows
-> implementation specific storage of MSI messages contrary to the
-> strict standard specified MSI and MSI-X message stores.
+On Fri, Nov 11, 2022 at 02:58:51PM +0100, Thomas Gleixner wrote:
+> MSI-X vectors can be allocated after the initial MSI-X enablement, but this
+> needs explicit support of the underlying interrupt domains.
 > 
-> This requires new device specific interrupt domains to handle the
-> implementation defined storage which can be an array in device memory or
-> host/guest memory which is shared with hardware queues.
+> Provide a function to query the ability and functions to allocate/free
+> individual vectors post-enable.
 > 
-> Add a function to create IMS domains for PCI devices. IMS domains are using
-> the new per device domain mechanism and are configured by the device driver
-> via a template. IMS domains are created as secondary device domains so they
-> work side on side with MSI[-X] on the same device.
+> The allocation can either request a specific index in the MSI-X table or
+> with the index argument MSI_ANY_INDEX it allocates the next free vector.
 > 
-> The IMS domains have a few constraints:
+> The return value is a struct msi_map which on success contains both index
+> and the Linux interrupt number. In case of failure index is negative and
+> the Linux interrupt number is 0.
 > 
->   - The index space is managed by the core code.
+> The allocation function is for a single MSI-X index at a time as that's
+> sufficient for the most urgent use case VFIO to get rid of the 'disable
+> MSI-X, reallocate, enable-MSI-X' cycle which is prone to lost interrupts
+> and redirections to the legacy and obviously unhandled INTx.
 > 
->     Device memory based IMS provides a storage array with a fixed size
->     which obviously requires an index. But there is no association between
->     index and functionality so the core can randomly allocate an index in
->     the array.
-> 
->     Queue memory based IMS does not have the concept of an index as the
->     storage is somewhere in memory. In that case the index is purely
->     software based to keep track of the allocations.
-> 
->   - There is no requirement for consecutive index ranges
-> 
->     This is currently a limitation of the MSI core and can be implemented
->     if there is a justified use case by changing the internal storage from
->     xarray to maple_tree. For now it's single vector allocation.
-> 
->   - The interrupt chip must provide the following callbacks:
-> 
->   	- irq_mask()
-> 	- irq_unmask()
-> 	- irq_write_msi_msg()
-> 
->    - The interrupt chip must provide the following optional callbacks
->      when the irq_mask(), irq_unmask() and irq_write_msi_msg() callbacks
->      cannot operate directly on hardware, e.g. in the case that the
->      interrupt message store is in queue memory:
-> 
->      	- irq_bus_lock()
-> 	- irq_bus_unlock()
-> 
->      These callbacks are invoked from preemptible task context and are
->      allowed to sleep. In this case the mandatory callbacks above just
->      store the information. The irq_bus_unlock() callback is supposed to
->      make the change effective before returning.
-> 
->    - Interrupt affinity setting is handled by the underlying parent
->      interrupt domain and communicated to the IMS domain via
->      irq_write_msi_msg(). IMS domains cannot have a irq_set_affinity()
->      callback. That's a reasonable restriction similar to the PCI/MSI
->      device domain implementations.
-> 
-> The domain is automatically destroyed when the PCI device is removed.
-> 
+> Also for the use cases Jason Gunthorpe pointed a single index allocation
+> is sufficient.
+
+Maybe a URL or outline the use cases so this means something in a few
+years?  I haven't followed this discussion, so it doesn't even mean
+anything to me now :)
+
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-A couple typos below.
-
 > ---
->  drivers/pci/msi/irqdomain.c |   59 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h         |    5 +++
->  2 files changed, 64 insertions(+)
+>  drivers/pci/msi/api.c       |   67 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/msi/irqdomain.c |    3 +
+>  include/linux/pci.h         |    6 +++
+>  3 files changed, 75 insertions(+), 1 deletion(-)
 > 
+> --- a/drivers/pci/msi/api.c
+> +++ b/drivers/pci/msi/api.c
+> @@ -113,6 +113,73 @@ int pci_enable_msix_range(struct pci_dev
+>  EXPORT_SYMBOL(pci_enable_msix_range);
+>  
+>  /**
+> + * pci_msix_can_alloc_dyn - Query whether dynamic allocation after enabling
+> + *			    MSI-X is supported
+> + *
+> + * @dev:	PCI device to operate on
+> + *
+> + * Return: True if supported, false otherwise
+> + */
+> +bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
+> +{
+> +	if (!dev->msix_cap)
+> +		return false;
+> +
+> +	return pci_msi_domain_supports(dev, MSI_FLAG_PCI_MSIX_ALLOC_DYN, DENY_LEGACY);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_msix_can_alloc_dyn);
+> +
+> +/**
+> + * pci_msix_alloc_irq_at - Allocate an MSI-X interrupt after enabling MSI-X
+> + *			   at a given MSI-X vector index or any free vector index
+> + *
+> + * @dev:	PCI device to operate on
+> + * @index:	Index to allocate. If @index == MSI_ANY_INDEX this allocates
+> + *		the next free index in the MSI-X table
+> + * @affdesc:	Optional pointer to an affinity descriptor structure. NULL otherwise
+> + *
+> + * Return: A struct msi_map
+> + *
+> + *	On success msi_map::index contains the allocated index (>= 0) and
+> + *	msi_map::virq the allocated Linux interrupt number (> 0).
+> + *
+> + *	On fail msi_map::index contains the error code and msi_map::virq
+> + *	is set to 0.
+> + */
+> +struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+> +				     const struct irq_affinity_desc *affdesc)
+> +{
+> +	struct msi_map map = { .index = -ENOTSUPP };
+> +
+> +	if (!dev->msix_enabled)
+> +		return map;
+> +
+> +	if (!pci_msix_can_alloc_dyn(dev))
+> +		return map;
+> +
+> +	return msi_domain_alloc_irq_at(&dev->dev, MSI_DEFAULT_DOMAIN, index, affdesc, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_msix_alloc_irq_at);
+> +
+> +/**
+> + * pci_msix_free_irq - Free an interrupt on a PCI/MSIX interrupt domain
+> + *		      which was allocated via pci_msix_alloc_irq_at()
+> + *
+> + * @dev:	The PCI device to operate on
+> + * @map:	A struct msi_map describing the interrupt to free
+> + *		as returned from the allocation function.
+> + */
+> +void pci_msix_free_irq(struct pci_dev *dev, struct msi_map map)
+> +{
+> +	if (WARN_ON_ONCE(map.index < 0 || map.virq <= 0))
+> +		return;
+> +	if (WARN_ON_ONCE(!pci_msix_can_alloc_dyn(dev)))
+> +		return;
+> +	msi_domain_free_irqs_range(&dev->dev, MSI_DEFAULT_DOMAIN, map.index, map.index);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_msix_free_irq);
+> +
+> +/**
+>   * pci_disable_msix() - Disable MSI-X interrupt mode on device
+>   * @dev: the PCI device to operate on
+>   *
 > --- a/drivers/pci/msi/irqdomain.c
 > +++ b/drivers/pci/msi/irqdomain.c
-> @@ -355,6 +355,65 @@ bool pci_msi_domain_supports(struct pci_
->  	return (supported & feature_mask) == feature_mask;
->  }
+> @@ -225,7 +225,8 @@ static struct msi_domain_template pci_ms
+>  	},
 >  
-> +/**
-> + * pci_create_ims_domain - Create a secondary IMS domain for a PCI device
-> + * @pdev:	The PCI device to operate on
-> + * @template:	The MSI info template which describes the domain
-> + * @hwsize:	The size of the hardware entry table or 0 if the domain
-> + *		is purely software managed
-> + * @data:	Optional pointer to domain specific data to be stored
-> + *		in msi_domain_info::data
-> + *
-> + * Return: True on success, false otherwise
-> + *
-> + * A IMS domain is expected to have the following constraints:
-
-An IMS ...
-
-> + *	- The index space is managed by the core code
-> + *
-> + *	- There is no requirement for consecutive index ranges
-> + *
-> + *	- The interrupt chip must provide the following callbacks:
-> + *		- irq_mask()
-> + *		- irq_unmask()
-> + *		- irq_write_msi_msg()
-> + *
-> + *	- The interrupt chip must provide the following optional callbacks
-> + *	  when the irq_mask(), irq_unmask() and irq_write_msi_msg() callbacks
-> + *	  cannot operate directly on hardware, e.g. in the case that the
-> + *	  interrupt message store is in queue memory:
-> + *		- irq_bus_lock()
-> + *		- irq_bus_unlock()
-> + *
-> + *	  These callbacks are invoked from preemptible task context and are
-> + *	  allowed to sleep. In this case the mandatory callbacks above just
-> + *	  store the information. The irq_bus_unlock() callback is supposed
-> + *	  to make the change effective before returning.
-> + *
-> + *     - Interrupt affinity setting is handled by the underlying parent
-> + *	 interrupt domain and communicated to the IMS domain via
-> + *	 irq_write_msi_msg().
-
-Different indentation than the bullet items above.
-
-> + *
-> + * The domain is automatically destroyed when the PCI device is removed.
-> + */
-> +bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
-> +			   unsigned int hwsize, void *data)
-> +{
-> +	struct irq_domain *domain = dev_get_msi_domain(&pdev->dev);
-> +
-> +	if (!domain || !irq_domain_is_msi_parent(domain))
-> +		return -ENOTSUPP;
-> +
-> +	if (template->info.bus_token != DOMAIN_BUS_PCI_DEVICE_IMS ||
-> +	    !(template->info.flags & MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS) ||
-> +	    !(template->info.flags & MSI_FLAG_FREE_MSI_DESCS) ||
-> +	    !template->chip.irq_mask || !template->chip.irq_unmask ||
-> +	    !template->chip.irq_write_msi_msg || template->chip.irq_set_affinity)
-> +		return -EINVAL;
-> +
-> +	return msi_create_device_irq_domain(&pdev->dev, MSI_SECONDARY_DOMAIN, template,
-> +					    hwsize, data, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_create_ims_domain);
-> +
->  /*
->   * Users of the generic MSI infrastructure expect a device to have a single ID,
->   * so with DMA aliases we have to pick the least-worst compromise. Devices with
+>  	.info = {
+> -		.flags			= MSI_COMMON_FLAGS | MSI_FLAG_PCI_MSIX,
+> +		.flags			= MSI_COMMON_FLAGS | MSI_FLAG_PCI_MSIX |
+> +					  MSI_FLAG_PCI_MSIX_ALLOC_DYN,
+>  		.bus_token		= DOMAIN_BUS_PCI_DEVICE_MSIX,
+>  	},
+>  };
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -2481,6 +2481,11 @@ static inline bool pci_is_thunderbolt_at
->  void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->  #endif
+> @@ -38,6 +38,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/resource_ext.h>
+> +#include <linux/msi_api.h>
+>  #include <uapi/linux/pci.h>
 >  
-> +struct msi_domain_template;
-> +
-> +bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
-> +			   unsigned int hwsize, void *data);
-> +
->  #include <linux/dma-mapping.h>
+>  #include <linux/pci_ids.h>
+> @@ -1559,6 +1560,11 @@ int pci_alloc_irq_vectors_affinity(struc
+>  				   unsigned int max_vecs, unsigned int flags,
+>  				   struct irq_affinity *affd);
 >  
->  #define pci_printk(level, pdev, fmt, arg...) \
+> +bool pci_msix_can_alloc_dyn(struct pci_dev *dev);
+> +struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+> +				     const struct irq_affinity_desc *affdesc);
+> +void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map);
+> +
+>  void pci_free_irq_vectors(struct pci_dev *dev);
+>  int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
+>  const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
 > 
