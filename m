@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8BC362C043
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 15:00:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 384B262C040
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 15:00:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233676AbiKPOAW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 09:00:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        id S233417AbiKPOAV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 09:00:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233666AbiKPN6S (ORCPT
+        with ESMTP id S233676AbiKPN6S (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 08:58:18 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E065264A5;
-        Wed, 16 Nov 2022 05:55:21 -0800 (PST)
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22213F044;
+        Wed, 16 Nov 2022 05:55:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1668606920; x=1700142920;
+  t=1668606929; x=1700142929;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=h5DisrySeivO+9ObvShvEku9XKX1a+6JwPj8X269yOw=;
-  b=EaprPu+Ow2V8N3uQFgvwdb9OaoVUXupzC9+k6BSNnL0kcEtKJf+WVRPV
-   hlrCT77j8Bp3Ne3qI8IgujlBumY5pUS6y3fS3eIGcjGJE2eaiz96XDdTn
-   Zk9D9a4qZS9df630XI/ybwThXWELVhotDlGEetbJk1iuvEaLNMYfx4cF7
-   Raay46KALSZTEbV6ykaPwK00ElTebzYgiT1TdHw3LbW+YzN02lKclPqTt
-   0l0IRrV59hdtC+BIWVmyA3x5/k1CnPCk+JaaaAwohIcOyhNBubl7a+1Ey
-   Z+GJJzefSQu6ps/yGrV4T4ch8U8FJSkmFrR9wBnW+xdflm7KzehRGcogn
+  bh=LQ9aw0MjTD+DyTb5ONZF9JuB5bkGwJGyd3a6rEfBHMU=;
+  b=ZU9s1AJHwIa07nPegMiFM253gx55aZSgze2S/GgHDGRkVn8rHfqR0kOF
+   7Mkg/fqiNzLWrE43xjuXXIMomF60B0wuXy/jrfp2D46Mu9YfNB31di5sq
+   +lWOV2mTPDVcPDjJkMXHQXt+JKGzDg3xZDwfCLGglImSejHPLkPIMZuqi
+   swwNdHMlSuqr8YzCR64VA/wToHqYOlQqSMQ2sLwEXGmEkLpT46vr6YVsY
+   /0fULRHnVU/EmQHE7ZQodZk5duJgRPy61CXnT8pS4G3ZPkvgx0vl/MZwx
+   J6DtBNPr4PEXvI8r5A/Hulv50AdsnwK5YBme/0H0jXSMiWL0DWAiuVVv5
    A==;
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="200047079"
+   d="scan'208";a="123709426"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2022 06:55:20 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2022 06:55:27 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 16 Nov 2022 06:55:19 -0700
+ 15.1.2507.12; Wed, 16 Nov 2022 06:55:21 -0700
 Received: from daire-X570.amer.actel.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Wed, 16 Nov 2022 06:55:16 -0700
+ 15.1.2507.12 via Frontend Transport; Wed, 16 Nov 2022 06:55:19 -0700
 From:   <daire.mcnamara@microchip.com>
 To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <paul.walmsley@sifive.com>,
@@ -46,9 +46,9 @@ To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
         <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-pci@vger.kernel.org>
 CC:     Daire McNamara <daire.mcnamara@microchip.com>
-Subject: [PATCH v1 2/9] PCI: microchip: Correct the DED and SEC interrupt bit offsets
-Date:   Wed, 16 Nov 2022 13:54:57 +0000
-Message-ID: <20221116135504.258687-3-daire.mcnamara@microchip.com>
+Subject: [PATCH v1 3/9] PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+Date:   Wed, 16 Nov 2022 13:54:58 +0000
+Message-ID: <20221116135504.258687-4-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221116135504.258687-1-daire.mcnamara@microchip.com>
 References: <20221116135504.258687-1-daire.mcnamara@microchip.com>
@@ -57,8 +57,7 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,38 +66,92 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Daire McNamara <daire.mcnamara@microchip.com>
 
-The SEC and DED interrupt bits were the wrong way round so the SEC
-interrupt handler attempted to mask, unmask, and clear the DED interrupt
-and vice versa. Correct the bit offsets so each interrupt handler
-operates properly.
+Minor re-organisation so that event handlers can access both a pointer
+to the bridge area of the PCIe rootport and the ctrl area of the PCIe
+rootport.
 
 Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-microchip-host.c | 31 ++++++++++----------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 80e7554722ca..30153fd1a2b3 100644
+index 30153fd1a2b3..a81e6d25e347 100644
 --- a/drivers/pci/controller/pcie-microchip-host.c
 +++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -165,12 +165,12 @@
- #define EVENT_PCIE_DLUP_EXIT			2
- #define EVENT_SEC_TX_RAM_SEC_ERR		3
- #define EVENT_SEC_RX_RAM_SEC_ERR		4
--#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		5
--#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		6
-+#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		5
-+#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		6
- #define EVENT_DED_TX_RAM_DED_ERR		7
- #define EVENT_DED_RX_RAM_DED_ERR		8
--#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		9
--#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		10
-+#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		9
-+#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		10
- #define EVENT_LOCAL_DMA_END_ENGINE_0		11
- #define EVENT_LOCAL_DMA_END_ENGINE_1		12
- #define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
+@@ -654,9 +654,10 @@ static inline u32 reg_to_event(u32 reg, struct event_map field)
+ 	return (reg & field.reg_mask) ? BIT(field.event_bit) : 0;
+ }
+ 
+-static u32 pcie_events(void __iomem *addr)
++static u32 pcie_events(struct mc_pcie *port)
+ {
+-	u32 reg = readl_relaxed(addr);
++	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
++	u32 reg = readl_relaxed(ctrl_base_addr + PCIE_EVENT_INT);
+ 	u32 val = 0;
+ 	int i;
+ 
+@@ -666,9 +667,10 @@ static u32 pcie_events(void __iomem *addr)
+ 	return val;
+ }
+ 
+-static u32 sec_errors(void __iomem *addr)
++static u32 sec_errors(struct mc_pcie *port)
+ {
+-	u32 reg = readl_relaxed(addr);
++	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
++	u32 reg = readl_relaxed(ctrl_base_addr + SEC_ERROR_INT);
+ 	u32 val = 0;
+ 	int i;
+ 
+@@ -678,9 +680,10 @@ static u32 sec_errors(void __iomem *addr)
+ 	return val;
+ }
+ 
+-static u32 ded_errors(void __iomem *addr)
++static u32 ded_errors(struct mc_pcie *port)
+ {
+-	u32 reg = readl_relaxed(addr);
++	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
++	u32 reg = readl_relaxed(ctrl_base_addr + DED_ERROR_INT);
+ 	u32 val = 0;
+ 	int i;
+ 
+@@ -690,9 +693,10 @@ static u32 ded_errors(void __iomem *addr)
+ 	return val;
+ }
+ 
+-static u32 local_events(void __iomem *addr)
++static u32 local_events(struct mc_pcie *port)
+ {
+-	u32 reg = readl_relaxed(addr);
++	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
++	u32 reg = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
+ 	u32 val = 0;
+ 	int i;
+ 
+@@ -704,15 +708,12 @@ static u32 local_events(void __iomem *addr)
+ 
+ static u32 get_events(struct mc_pcie *port)
+ {
+-	void __iomem *bridge_base_addr =
+-		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+-	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
+ 	u32 events = 0;
+ 
+-	events |= pcie_events(ctrl_base_addr + PCIE_EVENT_INT);
+-	events |= sec_errors(ctrl_base_addr + SEC_ERROR_INT);
+-	events |= ded_errors(ctrl_base_addr + DED_ERROR_INT);
+-	events |= local_events(bridge_base_addr + ISTATUS_LOCAL);
++	events |= pcie_events(port);
++	events |= sec_errors(port);
++	events |= ded_errors(port);
++	events |= local_events(port);
+ 
+ 	return events;
+ }
 -- 
 2.25.1
 
