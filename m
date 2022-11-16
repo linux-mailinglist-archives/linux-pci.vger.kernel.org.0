@@ -2,76 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7218F62B669
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 10:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F06F362B6A7
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 10:37:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231821AbiKPJYC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Nov 2022 04:24:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        id S231985AbiKPJhQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Nov 2022 04:37:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232256AbiKPJX5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 04:23:57 -0500
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C33FD7;
-        Wed, 16 Nov 2022 01:23:54 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VUxL0gu_1668590627;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VUxL0gu_1668590627)
-          by smtp.aliyun-inc.com;
-          Wed, 16 Nov 2022 17:23:52 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To:     nirmal.patel@linux.intel.com
-Cc:     jonathan.derrick@linux.dev, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH v2] PCI: vmd: Clean up some inconsistent indenting
-Date:   Wed, 16 Nov 2022 17:23:45 +0800
-Message-Id: <20221116092345.19983-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        with ESMTP id S232614AbiKPJhP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Nov 2022 04:37:15 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002876246
+        for <linux-pci@vger.kernel.org>; Wed, 16 Nov 2022 01:37:13 -0800 (PST)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NByZ00vsWz6HJY4;
+        Wed, 16 Nov 2022 17:34:48 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 16 Nov 2022 10:37:11 +0100
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
+ 2022 09:37:11 +0000
+Date:   Wed, 16 Nov 2022 09:37:10 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Li Ming <ming4.li@intel.com>
+CC:     <bhelgaas@google.com>, <ira.weiny@intel.com>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V2 1/1] PCI/DOE: Fix maximum data object length
+ miscalculation
+Message-ID: <20221116093710.00002091@Huawei.com>
+In-Reply-To: <20221116015637.3299664-1-ming4.li@intel.com>
+References: <20221116015637.3299664-1-ming4.li@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-No functional modification involved.
+On Wed, 16 Nov 2022 09:56:37 +0800
+Li Ming <ming4.li@intel.com> wrote:
 
-drivers/pci/controller/vmd.c:983 vmd_resume() warn: inconsistent
-indenting.
+> The value of data object length 0x0 indicates 2^18 dwords being
+> transferred. This patch adjusts the value of data object length for the
+> above case on both sending side and receiving side.
+> 
+> Besides, it is unnecessary to check whether length is greater than
+> SZ_1M while receiving a response data object, because length from LENGTH
+> field of data object header, max value is 2^18.
+> 
+> Signed-off-by: Li Ming <ming4.li@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=3074
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
-Changs in v2:
-  -Simplify if else statements to vmd_set_msi_remapping(vmd, !!vmd->irq_domain).
+Thanks,
 
- drivers/pci/controller/vmd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 98e0746e681c..9bced822d00a 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -980,10 +980,7 @@ static int vmd_resume(struct device *dev)
- 	struct vmd_dev *vmd = pci_get_drvdata(pdev);
- 	int err, i;
- 
--       if (vmd->irq_domain)
--               vmd_set_msi_remapping(vmd, true);
--       else
--               vmd_set_msi_remapping(vmd, false);
-+	vmd_set_msi_remapping(vmd, !!vmd->irq_domain);
- 
- 	for (i = 0; i < vmd->msix_count; i++) {
- 		err = devm_request_irq(dev, vmd->irqs[i].virq,
--- 
-2.20.1.7.g153144c
+> ---
+> v1->v2:
+>  * Fix the value of PCI_DOE_MAX_LENGTH
+>  * Moving length checking closer to transferring process
+>  * Add a missing bracket
+>  * Adjust patch description
+> ---
+>  drivers/pci/doe.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index e402f05068a5..66d9ab288646 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -29,6 +29,9 @@
+>  #define PCI_DOE_FLAG_CANCEL	0
+>  #define PCI_DOE_FLAG_DEAD	1
+>  
+> +/* Max data object length is 2^18 dwords */
+> +#define PCI_DOE_MAX_LENGTH	(1 << 18)
+> +
+>  /**
+>   * struct pci_doe_mb - State for a single DOE mailbox
+>   *
+> @@ -107,6 +110,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  {
+>  	struct pci_dev *pdev = doe_mb->pdev;
+>  	int offset = doe_mb->cap_offset;
+> +	size_t length;
+>  	u32 val;
+>  	int i;
+>  
+> @@ -123,15 +127,20 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
+>  		return -EIO;
+>  
+> +	/* Length is 2 DW of header + length of payload in DW */
+> +	length = 2 + task->request_pl_sz / sizeof(u32);
+> +	if (length > PCI_DOE_MAX_LENGTH)
+> +		return -EIO;
+> +	if (length == PCI_DOE_MAX_LENGTH)
+> +		length = 0;
+> +
+>  	/* Write DOE Header */
+>  	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->prot.vid) |
+>  		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+> -	/* Length is 2 DW of header + length of payload in DW */
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+>  			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+> -					  2 + task->request_pl_sz /
+> -						sizeof(u32)));
+> +					  length));
+>  	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
+>  		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+>  				       task->request_pl[i]);
+> @@ -178,7 +187,10 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+>  	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+>  
+>  	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> -	if (length > SZ_1M || length < 2)
+> +	/* A value of 0x0 indicates max data object length */
+> +	if (!length)
+> +		length = PCI_DOE_MAX_LENGTH;
+> +	if (length < 2)
+>  		return -EIO;
+>  
+>  	/* First 2 dwords have already been read */
 
