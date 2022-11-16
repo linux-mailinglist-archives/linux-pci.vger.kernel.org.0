@@ -2,104 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A67E662B01E
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 01:37:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74C1B62B035
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Nov 2022 01:44:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbiKPAhq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Nov 2022 19:37:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        id S229478AbiKPAoe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Nov 2022 19:44:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbiKPAhp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 19:37:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547832A970;
-        Tue, 15 Nov 2022 16:37:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 042BCB81A66;
-        Wed, 16 Nov 2022 00:37:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B8FC433B5;
-        Wed, 16 Nov 2022 00:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668559061;
-        bh=BNuisBrauM7r8I3QUy7HVPUK60+5GXaUDdg+V+tFKwY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LA+WyWfTOWaUtNNq2tFThoTEEfrHluSWEeogkfZGw3+pGKlGo6cOVl89ZATAYaTK/
-         rfRzytfqVh/+39qQG8Go0eb8E5MldwGD7sWH/0sdrSl2Qsffr4cKBOWF0j/8D7OHZJ
-         XdVHz2Z8fviZpvdCrO/MVp1XqKgAn4ic7R3ysWgyKYoFU3ugIu+TjsnJ3Uy6SWSQcJ
-         lYZKIoCzGuAkpC7em7cgWbzK80pTKRNMaRHSUI1X8xpunoOtwWFlI4vIQoXvdeQLRR
-         z5KXMtvkBXLCqPTEfCm+YhMy8NK3osBLs5rTF2FbVSE3qNnh5KX0yn+ydtiXdje4c6
-         DRIM2EPH+8O/Q==
-Date:   Tue, 15 Nov 2022 18:37:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-Message-ID: <20221116003739.GA1061657@bhelgaas>
+        with ESMTP id S231419AbiKPAob (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Nov 2022 19:44:31 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C190D2E688;
+        Tue, 15 Nov 2022 16:44:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668559467; x=1700095467;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2NiRuwSx5FT9zdz2LSg6+qqLsUwF4AGVTUaVRQ/KA5E=;
+  b=SRwm2vbV0775HtR1JBlHS1JqTamzcpZYgQpu80PbyPKLb5b4PIIQ2eED
+   rcMo6Uw2FgOxzXtnX6gPAjOlVm0UPC4uC9Dpq+MzmrWlOcCuH+LWTzqGR
+   X04LWGSKJqu0r6z649fRSwSxTX5/LWj01NYBh+Bt2RQ2j05yEhrz++lHC
+   pRcmL1wuVmGf/gMUe1e+07zjWdHjVWveZs5Zs15wprFR9tmyn2UN+PFGi
+   wOklhDiOUmcLb9oFkvRR6MoCKxLPdfVtcgOxoynD0aanvLZ3Qvsp63d1O
+   CtOuZjVSPIUOqPk+/iYEZYpa9c04huIfHV5R/FwX0parfs+hbCbMHkipp
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="299935418"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="299935418"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:44:27 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="968210506"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="968210506"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.209.162.56]) ([10.209.162.56])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:44:26 -0800
+Message-ID: <67109900-0292-885c-4530-5ff58ff8329b@linux.intel.com>
+Date:   Tue, 15 Nov 2022 17:44:25 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0g834K4ZBrEvhAbJhvGBVyq53nreG+xeBufXKQXA3VtrQ@mail.gmail.com>
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URI_TRY_3LD autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] PCI: vmd: Clean up some inconsistent indenting
+Content-Language: en-US
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     jonathan.derrick@linux.dev, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+References: <20221115054847.77829-1-jiapeng.chong@linux.alibaba.com>
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <20221115054847.77829-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 04:33:52PM +0100, Rafael J. Wysocki wrote:
-> On Fri, Nov 11, 2022 at 10:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Fri, Nov 11, 2022 at 12:58:28PM -0600, Limonciello, Mario wrote:
-> > > On 11/11/2022 11:41, Bjorn Helgaas wrote:
-> > > > On Mon, Oct 31, 2022 at 05:33:55PM -0500, Mario Limonciello wrote:
-> > > > > Firmware typically advertises that ACPI devices that represent PCIe
-> > > > > devices can support D3 by a combination of the value returned by
-> > > > > _S0W as well as the HotPlugSupportInD3 _DSD [1].
-> > > > >
-> > > > > `acpi_pci_bridge_d3` looks for this combination but also contains
-> > > > > an assumption that if an ACPI device contains power resources the PCIe
-> > > > > device it's associated with can support D3.  This was introduced
-> > > > > from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
-> > > > > D3 if power managed by ACPI").
-> > > > >
-> > > > > Some firmware configurations for "AMD Pink Sardine" do not support
-> > > > > wake from D3 in _S0W for the ACPI device representing the PCIe root
-> > > > > port used for tunneling. The PCIe device will still be opted into
-> > > > > runtime PM in the kernel [2] because of the logic within
-> > > > > `acpi_pci_bridge_d3`. This currently happens because the ACPI
-> > > > > device contains power resources.
-> >
-> > Wait.  Is this as simple as just recognizing that:
-> >
-> >   _PS0 means the OS has a knob to put the device in D0, but it doesn't
-> >   mean the device can wake itself from a low-power state.  The OS has
-> >   to use _S0W to learn the device's ability to wake itself.
-> 
-> It is.
+On 11/14/2022 9:48 PM, Jiapeng Chong wrote:
+> No functional modification involved.
+>
+> drivers/pci/controller/vmd.c:983 vmd_resume() warn: inconsistent indenting.
+>
+> Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=3074
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> ---
+>  drivers/pci/controller/vmd.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 98e0746e681c..b7914637048a 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -980,10 +980,10 @@ static int vmd_resume(struct device *dev)
+>  	struct vmd_dev *vmd = pci_get_drvdata(pdev);
+>  	int err, i;
+>  
+> -       if (vmd->irq_domain)
+> -               vmd_set_msi_remapping(vmd, true);
+> -       else
+> -               vmd_set_msi_remapping(vmd, false);
+> +	if (vmd->irq_domain)
+> +		vmd_set_msi_remapping(vmd, true);
+> +	else
+> +		vmd_set_msi_remapping(vmd, false);
+>  
+>  	for (i = 0; i < vmd->msix_count; i++) {
+>  		err = devm_request_irq(dev, vmd->irqs[i].virq,
 
-Now I'm confused again about what "HotPlugSupportInD3" means.  The MS
-web page [1] says it identifies Root Ports capable of handling hot
-plug events while in D3.  That sounds kind of related to _S0W: If _S0W
-says "I can wake myself from D3hot and D3cold", how is that different
-from "I can handle hotplug events in D3"?
+Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 
-This patch says that if dev's Root Port has "HotPlugSupportInD3", we
-don't need _PS0 or _PR0 for dev.  I guess that must be true, because
-previously the fact that we checked for "HotPlugSupportInD3" meant the
-device did NOT have _PS0 or _PR0.
+Thanks
 
-[1] https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
