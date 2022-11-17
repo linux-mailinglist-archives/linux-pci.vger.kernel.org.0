@@ -2,159 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A1862D56E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:49:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7944662D571
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234515AbiKQItL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 03:49:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49684 "EHLO
+        id S239651AbiKQItM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 03:49:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239651AbiKQIsz (ORCPT
+        with ESMTP id S239666AbiKQIsz (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:48:55 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5059857B6C
-        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 00:48:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668674927; x=1700210927;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YzW/uBfltV2mjho5n06PaELyRgYifyU7ZxU6FwkP76k=;
-  b=G49CZ+FRc2r74Z0HrYRjrUnZ6JPbpoBWJYJcPywIbpl3T7b96VTdPJyk
-   K9Re3pezKCa1JMng5erXsfVIkCzdrPIxmygDu2lpJEo/VOYWc51Wq4aWU
-   LRemkaIX52hyQHR6HwViTQ7ZnbihQNefXHcnZWW/6FDQcQa1JVRNL6Kac
-   3BtlXPlm9Rdp/F7S7oY55wSI0/yJ6f79I2iYitMz0zaSb/YVaXTQ7JjW8
-   ADDYRpossfRPZYCSLhDYzvkiXn5w7djbae4/g52fAdGRpOxwqL2UHe3/8
-   XVPIPaKmJ1IrZQpdEcykA7No8IsdxOPIbFVZbUakhbL+pXN2m0VGtgar1
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="300330389"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="300330389"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 00:48:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="672738728"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="672738728"
-Received: from lkp-server01.sh.intel.com (HELO 55744f5052f8) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 17 Nov 2022 00:48:44 -0800
-Received: from kbuild by 55744f5052f8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ovaZf-000058-37;
-        Thu, 17 Nov 2022 08:48:43 +0000
-Date:   Thu, 17 Nov 2022 16:48:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/doe] BUILD SUCCESS
- a4ff8e7a71601321f7bf7b58ede664dc0d774274
-Message-ID: <6375f548.rKhyceA7RBdYu0zM%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2468356D67;
+        Thu, 17 Nov 2022 00:48:47 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1668674925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f4v0o1aapg52+kcGV5XzAXyexP8Lv3lkKr4tjq7Y6O8=;
+        b=DpAi6RQXxFDAb2jCHZ8hlQGCjq7mUquhCkriQC1k+9L0/zpGPIDiDl1wxfoVJWMMc78fWv
+        CvKgC6NDCv4M4ECMkgjqNPVdnWHXrvKJw3eIIuHWJdEh3qA+KdDo17J98VlAIUkbdENP3c
+        uIYgYu3SkpZL6fgPFgpWDTw5m0wPt/FS5YSZeCsqZeRZ+AAiJ8CA9Ue9LHcLgni+DdqyC4
+        9HVVmUt1xIcWD1QdHd7VEuB6t9AhpmgY9P6zv760Gn2NALAhbYSBtsMm5JG+DzAF+k65BS
+        IWn5FdhAuzAg6oJvg9KiSyn3jKaDOTJRKePnnqaPxy+Hhpidj+kYQEhQXJAS/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1668674925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f4v0o1aapg52+kcGV5XzAXyexP8Lv3lkKr4tjq7Y6O8=;
+        b=VVj3wrOiImh69rAfSDo0/Y81RyorJMIHmdUsQW58EnPk24F1oOuavIpj30UCq+WmojLUnP
+        UMMbhlSw349GX5AQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [patch 19/33] genirq/msi: Provide msi_desc::msi_data
+In-Reply-To: <Y3U5xwujkZvI0TEN@nvidia.com>
+References: <20221111133158.196269823@linutronix.de>
+ <20221111135206.346985384@linutronix.de> <Y3U5xwujkZvI0TEN@nvidia.com>
+Date:   Thu, 17 Nov 2022 09:48:45 +0100
+Message-ID: <87tu2ym0eq.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/doe
-branch HEAD: a4ff8e7a71601321f7bf7b58ede664dc0d774274  PCI/DOE: Fix maximum data object length miscalculation
+On Wed, Nov 16 2022 at 15:28, Jason Gunthorpe wrote:
+> On Fri, Nov 11, 2022 at 02:58:41PM +0100, Thomas Gleixner wrote:
+>> +/**
+>> + * struct msi_desc_data - Generic MSI descriptor data
+>> + * @iobase:     Pointer to the IOMEM base adress for interrupt callbacks
+>> + * @cookie:	Device cookie provided at allocation time
+>> + *
+>> + * The content of this data is implementation defined, e.g. PCI/IMS
+>> + * implementations will define the meaning of the data.
+>> + */
+>> +struct msi_desc_data {
+>> +	void			__iomem *iobase;
+>> +	union msi_dev_cookie	cookie;
+>> +};
+>
+> It would be nice to see the pci_msi_desc converted to a domain
+> specific storage as well.
+>
+> Maybe could be written
+>
+> struct msi_desc {
+>    u64 domain_data[2];
+> }
+>
+> struct pci_msi_desc {
+> 		u32 msi_mask;
+> 		u8	multiple	: 3;
+> 		u8	multi_cap	: 3;
+> 		u8	can_mask	: 1;
+> 		u8	is_64		: 1;
+> 		u8	mask_pos;
+> 		u16 default_irq;
+> }
+> static_assert(sizeof(struct pci_msi_desc) <= sizeof(((struct msi_desc *)0)->domain_data));
+>
+> struct pci_msix_desc {
+> 		u32 msix_ctrl;
+> 		u8	multiple	: 3;
+> 		u8	multi_cap	: 3;
+> 		u8	can_mask	: 1;
+> 		u8	is_64		: 1;
+> 		u16 default_irq;
+> 		void __iomem *mask_base;
+> }
+> static_assert(sizeof(struct pci_msix_desc) <= sizeof(((struct msi_desc *)0)->domain_data));
+>
+> ideally hidden in the pci code with some irq_chip facing export API to
+> snoop in the bits a few places need
+>
+> We've used 128 bits for the PCI descriptor, we might as well like
+> everyone have all 128 bits for whatever they want to do
 
-elapsed time: 726m
+Not sure because we end up with nasty type casts for
 
-configs tested: 77
-configs skipped: 2
+> struct msi_desc {
+>    u64 domain_data[2];
+> }
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Let me think about it.
 
-gcc tested configs:
-alpha                            allyesconfig
-arc                              allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-m68k                             allyesconfig
-powerpc                          allmodconfig
-m68k                             allmodconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-ia64                             allmodconfig
-s390                                defconfig
-s390                             allyesconfig
-x86_64                            allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-sh                          r7785rp_defconfig
-arm                         lubbock_defconfig
-riscv             nommu_k210_sdcard_defconfig
-powerpc                mpc7448_hpc2_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-s390                       zfcpdump_defconfig
-sh                      rts7751r2d1_defconfig
-microblaze                          defconfig
-sh                          rsk7203_defconfig
-sparc64                          alldefconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                        nsim_700_defconfig
-powerpc                        cell_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-sh                          sdk7786_defconfig
-arm                            zeus_defconfig
-openrisc                            defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-um                               alldefconfig
-sh                           se7722_defconfig
-sh                         ap325rxa_defconfig
-i386                          randconfig-c001
+Thanks,
 
-clang tested configs:
-hexagon              randconfig-r041-20221117
-hexagon              randconfig-r045-20221117
-s390                 randconfig-r044-20221116
-riscv                randconfig-r042-20221116
-hexagon              randconfig-r041-20221116
-hexagon              randconfig-r045-20221116
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-k001
-powerpc                          g5_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+        tglx
