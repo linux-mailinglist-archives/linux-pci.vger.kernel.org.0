@@ -2,228 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB54F62E217
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:36:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF1462E269
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 18:00:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240675AbiKQQgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 11:36:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
+        id S240207AbiKQRAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 12:00:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240673AbiKQQgQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:36:16 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC96870A30
-        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 08:35:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668702921; x=1700238921;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HMXxpVugC093Ie4OcNbXaYdZIP1EZQJ+FUItgCxhVIM=;
-  b=QlhU+bhFXZtRaoGsDjnpVMhq5CDpwjcUIhczsZSRtvqyprPWd3OL6uvz
-   7LfRDj2EJLu4Fucme32D3FHD/V+qgejWDIIo3tvqn+iGHor9HGvwehxrO
-   UTth7Vr7+UuEDx7LCHnM6alxWs4OrHNf6Y4LIfQisD3vF5kky8NUtIPup
-   L1ZXqGIAT4ZbilxnZ57KegwiDxbJm4pEfRQEsGd9SfUdEEP/zReMueVEa
-   c6AIhkN3c8adD0Zr18GNg56wITeA7vNrzMORDIGrTi2WlGTlzktQIVBwA
-   6bs+EaNZIeZPIyL8TrXlhBdTE1OXUgqOtNi4ksZNwc9dYwz/4QT6doY44
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="339731351"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="339731351"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 08:34:49 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="642155517"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="642155517"
-Received: from mtkaczyk-devel.elements.local ([10.102.105.40])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 08:34:48 -0800
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, stuart.w.hayes@gmail.com,
-        dan.j.williams@intel.com
-Subject: [PATCH 3/3] misc: enclosure: update sysfs api
-Date:   Thu, 17 Nov 2022 17:34:07 +0100
-Message-Id: <20221117163407.28472-4-mariusz.tkaczyk@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20221117163407.28472-1-mariusz.tkaczyk@linux.intel.com>
-References: <20221117163407.28472-1-mariusz.tkaczyk@linux.intel.com>
+        with ESMTP id S240305AbiKQRAe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 12:00:34 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FFCB74CD2;
+        Thu, 17 Nov 2022 09:00:31 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso2197967wmp.5;
+        Thu, 17 Nov 2022 09:00:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fvc1vui8FhItk/x7dVzpPLEtk9PzyJtzG8SF5gpDffI=;
+        b=446zLZojEHJQ4afcVQY0WccJF6yAbP34xSotRxgnUYBLWUXiJPpbuUbQmTkAtzfG5L
+         K/sufiHu/oVF2N+HUnIuUO3kPMMftOmrIdwFgjZdCZrps6EPQjCrboy5rgOnI0Gj0cN4
+         v0aI7gKEDGkM8GXQ0UGaHFio7ocd9AJmvhatr/EMJpVmmC24dTHOeG5MND/jcbYduc89
+         xOIghjYTJD2xLWucMWu54cXVHq1I4+NWuwur2Ar6qjWWXEAbG1zozOB9BW+YGUpVkG5V
+         2HRA8AS3iHUi2bsyyLrr0dhcMuVegFPrD26EU4QP87OQpO58kW/8pjVLYH0QDoYPeEWM
+         weXQ==
+X-Gm-Message-State: ANoB5pmrrEhjopaMxC7aQxw5O6Nx9H70kVmBuCjzHQKystPFWIPcVykh
+        6ZUWpCSTcNyqp6Y5HQNRdco=
+X-Google-Smtp-Source: AA0mqf4w9C1S1sB2BGqir78CRk3XkLTTZMCy6CDAwQK6aFc9zQBLMizrSKjohdREPe3RgMeUrWRtJg==
+X-Received: by 2002:a1c:f003:0:b0:3cf:e87a:806a with SMTP id a3-20020a1cf003000000b003cfe87a806amr5835046wmb.58.1668704429531;
+        Thu, 17 Nov 2022 09:00:29 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id c20-20020a7bc854000000b003b476cabf1csm1769710wml.26.2022.11.17.09.00.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 09:00:28 -0800 (PST)
+Date:   Thu, 17 Nov 2022 17:00:21 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, tony.luck@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [Patch v3 13/14] PCI: hv: Add hypercalls to read/write MMIO space
+Message-ID: <Y3Zopc8B5xQLil4d@liuwe-devbox-debian-v2>
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-14-git-send-email-mikelley@microsoft.com>
+ <Y3ZQVpkS0Hr4LsI2@liuwe-devbox-debian-v2>
+ <Y3ZiAE+t6+ZptUuo@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y3ZiAE+t6+ZptUuo@google.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use DEVICE_ATTR RW, RO and WO macros. Update function names
-accordingly.
-No functional changes intended.
+On Thu, Nov 17, 2022 at 04:32:00PM +0000, Sean Christopherson wrote:
+> On Thu, Nov 17, 2022, Wei Liu wrote:
+> > On Wed, Nov 16, 2022 at 10:41:36AM -0800, Michael Kelley wrote:
+> > [...]
+> > >  
+> > > +static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32 *val)
+> > > +{
+> > > +	struct hv_mmio_read_input *in;
+> > > +	struct hv_mmio_read_output *out;
+> > > +	u64 ret;
+> > > +
+> > > +	/*
+> > > +	 * Must be called with interrupts disabled so it is safe
+> > > +	 * to use the per-cpu input argument page.  Use it for
+> > > +	 * both input and output.
+> > > +	 */
+> 
+> There's no need to require interrupts to be disabled to safely use a per-cpu
+> variable, simply disabling preemption also provides the necessary protection.
+> And this_cpu_ptr() will complain with CONFIG_DEBUG_PREEMPT=y if preemption isn't
+> disabled.
+> 
+> IIUC, based on the existing code, what is really be guarded against is an IRQ arriving
+> and initiating a different hypercall from IRQ context, and thus corrupting the page
+> from this function's perspective.
 
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
----
- drivers/misc/enclosure.c | 69 +++++++++++++++++-----------------------
- 1 file changed, 30 insertions(+), 39 deletions(-)
+Exactly. Michael's comment did not say this explicitly but that's what's
+being guarded.
 
-diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
-index 00f50fd0cc85..ab2fd918ecf6 100644
---- a/drivers/misc/enclosure.c
-+++ b/drivers/misc/enclosure.c
-@@ -473,8 +473,8 @@ static const char *const enclosure_type[] = {
- 	[ENCLOSURE_COMPONENT_ARRAY_DEVICE] = "array device",
- };
- 
--static ssize_t get_component_fault(struct device *cdev,
--				   struct device_attribute *attr, char *buf)
-+static ssize_t fault_show(struct device *cdev, struct device_attribute *attr,
-+			  char *buf)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -485,9 +485,8 @@ static ssize_t get_component_fault(struct device *cdev,
- 	return sysfs_emit(buf, "%d\n", status);
- }
- 
--static ssize_t set_component_fault(struct device *cdev,
--				   struct device_attribute *attr,
--				   const char *buf, size_t count)
-+static ssize_t fault_store(struct device *cdev, struct device_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -498,8 +497,8 @@ static ssize_t set_component_fault(struct device *cdev,
- 	return count;
- }
- 
--static ssize_t get_component_status(struct device *cdev,
--				    struct device_attribute *attr,char *buf)
-+static ssize_t status_show(struct device *cdev, struct device_attribute *attr,
-+			   char *buf)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -510,9 +509,8 @@ static ssize_t get_component_status(struct device *cdev,
- 	return sysfs_emit(buf, "%s\n", enclosure_status[status]);
- }
- 
--static ssize_t set_component_status(struct device *cdev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
-+static ssize_t status_store(struct device *cdev, struct device_attribute *attr,
-+			    const char *buf, size_t count)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -533,9 +531,8 @@ static ssize_t set_component_status(struct device *cdev,
- 		return -EINVAL;
- }
- 
--static ssize_t set_component_active(struct device *cdev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
-+static ssize_t active_store(struct device *cdev, struct device_attribute *attr,
-+			    const char *buf, size_t count)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -546,8 +543,8 @@ static ssize_t set_component_active(struct device *cdev,
- 	return count;
- }
- 
--static ssize_t get_component_locate(struct device *cdev,
--				    struct device_attribute *attr, char *buf)
-+static ssize_t locate_show(struct device *cdev, struct device_attribute *attr,
-+			   char *buf)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -558,9 +555,8 @@ static ssize_t get_component_locate(struct device *cdev,
- 	return sysfs_emit(buf, "%d\n", status);
- }
- 
--static ssize_t set_component_locate(struct device *cdev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
-+static ssize_t locate_store(struct device *cdev, struct device_attribute *attr,
-+			    const char *buf, size_t count)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -571,9 +567,8 @@ static ssize_t set_component_locate(struct device *cdev,
- 	return count;
- }
- 
--static ssize_t get_component_power_status(struct device *cdev,
--					  struct device_attribute *attr,
--					  char *buf)
-+static ssize_t power_status_show(struct device *cdev,
-+				 struct device_attribute *attr, char *buf)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -588,9 +583,9 @@ static ssize_t get_component_power_status(struct device *cdev,
- 	return sysfs_emit(buf, "%s\n", ecomp->power_status ? "on" : "off");
- }
- 
--static ssize_t set_component_power_status(struct device *cdev,
--					  struct device_attribute *attr,
--					  const char *buf, size_t count)
-+static ssize_t power_status_store(struct device *cdev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
- {
- 	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-@@ -610,16 +605,16 @@ static ssize_t set_component_power_status(struct device *cdev,
- 	return count;
- }
- 
--static ssize_t get_component_type(struct device *cdev,
--				  struct device_attribute *attr, char *buf)
-+static ssize_t type_show(struct device *cdev,
-+			 struct device_attribute *attr, char *buf)
- {
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
- 
- 	return sysfs_emit(buf, "%s\n", enclosure_type[ecomp->type]);
- }
- 
--static ssize_t get_component_slot(struct device *cdev,
--				  struct device_attribute *attr, char *buf)
-+static ssize_t slot_show(struct device *cdev,
-+			 struct device_attribute *attr, char *buf)
- {
- 	struct enclosure_component *ecomp = to_enclosure_component(cdev);
- 	int slot;
-@@ -633,17 +628,13 @@ static ssize_t get_component_slot(struct device *cdev,
- 	return sysfs_emit(buf, "%d\n", slot);
- }
- 
--static DEVICE_ATTR(fault, S_IRUGO | S_IWUSR, get_component_fault,
--		    set_component_fault);
--static DEVICE_ATTR(status, S_IRUGO | S_IWUSR, get_component_status,
--		   set_component_status);
--static DEVICE_ATTR(active, S_IWUSR, NULL, set_component_active);
--static DEVICE_ATTR(locate, S_IRUGO | S_IWUSR, get_component_locate,
--		   set_component_locate);
--static DEVICE_ATTR(power_status, S_IRUGO | S_IWUSR, get_component_power_status,
--		   set_component_power_status);
--static DEVICE_ATTR(type, S_IRUGO, get_component_type, NULL);
--static DEVICE_ATTR(slot, S_IRUGO, get_component_slot, NULL);
-+static DEVICE_ATTR_RW(fault);
-+static DEVICE_ATTR_RW(status);
-+static DEVICE_ATTR_WO(active);
-+static DEVICE_ATTR_RW(locate);
-+static DEVICE_ATTR_RW(power_status);
-+static DEVICE_ATTR_RO(type);
-+static DEVICE_ATTR_RO(slot);
- 
- static struct attribute *enclosure_component_attrs[] = {
- 	&dev_attr_fault.attr,
--- 
-2.26.2
+> 
+> > Perhaps adding something along this line?
+> > 
+> > 	WARN_ON(!irqs_disabled());
+> 
+> Given that every use of hyperv_pcpu_input_arg except hv_common_cpu_init() disables
+> IRQs, what about adding a helper to retrieve the pointer and assert that IRQs are
+> disabled?  I.e. add the sanity for all usage, not just this one-off case.
+> 
 
+We can potentially introduce a pair of get/put functions for these pages,
+but let's not feature-creep here...
+
+> And since CPUHP_AP_ONLINE_DYN => hv_common_cpu_init() runs after scheduling is
+> activated by CPUHP_AP_SCHED_WAIT_EMPTY, I believe that hv_common_cpu_init() is
+> theoretically broken.  Maybe someone can look at that when fixing he KVM vs.
+> Hyper-V issue?
+> 
+> https://lore.kernel.org/linux-hyperv/878rkqr7ku.fsf@ovpn-192-136.brq.redhat.com
+> https://lore.kernel.org/all/87sfikmuop.fsf@redhat.com
+
+I read the mails before have not looked into those since they are only
+theoretical per those threads. Sorry.
+
+The only scenario I can think of for CPU hotplug right now is the
+(upcoming) Linux root kernel, I guess we will cross the bridge when we
+get there.
+
+Thanks,
+Wei.
