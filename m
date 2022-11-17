@@ -2,33 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9E862E1C2
+	by mail.lfdr.de (Postfix) with ESMTP id B561B62E1C4
 	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:28:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240569AbiKQQ2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 11:28:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36654 "EHLO
+        id S240579AbiKQQ2c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 11:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240596AbiKQQ1m (ORCPT
+        with ESMTP id S240598AbiKQQ1m (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:27:42 -0500
-Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6BC73B8A;
-        Thu, 17 Nov 2022 08:27:35 -0800 (PST)
+Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E50786EF;
+        Thu, 17 Nov 2022 08:27:36 -0800 (PST)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout3.routing.net (Postfix) with ESMTP id CC97562631;
-        Thu, 17 Nov 2022 16:27:33 +0000 (UTC)
+        by mxout1.routing.net (Postfix) with ESMTP id ED00840326;
+        Thu, 17 Nov 2022 16:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1668702454;
+        s=20200217; t=1668702455;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gJcKjc3U/1ZgUtZqBtBqjQ25Ma5XTx9jmqwsXvu8sJ8=;
-        b=YF2QEJksGC+YKvEzRPajXrUawr/zW5CrAmEt+nZJ80HVWBJo0fG+WOqRxUVMUPqKt7u+CY
-        E7pwGQ9EGTW9/QTyCIgZfs0icZgE2wHQDsuCE2PsJiUBEvuOZFceN/5Mj5fMm0ODsri6Ln
-        EWy3oCXTXbOVI70qyZ15vfhiVtBectM=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=46LdQBOByeZuglrOcnrqp2nEUUTk+5YvyMsAuNPulHE=;
+        b=U3xj54lWfq8U8m/PMRmkgw36GAWiQEeWrmOBYJozFxOvf58aEvgTPcNdeHoIGFbrF80EYu
+        AftSJSzBG0cRiVnNGuGd3PzMN2VK+cAeKb49lhaHsAKqnzsFFiISKILQDI1HzO3JgmZ+z0
+        PNPOmssEZq3D0Ny12KjoxaQ6Vg7Y/sc=
 Received: from frank-G5.. (fttx-pool-80.245.75.65.bambit.de [80.245.75.65])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 40E96100501;
-        Thu, 17 Nov 2022 16:27:32 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id AEDB0100767;
+        Thu, 17 Nov 2022 16:27:33 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -47,14 +48,18 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org
-Subject: [PATCH v5 00/11] Add BananaPi R3
-Date:   Thu, 17 Nov 2022 17:27:17 +0100
-Message-Id: <20221117162728.20608-1-linux@fw-web.de>
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v5 01/11] arm64: dts: mt7986: move wed_pcie node
+Date:   Thu, 17 Nov 2022 17:27:18 +0100
+Message-Id: <20221117162728.20608-2-linux@fw-web.de>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221117162728.20608-1-linux@fw-web.de>
+References: <20221117162728.20608-1-linux@fw-web.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: ef396687-64f9-4e40-a6f7-12ef3db568a6
+X-Mail-ID: d5899a80-0129-4e1c-945f-0b56946d8b8e
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -66,91 +71,45 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-This Series adds some Nodes to mt7986 devicetree and the BananaPi R3
+Move the wed_pcie node to have node aligned by address.
 
-This version is rebased on Matthias' DTS64 next Branch from 2022/11/11.
+Fixes: 00b9903996b3 ("arm64: dts: mediatek: mt7986: add support for Wireless Ethernet Dispatch")
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-i included sams series for mt7986 DTS with small changes
-https://patchwork.kernel.org/project/linux-mediatek/cover/20220427124741.18245->
-
-6.2 will support dtso extension for dt overlays:
-
-"kbuild: Allow DTB overlays to built from .dtso named source files"
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=363547d2191cbc32ca954ba75d72908712398ff2
-
-There is some discussion about inclusion of dt-overlays and if it is
-better to support mmc also by these:
-
-https://patchwork.kernel.org/comment/25092116/
-https://patchwork.kernel.org/comment/25085681/
-
-i had run full dtbs-check but i end up with some strange warnings in
-ethernet-node that should not come up as phy-handle and sfp/managed
-properties are already defined.
-
-phy-handle made optional
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documen>
-
-property sfp/managed (which is included for mac subnode in yaml above):
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documen>
-
-changes:
-v5:
-- changed usb ranges/reg/unit-adress
-- added reviewd-by's except usb-part due to changes
-
-v4:
-- dropped RFC prefix
-- rebase on matthias' mtk dts-next (for 6.2) branch
-- added author information to overlays
-- fixed sfp binding error
-- added fix for moving wed_pcie node
-- readded missing compatible patches
-
-v3:
-- changed mmc pull-ups
-- added patch for board binding (sent separately before)
-- added pcie node in mt7986 (not yet again in r3)
-- added dt overlays
-
-
-
-
-
-Frank Wunderlich (7):
-  arm64: dts: mt7986: move wed_pcie node
-  dt-bindings: phy: mediatek,tphy: add support for mt7986
-  dt-bindings: usb: mtk-xhci: add support for mt7986
-  dt-bindings: PCI: mediatek-gen3: add SoC based clock config
-  dt-bindings: PCI: mediatek-gen3: add support for mt7986
-  arm64: dts: mt7986: add Bananapi R3
-  arm64: dts: mt7986: add BPI-R3 nand/nor overlays
-
-Sam Shih (4):
-  arm64: dts: mt7986: add spi related device nodes
-  arm64: dts: mt7986: add usb related device nodes
-  arm64: dts: mt7986: add mmc related device nodes
-  arm64: dts: mt7986: add pcie related device nodes
-
- .../bindings/pci/mediatek-pcie-gen3.yaml      |  64 ++-
- .../bindings/phy/mediatek,tphy.yaml           |   1 +
- .../bindings/usb/mediatek,mtk-xhci.yaml       |   1 +
- arch/arm64/boot/dts/mediatek/Makefile         |   4 +
- .../mediatek/mt7986a-bananapi-bpi-r3-emmc.dts |  31 ++
- .../mediatek/mt7986a-bananapi-bpi-r3-nand.dts |  55 +++
- .../mediatek/mt7986a-bananapi-bpi-r3-nor.dts  |  69 +++
- .../mediatek/mt7986a-bananapi-bpi-r3-sd.dts   |  25 +
- .../dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi | 458 ++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts  | 166 +++++++
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi     | 162 ++++++-
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts  |  63 +++
- 12 files changed, 1081 insertions(+), 18 deletions(-)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+index a22e10e89ab9..afc01abfa99c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+@@ -112,6 +112,12 @@ infracfg: infracfg@10001000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		wed_pcie: wed-pcie@10003000 {
++			compatible = "mediatek,mt7986-wed-pcie",
++				     "syscon";
++			reg = <0 0x10003000 0 0x10>;
++		};
++
+ 		topckgen: topckgen@1001b000 {
+ 			compatible = "mediatek,mt7986-topckgen", "syscon";
+ 			reg = <0 0x1001B000 0 0x1000>;
+@@ -257,12 +263,6 @@ ethsys: syscon@15000000 {
+ 			 #reset-cells = <1>;
+ 		};
+ 
+-		wed_pcie: wed-pcie@10003000 {
+-			compatible = "mediatek,mt7986-wed-pcie",
+-				     "syscon";
+-			reg = <0 0x10003000 0 0x10>;
+-		};
+-
+ 		wed0: wed@15010000 {
+ 			compatible = "mediatek,mt7986-wed",
+ 				     "syscon";
 -- 
 2.34.1
 
