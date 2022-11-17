@@ -2,66 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E431662E1DE
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:29:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E3E62E1F9
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:34:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240679AbiKQQ3e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 11:29:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35358 "EHLO
+        id S240658AbiKQQeo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 11:34:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239890AbiKQQ2m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:28:42 -0500
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DF67D533;
-        Thu, 17 Nov 2022 08:27:46 -0800 (PST)
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout1.routing.net (Postfix) with ESMTP id 870FF41ADB;
-        Thu, 17 Nov 2022 16:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1668702465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFFplL6tnghrNJxSGUJOHaMOAAx8kzDHCg+CXKYngGE=;
-        b=giyrCNfcKxMHMZRBGgsm3L5D/GLAqVH+MarmPEiL9rjX3+NuQ9Kad/2U9sEUVpQVJeuuWR
-        piQBXRbKFjLnyj/2ou/oty3N/cWPvh2G7ZWA55du9FbI0YbuEk61V162mfWLsd04z2mLOA
-        mj0zOfKhzmldns7adc6VA1xLPFll1EU=
-Received: from frank-G5.. (fttx-pool-80.245.75.65.bambit.de [80.245.75.65])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 55ED5100767;
-        Thu, 17 Nov 2022 16:27:44 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v5 10/11] arm64: dts: mt7986: add Bananapi R3
-Date:   Thu, 17 Nov 2022 17:27:27 +0100
-Message-Id: <20221117162728.20608-11-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221117162728.20608-1-linux@fw-web.de>
-References: <20221117162728.20608-1-linux@fw-web.de>
+        with ESMTP id S240311AbiKQQeQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:34:16 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D37075B862
+        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 08:32:04 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d20so2086269plr.10
+        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 08:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y9CVDfHX+ht3pe9PoZgShRnEuMK3hhYjUL+PhteMYLs=;
+        b=f/q9dbYV9KIClED5x6XtnNH9OBcIoYvpVlY3B8f7i0gA+unFTY0qNc4wR8aIGoXTrT
+         rtw+8cfJhy5Qza7fbjpkC+luhVdAYjWJuUet1bg8OVb/V98lJ1qBftWPC1VPNWyZtibz
+         6sRgxWBE2yoShXjcUM9Ugr7rntaliexeg8YjtupMP2ZG1G3AGrEQzZCKaRlakNdoR9HJ
+         ICnuOTPJVhQur77Ec83ZeeoLqeaQWIt11K3f5W91Npt26VtuNXMms15xGcz2GRSYgksD
+         LaZ62GhBy3dwvAxldgN57cZKNCROlQJp8qt9pfYixbMd+q4BfRhxdsoercr8tXDSLUy8
+         8Sfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y9CVDfHX+ht3pe9PoZgShRnEuMK3hhYjUL+PhteMYLs=;
+        b=LVkzN/IioEizVWCZHEtH2qGs6F6WEZ0sawbVE2vOS2hHTqZCtLPhIjIvjUa461IlIO
+         JoiBZK1bNY9eb4V+WYVMjOOG8FN0bBwmRtTXANPjoAHfBHfRBafHS3+l1cy1QHvg2X5z
+         6kaSB8Vaa7tayBHUy2Ic1Ang7wN5r5bzy0oV3YU4DNdK6mGzLqOfbvWTeRf3dfZbfoUh
+         x6xMzLkHkyKWsuXFWCnYATVsiZvzZT3SKyj81DLrC/FJUhfRmynnXj1Pe70nNQwPxUb2
+         oEa1ZR878zTVHNUGx2YOXpjZqMbJykFf614XAUoF//kgASOxPcuKOeqbwsfcXP3BPEKT
+         Jd4g==
+X-Gm-Message-State: ANoB5pnDpFXoj98wrbbIIW6vY7Iiyc33cZvGCrcBiqTxIHMyn4lJRblz
+        7ELCdeP0XfSxM5NtHIrqKc1Arg==
+X-Google-Smtp-Source: AA0mqf41sG/xf71mLgHjciiG592ZXvC0SB+A5zP4I/x7n/699zzfKplULxnAHjLteW5fbWVaokc20w==
+X-Received: by 2002:a17:90b:710:b0:20a:2547:907 with SMTP id s16-20020a17090b071000b0020a25470907mr9733486pjz.37.1668702724236;
+        Thu, 17 Nov 2022 08:32:04 -0800 (PST)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id u15-20020a170902e80f00b001869581f7ecsm1628090plg.116.2022.11.17.08.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 08:32:03 -0800 (PST)
+Date:   Thu, 17 Nov 2022 16:32:00 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, tony.luck@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [Patch v3 13/14] PCI: hv: Add hypercalls to read/write MMIO space
+Message-ID: <Y3ZiAE+t6+ZptUuo@google.com>
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-14-git-send-email-mikelley@microsoft.com>
+ <Y3ZQVpkS0Hr4LsI2@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: b5cb356b-350f-4b76-bfcb-f0706bd9be15
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y3ZQVpkS0Hr4LsI2@liuwe-devbox-debian-v2>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,616 +87,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Thu, Nov 17, 2022, Wei Liu wrote:
+> On Wed, Nov 16, 2022 at 10:41:36AM -0800, Michael Kelley wrote:
+> [...]
+> >  
+> > +static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32 *val)
+> > +{
+> > +	struct hv_mmio_read_input *in;
+> > +	struct hv_mmio_read_output *out;
+> > +	u64 ret;
+> > +
+> > +	/*
+> > +	 * Must be called with interrupts disabled so it is safe
+> > +	 * to use the per-cpu input argument page.  Use it for
+> > +	 * both input and output.
+> > +	 */
 
-Add support for Bananapi R3 SBC.
+There's no need to require interrupts to be disabled to safely use a per-cpu
+variable, simply disabling preemption also provides the necessary protection.
+And this_cpu_ptr() will complain with CONFIG_DEBUG_PREEMPT=y if preemption isn't
+disabled.
 
-- SD/eMMC support (switching first 4 bits of data-bus with sw6/D)
-- all rj45 ports and both SFP working (eth1/lan4)
-- all USB-Ports + SIM-Slot tested
-- i2c and all uarts tested
-- wifi tested (with eeprom calibration data)
+IIUC, based on the existing code, what is really be guarded against is an IRQ arriving
+and initiating a different hypercall from IRQ context, and thus corrupting the page
+from this function's perspective.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
+> Perhaps adding something along this line?
+> 
+> 	WARN_ON(!irqs_disabled());
 
-The device can boot from all 4 storage options. Both, SPI and MMC, can
-be switched using hardware switches on the board, see
-https://wiki.banana-pi.org/Banana_Pi_BPI-R3#Jumper_setting
+Given that every use of hyperv_pcpu_input_arg except hv_common_cpu_init() disables
+IRQs, what about adding a helper to retrieve the pointer and assert that IRQs are
+disabled?  I.e. add the sanity for all usage, not just this one-off case.
 
-I have added base dtb for sd/emmc to have a bootable version in mainline
-linux. SPI-NAND/NOR switched (CS by sw5/C) can be done with DT-Overlays,
-but don't know how to do it in upstream the right way...added dts files
-for dtbo and added them with dtbo extension to Makefile works.
+And since CPUHP_AP_ONLINE_DYN => hv_common_cpu_init() runs after scheduling is
+activated by CPUHP_AP_SCHED_WAIT_EMPTY, I believe that hv_common_cpu_init() is
+theoretically broken.  Maybe someone can look at that when fixing he KVM vs.
+Hyper-V issue?
 
-there is a commit which adds support building dtso files to dtbo in next:
-
-"kbuild: Allow DTB overlays to built from .dtso named source files"
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=363547d2191cbc32ca954ba75d72908712398ff2
-
-if Overlays are accepted then we can change my current dts from here
-to overlays too to have all as such. Till then imho the best way is to
-have mmc as board dts and add the right spi-device via overlay if
-needed.
-
-changes:
-v4:
-- add PCIe nodes
-- fix sfp-properties of sfp-1 (need to be plural)
-  thx to Denis Odintsov for this
-
-v3:
-- rename factory-key to reset-key
-- add dcin regulator and add it as input for 3v3 (with renaming)
-- remove memory-node
-- dropped wifi eeprom (calibration) data
-- move mmc0 pinctrl to common dtsi and drop sdcard comment
-- change mmc pull-up/down to have generic bias-pull*
-
-v2:
-- remove pcie to be added later (discussion about clocks)
-- some fixes based on suggestions on ML
-  - add key suffix like it's done in mt7622-bpi-r64 devicetree
-  - add dash in sfp node names
-  - use reg as unit for switch-node
-  - drop "-3-4" suffix from i2c-pins node name
-  - fix order in Makefile
----
- arch/arm64/boot/dts/mediatek/Makefile         |   2 +
- .../mediatek/mt7986a-bananapi-bpi-r3-emmc.dts |  31 ++
- .../mediatek/mt7986a-bananapi-bpi-r3-sd.dts   |  25 +
- .../dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi | 458 ++++++++++++++++++
- 4 files changed, 516 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 0ec90cb3ef28..e8902f2cc58f 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -7,6 +7,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dts
-new file mode 100644
-index 000000000000..a0ca35b5977e
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#include "mt7986a-bananapi-bpi-r3.dtsi"
-+
-+/ {
-+	model = "Bananapi BPI-R3 (emmc)";
-+};
-+
-+&mmc0 {
-+	bus-width = <8>;
-+	max-frequency = <200000000>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
-+	hs400-ds-delay = <0x14014>;
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_1p8v>;
-+	non-removable;
-+	no-sd;
-+	no-sdio;
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dts
-new file mode 100644
-index 000000000000..06e4691cb815
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dts
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Author: Sam.Shih <sam.shih@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#include "mt7986a-bananapi-bpi-r3.dtsi"
-+
-+/ {
-+	model = "Bananapi BPI-R3 (sdmmc)";
-+};
-+
-+&mmc0 {
-+	bus-width = <4>;
-+	max-frequency = <52000000>;
-+	cap-sd-highspeed;
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_1p8v>;
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi
-new file mode 100644
-index 000000000000..def16e36f1e6
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtsi
-@@ -0,0 +1,458 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2021 MediaTek Inc.
-+ * Authors: Sam.Shih <sam.shih@mediatek.com>
-+ *          Frank Wunderlich <frank-w@public-files.de>
-+ *          Daniel Golle <daniel@makrotopia.org>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/mt65xx.h>
-+
-+#include "mt7986a.dtsi"
-+
-+/ {
-+	model = "Bananapi BPI-R3";
-+	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	dcin: regulator-12vd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12vd";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		reset-key {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wps-key {
-+			label = "wps";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	/* i2c of the left SFP cage (wan) */
-+	i2c_sfp1: i2c-gpio-0 {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&pio 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	/* i2c of the right SFP cage (lan) */
-+	i2c_sfp2: i2c-gpio-1 {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&pio 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		green_led: led-0 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_POWER;
-+			gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		blue_led: led-1 {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&pio 86 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1.8vd";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		vin-supply = <&dcin>;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3.3vd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		vin-supply = <&dcin>;
-+	};
-+
-+	reg_5v: regulator-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name  = "fixed-5p1";
-+		regulator-min-microvolt = <5100000>;
-+		regulator-max-microvolt = <5100000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		vin-supply = <&dcin>;
-+	};
-+
-+	/* left SFP cage (wan) */
-+	sfp1: sfp-1 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp1>;
-+		los-gpios = <&pio 46 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 49 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	/* right SFP cage (lan) */
-+	sfp2: sfp-2 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp2>;
-+		los-gpios = <&pio 31 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 47 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 15 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 48 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&crypto {
-+	status = "okay";
-+};
-+
-+&eth {
-+	status = "okay";
-+
-+	gmac0: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-mode = "2500base-x";
-+
-+		fixed-link {
-+			speed = <2500>;
-+			full-duplex;
-+			pause;
-+		};
-+	};
-+
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-mode = "2500base-x";
-+		sfp = <&sfp1>;
-+		managed = "in-band-status";
-+	};
-+
-+	mdio: mdio-bus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-+
-+&mdio {
-+	switch: switch@31 {
-+		compatible = "mediatek,mt7531";
-+		reg = <31>;
-+		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc0_pins_default>;
-+	pinctrl-1 = <&mmc0_pins_uhs>;
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins>;
-+	status = "okay";
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_pins>;
-+	status = "okay";
-+};
-+
-+&pcie_phy {
-+	status = "okay";
-+};
-+
-+&pio {
-+	i2c_pins: i2c-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c";
-+		};
-+	};
-+
-+	mmc0_pins_default: mmc0-pins {
-+		mux {
-+			function = "emmc";
-+			groups = "emmc_51";
-+		};
-+		conf-cmd-dat {
-+			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
-+			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
-+			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
-+			input-enable;
-+			drive-strength = <4>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
-+		};
-+		conf-clk {
-+			pins = "EMMC_CK";
-+			drive-strength = <6>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
-+		};
-+		conf-ds {
-+			pins = "EMMC_DSL";
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
-+		};
-+		conf-rst {
-+			pins = "EMMC_RSTB";
-+			drive-strength = <4>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
-+		};
-+	};
-+
-+	mmc0_pins_uhs: mmc0-uhs-pins {
-+		mux {
-+			function = "emmc";
-+			groups = "emmc_51";
-+		};
-+		conf-cmd-dat {
-+			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
-+			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
-+			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
-+			input-enable;
-+			drive-strength = <4>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
-+		};
-+		conf-clk {
-+			pins = "EMMC_CK";
-+			drive-strength = <6>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
-+		};
-+		conf-ds {
-+			pins = "EMMC_DSL";
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
-+		};
-+		conf-rst {
-+			pins = "EMMC_RSTB";
-+			drive-strength = <4>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
-+		};
-+	};
-+
-+	pcie_pins: pcie-pins {
-+		mux {
-+			function = "pcie";
-+			groups = "pcie_clk", "pcie_pereset";
-+		};
-+	};
-+
-+	spi_flash_pins: spi-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0", "spi0_wp_hold";
-+		};
-+	};
-+
-+	spic_pins: spic-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi1_0";
-+		};
-+	};
-+
-+	uart1_pins: uart1-pins {
-+		mux {
-+			function = "uart";
-+			groups = "uart1_rx_tx";
-+		};
-+	};
-+
-+	uart2_pins: uart2-pins {
-+		mux {
-+			function = "uart";
-+			groups = "uart2_0_rx_tx";
-+		};
-+	};
-+
-+	wf_2g_5g_pins: wf-2g-5g-pins {
-+		mux {
-+			function = "wifi";
-+			groups = "wf_2g", "wf_5g";
-+		};
-+		conf {
-+			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
-+			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
-+			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
-+			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
-+			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
-+			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
-+			       "WF1_TOP_CLK", "WF1_TOP_DATA";
-+			drive-strength = <4>;
-+		};
-+	};
-+
-+	wf_dbdc_pins: wf-dbdc-pins {
-+		mux {
-+			function = "wifi";
-+			groups = "wf_dbdc";
-+		};
-+		conf {
-+			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
-+			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
-+			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
-+			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
-+			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
-+			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
-+			       "WF1_TOP_CLK", "WF1_TOP_DATA";
-+			drive-strength = <4>;
-+		};
-+	};
-+
-+	wf_led_pins: wf-led-pins {
-+		mux {
-+			function = "led";
-+			groups = "wifi_led";
-+		};
-+	};
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_flash_pins>;
-+	cs-gpios = <0>, <0>;
-+	status = "okay";
-+};
-+
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spic_pins>;
-+	cs-gpios = <0>, <0>;
-+	status = "okay";
-+};
-+
-+&ssusb {
-+	vusb33-supply = <&reg_3p3v>;
-+	vbus-supply = <&reg_5v>;
-+	status = "okay";
-+};
-+
-+&switch {
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "wan";
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			label = "lan0";
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+			label = "lan1";
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+			label = "lan2";
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+			label = "lan3";
-+		};
-+
-+		port5: port@5 {
-+			reg = <5>;
-+			label = "lan4";
-+			phy-mode = "2500base-x";
-+			sfp = <&sfp2>;
-+			managed = "in-band-status";
-+		};
-+
-+		port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&gmac0>;
-+			phy-mode = "2500base-x";
-+
-+			fixed-link {
-+				speed = <2500>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+};
-+
-+&trng {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "okay";
-+};
-+
-+&usb_phy {
-+	status = "okay";
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&wifi {
-+	status = "okay";
-+	pinctrl-names = "default", "dbdc";
-+	pinctrl-0 = <&wf_2g_5g_pins>, <&wf_led_pins>;
-+	pinctrl-1 = <&wf_dbdc_pins>, <&wf_led_pins>;
-+};
-+
--- 
-2.34.1
-
+https://lore.kernel.org/linux-hyperv/878rkqr7ku.fsf@ovpn-192-136.brq.redhat.com
+https://lore.kernel.org/all/87sfikmuop.fsf@redhat.com
