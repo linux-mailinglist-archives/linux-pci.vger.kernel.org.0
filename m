@@ -2,180 +2,416 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D8B562DD6E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 15:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C2C62DE33
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 15:33:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230327AbiKQOA3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 09:00:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
+        id S240134AbiKQOd0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 09:33:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240111AbiKQOAY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 09:00:24 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0664B12616;
-        Thu, 17 Nov 2022 06:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668693623; x=1700229623;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=NGrpr64So9KvCWHzQ/Tzdh0PIOfHQ7v9O/mDGPZzBdQ=;
-  b=jdP0JJJmKmWUDQnmzrlvWDd1VgeeEoICcAn1laTg1gM04R2DXOxyhTas
-   GVVCLZ1f9NUShOPDo7+FlcuF3ye5ERTUWzdH62AMl8T0B9CgnzXpPatcI
-   HgrZkvP33IsEE0SbQHxtRn9mV2CB1upBYvzCT5OQGktXbLdMbBoNC+ZQm
-   q2wxFPNx7w4djMl/Hcuik3k4aueFIFot419fFFY8VCK3twF0q48adBWi0
-   XQzoyp2seUCRhtvKaR3bbliNwtchAGsHpuO8VyB96WW1pZrwW9WCB2LPv
-   FP9NMLYtV3G1jP54JCogzjtgexR5uQN4tPI0Mn8VkHDqF8l2fdXzGWymd
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="314670666"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="314670666"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 06:00:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="884875936"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="884875936"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Nov 2022 06:00:21 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 17 Nov 2022 06:00:20 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Thu, 17 Nov 2022 06:00:20 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.108)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Thu, 17 Nov 2022 06:00:20 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bNl/zVtQAWBmc3SZfBAZYQzgyMpNtp75+04FyTtxUuotfrmwPUtAbttZxtynmmPX8LFKB90bfTgU0GWkAA7qYJB2c8ACOMhVUfTxpO/zjPgArrMU84T+URQj1/Z2uB1VEVIA+epPnwqxKkheiNqDsFSJvJhO4Bt0PBGv7wbeiitMe5c1JRyJOwfrWC7++qBL/0FEQfrDtwAbt7Uj1tmGb/cM2P8kAXhAUQjBaE5NVkV25FMdlRpmO4Y6roRMx3nJ5ErIW9O/7Zp+3zv6QLUt8hF2kLFbQAafIeFBQKh55Twc4G4+br1NFd2df3OmbwB7XEnyqsS6NapPwdoOzhY30w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ta245wnyjXIRgoa6iThaof5sEAbt+zFD7OGFXFsVtEU=;
- b=Y1Y5E60UIvxdsKZJc6x5oN6CtKChzrrD1Ps2SbxvpHZUgaVru+AC0hvSk+9FL5WnTZXaIwLcisKox7lmu2n3x3Rfsq869dxSEPHyErEpyt//jwJZjBpbuLOxDyS/bvnaKY1PAOZxfa4hWYc+QFpmmVPCq5w01bezDUJvYaf2qSzltnyPLJ1rXjF7uy115A+sWXjoyY/Uq+hnNo3+k3ATD45Rnsbrsh9OwAAvbuoQ6D8X4w3dYVJh7zNaXuO4nvPyVMBuMwWuRygvIKHkaKbi/vNmWubsvGzS72WdEQRqAPttn5QsEzdx3w8SGZH1YCaXZY00XzAMHNq/CLPgGYv/Wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com (2603:10b6:a03:45c::14)
- by LV2PR11MB6046.namprd11.prod.outlook.com (2603:10b6:408:17a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
- 2022 14:00:16 +0000
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::6dd2:a8a3:7f9:ad]) by SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::6dd2:a8a3:7f9:ad%4]) with mapi id 15.20.5813.013; Thu, 17 Nov 2022
- 14:00:16 +0000
-Date:   Thu, 17 Nov 2022 06:00:11 -0800
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch 01/39] PCI/MSI: Check for MSI enabled in
- __pci_msix_enable()
-Message-ID: <Y3Y+a/s/lq0sd2Ej@a4bf019067fa.jf.intel.com>
-References: <20221111120501.026511281@linutronix.de>
- <20221111122013.653556720@linutronix.de>
- <Y3UEFBJW1toFJZGn@a4bf019067fa.jf.intel.com>
- <87cz9ln2zu.ffs@tglx>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87cz9ln2zu.ffs@tglx>
-X-ClientProxiedBy: SJ0PR13CA0013.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::18) To SJ1PR11MB6201.namprd11.prod.outlook.com
- (2603:10b6:a03:45c::14)
+        with ESMTP id S240186AbiKQOdN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 09:33:13 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FB7C035;
+        Thu, 17 Nov 2022 06:33:07 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id z26so1953770pff.1;
+        Thu, 17 Nov 2022 06:33:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PbFDs+3SDAki55RJjrrFRD3jZK40Qi40k+nyqVzyofw=;
+        b=mMbOTdEjO/WsYpudFX4YM2CluSHhPm2wREMWr0zsJPGtIdOgI0+AtmqA7QePmXiSzf
+         05n4QXjvyv2y8ZSHzsx2SFH83nbl6zXi0ZrNXHOv+20rvMHBXr8maJYD38QTgh9eYVxV
+         sBusroZDjB1Adn7CFxrmighHn5CYv51/OL278swURZqeiy04D/4t48cUiyFErh3pd3He
+         eiX+Mi6pVmg22uI3JKTgtBWdkmRIyhe/gsGVpGwP9K4xjrJgBO6hzryY3b2TNpMzWRo+
+         xlSgMCgNT3v/iN5wt1JpmS/CruOzr/qkGgoPvAMxoW/YFh8yomslvg+qZl3HXtSlTCUp
+         is+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PbFDs+3SDAki55RJjrrFRD3jZK40Qi40k+nyqVzyofw=;
+        b=5/hOz0lpdkuPauXlyzR6BDsB4mtdtKOB6Jqcje2eiXTExBnhDNjauMtVbIHPdjPLsQ
+         GrIKdeO1IaK4x5V4Wu6strIfyauPcLX/NKIQNzlMqloQqKLQK/RXrtRrsjcG1zrup/fV
+         ORBBHvsu4mU+4sYD0+q7IYxOE1dep4n+cvp7DjTJVVwltW4kU238B2B7cGRRkouazN7Y
+         wed/0Pgkyxf7jXqDwUDhG2qt9dgg65h9opx1YOhMKi0jMplIu1wiUqTxFH69R9RfyBgh
+         lcN0cwoVC+ZG+zIPYH9nA6oMeAWiWv34F08PjMHoVKIzCgXRI2YgxakI/DvEBJ2tDsvN
+         y6JQ==
+X-Gm-Message-State: ANoB5plKuwwIiYQcbvvwb60z+aDptI0pHvaHh/WIM+lRnaGfXpZjeR7j
+        5B1MXwuEfF0kSU638GuMkng=
+X-Google-Smtp-Source: AA0mqf5dJ7wlexrp0AKne+xBVwPRPn2VKPcEdcgpAZKn7ulkPPW5dlCGCHXy/YxM9FejM3LwQqvA/Q==
+X-Received: by 2002:a62:1cd4:0:b0:56b:deea:72e9 with SMTP id c203-20020a621cd4000000b0056bdeea72e9mr3188734pfc.47.1668695587265;
+        Thu, 17 Nov 2022 06:33:07 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o65-20020a625a44000000b00562664d5027sm1217491pfb.61.2022.11.17.06.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 06:33:06 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Thu, 17 Nov 2022 06:33:05 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <20221117143305.GC664755@roeck-us.net>
+References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
+ <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR11MB6201:EE_|LV2PR11MB6046:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a0a2fcb-fd23-49ed-7d35-08dac8a40d40
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: A5hSR6eBBL0PQ5eOfKfEcpEmay6I1M+pg+LC2oS83BcIZ9/Mi84ek2t5xHagYHn8+6hw3SMEO1j86ci9Qr/BaXDqjAHZ+rytMurQYA2eJZifQhf6m1niYpRnL5fRfuEWSMMGmaGydeIUVHhQmlS5L4NBsDo1tHLjzp//qV1o45ZZlLtB6B6ajCv/A3A31ZG4DvWBxY3SlQrPrY2MLxwv9vXNUUDB/2TbPBW6LJioiKO1r93G0BZI5FxKWgMU//NH/uAI85yumaRdB/e1Iv1aUBUM4jlKIFleNcYe57lJPwiTFkJdwChpI2GSJOUjcVoTz6k3CTRHqw9Z00EwUqxhJoxPp2Htx9lN+NSYytgi88ZPF+tuZvXmmC+2aUZXWM0YlmMTc7I/4xoa0F3buDwJoJ0wLHiqyJNArDnrDc1IMSQoHOVR2TlkGEIVuRoXYt3GKLpDMOJP2E1vAPbv3fmqYndufKcovvYVjTPU/yIn+YFKukwA/Cwz4xSvlSucnqwvgA5P4O+ynW7wQN6cfOVlKa/HOvC9gG9kSE/hSRd1Ir8K61w1e4CF8TAZK4R0raoDQtLXWGoRNL2al4nl31YLXJ3eqqGn1z9SyzcPXuoGpzwcAnmTSoKx99mw1QVLKPG4T7v1fMmU6A6XwdemWskW9g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6201.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(39860400002)(376002)(136003)(346002)(366004)(451199015)(107886003)(6666004)(6506007)(26005)(6512007)(6486002)(186003)(478600001)(83380400001)(38100700002)(82960400001)(86362001)(2906002)(8936002)(7416002)(4744005)(41300700001)(66476007)(66556008)(66946007)(5660300002)(54906003)(8676002)(44832011)(4326008)(6916009)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3rY8XKpPg/F81iisymsi5efNwldOflosUqH6jObcWQVQG1J0BivDpx+GqrBK?=
- =?us-ascii?Q?SkyKN/wx5Vq5VOB8LBL+p+Dp5Xp8rEHTaPAUiklRF/HpAJcDft3j8vGlRrVt?=
- =?us-ascii?Q?KIBCSHhFKA93McEXlO6dSDmSlMnlATVBLeX6UKaXtXzlQy9AZ4ligo4W0Gmt?=
- =?us-ascii?Q?xCgF037mSAKXas+7BC9qvKrubdAJz2FHNH/8B3wjr4Kw3vmD241fr7h7FjWi?=
- =?us-ascii?Q?ipnPH5yAnl12tkydxlgCMQcP8u1iAEm7QYcahB363oN0dNtc2enM6f+39La0?=
- =?us-ascii?Q?6Oxh4ypgjUizKlYk86ZV8HkTlvQwczrvmt3ZA1iRkyH9uJmR9KE/gb8S7yU9?=
- =?us-ascii?Q?EZtLKVMjYPzbLlelpFq9u2ZXgD817T4npvr6fR1s+5+3ca5B0PtYCXfTUaYx?=
- =?us-ascii?Q?jafmx4Xom6qqY4aOA2Ae/QQqdyr1I9d9NE6ZYWcoIeea7I70Sn4f6moMsM1C?=
- =?us-ascii?Q?5krdg/8c0BZk4AZHKx2fl1e+ExxK+rf80VDNC+XYa7nBWmD/y29SkrZCboyl?=
- =?us-ascii?Q?sXNLW34j3ApNvAXVmuZTCUl3L9mmpuq7z9PeWABT834/gM2VDtAuXEnJtr9l?=
- =?us-ascii?Q?8h41WYsTDxy7cygT6Um6iFJpC5V3yxLSg6eY4if7HD7eilv/1bNNnIsVZNA7?=
- =?us-ascii?Q?2Vl34g6rLyOXjUH8y9id/xV1drRQp0a12+BiuwoRhGzTXNUMdKiYd0tGVqng?=
- =?us-ascii?Q?MW1QB/bxGcfqiQ3aRXVTN7nYIYCkRB4NTHp1Is1y6xBwSzUTem43QOQS8lmC?=
- =?us-ascii?Q?xYt2Zk0AigdZfrAQZxmwkJZ56HlsI7DIQS850L041nWI6A2I2tkQQ4vYbt63?=
- =?us-ascii?Q?3dpax2eF1nBk64iLfcXAjyysVHupLkojQL4pSczcnuXaOdtNzAsFjrBfrCVU?=
- =?us-ascii?Q?Isp8JSFJq/civ+9TJ6T9rCFeQJvX0hRSCADqCijpcJo+2aOqlIgTESeNlRSG?=
- =?us-ascii?Q?XscZJUMNVne/V6ulNxvPKaNeaQZ39CNY9IxN9/ASJ0hfKqVSbzXrE7+h3UIc?=
- =?us-ascii?Q?PVGIFNSQurtzS5+L+oHS/Gk7895Ycf6k9Jxc5mZ3ONKjv3WvBOvR9SYFKs9v?=
- =?us-ascii?Q?L7Dm+U1NYXR3tTDMMTVWgzeUslNVv5/IZcvpemyfbEuA+uzmZmwrCkq4+JLc?=
- =?us-ascii?Q?acePW9R14ODaEKXr+vMNP/tNoaUka4Eaq9Psaf+AVxqpQPYvtKywBPvA3y1M?=
- =?us-ascii?Q?AISL7LjhvCGIRxvXeNJwv1viy77FlSYhpOejHaqdoMmCCHRGYRqjEnpF9TOW?=
- =?us-ascii?Q?ltvqXVYqwRTVH5yYNVBGZambj/tUEUPItKkhAbDSfkD2Ch0IgzXTlJGJLaRF?=
- =?us-ascii?Q?E73xnZI57944Qno/r3ARss1mOeHLGhezXE0EQlyPlMsOSbqsufLUItw91toZ?=
- =?us-ascii?Q?RAyUvHe993aQ/p5fgxLOLbpWOTpRAZo4JWz6CyRcCyq/DZ4VflvVyg7lyQ1R?=
- =?us-ascii?Q?neols6tyVaLTl96di4AOFzZE011Ao9AIBbWPCe4aK0nXARvdnj6qK2j5RMsq?=
- =?us-ascii?Q?WnsY34cNMMkYQDzwdWnijbeINrDkuSHEO0UecItajY1U1b8IDW6PQIVP2u0V?=
- =?us-ascii?Q?6Fwz5jICRORBsBjTdkkp+VdSGljnB1NAmh+rmbWWrK4H3pagw82Q0nxXuaMr?=
- =?us-ascii?Q?9g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a0a2fcb-fd23-49ed-7d35-08dac8a40d40
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6201.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 14:00:16.6849
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: moF8mpSVxQV10VEdC/aU9aJqocHNQsQq9MhKplG4zn1E1k2v6a+nVfUpXe+ttfbjgXCFsnhaM83BOm97QxNY8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6046
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 02:07:33PM +0100, Thomas Gleixner wrote:
-> On Wed, Nov 16 2022 at 07:39, Ashok Raj wrote:
-> > On Fri, Nov 11, 2022 at 02:54:15PM +0100, Thomas Gleixner wrote:
-> >
-> > Can the pre-enabled checks for msi and msix be moved up before any vector
-> > range check?
-> >
-> > not that it matters for how it fails, does EBUSY sound better?
+On Thu, Nov 17, 2022 at 01:38:42PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
 > 
-> Does any caller care about the error code or about the ordering in which
-> the caller stupity is detected?
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
+>  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
+>  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
+>  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
+>  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
+>  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
+>  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
+>  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
+>  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
+>  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
+>  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
+>  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
+>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
+>  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
+>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
+>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
 
-No, I don't think so. That's why I prefixed it with "not that it matters" :-)
+For watchdog:
 
-Just thought it would be good hygiene, but doesn't change anything functionally.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+>  21 files changed, 23 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> index 1ab416c83c8d..d2de3d128b73 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Qualcomm Global Clock & Reset Controller Common Bindings
+> +title: Qualcomm Global Clock & Reset Controller common parts
+>  
+>  maintainers:
+>    - Stephen Boyd <sboyd@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index ad06d36af208..9b7b94fdbb0b 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/dma/dma-common.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: DMA Engine Generic Binding
+> +title: DMA Engine common properties
+>  
+>  maintainers:
+>    - Vinod Koul <vkoul@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> index 6d3727267fa8..225a141c7b5c 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> @@ -4,13 +4,13 @@
+>  $id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: DMA Controller Generic Binding
+> +title: DMA Controller common properties
+>  
+>  maintainers:
+>    - Vinod Koul <vkoul@kernel.org>
+>  
+>  allOf:
+> -  - $ref: "dma-common.yaml#"
+> +  - $ref: dma-common.yaml#
+>  
+>  # Everything else is described in the common file
+>  properties:
+> diff --git a/Documentation/devicetree/bindings/dma/dma-router.yaml b/Documentation/devicetree/bindings/dma/dma-router.yaml
+> index 4b817f5dc30e..0ebd7bc6232b 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-router.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-router.yaml
+> @@ -4,13 +4,13 @@
+>  $id: http://devicetree.org/schemas/dma/dma-router.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: DMA Router Generic Binding
+> +title: DMA Router common properties
+>  
+>  maintainers:
+>    - Vinod Koul <vkoul@kernel.org>
+>  
+>  allOf:
+> -  - $ref: "dma-common.yaml#"
+> +  - $ref: dma-common.yaml#
+>  
+>  description:
+>    DMA routers are transparent IP blocks used to route DMA request
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adc.yaml b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+> index db348fcbb52c..bd0f5fae256e 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/iio/adc/adc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Generic IIO bindings for ADC channels
+> +title: IIO common properties for ADC channels
+>  
+>  maintainers:
+>    - Jonathan Cameron <jic23@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/media/video-interface-devices.yaml b/Documentation/devicetree/bindings/media/video-interface-devices.yaml
+> index 4527f56a5a6e..bd719cb1813e 100644
+> --- a/Documentation/devicetree/bindings/media/video-interface-devices.yaml
+> +++ b/Documentation/devicetree/bindings/media/video-interface-devices.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/media/video-interface-devices.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Common bindings for video receiver and transmitter devices
+> +title: Common properties for video receiver and transmitter devices
+>  
+>  maintainers:
+>    - Jacopo Mondi <jacopo@jmondi.org>
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.yaml b/Documentation/devicetree/bindings/media/video-interfaces.yaml
+> index 68c3b9871cf3..e8cf73794772 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.yaml
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/media/video-interfaces.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Common bindings for video receiver and transmitter interface endpoints
+> +title: Common properties for video receiver and transmitter interface endpoints
+>  
+>  maintainers:
+>    - Sakari Ailus <sakari.ailus@linux.intel.com>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index 802e3ca8be4d..a17f49738abd 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/mmc/mmc-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: MMC Controller Generic Binding
+> +title: MMC Controller common properties
+>  
+>  maintainers:
+>    - Ulf Hansson <ulf.hansson@linaro.org>
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
+> index 97ac3a3fbb52..20b195ef9b70 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: NAND Chip and NAND Controller Generic Binding
+> +title: NAND Chip and NAND Controller common properties
+>  
+>  maintainers:
+>    - Miquel Raynal <miquel.raynal@bootlin.com>
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index 359a015d4e5a..a004efc42842 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: NAND Chip and NAND Controller Generic Binding
+> +title: NAND Chip and NAND Controller common properties
+>  
+>  maintainers:
+>    - Miquel Raynal <miquel.raynal@bootlin.com>
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/bluetooth-controller.yaml b/Documentation/devicetree/bindings/net/bluetooth/bluetooth-controller.yaml
+> index 9309dc40f54f..8715adff5eaf 100644
+> --- a/Documentation/devicetree/bindings/net/bluetooth/bluetooth-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/bluetooth-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/net/bluetooth/bluetooth-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Bluetooth Controller Generic Binding
+> +title: Bluetooth Controller common properties
+>  
+>  maintainers:
+>    - Marcel Holtmann <marcel@holtmann.org>
+> diff --git a/Documentation/devicetree/bindings/net/can/can-controller.yaml b/Documentation/devicetree/bindings/net/can/can-controller.yaml
+> index 1f0e98051074..3747b46cf9b6 100644
+> --- a/Documentation/devicetree/bindings/net/can/can-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/can/can-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/net/can/can-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: CAN Controller Generic Binding
+> +title: CAN Controller common properties
+>  
+>  maintainers:
+>    - Marc Kleine-Budde <mkl@pengutronix.de>
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index 3aef506fa158..26502c0f2aff 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Ethernet Controller Generic Binding
+> +title: Ethernet Controller common properties
+>  
+>  maintainers:
+>    - David S. Miller <davem@davemloft.net>
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> index ad808e9ce5b9..0aa1b60e78cc 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Ethernet PHY Generic Binding
+> +title: Ethernet PHY common properties
+>  
+>  maintainers:
+>    - Andrew Lunn <andrew@lunn.ch>
+> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> index b5706d4e7e38..b184689dd6b2 100644
+> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/net/mdio.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: MDIO Bus Generic Binding
+> +title: MDIO Bus common properties
+>  
+>  maintainers:
+>    - Andrew Lunn <andrew@lunn.ch>
+> diff --git a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> index cf9c2f7bddc2..20ac432dc683 100644
+> --- a/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> +++ b/Documentation/devicetree/bindings/opp/opp-v2-base.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/opp/opp-v2-base.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Generic OPP (Operating Performance Points) Common Binding
+> +title: Generic OPP (Operating Performance Points) common parts
+>  
+>  maintainers:
+>    - Viresh Kumar <viresh.kumar@linaro.org>
+> diff --git a/Documentation/devicetree/bindings/power/reset/restart-handler.yaml b/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> index 1f9a2aac53c0..8b52fd156d4c 100644
+> --- a/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/power/reset/restart-handler.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Restart and shutdown handler generic binding
+> +title: Restart and shutdown handler common properties
+>  
+>  maintainers:
+>    - Sebastian Reichel <sre@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> index 0ec3551f12dd..00848a5a409e 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/rtc/rtc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: RTC Generic Binding
+> +title: Real Time Clock common properties
+>  
+>  maintainers:
+>    - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> index 4aad121eff3f..2176033850dc 100644
+> --- a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: SoundWire Controller Generic Binding
+> +title: SoundWire Controller common properties
+>  
+>  maintainers:
+>    - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> index 01042a7f382e..6bbe073f894b 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/spi/spi-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: SPI Controller Generic Binding
+> +title: SPI Controller common properties
+>  
+>  maintainers:
+>    - Mark Brown <broonie@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/watchdog/watchdog.yaml b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> index e3dfb02f0ca5..6875cf1c3159 100644
+> --- a/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/watchdog/watchdog.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Watchdog Generic Bindings
+> +title: Watchdog common properties
+>  
+>  maintainers:
+>    - Guenter Roeck <linux@roeck-us.net>
+> -- 
+> 2.34.1
+> 
