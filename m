@@ -2,131 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7944662D571
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:49:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5935A62D592
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:55:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239651AbiKQItM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 03:49:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
+        id S233725AbiKQIzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 03:55:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239666AbiKQIsz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:48:55 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2468356D67;
-        Thu, 17 Nov 2022 00:48:47 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668674925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f4v0o1aapg52+kcGV5XzAXyexP8Lv3lkKr4tjq7Y6O8=;
-        b=DpAi6RQXxFDAb2jCHZ8hlQGCjq7mUquhCkriQC1k+9L0/zpGPIDiDl1wxfoVJWMMc78fWv
-        CvKgC6NDCv4M4ECMkgjqNPVdnWHXrvKJw3eIIuHWJdEh3qA+KdDo17J98VlAIUkbdENP3c
-        uIYgYu3SkpZL6fgPFgpWDTw5m0wPt/FS5YSZeCsqZeRZ+AAiJ8CA9Ue9LHcLgni+DdqyC4
-        9HVVmUt1xIcWD1QdHd7VEuB6t9AhpmgY9P6zv760Gn2NALAhbYSBtsMm5JG+DzAF+k65BS
-        IWn5FdhAuzAg6oJvg9KiSyn3jKaDOTJRKePnnqaPxy+Hhpidj+kYQEhQXJAS/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668674925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f4v0o1aapg52+kcGV5XzAXyexP8Lv3lkKr4tjq7Y6O8=;
-        b=VVj3wrOiImh69rAfSDo0/Y81RyorJMIHmdUsQW58EnPk24F1oOuavIpj30UCq+WmojLUnP
-        UMMbhlSw349GX5AQ==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: Re: [patch 19/33] genirq/msi: Provide msi_desc::msi_data
-In-Reply-To: <Y3U5xwujkZvI0TEN@nvidia.com>
-References: <20221111133158.196269823@linutronix.de>
- <20221111135206.346985384@linutronix.de> <Y3U5xwujkZvI0TEN@nvidia.com>
-Date:   Thu, 17 Nov 2022 09:48:45 +0100
-Message-ID: <87tu2ym0eq.ffs@tglx>
+        with ESMTP id S233023AbiKQIzW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:55:22 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B2E725FD;
+        Thu, 17 Nov 2022 00:55:21 -0800 (PST)
+Received: by mail-qv1-f45.google.com with SMTP id x13so767630qvn.6;
+        Thu, 17 Nov 2022 00:55:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NYBhPvdCeDd/iVExb9nTFoQYzuFI59drf2/iH8jDOIg=;
+        b=TRy1/s3He8DZiaWBJHAUsaweka0IAAxp3711mfiHkEanMsadB7pIBIL7bJHIO9VBHN
+         sd+EM7RskcZrFWxWjlLJcreOMI3am8rXq5OFhy1yvW7BWr+q4trS/7NB/ipbsjVcHVa2
+         oqaAWn5KBlxsfuyZDmZmsyo+sHsm5Nnxulv5N98tUPnqjak8Sp1QMQrMypzKxBtTTfyo
+         PGQ/vlrWI5nZ/QRofgS+75Wi/UXqPzOIBdcUWncZBXFULDQQRUlBa0N+adBTn38CXppw
+         WUZfkoc/UpadClPocFVLuO3lokQ5qwyTPoeS0BGaDU+xVNeD/3mqfBw01PyhPad1WZZK
+         ifLA==
+X-Gm-Message-State: ANoB5pliaWGIgnQ/uMzZBbWVgm6qgCIq8QaNGZC0D6g6uHySe+edl2ZR
+        LiAIAG6lTkGDb2910ozI9MBowSpsGShLag==
+X-Google-Smtp-Source: AA0mqf7ul8b+Jmt12TkV046AJHNgGiXc11ttMZqFb0vKulY66RAm8WDazkJM7s1DSuzZ3Fm5zPMvJA==
+X-Received: by 2002:ad4:5042:0:b0:4bb:63be:9994 with SMTP id m2-20020ad45042000000b004bb63be9994mr1492616qvq.111.1668675320402;
+        Thu, 17 Nov 2022 00:55:20 -0800 (PST)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id s19-20020a05620a29d300b006cfc9846594sm81035qkp.93.2022.11.17.00.55.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Nov 2022 00:55:19 -0800 (PST)
+Received: by mail-yb1-f182.google.com with SMTP id g127so1088263ybg.8;
+        Thu, 17 Nov 2022 00:55:19 -0800 (PST)
+X-Received: by 2002:a25:4289:0:b0:6ca:e43:d9ff with SMTP id
+ p131-20020a254289000000b006ca0e43d9ffmr1150622yba.543.1668675319692; Thu, 17
+ Nov 2022 00:55:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221116205100.1136224-1-helgaas@kernel.org> <20221116205100.1136224-3-helgaas@kernel.org>
+In-Reply-To: <20221116205100.1136224-3-helgaas@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 17 Nov 2022 09:55:08 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVtSHdFhd-V=7EzSZz6K7+fW9rLxUCN_=yZTGfKoAhS6A@mail.gmail.com>
+Message-ID: <CAMuHMdVtSHdFhd-V=7EzSZz6K7+fW9rLxUCN_=yZTGfKoAhS6A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI: Allow building CONFIG_OF drivers with COMPILE_TEST
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16 2022 at 15:28, Jason Gunthorpe wrote:
-> On Fri, Nov 11, 2022 at 02:58:41PM +0100, Thomas Gleixner wrote:
->> +/**
->> + * struct msi_desc_data - Generic MSI descriptor data
->> + * @iobase:     Pointer to the IOMEM base adress for interrupt callbacks
->> + * @cookie:	Device cookie provided at allocation time
->> + *
->> + * The content of this data is implementation defined, e.g. PCI/IMS
->> + * implementations will define the meaning of the data.
->> + */
->> +struct msi_desc_data {
->> +	void			__iomem *iobase;
->> +	union msi_dev_cookie	cookie;
->> +};
->
-> It would be nice to see the pci_msi_desc converted to a domain
-> specific storage as well.
->
-> Maybe could be written
->
-> struct msi_desc {
->    u64 domain_data[2];
-> }
->
-> struct pci_msi_desc {
-> 		u32 msi_mask;
-> 		u8	multiple	: 3;
-> 		u8	multi_cap	: 3;
-> 		u8	can_mask	: 1;
-> 		u8	is_64		: 1;
-> 		u8	mask_pos;
-> 		u16 default_irq;
-> }
-> static_assert(sizeof(struct pci_msi_desc) <= sizeof(((struct msi_desc *)0)->domain_data));
->
-> struct pci_msix_desc {
-> 		u32 msix_ctrl;
-> 		u8	multiple	: 3;
-> 		u8	multi_cap	: 3;
-> 		u8	can_mask	: 1;
-> 		u8	is_64		: 1;
-> 		u16 default_irq;
-> 		void __iomem *mask_base;
-> }
-> static_assert(sizeof(struct pci_msix_desc) <= sizeof(((struct msi_desc *)0)->domain_data));
->
-> ideally hidden in the pci code with some irq_chip facing export API to
-> snoop in the bits a few places need
->
-> We've used 128 bits for the PCI descriptor, we might as well like
-> everyone have all 128 bits for whatever they want to do
+Hi Bjorn,
 
-Not sure because we end up with nasty type casts for
+On Wed, Nov 16, 2022 at 9:51 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Many drivers depend on OF interfaces, so they won't be functional if
+> CONFIG_OF is not set.  But OF provides stub functions in that case, so make
+> them buildable if CONFIG_COMPILE_TEST is set.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> struct msi_desc {
->    u64 domain_data[2];
-> }
+Thanks for the update!
 
-Let me think about it.
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
 
-Thanks,
+> @@ -158,8 +162,9 @@ config PCI_LAYERSCAPE_EP
+>           controller works in RC mode.
+>
+>  config PCI_HISI
+> -       depends on OF && (ARM64 || COMPILE_TEST)
+>         bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
+> +       depends on ARM64 || COMPILE_TEST
+> +       depends on OF || COMPILE_TEST
 
-        tglx
+Note that ARM64 selects OF, so this (and a few others) could be
+simplified by dropping the "depends on OF || COMPILE_TEST".
+But that might be the scope of a different patch?
+
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         select PCIE_DW_HOST
+>         select PCI_HOST_COMMON
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
