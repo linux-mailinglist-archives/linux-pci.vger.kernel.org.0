@@ -2,84 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3C7862DC48
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 14:07:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5143462DC71
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 14:16:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234614AbiKQNHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 08:07:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58816 "EHLO
+        id S239869AbiKQNQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 08:16:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233886AbiKQNHi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 08:07:38 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188C059177;
-        Thu, 17 Nov 2022 05:07:35 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668690453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ttz1/GMaTk8h4TD14aPsbGIxMJv2rHjmwjhSDqhucs0=;
-        b=WDZLbEqveG5PJjvIG4M84A7mMytlGNV61Gw/YoP/QDOLetHLKNzxZ+trhb1EyoXlHMRPCY
-        uleqRqzLb6qyJafV7I1Gqw77uQ+CL7yRAXYYLJtPbH+CRgOFjb6Vq/SxWxmOk6937uf5ef
-        9VwJBtcPyyC7HCh0bYgycC5xCmA/8sST/2E8pOe4E148IEPGtXVFI6q6qZGeNE+j3OY1jo
-        QjDBfDC8AF5fbQ+neAWN6pyXgjBX6V6HJ2Yp2YSDLioOXVmnS934gU1wvrFYyMqwWKZSbM
-        O90UyTmYC2HHKEnS9SLVobc7Fm3sQmMNZL1LdzKmSNuNEMLk02Fmth8gzQXnZw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668690453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ttz1/GMaTk8h4TD14aPsbGIxMJv2rHjmwjhSDqhucs0=;
-        b=L9t4AwQosUgasEO8gwRfKjPJm0d6kdrZ24AvdpYKQri4d72MF1pCCaBP2DVDgm+HALY4kc
-        v0LLaVo5cdrzG7Dw==
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch 01/39] PCI/MSI: Check for MSI enabled in
- __pci_msix_enable()
-In-Reply-To: <Y3UEFBJW1toFJZGn@a4bf019067fa.jf.intel.com>
-References: <20221111120501.026511281@linutronix.de>
- <20221111122013.653556720@linutronix.de>
- <Y3UEFBJW1toFJZGn@a4bf019067fa.jf.intel.com>
-Date:   Thu, 17 Nov 2022 14:07:33 +0100
-Message-ID: <87cz9ln2zu.ffs@tglx>
+        with ESMTP id S239853AbiKQNQZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 08:16:25 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841E06D495
+        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 05:16:24 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id h12so2621566ljg.9
+        for <linux-pci@vger.kernel.org>; Thu, 17 Nov 2022 05:16:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i33sxe8YJAvtvzx995z6301l/SnWDqnZWm9Vht72DH4=;
+        b=tU7jXVbE/9IZhnkgZ2a2TR1cKrpxezzQgb08KohVcnbcFwh8xSb1SK8MR4QuXvS9Pm
+         XihBbnMW8DhfFgPSZHICrxqW3120Lq1P53poDCUvvZreXVcLnys74vyrtcoGZ23iFVlF
+         6XrA+BcxZB0URUC1GOjvTL0xUZsIoAMJrOTPvZwJRTN+YwbFxM7nP+xHf0uvt+yw5XI+
+         6S4Esw86xL2AAWM1pZoiHc6p8maew1osrjr+BUAosRDPX/evJSt0NIsrqd7InhKAJI4F
+         Dva5EE/QVjWaTs/cyxG7tne+9PKCnz9YvtXPqB+3nThZ7+tl5njGv8LdCBRzCq1Dyz28
+         94gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i33sxe8YJAvtvzx995z6301l/SnWDqnZWm9Vht72DH4=;
+        b=r9fVxXGlGyzhwvhV0lYz2CK1eNsacyFDiYEEttr8/I8DS73cLu/SpA/Hs7i/RGc3PU
+         KJfJiSoGu5m9fDsrSyT5TbA2K4BugJMru40QGF42ghenmw1aKFSkypVRR1CM6Um2+52j
+         6A7XSM2TqpJVHBJqhFK0Ebs/ZyVA4/9BIswKJyzqMZ/1u+rNlOVl3wQJlvnbknn0e/tI
+         jqKD8HZnCNoveNbo8hfBvn7aLC5aoOs6FTe5bdvHpXFA35A4HAXg/oYMFc4mIGeVrpvt
+         GasJHcvQjZb9Mnm015/45fxc2nV37kbWesiNKCFSZUZ81tAKjszx6jqaSrkk3GfZi2Io
+         ZwSg==
+X-Gm-Message-State: ANoB5pnM1rBCrUltai8x0p2G4xlzGkdrpvCTZB+UUivsceVIL7VlYLLe
+        kL0CRnmw/Ykwky/fDveHnSuWiQ==
+X-Google-Smtp-Source: AA0mqf52Yxq0LSiDFcb9qJsPRrRyCkW3YFJEfEhpUMT9fdxNufjsn01xmLLHGsqOPY/x/LtHAYjLag==
+X-Received: by 2002:a2e:a309:0:b0:277:88e:f5d7 with SMTP id l9-20020a2ea309000000b00277088ef5d7mr1067109lje.434.1668690982973;
+        Thu, 17 Nov 2022 05:16:22 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id q18-20020a194312000000b00494643db68fsm147572lfa.81.2022.11.17.05.16.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Nov 2022 05:16:22 -0800 (PST)
+Message-ID: <aff1e286-b32c-f0ac-40bb-9be0d9588a1c@linaro.org>
+Date:   Thu, 17 Nov 2022 14:16:21 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 5/9] dt-bindings: PCI: qcom: alphabetically sort
+ compatibles
+Content-Language: en-US
+To:     Robert Marko <robimarko@gmail.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mani@kernel.org,
+        lpieralisi@kernel.org, kw@linux.com, svarbanov@mm-sol.com,
+        shawn.guo@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20221116214841.1116735-1-robimarko@gmail.com>
+ <20221116214841.1116735-5-robimarko@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221116214841.1116735-5-robimarko@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16 2022 at 07:39, Ashok Raj wrote:
-> On Fri, Nov 11, 2022 at 02:54:15PM +0100, Thomas Gleixner wrote:
->
-> Can the pre-enabled checks for msi and msix be moved up before any vector
-> range check?
->
-> not that it matters for how it fails, does EBUSY sound better?
+On 16/11/2022 22:48, Robert Marko wrote:
+> Sort the compatibles list alphabetically for maintenance.
+> 
+> Signed-off-by: Robert Marko <robimarko@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 8 ++++----
 
-Does any caller care about the error code or about the ordering in which
-the caller stupity is detected?
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
