@@ -2,153 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D3162D489
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:00:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B37E62D4EC
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:22:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239433AbiKQIAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 03:00:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        id S233958AbiKQIWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 03:22:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239383AbiKQIAF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:00:05 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46538716FF;
-        Thu, 17 Nov 2022 00:00:01 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id b3so1553893lfv.2;
-        Thu, 17 Nov 2022 00:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hy7NLr5hqE2CbJ9jouBdK1ZIwHDUPfh4zTUfGBjG5As=;
-        b=n7y4fRjf6M5mskOzXdXUZu8ArEzlfdQw6BxAnS7gl3FgJm37oY7ADxdez6z4WWtTEk
-         GZeTVdJPSVQyNhme1p8tRboH2k51cxTEp8FLujI3ksGvHyel2Gyta3T8gmbGylSm7rwA
-         ZKFDykhol1g8+PCoHl1KQi6weDsspBkelXR/lkOk9fV9WD1QVDExKjbRjO/Adltz8PDH
-         KljdCHYf+Ok5oN5ZLJ+Dxe9MFmgMQZB7M5h4ZaWFO68V2azjPzkURmfYgBkzoVIJCZjX
-         9fU97XTmcsYxdyLWTdI9jmgzKUFNnDrGjZW1+wVIo/BrtSaho6N/nwid7ytf5AzDXNIL
-         tbfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hy7NLr5hqE2CbJ9jouBdK1ZIwHDUPfh4zTUfGBjG5As=;
-        b=taqWzTGe7++D8kO9uiJNk7eTJt5qvALitUfNrlivLM6Pz9s84Tu88eD8dMAju+VLKR
-         Y2WOf+n2Jfrc+Ee6JhkKRWdx2qNHg3RhQUs4fHhZ2oaoEY/sJSPCTcwGNw8k0rBpqBXJ
-         sfjp6WBFmK5uom2B49wd2bY7eLHFXa7eDJ0S1FMUrkCvjv44dQOnYd14g38m2ZE1KnzX
-         hMthdLR+ChnIiaXzJ2hHj+KCJQIq3KVtBPVQdXNZrtUJckASxQ1pQSCUWf3k2Ma+RPae
-         UgA7MPcWPpRxAYTbfj7yGSKEknTE2vwvqQ8eBKYdf+y4MdxPpPE0bY/C7hVnFCejcmD/
-         d5zw==
-X-Gm-Message-State: ANoB5pln/iMauXgATTQSe5ojv00AmQnwG0u/xevCYZ6DyiMg0lZBtt4b
-        GKBvPmN+CNiPueRbQy0F77o=
-X-Google-Smtp-Source: AA0mqf5/X/D4OGM7Km0DSNGgRsSX5HuHd40Bn19ehlIO61z4kcYkdVKpjil1rziL0MyeWcAlCyLmvw==
-X-Received: by 2002:ac2:4201:0:b0:4b1:7c15:e923 with SMTP id y1-20020ac24201000000b004b17c15e923mr512728lfh.320.1668671999651;
-        Wed, 16 Nov 2022 23:59:59 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id b17-20020a196711000000b004a100c21eaesm28532lfc.97.2022.11.16.23.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 23:59:59 -0800 (PST)
-Date:   Thu, 17 Nov 2022 10:59:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Rob Herring <robh@kernel.org>, Marek Vasut <marex@denx.de>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S234819AbiKQIWV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:22:21 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A14E6DCEB;
+        Thu, 17 Nov 2022 00:22:20 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1668673338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wIVX2MwJcu88wyoRSA1ASXFeHTanLRpod2fOiAYk42Q=;
+        b=pRs5JR7b+MK5IrHfaCpInQxaDeC9PvLo7Zo1msTJyoCGPbL+6O8u4CqY3P5lAAqWNgdDeS
+        Wor/o6pp3iVymD4p2gJG/HMX74WixBFfLFutuf+HsdWohrU85CZzDkvVKrovF6T+T3m+AW
+        BDyNHqKpKeCG8Pa2zdgXoqAMhZ4x3ntI+1l75eBvNGQy5jeEGTbkgKSYJuB9Xa+hDLyRPo
+        CP3cEuwwh7lHoufv9Otj/O10K7OhQ0HLfG06MINUxbYTEwlTMqaY9g/V9xuSqs+FZfpGMk
+        JRzV6t/Z3sPM+330lwYCsVQBePNWNqlFlrM6HYoHwLO+biS1QiI67/gbnW8E4Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1668673338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wIVX2MwJcu88wyoRSA1ASXFeHTanLRpod2fOiAYk42Q=;
+        b=VPYEAu0OHciMT2/0zjp9NwK3Ej0xV3gqu1ZiXKKa3Bl2hm2hGGSIINgmAIItBguwG+ofeA
+        EnxX6Q1iJQJvdiDQ==
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 01/20] dt-bindings: imx6q-pcie: Fix clock names for
- imx6sx and imx8mq
-Message-ID: <20221117075956.4dw4g7cswr2iamro@mobilestation>
-References: <20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru>
- <20221113191301.5526-2-Sergey.Semin@baikalelectronics.ru>
- <20221116203812.GA834519-robh@kernel.org>
- <20221117074318.cd52h5ks7ay4j4wb@mobilestation>
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [patch 34/39] PCI/MSI: Reject multi-MSI early
+In-Reply-To: <20221116163118.GA1116261@bhelgaas>
+References: <20221116163118.GA1116261@bhelgaas>
+Date:   Thu, 17 Nov 2022 09:22:18 +0100
+Message-ID: <8735aing79.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221117074318.cd52h5ks7ay4j4wb@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:43:22AM +0300, Serge Semin wrote:
-> On Wed, Nov 16, 2022 at 02:38:12PM -0600, Rob Herring wrote:
-> > On Sun, Nov 13, 2022 at 10:12:42PM +0300, Serge Semin wrote:
-> > > Originally as it was defined the legacy bindings the pcie_inbound_axi and
-> > > pcie_aux clock names were supposed to be used in the fsl,imx6sx-pcie and
-> > > fsl,imx8mq-pcie devices respectively. But the bindings conversion has been
-> > > incorrectly so now the fourth clock name is defined as "pcie_inbound_axi
-> > > for imx6sx-pcie, pcie_aux for imx8mq-pcie", which is completely wrong.
-> > > Let's fix that by conditionally apply the clock-names constraints based on
-> > > the compatible string content.
-> > > 
-> > > Fixes: 751ca492f131 ("dt-bindings: PCI: imx6: convert the imx pcie controller to dtschema")
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Acked-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > > 
-> > > ---
-> > > 
-> > > Changelog v5:
-> > > - This is a new patch added on the v5 release of the patchset.
-> > > 
-> > > Changelog v7:
-> > > - Move the allOf clause to the bottom of the bindings. (@Krzysztof)
-> > > - Get back the names to the clock-names property and make sure the
-> > >   platform-specific name constraint is applied in the allOf clause.
-> > >   (@Rob)
-> > > ---
-> > >  .../bindings/pci/fsl,imx6q-pcie.yaml          | 46 +++++++++++++++++--
-> > >  1 file changed, 42 insertions(+), 4 deletions(-)
-> > 
-> > We have 2 patches doing the same thing:
-> > 
-> > https://lore.kernel.org/all/20221109002449.35936-1-marex@denx.de/
-> 
+On Wed, Nov 16 2022 at 10:31, Bjorn Helgaas wrote:
+> On Fri, Nov 11, 2022 at 02:55:09PM +0100, Thomas Gleixner wrote:
+>>  
+>> +/**
+>> + * pci_msi_domain_supports - Check for support of a particular feature flag
+>> + * @pdev:		The PCI device to operate on
+>> + * @feature_mask:	The feature mask to check for (full match)
+>> + * @mode:		If ALLOW_LEGACY this grants the feature when there is no irq domain
+>> + *			associated to the device. If DENY_LEGACY the lack of an irq domain
+>> + *			makes the feature unsupported
+>
+> Looks like some of these might be wider than 80 columns, which I think
+> was the typical width of this file.
 
-> It seems to me that that patch does two things at a time:
-> 1. Fixes invalid fourth clock-names entry.
-> 2. Fixes the fsl,imx8mm-pcie device having the "pcie_aux" clock name
-> required instead of "pcie_phy".
-> 
-> My patch does only the first part. What about moving my patch to that
-> series and converting the Marek' patch to being applicable on top of
-> it and fixing the imx8mm part only? That seems reasonable.
+I accommodated to the general sentiment that 80 columns is yesterday. My
+new cutoff is 100.
 
-BTW, if this patch is moved from here the series will fail the
-dt_binding_check procedure.
+Thanks,
 
--Sergey
-
-> 
-> -Sergey
-> 
-> > 
-> > Please hash out which one you all want. Both seem to have clock 
-> > warnings still...
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
+        tglx
