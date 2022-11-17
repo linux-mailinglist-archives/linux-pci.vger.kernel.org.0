@@ -2,85 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04CA762DEEC
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 16:01:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1023462DF99
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 16:21:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233899AbiKQPBE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 10:01:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50466 "EHLO
+        id S240716AbiKQPVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 10:21:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234267AbiKQPBE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 10:01:04 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AB3CE0;
-        Thu, 17 Nov 2022 07:01:01 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668697259;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RP+U+feZlcZmrP3/IlXzJjEfrliAdXsJ/Be3VTH8hM4=;
-        b=yIMYsx8Ax/ruYoEaGB1680I3hBo33RXitUEA7+OswjFiHPWiao11xXYIPjCJvTM2HCKaI2
-        RY7j8mOW2ncx+3XttulWIEsrwrOODQ+4ZsrTQ7ufRC5IwPXGED+cydt8Wi2iNcTejnW4BH
-        GgGs/41wgb0SUGvNk1ONVVc/6kNv3J+M5NACfPeN5D0bLosXCcEsNYnxKhbFXYu51i3MbX
-        qaNNPRCMV2c0+ex4tdvDIoqEOm9H/tQsBWcrDGUC7qT1PNY7IBJXiAQ8kQIyhguimgV2rR
-        OgoiPXH4zFIqhCiB46/y6o8YQwdobX4ctsnN3sbopkL08t5BQv4ydmABvcHAdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668697259;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RP+U+feZlcZmrP3/IlXzJjEfrliAdXsJ/Be3VTH8hM4=;
-        b=zD3n5LruqflYwcA/byHi6Sl3zDk32yjCX+vWdV3TVGvkIuIL5PtPucTyH45LuHX4K2xR9n
-        HW/N/3UKH0gtg3DA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: Re: [patch 39/39] x86/apic: Remove X86_IRQ_ALLOC_CONTIGUOUS_VECTORS
-In-Reply-To: <Y3Umh+Pa1WSJ33fD@nvidia.com>
-References: <20221111120501.026511281@linutronix.de>
- <20221111122015.865042356@linutronix.de> <Y3Umh+Pa1WSJ33fD@nvidia.com>
-Date:   Thu, 17 Nov 2022 16:00:58 +0100
-Message-ID: <87a64pmxqt.ffs@tglx>
+        with ESMTP id S240648AbiKQPUw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 10:20:52 -0500
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A927990C;
+        Thu, 17 Nov 2022 07:17:10 -0800 (PST)
+Received: by mail-wm1-f43.google.com with SMTP id t4so1594391wmj.5;
+        Thu, 17 Nov 2022 07:17:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QqLoz4WimLaZOBWkpHa++cXKf6tUCOzTWtaNskWwH9g=;
+        b=i5g+VeGE+d7rY1AeqrFIQtYVRpDlQhNScnfUz+PDNhG3clVb7g2B2vcrN73dqwPQqA
+         M0zOLmJl+fdkq1LdCNBOsMNpcMVinn8dlLuzO5H1EFgCAq4VDkj09cOmmbICGsTMAfBm
+         zyWLuxjkz/BmFxlI6zJAj2EgCLXcvkFkvNX0ko9rW+kNjTenRsERcWGMrndsLLjI66bA
+         7f9tbSRRy0vMhjPbBQOO9q5ZExbMTrFlr6J7TKfmWrrIOQppOIrGbB0A7m+0OD1whZUv
+         EseLWuIQLYQb3R7me5WRFEnpRRmDPICxkRoLvUO6ymYeHy/SsdESpwELG7K79TlqO83f
+         Q09Q==
+X-Gm-Message-State: ANoB5pkpfC2yNj4fYuZAVJI2X9VQVlCgdbK2OwoMVbvRN32pU0Feokff
+        BYqj3+44oEVIr9zOLvtjlH4=
+X-Google-Smtp-Source: AA0mqf4oG8m5KQtZr4PdyBvld3lNlzCDl2hvGtjp3UPoMMz/kfHo1COZJFNOrwcAjA/0XDq2/6W6ew==
+X-Received: by 2002:a05:600c:220b:b0:3cf:f747:71f with SMTP id z11-20020a05600c220b00b003cff747071fmr3969071wml.147.1668698206322;
+        Thu, 17 Nov 2022 07:16:46 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g17-20020a05600c4ed100b003c701c12a17sm6914886wmq.12.2022.11.17.07.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 07:16:45 -0800 (PST)
+Date:   Thu, 17 Nov 2022 15:16:38 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [Patch v3 13/14] PCI: hv: Add hypercalls to read/write MMIO space
+Message-ID: <Y3ZQVpkS0Hr4LsI2@liuwe-devbox-debian-v2>
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-14-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1668624097-14884-14-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jason, Bjorn, Ashok!
+On Wed, Nov 16, 2022 at 10:41:36AM -0800, Michael Kelley wrote:
+[...]
+>  
+> +static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32 *val)
+> +{
+> +	struct hv_mmio_read_input *in;
+> +	struct hv_mmio_read_output *out;
+> +	u64 ret;
+> +
+> +	/*
+> +	 * Must be called with interrupts disabled so it is safe
+> +	 * to use the per-cpu input argument page.  Use it for
+> +	 * both input and output.
+> +	 */
 
-On Wed, Nov 16 2022 at 14:05, Jason Gunthorpe wrote:
-> On Fri, Nov 11, 2022 at 02:55:17PM +0100, Thomas Gleixner wrote:
->> Now that the PCI/MSI core code does early checking for multi-MSI support
->> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS is not required anymore.
->
->> Remove the flag and rely on MSI_FLAG_MULTI_PCI_MSI.
->
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Perhaps adding something along this line?
 
-Thanks for taking the time to go through this pile!
+	WARN_ON(!irqs_disabled());
 
-       tglx
+I can fold this in if you agree.
+
+> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	out = *this_cpu_ptr(hyperv_pcpu_input_arg) + sizeof(*in);
+> +	in->gpa = gpa;
+> +	in->size = size;
+> +
+> +	ret = hv_do_hypercall(HVCALL_MMIO_READ, in, out);
+> +	if (hv_result_success(ret)) {
+> +		switch (size) {
+> +		case 1:
+> +			*val = *(u8 *)(out->data);
+> +			break;
+> +		case 2:
+> +			*val = *(u16 *)(out->data);
+> +			break;
+> +		default:
+> +			*val = *(u32 *)(out->data);
+> +			break;
+> +		}
+> +	} else
+> +		dev_err(dev, "MMIO read hypercall error %llx addr %llx size %d\n",
+> +				ret, gpa, size);
+> +}
+> +
+> +static void hv_pci_write_mmio(struct device *dev, phys_addr_t gpa, int size, u32 val)
+> +{
+> +	struct hv_mmio_write_input *in;
+> +	u64 ret;
+> +
+> +	/*
+> +	 * Must be called with interrupts disabled so it is safe
+> +	 * to use the per-cpu input argument memory.
+> +	 */
+
+Ditto.
+
+Thanks,
+Wei.
