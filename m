@@ -2,150 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA30462E669
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 22:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1522762E714
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 22:38:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240219AbiKQVJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 16:09:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
+        id S234739AbiKQVih (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 16:38:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240624AbiKQVJZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 16:09:25 -0500
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCA87722F;
-        Thu, 17 Nov 2022 13:08:04 -0800 (PST)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 4969620007;
-        Thu, 17 Nov 2022 21:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1668719281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=72JrUM6NacHh18cxNPJTokOPFIy2MlvUmUZu6AVg77s=;
-        b=kQ3WnKEHtW817TTGo/51w1BLV9fElm+d4PRny19l0Xo5WVvRKUWbYa4RLUCeb4hzAu+blU
-        gN78c5WiYd88yo78Tac1K8UgLdjF8sGEUg2eG4K4KIGZ2aSd/NCisT3pEqKgpi8MG9t8wo
-        Mhed7VoKwoPF1Ad6rnk8zscQKUda7EVdabBo89uHsVUfKLNbVRCzBabKqvqOG3TKdkeI5N
-        elXTmNOrt8pOHvUy7n2mYZBmGVFue71mi4Gp0X7blRdSkQQj+FNRIx2l1Hm3E/1dFZjljQ
-        ITXz8XlIez/SUSB6b7UDZFkg18YUByW5VovCJRgF+828mYPwuo2FHFq7f7zwSg==
-Date:   Thu, 17 Nov 2022 22:07:56 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        with ESMTP id S232126AbiKQVig (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 16:38:36 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AA8248DF;
+        Thu, 17 Nov 2022 13:38:34 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id n20so8593579ejh.0;
+        Thu, 17 Nov 2022 13:38:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUJN6/PsoAr9DtbWPR15x8grcrsQm71np5836qd63DE=;
+        b=qtCVMqDUxoyIcBpnGtQpu4ujjbRGeb4KtYwtjqU6HKyHFfXwZ+YCFYEsU7ICTJLTTa
+         k8KYSgvtTY+gYH3K850o1j50RSJ3Eo/zvw+8XTnImz0vO1VgNEleqELQVURSnUmZyPXI
+         J8cS7NkLWAnZ2CSaIpl8uvb+mk9HbHbu21+yhZMl38y2ssJMW2a9UmcfUY4od5jVZMzV
+         9gKTZKPabws4V5jo4kGyw7nq7kNjN6+4S7GQfn6uV3rx12pI6wilTWwRQXh6dcIJfjNs
+         iYEoptIDKRE0w0lLzx4wAu3CINg0YkzdjBjfxhenIYQb8DBWWbk3VYsLSxTurwRt1nat
+         m9CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KUJN6/PsoAr9DtbWPR15x8grcrsQm71np5836qd63DE=;
+        b=LTzkMrgZzx7zfRPVjUB/uyC2UzexSXGlMc7bClEQKJGF1hgRDlsVTi+wT49mI2w27D
+         rmlVIIGxZBacXQuilsLpqjqpFv1Qc9NiP1YOZBqhJD9dPppcanOQC21c/t6L8CZkA098
+         adfUz82YGnvVhtAiiJsPCpVTP37tgXJZLBqSMzbMZiL5ezaN/hF5vzxjPxcTVDyjQWog
+         /ROlfe7b0rTZWdapXLdpWuUwGThbkO89svMHbIbezfdXlfJh/2DL0OBl3ZrFmipSoPCv
+         ymmmK3Q7zxWcigxvJZYE0Kortxqt1apUIp9EPLz3FQ6Fw75Id7RMHIxKchhKrX337V82
+         K51g==
+X-Gm-Message-State: ANoB5pmmSU+/Xm07JwxkTml3H+NrxFwu93H9DlNxANv0pLJYtQz/KDSA
+        586wdEO48atqZNDFJbreNNs=
+X-Google-Smtp-Source: AA0mqf6PPYkFug87LbQMmOYx+YPskLdCmwrLZsrazrdMUBctp7MS8eZ6nQvVCstuj8kmiVwZYJ3TOQ==
+X-Received: by 2002:a17:907:8dcc:b0:7b2:b5aa:f1e0 with SMTP id tg12-20020a1709078dcc00b007b2b5aaf1e0mr136572ejc.54.1668721112573;
+        Thu, 17 Nov 2022 13:38:32 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id kz10-20020a17090777ca00b007933047f923sm854163ejc.118.2022.11.17.13.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 13:38:32 -0800 (PST)
+Date:   Thu, 17 Nov 2022 22:38:30 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Message-ID: <20221117220756.7a1bf734@xps-13>
-In-Reply-To: <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
-        <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+Message-ID: <Y3ap1o2SbNvFw8Vd@orome>
+References: <20221114155333.234496-1-jonathanh@nvidia.com>
+ <20221114155333.234496-2-jonathanh@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SRHx2eAeA4iCxjID"
+Content-Disposition: inline
+In-Reply-To: <20221114155333.234496-2-jonathanh@nvidia.com>
+User-Agent: Mutt/2.2.8 (2022-11-05)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krzysztof,
 
-krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
+--SRHx2eAeA4iCxjID
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The Devicetree bindings document does not have to say in the title that
-> it is a "binding", but instead just describe the hardware.  For shared
-> (re-usable) schemas, name them all as "common properties".
+On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> From: Vidya Sagar <vidyas@nvidia.com>
 >=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Add support for ECAM aperture that is only supported for Tegra234
+> devices.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
->  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
->  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
->  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
->  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
->  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
->  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
->  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
->  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
->  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
->  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
->  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
->  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
->  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
->  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
->  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
->  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
->  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
->  21 files changed, 23 insertions(+), 23 deletions(-)
+> Changes since V2:
+> - Avoid duplication of reg items and reg-names
+> Changes since V1:
+> - Restricted the ECAM aperture to only Tegra234 devices that support it.
 >=20
+>  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+>  2 files changed, 33 insertions(+), 3 deletions(-)
 
-[...]
+Both patches applied now.
 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Docum=
-entation/devicetree/bindings/mtd/nand-chip.yaml
-> index 97ac3a3fbb52..20b195ef9b70 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: NAND Chip and NAND Controller Generic Binding
-> +title: NAND Chip and NAND Controller common properties
+Thanks,
+Thierry
 
-I only see this now but the title should be
+--SRHx2eAeA4iCxjID
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	"NAND chip common properties"
+-----BEGIN PGP SIGNATURE-----
 
-> =20
->  maintainers:
->    - Miquel Raynal <miquel.raynal@bootlin.com>
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b=
-/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 359a015d4e5a..a004efc42842 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: NAND Chip and NAND Controller Generic Binding
-> +title: NAND Chip and NAND Controller common properties
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmN2qdQACgkQ3SOs138+
+s6E2+RAAjuFYpzEgHKFuFYH6DWgLcgdiP21748X1m8Qu4TDX3nWnac5RkhXnkMjA
+tWJKOEgmm/TTuUidG3HJ5Mt84i5+FKW3mhIKP2JLBOJuPNp5eJBo95aRjCrhNFkX
+u8J5j18b3bZmQeZ7Y68Cs3mEp94c5O97c+qbQojYhuaBezHKkPZThs0sV9ngWKfh
+oYmzVGWyUXCqIX0Ko24VH0nMx7ZEWDB1jQTzlQtoz3h7VBQbJfDI42ig8Equ8LXJ
+etiWTKEbMvwfWeLtGH2bGsfIVgzc87O2LrjyjraYrPYlYzu27wWuKEhnmBZdtaqS
+KX2ZRYZAKYvxQc/D5WA0MjqJhnHquT2gnHz48kPk0sEHqjafdK9Pmvqzmu3xDnhe
+Q2sTwkcs/x7VrAzwYn2y9tt4cayeMGYyiiDodeQ8qq/tkpcc3Q/tFL3i1OP955CQ
+QnXLCulkW9CsXKTy0aQPoL93gsGBwpSr+bsn8/1tifidieSqoINTdP/T3m8HaLK3
+VrvvVTdI0yMTOWeyTDaFTc35yG+xabNf6GeAIhKiJLLU0AkmGATcDbG8Df2nBmHY
+tzIadd70eX7eu0F9qAdz1PygTa3Pb7HEnvHipTCWj0dOHSz4MWFQCy8RUp9ZfJu8
+fywK5oqXU0dp4FnfgGvLB1hqYioqIcnx8i3mLQjEr0QgS/wuKjU=
+=9wEV
+-----END PGP SIGNATURE-----
 
-And here just "NAND controller..."
-
-Of course the original purpose of your series is more to clean those
-titles rather than fixing them and if you disagree I am fine doing it
-myself aside, but if you could at the same time make the title more
-accurate that would be perfect.
-
-Either ways:
-
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Cheers,
-Miqu=C3=A8l
+--SRHx2eAeA4iCxjID--
