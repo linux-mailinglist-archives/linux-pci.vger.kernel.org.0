@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A8D62E1DC
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A598C62E1E8
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 17:29:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240299AbiKQQ3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 11:29:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
+        id S240367AbiKQQ3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 11:29:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240595AbiKQQ2d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:28:33 -0500
-Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995507CB93;
-        Thu, 17 Nov 2022 08:27:43 -0800 (PST)
+        with ESMTP id S240351AbiKQQ3N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 11:29:13 -0500
+Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE577D52A;
+        Thu, 17 Nov 2022 08:27:42 -0800 (PST)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout3.routing.net (Postfix) with ESMTP id 93A2262637;
-        Thu, 17 Nov 2022 16:27:39 +0000 (UTC)
+        by mxout2.routing.net (Postfix) with ESMTP id CF98961650;
+        Thu, 17 Nov 2022 16:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1668702459;
+        s=20200217; t=1668702461;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HCq6Ar2PkhD4OoGWAuL/w2DeeuE2Tk+RaLJ97BRtlww=;
-        b=rMV/lodh61k0GdYu4Z5sNNQ+db50GnZUBHLoDv6d/sgNm7gHIY2U8sw121GFPFeDp9GDWw
-        FME9pSpWq4h+Nf5yNyah1xxUvxB4lLpOZYKpVl/J4eOeR7lGDd+oDe2ZuKoTzdTXXe/TBo
-        PYAw5qTQ95FY8SC9E4zuUGjHlCjASNg=
+        bh=rLXaSi0nuYISQNA4/ZZOAgFRiUbo5QoSWGShK+kyzL8=;
+        b=lcAPHV1kpd0D33/7FZo4z5vdEdmmc+JGBs2XuxdPOVNrP5nJA2lBhu9T/U/Mgt+iGJCHzg
+        KJRNIP1VCMEK1xzUBVT5/jk7B3VF68VZ6MGlxiIsl2gwdHqKe5EmcvtusDvLBhwUlKqvz9
+        89DkIKEID+0NgkRvPTQgRBaB940ZeWs=
 Received: from frank-G5.. (fttx-pool-80.245.75.65.bambit.de [80.245.75.65])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 5C6961003D5;
-        Thu, 17 Nov 2022 16:27:38 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 7E7DE100767;
+        Thu, 17 Nov 2022 16:27:39 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -49,16 +49,18 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 05/11] dt-bindings: PCI: mediatek-gen3: add support for mt7986
-Date:   Thu, 17 Nov 2022 17:27:22 +0100
-Message-Id: <20221117162728.20608-6-linux@fw-web.de>
+        Sam Shih <sam.shih@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v5 06/11] arm64: dts: mt7986: add spi related device nodes
+Date:   Thu, 17 Nov 2022 17:27:23 +0100
+Message-Id: <20221117162728.20608-7-linux@fw-web.de>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221117162728.20608-1-linux@fw-web.de>
 References: <20221117162728.20608-1-linux@fw-web.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 540b6034-3930-4f02-97d2-3d5b3601088a
+X-Mail-ID: 992092e1-285c-4a7b-961f-459157b93fd5
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -68,66 +70,164 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: Sam Shih <sam.shih@mediatek.com>
 
-Add compatible string and clock-definition for mt7986. It needs 4 clocks
-for PCIe, define them in binding.
+This patch adds spi support for MT7986.
 
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Jianjun Wang <jianjun.wang@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
-v2:
-- squashed patch 2+3 (compatible and clock definition)
----
- .../bindings/pci/mediatek-pcie-gen3.yaml        | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 35 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi    | 28 ++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 35 ++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 5d7369debff2..f7a02019daea 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -48,6 +48,7 @@ properties:
-     oneOf:
-       - items:
-           - enum:
-+              - mediatek,mt7986-pcie
-               - mediatek,mt8188-pcie
-               - mediatek,mt8195-pcie
-           - const: mediatek,mt8192-pcie
-@@ -78,9 +79,11 @@ properties:
-       - const: mac
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+index 2f48cc3d3ddb..006878e3f2b2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+@@ -59,6 +59,20 @@ switch: switch@0 {
+ };
  
-   clocks:
-+    minItems: 4
-     maxItems: 6
+ &pio {
++	spi_flash_pins: spi-flash-pins {
++		mux {
++			function = "spi";
++			groups = "spi0", "spi0_wp_hold";
++		};
++	};
++
++	spic_pins: spic-pins {
++		mux {
++			function = "spi";
++			groups = "spi1_2";
++		};
++	};
++
+ 	uart1_pins: uart1-pins {
+ 		mux {
+ 			function = "uart";
+@@ -105,6 +119,27 @@ conf {
+ 	};
+ };
  
-   clock-names:
-+    minItems: 4
-     maxItems: 6
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_flash_pins>;
++	cs-gpios = <0>, <0>;
++	status = "okay";
++	spi_nand: spi_nand@0 {
++		compatible = "spi-nand";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++		spi-tx-buswidth = <4>;
++		spi-rx-buswidth = <4>;
++	};
++};
++
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spic_pins>;
++	cs-gpios = <0>, <0>;
++	status = "okay";
++};
++
+ &switch {
+ 	ports {
+ 		#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+index afc01abfa99c..29da9b8ed753 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+@@ -253,6 +253,34 @@ i2c0: i2c@11008000 {
+ 			status = "disabled";
+ 		};
  
-   assigned-clocks:
-@@ -160,6 +163,20 @@ allOf:
-             - const: tl_32k
-             - const: peri_26m
-             - const: peri_mem
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mediatek,mt7986-pcie
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pl_250m
-+            - const: tl_26m
-+            - const: peri_26m
-+            - const: top_133m
++		spi0: spi@1100a000 {
++			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0x1100a000 0 0x100>;
++			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_MPLL_D2>,
++				 <&topckgen CLK_TOP_SPI_SEL>,
++				 <&infracfg CLK_INFRA_SPI0_CK>,
++				 <&infracfg CLK_INFRA_SPI0_HCK_CK>;
++			clock-names = "parent-clk", "sel-clk", "spi-clk", "hclk";
++			status = "disabled";
++		};
++
++		spi1: spi@1100b000 {
++			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0x1100b000 0 0x100>;
++			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_MPLL_D2>,
++				 <&topckgen CLK_TOP_SPIM_MST_SEL>,
++				 <&infracfg CLK_INFRA_SPI1_CK>,
++				 <&infracfg CLK_INFRA_SPI1_HCK_CK>;
++			clock-names = "parent-clk", "sel-clk", "spi-clk", "hclk";
++			status = "disabled";
++		};
++
+ 		ethsys: syscon@15000000 {
+ 			 #address-cells = <1>;
+ 			 #size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+index 79c5c78f7a14..2c7f1d4fb352 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+@@ -100,6 +100,20 @@ fixed-link {
+ };
  
- unevaluatedProperties: false
+ &pio {
++	spi_flash_pins: spi-flash-pins {
++		mux {
++			function = "spi";
++			groups = "spi0", "spi0_wp_hold";
++		};
++	};
++
++	spic_pins: spic-pins {
++		mux {
++			function = "spi";
++			groups = "spi1_2";
++		};
++	};
++
+ 	wf_2g_5g_pins: wf-2g-5g-pins {
+ 		mux {
+ 			function = "wifi";
+@@ -132,6 +146,27 @@ conf {
+ 	};
+ };
  
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_flash_pins>;
++	cs-gpios = <0>, <0>;
++	status = "okay";
++	spi_nand: spi_nand@0 {
++		compatible = "spi-nand";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++		spi-tx-buswidth = <4>;
++		spi-rx-buswidth = <4>;
++	};
++};
++
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spic_pins>;
++	cs-gpios = <0>, <0>;
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
 -- 
 2.34.1
 
