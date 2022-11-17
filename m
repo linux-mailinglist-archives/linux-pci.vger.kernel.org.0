@@ -2,91 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B37E62D4EC
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB47D62D536
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Nov 2022 09:42:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233958AbiKQIWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Nov 2022 03:22:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32948 "EHLO
+        id S239483AbiKQImd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Nov 2022 03:42:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234819AbiKQIWV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:22:21 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A14E6DCEB;
-        Thu, 17 Nov 2022 00:22:20 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668673338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wIVX2MwJcu88wyoRSA1ASXFeHTanLRpod2fOiAYk42Q=;
-        b=pRs5JR7b+MK5IrHfaCpInQxaDeC9PvLo7Zo1msTJyoCGPbL+6O8u4CqY3P5lAAqWNgdDeS
-        Wor/o6pp3iVymD4p2gJG/HMX74WixBFfLFutuf+HsdWohrU85CZzDkvVKrovF6T+T3m+AW
-        BDyNHqKpKeCG8Pa2zdgXoqAMhZ4x3ntI+1l75eBvNGQy5jeEGTbkgKSYJuB9Xa+hDLyRPo
-        CP3cEuwwh7lHoufv9Otj/O10K7OhQ0HLfG06MINUxbYTEwlTMqaY9g/V9xuSqs+FZfpGMk
-        JRzV6t/Z3sPM+330lwYCsVQBePNWNqlFlrM6HYoHwLO+biS1QiI67/gbnW8E4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668673338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wIVX2MwJcu88wyoRSA1ASXFeHTanLRpod2fOiAYk42Q=;
-        b=VPYEAu0OHciMT2/0zjp9NwK3Ej0xV3gqu1ZiXKKa3Bl2hm2hGGSIINgmAIItBguwG+ofeA
-        EnxX6Q1iJQJvdiDQ==
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: Re: [patch 34/39] PCI/MSI: Reject multi-MSI early
-In-Reply-To: <20221116163118.GA1116261@bhelgaas>
-References: <20221116163118.GA1116261@bhelgaas>
-Date:   Thu, 17 Nov 2022 09:22:18 +0100
-Message-ID: <8735aing79.ffs@tglx>
+        with ESMTP id S234572AbiKQImc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Nov 2022 03:42:32 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18FC729BC;
+        Thu, 17 Nov 2022 00:42:30 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NCYLk23Qdz15Mc1;
+        Thu, 17 Nov 2022 16:42:06 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 16:42:28 +0800
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>, <liuqi6124@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <jonathan.cameron@huawei.com>, <bagasdotme@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>, <f.fangjian@huawei.com>,
+        <prime.zeng@huawei.com>, <shenyang39@huawei.com>
+Subject: [PATCH v3 0/4] Add TLP filter support and some fixes for HiSilicon PCIe PMU
+Date:   Thu, 17 Nov 2022 16:41:32 +0800
+Message-ID: <20221117084136.53572-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16 2022 at 10:31, Bjorn Helgaas wrote:
-> On Fri, Nov 11, 2022 at 02:55:09PM +0100, Thomas Gleixner wrote:
->>  
->> +/**
->> + * pci_msi_domain_supports - Check for support of a particular feature flag
->> + * @pdev:		The PCI device to operate on
->> + * @feature_mask:	The feature mask to check for (full match)
->> + * @mode:		If ALLOW_LEGACY this grants the feature when there is no irq domain
->> + *			associated to the device. If DENY_LEGACY the lack of an irq domain
->> + *			makes the feature unsupported
->
-> Looks like some of these might be wider than 80 columns, which I think
-> was the typical width of this file.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-I accommodated to the general sentiment that 80 columns is yesterday. My
-new cutoff is 100.
+HiSilicon PCIe PMU support count the bandwidth of TLP headers, TLP payloads
+or both. Add support for it. User can set this through perf tool's
+'len_mode' like:
 
-Thanks,
+  $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,len_mode=0x1/ sleep 5
 
-        tglx
+Also includes fixes and improvement of both driver and documentation in this
+series.
+
+Change since v2:
+- Take Patch 3 advance in the series and drop the fix tag, Per Jonathan
+- Add tags from Jonathan for Patch 3-4, Thanks.
+Link: https://lore.kernel.org/lkml/20221110085109.45227-2-yangyicong@huawei.com/
+
+Change since v1:
+- Refine the documentation per Jonathan and Bagas
+- Collect tags from Jonathan. Thanks.
+Link: https://lore.kernel.org/lkml/20221025113242.58271-1-yangyicong@huawei.com/
+
+Bagas Sanjaya (1):
+  Documentation: perf: Indent filter options list of hisi-pcie-pmu
+
+Yicong Yang (3):
+  drivers/perf: hisi: Fix some event id for hisi-pcie-pmu
+  docs: perf: Fix PMU instance name of hisi-pcie-pmu
+  drivers/perf: hisi: Add TLP filter support
+
+ .../admin-guide/perf/hisi-pcie-pmu.rst        | 112 +++++++++++-------
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        |  22 +++-
+ 2 files changed, 85 insertions(+), 49 deletions(-)
+
+-- 
+2.24.0
+
