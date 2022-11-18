@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70C162F7BD
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 15:35:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76DE562F7C8
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 15:36:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242161AbiKROfn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 09:35:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36210 "EHLO
+        id S242138AbiKROgK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 09:36:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242201AbiKROev (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 09:34:51 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65AAB8FE6A
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:47 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id i186-20020a1c3bc3000000b003cfe29a5733so7648579wma.3
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:47 -0800 (PST)
+        with ESMTP id S242494AbiKROfF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 09:35:05 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA51E9038A
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:48 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id v1so9472240wrt.11
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oZapRJG8z2JCvAvfXBnNMVwxacWcNRQ302sDNi+fas8=;
-        b=NHwf5gzscDKYMdxL3OfdNvxiV73eYzt9izjpEJGw56qyn/2edQPWAXNqpqJqeMJSHf
-         MREGqHR85usarI/2xnrbF/tqtjXoIVpAGDdUCKa9NDWKlwnHSqxlgAQzVT9vTL1itUTT
-         NxcMawupLX+vL58TS/S4zccA6KBi5QDMDVG8bQXkreRNk4dTQp8T1Bk3bHmQXmszD2iV
-         GdzyApU8zF+JRueqj3Jw/e4EA9u8suC4iGZFmwfQrlv23dbuh73YpX7lD5pxURY2ZaED
-         0tNJdOxEw/NS7ff2giSBtuuJuL18OpOGATexPhFVj+93aD6OvmPHiSM9m4E3NjoDuU63
-         xtvQ==
+        bh=4SvRgFTn6+Gybi1+j9eb6DiJcXSsUC9wg7dcCoAYlxo=;
+        b=rNdR543njIXd/vTYoC3ISLSjkRryowY2q1V07GqmJUyFH4lwy6TTyxgMjsP8O4AKdA
+         CYLwLsgpri/smVj6DDW62FZNw93QkK3gqpHq2HQk379M1DV3NrFNIwncfoYKjJVi6+6E
+         XVZ28lFTylYIhRpbfkpcf1cFDgj8AhxK3mbcTrqXN5bB6aJhMjaM/XZ9G5HSewQfRdRp
+         UFEMd90M0jfE54YuwnblNTl6tI2fn3oHsoKZxXEXOOPnqozVO3GHjDFwnsp/uG/HGse1
+         N+lyHJbxaUEA7S4WxaHcA7nZPgRoXhiwU22v+tCG2qO21jjs1yb9dLbV1ygsljh87xjA
+         0o+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oZapRJG8z2JCvAvfXBnNMVwxacWcNRQ302sDNi+fas8=;
-        b=0PfCXX8Va3vcUYGrBO87l20LNf7K/+MnyHoEDnZqrULkJtRyWuAa+VbEAMCu2kpHcQ
-         wj3VKB/tucCuUc2vjJ/lMZFD6MakwzovvlMxW+8Iq8yvTVRZ4pADojvenS07UkCCM/w6
-         kUJjp5WEQNCiuN8vgKgtj16HOPlAT6zg7h3NNqWL6JZqlKvTPfl28r+7nB45O/icKdl4
-         zDF1Et9dJ8nJwbMmOrXNIllwD0jmv4eaTpEqhAHjrajS6rB7s1j2i1JPPQS/Fx/ilW3s
-         ipd2cprRTHBgt56hhxQShn195XiIuuIaSjnYPVWA/sDQ+sUM1P6gOOLaOORqjze2EFrb
-         u64Q==
-X-Gm-Message-State: ANoB5pnVRcBoD6z7aRnXJUtAYJ61ulmgjpQM7nsbsCl+VpuoNeFKVURy
-        VOxZ4ZfE5+YMP+1PGY6OTcQ85Q==
-X-Google-Smtp-Source: AA0mqf6OgNWA+TIEwY5xvFtwseqvutQkVTW2N8FzT9WEGTWRAZmOEc5lNt7z8CriwQZvELVdMDiZ6w==
-X-Received: by 2002:a05:600c:468c:b0:3cf:7c81:caae with SMTP id p12-20020a05600c468c00b003cf7c81caaemr5207895wmo.135.1668782026873;
-        Fri, 18 Nov 2022 06:33:46 -0800 (PST)
+        bh=4SvRgFTn6+Gybi1+j9eb6DiJcXSsUC9wg7dcCoAYlxo=;
+        b=p9AETGgNVVN5XUgIiMzqK9i72kQf4q7061jwVBBIJaL6eR6zNBfHJjDMThx75l6WGt
+         BLlwq9V9RtxDAN5ZkouzGE78bsndwX/Egpy7HfrEEqokGxuowyXmOSY/W/M0yMq1Ngjp
+         4zvnZB4Mbe5vY/Cm3z9Kr9IIQIuSIymCACJyVJV3xjJkLxGj1vtfyyE4qAQ3e9KLnH2f
+         zSRlrRTSWV0UITnkdnFQ8blFvt/kCXUfm0qEDaFkjj3o6ZeAQiLlX0jNWDnB2VUCJuXC
+         LlovH0GrpLD32qcV+W7unxgLEyjOyogzkcsPzrdr2xpdy29T+lQAKLAS9cpXkFZm633+
+         Ol4w==
+X-Gm-Message-State: ANoB5pksZGJJSpW8LZ+htyP/UszQfqGK8i6khdKlPxM0ZbysFCly71PM
+        mINE6dP3vusqU0gBDjaRe5edCw==
+X-Google-Smtp-Source: AA0mqf6QQq479fIUCOCgvip5Pl5AI82bEkY7FqOFZ5rXBu8KR0A3F1ydYiGUSPadA491uLfZ1bpajw==
+X-Received: by 2002:a5d:452d:0:b0:241:c5ec:d0d with SMTP id j13-20020a5d452d000000b00241c5ec0d0dmr804402wra.441.1668782028313;
+        Fri, 18 Nov 2022 06:33:48 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id j21-20020a05600c1c1500b003cfb7c02542sm5436726wms.11.2022.11.18.06.33.45
+        by smtp.gmail.com with ESMTPSA id j21-20020a05600c1c1500b003cfb7c02542sm5436726wms.11.2022.11.18.06.33.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 06:33:46 -0800 (PST)
+        Fri, 18 Nov 2022 06:33:47 -0800 (PST)
 From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Fri, 18 Nov 2022 15:33:37 +0100
-Subject: [PATCH 11/12] dt-bindings: pcie: convert amlogic,meson-pcie.txt to
+Date:   Fri, 18 Nov 2022 15:33:38 +0100
+Subject: [PATCH 12/12] dt-bindings: net: convert mdio-mux-meson-g12a.txt to
  dt-schema
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20221117-b4-amlogic-bindings-convert-v1-11-3f025599b968@linaro.org>
+Message-Id: <20221117-b4-amlogic-bindings-convert-v1-12-3f025599b968@linaro.org>
 References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
 In-Reply-To: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
 To:     Jakub Kicinski <kuba@kernel.org>,
@@ -101,121 +101,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the Amlogic Meson AXG DWC PCIE SoC controller bindings to
-dt-schema.
+Convert MDIO bus multiplexer/glue of Amlogic G12a SoC family bindings
+to dt-schema.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- .../devicetree/bindings/pci/amlogic,axg-pcie.yaml  | 129 +++++++++++++++++++++
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 -----------
- 2 files changed, 129 insertions(+), 70 deletions(-)
+ .../bindings/net/amlogic,g12a-mdio-mux.yaml        | 80 ++++++++++++++++++++++
+ .../bindings/net/mdio-mux-meson-g12a.txt           | 48 -------------
+ 2 files changed, 80 insertions(+), 48 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
+diff --git a/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml b/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml
 new file mode 100644
-index 000000000000..563a0a3fa6f0
+index 000000000000..ec5c038ce6a0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-@@ -0,0 +1,129 @@
++++ b/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml
+@@ -0,0 +1,80 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pci/amlogic,axg-pcie.yaml#
++$id: http://devicetree.org/schemas/net/amlogic,g12a-mdio-mux.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Amlogic Meson AXG DWC PCIE SoC controller
++title: MDIO bus multiplexer/glue of Amlogic G12a SoC family
++
++description:
++  This is a special case of a MDIO bus multiplexer. It allows to choose between
++  the internal mdio bus leading to the embedded 10/100 PHY or the external
++  MDIO bus.
 +
 +maintainers:
 +  - Neil Armstrong <neil.armstrong@linaro.org>
 +
-+description:
-+  Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+
 +allOf:
-+  - $ref: snps,dw-pcie.yaml#
-+
-+# We need a select here so we don't match all nodes with 'snps,dw-pcie'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - amlogic,axg-pcie
-+          - amlogic,g12a-pcie
-+  required:
-+    - compatible
++  - $ref: mdio-mux.yaml#
 +
 +properties:
 +  compatible:
-+    items:
-+      - enum:
-+          - amlogic,axg-pcie
-+          - amlogic,g12a-pcie
-+      - const: snps,dw-pcie
++    const: amlogic,g12a-mdio-mux
 +
 +  reg:
-+    items:
-+      - description: External local bus interface registers
-+      - description: Meson designed configuration registers
-+      - description: PCIe configuration space
-+
-+  reg-names:
-+    items:
-+      - const: elbi
-+      - const: cfg
-+      - const: config
-+
-+  interrupts:
 +    maxItems: 1
 +
 +  clocks:
 +    items:
-+      - description: PCIe GEN 100M PLL clock
-+      - description: PCIe RC clock gate
-+      - description: PCIe PHY clock
++      - description: peripheral clock
++      - description: platform crytal
++      - description: SoC 50MHz MPLL
 +
 +  clock-names:
 +    items:
 +      - const: pclk
-+      - const: port
-+      - const: general
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: pcie
-+
-+  resets:
-+    items:
-+      - description: Port Reset
-+      - description: Shared APB reset
-+
-+  reset-names:
-+    items:
-+      - const: port
-+      - const: apb
-+
-+  num-lanes:
-+    const: 1
++      - const: clkin0
++      - const: clkin1
 +
 +required:
 +  - compatible
 +  - reg
-+  - reg-names
-+  - interrupts
-+  - "#address-cells"
-+  - "#size-cells"
-+  - "#interrupt-cells"
-+  - interrupt-map
-+  - interrupt-map-mask
-+  - ranges
-+  - bus-range
-+  - device_type
-+  - num-lanes
-+  - phys
-+  - phy-names
-+  - resets
-+  - reset-names
++  - clocks
++  - clock-names
 +
 +unevaluatedProperties: false
 +
@@ -223,104 +166,90 @@ index 000000000000..563a0a3fa6f0
 +  - |
 +    #include <dt-bindings/interrupt-controller/irq.h>
 +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    pcie: pcie@f9800000 {
-+        compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+        reg = <0xf9800000 0x400000>, <0xff646000 0x2000>, <0xf9f00000 0x100000>;
-+        reg-names = "elbi", "cfg", "config";
-+        interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&pclk>, <&clk_port>, <&clk_phy>;
-+        clock-names = "pclk", "port", "general";
-+        resets = <&reset_pcie_port>, <&reset_pcie_apb>;
-+        reset-names = "port", "apb";
-+        phys = <&pcie_phy>;
-+        phy-names = "pcie";
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0 0 0 0>;
-+        interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+        bus-range = <0x0 0xff>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        num-lanes = <1>;
-+        ranges = <0x82000000 0 0 0xf9c00000 0 0x00300000>;
++    mdio-multiplexer@4c000 {
++        compatible = "amlogic,g12a-mdio-mux";
++        reg = <0x4c000 0xa4>;
++        clocks = <&clkc_eth_phy>, <&xtal>, <&clkc_mpll>;
++        clock-names = "pclk", "clkin0", "clkin1";
++        mdio-parent-bus = <&mdio0>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        mdio@0 {
++            reg = <0>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++        };
++
++        mdio@1 {
++            reg = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            ethernet-phy@8 {
++                compatible = "ethernet-phy-id0180.3301",
++                             "ethernet-phy-ieee802.3-c22";
++                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++                reg = <8>;
++                max-speed = <100>;
++            };
++        };
 +    };
 +...
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt b/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
 deleted file mode 100644
-index c3a75ac6e59d..000000000000
---- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+index 3a96cbed9294..000000000000
+--- a/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
 +++ /dev/null
-@@ -1,70 +0,0 @@
--Amlogic Meson AXG DWC PCIE SoC controller
+@@ -1,48 +0,0 @@
+-Properties for the MDIO bus multiplexer/glue of Amlogic G12a SoC family.
 -
--Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
--It shares common functions with the PCIe DesignWare core driver and
--inherits common properties defined in
--Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+-This is a special case of a MDIO bus multiplexer. It allows to choose between
+-the internal mdio bus leading to the embedded 10/100 PHY or the external
+-MDIO bus.
 -
--Additional properties are described here:
+-Required properties in addition to the generic multiplexer properties:
+-- compatible : amlogic,g12a-mdio-mux
+-- reg: physical address and length of the multiplexer/glue registers
+-- clocks: list of clock phandle, one for each entry clock-names.
+-- clock-names: should contain the following:
+-  * "pclk"   : peripheral clock.
+-  * "clkin0" : platform crytal
+-  * "clkin1" : SoC 50MHz MPLL
 -
--Required properties:
--- compatible:
--	should contain :
--	- "amlogic,axg-pcie" for AXG SoC Family
--	- "amlogic,g12a-pcie" for G12A SoC Family
--	to identify the core.
--- reg:
--	should contain the configuration address space.
--- reg-names: Must be
--	- "elbi"	External local bus interface registers
--	- "cfg"		Meson specific registers
--	- "config"	PCIe configuration space
--- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
--- clocks: Must contain an entry for each entry in clock-names.
--- clock-names: Must include the following entries:
--	- "pclk"       PCIe GEN 100M PLL clock
--	- "port"       PCIe_x(A or B) RC clock gate
--	- "general"    PCIe Phy clock
--- resets: phandle to the reset lines.
--- reset-names: must contain "port" and "apb"
--       - "port"        Port A or B reset
--       - "apb"         Share APB reset
--- phys: should contain a phandle to the PCIE phy
--- phy-names: must contain "pcie"
+-Example :
 -
--- device_type:
--	should be "pci". As specified in snps,dw-pcie.yaml
+-mdio_mux: mdio-multiplexer@4c000 {
+-	compatible = "amlogic,g12a-mdio-mux";
+-	reg = <0x0 0x4c000 0x0 0xa4>;
+-	clocks = <&clkc CLKID_ETH_PHY>,
+-		 <&xtal>,
+-		 <&clkc CLKID_MPLL_5OM>;
+-	clock-names = "pclk", "clkin0", "clkin1";
+-	mdio-parent-bus = <&mdio0>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
 -
--
--Example configuration:
--
--	pcie: pcie@f9800000 {
--			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
--			reg = <0x0 0xf9800000 0x0 0x400000
--					0x0 0xff646000 0x0 0x2000
--					0x0 0xf9f00000 0x0 0x100000>;
--			reg-names = "elbi", "cfg", "config";
--			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
--			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
--			#interrupt-cells = <1>;
--			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
--			bus-range = <0x0 0xff>;
--			#address-cells = <3>;
--			#size-cells = <2>;
--			device_type = "pci";
--			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
--
--			clocks = <&clkc CLKID_USB
--					&clkc CLKID_PCIE_A
--					&clkc CLKID_PCIE_CML_EN0>;
--			clock-names = "general",
--					"pclk",
--					"port";
--			resets = <&reset RESET_PCIE_A>,
--				<&reset RESET_PCIE_APB>;
--			reset-names = "port",
--					"apb";
--			phys = <&pcie_phy>;
--			phy-names = "pcie";
+-	ext_mdio: mdio@0 {
+-		reg = <0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -	};
+-
+-	int_mdio: mdio@1 {
+-		reg = <1>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		internal_ephy: ethernet-phy@8 {
+-			compatible = "ethernet-phy-id0180.3301",
+-				     "ethernet-phy-ieee802.3-c22";
+-			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-			reg = <8>;
+-			max-speed = <100>;
+-		};
+-	};
+-};
 
 -- 
 b4 0.10.1
