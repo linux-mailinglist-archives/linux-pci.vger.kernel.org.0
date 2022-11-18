@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5509D62F45B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 13:17:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F6E262F473
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 13:20:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235302AbiKRMRM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 07:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
+        id S241579AbiKRMT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 07:19:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241367AbiKRMRG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 07:17:06 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB8E8433E;
-        Fri, 18 Nov 2022 04:17:05 -0800 (PST)
+        with ESMTP id S241630AbiKRMTz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 07:19:55 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4A697353;
+        Fri, 18 Nov 2022 04:19:49 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668773824;
+        s=2020; t=1668773987;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tcQlI7YIv/JuyTTUko1uzNyPmENjCW3KTVrHBOgi0ng=;
-        b=c4RZrm0+pEi8NCV00XRkCL6XtsZ4Le4ZyX2KZBs9DaEvXmRGi2ej5jdDbhZeKdEFcY/Sbl
-        mlZQAZwhNQm/gyv/u/uSYsCc5GqEpHnYWWnvTNYYOaRjgwxOuVoSz/8rPHlLP49pjBmTJq
-        3Ug3+qffL1EK4klpk/xkdfeBFto+0glHBR/uW+gYXEWHo2n5fyC/wdFNJ9l983i/3mRdD0
-        5/A12LFa8HpMe5gIlA1ZpaIBw0cNZ17X2LAqvnic1LqvDCAGbS3RgMIV+CQbGr8Fvqi6jY
-        8D63hepJpYOoOsSYGJfSQJ5M7bVDU1ttxVhcRP5Udkdy+eKFP6pm77r4FIX18w==
+        bh=WhwsHEanhWlPM5Bzweid0/1/mRw2xWqkE+tJM2n22fk=;
+        b=VV2lDm4JJjwYE/2GMczR4Mz3fiiKXicayezNfoLoysRgw53paE/+ph82V6nA5SW1yuYX8A
+        gqyf0MutVGYJSGrpkj2XqGHF9uJGfhP113D40Tw4KAnxztYxcrT28dWoXBU1e6L+F7iCOK
+        3AwLrDJxXBA2HbPYZOPe6PODVYmAuJ5DUBNSSXNU1khrjI3Qdr9uecdkbuV2KGON79aCh/
+        jrIcJEI1H8EH3VUnvDJCB1QHjHxBX9csO7M8fp4O61sCO/uUTrdSLhbxIAw/3jcSmVBR8G
+        JKyRDRPwaLjbBbbBP8J9xamGN08yYnZZmezPQskNSr4IjiUlDZ1jgsjUM8Q5/w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668773824;
+        s=2020e; t=1668773987;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tcQlI7YIv/JuyTTUko1uzNyPmENjCW3KTVrHBOgi0ng=;
-        b=6ILjPSuTJE5rtGnvnYvQiBKj/x1fp0zjN4rIjG1Tq6vXD+sUc9eBhitM0gMyUTuNjM86qj
-        ZZSdSsJt2w9/S9Bg==
+        bh=WhwsHEanhWlPM5Bzweid0/1/mRw2xWqkE+tJM2n22fk=;
+        b=xaRugJgOXc58D7WTJ/dDyPI0h75WqGErGRGwLTVJz9g8bkGyX+V/sVf9dEWSeCVPMJgz71
+        HoQVJ2dzTSrHMtDA==
 To:     "Tian, Kevin" <kevin.tian@intel.com>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
@@ -52,14 +52,14 @@ Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         "Chatre, Reinette" <reinette.chatre@intel.com>
-Subject: RE: [patch 08/20] genirq/msi: Make MSI descriptor iterators device
+Subject: RE: [patch 11/20] genirq/msi: Make descriptor allocation device
  domain aware
-In-Reply-To: <BN9PR11MB5276F39FAC20C32E273B7FB48C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+In-Reply-To: <BN9PR11MB527676BC82A9A1E71AC7F6608C099@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20221111131813.914374272@linutronix.de>
- <20221111132706.500733944@linutronix.de>
- <BN9PR11MB5276F39FAC20C32E273B7FB48C099@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Fri, 18 Nov 2022 13:17:04 +0100
-Message-ID: <87r0y0jw3j.ffs@tglx>
+ <20221111132706.670241974@linutronix.de>
+ <BN9PR11MB527676BC82A9A1E71AC7F6608C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date:   Fri, 18 Nov 2022 13:19:47 +0100
+Message-ID: <87o7t4jvz0.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,20 +71,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 18 2022 at 07:57, Kevin Tian wrote:
+On Fri, Nov 18 2022 at 08:10, Kevin Tian wrote:
 >> From: Thomas Gleixner <tglx@linutronix.de>
->> Sent: Friday, November 11, 2022 9:57 PM
->> 
->> +/* Invalid XA index which is outside of any searchable range */
->> +#define MSI_XA_MAX_INDEX	(ULONG_MAX - 1)
->> +#define MSI_XA_DOMAIN_SIZE	(MSI_MAX_INDEX + 1)
+>> +	if (WARN_ON_ONCE(first_index >= MSI_MAX_INDEX || last_index >=
+>> MSI_MAX_INDEX))
+>> +		return;
 >> +
+>>  	lockdep_assert_held(&dev->msi.data->mutex);
+>> 
+>>  	xa_for_each_range(xa, idx, desc, first_index, last_index) {
 >
-> Out of curiosity. Other places treat MSI_MAX_INDEX - 1 as the upper
-> bound of a valid range. This size definition here implies that the last ID
-> is wasted for every domain. Is it intended?
+> this doesn't belong to allocation. and next patch will convert it to
+> domid aware plus a formal check. Probably can just remove it
+> from this patch.
 
-Bah. MSI_MAX_INDEX is inclusive so the size must be + 1. I obviously
-missed that in the other places which use it as upper bound.
-
-Not that it matters, but yes. Let me fix that.
+I added this just for paranoia sake so I could catch my conversion
+error. So yes and no.
