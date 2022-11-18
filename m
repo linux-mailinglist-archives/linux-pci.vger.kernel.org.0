@@ -2,156 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83E2062FFFB
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 23:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA40630024
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 23:31:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbiKRWX1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 17:23:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
+        id S229776AbiKRWbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 17:31:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230266AbiKRWW6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 17:22:58 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD326B4061
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 14:22:14 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id x21so8441362ljg.10
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 14:22:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YoNPSXK+wcRdMRmvgHL8qJyp7aIYHmPBQaLIexRJUkU=;
-        b=Lwtw+o1CSW5vTgwEV62MVCpfbASyzQP5oi1qPCptojRzLi2J5/4BFTpdmRXkT/kE3q
-         581fBqcYj69ttvdlf5pZ3PaGL+/bQrnwVZANkzaSQyUOWvBylUl8vJ3wV6Mdh318fDz6
-         vTpsvqSN14tw2ZTI7utBW7cN/ft3e0BtAhx7xUAAuYhaQJL3WeugaW1+kGYYxDa8feJU
-         1VvWioswrTuuYwvF2yMwdStQHSNlCQVkSXLbLruAeuA6xZ64StoNuO08L/6PBvmG7Hcl
-         5Wwho1zCjbcUcUUz9stLhyRI9RgJGfLls9LXPgGFscjJbbgLWHHFI+GU5VbFXoVNWJNw
-         BztQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YoNPSXK+wcRdMRmvgHL8qJyp7aIYHmPBQaLIexRJUkU=;
-        b=lh0/Limmg2v+jfJq8EKw1NUbt7m1ZL1SwbZi/Ds0snXdjr8marZiprNEarGlQKFwU6
-         9Zx8b4yE8amclGOI/f1OYbzZZaCIP+IcDa6QmgmHWOJRN2213meB57yGaO1MyIDxHvEx
-         V00+zvTYHYbnYGdJDLtVDg59pJOoglAnOqKrv5spFKyUPL4k4K55Ph6BE8UHDIwqKc6Z
-         +GkFdQU7T0Fjf7EWYFnKaJbAyV29hP1o0rEZnitcLDWhv/uTuVc1YCZh2oxal0sFKeZn
-         FnFFvgTpvDR49qUaxfGg0GeFcK4V5h9T+22kEkxv6uhlQpdUkYj0l5/aWMNMySr7nkiw
-         0r3A==
-X-Gm-Message-State: ANoB5plh47i+4HIumkTStCyFwab/WtQmBcU0qryqMP9Rt6y+Ik6CJnq3
-        ucT5lXs2WJx2jZv7FDk9kvqt2w==
-X-Google-Smtp-Source: AA0mqf4xKLzMyHjJcZVQhYHe2UfYLPh7BuXdM1ZHd3LjrlsM5RJwX4Wn7PSA6vQqB+mkqWcZ8PwJ5g==
-X-Received: by 2002:a2e:b5d3:0:b0:277:c57:e914 with SMTP id g19-20020a2eb5d3000000b002770c57e914mr2924887ljn.53.1668810133015;
-        Fri, 18 Nov 2022 14:22:13 -0800 (PST)
-Received: from [192.168.1.129] ([194.204.33.9])
-        by smtp.gmail.com with ESMTPSA id i5-20020a0565123e0500b004978e51b691sm828413lfv.266.2022.11.18.14.22.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 14:22:12 -0800 (PST)
-Message-ID: <62058431-b2bf-4d1b-df98-2b84adf87a83@linaro.org>
-Date:   Sat, 19 Nov 2022 00:22:10 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: sm8350: add PCIe devices
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        with ESMTP id S229763AbiKRWbK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 17:31:10 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DC3922E6;
+        Fri, 18 Nov 2022 14:31:09 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1668810668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DkmsnDTBJ38CLVFri2Sxs2e83r1aTFEQrwjY6IcaV9Y=;
+        b=2Reu5g9dHf+c6zh/wysNssnOToFlv3XC9lV4FgmrbXt0q0bJmuKq59z3Nkylb8NRIWteU3
+        F6jURcpd8KTM7xB2ggvr8+t66UhmPtxLas51xhoeb0pvhaS4G3sfrJUkK5YPdF/xfH0bKI
+        BOXiqNNcreurcAzI6bJhmKzdMjUDPZ5fmQRuHYLHhZiw791n5aq2mPyWsGlMTBhQdr/ca3
+        wCsHq6XKO+xdmeD228vjU8JYvOawSw6g+hMFyX5qZxbS9Nepu9Nm9Lmzw9g91WTtT3WDE6
+        v4y1FPbG+E2t4HIKsHqx58Rn6xkIH06KOAznlgUZdpqLVNjOAZVyhGSgiflOkA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1668810668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DkmsnDTBJ38CLVFri2Sxs2e83r1aTFEQrwjY6IcaV9Y=;
+        b=aLVRMoGC/mD+1nPV1IbExqcqtMC3wFpRC1S+MWPeIzwcUw+R5HnIrmcpdcWQ7XJrI9sI7t
+        sWgMl0mULXDAxoDA==
+To:     Reinette Chatre <reinette.chatre@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org
-References: <20221110103345.729018-1-dmitry.baryshkov@linaro.org>
- <20221110103345.729018-8-dmitry.baryshkov@linaro.org>
- <Y2zYHEZDbNoGumTl@hovoldconsulting.com>
- <37fe9a22-7ca0-e4e5-ebff-4eb56dbb74eb@linaro.org>
- <Y3TzG4HGsFSU3sky@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <Y3TzG4HGsFSU3sky@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: Re: [patch 21/33] genirq/msi: Provide msi_domain_alloc_irq_at()
+In-Reply-To: <d33e63f0-a5ba-38d3-1cfb-dd5ab8d249b8@intel.com>
+References: <20221111133158.196269823@linutronix.de>
+ <20221111135206.463650635@linutronix.de>
+ <0cbf645b-b23a-6c85-4389-bb039a677a52@intel.com> <87k03tkrii.ffs@tglx>
+ <87zgcok4i2.ffs@tglx> <87wn7sjzeq.ffs@tglx>
+ <d33e63f0-a5ba-38d3-1cfb-dd5ab8d249b8@intel.com>
+Date:   Fri, 18 Nov 2022 23:31:07 +0100
+Message-ID: <87y1s7j3o4.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 16/11/2022 16:26, Johan Hovold wrote:
-> On Thu, Nov 10, 2022 at 05:20:11PM +0300, Dmitry Baryshkov wrote:
->> On 10/11/2022 13:53, Johan Hovold wrote:
->>> On Thu, Nov 10, 2022 at 01:33:44PM +0300, Dmitry Baryshkov wrote:
->>>> Add PCIe0 and PCIe1 (and corresponding PHY) devices found on SM8350
->>>> platform. The PCIe0 is a 1-lane Gen3 host, PCIe1 is a 2-lane Gen3 host.
->>>>
->>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/sm8350.dtsi | 246 ++++++++++++++++++++++++++-
->>>>    1 file changed, 244 insertions(+), 2 deletions(-)
->>>
->>>> @@ -1761,6 +1957,52 @@ tlmm: pinctrl@f100000 {
->>>>    			gpio-ranges = <&tlmm 0 0 204>;
->>>>    			wakeup-parent = <&pdc>;
->>>>    
->>>> +			pcie0_default_state: pcie0-default-state {
->>>> +				perst-pins {
->>>> +					pins = "gpio94";
->>>> +					function = "gpio";
->>>> +					drive-strength = <2>;
->>>> +					bias-pull-down;
->>>> +				};
->>>> +
->>>> +				clkreq-pins {
->>>> +					pins = "gpio95";
->>>> +					function = "pcie0_clkreqn";
->>>> +					drive-strength = <2>;
->>>> +					bias-pull-up;
->>>> +				};
->>>> +
->>>> +				wake-pins {
->>>> +					pins = "gpio96";
->>>> +					function = "gpio";
->>>> +					drive-strength = <2>;
->>>> +					bias-pull-up;
->>>> +				};
->>>> +			};
->>>
->>> The pinconfig should go in the board file.
->>
->> Usually yes. However for the PCIe we usually put them into the main
->> .dtsi. See sm8[124]50.dtsi.
-> 
-> Yeah, I noticed that too and had this discussion with Bjorn for
-> sc8280xp some months ago. Even if you may save a few lines by providing
-> defaults in a dtsi, the pin configuration is board specific and belongs
-> in the dts.
+On Fri, Nov 18 2022 at 10:18, Reinette Chatre wrote:
+>> @@ -141,7 +141,7 @@ static int msi_insert_desc(struct device *dev, struct msi_desc *desc,
+>>  		if (ret)
+>>  			goto fail;
+>>  
+>> -		desc->msi_index = index;
+>> +		desc->msi_index = index - baseidx;
+>
+> Could msi_desc->msi_index be made bigger? The hardware I am testing
+> on claims to support more IMS entries than what the u16 can
+> accommodate.
 
-I see that you've ended up with no pin configuration at all in 
-sc8280xp.dtsi. I must admit, this is an interesting approach. However I 
-fear that this might increase c&p amount. Let's see how it goes in the 
-long term.
+Sure that's trivial. How big does it claim it is?
 
-> 
-> Also note that 'perst' and 'wake' above could in principle be connected
-> to other GPIOs on different boards.
+>> @@ -1476,9 +1476,10 @@ struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, u
+>>  				       const struct irq_affinity_desc *affdesc,
+>>  				       union msi_dev_cookie *cookie)
+>>  {
+>> +	struct msi_ctrl ctrl = { .domid	= domid, .nirqs = 1, };
+>> +	struct msi_domain_info *info;
+>>  	struct irq_domain *domain;
+>>  	struct msi_map map = { };
+>> -	struct msi_desc *desc;
+>
+> (*desc is still needed)
 
-Yes. Do we see that in wild? No.
+Yes, I figured that out later :)
 
--- 
-With best wishes
-Dmitry
+> Thank you very much. With the above snippet it is possible to
+> allocate an IMS IRQ. I am not yet able to use the IRQ and I am working
+> on more tracing to figure out why. In the mean time, I did
+> just try the pci_ims_alloc_irq()/pci_ims_free_irq() flow and
+> pci_ims_free_irq() triggered the WARN below:
+>
+> remove_proc_entry: removing non-empty directory 'irq/220', leaking at least 'idxd-portal'
 
+Hrm, that's the irq action directory. No idea why that is not torn down.
+
+I assume your sequence is:
+
+  pci_ims_alloc();
+  request_irq();        <- This creates it
+  free_irq();           <- This removes it
+  pci_ims_free();
+
+Right?
+
+Thanks,
+
+        tglx
