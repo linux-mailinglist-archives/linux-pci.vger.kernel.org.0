@@ -2,64 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76DE562F7C8
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 15:36:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6881362F80C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 15:46:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242138AbiKROgK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 09:36:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
+        id S241916AbiKROqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 09:46:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242494AbiKROfF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 09:35:05 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA51E9038A
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:48 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id v1so9472240wrt.11
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:33:48 -0800 (PST)
+        with ESMTP id S241935AbiKROqe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 09:46:34 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602B172129
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:46:30 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id g12so8563792lfh.3
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:46:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4SvRgFTn6+Gybi1+j9eb6DiJcXSsUC9wg7dcCoAYlxo=;
-        b=rNdR543njIXd/vTYoC3ISLSjkRryowY2q1V07GqmJUyFH4lwy6TTyxgMjsP8O4AKdA
-         CYLwLsgpri/smVj6DDW62FZNw93QkK3gqpHq2HQk379M1DV3NrFNIwncfoYKjJVi6+6E
-         XVZ28lFTylYIhRpbfkpcf1cFDgj8AhxK3mbcTrqXN5bB6aJhMjaM/XZ9G5HSewQfRdRp
-         UFEMd90M0jfE54YuwnblNTl6tI2fn3oHsoKZxXEXOOPnqozVO3GHjDFwnsp/uG/HGse1
-         N+lyHJbxaUEA7S4WxaHcA7nZPgRoXhiwU22v+tCG2qO21jjs1yb9dLbV1ygsljh87xjA
-         0o+Q==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hahClhRd3DWgz5IfF3Hi2OhGzrj/JdBwzY9rjBeju8s=;
+        b=JZmmE5Z+1MzabRyRffMS4z0aGT9BgDXgC9DY0MCMYG1Od3pGNI30/93iq6QOZW6IdU
+         fzRFWbJEIsHpicLM2uM84cqyzD3qkQI9fT5ohEFetg4fYo8GpGdRtchVdyxXexmPlddC
+         eGYx58fwwwBR/DsKEi58q/WGkaBmfRML0mdohoszmg6ZPltefO3A2rcCnwjg9H2e4uHz
+         Ht2YGQKv1bXzlOexPAnjWHR0AMT7xMNE/h4sT/R2kdz2G7JqebBANYjHtmXhnqbDNEln
+         rVq3At5moD/Yhfg5Ccq+IamuGznKvyJiQMbNIvLxeCTTkEAeoLQaX+gl3f5Kw0H/Tmzx
+         zd0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4SvRgFTn6+Gybi1+j9eb6DiJcXSsUC9wg7dcCoAYlxo=;
-        b=p9AETGgNVVN5XUgIiMzqK9i72kQf4q7061jwVBBIJaL6eR6zNBfHJjDMThx75l6WGt
-         BLlwq9V9RtxDAN5ZkouzGE78bsndwX/Egpy7HfrEEqokGxuowyXmOSY/W/M0yMq1Ngjp
-         4zvnZB4Mbe5vY/Cm3z9Kr9IIQIuSIymCACJyVJV3xjJkLxGj1vtfyyE4qAQ3e9KLnH2f
-         zSRlrRTSWV0UITnkdnFQ8blFvt/kCXUfm0qEDaFkjj3o6ZeAQiLlX0jNWDnB2VUCJuXC
-         LlovH0GrpLD32qcV+W7unxgLEyjOyogzkcsPzrdr2xpdy29T+lQAKLAS9cpXkFZm633+
-         Ol4w==
-X-Gm-Message-State: ANoB5pksZGJJSpW8LZ+htyP/UszQfqGK8i6khdKlPxM0ZbysFCly71PM
-        mINE6dP3vusqU0gBDjaRe5edCw==
-X-Google-Smtp-Source: AA0mqf6QQq479fIUCOCgvip5Pl5AI82bEkY7FqOFZ5rXBu8KR0A3F1ydYiGUSPadA491uLfZ1bpajw==
-X-Received: by 2002:a5d:452d:0:b0:241:c5ec:d0d with SMTP id j13-20020a5d452d000000b00241c5ec0d0dmr804402wra.441.1668782028313;
-        Fri, 18 Nov 2022 06:33:48 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id j21-20020a05600c1c1500b003cfb7c02542sm5436726wms.11.2022.11.18.06.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 06:33:47 -0800 (PST)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Fri, 18 Nov 2022 15:33:38 +0100
-Subject: [PATCH 12/12] dt-bindings: net: convert mdio-mux-meson-g12a.txt to
- dt-schema
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hahClhRd3DWgz5IfF3Hi2OhGzrj/JdBwzY9rjBeju8s=;
+        b=G289joJj4WddCmuXTXJChCs3pL2Rt5gnYYLrEYTGM2mvznmqEJJQ9jEFqDk9i5sZ3c
+         q4TI1HTqvRbzAjDamxs31sofoPHslL9UQ/ESIq71JflaruO0QPemgYlWAOGrpw7ueYYX
+         Gp3KLfaY9N4u9nWC0A4hPoWi8ujvzRXscTCaIngpuKEACT7bT/ss7H4ggZDgLY/67c4i
+         9gjqsX5WTuHBFTLriceH+yYJVm86sO10VryFx5eD6zQ5EvLpn0Iy2AArBi8p4j8Kc0ZC
+         FsRhqovic+C026EKmrTiK+k8XDqtUK7EREsoMBkpFOg7VKQq/P4r32fgm3TtGPS5Bqtg
+         BMAg==
+X-Gm-Message-State: ANoB5pmqb9M+5rDvAHp8oxQJUCF5Zh/H/lP6JOmnEyjdXZWjspVlPp/3
+        dCEu/FQE5mmE8aXyui4MX7QMHQ==
+X-Google-Smtp-Source: AA0mqf4xQNEVq6KlclNCEMjl56xKu/uoZoZfSEq3TwF8gKAhDBzYdep45hA5R/OZ/mt+9IdD6Luzkg==
+X-Received: by 2002:a19:4f14:0:b0:4b4:b20c:4b7 with SMTP id d20-20020a194f14000000b004b4b20c04b7mr2476398lfb.201.1668782788658;
+        Fri, 18 Nov 2022 06:46:28 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id c3-20020ac25f63000000b004b177293a8dsm682197lfc.210.2022.11.18.06.46.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 06:46:28 -0800 (PST)
+Message-ID: <57c2ca7c-05be-7fc1-69ad-e06b6e571d60@linaro.org>
+Date:   Fri, 18 Nov 2022 15:46:26 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20221117-b4-amlogic-bindings-convert-v1-12-3f025599b968@linaro.org>
-References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
-In-Reply-To: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
-To:     Jakub Kicinski <kuba@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 01/12] dt-bindings: firmware: convert meson_sm.txt to
+ dt-schema
+Content-Language: en-US
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
@@ -87,12 +86,15 @@ Cc:     linux-media@vger.kernel.org, netdev@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
         linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        devicetree@vger.kernel.org
-X-Mailer: b4 0.10.1
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v1-1-3f025599b968@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221117-b4-amlogic-bindings-convert-v1-1-3f025599b968@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -101,155 +103,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert MDIO bus multiplexer/glue of Amlogic G12a SoC family bindings
-to dt-schema.
+On 18/11/2022 15:33, Neil Armstrong wrote:
+> Convert the Amlogic Secure Monitor bindings to dt-schema.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  .../bindings/firmware/amlogic,meson-gxbb-sm.yaml   | 36 ++++++++++++++++++++++
+>  .../bindings/firmware/meson/meson_sm.txt           | 15 ---------
+>  2 files changed, 36 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml b/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml
+> new file mode 100644
+> index 000000000000..33d1408610cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/firmware/amlogic,meson-gxbb-sm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Secure Monitor (SM)
+> +
+> +description:
+> +  In the Amlogic SoCs the Secure Monitor code is used to provide access to the
+> +  NVMEM, enable JTAG, set USB boot, etc...
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    const: amlogic,meson-gxbb-sm
+> +
+> +patternProperties:
+> +  "power-controller":
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- .../bindings/net/amlogic,g12a-mdio-mux.yaml        | 80 ++++++++++++++++++++++
- .../bindings/net/mdio-mux-meson-g12a.txt           | 48 -------------
- 2 files changed, 80 insertions(+), 48 deletions(-)
+This looks like a property, not a pattern.
 
-diff --git a/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml b/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml
-new file mode 100644
-index 000000000000..ec5c038ce6a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/amlogic,g12a-mdio-mux.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/amlogic,g12a-mdio-mux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MDIO bus multiplexer/glue of Amlogic G12a SoC family
-+
-+description:
-+  This is a special case of a MDIO bus multiplexer. It allows to choose between
-+  the internal mdio bus leading to the embedded 10/100 PHY or the external
-+  MDIO bus.
-+
-+maintainers:
-+  - Neil Armstrong <neil.armstrong@linaro.org>
-+
-+allOf:
-+  - $ref: mdio-mux.yaml#
-+
-+properties:
-+  compatible:
-+    const: amlogic,g12a-mdio-mux
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: peripheral clock
-+      - description: platform crytal
-+      - description: SoC 50MHz MPLL
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: clkin0
-+      - const: clkin1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    mdio-multiplexer@4c000 {
-+        compatible = "amlogic,g12a-mdio-mux";
-+        reg = <0x4c000 0xa4>;
-+        clocks = <&clkc_eth_phy>, <&xtal>, <&clkc_mpll>;
-+        clock-names = "pclk", "clkin0", "clkin1";
-+        mdio-parent-bus = <&mdio0>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mdio@0 {
-+            reg = <0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+
-+        mdio@1 {
-+            reg = <1>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            ethernet-phy@8 {
-+                compatible = "ethernet-phy-id0180.3301",
-+                             "ethernet-phy-ieee802.3-c22";
-+                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+                reg = <8>;
-+                max-speed = <100>;
-+            };
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt b/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
-deleted file mode 100644
-index 3a96cbed9294..000000000000
---- a/Documentation/devicetree/bindings/net/mdio-mux-meson-g12a.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--Properties for the MDIO bus multiplexer/glue of Amlogic G12a SoC family.
--
--This is a special case of a MDIO bus multiplexer. It allows to choose between
--the internal mdio bus leading to the embedded 10/100 PHY or the external
--MDIO bus.
--
--Required properties in addition to the generic multiplexer properties:
--- compatible : amlogic,g12a-mdio-mux
--- reg: physical address and length of the multiplexer/glue registers
--- clocks: list of clock phandle, one for each entry clock-names.
--- clock-names: should contain the following:
--  * "pclk"   : peripheral clock.
--  * "clkin0" : platform crytal
--  * "clkin1" : SoC 50MHz MPLL
--
--Example :
--
--mdio_mux: mdio-multiplexer@4c000 {
--	compatible = "amlogic,g12a-mdio-mux";
--	reg = <0x0 0x4c000 0x0 0xa4>;
--	clocks = <&clkc CLKID_ETH_PHY>,
--		 <&xtal>,
--		 <&clkc CLKID_MPLL_5OM>;
--	clock-names = "pclk", "clkin0", "clkin1";
--	mdio-parent-bus = <&mdio0>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	ext_mdio: mdio@0 {
--		reg = <0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--	};
--
--	int_mdio: mdio@1 {
--		reg = <1>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		internal_ephy: ethernet-phy@8 {
--			compatible = "ethernet-phy-id0180.3301",
--				     "ethernet-phy-ieee802.3-c22";
--			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--			reg = <8>;
--			max-speed = <100>;
--		};
--	};
--};
+> +    type: object
+> +    $ref: /schemas/power/amlogic,meson-sec-pwrc.yaml#
 
--- 
-b4 0.10.1
+Would be nice to add it here to example and drop from
+amlogic,meson-sec-pwrc.yaml (unless it will be used by more schemas?).
+
+
+Best regards,
+Krzysztof
+
