@@ -2,109 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72FC162FB2B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 18:09:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F9EE62FB6F
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 18:17:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235335AbiKRRJL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 12:09:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
+        id S241173AbiKRRRh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 12:17:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235224AbiKRRJK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 12:09:10 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE772701B1;
-        Fri, 18 Nov 2022 09:09:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668791349; x=1700327349;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=e2QHRfiu8f+Jdd+htf/CMAkOlQJDiFc8YQXAZJZ7SBY=;
-  b=dl5gEwzmvKdFFdLA9s5VelNIRMprGIDYKK1vSiBC8YnxsLnNeXbtMFER
-   hZo9RfUltQwNucWrFIm7xrS956QNozc8cMA7Pjn+RO+M8aC1tpnVq4EVr
-   XfBgBQVy1yF26dYKd3SlWlkQQ5nFUnWWn+/8JHCFlibD6QcjO+GQu4Toc
-   dn4ePX4diwwLMW1NbFP5BqfnSQ1M6Txxt9NZN2R8NXB3Wc5IbnAnX/GoP
-   tcElAltWFNQTupYYBAiq2w1mU9g+IyAPn1A4buk+iSQkc5EU6bt81Q1ZF
-   EblU4bXoopk/OHuOgv5GxzqXTDaszNgKJDySb/HhYYjSAeCPDOWkVEGn/
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="399469781"
-X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
-   d="scan'208";a="399469781"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:09:09 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="765224277"
-X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
-   d="scan'208";a="765224277"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:09:08 -0800
-Subject: [PATCH v3 11/11] cxl/pci: Add callback to log AER correctable error
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        with ESMTP id S234867AbiKRRRg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 12:17:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3643F27B2F;
+        Fri, 18 Nov 2022 09:17:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4A2A62691;
+        Fri, 18 Nov 2022 17:17:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244F9C433C1;
+        Fri, 18 Nov 2022 17:17:33 +0000 (UTC)
+Date:   Fri, 18 Nov 2022 12:17:31 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
-        terry.bowman@amd.com, bhelgaas@google.com
-Date:   Fri, 18 Nov 2022 10:09:08 -0700
-Message-ID: <166879134802.674819.8577415268687156421.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
+        Jonathan.Cameron@huawei.com, terry.bowman@amd.com,
+        bhelgaas@google.com
+Subject: Re: [PATCH v3 08/11] cxl/pci: add tracepoint events for CXL RAS
+Message-ID: <20221118121731.128df10c@gandalf.local.home>
+In-Reply-To: <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
 References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+        <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add AER error handler callback to read the correctable error status
-register for the CXL device. Log the error as a trace event and clear the
-error.
+On Fri, 18 Nov 2022 10:08:49 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/pci.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> +TRACE_EVENT(cxl_aer_uncorrectable_error,
+> +	TP_PROTO(const char *dev_name, u32 status, u32 fe, u32 *hl),
+> +	TP_ARGS(dev_name, status, fe, hl),
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__field(u32, status)
+> +		__field(u32, first_error)
+> +		__dynamic_array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index dad69110291d..b394fd227949 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -621,10 +621,30 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_correctable_error_log(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+	void __iomem *addr;
-+	u32 status;
-+
-+	if (!cxlds->regs.ras)
-+		return;
-+
-+	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-+	status = le32_to_cpu(readl(addr));
-+	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-+		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-+		trace_cxl_aer_correctable_error(dev_name(dev), status);
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
-+	.cor_error_log	= cxl_correctable_error_log,
- };
- 
- static struct pci_driver cxl_pci_driver = {
+If this is a fixed size, you do not need to use __dynamic_array, but
+instead just use __array()
+
+		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32);
+
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(dev_name, dev_name);
+> +		__entry->status = status;
+> +		__entry->first_error = fe;
+> +		/*
+> +		 * Embed the 512B headerlog data for user app retrieval and
+> +		 * parsing, but no need to print this in the trace buffer.
+> +		 */
+> +		memcpy(__get_dynamic_array(header_log), hl, CXL_HEADERLOG_SIZE);
+
+		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+
+This will be smaller and faster.
+
+-- Steve
 
 
+> +	),
+> +	TP_printk("%s: status: '%s' first_error: '%s'",
+> +		  __get_str(dev_name),
+> +		  show_uc_errs(__entry->status),
+> +		  show_uc_errs(__entry->first_error)
+> +	)
+> +);
+> +
