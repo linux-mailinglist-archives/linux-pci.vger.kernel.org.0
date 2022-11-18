@@ -2,176 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F5262EF5A
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 09:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6C9862EF76
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 09:31:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241417AbiKRI3D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 03:29:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
+        id S241497AbiKRIbO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 03:31:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241454AbiKRI2g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 03:28:36 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D246F3E
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id u11so5885595ljk.6
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=c0DwlSGGZnpMt70g7cvHCqqLtClo+HqnYC/KDMQT/2C4Kgme2ED6Ajko4OIXpmbeXS
-         m5SIke4QdtVszOu65Cv1AnF200xxc1a/iy1cj+W/4WPUi1idnzCq3jL3rOCyXQ/Sy7Xo
-         FhxYYZmL7CP0ofdSTlNio6J4qvL4Gb4QE7SbMbyvGwdcz0q2lnaiEphLSDGuz3cWY979
-         gQT9VdBtzdRs59dL/dUgCq5BV84WRT+Q7ok8jIBAq5G8XWvjz6kIifP/efd7/+/UMkZu
-         +qzJPaRvsSeqy/GGhmsAycmFzituYnYzJUATh2BkazIz98eeuD3Eq9fkv2cSDtBNQpLB
-         eqpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=r8T9Ayz1W1WJAx5xlISeWFWkdyZ3COSw1dqBQsPSlLtJYGMJhLP6vViOB2pZXVueTI
-         OEdrptcUVVE+nIBauv6DtUGrTxVWkGiOOAT/MV6SDKZIHk2yg4B1XKq8KlcJPuAp6wWK
-         C0PgqPROKeU42tkll1FQQ0evRLPPb0Kb4/C18Lb6GLTOcByoXAs9KWyyIzCycAE0t8IL
-         Ds35RmMU2Yyo78eO2upXjIvd7+smI2hOcaqSEBfG4UuCR42zqfaNh9eZfbnhJWBhNb/U
-         u5xzYRkaysttvdac7ZwFICgW8X5wk0qVhitAuzsqYMU8wTQAKQ2CO2L7TabjkpQ8+Mr5
-         fuqg==
-X-Gm-Message-State: ANoB5pnqboJ2o9SOlLjKM5lQBI2wYn7CtcVkbhKBpawP7wsDwWLc3kEW
-        YDMT0KYwc43vOn2FZ799Ab6zFA==
-X-Google-Smtp-Source: AA0mqf5FUU/an0yPckwGnu0iJ8FLtTfHewcyaiyp5w+c6ymGf8LMkNj5Lkw1yXdUuHVX3l3x9IvIFA==
-X-Received: by 2002:a2e:a5c7:0:b0:277:8d48:27dd with SMTP id n7-20020a2ea5c7000000b002778d4827ddmr2207144ljp.192.1668760111721;
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id d24-20020a056512369800b0049b8c0571e5sm564273lfs.113.2022.11.18.00.28.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Message-ID: <578b686e-8461-a959-86c5-83a8be1dc981@linaro.org>
-Date:   Fri, 18 Nov 2022 09:28:29 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
+        with ESMTP id S241527AbiKRIaa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 03:30:30 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7BED109;
+        Fri, 18 Nov 2022 00:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668760226; x=1700296226;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=BLk/nqowHorNoes+vg50vYJLfdGC4kLekv3mA1rr3uc=;
+  b=knofxVcW4q2Xu5TCz6KVNUs1IDXYpyL5OCV3N5facoJJuEXorYv04Erk
+   +qIUFu26bOM/O2eqX6Q2UNMsKVPi++jVxpgKtTst4EwI1GFNlUw2iRAVA
+   4OulVlD+DRmxOxvpmC2GCB5oYQvgEQc6kCJ05LQAqkyc0BCtJPbaRtyPL
+   UjvKuvoSGrEkIQyjGD0fuX5Mu+CSKhOigDs30fsi6CtNRyYf6pvX6Ncqw
+   sXduY3ZrPUxRarSx7j6DiIEC8Obo+KD3KTXLau1a+DE4ef8HThFYaFyrO
+   +fFMRsBLwvElL8KHrNfKXIKtCgXfGlbyyJcauTvMcg3l8bOCRHckK/x4E
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="339924287"
+X-IronPort-AV: E=Sophos;i="5.96,173,1665471600"; 
+   d="scan'208";a="339924287"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 00:30:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="885215135"
+X-IronPort-AV: E=Sophos;i="5.96,173,1665471600"; 
+   d="scan'208";a="885215135"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2022 00:30:25 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 18 Nov 2022 00:30:25 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 18 Nov 2022 00:30:24 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Fri, 18 Nov 2022 00:30:24 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Fri, 18 Nov 2022 00:30:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=msj2kjNvCRbgYwiz4O3BCQT3RwrrcyKJkABBSLZDNS6CQJMINPCNQ29oITs55VvY+FjEruQ8rxSWPlMm2z5awLSViiZeKAKiW0vIQL0jflbpvJ8xUin195tzhAbkkRvXYF49pW3CvMlIS8bcHzm5nj0WL11Y0ZTZaPPzkHZDZcs5La4jilvkno3ph0cdsyYu5mEzC5KuHoCWeMT0H4N5IyFIq5YwgPdFMvfTUrF0GAzsBVgT/mnJ4s5fxTjk11SK5vvm+m5pE5SAVK057HOPWFbbL7E56TOkwCmzKYNfgnYWxPjNxNNXz1YcZAeR0KfR9YfD78VIP7czO0qaqyxsTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BLk/nqowHorNoes+vg50vYJLfdGC4kLekv3mA1rr3uc=;
+ b=jIcQlhKQrecCMhkAW/5LHk/rDYpL835HJj7C9lydHRkZ1EKAVyHIQLIk0AOhqF29uDgD4AraZrTPTBbELzGcaXFg0DpYN8i0sEzWtc5KUXzs9JtwGiLb0eYKTzmPX7yA6wkIyX4ON23z2kEwxrE0ZIuVK4MgnZV4kxMMkAmNLDbqqHJNl6R/SzXcuczAFxDnh2GBj/4CvVIKqhpIjYo4JpKzFnI6GlBVQ5D8zV0IzqGpdFNtpUgIot4Y1OY3KzEhPOmvI5NgsRziJAgQLaGjwydpmMRL3d8E36t91M6M/4bCdyEc+ToWqqX3SxRUxdqxemeos2sAfYMYTw5+Jk5p+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20; Fri, 18 Nov
+ 2022 08:30:22 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::9929:858c:3d20:9489]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::9929:858c:3d20:9489%4]) with mapi id 15.20.5813.019; Fri, 18 Nov 2022
+ 08:30:21 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "Will Deacon" <will@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        "Chatre, Reinette" <reinette.chatre@intel.com>
+Subject: RE: [patch 14/20] genirq/msi: Provide new domain id based interfaces
+ for freeing interrupts
+Thread-Topic: [patch 14/20] genirq/msi: Provide new domain id based interfaces
+ for freeing interrupts
+Thread-Index: AQHY9dWAoq7JL8HNP0SXCON9W17SUK5EONdQ
+Date:   Fri, 18 Nov 2022 08:30:21 +0000
+Message-ID: <BN9PR11MB5276D82D1F75B82998A476058C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20221111131813.914374272@linutronix.de>
+ <20221111132706.837228984@linutronix.de>
+In-Reply-To: <20221111132706.837228984@linutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
- <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
- <20221117220756.7a1bf734@xps-13>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221117220756.7a1bf734@xps-13>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|PH7PR11MB6522:EE_
+x-ms-office365-filtering-correlation-id: 0ead35c9-1f14-437a-7f2c-08dac93f21f2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c2nox6nm7F4qHHKO8aJVspSTO2DcDe5I0TjDzLE8TK2IAMcwRibTjqMBMSwFGUTGBkcO9tr0UVzd24/8jILYfcfJM07GnIGCAUSJKkse1wDNzxFefd8quNTR8+OxUKUtodR401hKSd/FmN1doVVxG+5Ez9PnyI2dSWgWwt1eX+CxW8+DBBrIf4fH6nMhhWVhxeRlue6AccgBW3wjopsB4P/4+pGwDYMHeV7meS55k756IFcwPmROpDZDdP3ckt9O4YNkaqQeV13v1fukMBUm3cysiK+pZjYjahSqzdIGVFT0a6kIErV+jb4e7iELPEfrylHOoTcpPpNlE/6EPkvHMupNvhWoQliMNBPqEXWlVfoJ/ub/cbTaBksU3BKKAsjB/DSAbW4djd90Zsr6qC1x7NYtxi684f6loR7Qa/eK+HgIntBlp/fWLMo7udpCP3EwxU3nneoIPOUax02ps2r6skSHmCPrRzghKKe8P1NY7UridVs92E6WhnvargJfmaf1MvTZd7xl+i1G2QZffbUlGem65Pmw4DctkRtbJusIWbkNTji+mu0SfI/Y5gerNF7Ttj6A1yLnvaIC9lM0YXLSC430zi94gR0aNGoLqVc6q3CBiBL8noygvJ7hO3L0JkZEQPWWO38hyuteghYxMQcCYYsY7DZEAqzUxbhRII1mfjbdsi6/AG1RFnwKU6E2ECyyPX6Pzb1A7V0/JZkHrRYuWg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(39860400002)(346002)(366004)(376002)(136003)(451199015)(2906002)(83380400001)(122000001)(41300700001)(186003)(478600001)(38100700002)(107886003)(6506007)(76116006)(4744005)(7696005)(9686003)(66556008)(5660300002)(66446008)(8676002)(66946007)(64756008)(7416002)(4326008)(52536014)(66476007)(26005)(8936002)(55016003)(71200400001)(54906003)(82960400001)(38070700005)(86362001)(316002)(110136005)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d2R1OVpxVUx2WnNzTkhTTGl6alIrWDc5SDVOZTZ2TGJZN1dTUGV3OENCMkE3?=
+ =?utf-8?B?WklxUlJpdGdHSzF3UFhQS2dEWjc1bmJPd1kwVDc0WDVNblBUMjQ4cHI4VTk4?=
+ =?utf-8?B?N1FyNWNYdEpERGVJY28rM3F0dTZwVDJCRlM5NmJxQitpMWtyWlBCb1N5UHlq?=
+ =?utf-8?B?b2hya1lZQ1YzQUoydGtPTmlsbEdrZjBUaFQ2S3FFQ0JxbnpHd3F6RS9kaWJF?=
+ =?utf-8?B?ek9QdlFNdmwyOUhKd21sWVN1eUNOUTdZNWFhQ1hlQWFWS0dkTVoyMkhDSDFu?=
+ =?utf-8?B?R0ttelB3OUJxcFFjaEhDUTQ0ekhzOWZqSUV2T3dtRThOVUtXRDh2NlNMbmZW?=
+ =?utf-8?B?WXRkUklHSDNyMnQrL045bUtROFFnRHNDeTRuVWFYNEttQXl6L09DRHJ5VnA1?=
+ =?utf-8?B?a0NqU0VkZkRJRXRtYzhkK2tDbmxwaTlQdkxuc3hvamVzalUyZlRzSnl0alZO?=
+ =?utf-8?B?bTJlWi85TkxuQUV2dVBBb1c4Z3BMVW1GWStNN05sMitNa0ZGRklqK0RsaXNu?=
+ =?utf-8?B?VEdWbDFnUUJHYU5INDZmQXFMT3BTVjBxN2RvajRoMzdLN3JPaU9GeVdqajNk?=
+ =?utf-8?B?blM4eVV4MFViSk1DZmVHRHlJYlNxb2o3a1dvV2NzYzJmdGxlYnNlUVJwZG0z?=
+ =?utf-8?B?YWFQdkthb0wxdHZqSzZ5MXVLa1BEWnN6Rlp0TU9oUU1qNDZlc0YzM052NGgv?=
+ =?utf-8?B?WFlmQlozT3JHdlNXNlFZYzI2NDQzdWw2cnRwTDhwOVlYaG9JemdYSE5tQitS?=
+ =?utf-8?B?YmVLOGIyajVFNURpVi9NSWFCZ1lZU01XTXU5MEpFbkw5UGhJTmdrekE2N1Bv?=
+ =?utf-8?B?Y0l0NjJ4WHkyK1ZZUk9Kb1hpVHgxUzhqS0JpM2IrZGt1YWwvbEhMTHhMbWUz?=
+ =?utf-8?B?VGJGRk9WL24wcDhYOFlTT0duNk5RdVliWVE5cHNOSUVQM1lTVzZOMkgyeGw2?=
+ =?utf-8?B?dm9icmF4ZkZDdlZIU0FVeGwrRlJSaEI5YU9DUHZFZnJJQitGUkQwVGhiK2FN?=
+ =?utf-8?B?Wjd6eWE1UXlsb09TOWJRUzZvWjhBR1Y2cUxFSEtkdXg5Q1dTdzBZdk5XU0J3?=
+ =?utf-8?B?cXdQNmV3OVRKUXZMSDZtdnRJV3J6MnJmb0c0VXN1WEJ2N1EvRnlSNGQ3ei9O?=
+ =?utf-8?B?blNNeW5QTS9lSmJ2UDZKQStNaHBmTGxHVnozdHFSL2lxSmdhSHBFejdsd1gy?=
+ =?utf-8?B?WVo2dWcvcW16K2ltZExONzNKM05CdmhyUEMzUC9xcE1OV3I3eVd2WSt2UTJ2?=
+ =?utf-8?B?NW5SNlg2cGkzdlZFUkE4REdTSFRWbUgyWmxzK0s1SGVtdEl6cVZoOWVCVXJz?=
+ =?utf-8?B?cnVqOWFLemFVWTZZaHE5eVBzL1lSYVBrU1o3a1BkL2tCRW80ZE04K1hLVytN?=
+ =?utf-8?B?TmZMdDlCSFZEM1R6VmQ4cGUzdjRiZXpjeDhxK0lscW1LZFdxSkpjbXo0TC9m?=
+ =?utf-8?B?N1dKbHZmYmFQZGNyQ0Zhdk95dnpDc0NGMG56TERzQjBVZi9KU0VLOEo4N0Mv?=
+ =?utf-8?B?TnMyQWx1dHhtL2hJeWh3MTVkcVlFa2V5c2JoVVBOamtGeVV0ZlRsK0NydEFG?=
+ =?utf-8?B?b2FmYjhXcWRCazVqMEhzMm52bkxrS2xYcjVMakRFWWViRFJ0ZVRwUC9ueGo0?=
+ =?utf-8?B?dWJtOEtpVVpLT3c1bVA5NkMzY01tbXRZZWdlcCtKVUJYc3R4VVR3NExOaWQy?=
+ =?utf-8?B?MmNONzR6b2swaCtqeXVpZFE5d21zTldkcXBKQWR1NkRNdUY2Y295N0lzcjlt?=
+ =?utf-8?B?ZEdieENFUlJMeFJpTnlSU0UyNjZxSlRLTllialp2SUdhK2dDUUZ5dm5ET1ph?=
+ =?utf-8?B?SWZyb21na3V1QWJET3VYLzJsaHJhanF6NEFMVlVOL3greHlGTkFZTGNEZWd5?=
+ =?utf-8?B?K0dzeGVucUFaOUtyN0dtSUpzdTBkVlFBTFlqYUYzdjJ2TDNDTXNwTEZJV1U2?=
+ =?utf-8?B?Q2xKM0NQbGllWUNDdi9KbGZ6YzQxUWkrR1VTQ0tRWHYvODI4UlpnWm5oVzNk?=
+ =?utf-8?B?Vy80Q3JiMjZiWjd4S293aDRQRnJlMTVNcWR3NWIxSUo5NEtjck1jYkxoWEV0?=
+ =?utf-8?B?UWZPanZFSjc3S1hGTEJ3VnFTUUZ1SkRUR0R2TWdjTGVBeWY3WUtRMWtIVldB?=
+ =?utf-8?Q?k/gqykYHrviRQehSwvADFGSKC?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ead35c9-1f14-437a-7f2c-08dac93f21f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2022 08:30:21.5853
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uwfrWDDObocpSPfjLWqJsJ/aXw3onjHhCKm3/TpipezPldN4+MxE2wJnuWcHKIZKXf13+E4UgW6cYQuTl8t14w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6522
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17/11/2022 22:07, Miquel Raynal wrote:
-> Hi Krzysztof,
-> 
-> krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
-> 
->> The Devicetree bindings document does not have to say in the title that
->> it is a "binding", but instead just describe the hardware.  For shared
->> (re-usable) schemas, name them all as "common properties".
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
->>  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
->>  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
->>  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
->>  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
->>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
->>  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
->>  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
->>  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
->>  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
->>  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
->>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
->>  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
->>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
->>  21 files changed, 23 insertions(+), 23 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> index 97ac3a3fbb52..20b195ef9b70 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> I only see this now but the title should be
-> 
-> 	"NAND chip common properties"
-> 
->>  
->>  maintainers:
->>    - Miquel Raynal <miquel.raynal@bootlin.com>
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> index 359a015d4e5a..a004efc42842 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> And here just "NAND controller..."
-> 
-> Of course the original purpose of your series is more to clean those
-> titles rather than fixing them and if you disagree I am fine doing it
-> myself aside, but if you could at the same time make the title more
-> accurate that would be perfect.
-> 
-> Either ways:
-> 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Thanks, I update these manually, so I can correct the names to ones you
-mentioned. Thanks.
-
-Best regards,
-Krzysztof
-
+PiBGcm9tOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gU2VudDogRnJp
+ZGF5LCBOb3ZlbWJlciAxMSwgMjAyMiA5OjU3IFBNDQo+ICsvKioNCj4gKyAqIG1zaV9kb21haW5f
+ZnJlZV9pcnFzX2FsbF9sb2NrZWQgLSBGcmVlIGFsbCBpbnRlcnJ1cHRzIGZyb20gYSBNU0kNCj4g
+aW50ZXJydXB0DQoNCmZyb20gYSBNU0kgaW50ZXJydXB0ICJkb21haW4iDQoNCj4gKw0KPiArLyoq
+DQo+ICsgKiBtc2lfZG9tYWluX2ZyZWVfaXJxc19hbGwgLSBGcmVlIGFsbCBpbnRlcnJ1cHRzIGZy
+b20gYSBNU0kgaW50ZXJydXB0DQo+ICsgKgkJCSAgICAgIGFzc29jaWF0ZWQgdG8gYSBkZXZpY2UN
+Cg0KZGl0dG8NCg0KPiAtCW9wcy0+ZG9tYWluX2ZyZWVfaXJxcyhkb21haW4sIGRldik7DQo+IC0J
+aWYgKG9wcy0+bXNpX3Bvc3RfZnJlZSkNCj4gLQkJb3BzLT5tc2lfcG9zdF9mcmVlKGRvbWFpbiwg
+ZGV2KTsNCj4gLQltc2lfZG9tYWluX2ZyZWVfbXNpX2Rlc2NzKGluZm8sIGRldik7DQo+ICsJbXNp
+X2RvbWFpbl9mcmVlX2lycXNfcmFuZ2VfbG9ja2VkKGRldiwgTVNJX0RFRkFVTFRfRE9NQUlOLCAw
+LA0KPiBNU0lfTUFYX0lOREVYKTsNCg0KbXNpX2RvbWFpbl9mcmVlX2lycXNfYWxsX2xvY2tlZChk
+ZXYsIE1TSV9ERUZBVUxUX0RPTUFJTik7DQo=
