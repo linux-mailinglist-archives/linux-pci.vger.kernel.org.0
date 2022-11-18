@@ -2,62 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8938B62F8AE
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 16:02:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F4762F8C0
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 16:03:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242042AbiKRPCe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 10:02:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60132 "EHLO
+        id S242361AbiKRPDj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 10:03:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242215AbiKRPBs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 10:01:48 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC49BA1AE
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:58:27 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id u2so7093364ljl.3
-        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 06:58:27 -0800 (PST)
+        with ESMTP id S242021AbiKRPDL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 10:03:11 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD859736F
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 07:00:51 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id be13so8622827lfb.4
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 07:00:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gibrX75NV0o1Er7DAwf8HIM5v6cqoDdd2wUHdxJchhE=;
-        b=xlP2/zPO44yPgOZyJLVvU2O64clebhkb2vmGo5gBNeig3Ow/Ikz9yC2MGIXKRCdvt0
-         lgs97gHMJWxLzQeEWAWd4TUPsXItwsIf33R+z474tFpECaZSQxXSRD6nyNHMX84hbFpl
-         qOa7JUfbLDERx1AP423afzv+JxxpmRbbuYMBS9sWqWe2PZtbeMfDS7x8nHBfJuKmHUxg
-         kakz50WXbg0TKrdI7JcO6MbfKES672Ahu7rdE34KR75q5Ao4y9vUAEZc3V/1XQBycVcI
-         +pVtG0Sy08uigqxmUV+gjtdpxRxna5Zpc+pLemPTUQsG29Ar43U8KQBsGmagHGetsxPX
-         KQmg==
+        bh=xZwVEy9nYMOGJVqNuOaZMQiT5Q9vQhLz7eqb5cQdZQw=;
+        b=tqVpDafz2JPxpjQRqsyFMMJaYBXdKwQkLbZoJLNsDj9VCVAb7mK9tiv6F2SDhe3ufq
+         rwM92bgOOptB7jG/c5D4/Ya+FzHgR+tYlaNW6eTN2kHmmTzAofF5DcT1dlQaMSerR17G
+         rDqMG22aJ95f4773TiYyo8QPHpyb2j/dcpg7OfC+6nEshU7MsKGELcm1Mj/Tr+dhfK/5
+         4FZKPlIoRdC13WaDRNKf0g2s7vkFRT812d+h70WXPAsVX3F3+fzudapLPjmkSYVt89c4
+         Rc4kbe8E4a1WUuJcEcJQWGtK1FS4uE1x8EUvsNIFRLE2En48mecdHTbxq/5Nv3LwVNDB
+         CEOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gibrX75NV0o1Er7DAwf8HIM5v6cqoDdd2wUHdxJchhE=;
-        b=UT0juj0OUYRePwVx/oSTqdLgsYir6R7qOGrHFEbtELMAx1VPOCTmZjmr/3x/ZFlC1C
-         Tfd5VqDoj0HmmZ4tijWjfM+t4BM1n1tgLCOK9zBmyXlKvEJG8ORYuhFbPfB7MHCFxdhJ
-         3OHtbGi4+fVJx+9FWksbuBBiYEXuKc37+qWV+jWV0VfT3jIhHaKNPntLkkn+plh9DUz2
-         Y12fTKaVud3VYSw6Ez+wlg4M0oTlGmhjUM5By5VDQ8bVbL3Zanm5wPYRaLQeP2eboIPo
-         czSDmZ38EBYvuNjB3HM1pydxsTJhUMDJ2+j9foCC1aXPQD/0pvJUeWXRELeFyVagTF+D
-         KcpA==
-X-Gm-Message-State: ANoB5pmjYXmop+qATgp/yMveTonTiykwLnpVhibOHOiFYaWxA1DfeZ0g
-        wg43k9mpdCB44WL0ruda+9/OgA==
-X-Google-Smtp-Source: AA0mqf4GsDcErhuHhrxTsrc1he+Ga3A4CdIcSPLSlvDmnQTf+lXOnPMqUgqrM17z2dntyeUlAKEDoA==
-X-Received: by 2002:a05:651c:301:b0:278:e996:d2b0 with SMTP id a1-20020a05651c030100b00278e996d2b0mr2640287ljp.50.1668783506295;
-        Fri, 18 Nov 2022 06:58:26 -0800 (PST)
+        bh=xZwVEy9nYMOGJVqNuOaZMQiT5Q9vQhLz7eqb5cQdZQw=;
+        b=W0mKUNc8l0qw1Gn3QAfxd+JW1C/ApmvX9skdwLvKQAAL0AtYGtFKzdbYg+nr40/9iZ
+         sDEzbXtJVBTm8Je/pbXhZ7JEsAMNq6J4UUSq7og37ajHns8KgMx5/wMOvzooYe36677A
+         ocm/WZvW7qz/JIy1r5czykBUk+5Q8OcrIjnCtb5FNtNESbCKKWvvXdkQgRDlxvE+kDpE
+         KzqLRu3IY84BLtVDNzw4pvUcNtOU2Fd5ade+eh4IJ+dtc08BUmkcKQJT84HpBZ50FEAo
+         /NTHyf0BMlc+DtaT4ZgpNkO7sqtdFmkYB/os6i72aracaJbxNP3pTZq57U51j/quO/SN
+         Y+9g==
+X-Gm-Message-State: ANoB5pl0LP1UjJKZgv944V3ORNQFkrPMQsUfTDdhRKGTvxSuHsqmQWIl
+        wYtsHxbFsDUuiIOYpiwsCNY3uA==
+X-Google-Smtp-Source: AA0mqf6BTjsS+TwWckVjHa91aDENgfUjJrDrDj2CcWJkPyIdf7Ut+Y1Rzl3SNKwLnI6zGlVaoA3a5w==
+X-Received: by 2002:a05:6512:6d:b0:4a8:ebec:7143 with SMTP id i13-20020a056512006d00b004a8ebec7143mr2515960lfo.493.1668783649650;
+        Fri, 18 Nov 2022 07:00:49 -0800 (PST)
 Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id s30-20020a05651c201e00b0027758f0619fsm681677ljo.132.2022.11.18.06.58.23
+        by smtp.gmail.com with ESMTPSA id p5-20020a19f005000000b004b48e0f619asm694119lfc.48.2022.11.18.07.00.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 06:58:25 -0800 (PST)
-Message-ID: <35c07fc0-574c-817a-93ed-4575659e767b@linaro.org>
-Date:   Fri, 18 Nov 2022 15:58:23 +0100
+        Fri, 18 Nov 2022 07:00:48 -0800 (PST)
+Message-ID: <838b278a-aa3c-c34c-4277-e50079512b47@linaro.org>
+Date:   Fri, 18 Nov 2022 16:00:47 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [PATCH 07/12] dt-bindings: power: remove deprecated
- amlogic,meson-gx-pwrc.txt bindings
+Subject: Re: [PATCH 11/12] dt-bindings: pcie: convert amlogic,meson-pcie.txt
+ to dt-schema
 Content-Language: en-US
-To:     neil.armstrong@linaro.org, Jakub Kicinski <kuba@kernel.org>,
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
@@ -87,11 +88,9 @@ Cc:     linux-media@vger.kernel.org, netdev@vger.kernel.org,
         linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
- <20221117-b4-amlogic-bindings-convert-v1-7-3f025599b968@linaro.org>
- <15840da8-bae2-3bb2-af0c-0af563fdc27d@linaro.org>
- <95abd39d-b084-68e5-f012-6a1149bdb8a3@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v1-11-3f025599b968@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <95abd39d-b084-68e5-f012-6a1149bdb8a3@linaro.org>
+In-Reply-To: <20221117-b4-amlogic-bindings-convert-v1-11-3f025599b968@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -104,25 +103,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/11/2022 15:55, Neil Armstrong wrote:
-> On 18/11/2022 15:52, Krzysztof Kozlowski wrote:
->> On 18/11/2022 15:33, Neil Armstrong wrote:
->>> Remove the deprecated amlogic,meson-gx-pwrc.txt bindings, which was
->>> replaced by the amlogic,meson-ee-pwrc.yaml bindings.
->>>
->>> The amlogic,meson-gx-pwrc-vpu compatible isn't used anymore since [1]
->>> was merged in v5.8-rc1 and amlogic,meson-g12a-pwrc-vpu either since [2]
->>> was merged in v5.3-rc1.
->>>
->>> [1] commit 5273d6cacc06 ("arm64: dts: meson-gx: Switch to the meson-ee-pwrc bindings")
->>> [2] commit f4f1c8d9ace7 ("arm64: dts: meson-g12: add Everything-Else power domain controller")
->>
->> As of next-20221109 I see both compatibles used, so something here is
->> not accurate.
+On 18/11/2022 15:33, Neil Armstrong wrote:
+> Convert the Amlogic Meson AXG DWC PCIE SoC controller bindings to
+> dt-schema.
 > 
-> Yes driver still exists, was left for compatibility with older DTs during the migration.
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/amlogic,axg-pcie.yaml  | 129 +++++++++++++++++++++
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 -----------
+>  2 files changed, 129 insertions(+), 70 deletions(-)
+> 
 
-Then the bindings should stay. You can add "deprecated" to its title.
+Use subject prefixes matching the subsystem (git log --oneline -- ...).
+
+With fixed:
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
