@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE9562F47C
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 13:22:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88EB562F4B5
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 13:27:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235220AbiKRMWi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 07:22:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
+        id S242010AbiKRM1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 07:27:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235088AbiKRMWh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 07:22:37 -0500
+        with ESMTP id S242045AbiKRM1E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 07:27:04 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A68597353;
-        Fri, 18 Nov 2022 04:22:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70C08CFD9;
+        Fri, 18 Nov 2022 04:26:27 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668774154;
+        s=2020; t=1668774386;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tAhxxVLNA+O7aP4JThklUXrC9ZpujQO8F5mZd76izq0=;
-        b=PQ6J4TTN+X10HKzfA1cDtXWwxbM+8cGBJ1Q2MnMwDpahe9ZcvzpW2J5hjF6H3rCYe4utey
-        x8sqsJAxIYJybU2H94kj02WlBHIsYdBYUXInKsEz3dyTcPkf+o2B0+8odjb3SUkcWsGE8z
-        pvYmDAgIHyEZDZHJPOX6Pg2Fd5/6GEqbECoJHRjwC0KluIJuwogCR1w4iMMYYixGVber1I
-        A3x6ByvZFDWCWY+Gk3HcHFP1Y8yJVd96cWpc54RRXHGmAUJk/vTulaZpW2YU69/sFFMAgw
-        AW9I5hYslLMCqJ27dchEOFD3TSx7ZvbmrXkOCzbZ5nvogB3jMXARdVp8dsfZSw==
+        bh=trUxr7rxCEBkNFe0vyBij7OY4sK2AiIIhioyMFdro4A=;
+        b=fGeg/5CXa5jubxJgYoF+pXoaCBoNr9py1jmGRj9jLGQ6tktckzl+QgI+nWK0vtuXHEEUwN
+        ob62Um0CfCj7q90bJYyP7sZXL7XrGiqW70sYUT4Sq2nZNqmEQfRNP2Y2PePUjua3JmpKr0
+        iPkb+wppYBkeRPH/gMjqi7or6qgsUF3QfCnLrFk0M/aYDrBX/PbNwIcOr8Vx0fxQc8L2AV
+        rEnJZ64haa/yJd2k19SKCd2Fn3NELz6PFOZC8D9m8DS9s9HSd1rlYCs+aHNHBj0wGZ/2kM
+        h3/qq3hQhBz9ELKasUQftLL4/lx2rgjbfRPE1hpj/gSRn7YgWr0gZRkpU/j8Nw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668774154;
+        s=2020e; t=1668774386;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tAhxxVLNA+O7aP4JThklUXrC9ZpujQO8F5mZd76izq0=;
-        b=0Un2RLS/nv2ztoiRrVAPs1HU4cM6POwWWeJsMM0bGlblKIxkHRn1UdeInIlhJVsJtRiswu
-        sFlfMfue+wpkPPDw==
+        bh=trUxr7rxCEBkNFe0vyBij7OY4sK2AiIIhioyMFdro4A=;
+        b=CjIz3Cc56KUDhaEWrMvADnvvbhPgm1kUC3pC9Bf8v8s0RNslcliQJ875Gcrp6jUOZLB3iz
+        7AlaFjvUlI+aFXCA==
 To:     "Tian, Kevin" <kevin.tian@intel.com>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
@@ -52,13 +52,14 @@ Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
         Allen Hubbe <allenbh@gmail.com>,
         "Ahmed S. Darwish" <darwi@linutronix.de>,
         "Chatre, Reinette" <reinette.chatre@intel.com>
-Subject: RE: [patch 12/20] genirq/msi: Make descriptor freeing domain aware
-In-Reply-To: <BN9PR11MB52762A0081F7A1679850142A8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: RE: [patch 15/20] genirq/msi: Provide new domain id allocation
+ functions
+In-Reply-To: <BN9PR11MB527679752FAA7294E33619C98C099@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20221111131813.914374272@linutronix.de>
- <20221111132706.726275059@linutronix.de>
- <BN9PR11MB52762A0081F7A1679850142A8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Fri, 18 Nov 2022 13:22:34 +0100
-Message-ID: <87leo8jvud.ffs@tglx>
+ <20221111132706.892426212@linutronix.de>
+ <BN9PR11MB527679752FAA7294E33619C98C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date:   Fri, 18 Nov 2022 13:26:25 +0100
+Message-ID: <87iljcjvny.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,62 +71,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 18 2022 at 08:17, Kevin Tian wrote:
+On Fri, Nov 18 2022 at 08:43, Kevin Tian wrote:
 >> From: Thomas Gleixner <tglx@linutronix.de>
->>  /**
->> - * msi_insert_msi_desc - Allocate and initialize a MSI descriptor in the
->> default domain
->> + * msi_insert_msi_desc - Allocate and initialize a MSI descriptor in the
->> default irqdomain
->> + *
+>> Sent: Friday, November 11, 2022 9:57 PM
+>> 
+>> @@ -597,7 +598,7 @@ static struct irq_domain *msi_get_device
+>>  	if (!domain)
+>>  		return NULL;
+>> 
+>> -	if (WARN_ON_ONCE(irq_domain_is_msi_parent(domain)))
+>> +	if (irq_domain_is_msi_parent(domain))
+>>  		return NULL;
 >
-> belong to last patch
+> Is it intended to remove the warning here? If yes, what specific change
+> in this patch leads to that removal?
 
-Yes.
+Valid question
 
->> +/**
->> + * struct msi_ctrl - MSI internal management control structure
->> + * @domid:	ID of the domain on which management operations should
->> be done
->> + * @first:	First (hardware) slot index to operate on
->> + * @last:	Last (hardware) slot index to operate on
->> + */
->> +struct msi_ctrl {
->> +	unsigned int			domid;
->> +	unsigned int			first;
->> +	unsigned int			last;
->> +};
+>> +	xa_for_each_range(xa, idx, desc, ctrl->first + base, ctrl->last + base) {
+>> +		if (!msi_desc_match(desc, MSI_DESC_NOTASSOCIATED))
+>> +			continue;
+>> +
+>> +		/* This should return -ECONFUSED... */
+>> +		if (WARN_ON_ONCE(allocated >= ctrl->nirqs))
+>> +			return -EINVAL;
 >> +
 >
-> this really contains the range information. what about msi_range and
-> then msi_range_valid()?
+> why is "==" an error?
 
-It's range plus domain id and later it gains nirqs. So its awkward in
-any case.
+because if you get here _after_ having allocated all interrupts already
+then you have more descriptors than what you want to allocate, which
+should never happen right?
 
->> +static void msi_domain_free_descs(struct device *dev, struct msi_ctrl *ctrl)
->>  {
->>  	struct xarray *xa = &dev->msi.data->__store;
->>  	struct msi_desc *desc;
->>  	unsigned long idx;
->> +	int base;
->> +
->> +	lockdep_assert_held(&dev->msi.data->mutex);
->> 
->> -	if (WARN_ON_ONCE(first_index >= MSI_MAX_INDEX || last_index >=
->> MSI_MAX_INDEX))
->> +	if (!msi_ctrl_valid(dev, ctrl))
->>  		return;
->> 
->> -	lockdep_assert_held(&dev->msi.data->mutex);
->> +	base = msi_get_domain_base_index(dev, ctrl->domid);
->> +	if (base < 0)
->> +		return;
->
-> What about putting domid checks in msi_ctrl_valid() then here could
-> be a simple calculation on domid * MSI_XA_DOMAIN_SIZE.
->
-> domid is part of msi_ctrl. then it sound reasonable to validate it
-> together with first/last.
+Thanks,
 
-Let me look at that.
+        tglx
+
+
