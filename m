@@ -2,175 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE71A62F9F9
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 17:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E10BB62FB4B
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 18:12:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241741AbiKRQNy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 11:13:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
+        id S235282AbiKRRMs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 12:12:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235220AbiKRQNv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 11:13:51 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548F0657EB;
-        Fri, 18 Nov 2022 08:13:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1668788003;
-        bh=uNoPoaQqsCt3VB34ViP+juUR5EdI/2W4QHKFds0rL6w=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=hY8tQ6CNTTJC+x1cb7eDcgorID2yCPG1M5c4N0Pie0wg/7HMdCXE4WDJUO9znrn2T
-         WlCARUm9sEejFEczneQ40EisfjlkQLikKcMsSoUxFoq5pdJ+wWdfONCFfETLVnQema
-         XLQQQo4Pd0P6C4F+H32YffH0CfFzgmlkME+xuZ176eJdkmRh1lvjhdGVCCX74bcdqs
-         1wc7FF5VBLCKQ4K/6nz4dtdA3kRWCivzLRaF/A5YNfqY8Tgevtw8+YRDgT6cuBDc9v
-         HzW0iQyNUPTFtio3XxMYlKgfKq7A4v2WYuEnZs8yV2JTrl5Fm9VvKCWhgGXT4TNRP6
-         a+Sngah0EG/Hw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [80.245.77.125] ([80.245.77.125]) by web-mail.gmx.net
- (3c-app-gmx-bs01.server.lan [172.19.170.50]) (via HTTP); Fri, 18 Nov 2022
- 17:13:22 +0100
+        with ESMTP id S242535AbiKRRMb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 12:12:31 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89F894A4C;
+        Fri, 18 Nov 2022 09:12:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668791550; x=1700327550;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AOUPUafwcDNPcstCUTPlMTYyUtwrTx1nKmLprMS+Uno=;
+  b=Io80ruMMt4AwiL6Y8ssILVHfKTZKfYGi8SpNXrgK4C39tQNv0+Zr00WO
+   Y6lsVkRxQFQgHH3ceC7bqoz7QK1ikGwWrWZpUmc7KTeEkiEhg44SW9dxf
+   T4XWGmlN7XiNFxRVQxyCChZXT6w3Y5s98yCnsaL6E9M37KBfLZeeiXWkI
+   uWnMrD/ke/FU4j2zvtUnljrcj192ErQBBCCI4/T9x1rC4hGFApdg6VD+T
+   h8GDMKdb7ec+0qi+A1RBTCrG8o6iM1cHaVbkkfAznH8weTUX9n2aPivd7
+   KrgmXs7mSgMmv726dInVfTj1mED+bsoANJX8POXqUOgH4nM4F7FmesVxH
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="310814658"
+X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
+   d="scan'208";a="310814658"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:03 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="703807300"
+X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
+   d="scan'208";a="703807300"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:03 -0800
+Subject: [PATCH v3 00/11] cxl/pci: Add fundamental error handling
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
+        terry.bowman@amd.com, bhelgaas@google.com
+Date:   Fri, 18 Nov 2022 10:08:02 -0700
+Message-ID: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Message-ID: <trinity-923a3ba9-8956-490e-9e4a-0dc4ff59aba5-1668788002736@3c-app-gmx-bs01>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     =?UTF-8?Q?Chunfeng_Yun_=28=E4=BA=91=E6=98=A5=E5=B3=B0=29?= 
-        <Chunfeng.Yun@mediatek.com>
-Cc:     "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux@fw-web.de" <linux@fw-web.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        =?UTF-8?Q?Sam_Shih_=28=E5=8F=B2=E7=A2=A9=E4=B8=89=29?= 
-        <Sam.Shih@mediatek.com>, "kishon@ti.com" <kishon@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        =?UTF-8?Q?Jianjun_Wang_=28=E7=8E=8B=E5=BB=BA=E5=86=9B=29?= 
-        <Jianjun.Wang@mediatek.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        =?UTF-8?Q?Bo_Jiao_=28=E7=84=A6=E6=B3=A2=29?= <Bo.Jiao@mediatek.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Aw: Re: [PATCH v5 07/11] arm64: dts: mt7986: add usb related device
- nodes
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 18 Nov 2022 17:13:22 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <6417076e019640b23fff85e27798b277c74eeb74.camel@mediatek.com>
-References: <20221117162728.20608-1-linux@fw-web.de>
- <20221117162728.20608-8-linux@fw-web.de>
- <6417076e019640b23fff85e27798b277c74eeb74.camel@mediatek.com>
-Content-Transfer-Encoding: quoted-printable
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:HYGMb/xYz+XeZpM3XpDKsxgdGc8ewqlZVEcSbPVlQwkmfScvHH2RpSAexRIVX40RRQW9r
- 3pALC9qSqnC8awb8gvvin71249NFff0BFoJeO9TvalmQr02KVaF0++xTTsArljvYBYoCqLPZuTZK
- 8daI4anoIVL1aPxDipKLCD9KDXfKpGEIwIBx9RNSy+Pa4E03uA5M76bozqEnWWb4/omyYJsS75k3
- 0VTpzQyYvkxhjAtMwX2f2fqjgVHKukLUKgXyER9Jh5tDwN/PHpnXs22d0OBM7o35hFZyUPDWilA+
- eg=
-UI-OutboundReport: notjunk:1;M01:P0:gwvebTmYFlo=;HK+XyCP7s+prHXZyAzTEO+vkRgf
- yRjlVD4aEyd3O/vVQzvVscZQBDlD5IP5gc39H9LNhVF1PAa4Oi9zAFC920tYDRwayFi+mIv2W
- l6gFf8GhywPm0Pm0ZfK9pzZNGZjy22wciu3nXga8V9NMtKVumPHAT5v0W4IpY0dRz1krzP5Gg
- qbq3Uram4uEGdcCh+p+s775RshRXAp/btPkYXZHbex1qPUD5qQBQXWXLlKtHcFFNtPjZ7JX30
- qeZs7NObqS8dc8d/duY7ApDlNLxJqfuUVAC9MFs51CnsbMXz9LPiJ7X9LWJSWzGjd7p/Rzf6U
- 94OjCWkPlI76EEOmo1LIhqGu8yehTdemGzEEnUfbelsSIvkocTEl7T6uSiW2ZfeFm5rI+ZpG2
- FCcaDM/ojIgD5ZDyphVqahPaBlviPwMTIALDTZUhsq1eTeCtWtdDM7NVxjYB7PWUXL4Cfo0/G
- reM4XXKH5zO1LGLQSFHZKti5ukMY+GY6bEuB8UfEjHmkBp8WVBadc4azhIPD09JtIOsqQXJ2t
- vNe/0hphKteHYmm1kEL3fjjqknDhgVuoeYsZg53hitIcRJJHOK3Ck1eXFNGRjD+WdXpAFUhfX
- QPd73TUB/yP8hk/jLtafiIkn9fk2OLNzBqVfnpIHINw7/EC3K3tUs7GozMUH7pwMJx7OAKPl2
- IBXAnWjpYtzT7SQRmFJ10d+IdoAV1tykIXfI7brBlRmHiIttqzvMWDNUdrPksv2qPoGrWieoi
- mZs1Tkn4z/rQ9PA3hHkhxyF2Nc47LivgIktlosjIa+DUt+M9ym4KQFsOSS/ljKEAa1whrbtmk
- e+kxfbJmfKZXeV0oZxvVsQvI8zcGM29/6n6NlxvJul5Vw=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
+Hi Bjorn,
+I added a new optional callback for AER error handler to allow the PCI
+device driver to do additional logging. Please Ack the patch if it looks
+reasonable to you. Thank you!
 
-> Gesendet: Freitag, 18=2E November 2022 um 07:43 Uhr
-> Von: "Chunfeng Yun (=E4=BA=91=E6=98=A5=E5=B3=B0)" <Chunfeng=2EYun@mediat=
-ek=2Ecom>
-> On Thu, 2022-11-17 at 17:27 +0100, Frank Wunderlich wrote:
-> > From: Sam Shih <sam=2Eshih@mediatek=2Ecom>
-> >=20
-> > This patch adds USB support for MT7986=2E
-> >=20
-> > Signed-off-by: Sam Shih <sam=2Eshih@mediatek=2Ecom>
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
-> > ---
-> > changes compared to sams original version:
-> > - reorder xhci-clocks based on yaml binding
-> >=20
-> > v5:
-> >  - update ranges/reg of usb-phy
-> >  - not added RB from AngeloGioacchino for v4 because of these changes
+Hi Steve,
+Please review the trace event implementation and Ack if it looks ok.
+Thank you!
 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb=2Edts
-> > b/arch/arm64/boot/dts/mediatek/mt7986a-rfb=2Edts
-> > index 006878e3f2b2=2E=2E2b5d7ea31b4d 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb=2Edts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb=2Edts
-> > @@ -23,6 +23,24 @@ memory@40000000 {
-> >  		device_type =3D "memory";
-> >  		reg =3D <0 0x40000000 0 0x40000000>;
-> >  	};
-> > +
-> > +	reg_3p3v: regulator-3p3v {
-> > +		compatible =3D "regulator-fixed";
-> > +		regulator-name =3D "fixed-3=2E3V";
-> > +		regulator-min-microvolt =3D <3300000>;
-> > +		regulator-max-microvolt =3D <3300000>;
-> > +		regulator-boot-on;
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	reg_5v: regulator-5v {
-> > +		compatible =3D "regulator-fixed";
-> > +		regulator-name =3D "fixed-5V";
-> > +		regulator-min-microvolt =3D <5000000>;
-> > +		regulator-max-microvolt =3D <5000000>;
-> > +		regulator-boot-on;
-> > +		regulator-always-on;
-> > +	};
-> >  };
-> Usually if we use a gpio to control a switch to turn on/off power, we
-> model it as a fixed regulator, but here no gpio provided in reg_3p3v
-> and reg_5v, if no gpio used, no need these two fixed regulators too=2E
+v3:
+- Copy header log in 32bit chunks (Jonathan)
+- Export header log whole as raw data (Jonathan)
+- Added callback in PCI AER err handler for correctable errors (Jonathan)
+- Tested on qemu thanks to Jonathan's CXL AER injection enabling!
 
-i can drop 5v regulator, but 3v3 is used by emmc, so i would move that to =
-the mmc-patch
+v2:
+- Convert error reporting via printk to trace events
+- Drop ".rmap =" initialization (Jonathan)
+- return PCI_ERS_RESULT_NEED_RESET for UE in pci_channel_io_normal (Shiju)
 
-> > =20
-> >  &crypto {
-> > @@ -140,6 +158,12 @@ &spi1 {
-> >  	status =3D "okay";
-> >  };
-> > =20
-> > +&ssusb {
-> > +	vusb33-supply =3D <&reg_3p3v>;
-> > +	vbus-supply =3D <&reg_5v>;
-> These two supply can be removed if no swith to control them, they are
-> optional=2E
+Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
+Section 8.2.4.16 "CXL RAS Capability Structure" of the CXL rev3.0
+specification defines the error sources considered in this
+implementation. The RAS Capability Structure defines protocol, link and
+internal errors which are distinct from memory poison errors that are
+conveyed via direct consumption and/or media scanning.
 
-ok, i drop the references=2E
+The errors reported by the RAS registers are categorized into
+correctable and uncorrectable errors, where the uncorrectable errors are
+optionally steered to either fatal or non-fatal AER events. Table 12-2 
+"Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
+rev3.0 specification outlines that the remediation for uncorrectable errors
+is a reset to recover. This matches how the Linux PCIe AER core treats
+uncorrectable errors as occasions to reset the device to recover
+operation.
 
-anything else ok?
+While the specification notes "CXL Reset" or "Secondary Bus Reset" as
+theoretical recovery options, they are not feasible in practice since
+in-flight CXL.mem operations may not terminate and cause knock-on system
+fatal events. Reset is only reliable for recovering CXL.io, it is not
+reliable for recovering CXL.mem. Assuming the system survives, a reset
+causes CXL.mem operation to restart from scratch.
 
-prepared patch here (now yet squashed):
-https://github=2Ecom/frank-w/BPI-R2-4=2E14/commits/6=2E1-r3dts
+The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
+recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
+least provide a mechanism for the Root Port to terminate in flight
+CXL.mem operations with completions. That still poses problems in
+practice if the kernel is running out of "System RAM" backed by the CXL
+device and poison is used to convey the data lost to the protocol error.
 
-regards Frank
+Regardless of whether the reset and restart of CXL.mem operations is
+feasible / successful, the logging is still useful. So, the
+implementation reads, reports, and clears the status in the RAS
+Capability Structure registers, and it notifies the 'struct cxl_memdev'
+associated with the given PCIe endpoint to reattach to its driver over
+the reset so that the HDM decoder configuration can be reconstructed.
+
+The first half of the series reworks component register mapping so that
+the cxl_pci driver can own the RAS Capability while the cxl_port driver
+continues to own the HDM Decoder Capability. The last half implements
+the RAS Capability Structure mapping and reporting via 'struct
+pci_error_handlers'.
+
+The reporting of error information is done through event tracing. A new
+cxl_ras event is introduced to report the Uncorrectable and Correctable
+errors raised by CXL. The expectation is a monitoring user daemon such as
+"cxl monitor" will harvest those events and record them in a log in a
+format (JSON) that's consumable by management applications.
+
+For correctable errors, current Linux implementation does not provide any
+means to reach the pci device driver. Add an optional callback with the
+PCI aer error handler to allow the pci device driver to log additional
+information from the device.
+
+[1]: https://www.computeexpresslink.org/spec-landing
+
+---
+
+Dan Williams (8):
+      cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
+      cxl/pci: Cleanup cxl_map_device_regs()
+      cxl/pci: Kill cxl_map_regs()
+      cxl/core/regs: Make cxl_map_{component, device}_regs() device generic
+      cxl/port: Limit the port driver to just the HDM Decoder Capability
+      cxl/pci: Prepare for mapping RAS Capability Structure
+      cxl/pci: Find and map the RAS Capability Structure
+      cxl/pci: Add (hopeful) error handling support
+
+Dave Jiang (3):
+      cxl/pci: add tracepoint events for CXL RAS
+      PCI/AER: Add optional logging callback for correctable error
+      cxl/pci: Add callback to log AER correctable error
+
+
+ drivers/cxl/core/hdm.c     |  33 +++---
+ drivers/cxl/core/memdev.c  |   1 +
+ drivers/cxl/core/pci.c     |   3 +-
+ drivers/cxl/core/port.c    |   2 +-
+ drivers/cxl/core/regs.c    | 172 +++++++++++++++++-------------
+ drivers/cxl/cxl.h          |  38 +++++--
+ drivers/cxl/cxlmem.h       |   2 +
+ drivers/cxl/cxlpci.h       |   9 --
+ drivers/cxl/pci.c          | 212 ++++++++++++++++++++++++++++++-------
+ drivers/pci/pcie/aer.c     |   8 +-
+ include/linux/pci.h        |   3 +
+ include/trace/events/cxl.h | 110 +++++++++++++++++++
+ 12 files changed, 443 insertions(+), 150 deletions(-)
+ create mode 100644 include/trace/events/cxl.h
+
+--
+
