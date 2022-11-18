@@ -2,319 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6E2C62FEBA
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 21:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2531062FECF
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Nov 2022 21:27:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbiKRUXp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Nov 2022 15:23:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
+        id S229928AbiKRU1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Nov 2022 15:27:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbiKRUXn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 15:23:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B111A19A;
-        Fri, 18 Nov 2022 12:23:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE5A962770;
-        Fri, 18 Nov 2022 20:23:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDFEEC433D6;
-        Fri, 18 Nov 2022 20:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668803018;
-        bh=lTift4Acmd8dZ7iTbGs6y5gGp11qamjJZuPERJwDGFk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YmoAWeKmt0cFoRZbVHuI87D/iG17zgBNXDLHU49DiHbAN57WAYc+24AMnza1OvLRj
-         Dp36Lh7o6zRjMaUJmf350Q4qKdG1eni7/kRzBqT19OL9etDH7LFYycRgfR+xHKRHdS
-         5m3uWXJXkIqy76sj9ncIvl9s6c0WzdDt0u2Vk33Y07zDI6tzDI7mZBpqaiGAJm1rg1
-         +KOo8YMsLJVPsVdtP0bwLNA5PqT9mdV8ZHkMR+l5ccMpSliQLVvnO/vMO2lISQ0YS3
-         m0nwtsdcJij5jaI1ZmDtwvzd/+Xx1smk3rapciGlQItjhQRYZ74qw7XjI5HhP7d+FX
-         DrbwuespOa/fg==
-Date:   Fri, 18 Nov 2022 14:23:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
-        Len Brown <lenb@kernel.org>,
+        with ESMTP id S229829AbiKRU1e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Nov 2022 15:27:34 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FACA13C
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 12:27:34 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id p184so4665381iof.11
+        for <linux-pci@vger.kernel.org>; Fri, 18 Nov 2022 12:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6b228sSBdmEe622PJPDcidu4wKiIoq5NrJur1C1NIQ=;
+        b=Rp2BQyogGJZQ7ZJZU5zktR/shwNgmYdk+YIhpqwuoI1mEaAsPi6k4IGEGidbqcsErp
+         0amawcgipK1ioOyWiU/787JHnl9fgdRHjZv9gQE+OL3KOGlcI8HWVTbO9eAtWkRm+PYU
+         EDs8AG73P2oeMBc/EOKlKeCXmggbkHjUzGX14=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j6b228sSBdmEe622PJPDcidu4wKiIoq5NrJur1C1NIQ=;
+        b=N1eoHU8WFrI/1SwS5I7aSgaIUOe866G67yGAuvoHhaF5SvW8J9734fXJRg89vIfruN
+         F14202HPNy92ii2DsaqDeWMhct6c1dBC0FQBmLjJwRAGtExJvBBP2DRr2bWUOelPZqiU
+         fs2DiIILhzrNHGVhfwpvX+3cbu0EebBVFersI4nK8ChmvGRzvLaLpXKvWw3EPYu/mheD
+         6eaZPsRRd8V5/F6diKJBQ7EJMTb22LeJGc/JG5H3LVv1iSmgG4HHYow5CabHgAgjwV9l
+         lxu++S8MV9gN6mf2jaBDiulD0+MrZo794qLpXkmUt2YjgEX6JcBt1FXnnA3ZfJDUFXAt
+         lqIA==
+X-Gm-Message-State: ANoB5pnM3A5+gagc58Ehz03mWVrkmtcKLqIbYzN/jkXAZyQIM0nAlL/l
+        eW4jCNJqKaxzWexptp9IPF+B2g==
+X-Google-Smtp-Source: AA0mqf7OCpSwusxcSllfX3v77am0db2DyFyUduQIBkL2WKNHjBjLxPzprfSPv7kIZaIu2CsVhWh+LA==
+X-Received: by 2002:a5e:df46:0:b0:6bb:e329:fcd7 with SMTP id g6-20020a5edf46000000b006bbe329fcd7mr4127553ioq.206.1668803253589;
+        Fri, 18 Nov 2022 12:27:33 -0800 (PST)
+Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
+        by smtp.gmail.com with UTF8SMTPSA id o8-20020a056e0214c800b002f9f44625fbsm1512925ilk.52.2022.11.18.12.27.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 12:27:33 -0800 (PST)
+Date:   Fri, 18 Nov 2022 20:27:32 +0000
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-Message-ID: <20221118202336.GA1271811@bhelgaas>
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported
+ max latencies
+Message-ID: <Y3fqtMKzRMAI7ivW@google.com>
+References: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i3LyfMLx8cuYMdRzJagW-d0Vz3PBVEtFGpDBD6+7VZHQ@mail.gmail.com>
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URI_TRY_3LD autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rafael,
-
-Sorry, I'm still confused (my perpetual state :)).
-
-On Fri, Nov 18, 2022 at 02:16:17PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Nov 17, 2022 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Nov 17, 2022 at 06:01:26PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 17, 2022 at 12:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, Nov 16, 2022 at 01:00:36PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Wed, Nov 16, 2022 at 1:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Mon, Nov 14, 2022 at 04:33:52PM +0100, Rafael J. Wysocki wrote:
-> > > > > > > On Fri, Nov 11, 2022 at 10:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Nov 11, 2022 at 12:58:28PM -0600, Limonciello, Mario wrote:
-> > > > > > > > > On 11/11/2022 11:41, Bjorn Helgaas wrote:
-> > > > > > > > > > On Mon, Oct 31, 2022 at 05:33:55PM -0500, Mario Limonciello wrote:
-> > > > > > > > > > > Firmware typically advertises that ACPI devices that represent PCIe
-> > > > > > > > > > > devices can support D3 by a combination of the value returned by
-> > > > > > > > > > > _S0W as well as the HotPlugSupportInD3 _DSD [1].
-> > > > > > > > > > >
-> > > > > > > > > > > `acpi_pci_bridge_d3` looks for this combination but also contains
-> > > > > > > > > > > an assumption that if an ACPI device contains power resources the PCIe
-> > > > > > > > > > > device it's associated with can support D3.  This was introduced
-> > > > > > > > > > > from commit c6e331312ebf ("PCI/ACPI: Whitelist hotplug ports for
-> > > > > > > > > > > D3 if power managed by ACPI").
-> > > > > > > > > > >
-> > > > > > > > > > > Some firmware configurations for "AMD Pink Sardine" do not support
-> > > > > > > > > > > wake from D3 in _S0W for the ACPI device representing the PCIe root
-> > > > > > > > > > > port used for tunneling. The PCIe device will still be opted into
-> > > > > > > > > > > runtime PM in the kernel [2] because of the logic within
-> > > > > > > > > > > `acpi_pci_bridge_d3`. This currently happens because the ACPI
-> > > > > > > > > > > device contains power resources.
-> > > > > > > >
-> > > > > > > > Wait.  Is this as simple as just recognizing that:
-> > > > > > > >
-> > > > > > > >   _PS0 means the OS has a knob to put the device in D0, but it doesn't
-> > > > > > > >   mean the device can wake itself from a low-power state.  The OS has
-> > > > > > > >   to use _S0W to learn the device's ability to wake itself.
-> > > > > > >
-> > > > > > > It is.
-> > > > > >
-> > > > > > Now I'm confused again about what "HotPlugSupportInD3" means.  The MS
-> > > > > > web page [1] says it identifies Root Ports capable of handling hot
-> > > > > > plug events while in D3.  That sounds kind of related to _S0W: If _S0W
-> > > > > > says "I can wake myself from D3hot and D3cold", how is that different
-> > > > > > from "I can handle hotplug events in D3"?
-> > > > >
-> > > > > For native PME/hot-plug signaling there is no difference.  This is the
-> > > > > same interrupt by the spec after all IIRC.
-> > > > >
-> > > > > For GPE-based signaling, though, there is a difference, because GPEs
-> > > > > can only be used directly for wake signaling (this is related to
-> > > > > _PRW).  In particular, the only provision in the ACPI spec for device
-> > > > > hot-add are the Bus Check and Device Check notification values (0 and
-> > > > > 1) which require AML to run and evaluate Notify() on specific AML
-> > > > > objects.
-> > > > >
-> > > > > Hence, there is no spec-defined way to tell the OS that "something can
-> > > > > be hot-added under this device while in D3 and you will get notified
-> > > > > about that".
-> > > >
-> > > > So I guess acpi_pci_bridge_d3() looks for:
-> > > >
-> > > >   - "wake signaling while in D3" (_S0W) and
-> > > >   - "notification of hotplug while in D3" ("HotPlugSupportInD3")
-> > > >
-> > > > For Root Ports with both those abilities (or bridges below such Root
-> > > > Ports), we allow D3, and this patch doesn't change that.
-> > > >
-> > > > What this patch *does* change is that all bridges with _PS0 or _PR0
-> > > > previously could use D3, but now will only be able to use D3 if they
-> > > > are also (or are below) a Root Port that can signal wakeup
-> > > > (wakeup.flags.valid) and can wakeup from D3hot or D3cold (_S0W).
-> > > >
-> > > > And this fixes the Pink Sardine because it has Root Ports that do
-> > > > Thunderbolt tunneling, and they have _PS0 or _PR0 but their _S0W says
-> > > > they cannot wake from D3.  Previously we put those in D3, but they
-> > > > couldn't wake up.  Now we won't put them in D3.
-> > > >
-> > > > I guess there's a possibility that this could break or cause higher
-> > > > power consumption on systems that were fixed by c6e331312ebf
-> > > > ("PCI/ACPI: Whitelist hotplug ports for D3 if power managed by ACPI").
-> > > > I don't know enough about that scenario.  Maybe Lukas will chime in.
-> > >
-> > > Well, it is possible that some of these systems will be affected.
-> > >
-> > > One of such cases is when the port in question has _S0W which says
-> > > that wakeup from D3 is not supported.  In that case I think the kernel
-> > > should honor the _S0W input, because there may be a good reason known
-> > > to the platform integrator for it.
-> > >
-> > > The other case is when wakeup.flags.valid is unset for the port's ACPI
-> > > companion which means that the port cannot signal wakeup through
-> > > ACPI-related means at all and this may be problematic, especially in
-> > > the system-wide suspend case in which the wakeup capability is not too
-> > > relevant unless there is a system wakeup device under the port.
-> > >
-> > > I don't think that the adev->wakeup.flags.valid check has any bearing
-> > > on the _S0W check - if there is _S0W and it says "no wakeup from D3",
-> > > it should still be taken into account - so that check can be moved
-> > > past the _S0W check.
-> >
-> > So if _S0W says it can wake from D3, but wakeup.flags is not valid,
-> > it's still OK to use D3?
+On Fri, Sep 16, 2022 at 01:38:37PM +0530, Krishna chaitanya chundru wrote:
+> In ASPM driver, LTR threshold scale and value are updated based on
+> tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
+> LTR threshold scale and value are greater values than max snoop/non-snoop
+> value.
 > 
-> No, it isn't, as per the code today and I don't think that this
-> particular part should be changed now.
-
-But the current upstream code checks acpi_pci_power_manageable(dev)
-first, so if "dev" has _PR0 or _PS0, we'll use D3 even if _S0W says it
-can wake from D3 and wakeup.flags is not valid.
-
-> _S0W may only cause acpi_pci_bridge_d3() to return false, it is not
-> sufficient for true to be returned.
+> Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+> reported snoop/no-snoop values is greater than or equal to
+> LTR_L1.2_THRESHOLD value.
 > 
-> > I guess in this case we assume wakeup would
-> > be via native PME/hotplug signaling?
+> Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 > 
-> This may be taken into consideration at one point, if need be, but not
-> in this particular patch IMO.
+> I am taking this patch forward as prasad is no more working with our org.
+> changes since v6:
+> 	- Rebasing with pci/next.
+> changes since v5:
+> 	- no changes, just reposting as standalone patch instead of reply to
+> 	  previous patch.
+> Changes since v4:
+> 	- Replaced conditional statements with min and max.
+> changes since v3:
+> 	- Changed the logic to include this condition "snoop/nosnoop
+> 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+> Changes since v2:
+> 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+> Changes since v1:
+> 	- Added missing variable declaration in v1 patch
+> ---
+>  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> > > Now, for compatibility with systems where ports have neither _S0W nor
-> > > the HotPlugSupportInD3 property, the acpi_pci_power_manageable()
-> > > return value should determine the outcome regardless of the
-> > > adev->wakeup.flags.valid value, so the latter should only determine
-> > > whether or not the HotPlugSupportInD3 property will be inspected
-> > > (which may cause true to be returned before the "power manageable"
-> > > check).
-> > >
-> > > IOW, something like this (after checking _S0W):
-> > >
-> > > if (adev->wakeup.flags.valid &&
-> > >     !acpi_dev_get_property(adev, "HotPlugSupportInD3",
-> > > ACPI_TYPE_INTEGER, &obj) &&
-> > >     obj->integer.value == 1)
-> > >         return true;
-> > >
-> > > return acpi_pci_power_manageable(dev);
-> > >
-> > > Where the if () condition basically means that wakeup signaling is
-> > > supported (and there is no indication that it cannot be done from D3
-> > > as per the previous _S0W check) and hotplug signaling from D3 is
-> > > supported.
-> > >
-> > > > > > This patch says that if dev's Root Port has "HotPlugSupportInD3", we
-> > > > > > don't need _PS0 or _PR0 for dev.  I guess that must be true, because
-> > > > > > previously the fact that we checked for "HotPlugSupportInD3" meant the
-> > > > > > device did NOT have _PS0 or _PR0.
-> > > > > >
-> > > > > > [1] https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-> >
-> > I think you're suggesting the patch below, which will make
-> > acpi_pci_bridge_d3(dev) return "true" if:
-> >
-> >   - Root Port can wake from D3hot or D3cold, has "HotPlugSupportInD3",
-> >     and has wakeup.flags.valid, OR
-> >
-> >   - Root Port can wake from D3hot or D3cold, and "dev" has _PR0 or
-> >     _PS0
-> 
-> Well, not exactly.  The second point should be
-> 
->  - Root Port's ACPI companion ('dev') has _PR0 or _PS0.
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 928bf64..2bb8470 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  {
+>  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+>  	u32 val1, val2, scale1, scale2;
+> +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+>  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+>  	u32 ctl1 = 0, ctl2 = 0;
+>  	u32 pctl1, pctl2, cctl1, cctl2;
+> +	u16 ltr;
+> +	u16 max_snoop_lat, max_nosnoop_lat;
+>  
+>  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+>  		return;
+>  
+> +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
+> +	if (!ltr)
+> +		return;
+> +
+> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
+> +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
+> +
+> +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
+> +
+> +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
+> +
+> +	/* choose the greater max scale value between snoop and no snoop value*/
+> +	max_scale = max(max_snp_scale, max_nsnp_scale);
+> +
+> +	/* choose the greater max value between snoop and no snoop scales */
+> +	max_val = max(max_snp_val, max_nsnp_val);
 
-With the patch below, the RP _S0W must either fail or return D3hot or
-D3cold (this is what I meant by "RP can wake from D3hot or D3cold")
-before we even look for _PR0/_PS0.
+I suppose the goal is to dermine the max of snoop/no-snoop latency. Taking the
+max of scale and value separately won't yield the correct result when the scale
+is different for snoop vs no-snoop. Instead you need to convert scale + value
+to ns and determine the max of that (as done for 't_power_on').
 
-Maybe we're talking about two different things -- you suggest we
-should check whether the *Root Port* has _PR0 or _PS0, but the current
-code checks the bridge "dev", which might be *below* the Root Port
-IIUC.
+> +
+>  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+>  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+>  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> @@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  	 */
+>  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+>  	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> +
+> +	/*
+> +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
+> +	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
+> +	 */
+> +	scale = min(scale, max_scale);
+> +	value = min(value, max_val);
 
-> > Previously, all bridges with _PR0 or _PS0 could use D3; now we also
-> > require that the Root Port's _S0W says it can wake from at least
-> > D3hot.
-> 
-> Yes, if _S0W is present and it evaluates successfully, then it is
-> required to confirm that wakeup signaling from at least D3hot is
-> supported for 'true' to be returned (but it is not sufficient for that
-> by itself).
+This is wrong for the same reason as above, as Bjorn also pointed out in an earlier
+comment.
 
-Hmm.  In the case where _S0W is present and says at least D3hot but
-wakeup.flags is not valid, the patch below returns 'true' if "dev"
-has _PR0 or _PS0.
+Even with the values calculated correctly I'm not sure it this is the right
+thing to do, but I know little about LTR. In any case this patch reduces
+power consumption of the Kioxia NVMe significantly, essentially by
+programming an LTR_L1.2_THRESHOLD of 0ns instead of 86ns.
 
-> That's the only functional change made by that patch and yes, the
-> patch below is what I mean.
+I just came across Bjorn's recent 'PCI/ASPM: Fix L1SS issues' series [1] that
+corrects the LTR_L1.2_THRESHOLD calculation and landed upstream, unfortunately
+it doesn't magically fix the issues with the Kioxia NVMe :(
 
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index a46fec776ad7..66c9ae1dc5da 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -984,10 +984,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >         if (acpi_pci_disabled || !dev->is_hotplug_bridge)
-> >                 return false;
-> >
-> > -       /* Assume D3 support if the bridge is power-manageable by ACPI. */
-> > -       if (acpi_pci_power_manageable(dev))
-> > -               return true;
-> > -
-> >         rpdev = pcie_find_root_port(dev);
-> >         if (!rpdev)
-> >                 return false;
-> > @@ -996,14 +992,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >         if (!adev)
-> >                 return false;
-> >
-> > -       /*
-> > -        * If the Root Port cannot signal wakeup signals at all, i.e., it
-> > -        * doesn't supply a wakeup GPE via _PRW, it cannot signal hotplug
-> > -        * events from low-power states including D3hot and D3cold.
-> > -        */
-> > -       if (!adev->wakeup.flags.valid)
-> > -               return false;
-> > -
-> >         /*
-> >          * If the Root Port cannot wake itself from D3hot or D3cold, we
-> >          * can't use D3.
-> > @@ -1014,16 +1002,21 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >
-> >         /*
-> >          * The "HotPlugSupportInD3" property in a Root Port _DSD indicates
-> > -        * the Port can signal hotplug events while in D3.  We assume any
-> > -        * bridges *below* that Root Port can also signal hotplug events
-> > -        * while in D3.
-> > +        * the Port can signal hotplug events while in D3.  This differs
-> > +        * from _S0W because _S0W may rely on GPEs, which can only be used
-> > +        * directly for wake signaling, not hotplug events.
-> > +        *
-> > +        * We assume any bridges *below* that Root Port can also signal
-> > +        * hotplug events while in D3.
-> >          */
-> > -       if (!acpi_dev_get_property(adev, "HotPlugSupportInD3",
-> > +       if (adev->wakeup.flags.valid &&
-> > +           !acpi_dev_get_property(adev, "HotPlugSupportInD3",
-> >                                    ACPI_TYPE_INTEGER, &obj) &&
-> >             obj->integer.value == 1)
-> >                 return true;
-> >
-> > -       return false;
-> > +       /* Assume D3 support if the bridge is power-manageable by ACPI. */
-> > +       return acpi_pci_power_manageable(dev);
-> >  }
-> >
-> >  int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
-> 
-> Note that the adev->wakeup.flags.valid is still necessary in the cases
-> when _S0W is not present, because in those cases wakeup support
-> implies that it is supported in all D-states.  It is sort of redundant
-> when _S0W is present, but the current code has it and this particular
-> patch doesn't (or even shouldn't) change that.
-
-In the current patch, wakeup.flags is only relevant if the RP has
-"HotPlugSupportInD3".  If "dev" has _PR0 or _PS0, we'll return 'true'
-even if wakeup.flags is not valid.  Maybe that's wrong?
-
-Bjorn
+[1] https://lore.kernel.org/lkml/ca836507-50ca-13bc-ef88-7f69b1333c99@linux.intel.com/T/#m3f223b7e582052159de7538bcaf2bea6d2071472
