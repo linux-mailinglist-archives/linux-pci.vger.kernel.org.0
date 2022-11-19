@@ -2,123 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B62E631065
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Nov 2022 20:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9680863109E
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Nov 2022 21:09:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbiKSTOY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Nov 2022 14:14:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
+        id S234079AbiKSUJQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Nov 2022 15:09:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230471AbiKSTOX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Nov 2022 14:14:23 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DE2252;
-        Sat, 19 Nov 2022 11:14:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AA6/LSq7Yh9q7Ox/vz8E2sa7ktXqzYAYocMfWT/DNd1y5raWdRbn0UfB9wlOJsJifY6h124Iwt7W4jkwyAnP9XZnBP1XT5XWDvm+4q4B108KK7onWW3JfOs/vS1QcbNKOlIEXe4cUcd5gycfk3HE+2IK9GDMBJsEi1mlFkA15QhpZY18mLBkuWAL/S5B/pCJm/3QasBxmGgsk+Q3zp8WfSKJSLGgi+08VUfFcxu6tslEo4zT9V5etpm3fHJPsSQJsGK0UjqEnbpxK873K/6qeKoZtkK549h2+5DBA4QhR17FQuxyd+sZ0pLyUqgr8asn/YOhZXiQ28r5ggXM8KxD/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rN/0lGfoMRyR79JEkj4khXsNvta8d8zYHvFEXAVvEUg=;
- b=k8o9Fy8xnokuCyYLcpx8HY18V9WVWHBTfwRFYPFbun0EITl6k2Y7ApDgAB8E7+eLR2b9WW2ThMNiLDktVuk6c1hvgR8dTeRhqcVz7RP8zUiW4yKMpozB/jfP4AGTfvFFuDc+hqb700sWzxJYQy5tvnfbyr/+KsMabGSKL7nYKLIKutL4a+kyTarf9HRiVbyYd58zWlkAR44d2egZgBAPnO5eJxHuq7klIDB9NPC34joQF/tnunvP89i87AaiduAYiW1JKo+tvCrbd4GM8Lr3Hcs8qDQcwmYRxwxRrPInbe6Oof44PHw6UbUIio4c3cJIFZaiYT0/OQbovK4mXrMOgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rN/0lGfoMRyR79JEkj4khXsNvta8d8zYHvFEXAVvEUg=;
- b=YQpwDjTyjfnqopJ+VLxA9mtAcWIL5oagiiNzHdhMeq56TZBUW/kV3Ot4cF2irug+JfAhvZuNMTDhxRIYyX8EdI7eOpg+VutE6dYIvvEss1eQw2JSazvt1IHBJydQlv+RCVSGvuUdoM3fLwmE38Af8C0vQm+flO4uP4QzrgcJWFw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by CY5PR12MB6551.namprd12.prod.outlook.com (2603:10b6:930:41::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Sat, 19 Nov
- 2022 19:14:18 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::7d43:3f30:4caf:7421]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::7d43:3f30:4caf:7421%7]) with mapi id 15.20.5834.009; Sat, 19 Nov 2022
- 19:14:18 +0000
-Message-ID: <e10c6093-6ca5-e669-af0b-bd91514b6371@amd.com>
-Date:   Sat, 19 Nov 2022 20:14:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC] Resizable BARs vs bridges with BARs
-Content-Language: en-US
-To:     Alex Williamson <alex.williamson@redhat.com>
+        with ESMTP id S232799AbiKSUJN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Nov 2022 15:09:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACA019C01
+        for <linux-pci@vger.kernel.org>; Sat, 19 Nov 2022 12:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668888496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t8fvEvbhezyhAD/JaVvzpm35s4e3Vo4GoAsKe1XU2BY=;
+        b=RIhx0HOw/BU54kL4KxVDbPbS0xyNGn+9gAa43oTaIdzqAJYdI1XMprzxQAJa+mlYIFfIcI
+        DYBddzqhtHRLdMK3KO8CicKRCh0it/oNe+ioeDLzxNt6KyCmXvvm4l8ZCSm4mzLdrXeH2x
+        7ZhqFkraId5HjimWovYIVfToM1dMbgg=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-66-ofth3IFeMy25SpGcEKXFBw-1; Sat, 19 Nov 2022 15:08:14 -0500
+X-MC-Unique: ofth3IFeMy25SpGcEKXFBw-1
+Received: by mail-il1-f198.google.com with SMTP id 13-20020a056e0216cd00b003023e8b7d03so5566581ilx.7
+        for <linux-pci@vger.kernel.org>; Sat, 19 Nov 2022 12:08:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t8fvEvbhezyhAD/JaVvzpm35s4e3Vo4GoAsKe1XU2BY=;
+        b=I1waEiAaSOGaB7FhyCa4FAJa7krJPmn8BIfms90lC7p/3Id3y7IRZhayZA2MpSRAvn
+         yn15MGZuTzafO6XfqoMAAumiYBOXt001rgv6HCkNSm0TNXx2o5h74ItsD2MhvWbZyvsR
+         2RUGutNl2C8UGfjtCRshDYBzW45N0+z5132/zkT8mpr1qioxd4KUQGSU0cv5z1uaBdxr
+         cqXmSaaxdcUXgmVTEjatzai77dghPxYS3gr371+w87W36fX1AW82R2GuVxP76lOSIDvl
+         zS2diBNIuLcigE79Ht3jfhUdCfdaoBD43rA1KRrOc3lcwf2saUatgzMhzfuAOmdSCUCQ
+         bMzA==
+X-Gm-Message-State: ANoB5pnC2cajzf2TZgfygOcmr0lK9XfI8P1QmDQj0X8tkYuN9LJCLiq0
+        ZVPPPUSITknChaczgsOYe2kKdVYfWuQUnmuFUWhBa3qK1rXD+f835Yy0vRte5FopX5AhCal/PEd
+        62c+whqiKTeq6ugptye6A
+X-Received: by 2002:a02:cb58:0:b0:375:978b:53b with SMTP id k24-20020a02cb58000000b00375978b053bmr5474075jap.218.1668888493729;
+        Sat, 19 Nov 2022 12:08:13 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6+jR8Ngnfrt+h4llJ6DicydOAxJ/sZSHHCxlVRnzOAhlghFuX9CeICiWlJI/VW/jiZOrM+gw==
+X-Received: by 2002:a02:cb58:0:b0:375:978b:53b with SMTP id k24-20020a02cb58000000b00375978b053bmr5474069jap.218.1668888493356;
+        Sat, 19 Nov 2022 12:08:13 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id e32-20020a026d60000000b003733e2ce4e8sm2459211jaf.59.2022.11.19.12.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Nov 2022 12:08:12 -0800 (PST)
+Date:   Sat, 19 Nov 2022 13:08:11 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Resizable BARs vs bridges with BARs
+Message-ID: <20221119130811.718920ec.alex.williamson@redhat.com>
+In-Reply-To: <e10c6093-6ca5-e669-af0b-bd91514b6371@amd.com>
 References: <20221118160916.7e165306.alex.williamson@redhat.com>
- <fe0e40cb-b982-2aba-b622-8534c174ea39@amd.com>
- <20221119070741.7038464f.alex.williamson@redhat.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20221119070741.7038464f.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0159.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a2::19) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+        <fe0e40cb-b982-2aba-b622-8534c174ea39@amd.com>
+        <20221119070741.7038464f.alex.williamson@redhat.com>
+        <e10c6093-6ca5-e669-af0b-bd91514b6371@amd.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|CY5PR12MB6551:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2b8588b-5f90-4205-a882-08daca6241b4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R/fNplxawcuBc3z4ES2tyFhEizYCpqTOMLPSHV751OHMDrS2/KeuvqOqtfuuFiR2zPvzVtB79KOONUJcAyUP9oL7XS3OmFL/Rq6+9QkEJ20LPQ4TDK3dexD4Dji4HDFQBq5xYUg6ssB/nh3bE9IB4auJ9fea9vgb21suo98DDu/44zv7th4dFOggtFA8Jyr8Tfg8H4PUmrEVGDdlwcXQg2FTToJMTfcNeopo6R4gFFERoBE0Yjv49xwVvQAQdnsU4Q6gMIk1t+WGYClx28nLrUpFPI3wD3903OdPuhAQ0lT5RvSCUTMpoupidUrd+1Ihsq0g98xCk0141HcNEoheaOxJvseV7Ky0EK2/Dia3L0BGZVD2MB+wuZzDwfByWMv9esN5d7VoXjEcYCRnuLlUP0BJ2C0luyL2CvxPwkrYMJvUJGToIggVjRjms1XAid01bTkQvv/L2uQGiXi6+SVqsHs2TpwHw/Pq1YqfpBl9Nx7MjvZrMAWpiDicok/KgB5VHZngTmyk6RGWPATZU9iDFIT85eqMWLXM9F9RtOa/FMqeMS5EWRGuXg0pUHULuAEIM/yFlozQx9LVAbe80SM3hKb91dFyI9Q/FWHgpwTcjsXcRhmt0AZvLKmvCppSXge67+ni/TxgY6mFds1jlMosc8LdpKkp1TUUyD4fTJaaLqYbHjejofbVKV0gYTqw5fxOlMo68sfOqGYazrq3RXUUiR7hFi35gFUhWnb6Xm7b8rU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(451199015)(83380400001)(2616005)(66574015)(186003)(8936002)(38100700002)(5660300002)(66556008)(41300700001)(6486002)(8676002)(6666004)(66946007)(4326008)(66476007)(6506007)(6512007)(316002)(478600001)(6916009)(31686004)(36756003)(2906002)(31696002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YmV5d3JCY2lNVUpLSUh6a0pyZXpyU2JWNlJIN2NxcmtCQm9KaHNrZUpucmFv?=
- =?utf-8?B?TTMvNWZ1ZjQ0QVQ2eUlvZVZvRkkvTnpyN2Eya2gyeUZyVXE0alo0clZXNHV2?=
- =?utf-8?B?WXhvTzJNRkZoeldtclVkWTBhY2E2a3JBSnBjQU5xSFJPWFhxbEVGOEV5UnJF?=
- =?utf-8?B?cDVLUnhKcUwrZE1TTitNRUVBTTJYMHFkeHF3ak5RNHhudU0wZ1BOVlJsTWV4?=
- =?utf-8?B?L3Y4bGFudjF3cHpId3d1VmpkcmphdFRXUmIyVUtHVk9FOHR6RFlNUno0Yi9Q?=
- =?utf-8?B?VnJZY3lHVzRlWXNETnRRdlMrazZPUzFsNmszd0VHUlJXbXZZZlBkTWtTVUxt?=
- =?utf-8?B?QlRpbjhMWTlldVQ3WDRHanVDZWFHRlgxL3FSRGpDczFucTBtVk1sUm1rVTBj?=
- =?utf-8?B?ZWFUVllhaXR3b2VXb0RnT3VvTEFnQ000MDhScy9oNmg3RGdVMEplaXJuWjZt?=
- =?utf-8?B?NlFCRUYzSHg1SWVCNXBIY3o1RkJTdy9lMS9GMDNRdEdCU2k3QkJaaFJhL2g0?=
- =?utf-8?B?Snc1RklzWWQ0eXYrYmdXeC94djFMK2IrNTZJSEpuaFJ6bDRKNXNWVHVSaFNi?=
- =?utf-8?B?OVZ3Ris3UHFEa0xNeTB3V09KMGJWTmF0VXR2TGkwQk5BdDhkb2ltYmlZWStr?=
- =?utf-8?B?TGVwelo5M2tKUDFjbExJd0xrajNsN0NqTTZGWFBTT0YzdUNBMFJHL2RIZjc5?=
- =?utf-8?B?NVV1Z3pKdlJaZXlWcmdDTjFOcmJVYUlWRW5tS3BPSERpK2NnLytrSHFwUlpi?=
- =?utf-8?B?MStXcGN1MjJBQXdpaGc5MXBaVHo1S21pMHBxK2xFTWVmZlNoanZQV05hYis5?=
- =?utf-8?B?SHJiMmxkdG1vY0Rsa3J0Yi9sSy9IaTZ3aE04SmRSUXYvcWFEOGlEbGFjalJG?=
- =?utf-8?B?NUM3M2tiTi82Z2lKclZoTDRZdTAzbEJLb01JakJ5amUwbG05eVdOZ1NsaWRK?=
- =?utf-8?B?eGFoTFhqdVB5ekxaKzcyZk9vVGFkeHF6QXk4d210amdzM1FRcEFxdTFDakp6?=
- =?utf-8?B?VlRJM2dUL3hKUWRHYkpDS1AxUkRHaGR6YjVVcW5teFBQRHJjWVdrcGkyVk40?=
- =?utf-8?B?V3I2bHZ4SHBKVzJ1ZGZFZWkrT0x5clVZZzh1OS8xK2V3MDlVRFV0dW1hZVVT?=
- =?utf-8?B?WEh3TkV5MTlvSTkxdXRrcGtqZ1dLUzhBNy8zOTFoaENHZjRrWnQxUDJmVHFX?=
- =?utf-8?B?bXdtQVNPS05RUGFjWVgzTDZzRWRXeTM1NFFCMERtQ245N3dodCtRZzh5R3h4?=
- =?utf-8?B?eHlrK0hLYXZtZGhhTWovRmk3c2MxQmNhR2pEbmQ3MitXS2RMTXduU3FhODh5?=
- =?utf-8?B?SlQxMS96QXZaQlVLTlZHc2FWNEZSRjd1RmszM2NNMFlkck1pYm9YbCtNUlk0?=
- =?utf-8?B?ZEtjNlNXZWxHdWRHZUJLNElSb3BTQzlQQ3pUcW1RN2ZHeElYUFk3SHdJMUZV?=
- =?utf-8?B?WUkzMDc2YmtFcE9TWGZPWklFbkRVR3B4NXNBeVUzYTY4ZEhrQTdhTnFBc1p1?=
- =?utf-8?B?LzMvNE9HZHpvRWNISnpiYkhTR25wT0d5WDB1cTBnWVhmdm13UURRL0tqVUpO?=
- =?utf-8?B?c24vMlM3QUVrWGFBcE44SndtSTRTNEFiMG50VUNUZGsrQUFHS3pERkRFYlRm?=
- =?utf-8?B?aGJjcTg3ZnYxeW1wK2luVm5yTSs3c0dXdlQ1R0x2b3dWQUNwREJEMkNRTXFJ?=
- =?utf-8?B?MzhiTW5EM1dKQTZ6N0lXeEtmblJrUVBIVHJ2cjdtdXhMNU1iTzFBa2h2NUdm?=
- =?utf-8?B?LzdZL0FNb3QrZnEwTXJVaDhwdnVoQkhhM0xLWnZ1dlA2WDVXci9EbkZRZlRI?=
- =?utf-8?B?aW9NVE5wNWhrQUxjTHRIRHVsT3ZpbHdUb1AwN05qRVBTSkF0OG5rRUsvakg4?=
- =?utf-8?B?RUZvRmVIVEpIc3gvclhnNnJKMHE3YjBzTVorV2VCSzFjalNjdmhKeDVselNa?=
- =?utf-8?B?K0wzUmM0OURNWlJOWHk5anE1MUswSjZmN1pnaXRTbXkvUmNoRzFOcmx0VzVD?=
- =?utf-8?B?VnlyS0FiN21ZbmNzaVlJWk9iYmpEZWpvcTdxckRReDg5WGhTYzlSNWtSa0RX?=
- =?utf-8?B?ckRObDBZZjdYYWhBam16OGNhZ3Yza0o3QzNQbkQ1R1dFV3Q3Y2Z6MzVqeExN?=
- =?utf-8?B?bmVTVExQTkVhcnRTdjhwbjZLL0lXSVhFQVlKSTRMYzNuRjlTMFBXbk5rUG84?=
- =?utf-8?Q?oSJcM0TvDYDOTeyRaYWTnjQqIAs1nV7phAnxhTgycubK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2b8588b-5f90-4205-a882-08daca6241b4
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2022 19:14:18.5873
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DfZqtJcg3F/TP33OsYFRPlYSSAuFtwYpKuf8z3g7GyWSiqN6J/bomaem30In5jgv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6551
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -126,137 +81,264 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alex,
+Hi Christian,
 
-Am 19.11.22 um 15:07 schrieb Alex Williamson:
-> Hi Christian,
->
-> On Sat, 19 Nov 2022 12:02:55 +0100
-> Christian König <christian.koenig@amd.com> wrote:
->
->> Hi Alex,
->>
->> Am 19.11.22 um 00:09 schrieb Alex Williamson:
->>> Hi,
->>>
->>> I'm trying to get resizable BARs working in a configuration where my
->>> root bus resources provide plenty of aperture for the BAR:
->>>
->>> pci_bus 0000:5d: root bus resource [io  0x8000-0x9fff window]
->>> pci_bus 0000:5d: root bus resource [mem 0xb8800000-0xc5ffffff window]
->>> pci_bus 0000:5d: root bus resource [mem 0xb000000000-0xbfffffffff window] <<<
->>> pci_bus 0000:5d: root bus resource [bus 5d-7f]
->>>
->>> But resizing fails with -ENOSPC.  The topology looks like this:
->>>
->>>    +-[0000:5d]-+-00.0-[5e-61]----00.0-[5f-61]--+-01.0-[60]----00.0  Intel Corporation DG2 [Arc A380]
->>>                                                \-04.0-[61]----00.0  Intel Corporation Device 4f92
->>>
->>> The BIOS is not fluent in resizable BARs and only programs the root
->>> port with a small aperture:
->>>
->>> 5d:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev 07) (prog-if 00 [Normal decode])
->>>           Bus: primary=5d, secondary=5e, subordinate=61, sec-latency=0
->>>           I/O behind bridge: 0000f000-00000fff [disabled]
->>>           Memory behind bridge: b9000000-ba0fffff [size=17M]
->>>           Prefetchable memory behind bridge: 000000bfe0000000-000000bff07fffff [size=264M]
->>>           Kernel driver in use: pcieport
->>>
->>> The trouble comes on the upstream PCIe switch port:
->>>
->>> 5e:00.0 PCI bridge: Intel Corporation Device 4fa1 (rev 01) (prog-if 00 [Normal decode])
->>>      >>>  Region 0: Memory at b010000000 (64-bit, prefetchable)
->>>           Bus: primary=5e, secondary=5f, subordinate=61, sec-latency=0
->>>           I/O behind bridge: 0000f000-00000fff [disabled]
->>>           Memory behind bridge: b9000000-ba0fffff [size=17M]
->>>           Prefetchable memory behind bridge: 000000bfe0000000-000000bfefffffff [size=256M]
->>>           Kernel driver in use: pcieport
->>>
->>> Note region 0 of this bridge, which is 64-bit, prefetchable and
->>> therefore conflicts with the same type for the resizable BAR on the GPU:
->>>
->>> 60:00.0 VGA compatible controller: Intel Corporation DG2 [Arc A380] (rev 05) (prog-if 00 [VGA controller])
->>>           Region 0: Memory at b9000000 (64-bit, non-prefetchable) [disabled] [size=16M]
->>>           Region 2: Memory at bfe0000000 (64-bit, prefetchable) [disabled] [size=256M]
->>>           Expansion ROM at <ignored> [disabled]
->>>           Capabilities: [420 v1] Physical Resizable BAR
->>>                   BAR 2: current size: 256MB, supported: 256MB 512MB 1GB 2GB 4GB 8GB
->>>
->>> It's a shame that the hardware designers didn't mark the upstream port
->>> BAR as non-prefetchable to avoid it living in the same resource
->>> aperture as the resizable BAR on the downstream device.
->> This is expected. Bridges always have a 32bit non prefetchable and a
->> 64bit prefetchable BAR. This is part of the PCI(e) spec.
-> To be clear, the issue is a bridge implementing a 64-bit, prefetchable
-> BAR at config offset 0x10 & 0x14, not the limit/base registers that
-> define the bridge windows for prefetchable and non-prefetchable
-> downstream resources.
+On Sat, 19 Nov 2022 20:14:15 +0100
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+> Am 19.11.22 um 15:07 schrieb Alex Williamson:
+> > On Sat, 19 Nov 2022 12:02:55 +0100
+> > Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+> >> Am 19.11.22 um 00:09 schrieb Alex Williamson: =20
+> >>> I'm trying to get resizable BARs working in a configuration where my
+> >>> root bus resources provide plenty of aperture for the BAR:
+> >>>
+> >>> pci_bus 0000:5d: root bus resource [io  0x8000-0x9fff window]
+> >>> pci_bus 0000:5d: root bus resource [mem 0xb8800000-0xc5ffffff window]
+> >>> pci_bus 0000:5d: root bus resource [mem 0xb000000000-0xbfffffffff win=
+dow] <<<
+> >>> pci_bus 0000:5d: root bus resource [bus 5d-7f]
+> >>>
+> >>> But resizing fails with -ENOSPC.  The topology looks like this:
+> >>>
+> >>>    +-[0000:5d]-+-00.0-[5e-61]----00.0-[5f-61]--+-01.0-[60]----00.0  I=
+ntel Corporation DG2 [Arc A380]
+> >>>                                                \-04.0-[61]----00.0  I=
+ntel Corporation Device 4f92
+> >>>
+> >>> The BIOS is not fluent in resizable BARs and only programs the root
+> >>> port with a small aperture:
+> >>>
+> >>> 5d:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Por=
+t A (rev 07) (prog-if 00 [Normal decode])
+> >>>           Bus: primary=3D5d, secondary=3D5e, subordinate=3D61, sec-la=
+tency=3D0
+> >>>           I/O behind bridge: 0000f000-00000fff [disabled]
+> >>>           Memory behind bridge: b9000000-ba0fffff [size=3D17M]
+> >>>           Prefetchable memory behind bridge: 000000bfe0000000-000000b=
+ff07fffff [size=3D264M]
+> >>>           Kernel driver in use: pcieport
+> >>>
+> >>> The trouble comes on the upstream PCIe switch port:
+> >>>
+> >>> 5e:00.0 PCI bridge: Intel Corporation Device 4fa1 (rev 01) (prog-if 0=
+0 [Normal decode]) =20
+> >>>      >>>  Region 0: Memory at b010000000 (64-bit, prefetchable) =20
+> >>>           Bus: primary=3D5e, secondary=3D5f, subordinate=3D61, sec-la=
+tency=3D0
+> >>>           I/O behind bridge: 0000f000-00000fff [disabled]
+> >>>           Memory behind bridge: b9000000-ba0fffff [size=3D17M]
+> >>>           Prefetchable memory behind bridge: 000000bfe0000000-000000b=
+fefffffff [size=3D256M]
+> >>>           Kernel driver in use: pcieport
+> >>>
+> >>> Note region 0 of this bridge, which is 64-bit, prefetchable and
+> >>> therefore conflicts with the same type for the resizable BAR on the G=
+PU:
+> >>>
+> >>> 60:00.0 VGA compatible controller: Intel Corporation DG2 [Arc A380] (=
+rev 05) (prog-if 00 [VGA controller])
+> >>>           Region 0: Memory at b9000000 (64-bit, non-prefetchable) [di=
+sabled] [size=3D16M]
+> >>>           Region 2: Memory at bfe0000000 (64-bit, prefetchable) [disa=
+bled] [size=3D256M]
+> >>>           Expansion ROM at <ignored> [disabled]
+> >>>           Capabilities: [420 v1] Physical Resizable BAR
+> >>>                   BAR 2: current size: 256MB, supported: 256MB 512MB =
+1GB 2GB 4GB 8GB
+> >>>
+> >>> It's a shame that the hardware designers didn't mark the upstream port
+> >>> BAR as non-prefetchable to avoid it living in the same resource
+> >>> aperture as the resizable BAR on the downstream device. =20
+> >> This is expected. Bridges always have a 32bit non prefetchable and a
+> >> 64bit prefetchable BAR. This is part of the PCI(e) spec. =20
+> > To be clear, the issue is a bridge implementing a 64-bit, prefetchable
+> > BAR at config offset 0x10 & 0x14, not the limit/base registers that
+> > define the bridge windows for prefetchable and non-prefetchable
+> > downstream resources. =20
+>=20
+> WHAT? I've never heard of a bridge with this configuration. I don't=20
+> fully remember the spec, but I'm pretty sure that this isn't something=20
+> standard.
 
-WHAT? I've never heard of a bridge with this configuration. I don't 
-fully remember the spec, but I'm pretty sure that this isn't something 
-standard.
+Type1 config space allows for two standard BARs.
 
-Can you give me the output of "sudo lspci -vvvv -s $busID" for this device.
+> Can you give me the output of "sudo lspci -vvvv -s $busID" for this devic=
+e.
 
->>> In any case, it's my understanding that our bridge drivers don't generally make use
->>> of bridge BARs.  I think we can test whether a driver has done a
->>> pci_request_region() or equivalent by looking for the IORESOURCE_BUSY
->>> flag, but I also suspect this is potentially racy.
->> That sounds like we have a misunderstanding here how those bridges work.
->> The upstream bridges should include all the resources of the downstream
->> devices/bridges in their BARs.
-> Correct, and the issue is that the bridge at 5e:00.0 _consumes_ a
-> portion of the window we need to resize at the root port.
->
-> Root port:
-> Prefetchable memory behind bridge: 000000bfe0000000-000000bff07fffff [size=264M]
->
-> Upstream switch port:
-> Region 0: Memory at b010000000 (64-bit, prefetchable)
-> Prefetchable memory behind bridge: 000000bfe0000000-000000bfefffffff [size=256M]
->
-> It's that Region 0 resource that prevents resizing.
+5e:00.0 PCI bridge: Intel Corporation Device 4fa1 (rev 01) (prog-if 00 [Nor=
+mal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Steppi=
+ng- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort- =
+<MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 42
+	NUMA node: 0
+	IOMMU group: 1
+	Region 0: Memory at bff0000000 (64-bit, prefetchable) [size=3D8M]
+	Bus: primary=3D5e, secondary=3D5f, subordinate=3D61, sec-latency=3D0
+	I/O behind bridge: 0000f000-00000fff [disabled]
+	Memory behind bridge: b9000000-ba0fffff [size=3D17M]
+	Prefetchable memory behind bridge: 000000bfe0000000-000000bfefffffff [size=
+=3D256M]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort- =
+<MAbort- <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D375mA PME(D0+,D1-,D2-,D3hot+,D3c=
+old+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME-
+	Capabilities: [50] MSI: Enable- Count=3D1/1 Maskable+ 64bit+
+		Address: 0000000000000000  Data: 0000
+		Masking: 00000000  Pending: 00000000
+	Capabilities: [70] Express (v2) Upstream Port, MSI 00
+		DevCap:	MaxPayload 128 bytes, PhantFunc 0
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ SlotPowerLimit 75.000W
+		DevCtl:	CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop-
+			MaxPayload 128 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+		LnkCap:	Port #0, Speed 16GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <4=
+us, L1 <64us
+			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 8GT/s (downgraded), Width x8 (ok)
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP+ LTR+
+			 10BitTagComp+ 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS+
+			 AtomicOpsCap: Routing+ 32bit+ 64bit+ 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
+			 AtomicOpsCtl: EgressBlck+
+		LnkCap2: Supported Link Speeds: 2.5-16GT/s, Crosslink- Retimer+ 2Retimers=
++ DRS+
+		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- Compl=
+ianceSOS-
+			 Compliance De-emphasis: -6dB
+		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+ Equaliz=
+ationPhase1+
+			 EqualizationPhase2+ EqualizationPhase3+ LinkEqualizationRequest-
+			 Retimer- 2Retimers- CrosslinkRes: Upstream Port
+	Capabilities: [100 v2] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- =
+ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt+ RxOF- MalfTLP- =
+ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES+ TLP+ FCP+ CmpltTO+ CmpltAbrt+ UnxCmplt- RxOF+ MalfTLP+=
+ ECRC+ UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+		CEMsk:	RxErr+ BadTLP+ BadDLLP+ Rollover+ Timeout+ AdvNonFatalErr+
+		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCC=
+hkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [148 v1] Power Budgeting <?>
+	Capabilities: [158 v1] Secondary PCI Express
+		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+		LaneErrStat: 0
+	Capabilities: [178 v1] Physical Layer 16.0 GT/s <?>
+	Capabilities: [1a0 v1] Lane Margining at the Receiver <?>
+	Capabilities: [1d4 v1] Latency Tolerance Reporting
+		Max snoop latency: 0ns
+		Max no snoop latency: 0ns
+	Capabilities: [1dc v1] L1 PM Substates
+		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+			  PortCommonModeRestoreTime=3D10us PortTPowerOnTime=3D14us
+		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+			   T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+		L1SubCtl2: T_PwrOn=3D10us
+	Capabilities: [1f8 v1] Vendor Specific Information: ID=3D0002 Rev=3D4 Len=
+=3D100 <?>
+	Capabilities: [2f8 v1] Vendor Specific Information: ID=3D0001 Rev=3D1 Len=
+=3D038 <?>
+	Capabilities: [330 v1] Data Link Feature <?>
+	Kernel driver in use: pcieport
 
-Could it be that some of the ACPI tables are broken and because of this 
-we add a fixed resource to this device?
+> >>> In any case, it's my understanding that our bridge drivers don't gene=
+rally make use
+> >>> of bridge BARs.  I think we can test whether a driver has done a
+> >>> pci_request_region() or equivalent by looking for the IORESOURCE_BUSY
+> >>> flag, but I also suspect this is potentially racy. =20
+> >> That sounds like we have a misunderstanding here how those bridges wor=
+k.
+> >> The upstream bridges should include all the resources of the downstream
+> >> devices/bridges in their BARs. =20
+> > Correct, and the issue is that the bridge at 5e:00.0 _consumes_ a
+> > portion of the window we need to resize at the root port.
+> >
+> > Root port:
+> > Prefetchable memory behind bridge: 000000bfe0000000-000000bff07fffff [s=
+ize=3D264M]
+> >
+> > Upstream switch port:
+> > Region 0: Memory at b010000000 (64-bit, prefetchable)
+> > Prefetchable memory behind bridge: 000000bfe0000000-000000bfefffffff [s=
+ize=3D256M]
+> >
+> > It's that Region 0 resource that prevents resizing. =20
+>=20
+> Could it be that some of the ACPI tables are broken and because of this=20
+> we add a fixed resource to this device?
 
-Otherwise I have a hard time coming up with a way for a bridge to have a 
-BAR in the config space.
+The switch is part of a plug-in card, I'd not expect ACPI to be
+involved.  It's just a standard BAR:
 
->>> The patch below works for me, allowing the new resourceN_resize sysfs
->>> attribute to resize the root port window within the provided bus
->>> window.  Is this the right answer?  How can we make it feel less
->>> sketchy?  Thanks,
->> The correct approach is to remove all the drivers (EFI, vesafb etc...)
->> which are using the PCI(e) devices under the bridge in question. Then
->> release the resources and puzzle everything back together.
->>
->> See amdgpu_device_resize_fb_bar() how to do this correctly.
-> Resource resizing in pci-sysfs is largely modeled after the amdgpu
-> code, but I don't see any special provisions for handling conflicting
-> resources consumed on intermediate devices.  The driver attached to the
-> upstream switch port is pcieport and removing it doesn't resolve the
-> problem.  The necessary resource on the root port still reports a
-> child.
->
-> Is amdgppu resizing known to work in cases where the GPU is downstream
-> of a PCIe switch that consumes resources of the same type and the root
-> port aperture needs to be resized?  I suspect it does not.  Thanks,
+# setpci -s 5e:00.0 BASE_ADDRESS_0
+f000000c
+# setpci -s 5e:00.0 BASE_ADDRESS_1
+000000bf
+# setpci -s 5e:00.0 BASE_ADDRESS_0=3Dffffffff
+# setpci -s 5e:00.0 BASE_ADDRESS_1=3Dffffffff
+# setpci -s 5e:00.0 BASE_ADDRESS_0
+ff80000c
+# setpci -s 5e:00.0 BASE_ADDRESS_1
+ffffffff
 
-Well we have the possibility to add extra space to bridges on the kernel 
-command line for this.
+All this would have transparently worked if they would have chosen to
+implement a non-prefetchable BAR.
 
-This is used for things like hotplug behind bridges with limited address 
-space.
+> Otherwise I have a hard time coming up with a way for a bridge to have a=
+=20
+> BAR in the config space.
 
-Quite a while ago there was also a patch set which dynamically 
-binds/unbinds drivers from resources to resize the BARs. But that never 
-got far because of locking problems.
+It's a standard part of the Type1 config header.
 
-Regards,
-Christian.
+> >>> The patch below works for me, allowing the new resourceN_resize sysfs
+> >>> attribute to resize the root port window within the provided bus
+> >>> window.  Is this the right answer?  How can we make it feel less
+> >>> sketchy?  Thanks, =20
+> >> The correct approach is to remove all the drivers (EFI, vesafb etc...)
+> >> which are using the PCI(e) devices under the bridge in question. Then
+> >> release the resources and puzzle everything back together.
+> >>
+> >> See amdgpu_device_resize_fb_bar() how to do this correctly. =20
+> > Resource resizing in pci-sysfs is largely modeled after the amdgpu
+> > code, but I don't see any special provisions for handling conflicting
+> > resources consumed on intermediate devices.  The driver attached to the
+> > upstream switch port is pcieport and removing it doesn't resolve the
+> > problem.  The necessary resource on the root port still reports a
+> > child.
+> >
+> > Is amdgppu resizing known to work in cases where the GPU is downstream
+> > of a PCIe switch that consumes resources of the same type and the root
+> > port aperture needs to be resized?  I suspect it does not.  Thanks, =20
+>=20
+> Well we have the possibility to add extra space to bridges on the kernel=
+=20
+> command line for this.
+>=20
+> This is used for things like hotplug behind bridges with limited address=
+=20
+> space.
 
->
-> Alex
->
+AFAIK, this is only for hotplug slots, my root port is HotPlug-.
+
+I'd also like to make pci=3Drealloc aware of resizable BARs, but it hits
+the same problem.  Thanks,
+
+Alex
 
