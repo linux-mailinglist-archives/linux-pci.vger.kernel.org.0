@@ -2,117 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F316313CD
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Nov 2022 12:57:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D2CC6313E2
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Nov 2022 13:23:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiKTL5l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Nov 2022 06:57:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
+        id S229612AbiKTMXr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Nov 2022 07:23:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiKTL5g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 06:57:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B08AA44C;
-        Sun, 20 Nov 2022 03:57:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4087A60C47;
-        Sun, 20 Nov 2022 11:57:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A86C433C1;
-        Sun, 20 Nov 2022 11:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668945451;
-        bh=5ggy0qQWOQikRZXdP6PhBP9SY1KAh6GYvEPfkQOJ5x0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CoQOfYMy1c33U6h/6Si4Kkdk/nYqh1lkdFXZ7pJNL5n9vK4HQ3DUmgzTQOLTi3J/+
-         4L3CB5IjyqYzX7X6zG+dkWGYwvA0hdGuc7N8jgmhdeJrVuTqN/xj+dhNjZlfZ7J+m8
-         NQ3W2f0KvfT6p0noOZ/qXVAUIyJBbjFLwkXHWLqq4vnB57jfFy83AYkdplnSgmAaxg
-         zCmdzQLQ0WFjr9mXKc4j8OxmQ84ISEza82CabM3W7gyfz8kIdxOd4eSw2xfIjVG+7w
-         QNO+he23TglDYzyGgKk5ZjXVMQ7a3tWEdMTEYRmF8wOpAKAo7Hnk/oHDUutDwNLNGQ
-         zJucDyu29NEnA==
-Date:   Sun, 20 Nov 2022 11:57:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yangtao Li <tiny.windzz@gmail.com>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Daniel Mack <zonque@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Add missing start and/or end of line regex
- anchors
-Message-ID: <Y3oWJQRtgbHbqz0I@sirena.org.uk>
-References: <20221118223728.1721589-1-robh@kernel.org>
+        with ESMTP id S229561AbiKTMXq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 07:23:46 -0500
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FA829CB1
+        for <linux-pci@vger.kernel.org>; Sun, 20 Nov 2022 04:23:45 -0800 (PST)
+Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+         client-signature RSA-PSS (1024 bits) client-digest SHA256)
+        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id D12291C09ED
+        for <linux-pci@vger.kernel.org>; Sun, 20 Nov 2022 13:23:42 +0100 (CET)
+Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
+        id AB3631A0F29; Sun, 20 Nov 2022 13:23:42 +0100 (CET)
+Date:   Sun, 20 Nov 2022 13:23:42 +0100
+From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To:     Linux-PCI Mailing List <linux-pci@vger.kernel.org>
+Subject: pciutils-3.9.0 released
+Message-ID: <mj+md-20221120.122204.21924.albireo@ucw.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Q3GCr2oBFfh1LNvT"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221118223728.1721589-1-robh@kernel.org>
-X-Cookie: Ego sum ens omnipotens.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: D12291C09ED
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spamd-Result: default: False [-3.28 / 15.00];
+        BAYES_HAM(-2.98)[99.89%];
+        HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
+        IP_REPUTATION_HAM(-0.91)[asn: 51744(-0.27), country: CZ(-0.00), ip: 91.219.245.20(-0.64)];
+        NEURAL_HAM(-0.70)[-0.701];
+        HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
+        MIME_GOOD(-0.10)[text/plain];
+        DMARC_POLICY_SOFTFAIL(0.10)[ucw.cz : No valid SPF, No valid DKIM,none];
+        R_SPF_NA(0.00)[no SPF record];
+        FROM_EQ_ENVFROM(0.00)[];
+        MIME_TRACE(0.00)[0:+];
+        TAGGED_FROM(0.00)[f-201122,linux-pci=vger.kernel.org];
+        R_DKIM_NA(0.00)[];
+        ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
+        RCVD_TLS_LAST(0.00)[];
+        RCPT_COUNT_ONE(0.00)[1];
+        R_MIXED_CHARSET(0.00)[subject];
+        ARC_NA(0.00)[];
+        TO_DN_ALL(0.00)[];
+        MID_RHS_MATCH_FROM(0.00)[];
+        TO_MATCH_ENVRCPT_ALL(0.00)[];
+        FROM_HAS_DN(0.00)[];
+        RCVD_COUNT_TWO(0.00)[2]
+X-Spamd-Bar: ---
+Authentication-Results: jabberwock.ucw.cz;
+        dkim=none;
+        spf=none (jabberwock.ucw.cz: domain of "mj+f-201122+linux-pci=vger.kernel.org@ucw.cz" has no SPF policy when checking 91.219.245.20) smtp.mailfrom="mj+f-201122+linux-pci=vger.kernel.org@ucw.cz";
+        dmarc=fail reason="No valid SPF, No valid DKIM" header.from=ucw.cz (policy=none)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello, world!
 
---Q3GCr2oBFfh1LNvT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I just released version 3.9.0 of the PCI Utilities.
 
-On Fri, Nov 18, 2022 at 04:37:27PM -0600, Rob Herring wrote:
-> json-schema patterns by default will match anywhere in a string, so
-> typically we want at least the start or end anchored. Fix the obvious
-> cases where the anchors were forgotten.
+(The tarball at kernel.org is not updated yet, since I'm having some problems
+with signature verification.)
 
-Acked-by: Mark Brown <broonie@kernel.org>
+From the changelog:
 
---Q3GCr2oBFfh1LNvT
-Content-Type: application/pgp-signature; name="signature.asc"
+	* We decode Compute Express Link (CXL) capabilities.
 
------BEGIN PGP SIGNATURE-----
+	* The tree mode of lspci is now compatible with filtering options.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN6FiQACgkQJNaLcl1U
-h9AA2wf/bx63PKQM05br3AtOVY9zdnicSS3gPjXP1RhIZFx5DzHwpwd0ubzHQeEN
-Kk6JXxiJGRd6UUsifgfE3wHiKuDzN/eqx3PrQeCPxvUM70Uz2XifdEqmnhRhR/ow
-HSxPCKrdL/VnVCE4OGskhnQnuNKdomuoEv5pKw5+0Ue8/O2O24vxh+Ckm/qdedgr
-oN+ptQEN4r+FDCGwsc98OKacDLoBwXp0NKSqoflhG0+AzYS3Pv4CWoSJyW7PPzYR
-Na7vdI9pcZxlPhOQilQUYKQWmFt0yl7+uUldCPsQXO/0XTBa1KTcI9H2bRK1MsOw
-EN4xxqC1SJ9Q0J7wg7TTl77qIj7PPA==
-=lgNY
------END PGP SIGNATURE-----
+	* When setpci is used with a named register, it checks whether
+	  the register is present in the particular header type.
 
---Q3GCr2oBFfh1LNvT--
+	* Linux: The intel-conf[12] back-ends prefer to use ioperm() instead
+	  of iopl() to gain access to I/O ports.
+
+	* Windows: We have two new back-ends thanks to Pali Rohár.
+	  One uses the NT SysDbg interface, the other uses kldbgdrv.sys
+	  (which is a part of the Microsoft WinDbg tool).
+
+	* Windows: We support building libpci as a DLL. Also, Windows
+	  binaries now include meta-data with version.
+
+	* Hurd: The Hurd back-end works again.
+
+	* mmio-conf1(-ext): Added a new back-end implementing the intel-conf1
+	  interface over MMIO. This is useful on some ARM machines, but it
+	  requires manual configuration of the MMIO addresses.
+
+	* As usually, updated pci.ids to the current snapshot of the database.
+
+				Have a nice fortnight
+-- 
+Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
+United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
