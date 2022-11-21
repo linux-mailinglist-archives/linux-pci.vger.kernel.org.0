@@ -2,258 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D5B5632AD7
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:21:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2500F632ADA
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:21:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231565AbiKURVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 12:21:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42436 "EHLO
+        id S231325AbiKURVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 12:21:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbiKURVA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:21:00 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85CDCFB98;
-        Mon, 21 Nov 2022 09:20:10 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id t1so8953614wmi.4;
-        Mon, 21 Nov 2022 09:20:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xMcN9cuI8kd/EBAZ74WJbV4knfpudOgQHBZHEvjiUeg=;
-        b=CdG/Jsfw1WTtgaq07815E+5iiz2BxCttLVutSSsFDeJFpdjNTgCM7mczngh0Mw0gQz
-         SnTnYE2NuBXGHWFYumksr7JptJia+L+A9Py3dN8WPTyvvc9GgnpNljN4pEl0euji5eE1
-         eyC8cYmYM+bHAe88l8/ZMLMlpikoW4T6vKWbn1n/jk48V1E2Dw4Y61p9lNjkiZxY3k5Y
-         eopvdLuyLCetDs8o1UMQQd1ayN+JEoDZr37YZm1qdCe1sGBeqsPyXWYDnouy4B1/K2IM
-         NYCYuCeeYrJTx/Cp+fZ3+lAaZ4ij8zzFbQKPGliDB5otsq7HURxo8kzaKU+ve9GHoDCw
-         2vBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMcN9cuI8kd/EBAZ74WJbV4knfpudOgQHBZHEvjiUeg=;
-        b=EiI1JU1Twh5tQLsldOJElWjx8UB5PSnYdOOZUC3wZdzJhDxYoEBSovqHyAozppnGbP
-         lFOLU4HB7k5sCk1+dwAgfiOBRxCIFKAEC1FhJjuzF+6etxy51eKX3ncB7da/TjwnJphq
-         ILmDvVNSdSZ89X0O29Gec38EurhIjTdbTU21O2UgyoyooZU0iEvr3FzrK/R5qXJ87ZY7
-         k+OvPCNe/Cm5fOZqm0fG8mse9yVFp5tgTxUoecX5ND6ZDkWKjp46XVI42nY07vUAXQMk
-         TMOEnnD7hHIDxlunjB7QZGK3FfaO05cvmSIkz6K9g1eIu6AG9WkeK1u9T69EtGtT/QBr
-         h5yA==
-X-Gm-Message-State: ANoB5pl70EMGHEGLEMNca9H1JwPCsWAmDIzZPFF+O7KkzWDfXX03auWm
-        re9YIfrvS0di9XVxwLtsaQM=
-X-Google-Smtp-Source: AA0mqf5NIforkcTyJS8N4lSRmBCwg/nq8MPBei0Dm1KYtcSUjGsnHEVqkWMPQgn0njhjv49oLeM4WQ==
-X-Received: by 2002:a05:600c:4f93:b0:3cf:a616:ccc0 with SMTP id n19-20020a05600c4f9300b003cfa616ccc0mr17500223wmq.73.1669051208958;
-        Mon, 21 Nov 2022 09:20:08 -0800 (PST)
-Received: from [192.168.1.131] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id c12-20020adffb4c000000b0022a3a887ceasm11736948wrs.49.2022.11.21.09.20.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 09:20:07 -0800 (PST)
-Message-ID: <7902124b-fb5e-6eb4-1f57-f3fd49146e24@gmail.com>
-Date:   Mon, 21 Nov 2022 18:20:05 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v6 06/11] arm64: dts: mt7986: add spi related device nodes
-Content-Language: en-US
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S231388AbiKURVO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:21:14 -0500
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2061.outbound.protection.outlook.com [40.107.92.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03DBBD29B6;
+        Mon, 21 Nov 2022 09:20:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FhCWPS4BxB5NjgQJVET9e+2twuMC7fcE9A3TlWgZH5tkRtnFMZLybtxkn1S+4xSUeUeEVyVPHka8kXmJS0kuUQxDL1Rqp0i0vg44GmbwSn+7K59FO22amQ2IVsEWIntTgcxxLlLMuUWEAFnI8Ghh7YHtNi1dJ2+RLWLiiPcGBQ0qzzZEv/Y/scrKbLQL2q1nLxlR2UKBHyX+z81h1M14h2c4rtSwmdn9qhxWWGavgkOYDakE8nyFoWcsDI8Av0L7KgXq6Fy8yramGq5UBAkIqQInbi+cPA2uo4AbdCwNvA6vD/CM7xtJA7auE6LZhZcN7cQ4RSNn3uTFOGQWeoncMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HlutBJxvlvzHUj8gwPKI9qiwRfiZV9chrM/fPFsNBfo=;
+ b=EovD/gJj4VuB+zAlLsaw8bwa0/Qn3xesfsQMjRC9yGwLOeSIPt7fXRcZd1M0abck7p3ko/CfdPG5Zs5CXalysAbax4tmAUxTUnoBMrbYUQoYlKWd4/7JGVCqNrmZqj+icZFAnw80ArmiNAwol67htwhBybGcomr0+4olwR7pCrrnQpcw5Sn1liYLuO9/LCl1tPzkOhTNCoh2BjIoNms41EQyzLHVYFj+yvSkiP6B9Vp/Mx0XtREr2qa2XO/FJviZ8/aexc8ejvUzw1qMZSsVoT9yHw6grCIQ+RzaNbn1TNBYBL+EneMtPTntUW+NzzSlQNXGiniebU8TCJkzs16wTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HlutBJxvlvzHUj8gwPKI9qiwRfiZV9chrM/fPFsNBfo=;
+ b=XuBK7axY2RYS7806cpk6eT4skiYZtEwjV/F+rTvIna8kK860zAKF/Xe2lTywUX19aNjv2pAJO21GtXiy+/zmhaoE/CP+LVySMaVnXoFLxQLso2P6DCfaksoFnvdruiZP+D+PAieD129yWTe3vQjd9gU+DxtkcC6DDt8PlTOFShRL0RIaMdnjV5MdDPxUOXpU7wUaPN/HR8dqA7FwrZTdmkO+G4Is48iceUdttU602jQfIEynoLLgcMN9SRntpxpFxNUh9S5a1YYNGTMEP3bAHX2jWSLdBJKSn0gXN3Hm5xejamZEtGQ6WxLiBnAcDtf/YUx4+lsYBGl/s0FU1/y4XA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by DM6PR12MB4219.namprd12.prod.outlook.com (2603:10b6:5:217::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Mon, 21 Nov
+ 2022 17:20:22 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a%9]) with mapi id 15.20.5834.011; Mon, 21 Nov 2022
+ 17:20:21 +0000
+Date:   Mon, 21 Nov 2022 13:20:20 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        Sam Shih <sam.shih@mediatek.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-References: <20221118190126.100895-1-linux@fw-web.de>
- <20221118190126.100895-7-linux@fw-web.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20221118190126.100895-7-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [patch 19/33] genirq/msi: Provide msi_desc::msi_data
+Message-ID: <Y3uzVJ/7ecL8DBK7@nvidia.com>
+References: <20221111133158.196269823@linutronix.de>
+ <20221111135206.346985384@linutronix.de>
+ <Y3U5xwujkZvI0TEN@nvidia.com>
+ <871qpzkj9k.ffs@tglx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871qpzkj9k.ffs@tglx>
+X-ClientProxiedBy: BL1PR13CA0105.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::20) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM6PR12MB4219:EE_
+X-MS-Office365-Filtering-Correlation-Id: cf30c9a6-8a13-41f9-fee1-08dacbe4ab89
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Y5H8OOV8XBWGT2xA5E2EPmRy4ZgiiARRBO55FV598UFeBW04aEw4gy10cY2v4zA3WvegUoeerIPuduSsinfLIZe6cN4c9SyrQWT1Wm7CXOdb3jcocVjgGTUpdJ0Ee5M3JtVLkte6t+mOnq6uPmCL0WtgXKfCc+9EIC2DZ/GjKLVaj8pYMhrNHJs2Yb7cs/rzAiBpxunvHEnbAvLqNb8wY2CsYZNfMxWfjaAf9i07hSvaKJpJ1cyu4gxpZTZ4lxBvqQou63ubXt/AXpADLhiRmrAAMDlt1/raubnn/c4UuclEc4DcKsJ2L7SEYd8m7DdSJhG1YxBbTLDCvcS2kbu33nflTRPAN9948yU59cUqEiTuZtd3gotoFi5ZNIdx7yNFi60Ta9WshVWfO5ZwZiii0l4bLpKdlfpHFNupUcwKGJwVElUY1Sf47sWgfu88SRppXsRT37vRSI0mMa1CaSEJIQUSHNQcI/kBM8U0tkWkPsDFoA49dCbuMKL+pr0dB2sXPEJQnL3s37ZMxs9toJImL7kMf9f4ywTR/IqFFT8diFmblci4LM0iOvo3NQANRZbOvRXKSiTLDy6w85KGdPCY80wQDVwHO3VP0Yq4pQOQCErCUJLmqR8TS7Gl+5XiIe/K
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(451199015)(478600001)(6486002)(66899015)(66556008)(36756003)(66946007)(6512007)(41300700001)(8676002)(66476007)(4326008)(8936002)(186003)(2616005)(26005)(7416002)(5660300002)(316002)(6506007)(54906003)(6916009)(83380400001)(2906002)(86362001)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9SxHW9m1aDe5STSjxD06eugs9Tf5VJWkZZAUgZrHXSHuB7dfQlUguN+URS/z?=
+ =?us-ascii?Q?o/vVNscCeK4ia5CtdC4gvqUFZr6JaW6p3Z3UDZ+v8egxi9foEwoq+K6kskkI?=
+ =?us-ascii?Q?NHUQLUNiczJrXn8nXAeGcX3CFZwwTJ7v31AiVy0fhc3WfuF1W4cl0tNEY0sI?=
+ =?us-ascii?Q?hA46mgiWr2MDdw5YL6NtKvFXWer6JxZBXFL80HBsIcp6VL8rq6bkHqBz4d5T?=
+ =?us-ascii?Q?dIE6ypOvwC8rJ89fa7H94j7H021xg6JmAbX83/+tx83/Sy0qM5S4flfvzKd7?=
+ =?us-ascii?Q?Jo/T0FYZT6vkloVK1lEkDejKJE3mx7PP5jMQlneD3z9vcajEaJWs96gEqxHn?=
+ =?us-ascii?Q?+O6Ri6Dj3ouhdd0hbOB5jF/0IXkr6Gby2qK7V9Rx87bK/2EWJe7+8kiaoxF0?=
+ =?us-ascii?Q?WkYtBWtd7xJreF99BeCSvmuQPU4mJ2wNrHFLHAioH4mmJvmZs3BKTCEDDm0r?=
+ =?us-ascii?Q?KxNLSO3t88/vpud1jawn4ya8jdEEau/gH7uYiLx4U/S3fkSeYFw4maxm1ezt?=
+ =?us-ascii?Q?6IOxWP8WV1xbNfbPTRqxvBLdv99KvFo4UolJaQ6pp9s+j5QUSRscUoWy9Ns3?=
+ =?us-ascii?Q?hsm/UdQFXNE+OjT3jJrwWyWlNtVvj+Z8QOj9dYE8G1+P5Xpcyd7AKrQsbAiC?=
+ =?us-ascii?Q?bqkUgTN3CGIipw401jnBgmKG0cvLWTpam92sZqXPhqHthtBvzvCiEJ60usYT?=
+ =?us-ascii?Q?G/Z5U7X8jQ1qF59cmBmizbdYr8EdiLn0bK2eKpBQrvaZrrPx77wXrIoFj2AM?=
+ =?us-ascii?Q?EZtgTbKU21dQd2DrqMyUKstFnNIOcZ7darXNBEAYXB3Z/d3K3UGIbTArX9LV?=
+ =?us-ascii?Q?n5BpB9gHIJxRkPPko5tgBzUx3z8ZNzwG5KDwdj7XaVCByNFm0OzRVveVImI4?=
+ =?us-ascii?Q?3o1kBsu500YykaZxh1dQWZxP5SZCCDI27CME5+udmbJYNQ8mPR00WywyLK3z?=
+ =?us-ascii?Q?DeHdc0TcPxfA6ZLSTTtXHRnc8m9bUuf9MMV1KnEFdTPgTvxvxwQGxKREq/TM?=
+ =?us-ascii?Q?N7PEFXCXz/n14GT2sGEYC19ewaB31XC4wzfZ+JqTbpCZHVPzL/R9ZWHYCKXC?=
+ =?us-ascii?Q?RApgwmreiooHnxK5kBTz9juzdTmV1mRH5mbP6uoWXTWUoirTTMihUpnsPdQV?=
+ =?us-ascii?Q?XcCphz7vYajBBkjvtof+5lIkr9m4RDkum7epgkb2fy7hC+LD9fR2OVGSO+wm?=
+ =?us-ascii?Q?R7XXP5kVGKZ8/FZSr/g6rbmt4/g6qEImzoQUf7eqJNaemfOxxxfD73TyNS9y?=
+ =?us-ascii?Q?TRrE/ZmI+c+aredRflmkP7nNUx+u0rfh1Iwa/YoY4OcSWAHednXJ19Xo74vx?=
+ =?us-ascii?Q?SKQkWIPVEL4McOhyuW4wIo0FDIz+3yrdM3Ke0SAWPn2ok4g+scLZNIbZQzq8?=
+ =?us-ascii?Q?eno1K/0gWhv4SPJLDy3GHsIbQNLmVcn2oX2N//vXhqe36IbkNsSI0kS1oDNV?=
+ =?us-ascii?Q?h+aBFt6vmSnKINelZwTknqmo0azEvAdQwS96kYI8R1HsmE+wiGhGqVy7e7Jf?=
+ =?us-ascii?Q?4+Y1SxpNE+8cACPLbw5zymf6Jj9i0EG+yUCaylRfKSxYBCaLRwltATIgcnSV?=
+ =?us-ascii?Q?UyUqRYP4jaR7ghhK1PM=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf30c9a6-8a13-41f9-fee1-08dacbe4ab89
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2022 17:20:21.8838
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ISAGbCI0Tr8TpbnVp5KoJDE8dJcBjodAh2+W/cxmcnIkBqUQXVS2jVMLGu86j2dB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4219
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Nov 18, 2022 at 11:08:55PM +0100, Thomas Gleixner wrote:
 
-
-On 18/11/2022 20:01, Frank Wunderlich wrote:
-> From: Sam Shih <sam.shih@mediatek.com>
+> I looked into this and it gets ugly very fast.
 > 
-> This patch adds spi support for MT7986.
+> The above has two parts:
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Applied, thanks!
-
-> ---
->   arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 35 ++++++++++++++++++++
->   arch/arm64/boot/dts/mediatek/mt7986a.dtsi    | 28 ++++++++++++++++
->   arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 35 ++++++++++++++++++++
->   3 files changed, 98 insertions(+)
+>     iobase    is domain specific and setup by the domain code
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-> index 2f48cc3d3ddb..006878e3f2b2 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-> @@ -59,6 +59,20 @@ switch: switch@0 {
->   };
->   
->   &pio {
-> +	spi_flash_pins: spi-flash-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi0", "spi0_wp_hold";
-> +		};
-> +	};
-> +
-> +	spic_pins: spic-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi1_2";
-> +		};
-> +	};
-> +
->   	uart1_pins: uart1-pins {
->   		mux {
->   			function = "uart";
-> @@ -105,6 +119,27 @@ conf {
->   	};
->   };
->   
-> +&spi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_flash_pins>;
-> +	cs-gpios = <0>, <0>;
-> +	status = "okay";
-> +	spi_nand: spi_nand@0 {
-> +		compatible = "spi-nand";
-> +		reg = <0>;
-> +		spi-max-frequency = <10000000>;
-> +		spi-tx-buswidth = <4>;
-> +		spi-rx-buswidth = <4>;
-> +	};
-> +};
-> +
-> +&spi1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spic_pins>;
-> +	cs-gpios = <0>, <0>;
-> +	status = "okay";
-> +};
-> +
->   &switch {
->   	ports {
->   		#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-> index afc01abfa99c..29da9b8ed753 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-> @@ -253,6 +253,34 @@ i2c0: i2c@11008000 {
->   			status = "disabled";
->   		};
->   
-> +		spi0: spi@1100a000 {
-> +			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0 0x1100a000 0 0x100>;
-> +			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&topckgen CLK_TOP_MPLL_D2>,
-> +				 <&topckgen CLK_TOP_SPI_SEL>,
-> +				 <&infracfg CLK_INFRA_SPI0_CK>,
-> +				 <&infracfg CLK_INFRA_SPI0_HCK_CK>;
-> +			clock-names = "parent-clk", "sel-clk", "spi-clk", "hclk";
-> +			status = "disabled";
-> +		};
-> +
-> +		spi1: spi@1100b000 {
-> +			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0 0x1100b000 0 0x100>;
-> +			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&topckgen CLK_TOP_MPLL_D2>,
-> +				 <&topckgen CLK_TOP_SPIM_MST_SEL>,
-> +				 <&infracfg CLK_INFRA_SPI1_CK>,
-> +				 <&infracfg CLK_INFRA_SPI1_HCK_CK>;
-> +			clock-names = "parent-clk", "sel-clk", "spi-clk", "hclk";
-> +			status = "disabled";
-> +		};
-> +
->   		ethsys: syscon@15000000 {
->   			 #address-cells = <1>;
->   			 #size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-> index 79c5c78f7a14..2c7f1d4fb352 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-> @@ -100,6 +100,20 @@ fixed-link {
->   };
->   
->   &pio {
-> +	spi_flash_pins: spi-flash-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi0", "spi0_wp_hold";
-> +		};
-> +	};
-> +
-> +	spic_pins: spic-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi1_2";
-> +		};
-> +	};
-> +
->   	wf_2g_5g_pins: wf-2g-5g-pins {
->   		mux {
->   			function = "wifi";
-> @@ -132,6 +146,27 @@ conf {
->   	};
->   };
->   
-> +&spi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_flash_pins>;
-> +	cs-gpios = <0>, <0>;
-> +	status = "okay";
-> +	spi_nand: spi_nand@0 {
-> +		compatible = "spi-nand";
-> +		reg = <0>;
-> +		spi-max-frequency = <10000000>;
-> +		spi-tx-buswidth = <4>;
-> +		spi-rx-buswidth = <4>;
-> +	};
-> +};
-> +
-> +&spi1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spic_pins>;
-> +	cs-gpios = <0>, <0>;
-> +	status = "okay";
-> +};
-> +
->   &uart0 {
->   	status = "okay";
->   };
+>     cookie    is per interrupt allocation. That's where the instance
+>               queue or whatever connects to the domain.
+> 
+> I can abuse the fields for PCI/MSI of course, but see below.
+
+I don't know that we need to store the second one forever in the desc.
+I was thinking this information is ephemeral, just used during alloc,
+and if the msi domain driver wishes some of it to be stored then it
+should do so.
+
+> Sure I could make both cookies plain u64, but I hate these forced type
+> casts and the above is simple to handle and understand.
+
+I guess, they aren't what I think of as cookies, so I wouldn't make
+them u64 in the first place.
+
+The argument to msi_domain_alloc_irq_at() ideally wants to be a
+per-domain-type struct so we can folow it around more cleanly. This is
+C so we have to type erase it as a void * through the core code, but
+OK.
+
+The second one is typically called "driver private data" in device
+driver subsystems that can't use container_of for some reason - just a
+chunk of data the driver can associate with a core owned struct.
+
+The usual pattern for driver private data is for the core to provide
+some kind of accessor void *get_priv() (think dev_get_drvdata()) or
+whatever.
+
+But I do understand your point about keeping the drivers away from
+things. Maybe some other pattern is better in this case.
+
+Jason
