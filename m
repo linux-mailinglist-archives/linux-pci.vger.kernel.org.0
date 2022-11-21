@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A63C632611
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:37:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF7A63260F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:37:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbiKUOhN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:37:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47830 "EHLO
+        id S229946AbiKUOhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:37:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbiKUOgl (ORCPT
+        with ESMTP id S230176AbiKUOgl (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:36:41 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A504DC6D13;
-        Mon, 21 Nov 2022 06:36:28 -0800 (PST)
-Message-ID: <20221121083325.898535631@linutronix.de>
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0370DC6D16;
+        Mon, 21 Nov 2022 06:36:30 -0800 (PST)
+Message-ID: <20221121083325.950255253@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041387;
+        s=2020; t=1669041388;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=9rEv0ZCHRcbwfGXHvRaB+26Gs3i0vHsf2KEnMS96bjY=;
-        b=GXvys4RNHQ7h0QJBqveM//QK3VblBKRZ4eYHP/cRMku42RLzjX3JH3BHs7zUb5U/ORz0Qn
-        N/TjGTvzSeYuMzUs3dVZUk7xyyDqIZD7+dy/qhNkL/ggGFqlVZb4G+lODo4RrmjkA0pLsE
-        DXFG8m0zubDhD9Qz+DOsxZR6jxULosiRgtLhI3HKwk3k601W1wPVdNf9bvxFOndczykdZW
-        PLQMuQ9BMlXYsARIKsuQCR0r5ZuInW1CMdeYh/vRpwlFsPwFiIVT/UZe7GSZ53s870/4pS
-        ZJp3wL0ucDww9DednLFrLw2+oEbJVvjebsyGeh7/YoO/rYDFIXSVqTGyIvWsyQ==
+         references:references; bh=W7qVbQgLsW9+eyoM2fn4CU+n/dlKHe6NknzgWNBQJFM=;
+        b=nQVGQACbwDgZgFx6Yzjx95AJmLSoQLwxKE1n+al/J1KQEZFIX5TbDcZEuaFUjQuLDeJ0iO
+        GbY/q/6UgN99PnEeTDHVJMVoz5hbW2y4TWu8fv3219e4f1sBqPbJQRUt3TNboXcIQOHB3C
+        BQ4SP8gLZ5wrn/taAL/7kxxIqz2CkmCAEdYIl1UAs8oMvGY6+X2j+Gks1jIXOzoFksie6R
+        lUGpRKjCdlDJ9AsF04mx3GzyZrgsXv6tHTGy5OswCQ/tvR6t3kfFjmJxBjtszWXxvuxZ4z
+        fn9fdLbTr84EWKgXasbHdlhHz4dN2pXJkVp0n+g5f0Z9KxvGffVK36G1nIHqPQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041387;
+        s=2020e; t=1669041388;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=9rEv0ZCHRcbwfGXHvRaB+26Gs3i0vHsf2KEnMS96bjY=;
-        b=/ryo2wZZtD3zkaTdpxsEJC9pzfQODO2gG/rLr9x6xv7NCtw5ssyjyawTKgkSyCSIBjSgiM
-        iNZJtqjUellQKGCw==
+         references:references; bh=W7qVbQgLsW9+eyoM2fn4CU+n/dlKHe6NknzgWNBQJFM=;
+        b=U4VJ4dAgXGtzIyaO0c7BJIiFHBNo3jeZHyXGDxSY68cLTykCaDumafui4CSyQh6fJZRQaB
+        8m/CSoIAq4Bug9DQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -48,11 +48,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V2 07/21] genirq/msi: Check for invalid MSI parent domain usage
+Subject: [patch V2 08/21] genirq/msi: Add pointers for per device irq domains
 References: <20221121083210.309161925@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:36:27 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:36:28 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,54 +62,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the upcoming per device MSI domain concept the MSI parent domains are
-not allowed to be used as regular MSI domains where the MSI allocation/free
-operations are applicable.
+With the upcoming per device MSI interrupt domain support it is necessary
+to store the domain pointers per device.
 
-Add appropriate checks.
+Instead of delegating that storage to device drivers or subsystems create a
+storage array in struct msi_device_data which will also take care of
+tearing down the irq domains when msi_device_data is cleaned up via devres.
+
+The interfaces into the MSI core will be changed from irqdomain pointer
+based interfaces to domain id based interfaces to support multiple MSI
+domains on a single device (e.g. PCI/MSI[-X] and PCI/IMS.
+
+Once the per device domain support is complete the irq domain pointer in
+struct device::msi.domain will not longer contain a pointer to the "global"
+MSI domain. It will contain a pointer to the MSI parent domain instead.
+
+It would be a horrible maze of conditionals to evaluate all over the place
+which domain pointer should be used, i.e. the "global" one in
+device::msi::domain or one from the internal pointer array.
+
+To avoid this evaluate in msi_setup_device_data() whether the irq domain
+which is associated to a device is a "global" or a parent MSI domain. If it
+is global then copy the pointer into the first entry in the irqdomain
+pointer array.
+
+This allows to convert interfaces and implementation to domain ids while
+keeping everything existing working.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: Made the error return understandable. (Kevin)
----
- kernel/irq/msi.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ include/linux/msi.h     |    3 +++
+ include/linux/msi_api.h |    8 ++++++++
+ kernel/irq/msi.c        |   14 ++++++++++++++
+ 3 files changed, 25 insertions(+)
 
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -77,6 +77,7 @@ struct msi_desc;
+ struct pci_dev;
+ struct platform_msi_priv_data;
+ struct device_attribute;
++struct irq_domain;
+ 
+ void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
+ #ifdef CONFIG_GENERIC_MSI_IRQ
+@@ -180,6 +181,7 @@ enum msi_desc_filter {
+  * @mutex:		Mutex protecting the MSI descriptor store
+  * @__store:		Xarray for storing MSI descriptor pointers
+  * @__iter_idx:		Index to search the next entry for iterators
++ * @__irqdomains:	Per device interrupt domains
+  */
+ struct msi_device_data {
+ 	unsigned long			properties;
+@@ -187,6 +189,7 @@ struct msi_device_data {
+ 	struct mutex			mutex;
+ 	struct xarray			__store;
+ 	unsigned long			__iter_idx;
++	struct irq_domain		*__irqdomains[MSI_MAX_DEVICE_IRQDOMAINS];
+ };
+ 
+ int msi_setup_device_data(struct device *dev);
+--- a/include/linux/msi_api.h
++++ b/include/linux/msi_api.h
+@@ -10,6 +10,14 @@
+ 
+ struct device;
+ 
++/*
++ * Per device interrupt domain related constants.
++ */
++enum msi_domain_ids {
++	MSI_DEFAULT_DOMAIN,
++	MSI_MAX_DEVICE_IRQDOMAINS,
++};
++
+ unsigned int msi_get_virq(struct device *dev, unsigned int index);
+ 
+ #endif
 --- a/kernel/irq/msi.c
 +++ b/kernel/irq/msi.c
-@@ -937,13 +937,21 @@ int msi_domain_alloc_irqs_descs_locked(s
+@@ -21,6 +21,18 @@
  
- 	lockdep_assert_held(&dev->msi.data->mutex);
+ static inline int msi_sysfs_create_group(struct device *dev);
  
-+	if (WARN_ON_ONCE(irq_domain_is_msi_parent(domain))) {
-+		ret = -EINVAL;
-+		goto free;
-+	}
-+
-+	/* Frees allocated descriptors in case of failure. */
- 	ret = msi_domain_add_simple_msi_descs(info, dev, nvec);
- 	if (ret)
--		return ret;
-+		goto free;
- 
- 	ret = ops->domain_alloc_irqs(domain, dev, nvec);
--	if (ret)
--		msi_domain_free_irqs_descs_locked(domain, dev);
-+	if (!ret)
-+		return 0;
-+free:
-+	msi_domain_free_irqs_descs_locked(domain, dev);
- 	return ret;
- }
- 
-@@ -1013,6 +1021,9 @@ void msi_domain_free_irqs_descs_locked(s
- 
- 	lockdep_assert_held(&dev->msi.data->mutex);
- 
-+	if (WARN_ON_ONCE(irq_domain_is_msi_parent(domain)))
++static inline void msi_setup_default_irqdomain(struct device *dev, struct msi_device_data *md)
++{
++	if (!dev->msi.domain)
 +		return;
++	/*
++	 * If @dev::msi::domain is a global MSI domain, copy the pointer
++	 * into the domain array to avoid conditionals all over the place.
++	 */
++	if (!irq_domain_is_msi_parent(dev->msi.domain))
++		md->__irqdomains[MSI_DEFAULT_DOMAIN] = dev->msi.domain;
++}
 +
- 	ops->domain_free_irqs(domain, dev);
- 	if (ops->msi_post_free)
- 		ops->msi_post_free(domain, dev);
+ /**
+  * msi_alloc_desc - Allocate an initialized msi_desc
+  * @dev:	Pointer to the device for which this is allocated
+@@ -213,6 +225,8 @@ int msi_setup_device_data(struct device
+ 		return ret;
+ 	}
+ 
++	msi_setup_default_irqdomain(dev, md);
++
+ 	xa_init(&md->__store);
+ 	mutex_init(&md->mutex);
+ 	dev->msi.data = md;
 
