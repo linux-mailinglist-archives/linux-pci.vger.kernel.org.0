@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 357E2632668
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:40:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5E5C63266C
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231829AbiKUOj7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:39:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
+        id S231845AbiKUOkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:40:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231720AbiKUOim (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:42 -0500
+        with ESMTP id S231725AbiKUOin (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:43 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A90EBC72E1;
-        Mon, 21 Nov 2022 06:38:16 -0800 (PST)
-Message-ID: <20221121091327.765751899@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3640C900F;
+        Mon, 21 Nov 2022 06:38:17 -0800 (PST)
+Message-ID: <20221121091327.817612499@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041495;
+        s=2020; t=1669041496;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=aPZsUav27NBNGy9CDcKsBA6eS6rPiDVMzp1pfp5Kt2c=;
-        b=MP/SuT1eRbh9P77txd5gKe8HLBx8vQPoQ+Mf25IhzIhO+02JL8aKP/Wlqz2cEC6svkSOhM
-        VCHDdpCOoFCpyQYQ001wNdgqeFrXcf0i+ZL8IBMvsCZqnLMnyfn84bKCbKVQM4ulpd6wgY
-        oZjNfwUTGtjkzozAMfKYsSXhboQVGldg7a3ztLqg72B176HqYxGWmPMB61T5t9zNalwueY
-        KsVT86hs42C2ipGA5OqROd97slYSI8WvhoYbGUJ8w9ArXLZBW6ARY7Ea3SHLgwEb+ydudG
-        tDiCLJ1jLvkajQMI+RlYWF2CJV2QMIl1U+2TJKkT4MtBn0rEgLrKULx2a/TTpg==
+         references:references; bh=jPRMH9ANd3Y1Xl+LkBRLSL32jXRgRoZHrUPJTpoWc4w=;
+        b=QAyxdW6h4sEX+AbOWBAvdjH57yGH+aQr6mTBG5rtDFmVg5qPzm94rcyOtu6n1/2NOEOjHG
+        8mtB7wgZG+/SeMhngvjdMShENcu37cSHRYCbM5G/R0rsFpBujjDVARJKBZaZHXsTXVj8DR
+        +w5sevvdAhMTf30QKj9KvoP3kPLfZydnyJfK4Wd9JKoeZv5LSyyuQ4931QcJqefR+tupdW
+        L/gZefLOfpBgSGRyWxtN+0Krgpukyd3rsYW1Ziqu1YEMKVrb/8WPXpWM+tX2XKXB/Jf+nY
+        vH1HM608y3ZHSsXhWL9pNMTqaDOxxxcaZ/+gZvQioSDHffPb2ymCbzWw5Bbqhg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041495;
+        s=2020e; t=1669041496;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=aPZsUav27NBNGy9CDcKsBA6eS6rPiDVMzp1pfp5Kt2c=;
-        b=AbZBfS5PtDXSGoS216fyH+iusnOJ175SCbLGv0W1kvqPWzCUH4jctX6x1aqQoXMDA3ToWx
-        EuLX9euk0Hg3hIDA==
+         references:references; bh=jPRMH9ANd3Y1Xl+LkBRLSL32jXRgRoZHrUPJTpoWc4w=;
+        b=+Aq08sUBX75c5DnBj1c1zdU+rBdYklHxGULnWz5ywt1uWk4RCag051MzVzbxyhWOitNgaJ
+        64OLROZGxAURy1Bg==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -47,12 +47,13 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V2 23/33] PCI/MSI: Split MSI-X descriptor setup
+        Allen Hubbe <allenbh@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [patch V2 24/33] PCI/MSI: Provide prepare_desc() MSI domain op
 References: <20221121083657.157152924@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:38:14 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:38:16 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,190 +63,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The upcoming mechanism to allocate MSI-X vectors after enabling MSI-X needs
-to share some of the MSI-X descriptor setup.
+The setup of MSI descriptors for PCI/MSI-X interrupts depends partially on
+the MSI index for which the descriptor is initialized.
 
-The regular descriptor setup on enable has the following code flow:
+Dynamic MSI-X vector allocation post MSI-X enablement allows to allocate
+vectors at a given index or at any free index in the available table
+range. The latter requires that the descriptor is initialized after the
+MSI core has chosen an index.
 
-    1) Allocate descriptor
-    2) Setup descriptor with PCI specific data
-    3) Insert descriptor
-    4) Allocate interrupts which in turn scans the inserted
-       descriptors
+Implement the prepare_desc() op in the PCI/MSI-X specific msi_domain_ops
+which is invoked before the core interrupt descriptor and the associated
+Linux interrupt number is allocated.
 
-This cannot be easily changed because the PCI/MSI code needs to handle the
-legacy architecture specific allocation model and the irq domain model
-where quite some domains have the assumption that the above flow is how it
-works.
-
-Ideally the code flow should look like this:
-
-   1) Invoke allocation at the MSI core
-   2) MSI core allocates descriptor
-   3) MSI core calls back into the irq domain which fills in
-      the domain specific parts
-
-This could be done for underlying parent MSI domains which support
-post-enable allocation/free but that would create significantly different
-code pathes for MSI/MSI-X enable.
-
-Though for dynamic allocation which wants to share the allocation code with
-the upcoming PCI/IMS support it's the right thing to do.
-
-Split the MSI-X descriptor setup into the preallocation part which just sets
-the index and fills in the horrible hack of virtual IRQs and the real PCI
-specific MSI-X setup part which solely depends on the index in the
-descriptor. This allows to provide a common dynamic allocation interface at
-the MSI core level for both PCI/MSI-X and PCI/IMS.
+That callback is also provided for the upcoming PCI/IMS implementations so
+the implementation specific interrupt domain can do their domain specific
+initialization of the MSI descriptors.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/msi/msi.c |   72 +++++++++++++++++++++++++++++++-------------------
- drivers/pci/msi/msi.h |    2 +
- 2 files changed, 47 insertions(+), 27 deletions(-)
+V2: Reworded changelog (Bjorn)
+---
+ drivers/pci/msi/irqdomain.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -569,34 +569,56 @@ static void __iomem *msix_map_region(str
- 	return ioremap(phys_addr, nr_entries * PCI_MSIX_ENTRY_SIZE);
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -202,6 +202,14 @@ static void pci_unmask_msix(struct irq_d
+ 	pci_msix_unmask(irq_data_get_msi_desc(data));
  }
  
--static int msix_setup_msi_descs(struct pci_dev *dev, void __iomem *base,
--				struct msix_entry *entries, int nvec,
--				struct irq_affinity_desc *masks)
-+/**
-+ * msix_prepare_msi_desc - Prepare a half initialized MSI descriptor for operation
-+ * @dev:	The PCI device for which the descriptor is prepared
-+ * @desc:	The MSI descriptor for preparation
-+ *
-+ * This is separate from msix_setup_msi_descs() below to handle dynamic
-+ * allocations for MSI-X after initial enablement.
-+ *
-+ * Ideally the whole MSI-X setup would work that way, but there is no way to
-+ * support this for the legacy arch_setup_msi_irqs() mechanism and for the
-+ * fake irq domains like the x86 XEN one. Sigh...
-+ *
-+ * The descriptor is zeroed and only @desc::msi_index and @desc::affinity
-+ * are set. When called from msix_setup_msi_descs() then the is_virtual
-+ * attribute is initialized as well.
-+ *
-+ * Fill in the rest.
-+ */
-+void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
++static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
++				  struct msi_desc *desc)
 +{
-+	desc->nvec_used				= 1;
-+	desc->pci.msi_attrib.is_msix		= 1;
-+	desc->pci.msi_attrib.is_64		= 1;
-+	desc->pci.msi_attrib.default_irq	= dev->irq;
-+	desc->pci.mask_base			= dev->msix_base;
-+	desc->pci.msi_attrib.can_mask		= !pci_msi_ignore_mask &&
-+						  !desc->pci.msi_attrib.is_virtual;
-+
-+	if (desc->pci.msi_attrib.can_mask) {
-+		void __iomem *addr = pci_msix_desc_addr(desc);
-+
-+		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
-+	}
++	/* Don't fiddle with preallocated MSI descriptors */
++	if (!desc->pci.mask_base)
++		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
 +}
 +
-+static int msix_setup_msi_descs(struct pci_dev *dev, struct msix_entry *entries,
-+				int nvec, struct irq_affinity_desc *masks)
- {
- 	int ret = 0, i, vec_count = pci_msix_vec_count(dev);
- 	struct irq_affinity_desc *curmsk;
- 	struct msi_desc desc;
--	void __iomem *addr;
+ static struct msi_domain_template pci_msix_template = {
+ 	.chip = {
+ 		.name			= "PCI-MSIX",
+@@ -212,6 +220,7 @@ static struct msi_domain_template pci_ms
+ 	},
  
- 	memset(&desc, 0, sizeof(desc));
- 
--	desc.nvec_used			= 1;
--	desc.pci.msi_attrib.is_msix	= 1;
--	desc.pci.msi_attrib.is_64	= 1;
--	desc.pci.msi_attrib.default_irq	= dev->irq;
--	desc.pci.mask_base		= base;
--
- 	for (i = 0, curmsk = masks; i < nvec; i++, curmsk++) {
- 		desc.msi_index = entries ? entries[i].entry : i;
- 		desc.affinity = masks ? curmsk : NULL;
- 		desc.pci.msi_attrib.is_virtual = desc.msi_index >= vec_count;
--		desc.pci.msi_attrib.can_mask = !pci_msi_ignore_mask &&
--					       !desc.pci.msi_attrib.is_virtual;
- 
--		if (desc.pci.msi_attrib.can_mask) {
--			addr = pci_msix_desc_addr(&desc);
--			desc.pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
--		}
-+		msix_prepare_msi_desc(dev, &desc);
- 
- 		ret = msi_insert_msi_desc(&dev->dev, &desc);
- 		if (ret)
-@@ -629,9 +651,8 @@ static void msix_mask_all(void __iomem *
- 		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
- }
- 
--static int msix_setup_interrupts(struct pci_dev *dev, void __iomem *base,
--				 struct msix_entry *entries, int nvec,
--				 struct irq_affinity *affd)
-+static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-+				 int nvec, struct irq_affinity *affd)
- {
- 	struct irq_affinity_desc *masks = NULL;
- 	int ret;
-@@ -640,7 +661,7 @@ static int msix_setup_interrupts(struct
- 		masks = irq_create_affinity_masks(nvec, affd);
- 
- 	msi_lock_descs(&dev->dev);
--	ret = msix_setup_msi_descs(dev, base, entries, nvec, masks);
-+	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
- 	if (ret)
- 		goto out_free;
- 
-@@ -678,7 +699,6 @@ static int msix_setup_interrupts(struct
- static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 				int nvec, struct irq_affinity *affd)
- {
--	void __iomem *base;
- 	int ret, tsize;
- 	u16 control;
- 
-@@ -696,15 +716,13 @@ static int msix_capability_init(struct p
- 	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
- 	/* Request & Map MSI-X table region */
- 	tsize = msix_table_size(control);
--	base = msix_map_region(dev, tsize);
--	if (!base) {
-+	dev->msix_base = msix_map_region(dev, tsize);
-+	if (!dev->msix_base) {
- 		ret = -ENOMEM;
- 		goto out_disable;
- 	}
- 
--	dev->msix_base = base;
--
--	ret = msix_setup_interrupts(dev, base, entries, nvec, affd);
-+	ret = msix_setup_interrupts(dev, entries, nvec, affd);
- 	if (ret)
- 		goto out_disable;
- 
-@@ -719,7 +737,7 @@ static int msix_capability_init(struct p
- 	 * which takes the MSI-X mask bits into account even
- 	 * when MSI-X is disabled, which prevents MSI delivery.
- 	 */
--	msix_mask_all(base, tsize);
-+	msix_mask_all(dev->msix_base, tsize);
- 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
- 
- 	pcibios_free_irq(dev);
---- a/drivers/pci/msi/msi.h
-+++ b/drivers/pci/msi/msi.h
-@@ -84,6 +84,8 @@ static inline __attribute_const__ u32 ms
- 	return (1 << (1 << desc->pci.msi_attrib.multi_cap)) - 1;
- }
- 
-+void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc);
-+
- /* Subsystem variables */
- extern int pci_msi_enable;
+ 	.ops = {
++		.prepare_desc		= pci_msix_prepare_desc,
+ 		.set_desc		= pci_device_domain_set_desc,
+ 	},
  
 
