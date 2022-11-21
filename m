@@ -2,90 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 804EC63216F
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 12:56:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7213E63217D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbiKUL41 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 06:56:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
+        id S231294AbiKUMAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 07:00:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbiKUL40 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 06:56:26 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BA563174;
-        Mon, 21 Nov 2022 03:56:25 -0800 (PST)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG5MN3YMSz68B2l;
-        Mon, 21 Nov 2022 19:51:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 12:56:23 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 11:56:22 +0000
-Date:   Mon, 21 Nov 2022 11:56:21 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <rostedt@goodmis.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>
-Subject: Re: [PATCH v3 09/11] cxl/pci: Add (hopeful) error handling support
-Message-ID: <20221121115621.00002b92@Huawei.com>
-In-Reply-To: <166879133596.674819.10879693357035405104.stgit@djiang5-desk3.ch.intel.com>
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
-        <166879133596.674819.10879693357035405104.stgit@djiang5-desk3.ch.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229677AbiKUMAB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 07:00:01 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9434B848
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 04:00:00 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id a15so14229410ljb.7
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 04:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gAe96EUQJW/t2YfQOYFjoHjjiIW4hHrPPaKyPCc7BE4=;
+        b=UVduBhk3PJQZkKzEskUrpKs00z1z4r/O7LnJCkT22HInQOeMTGaNIiUeqIGHvlHNel
+         8VqMPfMXtV6tMv9ea7G6sbKvzE3Fm/DlG1E+g8NcPhYe8kgMQ604qRLIDomYKgkO4nJm
+         nNM0oOsRVkJDTr9ybiWyVEr8r6WawaItHr7qHt8Sbx4Ok3kdRHr2SR9GXJjMcjqAyue3
+         iOGkflLwOC1bOY41x6zbbYbq9oqoBTN30Z/aCEk3crJLxYULIxr+CRUxsV3WKHgXoVok
+         yHMtfO5pYc15hhPs6wnzHYeNYaUln8nxRvBy6UGnsaaprdi+rLUUBCYXS1isltaJirK1
+         YmLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gAe96EUQJW/t2YfQOYFjoHjjiIW4hHrPPaKyPCc7BE4=;
+        b=5EkUKp4hZNXQjq5obn5vHv3/3YBs+tJsNViFGdI8/173J4TYVZHnogWV452BUUPMZc
+         GElIBZze5WrJL50TlF4phzzoyeKs2VVVftBLcJiSqNBi/h6sINQARWM75sD1o+V+mN9s
+         zzH6sPVIlwctQTjZv2AL4zWlFvQ1dBGWmb0SuvpFzbzjBPCkvbUxHxaqsYDummdsLHDb
+         u6SpvoDIK2F4L+US+r5GaeEXsWZGeCesUm11vJaOm80IFLHgkpKaSIQuE/uA8ttglUx9
+         kXny+IEixis3Aest0J8b38dJRWw5/Vs+//GtDrmaP9Qql9lfd9JNSvzhki+MmKbZdtIi
+         FTVg==
+X-Gm-Message-State: ANoB5pmMrz9Cz/gXOllGPg/w2lZHilHrtHoOisvmWz4RAUF5EL7lGXnO
+        nGMVo6c6e7OcWB6/3APyuRK53A==
+X-Google-Smtp-Source: AA0mqf6lo8pDgZCEf5cpGQ6TpOYX19afdgtwbFTqg3DuazhEzItnWlNNkGFC2exRFsAu0oB9C2ARJA==
+X-Received: by 2002:a05:651c:160f:b0:278:d847:1a8b with SMTP id f15-20020a05651c160f00b00278d8471a8bmr5107958ljq.17.1669031999150;
+        Mon, 21 Nov 2022 03:59:59 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id p3-20020ac24ec3000000b00492e3a8366esm2005053lfr.9.2022.11.21.03.59.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 03:59:58 -0800 (PST)
+Message-ID: <856449f3-6341-78d8-28db-3d4b8a0a25ad@linaro.org>
+Date:   Mon, 21 Nov 2022 12:59:57 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/6] dt-bindings: phy: Add PCIe PHY bindings for FSD
+Content-Language: en-US
+To:     Shradha Todi <shradha.t@samsung.com>, bhelgaas@google.com,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        kishon@ti.com, vkoul@kernel.org, lpieralisi@kernel.org,
+        kw@linux.com, mani@kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, alim.akhtar@samsung.com,
+        ajaykumar.rs@samsung.com, rcsekar@samsung.com,
+        sriranjani.p@samsung.com, bharat.uppal@samsung.com,
+        s.prashar@samsung.com, aswani.reddy@samsung.com,
+        pankaj.dubey@samsung.com, p.rajanbabu@samsung.com,
+        niyas.ahmed@samsung.com, chanho61.park@samsung.com
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20221121105210.68596-1-shradha.t@samsung.com>
+ <CGME20221121104719epcas5p2f87febfba74a4ca6807b3095acf507d0@epcas5p2.samsung.com>
+ <20221121105210.68596-2-shradha.t@samsung.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221121105210.68596-2-shradha.t@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Nov 2022 10:08:55 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On 21/11/2022 11:52, Shradha Todi wrote:
+> Document the PCIe PHY device tree bindings for Tesla
+> FSD SoC
 
-> From: Dan Williams <dan.j.williams@intel.com>
+Subject: drop second, redundant "bindings".
+
 > 
-> Add nominal error handling that tears down CXL.mem in response to error
-> notifications that imply a device reset. Given some CXL.mem may be
-> operating as System RAM, there is a high likelihood that these error
-> events are fatal. However, if the system survives the notification the
-> expectation is that the driver behavior is equivalent to a hot-unplug
-> and re-plug of an endpoint.
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+>  .../bindings/phy/phy-tesla-pcie.yaml          | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-tesla-pcie.yaml
 > 
-> Note that this does not change the mask values from the default. That
-> awaits CXL _OSC support to determine whether platform firmware is in
-> control of the mask registers.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-tesla-pcie.yaml b/Documentation/devicetree/bindings/phy/phy-tesla-pcie.yaml
+> new file mode 100644
+> index 000000000000..8fa9a050af7a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-tesla-pcie.yaml
 
-Maybe something for the future, but if multiple errors are reported
-in the CXL RAS structures, we should be able to keep iterating to
-report them all + reset just the once.
-I think that relies on Multiple_Header_Recording_Capability though
-if we want useful data.
+Filename based on compatible.
 
-Looks good to me though I have messaged one of our RAS experts
-to take a look as I only end up touching this aspect of PCI drivers
-once in a blue moon!
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/phy-tesla-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Tesla FSD SoC PCIe PHY
+> +
+> +maintainers:
+> +  - Shradha Todi <shradha.t@samsung.com>
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 0
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Put compatible as first.
 
+> +
+> +  compatible:
+> +    enum:
+> +      - tesla,fsd-pcie-phy
+> +
+> +  reg:
+> +    minItems: 2
 
+Drop minItems
+
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    minItems: 2
+> +    maxItems: 2
+
+Drop both.
+
+> +    items:
+> +      enum: [phy, pcs]
+
+Instead list items one after another.
+
+> +    description: |
+> +      phy is the register access to PMA layer
+> +      pcs is the register access to PCS layer
+
+These go to describing items in 'reg:'
+
+> +
+> +  phy-mode:
+> +    description: |
+> +      Defines the bifurcation mode of the PHY
+
+enum, probably type as well... phy-mode is usually a string. Is it here?
+
+> +
+> +  tesla,pmureg-phandle:
+
+Drop phandle, so tesla,pmu-syscon
+
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Drop quotes
+
+> +    description: phandle for PMU system controller interface used to
+> +                 control PMU register bits for PCIe PHY
+> +
+> +  tesla,pcie-sysreg:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Drop quotes
+
+> +    description: phandle for system control registers, used to
+> +                 control phy signals at system level
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+
+compatible first.
+
+> +  - reg
+> +  - reg-names
+> +  - phy-mode
+> +  - tesla,pmureg-phandle
+> +  - tesla,pcie-sysreg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    bus {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pcie_phy0: pcie-phy@15080000 {
+> +        compatible = "tesla,fsd-pcie-phy";
+> +        #phy-cells = <0>;
+> +        reg = <0x0 0x15080000 0x0 0x2000>, <0x0 0x150A0000 0x0 0x1000>;
+> +        reg-names = "phy", "pcs";
+> +        tesla,pmureg-phandle = <&pmu_system_controller>;
+> +        tesla,pcie-sysreg = <&sysreg_fsys0>;
+> +        phy-mode = <0>;
+> +        status = "disabled";
+
+Drop status
+
+> +      };
+> +    };
+> +...
+
+Best regards,
+Krzysztof
 
