@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0833963265B
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605B763265E
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:39:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231787AbiKUOjY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:39:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
+        id S230516AbiKUOjd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:39:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231584AbiKUOif (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:35 -0500
+        with ESMTP id S231593AbiKUOil (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:41 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A09C80D6;
-        Mon, 21 Nov 2022 06:38:13 -0800 (PST)
-Message-ID: <20221121091327.660407141@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E07C846F;
+        Mon, 21 Nov 2022 06:38:15 -0800 (PST)
+Message-ID: <20221121091327.713589628@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041492;
+        s=2020; t=1669041493;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=rFAZUOe7/xJ1t1dV08jaEyOugs45JE8N4r9GO+/5wfE=;
-        b=ezvKf5fvUsX4oJGcOgrhbx2M8TXP9jAhXcbTiYEYIUdqFahxvVZUWsuY4pV3OOi8M6XJAG
-        mtEdy5mKgjy0gDRQTGL6xSq8x0Yg9pLaUQnXHZ0ssnYSa7gg4O3DwzZl8zVz/yI/M0v2QA
-        h2eYGtai/tCJZ7eScTimwdi2MXphHi+Rryp+qIi9WisVFL12FL/rXUuDpxP6kPGPYCZ+7h
-        ox9TjvzNmk/S33U9G2ysjzxLeh6ukkMZAOPDS9OZuoKN7Z2Ej6NZSH5Dg4QsjOnZ5Apnxc
-        7dpX9ZgsECsx2uy9/6htMUmEYpg/66K2ST2qquMZT1BL/jxFmgCfWcISRZoKPQ==
+         references:references; bh=fGweWjopcEmhFfptqFTrW/NIWQ/1hQiFq3/Kny0SMZ4=;
+        b=0trFOjA/R44BZgXeMIkt/zQa2KLYiFV47dS2jCKICJRADEWo3P+4K45ud54/XltrjjP0pr
+        MDLf3zpmiqd7lmkbDv6vPaq1TcE6MpgRHzXv0Bb7i5hLDUW72+h5VmQwmVSVncl+/XpMKs
+        wR8xedSJng6RivjUrfpw6RkBH/PRmCeZ3eFRXA+Y3q2//RffGFdn24XVp5YimRek+J/dhM
+        D5+WSx78xnHdQxTIj5UaNqBFtZBZZ012TWHFJ568ehpMkBq/+39Hl7RCDs1LiRtcZISleS
+        lBerxyrCVYJOmX2Tu3fcws/i2IqK4RVELbISH7tvkLWlgV9JPxNp0meazhk1KA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041492;
+        s=2020e; t=1669041493;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=rFAZUOe7/xJ1t1dV08jaEyOugs45JE8N4r9GO+/5wfE=;
-        b=m1O4btEed4JHjpjaD4aBEz5/1H2XgJ3A/5QixpPORdr9GXi5MIiBHRTyy+X1361uqEon0G
-        R49NMyPn6V3kVbAQ==
+         references:references; bh=fGweWjopcEmhFfptqFTrW/NIWQ/1hQiFq3/Kny0SMZ4=;
+        b=1tH5asyB/T4QpgfzvDVzIhaPZE1I9+3rllXFlXeotjJXAOBr9MAPDa6wAdRRqPmydeLDPz
+        3+HngMWEkWKcRxCg==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -47,12 +47,13 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V2 21/33] genirq/msi: Provide msi_domain_alloc_irq_at()
+        Allen Hubbe <allenbh@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [patch V2 22/33] genirq/msi: Provide MSI_FLAG_MSIX_ALLOC_DYN
 References: <20221121083657.157152924@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:38:12 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:38:13 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,230 +63,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For supporting post MSI-X enable allocations and for the upcoming PCI/IMS
-support a seperate interface is required which allows not only the
-allocation of a specific index, but also the allocation of any, i.e. the
-next free index. The latter is especially required for IMS because IMS
-completely does away with index to functionality mappings which are
-often found in MSI/MSI-X implementation.
+Provide a new MSI feature flag in preparation for dynamic MSIX allocation
+after the initial MSI-X enable has been done.
 
-But even with MSI-X there are devices where only the first few indices have
-a fixed functionality and the rest is freely assignable by software,
-e.g. to queues.
+This needs to be an explicit MSI interrupt domain feature because quite
+some implementations (both interrupt domains and legacy allocation mode)
+have clear expectations that the allocation code is only invoked when MSI-X
+is about to be enabled. They either talk to hypervisors or do some other
+work and are not prepared to be invoked on an already MSI-X enabled device.
 
-msi_domain_alloc_irq_at() is also different from the range based interfaces
-as it always enforces that the MSI descriptor is allocated by the core code
-and not preallocated by the caller like the PCI/MSI[-X] enable code path
-does.
-
-msi_domain_alloc_irq_at() can be invoked with the index argument set to
-MSI_ANY_INDEX which makes the core code pick the next free index. The irq
-domain can provide a prepare_desc() operation callback in its
-msi_domain_ops to do domain specific post allocation initialization before
-the actual Linux interrupt and the associated interrupt descriptor and
-hierarchy alloccations are conducted.
-
-The function also takes an optional @cookie argument which is of type union
-msi_dev_cookie. This cookie is not used by the core code and is stored in
-the allocated msi_desc::data::cookie. The meaning of the cookie is
-completely implementation defined. In case of IMS this might be a PASID or
-a pointer to a device queue, but for the MSI core it's opaque and not used
-in any way.
-
-The function returns a struct msi_map which on success contains the
-allocated index number and the Linux interrupt number so the caller can
-spare the index to Linux interrupt number lookup.
-
-On failure map::index contains the error code and map::virq is 0.
+This is also explicit MSI-X only because rewriting the size of the MSI
+entries is only possible when disabling MSI which in turn might cause lost
+interrupts on the device.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
-V2: Fix the recursive allocation issue and the index calculation (Reinette)
----
- include/linux/msi.h     |    4 +
- include/linux/msi_api.h |    7 ++
- kernel/irq/msi.c        |  113 +++++++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 113 insertions(+), 11 deletions(-)
+ include/linux/msi.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -80,6 +80,7 @@ struct pci_dev;
- struct platform_msi_priv_data;
- struct device_attribute;
- struct irq_domain;
-+struct irq_affinity_desc;
- 
- void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
- #ifdef CONFIG_GENERIC_MSI_IRQ
-@@ -591,6 +592,9 @@ int msi_domain_alloc_irqs_range(struct d
- 				unsigned int first, unsigned int last);
- int msi_domain_alloc_irqs_all_locked(struct device *dev, unsigned int domid, int nirqs);
- 
-+struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, unsigned int index,
-+				       const struct irq_affinity_desc *affdesc,
-+				       union msi_instance_cookie *cookie);
- 
- void msi_domain_free_irqs_range_locked(struct device *dev, unsigned int domid,
- 				       unsigned int first, unsigned int last);
---- a/include/linux/msi_api.h
-+++ b/include/linux/msi_api.h
-@@ -48,6 +48,13 @@ struct msi_map {
- 	int	virq;
+@@ -546,7 +546,8 @@ enum {
+ 	MSI_FLAG_LEVEL_CAPABLE		= (1 << 18),
+ 	/* MSI-X entries must be contiguous */
+ 	MSI_FLAG_MSIX_CONTIGUOUS	= (1 << 19),
+-
++	/* PCI/MSI-X vectors can be dynamically allocated/freed post MSI-X enable */
++	MSI_FLAG_PCI_MSIX_ALLOC_DYN	= (1 << 20),
  };
  
-+/*
-+ * Constant to be used for dynamic allocations when the allocation
-+ * is any free MSI index (entry in the MSI-X table or a software
-+ * managed index.
-+ */
-+#define MSI_ANY_INDEX		UINT_MAX
-+
- unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index);
- 
  /**
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -40,6 +40,7 @@ static inline int msi_sysfs_create_group
- /* Invalid XA index which is outside of any searchable range */
- #define MSI_XA_MAX_INDEX	(ULONG_MAX - 1)
- #define MSI_XA_DOMAIN_SIZE	(MSI_MAX_INDEX + 1)
-+#define MSI_ANY_INDEX		UINT_MAX
- 
- static inline void msi_setup_default_irqdomain(struct device *dev, struct msi_device_data *md)
- {
-@@ -127,18 +128,34 @@ static int msi_insert_desc(struct device
- 	}
- 
- 	hwsize = msi_domain_get_hwsize(dev, domid);
--	if (index >= hwsize) {
--		ret = -ERANGE;
--		goto fail;
--	}
- 
--	desc->msi_index = index;
--	index += baseidx;
--	ret = xa_insert(&md->__store, index, desc, GFP_KERNEL);
--	if (ret)
--		goto fail;
--	return 0;
-+	if (index == MSI_ANY_INDEX) {
-+		struct xa_limit limit;
-+		unsigned int index;
-+
-+		limit.min = baseidx;
-+		limit.max = baseidx + hwsize - 1;
-+
-+		/* Let the xarray allocate a free index within the limits */
-+		ret = xa_alloc(&md->__store, &index, desc, limit, GFP_KERNEL);
-+		if (ret)
-+			goto fail;
- 
-+		desc->msi_index = index - baseidx;
-+		return 0;
-+	} else {
-+		if (index >= hwsize) {
-+			ret = -ERANGE;
-+			goto fail;
-+		}
-+
-+		desc->msi_index = index;
-+		index += baseidx;
-+		ret = xa_insert(&md->__store, index, desc, GFP_KERNEL);
-+		if (ret)
-+			goto fail;
-+		return 0;
-+	}
- fail:
- 	msi_free_desc(desc);
- 	return ret;
-@@ -333,7 +350,7 @@ int msi_setup_device_data(struct device
- 
- 	msi_setup_default_irqdomain(dev, md);
- 
--	xa_init(&md->__store);
-+	xa_init_flags(&md->__store, XA_FLAGS_ALLOC);
- 	mutex_init(&md->mutex);
- 	md->__iter_idx = MSI_XA_MAX_INDEX;
- 	dev->msi.data = md;
-@@ -1433,6 +1450,80 @@ int msi_domain_alloc_irqs_all_locked(str
- 	return msi_domain_alloc_locked(dev, &ctrl);
- }
- 
-+/**
-+ * msi_domain_alloc_irq_at - Allocate an interrupt from a MSI interrupt domain at
-+ *			     a given index - or at the next free index
-+ *
-+ * @dev:	Pointer to device struct of the device for which the interrupts
-+ *		are allocated
-+ * @domid:	Id of the interrupt domain to operate on
-+ * @index:	Index for allocation. If @index == %MSI_ANY_INDEX the allocation
-+ *		uses the next free index.
-+ * @affdesc:	Optional pointer to an interrupt affinity descriptor structure
-+ * @icookie:	Optional pointer to a domain specific per instance cookie. If
-+ *		non-NULL the content of the cookie is stored in msi_desc::data.
-+ *		Must be NULL for MSI-X allocations
-+ *
-+ * This requires a MSI interrupt domain which lets the core code manage the
-+ * MSI descriptors.
-+ *
-+ * Return: struct msi_map
-+ *
-+ *	On success msi_map::index contains the allocated index number and
-+ *	msi_map::virq the corresponding Linux interrupt number
-+ *
-+ *	On failure msi_map::index contains the error code and msi_map::virq
-+ *	is %0.
-+ */
-+struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, unsigned int index,
-+				       const struct irq_affinity_desc *affdesc,
-+				       union msi_instance_cookie *icookie)
-+{
-+	struct msi_ctrl ctrl = { .domid	= domid, .nirqs = 1, };
-+	struct msi_domain_info *info;
-+	struct irq_domain *domain;
-+	struct msi_map map = { };
-+	struct msi_desc *desc;
-+	int ret;
-+
-+	msi_lock_descs(dev);
-+	domain = msi_get_device_domain(dev, domid);
-+	if (!domain) {
-+		map.index = -ENODEV;
-+		goto unlock;
-+	}
-+
-+	desc = msi_alloc_desc(dev, 1, affdesc);
-+	if (!desc) {
-+		map.index = -ENOMEM;
-+		goto unlock;
-+	}
-+
-+	if (icookie)
-+		desc->data.icookie = *icookie;
-+
-+	ret = msi_insert_desc(dev, desc, domid, index);
-+	if (ret) {
-+		map.index = ret;
-+		goto unlock;
-+	}
-+
-+	ctrl.first = ctrl.last = desc->msi_index;
-+	info = domain->host_data;
-+
-+	ret = __msi_domain_alloc_irqs(dev, domain, &ctrl);
-+	if (ret) {
-+		map.index = ret;
-+		msi_domain_free_locked(dev, &ctrl);
-+	} else {
-+		map.index = desc->msi_index;
-+		map.virq = desc->irq;
-+	}
-+unlock:
-+	msi_unlock_descs(dev);
-+	return map;
-+}
-+
- static void __msi_domain_free_irqs(struct device *dev, struct irq_domain *domain,
- 				   struct msi_ctrl *ctrl)
- {
 
