@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FF1F6326B8
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F866326BC
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:48:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231587AbiKUOsU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:48:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40268 "EHLO
+        id S230020AbiKUOs0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:48:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232401AbiKUOr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:47:58 -0500
+        with ESMTP id S232474AbiKUOsH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:48:07 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E74D32B6;
-        Mon, 21 Nov 2022 06:41:57 -0800 (PST)
-Message-ID: <20221121140049.491212443@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E82D33A6;
+        Mon, 21 Nov 2022 06:42:04 -0800 (PST)
+Message-ID: <20221121140049.554212644@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041592;
+        s=2020; t=1669041593;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=MqSNqTk6zSn2/CxqHu1Zk5vIICcROEec5cXqFROUsAQ=;
-        b=MED9eLTLCMaP9JjgxDdnM9Qe91gAN0co/FhD3zsKDk9NXRDOHiuAGTbgsIe36YcEteUfzQ
-        kEMf1EH6oY52gflGi8LX0nB7hW73PWpue4PDsBbCOM9d7zxAUlVKEizRi0OnHpkCHIEA3W
-        DjMqfnm7IkBYxEA8RUfxd0BzaPZRJnplGWLPOgt/UJQTob7mWUMopMESTaZmmYnL8N1kE5
-        QSFlG2iLpZxFD7IpRLOya2HausK3SPiWj7dybx49JBRRKp2ER96ARqx+UqMmYoOOGgna0M
-        z/+JZPqZv+Pa0+5IdVSLPsBO7/PSMgi0qK5SQPEKmVHdlI7iI2lkwtuuqVPG6g==
+         references:references; bh=NtvhSh2f4pTpvLMutbIVG+VUzt3UJNiGBzd/l7fMSPA=;
+        b=Z5N/sHGsjnfi6DDzliH8qtM6HeDVck3w0BctoPEfXNynkAMuy2Npc6JzuOwLOOqf0YOqlf
+        VWq2L+gmLbsPY5++V7StXnignsjC/KMbjuiNJic9tC6jED3xPXYDXy0bp1csrkJdRiRzOn
+        n0t7ZxwtAL4zLhckmfMFq/vGLDpL72Uk1t3uK47QkwRuvmqxzTMC6Xtfz8vfp+dB97+RJt
+        Y7kJuMtujeFO6Y3Gz39/69J/9Y6IvTWYCUIqJo0tfQZ8B7bC+Sb/lW1/+rr434AL2hlOUL
+        Ty5FpxNqcI5yWmO98uXAMubZw3b4s2jNdJ77tCZLjiMaS8ituWDjGkcPkzjfbA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041592;
+        s=2020e; t=1669041593;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=MqSNqTk6zSn2/CxqHu1Zk5vIICcROEec5cXqFROUsAQ=;
-        b=Anqh6ewUZl0pXlAdjbqMgriIRD+DnvrtfkV6fSyBs6v4TKr+4HPdCWXH4A/aracjdB1JgF
-        Ja2c16USH0yTsGDw==
+         references:references; bh=NtvhSh2f4pTpvLMutbIVG+VUzt3UJNiGBzd/l7fMSPA=;
+        b=1Yg4NpVzVU8shkbIVZMX8eKsbg89c9jstPgn2SKiWDm1qg8XwZRA/NT6d7HDYVCtN5dicg
+        c4CcM2aqZO2WqHCQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
@@ -59,11 +59,11 @@ Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>
-Subject: [patch V2 19/40] genirq/msi: Split msi_domain_alloc_irq_at()
+Subject: [patch V2 20/40] genirq/msi: Provide BUS DEVICE_MSI_WIRED
 References: <20221121135653.208611233@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:39:52 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:39:53 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -73,130 +73,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In preparation for providing a special allocation function for wired
-interrupt which are connected to a wire to MSI bridge, split the inner
-workings of msi_domain_alloc_irq_at() out into a helper function so the
-code can be shared.
-
-No functional change.
+Provide a domain bus token for the upcoming support for wire to MSI device
+domains so the domain can be distinguished from regular device MSI domains.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/msi.c |   76 +++++++++++++++++++++++++++++++------------------------
- 1 file changed, 43 insertions(+), 33 deletions(-)
+ include/linux/irqdomain_defs.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -1465,34 +1465,10 @@ int msi_domain_alloc_irqs_all_locked(str
- 	return msi_domain_alloc_locked(dev, &ctrl);
- }
+--- a/include/linux/irqdomain_defs.h
++++ b/include/linux/irqdomain_defs.h
+@@ -27,6 +27,7 @@ enum irq_domain_bus_token {
+ 	DOMAIN_BUS_AMDVI,
+ 	DOMAIN_BUS_PCI_DEVICE_IMS,
+ 	DOMAIN_BUS_DEVICE_IMS,
++	DOMAIN_BUS_WIRED_TO_MSI,
+ };
  
--/**
-- * msi_domain_alloc_irq_at - Allocate an interrupt from a MSI interrupt domain at
-- *			     a given index - or at the next free index
-- *
-- * @dev:	Pointer to device struct of the device for which the interrupts
-- *		are allocated
-- * @domid:	Id of the interrupt domain to operate on
-- * @index:	Index for allocation. If @index == %MSI_ANY_INDEX the allocation
-- *		uses the next free index.
-- * @affdesc:	Optional pointer to an interrupt affinity descriptor structure
-- * @icookie:	Optional pointer to a domain specific per instance cookie. If
-- *		non-NULL the content of the cookie is stored in msi_desc::data.
-- *		Must be NULL for MSI-X allocations
-- *
-- * This requires a MSI interrupt domain which lets the core code manage the
-- * MSI descriptors.
-- *
-- * Return: struct msi_map
-- *
-- *	On success msi_map::index contains the allocated index number and
-- *	msi_map::virq the corresponding Linux interrupt number
-- *
-- *	On failure msi_map::index contains the error code and msi_map::virq
-- *	is %0.
-- */
--struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, unsigned int index,
--				       const struct irq_affinity_desc *affdesc,
--				       union msi_instance_cookie *icookie)
-+static struct msi_map __msi_domain_alloc_irq_at(struct device *dev, unsigned int domid,
-+						unsigned int index,
-+						const struct irq_affinity_desc *affdesc,
-+						union msi_instance_cookie *icookie)
- {
- 	struct msi_ctrl ctrl = { .domid	= domid, .nirqs = 1, };
- 	struct msi_domain_info *info;
-@@ -1501,17 +1477,16 @@ struct msi_map msi_domain_alloc_irq_at(s
- 	struct msi_desc *desc;
- 	int ret;
- 
--	msi_lock_descs(dev);
- 	domain = msi_get_device_domain(dev, domid);
- 	if (!domain) {
- 		map.index = -ENODEV;
--		goto unlock;
-+		return map;
- 	}
- 
- 	desc = msi_alloc_desc(dev, 1, affdesc);
- 	if (!desc) {
- 		map.index = -ENOMEM;
--		goto unlock;
-+		return map;
- 	}
- 
- 	if (icookie)
-@@ -1520,7 +1495,7 @@ struct msi_map msi_domain_alloc_irq_at(s
- 	ret = msi_insert_desc(dev, desc, domid, index);
- 	if (ret) {
- 		map.index = ret;
--		goto unlock;
-+		return map;
- 	}
- 
- 	ctrl.first = ctrl.last = desc->msi_index;
-@@ -1534,7 +1509,42 @@ struct msi_map msi_domain_alloc_irq_at(s
- 		map.index = desc->msi_index;
- 		map.virq = desc->irq;
- 	}
--unlock:
-+	return map;
-+}
-+
-+/**
-+ * msi_domain_alloc_irq_at - Allocate an interrupt from a MSI interrupt domain at
-+ *			     a given index - or at the next free index
-+ *
-+ * @dev:	Pointer to device struct of the device for which the interrupts
-+ *		are allocated
-+ * @domid:	Id of the interrupt domain to operate on
-+ * @index:	Index for allocation. If @index == %MSI_ANY_INDEX the allocation
-+ *		uses the next free index.
-+ * @affdesc:	Optional pointer to an interrupt affinity descriptor structure
-+ * @icookie:	Optional pointer to a domain specific per instance cookie. If
-+ *		non-NULL the content of the cookie is stored in msi_desc::data.
-+ *		Must be NULL for MSI-X allocations
-+ *
-+ * This requires a MSI interrupt domain which lets the core code manage the
-+ * MSI descriptors.
-+ *
-+ * Return: struct msi_map
-+ *
-+ *	On success msi_map::index contains the allocated index number and
-+ *	msi_map::virq the corresponding Linux interrupt number
-+ *
-+ *	On failure msi_map::index contains the error code and msi_map::virq
-+ *	is %0.
-+ */
-+struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, unsigned int index,
-+				       const struct irq_affinity_desc *affdesc,
-+				       union msi_instance_cookie *icookie)
-+{
-+	struct msi_map map;
-+
-+	msi_lock_descs(dev);
-+	map = __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
- 	msi_unlock_descs(dev);
- 	return map;
- }
+ #endif /* _LINUX_IRQDOMAIN_DEFS_H */
 
