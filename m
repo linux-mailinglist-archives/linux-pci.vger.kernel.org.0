@@ -2,145 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D366632B87
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:54:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D276D632BEE
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 19:18:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229843AbiKURyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 12:54:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        id S230390AbiKUSS3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 13:18:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiKURyX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:54:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95BAA26FE
-        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 09:54:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230291AbiKUSS1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 13:18:27 -0500
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122F0C72D0;
+        Mon, 21 Nov 2022 10:18:25 -0800 (PST)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.1.0)
+ id f83118289e0b1ce8; Mon, 21 Nov 2022 19:18:22 +0100
+Received: from kreacher.localnet (unknown [213.134.163.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27F1161374
-        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 17:54:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C840C433C1;
-        Mon, 21 Nov 2022 17:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669053261;
-        bh=U9GAbtKpbOcEGLHkAF6EWI2FRUiJLfEVdQD+b+Wb5eU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MPrAh8ZzZd5mogOZOqsn73sV9OB8etDQMMfVPvDn7qqBCG0Pv0oFPe+tylGqoNdT8
-         vvumMWJt6KxxzTDfLholqVEuICF0jlm9xIqTNwBgxxjv4lBuki605job3dhGRfnp6q
-         dYlzfEwiMM8p9hjJvAWFFQ0X4sbgomgwKp/AQThQPTayINHxa8v8EVVv1mDoanQ4e0
-         P1sruwrhrEVqvferJMRlqoIwpSw5m9q+gfUdYVegVIhuY1LA5+HaXzrohpnRKUbwwb
-         ft75ZpQTmbhb8ij3McoAHidQ2QCTqO7lzyuk2iC+xl5ODpUkoV11qT6+qTjDWgRYb1
-         y2Bgrl7x5drgw==
-Date:   Mon, 21 Nov 2022 11:54:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Francisco Blas Izquierdo Riera <klondike@klondike.es>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev
-Subject: Re: [PATCH v2] PCI: Add DMA alias for Intel Corporation 8 Series HECI
-Message-ID: <20221121175419.GA122359@bhelgaas>
+        by v370.home.net.pl (Postfix) with ESMTPSA id 200C7780F76;
+        Mon, 21 Nov 2022 19:18:22 +0100 (CET)
+Authentication-Results: v370.home.net.pl; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: v370.home.net.pl; spf=fail smtp.mailfrom=rjwysocki.net
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v1 0/2] PCI: hotplug: Add checks to avoid doing hotplug on PCIe Upstream Ports
+Date:   Mon, 21 Nov 2022 19:13:15 +0100
+Message-ID: <5623410.DvuYhMxLoT@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221121164037.8C73110BB536@smtp.xiscosoft.net>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 213.134.163.140
+X-CLIENT-HOSTNAME: 213.134.163.140
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvgedrheeigdduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppedvudefrddufeegrdduieefrddugedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudeifedrudegtddphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepkedprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgurhhighhordhvihhvihesihhnthgvlhdrtghomhdprhgtphhtthhopehluhhkrghsseifuhhnnhgvrhdruggvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgv
+ rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Jarkko, Tomas, Alexander; can any of you confirm this behavior of
-the HECI device?  Are there any other HECI devices that should be
-included in this quirk?]
+Hi All,
 
-[+cc David, Lu, iommu list]
+PCIe Upstream Ports are not hotplug-capable by definition, but it turns out
+that in some cases, if the system is configured in a particularly interesting
+way, the kernel may be made attempt to operate an Upstream Port as a hotplug
+one which causes functional issues to appear.
 
-On Mon, Nov 21, 2022 at 05:40:37PM +0100, Francisco Blas Izquierdo Riera wrote:
-> PCI: Add function 7 DMA alias quirk for Intel Corporation 8 Series HECI.
-> 
-> Intel Corporation 8 Series HECIs include support for a CRB TPM 2.0
-> device. When the device is enabled on the BIOS, the TPM 2.0 device is
-> detected but the IOMMU prevents it from being accessed.
-> 
-> Even on a computer with a fixed DMAR table, device initialization
-> fails with DMA errors:
->   DMAR: DRHD: handling fault status reg 3
->   DMAR: [DMA Read NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x06] PTE Read access is not set
->   DMAR: DRHD: handling fault status reg 2
->   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
->   DMAR: DRHD: handling fault status reg 2
->   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
->   tpm tpm0: Operation Timed out
->   DMAR: DRHD: handling fault status reg 3
->   tpm tpm0: Operation Timed out
->   tpm_crb: probe of MSFT0101:00 failed with error -62
-> 
-> After patching the DMAR table and adding this patch, the TPM 2.0
-> device is initialized correctly and no DMA errors appear. Accessing
-> the TPM 2.0 PCR banks also works as expected.
+The following 2 patches amend the code to prevent this behavior from occurring.
 
-Francisco, is the DMAR patch *also* required?  We have several similar
-quirks for devices that use unexpected function numbers, but I don't
-remember any that require DMAR changes.
+Thanks!
 
-A kernel quirk requires no action on the part of users, so that's
-easy.  But I don't think it's practical for ordinary users to extract
-the DMAR, disassemble it, patch it, recompile it, and update the
-initramfs as described in your blog post.
 
-Is there a way to add a kernel quirk to accomplish the same DMAR
-override?
 
-> Since most Haswell computers supporting this do not seem to have a
-> valid DMAR table patching the table with an appropriate RMRR is
-> usually also needed. I have published a blogpost describing the
-> process.
-> 
-> This patch currently adds the alias only for function 0. Since this
-> is the only function I have seen provided by the HECI on actual
-> hardware.
-> 
-> 
-> V2: Resent using a sendmail to fix tab mangling made by Thunderbird.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=108251
-> Link: https://klondike.es/klog/2022/11/21/patching-the-acpi-dmar-table-to-allow-tpm2-0/
-> Reported-by: Pierre Chifflier <chifflier@gmail.com>
-> Tested-by: Francisco Blas Izquierdo Riera (klondike) <klondike@klondike.es>
-> Signed-off-by: Francisco Blas Izquierdo Riera <klondike@klondike.es>
-> Suggested-by: Baolu Lu <baolu.lu@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: stable@vger.kernel.org
-> 
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4162,6 +4162,22 @@
->  			 0x0122, /* Plextor M6E (Marvell 88SS9183)*/
->  			 quirk_dma_func1_alias);
->  
-> +static void quirk_dma_func7_alias(struct pci_dev *dev)
-> +{
-> +	if (PCI_FUNC(dev->devfn) == 0)
-> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 7), 1);
-> +}
-> +
-> +/*
-> + * Certain HECIs in Haswell systems support TPM 2.0. Unfortunately they
-> + * perform DMA using the hidden function 7. Fixing this requires this
-> + * alias and a patch of the DMAR ACPI table to include the appropriate
-> + *  MTRR.
-> + * https://bugzilla.kernel.org/show_bug.cgi?id=108251
-> + */
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9c3a,
-> +			 quirk_dma_func7_alias);
-> +
->  /*
->   * Some devices DMA with the wrong devfn, not just the wrong function.
->   * quirk_fixed_dma_alias() uses this table to create fixed aliases, where
