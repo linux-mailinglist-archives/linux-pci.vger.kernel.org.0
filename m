@@ -2,35 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47E2632292
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:44:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6754632295
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbiKUMoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 07:44:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
+        id S230350AbiKUMoT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 07:44:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbiKUMoM (ORCPT
+        with ESMTP id S230398AbiKUMoM (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 07:44:12 -0500
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC192BF833;
-        Mon, 21 Nov 2022 04:44:10 -0800 (PST)
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AEF3BF838;
+        Mon, 21 Nov 2022 04:44:11 -0800 (PST)
 X-IronPort-AV: E=Sophos;i="5.96,181,1665414000"; 
-   d="scan'208";a="143416640"
+   d="scan'208";a="140756684"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 21 Nov 2022 21:44:09 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 21 Nov 2022 21:44:09 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3C3284923703;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 56F4349236FB;
         Mon, 21 Nov 2022 21:44:09 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
         bhelgaas@google.com, krzk+dt@kernel.org
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v7 2/9] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-Date:   Mon, 21 Nov 2022 21:43:53 +0900
-Message-Id: <20221121124400.1282768-3-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v7 3/9] PCI: Add PCI_EXP_LNKCAP_MLW macros
+Date:   Mon, 21 Nov 2022 21:43:54 +0900
+Message-Id: <20221121124400.1282768-4-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
@@ -44,112 +43,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-PCIe endpoint module.
+Add macros defining Maximum Link Width bits in Link Capabilities
+Register.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- .../bindings/pci/rcar-gen4-pci-ep.yaml        | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ include/uapi/linux/pci_regs.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-new file mode 100644
-index 000000000000..4b10d67e4336
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2022 Renesas Electronics Corp.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car Gen4 PCIe Endpoint
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+allOf:
-+  - $ref: snps,dw-pcie-ep.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
-+      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
-+
-+  reg:
-+    maxItems: 4
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: atu
-+      - const: appl
-+      - const: addr_space
-+
-+  interrupts:
-+    maxItems: 3
-+
-+  interrupt-names:
-+    items:
-+      - const: dma
-+      - const: sft_ce
-+      - const: app
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  max-link-speed: true
-+
-+  num-lanes: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - resets
-+  - power-domains
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a779f0-sysc.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0_ep: pcie-ep@e65d0000 {
-+            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep";
-+            reg = <0 0xe65d0000 0 0x1000>, <0 0xe65d1000 0 0x1000>,
-+                  <0 0xe65d3000 0 0x2000>, <0 0xfe000000 0 0x400000>;
-+            reg-names = "dbi", "atu", "appl", "addr_space";
-+            interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "dma", "sft_ce", "app";
-+            clocks = <&cpg CPG_MOD 624>;
-+            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-+            resets = <&cpg 624>;
-+            num-lanes = <2>;
-+            max-link-speed = <2>;
-+        };
-+    };
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 1c3591c8e09e..31216c6a07ad 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -538,6 +538,12 @@
+ #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
+ #define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
+ #define  PCI_EXP_LNKCAP_SLS_64_0GB 0x00000006 /* LNKCAP2 SLS Vector bit 5 */
++#define  PCI_EXP_LNKCAP_MLW_X1	0x00000010 /* Maximum Link Width x1 */
++#define  PCI_EXP_LNKCAP_MLW_X2	0x00000020 /* Maximum Link Width x2 */
++#define  PCI_EXP_LNKCAP_MLW_X4	0x00000040 /* Maximum Link Width x4 */
++#define  PCI_EXP_LNKCAP_MLW_X8	0x00000080 /* Maximum Link Width x8 */
++#define  PCI_EXP_LNKCAP_MLW_X12	0x000000c0 /* Maximum Link Width x12 */
++#define  PCI_EXP_LNKCAP_MLW_X16	0x00000100 /* Maximum Link Width x16 */
+ #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
+ #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
+ #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
 -- 
 2.25.1
 
