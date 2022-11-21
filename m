@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E68E632607
+	by mail.lfdr.de (Postfix) with ESMTP id A4581632608
 	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:36:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiKUOgt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229990AbiKUOgt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 21 Nov 2022 09:36:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231200AbiKUOgh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:36:37 -0500
+        with ESMTP id S231214AbiKUOgi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:36:38 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BEBC80EF;
-        Mon, 21 Nov 2022 06:36:21 -0800 (PST)
-Message-ID: <20221121083325.573428885@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B39C80F2;
+        Mon, 21 Nov 2022 06:36:22 -0800 (PST)
+Message-ID: <20221121083325.630349797@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041379;
+        s=2020; t=1669041381;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=XzEU6xpUtYERldMqsji8DXGQ2kRnY83P6uKMpYacBXc=;
-        b=dU8Pv1A3KUHAjBDxJCqRcuMbTTS80Mc9lLCZK9YTQfwuRkQG4KnB7JSpzEEgcazLqmhi+l
-        GFCfaHXM2ER96zq2r0Xi+UM6H83wimW9tR1zE0vhzqSSi4NafFsz5bXbM6dGdsJjKUdiPx
-        rxgIb4NqlHDYu0592wWnTFdv4mbSy03cWeWNDvBL+pvlybHGuLYmN0vhriVCH3Xs2/BNkJ
-        h8wQunObOJceMdqn2Welwg5gVQdLuBmt6tqUdE4sHj1l8SVXSLRtVlvtBJyViyV7+vsfdP
-        dXdBwDLc/hp01ZyPTMzJPIOV6fandAXVQhzMthGzYTDX3Cs8eh6S5AS4/cVfDw==
+         references:references; bh=E6KtSq0yDLolu/6n+fAhU+2bN1LDYJtV3H1STAwY1WQ=;
+        b=Nt0tprtlmlqk2lf7EOvYegqH2iEYraQbuzbummDc3Ly5HJJlma5z7AHRanIBlbOHqYYKM2
+        xbVNXqsX5zjzJKnMBGrgV9LwnoA0jNJv5liQy0PbjXO69LClOTedsIA99AeHbXzcP4AocU
+        GtuZCnEi6zeFFU/eFrmNZLzSTn+HIs9Kt/T8RbNLz1Tz9j+MyhNu0sgZJQ6NCVmV4c/wsx
+        WVCEsqfgGh31lwBB0dwS5jyWuakisVDNUnPDGAJsDFhKBtj8sAMF2QVAebOYl7E9kAJM8/
+        qUuf3Qs28jJU7LcnuhtocUQ2l5YsQB7nBfa+/qHM2L1xXPGfsOmI0HeUllYyzQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041379;
+        s=2020e; t=1669041381;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=XzEU6xpUtYERldMqsji8DXGQ2kRnY83P6uKMpYacBXc=;
-        b=9Rk1Rpr8yUYA05RyCHr0jXkegrQlwrh5f3aqgh5NaQ1HphRHReVuGD6lvPq8XCdKSk5c6w
-        mIaWKFsPb4X/QqDA==
+         references:references; bh=E6KtSq0yDLolu/6n+fAhU+2bN1LDYJtV3H1STAwY1WQ=;
+        b=oVMdpkcOMrzUphf3qTmecZ9EKyRBFky6Tvp/k05MIcbTxFWCqJJazJ8RH+9yMine/iNcAv
+        9UEeYShYlfJ5jCAA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -47,13 +47,12 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [patch V2 01/21] genirq/msi: Move IRQ_DOMAIN_MSI_NOMASK_QUIRK to MSI flags
+        Allen Hubbe <allenbh@gmail.com>
+Subject: [patch V2 02/21] genirq/irqdomain: Make struct irqdomain readable
 References: <20221121083210.309161925@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:36:19 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:36:20 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -63,83 +62,109 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It's truly a MSI only flag and for the upcoming per device MSI domains this
-must be in the MSI flags so it can be set during domain setup without
-exposing this quirk outside of x86.
+Tabular alignment of both kernel-doc and the actual struct declaration make
+visual parsing way more conveniant.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
- arch/x86/kernel/apic/msi.c |    5 ++---
- include/linux/irqdomain.h  |    9 +--------
- include/linux/msi.h        |    6 ++++++
- kernel/irq/msi.c           |    2 +-
- 4 files changed, 10 insertions(+), 12 deletions(-)
+V2: Split out from the irqdomain::dev rename patch (Jason)
+---
+ include/linux/irqdomain.h |   74 +++++++++++++++++++++++-----------------------
+ 1 file changed, 37 insertions(+), 37 deletions(-)
 
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -176,7 +176,8 @@ static struct msi_domain_ops pci_msi_dom
- 
- static struct msi_domain_info pci_msi_domain_info = {
- 	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--			  MSI_FLAG_PCI_MSIX,
-+			  MSI_FLAG_PCI_MSIX | MSI_FLAG_NOMASK_QUIRK,
-+
- 	.ops		= &pci_msi_domain_ops,
- 	.chip		= &pci_msi_controller,
- 	.handler	= handle_edge_irq,
-@@ -200,8 +201,6 @@ struct irq_domain * __init native_create
- 	if (!d) {
- 		irq_domain_free_fwnode(fn);
- 		pr_warn("Failed to initialize PCI-MSI irqdomain.\n");
--	} else {
--		d->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
- 	}
- 	return d;
- }
 --- a/include/linux/irqdomain.h
 +++ b/include/linux/irqdomain.h
-@@ -186,15 +186,8 @@ enum {
- 	/* Irq domain implements MSI remapping */
- 	IRQ_DOMAIN_FLAG_MSI_REMAP	= (1 << 5),
+@@ -117,53 +117,53 @@ struct irq_domain_chip_generic;
  
--	/*
--	 * Quirk to handle MSI implementations which do not provide
--	 * masking. Currently known to affect x86, but partially
--	 * handled in core code.
--	 */
--	IRQ_DOMAIN_MSI_NOMASK_QUIRK	= (1 << 6),
--
- 	/* Irq domain doesn't translate anything */
--	IRQ_DOMAIN_FLAG_NO_MAP		= (1 << 7),
-+	IRQ_DOMAIN_FLAG_NO_MAP		= (1 << 6),
+ /**
+  * struct irq_domain - Hardware interrupt number translation object
+- * @link: Element in global irq_domain list.
+- * @name: Name of interrupt domain
+- * @ops: pointer to irq_domain methods
+- * @host_data: private data pointer for use by owner.  Not touched by irq_domain
+- *             core code.
+- * @flags: host per irq_domain flags
+- * @mapcount: The number of mapped interrupts
++ * @link:	Element in global irq_domain list.
++ * @name:	Name of interrupt domain
++ * @ops:	Pointer to irq_domain methods
++ * @host_data:	Private data pointer for use by owner.  Not touched by irq_domain
++ *		core code.
++ * @flags:	Per irq_domain flags
++ * @mapcount:	The number of mapped interrupts
+  *
+- * Optional elements
+- * @fwnode: Pointer to firmware node associated with the irq_domain. Pretty easy
+- *          to swap it for the of_node via the irq_domain_get_of_node accessor
+- * @gc: Pointer to a list of generic chips. There is a helper function for
+- *      setting up one or more generic chips for interrupt controllers
+- *      drivers using the generic chip library which uses this pointer.
+- * @dev: Pointer to a device that the domain represent, and that will be
+- *       used for power management purposes.
+- * @parent: Pointer to parent irq_domain to support hierarchy irq_domains
++ * Optional elements:
++ * @fwnode:	Pointer to firmware node associated with the irq_domain. Pretty easy
++ *		to swap it for the of_node via the irq_domain_get_of_node accessor
++ * @gc:		Pointer to a list of generic chips. There is a helper function for
++ *		setting up one or more generic chips for interrupt controllers
++ *		drivers using the generic chip library which uses this pointer.
++ * @dev:	Pointer to a device that can be utilized for power management
++ *		purposes related to the irq domain.
++ * @parent:	Pointer to parent irq_domain to support hierarchy irq_domains
+  *
+- * Revmap data, used internally by irq_domain
+- * @revmap_size: Size of the linear map table @revmap[]
+- * @revmap_tree: Radix map tree for hwirqs that don't fit in the linear map
+- * @revmap_mutex: Lock for the revmap
+- * @revmap: Linear table of irq_data pointers
++ * Revmap data, used internally by the irq domain code:
++ * @revmap_size:	Size of the linear map table @revmap[]
++ * @revmap_tree:	Radix map tree for hwirqs that don't fit in the linear map
++ * @revmap_mutex:	Lock for the revmap
++ * @revmap:		Linear table of irq_data pointers
+  */
+ struct irq_domain {
+-	struct list_head link;
+-	const char *name;
+-	const struct irq_domain_ops *ops;
+-	void *host_data;
+-	unsigned int flags;
+-	unsigned int mapcount;
++	struct list_head		link;
++	const char			*name;
++	const struct irq_domain_ops	*ops;
++	void				*host_data;
++	unsigned int			flags;
++	unsigned int			mapcount;
  
- 	/*
- 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -399,6 +399,12 @@ enum {
- 	MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS	= (1 << 9),
- 	/* Free MSI descriptors */
- 	MSI_FLAG_FREE_MSI_DESCS		= (1 << 10),
-+	/*
-+	 * Quirk to handle MSI implementations which do not provide
-+	 * masking. Currently known to affect x86, but has to be partially
-+	 * handled in the core MSI code.
-+	 */
-+	MSI_FLAG_NOMASK_QUIRK		= (1 << 11),
+ 	/* Optional data */
+-	struct fwnode_handle *fwnode;
+-	enum irq_domain_bus_token bus_token;
+-	struct irq_domain_chip_generic *gc;
+-	struct device *dev;
++	struct fwnode_handle		*fwnode;
++	enum irq_domain_bus_token	bus_token;
++	struct irq_domain_chip_generic	*gc;
++	struct device			*dev;
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+-	struct irq_domain *parent;
++	struct irq_domain		*parent;
+ #endif
+ 
+ 	/* reverse map data. The linear map gets appended to the irq_domain */
+-	irq_hw_number_t hwirq_max;
+-	unsigned int revmap_size;
+-	struct radix_tree_root revmap_tree;
+-	struct mutex revmap_mutex;
+-	struct irq_data __rcu *revmap[];
++	irq_hw_number_t			hwirq_max;
++	unsigned int			revmap_size;
++	struct radix_tree_root		revmap_tree;
++	struct mutex			revmap_mutex;
++	struct irq_data __rcu		*revmap[];
  };
  
- int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -875,7 +875,7 @@ static int __msi_domain_alloc_irqs(struc
- 		 * MSI affinity setting requires a special quirk (X86) when
- 		 * reservation mode is active.
- 		 */
--		if (domain->flags & IRQ_DOMAIN_MSI_NOMASK_QUIRK)
-+		if (info->flags & MSI_FLAG_NOMASK_QUIRK)
- 			vflags |= VIRQ_NOMASK_QUIRK;
- 	}
- 
+ /* Irq domain flags */
 
