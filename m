@@ -2,123 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BAAA63276C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 16:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B59F6327AA
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 16:17:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232031AbiKUPLJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 10:11:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
+        id S232158AbiKUPRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 10:17:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232053AbiKUPKx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 10:10:53 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B895CBE252;
-        Mon, 21 Nov 2022 07:03:12 -0800 (PST)
-Received: from zn.tnic (p200300ea9733e725329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e725:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 45E7E1EC064C;
-        Mon, 21 Nov 2022 16:03:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1669042991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ad0xyJQtRuj2l0HKhWgNpGUpnSMGJ0sK9iQrDE+ZQ9k=;
-        b=UxVYoF3Ez3k9aL2h4PQRxGYz0bNOj11by8YRTCWsFJS4EMjNk4OCRpnme2Scpi73L/9qlf
-        IbNFDMlblbgrdYpZBKjhcf3pXJPR5glZBVzvEMcTFrrAYXrhOqK8c7sDEXcYzkH5YxdjyL
-        AvxLtCqL6o1513540e1ijOqmzdvqdA8=
-Date:   Mon, 21 Nov 2022 16:03:07 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
-        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
-        mingo@redhat.com, dave.hansen@linux.intel.com,
-        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
-        isaku.yamahata@intel.com, dan.j.williams@intel.com,
-        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-        iommu@lists.linux.dev
-Subject: Re: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use
- standard coco mechanisms
-Message-ID: <Y3uTK3rBV6eXSJnC@zn.tnic>
-References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
- <1668624097-14884-8-git-send-email-mikelley@microsoft.com>
+        with ESMTP id S232193AbiKUPR1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 10:17:27 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 55FD1D70;
+        Mon, 21 Nov 2022 07:13:48 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34DF91FB;
+        Mon, 21 Nov 2022 07:13:54 -0800 (PST)
+Received: from [10.57.71.118] (unknown [10.57.71.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF31F3F73B;
+        Mon, 21 Nov 2022 07:13:43 -0800 (PST)
+Message-ID: <4a2836d6-3088-c513-7541-be7c8a0464a5@arm.com>
+Date:   Mon, 21 Nov 2022 15:13:38 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1668624097-14884-8-git-send-email-mikelley@microsoft.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [patch V2 02/40] ACPI/IORT: Make prototype of
+ iort_pmsi_get_dev_id() always available
+Content-Language: en-GB
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+References: <20221121135653.208611233@linutronix.de>
+ <20221121140048.408064684@linutronix.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20221121140048.408064684@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 10:41:30AM -0800, Michael Kelley wrote:
-> Hyper-V guests on AMD SEV-SNP hardware have the option of using the
-> "virtual Top Of Memory" (vTOM) feature specified by the SEV-SNP
-> architecture. With vTOM, shared vs. private memory accesses are
-> controlled by splitting the guest physical address space into two
-> halves.  vTOM is the dividing line where the uppermost bit of the
-> physical address space is set; e.g., with 47 bits of guest physical
-> address space, vTOM is 0x40000000000 (bit 46 is set).  Guest phyiscal
+On 2022-11-21 14:39, Thomas Gleixner wrote:
+> W=1 build complains:
+> 
+> drivers/irqchip/irq-gic-v3-its-msi-parent.c:110:12: warning: no previous prototype for function 'iort_pmsi_get_dev_id' [-Wmissing-prototypes]
+>     int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
+> 
+> Reported-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> ---
+>   include/linux/acpi_iort.h |    4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> --- a/include/linux/acpi_iort.h
+> +++ b/include/linux/acpi_iort.h
+> @@ -26,13 +26,15 @@ int iort_register_domain_token(int trans
+>   			       struct fwnode_handle *fw_node);
+>   void iort_deregister_domain_token(int trans_id);
+>   struct fwnode_handle *iort_find_domain_token(int trans_id);
+> +
+> +int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
+> +
+>   #ifdef CONFIG_ACPI_IORT
+>   void acpi_iort_init(void);
+>   u32 iort_msi_map_id(struct device *dev, u32 id);
+>   struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
+>   					  enum irq_domain_bus_token bus_token);
+>   void acpi_configure_pmsi_domain(struct device *dev);
+> -int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
 
-Unknown word [phyiscal] in commit message.
-Suggestions: ['physical', 'physically', ... ]
+FWIW I'd prefer to add a "return -ENODEV" stub in the #else section to 
+match the others.
 
-Please introduce a spellchecker into your patch creation workflow.
+<wonders why this was inconsistent to begin with, goes off to dig 
+through Git history...>
 
-...
+Oh hey, then we could also finally make good on that 6-year-old promise 
+that "The weak function will be removed when the ACPI counterpart is 
+merged." :)
 
-> @@ -108,6 +115,7 @@ u64 cc_mkenc(u64 val)
->  	switch (vendor) {
->  	case CC_VENDOR_AMD:
->  		return val | cc_mask;
-> +	case CC_VENDOR_HYPERV:
->  	case CC_VENDOR_INTEL:
->  		return val & ~cc_mask;
->  	default:
-> @@ -121,6 +129,7 @@ u64 cc_mkdec(u64 val)
->  	switch (vendor) {
->  	case CC_VENDOR_AMD:
->  		return val & ~cc_mask;
-> +	case CC_VENDOR_HYPERV:
->  	case CC_VENDOR_INTEL:
->  		return val | cc_mask;
->  	default:
+Thanks,
+Robin.
 
-Uuuh, this needs a BIG FAT COMMENT.
-
-You're running on SNP and yet the enc/dec meaning is flipped. And that's
-because of vTOM.
-
-What happens if you have other types of SNP-based VMs on HyperV? The
-isolation VMs thing? Or is that the same?
-
-What happens when you do TDX guests with HyperV?
-
-This becomes wrong then.
-
-I think you need a more finer-grained check here in the sense of "is it
-a HyperV guest using a paravisor and vTOM is enabled" or so.
-
-Otherwise, I like the removal of the HyperV-specific checks ofc.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>   void iort_get_rmr_sids(struct fwnode_handle *iommu_fwnode,
+>   		       struct list_head *head);
+>   void iort_put_rmr_sids(struct fwnode_handle *iommu_fwnode,
+> 
