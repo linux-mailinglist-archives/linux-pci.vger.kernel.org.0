@@ -2,36 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 539496326A6
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:46:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADD9E6326B7
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:48:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229664AbiKUOqm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:46:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
+        id S231649AbiKUOsX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:48:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbiKUOqV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:46:21 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E558D22B4;
-        Mon, 21 Nov 2022 06:40:45 -0800 (PST)
-Message-ID: <20221121140048.408064684@linutronix.de>
+        with ESMTP id S231618AbiKUOo4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:44:56 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830EBD06CA;
+        Mon, 21 Nov 2022 06:39:57 -0800 (PST)
+Message-ID: <20221121140048.470680255@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041571;
+        s=2020; t=1669041572;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=v7+zNHMDfnt2h0cuevH6G6rdERYSvXaLiJHEl/OPzRA=;
-        b=BK7De0GLyVdGt+ID5l/O8FDKaONmeeUqA1jGGC8SJis6fg6lt/hJJ1L4RE/wNxW67UPbKI
-        4FQAYyqw1uNwL3wu59yoEUlBDq1c/9skFCW4hX8z6s4NEf812J+MCf+fkPCnwrgABn2qCN
-        qJyWhdvCjWe28OCL7Crb2rrYqeViTYCyQFekZkPcPPYV5HHv/Nwc/BnAdTxeoC4WpgPVDM
-        V8Wsr7HK9ajfXvDEnyFNAiz+AzgyZP2ez3hAwxdKds2PGmoHHxZgOdC8zBMcwuATRP9Mid
-        OO0YYe0zIugwl2Lb7Jf72lPPxP/kuOSFhj5ExQs+rCDpeGAtW1KuTnuy4wYxzQ==
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=Hb3esJ7fn5+7hYW7Y+IG4ff4JCmYbRpqleme76TiWY0=;
+        b=WQdEFCP8WDLyVaqrmSMhWCpNYPxAJ7d95BE1qWFNeILuZ7WI5vbr6YOMqnI1+W9Wgg9IzA
+        csn49rU5fXRJiQnpkTwYWBxod8cNsEATAzQ6M5+NLx34W2s2CqM0AAs4+L9W9qWddJ2FzD
+        QGE/fz12qkjlOsbNEqibWlfJrqLZzHdUkRycUvhHb66DC35HNk8dhRJ3IkB5/VR2YMPqVV
+        E4tQSxLRpa5pZxDHtpcS4XGXTFqswUG5w5PLtcyk3T6Jl6wZNJDawmN7d8Bi27AE4opyYq
+        okzzlx/fTp+rSfg6iTojRN6V2gbvdy4ZrcVjRlPTKBckVUrGj4T+aP+x/exREw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041571;
+        s=2020e; t=1669041572;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=v7+zNHMDfnt2h0cuevH6G6rdERYSvXaLiJHEl/OPzRA=;
-        b=txp+8IF2ph3rlWD25/rWQf/qMPVnVy121ZePaP6MpxEhTz5t7liGLGi/FSqvC7A6KuwZJm
-        qDuDIuLIIkbuwlCA==
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=Hb3esJ7fn5+7hYW7Y+IG4ff4JCmYbRpqleme76TiWY0=;
+        b=BsWiPnHdBDyoonJO/vBkHO8nkDPzR94XOGsCAk9ljtJIPfuyV2rWN6QyBOSC6fNKb3EQpb
+        Vfw0g4scDyNCRoCw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
@@ -59,12 +61,12 @@ Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>
-Subject: [patch V2 02/40] ACPI/IORT: Make prototype of iort_pmsi_get_dev_id()
- always available
+Subject: [patch V2 03/40] irqchip/gic-v2m: Include arm-gic-common.h
 References: <20221121135653.208611233@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:39:31 +0100 (CET)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Date:   Mon, 21 Nov 2022 15:39:32 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -74,36 +76,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-W=1 build complains:
-
-drivers/irqchip/irq-gic-v3-its-msi-parent.c:110:12: warning: no previous prototype for function 'iort_pmsi_get_dev_id' [-Wmissing-prototypes]                                                                                              
-   int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
-
-Reported-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
----
- include/linux/acpi_iort.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -26,13 +26,15 @@ int iort_register_domain_token(int trans
- 			       struct fwnode_handle *fw_node);
- void iort_deregister_domain_token(int trans_id);
- struct fwnode_handle *iort_find_domain_token(int trans_id);
-+
-+int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
-+
- #ifdef CONFIG_ACPI_IORT
- void acpi_iort_init(void);
- u32 iort_msi_map_id(struct device *dev, u32 id);
- struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
- 					  enum irq_domain_bus_token bus_token);
- void acpi_configure_pmsi_domain(struct device *dev);
--int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
- void iort_get_rmr_sids(struct fwnode_handle *iommu_fwnode,
- 		       struct list_head *head);
- void iort_put_rmr_sids(struct fwnode_handle *iommu_fwnode,
-
+Vz0xIGJ1aWxkIGNvbXBsYWluczoKCmRyaXZlcnMvaXJxY2hpcC9pcnEtZ2ljLXYybS5jOjU3MDox
+Mjogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhnaWN2Mm1faW5pdOKAmSBb
+LVdtaXNzaW5nLXByb3RvdHlwZXNdCiAgNTcwIHwgaW50IF9faW5pdCBnaWN2Mm1faW5pdChzdHJ1
+Y3QgZndub2RlX2hhbmRsZSAqcGFyZW50X2hhbmRsZSwKClNpZ25lZC1vZmYtYnk6IFRob21hcyBH
+bGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPgpDYzogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxp
+bnV0cm9uaXguZGU+CkNjOiBNYXJjIFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPgotLS0KIGRyaXZl
+cnMvaXJxY2hpcC9pcnEtZ2ljLXYybS5jIHwgICAgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKykKCi0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtZ2ljLXYybS5jCisrKyBiL2RyaXZl
+cnMvaXJxY2hpcC9pcnEtZ2ljLXYybS5jCkBAIC0yNCw2ICsyNCw3IEBACiAjaW5jbHVkZSA8bGlu
+dXgvc2xhYi5oPgogI2luY2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+CiAjaW5jbHVkZSA8bGludXgv
+aXJxY2hpcC9hcm0tZ2ljLmg+CisjaW5jbHVkZSA8bGludXgvaXJxY2hpcC9hcm0tZ2ljLWNvbW1v
+bi5oPgogCiAvKgogKiBNU0lfVFlQRVI6Cgo=
