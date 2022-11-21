@@ -2,181 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BAE0632325
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 14:08:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B9C063236D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 14:29:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbiKUNIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 08:08:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        id S230006AbiKUN2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 08:28:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbiKUNIh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 08:08:37 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2956DF6C;
-        Mon, 21 Nov 2022 05:08:22 -0800 (PST)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG6yP2fHqz6H6lF;
-        Mon, 21 Nov 2022 21:03:25 +0800 (CST)
-Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 14:08:20 +0100
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml500001.china.huawei.com (7.191.163.213) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 13:08:20 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2375.031;
- Mon, 21 Nov 2022 13:08:20 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "terry.bowman@amd.com" <terry.bowman@amd.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: RE: [PATCH v3 08/11] cxl/pci: add tracepoint events for CXL RAS
-Thread-Topic: [PATCH v3 08/11] cxl/pci: add tracepoint events for CXL RAS
-Thread-Index: AQHY+3CXArS33x1cm0yUWzixPS3MpK5JWoOA
-Date:   Mon, 21 Nov 2022 13:08:19 +0000
-Message-ID: <68b7bc0509fc4e2a9c42e664efa91472@huawei.com>
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
- <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.174.14]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S229982AbiKUN2C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 08:28:02 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F7D9A5CB;
+        Mon, 21 Nov 2022 05:28:00 -0800 (PST)
+Date:   Mon, 21 Nov 2022 14:27:58 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1669037279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HZklvIesdxDmu7Qaf/ZiJjhEu1yDVY6FbfODT00EzTs=;
+        b=jHhAbGIU73MpaMN6C4c9x0AtTJCHXZp5Cf00BYBrhSC+Ly7FFmzaJqhpCQpDBpb3AIHBLb
+        fahaXVPu8tZUHnGU0qAl92sdYb5P0YBW4ntnVXWjAaBTnxwZ2ghHuEQ9GMsZjiHFVlfE/u
+        nO++mU0Wk265n3LKz2wAxlNlVves/eyPuU2hZ/KLFIPHhqrZd7K7Ff/t5oMZjCtrjcKY1j
+        aSxSHpPp8N6czJqlXBwTT2a+Kb1LaxHIWhrCmhBqn6pf68a/zJy32bQodg1vb68BIOiiF9
+        4xL/d15rmNDaS5LnXrj94cMSK654/eaDT7pL+r5mpORW3YYUPnJ6acDt++d/kg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1669037279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HZklvIesdxDmu7Qaf/ZiJjhEu1yDVY6FbfODT00EzTs=;
+        b=ShpeAfvPGHu9rWHY0jctqqz6LnNPUUmyhwPfLv1gdlKXUOuraTJm1BKSNIIeigpMPhdLbI
+        TXbBKmBfgKh4SuAA==
+From:   "Ahmed S. Darwish" <darwi@linutronix.de>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-doc@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] PCI/MSI: api: Use bullet lists in kernel-doc comments
+Message-ID: <Y3t83uo/TZzxc1nL@lx-t490>
+References: <20221121184100.0974cc35@canb.auug.org.au>
+ <20221121101245.23544-1-bagasdotme@gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221121101245.23544-1-bagasdotme@gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgRGF2ZSwNCg0KUGxlYXNlIHNlZSBmZXcgY29tbWVudHMuDQoNCj4tLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPkZyb206IERhdmUgSmlhbmcgPGRhdmUuamlhbmdAaW50ZWwuY29tPg0KPlNl
-bnQ6IDE4IE5vdmVtYmVyIDIwMjIgMTc6MDkNCj5UbzogbGludXgtY3hsQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPkNjOiBkYW4uai53aWxsaWFtc0BpbnRlbC5j
-b207IGlyYS53ZWlueUBpbnRlbC5jb207IHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsNCj5hbGlz
-b24uc2Nob2ZpZWxkQGludGVsLmNvbTsgSm9uYXRoYW4gQ2FtZXJvbg0KPjxqb25hdGhhbi5jYW1l
-cm9uQGh1YXdlaS5jb20+OyByb3N0ZWR0QGdvb2RtaXMub3JnOw0KPnRlcnJ5LmJvd21hbkBhbWQu
-Y29tOyBiaGVsZ2Fhc0Bnb29nbGUuY29tDQo+U3ViamVjdDogW1BBVENIIHYzIDA4LzExXSBjeGwv
-cGNpOiBhZGQgdHJhY2Vwb2ludCBldmVudHMgZm9yIENYTCBSQVMNCj4NCj5BZGQgdHJhY2Vwb2lu
-dCBldmVudHMgZm9yIHJlY29yZGluZyB0aGUgQ1hMIHVuY29ycmVjdGFibGUgYW5kIGNvcnJlY3Rh
-YmxlDQo+ZXJyb3JzLiBGb3IgdW5jb3JyZWN0YWJsZSBlcnJvcnMsIHRoZXJlIGlzIGFkZGl0aW9u
-YWwgZGF0YSBvZiA1MTJCIGZyb20gdGhlDQo+aGVhZGVyIGxvZyByZWdpc3RlciAoQ1hMIHNwZWMg
-cmV2MyA4LjIuNC4xNi43KS4gVGhlIHRyYWNlIGV2ZW50IHdpbGwgaW50YWtlIGENCj5keW5hbWlj
-IGFycmF5IHRoYXQgd2lsbCBkdW1wIHRoZSBlbnRpcmUgSGVhZGVyIExvZyBkYXRhLiBJZiBtdWx0
-aXBsZSBlcnJvcnMgYXJlDQo+c2V0IGluIHRoZSBzdGF0dXMgcmVnaXN0ZXIsIHRoZW4gdGhlICdm
-aXJzdCBlcnJvcicgZmllbGQgKENYTCBzcGVjIHJldjMgdjguMi40LjE2LjYpDQo+aXMgcmVhZCBm
-cm9tIHRoZSBFcnJvciBDYXBhYmlsaXRpZXMgYW5kIENvbnRyb2wgUmVnaXN0ZXIgaW4gb3JkZXIg
-dG8gZGV0ZXJtaW5lDQo+dGhlIGVycm9yLg0KPg0KPlRoaXMgaW1wbGVtZW50YXRpb24gZG9lcyBu
-b3QgaW5jbHVkZSBDWEwgSURFIEVycm9yIGRldGFpbHMuDQo+DQo+Q2M6IFN0ZXZlbiBSb3N0ZWR0
-IDxyb3N0ZWR0QGdvb2RtaXMub3JnPg0KPlNpZ25lZC1vZmYtYnk6IERhdmUgSmlhbmcgPGRhdmUu
-amlhbmdAaW50ZWwuY29tPg0KPi0tLQ0KPiBkcml2ZXJzL2N4bC9wY2kuYyAgICAgICAgICB8ICAg
-IDIgKw0KPiBpbmNsdWRlL3RyYWNlL2V2ZW50cy9jeGwuaCB8ICAxMTANCj4rKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAyIGZpbGVzIGNoYW5nZWQsIDExMiBp
-bnNlcnRpb25zKCspDQo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3RyYWNlL2V2ZW50cy9j
-eGwuaA0KPg0KPmRpZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9wY2kuYyBiL2RyaXZlcnMvY3hsL3Bj
-aS5jIGluZGV4DQo+OTQyOGYzZTBkOTliLi4wZjM2YTU4NjFhN2IgMTAwNjQ0DQo+LS0tIGEvZHJp
-dmVycy9jeGwvcGNpLmMNCj4rKysgYi9kcml2ZXJzL2N4bC9wY2kuYw0KPkBAIC0xMyw2ICsxMyw4
-IEBADQo+ICNpbmNsdWRlICJjeGxtZW0uaCINCj4gI2luY2x1ZGUgImN4bHBjaS5oIg0KPiAjaW5j
-bHVkZSAiY3hsLmgiDQo+KyNkZWZpbmUgQ1JFQVRFX1RSQUNFX1BPSU5UUw0KPisjaW5jbHVkZSA8
-dHJhY2UvZXZlbnRzL2N4bC5oPg0KPg0KPiAvKioNCj4gICogRE9DOiBjeGwgcGNpDQo+ZGlmZiAt
-LWdpdCBhL2luY2x1ZGUvdHJhY2UvZXZlbnRzL2N4bC5oIGIvaW5jbHVkZS90cmFjZS9ldmVudHMv
-Y3hsLmggbmV3IGZpbGUNCj5tb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwMDAwMDAuLmY4ZTk1ZDk3
-NzEzMw0KPi0tLSAvZGV2L251bGwNCj4rKysgYi9pbmNsdWRlL3RyYWNlL2V2ZW50cy9jeGwuaA0K
-PkBAIC0wLDAgKzEsMTEwIEBADQo+Ky8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-ICovDQo+KyN1bmRlZiBUUkFDRV9TWVNURU0NCj4rI2RlZmluZSBUUkFDRV9TWVNURU0gY3hsDQo+
-Kw0KPisjaWYgIWRlZmluZWQoX0NYTF9FVkVOVFNfSCkgfHwgZGVmaW5lZChUUkFDRV9IRUFERVJf
-TVVMVElfUkVBRCkNCj4jZGVmaW5lDQo+K19DWExfRVZFTlRTX0gNCj4rDQo+KyNpbmNsdWRlIDxs
-aW51eC90cmFjZXBvaW50Lmg+DQo+Kw0KPisjZGVmaW5lIENYTF9IRUFERVJMT0dfU0laRQkJU1pf
-NTEyDQo+KyNkZWZpbmUgQ1hMX0hFQURFUkxPR19TSVpFX1UzMgkJU1pfNTEyIC8gc2l6ZW9mKHUz
-MikNCj4rDQo+KyNkZWZpbmUgQ1hMX1JBU19VQ19DQUNIRV9EQVRBX1BBUklUWQlCSVQoMCkNCj4r
-I2RlZmluZSBDWExfUkFTX1VDX0NBQ0hFX0FERFJfUEFSSVRZCUJJVCgxKQ0KPisjZGVmaW5lIENY
-TF9SQVNfVUNfQ0FDSEVfQkVfUEFSSVRZCUJJVCgyKQ0KPisjZGVmaW5lIENYTF9SQVNfVUNfQ0FD
-SEVfREFUQV9FQ0MJQklUKDMpDQo+KyNkZWZpbmUgQ1hMX1JBU19VQ19NRU1fREFUQV9QQVJJVFkJ
-QklUKDQpDQo+KyNkZWZpbmUgQ1hMX1JBU19VQ19NRU1fQUREUl9QQVJJVFkJQklUKDUpDQo+KyNk
-ZWZpbmUgQ1hMX1JBU19VQ19NRU1fQkVfUEFSSVRZCUJJVCg2KQ0KPisjZGVmaW5lIENYTF9SQVNf
-VUNfTUVNX0RBVEFfRUNDCQlCSVQoNykNCj4rI2RlZmluZSBDWExfUkFTX1VDX1JFSU5JVF9USFJF
-U0gJQklUKDgpDQo+KyNkZWZpbmUgQ1hMX1JBU19VQ19SU1ZEX0VOQ09ERQkJQklUKDkpDQo+KyNk
-ZWZpbmUgQ1hMX1JBU19VQ19QT0lTT04JCUJJVCgxMCkNCj4rI2RlZmluZSBDWExfUkFTX1VDX1JF
-Q1ZfT1ZFUkZMT1cJQklUKDExKQ0KPisjZGVmaW5lIENYTF9SQVNfVUNfSU5URVJOQUxfRVJSCQlC
-SVQoMTQpDQo+KyNkZWZpbmUgQ1hMX1JBU19VQ19JREVfVFhfRVJSCQlCSVQoMTUpDQo+KyNkZWZp
-bmUgQ1hMX1JBU19VQ19JREVfUlhfRVJSCQlCSVQoMTYpDQo+Kw0KPisjZGVmaW5lIHNob3dfdWNf
-ZXJycyhzdGF0dXMpCV9fcHJpbnRfZmxhZ3Moc3RhdHVzLCAiIHwgIiwNCj4JICBcDQo+Kwl7IENY
-TF9SQVNfVUNfQ0FDSEVfREFUQV9QQVJJVFksICJDYWNoZSBEYXRhIFBhcml0eSBFcnJvciIgfSwN
-Cj4JICBcDQo+Kwl7IENYTF9SQVNfVUNfQ0FDSEVfQUREUl9QQVJJVFksICJDYWNoZSBBZGRyZXNz
-IFBhcml0eSBFcnJvciIgfSwNCj4JICBcDQo+Kwl7IENYTF9SQVNfVUNfQ0FDSEVfQkVfUEFSSVRZ
-LCAiQ2FjaGUgQnl0ZSBFbmFibGUgUGFyaXR5IEVycm9yIiB9LA0KPlwNCj4rCXsgQ1hMX1JBU19V
-Q19DQUNIRV9EQVRBX0VDQywgIkNhY2hlIERhdGEgRUNDIEVycm9yIiB9LA0KPgkgIFwNCj4rCXsg
-Q1hMX1JBU19VQ19NRU1fREFUQV9QQVJJVFksICJNZW1vcnkgRGF0YSBQYXJpdHkgRXJyb3IiIH0s
-DQo+CSAgXA0KPisJeyBDWExfUkFTX1VDX01FTV9BRERSX1BBUklUWSwgIk1lbW9yeSBBZGRyZXNz
-IFBhcml0eSBFcnJvciINCj59LAkgIFwNCj4rCXsgQ1hMX1JBU19VQ19NRU1fQkVfUEFSSVRZLCAi
-TWVtb3J5IEJ5dGUgRW5hYmxlIFBhcml0eSBFcnJvciINCj59LCAgXA0KPisJeyBDWExfUkFTX1VD
-X01FTV9EQVRBX0VDQywgIk1lbW9yeSBEYXRhIEVDQyBFcnJvciIgfSwNCj4JICBcDQo+Kwl7IENY
-TF9SQVNfVUNfUkVJTklUX1RIUkVTSCwgIlJFSU5JVCBUaHJlc2hvbGQgSGl0IiB9LA0KPgkgIFwN
-Cj4rCXsgQ1hMX1JBU19VQ19SU1ZEX0VOQ09ERSwgIlJlY2VpdmVkIFVucmVjb2duaXplZCBFbmNv
-ZGluZyIgfSwNCj4JICBcDQo+Kwl7IENYTF9SQVNfVUNfUE9JU09OLCAiUmVjZWl2ZWQgUG9pc29u
-IEZyb20gUGVlciIgfSwNCj4JICBcDQo+Kwl7IENYTF9SQVNfVUNfUkVDVl9PVkVSRkxPVywgIlJl
-Y2VpdmVyIE92ZXJmbG93IiB9LA0KPgkgIFwNCj4rCXsgQ1hMX1JBU19VQ19JTlRFUk5BTF9FUlIs
-ICJDb21wb25lbnQgU3BlY2lmaWMgRXJyb3IiIH0sCSAgXA0KPisJeyBDWExfUkFTX1VDX0lERV9U
-WF9FUlIsICJJREUgVHggRXJyb3IiIH0sCQkJICBcDQo+Kwl7IENYTF9SQVNfVUNfSURFX1JYX0VS
-UiwgIklERSBSeCBFcnJvciIgfQkJCSAgXA0KPispDQo+Kw0KPitUUkFDRV9FVkVOVChjeGxfYWVy
-X3VuY29ycmVjdGFibGVfZXJyb3IsDQo+KwlUUF9QUk9UTyhjb25zdCBjaGFyICpkZXZfbmFtZSwg
-dTMyIHN0YXR1cywgdTMyIGZlLCB1MzIgKmhsKSwNCj4rCVRQX0FSR1MoZGV2X25hbWUsIHN0YXR1
-cywgZmUsIGhsKSwNCj4rCVRQX1NUUlVDVF9fZW50cnkoDQo+KwkJX19zdHJpbmcoZGV2X25hbWUs
-IGRldl9uYW1lKQ0KPisJCV9fZmllbGQodTMyLCBzdGF0dXMpDQo+KwkJX19maWVsZCh1MzIsIGZp
-cnN0X2Vycm9yKQ0KPisJCV9fZHluYW1pY19hcnJheSh1MzIsIGhlYWRlcl9sb2csDQo+Q1hMX0hF
-QURFUkxPR19TSVpFX1UzMikNCj4rCSksDQo+KwlUUF9mYXN0X2Fzc2lnbigNCj4rCQlfX2Fzc2ln
-bl9zdHIoZGV2X25hbWUsIGRldl9uYW1lKTsNCj4rCQlfX2VudHJ5LT5zdGF0dXMgPSBzdGF0dXM7
-DQo+KwkJX19lbnRyeS0+Zmlyc3RfZXJyb3IgPSBmZTsNCj4rCQkvKg0KPisJCSAqIEVtYmVkIHRo
-ZSA1MTJCIGhlYWRlcmxvZyBkYXRhIGZvciB1c2VyIGFwcCByZXRyaWV2YWwgYW5kDQo+KwkJICog
-cGFyc2luZywgYnV0IG5vIG5lZWQgdG8gcHJpbnQgdGhpcyBpbiB0aGUgdHJhY2UgYnVmZmVyLg0K
-PisJCSAqLw0KPisJCW1lbWNweShfX2dldF9keW5hbWljX2FycmF5KGhlYWRlcl9sb2cpLCBobCwN
-Cj5DWExfSEVBREVSTE9HX1NJWkUpOw0KPisJKSwNCj4rCVRQX3ByaW50aygiJXM6IHN0YXR1czog
-JyVzJyBmaXJzdF9lcnJvcjogJyVzJyIsDQo+KwkJICBfX2dldF9zdHIoZGV2X25hbWUpLA0KPisJ
-CSAgc2hvd191Y19lcnJzKF9fZW50cnktPnN0YXR1cyksDQo+KwkJICBzaG93X3VjX2VycnMoX19l
-bnRyeS0+Zmlyc3RfZXJyb3IpDQo+KwkpDQo+Kyk7DQo+Kw0KPisjZGVmaW5lIENYTF9SQVNfQ0Vf
-Q0FDSEVfREFUQV9FQ0MJQklUKDApDQo+KyNkZWZpbmUgQ1hMX1JBU19DRV9NRU1fREFUQV9FQ0MJ
-CUJJVCgxKQ0KPisjZGVmaW5lIENYTF9SQVNfQ0VfQ1JDX1RIUkVTSAkJQklUKDIpDQoNCkkgdGhp
-bmsgdGhlIEJpdCBMb2NhdGlvbiAzICAiUmV0cnlfVGhyZXNob2xkOiBSZXRyeSBUaHJlc2hvbGQg
-SGl0LiAiICBhcyBwZXIgdGhlIA0KQ29ycmVjdGFibGUgRXJyb3IgU3RhdHVzIFJlZ2lzdGVyIGlu
-IHRoZSBDWEwgMy4wIHNwZWNpZmljYXRpb24gaXMgbWlzc2luZz8NCklmIHNvLCBwbGVhc2UgY29y
-cmVjdCB0aGUgYml0IGxvY2F0aW9uIG9mIHRoZSBzdWJzZXF1ZW50IGNvcnJlY3RlZCBlcnJvcnMg
-YXMgd2VsbC4NCiAgDQo+KyNkZWZpbmUgQ1hMX1JBU19DRV9DQUNIRV9QT0lTT04JCUJJVCgzKQ0K
-PisjZGVmaW5lIENYTF9SQVNfQ0VfTUVNX1BPSVNPTgkJQklUKDQpDQo+KyNkZWZpbmUgQ1hMX1JB
-U19DRV9QSFlTX0xBWUVSX0VSUglCSVQoNSkNCj4rDQo+KyNkZWZpbmUgc2hvd19jZV9lcnJzKHN0
-YXR1cykJX19wcmludF9mbGFncyhzdGF0dXMsICIgfCAiLA0KPgkJXA0KPisJeyBDWExfUkFTX0NF
-X0NBQ0hFX0RBVEFfRUNDLCAiQ2FjaGUgRGF0YSBFQ0MgRXJyb3IiIH0sDQo+CQlcDQo+Kwl7IENY
-TF9SQVNfQ0VfTUVNX0RBVEFfRUNDLCAiTWVtb3J5IERhdGEgRWNjIEVycm9yIiB9LA0KDQpQbGVh
-c2UgY2hhbmdlICJFY2MiIHRvICJFQ0MiLg0KDQo+CQlcDQo+Kwl7IENYTF9SQVNfQ0VfQ1JDX1RI
-UkVTSCwgIkNSQyBUaHJlc2hvbGQgSGl0IiB9LA0KPgkJXA0KPisJeyBDWExfUkFTX0NFX0NBQ0hF
-X1BPSVNPTiwgIlJlY2VpdmVkIENhY2hlIFBvaXNvbiBGcm9tIFBlZXIiDQo+fSwJCVwNCj4rCXsg
-Q1hMX1JBU19DRV9NRU1fUE9JU09OLCAiUmVjZWl2ZWQgTWVtb3J5IFBvaXNvbiBGcm9tIFBlZXIi
-DQo+fSwJCVwNCj4rCXsgQ1hMX1JBU19DRV9QSFlTX0xBWUVSX0VSUiwgIlJlY2VpdmVkIEVycm9y
-IEZyb20gUGh5c2ljYWwNCj5MYXllciIgfQlcDQo+KykNCj4rDQo+K1RSQUNFX0VWRU5UKGN4bF9h
-ZXJfY29ycmVjdGFibGVfZXJyb3IsDQo+KwlUUF9QUk9UTyhjb25zdCBjaGFyICpkZXZfbmFtZSwg
-dTMyIHN0YXR1cyksDQo+KwlUUF9BUkdTKGRldl9uYW1lLCBzdGF0dXMpLA0KPisJVFBfU1RSVUNU
-X19lbnRyeSgNCj4rCQlfX3N0cmluZyhkZXZfbmFtZSwgZGV2X25hbWUpDQo+KwkJX19maWVsZCh1
-MzIsIHN0YXR1cykNCj4rCSksDQo+KwlUUF9mYXN0X2Fzc2lnbigNCj4rCQlfX2Fzc2lnbl9zdHIo
-ZGV2X25hbWUsIGRldl9uYW1lKTsNCj4rCQlfX2VudHJ5LT5zdGF0dXMgPSBzdGF0dXM7DQo+Kwkp
-LA0KPisJVFBfcHJpbnRrKCIlczogc3RhdHVzOiAnJXMnIiwNCj4rCQkgIF9fZ2V0X3N0cihkZXZf
-bmFtZSksIHNob3dfY2VfZXJycyhfX2VudHJ5LT5zdGF0dXMpDQo+KwkpDQo+Kyk7DQo+Kw0KPisj
-ZW5kaWYgLyogX0NYTF9FVkVOVFNfSCAqLw0KPisNCj4rLyogVGhpcyBwYXJ0IG11c3QgYmUgb3V0
-c2lkZSBwcm90ZWN0aW9uICovICN1bmRlZiBUUkFDRV9JTkNMVURFX0ZJTEUNCj4rI2RlZmluZSBU
-UkFDRV9JTkNMVURFX0ZJTEUgY3hsICNpbmNsdWRlIDx0cmFjZS9kZWZpbmVfdHJhY2UuaD4NCj4N
-Cg0KVGhhbmtzLA0KU2hpanUNCg==
+On Mon, Nov 21, 2022 at 05:12:45PM +0700, Bagas Sanjaya wrote:
+>   * @flags:    One or more of:
+> - *            %PCI_IRQ_MSIX      Allow trying MSI-X vector allocations
+> - *            %PCI_IRQ_MSI       Allow trying MSI vector allocations
+> - *            %PCI_IRQ_LEGACY    Allow trying legacy INTx interrupts, if
+> - *                               and only if @min_vecs == 1
+> - *            %PCI_IRQ_AFFINITY  Auto-manage IRQs affinity by spreading
+> - *                               the vectors around available CPUs
+> + *
+> + *            * %PCI_IRQ_MSIX - Allow trying MSI-X vector allocations
+> + *            * %PCI_IRQ_MSI - Allow trying MSI vector allocations
+> + *
+> + *            * %PCI_IRQ_LEGACY - Allow trying legacy INTx interrupts, if
+> + *              and only if @min_vecs == 1
+> + *
+> + *            * %PCI_IRQ_AFFINITY - Auto-manage IRQs affinity by spreading
+> + *              the vectors around available CPUs
+...
+> - *       meanings, depending on interrupt mode
+> - *         MSI-X        the index in the MSI-X vector table
+> - *         MSI          the index of the enabled MSI vectors
+> - *         INTx         must be 0
+> + *       meanings, depending on interrupt mode:
+> + *
+> + *         * MSI-X - the index in the MSI-X vector table
+> + *         * MSI - the index of the enabled MSI vectors
+> + *         * INTx - must be 0
+
+Sorry for the trouble.
+
+While at it, can we please keep the alignment in the original patch?
+This is supposed to be pretty too for people who look at the C code
+(most of the actual readers).
+
+That is:
+
+ + *
+ + *            * %PCI_IRQ_MSIX     -  Allow trying MSI-X vector allocations
+ + *            * %PCI_IRQ_MSI      -  Allow trying MSI vector allocations
+ + *            * %PCI_IRQ_LEGACY   -  Allow trying legacy INTx interrupts, if
+ + *              and only if @min_vecs == 1
+ + *            * %PCI_IRQ_AFFINITY - Auto-manage IRQs affinity by spreading
+ + *              the vectors around available CPUs
+
+and:
+
+> + *       meanings, depending on interrupt mode:
+> + *
+> + *         * MSI-X - the index in the MSI-X vector table
+> + *         * MSI   - the index of the enabled MSI vectors
+> + *         * INTx  - must be 0
+
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
