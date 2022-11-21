@@ -2,116 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9C063236D
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 14:29:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3926E6323A7
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 14:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiKUN2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 08:28:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
+        id S230293AbiKUNdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 08:33:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiKUN2C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 08:28:02 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F7D9A5CB;
-        Mon, 21 Nov 2022 05:28:00 -0800 (PST)
-Date:   Mon, 21 Nov 2022 14:27:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669037279;
+        with ESMTP id S230371AbiKUNdD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 08:33:03 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFAEBFF59;
+        Mon, 21 Nov 2022 05:32:59 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e725329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e725:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C9C6B1EC053F;
+        Mon, 21 Nov 2022 14:32:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1669037577;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZklvIesdxDmu7Qaf/ZiJjhEu1yDVY6FbfODT00EzTs=;
-        b=jHhAbGIU73MpaMN6C4c9x0AtTJCHXZp5Cf00BYBrhSC+Ly7FFmzaJqhpCQpDBpb3AIHBLb
-        fahaXVPu8tZUHnGU0qAl92sdYb5P0YBW4ntnVXWjAaBTnxwZ2ghHuEQ9GMsZjiHFVlfE/u
-        nO++mU0Wk265n3LKz2wAxlNlVves/eyPuU2hZ/KLFIPHhqrZd7K7Ff/t5oMZjCtrjcKY1j
-        aSxSHpPp8N6czJqlXBwTT2a+Kb1LaxHIWhrCmhBqn6pf68a/zJy32bQodg1vb68BIOiiF9
-        4xL/d15rmNDaS5LnXrj94cMSK654/eaDT7pL+r5mpORW3YYUPnJ6acDt++d/kg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669037279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZklvIesdxDmu7Qaf/ZiJjhEu1yDVY6FbfODT00EzTs=;
-        b=ShpeAfvPGHu9rWHY0jctqqz6LnNPUUmyhwPfLv1gdlKXUOuraTJm1BKSNIIeigpMPhdLbI
-        TXbBKmBfgKh4SuAA==
-From:   "Ahmed S. Darwish" <darwi@linutronix.de>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-doc@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] PCI/MSI: api: Use bullet lists in kernel-doc comments
-Message-ID: <Y3t83uo/TZzxc1nL@lx-t490>
-References: <20221121184100.0974cc35@canb.auug.org.au>
- <20221121101245.23544-1-bagasdotme@gmail.com>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=h6QdlM3if85oKaJAXlxT1/ww0EFma2c3NtTeZN9RKM4=;
+        b=F/qey3CdoLaY63yMD4WxsH1hFqcb8XOOWthbY+Nbxn+Wmmnr5u1piaNXCGLV0Mh3LG99Pn
+        rqOSgWpLbhkeLNecWYqWX/jiQzwmnfIMO7Eb2YyHE4IM4ljndmEMt8EppBbrHJD5+8r0GA
+        BDmK9mEPeFJCTBclgIhpz+1NyntkeW8=
+Date:   Mon, 21 Nov 2022 14:32:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [Patch v3 01/14] x86/ioremap: Fix page aligned size calculation
+ in __ioremap_caller()
+Message-ID: <Y3t+BipyGPUV3q8F@zn.tnic>
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-2-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221121101245.23544-1-bagasdotme@gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1668624097-14884-2-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 05:12:45PM +0700, Bagas Sanjaya wrote:
->   * @flags:    One or more of:
-> - *            %PCI_IRQ_MSIX      Allow trying MSI-X vector allocations
-> - *            %PCI_IRQ_MSI       Allow trying MSI vector allocations
-> - *            %PCI_IRQ_LEGACY    Allow trying legacy INTx interrupts, if
-> - *                               and only if @min_vecs == 1
-> - *            %PCI_IRQ_AFFINITY  Auto-manage IRQs affinity by spreading
-> - *                               the vectors around available CPUs
-> + *
-> + *            * %PCI_IRQ_MSIX - Allow trying MSI-X vector allocations
-> + *            * %PCI_IRQ_MSI - Allow trying MSI vector allocations
-> + *
-> + *            * %PCI_IRQ_LEGACY - Allow trying legacy INTx interrupts, if
-> + *              and only if @min_vecs == 1
-> + *
-> + *            * %PCI_IRQ_AFFINITY - Auto-manage IRQs affinity by spreading
-> + *              the vectors around available CPUs
-...
-> - *       meanings, depending on interrupt mode
-> - *         MSI-X        the index in the MSI-X vector table
-> - *         MSI          the index of the enabled MSI vectors
-> - *         INTx         must be 0
-> + *       meanings, depending on interrupt mode:
-> + *
-> + *         * MSI-X - the index in the MSI-X vector table
-> + *         * MSI - the index of the enabled MSI vectors
-> + *         * INTx - must be 0
+On Wed, Nov 16, 2022 at 10:41:24AM -0800, Michael Kelley wrote:
+> Current code re-calculates the size after aligning the starting and
+> ending physical addresses on a page boundary. But the re-calculation
+> also embeds the masking of high order bits that exceed the size of
+> the physical address space (via PHYSICAL_PAGE_MASK). If the masking
+> removes any high order bits, the size calculation results in a huge
+> value that is likely to immediately fail.
+> 
+> Fix this by re-calculating the page-aligned size first. Then mask any
+> high order bits using PHYSICAL_PAGE_MASK.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/x86/mm/ioremap.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index 78c5bc6..6453fba 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -217,9 +217,15 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+>  	 * Mappings have to be page-aligned
+>  	 */
+>  	offset = phys_addr & ~PAGE_MASK;
+> -	phys_addr &= PHYSICAL_PAGE_MASK;
+> +	phys_addr &= PAGE_MASK;
+>  	size = PAGE_ALIGN(last_addr+1) - phys_addr;
+>  
+> +	/*
+> +	 * Mask out any bits not part of the actual physical
+> +	 * address, like memory encryption bits.
+> +	 */
+> +	phys_addr &= PHYSICAL_PAGE_MASK;
+> +
+>  	retval = memtype_reserve(phys_addr, (u64)phys_addr + size,
+>  						pcm, &new_pcm);
+>  	if (retval) {
+> -- 
 
-Sorry for the trouble.
+This looks like a fix to me that needs to go to independently to stable.
+And it would need a Fixes tag.
 
-While at it, can we please keep the alignment in the original patch?
-This is supposed to be pretty too for people who look at the C code
-(most of the actual readers).
+/me does some git archeology...
 
-That is:
+I guess this one:
 
- + *
- + *            * %PCI_IRQ_MSIX     -  Allow trying MSI-X vector allocations
- + *            * %PCI_IRQ_MSI      -  Allow trying MSI vector allocations
- + *            * %PCI_IRQ_LEGACY   -  Allow trying legacy INTx interrupts, if
- + *              and only if @min_vecs == 1
- + *            * %PCI_IRQ_AFFINITY - Auto-manage IRQs affinity by spreading
- + *              the vectors around available CPUs
+ffa71f33a820 ("x86, ioremap: Fix incorrect physical address handling in PAE mode")
 
-and:
+should be old enough so that it goes to all relevant stable kernels...
 
-> + *       meanings, depending on interrupt mode:
-> + *
-> + *         * MSI-X - the index in the MSI-X vector table
-> + *         * MSI   - the index of the enabled MSI vectors
-> + *         * INTx  - must be 0
+Hmm?
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
---
-Ahmed S. Darwish
-Linutronix GmbH
+https://people.kernel.org/tglx/notes-about-netiquette
