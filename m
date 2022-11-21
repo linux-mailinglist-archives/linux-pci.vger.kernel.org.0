@@ -2,89 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFAD5632AA2
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:16:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E3E2632AD4
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:21:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231548AbiKURQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 12:16:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
+        id S231267AbiKURVF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 12:21:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbiKURPt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:15:49 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C56CC8C90;
-        Mon, 21 Nov 2022 09:13:53 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id n3so4296778wrp.5;
-        Mon, 21 Nov 2022 09:13:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iOdZm+t0ZjNb9E1ZMCmZ/u5jw9aDGTn6ypSEA7WGmII=;
-        b=Bri+YqkxR9A7oBnDSBN5S+vyOvU73bMGjpOqXuh54mO57W/8vv2dISgFfJOv3GVPOO
-         oprFGOYKvPDkUXBkinoQBz9ugVtWHtbvoxjmtsz8uoKHrn3o4h7g8HzFMT7pZSWm3tQl
-         ClJNBQoFkCPAL0MU349QGlUMLQGqPY86xykMZKCWkbcHBRDAz2s9EzUbcjmMdXrFaeWy
-         KXJLqSv1NIG7+lIf0t23v2cu1b2bFHGZMN8NVVK6CAXLcA04FgEkSIorOTi9/NgTZfPk
-         2ZWmQ/1KOoaRIrZVUtuN5dcjuJheAkvjOXD8diWI7ljW/v9ofHCjrFQZKA5aY3kxeK6O
-         TpsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOdZm+t0ZjNb9E1ZMCmZ/u5jw9aDGTn6ypSEA7WGmII=;
-        b=ZelV5ALgDxQc9l73EThonb7YOuonhjnLD2RrueobYNmgdWxdan8zUueLoojpFY9WNh
-         6Dkl3YCkizBZrFbVjvHSrp1azrsmsPVgXBC5VLrjngCnCXoGrtwsiCk63dJxZrBxNthJ
-         iPpzrE4Lmvp/sxViL7mrFHa358dlGPQFwaOH2qrWymKpKINQQqk7jcwsyqaGfLoFOuvh
-         Wfmo8aLIB6HN7wzm7/8t42ITi6AY67poy0XJNmAbgB+IMRK5KeccFWKX1nVJj7QM08Ar
-         u9qpgC/S0XBMgOE3p6D1Rdl2QsfrrzwrGTUypNEaMkPTv+WZc+tVC3rUJsHDFQq/FtsV
-         vzcA==
-X-Gm-Message-State: ANoB5pnGctMdzYfeOgpCpReA0XBSq1As2xs/PZfBGGFiMOHWbfGvZbWv
-        vWkDWEPY9QcySJl7hEGWGYY=
-X-Google-Smtp-Source: AA0mqf4hbwsmtUuhLGr69LHoOQQEqvX+EvI7mtwqoCP9NL9TQavoW8740rWW99QiGdXzv6vfRPk5aw==
-X-Received: by 2002:a05:6000:10c6:b0:241:d021:52d3 with SMTP id b6-20020a05600010c600b00241d02152d3mr4812424wrx.540.1669050831503;
-        Mon, 21 Nov 2022 09:13:51 -0800 (PST)
-Received: from [192.168.1.131] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id 4-20020a05600c020400b003b492753826sm13911425wmi.43.2022.11.21.09.13.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 09:13:50 -0800 (PST)
-Message-ID: <ef9c585f-37fd-f1f4-032b-20680bda1865@gmail.com>
-Date:   Mon, 21 Nov 2022 18:13:48 +0100
+        with ESMTP id S231289AbiKURUt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:20:49 -0500
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA9EB480B;
+        Mon, 21 Nov 2022 09:19:56 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 67BA7541E1A;
+        Mon, 21 Nov 2022 17:19:55 +0000 (UTC)
+Received: from pdx1-sub0-mail-a296.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id C7B53541138;
+        Mon, 21 Nov 2022 17:19:54 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669051194; a=rsa-sha256;
+        cv=none;
+        b=1AQgRxRqrHMuD0B9PjQcp/G5WDfEAC0ppoFPuf/DyH1UOqKDsl7P5pSEgYR9w8rk3q9QEG
+        hQ4oVmm0JtKMetw6ekMM/v+iJfoqepBr9N/pPOzqsbI0vHeXUPnP+hBlxG5CgKfNxAhbFK
+        8wyzR7bz73XM3LfUq++k3sc9DB3nShRcW3DEtnIwpKpqPUCPUJeamI7Fs8yjtxDLRQ3mxy
+        +esoMPLUvXme6xtlB1dvS6YvwOVl3jHP+152rIjIAe/k/Fe0oWmVqa0iNBqwriu18571vy
+        eg2MA7rQ0tgesD5vYZ28SUOmF3oEOb+RJwtwn+TNhKOekhDOrDCLxNxhplPVyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1669051194;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=Awet1cfVouXE2vI0H4bD47UQq3RFH+Y6po3HoWdj/t8=;
+        b=MqcKepZPDYctXZLrKT6DLXiMloF+PKqltLCLsER//0/GN/M9tlNuI/PbcWIguIGo12alP2
+        BqZwKp74SPzhO17iCZn+9+6P+zlgY3/vf3ry57J/MLNLRxpggGrIY1+ZCeHfFYFZCgkDAj
+        cOXdM1CZSrAhMuEeLGp9sa7lKqPziNFCeTktselQhZ5WeSH8TbvMlxuDfzcPkJP1jGPDgW
+        RRIQel1roSsdfqNWoxJnEN2azJsVJgkcRRfnCI2SXJNg9YmdkGHuhv9lXykesEpQtaDU8a
+        6WiXzxX5LnBtmHNLjdu+7Q7z/5lhDO94utZE5z/iyhFypHb5MdLdyOKNvS39dQ==
+ARC-Authentication-Results: i=1;
+        rspamd-65567d767-pkj8f;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tasty-Well-Made: 7e80b4ac2ad21cfe_1669051195168_1626871718
+X-MC-Loop-Signature: 1669051195167:1350808727
+X-MC-Ingress-Time: 1669051195167
+Received: from pdx1-sub0-mail-a296.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.126.30.15 (trex/6.7.1);
+        Mon, 21 Nov 2022 17:19:55 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a296.dreamhost.com (Postfix) with ESMTPSA id 4NGDfK5T0Jz3V;
+        Mon, 21 Nov 2022 09:19:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1669051194;
+        bh=Awet1cfVouXE2vI0H4bD47UQq3RFH+Y6po3HoWdj/t8=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Xbm8KpHKRUK5iPDhpa7uconjLd6+6zTdsWIwGSL/TgjCgZzkF0ZtuBWJ9T0c5LilR
+         jDsLA53Ua92fxhGgjzSK6de/w1CR5qhmdWC+a5fpzHHsUcoUonuzWAcDpFM2mJzbD1
+         qrmC/VKOFpTeNKNQmEs4ZXlYmgO5rBZbHeLszT5J+fbfENxGkcLJSKWwPKyBYukD7H
+         NuF3AOf7tH0/49ohgQbBdViByLACthbZvloqoOvRs5ztFZbDxtFHjdv+du17G2ME1C
+         C/HTCn0OQTsmUm+l+3mrRKgePwat0J/PrVDg2Ptn814Y60U3KXlxBDf12vTAD7vqsi
+         uuqAPbdz33qhw==
+Date:   Mon, 21 Nov 2022 09:19:50 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     ira.weiny@intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Li, Ming" <ming4.li@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
+Message-ID: <20221121171950.yflx4nklyqtrhn7s@offworld>
+References: <20221119222527.1799836-1-ira.weiny@intel.com>
+ <637b98358f7d0_1ee2429488@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v6 05/11] dt-bindings: PCI: mediatek-gen3: add support for
- mt7986
-Content-Language: en-US
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20221118190126.100895-1-linux@fw-web.de>
- <20221118190126.100895-6-linux@fw-web.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20221118190126.100895-6-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <637b98358f7d0_1ee2429488@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+User-Agent: NeoMutt/20220429
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -92,69 +104,16 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 21 Nov 2022, Dan Williams wrote:
 
+>The mutex will attempt to maintain fairness in its own waitqueue. If the
+>current task in exec_task() sees PCI_DOE_FLAG_CANCEL, it will drop out
+>and release the lock and then all waiters can check PCI_DOE_FLAG_CANCEL
+>before exec_task().
 
-On 18/11/2022 20:01, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Add compatible string and clock-definition for mt7986. It needs 4 clocks
-> for PCIe, define them in binding.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Jianjun Wang <jianjun.wang@mediatek.com>
+Yes, and try-locking is hacky by nature. In addition, relying on the mutex
+queuing will often be more optimal as it tries to avoid blocking altogether
+via mcs (which is also cacheline friendly).
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
-> v2:
-> - squashed patch 2+3 (compatible and clock definition)
-> ---
->   .../bindings/pci/mediatek-pcie-gen3.yaml        | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> index 5d7369debff2..f7a02019daea 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -48,6 +48,7 @@ properties:
->       oneOf:
->         - items:
->             - enum:
-> +              - mediatek,mt7986-pcie
->                 - mediatek,mt8188-pcie
->                 - mediatek,mt8195-pcie
->             - const: mediatek,mt8192-pcie
-> @@ -78,9 +79,11 @@ properties:
->         - const: mac
->   
->     clocks:
-> +    minItems: 4
->       maxItems: 6
->   
->     clock-names:
-> +    minItems: 4
->       maxItems: 6
->   
->     assigned-clocks:
-> @@ -160,6 +163,20 @@ allOf:
->               - const: tl_32k
->               - const: peri_26m
->               - const: peri_mem
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - mediatek,mt7986-pcie
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: pl_250m
-> +            - const: tl_26m
-> +            - const: peri_26m
-> +            - const: top_133m
->   
->   unevaluatedProperties: false
->   
+Thanks,
+Davidlohr
