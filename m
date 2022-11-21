@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C9DE6326E3
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:51:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12CD56326E5
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:51:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbiKUOvY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:51:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45554 "EHLO
+        id S231795AbiKUOve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:51:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbiKUOul (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:50:41 -0500
+        with ESMTP id S231847AbiKUOuz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:50:55 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6B0C1F49;
-        Mon, 21 Nov 2022 06:42:48 -0800 (PST)
-Message-ID: <20221121140050.322564760@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F05D5388;
+        Mon, 21 Nov 2022 06:42:53 -0800 (PST)
+Message-ID: <20221121140050.386216606@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041608;
+        s=2020; t=1669041610;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=BsahiWAKXFVJNJh44POfSovZLxdrhfjFryH8JdnSUvg=;
-        b=PR53tmTt10lyQW8LlIx/PyT+1Nwg6hlPDXIQcLRf5Q22DV1dMMXq8ggOlWrdIN2B0Gk+en
-        BLEYhIeWc0u73XGOG0S5eSnH4U91VqDWy+tCRIFBLy3528SNFP2T+9AsdU4nx/8BzK0AIy
-        6JqgDVGRTua3bU+CAr4StsXEuRVfqCwSwNzq8EIyg89676MuCUb9RwNxryWEbZQ3OCNHtD
-        v5U1IcmeCzeVkYJXmzJ2h8iUSNZet81amIAwvi3AwkII7DTKtN5bhX6VgpNsoDFvSvDg81
-        bphqeOprxQq9kras4E8qEN9rA3Nvm5s3du7g6IkbpjLXXyobrzsXzsPLfeH/YA==
+         references:references; bh=nXitai8NNW5ZoGV4iB4WLsBQcUEV2ql1w841y8zrkC4=;
+        b=ZYjAx1f+bZbDKdv0NCiPkFN8hoq6CJWlh96007mt0tRK0Ub323b+2n517CIn0+NrKI0snq
+        4m32CtJ6w+66nzOz7nnHU2Ae6NJGZaq/QDWLulrNXg1KVZAK37sdI9NKZgxLg9pllh4TJc
+        pBM3J8f8kHcz4v+5tRqEJElXW2LacXj8w8Pv2ljOuhIkAmBFMCQefIOgu8W/JSnUGhH/5A
+        nnWC60NaYZZf8pdR82dGpLivH139/emTx4OQg0Q0OnvobUm02Qds0CsU/Z0zdK5KQiT6Xd
+        Dhp+Dm1uI0MjfoRze8bR2A0PhBwyoZqa1cFlCEXqpZrP7pMDI8FLJPHAPHbp4A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041608;
+        s=2020e; t=1669041610;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=BsahiWAKXFVJNJh44POfSovZLxdrhfjFryH8JdnSUvg=;
-        b=HQ5Yx+4UF17bUmcln2P+uBe4p0mVVcmgNYPOgbUkeviPuXl5M6nQ/kBiImIbMI7aNTdljT
-        rKTZG/Cs8/s2gUCw==
+         references:references; bh=nXitai8NNW5ZoGV4iB4WLsBQcUEV2ql1w841y8zrkC4=;
+        b=hVEfbaTkojXgD9cFeu7P71Xwu6mIMOCS255HaFo1vemiQOefBL/PBPbky/jxxsmaJJ7YQr
+        MTYUcEIZIv9lIgBA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
@@ -59,11 +59,11 @@ Cc:     Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>
-Subject: [patch V2 32/40] genirq/msi: Provide MSI_FLAG_PARENT_PM_DEV
+Subject: [patch V2 33/40] irqchip/imx-mu-msi: Switch to MSI parent
 References: <20221121135653.208611233@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:40:08 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:40:09 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -73,38 +73,139 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some platform-MSI implementations require that power management is
-redirected to the underlying interrupt chip device. To make this work
-with per device MSI domains provide a new feature flag and let the
-core code handle the setup of dev->pm_dev when set during device MSI
-domain creation.
+All platform MSI users and the PCI/MSI code handle per device MSI domains
+when the irqdomain associated to the device provides MSI parent
+functionality.
+
+Remove the "global" platform domain related code and provide the MSI parent
+functionality by filling in msi_parent_ops.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
 ---
- include/linux/msi.h |    2 ++
- kernel/irq/msi.c    |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/irqchip/Kconfig           |    1 
+ drivers/irqchip/irq-gic-msi-lib.c |    2 +
+ drivers/irqchip/irq-imx-mu-msi.c  |   53 +++++++++++++++-----------------------
+ 3 files changed, 25 insertions(+), 31 deletions(-)
 
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -538,6 +538,8 @@ enum {
- 	MSI_FLAG_NOMASK_QUIRK		= (1 << 7),
- 	/* Use dev->fwnode for MSI device domain creation */
- 	MSI_FLAG_USE_DEV_FWNODE		= (1 << 8),
-+	/* Set parent->dev into domain->pm_dev on device domain creation */
-+	MSI_FLAG_PARENT_PM_DEV		= (1 << 9),
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -494,6 +494,7 @@ config IMX_MU_MSI
+ 	select IRQ_DOMAIN
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	select GENERIC_MSI_IRQ
++	select ARM_GIC_MSI_LIB
+ 	help
+ 	  Provide a driver for the i.MX Messaging Unit block used as a
+ 	  CPU-to-CPU MSI controller. This requires a specially crafted DT
+--- a/drivers/irqchip/irq-gic-msi-lib.c
++++ b/drivers/irqchip/irq-gic-msi-lib.c
+@@ -90,6 +90,8 @@ bool gic_msi_lib_init_dev_msi_info(struc
+ 	/* Chip updates for all child bus types */
+ 	if (!info->chip->irq_eoi)
+ 		info->chip->irq_eoi	= irq_chip_eoi_parent;
++	if (!info->chip->irq_ack)
++		info->chip->irq_ack	= irq_chip_ack_parent;
  
- 	/* Mask for the generic functionality */
- 	MSI_GENERIC_FLAGS_MASK		= GENMASK(15, 0),
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -884,6 +884,8 @@ static struct irq_domain *__msi_create_i
- 		if (!domain->name && info->chip)
- 			domain->name = info->chip->name;
- 		irq_domain_update_bus_token(domain, info->bus_token);
-+		if (info->flags & MSI_FLAG_PARENT_PM_DEV)
-+			domain->pm_dev = parent->pm_dev;
+ 	/*
+ 	 * The device MSI domain can never have a set affinity callback it
+--- a/drivers/irqchip/irq-imx-mu-msi.c
++++ b/drivers/irqchip/irq-imx-mu-msi.c
+@@ -24,6 +24,8 @@
+ #include <linux/pm_domain.h>
+ #include <linux/spinlock.h>
+ 
++#include "irq-gic-msi-lib.h"
++
+ #define IMX_MU_CHANS            4
+ 
+ enum imx_mu_xcr {
+@@ -114,20 +116,6 @@ static void imx_mu_msi_parent_ack_irq(st
+ 	imx_mu_read(msi_data, msi_data->cfg->xRR + data->hwirq * 4);
+ }
+ 
+-static struct irq_chip imx_mu_msi_irq_chip = {
+-	.name = "MU-MSI",
+-	.irq_ack = irq_chip_ack_parent,
+-};
+-
+-static struct msi_domain_ops imx_mu_msi_irq_ops = {
+-};
+-
+-static struct msi_domain_info imx_mu_msi_domain_info = {
+-	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+-	.ops	= &imx_mu_msi_irq_ops,
+-	.chip	= &imx_mu_msi_irq_chip,
+-};
+-
+ static void imx_mu_msi_parent_compose_msg(struct irq_data *data,
+ 					  struct msi_msg *msg)
+ {
+@@ -195,6 +183,7 @@ static void imx_mu_msi_domain_irq_free(s
+ }
+ 
+ static const struct irq_domain_ops imx_mu_msi_domain_ops = {
++	.select	= gic_msi_lib_irq_domain_select,
+ 	.alloc	= imx_mu_msi_domain_irq_alloc,
+ 	.free	= imx_mu_msi_domain_irq_free,
+ };
+@@ -216,35 +205,37 @@ static void imx_mu_msi_irq_handler(struc
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++#define IMX_MU_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
++					 MSI_FLAG_USE_DEF_CHIP_OPS |	\
++					 MSI_FLAG_PARENT_PM_DEV)
++
++#define IMX_MU_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK)
++
++static const struct msi_parent_ops imx_mu_msi_parent_ops = {
++	.supported_flags	= IMX_MU_MSI_FLAGS_SUPPORTED,
++	.required_flags		= IMX_MU_MSI_FLAGS_REQUIRED,
++	.bus_select_token       = DOMAIN_BUS_NEXUS,
++	.bus_select_mask	= MATCH_PLATFORM_MSI,
++	.prefix			= "MU-MSI-",
++	.init_dev_msi_info	= gic_msi_lib_init_dev_msi_info,
++};
++
+ static int imx_mu_msi_domains_init(struct imx_mu_msi *msi_data, struct device *dev)
+ {
+ 	struct fwnode_handle *fwnodes = dev_fwnode(dev);
+ 	struct irq_domain *parent;
+ 
+ 	/* Initialize MSI domain parent */
+-	parent = irq_domain_create_linear(fwnodes,
+-					    IMX_MU_CHANS,
+-					    &imx_mu_msi_domain_ops,
+-					    msi_data);
++	parent = irq_domain_create_linear(fwnodes, IMX_MU_CHANS, &imx_mu_msi_domain_ops, msi_data);
+ 	if (!parent) {
+ 		dev_err(dev, "failed to create IRQ domain\n");
+ 		return -ENOMEM;
  	}
  
- 	return domain;
+ 	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+-
+-	msi_data->msi_domain = platform_msi_create_irq_domain(fwnodes,
+-					&imx_mu_msi_domain_info,
+-					parent);
+-
+-	if (!msi_data->msi_domain) {
+-		dev_err(dev, "failed to create MSI domain\n");
+-		irq_domain_remove(parent);
+-		return -ENOMEM;
+-	}
+-
+-	irq_domain_set_pm_device(msi_data->msi_domain, dev);
+-
++	parent->dev = parent->pm_dev = dev;
++	parent->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
++	parent->msi_parent_ops = &imx_mu_msi_parent_ops;
+ 	return 0;
+ }
+ 
 
