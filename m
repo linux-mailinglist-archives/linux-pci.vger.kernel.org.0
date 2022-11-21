@@ -2,151 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33399632B7E
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:52:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D366632B87
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:54:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230460AbiKURwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 12:52:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43314 "EHLO
+        id S229843AbiKURyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 12:54:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbiKURwe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:52:34 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD3C10AB;
-        Mon, 21 Nov 2022 09:52:28 -0800 (PST)
-Received: from frapeml500001.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGFGB636zz689Gt;
-        Tue, 22 Nov 2022 01:47:30 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml500001.china.huawei.com (7.182.85.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 18:52:26 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 17:52:26 +0000
-Date:   Mon, 21 Nov 2022 17:52:25 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Hillf Danton <hdanton@sina.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Li Ming <ming4.li@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
-Message-ID: <20221121175225.00001b7b@Huawei.com>
-In-Reply-To: <Y3oyQhHUbYZGA80M@iweiny-mobl>
-References: <20221119222527.1799836-1-ira.weiny@intel.com>
-        <20221120022735.4671-1-hdanton@sina.com>
-        <Y3oyQhHUbYZGA80M@iweiny-mobl>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229658AbiKURyX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:54:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95BAA26FE
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 09:54:22 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 27F1161374
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 17:54:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C840C433C1;
+        Mon, 21 Nov 2022 17:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669053261;
+        bh=U9GAbtKpbOcEGLHkAF6EWI2FRUiJLfEVdQD+b+Wb5eU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MPrAh8ZzZd5mogOZOqsn73sV9OB8etDQMMfVPvDn7qqBCG0Pv0oFPe+tylGqoNdT8
+         vvumMWJt6KxxzTDfLholqVEuICF0jlm9xIqTNwBgxxjv4lBuki605job3dhGRfnp6q
+         dYlzfEwiMM8p9hjJvAWFFQ0X4sbgomgwKp/AQThQPTayINHxa8v8EVVv1mDoanQ4e0
+         P1sruwrhrEVqvferJMRlqoIwpSw5m9q+gfUdYVegVIhuY1LA5+HaXzrohpnRKUbwwb
+         ft75ZpQTmbhb8ij3McoAHidQ2QCTqO7lzyuk2iC+xl5ODpUkoV11qT6+qTjDWgRYb1
+         y2Bgrl7x5drgw==
+Date:   Mon, 21 Nov 2022 11:54:19 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Francisco Blas Izquierdo Riera <klondike@klondike.es>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev
+Subject: Re: [PATCH v2] PCI: Add DMA alias for Intel Corporation 8 Series HECI
+Message-ID: <20221121175419.GA122359@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221121164037.8C73110BB536@smtp.xiscosoft.net>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 20 Nov 2022 05:57:22 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+[+to Jarkko, Tomas, Alexander; can any of you confirm this behavior of
+the HECI device?  Are there any other HECI devices that should be
+included in this quirk?]
 
-> On Sun, Nov 20, 2022 at 10:27:35AM +0800, Hillf Danton wrote:
-> > On Sat, 19 Nov 2022 14:25:27 -0800 Ira Weiny <ira.weiny@intel.com>  
-> > > @@ -529,8 +492,18 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > >  		return -EIO;
-> > >  
-> > >  	task->doe_mb = doe_mb;
-> > > -	INIT_WORK(&task->work, doe_statemachine_work);
-> > > -	queue_work(doe_mb->work_queue, &task->work);
-> > > +
-> > > +again:
-> > > +	if (!mutex_trylock(&doe_mb->exec_lock)) {
-> > > +		if (wait_event_timeout(task->doe_mb->wq,
-> > > +				test_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags),
-> > > +				PCI_DOE_POLL_INTERVAL))
-> > > +			return -EIO;  
-> > 
-> > Is EIO worth a line of pr_warn()?  
-> 
-> Maybe but I'm not sure it is worth it.  This was paralleling the original code
-> which called pci_doe_flush_mb() to shut down the mailbox.  So this is likely to
-> never happen.  The callers could print something if needed.
-> 
-> >   
-> > > +		goto again;
-> > > +	}
-> > > +	exec_task(task);
-> > > +	mutex_unlock(&doe_mb->exec_lock);
-> > > +  
-> > 
-> > If it is likely to take two minutes to acquire the exec_lock after
-> > rounds of trying again, trylock + wait timeout barely make sense given EIO.  
-> 
-> I'm not sure where 2 minutes come from?
-> 
-> #define PCI_DOE_TIMEOUT HZ
-> #define PCI_DOE_POLL_INTERVAL   (PCI_DOE_TIMEOUT / 128)
-> 
-> It is also not anticipated that more than 1 task is being given to the mailbox
-> but the protection needs to be there because exec_task() will get confused if
-> more than 1 thread submits at the same time.
+[+cc David, Lu, iommu list]
 
-Given multiple protocols can be on the same DOE and they may be handled by
-either subdrivers or indeed driven by userspace interface, there is a high
-chance that more than one task will be queued up (once we have a few more
-supported protocols).
+On Mon, Nov 21, 2022 at 05:40:37PM +0100, Francisco Blas Izquierdo Riera wrote:
+> PCI: Add function 7 DMA alias quirk for Intel Corporation 8 Series HECI.
+> 
+> Intel Corporation 8 Series HECIs include support for a CRB TPM 2.0
+> device. When the device is enabled on the BIOS, the TPM 2.0 device is
+> detected but the IOMMU prevents it from being accessed.
+> 
+> Even on a computer with a fixed DMAR table, device initialization
+> fails with DMA errors:
+>   DMAR: DRHD: handling fault status reg 3
+>   DMAR: [DMA Read NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x06] PTE Read access is not set
+>   DMAR: DRHD: handling fault status reg 2
+>   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
+>   DMAR: DRHD: handling fault status reg 2
+>   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
+>   tpm tpm0: Operation Timed out
+>   DMAR: DRHD: handling fault status reg 3
+>   tpm tpm0: Operation Timed out
+>   tpm_crb: probe of MSFT0101:00 failed with error -62
+> 
+> After patching the DMAR table and adding this patch, the TPM 2.0
+> device is initialized correctly and no DMA errors appear. Accessing
+> the TPM 2.0 PCR banks also works as expected.
 
-> 
-> All this said I've now convinced myself that there is a race in the use of
-> PCI_DOE_FLAG_CANCEL even with the existing code.
-> 
-> I believe that if the pci device goes away the doe_mb structure may get free'ed
-> prior to other threads having a chance to check doe_mb->flags.  Worse yet the
-> work queue itself (doe_mb->wq) may become invalid...
-> 
-> I don't believe this can currently happen because anyone using the doe_mb
-> structure has a reference to the pci device.
-> 
-> With this patch I think all the doe_mb->flags and the wait queue can go away.
-> pci_doe_wait() can be replaced with a simple msleep_interruptible().
-> 
-> Let me work through that a bit.
-> 
-> Ira
-> 
-> > 
-> > Hillf
-> > 
-> > /**
-> >  * wait_event_timeout - sleep until a condition gets true or a timeout elapses
-> >  * @wq_head: the waitqueue to wait on
-> >  * @condition: a C expression for the event to wait for
-> >  * @timeout: timeout, in jiffies
-> >  *
-> >  * The process is put to sleep (TASK_UNINTERRUPTIBLE) until the
-> >  * @condition evaluates to true. The @condition is checked each time
-> >  * the waitqueue @wq_head is woken up.
-> >  *
-> >  * wake_up() has to be called after changing any variable that could
-> >  * change the result of the wait condition.
-> >  *
-> >  * Returns:
-> >  * 0 if the @condition evaluated to %false after the @timeout elapsed,
-> >  * 1 if the @condition evaluated to %true after the @timeout elapsed,
-> >  * or the remaining jiffies (at least 1) if the @condition evaluated
-> >  * to %true before the @timeout elapsed.
-> >  */  
+Francisco, is the DMAR patch *also* required?  We have several similar
+quirks for devices that use unexpected function numbers, but I don't
+remember any that require DMAR changes.
 
+A kernel quirk requires no action on the part of users, so that's
+easy.  But I don't think it's practical for ordinary users to extract
+the DMAR, disassemble it, patch it, recompile it, and update the
+initramfs as described in your blog post.
+
+Is there a way to add a kernel quirk to accomplish the same DMAR
+override?
+
+> Since most Haswell computers supporting this do not seem to have a
+> valid DMAR table patching the table with an appropriate RMRR is
+> usually also needed. I have published a blogpost describing the
+> process.
+> 
+> This patch currently adds the alias only for function 0. Since this
+> is the only function I have seen provided by the HECI on actual
+> hardware.
+> 
+> 
+> V2: Resent using a sendmail to fix tab mangling made by Thunderbird.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=108251
+> Link: https://klondike.es/klog/2022/11/21/patching-the-acpi-dmar-table-to-allow-tpm2-0/
+> Reported-by: Pierre Chifflier <chifflier@gmail.com>
+> Tested-by: Francisco Blas Izquierdo Riera (klondike) <klondike@klondike.es>
+> Signed-off-by: Francisco Blas Izquierdo Riera <klondike@klondike.es>
+> Suggested-by: Baolu Lu <baolu.lu@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: stable@vger.kernel.org
+> 
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4162,6 +4162,22 @@
+>  			 0x0122, /* Plextor M6E (Marvell 88SS9183)*/
+>  			 quirk_dma_func1_alias);
+>  
+> +static void quirk_dma_func7_alias(struct pci_dev *dev)
+> +{
+> +	if (PCI_FUNC(dev->devfn) == 0)
+> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 7), 1);
+> +}
+> +
+> +/*
+> + * Certain HECIs in Haswell systems support TPM 2.0. Unfortunately they
+> + * perform DMA using the hidden function 7. Fixing this requires this
+> + * alias and a patch of the DMAR ACPI table to include the appropriate
+> + *  MTRR.
+> + * https://bugzilla.kernel.org/show_bug.cgi?id=108251
+> + */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9c3a,
+> +			 quirk_dma_func7_alias);
+> +
+>  /*
+>   * Some devices DMA with the wrong devfn, not just the wrong function.
+>   * quirk_fixed_dma_alias() uses this table to create fixed aliases, where
