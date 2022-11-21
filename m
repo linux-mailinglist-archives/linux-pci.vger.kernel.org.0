@@ -2,117 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1BEC63163E
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Nov 2022 21:10:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B69A3631795
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 01:26:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbiKTUKO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Nov 2022 15:10:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53056 "EHLO
+        id S229798AbiKUAZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Nov 2022 19:25:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbiKTUJ5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 15:09:57 -0500
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AEE2F397;
-        Sun, 20 Nov 2022 12:09:04 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id C24665C005B;
-        Sun, 20 Nov 2022 15:09:01 -0500 (EST)
-Received: from imap48 ([10.202.2.98])
-  by compute5.internal (MEProxy); Sun, 20 Nov 2022 15:09:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:message-id:mime-version
-        :reply-to:sender:subject:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1668974941; x=
-        1669061341; bh=A/l1Y0qAN4hTYqzDIPOQtrpLivbhrove9YLZsjDBhXY=; b=N
-        hb9+fYrrigI3KxlY/Xw+wwrh6mktNlLsNpp1wZLwIGqB1B2JtlV83df3Syq/fv6U
-        DY43+W9JA5FipwBbm7e3CflcgGL3ybluWQvqag22ucC0/SUsXGMqkAY79F5fRnQ+
-        nx8IJoboDUWORpH/lwaZyzVniympVlUqGqvVjrRAHaYgnWBfCvHXp9Ibmg8X3FNR
-        vbaOYDzvQtaQbEhjn4W13LXjwmmIJBm6ts1ObFnk8dLBJfXbRe6RH7hrlyCKHlg2
-        uWFLkvKRPcCu7NBe1mB/GdzsMM6n/IlFdex2yu1LIO8kIJKTgnb8jAZTv+YLzWUE
-        8sX0xM70zN86NFJgxisOw==
-X-ME-Sender: <xms:XYl6Y8t4iF2FtDL21rfqdGvf7DIDGTeIduwo60ChBM76xNlMsDVWPg>
-    <xme:XYl6Y5fsuxw5fl106vN6fYr4fGtX4OC7s6f3vcO6RXgkrdGMe-EYryzT5vVFQCw9L
-    D7nVHDhlgxXcvVabJE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrheeggddutdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenuchmihhsshhinhhgucfvqfcufhhivghlugculdeftd
-    dmnecujfgurhepofgfggfkfffhufgtsehttdertderredtnecuhfhrohhmpehthhhomhgr
-    shcuoehthhhomhgrshesphhouhhrrhhivghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    fftedtffekieffjeetteelieehgeekvdevleehheejfeevfefgffegfeefveeludenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgpdhfrhgvvgiivghsrdhsohhfthifrghrvgenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthhhomhgr
-    shesphhouhhrrhhivghlrdhorhhg
-X-ME-Proxy: <xmx:XYl6Y3y-Jxfhiqpz3Klus1WKdbDQjdOsgCYLRyyTjXzjV1CY2kTDAw>
-    <xmx:XYl6Y_PuQvhH2m-DodW9LscMm2a7gHN45iOSUDHXPD2KpG4NrhorbQ>
-    <xmx:XYl6Y8_TdRXKQyJGF7F9rKTclKlZxFzhgWLrPNHqXr6KiHZ6dlCK_g>
-    <xmx:XYl6Y-Lrc92Hyltj9pAnlkdLFFkPrKiC92B98wbeRVoOvSecLUo6ew>
-Feedback-ID: i1ac9442a:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3785C31A0063; Sun, 20 Nov 2022 15:09:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <364007fe-1575-4609-a183-835ca1015d77@app.fastmail.com>
-Date:   Sun, 20 Nov 2022 21:08:37 +0100
-From:   thomas <thomas@pourriel.org>
-Subject: [Bug] NVME controller down (Seagate FireCuda 530)
-Content-Type: text/plain
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,MISSING_HEADERS,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NEUTRAL autolearn=no
+        with ESMTP id S229708AbiKUAZ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 19:25:57 -0500
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2120.outbound.protection.outlook.com [40.107.114.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08E720F47;
+        Sun, 20 Nov 2022 16:25:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bZpJFgqe8VBIqpZBjYZZBiu70M0e872u259g5I7Y7YuKHdJ50q3D1/9j7a5KFjR6swqUvXCPrAKiwn8+DaVOMTZLGMcgJIpBNMeK/ofhQloHfhYlZGR8vKv96Kg2NmTBSWUOL+gcaNwUS7WHFmA3YWwZscF5ES/y2CATsxlOZyFexBex8r/klb+2ykgZcvogoT7mxo4vCLSKdKM0Nkk3+UPR5iOxaHrXrc/MXNMneyvkNHzq504n2yOZxeBMbTYdoAEHQRnImWpSqOI1gCSjJ2XTZFWZdidouKUsQmw0Ln3JRcYuTbi1jbrRvsnsUJdEKeMkaecm4VSxo34b3vzw8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YqJlfBDTfAAeQn0nYl5/qpcSiOchA+pQ+TQI6hJnY/E=;
+ b=NE4d3udQSuTEM425g2Z37/xLGXHK/SXqUOFuGwDIY1MQ5TnHwz+5ekS4i2iCfgZCLOCML45n7xJhA7v2MlW4HshM38aYgyMKgVOR4ziiWEE5J9qHbjoqsH1cgNiqrCiGtdnCxk7vP0M61DAlS1AIKms5aVxnNaT4Tuy+qIMGhTHRhEQFWmAIAcSJqguWy91YQd6VhhulvCMr9zxiemIegkWCoK6X3PNJ3ZqMSjOI4Io8T0jfYJGLUS3i/rMYIRd+GChANCZhRoJwmOHcj7gi4L0HhOlX5IgPSilCVjS8qPYPAZkrxDh9FVye3I8uxXMynIufCZEcCy5CUgeGBPWOpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YqJlfBDTfAAeQn0nYl5/qpcSiOchA+pQ+TQI6hJnY/E=;
+ b=da/RP4YH6OcstbDPr+ECwt2Rtt5FQYu1T06hwEoPJ98UfygNRElPSNyi8yRgaC6Aecb9OWTjkGDQ3cU1WccErxvpAPW4PlHQTzSD1dq9nvGEedBRkk1eQ/BN17mAGVkpif0EqOwssbqB+8SR2xKkE/19ZOUa4zIVQUeNMZ20DHk=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TYWPR01MB9407.jpnprd01.prod.outlook.com
+ (2603:1096:400:1a2::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Mon, 21 Nov
+ 2022 00:25:52 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::cd89:4a4b:161e:b78d]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::cd89:4a4b:161e:b78d%9]) with mapi id 15.20.5834.015; Mon, 21 Nov 2022
+ 00:25:52 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Rob Herring <robh@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yangtao Li <tiny.windzz@gmail.com>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Daniel Mack <zonque@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-sunxi@lists.linux.dev" <linux-sunxi@lists.linux.dev>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: Add missing start and/or end of line regex
+ anchors
+Thread-Topic: [PATCH] dt-bindings: Add missing start and/or end of line regex
+ anchors
+Thread-Index: AQHY+55sqHJJZXHHEUGv/qPttLIYU65Ih+IA
+Date:   Mon, 21 Nov 2022 00:25:52 +0000
+Message-ID: <TYBPR01MB5341D75C3C139DEAFAA599EDD80A9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20221118223728.1721589-1-robh@kernel.org>
+In-Reply-To: <20221118223728.1721589-1-robh@kernel.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYWPR01MB9407:EE_
+x-ms-office365-filtering-correlation-id: ce582612-997f-4390-e5f5-08dacb56f29e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xiULpy+xv0GaeT+uC/cVHMJdfDztyRubeh/MOVrfkimUNsovV8NZYpnFb6B+IjWw5EnqJrLykjeo2C4L7rPsuZfVMOYBAc9ZMMQE2+bS/SX+hvx1tcqO9k8ngk7Wyi51tGHmQZof7sNzcoIbfwHXBnGf20Tm5SkwJu40EFlrCkB5tjEKf3TbdYO+ZsoRLYYDRc8/Ah/sqQcsxRvR4W4mozD1KJX6e3gN7X7lOb243jQH3zmpCNz4S2PA+CWbGeldYflqT57M/o2dRe3Z6LlgQEk1CIHnkmjDb2Ek2BJRGt1nmZttnhJ62ir78aLP1PNbGKbXd+Mx0ZRFqcCIszZKVBOTeswfirsrLM4vWR7+otQwN33Ln1OHtlKQItKRPeZy/C/9ygaXbCOCqbYBCmX00Zkj3KV/0Vbm6J+LItOeihTUMVJdKLKO03h/KnkEbr2pZQxEmyIxtoRHIhV2ATi1g2L8nOZ35b7bJknGK6BnpY+OLPysXox2o4zae395rkIhfDc7j09qrPlFgjAhAwxq/T6nU8bzugqnxCnbGfWqj9G6E1oPjPzLf4nFpYBHpJXDqBrWGcLw+B1q0m9JrjIOsh+fLA2t1EvsjvNJWRkWvusJg/Yp9065Ja8cBwt7+XHypKBA6KEZ8x2eiqw77PQDjCEjkd27AIASwKLZLe4Ji6ctJQc0qdpE0qFJq69DqmHNq1sGN6ODINIv4iA+oVQYzCWmBKc+8TItDIP5pBTB/Jw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(451199015)(6506007)(38070700005)(110136005)(921005)(2906002)(71200400001)(478600001)(86362001)(55016003)(38100700002)(122000001)(7696005)(9686003)(33656002)(186003)(4744005)(52536014)(7406005)(8936002)(7416002)(41300700001)(66446008)(4326008)(8676002)(66476007)(76116006)(66946007)(66556008)(5660300002)(316002)(64756008)(54906003)(6636002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Lo9iqX0dXJcYY1aDnJE359K66hPEIQHEwjljLdFufIxr3skSSZ5ZfospLQqi?=
+ =?us-ascii?Q?RJHhIaqMmaKXPTkLJfK8SuCP7+pqqhrqU5UH1B/5I3xRQVbBqiNY60FKzeUd?=
+ =?us-ascii?Q?KIf6fKLG9kV004OjV/uqHQvARjZJ4eeBn9uuWHXBFtrfzY8C/e+e/DibtLyY?=
+ =?us-ascii?Q?j5khT/rX8s7uJSFP52Nnvcec6cYVldukO4pGCDAJrb/m0uHUZZ/pmCEBFHW4?=
+ =?us-ascii?Q?lVsQAtFhkef5g1a8KtJw7xMOwbXKIWlSbZQJEYEJ6wPvf8XiofpZdFXYkiou?=
+ =?us-ascii?Q?dnpKMkN5nm4B76LSBrvEUxBzsGQxFjJW+dqkx6T3Wgq41RX93mw2aZfBc4DQ?=
+ =?us-ascii?Q?g2eS8/eFkCZZKLVB3RAjdZCMk7RbCzJs7Oe5CHYzrGxIdrKm/CWVC/cnu+er?=
+ =?us-ascii?Q?tvjmuQ0hgFr9CvwCfrwKSad+V10uZ0dWii+AsoSbDWZiuQfi4mt69pZ++dGt?=
+ =?us-ascii?Q?H/wqwVu9ZVoLZt6NWlWdCJvK++wXVRWy6ud6JfidpEOO7mawgfY2OBarvBrR?=
+ =?us-ascii?Q?DP9s/Qtas+Rpya98atXl4p1KnsDPoTEUjNHHoAKm7OJKsTYdxnHJ3Vymyh8d?=
+ =?us-ascii?Q?oSgilU1Tw23Jt3f4Vt5mDaBqNWnppB+nv8X5msi3ay3DzTg85Di3arC8GQ0D?=
+ =?us-ascii?Q?quQfsA0/Zn6/cpUb4jm61TatOnhxgHFgUNbO22dL3I43FVwFQkCVAq/g/CuN?=
+ =?us-ascii?Q?llhhpr9bsrJEccKVioKwF/DAkRyg86cRJudds8i2mblVb+DOx5cVxDjS1aH3?=
+ =?us-ascii?Q?tmN+MZswAgqFje4BN57Lj0+taogSRFw1VxcHbtqpxw3IYv1uP6P0CkzICyge?=
+ =?us-ascii?Q?cFh2URokZY2p5u18o28ViuaM6EZr8VXyhwTbigYID6TEa6i0IGt/e33GOr0m?=
+ =?us-ascii?Q?FfmskgF4sS7zDqlMiPSDeRBrc/mKyfmXQ8CRAsRqDuFp9YLIErF0vYpQz+Ix?=
+ =?us-ascii?Q?qTXQM0aMZP1ksXGLcJPzrKvDDOuYzfYNYLbvzxYLTxehRfWiKrvlrSlgM/pX?=
+ =?us-ascii?Q?al6OrRXNf/7151STn7Y1O7rDKLR2ip7dGP0NjTrHNtsG68iSF1at61Hnllil?=
+ =?us-ascii?Q?+FUYcePCLRLTSNTCXglaqOs5VEp15RUWhXTlr+Rr/gpfGdWDXZTX30ptLOgf?=
+ =?us-ascii?Q?qb1iVFR5uvZgjISY6y2CBeBcz52ZFGW9yKeNBw5rS7oGuhSLSzhW7WKy7ziK?=
+ =?us-ascii?Q?bpB4WYqcKXQVPgHT0l8XnZgvL1CAQXK4iYl5qtndCQcYbSwN9/nCCDNkY7MR?=
+ =?us-ascii?Q?mZPcbkqzJ0OQDLV0IMDBo3sAuXAK541oWYQLWdOnV3K8XgkkgntsQvluB8Qg?=
+ =?us-ascii?Q?vdrXGu8b84hSHn+TonWh1/Lr4BuIIupp5MdEepGLg1eXuWc33AK0hr5fJHu2?=
+ =?us-ascii?Q?JZc6iReLz8FdI4wZGn+00vBi0Ww4krfHOkZo+LTsHbEXhe2b454vhWndnrXM?=
+ =?us-ascii?Q?sVWsh2j1z2cqt5SmVjPM256CG1hMYSCAaxFus/5TUbO3OKYHpSpq6SpmzGDj?=
+ =?us-ascii?Q?Gvzhqe/J7O5owekDI7OdNFWXr7g/yE4XUT4P8BIEwvn3IBJFzoWlvuz+tsN9?=
+ =?us-ascii?Q?7myrAw/ioUUAjn9U5JJi6T/8kbiiXlf/cxRgzjxdtLQJdZoj25W9NRVAUSdt?=
+ =?us-ascii?Q?aWKegdS3U6Hc+HjujpeVk6YMj3NJ76fZECQZEpvnJhk4l6UfgRv7ilqaTg7E?=
+ =?us-ascii?Q?MaTMhQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce582612-997f-4390-e5f5-08dacb56f29e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2022 00:25:52.3847
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5MOsZdQW+2Yww1wsWAMJmrRrUwSCHQ7U8dNi5IielUC0CPYtj/QzZfXJDpFoC7SGVjqEbtT0JIWm5v94gIyVxFPhyGazBxAyrG7cnz8pMPqrkRfAOqONf/Q0PbT3kzKu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB9407
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+Hi Rob,
 
-Following a recommendation from https://bugzilla.kernel.org/show_bug.cgi?id=216709 , I'm posting this here, in the hope that it finds a resolution.
+> From: Rob Herring, Sent: Saturday, November 19, 2022 7:37 AM
+>=20
+> json-schema patterns by default will match anywhere in a string, so
+> typically we want at least the start or end anchored. Fix the obvious
+> cases where the anchors were forgotten.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/cpufreq/qcom-cpufreq-nvmem.yaml       | 2 +-
+>  Documentation/devicetree/bindings/hwmon/adt7475.yaml          | 4 ++--
+>  .../bindings/opp/allwinner,sun50i-h6-operating-points.yaml    | 4 ++--
+>  .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml         | 2 +-
+>  .../devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml        | 2 +-
 
-# ISSUE DESCRIPTION
-A few seconds after GNOME is started, the NVME drive that is mounted (but which is not used to boot from) is inacessible. dmesg output is:
+Thank you for the patch! For R-Car PCI,
 
-> [  281.692677] nvme nvme0: controller is down; will reset: CSTS=0xffffffff,
-> PCI_STATUS=0x10
-> [  281.778102] nvme 0000:04:00.0: enabling device (0000 -> 0002)
-> [  281.778436] nvme nvme0: Removing after probe failure status: -19
-> [  281.797929] nvme0n1: detected capacity change from 3907029168 to 0
-> [  281.797947] blk_update_request: I/O error, dev nvme0n1, sector 2786568960
-> op 0x1:(WRITE) flags 0x103000 phys_seg 1 prio class 0
-> [  281.797972] Buffer I/O error on dev nvme0n1p3, logical block 308281696,
-> lost async page write
-> [  281.850852] FAT-fs (nvme0n1p4): unable to read boot sector to mark fs as
-> dirty
-> [  343.901432] EXT4-fs warning (device nvme0n1p3):
-> htree_dirblock_to_tree:1067: inode #77070337: lblock 0: comm ls: error -5
-> reading directory block
-> [  343.902354] EXT4-fs error (device nvme0n1p3): __ext4_find_entry:1658:
-> inode #77070337: comm test-nvme-write: reading directory lblock 0
-> [  350.028540] Aborting journal on device nvme0n1p3-8.
-> [  350.028548] Buffer I/O error on dev nvme0n1p3, logical block 223903744,
-> lost sync page write
-> [  350.028554] JBD2: Error -5 detected when updating journal superblock for
-> nvme0n1p3-8.
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
+Best regards,
+Yoshihiro Shimoda
 
-# WHAT I'VE TRIED (without much luck)
-- I've managed to install ZorinOS several times on the drive, so the drive works long enough to have everything copied and installed.
-- On the first 2 Samsung drives, I've managed to install Windows. I did not try with the latest drive.
-- This is the 3rd drive I'm testing (tried with 2 Samsung 970 EVO plus 2To before, and now with a Seagate FireCuda 530 2To)
-- I've tried with either kernel parameter pcie_aspm=off or nvme_core.default_ps_max_latency_us=0 and finally with both, but I get the same result in all 3 cases.
-- I've also tried with various values for nvme_core.default_ps_max_latency_us (starting with 5500)
-- If I boot from the drive, starting in recovery mode, and resuming normal start, seems to postpone a bit the freeze of the system but only by a few minutes. But it still freezes.
-
-
-# SOFTWARE / HARDWARE
-- Linux Kernel : 5.15.0-53-generic
-- Distribution : Zorin OS 16.2
-- Motherboard : GIGABYTE B550 AORUS Elite V2 
-- NVME Drive : Seagate FireCuda 530 2To (latest firmware)
-- CPU : AMD Ryzen 5700X
-
-Thomas.
