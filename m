@@ -2,95 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32F69631BA4
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 09:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFAF8631DE5
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 11:13:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbiKUIiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 03:38:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34014 "EHLO
+        id S231229AbiKUKNF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 05:13:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbiKUIiI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 03:38:08 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23701D336;
-        Mon, 21 Nov 2022 00:38:05 -0800 (PST)
-Received: by mail-qk1-f175.google.com with SMTP id z17so7536025qki.11;
-        Mon, 21 Nov 2022 00:38:05 -0800 (PST)
+        with ESMTP id S230232AbiKUKNA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 05:13:00 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCBFBF41;
+        Mon, 21 Nov 2022 02:12:59 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id g10so10131132plo.11;
+        Mon, 21 Nov 2022 02:12:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JcrfVzbVII/ixGjW6CzVs+lFc79Nuwer3t6F4w1cDOc=;
+        b=qe0/1odAvG1U4tkPC+b1tQpKv/R4kNC8LqG1JsbtP1wjrD1R7uiDuTHJlQG9s94tUN
+         pSVcDGKuezB3YA0zR+DCbSpZKONwxdFDvlNZQyQfxDO2rS3lK50kZj7rhbykDHX6p8Dd
+         019VpLsO1oJTAXVbjgB6UkPOnnFPQKhEhzZe8BSJ5rQgtT7bn5Nc6NeSmlLtxc3W+RLs
+         GqdXaBn8ozP9QGmC0O9dp8YPwjffeSJOf6F9DiYVFshSP3TYFD1IQ/no/UM42zt6L/8Y
+         7JMkOPXVaZ/lBtl43hfJ66qLauYVyuXgO7b5luKyUhAjuQpHQ2BIMwLSA629xGS2Q7jw
+         Tliw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=majJ1avGrA5sKHgff1+tjzzyZx4Q8F2N6bTI30UoVN0=;
-        b=XYtG3qcXZlf52gle7v15TTQkORhvT49sba3oM7PqdMTxAKDHBjfdF1pljGp/7X1gnS
-         xjGAet8iSokRhVpc2ofwrYWcPTGQeGBid6PFyiAUTUoBtSjbnJuRKNsBj7Ss/iaSOQrf
-         dfTwjabUpY/bcLe0pbr/J9LqtVmKHzW6RFzfgw29ZDmqfF+BZ5ev4EcLStk+zpot8jYU
-         5V/MTRlqcwvLu7kduSo9EkSz+8OvDzBzk5MeMo3HWuxbi18FCa+MJ/PM58UrjBdmiyX2
-         YUKMYA3qCaWEwdpa2NcmhDwJNfdyhyhlmIMsz7VC3zITWwx91En5TE/hT8iwkAUVq8qK
-         hNKw==
-X-Gm-Message-State: ANoB5pkkyMAWWQby9+ws2v6gKkhCq0xfy7ksRLDzTdlM/ksbkm1M1rzf
-        we6Lr5O/g9g3WmExoZKeAxxgPW9ZX0Qa0A==
-X-Google-Smtp-Source: AA0mqf42m6RtQH9n3FrT6ck1TJ8JYf+DL91aVh89zndnYg5xcI3fw3Cqh+f19rdsFfPeepAOEMNnfw==
-X-Received: by 2002:a05:620a:150c:b0:6f8:aafe:27e7 with SMTP id i12-20020a05620a150c00b006f8aafe27e7mr15094781qkk.590.1669019884806;
-        Mon, 21 Nov 2022 00:38:04 -0800 (PST)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id v18-20020a05620a0f1200b006fa32a26433sm7838132qkl.38.2022.11.21.00.38.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 00:38:03 -0800 (PST)
-Received: by mail-yb1-f169.google.com with SMTP id k84so12771887ybk.3;
-        Mon, 21 Nov 2022 00:38:02 -0800 (PST)
-X-Received: by 2002:a5b:24b:0:b0:6ca:3b11:8d76 with SMTP id
- g11-20020a5b024b000000b006ca3b118d76mr16184146ybp.202.1669019882500; Mon, 21
- Nov 2022 00:38:02 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JcrfVzbVII/ixGjW6CzVs+lFc79Nuwer3t6F4w1cDOc=;
+        b=42vxU9tZhska9TC4d0Oih3EYjrCIyz9PgSth/LwyRyok6NE1VMY0O4iVqjZlJASdhN
+         lZjOURMhRP+F2rDJNtgYy+XKepElEt0MTCO9b4rIqHavoIUCVUox+OtMRML3VoTdTwOm
+         1xIB0hesvMR8LlVQez3x1qMr4lKGx9Z8PXR33dSQeHOrRZ6pleDeZtNXBb1lapdayqIN
+         uccbDeribD4cT8WBL299+Jaa57Hup6RDQttFUBgoAA1iG/7+qNaoV0t2sZVRMwz+oMQ4
+         ax59uDo/9tNuHbuQ5Et2kBlHgrwGF4xN/xmujghuAQrCudxhOa6J2VyCBXRgS5J9V6HM
+         tgYA==
+X-Gm-Message-State: ANoB5pn9q33bHBZyCceLO0RjSuA4sAM59NCd/BNGCne/aU1gk1Uc8lK9
+        mulHhQnR4LMkCBPdqi2KG0SMNjWGi4M=
+X-Google-Smtp-Source: AA0mqf4X7XAJHYWZmsY4H/BNdfWBj2mucoOk/+euz4wnJWV5PHenEU1N5UF1Co84wGl8RXfwilPrwQ==
+X-Received: by 2002:a17:902:e80f:b0:186:f4ba:a817 with SMTP id u15-20020a170902e80f00b00186f4baa817mr3271250plg.97.1669025578623;
+        Mon, 21 Nov 2022 02:12:58 -0800 (PST)
+Received: from debian.. (subs02-180-214-232-69.three.co.id. [180.214.232.69])
+        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b0017f5ad327casm4522235plb.103.2022.11.21.02.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Nov 2022 02:12:58 -0800 (PST)
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] PCI/MSI: api: Use bullet lists in kernel-doc comments
+Date:   Mon, 21 Nov 2022 17:12:45 +0700
+Message-Id: <20221121101245.23544-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221121184100.0974cc35@canb.auug.org.au>
+References: <20221121184100.0974cc35@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20221118223728.1721589-1-robh@kernel.org>
-In-Reply-To: <20221118223728.1721589-1-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 21 Nov 2022 09:37:51 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXevKD5uq9k+gWygy0rZ_AVjxBW1vrE_Gzzu8=mJu1vjQ@mail.gmail.com>
-Message-ID: <CAMuHMdXevKD5uq9k+gWygy0rZ_AVjxBW1vrE_Gzzu8=mJu1vjQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add missing start and/or end of line regex anchors
-To:     Rob Herring <robh@kernel.org>
-Cc:     Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yangtao Li <tiny.windzz@gmail.com>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Daniel Mack <zonque@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4119; i=bagasdotme@gmail.com; h=from:subject; bh=k7u8QF68GBXH09CAMJK6Ok/Q+l2nHiOrmGnVIIIvZXo=; b=owGbwMvMwCH2bWenZ2ig32LG02pJDMnV/rKHN1ycvSDhlCez8+YTRvVrnrVsuco0da2Tv90jjeO7 XLiWdJSyMIhxMMiKKbJMSuRrOr3LSORC+1pHmDmsTCBDGLg4BWAiWV6MDAvCbO/P3zef/+jCnVUXuW 7nsszaV8Fw4XTT8fvca9Y1hlcz/BU+FuZ9XubSl2J79vBajXciHWpJvI/rxD5MmlKuteS8Ox8A
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS
         autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,25 +77,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 11:43 PM Rob Herring <robh@kernel.org> wrote:
-> json-schema patterns by default will match anywhere in a string, so
-> typically we want at least the start or end anchored. Fix the obvious
-> cases where the anchors were forgotten.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Stephen Rothwell reported htmldocs warnings when merging tip tree:
 
->  .../devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml        | 2 +-
->  Documentation/devicetree/bindings/sound/renesas,rsnd.yaml     | 2 +-
+Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:148: ERROR: Unexpected indentation.
+Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:149: WARNING: Block quote ends without a blank line; unexpected unindent.
+Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:236: ERROR: Unexpected indentation.
+Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:259: ERROR: Unexpected indentation.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Use bullet lists syntax for pci_disable_msix flags and interrupt mode lists
+to fix these warnings.
 
-Gr{oetje,eeting}s,
+Link: https://lore.kernel.org/linux-next/20221121184100.0974cc35@canb.auug.org.au/
+Fixes: 5c0997dc33ac24 ("PCI/MSI: Move pci_alloc_irq_vectors() to api.c")
+Fixes: 017239c8db2093 ("PCI/MSI: Move pci_irq_vector() to api.c")
+Fixes: be37b8428b7b77 ("PCI/MSI: Move pci_irq_get_affinity() to api.c")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ drivers/pci/msi/api.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-                        Geert
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index 6c3ad4863850c3..d48c21295a88c6 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -142,12 +142,15 @@ EXPORT_SYMBOL(pci_disable_msix);
+  * @min_vecs: minimum required number of vectors (must be >= 1)
+  * @max_vecs: maximum desired number of vectors
+  * @flags:    One or more of:
+- *            %PCI_IRQ_MSIX      Allow trying MSI-X vector allocations
+- *            %PCI_IRQ_MSI       Allow trying MSI vector allocations
+- *            %PCI_IRQ_LEGACY    Allow trying legacy INTx interrupts, if
+- *                               and only if @min_vecs == 1
+- *            %PCI_IRQ_AFFINITY  Auto-manage IRQs affinity by spreading
+- *                               the vectors around available CPUs
++ *
++ *            * %PCI_IRQ_MSIX - Allow trying MSI-X vector allocations
++ *            * %PCI_IRQ_MSI - Allow trying MSI vector allocations
++ *
++ *            * %PCI_IRQ_LEGACY - Allow trying legacy INTx interrupts, if
++ *              and only if @min_vecs == 1
++ *
++ *            * %PCI_IRQ_AFFINITY - Auto-manage IRQs affinity by spreading
++ *              the vectors around available CPUs
+  *
+  * Allocate up to @max_vecs interrupt vectors on device. MSI-X irq
+  * vector allocation has a higher precedence over plain MSI, which has a
+@@ -232,10 +235,11 @@ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+  * pci_irq_vector() - Get Linux IRQ number of a device interrupt vector
+  * @dev: the PCI device to operate on
+  * @nr:  device-relative interrupt vector index (0-based); has different
+- *       meanings, depending on interrupt mode
+- *         MSI-X        the index in the MSI-X vector table
+- *         MSI          the index of the enabled MSI vectors
+- *         INTx         must be 0
++ *       meanings, depending on interrupt mode:
++ *
++ *         * MSI-X - the index in the MSI-X vector table
++ *         * MSI - the index of the enabled MSI vectors
++ *         * INTx - must be 0
+  *
+  * Return: the Linux IRQ number, or -EINVAL if @nr is out of range
+  */
+@@ -255,10 +259,11 @@ EXPORT_SYMBOL(pci_irq_vector);
+  * pci_irq_get_affinity() - Get a device interrupt vector affinity
+  * @dev: the PCI device to operate on
+  * @nr:  device-relative interrupt vector index (0-based); has different
+- *       meanings, depending on interrupt mode
+- *         MSI-X        the index in the MSI-X vector table
+- *         MSI          the index of the enabled MSI vectors
+- *         INTx         must be 0
++ *       meanings, depending on interrupt mode:
++ *
++ *         * MSI-X - the index in the MSI-X vector table
++ *         * MSI - the index of the enabled MSI vectors
++ *         * INTx - must be 0
+  *
+  * Return: MSI/MSI-X vector affinity, NULL if @nr is out of range or if
+  * the MSI(-X) vector was allocated without explicit affinity
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+base-commit: 15ce088a8698c22cf5a18799dda16f04ed1d1cb7
+-- 
+An old man doll... just what I always wanted! - Clara
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
