@@ -2,165 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0884F631882
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 03:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4CBD631899
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 03:24:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbiKUCIO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Nov 2022 21:08:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40182 "EHLO
+        id S229685AbiKUCYj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Nov 2022 21:24:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiKUCIN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 21:08:13 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC12713F8C;
-        Sun, 20 Nov 2022 18:08:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668996491; x=1700532491;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=UgoKAvaVej1lY+F8COOB+/X4vAU5Scyn+S4L8fP+HfE=;
-  b=HF37lVyfw4aBtFw9cJW4awFDXYJO5QQCQ67FZbCaYK+6KVHfDbqoxP4w
-   aDNxJNJQoqCyVtyRj8PJu23FGvWIfpZaqBLCbIEnkJ0n3NuR1mE7dXlDS
-   zblPGIrbQfMEZmyE4egBXH5irVGYJmOc0dC/w/mfZoxK6B7EodSNvYiPJ
-   dVaFnQ4UqXuUCw3PCtq+/a0QCN7R0fstkuXfvQxCauQp9j01V6E+6y1h7
-   6Ay32N/xyL0rlotnuyhYtcAYubkilqbNo47rLnRG09KYO796/sTZkdS57
-   dg2n+lioFFiHU5LWVmrf+X+f2+lmQgmSR2OSpoHFUkoRWEFP+eX/bNh+Z
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="399742972"
-X-IronPort-AV: E=Sophos;i="5.96,180,1665471600"; 
-   d="scan'208";a="399742972"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2022 18:08:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="969899863"
-X-IronPort-AV: E=Sophos;i="5.96,180,1665471600"; 
-   d="scan'208";a="969899863"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Nov 2022 18:08:11 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Sun, 20 Nov 2022 18:08:11 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Sun, 20 Nov 2022 18:08:10 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Sun, 20 Nov 2022 18:08:10 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.44) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Sun, 20 Nov 2022 18:08:10 -0800
+        with ESMTP id S229600AbiKUCYi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Nov 2022 21:24:38 -0500
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70058.outbound.protection.outlook.com [40.107.7.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4342A957;
+        Sun, 20 Nov 2022 18:24:36 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CrzSlbqVIMecHP2S0lJ4HqxidYpcwvLVxxaruSJHZI3aNW34agMxn+x0RYr+zSwcilM6q28K71E5dub5OfFf84Efimv+ReqfX636P8shFppUyKkZPATX96GXQTaGaxHNBHdrvLpBEiNOlyP6xyihbw7lOUP57rtJddcEfYJcRZ8NOD99FE5elNf9Qw/pHhjI/OeHOHA+RYvxTbyxBUHhDvqDXraVfwJTV9xljxIzNvNFAOh99UNYZY80p1jKozK1iCLt2LCMGcPd/2T4fzgSh/cCSf2SHVRMOxYOWrHPZm/aX+uJlqXBs9nPmyZ0qU71OIywqrLphjfoT/2q9bB6Xw==
+ b=an1hpREtrwjPGuoA4X4aT+LLv/FLFm694wTe/PtfV/Pk2bkNB6CcXeQvyjJ3XmohJU9BgVOgi/MQXEFRKTokOzF1dCZS8EkCkdJCPH7lrue7DuSwEA58Pp95zZLGh2g6mKST2TXAA/YV3mEI0hJQio2MXgypdpCx+mQP1HxCQ/DUdEL+FdXubk1WYRlfbs9/txmf+/qNZ5ofhazQ6CU25yS3z7qO7KkC2oluHQBZ2GhPeovVcwtBp9irUJB5e/g1PYmXbGv7Uui/wX6H4eSZWzhZs9C/SU9FkxC/SITmi648rpnYmMst/EZyHPf41+Kfgq2845KkHcMA7XTM8Z9I4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j6m65k8QGai2uCZdYmjo2/b55PflWcrdKsOz2sNIRxg=;
- b=K7Rx5CBIW05WxRb8zefQCtfTd/56GdfzMzXBmIk2cCAgWwrGJ3fq6zkozRH9ywaT8Y87p7stKv0+CjhW8u00GPuRCEth5orT1I92C4gUE3uo7Yev51rcc3EJLgmHQSPw6KNR7bncQVMJ9moSbCE1q8otDpNjQdX398efJgb+fa13ZWoPq4kQDyk3LR6aB62vujM0cFj4+TArSI2uCz7vdT36sMZuW7LVyPVIP6360uawVer2NIJ/GFYkj7xEAvXA2D9u6V1cgGIDwVV5gkLRfHpY7dflKuGeCxyio3frsuD2+g+WvdN5pEUCmvc1OdBsufgddmFlpn9sV1xlnFDWTg==
+ bh=ahBr4t2Fhm3bvdQt5S049zqrSwTLn/ECPO/sPYlJleA=;
+ b=bKFfP+X9d62lJvdQZ9ISOyV8zuImHih6YZaV5yUQTFGVkPn9cWCHlgKZABWslWX4+flIUggb4VJQQ+Fy2VC73BcE1wb7bk4BfiIK6HuS1suU5aI2NCogO7SI1XLQz2fAcWk5inXXDQlI7/j6AlV5zZ1I2QfZFnPUS8QI812ZF5k1OifyS/AF307foi2i5eGPOIBBrxC40pphYdZsgDkv5nJQMhfX7gaWcNkRyAo/w1vhM/ltFnsgdqZgBET8LZ4allKcWsmS6FkFvDirqgv8UaJYvOsVmOf4tWrNDSaQurEmf6pdOpL9doWIdmhS0WjtjSQfeUOV1aly3fv1CQL7QQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN6PR11MB3956.namprd11.prod.outlook.com (2603:10b6:405:77::10)
- by MW4PR11MB6888.namprd11.prod.outlook.com (2603:10b6:303:22d::16) with
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ahBr4t2Fhm3bvdQt5S049zqrSwTLn/ECPO/sPYlJleA=;
+ b=bdKrGXSPCTVYQvQ4mMGRHFJgwwLxKQkqaNayThsFnTg9BYxRtGhyxtM/6qabdrSvNTZ9JNK0PfqaZqDuu0PZE4x1nZSXqa6ACpd5o6moziFgDgbsjntzxshboRvzSnTuWCsySrN1TC1nDWjqc2tH8QI+ERDWy+BI8CQPMa31xYM=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by PA4PR04MB9709.eurprd04.prod.outlook.com (2603:10a6:102:26b::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Mon, 21 Nov
- 2022 02:08:08 +0000
-Received: from BN6PR11MB3956.namprd11.prod.outlook.com
- ([fe80::7ac:fe96:566:65e]) by BN6PR11MB3956.namprd11.prod.outlook.com
- ([fe80::7ac:fe96:566:65e%3]) with mapi id 15.20.5834.015; Mon, 21 Nov 2022
- 02:08:08 +0000
-Message-ID: <e7db6aea-4146-33f2-9490-9b5b902e0ec1@intel.com>
-Date:   Mon, 21 Nov 2022 10:07:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.11; Mon, 21 Nov
+ 2022 02:24:32 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::f135:ec2c:8528:d866]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::f135:ec2c:8528:d866%9]) with mapi id 15.20.5834.015; Mon, 21 Nov 2022
+ 02:24:32 +0000
+From:   Hongxing Zhu <hongxing.zhu@nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "marex@denx.de" <marex@denx.de>,
+        "tharvey@gateworks.com" <tharvey@gateworks.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>,
+        "richard.leitner@linux.dev" <richard.leitner@linux.dev>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v2] soc: imx: imx8mp-blk-ctrl: Add PCIe SYSPLL
+ configurations
+Thread-Topic: [PATCH v2] soc: imx: imx8mp-blk-ctrl: Add PCIe SYSPLL
+ configurations
+Thread-Index: AQHY+vxnXue4lENJ1keLvz2yS/EdZa5EhISAgAQkE1A=
+Date:   Mon, 21 Nov 2022 02:24:32 +0000
+Message-ID: <AS8PR04MB86761612418538867E332AA38C0A9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1668740199-31956-1-git-send-email-hongxing.zhu@nxp.com>
+ <dda2cd20b823b002e4b2dccb69741707785a2474.camel@pengutronix.de>
+In-Reply-To: <dda2cd20b823b002e4b2dccb69741707785a2474.camel@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-From:   "Li, Ming" <ming4.li@intel.com>
-To:     <ira.weiny@intel.com>
-CC:     Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20221119222527.1799836-1-ira.weiny@intel.com>
- <750c2096-fe2f-0597-a635-78cbe6b0ee0d@intel.com>
-Organization: Intel
-In-Reply-To: <750c2096-fe2f-0597-a635-78cbe6b0ee0d@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SGXP274CA0001.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::13)
- To BN6PR11MB3956.namprd11.prod.outlook.com (2603:10b6:405:77::10)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8676:EE_|PA4PR04MB9709:EE_
+x-ms-office365-filtering-correlation-id: f4e586dc-6a7e-4df9-14a4-08dacb678669
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7qqmQw7i7Q9lqEJt/qAiMxHoQg/MabRV4RyXyZUd34TNNsD5niA+545Wy6BcgFLfgI7JZu8mfcBYCXtnzcOI83PFDS4xp4FKzGl64mhh3ufBzvslSavc3zfAGl+TGeUeyDqe/o6+i8HC/IO+xoYgwwwxervxfOqEJRfGuVTyIbhW6cZUGvtAslVPA8ONHSWj85dTSuHNJQjj8EFU9pmEfC8uR2JbkJFthfnY5FsYbNILqZAM7mA5PD/SxPhZKtFeD8ooFAELGda+HawnbtqwHRQTla3QUbYs2/6rLz9s+sZXShlhK+KxA7Z0WTz3E7+cMOHH+ZbK0aLDJbFaBrMeNXGYmUcYbLRXhIsdAmb+wgPI1G7NgqLXHuusmRpLGUgVkQrmWQQxE9ATDLgxycSsImC/rjbPTf2+Lc/BxlvsIY9duucxx7Q5H/79fczJY1ZNG7bg2LvtDAz04eYkyx/yyq+9bQ8f8/XKOazb+K/yd+eaqNFSjdv4LlXeOeZduUMXVN/D3sHYhCVuJ7AO+kplE4uMYO9Ecw58ekW5vMrymywwVbM7h2Dy0SViYpklgY+MTSvDUg2ej6/ykKDsMlqL98M4pJnN9IIXS7tpbLutHV6ehHRDc1EN1POv5ZOIcvKwRr1/zGR25Bu/5EstIjXggxu9iLnYYexnZWVG6acJZPMXycNO2aL8oeNBdWADEDYE72HA4ehMGvM7tDjEIXsds1afOMmGkFAYNdEqOu81w+j4eLkCunkt/TNHlLYcpuJ7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(84040400005)(451199015)(2906002)(33656002)(7416002)(8936002)(4326008)(5660300002)(9686003)(26005)(44832011)(53546011)(6506007)(7696005)(52536014)(41300700001)(86362001)(76116006)(66556008)(66476007)(66446008)(66946007)(64756008)(8676002)(55016003)(54906003)(110136005)(122000001)(45080400002)(478600001)(38070700005)(316002)(38100700002)(966005)(83380400001)(71200400001)(186003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?gb2312?B?bVlLTDNXRTMwcTJMSjJBL2x5UFhqdnFyeURXTXRlUkdkOGllY3JoSkhOekt3?=
+ =?gb2312?B?R1VESnYvV042UUJsUXU2TkREbmdTeEI2MGMyNktVRldsbUgxVVFXdTFEZTFY?=
+ =?gb2312?B?UmU3dnBwNGg1NUprSHQ2bW5XaytrR1BxZUQ4U1o3bWNNZTIxVVl0Syt5aUQy?=
+ =?gb2312?B?UUZRckxZMnp5SHZVU0hZM2dTR001YUNNd3ByYzJ3bkhndUd4UU1rSWdVTHpW?=
+ =?gb2312?B?VTVIME1tVzdHOGdMeERQYjdOOU5vNmtENDdmbUV5T1dXcWNoZEo5UVh4SU9Q?=
+ =?gb2312?B?bHhOVDdnc09UTm14R0NTSWdGMjJpSldrRlo4TGIycjdnVElyZU91cjNaKzhs?=
+ =?gb2312?B?ZXZQRy9tWDNTNjl1ODlDMCszMThVbG5ya3hOcmo5SUlMRDVMVUprTG5PaVZH?=
+ =?gb2312?B?QXhhRFNvekp1WWxWUDYwUWdmNlJwOURZdmxXdHRpcjFldG1odVJ6VlBmd28w?=
+ =?gb2312?B?QXg4OTVFdnoyTG03WkJKMUs1UkRRcndsdFFtSytsRlZmWkxldXFrSXVzdDNN?=
+ =?gb2312?B?TURBTVNMdVZvWlZ1R0xYc0ZrZCtEejBOY2REKytUV3RxamJ4SHJrbTUxdmlC?=
+ =?gb2312?B?M1hwWXBjSHl4Z2o0R20zYnUzVDFWeXorQmFMbW15YnRWWHJZTElndUErdkZ3?=
+ =?gb2312?B?UU1pUTVzZytZcHJpcVNNeGRYSGVYdWJLUVh6SUFFK2I1MndQTWhJNUtNdkhX?=
+ =?gb2312?B?bEs3eHRQRzlXeEtxNytHZGZQQkRqNis5Wk1TWHdEelgvSTJ4cHZQZHgxbXpm?=
+ =?gb2312?B?NVo4aTB1WitaOW11SzRDTm95d2M2T3FJaGJocENBTXd4bWozN1VJVUlYZnlS?=
+ =?gb2312?B?WVVZOUNna2tCMUxlNUFFQUJnKzhzTU1JWnBEZ0lYRjBCYU1tM2UvZ0FzNS80?=
+ =?gb2312?B?MTBFK3pDVnFIRHdFVG5hR2xpZFVaQ3J4cVN3cUw5UXRaOGpFajZuVEVNTXk4?=
+ =?gb2312?B?aVFSbjFZbkY2VFlKaUkrWjZVdWU3Sm5VYVVma1BUTndmVExJRjB2UlRrWDVa?=
+ =?gb2312?B?c0RGekVsbDdZQUFHa09DazVTbnRyWXRLSTIrVjl1UlVjWkk5dnFZQVNhUjB5?=
+ =?gb2312?B?L3Vna29NdzhYS2c2UCtzR3I4Vk1ENFNsNHRicUNkSmZleWRvazNRVEJNMmZP?=
+ =?gb2312?B?QmNobFhvWmxtV0luOGZxZU5KYmRQeThkZldmQmVQSjBNWnlGcVBMMDBQdWRn?=
+ =?gb2312?B?ZWhybnM2cTFIcEhqeHlabVpZUlo1MHZ1TU85SnQrTHNJQWNjNFF1OGw4a0NI?=
+ =?gb2312?B?NGIrUjVYSDYxZ09sRHFvMjNVSitZOWxEYlUxRldwelFuS3d5NW1KWUFJR1Fz?=
+ =?gb2312?B?VnhGMXNIb2ZqNE5DUFN4ajRMdSs2YTNiTitwbWh2V1NCakFRSzFiNW1vVnJ6?=
+ =?gb2312?B?RE5hTzFlYjFCbHZhTDQ2Q3E0NnR3MWxGNm1FalpsTXJhVnZlRk1sS0ZDSWVh?=
+ =?gb2312?B?SGdKSCtDYTBBMnl2d1djTHdzdjd5SXR1R3g5SW1JZDZldWVRZytWbllNbWR0?=
+ =?gb2312?B?c3AxbU1wMlh4UmdSWmNSTWQvbkpmSXlEdW91SDNjSVdEZnRUZk0vL3ZFMFIz?=
+ =?gb2312?B?VU9mVTVVRm5nZjV1Q0drQzdORkxuMWNGSFpZdHdTOS9hVUt1cmx2N3U3eXI3?=
+ =?gb2312?B?K2lVYlBJUXdUVlhZUFNmaXVGc0drYk9mUUN3MUpVcUlSbm40OFppMUtVMFBj?=
+ =?gb2312?B?ZERrWjN3aEF2a1JWazhmWXh4dkQ0QndRWkhINzJiY25pbkF0emI4M2JVNDFs?=
+ =?gb2312?B?NXpoTlRSMFNyd1VpU1BrdFF4TXpJcmxVVlI5ZmVKa2JsNVpZMDIyc3JNdnVn?=
+ =?gb2312?B?Z1R0WVM5U29MbEZJdkpWa1VmeFpJZGJmUjErcDF0OFYzUk9ScFVMc3lYMlZE?=
+ =?gb2312?B?U1hPVjgzY0trMnJ3WVJnVFUrVXJUa2JkODFCblNvcStOeWNkYmJqQ0VoQlNM?=
+ =?gb2312?B?QzFRSi9XN21lcnRQZnlxTmlQVnhhUVhSQ1BNQjNtSlozWCtsV1JKMGpLRDhJ?=
+ =?gb2312?B?REI5YmRWSjk2bVpPcVFwUFNhNUI5UktQK1dXNjh6ZGJUa3gvVDU4eFNTN1kz?=
+ =?gb2312?B?NVBjSzVkNSttM2tSQXFvZ0lqU2NuZVNyUkR4eGJIZFBobHhCUDM2RTFjOStE?=
+ =?gb2312?Q?UnrNEAHVrZaJGcQvvnc0BSW2f?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR11MB3956:EE_|MW4PR11MB6888:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5948d5a0-28b7-4c83-7396-08dacb653b56
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pUSz0Go5n/K7bCBtlF4Z6NT0eRJapB1ALbOMbopueUX/cbo5d88LJE2c5EIUnJ8NC1P354e7Jt6sm3YU149at5UJcYGKiFFtRqiShA1P1vpcNX3BLgQ+2A8lc1GhSML14BWpkc85ViLmwHAmYlskY6/Gg7K/IzmlhcgLxRwDJSM8axg/HH2d0l3z7Ze/s3N6DoCZd/iYl5XcyQIaa0lC8EwClgDytDwFOp1FVQpatiA9MQdW8XaKgg/pZQdPaqRaYC8+ULe2eay667zWrtKmNVcSbGtvbCi1hdVbQqUzOGnq+JOPlwhtnXyC28+um+SvOtJM4bh4gMkUIsvpPOvsFh+/yNOahpnqpIHTKSGsjYdTc52ORU9U6F9w5UBkFVfq/AD7Mau2NiYLzk7vPzqQz/lK2cqH6ZJx7xEJVcil6KKZHcoannBkQwwkjeXTNuXl5vqoMutAK/IqLxTVw0oZFySbpvrTflDEZk5qhFmM/v3yV5XIc0q4h7B1AycFvY4UBVEPja0OdjgjhMGOwvdV5Ov0j9okPzzZnQERJx1Oq0UkzbTvuwlVNCVZKK7A+14MeMTS+/frntcfndulVfRy82QgedbwGca/dLr/8l5ptMtOb51o6ZnEJzOSM/C/xTNXEdF/YZAU9Y8NFFXxPfMufYMNFy5pWk+FVRrkIXgl+27K+YiWzDfJBU8DjoZIg8TNymDJYsuQPS5k3eOdYzRjCDGKaZhIVI03cFEKic1LZqbDijBEQ38jbmo5OxKvA4tmpfrgssPQcdo6DjDniz96ZYFU8IYCztJ0wIs7dG7/c6w=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB3956.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(136003)(376002)(346002)(396003)(366004)(451199015)(31686004)(86362001)(31696002)(8936002)(4326008)(2906002)(82960400001)(83380400001)(38100700002)(37006003)(316002)(6636002)(54906003)(186003)(2616005)(66476007)(8676002)(36756003)(6486002)(478600001)(36916002)(966005)(5660300002)(34206002)(66556008)(66946007)(30864003)(41300700001)(6666004)(6506007)(26005)(6512007)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?LzFDdVN3RDM4MFdZSzJnejFLOXV4V09mcGJTcGVMbUI4RFo5TUtuUi9GT0l6?=
- =?utf-8?B?TkZYZVp3WXhSd29aVGszUEg5dTJwTExlb0JGUW14b1hNaHJUVGFWQUlxQ3JD?=
- =?utf-8?B?aFVsV2lCYmdqRWx3MWYxRWY0U01WL1hvVWh3TnNWTG5udWl4RmVXUzRGbkZy?=
- =?utf-8?B?azJ3QndvdnM0RGRRdTlMMXhOUlRQdGk2Z2NUckJPVUl0UTh5UGE4VmVDUFcy?=
- =?utf-8?B?RXgwQnlXa3RCNWV4cWhUdjNLWjNUS3RGbFd2NlkyZXJXRlRxRXJoSGd6UG5p?=
- =?utf-8?B?OEJjUXhEZTlzZ213QXBxRGVnM1VpQzFrOEZiU2RUbitnZFlCQy90TkpBMjJE?=
- =?utf-8?B?MUx4eit3R2I3a2FqelVjQk1hZTVGMnNWQzloTGhmejdGSnVlVnI2RVQ0d2ZY?=
- =?utf-8?B?bUtxeEVVMTgzV0dwSzdwZ005T0IxWFJOYjlDZlVLc2xLWm5ySngrT1lrNGd5?=
- =?utf-8?B?ek41N294Y2wvNjRLMnV0TWp2eGVNYjVKV0c5aW4zZDRNandQeVRBTUd6UDVI?=
- =?utf-8?B?dVRrbVRBV2U4R1BrSTI0cEYyeURTUzlHcVJ0S1ZEOG5nY0pId1FndWlPRWJt?=
- =?utf-8?B?WVJYK2xKSHZVSWI0OFE5OVh0bFBuM3E4bDExdmRPZlFEb3NkajVPWDRnNFBr?=
- =?utf-8?B?b1R6SW5YcTIrQVRzc1pJS0dEelBxamVkMkVKZEluYXpIcm5zVkJNNjhYY1hB?=
- =?utf-8?B?bzRVS3ArZmx1RmpmT3pJbUl1aDJhdmpkb1JzOVB3QkYxc1JVcjQ0b2V4K2xY?=
- =?utf-8?B?emRWMWZtMHBLbVhlblp6SFZnRXFBSEZJUHFBUVJwa1liS1FpQ2IrRnlGNWUr?=
- =?utf-8?B?TmRoS2FPVDBzMFFlcDk0Nk9rc2VOZk9HVEgvd0xMWU1Ib2NmeHEvdVhLdG1k?=
- =?utf-8?B?SkJxeUZQMGVvYVowcFl4VWV6WWIyd1dXcXlUdE9ZS0xZU01XRlE0R1BmZVB2?=
- =?utf-8?B?RGNQdi9tNTY4NS82aEkzUUt4ZWorVTBPN21QTFkzQkxTSXpWdktNbTJ6SXFY?=
- =?utf-8?B?NGtSUXJFZmR6MVhwY1I5cTNiZDh1eEtaN1VZTCtFNm5XM1AvYTVXZTdSUE4x?=
- =?utf-8?B?NUZwNG94c0NiM0RMRm5ROWc1MFY0dVI2bUtzUTIzc0VGeFhyYk5NT29BaTc0?=
- =?utf-8?B?bmoycGlxTENWazVHRjNBTG1FUG4wNTNnRlNoZStvSnlSYVMzVEVPQjhBdGV3?=
- =?utf-8?B?emVrU2ZjYUdkMWl4dm9FeFVKOVlhYWNkcHpVWXFEeUZvS3FjUGV6Ync2bDJk?=
- =?utf-8?B?alRqTHNwWlhlMWVtazBjMWZFVjdVWk05ZGpJekk2WUNuT20yb205N2Y1S1Ux?=
- =?utf-8?B?dDk1d1U1eFNqUlFpTEtScFJoRTJFZk5LWVRpak43Sy9BNjYrMWk2QWhyWm1E?=
- =?utf-8?B?alk5TG9sTlFZUU1pdTJQTVJaWUFETmJNZU5KZjF2d3IrWURMK3YreUNVSGhh?=
- =?utf-8?B?Nk4rV3c0YXBWVDZxZEZkS1NzL0F0a3lZbDBLRThBUFJCMHI5S3NvUWdZME9s?=
- =?utf-8?B?clFjUTB5OStWQVFJclY2NjJ2dUJEdjRYWWhMRi8zMjQyeXEzV3NkbzZjNUp4?=
- =?utf-8?B?UjZVcGlsS1d1WUlqWDNLTld3ZEc4WVVFZW1nQ20rNnR4Rzg4eGI5eFh5ZTNx?=
- =?utf-8?B?TGVGTEhNendNVXQ5dEpoNnZLUzkzTVpMSkEzVUk1aHl3WFV2SzI1U0M4WmdS?=
- =?utf-8?B?bmt0VTJTWE1laExOYUhQYXQvYkpRYlRtR01LN1FBcFZmVUNyd2t1UjdtbUVu?=
- =?utf-8?B?b0ZCaFdMVkR0M0czSElBT0FlSTJxZnZ1VzI1UURWVjhnR3ZXNlN5S2RwZ1V0?=
- =?utf-8?B?MDBwb2dId2Y2K3pUOGNneUZLdGp3MXErUzlUeXlpaXp0bXpobTN2SE1USEs2?=
- =?utf-8?B?ZkhYVjYyZTlnd1UzY0xuSDYrSjJkZ2hGd2MrM2FBV09xemF4SE8vZEJKL3VF?=
- =?utf-8?B?R0VwZHY3TVUzTGhwTDRnbG9JSDg1aytHazQ4MDBuaTFSQkJDMEZTckd0NGUx?=
- =?utf-8?B?WS8rblVRV3hWM3dtVXMyZEVFejI0ZlJWWUlTYWFUVGswOGJnNDR0NEU2YzQ5?=
- =?utf-8?B?VXN6VGJHMkNQRDRRMlRlbDlja2tPcVdVQncwcElwb08rMmVQVWJVQ0IyNU1N?=
- =?utf-8?Q?Sw06Vsbmr62WhdFTth45asuB0?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5948d5a0-28b7-4c83-7396-08dacb653b56
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR11MB3956.namprd11.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2022 02:08:07.9315
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4e586dc-6a7e-4df9-14a4-08dacb678669
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2022 02:24:32.3138
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d99C1pAtnq/ojmXpB89O5ccFpPgiWM8WsxPQ1uMyKoHWVictSCtbMPvxpAkwRpEUypVmwu64A4wFT52RU+lybw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6888
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DFONf3byP8zLUTIaRTkyYDzZJ5OBYqN8ZEDrSIXdkoEg162lRpgvjR9nvNUghq6e7Hcc3wEmt/7rrxgoyPQ+SQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9709
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -168,354 +140,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/21/2022 9:39 AM, Li, Ming wrote:
-> On 11/20/2022 6:25 AM, ira.weiny@intel.com wrote:
->> From: Ira Weiny <ira.weiny@intel.com>
->>
->> Gregory Price and Jonathan Cameron reported a bug within
->> pci_doe_submit_task().[1]  The issue was that work item initialization
->> needs to be done with either INIT_WORK_ONSTACK() or INIT_WORK()
->> depending on how the work item is allocated.
->>
->> Initially, it was anticipated that DOE tasks were going to need to be
->> submitted asynchronously and the code was designed thusly.  Many
->> alternatives were discussed to fix the work initialization issue.[2]
->>
->> However, all current users submit tasks synchronously and this has
->> therefore become an unneeded maintenance burden.  Remove the extra
->> maintenance burden by replacing asynchronous task submission with
->> a synchronous wait function.[3]
->>
->> [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
->> [2] https://lore.kernel.org/linux-cxl/Y3kSDQDur+IUDs2O@iweiny-mobl/T/#m0f057773d9c75432fcfcc54a2604483fe82abe92
->> [3] https://lore.kernel.org/linux-cxl/Y3kSDQDur+IUDs2O@iweiny-mobl/T/#m32d3f9b208ef7486bc148d94a326b26b2d3e69ff
->>
->> Reported-by: Gregory Price <gregory.price@memverge.com>
->> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Suggested-by: "Li, Ming" <ming4.li@intel.com>
->> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->>
->> ---
->> Thanks to Dan for the bulk of the patch.
->> Thanks to Ming for pointing out the need for a lock to prevent more
->> than 1 task from being processed at a time.
->> ---
->>  drivers/cxl/core/pci.c  | 16 ++------
->>  drivers/pci/doe.c       | 83 ++++++++++++++---------------------------
->>  include/linux/pci-doe.h | 10 +----
->>  3 files changed, 32 insertions(+), 77 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 9240df53ed87..58977e0712b6 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -490,21 +490,14 @@ static struct pci_doe_mb *find_cdat_doe(struct device *uport)
->>  		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
->>  	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
->>  
->> -static void cxl_doe_task_complete(struct pci_doe_task *task)
->> -{
->> -	complete(task->private);
->> -}
->> -
->>  struct cdat_doe_task {
->>  	u32 request_pl;
->>  	u32 response_pl[32];
->> -	struct completion c;
->>  	struct pci_doe_task task;
->>  };
->>  
->>  #define DECLARE_CDAT_DOE_TASK(req, cdt)                       \
->>  struct cdat_doe_task cdt = {                                  \
->> -	.c = COMPLETION_INITIALIZER_ONSTACK(cdt.c),           \
->>  	.request_pl = req,				      \
->>  	.task = {                                             \
->>  		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,        \
->> @@ -513,8 +506,6 @@ struct cdat_doe_task cdt = {                                  \
->>  		.request_pl_sz = sizeof(cdt.request_pl),      \
->>  		.response_pl = cdt.response_pl,               \
->>  		.response_pl_sz = sizeof(cdt.response_pl),    \
->> -		.complete = cxl_doe_task_complete,            \
->> -		.private = &cdt.c,                            \
->>  	}                                                     \
->>  }
->>  
->> @@ -525,12 +516,12 @@ static int cxl_cdat_get_length(struct device *dev,
->>  	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
->>  	int rc;
->>  
->> -	rc = pci_doe_submit_task(cdat_doe, &t.task);
->> +	rc = pci_doe_submit_task_wait(cdat_doe, &t.task);
->>  	if (rc < 0) {
->>  		dev_err(dev, "DOE submit failed: %d", rc);
->>  		return rc;
->>  	}
->> -	wait_for_completion(&t.c);
->> +
->>  	if (t.task.rv < sizeof(u32))
->>  		return -EIO;
->>  
->> @@ -554,12 +545,11 @@ static int cxl_cdat_read_table(struct device *dev,
->>  		u32 *entry;
->>  		int rc;
->>  
->> -		rc = pci_doe_submit_task(cdat_doe, &t.task);
->> +		rc = pci_doe_submit_task_wait(cdat_doe, &t.task);
->>  		if (rc < 0) {
->>  			dev_err(dev, "DOE submit failed: %d", rc);
->>  			return rc;
->>  		}
->> -		wait_for_completion(&t.c);
->>  		/* 1 DW header + 1 DW data min */
->>  		if (t.task.rv < (2 * sizeof(u32)))
->>  			return -EIO;
->> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
->> index e402f05068a5..41a75112b39b 100644
->> --- a/drivers/pci/doe.c
->> +++ b/drivers/pci/doe.c
->> @@ -18,7 +18,6 @@
->>  #include <linux/mutex.h>
->>  #include <linux/pci.h>
->>  #include <linux/pci-doe.h>
->> -#include <linux/workqueue.h>
->>  
->>  #define PCI_DOE_PROTOCOL_DISCOVERY 0
->>  
->> @@ -40,7 +39,7 @@
->>   * @cap_offset: Capability offset
->>   * @prots: Array of protocols supported (encoded as long values)
->>   * @wq: Wait queue for work item
->> - * @work_queue: Queue of pci_doe_work items
->> + * @exec_lock: Lock to ensure 1 task is processed at a time
->>   * @flags: Bit array of PCI_DOE_FLAG_* flags
->>   */
->>  struct pci_doe_mb {
->> @@ -49,7 +48,7 @@ struct pci_doe_mb {
->>  	struct xarray prots;
->>  
->>  	wait_queue_head_t wq;
->> -	struct workqueue_struct *work_queue;
->> +	struct mutex exec_lock;
->>  	unsigned long flags;
->>  };
->>  
->> @@ -211,7 +210,6 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->>  static void signal_task_complete(struct pci_doe_task *task, int rv)
->>  {
->>  	task->rv = rv;
->> -	task->complete(task);
->>  }
->>  
->>  static void signal_task_abort(struct pci_doe_task *task, int rv)
->> @@ -231,10 +229,8 @@ static void signal_task_abort(struct pci_doe_task *task, int rv)
->>  	signal_task_complete(task, rv);
->>  }
->>  
->> -static void doe_statemachine_work(struct work_struct *work)
->> +static void exec_task(struct pci_doe_task *task)
->>  {
->> -	struct pci_doe_task *task = container_of(work, struct pci_doe_task,
->> -						 work);
->>  	struct pci_doe_mb *doe_mb = task->doe_mb;
->>  	struct pci_dev *pdev = doe_mb->pdev;
->>  	int offset = doe_mb->cap_offset;
->> @@ -295,18 +291,12 @@ static void doe_statemachine_work(struct work_struct *work)
->>  	signal_task_complete(task, rc);
->>  }
->>  
->> -static void pci_doe_task_complete(struct pci_doe_task *task)
->> -{
->> -	complete(task->private);
->> -}
->> -
->>  static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->>  			     u8 *protocol)
->>  {
->>  	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
->>  				    *index);
->>  	u32 response_pl;
->> -	DECLARE_COMPLETION_ONSTACK(c);
->>  	struct pci_doe_task task = {
->>  		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
->>  		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
->> @@ -314,17 +304,13 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->>  		.request_pl_sz = sizeof(request_pl),
->>  		.response_pl = &response_pl,
->>  		.response_pl_sz = sizeof(response_pl),
->> -		.complete = pci_doe_task_complete,
->> -		.private = &c,
->>  	};
->>  	int rc;
->>  
->> -	rc = pci_doe_submit_task(doe_mb, &task);
->> +	rc = pci_doe_submit_task_wait(doe_mb, &task);
->>  	if (rc < 0)
->>  		return rc;
->>  
->> -	wait_for_completion(&c);
->> -
->>  	if (task.rv != sizeof(response_pl))
->>  		return -EIO;
->>  
->> @@ -376,13 +362,6 @@ static void pci_doe_xa_destroy(void *mb)
->>  	xa_destroy(&doe_mb->prots);
->>  }
->>  
->> -static void pci_doe_destroy_workqueue(void *mb)
->> -{
->> -	struct pci_doe_mb *doe_mb = mb;
->> -
->> -	destroy_workqueue(doe_mb->work_queue);
->> -}
->> -
->>  static void pci_doe_flush_mb(void *mb)
->>  {
->>  	struct pci_doe_mb *doe_mb = mb;
->> @@ -390,12 +369,9 @@ static void pci_doe_flush_mb(void *mb)
->>  	/* Stop all pending work items from starting */
->>  	set_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags);
->>  
->> -	/* Cancel an in progress work item, if necessary */
->> +	/* Cancel the in progress task and waiting tasks, if necessary */
->>  	set_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags);
->>  	wake_up(&doe_mb->wq);
-> should use wake_up_all() to wake up all waiting tasks here?
-> 
->> -
->> -	/* Flush all work items */
->> -	flush_workqueue(doe_mb->work_queue);
->>  }
->>  
->>  /**
->> @@ -423,25 +399,13 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
->>  	doe_mb->pdev = pdev;
->>  	doe_mb->cap_offset = cap_offset;
->>  	init_waitqueue_head(&doe_mb->wq);
->> +	mutex_init(&doe_mb->exec_lock);
->>  
->>  	xa_init(&doe_mb->prots);
->>  	rc = devm_add_action(dev, pci_doe_xa_destroy, doe_mb);
->>  	if (rc)
->>  		return ERR_PTR(rc);
->>  
->> -	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
->> -						dev_driver_string(&pdev->dev),
->> -						pci_name(pdev),
->> -						doe_mb->cap_offset);
->> -	if (!doe_mb->work_queue) {
->> -		pci_err(pdev, "[%x] failed to allocate work queue\n",
->> -			doe_mb->cap_offset);
->> -		return ERR_PTR(-ENOMEM);
->> -	}
->> -	rc = devm_add_action_or_reset(dev, pci_doe_destroy_workqueue, doe_mb);
->> -	if (rc)
->> -		return ERR_PTR(rc);
->> -
->>  	/* Reset the mailbox by issuing an abort */
->>  	rc = pci_doe_abort(doe_mb);
->>  	if (rc) {
->> @@ -496,23 +460,22 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
->>  EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
->>  
->>  /**
->> - * pci_doe_submit_task() - Submit a task to be processed by the state machine
->> + * pci_doe_submit_task_wait() - Submit and execute a task
->>   *
->>   * @doe_mb: DOE mailbox capability to submit to
->> - * @task: task to be queued
->> - *
->> - * Submit a DOE task (request/response) to the DOE mailbox to be processed.
->> - * Returns upon queueing the task object.  If the queue is full this function
->> - * will sleep until there is room in the queue.
->> + * @task: task to be run
->>   *
->> - * task->complete will be called when the state machine is done processing this
->> - * task.
->> + * Submit and run DOE task (request/response) to the DOE mailbox to be
->> + * processed.
->>   *
->>   * Excess data will be discarded.
->>   *
->> - * RETURNS: 0 when task has been successfully queued, -ERRNO on error
->> + * Context: non-interrupt
->> + *
->> + * RETURNS: 0 when task was executed, the @task->rv holds the status
->> + * result of the executed opertion, -ERRNO on failure to submit.
->>   */
->> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->> +int pci_doe_submit_task_wait(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->>  {
->>  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->>  		return -EINVAL;
->> @@ -529,8 +492,18 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->>  		return -EIO;
->>  
->>  	task->doe_mb = doe_mb;
->> -	INIT_WORK(&task->work, doe_statemachine_work);
->> -	queue_work(doe_mb->work_queue, &task->work);
->> +
->> +again:
->> +	if (!mutex_trylock(&doe_mb->exec_lock)) {
->> +		if (wait_event_timeout(task->doe_mb->wq,
->> +				test_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags),
->> +				PCI_DOE_POLL_INTERVAL))
->> +			return -EIO;
-> 
-> We already implemented a pci_doe_wait(), I think we can use it to instead of this wait_event_timeout.
-> 
-> Thanks
-> Ming
-> 
-
-This wait_event_timeout() only check PCI_DOE_FLAG_CANCEL, that means it only detects the signal which the doe_mb has being destroyed.
-If current doe task is done correctly, I think we should wake up next task. Current implementation just waits utill timeout happens and try it again.
-Besides, If two threads are waiting a same doe_mb, thread #1 waited firstly, thread #2 waited secondly, there is a chance that thread #2 is processed before thread #1.
-
-Thanks
-Ming
-
->> +		goto again;
->> +	}
->> +	exec_task(task);
->> +	mutex_unlock(&doe_mb->exec_lock);
->> +
->>  	return 0;
->>  }
->> -EXPORT_SYMBOL_GPL(pci_doe_submit_task);
->> +EXPORT_SYMBOL_GPL(pci_doe_submit_task_wait);
->> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
->> index ed9b4df792b8..c94122a66221 100644
->> --- a/include/linux/pci-doe.h
->> +++ b/include/linux/pci-doe.h
->> @@ -30,8 +30,6 @@ struct pci_doe_mb;
->>   * @response_pl_sz: Size of the response payload (bytes)
->>   * @rv: Return value.  Length of received response or error (bytes)
->>   * @complete: Called when task is complete
->> - * @private: Private data for the consumer
->> - * @work: Used internally by the mailbox
->>   * @doe_mb: Used internally by the mailbox
->>   *
->>   * The payload sizes and rv are specified in bytes with the following
->> @@ -50,11 +48,6 @@ struct pci_doe_task {
->>  	u32 *response_pl;
->>  	size_t response_pl_sz;
->>  	int rv;
->> -	void (*complete)(struct pci_doe_task *task);
->> -	void *private;
->> -
->> -	/* No need for the user to initialize these fields */
->> -	struct work_struct work;
->>  	struct pci_doe_mb *doe_mb;
->>  };
->>  
->> @@ -72,6 +65,5 @@ struct pci_doe_task {
->>  
->>  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->>  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
->> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
->> -
->> +int pci_doe_submit_task_wait(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
->>  #endif
->>
->> base-commit: b6e7fdfd6f6a8bf88fcdb4a45da52c42ba238c25
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFj
+aEBwZW5ndXRyb25peC5kZT4NCj4gU2VudDogMjAyMsTqMTHUwjE4yNUgMTk6MDINCj4gVG86IEhv
+bmd4aW5nIFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+OyBNYXJjZWwgWmlzd2lsZXINCj4gPG1h
+cmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT47IG1hcmV4QGRlbnguZGU7IHRoYXJ2ZXlAZ2F0ZXdv
+cmtzLmNvbTsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNv
+bTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gYWxleGFuZGVyLnN0ZWluQGV3LnRxLWdyb3VwLmNv
+bTsgcmljaGFyZC5sZWl0bmVyQGxpbnV4LmRldg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4ga2VybmVs
+QHBlbmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHYyXSBzb2M6IGlteDogaW14OG1wLWJsay1jdHJsOiBBZGQgUENJZSBT
+WVNQTEwNCj4gY29uZmlndXJhdGlvbnMNCj4gDQo+IEFtIEZyZWl0YWcsIGRlbSAxOC4xMS4yMDIy
+IHVtIDEwOjU2ICswODAwIHNjaHJpZWIgUmljaGFyZCBaaHU6DQo+ID4gQWRkIFBDSWUgU1lTUExM
+IGNvbmZpZ3VyYXRpb25zLCB0aHVzIHRoZSBpbnRlcm5hbCBTWVNQTEwgY2FuIGJlIHVzZWQNCj4g
+PiBhcyBpLk1YOE1QIFBDSWUgcmVmZXJlbmNlIGNsb2NrLg0KPiA+DQo+ID4gVGhlIGZvbGxvd2lu
+ZyBwcm9wZXJ0aWVzIG9mIFBIWSBkdHMgbm9kZSBzaG91bGQgYmUgY2hhbmdlZCBhY2NvcmRpbmds
+eS4NCj4gPiAgIC0gU2V0ICdmc2wscmVmY2xrLXBhZC1tb2RlJyBhcyAnPElNWDhfUENJRV9SRUZD
+TEtfUEFEX09VVFBVVD4nLg0KPiA+ICAgLSBDaGFuZ2UgJ2Nsb2NrcycgdG8gJzwmY2xrIElNWDhN
+UF9DTEtfSFNJT19BWEk+Jy4NCj4gDQo+IFRoaXMgaXMgc3RpbGwgbm90IHdoYXQgSSBtZWFudC4g
+VGhlcmUgaXMgbm8gZGlyZWN0IHJlbGF0aW9uIGJldHdlZW4gdGhlIFBDSWUgUEhZDQo+IGRvbWFp
+biBiZWluZyBwb3dlcmVkIHVwIGFuZCB0aGUgUENJZSBQTEwgYmVpbmcgbmVlZGVkLiBUaGUgUExM
+IHJlYWxseSBvbmx5DQo+IG5lZWRzIHRvIGJlIGFjdGl2ZSB3aGVuIHRoZSByZWZlcmVuY2UgY2xv
+Y2sgaXNuJ3Qgc291cmNlZCBleHRlcm5hbGx5LiBTbyB0aGUNCj4gSFNJTyBibGstY3RybCBzaG91
+bGQgZXhwb3NlIGEgcHJvcGVyIGNsb2NrIGZvciB0aGUgUExMLiBBcyB0aGUgUExMIGlzIGVmZmVj
+dGl2ZWx5DQo+IGZpeGVkIHJhdGUgaXQgc2hvdWxkIGJlIGVub3VnaCB0byBleHBvc2UgZ2V0X3Jh
+dGUsIHByZXBhcmUgYW5kIHVucHJlcGFyZSBjbGsNCj4gb3BzLg0KPiANCj4gVGhlIFBIWSBzaG91
+bGQgdGhlbiBwb2ludCBhdCB0aGUgYmxrLWN0cmwgYXMgdGhlIHJlZmVyZW5jZSBjbG9jayBzb3Vy
+Y2UuDQpIaSBMdWNhczoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NClVuZGVyc3RhbmQgd2hh
+dCdyZSB5b3VyIG1lYW5zLg0KQ2FuIHlvdSBoZWxwIHRvIHByb3ZpZGUgc29tZSBzcGVjaWZpYyBw
+c2V1ZG8gZXhhbXBsZSBjb2RlcyB0byBsZXQgYmxrLWN0cmwNCiBleHBvc2Ugc3VjaCBraW5kIG9m
+IGNsb2NrIHRvIFBDSWUgUEhZIG1vZHVsZT8NCg0KQmVzdCBSZWdhcmRzDQpSaWNoYXJkIFpodQ0K
+PiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSaWNo
+YXJkIFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gdjEtPnYyOg0KPiA+
+IFJlZmVyIHRvIEx1Y2FzJyBjb21tZW50cywgZG9uJ3QgZXhwb3NlIElNWDhNUF9DTEtfSFNJT19S
+T09UIHRvIGR0cw0KPiBub2RlLg0KPiA+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rp
+b24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnBhdGMNCj4gPg0KPiBod29yay5vemxh
+YnMub3JnJTJGcHJvamVjdCUyRmxpbnV4LXBjaSUyRnBhdGNoJTJGMTY2NjU5MDE4OS0xMzY0LTEt
+Z2kNCj4gdA0KPiA+DQo+IC1zZW5kLWVtYWlsLWhvbmd4aW5nLnpodSU0MG54cC5jb20lMkYmYW1w
+O2RhdGE9MDUlN0MwMSU3Q2hvbmd4aW5nLg0KPiB6aHUlDQo+ID4NCj4gNDBueHAuY29tJTdDNGU1
+NTkwMzBiMTNkNDA4ZjY2YzEwOGRhYzk1NDYzOTMlN0M2ODZlYTFkM2JjMmI0YzYNCj4gZmE5MmNk
+OTkNCj4gPg0KPiBjNWMzMDE2MzUlN0MwJTdDMCU3QzYzODA0MzY2MTUzNzcxMDc3MiU3Q1Vua25v
+d24lN0NUV0ZwYkdaDQo+IHNiM2Q4ZXlKV0lqbw0KPiA+DQo+IGlNQzR3TGpBd01EQWlMQ0pRSWpv
+aVYybHVNeklpTENKQlRpSTZJazFoYVd3aUxDSlhWQ0k2TW4wJTNEJTdDMzAwDQo+IDAlN0MlDQo+
+ID4NCj4gN0MlN0MmYW1wO3NkYXRhPUdONVduek5XMW9jbGg3WkpGVVVLM0I2OFFZQXFSTXc2a1B2
+MG9FZ1BtRlkNCj4gJTNEJmFtcDtyZXMNCj4gPiBlcnZlZD0wDQo+ID4NCj4gPiBVc2UgPCZjbGsg
+SU1YOE1QX0NMS19IU0lPX0FYST4gYXMgcmVmZXJyZW5jZSBjbG9jayBzb3VyY2Ugd2hlbg0KPiA+
+IGludGVybmFsIGNsb2NrIG1vZGUgaXMgdXNlZCBieSBpLk1YOE1QIFBDSWUgbW9kdWxlLg0KPiA+
+DQo+ID4gVmVyaWZpZWQgb24gaS5NWDhNUCBFVksgYm9hcmQgd2l0aCByZW1vdmluZyBSMTMxL1Ix
+MzIvUjEzNy9SMTM4LCBhbmQNCj4gPiBwb3B1bGF0aW5nIFIxMzUvUjEzNi4NCj4gPiAtLS0NCj4g
+PiAgZHJpdmVycy9zb2MvaW14L2lteDhtcC1ibGstY3RybC5jIHwgMjIgKysrKysrKysrKysrKysr
+KysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL2lteC9pbXg4bXAtYmxrLWN0cmwuYw0KPiA+IGIvZHJp
+dmVycy9zb2MvaW14L2lteDhtcC1ibGstY3RybC5jDQo+ID4gaW5kZXggMGUzYjZiYTIyZjk0Li41
+YWQyMGE4ZWEyNWUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvaW14L2lteDhtcC1ibGst
+Y3RybC5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvaW14L2lteDhtcC1ibGstY3RybC5jDQo+ID4g
+QEAgLTIxLDYgKzIxLDE2IEBADQo+ID4gICNkZWZpbmUgIFVTQl9DTE9DS19NT0RVTEVfRU4JQklU
+KDEpDQo+ID4gICNkZWZpbmUgIFBDSUVfUEhZX0FQQl9SU1QJQklUKDQpDQo+ID4gICNkZWZpbmUg
+IFBDSUVfUEhZX0lOSVRfUlNUCUJJVCg1KQ0KPiA+ICsjZGVmaW5lIEdQUl9SRUcyCQkweDgNCj4g
+PiArI2RlZmluZSAgUF9QTExfTUFTSwkJR0VOTUFTSyg1LCAwKQ0KPiA+ICsjZGVmaW5lICBNX1BM
+TF9NQVNLCQlHRU5NQVNLKDE1LCA2KQ0KPiA+ICsjZGVmaW5lICBTX1BMTF9NQVNLCQlHRU5NQVNL
+KDE4LCAxNikNCj4gPiArI2RlZmluZSAgUF9QTEwJCQkoMHhjIDw8IDApDQo+ID4gKyNkZWZpbmUg
+IE1fUExMCQkJKDB4MzIwIDw8IDYpDQo+ID4gKyNkZWZpbmUgIFNfUExMCQkJKDB4NCA8PCAxNikN
+Cj4gPiArI2RlZmluZSBHUFJfUkVHMwkJMHhjDQo+ID4gKyNkZWZpbmUgIFBMTF9DS0UJCUJJVCgx
+NykNCj4gPiArI2RlZmluZSAgUExMX1JTVAkJQklUKDMxKQ0KPiA+DQo+ID4gIHN0cnVjdCBpbXg4
+bXBfYmxrX2N0cmxfZG9tYWluOw0KPiA+DQo+ID4gQEAgLTg2LDYgKzk2LDE4IEBAIHN0YXRpYyB2
+b2lkIGlteDhtcF9oc2lvX2Jsa19jdHJsX3Bvd2VyX29uKHN0cnVjdA0KPiBpbXg4bXBfYmxrX2N0
+cmwgKmJjLA0KPiA+ICAJY2FzZSBJTVg4TVBfSFNJT0JMS19QRF9QQ0lFX1BIWToNCj4gPiAgCQly
+ZWdtYXBfc2V0X2JpdHMoYmMtPnJlZ21hcCwgR1BSX1JFRzAsDQo+ID4gIAkJCQlQQ0lFX1BIWV9B
+UEJfUlNUIHwgUENJRV9QSFlfSU5JVF9SU1QpOw0KPiA+ICsNCj4gPiArCQkvKiBTZXQgdGhlIFBM
+TCBjb25maWd1cmF0aW9ucywgUCA9IDEyLCBNID0gODAwLCBTID0gNC4gKi8NCj4gPiArCQlyZWdt
+YXBfdXBkYXRlX2JpdHMoYmMtPnJlZ21hcCwgR1BSX1JFRzIsDQo+ID4gKwkJCQkgICBQX1BMTF9N
+QVNLIHwgTV9QTExfTUFTSyB8IFNfUExMX01BU0ssDQo+ID4gKwkJCQkgICBQX1BMTCB8IE1fUExM
+IHwgU19QTEwpOw0KPiA+ICsJCXVkZWxheSgxKTsNCj4gPiArDQo+ID4gKwkJcmVnbWFwX3VwZGF0
+ZV9iaXRzKGJjLT5yZWdtYXAsIEdQUl9SRUczLCBQTExfUlNULCBQTExfUlNUKTsNCj4gPiArCQl1
+ZGVsYXkoMTApOw0KPiA+ICsNCj4gPiArCQkvKiBTZXQgMWInMSB0byBwbGxfY2tlIG9mIEdQUl9S
+RUczICovDQo+ID4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKGJjLT5yZWdtYXAsIEdQUl9SRUczLCBQ
+TExfQ0tFLCBQTExfQ0tFKTsNCj4gPiAgCQlicmVhazsNCj4gPiAgCWRlZmF1bHQ6DQo+ID4gIAkJ
+YnJlYWs7DQo+IA0KDQo=
