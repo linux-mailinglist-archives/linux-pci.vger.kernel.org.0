@@ -2,216 +2,276 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C98C16320D7
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 12:39:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DB6E63211C
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 12:47:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231318AbiKULjc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 06:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38006 "EHLO
+        id S230099AbiKULrH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 06:47:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231321AbiKULjI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 06:39:08 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1548D13D02;
-        Mon, 21 Nov 2022 03:37:47 -0800 (PST)
-Received: from frapeml100008.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG50d1zJkz6H7YQ;
-        Mon, 21 Nov 2022 19:35:13 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 12:37:45 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 11:37:44 +0000
-Date:   Mon, 21 Nov 2022 11:37:43 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <rostedt@goodmis.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>
-Subject: Re: [PATCH v3 08/11] cxl/pci: add tracepoint events for CXL RAS
-Message-ID: <20221121113743.000075b6@Huawei.com>
-In-Reply-To: <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
-        <166879132997.674819.12112190531427523276.stgit@djiang5-desk3.ch.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231538AbiKULqz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 06:46:55 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FE726C1
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 03:46:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669031213; x=1700567213;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K+TucEnOC4a+YL//KkmZgv0jgf05oC2OMeVlJa8zWD4=;
+  b=kGaqdi1nuxKhI/yaMtMnNG3ui98tWFEOLZEW71TnqfW8Hwizqa/lLLDG
+   PE7a6mTBL4A92zPcEFhszd+EeQEFtOeg3DZ//4D+ZY4PGjYkEPNGlT0Ki
+   FwZcfKvh+2w6FoT8kjYO8fbDr6fA48RTr5W7OhMkv5Nbvx3J7aUxHq6E2
+   JYuH478bXvHBI1pQDbruEQtQAJzvCSJzj+vaNgSQ8f7GRTQZ6WNM/fmGd
+   BUn4pDoSu6F2IOtiTQ2dOHjqD9d7J2XxsT6tmd+PETCTc5bdezgeBVDoH
+   aWzh6blRxL+g6Ws32/RjQmX4g5HpFKpe4tQD/fKfUkB0/23mtdwwMI211
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="314685958"
+X-IronPort-AV: E=Sophos;i="5.96,181,1665471600"; 
+   d="scan'208";a="314685958"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 03:46:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="746874526"
+X-IronPort-AV: E=Sophos;i="5.96,181,1665471600"; 
+   d="scan'208";a="746874526"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2022 03:46:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 94D2C10E; Mon, 21 Nov 2022 13:47:16 +0200 (EET)
+Date:   Mon, 21 Nov 2022 13:47:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: Take multifunction devices into account when
+ distributing resources
+Message-ID: <Y3tlRIG99P/amO9Q@black.fi.intel.com>
+References: <Y3dI6K8o+j1nE4Lf@black.fi.intel.com>
+ <20221118122951.GA1263043@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20221118122951.GA1263043@bhelgaas>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Nov 2022 10:08:49 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+Hi,
 
-> Add tracepoint events for recording the CXL uncorrectable and correctable
-> errors. For uncorrectable errors, there is additional data of 512B from
-> the header log register (CXL spec rev3 8.2.4.16.7). The trace event will
-> intake a dynamic array that will dump the entire Header Log data. If
-> multiple errors are set in the status register, then the
-> 'first error' field (CXL spec rev3 v8.2.4.16.6) is read from the Error
-> Capabilities and Control Register in order to determine the error.
+On Fri, Nov 18, 2022 at 06:29:51AM -0600, Bjorn Helgaas wrote:
+> Hi Mika,
 > 
-> This implementation does not include CXL IDE Error details.
+> On Fri, Nov 18, 2022 at 10:57:12AM +0200, Mika Westerberg wrote:
+> > On Thu, Nov 17, 2022 at 05:10:34PM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Nov 14, 2022 at 01:59:52PM +0200, Mika Westerberg wrote:
+> > > > PCIe switch upstream port may be one of the functions of a multifunction
+> > > > device.
+> > > 
+> > > I don't think this is specific to PCIe, is it?  Can't we have a
+> > > multi-function device where one function is a conventional PCI bridge?
+> > > Actually, I don't think "multi-function" is relevant at all -- you
+> > > iterate over all the devices on the bus below.  For PCIe, that likely
+> > > means multiple functions of the same device, but it could be separate
+> > > devices in conventional PCI.
+> > 
+> > Yes it can be but I was trying to explain the problem we encountered and
+> > that's related to PCIe.
+> > 
+> > I can leave this out if you think it is better that way.
 > 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-With the stuff Steven raised tidied up this looks good to me now.
+> Not necessarily, I'm just hoping this change is generic enough for all
+> PCI and PCIe topologies.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Okay maybe I'll just drop the "multi-function" part of it?
 
-
-
-> ---
->  drivers/cxl/pci.c          |    2 +
->  include/trace/events/cxl.h |  110 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 112 insertions(+)
->  create mode 100644 include/trace/events/cxl.h
+> > > > The resource distribution code does not take this into account
+> > > > properly and therefore it expands the upstream port resource windows too
+> > > > much, not leaving space for the other functions (in the multifunction
+> > > > device)
+> > > 
+> > > I guess the window expansion here is done by adjust_bridge_window()?
+> > 
+> > Yes but the resources are distributed in
+> > pci_bus_distribute_available_resources().
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 9428f3e0d99b..0f36a5861a7b 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -13,6 +13,8 @@
->  #include "cxlmem.h"
->  #include "cxlpci.h"
->  #include "cxl.h"
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/cxl.h>
->  
->  /**
->   * DOC: cxl pci
-> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-> new file mode 100644
-> index 000000000000..f8e95d977133
-> --- /dev/null
-> +++ b/include/trace/events/cxl.h
-> @@ -0,0 +1,110 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM cxl
-> +
-> +#if !defined(_CXL_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _CXL_EVENTS_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +#define CXL_HEADERLOG_SIZE		SZ_512
-> +#define CXL_HEADERLOG_SIZE_U32		SZ_512 / sizeof(u32)
-> +
-> +#define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
-> +#define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
-> +#define CXL_RAS_UC_CACHE_BE_PARITY	BIT(2)
-> +#define CXL_RAS_UC_CACHE_DATA_ECC	BIT(3)
-> +#define CXL_RAS_UC_MEM_DATA_PARITY	BIT(4)
-> +#define CXL_RAS_UC_MEM_ADDR_PARITY	BIT(5)
-> +#define CXL_RAS_UC_MEM_BE_PARITY	BIT(6)
-> +#define CXL_RAS_UC_MEM_DATA_ECC		BIT(7)
-> +#define CXL_RAS_UC_REINIT_THRESH	BIT(8)
-> +#define CXL_RAS_UC_RSVD_ENCODE		BIT(9)
-> +#define CXL_RAS_UC_POISON		BIT(10)
-> +#define CXL_RAS_UC_RECV_OVERFLOW	BIT(11)
-> +#define CXL_RAS_UC_INTERNAL_ERR		BIT(14)
-> +#define CXL_RAS_UC_IDE_TX_ERR		BIT(15)
-> +#define CXL_RAS_UC_IDE_RX_ERR		BIT(16)
-> +
-> +#define show_uc_errs(status)	__print_flags(status, " | ",		  \
-> +	{ CXL_RAS_UC_CACHE_DATA_PARITY, "Cache Data Parity Error" },	  \
-> +	{ CXL_RAS_UC_CACHE_ADDR_PARITY, "Cache Address Parity Error" },	  \
-> +	{ CXL_RAS_UC_CACHE_BE_PARITY, "Cache Byte Enable Parity Error" }, \
-> +	{ CXL_RAS_UC_CACHE_DATA_ECC, "Cache Data ECC Error" },		  \
-> +	{ CXL_RAS_UC_MEM_DATA_PARITY, "Memory Data Parity Error" },	  \
-> +	{ CXL_RAS_UC_MEM_ADDR_PARITY, "Memory Address Parity Error" },	  \
-> +	{ CXL_RAS_UC_MEM_BE_PARITY, "Memory Byte Enable Parity Error" },  \
-> +	{ CXL_RAS_UC_MEM_DATA_ECC, "Memory Data ECC Error" },		  \
-> +	{ CXL_RAS_UC_REINIT_THRESH, "REINIT Threshold Hit" },		  \
-> +	{ CXL_RAS_UC_RSVD_ENCODE, "Received Unrecognized Encoding" },	  \
-> +	{ CXL_RAS_UC_POISON, "Received Poison From Peer" },		  \
-> +	{ CXL_RAS_UC_RECV_OVERFLOW, "Receiver Overflow" },		  \
-> +	{ CXL_RAS_UC_INTERNAL_ERR, "Component Specific Error" },	  \
-> +	{ CXL_RAS_UC_IDE_TX_ERR, "IDE Tx Error" },			  \
-> +	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
-> +)
-> +
-> +TRACE_EVENT(cxl_aer_uncorrectable_error,
-> +	TP_PROTO(const char *dev_name, u32 status, u32 fe, u32 *hl),
-> +	TP_ARGS(dev_name, status, fe, hl),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name)
-> +		__field(u32, status)
-> +		__field(u32, first_error)
-> +		__dynamic_array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name);
-> +		__entry->status = status;
-> +		__entry->first_error = fe;
-> +		/*
-> +		 * Embed the 512B headerlog data for user app retrieval and
-> +		 * parsing, but no need to print this in the trace buffer.
-> +		 */
-> +		memcpy(__get_dynamic_array(header_log), hl, CXL_HEADERLOG_SIZE);
-> +	),
-> +	TP_printk("%s: status: '%s' first_error: '%s'",
-> +		  __get_str(dev_name),
-> +		  show_uc_errs(__entry->status),
-> +		  show_uc_errs(__entry->first_error)
-> +	)
-> +);
-> +
-> +#define CXL_RAS_CE_CACHE_DATA_ECC	BIT(0)
-> +#define CXL_RAS_CE_MEM_DATA_ECC		BIT(1)
-> +#define CXL_RAS_CE_CRC_THRESH		BIT(2)
-> +#define CXL_RAS_CE_CACHE_POISON		BIT(3)
-> +#define CXL_RAS_CE_MEM_POISON		BIT(4)
-> +#define CXL_RAS_CE_PHYS_LAYER_ERR	BIT(5)
-> +
-> +#define show_ce_errs(status)	__print_flags(status, " | ",			\
-> +	{ CXL_RAS_CE_CACHE_DATA_ECC, "Cache Data ECC Error" },			\
-> +	{ CXL_RAS_CE_MEM_DATA_ECC, "Memory Data Ecc Error" },			\
-> +	{ CXL_RAS_CE_CRC_THRESH, "CRC Threshold Hit" },				\
-> +	{ CXL_RAS_CE_CACHE_POISON, "Received Cache Poison From Peer" },		\
-> +	{ CXL_RAS_CE_MEM_POISON, "Received Memory Poison From Peer" },		\
-> +	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
-> +)
-> +
-> +TRACE_EVENT(cxl_aer_correctable_error,
-> +	TP_PROTO(const char *dev_name, u32 status),
-> +	TP_ARGS(dev_name, status),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name)
-> +		__field(u32, status)
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name);
-> +		__entry->status = status;
-> +	),
-> +	TP_printk("%s: status: '%s'",
-> +		  __get_str(dev_name), show_ce_errs(__entry->status)
-> +	)
-> +);
-> +
-> +#endif /* _CXL_EVENTS_H */
-> +
-> +/* This part must be outside protection */
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE cxl
-> +#include <trace/define_trace.h>
-> 
-> 
+> Yep, sounds good, I was just confirming my understanding of the code.
+> The main point of this patch is to *reduce* the size of the windows to
+> leave room for peers of the bridge, so I had to look a bit to figure
+> out where they got expanded.
 
+Understood :)
+
+> > > >  	if (hotplug_bridges + normal_bridges == 1) {
+> > > > -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> > > > -		if (dev->subordinate)
+> > > > -			pci_bus_distribute_available_resources(dev->subordinate,
+> > > > -				add_list, io, mmio, mmio_pref);
+> > > > +		/* Upstream port must be the first */
+> > > > +		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> > > > +		if (!bridge->subordinate)
+> > > > +			return;
+> > > > +
+> > > > +		/*
+> > > > +		 * It is possible to have switch upstream port as a part of a
+> > > > +		 * multifunction device. For this reason reduce the space
+> > > > +		 * available for distribution by the amount required by the
+> > > > +		 * peers of the upstream port.
+> > > > +		 */
+> > > > +		list_for_each_entry(dev, &bus->devices, bus_list) {
+> > > 
+> > > It seems like maybe we ought to do this regardless of how many bridges
+> > > there are on the bus.  Don't we always want to assign space to devices
+> > > on this bus before distributing the leftovers to downstream buses?
+> > 
+> > Yes we do.
+> > 
+> > > E.g., maybe this should be done before the adjust_bridge_window()
+> > > calls?
+> > 
+> > With the current code it is clear that we deal with the upstream port.
+> > At least in PCIe it is not allowed to have anything else than downstream
+> > ports on that internal bus so the only case we would need to do this is
+> > the switch upstream port.
+> > 
+> > Let me know if you still want me to move this before adjust_bridge_window()
+> > I can do that in v3. Probably needs a comment too.
+> 
+> Hmm, I don't know exactly how to do this, but I don't think this code
+> should be PCIe-specific, which I think means it shouldn't depend on
+> how many bridges are on the bus.
+> 
+> I guess the existing assumption that a bridge must be the first device
+> on the bus is a hidden assumption that this is PCIe.  That might be a
+> mistake from the past.
+> 
+> I haven't tried it, but I wonder if we could reproduce the same
+> problem in a conventional PCI topology with qemu.
+
+I'm not an expert in QEMU but I think I was able to create such topology
+with the following command line (parts copied from Jonathan's):
+
+qemu-system-aarch64                                                             \
+        -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+        -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd                           \
+        -nographic -no-reboot                                                   \
+        -kernel Image                          					\
+        -initrd rootfs.cpio.bz2              					\
+        -device pcie-pci-bridge,id=br1                                          \
+        -device pci-bridge,chassis_nr=1,bus=br1,id=br2,shpc=on,addr=2           \
+        -device e1000,bus=br1,addr=3                                            \
+        -device e1000,bus=br1,addr=4                                            \
+        -device e1000,bus=br2,addr=5
+
+However, the problem does not reproduce with or without the patch. The
+below is 'lspci -v' without this patch and 5632e2beaf9d5dda694c0572684dea783d8a9492 reverted:
+
+00:02.0 PCI bridge: Red Hat, Inc. Device 000e (prog-if 00 [Normal decode])
+        Flags: bus master, 66MHz, fast devsel, latency 0, IRQ 47
+        Memory at 8000004000 (64-bit, non-prefetchable) [size=256]
+        Bus: primary=00, secondary=01, subordinate=02, sec-latency=0
+        I/O behind bridge: 1000-2fff [size=8K] [16-bit]
+        Memory behind bridge: 10000000-102fffff [size=3M] [32-bit]
+        Prefetchable memory behind bridge: [disabled] [64-bit]
+        Capabilities: [8c] MSI: Enable- Count=1/1 Maskable+ 64bit+
+        Capabilities: [84] Power Management version 3
+        Capabilities: [48] Express PCI-Express to PCI/PCI-X Bridge, MSI 00
+        Capabilities: [40] Hot-plug capable
+        Capabilities: [100] Advanced Error Reporting
+
+01:02.0 PCI bridge: Red Hat, Inc. QEMU PCI-PCI bridge (prog-if 00 [Normal decode])
+        Flags: bus master, 66MHz, fast devsel, latency 0, IRQ 45
+        Memory at 10240000 (64-bit, non-prefetchable) [size=256]
+        Bus: primary=01, secondary=02, subordinate=02, sec-latency=0
+        I/O behind bridge: 1000-1fff [size=4K] [16-bit]
+        Memory behind bridge: 10000000-100fffff [size=1M] [32-bit]
+        Prefetchable memory behind bridge: [disabled] [64-bit]
+        Capabilities: [4c] MSI: Enable- Count=1/1 Maskable+ 64bit+
+        Capabilities: [48] Slot ID: 0 slots, First+, chassis 01
+        Capabilities: [40] Hot-plug capable
+
+01:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 46
+        Memory at 10200000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 2000 [size=64]
+        Expansion ROM at 10100000 [disabled] [size=512K]
+        Kernel driver in use: e1000
+
+01:04.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 47
+        Memory at 10220000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 2040 [size=64]
+        Expansion ROM at 10180000 [disabled] [size=512K]
+        Kernel driver in use: e1000
+
+02:05.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 46
+        Memory at 10080000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 1000 [size=64]
+        Expansion ROM at 10000000 [disabled] [size=512K]
+        Kernel driver in use: e1000
+
+And with this patch (5632e2beaf9d5dda694c0572684dea783d8a9492 still reverted):
+
+00:02.0 PCI bridge: Red Hat, Inc. Device 000e (prog-if 00 [Normal decode])
+        Flags: bus master, 66MHz, fast devsel, latency 0, IRQ 47
+        Memory at 8000004000 (64-bit, non-prefetchable) [size=256]
+        Bus: primary=00, secondary=01, subordinate=02, sec-latency=0
+        I/O behind bridge: 1000-2fff [size=8K] [16-bit]
+        Memory behind bridge: 10000000-102fffff [size=3M] [32-bit]
+        Prefetchable memory behind bridge: [disabled] [64-bit]
+        Capabilities: [8c] MSI: Enable- Count=1/1 Maskable+ 64bit+
+        Capabilities: [84] Power Management version 3
+        Capabilities: [48] Express PCI-Express to PCI/PCI-X Bridge, MSI 00
+        Capabilities: [40] Hot-plug capable
+        Capabilities: [100] Advanced Error Reporting
+
+01:02.0 PCI bridge: Red Hat, Inc. QEMU PCI-PCI bridge (prog-if 00 [Normal decode])
+        Flags: bus master, 66MHz, fast devsel, latency 0, IRQ 45
+        Memory at 10240000 (64-bit, non-prefetchable) [size=256]
+        Bus: primary=01, secondary=02, subordinate=02, sec-latency=0
+        I/O behind bridge: 1000-1fff [size=4K] [16-bit]
+        Memory behind bridge: 10000000-100fffff [size=1M] [32-bit]
+        Prefetchable memory behind bridge: [disabled] [64-bit]
+        Capabilities: [4c] MSI: Enable- Count=1/1 Maskable+ 64bit+
+        Capabilities: [48] Slot ID: 0 slots, First+, chassis 01
+        Capabilities: [40] Hot-plug capable
+
+01:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 46
+        Memory at 10200000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 2000 [size=64]
+        Expansion ROM at 10100000 [disabled] [size=512K]
+        Kernel driver in use: e1000
+
+01:04.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 47
+        Memory at 10220000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 2040 [size=64]
+        Expansion ROM at 10180000 [disabled] [size=512K]
+        Kernel driver in use: e1000
+
+02:05.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine
+        Flags: bus master, fast devsel, latency 0, IRQ 46
+        Memory at 10080000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at 1000 [size=64]
+        Expansion ROM at 10000000 [disabled] [size=512K]
+        Kernel driver in use: e1000
