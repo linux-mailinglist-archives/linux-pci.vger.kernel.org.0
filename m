@@ -2,105 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3902D63228E
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:44:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D75DA63228D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:44:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiKUMoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S230419AbiKUMoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 21 Nov 2022 07:44:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbiKUMoL (ORCPT
+        with ESMTP id S230335AbiKUMoL (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 07:44:11 -0500
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7156BF825;
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD626BF826;
         Mon, 21 Nov 2022 04:44:09 -0800 (PST)
 X-IronPort-AV: E=Sophos;i="5.96,181,1665414000"; 
-   d="scan'208";a="143416637"
+   d="scan'208";a="140756681"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 21 Nov 2022 21:44:09 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 21 Nov 2022 21:44:09 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0800249236FB;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 210A04923703;
         Mon, 21 Nov 2022 21:44:09 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
         bhelgaas@google.com, krzk+dt@kernel.org
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v7 0/9] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
-Date:   Mon, 21 Nov 2022 21:43:51 +0900
-Message-Id: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 1/9] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+Date:   Mon, 21 Nov 2022 21:43:52 +0900
+Message-Id: <20221121124400.1282768-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
-To support them, modify PCIe DesignWare common codes.
+Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
+PCIe host module.
 
-Changes from v6:
- https://lore.kernel.org/all/20220922080647.3489791-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on next-20221116.
- -- And based on the following patches:
-    [PATCH v7 00/20] PCI: dwc: Add generic resources and Baikal-T1 support
-    https://lore.kernel.org/linux-pci/20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru/
-    [PATCH v6 00/24] dmaengine: dw-edma: Add RP/EP local DMA controllers support
-    https://lore.kernel.org/linux-pci/20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru/
- - Update dt-bindings docs for the latest based code.
- - Add support for triggering legacy IRQs in the patch [06/10] (new).
- - Add .no_msix flag into the patch [07/10].
- - Merge .ep_pre_init() support into the patch [08/10].
- - Add .reserved_bar for BAR5 instead in the patch [08/10].
- - Change SPDX-License-Identifier from "GPL-2.0" to "GPL-2.0-only".
-
-Changes from v5:
- https://lore.kernel.org/all/20220905071257.1059436-1-yoshihiro.shimoda.uh@renesas.com/
- - No treewide patches.
- - Drop PCI_EXP_LNKCAP_MLW_X32 in patch [03/10].
- - Add Acked-by in patch [03/10].
- - Fix subject prefix in patch [04/10], [05/10], [08/10] and [09/10].
- - Fix typo in patch [05/10] and [07/10].
-
-Yoshihiro Shimoda (9):
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-  PCI: Add PCI_EXP_LNKCAP_MLW macros
-  PCI: designware-ep: Expose dw_pcie_ep_exit() to module
-  PCI: dwc: Avoid reading a register to detect whether eDMA exists
-  PCI: dwc: Add support for triggering legacy IRQs
-  PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
-  PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
-  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-
- .../bindings/pci/rcar-gen4-pci-ep.yaml        |  90 +++++++++
- .../bindings/pci/rcar-gen4-pci-host.yaml      |  90 +++++++++
- MAINTAINERS                                   |   1 +
- drivers/pci/controller/dwc/Kconfig            |  18 ++
- drivers/pci/controller/dwc/Makefile           |   4 +
- .../pci/controller/dwc/pcie-designware-ep.c   |  70 ++++++-
- .../pci/controller/dwc/pcie-designware-host.c |   3 +
- drivers/pci/controller/dwc/pcie-designware.c  |  29 ++-
- drivers/pci/controller/dwc/pcie-designware.h  |  14 +-
- .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 182 +++++++++++++++++
- .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 190 ++++++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 181 +++++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  63 ++++++
- include/uapi/linux/pci_regs.h                 |   6 +
- 14 files changed, 923 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
 
+diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+new file mode 100644
+index 000000000000..1bd7612101d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2022 Renesas Electronics Corp.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car Gen4 PCIe Host
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++allOf:
++  - $ref: snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: renesas,r8a779f0-pcie   # R-Car S4-8
++      - const: renesas,rcar-gen4-pcie  # R-Car Gen4
++
++  interrupts:
++    maxItems: 4
++
++  interrupt-names:
++    items:
++      - const: msi
++      - const: dma
++      - const: sft_ce
++      - const: app
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - power-domains
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a779f0-sysc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie: pcie@e65d0000 {
++            compatible = "renesas,r8a779f0-pcie", "renesas,rcar-gen4-pcie";
++            reg = <0 0xe65d0000 0 0x3000>, <0 0xe65d3000 0 0x2000>,
++                  <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x400000>;
++            reg-names = "dbi", "atu", "app", "config";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0x00 0xff>;
++            device_type = "pci";
++            ranges =  <0x81000000 0 0x00000000 0 0xfe000000 0 0x00010000
++                       0x82000000 0 0x30000000 0 0x30000000 0 0x10000000>;
++            dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
++            interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "msi", "dma", "sft_ce", "app";
++            #interrupt-cells = <1>;
++            interrupt-map-mask = <0 0 0 7>;
++            interrupt-map = <0 0 0 1 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 2 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 3 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 4 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 624>;
++            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++            resets = <&cpg 624>;
++            num-lanes = <2>;
++            snps,enable-cdm-check;
++            max-link-speed = <2>;
++        };
++    };
 -- 
 2.25.1
 
