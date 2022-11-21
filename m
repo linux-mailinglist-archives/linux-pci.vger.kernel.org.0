@@ -2,98 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F02996329E2
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 17:43:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B176632A36
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 18:04:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230260AbiKUQnf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 11:43:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        id S229969AbiKUREZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 12:04:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230256AbiKUQn0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 11:43:26 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EA1C622E;
-        Mon, 21 Nov 2022 08:43:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=blUcgX8mY8WgrFpMcPGcDzXunG3i7Y18ZFQ0Fc/IPLNc34J3CXCPtk8AypBFkPqTcu/U68PEPLI0ljQNpHuzoBRlB7EgEhmEqAcgCBNQO4ZfuUKkRSk3eOW7O8mtfa8Bmnp9aL6Qd4lf2TRmOufKdxgEYUGKnc00N6urZi/SW5ubRgRa/qkpGjx6VvSALg3dZD4p2O6//nN5Co7B3k76qdDLUTUaC5fQByS9VBv8RbobBv2AInA9RkMFdQ3A5bnTH5dKVwb4SmIAtpotFajq2wYDs8XgPupLhuKRC3XjfoQy8nDFasxRTAK/TJU9rg0uqiDgDSamtudhKDJut/BDhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4kE3EEoROF8TRC85LHQNVGLLOGk4/ncwzq/kMy+zm2w=;
- b=aiqrNXjXVK5KK820565dIhPUcUBPOKp5NSgMHHGRd6esVJ3l6lOHKhGD3271pPyVB4fWrXAhVLkK4g/PnkaffDCQDaKTsSEjmfoG73kKDJAUcqBHqJWB6MlpLpXAVuyDe7Z6U4D/7uvXmKbUiYSI2xhPKn7n+k6plESGeSQqSyVY60ftrSpEmQXvN2ulsa7fboIEf7D9vOv2ivGVqGspcOo0zriv1tbwo7n7cBEw0AH84TA9D/QaKeYrlZfpOsOiQVY0MXZ2JxwiARDKzUY38XLASSjJfEhE7dKPNAafFADULYfL0fH0Q4IC/lzvwDfPo1NgCRTDm7hKWO+rqqXbFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4kE3EEoROF8TRC85LHQNVGLLOGk4/ncwzq/kMy+zm2w=;
- b=E8pI1yVC+a5tLYPFdwGwlhEiiUOX4PTi/zVtRD/OF7kAlszNxA4XitoT9nbihDLupx7jvd+bO7teO/ADNQHk1U9wrZ6GX6ZLAy/ArUVO5gYGiuzrLUd5pIHix5LjDvQwqc4W2PY0Hog4wn2tYkqimYA65h2vPjevaHCtkhcDz9A=
-Received: from BN8PR12CA0013.namprd12.prod.outlook.com (2603:10b6:408:60::26)
- by MW4PR12MB6876.namprd12.prod.outlook.com (2603:10b6:303:208::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.11; Mon, 21 Nov
- 2022 16:43:18 +0000
-Received: from BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:60:cafe::d9) by BN8PR12CA0013.outlook.office365.com
- (2603:10b6:408:60::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15 via Frontend
- Transport; Mon, 21 Nov 2022 16:43:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT055.mail.protection.outlook.com (10.13.177.62) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Mon, 21 Nov 2022 16:43:18 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 21 Nov
- 2022 10:43:17 -0600
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Mon, 21 Nov 2022 10:43:16 -0600
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
-        <frowand.list@gmail.com>, <helgaas@kernel.org>
-CC:     Lizhi Hou <lizhi.hou@amd.com>, <clement.leger@bootlin.com>,
-        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>, <stefano.stabellini@xilinx.com>,
-        <trix@redhat.com>
-Subject: [RESEND PATCH RFC V4 3/3] PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
-Date:   Mon, 21 Nov 2022 08:43:04 -0800
-Message-ID: <1669048984-56394-4-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1669048984-56394-1-git-send-email-lizhi.hou@amd.com>
-References: <1669048984-56394-1-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S229915AbiKUREZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 12:04:25 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4116D79378;
+        Mon, 21 Nov 2022 09:04:24 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id t25-20020a1c7719000000b003cfa34ea516so10718120wmi.1;
+        Mon, 21 Nov 2022 09:04:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NoFx71q/N+0qvQAXga+00ibSeehFlmzztyqyJ4eQ8tU=;
+        b=SOzH1U73ZCGPIl43YAXV6NsMIfqJufbn/wt/jIDoIOp6GOyDnyNUbweXEzy6k7i/GC
+         U7kDF6zkGTZJaKsG8HlSLw6o4jH+zrzamUK2ttsK/v0Ev0UHeFKF0cgO56PL/UfJ/VJq
+         P5tegS169frMGQLFONlxqSDw7DKPL4qSX28m2Y8oxjCQK9OaNMfJcmdEA58NrNYCcXMD
+         tVeexNRwQNzZfTAaPFiTj34BZsAFgPj6pDjykwWIRKBwlD0kuFXmIK8+OSHKMvwmpdIz
+         xqrzkxoEMdn0qCvI3EfBZ+LkJcoeDhsKeEQYm3cS36/rtajPjkuv9RSkbX50qFpzKnan
+         569A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NoFx71q/N+0qvQAXga+00ibSeehFlmzztyqyJ4eQ8tU=;
+        b=NZZsSDuHCCaa1UHue9r6x4vrjP6SZCm9iuTOHBTaLkS4VywgVMMQ6ySXIF0d3BlEuO
+         RhlLJVVpA+FGhmPlKzWTG+if/gR71PigSII7wJeBfy5Bgbs3EgRNManjNF87Lyu3cKqA
+         VRyZPu4K0UVhRCKh47lSu/JYau7JFfZ8cydo7xz+Byz2bT6XNAQ2yAIakCrAiImONZlp
+         XkSDVGdYbXCn0ydlotTq43Mzv/rnhZTX1V7n+JcgqVsW5igGAED3gt0NHzCTkO4dFSoe
+         qINo4POl7iAbfvvba+GnAB3fDstw8yY878zxTF/QuZtBcjQyhFQisk4smesZlQXCquBT
+         bC5A==
+X-Gm-Message-State: ANoB5pnuQ+LeelLUL5FGc88+ljPk/bLy31MCCYWhiBo7tE4FwQQtvFMm
+        wbsd7B6/NeVqV7hHEptJKVxUM9W9SLA=
+X-Google-Smtp-Source: AA0mqf7NevCCp2kHDxm/siKILqFB87Rj2TAPdnv2R9chC5DSXsq7GJxVOqlYf2BRJ2sM75AZqf8HGg==
+X-Received: by 2002:a05:600c:35c8:b0:3cf:cf89:2f02 with SMTP id r8-20020a05600c35c800b003cfcf892f02mr2889036wmq.2.1669050262379;
+        Mon, 21 Nov 2022 09:04:22 -0800 (PST)
+Received: from [192.168.1.131] ([207.188.167.132])
+        by smtp.gmail.com with ESMTPSA id g17-20020a05600c4ed100b003c701c12a17sm21447872wmq.12.2022.11.21.09.04.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 09:04:20 -0800 (PST)
+Message-ID: <a257049b-d3a8-e0ac-d887-5bb0420579ad@gmail.com>
+Date:   Mon, 21 Nov 2022 18:04:18 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT055:EE_|MW4PR12MB6876:EE_
-X-MS-Office365-Filtering-Correlation-Id: b53e4737-aa55-478d-bf90-08dacbdf7e27
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: c2SRC6cXPmWJL2P78fPjrvq+7BzHrIncOSANufEQEK4ogCDq9mAkZQy6aUxdS2n/KNHdSLA091eQMrrHBCC93x7vgmDFzHDaLZ2wfDODh0QLpnTPb/gajdQPMgKGEyE064WHwO62jhgIcG32Z2YKzMT3GL32LlPj6/cwY9bpUSRleDffthOL5TAWJSnM88wYB4k/kHTKEhBhBEOlZAGRD1xflyo/osIO4BEdHkJG5IiH2jKblZltQauh3L715Bo8DSdxsONE8gX0cjKB63Y+0Ntgo3hx+msS+dK7L1Pq4Tn7vKBnNAbLKHoFYBgpp5mCSubE7fn1eyrdVI0FKF6Y7q8/LjF2Ozqq0mxiCrZVUypaTFPb7Qgvx+mi9IvkEnaqOXWy2yeR9mhGUlalqA0OcSx7NEdSXnDpgRLX2lvKfHEmOuMFzwSTxuBUP4WvKwiZJyeBruVZPmnTqkiKO6F/74EIbh94gt/HSzOmNvuYXLm290SCR6yzm/gMh5utKkTCTEBMazgNT0r3dqNhYtKd2SwXKD0/8ASFHQq14XF0S35wZxO2XiY1bCpsQOPKHBOHXB0c3uwQvxulJbfo/P1h4wOxiWdKH93UgIfJZPwuzxPJoSv0OmeR0b1VGgD5I7kWeLBJZaxJeM7UZqhAjpRR6xFnFcWjI85CGT51SHYANkTq+Y22zCqJ57Ih/gmAxGAZCimespkHnRo0IX1YfQF3RDIM31TexRMnE64Kpn7muOw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(136003)(376002)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(36756003)(478600001)(5660300002)(44832011)(336012)(47076005)(40460700003)(70586007)(4326008)(8676002)(426003)(70206006)(26005)(54906003)(316002)(110136005)(2616005)(8936002)(82310400005)(356005)(36860700001)(81166007)(82740400003)(41300700001)(186003)(2906002)(40480700001)(86362001)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2022 16:43:18.0557
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b53e4737-aa55-478d-bf90-08dacbdf7e27
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6876
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v6 01/11] arm64: dts: mt7986: move wed_pcie node
+Content-Language: en-US
+To:     Frank Wunderlich <linux@fw-web.de>,
+        linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Bo Jiao <Bo.Jiao@mediatek.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+References: <20221118190126.100895-1-linux@fw-web.de>
+ <20221118190126.100895-2-linux@fw-web.de>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20221118190126.100895-2-linux@fw-web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -101,42 +92,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Xilinx Alveo U50 PCI card exposes multiple hardware peripherals on
-its PCI BAR. The card firmware provides a flattened device tree to
-describe the hardware peripherals on its BARs. This allows U50 driver to
-load the flattened device tree and generate the device tree node for
-hardware peripherals underneath.
 
-To generate device tree node for U50 card, added PCI quirks to call
-of_pci_make_dev_node() for U50.
 
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-Signed-off-by: Max Zhen <max.zhen@amd.com>
-Reviewed-by: Brian Xu <brian.xu@amd.com>
----
- drivers/pci/quirks.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 18/11/2022 20:01, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Move the wed_pcie node to have node aligned by address.
+> 
+> Fixes: 00b9903996b3 ("arm64: dts: mediatek: mt7986: add support for Wireless Ethernet Dispatch")
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4944798e75b5..5d76932f59ec 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5956,3 +5956,14 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
- #endif
-+
-+/*
-+ * For PCI device which have multiple downstream devices, its driver may use
-+ * a flattened device tree to describe the downstream devices.
-+ * To overlay the flattened device tree, the PCI device and all its ancestor
-+ * devices need to have device tree nodes on system base device tree. Thus,
-+ * before driver probing, it might need to add a device tree node as the final
-+ * fixup.
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
--- 
-2.17.1
+Applied, thanks!
 
+> ---
+>   arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+> index a22e10e89ab9..afc01abfa99c 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+> @@ -112,6 +112,12 @@ infracfg: infracfg@10001000 {
+>   			#clock-cells = <1>;
+>   		};
+>   
+> +		wed_pcie: wed-pcie@10003000 {
+> +			compatible = "mediatek,mt7986-wed-pcie",
+> +				     "syscon";
+> +			reg = <0 0x10003000 0 0x10>;
+> +		};
+> +
+>   		topckgen: topckgen@1001b000 {
+>   			compatible = "mediatek,mt7986-topckgen", "syscon";
+>   			reg = <0 0x1001B000 0 0x1000>;
+> @@ -257,12 +263,6 @@ ethsys: syscon@15000000 {
+>   			 #reset-cells = <1>;
+>   		};
+>   
+> -		wed_pcie: wed-pcie@10003000 {
+> -			compatible = "mediatek,mt7986-wed-pcie",
+> -				     "syscon";
+> -			reg = <0 0x10003000 0 0x10>;
+> -		};
+> -
+>   		wed0: wed@15010000 {
+>   			compatible = "mediatek,mt7986-wed",
+>   				     "syscon";
