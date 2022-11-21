@@ -2,122 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 862016321CC
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:21:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7518632236
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 13:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiKUMVi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 07:21:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42490 "EHLO
+        id S229853AbiKUMei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 07:34:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiKUMVe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 07:21:34 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9311751C35;
-        Mon, 21 Nov 2022 04:21:32 -0800 (PST)
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG5z060tYz6HJZY;
-        Mon, 21 Nov 2022 20:18:52 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 13:21:30 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 12:21:30 +0000
-Date:   Mon, 21 Nov 2022 12:21:29 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <rostedt@goodmis.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>
-Subject: Re: [PATCH v3 11/11] cxl/pci: Add callback to log AER correctable
- error
-Message-ID: <20221121122129.00001908@Huawei.com>
-In-Reply-To: <166879134802.674819.8577415268687156421.stgit@djiang5-desk3.ch.intel.com>
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
-        <166879134802.674819.8577415268687156421.stgit@djiang5-desk3.ch.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231159AbiKUMeN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 07:34:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2A6AFE65;
+        Mon, 21 Nov 2022 04:34:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBB3461149;
+        Mon, 21 Nov 2022 12:34:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30172C433D6;
+        Mon, 21 Nov 2022 12:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669034044;
+        bh=ZwT+dnfKh4H9gTwAC+BKBYdBZ8TmrMahu5H8qVC6lZM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oCWuS3JGmuHudj46cpvkJxWaiSA+U33wiAPA25Qf/3ZqAEF//DV1n3X7QvucNZlZv
+         RDoV4QsXb2DRY12LD3tCnxpMGsVRRaZPn5m9NrmJ+tbzLmrpmGZy4duU2DLD0JoIUN
+         EWI2AW+Wvik+JhETIYIJCXhFbbwTxPMBMwIJq1AT0nci57KknzyDiIt4tTCwxq+sXI
+         Tb2ahXPPwU5arGAlpp1ElTtiI5dWACBP8hXXKwYJ+SzUWhTZgCorFUSX0EtYEa6jjD
+         k2wRJKHq4Delqipwlk1g7/1hkt04FN5hgpwXabTYRBhiQ9qrhHVNNUSIxGmfWIcFm3
+         Vt+g5taNoojUQ==
+Date:   Mon, 21 Nov 2022 06:34:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-doc@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] PCI/MSI: api: Use bullet lists in kernel-doc comments
+Message-ID: <20221121123402.GA100653@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221121101245.23544-1-bagasdotme@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Nov 2022 10:09:08 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+Hi Bagas,
 
-> Add AER error handler callback to read the correctable error status
-> register for the CXL device. Log the error as a trace event and clear the
-> error.
+If you have opportunity, please update the subject line to remove
+"api: " to match previous history:
+
+  PCI/MSI: Correct 'can_mask' test in msi_add_msi_desc()
+  PCI/MSI: Remove bogus warning in pci_irq_get_affinity()
+  PCI/MSI: Prevent UAF in error path
+  PCI/MSI: Unbreak pci_irq_get_affinity()
+  PCI/MSI: Use msi_on_each_desc()
+  PCI/MSI: Let core code free MSI descriptors
+  PCI/MSI: Use msi_add_msi_desc()
+  PCI/MSI: Protect MSI operations
+  PCI/MSI: Simplify pci_irq_get_affinity()
+  ...
+
+On Mon, Nov 21, 2022 at 05:12:45PM +0700, Bagas Sanjaya wrote:
+> Stephen Rothwell reported htmldocs warnings when merging tip tree:
 > 
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-You may want to make it clearer in the description of patch 10 that
-we 'need' the callback rather than falling into the better logging
-category (which was what I was previously thinking!)
-
-Jonathan
-
-> ---
->  drivers/cxl/pci.c |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:148: ERROR: Unexpected indentation.
+> Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:149: WARNING: Block quote ends without a blank line; unexpected unindent.
+> Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:236: ERROR: Unexpected indentation.
+> Documentation/PCI/msi-howto:380: drivers/pci/msi/api.c:259: ERROR: Unexpected indentation.
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index dad69110291d..b394fd227949 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -621,10 +621,30 @@ static void cxl_error_resume(struct pci_dev *pdev)
->  		 dev->driver ? "successful" : "failed");
->  }
->  
-> +static void cxl_correctable_error_log(struct pci_dev *pdev)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +	void __iomem *addr;
-> +	u32 status;
-> +
-> +	if (!cxlds->regs.ras)
-> +		return;
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> +	status = le32_to_cpu(readl(addr));
-> +	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> +		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-
-Ah. I'd forgotten we need to clear this an hence 'need' the callback in 
-the previous patch to handle this properly.
-
-
-> +		trace_cxl_aer_correctable_error(dev_name(dev), status);
-> +	}
-> +}
-> +
->  static const struct pci_error_handlers cxl_error_handlers = {
->  	.error_detected	= cxl_error_detected,
->  	.slot_reset	= cxl_slot_reset,
->  	.resume		= cxl_error_resume,
-> +	.cor_error_log	= cxl_correctable_error_log,
->  };
->  
->  static struct pci_driver cxl_pci_driver = {
+> Use bullet lists syntax for pci_disable_msix flags and interrupt mode lists
+> to fix these warnings.
 > 
-> 
-
+> Link: https://lore.kernel.org/linux-next/20221121184100.0974cc35@canb.auug.org.au/
+> Fixes: 5c0997dc33ac24 ("PCI/MSI: Move pci_alloc_irq_vectors() to api.c")
+> Fixes: 017239c8db2093 ("PCI/MSI: Move pci_irq_vector() to api.c")
+> Fixes: be37b8428b7b77 ("PCI/MSI: Move pci_irq_get_affinity() to api.c")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
