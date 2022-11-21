@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6A47632654
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:39:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F24F632655
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Nov 2022 15:39:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231685AbiKUOjO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Nov 2022 09:39:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49364 "EHLO
+        id S231463AbiKUOjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Nov 2022 09:39:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbiKUOiM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:12 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F86293737;
-        Mon, 21 Nov 2022 06:38:11 -0800 (PST)
-Message-ID: <20221121091327.546352933@linutronix.de>
+        with ESMTP id S231693AbiKUOiN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Nov 2022 09:38:13 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A209FC7687;
+        Mon, 21 Nov 2022 06:38:12 -0800 (PST)
+Message-ID: <20221121091327.604532862@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669041490;
+        s=2020; t=1669041491;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=TpR1wEbG/Wo0WW0drKjzPBv3GD8sCJ8ij4dxCieYEi4=;
-        b=boEzxceGwga/4l4WI3M49ixM1qKuf902SAk5l7XjmXIUhMmHwHtoGn6S+cNno7lthH6f49
-        FY0+6f0rhfZShW12K2hC6TDzMY8lOJt3KHWL7Cu0Te2OutLLD1a8iSCYWabqzTcnI8VkhI
-        8VOGweAyq0indNR8ij7aveLxew6fiQkD4FgGWgY9K4if7FAgjI5g9tbBkptfOtznFHyS0u
-        YnB9GPyenUjubrLD4hKPRfPM7RXkZbztGSo2X3xTZOgCU4W20NwnnKyL24WOeQ7fyLkRej
-        D3Se01bEPRyunajWqPxzq++nZqP0watcRmuzsg853sY0mv+0GfFrkVflGH6D9w==
+         references:references; bh=1Ia7eZriEUpBkiV/NLqg7niZ6fMKSxoDJkKbYDvtHyI=;
+        b=4ALiouWmVkPRnT0vTcSPsOaIdfz4pn6W50xbL45ycypOo/a78qwl3e4jYa9vI28IfBmqlD
+        FDnvxoiuLyiB9PmRDyjIKiLV8pvbWdhvgwD0p/bSalOqrXyEs2OoXTWzXgAr4fdrshc4Gu
+        g7e49ttJnijI06uYdFUELqJb6GFnAitKSHuT8tYoe3tt1nAdhJ/uRUqgQytgH2qkSBf5W1
+        R+r+4+uvLWXIkylOfnDsRadgug9ShopI1nm54EloqDXQW/crZdZNZ7BpOPFQy9LDpYXiRV
+        xreGFARzGdap8ROM1ZHuk1FQIm1MjhX/0/GOuCRkDhn/mCSEgPYOd6wRK9V9lQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669041490;
+        s=2020e; t=1669041491;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=TpR1wEbG/Wo0WW0drKjzPBv3GD8sCJ8ij4dxCieYEi4=;
-        b=8SxTnGwUpnz/eHpEzw+XHQcUvf4J25tXxaf20pnh5OyYxflN/m2nfUssZYiI3+XzN9sLR3
-        lpOhY2E5q68YH8Cw==
+         references:references; bh=1Ia7eZriEUpBkiV/NLqg7niZ6fMKSxoDJkKbYDvtHyI=;
+        b=AxaLkvG0WXuwHg5a829R4zwLLIr7zTby4dzJQ5g4oyZ1A/gtehkDNr3C+ECAXdMfwXzlIT
+        YSlZB34oKn7fdsCA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -48,11 +48,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V2 19/33] genirq/msi: Provide msi_desc::msi_data
+Subject: [patch V2 20/33] genirq/msi: Provide msi_domain_ops::prepare_desc()
 References: <20221121083657.157152924@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Nov 2022 15:38:09 +0100 (CET)
+Date:   Mon, 21 Nov 2022 15:38:11 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,120 +62,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The upcoming support for PCI/IMS requires to store some information related
-to the message handling in the MSI descriptor, e.g. PASID or a pointer to a
-queue.
+The existing MSI domain ops msi_prepare() and set_desc() turned out to be
+unsuitable for implementing IMS support.
 
-Provide a generic storage struct which maps over the existing PCI specific
-storage which means the size of struct msi_desc is not getting bigger.
+msi_prepare() does not operate on the MSI descriptors. set_desc() lacks
+an irq_domain pointer and has a completely different purpose.
 
-It contains a iomem pointer for device memory based IMS and a union of a
-u64 and a void pointer which allows the device specific IMS implementations
-to store the necessary information.
-
-The iomem pointer is set up by the domain allocation functions.
-
-The data union msi_dev_cookie is going to be handed in when allocating an
-interrupt on an IMS domain so the irq chip callbacks of the IMS domain have
-the necessary per vector information available. It also comes in handy when
-cleaning up the platform MSI code for wire to MSI bridges which need to
-hand down the type information to the underlying interrupt domain.
-
-For the core code the cookie is opaque and meaningless. It just stores it
-during an allocation through the upcoming interfaces for IMS and wire to
-MSI brigdes.
+Introduce a prepare_desc() op which allows IMS implementations to amend an
+MSI descriptor which was allocated by the core code, e.g. by adjusting the
+iomem base or adding some data based on the allocated index. This is way
+better than requiring that all IMS domain implementations preallocate the
+MSI descriptor and then allocate the interrupt.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/msi.h     |   38 +++++++++++++++++++++++++++++++++++++-
- include/linux/msi_api.h |   17 +++++++++++++++++
- 2 files changed, 54 insertions(+), 1 deletion(-)
+ include/linux/msi.h |    6 +++++-
+ kernel/irq/msi.c    |    3 +++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -125,6 +125,38 @@ struct pci_msi_desc {
- 	};
- };
- 
-+/**
-+ * union msi_domain_cookie - Opaque MSI domain specific data
-+ * @value:	u64 value store
-+ * @ptr:	Pointer to domain specific data
-+ * @iobase:	Domain specific IOmem pointer
-+ *
-+ * The content of this data is implementation defined and used by the MSI
-+ * domain to store domain specific information which is requried for
-+ * interrupt chip callbacks.
-+ */
-+union msi_domain_cookie {
-+	u64	value;
-+	void	*ptr;
-+	void	__iomem *iobase;
-+};
-+
-+/**
-+ * struct msi_desc_data - Generic MSI descriptor data
-+ * @dcookie:	Cookie for MSI domain specific data which is required
-+ *		for irq_chip callbacks
-+ * @icookie:	Cookie for the MSI interrupt instance provided by
-+ *		the usage site to the allocation function
-+ *
-+ * The content of this data is implementation defined, e.g. PCI/IMS
-+ * implementations define the meaning of the data. The MSI core ignores
-+ * this data completely.
-+ */
-+struct msi_desc_data {
-+	union msi_domain_cookie		dcookie;
-+	union msi_instance_cookie	icookie;
-+};
-+
- #define MSI_MAX_INDEX		((unsigned int)USHRT_MAX)
- 
- /**
-@@ -142,6 +174,7 @@ struct pci_msi_desc {
+@@ -402,6 +402,8 @@ struct msi_domain_info;
+  * @msi_init:		Domain specific init function for MSI interrupts
+  * @msi_free:		Domain specific function to free a MSI interrupts
+  * @msi_prepare:	Prepare the allocation of the interrupts in the domain
++ * @prepare_desc:	Optional function to prepare the allocated MSI descriptor
++ *			in the domain
+  * @set_desc:		Set the msi descriptor for an interrupt
+  * @domain_alloc_irqs:	Optional function to override the default allocation
+  *			function.
+@@ -413,7 +415,7 @@ struct msi_domain_info;
+  * @get_hwirq, @msi_init and @msi_free are callbacks used by the underlying
+  * irqdomain.
   *
-  * @msi_index:	Index of the msi descriptor
-  * @pci:	PCI specific msi descriptor data
-+ * @data:	Generic MSI descriptor data
-  */
- struct msi_desc {
- 	/* Shared device/bus type independent data */
-@@ -161,7 +194,10 @@ struct msi_desc {
- 	void *write_msi_msg_data;
+- * @msi_check, @msi_prepare and @set_desc are callbacks used by the
++ * @msi_check, @msi_prepare, @prepare_desc and @set_desc are callbacks used by the
+  * msi_domain_alloc/free_irqs*() variants.
+  *
+  * @domain_alloc_irqs, @domain_free_irqs can be used to override the
+@@ -436,6 +438,8 @@ struct msi_domain_ops {
+ 	int		(*msi_prepare)(struct irq_domain *domain,
+ 				       struct device *dev, int nvec,
+ 				       msi_alloc_info_t *arg);
++	void		(*prepare_desc)(struct irq_domain *domain, msi_alloc_info_t *arg,
++					struct msi_desc *desc);
+ 	void		(*set_desc)(msi_alloc_info_t *arg,
+ 				    struct msi_desc *desc);
+ 	int		(*domain_alloc_irqs)(struct irq_domain *domain,
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -1285,6 +1285,9 @@ static int __msi_domain_alloc_irqs(struc
+ 		if (WARN_ON_ONCE(allocated >= ctrl->nirqs))
+ 			return -EINVAL;
  
- 	u16				msi_index;
--	struct pci_msi_desc		pci;
-+	union {
-+		struct pci_msi_desc	pci;
-+		struct msi_desc_data	data;
-+	};
- };
- 
- /*
---- a/include/linux/msi_api.h
-+++ b/include/linux/msi_api.h
-@@ -19,6 +19,23 @@ enum msi_domain_ids {
- };
- 
- /**
-+ * union msi_instance_cookie - MSI instance cookie
-+ * @value:	u64 value store
-+ * @ptr:	Pointer to usage site specific data
-+ *
-+ * This cookie is handed to the IMS allocation function and stored in the
-+ * MSI descriptor for the interrupt chip callbacks.
-+ *
-+ * The content of this cookie is MSI domain implementation defined.  For
-+ * PCI/IMS implementations this could be a PASID or a pointer to queue
-+ * memory.
-+ */
-+union msi_instance_cookie {
-+	u64	value;
-+	void	*ptr;
-+};
++		if (ops->prepare_desc)
++			ops->prepare_desc(domain, &arg, desc);
 +
-+/**
-  * msi_map - Mapping between MSI index and Linux interrupt number
-  * @index:	The MSI index, e.g. slot in the MSI-X table or
-  *		a software managed index if >= 0. If negative
+ 		ops->set_desc(&arg, desc);
+ 
+ 		virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
 
