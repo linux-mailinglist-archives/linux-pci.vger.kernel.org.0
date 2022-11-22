@@ -2,159 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE677633C4E
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 13:21:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 192E5633E0F
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 14:49:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233605AbiKVMVN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 07:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
+        id S233869AbiKVNtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 08:49:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231864AbiKVMVM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 07:21:12 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884B74AF08
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 04:21:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669119671; x=1700655671;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/QCCd2hQOUkjYvW2iNs4k2Ykntj36pFyXgTIXwWsk+U=;
-  b=Z3Dot18jQPztGLmL+EriYsXP82mr0NP7mm0esz6yUZgKiZy/gRwbNy32
-   UiMmccURPvIeBO2cPxeNf2ChkIzYKd18aOwDCwviNZykHLtWPDtxDPbwk
-   NGCOrFYh1poulzV1Vq0mIMYY4hWbBDrl13QWp1D0g7ZjYStZw+AgBraAM
-   MwgUINijSyvK2CwRNmZtRCgQpvc5aE/eyAW/WURDqleSz6Dp8gNyanLBb
-   2fG2BnR/bvXOAWap65oX1JG8beyJJotCS629WWYVy4HjmXr/hdpomx+sT
-   6l/qqmjVzXDRzCMpSHupp9CWWuRv0BBr1ZwT+SEwx54xtkTsqByjD6PAv
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="313831254"
-X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
-   d="scan'208";a="313831254"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 04:21:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="619194398"
-X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
-   d="scan'208";a="619194398"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 22 Nov 2022 04:21:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id CD583128; Tue, 22 Nov 2022 14:21:33 +0200 (EET)
-Date:   Tue, 22 Nov 2022 14:21:33 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Take multifunction devices into account when
- distributing resources
-Message-ID: <Y3y+zSHG4X2iCQQ9@black.fi.intel.com>
-References: <Y3tlRIG99P/amO9Q@black.fi.intel.com>
- <20221121224548.GA138441@bhelgaas>
- <Y3xvcvqgFbYMIIpl@black.fi.intel.com>
- <20221122114541.00005ff9@Huawei.com>
+        with ESMTP id S233855AbiKVNtt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 08:49:49 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07F157B66
+        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:49:47 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id y203so14413954pfb.4
+        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:49:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+P2ivfSFXLbWzT9PHNfJTpLAcw4nHOZdoUpRgaAM1gU=;
+        b=fDTk2qBn/jf665HzklH6UgrbxkjDpJ1nhbZZBgIiVScnJcuXM3dqCYTfA66iUL7d1x
+         xgp39O/842vNtoP/98WyzKWLw/dcDoDblPngnaWUJY6UCUjh+MNdk9IWbRswPEOumalm
+         nG1/Fn8QT3qrhSs4GytV3EDzuY3esaC2eBpPKzpeZZheNCn2OqaExxIvpoX+lud+gMOs
+         v9gaaMdzSvUCSBUMK0suNy/jtdG6sm37k/K7+kZlYmpo1ebgMYGur7k6cVJnoZZI2Ugn
+         EyLqmBY8YLX09KmIwumwT7K7E+ZCgi4aqO7TAH0fx6gcN0yt1Wz33S9O9NPWy3nO4+CS
+         RF6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+P2ivfSFXLbWzT9PHNfJTpLAcw4nHOZdoUpRgaAM1gU=;
+        b=RomYThtIe585LwSIlb5Dt287+vK3MhvQSHYyr6BkBdeEqnC8HZaEpO6m5/y7D2UH78
+         9R5Lm8KqffO2TrZDdfItg4bRIAsyj5V76hL0eqh+LUkAflkY5rXBEotkD73SZaKOMEfh
+         nX4wRgKOMoITqlLTVu1lJt57K7rmeX49+iqIBqXLzl7jI3gwmOjSW67uDCfMA7m5rQ2F
+         UGPJiyJF1XYnJdO4Zf8dm1KAujF7esaPl5ydMEkPft+8UozhD5r1+st48TNs93lKXe6y
+         OShmX5wgGsSZBJidbvCsLH8tyhI+7rjDL92J72ozDk2j+G1cBnhyHnwdxYjjGaTax6tr
+         gQQg==
+X-Gm-Message-State: ANoB5plsJsS8PO2YoNG7bsCzyiuCiDYqyAfsdHUvgHSvkKyHgYbOJoCJ
+        FDg1jJfRVtUdPKiix+Cl+Kqa
+X-Google-Smtp-Source: AA0mqf6xYGN0spP0aEoAK/0g3HTZzm3Evd3m91jBxcfLOeUT1xue0xoWw7S+r9p8/Vt32ziS0YkKpA==
+X-Received: by 2002:aa7:9e5d:0:b0:54c:9e75:ab7 with SMTP id z29-20020aa79e5d000000b0054c9e750ab7mr4471439pfq.82.1669124987338;
+        Tue, 22 Nov 2022 05:49:47 -0800 (PST)
+Received: from thinkpad ([59.92.98.84])
+        by smtp.gmail.com with ESMTPSA id jb4-20020a170903258400b00186b86ed450sm11953991plb.156.2022.11.22.05.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 05:49:46 -0800 (PST)
+Date:   Tue, 22 Nov 2022 19:19:41 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     vidyas@nvidia.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, robh@kernel.org, lpieralisi@kernel.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to
+ threaded IRQ handler
+Message-ID: <20221122134941.GC157542@thinkpad>
+References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
+ <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
+ <20221114110654.GL3869@thinkpad>
+ <20221114110820.GM3869@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221122114541.00005ff9@Huawei.com>
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221114110820.GM3869@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 11:45:41AM +0000, Jonathan Cameron wrote:
-> On Tue, 22 Nov 2022 08:42:58 +0200
-> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> 
-> > Hi,
-> > 
-> > On Mon, Nov 21, 2022 at 04:45:48PM -0600, Bjorn Helgaas wrote:
-> > > IIUC, the summary is this:
+On Mon, Nov 14, 2022 at 04:38:20PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Nov 14, 2022 at 04:37:00PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Oct 25, 2022 at 08:20:58PM +0530, Manivannan Sadhasivam wrote:
+> > > dw_pcie_ep_linkup() may take more time to execute depending on the EPF
+> > > driver implementation. Calling this API in the hard IRQ handler is not
+> > > encouraged since the hard IRQ handlers are supposed to complete quickly.
 > > > 
-> > >   00:02.0 bridge window [mem 0x10000000-0x102fffff] to [bus 01-02]
-> > >   01:02.0 bridge window [mem 0x10000000-0x100fffff] to [bus 02]
-> > >   01:03.0 NIC BAR [mem 0x10200000-0x1021ffff]
-> > >   01:04.0 NIC BAR [mem 0x10220000-0x1023ffff]
-> > >   02:05.0 NIC BAR [mem 0x10080000-0x1009ffff]
+> > > So move the dw_pcie_ep_linkup() call to threaded IRQ handler.
 > > > 
-> > > and it's the same with and without the current patch.
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Sorry for resending it (something messed up with my email client).
+> 
+> Vidya, can you please review this patch?
+> 
+
+Ping!
+
+Thanks,
+Mani
+
+> Thanks,
+> Mani
+> 
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
 > > > 
-> > > Are all these assignments done by BIOS, or did Linux update them?  
-> > 
-> > > Did we exercise the same "distribute available resources" path as in
-> > > the PCIe case?  I expect we *should*, because there really shouldn't
-> > > be any PCI vs PCIe differences in how resources are handled.  This is
-> > > why I'm not comfortable with assumptions here that depend on PCIe.
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 1b6b437823d2..a0d231b7a435 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -287,6 +287,7 @@ struct tegra_pcie_dw {
+> > >  	struct gpio_desc *pex_refclk_sel_gpiod;
+> > >  	unsigned int pex_rst_irq;
+> > >  	int ep_state;
+> > > +	long link_status;
+> > >  };
+> > >  
+> > >  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+> > > @@ -450,9 +451,13 @@ static void pex_ep_event_hot_rst_done(struct tegra_pcie_dw *pcie)
+> > >  static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+> > >  {
+> > >  	struct tegra_pcie_dw *pcie = arg;
+> > > +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> > >  	struct dw_pcie *pci = &pcie->pci;
+> > >  	u32 val, speed;
+> > >  
+> > > +	if (test_and_clear_bit(0, &pcie->link_status))
+> > > +		dw_pcie_ep_linkup(ep);
+> > > +
+> > >  	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+> > >  		PCI_EXP_LNKSTA_CLS;
+> > >  	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
+> > > @@ -499,7 +504,6 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+> > >  static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
+> > >  {
+> > >  	struct tegra_pcie_dw *pcie = arg;
+> > > -	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> > >  	int spurious = 1;
+> > >  	u32 status_l0, status_l1, link_status;
+> > >  
+> > > @@ -515,7 +519,8 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
+> > >  			link_status = appl_readl(pcie, APPL_LINK_STATUS);
+> > >  			if (link_status & APPL_LINK_STATUS_RDLH_LINK_UP) {
+> > >  				dev_dbg(pcie->dev, "Link is up with Host\n");
+> > > -				dw_pcie_ep_linkup(ep);
+> > > +				set_bit(0, &pcie->link_status);
+> > > +				return IRQ_WAKE_THREAD;
+> > >  			}
+> > >  		}
+> > >  
+> > > -- 
+> > > 2.25.1
 > > > 
-> > > I can't tell from Jonathan's PCIe case whether we got a working config
-> > > from BIOS or not because our logging of bridge windows is kind of
-> > > poor.  
 > > 
-> > This is ARM64 so there is no "BIOS" involved (something similar though).
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
 > 
-> It's EDK2 in my tests  - so very similar to other arch.
-> Possible to boot without though and rely on DT, but various things don't
-> work yet...
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
-Okay.
-
-> > It is the same "system" that Jonathan used where the regression happened
-> > with the multifunction PCIe configuration with the exception that I'm
-> > now using PCI devices instead of PCIe as you asked.
-> > 
-> > I'm not 100% sure if the all the same code paths are used here, though.
-> > 
-> 
-> I wondered if it was possibly to do with fairly minimal handling of pci-pxb
-> (the weird root bridge) in EDK2, so tried the obvious of hanging your PCI
-> test below one of those rather than directly below a normal bridge.
-> Despite shuffling things around into configurations
-> I thought might trigger the problem, it all seems fine.
-
-I also did some other experiments like tried to add pcie-root-port first
-but that did not trigger the issue either (unless I missed something).
-
-> Note that I can't currently test the pxb-pcie configurations without EDK2
-> as arm-virt doesn't provide the relevant DT for those root bridges yet
-> (it's on my todo list as it's a prereq for getting the QEMU CXL ARM64
-> emulation upstream)
-> 
-> So no guarantees as I don't understand fully why PCI is ending up
-> with different handling.
-> 
-> From liberal distribution of printk()s it seems that for PCI bridges
-> pci_bridge_resources_not_assigned() is false, but for PCI express
-> example it is true.  My first instinct is quirk of the EDK2 handling? 
-> I'll have a dig, but I'm not an expert in EDK2 at all, so may not get
-> to the bottom of this.
-> 
-> Ultimately it seems that when the OS takes over the prefetchable memory
-> resources are not configured for the PCIe case, but are for the PCI case.
-> So we aren't currently walking the new code for PCI.
-
-I think the reason why this "difference" is that we have this in
-__pci_bus_size_bridges():
-
-               if (bus->self->is_hotplug_bridge) {
-                        additional_io_size  = pci_hotplug_io_size;
-                        additional_mmio_size = pci_hotplug_mmio_size;
-                        additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
-                }
-
-For QEMU PCIe root/downstream ports this might be true so we end up with
-"additional resources" in the resource list and therfore the kernel
-tries to do the allocation wrt. with PCI case it is not. I tried to end
-up with the same code path in my command line with this:
-
-  -device pci-bridge,chassis_nr=1,bus=br1,id=br2,shpc=on,addr=2
-
-The "shpc=on" should make it hotplug bridge as well but apparently that
-is not happening.
+-- 
+மணிவண்ணன் சதாசிவம்
