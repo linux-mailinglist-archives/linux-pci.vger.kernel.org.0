@@ -2,115 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EDFB634245
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 18:14:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2B863426C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 18:26:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234462AbiKVROJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 12:14:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37614 "EHLO
+        id S233180AbiKVR00 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 12:26:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234453AbiKVROI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 12:14:08 -0500
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63AF6E577;
-        Tue, 22 Nov 2022 09:14:07 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8A7FA100DCEC0;
-        Tue, 22 Nov 2022 18:14:06 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6BAF4A236D; Tue, 22 Nov 2022 18:14:06 +0100 (CET)
-Date:   Tue, 22 Nov 2022 18:14:06 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "'ira.weiny@intel.com'" <ira.weiny@intel.com>,
+        with ESMTP id S231842AbiKVR0Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 12:26:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6E275D87
+        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 09:26:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDDF9617FB
+        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 17:26:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286D9C433C1;
+        Tue, 22 Nov 2022 17:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669137984;
+        bh=7Ps8ZfkHF5M9k8eMHcwMwPv/gwwPZmeDmsutOAl+fio=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CUk2vLIBFtHvDXVgLhzphZnECufWiPRJfrtcWszhWIceO6clF3ZyQO5WA4/I21gcd
+         NOfWnEuyiKIkxY2VJVmj7lD+kHMPzLD6Os7BuOql/RCnAwaMBcrITI16bnau61bncW
+         /PZk6rO12Kj/TelNvFmmsi6gxJkDDlXLqhLYMUWXSwsAx6OuAzJOhwcMLXn4lretfL
+         1r/EEaCystoM/pwxQnrHH33/UrBkzowMXFHWp8w61zP7YVT/YYK6hyy4oqGSmciZCj
+         Y2SM7FM6s6bWjYLy8qKhxMEJpeebRQNVsbZaHJcj9jAo/IV7L7K1ri/ms4lUicmAfS
+         BzEzumUkeDR/A==
+Date:   Tue, 22 Nov 2022 11:26:22 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V2] PCI/DOE: Detect on stack work items automatically
-Message-ID: <20221122171406.GC11310@wunner.de>
-References: <20221118000524.1477383-1-ira.weiny@intel.com>
- <e59f83f3ca4149d098efe43b48fecd1b@AcuMS.aculab.com>
- <20221122171309.GA11310@wunner.de>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: Take multifunction devices into account when
+ distributing resources
+Message-ID: <20221122172622.GA197413@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221122171309.GA11310@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221122114541.00005ff9@Huawei.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now with Thomas added to cc for real.
+On Tue, Nov 22, 2022 at 11:45:41AM +0000, Jonathan Cameron wrote:
+> On Tue, 22 Nov 2022 08:42:58 +0200
+> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> > On Mon, Nov 21, 2022 at 04:45:48PM -0600, Bjorn Helgaas wrote:
+> > > IIUC, the summary is this:
+> > > 
+> > >   00:02.0 bridge window [mem 0x10000000-0x102fffff] to [bus 01-02]
+> > >   01:02.0 bridge window [mem 0x10000000-0x100fffff] to [bus 02]
+> > >   01:03.0 NIC BAR [mem 0x10200000-0x1021ffff]
+> > >   01:04.0 NIC BAR [mem 0x10220000-0x1023ffff]
+> > >   02:05.0 NIC BAR [mem 0x10080000-0x1009ffff]
+> > > 
+> > > and it's the same with and without the current patch.
+> > > 
+> > > Are all these assignments done by BIOS, or did Linux update them?  
+> > 
+> > > Did we exercise the same "distribute available resources" path as in
+> > > the PCIe case?  I expect we *should*, because there really shouldn't
+> > > be any PCI vs PCIe differences in how resources are handled.  This is
+> > > why I'm not comfortable with assumptions here that depend on PCIe.
+> > > 
+> > > I can't tell from Jonathan's PCIe case whether we got a working config
+> > > from BIOS or not because our logging of bridge windows is kind of
+> > > poor.  
+> > 
+> > This is ARM64 so there is no "BIOS" involved (something similar though).
+> 
+> It's EDK2 in my tests  - so very similar to other arch.
+> Possible to boot without though and rely on DT, but various things don't
+> work yet...
 
-On Tue, Nov 22, 2022 at 06:13:09PM +0100, Lukas Wunner wrote:
-> [+cc Thomas Gleixner, author of dc186ad741c1]
-> 
-> On Fri, Nov 18, 2022 at 09:20:38AM +0000, David Laight wrote:
-> > > From: ira.weiny@intel.com
-> > > Sent: 18 November 2022 00:05
-> > > 
-> > > Work item initialization needs to be done with either
-> > > INIT_WORK_ONSTACK() or INIT_WORK() depending on how the work item is
-> > > allocated.
-> > > 
-> > > The callers of pci_doe_submit_task() allocate struct pci_doe_task on the
-> > > stack and pci_doe_submit_task() incorrectly used INIT_WORK().
-> > > 
-> > > Jonathan suggested creating doe task allocation macros such as
-> > > DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> > > function is not known to the callers and must be initialized correctly.
-> > > 
-> > > A follow up suggestion was to have an internal 'pci_doe_work' item
-> > > allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> > > could restrict the context where tasks are used.
-> > > 
-> > > Another idea was to have an intermediate step to initialize the task
-> > > struct with a new call.[3]  This added a lot of complexity.
-> > > 
-> > > Lukas pointed out that object_is_on_stack() is available to detect this
-> > > automatically.
-> > > 
-> > > Use object_is_on_stack() to determine the correct init work function to
-> > > call.
-> > 
-> > This is all a bit strange.
-> > The 'onstack' flag is needed for the diagnostic check:
-> > 	is_on_stack = object_is_on_stack(addr);
-> > 	if (is_on_stack == onstack)
-> > 		return;
-> > 	pr_warn(...);
-> > 	WARN_ON(1);
-> > 
-> > So setting the flag to the location of the buffer just subverts the check.
-> > It that is sane there ought to be a proper way to do it.
-> 
-> If object_is_on_stack() is sufficient to check whether a struct
-> is on the stack or not, why doesn't __init_work() use it to
-> auto-detect whether to call debug_object_init_on_stack() or
-> debug_object_init()?
-> 
-> Forcing developers to use a specific initializer for something
-> that can be auto-detected is akin to treating them like kids
-> and telling them "You didn't say the magic word."
-> 
-> What's the point?
-> 
-> Thanks,
-> 
-> Lukas
+Doesn't matter whether it's BIOS/EFI/EDK2/etc, the question was really
+whether anything has programmed BARs and windows before Linux gets
+started.
+
+> From liberal distribution of printk()s it seems that for PCI bridges
+> pci_bridge_resources_not_assigned() is false, but for PCI express
+> example it is true.  My first instinct is quirk of the EDK2 handling? 
+> I'll have a dig, but I'm not an expert in EDK2 at all, so may not get
+> to the bottom of this.
+
+I don't know what pci_bridge_resources_not_assigned() is.
+
+> Ultimately it seems that when the OS takes over the prefetchable memory
+> resources are not configured for the PCIe case, but are for the PCI case.
+> So we aren't currently walking the new code for PCI.
+
+Whatever the reason for this is, it doesn't sound like something Linux
+should assume or rely on.
+
+Bjorn
