@@ -2,73 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B3C633E38
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 14:56:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92CEE633FC6
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 16:04:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232498AbiKVN4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 08:56:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
+        id S231808AbiKVPEo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 10:04:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232800AbiKVNz7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 08:55:59 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A4567F49
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:55:58 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id g62so14414751pfb.10
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:55:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yfTOQwrrcPpkrDlf5AiVxig6mnCOgOA2GN9rJdoHhPA=;
-        b=ODNsLVJ8fAT1RlWHmW4dMx9bHa2yzInu2BdbuIbnbv9s/RLQ6XMWzhhHocxKANR+H2
-         /lS3pt8vRihLOXlyj7/I3ZL0sk47MELMzlhUf8rCCOSdfN0+okOZsdpyeIxzdEk4HuoZ
-         jnrPlZVI2ZY8/RDnR3bF7xxfn0CzzB073MvyvadIIbojGPqawV4vLLCsODlZUf96ej6u
-         SZFx8SzacV7Dd5GnNc1kHKC7Bbg/85DVbgeVl6zV50i0MNKMYdPubT5Xo+bPWZbv2Wlk
-         Em9dGgk+adwIz2CyaMCj+e8bGJB0IarG9xnONkf+SCHT01a0lH7bUj8Qr73AIhB3U6Al
-         eh7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfTOQwrrcPpkrDlf5AiVxig6mnCOgOA2GN9rJdoHhPA=;
-        b=bUftjiuCSJcWy0QB5G3OxDlIaa6mX/bvN+XibGrVL4YsKyKjZuT4yAQrriO4xe6gv0
-         cAOg8NtIBaANtb6Tr0xFdIj0JGKKjhmqkrB6Jizyaawh80VO76ebFrhWLVna/FFjhFza
-         AQvp9ti2vHAPqrQaYKT17H3w7MLkhwK/mB6R6ebME3/Q399TQtI9DjPSAv96YonMyuxI
-         yBhrJ7WS7zpJ+f1AhPTm0TvX+Txl0mfqN5mg7GWxVCm3grMqtnuGSZKSAL9ZPFTV3N03
-         zLhaB4pMS+F/tiDnbAdoQp1hyn0+JOyisRLscss6fdpCIC8GhPcUV9Ht4aGAOm3jUgeB
-         D0Pw==
-X-Gm-Message-State: ANoB5pm4hSRYGtF4a0VivGGQcs7MZxlJyKkVlw6bSvqfLhr07gfrjb7P
-        rCGqck/cflutu5i4LrX6NJBO
-X-Google-Smtp-Source: AA0mqf7vdyeNuz6rQCI3cxxJYL9kYFQBG7ovuALu6oqJ5NJSdY+RgjWdUAbZR80KavjWS6cKtwRlqA==
-X-Received: by 2002:a63:110d:0:b0:46f:6225:c2f9 with SMTP id g13-20020a63110d000000b0046f6225c2f9mr22148675pgl.225.1669125357907;
-        Tue, 22 Nov 2022 05:55:57 -0800 (PST)
-Received: from thinkpad ([59.92.98.84])
-        by smtp.gmail.com with ESMTPSA id r12-20020a63e50c000000b00476dc914262sm9271620pgh.1.2022.11.22.05.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 05:55:56 -0800 (PST)
-Date:   Tue, 22 Nov 2022 19:25:50 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+        with ESMTP id S233217AbiKVPEn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 10:04:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021A365F6;
+        Tue, 22 Nov 2022 07:04:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A293FB81AF2;
+        Tue, 22 Nov 2022 15:04:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41550C433C1;
+        Tue, 22 Nov 2022 15:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669129479;
+        bh=P9fA7ZwQiyLuOSFN0uBsRJicIpWm5a1d+ko8TW2gN8Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HDQdFxxyOEjTZRPW3tZdRQQAYijhdaM7D0xV4PtCL0x+8eTD7VBCxwTxnsrhBujYZ
+         P0C0UIzBYUjE3wnGmLHZOZAgbM/MtG6L13XRhqtUDgQITVRwkb0f+MK7I4tJS79cCd
+         ZYWF+2ROiGDJwzLrR89zbq+ayiFZoYJqWLBxwgMED8gJME13I4wa02ekb4MVtxYeHr
+         jriPHtW8fHvJ7SZjwVsKiazwBpibVf8zg7vEsbkDCNHDIQb3Is+o0Ijtv8kajNhi+F
+         //C+Z9zzji3DOZymzFuEgjvdEqX67jrfXIaD3z1vAiRx6JyYxnkSLsf/GymIvujVId
+         WrUiVUCTSllDw==
+Date:   Tue, 22 Nov 2022 09:04:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
         bhelgaas@google.com, krzk+dt@kernel.org,
         marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        fancer.lancer@gmail.com, Sergey.Semin@baikalelectronics.ru
-Subject: Re: [PATCH v7 5/9] PCI: dwc: Avoid reading a register to detect
- whether eDMA exists
-Message-ID: <20221122135550.GD157542@thinkpad>
-References: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
- <20221121124400.1282768-6-yoshihiro.shimoda.uh@renesas.com>
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v7 7/9] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+Message-ID: <20221122150437.GA187129@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221121124400.1282768-6-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20221121124400.1282768-8-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,46 +53,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+ Serge (who authored EDMA support)
-
-Thanks,
-Mani
-
-On Mon, Nov 21, 2022 at 09:43:56PM +0900, Yoshihiro Shimoda wrote:
-> Since reading value of PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL was
-> 0x00000000 on one of SoCs (R-Car S4-8), it cannot find the eDMA.
-> So, directly read the eDMA register if edma.reg_base is not zero.
+On Mon, Nov 21, 2022 at 09:43:58PM +0900, Yoshihiro Shimoda wrote:
+> Add R-Car Gen4 PCIe Host support. This controller is based on
+> Synopsys DesignWare PCIe.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 637d01807c67..2cc8584da6f4 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -836,8 +836,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  {
->  	u32 val;
->  
-> -	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> +	if (pci->edma.reg_base) {
->  		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
->  
->  		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> @@ -845,6 +844,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
->  
->  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
-> +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
->  	} else {
->  		return -ENODEV;
->  	}
-> -- 
-> 2.25.1
-> 
+> This controller doesn't support MSI-X interrupt. So, introduce
+> no_msix flag in struct dw_pcie_host_ops to clear MSI_FLAG_PCI_MSIX
+> from dw_pcie_msi_domain_info.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> +	/* Enable L1 Substates */
+> +	val = dw_pcie_readl_dbi(dw, L1PSCAP(PCI_L1SS_CTL1));
+> +	val &= ~PCI_L1SS_CTL1_L1SS_MASK;
+> +	val |= PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_1 |
+> +	       PCI_L1SS_CTL1_ASPM_L1_2 | PCI_L1SS_CTL1_ASPM_L1_1;
+> +	dw_pcie_writel_dbi(dw, L1PSCAP(PCI_L1SS_CTL1), val);
+
+This seems like something that ought to be done by the PCI core in
+pcie/aspm.c.  L1.2 also depends on LTR being supported and configured.
+
+If it needs to be enabled here, can you expand the comment to say why
+and how LTR is being configured?
+
+> +	rcar_gen4_pcie_disable_bar(dw, BAR0MASKF);
+> +	rcar_gen4_pcie_disable_bar(dw, BAR1MASKF);
+> +
+> +	/* Set Root Control */
+> +	val = dw_pcie_readl_dbi(dw, EXPCAP(PCI_EXP_RTCTL));
+> +	val |= PCI_EXP_RTCTL_SECEE | PCI_EXP_RTCTL_SENFEE |
+> +	       PCI_EXP_RTCTL_SEFEE | PCI_EXP_RTCTL_PMEIE |
+> +	       PCI_EXP_RTCTL_CRSSVE;
+> +	dw_pcie_writel_dbi(dw, EXPCAP(PCI_EXP_RTCTL), val);
+> +
+> +	/* Set Interrupt Disable, SERR# Enable, Parity Error Response */
+> +	val = dw_pcie_readl_dbi(dw, PCI_COMMAND);
+> +	val |= PCI_COMMAND_PARITY | PCI_COMMAND_SERR |
+> +	       PCI_COMMAND_INTX_DISABLE;
+> +	dw_pcie_writel_dbi(dw, PCI_COMMAND, val);
+> +
+> +	/* Enable SERR */
+> +	val = dw_pcie_readb_dbi(dw, PCI_BRIDGE_CONTROL);
+> +	val |= PCI_BRIDGE_CTL_SERR;
+> +	dw_pcie_writeb_dbi(dw, PCI_BRIDGE_CONTROL, val);
+> +
+> +	/* Device control */
+> +	val = dw_pcie_readl_dbi(dw, EXPCAP(PCI_EXP_DEVCTL));
+> +	val |= PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE |
+> +	       PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE;
+> +	dw_pcie_writel_dbi(dw, EXPCAP(PCI_EXP_DEVCTL), val);
+
+The above also looks like things that should be configured by the PCI
+core.
+
+> +		dev_err(&pdev->dev, "Failed to initialize host\n");
+> +		dev_err(dev, "failed to request resource: %d\n", err);
+
+Pick a capitalization style.
+
+> +		dev_err(dev, "%s: failed to resume/get Runtime PM\n", __func__);
+
+The driver name + device ID + message text printed by dev_err() should
+be enough that __func__ isn't needed.
+
+Bjorn
