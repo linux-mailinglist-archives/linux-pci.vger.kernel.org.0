@@ -2,131 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3407A6343A3
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 19:30:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B27746343B4
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 19:34:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233768AbiKVSar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 13:30:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        id S234431AbiKVSeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 13:34:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231766AbiKVSaq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 13:30:46 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DA57FF21;
-        Tue, 22 Nov 2022 10:30:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669141846; x=1700677846;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BEn7669Y/qpoLWxlJH/t+9MokSfp1qnFTNQyr2DK8ug=;
-  b=XUh1G8AgEfrrR0AmQdgO16MuacflTVvpBN+U4N7BAkxySmgrfZpbmGhA
-   0LnUlcfbdHSdTIeHtbW2IzgLFYuwiUFB4qL42GWpBYRkLLBNVUFmODvlA
-   PIcQFP7g3JVCr1rEZ7APc5KeXUV2pMXL1iQPh8JOJeilGMDy+BB1gDawk
-   r/DlLbtuLh3oAWuscR5ZRom0S0XMMENqDRJxdY9ztF6SZqHAT5zDHk9CF
-   m8/di5+ej8wi6g3LZbhhDDq8YWUKyv0rBAs+38xdNoTBbGnn68yE7TUlJ
-   7cPbsySsazqp7YOlbXpw9QnOKPpsds3Em5Mde+ayOhY1bA2ZCPy8ynDqc
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="340757644"
-X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
-   d="scan'208";a="340757644"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 10:30:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="783936620"
-X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
-   d="scan'208";a="783936620"
-Received: from coltsavx-mobl1.amr.corp.intel.com (HELO [10.255.0.114]) ([10.255.0.114])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 10:30:25 -0800
-Message-ID: <cff68b1a-c239-4d52-27b0-536079243981@intel.com>
-Date:   Tue, 22 Nov 2022 10:30:23 -0800
+        with ESMTP id S232869AbiKVSeX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 13:34:23 -0500
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39CF17C6B5;
+        Tue, 22 Nov 2022 10:34:22 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 6C08C2800BBC5;
+        Tue, 22 Nov 2022 19:34:20 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 5F64AA072B; Tue, 22 Nov 2022 19:34:20 +0100 (CET)
+Date:   Tue, 22 Nov 2022 19:34:20 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] PCI: hotplug: Add checks to avoid doing hotplug
+ on PCIe Upstream Ports
+Message-ID: <20221122183420.GA22578@wunner.de>
+References: <5623410.DvuYhMxLoT@kreacher>
+ <20221122180603.GA205176@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use standard
- coco mechanisms
-Content-Language: en-US
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
- <1668624097-14884-8-git-send-email-mikelley@microsoft.com>
- <Y3uTK3rBV6eXSJnC@zn.tnic>
- <BYAPR21MB16886AF404739449CA467B1AD70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <BYAPR21MB16886AF404739449CA467B1AD70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221122180603.GA205176@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/22/22 10:22, Michael Kelley (LINUX) wrote:
-> Anyway, that's where I think this should go. Does it make sense?
-> Other thoughts?
+On Tue, Nov 22, 2022 at 12:06:03PM -0600, Bjorn Helgaas wrote:
+> On Mon, Nov 21, 2022 at 07:13:15PM +0100, Rafael J. Wysocki wrote:
+> > PCIe Upstream Ports are not hotplug-capable by definition, but it turns out
+> > that in some cases, if the system is configured in a particularly interesting
+> > way, the kernel may be made attempt to operate an Upstream Port as a hotplug
+> > one which causes functional issues to appear.
+> > 
+> > The following 2 patches amend the code to prevent this behavior from occurring.
+> 
+> Thanks, applied to pci/hotplug for v6.2.  Lukas, I didn't presume to
+> convert your LGTM to Reviewed-by, but would be happy add it.
 
-I think hard-coding the C-bit behavior and/or position to a vendor was
-probably a bad idea.  Even the comment:
+I figured that having both a Suggested-by and a Reviewed-by might
+look odd, hence went with the more neutral LGTM.  But I see it was
+ambiguous.  Either way is fine for me. :)
 
-u64 cc_mkenc(u64 val)
-{
-        /*
-         * Both AMD and Intel use a bit in the page table to indicate
-         * encryption status of the page.
-         *
-         * - for AMD, bit *set* means the page is encrypted
-         * - for Intel *clear* means encrypted.
-         */
+Thanks,
 
-doesn't make a lot of sense now.  Maybe we should just have a:
-
-	CC_ATTR_ENC_SET
-
-which gets set for the "AMD" behavior and is clear for the "Intel"
-behavior.  Hyper-V code running on AMD can set the attribute to get teh
-"Intel" behavior.
-
-That sure beats having a Hyper-V vendor.
+Lukas
