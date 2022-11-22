@@ -2,101 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FEE963356E
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 07:42:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14ADC63357C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 07:50:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229450AbiKVGml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 01:42:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
+        id S231712AbiKVGu2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 01:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbiKVGmi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 01:42:38 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5016369
-        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 22:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669099357; x=1700635357;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GlGn0lSAv9F2GKdxS0kY7kX0REeyqVb3DzCbY7rRxF4=;
-  b=hS+W3RAipAbzVmuPhBl+vcIu6tSCKPKwMt9KjZLPm0dHNP+bt3VVedGY
-   ppRYQ0pEeOCNITlMwIDvO8uNVFNCQOwQHbiP8PfPVmfL/27uWaUHlKdBr
-   6WPDdeaUks8+9rjNBkk11B8IfGVxGgbXfwyoLTkiqtOiUxAICVfL6aegc
-   Z00KJPpxOr3TDS8M9yOiy0gS89x0G4kmKrblJBUYtG9Bf+Ye2Qyfdt9uU
-   ueebC8ZqcldD/n2KIzWE06euydv/pgNCkOubzw5z+10jqB5dbjLZwUvmj
-   JjQTgRtQ1zK6IcGabJyobvlvB9wxS+PQ6Qi4Po3xc9dFoMZN16eFQnpGC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="314895898"
-X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
-   d="scan'208";a="314895898"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 22:42:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="747224898"
-X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
-   d="scan'208";a="747224898"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2022 22:42:32 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 45195128; Tue, 22 Nov 2022 08:42:58 +0200 (EET)
-Date:   Tue, 22 Nov 2022 08:42:58 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Take multifunction devices into account when
- distributing resources
-Message-ID: <Y3xvcvqgFbYMIIpl@black.fi.intel.com>
-References: <Y3tlRIG99P/amO9Q@black.fi.intel.com>
- <20221121224548.GA138441@bhelgaas>
+        with ESMTP id S231466AbiKVGu1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 01:50:27 -0500
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB28621266
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 22:50:25 -0800 (PST)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-14279410bf4so14504037fac.8
+        for <linux-pci@vger.kernel.org>; Mon, 21 Nov 2022 22:50:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lzFJLpTLcz/ApZwJA6HZYYwWg5c8s6kbjnuAYkfIuQ0=;
+        b=Bp9iz5iWBO3rOgNazChfrLbalZWXa01HFbpzJayoUJFPQkEJOLB+p02PZPkrRQncsw
+         f6xfr6Ave8C6rATZQe0YqQxG79MXg/TCciBgKxW/x9Hbd4XR5Ay1ARvRmtTWFaUOQBKd
+         lhBX6jZUi/5WuxhhPyafPHvk34DPA0J38qj17TT47z1d1VWGOsxF0WP+YpU+zKYruEB1
+         O3RwSmnuJCIyOtohhm553fjPmr10vukwRsiuuRwt3/yd3G2u748EWWurzG/eoI1UCA11
+         vQmm/PNA1F6ClLB8uE31/uDDISLJyEv2nVEr6AYW2Z+G7G0QVtmSV80N2HERZaToPlPL
+         +lSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lzFJLpTLcz/ApZwJA6HZYYwWg5c8s6kbjnuAYkfIuQ0=;
+        b=T5pQUgu6O7taCrT/jt7nI/zFe+AkPCCZoMLIlrLkhYidFHiwvL7aHSlDB0EbswKwM2
+         fP+sbQ6glpalmS6CJ7cdELEWxWWb4Dhd30MD714XxL9yoqlbHR92URM2y7NR//WCdh4c
+         vomZ2/wwCAI4aXoDzE3ZI7JGbZACJBvVpeetASmdobEaKjh4iMll860+/5Lhm/P6iDNH
+         8XTEf3TuAZ/mf5VYS40WZ2zge3lZdTFJu7LdNgqO/XF6nWfgrBekWC1hY+hiGnHF9lMh
+         LA0vEV/UGov6qkrt4C24f0zjwwoIXBO6sb2zg8Tx1CD0Rr6ZOrp47N/D5yeKvq0Z0YGT
+         X1EA==
+X-Gm-Message-State: ANoB5plUCzPKRmKaOyl5aVq9HAZqbbtsgBoHTWPj3zAyCj14LDwZuacC
+        pzxR4seFQtpWx8wvkvi9VfXcf7mdq3KCl2OALL4=
+X-Google-Smtp-Source: AA0mqf6dxxk/zXQvI8sJ6M21664ZNPRUZrEfzwoGEa2AogJXqZAWjlMjFWUSH2rD8j5DAqGJnL0ZPVik+3GVoGzFq78=
+X-Received: by 2002:a05:6870:9591:b0:13a:eee0:b499 with SMTP id
+ k17-20020a056870959100b0013aeee0b499mr1592368oao.83.1669099825206; Mon, 21
+ Nov 2022 22:50:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221121224548.GA138441@bhelgaas>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <CAMhs-H-i1arxS4daudfG8AGuFyxmJuNe6CY4A+Pi+u8RNUM65A@mail.gmail.com>
+ <20221121225052.GA140064@bhelgaas>
+In-Reply-To: <20221121225052.GA140064@bhelgaas>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Tue, 22 Nov 2022 07:50:13 +0100
+Message-ID: <CAMhs-H-cX2obR3XggAc-3hqHEW2S4UErYKVLWk=TKcJpYSd+gg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mt7621: increase PERST_DELAY_MS
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+        bhelgaas@google.com, kw@linux.com, robh@kernel.org,
+        lpieralisi@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Mon, Nov 21, 2022 at 11:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sun, Nov 20, 2022 at 08:37:50AM +0100, Sergio Paracuellos wrote:
+> > On Sat, Nov 19, 2022 at 7:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Sat, Nov 19, 2022 at 12:08:37PM +0100, Sergio Paracuellos wrote:
+> > > > Some devices using this SoC and PCI's like ZBT WE1326 and Netgear R6220 need
+> > > > more time to get the PCI ports properly working after reset. Hence, increase
+> > > > PERST_DELAY_MS definition used for this purpose from 100 ms to 500 ms to get
+> > > > into confiable boots and working PCI for these devices.
+> > >
+> > > confiable?
+> >
+> > It seems my spanish confused my mind here :). I meant trustable.
+>
+> Your English is WAY, WAY better than my Spanish :)
+>
+> I assume this is more about just making boots more "reliable" than
+> something like the "Trusted Boot" or "Secure Boot" technologies [1,2]?
 
-On Mon, Nov 21, 2022 at 04:45:48PM -0600, Bjorn Helgaas wrote:
-> IIUC, the summary is this:
-> 
->   00:02.0 bridge window [mem 0x10000000-0x102fffff] to [bus 01-02]
->   01:02.0 bridge window [mem 0x10000000-0x100fffff] to [bus 02]
->   01:03.0 NIC BAR [mem 0x10200000-0x1021ffff]
->   01:04.0 NIC BAR [mem 0x10220000-0x1023ffff]
->   02:05.0 NIC BAR [mem 0x10080000-0x1009ffff]
-> 
-> and it's the same with and without the current patch.
-> 
-> Are all these assignments done by BIOS, or did Linux update them?
+You are right. Reliable is definitely the accurate word for this :)
 
-> Did we exercise the same "distribute available resources" path as in
-> the PCIe case?  I expect we *should*, because there really shouldn't
-> be any PCI vs PCIe differences in how resources are handled.  This is
-> why I'm not comfortable with assumptions here that depend on PCIe.
-> 
-> I can't tell from Jonathan's PCIe case whether we got a working config
-> from BIOS or not because our logging of bridge windows is kind of
-> poor.
-
-This is ARM64 so there is no "BIOS" involved (something similar though).
-
-It is the same "system" that Jonathan used where the regression happened
-with the multifunction PCIe configuration with the exception that I'm
-now using PCI devices instead of PCIe as you asked.
-
-I'm not 100% sure if the all the same code paths are used here, though.
+Thanks,
+     Sergio Paracuellos
+>
+> Bjorn
+>
+> [1] https://trustedcomputinggroup.org/resource/trusted-boot/
+> [2] https://learn.microsoft.com/en-us/windows/security/trusted-boot
