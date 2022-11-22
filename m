@@ -2,161 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 192E5633E0F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 14:49:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2EC8633E20
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Nov 2022 14:52:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233869AbiKVNtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 08:49:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
+        id S233908AbiKVNwE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 08:52:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233855AbiKVNtt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 08:49:49 -0500
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07F157B66
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:49:47 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id y203so14413954pfb.4
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 05:49:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+P2ivfSFXLbWzT9PHNfJTpLAcw4nHOZdoUpRgaAM1gU=;
-        b=fDTk2qBn/jf665HzklH6UgrbxkjDpJ1nhbZZBgIiVScnJcuXM3dqCYTfA66iUL7d1x
-         xgp39O/842vNtoP/98WyzKWLw/dcDoDblPngnaWUJY6UCUjh+MNdk9IWbRswPEOumalm
-         nG1/Fn8QT3qrhSs4GytV3EDzuY3esaC2eBpPKzpeZZheNCn2OqaExxIvpoX+lud+gMOs
-         v9gaaMdzSvUCSBUMK0suNy/jtdG6sm37k/K7+kZlYmpo1ebgMYGur7k6cVJnoZZI2Ugn
-         EyLqmBY8YLX09KmIwumwT7K7E+ZCgi4aqO7TAH0fx6gcN0yt1Wz33S9O9NPWy3nO4+CS
-         RF6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+P2ivfSFXLbWzT9PHNfJTpLAcw4nHOZdoUpRgaAM1gU=;
-        b=RomYThtIe585LwSIlb5Dt287+vK3MhvQSHYyr6BkBdeEqnC8HZaEpO6m5/y7D2UH78
-         9R5Lm8KqffO2TrZDdfItg4bRIAsyj5V76hL0eqh+LUkAflkY5rXBEotkD73SZaKOMEfh
-         nX4wRgKOMoITqlLTVu1lJt57K7rmeX49+iqIBqXLzl7jI3gwmOjSW67uDCfMA7m5rQ2F
-         UGPJiyJF1XYnJdO4Zf8dm1KAujF7esaPl5ydMEkPft+8UozhD5r1+st48TNs93lKXe6y
-         OShmX5wgGsSZBJidbvCsLH8tyhI+7rjDL92J72ozDk2j+G1cBnhyHnwdxYjjGaTax6tr
-         gQQg==
-X-Gm-Message-State: ANoB5plsJsS8PO2YoNG7bsCzyiuCiDYqyAfsdHUvgHSvkKyHgYbOJoCJ
-        FDg1jJfRVtUdPKiix+Cl+Kqa
-X-Google-Smtp-Source: AA0mqf6xYGN0spP0aEoAK/0g3HTZzm3Evd3m91jBxcfLOeUT1xue0xoWw7S+r9p8/Vt32ziS0YkKpA==
-X-Received: by 2002:aa7:9e5d:0:b0:54c:9e75:ab7 with SMTP id z29-20020aa79e5d000000b0054c9e750ab7mr4471439pfq.82.1669124987338;
-        Tue, 22 Nov 2022 05:49:47 -0800 (PST)
-Received: from thinkpad ([59.92.98.84])
-        by smtp.gmail.com with ESMTPSA id jb4-20020a170903258400b00186b86ed450sm11953991plb.156.2022.11.22.05.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 05:49:46 -0800 (PST)
-Date:   Tue, 22 Nov 2022 19:19:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     vidyas@nvidia.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, robh@kernel.org, lpieralisi@kernel.org,
-        bhelgaas@google.com
-Subject: Re: [PATCH v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to
- threaded IRQ handler
-Message-ID: <20221122134941.GC157542@thinkpad>
-References: <20221025145101.116393-1-manivannan.sadhasivam@linaro.org>
- <20221025145101.116393-3-manivannan.sadhasivam@linaro.org>
- <20221114110654.GL3869@thinkpad>
- <20221114110820.GM3869@thinkpad>
+        with ESMTP id S233934AbiKVNwC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 08:52:02 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C97557B66;
+        Tue, 22 Nov 2022 05:52:00 -0800 (PST)
+Received: from frapeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGlwz39M5z67NKF;
+        Tue, 22 Nov 2022 21:49:23 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 22 Nov 2022 14:51:56 +0100
+Received: from localhost (10.45.149.88) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 22 Nov
+ 2022 13:51:55 +0000
+Date:   Tue, 22 Nov 2022 13:51:52 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
+        <linuxarm@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Update the entries for HiSilicon PTT
+ device driver
+Message-ID: <20221122135152.0000040a@Huawei.com>
+In-Reply-To: <20221122120209.25682-2-yangyicong@huawei.com>
+References: <20221122120209.25682-1-yangyicong@huawei.com>
+        <20221122120209.25682-2-yangyicong@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221114110820.GM3869@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.149.88]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 04:38:20PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Nov 14, 2022 at 04:37:00PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Oct 25, 2022 at 08:20:58PM +0530, Manivannan Sadhasivam wrote:
-> > > dw_pcie_ep_linkup() may take more time to execute depending on the EPF
-> > > driver implementation. Calling this API in the hard IRQ handler is not
-> > > encouraged since the hard IRQ handlers are supposed to complete quickly.
-> > > 
-> > > So move the dw_pcie_ep_linkup() call to threaded IRQ handler.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Sorry for resending it (something messed up with my email client).
-> 
-> Vidya, can you please review this patch?
-> 
+On Tue, 22 Nov 2022 20:02:09 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-Ping!
-
-Thanks,
-Mani
-
-> Thanks,
-> Mani
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index 1b6b437823d2..a0d231b7a435 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -287,6 +287,7 @@ struct tegra_pcie_dw {
-> > >  	struct gpio_desc *pex_refclk_sel_gpiod;
-> > >  	unsigned int pex_rst_irq;
-> > >  	int ep_state;
-> > > +	long link_status;
-> > >  };
-> > >  
-> > >  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
-> > > @@ -450,9 +451,13 @@ static void pex_ep_event_hot_rst_done(struct tegra_pcie_dw *pcie)
-> > >  static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
-> > >  {
-> > >  	struct tegra_pcie_dw *pcie = arg;
-> > > +	struct dw_pcie_ep *ep = &pcie->pci.ep;
-> > >  	struct dw_pcie *pci = &pcie->pci;
-> > >  	u32 val, speed;
-> > >  
-> > > +	if (test_and_clear_bit(0, &pcie->link_status))
-> > > +		dw_pcie_ep_linkup(ep);
-> > > +
-> > >  	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
-> > >  		PCI_EXP_LNKSTA_CLS;
-> > >  	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-> > > @@ -499,7 +504,6 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
-> > >  static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
-> > >  {
-> > >  	struct tegra_pcie_dw *pcie = arg;
-> > > -	struct dw_pcie_ep *ep = &pcie->pci.ep;
-> > >  	int spurious = 1;
-> > >  	u32 status_l0, status_l1, link_status;
-> > >  
-> > > @@ -515,7 +519,8 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
-> > >  			link_status = appl_readl(pcie, APPL_LINK_STATUS);
-> > >  			if (link_status & APPL_LINK_STATUS_RDLH_LINK_UP) {
-> > >  				dev_dbg(pcie->dev, "Link is up with Host\n");
-> > > -				dw_pcie_ep_linkup(ep);
-> > > +				set_bit(0, &pcie->link_status);
-> > > +				return IRQ_WAKE_THREAD;
-> > >  			}
-> > >  		}
-> > >  
-> > > -- 
-> > > 2.25.1
-> > > 
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
+> Add missing entries for the perf userspace part of this driver.
+> Also add Jonathan as the maintainer for his expertise on this
+> driver and PCIe stuffs.
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
--- 
-மணிவண்ணன் சதாசிவம்
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  MAINTAINERS | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2585e7edc335..de3d0a5d9cb0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9263,11 +9263,15 @@ F:	drivers/perf/hisilicon/hns3_pmu.c
+>  
+>  HISILICON PTT DRIVER
+>  M:	Yicong Yang <yangyicong@hisilicon.com>
+> +M:	Jonathan Cameron <jonathan.cameron@huawei.com>
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>  F:	Documentation/trace/hisi-ptt.rst
+>  F:	drivers/hwtracing/ptt/
+> +F:	tools/perf/arch/arm64/util/hisi-ptt.c
+> +F:	tools/perf/util/hisi-ptt*
+> +F:	tools/perf/util/hisi-ptt-decoder/*
+>  
+>  HISILICON QM DRIVER
+>  M:	Weili Qian <qianweili@huawei.com>
+
