@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 298EB635BED
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 12:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56FF9635BFB
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 12:43:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236235AbiKWLlO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 06:41:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
+        id S237468AbiKWLlj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 06:41:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237411AbiKWLlL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 06:41:11 -0500
+        with ESMTP id S237391AbiKWLlc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 06:41:32 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A30109583;
-        Wed, 23 Nov 2022 03:41:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1329C1095AA;
+        Wed, 23 Nov 2022 03:41:28 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669203666;
+        s=2020; t=1669203686;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=373bQ1nq+nl0rYtdJTO5Jt2zlt/TLiciMjBg/gptv3M=;
-        b=KpEqNtPqfiJppK8AvzqtheMaPcoZmN8t/rFv6jjr6hTYoy40ftLFhpimHJ5jw8l6Va6aMw
-        Hj8rFIEBDV55rsgKjpjmn7AIQVUNwC2gbZf1xfpahuw3LOSLh/LJheui3OO1y+1cm92f6x
-        HQIXyX+ew/MZPbmSyWMukFU5yTJnHGzvmeRo4Z3KIKZfQvoGpIuFiGmWGU1jHalUcMt94Q
-        UjDY8OCA77xKJVyyWjMTJG76mp6GpoVYrvAE002YCUD9t6HNkhsIHaymA3SxGTYalj768Y
-        JPVHnOXR9BT/siy0wfNlaD21yUTYXDrgoxQ6VRkYoAyn0ji4clI4WvLn5hj9Hg==
+        bh=kc21O6wY4Q6r+mTnObxfs2KOMyS/UVcJmynZXV3Alfo=;
+        b=fJiPVVKvGmb3Z6MlKrSoOE572tB3jWNzQMJM2ZsLFdhyLEI3dHpVghflAbJGIGkivhVX0v
+        EcgfZViiax0lJTf3gYuumHZo3ioTTtSoTctDYt3ZKJE30lFj3EhRMozgeeZMFlRMsNb+i3
+        FfIV+VT0RdvY/Sy/29hY3d8XXxot7GcUE3ItMpDnNNJRy+qJGgOH5bBx2oqLZmVSxmyvfv
+        XXqvMr/7wIpT3Z6Xig4Xv1BBBZ6F3m3LPbKXmNvSO5KyAFJnO4DRkvxKkvT5j83W4tnb5c
+        SFIsySN5GyQImHWDMr9HfcNnSkD/ssADIkY3IXCJZfyPgAS+0Vz6AUjkyaeglQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669203666;
+        s=2020e; t=1669203686;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=373bQ1nq+nl0rYtdJTO5Jt2zlt/TLiciMjBg/gptv3M=;
-        b=cQlKvLqRtjVxKMFF8O3YttItxpSP0whK6NO6CdL/nA66+knkQDkTy9kfdNkswueZtwmlSX
-        vU8ev3zdRcFC1GBQ==
+        bh=kc21O6wY4Q6r+mTnObxfs2KOMyS/UVcJmynZXV3Alfo=;
+        b=qd4XW1N6UovQIjWlGHprPa+Nv/Om0cvvHmA4Oj16C7YLu7d+3dJoaWLpkMfTCE5V6n0gxK
+        ByXCq0cvkV1AMNAA==
 To:     "Tian, Kevin" <kevin.tian@intel.com>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
@@ -49,16 +49,14 @@ Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
         "Williams, Dan J" <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         "Raj, Ashok" <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: RE: [patch V2 12/33] PCI/MSI: Add support for per device MSI[X]
- domains
-In-Reply-To: <BN9PR11MB5276E9AD0F86A27A23ED8CFB8C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
+        Allen Hubbe <allenbh@gmail.com>
+Subject: RE: [patch V2 19/33] genirq/msi: Provide msi_desc::msi_data
+In-Reply-To: <BN9PR11MB5276C788BFDBC254CE5912278C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20221121083657.157152924@linutronix.de>
- <20221121091327.163146917@linutronix.de>
- <BN9PR11MB5276E9AD0F86A27A23ED8CFB8C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Wed, 23 Nov 2022 12:41:05 +0100
-Message-ID: <87zgchew4u.ffs@tglx>
+ <20221121091327.546352933@linutronix.de>
+ <BN9PR11MB5276C788BFDBC254CE5912278C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date:   Wed, 23 Nov 2022 12:41:26 +0100
+Message-ID: <87wn7lew49.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,73 +68,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 23 2022 at 08:08, Kevin Tian wrote:
+On Wed, Nov 23 2022 at 08:27, Kevin Tian wrote:
+
 >> From: Thomas Gleixner <tglx@linutronix.de>
->
-> pci_mask_msi() and pci_msi_mask() are confusing.
->
-> Probably pci_irq_mask_msi() given the parameter is irq_data.
-
-maybe.
-
->> +bool pci_setup_msi_device_domain(struct pci_dev *pdev)
->> +{
->> +	if (WARN_ON_ONCE(pdev->msix_enabled))
->> +		return false;
->
-> the check already exists in __pci_enable_msi_range()
->
->> +bool pci_setup_msix_device_domain(struct pci_dev *pdev, unsigned int
->> hwsize)
->> +{
->> +	if (WARN_ON_ONCE(pdev->msix_enabled))
->> +		return false;
->
-> ditto.
->
-> btw according to the comment this should check pdev->msi_enabled.
-
-Yeah, those are probably redundant.
-
->
->> @@ -152,13 +316,33 @@ bool pci_msi_domain_supports(struct pci_
->>  {
->>  	struct msi_domain_info *info;
->>  	struct irq_domain *domain;
->> +	unsigned int supported;
+>> Sent: Monday, November 21, 2022 10:38 PM
 >> 
->>  	domain = dev_get_msi_domain(&pdev->dev);
+>> The upcoming support for PCI/IMS requires to store some information
+>> related
+>> to the message handling in the MSI descriptor, e.g. PASID or a pointer to a
+>> queue.
 >> 
->>  	if (!domain || !irq_domain_is_hierarchy(domain))
->>  		return mode == ALLOW_LEGACY;
->> -	info = domain->host_data;
->> -	return (info->flags & feature_mask) == feature_mask;
->> +
->> +	if (!irq_domain_is_msi_parent(domain)) {
->> +		/*
->> +		 * For "global" PCI/MSI interrupt domains the associated
->> +		 * msi_domain_info::flags is the authoritive source of
->> +		 * information.
->> +		 */
->> +		info = domain->host_data;
->> +		supported = info->flags;
->> +	} else {
->> +		/*
->> +		 * For MSI parent domains the supported feature set
->> +		 * is avaliable in the parent ops. This makes checks
->> +		 * possible before actually instantiating the
->> +		 * per device domain because the parent is never
->> +		 * expanding the PCI/MSI functionality.
->> +		 */
->> +		supported = domain->msi_parent_ops->supported_flags;
+>> Provide a generic storage struct which maps over the existing PCI specific
+>> storage which means the size of struct msi_desc is not getting bigger.
+>> 
+>> It contains a iomem pointer for device memory based IMS and a union of a
+>> u64 and a void pointer which allows the device specific IMS implementations
+>> to store the necessary information.
 >
-> This is general PCI MSI logic. So an open related to my rely to patch02,
-> is it correct for PCI core to assume that the real parent imposes all the
-> restrictions and there is no need to further go down the hierarchy?
+> stale comment.
+>
+>> 
+>> The iomem pointer is set up by the domain allocation functions.
+>> 
+>> The data union msi_dev_cookie is going to be handed in when allocating an
+>
+> no msi_dev_cookie now.
 
-That was my working assumption and it turned out to be correct with both
-x86 and ARM.
-
-Thanks,
-
-        tglx
+Ooops.
