@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C99F6364A8
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 16:50:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD84D6364D0
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 16:53:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238190AbiKWPuk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 10:50:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38116 "EHLO
+        id S238900AbiKWPxs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 10:53:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238744AbiKWPuI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 10:50:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E2FC604D;
-        Wed, 23 Nov 2022 07:49:43 -0800 (PST)
+        with ESMTP id S238785AbiKWPxB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 10:53:01 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121AC5A6EA;
+        Wed, 23 Nov 2022 07:52:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 94278B820D2;
-        Wed, 23 Nov 2022 15:49:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5620C433C1;
-        Wed, 23 Nov 2022 15:49:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73E2E61DD9;
+        Wed, 23 Nov 2022 15:52:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5EEC43144;
+        Wed, 23 Nov 2022 15:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669218581;
-        bh=T0mf0ijZQTzNBNeBPF5fkFm6qTXOYlAmsvGjPYhocZE=;
+        s=k20201202; t=1669218776;
+        bh=ZtsEDAGH6M1Hm2mKwIp+nkyl3EOfULlsa+PR5Jh+/yY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QYvvVVFg3xABYgJQEwfoWni/oYrfqNnbcqqcQVrcp6uxcLqxAT3Hv4qpUOukDjTs/
-         0p7LoCYEfkSeEAiiX+7nrXQkbqjw1137EJi8AGbebG+uSGbSuFWy6ItixRDZdgYjzd
-         wI4+oGGgg+c8KPKVUQ5ZdWR+K+nR9Wh8y+eMc16I0PC838GB+J3v6zlQjhWOtg1c1c
-         6e5RsTLcd6FqRQaHdPekbba0bcco/SKnkdwTGzLKgRh+Lpo1he1WOZKJOaw2ZEIIXQ
-         GRY+SoMl3sj6Xk7pnSLZNQi8V4EhDNugotUmyQAc8a1pA6HLWIGeNLAtS34DQuw57+
-         eXjalnxk49wTQ==
-Date:   Wed, 23 Nov 2022 15:49:30 +0000
+        b=aCYae1otHmgUnvQhYydPYexYhzz0miYjM4zpf8c2mnxAms5CtVYUfAM7tWuXKgBlL
+         NCzjlOivqXZ6UqIGFo6Q3BntqxLP3hoWG6T432NPpsWDwgRF2tNVlSSreyLi6w5epT
+         5yRu6zDAJOHqLx2PKvtXWr2dbpMJrrYdASELSXDQ7oXGnQVROdJjqD20wCxJmK/TbF
+         LxosEZjoFf2ROozxpxjVeaVFcuzQLwzX93rS2p4/AwotUvzWq5hYJvRgCJVOQBQ8wc
+         Y+r3iBPxcrfDRitsbVrK4soZK4ULKoO7A7tHxHwHfbIwT8fluQgTwO6NOBHUOHbov+
+         PWGuJ73a1veDQ==
+Date:   Wed, 23 Nov 2022 15:52:45 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -61,16 +61,15 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 7/9] dt-bindings: drop redundant part of title
- (beginning)
-Message-ID: <Y35BCpD/tr/7prMh@sirena.org.uk>
+Subject: Re: [PATCH v2 9/9] dt-bindings: drop redundant part of title (manual)
+Message-ID: <Y35BzU80hf36eRyo@sirena.org.uk>
 References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
- <20221121110615.97962-8-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-10-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uLB1Llf0h2iQ6rin"
+        protocol="application/pgp-signature"; boundary="QAOhPtWQs4kr9fZE"
 Content-Disposition: inline
-In-Reply-To: <20221121110615.97962-8-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221121110615.97962-10-krzysztof.kozlowski@linaro.org>
 X-Cookie: I'm rated PG-34!!
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -82,29 +81,30 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---uLB1Llf0h2iQ6rin
+--QAOhPtWQs4kr9fZE
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Nov 21, 2022 at 12:06:13PM +0100, Krzysztof Kozlowski wrote:
+On Mon, Nov 21, 2022 at 12:06:15PM +0100, Krzysztof Kozlowski wrote:
 > The Devicetree bindings document does not have to say in the title that
-> it is a "Devicetree binding", but instead just describe the hardware.
+> it is a "Devicetree binding" or a "schema", but instead just describe
+> the hardware.
 
 Acked-by: Mark Brown <broonie@kernel.org>
 
---uLB1Llf0h2iQ6rin
+--QAOhPtWQs4kr9fZE
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+QQkACgkQJNaLcl1U
-h9C5lAf8Dpp6enFuhrAPv0ZsgsZe6xWsOHu4pelgjbPEH8V7tDwUPWITXN5vLI3+
-RuqFuOP0hYHIa9rUjaI4dZX0sPV7cFMF2BdyjTFdczyAizXljoNVh2r23soCG0RX
-66rxbmsNE++z+1DObKtZgJoutGaB/ZAqMpW0t0XJERPq1KbjBGmy8D/fIq8lvoy/
-4297MfYX3okBCVVhPRX/v+unG3sVqED0Bhdjpo/bwY0150YItakf4eVUXwFxfvTK
-25XCxunGEShq5zi//+/abs2X89ZjhqLTfJtYtUVnj1xtSfEqoRb6mf82WrkieRvA
-dYORYgupqLBXMecamcwbhHMcJBNZ3w==
-=hyWV
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+QcwACgkQJNaLcl1U
+h9AXjAf8DK+4g+6i+PYcdDNKGnFY/1uo0vNGE7MKgsNgIAMn42Y9Tw++ts0ZwHYw
+EDuQqMblUcsp9NKWMs1LVsvQ2YGAbZUXjgUzWpiImszGWwmUf6DZkjwNojGA5ngh
+GAGhKyUYUGXRb0MKJ1X4O3pobituSQSnz8UWlDrpBOO2OiWnWvdbURWlhNYNqMSm
+70ahwExSo8nv/Dxkvf+GV0FHLToE5K4JZxqRh/Gn0l0206IYzY4jvEbCq0DEuZPH
+Jt7Az6phpVvce86sAHnvukNdIa0EQ/8pR+v9idvZiGVY5NJvdJA54BR+1AoXlMna
+RQueknzjRrsbdQSr0xa/wr8lQW5rpw==
+=Wum3
 -----END PGP SIGNATURE-----
 
---uLB1Llf0h2iQ6rin--
+--QAOhPtWQs4kr9fZE--
