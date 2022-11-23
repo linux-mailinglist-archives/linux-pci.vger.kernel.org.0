@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7095F636E0F
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 00:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5D16636E3B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 00:16:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbiKWXGK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 18:06:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60398 "EHLO
+        id S229847AbiKWXQN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 18:16:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbiKWXFx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 18:05:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854A717024D;
-        Wed, 23 Nov 2022 15:05:42 -0800 (PST)
+        with ESMTP id S229910AbiKWXP4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 18:15:56 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD03F4A58F;
+        Wed, 23 Nov 2022 15:15:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3A766B82503;
-        Wed, 23 Nov 2022 23:05:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E2FC433C1;
-        Wed, 23 Nov 2022 23:05:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58FEC61F5C;
+        Wed, 23 Nov 2022 23:15:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A532C433C1;
+        Wed, 23 Nov 2022 23:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669244740;
-        bh=WvDBwfjaVvOEQHGt0bchNUrMTBCVHmD1JG+lP6VucLM=;
+        s=k20201202; t=1669245319;
+        bh=bWh0T0oFSkJB4PdiGGy2fzByge1TZxmhgUDK3+WVRwQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jh9kNXFSMAKzWA+V3l4fe4QxYCWzFE2/GBMio9EPM0YfsF8DbM14ZMv0oVoQovCL+
-         8jsErEyb3HKVHH6463oP5BCN+aV0cHmDUXhHdTE7oTTthQeFO1y38j9JBVrELF4zL7
-         HaWrOPTVIrw509rg/c+4eDYOUDVNhQshxtw8QZdizkbYnPw71eBHzpWYoSxbB72Biw
-         Al4grabUH4nFdMcovOtUTCVHaFvHRENFkfoBy0muARkd6n5DIP+nEmkI5hbns/vYEn
-         DGmHpHPGLifdqRT919caaHGq1usKRKXV66wsyureNun8pPaHRR61SqbQoez/cyiInk
-         QJtxtP5JRVI0w==
-Date:   Wed, 23 Nov 2022 23:05:34 +0000
+        b=hOsL4XS3Ls3qrj//pdUPbpdj+bs3yrDTUf2+YCvHJOcLO96rX1hwTJysQesJ4OxXO
+         1QN13hX76UR86edLyOE82ZXmQIOb6+ciFjaOFlb/HzTB6QcttSr7FiWjsu6OdlW0hI
+         ESLz2htJ4t/8vPubL5XR/fY7MCxlq0qOIk1M62UvPMcT9rnBqIz0BSRdGbJZ5u5M6N
+         IfSKX0Lj22j6681Hku9IO3xbNOf94rmi/G0aD0aOe3AtJ1xUeS4zPBqN05bZa9nOpu
+         7Mp3b1P4NYcUXM3CfdzyhKoaIva8vB4wB6yuQPMPbR6SLHag8QJ6uAeFvNSj3XFEqz
+         VzfK2GNkl40MQ==
+Date:   Wed, 23 Nov 2022 23:15:14 +0000
 From:   Conor Dooley <conor@kernel.org>
 To:     daire.mcnamara@microchip.com
 Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
@@ -39,15 +39,13 @@ Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
         palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org,
         kw@linux.com, bhelgaas@google.com, linux-riscv@lists.infradead.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 8/9] PCI: microchip: Partition inbound address
- translation
-Message-ID: <Y36nPubPl08F/nag@spud>
+Subject: Re: [PATCH v1 0/9] PCI: microchip: Partition address translations
+Message-ID: <Y36pgsCplC5hN2ij@spud>
 References: <20221116135504.258687-1-daire.mcnamara@microchip.com>
- <20221116135504.258687-9-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221116135504.258687-9-daire.mcnamara@microchip.com>
+In-Reply-To: <20221116135504.258687-1-daire.mcnamara@microchip.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,77 +55,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 01:55:03PM +0000, daire.mcnamara@microchip.com wrote:
+Hey Daire,
+
+On Wed, Nov 16, 2022 at 01:54:55PM +0000, daire.mcnamara@microchip.com wrote:
 > From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> On Microchip PolarFire SoC the PCIe rootport is behind a set of fabric
-> inter connect (fic) busses that encapsulate busses like ABP/AHP, AXI-S
-> and AXI-M. Depending on which fic(s) the rootport is wired through to
-> cpu space, the rootport driver needs to take account of the address
-> translation done by a parent (e.g. fabric) node before setting up its
-> own inbound address translation tables from attached devices.
+> Microchip PolarFire SoC is a 64-bit device and has DDR starting at
+> 0x80000000 and 0x1000000000. Its PCIe rootport is connected to the CPU
+> Coreplex via an FPGA fabric. The AXI connections between the Coreplex and
+> the fabric are 64-bit and the AXI connections between the fabric and the
+> rootport are 32-bit.  For the CPU CorePlex to act as an AXI-Master to the
+> PCIe devices and for the PCIe devices to act as bus masters to DDR at these
+> base addresses, the fabric can be customised to add/remove offsets for bits
+> 38-32 in each direction. These offsets, if present, vary with each
+> customer's design.
 > 
-> Parse the dma-range properties to determine how much address translation
-> to perform in the root port and how much is being provided by the
-> fabric.
+> To support this variety, the rootport driver must know how much address
+> translation (both inbound and outbound) is performed by a particular
+> customer design and how much address translation must be provided by the
+> rootport.
 > 
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  drivers/pci/controller/pcie-microchip-host.c | 184 ++++++++++++++++++-
->  1 file changed, 178 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-> index 62f8c5edfd0e..a90a0a675f14 100644
-> --- a/drivers/pci/controller/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> This patchset contains a parent/child dma-ranges scheme suggested by Rob
+> Herring. It creates an FPGA PCIe parent bus which wraps the PCIe rootport
+> and implements a parsing scheme where the root port identifies what address
+> translations are performed by the FPGA fabric parent bus, and what
+> address translations must be done by the rootport itself.
 
-> @@ -940,6 +954,46 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
->  	return mc_allocate_msi_domains(port);
->  }
->  
-> +static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
-> +{
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	phys_addr_t pcie_addr;
-> +	phys_addr_t axi_addr;
-> +	u32 atr_size;
-> +	u32 val;
-> +	int i;
-> +
-> +	for (i = 0; i < port->num_inbound_windows; i++) {
-> +		atr_size = ilog2(port->inbound_windows[i].size) - 1;
-> +		atr_size &= GENMASK(5, 0);
-> +
-> +		pcie_addr = port->inbound_windows[i].pci_addr;
-> +
-> +		val = lower_32_bits(pcie_addr) & GENMASK(31, 12);
-> +		val |= (atr_size << ATR_SIZE_SHIFT);
-> +		val |= ATR_IMPL_ENABLE;
-> +		writel(val, bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_SRCADDR_PARAM + (i * ATR_WINDOW_DESC_SIZE));
-> +		writel(upper_32_bits(pcie_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_SRC_ADDR + (i * ATR_WINDOW_DESC_SIZE));
-> +
-> +		axi_addr = port->inbound_windows[i].axi_addr;
-> +
-> +		writel(lower_32_bits(axi_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_ADDR_LSB + (i * ATR_WINDOW_DESC_SIZE));
-> +		writel(upper_32_bits(axi_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_ADDR_UDW + (i * ATR_WINDOW_DESC_SIZE));
-> +
-> +		writel(TRSL_ID_AXI4_MASTER_0, bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_PARAM + (i * ATR_WINDOW_DESC_SIZE));
-> +
-> +		dev_dbg(&pdev->dev, "0x%010llx..0x%010llx -> 0x%010llx\n",
-> +			pcie_addr, pcie_addr + port->inbound_windows[i].size - 1, axi_addr);
+I've tried this scheme with a bunch of different PCI configurations, and
+it holds water, so I am happy with it :) Hopefully Rob is a lot happier
+with this version of it too!
 
-If you're going to leave the dbg print in, can you make it more verbose
-so that the log message stands on its own?
-
-Other than that, I made most of my comments before submission so LGTM..
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+It's been long enough that I think you should be good to submit a
+cleaned up version, provided Rob's happy on the DT side I think.
 
 Thanks,
 Conor.
 
+> See https://lore.kernel.org/linux-pci/20220902142202.2437658-1-daire.mcnamara@microchip.com/
+> for the relevant previous patch submission discussion.
+> 
+> It also re-partitions the probe() and init() functions as suggested by
+> Bjorn Helgaas to make them more maintainable as the init() function had
+> become too large.
+> 
+> It also contains some minor fixes and clean-ups that are pre-requisites:
+> - to align register, offset, and mask names with the hardware documentation
+>   and to have the register definitions appear in the same order as in the
+>   hardware documentation;
+> - to harvest the MSI information from the hardware configuration register
+>   as these depend on the FPGA fabric design and can vary with different
+>   customer designs;
+> - to clean up interrupt initialisation to make it more maintainable;
+> - to fix SEC and DED interrupt handling.
+> 
+> I expect Conor will take the dts patch via the soc tree once the PCIe parts
+> of the series are accepted.
+> 
+> Conor Dooley (1):
+>   riscv: dts: microchip: add parent ranges and dma-ranges for IKRD
+>     v2022.09
+> 
+> Daire McNamara (8):
+>   PCI: microchip: Align register, offset, and mask names with hw docs
+>   PCI: microchip: Correct the DED and SEC interrupt bit offsets
+>   PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+>   PCI: microchip: Clean up initialisation of interrupts
+>   PCI: microchip: Gather MSI information from hardware config registers
+>   PCI: microchip: Re-partition code between probe() and init()
+>   PCI: microchip: Partition outbound address translation
+>   PCI: microchip: Partition inbound address translation
+> 
+>  .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  62 +-
+>  drivers/pci/controller/pcie-microchip-host.c  | 676 +++++++++++++-----
+>  2 files changed, 522 insertions(+), 216 deletions(-)
+> 
+> 
+> base-commit: 3c1f24109dfc4fb1a3730ed237e50183c6bb26b3
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
