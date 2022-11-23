@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CC85636CF6
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 23:14:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04D27636D65
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 23:41:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbiKWWOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 17:14:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37986 "EHLO
+        id S229526AbiKWWjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 17:39:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbiKWWOZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 17:14:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB4C10AD38;
-        Wed, 23 Nov 2022 14:14:18 -0800 (PST)
+        with ESMTP id S229463AbiKWWjx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 17:39:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE2792B5D;
+        Wed, 23 Nov 2022 14:39:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1169F61D85;
-        Wed, 23 Nov 2022 22:14:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E210C433C1;
-        Wed, 23 Nov 2022 22:14:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BCB761F4C;
+        Wed, 23 Nov 2022 22:39:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B6E7C433C1;
+        Wed, 23 Nov 2022 22:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669241657;
-        bh=IlfNd3xG0lGjgm7fwh3ZoO9MxNH11zL8e7meF/BJR3A=;
+        s=k20201202; t=1669243191;
+        bh=a4+0uiLBUyE9xruBjqTz1QT1oKdoKy3V//RWTYjwkwY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LELmx55Q/1YwJS2GAtTntuVrIasCR4SSyMBZTwyE3I2LhZeVPg3O4J+1m4/iGwNmA
-         Rdsu1YItOzKFOa0qPQIPMZ8qGR8KsuevwlOt2s2MhrJFt2cNh4gNv0RgZo8l4DXcjD
-         9ppKwckhHnNb2Mj653o1U9Q7KU5c/wUfZQAHClnBZ6DdhVD+PEJdgIRolUK+MK8yor
-         RSAEqap47c5SWrYtDajGNuPxr5YEROKY5fFrr26dYK+YzFvxUtMcQ3z4CLMvzhczL2
-         gJ75oU+GDzB+W6ESh0rtEy4412FnSf3kFZAvNxdsTlEUhdyLNXingTeDN2lenhnVq8
-         MvHqrlegCTdIA==
-Date:   Wed, 23 Nov 2022 22:14:12 +0000
+        b=ckM/t7ZKPNwm4Zuy7Uv7ff+ykJqZS0VjMONRm4ToWTuo/TVOIgm+DCpVBaQbrZVQV
+         5oF158/847ifg8T2T+ZAbs2q7b2bPIT9Av7mBk8sEE+Nd4K+L5d3gUiQLmuOte198h
+         jzaNpZIsLqhe2aEZhss2zLCaq7YcaSfVGI2heQIbfAxtwSNTPFCwL+n0Aci9SXBqZ9
+         0aDTulLNWUMMBn0zIrE0D9gPm/B994EqT5o2bWCU9Be2ZMrv/TpKaRoR8cyTzV2lMI
+         XqcW3gtWP30OBARqnEi8Ov5lqpxnboGARVYMETmGm7VboLN1xK48Nwxi8S1orSeTQD
+         IJMG3CWalhSxQ==
+Date:   Wed, 23 Nov 2022 22:39:46 +0000
 From:   Conor Dooley <conor@kernel.org>
-To:     daire.mcnamara@microchip.com, robh@kernel.org
+To:     daire.mcnamara@microchip.com
 Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
         palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org,
         kw@linux.com, bhelgaas@google.com, linux-riscv@lists.infradead.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 9/9] riscv: dts: microchip: add parent ranges and
- dma-ranges for IKRD v2022.09
-Message-ID: <Y36bNE/pG14F9KyY@spud>
+Subject: Re: [PATCH v1 6/9] PCI: microchip: Re-partition code between probe()
+ and init()
+Message-ID: <Y36hMtARoGy2YULP@spud>
 References: <20221116135504.258687-1-daire.mcnamara@microchip.com>
- <20221116135504.258687-10-daire.mcnamara@microchip.com>
+ <20221116135504.258687-7-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221116135504.258687-10-daire.mcnamara@microchip.com>
+In-Reply-To: <20221116135504.258687-7-daire.mcnamara@microchip.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,108 +57,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hey Rob,
-
-On Wed, Nov 16, 2022 at 01:55:04PM +0000, daire.mcnamara@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Wed, Nov 16, 2022 at 01:55:01PM +0000, daire.mcnamara@microchip.com wrote:
+> From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> we have replaced the "microchip,matro0" hack property with what was
-> suggested by Rob - create a parent bus and use ranges and dma-ranges in
-> the parent bus and pcie device to achieve the address translations we
-> need. Add the appropriate ranges and dma-ranges for the v2022.09 IKRD
-> so that it remains functional.
+> Continuing to use pci_host_common_probe() for the PCIe root complex on
+> PolarFire SoC was leading to an extremely large _init() function and
+> some unnatural code flow. Re-partition so some tasks are done in
+> a _probe() routine, which calls pci_host_common_probe() and then use a
+> much smaller _init() function, mainly to enable interrupts after address
+> translation tables are set up.
 > 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  drivers/pci/controller/pcie-microchip-host.c | 55 ++++++++++++++------
+>  1 file changed, 38 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+> index faecf419ad6f..73856647f321 100644
+> --- a/drivers/pci/controller/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -381,6 +381,8 @@ static struct {
+>  
+>  static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
+>  
+> +static struct mc_pcie *port;
+> +
+>  static void mc_pcie_fixup_ecam(struct mc_pcie *port, void __iomem *ecam)
+>  {
+>  	struct mc_msi *msi = &port->msi;
+> @@ -1095,7 +1097,34 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  {
+>  	struct device *dev = cfg->parent;
+>  	struct platform_device *pdev = to_platform_device(dev);
+> -	struct mc_pcie *port;
+> +	void __iomem *bridge_base_addr =
+> +		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	int ret;
+> +
+> +	/* Configure address translation table 0 for PCIe config space */
+> +	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
+> +			     cfg->res.start,
+> +			     resource_size(&cfg->res));
+> +
+> +	/* Need some fixups in config space */
+> +	mc_pcie_fixup_ecam(port, cfg->win);
+> +
+> +	/* Configure non-config space outbound ranges */
+> +	ret = mc_pcie_setup_windows(pdev, port);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* address translation is up; safe to enable interrupts */
 
-This patch was included as demonstration of what the series results in
-DT wise. It's the custom address translation property that you had
-NACKED in [0] but done (we think) in the way that you suggested with an
-extra, middle-man bus. Could you take a look & see if it fits with what
-you requested?
+I think that Bjorn mentioned it elsewhere, but consistent capitalisation
+would be nice. Otherwise, code movement looks good to me.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
 Thanks,
 Conor.
 
-0 - https://lore.kernel.org/linux-riscv/20220902142202.2437658-1-daire.mcnamara@microchip.com/
-
-> ---
->  .../dts/microchip/mpfs-icicle-kit-fabric.dtsi | 62 +++++++++++--------
->  1 file changed, 35 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-> index 1069134f2e12..51ce87e70b33 100644
-> --- a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-> +++ b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-> @@ -26,33 +26,41 @@ i2c2: i2c@40000200 {
->  		status = "disabled";
->  	};
+> +	ret = mc_init_interrupts(pdev, port);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mc_host_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+>  	void __iomem *bridge_base_addr;
+>  	void __iomem *ctrl_base_addr;
+>  	int ret;
+> @@ -1104,13 +1133,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>  	if (!port)
+>  		return -ENOMEM;
+> -	port->dev = dev;
 >  
-> -	pcie: pcie@3000000000 {
-> -		compatible = "microchip,pcie-host-1.0";
-> -		#address-cells = <0x3>;
-> -		#interrupt-cells = <0x1>;
-> -		#size-cells = <0x2>;
-> -		device_type = "pci";
-> -		reg = <0x30 0x0 0x0 0x8000000>, <0x0 0x43000000 0x0 0x10000>;
-> -		reg-names = "cfg", "apb";
-> -		bus-range = <0x0 0x7f>;
-> -		interrupt-parent = <&plic>;
-> -		interrupts = <119>;
-> -		interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> -				<0 0 0 2 &pcie_intc 1>,
-> -				<0 0 0 3 &pcie_intc 2>,
-> -				<0 0 0 4 &pcie_intc 3>;
-> -		interrupt-map-mask = <0 0 0 7>;
-> -		clocks = <&ccc_nw CLK_CCC_PLL0_OUT1>, <&ccc_nw CLK_CCC_PLL0_OUT3>;
-> -		clock-names = "fic1", "fic3";
-> -		ranges = <0x3000000 0x0 0x8000000 0x30 0x8000000 0x0 0x80000000>;
-> -		dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x1 0x00000000>;
-> -		msi-parent = <&pcie>;
-> -		msi-controller;
-> -		status = "disabled";
-> -		pcie_intc: interrupt-controller {
-> -			#address-cells = <0>;
-> -			#interrupt-cells = <1>;
-> -			interrupt-controller;
-> +	fabric-pcie-bus {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges = <0x0 0x40000000 0x0 0x40000000 0x0 0x20000000>,
-> +			 <0x30 0x0 0x30 0x0 0x10 0x0>;
-> +		dma-ranges = <0x0 0x0 0x10 0x0 0x0 0x80000000>;
-> +		pcie: pcie@3000000000 {
-> +			compatible = "microchip,pcie-host-1.0";
-> +			#address-cells = <0x3>;
-> +			#interrupt-cells = <0x1>;
-> +			#size-cells = <0x2>;
-> +			device_type = "pci";
-> +			reg = <0x30 0x0 0x0 0x8000000>, <0x0 0x43000000 0x0 0x10000>;
-> +			reg-names = "cfg", "apb";
-> +			bus-range = <0x0 0x7f>;
-> +			interrupt-parent = <&plic>;
-> +			interrupts = <119>;
-> +			interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> +					<0 0 0 2 &pcie_intc 1>,
-> +					<0 0 0 3 &pcie_intc 2>,
-> +					<0 0 0 4 &pcie_intc 3>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			clocks = <&ccc_nw CLK_CCC_PLL0_OUT1>, <&ccc_nw CLK_CCC_PLL0_OUT3>;
-> +			clock-names = "fic1", "fic3";
-> +			ranges = <0x3000000 0x0 0x8000000 0x30 0x8000000 0x0 0x80000000>;
-> +			dma-ranges = <0x3000000 0x10 0x0 0x0 0x0 0x0 0x80000000>;
-> +			msi-parent = <&pcie>;
-> +			msi-controller;
-> +			status = "disabled";
-> +			pcie_intc: interrupt-controller {
-> +				#address-cells = <0>;
-> +				#interrupt-cells = <1>;
-> +				interrupt-controller;
-> +			};
->  		};
->  	};
+> -	ret = mc_pcie_init_clks(dev);
+> -	if (ret) {
+> -		dev_err(dev, "failed to get clock resources, error %d\n", ret);
+> -		return -ENODEV;
+> -	}
+> +	port->dev = dev;
 >  
+>  	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
+>  	if (IS_ERR(port->axi_base_addr))
+> @@ -1136,16 +1160,13 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  	/* pick vector address from design */
+>  	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
+>  
+> -	/* Configure Address Translation Table 0 for PCIe config space */
+> -	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
+> -			     cfg->res.start, resource_size(&cfg->res));
+> -
+> -	ret = mc_pcie_setup_windows(pdev, port);
+> -	if (ret)
+> -		return ret;
+> +	ret = mc_pcie_init_clks(dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get clock resources, error %d\n", ret);
+> +		return -ENODEV;
+> +	}
+>  
+> -	/* address translation is up; safe to enable interrupts */
+> -	return mc_init_interrupts(pdev, port);
+> +	return pci_host_common_probe(pdev);
+>  }
+>  
+>  static const struct pci_ecam_ops mc_ecam_ops = {
+> @@ -1168,7 +1189,7 @@ static const struct of_device_id mc_pcie_of_match[] = {
+>  MODULE_DEVICE_TABLE(of, mc_pcie_of_match);
+>  
+>  static struct platform_driver mc_pcie_driver = {
+> -	.probe = pci_host_common_probe,
+> +	.probe = mc_host_probe,
+>  	.driver = {
+>  		.name = "microchip-pcie",
+>  		.of_match_table = mc_pcie_of_match,
 > -- 
 > 2.25.1
 > 
