@@ -2,101 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F7EE634DBC
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 03:18:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3751E634EFF
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 05:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232734AbiKWCSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 21:18:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
+        id S235734AbiKWEjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 23:39:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232445AbiKWCSd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 21:18:33 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80DFC0527
-        for <linux-pci@vger.kernel.org>; Tue, 22 Nov 2022 18:18:31 -0800 (PST)
-Received: from dggpeml500024.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NH4Xd6HxkzHw5Y;
-        Wed, 23 Nov 2022 10:17:53 +0800 (CST)
-Received: from [10.174.178.41] (10.174.178.41) by
- dggpeml500024.china.huawei.com (7.185.36.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 23 Nov 2022 10:18:30 +0800
-Message-ID: <92523fb0-0df4-e0f9-d7ee-16e3c4cdc6ed@huawei.com>
-Date:   Wed, 23 Nov 2022 10:18:29 +0800
+        with ESMTP id S235109AbiKWEiy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 23:38:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8989A262;
+        Tue, 22 Nov 2022 20:38:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BFD8D61A3D;
+        Wed, 23 Nov 2022 04:38:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41DBDC433C1;
+        Wed, 23 Nov 2022 04:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669178332;
+        bh=QqrDbDLRcAQr4MUv+oZ9PutfTqVkNXwAFQlJXbN9odk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e//Q0Igg0hWRrSaEgwdgmlRQd6QUnoz7COLqfkBnj6LOQdy+G730Ld4a0mtbj4mXF
+         2Ns0fWlqq5UDuwlf9gZi0p759DWrC6wlC8ge0bN3ZHQX7ihQg5stNciFtDWoi+LjF+
+         jWzWEBluurxmktSYXewY3T9nYOayIZyWy4v5xTekb99HPZYHOBbHZT0xSp18BLpDTb
+         NaAioF2pMRU0zHtAQ3RqHqTT9WvlSrvbvq0f834SNj6byw1vq/7zTaiB7b45SOLdS0
+         ZrrsM+AKFkbmsFDsQ5lzS4sSEz1POrgSXaqhxXHOGYxGm3acH0ikOnG+UML9Urblga
+         OhyWc3tcT/vgQ==
+Date:   Wed, 23 Nov 2022 10:08:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <Y32j1+T3bBVTEDxO@matsya>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH] PCI: cpqphp: Fix error handling in cpqhpc_init()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <gregkh@suse.de>,
-        <linux-pci@vger.kernel.org>
-References: <20221122200551.GA212321@bhelgaas>
-From:   Yuan Can <yuancan@huawei.com>
-In-Reply-To: <20221122200551.GA212321@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.41]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500024.china.huawei.com (7.185.36.10)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 21-11-22, 12:06, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Guenter Roeck <linux@roeck-us.net> # watchdog
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # IIO
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/dma/dma-common.yaml           | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-controller.yaml       | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-router.yaml           | 2 +-
 
-在 2022/11/23 4:05, Bjorn Helgaas 写道:
-> On Tue, Nov 22, 2022 at 10:13:46AM +0000, Yuan Can wrote:
->> The cpqhpc_init() returns the result of pci_register_driver() without
->> checking it, if pci_register_driver() failed, the debugfs created in
->> cpqhp_initialize_debugfs() is not removed, resulting the debugfs of
->> cpqhp can never be created later.
->> Fix by calling cpqhp_shutdown_debugfs() when pci_register_driver() failed.
-> Add a blank line between paragraphs.
-Ok.
->> Fixes: 9f3f4681291f ("[PATCH] PCI Hotplug: fix up the sysfs file in the compaq pci hotplug driver")
->> Signed-off-by: Yuan Can <yuancan@huawei.com>
->> ---
->>   drivers/pci/hotplug/cpqphp_core.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
->> index c94b40e64baf..c47981ef92ea 100644
->> --- a/drivers/pci/hotplug/cpqphp_core.c
->> +++ b/drivers/pci/hotplug/cpqphp_core.c
->> @@ -1389,6 +1389,8 @@ static int __init cpqhpc_init(void)
->>   	info(DRIVER_DESC " version: " DRIVER_VERSION "\n");
->>   	cpqhp_initialize_debugfs();
->>   	result = pci_register_driver(&cpqhpc_driver);
->> +	if (result)
->> +		cpqhp_shutdown_debugfs();
-> Is there some reason cpqhp_initialize_debugfs() needs to be called
-> before pci_register_driver()?
->
-> In other words, could we do this instead?
->
->    result = pci_register_driver(&cpqhpc_driver);
->    if (result)
->      return result;
->
->    cpqhp_initialize_debugfs();
->    return 0;
-Thanks for the suggestion! I do not see any reason that the order must 
-be kept, will change to this style in the next version.
-> I assume this was found by code inspection?  I've never heard of
-> anybody actually using this driver :)
-Yes, you are right :)
->>   	dbg("pci_register_driver = %d\n", result);
->>   	return result;
->>   }
->> -- 
->> 2.17.1
->>
+Acked-By: Vinod Koul <vkoul@kernel.org>
+
 -- 
-Best regards,
-Yuan Can
-
+~Vinod
