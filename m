@@ -2,142 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2000636075
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 14:51:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF846360B4
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 14:57:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237686AbiKWNvk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 08:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35850 "EHLO
+        id S237035AbiKWN5n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 08:57:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236618AbiKWNvS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 08:51:18 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D572181D;
-        Wed, 23 Nov 2022 05:42:13 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669210931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3w3v4/UzR7fUI27II1khhAoE3yCMnYi0dCnXEjA/Pt0=;
-        b=QymXP1PfA635NFW9W28ggBDHxu7s38hd04fusJX8sm5j7x+P1R+au45E4fMe8yib9E/YAL
-        W56eUNygUmzDIu9e9pEIfgmvvZXDl5V2dDX9xQwj5Om1clHLvl12pJBCszscS9cwqysIeB
-        9iQ310MaxjcPg22AJr/u28F5Vz6yILIz/lnLKEiBwy+IjzM52/6E0P3fPHPpnSMyAJJlQW
-        V3uT0wtcoDfqosln8wBR9rR3tY3zyB3UHPINmgNH+Y1qPJPkGg0CRKIg3j8I3nTX196ZJS
-        TgEPnwgrUthIahonWcrnRYJ96RzkpoOw2yk8Dm9pIr6IzTHcFp5nsiNa/0WeUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669210931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3w3v4/UzR7fUI27II1khhAoE3yCMnYi0dCnXEjA/Pt0=;
-        b=8lxeHUvSB1L6YbyJW9i+pEva3FYbsyr5CgAYvhxaDO46eruMuk68rr6WBYoJdecnntzVx+
-        lmvqYnvE57EUwGAA==
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: RE: [patch V2 13/33] x86/apic/vector: Provide MSI parent domain
-In-Reply-To: <BN9PR11MB5276223A2114DD96420C7B1D8C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20221121083657.157152924@linutronix.de>
- <20221121091327.217466288@linutronix.de>
- <BN9PR11MB5276223A2114DD96420C7B1D8C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Wed, 23 Nov 2022 14:42:10 +0100
-Message-ID: <87tu2peqj1.ffs@tglx>
+        with ESMTP id S236767AbiKWN4v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 08:56:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBB3101F;
+        Wed, 23 Nov 2022 05:51:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED9E961CEC;
+        Wed, 23 Nov 2022 13:51:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B70F3C433D6;
+        Wed, 23 Nov 2022 13:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669211504;
+        bh=yn6IQg9xUUV9CgWL40Zq6y52rg1mn5sa8oD03o5v7Xs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UKfpNKKUztgIyNLf4JyG/Wh9x1SnC70ZZ6CMkTeLD14mkOzGlAm4+qghDz9TTaJEY
+         oavU1DO373ElaIHQhIEpVZi9OKHf+AB7y5AZ3a0QM4K6Mda5mlxZI6uj77Y+34o3+z
+         tC1+zaqNCkF1IRGWjNnvY9xTloZLlUjIwvwDNzzHVs6iAjJgjo18LVCElB+Z+suDGy
+         RWQBO44v5C47KQUPl5LJXsrQ6VqWTj1W9The96h2CM4sfIP1b0DOy3ZhTq1Wp6bXDL
+         C50DRWElKcd6PEaRVrgU5hEWY/A3MmvIZ+aqD+I2bHVUKaydHWSJ+FVF1rDhM8vyJp
+         Av8NqbWSqNyRA==
+Date:   Wed, 23 Nov 2022 13:51:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <Y34lZFSBEwuI6G+a@sirena.org.uk>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sez8m7aAndejrS5d"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
+X-Cookie: I'm rated PG-34!!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 23 2022 at 08:16, Kevin Tian wrote:
->> From: Thomas Gleixner <tglx@linutronix.de>
->> Sent: Monday, November 21, 2022 10:38 PM
->> 
->> +bool pci_dev_has_default_msi_parent_domain(struct pci_dev *dev)
->> +{
->> +	struct irq_domain *domain = dev_get_msi_domain(&dev->dev);
->> 
->> -int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
->> -		    msi_alloc_info_t *arg)
->> +	if (!domain)
->> +		domain = dev_get_msi_domain(&dev->bus->dev);
->> +	if (!domain)
->> +		return false;
->> +
->> +	return domain == x86_vector_domain;
->
-> the function name is about parent domain but there is no check on
-> the parent flag. Probably just remove 'parent'?
 
-No. This checks whether the device has the default MSI parent domain,
-which _IS_ the vector domain.
+--sez8m7aAndejrS5d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I really don't have to check whether the vector domain has the MSI
-parent flag set or not. It _IS_ set. If that gets lost later then the
-result of the above function is the least of our problems.
+On Mon, Nov 21, 2022 at 12:06:07PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
 
->> +/**
->> + * x86_init_dev_msi_info - Domain info setup for MSI domains
->> + * @dev:		The device for which the domain should be created
->> + * @domain:		The (root) domain providing this callback
->
-> what is the purpose of '(root)'? it's also used by intermediate domain
-> i.e. IR.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-It _can_ be used, yes. But the way I implemented IR MSI parents it is
-not used by it.
+--sez8m7aAndejrS5d
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> +
->> +	/*
->> +	 * Mask out the domain specific MSI feature flags which are not
->> +	 * supported by the real parent.
->> +	 */
->> +	info->flags			&= pops->supported_flags;
->> +	/* Enforce the required flags */
->> +	info->flags			|=
->> X86_VECTOR_MSI_FLAGS_REQUIRED;
->> +
->> +	/* This is always invoked from the top level MSI domain! */
->> +	info->ops->msi_prepare		= x86_msi_prepare;
->> +
->> +	info->chip->irq_ack		= irq_chip_ack_parent;
->> +	info->chip->irq_retrigger	= irq_chip_retrigger_hierarchy;
->> +	info->chip->flags		|= IRQCHIP_SKIP_SET_WAKE |
->> +					   IRQCHIP_AFFINITY_PRE_STARTUP;
->
-> Above are executed twice for both IR and vector after next patch comes.
-> Could skip it for IR.
+-----BEGIN PGP SIGNATURE-----
 
-How so?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+JWMACgkQJNaLcl1U
+h9CJ0gf/ajSRpLgN3RoHR7wLxFr99y5vWRywVoOaKU+lLq3UY2O6a9ssY8wOblzx
+J9LbUP4Acep2fofTZCX1Ks2sTUHXNBB95SaeCwpSD/MX2HltHr0QvTGh8Lc9EfRf
+f4l/ayjov4DbVsOJ019O7MKSgyuKezLb6Rj/5S38OrqdREbbzDoFe2ah8rSxpA8m
+OQPEsY4eAbVfELEo/JQ86QYXN8gT6p3qA0+8IxDb0D+iLi3JCIz3GTrn+ZCudWRS
+DkbD00vhGbeEaAbI/ufYp/KUWT0wfIoONENSAdGhmGMd+deqbmOt1Ryt+YoEt49j
+pRMeSDCxuBZIpBjQfw7H+5ofOT8jsg==
+=hoZL
+-----END PGP SIGNATURE-----
 
-+static const struct msi_parent_ops dmar_msi_parent_ops = {
-+	.supported_flags	= X86_VECTOR_MSI_FLAGS_SUPPORTED | MSI_FLAG_MULTI_PCI_MSI,
-+	.prefix			= "IR-",
-+	.init_dev_msi_info	= msi_parent_init_dev_msi_info,
-+};
-
-IR delegates the init to its parent domain, i.e. the vector domain. So
-there is no double invocation.
-
-Thanks,
-
-        tglx
+--sez8m7aAndejrS5d--
