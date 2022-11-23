@@ -2,45 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DEF9634C69
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 02:11:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C9F634C84
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 02:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235655AbiKWBLO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Nov 2022 20:11:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48670 "EHLO
+        id S234704AbiKWBNH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Nov 2022 20:13:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235516AbiKWBKd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 20:10:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFA0E1201;
-        Tue, 22 Nov 2022 17:10:07 -0800 (PST)
+        with ESMTP id S235580AbiKWBMn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Nov 2022 20:12:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67918E0DE4;
+        Tue, 22 Nov 2022 17:11:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C043061962;
-        Wed, 23 Nov 2022 01:10:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD9EC433B5;
-        Wed, 23 Nov 2022 01:10:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1AA5DB81CBD;
+        Wed, 23 Nov 2022 01:11:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBDB5C433D6;
+        Wed, 23 Nov 2022 01:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669165806;
-        bh=rXOvu1e2etLRq3CMGISVIMIOQhLrgiLZaBMVOwuTAjI=;
+        s=k20201202; t=1669165887;
+        bh=ADbZq4YwW1C+91LIdQtYbccEDrGI/iE1NCMBgSuxYyc=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Q62EsxGHVZLCsPw0ucsA71H9q1uzbpJejlgvneTDzf81PBaStl1j92/UjTYMFSJLf
-         +1cnC1i+4xFCDi8K5rrd+XqrSqI4peARWRYD7qyCrN+bJY2hnpRFlQ2M0RS1NqMdrz
-         mTRiCLqa327jxIv8zxqbxIUHsXQdUZ5S1iOaZwOed1GbaEB8rQmLmSeQJ0uxFfC13P
-         KHIF6NukB4TNZOIGJeuwCQkY/wgbiPrFTNfqaQLk22QRK+OXaXR3qMP3LRmjKf5guk
-         6wkvrMRVrBqjZ0H/3k9Dfd1J8jLSlm31F2PpODDHrBOqDwNnJv6gqu2l6/7uckY9z+
-         mTfA5G2FcKVlw==
+        b=mcNBGmmaNNNKqJjI81qBoU1BnHKL/Od65PEiCM5eFS6rB3FMDGHuSwiR2KIVbhE/L
+         7dF6XJbD2xB42+q+79Hj+uKuOsQEZ2NZVw3F3KY5WGdOWwKOH+MDJvbY6NNaq2ebZe
+         OhmSGXztCFZsqwDD4yPnkHiXlKTER0HV9ALchzxPzIqjFWx3BoaWYwoPCydWpzZ1nt
+         VJVMq7NkiDRF/lqctbrNTB0LNvK+kQdYINT2J+igN+zulIsY6oTbHdQJLwyoJ5a29q
+         u974j5yATKuTF2SI4fgGfHzwI0SI22L4R/m02aMeH0OJeBZf6JsinR5AbhUTI2iu0w
+         MLwWiuRxgGUoQ==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20221121110615.97962-6-krzysztof.kozlowski@linaro.org>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org> <20221121110615.97962-6-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 5/9] dt-bindings: drop redundant part of title (end, part two)
+In-Reply-To: <20221121110615.97962-7-krzysztof.kozlowski@linaro.org>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org> <20221121110615.97962-7-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 6/9] dt-bindings: drop redundant part of title (end, part three)
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -67,9 +66,9 @@ To:     Andrew Lunn <andrew@lunn.ch>,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-watchdog@vger.kernel.org, netdev@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Date:   Tue, 22 Nov 2022 17:10:04 -0800
+Date:   Tue, 22 Nov 2022 17:11:25 -0800
 User-Agent: alot/0.10
-Message-Id: <20221123011006.1BD9EC433B5@smtp.kernel.org>
+Message-Id: <20221123011127.BBDB5C433D6@smtp.kernel.org>
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
         DKIM_SIGNED,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -79,57 +78,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Krzysztof Kozlowski (2022-11-21 03:06:11)
+Quoting Krzysztof Kozlowski (2022-11-21 03:06:12)
 > The Devicetree bindings document does not have to say in the title that
 > it is a "binding", but instead just describe the hardware.
 >=20
-> Drop trailing "Node|Tree|Generic bindings" in various forms (also with
-> trailling full stop):
+> Drop trailing "bindings" in various forms (also with trailling full
+> stop):
 >=20
 >   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
 >     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [nN]ode [bB]indings\?\.\?$/title: \=
-1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [tT]ree [bB]indings\?\.\?$/title: \=
-1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [gG]eneric [bB]indings\?\.\?$/title=
-: \1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [bB]indings\? description\.\?$/titl=
-e: \1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [bB]indings\? document\.\?$/title: =
-\1/' {} \;
+>     -exec sed -i -e 's/^title: \(.*\) [bB]indings\?\.\?$/title: \1/' {} \;
 >=20
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  Documentation/devicetree/bindings/clock/ti,sci-clk.yaml         | 2 +-
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.yaml b/Do=
-cumentation/devicetree/bindings/clock/ti,sci-clk.yaml
-> index 0e370289a053..63d976341696 100644
-> --- a/Documentation/devicetree/bindings/clock/ti,sci-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/clock/ti,sci-clk.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: TI-SCI clock controller node bindings
-> +title: TI-SCI clock controller
-> =20
->  maintainers:
->    - Nishanth Menon <nm@ti.com>
 
 Acked-by: Stephen Boyd <sboyd@kernel.org> # clk
