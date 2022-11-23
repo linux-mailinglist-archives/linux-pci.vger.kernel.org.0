@@ -2,161 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EAD16359E4
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 11:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D166635A65
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 11:43:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236593AbiKWK3s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 05:29:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
+        id S236342AbiKWKnN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 05:43:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236605AbiKWK3L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 05:29:11 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 308DF1173F9
-        for <linux-pci@vger.kernel.org>; Wed, 23 Nov 2022 02:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669198275; x=1700734275;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ld/tCuQyThHPMHAybfAmIHufQOGY5mU7N+ah2zJ+fdo=;
-  b=ezp04HVLuHQQ+73n3EKeIT2Jb+wSRmqZHeoiRhiA06zfJgMioi/nxkOH
-   NC6pG2kT3DvPOjz7cJymIYhsRVEz4VpiGflF8AEpkSsLTMIefU1/uWj/m
-   dr9cyqFxvG+L3g5GgDDBDXQczDl4ddJoEvUT9f3fdr+zF2nFnzNva8lDT
-   HwMv2lE5/m1bp8C0KBFEElLpXwfrIlPcRX1IfwVWL/oaNABDSc6pj5odG
-   uGO6Ly388AQPDMj+6RqLbEM2GGBnb9i6dUz96524a2Sgt/65uQ6cVMp71
-   BmtJ0YjE1RjHvBs0VL3cE4WjfXkFystVFjDkRYw22LwifzDzrvwogik1D
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="312731631"
-X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
-   d="scan'208";a="312731631"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 02:11:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="672823453"
-X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
-   d="scan'208";a="672823453"
-Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 23 Nov 2022 02:11:09 -0800
-Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oxmij-0002cg-0F;
-        Wed, 23 Nov 2022 10:11:09 +0000
-Date:   Wed, 23 Nov 2022 18:10:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
- 9676f40618df9f8e1ab681486021d6c0df86c5fa
-Message-ID: <637df1b1.jGRR3B1mCBwY8PdS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S237953AbiKWKmY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 05:42:24 -0500
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F3D769FC;
+        Wed, 23 Nov 2022 02:27:25 -0800 (PST)
+Received: by mail-pj1-f53.google.com with SMTP id o5-20020a17090a678500b00218cd5a21c9so1425739pjj.4;
+        Wed, 23 Nov 2022 02:27:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pwpkG9G3xkjOyzikzQ4T/gV3SMpUqELfzhIlK43yLpY=;
+        b=jQXLGvDVVqf0LTqxfMq535ZmBr0TkT6RB8p0K8w8T4X78ujUSLrRE1BiKXSaqWNkmw
+         cAkayP69927XFP5BW+z1irjuWY5mWxL4XQ507eTgf2AzwJhLDBEP2gNyowTAh+MWX5YJ
+         DvlEpF45NCRkz+8Gm7+Cz4tyS2l9/XAiVpA7UMj0ODEclCcxmeXJwkN1+Z/oqKyAeSbw
+         3+W9WGzmfnnF16NWn5dQpa3a8WYifXYRCN4bydwZ326GLbvuH8Zdo11ZhikVrjDkZ9vA
+         UHat2k1hFjfe0oXg7Vvg1dokDaesqRyGFwEHZSuiPBVZN3X5ZtEvPC9ueBWj3baE/vNn
+         vDVg==
+X-Gm-Message-State: ANoB5pmNpoOo2LNpR3OgzqqEeSYg/jELrMBlhcX2HhIdcA9xj7wx9aA2
+        v2LitFYUz66ji4yIFNDP7sk=
+X-Google-Smtp-Source: AA0mqf79gqmDL9stZaRGjrZHLamllSmaeTB+6NNa9TcOtJrVW/NC2LzyXTItQ7A2l8c6qcAq/OLfbA==
+X-Received: by 2002:a17:90b:484:b0:218:9d3d:71f4 with SMTP id bh4-20020a17090b048400b002189d3d71f4mr19624100pjb.148.1669199244920;
+        Wed, 23 Nov 2022 02:27:24 -0800 (PST)
+Received: from [192.168.0.247] (61-227-110-150.dynamic-ip.hinet.net. [61.227.110.150])
+        by smtp.gmail.com with ESMTPSA id i8-20020a170902c94800b00172fad607b3sm13969212pla.207.2022.11.23.02.27.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Nov 2022 02:27:24 -0800 (PST)
+Message-ID: <5c766840-e092-45ea-0664-7bbdb78b933a@canonical.com>
+Date:   Wed, 23 Nov 2022 18:27:18 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH V8 0/4] PCI: vmd: Enable PCIe ASPM and LTR on select
+ hardware
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     michael.a.bottini@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, me@adhityamohan.in,
+        rafael@kernel.org, hch@infradead.org, robh@kernel.org,
+        bhelgaas@google.com, kw@linux.com, lorenzo.pieralisi@arm.com,
+        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
+References: <20221103021822.308586-1-david.e.box@linux.intel.com>
+From:   You-Sheng Yang <vicamo.yang@canonical.com>
+In-Reply-To: <20221103021822.308586-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: 9676f40618df9f8e1ab681486021d6c0df86c5fa  PCI: shpchp: Remove unused get_mode1_ECC_cap callback
+Hi David,
 
-elapsed time: 818m
+On 11/3/22 10:18, David E. Box wrote:
+> This series adds a work around for enabling PCIe ASPM and for setting PCIe
+> LTR values on VMD reserved root ports on select platforms. While
+> configuration of these capabilities is usually done by BIOS, on these
+> platforms these capabilities will not be configured because the ports are
+> not visible to BIOS. This was part of an initial design that expected the
+> driver to completely handle the ports, including power management. However
+> on Linux those ports are still managed by the PCIe core, which has the
+> expectation that they adhere to device standards including BIOS
+> configuration, leading to this problem.
+>
+> The target platforms are Tiger Lake, Alder Lake, and Raptor Lake though the
+> latter has already implemented support for configuring the LTR values.
+> Meteor Lake is expected add BIOS ASPM support, eliminating the future need
+> for this work around.
 
-configs tested: 80
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It appears to me that this patch series works only on Tiger Lake. We 
+have tried to revert our current work-arounds in Ubuntu kernels 
+generic-5.15/oem-5.17/oem-6.0/unstable-6.1 and apply this series, the 
+prebuilt kernels can be found in:
 
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-powerpc                           allnoconfig
-s390                             allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-sh                               allmodconfig
-x86_64                           rhel-8.3-kvm
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-mips                             allyesconfig
-powerpc                          allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-x86_64                              defconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-ia64                             allmodconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                                defconfig
-i386                          randconfig-a005
-arm                          simpad_defconfig
-powerpc                  iss476-smp_defconfig
-sh                             espt_defconfig
-arc                    vdk_hs38_smp_defconfig
-i386                             allyesconfig
-x86_64                            allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                 randconfig-a014-20221121
-i386                 randconfig-a011-20221121
-i386                 randconfig-a013-20221121
-i386                 randconfig-a016-20221121
-i386                 randconfig-a012-20221121
-i386                 randconfig-a015-20221121
-s390                 randconfig-r044-20221121
-riscv                randconfig-r042-20221121
-arc                  randconfig-r043-20221120
-arc                  randconfig-r043-20221121
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
+   https://launchpad.net/~vicamo/+archive/ubuntu/ppa-1996620
 
-clang tested configs:
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64               randconfig-a004-20221121
-x86_64               randconfig-a001-20221121
-x86_64               randconfig-a003-20221121
-x86_64               randconfig-a002-20221121
-x86_64               randconfig-a005-20221121
-x86_64               randconfig-a006-20221121
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-powerpc                 mpc832x_rdb_defconfig
-mips                     cu1000-neo_defconfig
-i386                 randconfig-a001-20221121
-i386                 randconfig-a005-20221121
-i386                 randconfig-a006-20221121
-i386                 randconfig-a004-20221121
-i386                 randconfig-a003-20221121
-i386                 randconfig-a002-20221121
+However, only TGL can still enter PC10 as before.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+
+ADL-M, RPL platforms will stay in PC3 with vmd LTR set, but ASPM 
+disabled. i915 RC6 blocked, too:
+
+$ sudo cat /sys/kernel/debug/dri/
+
+0/i915_dmc_info
+...
+DC3CO count: 0
+DC3 -> DC5 count: 100
+DC5 -> DC6 count: 0
+
+
+> Note, the driver programs the LTRs because BIOS would also normally do this
+> for devices that do not set them by default. Without this, SoC power
+> management would be blocked on those platform. This SoC specific value is
+> the maximum latency required to allow the SoC to enter the deepest power
+> state.
+>
+> This patch addresses the following open bugzillas on VMD enabled laptops
+> that cannot enter low power states.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=212355
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215063
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=213717
+>
+> David E. Box (3):
+>    PCI: vmd: Use PCI_VDEVICE in device list
+>    PCI: vmd: Create feature grouping for client products
+>    PCI: vmd: Add quirk to configure PCIe ASPM and LTR
+>
+> Michael Bottini (1):
+>    PCI/ASPM: Add pci_enable_link_state()
+>
+>   drivers/pci/controller/vmd.c | 96 ++++++++++++++++++++++++++----------
+>   drivers/pci/pcie/aspm.c      | 54 ++++++++++++++++++++
+>   include/linux/pci.h          |  7 +++
+>   3 files changed, 131 insertions(+), 26 deletions(-)
+>
+>
+> base-commit: 247f34f7b80357943234f93f247a1ae6b6c3a740
+
+
+Regards,
+You-Sheng Yang
+
