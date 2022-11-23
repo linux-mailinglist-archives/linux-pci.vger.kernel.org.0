@@ -2,192 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65EBC636B28
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 21:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C0D636BBF
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Nov 2022 22:02:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239769AbiKWUc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Nov 2022 15:32:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56032 "EHLO
+        id S230009AbiKWVCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Nov 2022 16:02:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239780AbiKWUbS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 15:31:18 -0500
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.148])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC38113A
-        for <linux-pci@vger.kernel.org>; Wed, 23 Nov 2022 12:28:15 -0800 (PST)
-Received: (wp-smtpd smtp.tlen.pl 5473 invoked from network); 23 Nov 2022 21:28:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1669235291; bh=4B+0gVhfeVMpr3xVWJpkPm7YJRc30ybzLuOA8k2a714=;
-          h=From:Subject:To:Cc;
-          b=Ce865vWNuhQr/TnVnyy1/+H8fh52Y3QBMV5MoOSY7SO8/PbBmJXmOQJXZe6PngaE9
-           MpsoFfXNDHkMCNFevc62TrSKI6oQ4HNoN6uMvnYqd7IaFKFo4p5LAinmh8V73xNUTZ
-           TxT4hdsEZBD/tu14YsLgmpRkxHGkKFoISy/649wU=
-Received: from aafn183.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.143.183])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <jdelvare@suse.de>; 23 Nov 2022 21:28:11 +0100
-Message-ID: <140691e3-9c3d-4855-ad21-ec96e77e6693@o2.pl>
-Date:   Wed, 23 Nov 2022 21:28:10 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-From:   =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>
-Subject: Re: [PATCH v2] acpi,pci: warn about duplicate IRQ routing entries
- returned from _PRT
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org,
+        with ESMTP id S229728AbiKWVCA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Nov 2022 16:02:00 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FA014D01;
+        Wed, 23 Nov 2022 13:01:59 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1669237317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KPY0QPiwPxOVNsUhFw4qklPqSP46kFJcNzsOhN1n538=;
+        b=ORlVKv/m7tEpD4UVrSrPCm6J+eBk0xqmjwUulhd3d/QDKGlpl1PrgW4uX9WBfYtVw8dMNQ
+        KCJCOYvUUPW2sEp+Ti1YD5lD28plFoJnwMPjc0Xx/tosLREa8IY2uSTuAqt57VnhrFhVpb
+        z4rp31jZV7sIxWROrFrG7BMo2digq5jqsNyl3Zgt/RJ2TQo+hvZM+ews4EL4cWzHZmVUju
+        egBD+o8SetcnmCIoYMmRnCO5XZOOvRvEyyE9/I131m0NNmA9yYRlA/iCMuEKE7m2jgxhvC
+        pMKQs6O8Sh0JYLc2qtTFb+lQ9AOgElBbZMrUv+VHkOK3RcJ1uieEU3nJUS0c5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1669237317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KPY0QPiwPxOVNsUhFw4qklPqSP46kFJcNzsOhN1n538=;
+        b=O1eXHnlVkm6CTF96zn3Fg/SVgP3bXEsbm4ePNRytcJEB86WwopkHY3WPHu0o+uUPvD7vo6
+        qYLo+gx3cBCp+iAQ==
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@suse.de>
-References: <20221112200927.7255-1-mat.jonczyk@o2.pl>
- <20221113173442.5770-1-mat.jonczyk@o2.pl>
- <20221115093617.519f3aeb@endymion.delvare>
-Content-Language: en-GB
-In-Reply-To: <20221115093617.519f3aeb@endymion.delvare>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: dfc6105109ff66cb953bd9e99eb03b64
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000002 [8eGW]                               
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: RE: [patch V2 07/33] genirq/msi: Provide
+ msi_create/free_device_irq_domain()
+In-Reply-To: <8735a9gau7.ffs@tglx>
+References: <20221121083657.157152924@linutronix.de>
+ <20221121091326.879869866@linutronix.de>
+ <BN9PR11MB527604DE2A881FF615B7D0748C0C9@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <8735a9gau7.ffs@tglx>
+Date:   Wed, 23 Nov 2022 22:01:56 +0100
+Message-ID: <875yf5e663.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
-
-W dniu 15.11.2022 o 09:36, Jean Delvare pisze:
-> Hi Mateusz,
+On Wed, Nov 23 2022 at 12:38, Thomas Gleixner wrote:
+> On Wed, Nov 23 2022 at 08:02, Kevin Tian wrote:
+>>> +	bundle->info.hwsize = hwsize ? hwsize : MSI_MAX_INDEX;
+>>
+>> patch04 marks that hwsize being 0 means unknown or unlimited in the
+>> header file.
+>>
+>> but here info.hwsize always gets a value i.e. the meaning of 0 only exists
+>> in this function. What about removing the trailing words about 0 in
+>> patch04?
+>>
+>> - + * @hwsize:		The hardware table size (0 if unknown/unlimited)
+>> + + * @hwsize:		The hardware table size
 >
-> On Sun, 13 Nov 2022 18:34:42 +0100, Mateusz Jończyk wrote:
->> On some platforms, the ACPI _PRT function returns duplicate interrupt
->> routing entries. Linux uses the first matching entry, but sometimes the
->> second matching entry contains the correct interrupt vector.
->>
->> Print a warning to dmesg if duplicate interrupt routing entries are
->> present, so that we could check how many models are affected.
-> Excellent idea. We want hardware manufacturers to fix such bugs in the
-> firmware, and the best way for this to happen is to report them
-> whenever they are encountered.
+> Fair enough, though I rather make that:
 >
->> This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
->> SMBus controller. This controller was nonfunctional unless its interrupt
->> usage was disabled (using the "disable_features=0x10" module parameter).
->>
->> After investigation, it turned out that the driver was using an
->> incorrect interrupt vector: in lspci output for this device there was:
->>         Interrupt: pin B routed to IRQ 19
->> but after running i2cdetect (without using any i2c-i801 module
->> parameters) the following was logged to dmesg:
->>
->>         [...]
->>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->>         i801_smbus 0000:00:1f.3: Transaction timeout
->>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->>         i801_smbus 0000:00:1f.3: Transaction timeout
->>         irq 17: nobody cared (try booting with the "irqpoll" option)
->>
->> Existence of duplicate entries in a table returned by the _PRT method
->> was confirmed by disassembling the ACPI DSDT table.
-> Excuse a probably stupid question, but what would happen if we would
-> plain ignore the IRQ routing information from ACPI in this case? Would
-> we fallback to some pure-PCI routing logic which may have a chance to
-> find the right IRQ routing (matching the second ACPI routing entry in
-> this case)?
-
-From what I understand, the PCI IRQ routing information is not discoverable
-by probing the hardware (in the general case), it has to be obtained from
-the ACPI tables (or perhaps from the obsolete MP tables, also provided by
-firmware). See https://docs.kernel.org/PCI/acpi-info.html :
-
-> For example, there’s no standard hardware mechanism for enumerating PCI
-> host bridges, so the ACPI namespace must describe each host bridge,
-> the method for accessing PCI config space below it, the address space
-> windows the host bridge forwards to PCI (using _CRS), and the routing
-> of legacy INTx interrupts (using _PRT).
-
-(a PCI host bridge connects the CPU cores to the PCI bus, it is the root of the PCI
-device tree. This patch concerns the "legacy INTx interrupts" as above).
-
-In the case of this particular laptop, however, it should be possible to obtain
-the information by reading chipset registers, which are documented at
-https://www.intel.com/content/www/us/en/io/io-controller-hub-9-datasheet.html
-But this is difficult to implement in every case.
-
->> Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Len Brown <lenb@kernel.org>
->> Cc: Borislav Petkov <bp@suse.de>
->> Cc: Jean Delvare <jdelvare@suse.com>
->>
->> --
->> v2: - add a newline at the end of the kernel log message,
->>     - replace: "if (match == NULL)" -> "if (!match)"
->>     - patch description tweaks.
->>
->> Tested on two computers, including the affected Dell Latitude E6500 laptop.
->>
->>  drivers/acpi/pci_irq.c | 25 ++++++++++++++++++++++---
->>  1 file changed, 22 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
->> index 08e15774fb9f..a4e41b7b71ed 100644
->> --- a/drivers/acpi/pci_irq.c
->> +++ b/drivers/acpi/pci_irq.c
->> @@ -203,6 +203,8 @@ static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
->>  	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->>  	struct acpi_pci_routing_table *entry;
->>  	acpi_handle handle = NULL;
->> +	struct acpi_prt_entry *match = NULL;
->> +	const char *match_int_source = NULL;
->>  
->>  	if (dev->bus->bridge)
->>  		handle = ACPI_HANDLE(dev->bus->bridge);
->> @@ -219,13 +221,30 @@ static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
->>  
->>  	entry = buffer.pointer;
->>  	while (entry && (entry->length > 0)) {
->> -		if (!acpi_pci_irq_check_entry(handle, dev, pin,
->> -						 entry, entry_ptr))
->> -			break;
->> +		struct acpi_prt_entry *curr;
->> +
->> +		if (!acpi_pci_irq_check_entry(handle, dev, pin, entry, &curr)) {
->> +			if (!match) {
->> +				match = curr;
->> +				match_int_source = entry->source;
->> +			} else {
->> +				pr_warn(FW_BUG
->> +				"ACPI _PRT returned duplicate IRQ routing entries for device "
->> +					"%04x:%02x:%02x[INT%c]: %s[%d] and %s[%d].\n",
-> The beginning of the string should be aligned with the opening
-> parenthesis, and the string should be on a single line (this is a
-> encouraged exception to the 80-column rule). I would also omit the
-> tailing dot for consistency.
-OK
->> +					curr->id.segment, curr->id.bus, curr->id.device,
-> Is the IRQ per PCI device, or per PCI function? If the latter, then you
-> should print "%02x.%x" instead of just "%02x", with the extra element
-> being curr->id.function.
-
-This is per PCI device.
-
-[snip]
-
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> Tested-by: Jean Delvare <jdelvare@suse.de>
+>  * @hwsize:		The hardware table size or the software defined
+>                         index limit
 >
-> (Tested on a Dell OptiPlex 9020 not affected by the problem.)
->
-Thank you for reviewing.
 
-Greetings,
+Actually 0 still needs to be valid to guarantee backward compatibility
+for all existing msi_domain_info implementations.
 
-Mateusz
+The above is the per device domain creation function, but yes, I can lift
+that initialization into the common MSI domain creation code.
 
+Let me stare at this some more.
