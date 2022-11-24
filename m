@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1FC7637A25
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 14:45:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E6A637A33
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 14:46:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbiKXNpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 08:45:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36408 "EHLO
+        id S230062AbiKXNqt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 08:46:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbiKXNpJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 08:45:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE0E10893E;
-        Thu, 24 Nov 2022 05:45:06 -0800 (PST)
+        with ESMTP id S230105AbiKXNqo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 08:46:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC02115D27;
+        Thu, 24 Nov 2022 05:46:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 019F8620F4;
-        Thu, 24 Nov 2022 13:45:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F11C433D6;
-        Thu, 24 Nov 2022 13:45:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 347BFB81EA7;
+        Thu, 24 Nov 2022 13:46:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B32B2C433C1;
+        Thu, 24 Nov 2022 13:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669297505;
-        bh=pTdLT7h5QD3eXwhb2FYyeQ9UzRMt/x++5i9hOp9iqeU=;
+        s=k20201202; t=1669297596;
+        bh=1mjbf4wNzg4ntJqgMZcpJm5kDRm8pvEmrLegYMkX0rg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jaXgRf1M7XAsS+qIKFGRmIYLwzfOy2DPwiuOU7LfAYIRoXgYj8w8LDkNYAyXBfS70
-         AMrV//bDj9iDMT20yfEUolt0weu5aRG/WHDZ9+RsrOAJbgjMmoX0ntNw5xHcQg38qD
-         ga/doQ5885725qF+oyuZTT4KZ6C6RPyqlObFCm3wQ4Im/avYP96nbcPHSaYgvR1XNt
-         4pgFVuwJwGYRPew/UFoY5RzTZqfLDZaeUZK24tP45NjRx4cBfcN/sIwGXwh09gxZrs
-         D9cfLevjUn845fHiq2HizoBncQsbqWCp2x4aOGQwHMLlXpRprFwOPS1XLEqBxtZebf
-         vNnhg9tkL5KGA==
+        b=Dbc522+9I+6j1u8wNFUQpssOVuHL9km/kMS12TE1cYptPZ/OnB4IypYph5WgL1tgd
+         Ac3l1L1yoKVpv2XzjcLko1+MigI2jdfQI/rUMF6gVjd7GCKYzdAeLYJFC6RO322Jqi
+         xR9kQrb2eR8JfqNorIIhx6QuMo6RbNF0BGV0KIFuYYHzKsub1r9QDtqUlZehxgmK+W
+         IYTA7IWs1aA8tFCD+A7oNxHU8De3mToHVGlqjIpmb2z61nalSZpuLG6W83LdkmuxId
+         rkRgOk/2UOzkCONs0GaPDkgmSqgLebbIOGaYHToGDfyJIEqiHpr6GJlczr3eKBp2FM
+         BJ5TTUG8Foxrg==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1oyCXH-008NyF-8P;
-        Thu, 24 Nov 2022 13:45:03 +0000
-Date:   Thu, 24 Nov 2022 13:45:02 +0000
-Message-ID: <86wn7kmppd.wl-maz@kernel.org>
+        id 1oyCYk-008O0V-Ou;
+        Thu, 24 Nov 2022 13:46:34 +0000
+Date:   Thu, 24 Nov 2022 13:46:34 +0000
+Message-ID: <86v8n4mpmt.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
@@ -53,18 +53,19 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [patch V2 02/21] genirq/irqdomain: Make struct irqdomain readable
-In-Reply-To: <20221121083325.630349797@linutronix.de>
+        Allen Hubbe <allenbh@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [patch V2 03/21] genirq/irqdomain: Rename irq_domain::dev to irq_domain::pm_dev
+In-Reply-To: <20221121083325.684903415@linutronix.de>
 References: <20221121083210.309161925@linutronix.de>
-        <20221121083325.630349797@linutronix.de>
+        <20221121083325.684903415@linutronix.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com, jgg@nvidia.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -76,22 +77,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 21 Nov 2022 14:36:20 +0000,
+On Mon, 21 Nov 2022 14:36:22 +0000,
 Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Tabular alignment of both kernel-doc and the actual struct declaration make
-> visual parsing way more conveniant.
+> irq_domain::dev is a misnomer as it's usually the rule that a device
+> pointer points to something which is directly related to the instance.
 > 
-> No functional change.
+> irq_domain::dev can point to some other device for power management to
+> ensure that this underlying device is not powered down when an interrupt is
+> allocated.
+> 
+> The upcoming per device MSI domains really require a pointer to the device
+> which instantiated the irq domain and not to some random other device which
+> is required for power management down the chain.
+> 
+> Rename irq_domain::dev to irq_domain::pm_dev and fixup the few sites which
+> use that pointer.
+> 
+> Conversion was done with the help of coccinelle.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
-> V2: Split out from the irqdomain::dev rename patch (Jason)
-> ---
->  include/linux/irqdomain.h |   74 +++++++++++++++++++++++-----------------------
->  1 file changed, 37 insertions(+), 37 deletions(-)
+>  drivers/irqchip/irq-gic.c |    4 ++--
+>  include/linux/irqdomain.h |    6 +++---
+>  kernel/irq/chip.c         |    8 ++++----
+>  3 files changed, 9 insertions(+), 9 deletions(-)
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
 	M.
 
