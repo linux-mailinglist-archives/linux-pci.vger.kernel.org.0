@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04F1D638181
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:27:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97763638185
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:27:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiKXX1S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 18:27:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
+        id S229931AbiKXX1t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 18:27:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbiKXX1B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 18:27:01 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE316C6961;
-        Thu, 24 Nov 2022 15:25:51 -0800 (PST)
-Message-ID: <20221124232325.382485843@linutronix.de>
+        with ESMTP id S229918AbiKXX1W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 18:27:22 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A55CFA6A;
+        Thu, 24 Nov 2022 15:26:13 -0800 (PST)
+Message-ID: <20221124232325.442499757@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669332349;
+        s=2020; t=1669332350;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LpT5bWEZO8pdMpxaAOZXaaWsLza6Gnp607G1pMhReoc=;
-        b=0MH4NHb6VIKYBiir3GhyqPzfF6YTH4g0U3Bv7+hXm0Aa/VCHHzSoNKmN1gru5H9XsAq1M9
-        y4sQo2/0VoTey1MzXhUumLjoj0sN+DVmnmnfRJ5cy9op3P/aofDx5Rx492E+ySpnCnSHOz
-        w9VGgP+x0jvub7l+cZY1xWeovnUxJPOZ0ZM0sHRxHEX/VRVLBRMCgIREEVq10BD/IGj67G
-        NP5l049cYFy9guiI7zPZMVgTEPlkw1yaJicKyL3gQxyOadRi9nyumSwl8uqGElMzwR0djq
-        FM1TqEVdf4ldjacsepXtBHBrBL8qjOFR1Ds9Eitoux9yDrpuqhcGM8NX/ErAlA==
+         references:references; bh=qV//gzPmOqH3W5duAbtHBZqaagM7sPrAqRRWld0OnjU=;
+        b=HEs+D51n1rtP2vHE8zTlVoE+bOEuK2V6v930W5rI9u4JP69P6fXmSVDnDQ1OHvh8M447Sn
+        HIlQFnvYDrdPoJcHKUF9zWPOzTFdotIaDJeP4PmQt47rpPs5JkVCmNFfPamCp6ElalPaoe
+        GsMsWwhrkK0Xk94tKAGIT7UlJ+i4IEFczaZR3txMYlivHdJ431STot8EbTkltcYS0wEGao
+        et9k4iKua0uRgP7tqps8ulngmt5DqTRm38bPI+asJObtPINw0VLpRZKqWInlIQ4nji5CYU
+        fUFGNYViSoRtRnRwtLtY2osg/SfBArVb8hmj3MCn8fuKZIukKgQmUAyDMQfRlg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669332349;
+        s=2020e; t=1669332350;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LpT5bWEZO8pdMpxaAOZXaaWsLza6Gnp607G1pMhReoc=;
-        b=fXn8YaoJHN3fPzAHifqZIeCwtmyM9g+FF7JclrWARpdUgCDf5vudSvYFSwi98Q2eVs1LuJ
-        hZv9P0rZKQeV+LAQ==
+         references:references; bh=qV//gzPmOqH3W5duAbtHBZqaagM7sPrAqRRWld0OnjU=;
+        b=oMDZPkI4sNS0Y6FEh3qMJ6jAioLVyTTklUXpF0S2QnDYthHjgNU62jXoYHjPYaGX3cqY2M
+        Bz+7VnU1G1xZI4AQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -48,11 +48,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V3 02/33] genirq/msi: Provide struct msi_parent_ops
+Subject: [patch V3 03/33] genirq/msi: Provide data structs for per device domains
 References: <20221124230505.073418677@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 25 Nov 2022 00:25:48 +0100 (CET)
+Date:   Fri, 25 Nov 2022 00:25:49 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,152 +62,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-MSI parent domains must have some control over the MSI domains which are
-built on top. On domain creation they need to fill in e.g. architecture
-specific chip callbacks or msi domain ops to make the outermost domain
-parent agnostic which is obviously required for architecture independence
-etc.
+Provide struct msi_domain_template which contains a bundle of struct
+irq_chip, struct msi_domain_ops and struct msi_domain_info and a name
+field.
 
-The structure contains:
+This template is used by MSI device domain implementations to provide the
+domain specific functionality, feature bits etc.
 
-    1) A bitfield which exposes the supported functional features. This
-       allows to check for features and is also used in the initialization
-       callback to mask out unsupported features when the actual domain
-       implementation requests a broader range, e.g. on x86 PCI multi-MSI
-       is only supported by remapping domains but not by the underlying
-       vector domain. The PCI/MSI code can then always request multi-MSI
-       support, but the resulting feature set after creation might not
-       have it set.
+When a MSI domain is created the template is duplicated in the core code
+so that it can be modified per instance. That means templates can be
+marked const at the MSI device domain code.
 
-    2) An optional string prefix which is put in front of domain and chip
-       names during creation of the MSI domain. That allows to keep the
-       naming schemes e.g. on x86 where PCI-MSI domains have a IR- prefix
-       when interrupt remapping is enabled.
+The template is a bundle to avoid several allocations and duplications
+of the involved structures.
 
-    3) An initialization callback to sanity check the domain info of
-       the to be created MSI domain, to restrict features and to
-       apply changes in MSI ops and interrupt chip callbacks to
-       accomodate to the particular MSI parent implementation and/or
-       the underlying hierarchy.
+The name field is used to construct the final domain and chip name via:
 
-Add a conveniance function to delegate the initialization from the
-MSI parent domain to an underlying domain in the hierarchy.
+    $PREFIX$NAME-$DEVNAME
+
+where prefix is the optional prefix of the MSI parent domain, $NAME is the
+provided name in template::chip and the device name so that the domain
+is properly identified. On x86 this results for PCI/MSI in:
+
+   PCI-MSI-0000:3d:00.1 or IR-PCI-MSIX-0000:3d:00.1
+
+depending on the domain type and the availability of remapping.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: Renamed arguments and updated comments (Jason)
+V3: Correct changelog (Kevin)
 ---
- include/linux/irqdomain.h |    5 +++++
- include/linux/msi.h       |   21 +++++++++++++++++++++
- kernel/irq/msi.c          |   41 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
+ include/linux/msi.h |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -46,6 +46,7 @@ struct irq_desc;
- struct cpumask;
- struct seq_file;
- struct irq_affinity_desc;
-+struct msi_parent_ops;
- 
- #define IRQ_DOMAIN_IRQ_SPEC_PARAMS 16
- 
-@@ -134,6 +135,7 @@ struct irq_domain_chip_generic;
-  * @pm_dev:	Pointer to a device that can be utilized for power management
-  *		purposes related to the irq domain.
-  * @parent:	Pointer to parent irq_domain to support hierarchy irq_domains
-+ * @msi_parent_ops: Pointer to MSI parent domain methods for per device domain init
-  *
-  * Revmap data, used internally by the irq domain code:
-  * @revmap_size:	Size of the linear map table @revmap[]
-@@ -157,6 +159,9 @@ struct irq_domain {
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- 	struct irq_domain		*parent;
- #endif
-+#ifdef CONFIG_GENERIC_MSI_IRQ
-+	const struct msi_parent_ops	*msi_parent_ops;
-+#endif
- 
- 	/* reverse map data. The linear map gets appended to the irq_domain */
- 	irq_hw_number_t			hwirq_max;
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -500,6 +500,27 @@ enum {
+@@ -24,6 +24,7 @@
+ #include <linux/xarray.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
++#include <linux/irq.h>
+ #include <linux/bits.h>
  
+ #include <asm/msi.h>
+@@ -74,7 +75,6 @@ struct msi_msg {
+ 
+ extern int pci_msi_ignore_mask;
+ /* Helper functions */
+-struct irq_data;
+ struct msi_desc;
+ struct pci_dev;
+ struct platform_msi_priv_data;
+@@ -442,6 +442,20 @@ struct msi_domain_info {
+ 	void				*data;
  };
  
 +/**
-+ * struct msi_parent_ops - MSI parent domain callbacks and configuration info
-+ *
-+ * @supported_flags:	Required: The supported MSI flags of the parent domain
-+ * @prefix:		Optional: Prefix for the domain and chip name
-+ * @init_dev_msi_info:	Required: Callback for MSI parent domains to setup parent
-+ *			domain specific domain flags, domain ops and interrupt chip
-+ *			callbacks when a per device domain is created.
++ * struct msi_domain_template - Template for MSI device domains
++ * @name:	Storage for the resulting name. Filled in by the core.
++ * @chip:	Interrupt chip for this domain
++ * @ops:	MSI domain ops
++ * @info:	MSI domain info data
 + */
-+struct msi_parent_ops {
-+	u32		supported_flags;
-+	const char	*prefix;
-+	bool		(*init_dev_msi_info)(struct device *dev, struct irq_domain *domain,
-+					     struct irq_domain *msi_parent_domain,
-+					     struct msi_domain_info *msi_child_info);
++struct msi_domain_template {
++	char			name[48];
++	struct irq_chip		chip;
++	struct msi_domain_ops	ops;
++	struct msi_domain_info	info;
 +};
 +
-+bool msi_parent_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-+				  struct irq_domain *msi_parent_domain,
-+				  struct msi_domain_info *msi_child_info);
-+
- int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
- 			    bool force);
- 
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -789,6 +789,47 @@ struct irq_domain *msi_create_irq_domain
- 	return domain;
- }
- 
-+/**
-+ * msi_parent_init_dev_msi_info - Delegate initialization of device MSI info down
-+ *				  in the domain hierarchy
-+ * @dev:		The device for which the domain should be created
-+ * @domain:		The domain in the hierarchy this op is being called on
-+ * @msi_parent_domain:	The IRQ_DOMAIN_FLAG_MSI_PARENT domain for the child to
-+ *			be created
-+ * @msi_child_info:	The MSI domain info of the IRQ_DOMAIN_FLAG_MSI_DEVICE
-+ *			domain to be created
-+ *
-+ * Return: true on success, false otherwise
-+ *
-+ * This is the most complex problem of per device MSI domains and the
-+ * underlying interrupt domain hierarchy:
-+ *
-+ * The device domain to be initialized requests the broadest feature set
-+ * possible and the underlying domain hierarchy puts restrictions on it.
-+ *
-+ * That's trivial for a simple parent->child relationship, but it gets
-+ * interesting with an intermediate domain: root->parent->child.  The
-+ * intermediate 'parent' can expand the capabilities which the 'root'
-+ * domain is providing. So that creates a classic hen and egg problem:
-+ * Which entity is doing the restrictions/expansions?
-+ *
-+ * One solution is to let the root domain handle the initialization that's
-+ * why there is the @domain and the @msi_parent_domain pointer.
-+ */
-+bool msi_parent_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-+				  struct irq_domain *msi_parent_domain,
-+				  struct msi_domain_info *msi_child_info)
-+{
-+	struct irq_domain *parent = domain->parent;
-+
-+	if (WARN_ON_ONCE(!parent || !parent->msi_parent_ops ||
-+			 !parent->msi_parent_ops->init_dev_msi_info))
-+		return false;
-+
-+	return parent->msi_parent_ops->init_dev_msi_info(dev, parent, msi_parent_domain,
-+							 msi_child_info);
-+}
-+
- int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
- 			    int nvec, msi_alloc_info_t *arg)
- {
+ /*
+  * Flags for msi_domain_info
+  *
 
