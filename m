@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F53637968
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 13:55:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92F406379A4
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 14:04:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbiKXMza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 07:55:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38872 "EHLO
+        id S229499AbiKXNEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 08:04:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiKXMzP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 07:55:15 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5DA60E86;
-        Thu, 24 Nov 2022 04:54:41 -0800 (PST)
+        with ESMTP id S229775AbiKXNEW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 08:04:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDE7C5B51;
+        Thu, 24 Nov 2022 05:04:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4873DB827DC;
-        Thu, 24 Nov 2022 12:54:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83D8C433C1;
-        Thu, 24 Nov 2022 12:54:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 10EBD62123;
+        Thu, 24 Nov 2022 13:04:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F762C433D6;
+        Thu, 24 Nov 2022 13:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669294475;
-        bh=9QkhjAE7g302O8xYWx35Sm2zi8DMss+GmLRxtfsRGAA=;
+        s=k20201202; t=1669295060;
+        bh=K0spZ237Ij4bnG8ES++EsmCNrt83UGBNa9SuA8ANQo4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GnblqLUtPR77TFNfWzeZYs0fCeekVJdwHDIvSJSJrFTCcK86GeIzKP8sT9pzCaSvY
-         KqbCmhFA9CPmUOIG3O7H98MR9ag8xVQ/2NroPPV+i37qRhZ5yNV+NXw0yI90hx/4r4
-         GW2Vm2ieLxeRrLE1M0lJHe0XLdqflyVyjlUSZm/4DgT7OvVscHhhblYf9QWmps1Wip
-         6g6UW7BXs9C8q1UHXmJ28R+bkGy9e5jj05nKekahi4uSKMpO3mR6hTVpHL4HCSnY9g
-         WGTJ0R/vPNlkxDzlOYjViWVQbrfBTvMULRfvHNmnk76CUw2Ie/3a4UGWBp65QE/5Tg
-         H717hm0mL7Rrg==
+        b=oBnc7By1HOVo2awPOJXd3ZwuGruOuod4kcUfDYXHNqg9TplObGExnJmQdT7FmvUE/
+         s9rJ1VV/Vh2Wwu+yQwmKNmFxu2fdMhEvZ6ThcCN95nYO5yipXrb8VDqfN7ZygL5wkn
+         4L4RQqumygls+h/MBkBkXOPGpUXby62JBmKbGvQDOO/ZKZHak+fEP8hfUQvoDVeA3C
+         QRT0s6AVWkjXwlcbexXuwWYZ0zcWPog1VSRmWdFgUu1zR+gASfdjqg2zx4jgVr3ijB
+         ihPhECxu1WzzW1RizFxTTOv2uxNCtwxQj0Pk2QC8DZXODlwpiMc6H8Qxkf/d4QNgEY
+         HHh+9dUBSMQ3w==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1oyBkO-008NP7-Lo;
-        Thu, 24 Nov 2022 12:54:32 +0000
-Date:   Thu, 24 Nov 2022 12:54:32 +0000
-Message-ID: <864juoo6lz.wl-maz@kernel.org>
+        id 1oyBtq-008NWc-5w;
+        Thu, 24 Nov 2022 13:04:18 +0000
+Date:   Thu, 24 Nov 2022 13:04:17 +0000
+Message-ID: <8635a8o65q.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
@@ -65,10 +65,10 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>
-Subject: Re: [patch V2 05/40] irqchip/ti-sci-inta: Fix kernel doc
-In-Reply-To: <20221121140048.596303869@linutronix.de>
+Subject: Re: [patch V2 06/40] PCI/MSI: Provide static key for parent mask/unmask
+In-Reply-To: <20221121140048.659849460@linutronix.de>
 References: <20221121135653.208611233@linutronix.de>
-        <20221121140048.596303869@linutronix.de>
+        <20221121140048.659849460@linutronix.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -87,25 +87,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 21 Nov 2022 14:39:34 +0000,
+On Mon, 21 Nov 2022 14:39:36 +0000,
 Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> W=1 build complains:
+> Most ARM(64) PCI/MSI domains mask and unmask in the parent domain after or
+> before the PCI mask/unmask operation takes place. So there are more than a
+> dozen of the same wrapper implementation all over the place.
 > 
-> drivers/irqchip/irq-ti-sci-inta.c:177: warning: Function parameter or member 'vint_id' not described in 'ti_sci_inta_xlate_irq'
-> drivers/irqchip/irq-ti-sci-inta.c:177: warning: Excess function parameter 'irq' description in 'ti_sci_inta_xlate_irq'
+> Don't make the same mistake with the new per device PCI/MSI domains and
+> provide a static key which lets the domain implementation enable this
+> sequence in the PCI/MSI code.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <kristo@kernel.org>
-> Cc: Santosh Shilimkar <ssantosh@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/irqchip/irq-ti-sci-inta.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/msi/irqdomain.c |   30 ++++++++++++++++++++++++++++++
+>  include/linux/msi.h         |    2 ++
+>  2 files changed, 32 insertions(+)
+> 
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -148,17 +148,45 @@ static void pci_device_domain_set_desc(m
+>  	arg->hwirq = desc->msi_index;
+>  }
+>  
+> +static DEFINE_STATIC_KEY_FALSE(pci_msi_mask_unmask_parent);
+> +
+> +/**
+> + * pci_device_msi_mask_unmask_parent_enable - Enable propagation of mask/unmask
+> + *					      to the parent interrupt chip
+> + *
+> + * For MSI parent interrupt domains which want to mask at the parent interrupt
+> + * chip too.
+> + */
+> +void pci_device_msi_mask_unmask_parent_enable(void)
+> +{
+> +	static_branch_enable(&pci_msi_mask_unmask_parent);
+> +}
+> +
+> +static __always_inline void cond_mask_parent(struct irq_data *data)
+> +{
+> +	if (static_branch_unlikely(&pci_msi_mask_unmask_parent))
+> +		irq_chip_mask_parent(data);
+> +}
+> +
+> +static __always_inline void cond_unmask_parent(struct irq_data *data)
+> +{
+> +	if (static_branch_unlikely(&pci_msi_mask_unmask_parent))
+> +		irq_chip_unmask_parent(data);
+> +}
+> +
+>  static void pci_mask_msi(struct irq_data *data)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+>  	pci_msi_mask(desc, BIT(data->irq - desc->irq));
+> +	cond_mask_parent(data);
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+I find this a bit odd. If anything, I'd rather drop the masking at the
+PCI level and keep it local to the interrupt controller, because this
+is likely to be more universal than the equivalent PCI operation
+(think multi-MSI, for example, which cannot masks individual MSIs).
+
+Another thing is that the static key is a global state. Nothing says
+that masking one way or the other is a universal thing, specially when
+you have multiple interrupt controllers dealing with MSIs in different
+ways. For example, GICv3 can use both the ITS and the GICv3-MBI frame
+at the same time for different PCI RC. OK, they happen to deal with
+MSIs in the same way, but you hopefully get my point.
+
+Thanks,
 
 	M.
 
