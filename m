@@ -2,144 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F376637A00
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 14:33:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BDA2637A10
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 14:39:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbiKXNdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 08:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
+        id S229931AbiKXNi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 08:38:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229822AbiKXNdX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 08:33:23 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC70B442EA
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 05:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669296802; x=1700832802;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Fz0IaYOlcSZmKnoY5wEUBQfGrsfGJyOCUdoQd2bMOdE=;
-  b=fssY50o0/9/iWXKprPEpnvwQ5/BFUMf2N0/AduG8R+RerUrjRO8IYxgs
-   iqvo125bZkYIasHcmMiDlV7Cu5KXNl4X9EAVdQ+peJ/QftVzmolZw3VBG
-   rCaqYEBAD8MTJEtvhIpp51PjBx/jNTrmj1g6g3T9y7DocOYDomMyDNtgv
-   wQ67ARMJJn4b7JQ+7zKmkG/+BhktcgvEwmO8zP54gtuWnk0ZNnQv9er4L
-   AbiJPYmTIE0oK6eL/LR4Z1UGEoQdUGvFIpJElY13ki/I0+ubwCsJDiOyg
-   /nRKkaMhzOwD1tvQPETmC4GXO1yx/D/gprkkiAwHVZ746CC30LL2zXrDC
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="311938526"
-X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
-   d="scan'208";a="311938526"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2022 05:33:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="675095613"
-X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
-   d="scan'208";a="675095613"
-Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 24 Nov 2022 05:33:16 -0800
-Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oyCLr-0003wP-2I;
-        Thu, 24 Nov 2022 13:33:15 +0000
-Date:   Thu, 24 Nov 2022 21:33:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [lpieralisi-pci:pci/dwc] BUILD SUCCESS
- ba6ed462dcf41a83b36eb9a74a8c4720040f9762
-Message-ID: <637f729a.2NAwtu3JZYjmbn4J%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S229883AbiKXNi6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 08:38:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E0BF2C3F;
+        Thu, 24 Nov 2022 05:38:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F58762127;
+        Thu, 24 Nov 2022 13:38:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC49AC433D6;
+        Thu, 24 Nov 2022 13:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669297136;
+        bh=7Au/HDQUhNqjxPT9EIdVuLBQ7xa+X0OeJzBexjpcgvM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dw9Qt14PDNMG2cdC0+PZTRsjYtl/WNvN7HhmltKxOZH1F06zFPNy2R6vPPL2vZnRP
+         fbu9KbF8aBm/uu87+jWfPdJkCg+BQQ0k5E7NG+1yJJZwK7BDRh0k3aRXFJ3/N2YNOy
+         6DF3KXDeKm3C37I+0+R5r0DJGKr7jdO4Zyow4HpE6qvpq7JEfF0yiU4tIP6EQ7SoPW
+         Pb7LjYV7EiSj1lgsxnexhXBQomC8IfeNUUFy0LHR4RVLrmqU1hReNPYCpqfLgocZdj
+         Lr40RA/zlu5rwkacsmJw3pihB3Esop5PZ41PLMIcfMMwLWv8ZEv/4BRAB/jAhkxfki
+         8JFJJMoC0nwSA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oyCRK-008Ntt-J2;
+        Thu, 24 Nov 2022 13:38:54 +0000
+Date:   Thu, 24 Nov 2022 13:38:54 +0000
+Message-ID: <86zgcgmpzl.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [patch V2 06/40] PCI/MSI: Provide static key for parent mask/unmask
+In-Reply-To: <87bkowcx0z.ffs@tglx>
+References: <20221121135653.208611233@linutronix.de>
+        <20221121140048.659849460@linutronix.de>
+        <8635a8o65q.wl-maz@kernel.org>
+        <87bkowcx0z.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
-branch HEAD: ba6ed462dcf41a83b36eb9a74a8c4720040f9762  PCI: dwc: Add Baikal-T1 PCIe controller support
+On Thu, 24 Nov 2022 13:17:00 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Thu, Nov 24 2022 at 13:04, Marc Zyngier wrote:
+> > On Mon, 21 Nov 2022 14:39:36 +0000,
+> >>  static void pci_mask_msi(struct irq_data *data)
+> >>  {
+> >>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+> >>  
+> >>  	pci_msi_mask(desc, BIT(data->irq - desc->irq));
+> >> +	cond_mask_parent(data);
+> >
+> > I find this a bit odd. If anything, I'd rather drop the masking at the
+> > PCI level and keep it local to the interrupt controller, because this
+> > is likely to be more universal than the equivalent PCI operation
+> > (think multi-MSI, for example, which cannot masks individual MSIs).
+> >
+> > Another thing is that the static key is a global state. Nothing says
+> > that masking one way or the other is a universal thing, specially when
+> > you have multiple interrupt controllers dealing with MSIs in different
+> > ways. For example, GICv3 can use both the ITS and the GICv3-MBI frame
+> > at the same time for different PCI RC. OK, they happen to deal with
+> > MSIs in the same way, but you hopefully get my point.
+> 
+> I'm fine with dropping that. I did this because basically all of the
+> various ARM PCI/MSI domain implementation have a copy of the same
+> functions. Some of them have pointlessly the wrong order because copy &
+> pasta is so wonderful....
+> 
+> So the alternative solution is to provide _ONE_ set of correct callbacks
+> and let the domain initialization code override the irq chip callbacks
+> of the default PCI/MSI template.
 
-elapsed time: 1347m
+If the various irqchips can tell the core code whether they want
+things to be masked at the PCI level or at the irqchip level, this
+would be a move in the right direction. For the GIC, I'd definitely
+want things masked locally.
 
-configs tested: 63
-configs skipped: 2
+What I'd like to get rid off is the double masking, as I agree it is
+on the "pretty dumb" side of things.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
 
-gcc tested configs:
-arc                                 defconfig
-alpha                               defconfig
-s390                             allmodconfig
-s390                                defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                           allnoconfig
-s390                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-m68k                             allyesconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-ia64                             allmodconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a015
-i386                                defconfig
-arc                  randconfig-r043-20221124
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-i386                             allyesconfig
-x86_64                            allnoconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                          pxa3xx_defconfig
-mips                         db1xxx_defconfig
-arm                        shmobile_defconfig
-arm                           viper_defconfig
-
-clang tested configs:
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a012
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a014
-x86_64                        randconfig-a005
-x86_64                        randconfig-a016
-riscv                randconfig-r042-20221124
-s390                 randconfig-r044-20221124
-hexagon              randconfig-r045-20221124
-hexagon              randconfig-r041-20221124
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
+	M.
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Without deviation from the norm, progress is not possible.
