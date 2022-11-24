@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 965C463818F
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:28:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 087E8638190
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbiKXX2o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 18:28:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
+        id S229970AbiKXX2p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 18:28:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbiKXX2a (ORCPT
+        with ESMTP id S229968AbiKXX2a (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 18:28:30 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE43D33BF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EEEAD39D7;
         Thu, 24 Nov 2022 15:26:49 -0800 (PST)
-Message-ID: <20221124232325.798556374@linutronix.de>
+Message-ID: <20221124232325.857982142@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669332359;
+        s=2020; t=1669332361;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=O52hKM/eyXA5495ofBmhJYgeFgFMKz1bKsf4ukXppYY=;
-        b=dopcgaOBeuvvrVBBjM0IZ0Z4kvik/8Xxm+j9VeWrZCxYVZSjAt7u7Wu3jFdqxEDwUs6Dpe
-        ZRigkklTSw5Qbi46/l+53EZbtiawpGi1awSivW/h0qEf3eKvOkyLD+9JzcvGduXRbZsEGB
-        xs+n1tn5OojF8ZuNu/AJLkCszv9eTIlOAJDJJ4Nn3dJCCo9O6gaS0qRvESCs5Cgfnt9YEK
-        T5yZg75EvqwFYUGAgCoP5qqPeaZgIhea5xAsHXj5ZIWpkryKhPu39X2YnTr2E7kId+rjog
-        RVerFXwJ+rt+WWZzl8R8LpOv8Uy2HKj//8IxlIJWp8zyBglmainSmPymXLBx3A==
+         references:references; bh=osB1ROcuLYeqTjSSCjR+4n5EoRccoICYxGf0yGM+gI4=;
+        b=ABaIW7MV8O3R2mRIwO7XbR954a66E6czAFyHzAy1nqq+3Go8dnsOQrvE9HTCyZ5TUSR8GJ
+        SkEDDe1FnLWq8QYG9vIDYGLGuyfQjYB8sTAZXRHfwSwt9Atwg7i9WikjEgxECyGJRagXsG
+        munrndXOg5nsbq3O9UZxoMRauswae1SnyuIo+djGBCG8R2ctFvcE0w3RW/kg3KLxid+oXd
+        x1Zpe/t0GEwwuh6LN5BQtsIxtqVfE/Om6ubID8cuKr1U8UZ1bJD+oZClqJN/i1Yc3+O1MJ
+        IrnynicLqy4ZxrS+JEU3JmVDJo4tpo76cTuxTUvg0DErzz508yCTDkpTysd0eg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669332359;
+        s=2020e; t=1669332361;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=O52hKM/eyXA5495ofBmhJYgeFgFMKz1bKsf4ukXppYY=;
-        b=gHSz9L5yPdDRuaLfE8LQ98i2E3jVTmq3Z5/qFrAeRScCdHPL18H1Wxeq8YXUhiN2rmB9LF
-        +zoMdTSXWUgufbDA==
+         references:references; bh=osB1ROcuLYeqTjSSCjR+4n5EoRccoICYxGf0yGM+gI4=;
+        b=9C5N+ZHv6PSbAktC6PZccDrlqHU363uVBq/cMK/CZrvzFFxFLzZOb1195PdSrGa0TK5YFB
+        YAt7DEbWz78jWgCQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -47,12 +47,13 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V3 09/33] genirq/msi: Add range checking to msi_insert_desc()
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [patch V3 10/33] PCI/MSI: Split __pci_write_msi_msg()
 References: <20221124230505.073418677@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 25 Nov 2022 00:25:59 +0100 (CET)
+Date:   Fri, 25 Nov 2022 00:26:00 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,149 +63,143 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Per device domains provide the real domain size to the core code. This
-allows range checking on insertion of MSI descriptors and also paves the
-way for dynamic index allocations which are required e.g. for IMS. This
-avoids external mechanisms like bitmaps on the device side and just
-utilizes the core internal MSI descriptor storxe for it.
+The upcoming per device MSI domains will create different domains for MSI
+and MSI-X. Split the write message function into MSI and MSI-X helpers so
+they can be used by those new domain functions seperately.
 
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
-V3: Adopt to the new info->hwsize handling and to the new xarray split
----
- kernel/irq/msi.c |   58 ++++++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 47 insertions(+), 11 deletions(-)
+ drivers/pci/msi/msi.c |  104 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 54 insertions(+), 50 deletions(-)
 
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -40,6 +40,7 @@ struct msi_ctrl {
- #define MSI_XA_DOMAIN_SIZE	(MSI_MAX_INDEX + 1)
- 
- static void msi_domain_free_locked(struct device *dev, struct msi_ctrl *ctrl);
-+static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid);
- static inline int msi_sysfs_create_group(struct device *dev);
- 
- 
-@@ -80,16 +81,28 @@ static void msi_free_desc(struct msi_des
- 	kfree(desc);
- }
- 
--static int msi_insert_desc(struct msi_device_data *md, struct msi_desc *desc,
-+static int msi_insert_desc(struct device *dev, struct msi_desc *desc,
- 			   unsigned int domid, unsigned int index)
- {
-+	struct msi_device_data *md = dev->msi.data;
- 	struct xarray *xa = &md->__domains[domid].store;
-+	unsigned int hwsize;
- 	int ret;
- 
-+	hwsize = msi_domain_get_hwsize(dev, domid);
-+	if (index >= hwsize) {
-+		ret = -ERANGE;
-+		goto fail;
-+	}
-+
- 	desc->msi_index = index;
- 	ret = xa_insert(xa, index, desc, GFP_KERNEL);
- 	if (ret)
--		msi_free_desc(desc);
-+		goto fail;
-+	return 0;
-+
-+fail:
-+	msi_free_desc(desc);
- 	return ret;
- }
- 
-@@ -117,7 +130,7 @@ int msi_domain_insert_msi_desc(struct de
- 	/* Copy type specific data to the new descriptor. */
- 	desc->pci = init_desc->pci;
- 
--	return msi_insert_desc(dev->msi.data, desc, domid, init_desc->msi_index);
-+	return msi_insert_desc(dev, desc, domid, init_desc->msi_index);
- }
- 
- static bool msi_desc_match(struct msi_desc *desc, enum msi_desc_filter filter)
-@@ -136,11 +149,16 @@ static bool msi_desc_match(struct msi_de
- 
- static bool msi_ctrl_valid(struct device *dev, struct msi_ctrl *ctrl)
- {
-+	unsigned int hwsize;
-+
- 	if (WARN_ON_ONCE(ctrl->domid >= MSI_MAX_DEVICE_IRQDOMAINS ||
--			 !dev->msi.data->__domains[ctrl->domid].domain ||
--			 ctrl->first > ctrl->last ||
--			 ctrl->first > MSI_MAX_INDEX ||
--			 ctrl->last > MSI_MAX_INDEX))
-+			 !dev->msi.data->__domains[ctrl->domid].domain))
-+		return false;
-+
-+	hwsize = msi_domain_get_hwsize(dev, ctrl->domid);
-+	if (WARN_ON_ONCE(ctrl->first > ctrl->last ||
-+			 ctrl->first >= hwsize ||
-+			 ctrl->last >= hwsize))
- 		return false;
- 	return true;
- }
-@@ -208,7 +226,7 @@ static int msi_domain_add_simple_msi_des
- 		desc = msi_alloc_desc(dev, 1, NULL);
- 		if (!desc)
- 			goto fail_mem;
--		ret = msi_insert_desc(dev->msi.data, desc, ctrl->domid, idx);
-+		ret = msi_insert_desc(dev, desc, ctrl->domid, idx);
- 		if (ret)
- 			goto fail;
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -180,6 +180,58 @@ void __pci_read_msi_msg(struct msi_desc
  	}
-@@ -407,7 +425,10 @@ unsigned int msi_domain_get_virq(struct
- 	if (!dev->msi.data)
- 		return 0;
- 
--	if (WARN_ON_ONCE(index > MSI_MAX_INDEX || domid >= MSI_MAX_DEVICE_IRQDOMAINS))
-+	if (WARN_ON_ONCE(domid >= MSI_MAX_DEVICE_IRQDOMAINS))
-+		return 0;
-+
-+	if (WARN_ON_ONCE(index >= msi_domain_get_hwsize(dev, domid)))
- 		return 0;
- 
- 	/* This check is only valid for the PCI default MSI domain */
-@@ -569,6 +590,20 @@ static struct irq_domain *msi_get_device
- 	return domain;
  }
  
-+static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid)
++static inline void pci_write_msg_msi(struct pci_dev *dev, struct msi_desc *desc,
++				     struct msi_msg *msg)
 +{
-+	struct msi_domain_info *info;
-+	struct irq_domain *domain;
++	int pos = dev->msi_cap;
++	u16 msgctl;
 +
-+	domain = msi_get_device_domain(dev, domid);
-+	if (domain) {
-+		info = domain->host_data;
-+		return info->hwsize;
++	pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
++	msgctl &= ~PCI_MSI_FLAGS_QSIZE;
++	msgctl |= desc->pci.msi_attrib.multiple << 4;
++	pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
++
++	pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_LO, msg->address_lo);
++	if (desc->pci.msi_attrib.is_64) {
++		pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_HI,  msg->address_hi);
++		pci_write_config_word(dev, pos + PCI_MSI_DATA_64, msg->data);
++	} else {
++		pci_write_config_word(dev, pos + PCI_MSI_DATA_32, msg->data);
 +	}
-+	/* No domain, no size... */
-+	return 0;
++	/* Ensure that the writes are visible in the device */
++	pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
 +}
 +
- static inline void irq_chip_write_msi_msg(struct irq_data *data,
- 					  struct msi_msg *msg)
++static inline void pci_write_msg_msix(struct msi_desc *desc, struct msi_msg *msg)
++{
++	void __iomem *base = pci_msix_desc_addr(desc);
++	u32 ctrl = desc->pci.msix_ctrl;
++	bool unmasked = !(ctrl & PCI_MSIX_ENTRY_CTRL_MASKBIT);
++
++	if (desc->pci.msi_attrib.is_virtual)
++		return;
++	/*
++	 * The specification mandates that the entry is masked
++	 * when the message is modified:
++	 *
++	 * "If software changes the Address or Data value of an
++	 * entry while the entry is unmasked, the result is
++	 * undefined."
++	 */
++	if (unmasked)
++		pci_msix_write_vector_ctrl(desc, ctrl | PCI_MSIX_ENTRY_CTRL_MASKBIT);
++
++	writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
++	writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
++	writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
++
++	if (unmasked)
++		pci_msix_write_vector_ctrl(desc, ctrl);
++
++	/* Ensure that the writes are visible in the device */
++	readl(base + PCI_MSIX_ENTRY_DATA);
++}
++
+ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
  {
-@@ -1359,7 +1394,7 @@ int msi_domain_alloc_irqs_all_locked(str
- 	struct msi_ctrl ctrl = {
- 		.domid	= domid,
- 		.first	= 0,
--		.last	= MSI_MAX_INDEX,
-+		.last	= msi_domain_get_hwsize(dev, domid) - 1,
- 		.nirqs	= nirqs,
- 	};
+ 	struct pci_dev *dev = msi_desc_to_pci_dev(entry);
+@@ -187,63 +239,15 @@ void __pci_write_msi_msg(struct msi_desc
+ 	if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
+ 		/* Don't touch the hardware now */
+ 	} else if (entry->pci.msi_attrib.is_msix) {
+-		void __iomem *base = pci_msix_desc_addr(entry);
+-		u32 ctrl = entry->pci.msix_ctrl;
+-		bool unmasked = !(ctrl & PCI_MSIX_ENTRY_CTRL_MASKBIT);
+-
+-		if (entry->pci.msi_attrib.is_virtual)
+-			goto skip;
+-
+-		/*
+-		 * The specification mandates that the entry is masked
+-		 * when the message is modified:
+-		 *
+-		 * "If software changes the Address or Data value of an
+-		 * entry while the entry is unmasked, the result is
+-		 * undefined."
+-		 */
+-		if (unmasked)
+-			pci_msix_write_vector_ctrl(entry, ctrl | PCI_MSIX_ENTRY_CTRL_MASKBIT);
+-
+-		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
+-		writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
+-		writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
+-
+-		if (unmasked)
+-			pci_msix_write_vector_ctrl(entry, ctrl);
+-
+-		/* Ensure that the writes are visible in the device */
+-		readl(base + PCI_MSIX_ENTRY_DATA);
++		pci_write_msg_msix(entry, msg);
+ 	} else {
+-		int pos = dev->msi_cap;
+-		u16 msgctl;
+-
+-		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+-		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
+-		msgctl |= entry->pci.msi_attrib.multiple << 4;
+-		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+-
+-		pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_LO,
+-				       msg->address_lo);
+-		if (entry->pci.msi_attrib.is_64) {
+-			pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_HI,
+-					       msg->address_hi);
+-			pci_write_config_word(dev, pos + PCI_MSI_DATA_64,
+-					      msg->data);
+-		} else {
+-			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+-					      msg->data);
+-		}
+-		/* Ensure that the writes are visible in the device */
+-		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
++		pci_write_msg_msi(dev, entry, msg);
+ 	}
  
-@@ -1473,7 +1508,8 @@ void msi_domain_free_irqs_range(struct d
-  */
- void msi_domain_free_irqs_all_locked(struct device *dev, unsigned int domid)
- {
--	msi_domain_free_irqs_range_locked(dev, domid, 0, MSI_MAX_INDEX);
-+	msi_domain_free_irqs_range_locked(dev, domid, 0,
-+					  msi_domain_get_hwsize(dev, domid) - 1);
+-skip:
+ 	entry->msg = *msg;
+ 
+ 	if (entry->write_msi_msg)
+ 		entry->write_msi_msg(entry, entry->write_msi_msg_data);
+-
  }
  
- /**
+ void pci_write_msi_msg(unsigned int irq, struct msi_msg *msg)
 
