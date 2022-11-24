@@ -2,76 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA6C8637C0C
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 15:55:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75890637C23
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 15:56:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiKXOzN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 09:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
+        id S229448AbiKXO4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 09:56:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiKXOzK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 09:55:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7E7A1A0;
-        Thu, 24 Nov 2022 06:55:08 -0800 (PST)
+        with ESMTP id S229613AbiKXO4b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 09:56:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1831B827DF;
+        Thu, 24 Nov 2022 06:56:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 48639B8283A;
-        Thu, 24 Nov 2022 14:55:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C289BC433C1;
-        Thu, 24 Nov 2022 14:55:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF0986219D;
+        Thu, 24 Nov 2022 14:56:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1828DC433C1;
+        Thu, 24 Nov 2022 14:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669301706;
-        bh=S3xYwGQuP1zkeAOUdEdt9aQxCaHG1tpwe3PTQbwPO30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r0tfM3KXFq8k8dKdKgCyfe0VqkbG+aSVkOzM9rQig5SJnlW4pG8A9wbar7Uad2Eer
-         erd/sBiYLcZdK67QfsCyxaKSBLZhO58ulwkqoCk28Ny9GnxH61LQVZFc5HueoQogaE
-         CS+Q6cLAOrlQPiuOBYeFpv5HPB0bJs0s7iEKHQs7qqSRZ//HsO1qoC2lyHDuTAn9+D
-         o035g2hgwLpT2kmGykDx2rMhldFJ7UN7ULem4MSTcVezL0KlrMkmXz5Ovl5KidGrtn
-         JOl8xhddKpDWye2PFI5/wXspCDb0bNhouFBGvmHqJjokfG04TYCDIju1kP9KMHfZyZ
-         ZAJfdZyFaAkCw==
-Received: by mercury (Postfix, from userid 1000)
-        id 82F7D106092A; Thu, 24 Nov 2022 15:55:03 +0100 (CET)
-Date:   Thu, 24 Nov 2022 15:55:03 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 4/9] dt-bindings: drop redundant part of title (end)
-Message-ID: <20221124145503.ir4n5qjonowpyhdz@mercury.elektranox.org>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
- <20221121110615.97962-5-krzysztof.kozlowski@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ksnzyadj7qk2pape"
-Content-Disposition: inline
-In-Reply-To: <20221121110615.97962-5-krzysztof.kozlowski@linaro.org>
+        s=k20201202; t=1669301789;
+        bh=4ZTYBdgCLzsXOsSCItv0xvxw64IzWm2GzGfVZWPLYl0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mvb47uwHPhgA+36dMpA/V8iqG5Wfglh6VjTrBTeYa5OhxWqwfYsLlZl26Xt7ux/Bf
+         Sy8cEH453/FiuonpLlhcL3o1RLpTMn7FLDvGw1728E1gnntJyVq/PznvgGIFPSGrg3
+         ZMfKZci7wL7pQJhiKMZt5dVfTT09K6AiD/lXavZ9/QDYTwUpODwApqSfM6+wWG/LtW
+         7pcIzQedDfqw25MQykyJwAWWOlrIIjQEBx2v1iiSgpx7CfpnfHbqr+szD9MJAFEaj8
+         jFha/FZUtgY4HlndX1UmeeJrwCVyH8mhLkLZMAcAZBfaNy0o0a4PvMpR65uLX97XYp
+         JApzWZd1R6sRw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oyDeM-008P1i-Pr;
+        Thu, 24 Nov 2022 14:56:26 +0000
+Date:   Thu, 24 Nov 2022 14:56:25 +0000
+Message-ID: <86sfi8mmee.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: Re: [patch V2 08/21] genirq/msi: Add pointers for per device irq domains
+In-Reply-To: <20221121083325.950255253@linutronix.de>
+References: <20221121083210.309161925@linutronix.de>
+        <20221121083325.950255253@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -81,116 +76,133 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---ksnzyadj7qk2pape
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Nov 21, 2022 at 12:06:10PM +0100, Krzysztof Kozlowski wrote:
-> The Devicetree bindings document does not have to say in the title that
-> it is a "Devicetree binding", but instead just describe the hardware.
->=20
-> Drop trailing "Devicetree bindings" in various forms (also with
-> trailling full stop):
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [dD]evice[ -]\?[tT]ree [bB]indings\=
-?\.\?$/title: \1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [dD]evice[ -]\?[nN]ode [bB]indings\=
-?\.\?$/title: \1/' {} \;
->=20
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [dD][tT] [bB]indings\?\.\?$/title: =
-\1/' {} \;
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # IIO
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Mon, 21 Nov 2022 14:36:28 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> With the upcoming per device MSI interrupt domain support it is necessary
+> to store the domain pointers per device.
+> 
+> Instead of delegating that storage to device drivers or subsystems create a
+> storage array in struct msi_device_data which will also take care of
+> tearing down the irq domains when msi_device_data is cleaned up via devres.
+> 
+> The interfaces into the MSI core will be changed from irqdomain pointer
+> based interfaces to domain id based interfaces to support multiple MSI
+> domains on a single device (e.g. PCI/MSI[-X] and PCI/IMS.
+> 
+> Once the per device domain support is complete the irq domain pointer in
+> struct device::msi.domain will not longer contain a pointer to the "global"
+> MSI domain. It will contain a pointer to the MSI parent domain instead.
+> 
+> It would be a horrible maze of conditionals to evaluate all over the place
+> which domain pointer should be used, i.e. the "global" one in
+> device::msi::domain or one from the internal pointer array.
+> 
+> To avoid this evaluate in msi_setup_device_data() whether the irq domain
+> which is associated to a device is a "global" or a parent MSI domain. If it
+> is global then copy the pointer into the first entry in the irqdomain
+> pointer array.
+> 
+> This allows to convert interfaces and implementation to domain ids while
+> keeping everything existing working.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
+>  include/linux/msi.h     |    3 +++
+>  include/linux/msi_api.h |    8 ++++++++
+>  kernel/irq/msi.c        |   14 ++++++++++++++
+>  3 files changed, 25 insertions(+)
+> 
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -77,6 +77,7 @@ struct msi_desc;
+>  struct pci_dev;
+>  struct platform_msi_priv_data;
+>  struct device_attribute;
+> +struct irq_domain;
+>  
+>  void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
+>  #ifdef CONFIG_GENERIC_MSI_IRQ
+> @@ -180,6 +181,7 @@ enum msi_desc_filter {
+>   * @mutex:		Mutex protecting the MSI descriptor store
+>   * @__store:		Xarray for storing MSI descriptor pointers
+>   * @__iter_idx:		Index to search the next entry for iterators
+> + * @__irqdomains:	Per device interrupt domains
+>   */
+>  struct msi_device_data {
+>  	unsigned long			properties;
+> @@ -187,6 +189,7 @@ struct msi_device_data {
+>  	struct mutex			mutex;
+>  	struct xarray			__store;
+>  	unsigned long			__iter_idx;
+> +	struct irq_domain		*__irqdomains[MSI_MAX_DEVICE_IRQDOMAINS];
+>  };
+>  
+>  int msi_setup_device_data(struct device *dev);
+> --- a/include/linux/msi_api.h
+> +++ b/include/linux/msi_api.h
+> @@ -10,6 +10,14 @@
+>  
+>  struct device;
+>  
+> +/*
+> + * Per device interrupt domain related constants.
+> + */
+> +enum msi_domain_ids {
+> +	MSI_DEFAULT_DOMAIN,
+> +	MSI_MAX_DEVICE_IRQDOMAINS,
+> +};
+> +
+>  unsigned int msi_get_virq(struct device *dev, unsigned int index);
+>  
+>  #endif
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -21,6 +21,18 @@
+>  
+>  static inline int msi_sysfs_create_group(struct device *dev);
+>  
+> +static inline void msi_setup_default_irqdomain(struct device *dev, struct msi_device_data *md)
 
-=2E..
+Do we really need this to be inline? I'm sure the compiler can figure
+it out.
 
->  .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml      | 2 +-
->  .../devicetree/bindings/power/supply/maxim,ds2760.yaml          | 2 +-
->  .../devicetree/bindings/power/supply/maxim,max14656.yaml        | 2 +-
+> +{
+> +	if (!dev->msi.domain)
+> +		return;
+> +	/*
+> +	 * If @dev::msi::domain is a global MSI domain, copy the pointer
+> +	 * into the domain array to avoid conditionals all over the place.
+> +	 */
+> +	if (!irq_domain_is_msi_parent(dev->msi.domain))
+> +		md->__irqdomains[MSI_DEFAULT_DOMAIN] = dev->msi.domain;
+> +}
+> +
+>  /**
+>   * msi_alloc_desc - Allocate an initialized msi_desc
+>   * @dev:	Pointer to the device for which this is allocated
+> @@ -213,6 +225,8 @@ int msi_setup_device_data(struct device
+>  		return ret;
+>  	}
+>  
+> +	msi_setup_default_irqdomain(dev, md);
+> +
 
-=2E..
+nit: if you move the setup below the msi.data assignment, you could
+only pass dev as a parameter. Or pass both and move the assignment in
+the function?
 
-> diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-po=
-wer.yaml b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.=
-yaml
-> index 46de35861738..11f1f98c1cdc 100644
-> --- a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
-> +++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/power/reset/xlnx,zynqmp-power.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: Xilinx Zynq MPSoC Power Management Device Tree Bindings
-> +title: Xilinx Zynq MPSoC Power Management
-> =20
->  maintainers:
->    - Michal Simek <michal.simek@xilinx.com>
-> diff --git a/Documentation/devicetree/bindings/power/supply/maxim,ds2760.=
-yaml b/Documentation/devicetree/bindings/power/supply/maxim,ds2760.yaml
-> index c838efcf7e16..5faa2418fe2f 100644
-> --- a/Documentation/devicetree/bindings/power/supply/maxim,ds2760.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/maxim,ds2760.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/power/supply/maxim,ds2760.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: Maxim DS2760 DT bindings
-> +title: Maxim DS2760
-> =20
->  maintainers:
->    - Sebastian Reichel <sre@kernel.org>
-> diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max1465=
-6.yaml b/Documentation/devicetree/bindings/power/supply/maxim,max14656.yaml
-> index 070ef6f96e60..711066b8cdb9 100644
-> --- a/Documentation/devicetree/bindings/power/supply/maxim,max14656.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/maxim,max14656.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/power/supply/maxim,max14656.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: Maxim MAX14656 DT bindings
-> +title: Maxim MAX14656
-> =20
->  maintainers:
->    - Sebastian Reichel <sre@kernel.org>
+>  	xa_init(&md->__store);
+>  	mutex_init(&md->mutex);
+>  	dev->msi.data = md;
+> 
+> 
 
-Acked-by: Sebastian Reichel <sre@kernel.org>
+Irrespective of the above,
 
--- Sebastian
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
---ksnzyadj7qk2pape
-Content-Type: application/pgp-signature; name="signature.asc"
+	M.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmN/hccACgkQ2O7X88g7
-+ppHEw/+Ofnx5vLl+V2sXB4VCd7c5T9abMJs0VA3LSQVJMpmCEWW5XvhGEnmu2bA
-pe/8cmzFUNEal3JsF6Pun9+s8oVlQbtbXgQqqxocYGD0uNtePzX3IGizBN9mod8c
-SB1U/oUlAw3ixwqcW5ZtbvPG1lAAc++86GtlPhulX7wCUFqbSMlbHXO2x8N1pa2+
-cpOUmML55ELsk9srGIh7D88sV+n7hQQ8fMBI3HJt8gpZp1vpSG4mO941XAamkGgQ
-hxEH9NP7AZl0ACiU1hRr3snxA+Yt3zg0mqyvk7OEwZnH85a/rlUqW74AlYeI2htX
-+lSqy5fLCEAUifNJqotbU0xNOsiYKoFAcZAcfe89ePJYQoyg/wzPbptF8WK6uPQn
-+k6HAHgIKHEd9h8o8LtU5MexYnGJix6nm6nkTOyq9u0PiHfsi75epi6lfw1xXX6Z
-XYXxos+ohbeTUt/yW44aGw3jQ940mpr0f0gnVkudCiqfh4pV8gvWX8YoZH+K2BJa
-C4natf1/bbwe0fTrA92dFqc3iwZB6FdCmdhE/cJ69GAW8araN8PelXTe2WgjmSOi
-GZ6VtLaEi+lDktvqKCb/mw2GvrHW0y/EpRAvctJqNTR2uknOLyncBS9PiseoklUj
-zmMw9e8xCv0ZXkroHdPqE8sDSQSB7gBINlSYEKk6wubHJwWdiyM=
-=rY9T
------END PGP SIGNATURE-----
-
---ksnzyadj7qk2pape--
+-- 
+Without deviation from the norm, progress is not possible.
