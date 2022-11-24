@@ -2,45 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 948C5637D30
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 16:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5DEB637D61
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 16:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiKXPqL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 10:46:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
+        id S229436AbiKXPzW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 10:55:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiKXPqL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 10:46:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497D793CF6;
-        Thu, 24 Nov 2022 07:46:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0FBD9B82871;
-        Thu, 24 Nov 2022 15:46:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90CE9C433C1;
-        Thu, 24 Nov 2022 15:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669304766;
-        bh=nOWuXFcY6tchDx+uGT9fJZYoq2XpD2rR1ixM25MB3DY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MP0YU/9PgCIVcADtRQGfecL6nRQ599zr3mxfHTtRGWspodKW6WHFJF6scO049ABGN
-         Z29gf56TBS1iGeP01/tL474w2FW+cStYvnrYfPxRKgHXS0R03ClPHZXZhdFazytxq8
-         oegc91mbyttVVeftvKxoJ1+T87TW3ouxDL0pNzkpNFNWxFh8TCjWyw4IDnCbIPpk04
-         e+zvBS++6E9tmUwM2Rq+y3VUAFzQe4wmAqE1qNCPM8mEGkrFt/+YLfL5RvzxF84+jN
-         6duXktlEkvIqMRj3bTlpbmpj89RPe7zX1tG51FV+zc/G2zw/Tin7ufjS//YfpKmXUB
-         iWk/0J8NFS4Yw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oyEQO-008Pgz-0Y;
-        Thu, 24 Nov 2022 15:46:04 +0000
-Date:   Thu, 24 Nov 2022 15:46:03 +0000
-Message-ID: <86r0xsmk3o.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
+        with ESMTP id S229481AbiKXPzV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 10:55:21 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B404F16E8D8;
+        Thu, 24 Nov 2022 07:55:20 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1669305319;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oW1vFoGkG1gZqHKm6cJJxeAutc3pzwTc7EeCCgEOa6U=;
+        b=0STs4hhjniVU1gnUtiCn2+QbL9DvDE6kplZCXTj4CQQPcUinLqK2Z5vDrQreia+8ijFfLR
+        e4mKYpcJSGAfu8auOR5DLm/uttM+VvKD+6er6Nka6+O1fDe6kwyhxHC2Vz+GoFC5amNLG9
+        XZCyv8KeAIR0t3UrVu+0zDh8gfZvPkSKC5Drq/qfJ/j3fp1KvUWLrWdaC7gPQyei2L9S9W
+        LfrNLxpO45JAHHhQS4jRef1P16FsdBY3PWvnM+E/0mpxhnKtaVIcXjGX2kFRUb7adg6GEl
+        JjwXPKT1VphSef6tbprMD8+AX7/4zwhTXOGd9Z7AjjokyC6bMZvXR7TkvlURlg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1669305319;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oW1vFoGkG1gZqHKm6cJJxeAutc3pzwTc7EeCCgEOa6U=;
+        b=4Rss4EqtqqINndCFCf02V6OverlUL7auZMseRap9WhFAA1bfi3K6qgHJwtdqUBMXD5cybT
+        KimBj3JaMip9fTCw==
+To:     Marc Zyngier <maz@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
@@ -54,178 +48,56 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [patch V2 09/21] genirq/msi: Make MSI descriptor iterators device domain aware
-In-Reply-To: <20221121083326.002153609@linutronix.de>
+Subject: Re: [patch V2 09/21] genirq/msi: Make MSI descriptor iterators
+ device domain aware
+In-Reply-To: <86r0xsmk3o.wl-maz@kernel.org>
 References: <20221121083210.309161925@linutronix.de>
-        <20221121083326.002153609@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20221121083326.002153609@linutronix.de> <86r0xsmk3o.wl-maz@kernel.org>
+Date:   Thu, 24 Nov 2022 16:55:17 +0100
+Message-ID: <87zgcgbb4q.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 21 Nov 2022 14:36:29 +0000,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> To support multiple MSI interrupt domains per device it is necessary to
-> segment the xarray MSI descriptor storage. Each domain gets up to
-> MSI_MAX_INDEX entries.
-> 
-> Change the iterators so they operate with domain ids and take the domain
-> offsets into account.
-> 
-> The publicly available iterators which are mostly used in legacy
-> implementations and the PCI/MSI core default to MSI_DEFAULT_DOMAIN (0)
-> which is the id for the existing "global" domains.
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: Fix the off by one so the index space is including MSI_MAX_INDEX (Kevin)
-> ---
->  include/linux/msi.h |   45 +++++++++++++++++++++++++++++++++++++++++----
->  kernel/irq/msi.c    |   43 +++++++++++++++++++++++++++++++++++--------
->  2 files changed, 76 insertions(+), 12 deletions(-)
-> 
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -181,6 +181,7 @@ enum msi_desc_filter {
->   * @mutex:		Mutex protecting the MSI descriptor store
->   * @__store:		Xarray for storing MSI descriptor pointers
->   * @__iter_idx:		Index to search the next entry for iterators
-> + * @__iter_max:		Index to limit the search
->   * @__irqdomains:	Per device interrupt domains
->   */
->  struct msi_device_data {
-> @@ -189,6 +190,7 @@ struct msi_device_data {
->  	struct mutex			mutex;
->  	struct xarray			__store;
->  	unsigned long			__iter_idx;
-> +	unsigned long			__iter_max;
->  	struct irq_domain		*__irqdomains[MSI_MAX_DEVICE_IRQDOMAINS];
->  };
->  
-> @@ -197,14 +199,34 @@ int msi_setup_device_data(struct device
->  void msi_lock_descs(struct device *dev);
->  void msi_unlock_descs(struct device *dev);
->  
-> -struct msi_desc *msi_first_desc(struct device *dev, enum msi_desc_filter filter);
-> +struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
-> +				       enum msi_desc_filter filter);
-> +
-> +/**
-> + * msi_first_desc - Get the first MSI descriptor of the default irqdomain
-> + * @dev:	Device to operate on
-> + * @filter:	Descriptor state filter
-> + *
-> + * Must be called with the MSI descriptor mutex held, i.e. msi_lock_descs()
-> + * must be invoked before the call.
-> + *
-> + * Return: Pointer to the first MSI descriptor matching the search
-> + *	   criteria, NULL if none found.
-> + */
-> +static inline struct msi_desc *msi_first_desc(struct device *dev,
-> +					      enum msi_desc_filter filter)
-> +{
-> +	return msi_domain_first_desc(dev, MSI_DEFAULT_DOMAIN, filter);
-> +}
-> +
->  struct msi_desc *msi_next_desc(struct device *dev, enum msi_desc_filter filter);
->  
->  /**
-> - * msi_for_each_desc - Iterate the MSI descriptors
-> + * msi_domain_for_each_desc - Iterate the MSI descriptors in a specific domain
->   *
->   * @desc:	struct msi_desc pointer used as iterator
->   * @dev:	struct device pointer - device to iterate
-> + * @domid:	The id of the interrupt domain which should be walked.
->   * @filter:	Filter for descriptor selection
->   *
->   * Notes:
-> @@ -212,10 +234,25 @@ struct msi_desc *msi_next_desc(struct de
->   *    pair.
->   *  - It is safe to remove a retrieved MSI descriptor in the loop.
->   */
-> -#define msi_for_each_desc(desc, dev, filter)			\
-> -	for ((desc) = msi_first_desc((dev), (filter)); (desc);	\
-> +#define msi_domain_for_each_desc(desc, dev, domid, filter)			\
-> +	for ((desc) = msi_domain_first_desc((dev), (domid), (filter)); (desc);	\
->  	     (desc) = msi_next_desc((dev), (filter)))
->  
-> +/**
-> + * msi_for_each_desc - Iterate the MSI descriptors in the default irqdomain
-> + *
-> + * @desc:	struct msi_desc pointer used as iterator
-> + * @dev:	struct device pointer - device to iterate
-> + * @filter:	Filter for descriptor selection
-> + *
-> + * Notes:
-> + *  - The loop must be protected with a msi_lock_descs()/msi_unlock_descs()
-> + *    pair.
-> + *  - It is safe to remove a retrieved MSI descriptor in the loop.
-> + */
-> +#define msi_for_each_desc(desc, dev, filter)					\
-> +	msi_domain_for_each_desc((desc), (dev), MSI_DEFAULT_DOMAIN, (filter))
-> +
->  #define msi_desc_to_dev(desc)		((desc)->dev)
->  
->  #ifdef CONFIG_IRQ_MSI_IOMMU
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -21,6 +21,10 @@
->  
->  static inline int msi_sysfs_create_group(struct device *dev);
->  
-> +/* Invalid XA index which is outside of any searchable range */
-> +#define MSI_XA_MAX_INDEX	(ULONG_MAX - 1)
-> +#define MSI_XA_DOMAIN_SIZE	(MSI_MAX_INDEX + 1)
-> +
->  static inline void msi_setup_default_irqdomain(struct device *dev, struct msi_device_data *md)
->  {
->  	if (!dev->msi.domain)
-> @@ -33,6 +37,20 @@ static inline void msi_setup_default_irq
->  		md->__irqdomains[MSI_DEFAULT_DOMAIN] = dev->msi.domain;
->  }
->  
-> +static int msi_get_domain_base_index(struct device *dev, unsigned int domid)
-> +{
-> +	lockdep_assert_held(&dev->msi.data->mutex);
-> +
-> +	if (WARN_ON_ONCE(domid >= MSI_MAX_DEVICE_IRQDOMAINS))
-> +		return -ENODEV;
-> +
-> +	if (WARN_ON_ONCE(!dev->msi.data->__irqdomains[domid]))
-> +		return -ENODEV;
-> +
-> +	return domid * MSI_XA_DOMAIN_SIZE;
-> +}
+On Thu, Nov 24 2022 at 15:46, Marc Zyngier wrote:
+> On Mon, 21 Nov 2022 14:36:29 +0000,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> +static int msi_get_domain_base_index(struct device *dev, unsigned int domid)
+>> +{
+>> +	lockdep_assert_held(&dev->msi.data->mutex);
+>> +
+>> +	if (WARN_ON_ONCE(domid >= MSI_MAX_DEVICE_IRQDOMAINS))
+>> +		return -ENODEV;
+>> +
+>> +	if (WARN_ON_ONCE(!dev->msi.data->__irqdomains[domid]))
+>> +		return -ENODEV;
+>> +
+>> +	return domid * MSI_XA_DOMAIN_SIZE;
+>> +}
+>
+> So what I understand of this is that we split the index space into
+> segments, one per msi_domain_ids, MSI_XA_DOMAIN_SIZE apart.
+>
+> Why didn't you decide to go all the way and have one xarray per
+> irqdomain? It's not that big a structure, and it would make the whole
+> thing a bit more straightforward.
+>
+> Or do you anticipate cases where you'd walk the __store xarray across
+> irqdomains?
 
-So what I understand of this is that we split the index space into
-segments, one per msi_domain_ids, MSI_XA_DOMAIN_SIZE apart.
+Not really. I just found it conveniant to deal with one, but yes we
+could do the same thing with two xarrays.
 
-Why didn't you decide to go all the way and have one xarray per
-irqdomain? It's not that big a structure, and it would make the whole
-thing a bit more straightforward.
-
-Or do you anticipate cases where you'd walk the __store xarray across
-irqdomains?
+But at the very end it does not make a huge difference. Fine with me
+either way.
 
 Thanks,
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+        tglx
