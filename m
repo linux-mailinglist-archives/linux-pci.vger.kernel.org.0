@@ -2,65 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4F8637419
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 09:36:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFEEC637420
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 09:36:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbiKXIgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 03:36:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
+        id S230020AbiKXIgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 03:36:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbiKXIgU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 03:36:20 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8405AF241A;
-        Thu, 24 Nov 2022 00:36:19 -0800 (PST)
+        with ESMTP id S230011AbiKXIgb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 03:36:31 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2061.outbound.protection.outlook.com [40.107.101.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA290F8876;
+        Thu, 24 Nov 2022 00:36:27 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jgRyjfZvWosYH7ldx6t4NSjaODqLqOis6CaOw5JTMOEkEcS6Uifu7tnlQ1a++K7LGfpT0sk/X6NVoly1E3Qes6iyA8Bm2+8Orl5jwF/E8Gpq/mP1wjidNRmMZzBBj9MsV9ERG8OIrVkmW1aaXq3EuIdc1xMAWaY0XvJCBPq5d4RNVzeStWeG1aZ6SkjS+rtJa2PXhfEdAElVH4eHu4/sKG3IlY3TpgOilCVp7Y8A7y9Qgp1rQCN0zDU4pzbl4BqZEfPW0FGyKwJf3d9XEoDxmQPto4hIzzmxK+HTDquExV82283gp7kK9WeGf3APY0qu77jQVEucgmmuADgF4AYbHg==
+ b=P94h4xjNOF5AA/zET1XJm4Kwp0ju7BfauMCJ8gXeD5ub6rVPlK2ZMvOBHLxkz1vFR0mhFpMVD8TBWcXMgimMwX9E4s+mO2J418szp5MpbKmCOtEdHGKNamHp0ocKflKLDr0F7BLHYywCqf6qjG+LJzAgixg7kV9Ny0wYHIGpbiQuWLKaET0qBN2E+iLe38uJbPGZ6KdC6qA57ygsY62MVvahqq8lHY0lKBkkASZB8TGmgmLN/1RYj/woxyB8fx6T5Wnl/O50UTzxArAZF3J70QTlGE5lWJARYVihMV1NRRq8WkCH/CFr/rujmW5RRWrvSQeknEgI+QcXpQ8zt9xB/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qi2kNenpffnaO+SSPdyB5MFvI8nnyx/vmr5uEmYT3pY=;
- b=IhU4pvOaSw2x67cct/eyb8mepgI+4UZL7ywXuD2rfLrGWQHAap/qzOCA3LgbJxv8tg84aKM3xWGk481DKUA6iLvIC2DOnhJDsN5QZHWX9Ek9oOM/J0pzKXPEQyh97f+3YTEJx8LfJX7eNFmN5VrcwBvy/ftEce5MG5S60tmdGrt6QX8cMI0FDvWgOaxpZo7hyNfmXmB04yz2myAxwHluUpeOt0xuMbJqxHy8VoDDZw7B2R8whP0P3a6lFewUISJqG66zqAGXpmLyoW5LHtKA4ErAYq6ISgbOeWEaUpSy9cE78/qEkqJamOIaZ1vNDdnw3MiLaWqQjpNMBI3xkY6LtA==
+ bh=hY4vY09asHgYyDDAliTg5s2wLmFzg8o0YSVfP8bMTfw=;
+ b=LMqm0lC89I3XXalooaWP26e1sm0l04irQdhP7TWHHvpSd8FZuGTOR87uodoJr7P9rNduDutahAT6pPCTLvH6o5jaAgy9ZFjoxZLmcJey/92j6t0S5SOfeeEh4Ncax4hVnfN2qiMxC2xky1wWRmK8ZsTv2K8LLlMLBGloRRK0mTENoPMSVIbgQ/EsQMQRIcF3ReibxoQWaPVizgGYBmFbqsIOd4RDJoaWPvFPxrPG3BC1tyvOECBIuj2fh6e0DcYnlj9u53nWicPfVPMzrsOVJ6eAdJsBtfkFMRIHljCBVp8EKIdK8YxFr2+d7I3MFUG5cKebRXjRsYd919+EQY156w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qi2kNenpffnaO+SSPdyB5MFvI8nnyx/vmr5uEmYT3pY=;
- b=E0pewIAeUBL/UELn2TQ5/53haBNY3FtoCXQZiC1DrtfZRkkKRgMrZOs0RLJ95H+KbcRqSKIp0dBUuxyApMe43WxM7VkuTxMqQfzgrBn0frNQFtBoNxzjJ32GqWtt7SBsyEOP8J1NDJFzmBsf8cevJL0sDKa3hUN8HdtVdoAEJlJq7oeLzM1tyA6aYmlCsYr6ezu5LqIcNX5JWzlSTBjvcdPsbZMnrtQYBbQN2yJ2ZY6keMX8oxx1yiz9eOTx717QYNqbJ/yK8GmDr1OFzQp/Dx3zxGdOxGjn/4FeRWnSNKfM82FZZ/UksApQsRMRDqEvMyqOYrRO9RhjXDqWv+kBWQ==
-Received: from DM6PR08CA0043.namprd08.prod.outlook.com (2603:10b6:5:1e0::17)
- by DM4PR12MB5087.namprd12.prod.outlook.com (2603:10b6:5:38a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.19; Thu, 24 Nov
- 2022 08:36:17 +0000
-Received: from DM6NAM11FT106.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1e0:cafe::94) by DM6PR08CA0043.outlook.office365.com
- (2603:10b6:5:1e0::17) with Microsoft SMTP Server (version=TLS1_2,
+ bh=hY4vY09asHgYyDDAliTg5s2wLmFzg8o0YSVfP8bMTfw=;
+ b=M8/Ge68EfPKhgl/jFbtrzGp/YbrRKLZs82Sp9VJEWsBUMQmM0ZG5QrRrftd9m1up4fRjxJfLVQqK4kzH9X1T1McusGcrM2NFk1sU/REA8UCFewpK9DO0iQPOqrH9oIa2ZXBJ77qpYGdoGnfX6BybaL1aMHweoX1vKn0OaGkz8vofvsyOnwyiupgQDKvqRkk2rmaeeX35WTtJavSoqxj1zBilp9hwMPBN+RS8sLK6qFIAAR0fmr+wKtK8xwrgOxnGb1ZrjvPHTY3K8f2Kte1LQKwfQBAjQrg3w5N1FxyT3GzgCA7Bfr5+qL6AfuwxvLNruyZ6kifzVh6Y4FCdDpmTFQ==
+Received: from DM5PR07CA0109.namprd07.prod.outlook.com (2603:10b6:4:ae::38) by
+ CY5PR12MB6225.namprd12.prod.outlook.com (2603:10b6:930:23::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5857.19; Thu, 24 Nov 2022 08:36:25 +0000
+Received: from DM6NAM11FT078.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:ae:cafe::67) by DM5PR07CA0109.outlook.office365.com
+ (2603:10b6:4:ae::38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.19 via Frontend
- Transport; Thu, 24 Nov 2022 08:36:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ Transport; Thu, 24 Nov 2022 08:36:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DM6NAM11FT106.mail.protection.outlook.com (10.13.172.229) with Microsoft SMTP
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DM6NAM11FT078.mail.protection.outlook.com (10.13.173.183) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5857.18 via Frontend Transport; Thu, 24 Nov 2022 08:36:17 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.5857.19 via Frontend Transport; Thu, 24 Nov 2022 08:36:25 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 24 Nov
- 2022 00:36:06 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ 2022 00:36:13 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 24 Nov
- 2022 00:36:05 -0800
+ 2022 00:36:12 -0800
 Received: from mmaddireddy-ubuntu.nvidia.com (10.127.8.10) by mail.nvidia.com
  (10.129.68.10) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Thu, 24 Nov 2022 00:36:01 -0800
+ Transport; Thu, 24 Nov 2022 00:36:07 -0800
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
 To:     <vkoul@kernel.org>, <kishon@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <thierry.reding@gmail.com>,
@@ -70,9 +69,9 @@ CC:     <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
         <lpieralisi@kernel.org>, <nkristam@nvidia.com>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 2/3] arm64: tegra: Add uphy lane number and intr in p2u nodes
-Date:   Thu, 24 Nov 2022 14:05:09 +0530
-Message-ID: <20221124083510.3008139-3-mmaddireddy@nvidia.com>
+Subject: [PATCH 3/3] phy: tegra: Add lane margin support
+Date:   Thu, 24 Nov 2022 14:05:10 +0530
+Message-ID: <20221124083510.3008139-4-mmaddireddy@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221124083510.3008139-1-mmaddireddy@nvidia.com>
 References: <20221124083510.3008139-1-mmaddireddy@nvidia.com>
@@ -82,23 +81,23 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT106:EE_|DM4PR12MB5087:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39f04390-7b88-4dc3-c13e-08dacdf6f4b6
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT078:EE_|CY5PR12MB6225:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8cd3bad1-95c4-4fb2-31c0-08dacdf6f922
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MzjgdzBoX6yhjWPH73T25RLK+YLd8t0DE2KWl2U/XjoP2d0xWZgYxbEAi7fpj39GWUzuns2H4/dYEFUBfuVFbAgK+ZqaZ+KPZoPbq7/sI2inLOd5RWArzVn7Ck1rBr+Dir2HZmZ4lSlvui1IDBP7oSxuBnMXPV0w0Ia8im8wcHI7bCZphRERbPUTOjhm1PB7ysfnbAVmh2WuhUa3STp4bC3k3xqWIdv82JO0axoe/3o2c5vTBbRERa2p3IH5PuOw9v5bkvAtcnkb5CxoSKmuiZ2uqF0d1Xl13u7h+9j3CniDlC9jDRVirFn/XL88Nd8rdjmMD8SnesH9VL67XW+raBZmDeMst/z/F4AgA1L7U10iYYdUapL4975iNMzFAW9INxECpEA+bndVe2hPJm1tl4SvFcrngDAOQbkBIYa9jpInk8QHujz7jBTDSwsAJyAXkCNhlWpWxXEVriFu9svxrRYrn7tHP1FAUobgSX8IVs4UolT0y6yzuYJJi1C5YY8x7YTlkqnCi7jrsKGDIfPXjYfD/yzQ8yiCVmp6quDx2+Rn5gOUMkTXYGsb/l+j8+e6L99BvmIk76VeIrs/kG5BRLSKun3Xsbw+wLbH/u2I7aPaIoXfb3R0bi/OB9bnvkAJzj7rjd0PgeeRISzpuvxC8JZgzDqLEr7znsjV+LZ03C3v/L1tFOJFTDGPtQ6HKlNS9GYOHAJJcKZjt3s9LL8Vfcwv5PqUV+/t4bKlT8A6SC0=
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(136003)(376002)(39860400002)(451199015)(40470700004)(46966006)(36840700001)(7416002)(5660300002)(2906002)(36756003)(356005)(7636003)(70206006)(70586007)(4326008)(8676002)(110136005)(6636002)(86362001)(54906003)(316002)(8936002)(41300700001)(82310400005)(478600001)(7696005)(26005)(107886003)(40480700001)(426003)(47076005)(36860700001)(2616005)(336012)(186003)(1076003)(40460700003)(82740400003)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: sdRrvaD81VDrJ8Jkc4HZo8gDju2zNDfcF0V+f+E5hC+5OCSNRgFhKb5OR6mwq+ZWTjXCm5g5jvMYvmt0ubIUIxoKHTM5kb9eUlSisFMJkm4tCLzEV1l3/bfkSp7tnbypDih+wHtJ8JuZqe4uLL12uToY4mKWsb2yvZXX0ETTbQA6x0G1X14M4Dya9XhvAJirF5n5viCbdnVmi0QKZF5MWEYNTUu6H4w0lXHl+2SIb6fu67/UYmEuha0rxvTjJPjfeui3sVP816h+T+1OQsv//EYj3LAz8J/EzeMMzW1htH3VKcxF/TlglqDlXY3zv9zYC1NNz8hKqedNc9re31kprXo4diSC2tQATNqE1aQrZ/ynaVLfnpmf1H/fottTUwIMSazwUUfhwZlFSt2BHS82rwogDWnsJrR0gRLUrFQx33uLfezVP0mpBQ4r6WyanytOyX8lhCzBCjPQWKbcBypw9XXJcs88Q6XnqJ6bXt/GBK+zhzTf+Sz2E8Cz47VXw9/ZlFOjZrBwQWGbNv+82I8pEME39exUOEVClMD4tIxUG+Lhcj67CLg6uAnWMpYNpaYqdWeWgl0su7y9H3wzi+bTABd2L04RWgq02DWkCIAGd4YsJgeGiAOy4g7JEfj1wLodr+Bj2ylzsIA57wlo1TuReqW4gmAKbEu6bdqQ7rizWlSEJDizX6txl/fW+PPFs5jMkBijYevbKgxqMvv2kDzhIw==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(396003)(376002)(346002)(451199015)(40470700004)(36840700001)(46966006)(40480700001)(2906002)(30864003)(36756003)(5660300002)(7416002)(8936002)(41300700001)(107886003)(6666004)(26005)(7696005)(40460700003)(186003)(336012)(426003)(1076003)(2616005)(86362001)(4326008)(8676002)(70586007)(47076005)(70206006)(82310400005)(110136005)(54906003)(316002)(6636002)(83380400001)(82740400003)(36860700001)(7636003)(356005)(478600001)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2022 08:36:17.6050
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2022 08:36:25.0200
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39f04390-7b88-4dc3-c13e-08dacdf6f4b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cd3bad1-95c4-4fb2-31c0-08dacdf6f922
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT106.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT078.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5087
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6225
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -109,306 +108,378 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UPHY lane number is required to exchange lane margin data between P2U
-and UPHY. Add uphy lane number in p2u device tree nodes.
+Per PCIe r6.0.1, section 4.2.18, Lane Margining at Receiver is mandatory
+for all Ports supporting a data rate of 16.0 GT/s or higher. Tegra234
+supports Gen4 and Receiver Lane Margining with per lane PIPE2UPHY instance
+acting as a relay between PCIe controller and Universal PHY (UPHY).
+
+P2U driver enables MARGIN_SW_READY and MARGIN_READY bits to start snooping
+on changes in lane margin control register in PCIe configuration space.
+P2U HW generates MARGIN_START or MARGIN_CHANGE interrupt after it copied
+margin control data to P2U_RX_MARGIN_CTRL register. On MARGIN_START or
+MARGIN_CHANGE interrupt, P2U driver copies margin control data to UPHY
+via mailbox communication. UPHY HW performs margining operation and
+P2U driver copies margin status from UPHY to P2U_RX_MARGIN_STATUS
+register. P2U driver repeats this until PCIe controller issues margin
+stop command.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 120 +++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+ drivers/phy/tegra/phy-tegra194-p2u.c | 272 +++++++++++++++++++++++++++
+ 1 file changed, 272 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index eaf05ee9acd1..ec8a28a9d380 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -1109,6 +1109,11 @@ p2u_hsio_0: phy@3e00000 {
- 			reg = <0x03e00000 0x10000>;
- 			reg-names = "ctl";
+diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+index 633e6b747275..a86b4af70ab9 100644
+--- a/drivers/phy/tegra/phy-tegra194-p2u.c
++++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+@@ -7,12 +7,15 @@
+  * Author: Vidya Sagar <vidyas@nvidia.com>
+  */
  
-+			interrupts = <0 336 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 0>;
-+
- 			#phy-cells = <0>;
- 		};
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/phy/phy.h>
++#include <soc/tegra/bpmp.h>
++#include <soc/tegra/bpmp-abi.h>
  
-@@ -1117,6 +1122,11 @@ p2u_hsio_1: phy@3e10000 {
- 			reg = <0x03e10000 0x10000>;
- 			reg-names = "ctl";
+ #define P2U_CONTROL_CMN			0x74
+ #define P2U_CONTROL_CMN_ENABLE_L2_EXIT_RATE_CHANGE		BIT(13)
+@@ -31,14 +34,57 @@
+ #define P2U_DIR_SEARCH_CTRL				0xd4
+ #define P2U_DIR_SEARCH_CTRL_GEN4_FINE_GRAIN_SEARCH_TWICE	BIT(18)
  
-+			interrupts = <0 337 0x04>;
-+			interrupt-names = "intr";
++#define P2U_RX_MARGIN_SW_INT_EN		0xe0
++#define P2U_RX_MARGIN_SW_INT_EN_READINESS		BIT(0)
++#define P2U_RX_MARGIN_SW_INT_EN_MARGIN_START		BIT(1)
++#define P2U_RX_MARGIN_SW_INT_EN_MARGIN_CHANGE		BIT(2)
++#define P2U_RX_MARGIN_SW_INT_EN_MARGIN_STOP		BIT(3)
 +
-+			nvidia,bpmp = <&bpmp 1>;
++#define P2U_RX_MARGIN_SW_INT		0xe4
++#define P2U_RX_MARGIN_SW_INT_MASK			0xf
++#define P2U_RX_MARGIN_SW_INT_READINESS			BIT(0)
++#define P2U_RX_MARGIN_SW_INT_MARGIN_START		BIT(1)
++#define P2U_RX_MARGIN_SW_INT_MARGIN_CHANGE		BIT(2)
++#define P2U_RX_MARGIN_SW_INT_MARGIN_STOP		BIT(3)
 +
- 			#phy-cells = <0>;
- 		};
++#define P2U_RX_MARGIN_SW_STATUS		0xe8
++#define P2U_RX_MARGIN_SW_STATUS_MARGIN_SW_READY		BIT(0)
++#define P2U_RX_MARGIN_SW_STATUS_MARGIN_READY		BIT(1)
++#define P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_STATUS	BIT(2)
++#define P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_ERROR_STATUS	BIT(3)
++
++#define P2U_RX_MARGIN_CTRL		0xec
++
++#define P2U_RX_MARGIN_STATUS		0xf0
++#define P2U_RX_MARGIN_STATUS_ERRORS_MASK		0xffff
++
++enum margin_state {
++	RX_MARGIN_START_CHANGE = 1,
++	RX_MARGIN_STOP,
++	RX_MARGIN_GET_MARGIN,
++};
++
+ struct tegra_p2u_of_data {
+ 	bool one_dir_search;
++	bool lane_margin;
+ };
  
-@@ -1125,6 +1135,11 @@ p2u_hsio_2: phy@3e20000 {
- 			reg = <0x03e20000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 338 0x04>;
-+			interrupt-names = "intr";
+ struct tegra_p2u {
+ 	void __iomem *base;
+ 	bool skip_sz_protection_en; /* Needed to support two retimers */
+ 	struct tegra_p2u_of_data *of_data;
++	struct device *dev;
++	struct tegra_bpmp *bpmp;
++	u32 id;
++	atomic_t margin_state;
++};
 +
-+			nvidia,bpmp = <&bpmp 2>;
-+
- 			#phy-cells = <0>;
- 		};
++struct margin_ctrl {
++	u32 en:1;
++	u32 clr:1;
++	u32 x:7;
++	u32 y:6;
++	u32 n_blks:8;
+ };
  
-@@ -1133,6 +1148,11 @@ p2u_hsio_3: phy@3e30000 {
- 			reg = <0x03e30000 0x10000>;
- 			reg-names = "ctl";
+ static inline void p2u_writel(struct tegra_p2u *phy, const u32 value,
+@@ -83,6 +129,14 @@ static int tegra_p2u_power_on(struct phy *x)
+ 		p2u_writel(phy, val, P2U_DIR_SEARCH_CTRL);
+ 	}
  
-+			interrupts = <0 339 0x04>;
-+			interrupt-names = "intr";
++	if (phy->of_data->lane_margin) {
++		p2u_writel(phy, P2U_RX_MARGIN_SW_INT_EN_READINESS |
++			   P2U_RX_MARGIN_SW_INT_EN_MARGIN_START |
++			   P2U_RX_MARGIN_SW_INT_EN_MARGIN_CHANGE |
++			   P2U_RX_MARGIN_SW_INT_EN_MARGIN_STOP,
++			   P2U_RX_MARGIN_SW_INT_EN);
++	}
 +
-+			nvidia,bpmp = <&bpmp 3>;
-+
- 			#phy-cells = <0>;
- 		};
+ 	return 0;
+ }
  
-@@ -1141,6 +1161,11 @@ p2u_hsio_4: phy@3e40000 {
- 			reg = <0x03e40000 0x10000>;
- 			reg-names = "ctl";
+@@ -104,17 +158,195 @@ static const struct phy_ops ops = {
+ 	.owner = THIS_MODULE,
+ };
  
-+			interrupts = <0 340 0x04>;
-+			interrupt-names = "intr";
++static int tegra_p2u_set_margin_control(struct tegra_p2u *phy, u32 ctrl_data)
++{
++	struct tegra_bpmp_message msg;
++	struct mrq_uphy_response resp;
++	struct mrq_uphy_request req;
++	struct margin_ctrl ctrl;
++	int err;
 +
-+			nvidia,bpmp = <&bpmp 4>;
++	memcpy(&ctrl, &ctrl_data, sizeof(ctrl_data));
 +
- 			#phy-cells = <0>;
- 		};
++	memset(&req, 0, sizeof(req));
++	memset(&resp, 0, sizeof(resp));
++
++	req.lane = phy->id;
++	req.cmd = CMD_UPHY_PCIE_LANE_MARGIN_CONTROL;
++	req.uphy_set_margin_control.en = ctrl.en;
++	req.uphy_set_margin_control.clr = ctrl.clr;
++	req.uphy_set_margin_control.x = ctrl.x;
++	req.uphy_set_margin_control.y = ctrl.y;
++	req.uphy_set_margin_control.nblks = ctrl.n_blks;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.mrq = MRQ_UPHY;
++	msg.tx.data = &req;
++	msg.tx.size = sizeof(req);
++	msg.rx.data = &resp;
++	msg.rx.size = sizeof(resp);
++
++	err = tegra_bpmp_transfer(phy->bpmp, &msg);
++	if (err)
++		return err;
++	if (msg.rx.ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int tegra_p2u_get_margin_status(struct tegra_p2u *phy, u32 *val)
++{
++	struct tegra_bpmp_message msg;
++	struct mrq_uphy_response resp;
++	struct mrq_uphy_request req;
++	int rc;
++
++	req.lane = phy->id;
++	req.cmd = CMD_UPHY_PCIE_LANE_MARGIN_STATUS;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.mrq = MRQ_UPHY;
++	msg.tx.data = &req;
++	msg.tx.size = sizeof(req);
++	msg.rx.data = &resp;
++	msg.rx.size = sizeof(resp);
++
++	rc = tegra_bpmp_transfer(phy->bpmp, &msg);
++	if (rc)
++		return rc;
++	if (msg.rx.ret)
++		return -EINVAL;
++
++	*val = resp.uphy_get_margin_status.status;
++
++	return 0;
++}
++
++static irqreturn_t tegra_p2u_irq_thread(int irq, void *arg)
++{
++	struct tegra_p2u *phy = arg;
++	struct device *dev = phy->dev;
++	u32 val;
++	int state, ret;
++
++	do {
++		state = atomic_read(&phy->margin_state);
++		switch (state) {
++		case RX_MARGIN_START_CHANGE:
++		case RX_MARGIN_STOP:
++			/* Read margin control data and copy it to UPHY. */
++			val = p2u_readl(phy, P2U_RX_MARGIN_CTRL);
++			ret = tegra_p2u_set_margin_control(phy, val);
++			if (ret) {
++				dev_err(dev, "failed to set margin control: %d\n", ret);
++				break;
++			}
++
++			p2u_writel(phy, P2U_RX_MARGIN_SW_STATUS_MARGIN_SW_READY |
++				   P2U_RX_MARGIN_SW_STATUS_MARGIN_READY |
++				   P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_STATUS |
++				   P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_ERROR_STATUS,
++				   P2U_RX_MARGIN_SW_STATUS);
++
++			usleep_range(10, 11);
++
++			if (state == RX_MARGIN_STOP) {
++				/* Return from the loop if PCIe ctrl issues margin stop cmd. */
++				p2u_writel(phy, P2U_RX_MARGIN_SW_STATUS_MARGIN_SW_READY |
++					   P2U_RX_MARGIN_SW_STATUS_MARGIN_READY |
++					   P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_ERROR_STATUS,
++					   P2U_RX_MARGIN_SW_STATUS);
++
++				return IRQ_HANDLED;
++			}
++
++			atomic_set(&phy->margin_state, RX_MARGIN_GET_MARGIN);
++			break;
++
++		case RX_MARGIN_GET_MARGIN:
++			/*
++			 * Read margin status from UPHY and program it in P2U_RX_MARGIN_STATUS
++			 * register. This data will reflect in PCIe controller's margining lane
++			 * status register.
++			 */
++			ret = tegra_p2u_get_margin_status(phy, &val);
++			if (ret) {
++				dev_err(dev, "failed to get margin status: %d\n", ret);
++				break;
++			}
++			p2u_writel(phy, val & P2U_RX_MARGIN_STATUS_ERRORS_MASK,
++				   P2U_RX_MARGIN_STATUS);
++
++			p2u_writel(phy, P2U_RX_MARGIN_SW_STATUS_MARGIN_SW_READY |
++				   P2U_RX_MARGIN_SW_STATUS_MARGIN_READY |
++				   P2U_RX_MARGIN_SW_STATUS_PHY_MARGIN_ERROR_STATUS,
++				   P2U_RX_MARGIN_SW_STATUS);
++
++			msleep(20);
++			break;
++
++		default:
++			dev_err(dev, "Invalid margin state: %d\n", state);
++			return IRQ_HANDLED;
++		};
++	} while (1);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t tegra_p2u_irq_handler(int irq, void *arg)
++{
++	struct tegra_p2u *phy = (struct tegra_p2u *)arg;
++	u32 val = 0;
++	irqreturn_t ret = IRQ_HANDLED;
++
++	val = p2u_readl(phy, P2U_RX_MARGIN_SW_INT);
++	p2u_writel(phy, val, P2U_RX_MARGIN_SW_INT);
++
++	/*
++	 * When PCIe link trains to Gen4, P2U HW generate READINESS interrupt. Set MARGIN_SW_READY
++	 * and MARGIN_READY bits to enable P2U HW sample lane margin control data from PCIe
++	 * controller's configuration space.
++	 */
++	if (val & P2U_RX_MARGIN_SW_INT_READINESS)
++		p2u_writel(phy, P2U_RX_MARGIN_SW_STATUS_MARGIN_SW_READY |
++			   P2U_RX_MARGIN_SW_STATUS_MARGIN_READY,
++			   P2U_RX_MARGIN_SW_STATUS);
++
++	/*
++	 * P2U HW generates MARGIN_START or MARGIN_CHANGE interrupt after it copied margin control
++	 * data to P2U_RX_MARGIN_CTRL register.
++	 */
++	if ((val & P2U_RX_MARGIN_SW_INT_MARGIN_START) ||
++	    (val & P2U_RX_MARGIN_SW_INT_MARGIN_CHANGE)) {
++		atomic_set(&phy->margin_state, RX_MARGIN_START_CHANGE);
++		ret = IRQ_WAKE_THREAD;
++	}
++
++	/* P2U HW generates MARGIN_STOP interrupt when PCIe controller issues margin stop cmd. */
++	if (val & P2U_RX_MARGIN_SW_INT_MARGIN_STOP)
++		atomic_set(&phy->margin_state, RX_MARGIN_STOP);
++
++	return ret;
++}
++
+ static int tegra_p2u_probe(struct platform_device *pdev)
+ {
+ 	struct phy_provider *phy_provider;
+ 	struct device *dev = &pdev->dev;
+ 	struct phy *generic_phy;
+ 	struct tegra_p2u *phy;
++	int ret;
++	u32 irq;
  
-@@ -1149,6 +1174,11 @@ p2u_hsio_5: phy@3e50000 {
- 			reg = <0x03e50000 0x10000>;
- 			reg-names = "ctl";
+ 	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+ 	if (!phy)
+ 		return -ENOMEM;
  
-+			interrupts = <0 341 0x04>;
-+			interrupt-names = "intr";
++	phy->dev = dev;
++	platform_set_drvdata(pdev, phy);
 +
-+			nvidia,bpmp = <&bpmp 5>;
-+
- 			#phy-cells = <0>;
- 		};
+ 	phy->of_data =
+ 		(struct tegra_p2u_of_data *)of_device_get_match_data(dev);
+ 	if (!phy->of_data)
+@@ -140,15 +372,54 @@ static int tegra_p2u_probe(struct platform_device *pdev)
+ 	if (IS_ERR(phy_provider))
+ 		return PTR_ERR(phy_provider);
  
-@@ -1157,6 +1187,11 @@ p2u_hsio_6: phy@3e60000 {
- 			reg = <0x03e60000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 342 0x04>;
-+			interrupt-names = "intr";
++	if (phy->of_data->lane_margin) {
++		irq = platform_get_irq_byname(pdev, "intr");
++		if (irq < 0) {
++			dev_err(dev, "failed to get intr interrupt\n");
++			return irq;
++		}
 +
-+			nvidia,bpmp = <&bpmp 6>;
++		ret = devm_request_threaded_irq(dev, irq, tegra_p2u_irq_handler,
++						tegra_p2u_irq_thread, 0,
++						"tegra-p2u-intr", phy);
++		if (ret) {
++			dev_err(dev, "failed to request intr irq\n");
++			return ret;
++		}
 +
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1165,6 +1200,11 @@ p2u_hsio_7: phy@3e70000 {
- 			reg = <0x03e70000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 343 0x04>;
-+			interrupt-names = "intr";
++		ret = of_property_read_u32_index(dev->of_node, "nvidia,bpmp",
++						 1, &phy->id);
++		if (ret) {
++			dev_err(dev, "failed to read P2U id: %d\n", ret);
++			return ret;
++		}
 +
-+			nvidia,bpmp = <&bpmp 7>;
++		phy->bpmp = tegra_bpmp_get(dev);
++		if (IS_ERR(phy->bpmp))
++			return PTR_ERR(phy->bpmp);
++	}
 +
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1173,6 +1213,11 @@ p2u_nvhs_0: phy@3e90000 {
- 			reg = <0x03e90000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 344 0x04>;
-+			interrupt-names = "intr";
++	return 0;
++}
 +
-+			nvidia,bpmp = <&bpmp 8>;
++static int tegra_p2u_remove(struct platform_device *pdev)
++{
++	struct tegra_p2u *phy = platform_get_drvdata(pdev);
 +
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1181,6 +1226,11 @@ p2u_nvhs_1: phy@3ea0000 {
- 			reg = <0x03ea0000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 345 0x04>;
-+			interrupt-names = "intr";
++	if (phy->of_data->lane_margin)
++		tegra_bpmp_put(phy->bpmp);
 +
-+			nvidia,bpmp = <&bpmp 9>;
-+
- 			#phy-cells = <0>;
- 		};
+ 	return 0;
+ }
  
-@@ -1189,6 +1239,11 @@ p2u_nvhs_2: phy@3eb0000 {
- 			reg = <0x03eb0000 0x10000>;
- 			reg-names = "ctl";
+ static const struct tegra_p2u_of_data tegra194_p2u_of_data = {
+ 	.one_dir_search = false,
++	.lane_margin = false,
+ };
  
-+			interrupts = <0 346 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 10>;
-+
- 			#phy-cells = <0>;
- 		};
+ static const struct tegra_p2u_of_data tegra234_p2u_of_data = {
+ 	.one_dir_search = true,
++	.lane_margin = true,
+ };
  
-@@ -1197,6 +1252,11 @@ p2u_nvhs_3: phy@3ec0000 {
- 			reg = <0x03ec0000 0x10000>;
- 			reg-names = "ctl";
+ static const struct of_device_id tegra_p2u_id_table[] = {
+@@ -166,6 +437,7 @@ MODULE_DEVICE_TABLE(of, tegra_p2u_id_table);
  
-+			interrupts = <0 347 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 11>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1205,6 +1265,11 @@ p2u_nvhs_4: phy@3ed0000 {
- 			reg = <0x03ed0000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 348 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 12>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1213,6 +1278,11 @@ p2u_nvhs_5: phy@3ee0000 {
- 			reg = <0x03ee0000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 349 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 13>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1221,6 +1291,11 @@ p2u_nvhs_6: phy@3ef0000 {
- 			reg = <0x03ef0000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 350 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 14>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1229,6 +1304,11 @@ p2u_nvhs_7: phy@3f00000 {
- 			reg = <0x03f00000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 351 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 15>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1237,6 +1317,11 @@ p2u_gbe_0: phy@3f20000 {
- 			reg = <0x03f20000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 203 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 16>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1245,6 +1330,11 @@ p2u_gbe_1: phy@3f30000 {
- 			reg = <0x03f30000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 220 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 17>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1253,6 +1343,11 @@ p2u_gbe_2: phy@3f40000 {
- 			reg = <0x03f40000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 221 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 18>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1261,6 +1356,11 @@ p2u_gbe_3: phy@3f50000 {
- 			reg = <0x03f50000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 222 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 19>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1269,6 +1369,11 @@ p2u_gbe_4: phy@3f60000 {
- 			reg = <0x03f60000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 108 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 20>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1277,6 +1382,11 @@ p2u_gbe_5: phy@3f70000 {
- 			reg = <0x03f70000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 109 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 21>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1285,6 +1395,11 @@ p2u_gbe_6: phy@3f80000 {
- 			reg = <0x03f80000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 110 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 22>;
-+
- 			#phy-cells = <0>;
- 		};
- 
-@@ -1293,6 +1408,11 @@ p2u_gbe_7: phy@3f90000 {
- 			reg = <0x03f90000 0x10000>;
- 			reg-names = "ctl";
- 
-+			interrupts = <0 111 0x04>;
-+			interrupt-names = "intr";
-+
-+			nvidia,bpmp = <&bpmp 23>;
-+
- 			#phy-cells = <0>;
- 		};
- 
+ static struct platform_driver tegra_p2u_driver = {
+ 	.probe = tegra_p2u_probe,
++	.remove = tegra_p2u_remove,
+ 	.driver = {
+ 		.name = "tegra194-p2u",
+ 		.of_match_table = tegra_p2u_id_table,
 -- 
 2.25.1
 
