@@ -2,109 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C49163753A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 10:35:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C9E637559
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 10:37:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbiKXJfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 04:35:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        id S229536AbiKXJh4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 04:37:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiKXJfA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 04:35:00 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CD828718
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 01:34:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669282497; x=1700818497;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0xYbEpL+IFj58Bv/+I9mstI1nkwmltbvPfaH7RUZy8g=;
-  b=Z2oNhztmP1/pMN1gtD/gMIUEB2FCHXAkgaiLqkH9nPOocs9wnr4evPN3
-   aBXlCEzNtHl9mBrllF6IErvioQ6dghdEF4jOJVN7nGj3TFkKaZmsAgJWc
-   5GBPVXGAsPICnm8unnImFdgsi7c9KQcip7XiZVh0dfkNOJqIbhxB7A/gg
-   /v2wEOBa9RX2FK5IghUevU1QiE9jp9v//CEf9CnLzMZbl1RnyF4g8Vw+i
-   bqJYahOctMBXDHJ+zs6AluCaQ/9NvlfWqWijnmfY4qe+zxoKMQDbIzCiN
-   Ib/fWfLUqRsAuLkHbl2CO2G2FR3lgott8/JxxYUTbV2UKPMEEeyNHDj8v
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="314297473"
-X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
-   d="scan'208";a="314297473"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2022 01:34:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="642261983"
-X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
-   d="scan'208";a="642261983"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 24 Nov 2022 01:34:53 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 07019128; Thu, 24 Nov 2022 11:35:19 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/portdrv: Do not require an interrupt for all AER capable ports
-Date:   Thu, 24 Nov 2022 11:35:19 +0200
-Message-Id: <20221124093519.85363-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S229459AbiKXJhz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 04:37:55 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C561A1F62F;
+        Thu, 24 Nov 2022 01:37:54 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1669282673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tjizbh8hWoBsQRunZtQQh9g5OJSznOxQIsaJyKhrvY4=;
+        b=C9MBI36lXTOK5rNSl4tj3DGptwslIqTgmLItfx0CKyB3ne+Dd0tmdMIfiz209fcA9vixlx
+        2teLzuNjJ8ljmoIvc7Xy1N2SYBSUgRWzvAlTjDHemyxp0BsUJarg1y+wCqCVqn+JcQu/Ti
+        qnaDwwdOar5iGkhrs8YwASq6UweHRtprwNGW5v5TkHd8ghGTJIpIYU+1bAYh5ALMRY7k7v
+        s8CJ0i2EMsuZ7cn8F3OuXqa9AxR4WdK5iG8gYhcWjvoAeOZlXdlJNPfNvW7ZTVirlCKiAS
+        OUt2Bz+zaiepmEr8bANxSA3/kA9+qm9vFhqRVw9qwLzimcENlYADSD85oa7JOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1669282673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tjizbh8hWoBsQRunZtQQh9g5OJSznOxQIsaJyKhrvY4=;
+        b=302zCTmDM6qHG2AccjtKzwe2xp7tI80vPQ9FLQhiYOUW7KQ0JmmNLbD94Oq9fCUBCFgotm
+        jDHDMlJDWpl50xBw==
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: RE: [patch V2 31/33] iommu/vt-d: Enable PCI/IMS
+In-Reply-To: <BN9PR11MB527650A018BE7BF422BDA2F58C0F9@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20221121083657.157152924@linutronix.de>
+ <20221121091328.184455059@linutronix.de>
+ <BN9PR11MB527650A018BE7BF422BDA2F58C0F9@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date:   Thu, 24 Nov 2022 10:37:53 +0100
+Message-ID: <87ilj4d766.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Only Root Ports and Event Collectors use MSI for AER. PCIe Switch ports
-or endpoints on the other hand only send messages (that get collected by
-the former). For this reason do not require PCIe switch ports and
-endpoints to use interrupt if they support AER.
+On Thu, Nov 24 2022 at 03:17, Kevin Tian wrote:
+>>  static const struct msi_parent_ops dmar_msi_parent_ops = {
+>> -	.supported_flags	= X86_VECTOR_MSI_FLAGS_SUPPORTED |
+>> MSI_FLAG_MULTI_PCI_MSI,
+>> +	.supported_flags	= X86_VECTOR_MSI_FLAGS_SUPPORTED |
+>> +				  MSI_FLAG_MULTI_PCI_MSI |
+>> +				  MSI_FLAG_PCI_IMS,
+>>  	.prefix			= "IR-",
+>>  	.init_dev_msi_info	= msi_parent_init_dev_msi_info,
+>>  };
+>
+> vIR is already available on vIOMMU today [1].
+>
+> Fortunately both intel/amd IOMMU has a way to detect whether it's a vIOMMU.
+>
+> For intel it's cap_caching_mode().
+>
+> For AMD it's amd_iommu_np_cache.
+>
+> Then MSI_FLAG_PCI_IMS should be set only on physical IOMMU.
 
-This allows portdrv to attach to recent Intel PCIe switch ports that
-don't declare MSI or legacy interrupts.
+Ok. Let me fix that then.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/pcie/portdrv_core.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+But that made me read back some more.
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 1ac7fec47d6f..1b1c386e50c4 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -164,7 +164,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
-  */
- static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
- {
--	int ret, i;
-+	int ret, i, type;
- 
- 	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
- 		irqs[i] = -1;
-@@ -177,6 +177,19 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
- 	if ((mask & PCIE_PORT_SERVICE_PME) && pcie_pme_no_msi())
- 		goto legacy_irq;
- 
-+	/*
-+	 * Only root ports and event collectors use MSI for errors. Endpoints,
-+	 * switch ports send messages to them but don't use MSI for that (PCIe
-+	 * 5.0 sec 6.2.3.2).
-+	 */
-+	type = pci_pcie_type(dev);
-+	if ((mask & PCIE_PORT_SERVICE_AER) &&
-+	    type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_RC_EC)
-+		mask &= ~PCIE_PORT_SERVICE_AER;
-+
-+	if (!mask)
-+		return 0;
-+
- 	/* Try to use MSI-X or MSI if supported */
- 	if (pcie_port_enable_irq_vec(dev, irqs, mask) == 0)
- 		return 0;
--- 
-2.35.1
+Jason said, that the envisioned Mellanox use case does not depend on the
+IOMMU because the card itself has one which takes care of the
+protections.
 
+How are we going to resolve that dilemma?
+
+Thanks,
+
+        tglx
