@@ -2,98 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8267F63751E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 10:26:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C49163753A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 10:35:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229740AbiKXJ01 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 04:26:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
+        id S229463AbiKXJfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 04:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiKXJ00 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 04:26:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7449611605A
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 01:26:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 11571B8272B
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 09:26:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C49B8C433C1;
-        Thu, 24 Nov 2022 09:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669281982;
-        bh=G3Nvx4eFIEdvlFlwDl+MkthdYtBQ3D2oxgXQJ3iZjCo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=DCOcd2mHzGFyDzDp0ouPzbjTuDyxfagJ3lK3OJrxMiUQ7KSGrfQaN6irWdcSveY23
-         9qX7vhKYH9fKAlZFSV4JJzw1qaD8OFudv0qsHPILA0n+686uXsBAjWqXBksVxJkmcW
-         0gluAT6veiEZdRmT0r3EEBMSQdbegL6Zg7xaUy0PM9Lo2jRC7Qp2gKSJvzYm0M6Tfe
-         oLZ2/Fve+EXmQwQAmX72Mvxsy3pgMLjtTdypqaiGWAtfmv95ZueuQUGTmRmDdfjsUO
-         HPGrA5nC9DSjLeGdWhPanScrkw6emCznZc07HxmDFFXXmvWmnIGW+Pb3B7J90GBtal
-         AknKcKP25fx2A==
-Message-ID: <1eb8a559-8cef-1093-0ff3-bfbfeceff60f@kernel.org>
-Date:   Thu, 24 Nov 2022 10:26:18 +0100
+        with ESMTP id S229436AbiKXJfA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 04:35:00 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CD828718
+        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 01:34:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669282497; x=1700818497;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0xYbEpL+IFj58Bv/+I9mstI1nkwmltbvPfaH7RUZy8g=;
+  b=Z2oNhztmP1/pMN1gtD/gMIUEB2FCHXAkgaiLqkH9nPOocs9wnr4evPN3
+   aBXlCEzNtHl9mBrllF6IErvioQ6dghdEF4jOJVN7nGj3TFkKaZmsAgJWc
+   5GBPVXGAsPICnm8unnImFdgsi7c9KQcip7XiZVh0dfkNOJqIbhxB7A/gg
+   /v2wEOBa9RX2FK5IghUevU1QiE9jp9v//CEf9CnLzMZbl1RnyF4g8Vw+i
+   bqJYahOctMBXDHJ+zs6AluCaQ/9NvlfWqWijnmfY4qe+zxoKMQDbIzCiN
+   Ib/fWfLUqRsAuLkHbl2CO2G2FR3lgott8/JxxYUTbV2UKPMEEeyNHDj8v
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="314297473"
+X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
+   d="scan'208";a="314297473"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2022 01:34:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="642261983"
+X-IronPort-AV: E=Sophos;i="5.96,190,1665471600"; 
+   d="scan'208";a="642261983"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 24 Nov 2022 01:34:53 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 07019128; Thu, 24 Nov 2022 11:35:19 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI/portdrv: Do not require an interrupt for all AER capable ports
+Date:   Thu, 24 Nov 2022 11:35:19 +0200
+Message-Id: <20221124093519.85363-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v6 1/5] dt-bindings: PCI: ti,j721e-pci-*: add checks for
- num-lanes
-Content-Language: en-US
-To:     Matt Ranostay <mranostay@ti.com>
-Cc:     vigneshr@ti.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20221115150335.501502-1-mranostay@ti.com>
- <20221115150335.501502-2-mranostay@ti.com>
- <36a9ac00-669d-08ae-558d-c85fd9715cb3@kernel.org> <Y38kJ0nEBf+Mztpe@ubuntu>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <Y38kJ0nEBf+Mztpe@ubuntu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/11/2022 08:58, Matt Ranostay wrote:
-> On Wed, Nov 23, 2022 at 05:04:15PM +0100, Krzysztof Kozlowski wrote:
->> On 15/11/2022 16:03, Matt Ranostay wrote:
->>> Add num-lanes schema checks based on compatible string on available
->>> lanes for that platform.
->>>
->>> Signed-off-by: Matt Ranostay <mranostay@ti.com>
->>> ---
->>>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 28 +++++++++++++++++--
->>>  .../bindings/pci/ti,j721e-pci-host.yaml       | 28 +++++++++++++++++--
->>>  2 files changed, 50 insertions(+), 6 deletions(-)
->>
->> Please use scripts/get_maintainers.pl to get a list of necessary people
->> and lists to CC.  It might happen, that command when run on an older
->> kernel, gives you outdated entries.  Therefore please be sure you base
->> your patches on recent Linux kernel.
->>
->> You miss not only people but also lists, meaning this will not be
->> automatically tested.
->>
-> 
-> Noted. Reran script with --git as well and it picked up a few additional people
-> to Cc.
+Only Root Ports and Event Collectors use MSI for AER. PCIe Switch ports
+or endpoints on the other hand only send messages (that get collected by
+the former). For this reason do not require PCIe switch ports and
+endpoints to use interrupt if they support AER.
 
-No need for --git. Just run it normally and Cc all folks listed as
-reviewer, maintainer/supporter and all the lists. That's one simple
-command: scripts/get_maintainer.pl ./*.patch
-(which can be easily automated and combined with git send-email / bash
-aliases or scripts).
+This allows portdrv to attach to recent Intel PCIe switch ports that
+don't declare MSI or legacy interrupts.
 
-So don't add some unusual or random addresses, just add the *required*
-addresses.
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/pcie/portdrv_core.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 1ac7fec47d6f..1b1c386e50c4 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -164,7 +164,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+  */
+ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+ {
+-	int ret, i;
++	int ret, i, type;
+ 
+ 	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+ 		irqs[i] = -1;
+@@ -177,6 +177,19 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+ 	if ((mask & PCIE_PORT_SERVICE_PME) && pcie_pme_no_msi())
+ 		goto legacy_irq;
+ 
++	/*
++	 * Only root ports and event collectors use MSI for errors. Endpoints,
++	 * switch ports send messages to them but don't use MSI for that (PCIe
++	 * 5.0 sec 6.2.3.2).
++	 */
++	type = pci_pcie_type(dev);
++	if ((mask & PCIE_PORT_SERVICE_AER) &&
++	    type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_RC_EC)
++		mask &= ~PCIE_PORT_SERVICE_AER;
++
++	if (!mask)
++		return 0;
++
+ 	/* Try to use MSI-X or MSI if supported */
+ 	if (pcie_port_enable_irq_vec(dev, irqs, mask) == 0)
+ 		return 0;
+-- 
+2.35.1
 
