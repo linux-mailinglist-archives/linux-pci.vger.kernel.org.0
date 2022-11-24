@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03DDB63816B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:25:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC1C63816D
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 00:25:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiKXXZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 18:25:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
+        id S229698AbiKXXZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 18:25:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiKXXYx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 18:24:53 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E193A65A1;
-        Thu, 24 Nov 2022 15:24:31 -0800 (PST)
-Message-ID: <20221124230314.163043028@linutronix.de>
+        with ESMTP id S229813AbiKXXYz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 18:24:55 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6415287555;
+        Thu, 24 Nov 2022 15:24:34 -0800 (PST)
+Message-ID: <20221124230314.220788011@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669332269;
+        s=2020; t=1669332271;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=1/0X92agTvjRjQzuL4lsTq7huP6SoYkhEuMMwl1ZamE=;
-        b=hwD5d3aqQLl2DGymQxv0DOqxN2X0T2oe+RcE6wc2WBaEjdPcVtK203DQyFSfCaPwzTPknV
-        qq/xtxoYKPCexWPCPRjqetiesdM8jxRr1/jq+F3VMaT3EEys9bTY8x3OpXEmFggG889XJ2
-        qV9rpXdgyWUI9neFVAOL5rx+xXcTgAi7d+8MLt8/dfCHqOR0UOhXNd/8SYAHxpDWioB931
-        2iPY8empjkEDpJ3MBqLrfRGN6H4sHj/x8Lao0FE9dHylp7Y4yq6F0RJz9Jt8QuDGZ+Y8Gq
-        DhPS/CwCDJsMc6sO0AgxK1Q08dlN+mbZmuATyZZ9WzEkAejnQXHH/OyoViXTEg==
+         references:references; bh=01JZ04pCVGnanIjdp9eHgMGQKSfrcBXNPjV3qqO7Obo=;
+        b=z3pU7RGoRRPgJeppy54pT/zSr0ya+l0FCtfGncBlf9ORM6MT/mfaqyJccbZ36bsJN1R3u4
+        6bagjSANXEOIoZejSfoy59BkDGjaMqEGXYZmfANOsHOVbC6vPGyC8X9eVj8MG0UyEf8DRd
+        JOEvQ6mwoP2r5W3H8Ms7C2OuFfbRl9W3FTWgoPXmhrqePEyiPQspNZqB6NVaD0nJPZ1NAk
+        hJXMUWS94xkUVxJNcUkfLrfOwMfK6Hpo+Z0+U7H6moQfZZNt05aqTzGgeFh0sYa8N+vunn
+        NNR0JMkUenc2zaVWlMJZiXkZRggc+AtlkQgZWsf/gn5yrKne+qEbl5EOqS100g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669332269;
+        s=2020e; t=1669332271;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=1/0X92agTvjRjQzuL4lsTq7huP6SoYkhEuMMwl1ZamE=;
-        b=+qxLZDiyXYQT2USH+0qUG2LwZo4EgBYRce9frjtPYQCJ0p7/zkLObQUhsheUPbDNlPdd5P
-        aM4o74JQYSybbZBA==
+         references:references; bh=01JZ04pCVGnanIjdp9eHgMGQKSfrcBXNPjV3qqO7Obo=;
+        b=MjDMTJsrMbgqwTfGAYjZodRyQW/x3zG+c4Cl4Se2ECFN6ImiNiJ6IcN9btmLMxg4l44O6L
+        rAJuGkLn9aRSznAw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -48,11 +48,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: [patch V3 13/22] genirq/msi: Make descriptor allocation device domain aware
+Subject: [patch V3 14/22] genirq/msi: Make descriptor freeing domain aware
 References: <20221124225331.464480443@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 25 Nov 2022 00:24:29 +0100 (CET)
+Date:   Fri, 25 Nov 2022 00:24:30 +0100 (CET)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,104 +62,135 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Change the descriptor allocation and insertion functions to take a domain
-id to prepare for the upcoming multi MSI domain per device support.
+Change the descriptor free functions to take a domain id to prepare for the
+upcoming multi MSI domain per device support.
+
+To avoid changing and extending the interfaces over and over use an core
+internal control struct and hand the pointer through the various functions.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
 V3: Adopt to the domain/xarray storage change
 ---
- include/linux/msi.h |   16 +++++++++++++++-
- kernel/irq/msi.c    |   20 ++++++++++++--------
- 2 files changed, 27 insertions(+), 9 deletions(-)
+ include/linux/msi.h |   19 +++++++++++++++--
+ kernel/irq/msi.c    |   58 +++++++++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 65 insertions(+), 12 deletions(-)
 
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -286,7 +286,21 @@ static inline void msi_desc_set_iommu_co
+@@ -301,10 +301,25 @@ static inline int msi_insert_msi_desc(st
+ 	return msi_domain_insert_msi_desc(dev, MSI_DEFAULT_DOMAIN, init_desc);
  }
- #endif
  
--int msi_insert_msi_desc(struct device *dev, struct msi_desc *init_desc);
-+int msi_domain_insert_msi_desc(struct device *dev, unsigned int domid,
-+			       struct msi_desc *init_desc);
-+/**
-+ * msi_insert_msi_desc - Allocate and initialize a MSI descriptor in the
-+ *			 default irqdomain and insert it at @init_desc->msi_index
-+ * @dev:	Pointer to the device for which the descriptor is allocated
-+ * @init_desc:	Pointer to an MSI descriptor to initialize the new descriptor
+-void msi_free_msi_descs_range(struct device *dev, unsigned int first_index, unsigned int last_index);
++void msi_domain_free_msi_descs_range(struct device *dev, unsigned int domid,
++				     unsigned int first, unsigned int last);
+ 
+ /**
+- * msi_free_msi_descs - Free MSI descriptors of a device
++ * msi_free_msi_descs_range - Free a range of MSI descriptors of a device
++ *			      in the default irqdomain
 + *
-+ * Return: 0 on success or an appropriate failure code.
++ * @dev:	Device for which to free the descriptors
++ * @first:	Index to start freeing from (inclusive)
++ * @last:	Last index to be freed (inclusive)
 + */
-+static inline int msi_insert_msi_desc(struct device *dev, struct msi_desc *init_desc)
++static inline void msi_free_msi_descs_range(struct device *dev, unsigned int first,
++					    unsigned int last)
 +{
-+	return msi_domain_insert_msi_desc(dev, MSI_DEFAULT_DOMAIN, init_desc);
++	msi_domain_free_msi_descs_range(dev, MSI_DEFAULT_DOMAIN, first, last);
 +}
 +
- void msi_free_msi_descs_range(struct device *dev, unsigned int first_index, unsigned int last_index);
- 
- /**
++/**
++ * msi_free_msi_descs - Free all MSI descriptors of a device in the default irqdomain
+  * @dev:	Device to free the descriptors
+  */
+ static inline void msi_free_msi_descs(struct device *dev)
 --- a/kernel/irq/msi.c
 +++ b/kernel/irq/msi.c
-@@ -39,7 +39,7 @@ static inline int msi_sysfs_create_group
-  * Return: pointer to allocated &msi_desc on success or %NULL on failure
-  */
- static struct msi_desc *msi_alloc_desc(struct device *dev, int nvec,
--					const struct irq_affinity_desc *affinity)
-+				       const struct irq_affinity_desc *affinity)
- {
- 	struct msi_desc *desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+@@ -19,6 +19,18 @@
  
-@@ -64,9 +64,10 @@ static void msi_free_desc(struct msi_des
- 	kfree(desc);
- }
+ #include "internals.h"
  
--static int msi_insert_desc(struct msi_device_data *md, struct msi_desc *desc, unsigned int index)
-+static int msi_insert_desc(struct msi_device_data *md, struct msi_desc *desc,
-+			   unsigned int domid, unsigned int index)
- {
--	struct xarray *xa = &md->__domains[MSI_DEFAULT_DOMAIN].store;
-+	struct xarray *xa = &md->__domains[domid].store;
- 	int ret;
- 
- 	desc->msi_index = index;
-@@ -77,15 +78,17 @@ static int msi_insert_desc(struct msi_de
- }
- 
- /**
-- * msi_insert_msi_desc - Allocate and initialize a MSI descriptor and
-- *			 insert it at @init_desc->msi_index
-+ * msi_domain_insert_msi_desc - Allocate and initialize a MSI descriptor and
-+ *				insert it at @init_desc->msi_index
-  *
-  * @dev:	Pointer to the device for which the descriptor is allocated
-+ * @domid:	The id of the interrupt domain to which the desriptor is added
-  * @init_desc:	Pointer to an MSI descriptor to initialize the new descriptor
-  *
-  * Return: 0 on success or an appropriate failure code.
-  */
--int msi_insert_msi_desc(struct device *dev, struct msi_desc *init_desc)
-+int msi_domain_insert_msi_desc(struct device *dev, unsigned int domid,
-+			       struct msi_desc *init_desc)
- {
- 	struct msi_desc *desc;
- 
-@@ -97,7 +100,8 @@ int msi_insert_msi_desc(struct device *d
- 
- 	/* Copy type specific data to the new descriptor. */
- 	desc->pci = init_desc->pci;
--	return msi_insert_desc(dev->msi.data, desc, init_desc->msi_index);
++/**
++ * struct msi_ctrl - MSI internal management control structure
++ * @domid:	ID of the domain on which management operations should be done
++ * @first:	First (hardware) slot index to operate on
++ * @last:	Last (hardware) slot index to operate on
++ */
++struct msi_ctrl {
++	unsigned int			domid;
++	unsigned int			first;
++	unsigned int			last;
++};
 +
-+	return msi_insert_desc(dev->msi.data, desc, domid, init_desc->msi_index);
+ /* Invalid Xarray index which is outside of any searchable range */
+ #define MSI_XA_MAX_INDEX	(ULONG_MAX - 1)
+ /* The maximum domain size */
+@@ -151,22 +163,29 @@ static bool msi_desc_match(struct msi_de
+ 	return false;
  }
  
- /**
-@@ -120,7 +124,7 @@ static int msi_add_simple_msi_descs(stru
- 		desc = msi_alloc_desc(dev, 1, NULL);
- 		if (!desc)
- 			goto fail_mem;
--		ret = msi_insert_desc(dev->msi.data, desc, idx);
-+		ret = msi_insert_desc(dev->msi.data, desc, MSI_DEFAULT_DOMAIN, idx);
- 		if (ret)
- 			goto fail;
+-/**
+- * msi_free_msi_descs_range - Free MSI descriptors of a device
+- * @dev:		Device to free the descriptors
+- * @first_index:	Index to start freeing from
+- * @last_index:		Last index to be freed
+- */
+-void msi_free_msi_descs_range(struct device *dev, unsigned int first_index,
+-			      unsigned int last_index)
++static bool msi_ctrl_valid(struct device *dev, struct msi_ctrl *ctrl)
++{
++	if (WARN_ON_ONCE(ctrl->domid >= MSI_MAX_DEVICE_IRQDOMAINS ||
++			 ctrl->first > ctrl->last ||
++			 ctrl->first > MSI_MAX_INDEX ||
++			 ctrl->last > MSI_MAX_INDEX))
++		return false;
++	return true;
++}
++
++static void msi_domain_free_descs(struct device *dev, struct msi_ctrl *ctrl)
+ {
+-	struct xarray *xa = &dev->msi.data->__domains[MSI_DEFAULT_DOMAIN].store;
+ 	struct msi_desc *desc;
++	struct xarray *xa;
+ 	unsigned long idx;
+ 
+ 	lockdep_assert_held(&dev->msi.data->mutex);
+ 
+-	xa_for_each_range(xa, idx, desc, first_index, last_index) {
++	if (!msi_ctrl_valid(dev, ctrl))
++		return;
++
++	xa = &dev->msi.data->__domains[ctrl->domid].store;
++	xa_for_each_range(xa, idx, desc, ctrl->first, ctrl->last) {
+ 		xa_erase(xa, idx);
+ 
+ 		/* Leak the descriptor when it is still referenced */
+@@ -176,6 +195,25 @@ void msi_free_msi_descs_range(struct dev
  	}
+ }
+ 
++/**
++ * msi_domain_free_msi_descs_range - Free a range of MSI descriptors of a device in an irqdomain
++ * @dev:	Device for which to free the descriptors
++ * @domid:	Id of the domain to operate on
++ * @first:	Index to start freeing from (inclusive)
++ * @last:	Last index to be freed (inclusive)
++ */
++void msi_domain_free_msi_descs_range(struct device *dev, unsigned int domid,
++				     unsigned int first, unsigned int last)
++{
++	struct msi_ctrl ctrl = {
++		.domid	= domid,
++		.first	= first,
++		.last	= last,
++	};
++
++	msi_domain_free_descs(dev, &ctrl);
++}
++
+ void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ {
+ 	*msg = entry->msg;
 
