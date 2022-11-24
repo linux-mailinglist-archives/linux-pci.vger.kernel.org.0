@@ -2,133 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FC3637829
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 12:55:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C052363793D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Nov 2022 13:50:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbiKXLzu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Nov 2022 06:55:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        id S229475AbiKXMug (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Nov 2022 07:50:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbiKXLzt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 06:55:49 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95939C6218
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 03:55:48 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id b11so1219299pjp.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Nov 2022 03:55:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5tFoaZJ9Zngdk5YXFm9CRQu0l0Dt7f+Q0OVbqus0B9g=;
-        b=Szq1aC9Wra2IsZFqObHsGmeRI22JZDC77KB/fn/y5FDl1j/mH9t1bt2oRO2s/VsJg7
-         7++YyfrZAapEEDfLW0AwNAOxQj2JqhfS2eyYXsf83BRjBsaGqzALFQUn9U/JszeJRktf
-         4HqbJk+4e6lzOTNxBu3E14KsUMxicRA6V93jEnLg9JNNLXUcDSEIbwXmlHdBRVR0b9IJ
-         89QLi93nA9G6E7Cy9sfDxGpbYmsM/TtKM6qMLLLbwwcP7FdsCcg8PzWXqNKRVlzBaN7s
-         zesRFiiIFCpF7es4an9DB8E4QRu/X6DYVBbH4mUAbiePl2Xh9xTnkMT+Js/iC/OTZk0z
-         LILA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5tFoaZJ9Zngdk5YXFm9CRQu0l0Dt7f+Q0OVbqus0B9g=;
-        b=gxBV+0Z0TFjYRqgilIwCkuAHjYGhEF6Ag60x9lb/FDYB9aWRwyC41wuM0rTr084w8Y
-         u3qOzQmqN+G9OOfWPa7njmACBu6+XvdKO6rBwSBMywD0O36ecnF6Ug8xllQResvCoybf
-         ROkfhLNT2JWDv1BCXE701BUxe7hNqYr6uRyQcDDIOP5zWsFzk+80oPiJV4U4ggw4psjy
-         eNB503q7PMVLt9cZqE/vtLNGueN4Ab9TphzXcVnzj2LHIGmXk5jW3sKiLHdEPR4w9uum
-         J6OGN8FawIxPQhZH49xslKPhQXzuAJLyATcVM7fWUPbTDsiH+ViB5wfY3ykpAyICF5Ys
-         m0Cg==
-X-Gm-Message-State: ANoB5plOtbTb9Llpa/7dnoiBZnqDGs74KtXQooxT2BIHrMN1GPnWFMJS
-        0vdaNs5LJtBxg3lT9eebk3pR+jHjRy8KOg==
-X-Google-Smtp-Source: AA0mqf5ErK/yTLbHh6wS925owcGQFojLs0Qt5kfkDM8yW/n5AlgaTkNUM7UboZPZKsKTOdXfrMbQOA==
-X-Received: by 2002:a17:902:e294:b0:17c:620f:13ac with SMTP id o20-20020a170902e29400b0017c620f13acmr16312497plc.9.1669290948065;
-        Thu, 24 Nov 2022 03:55:48 -0800 (PST)
-Received: from [10.255.190.159] ([139.177.225.236])
-        by smtp.gmail.com with ESMTPSA id ij13-20020a170902ab4d00b0018685257c0dsm1139212plb.58.2022.11.24.03.55.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Nov 2022 03:55:47 -0800 (PST)
-Message-ID: <af5c0fb7-0de7-7ca4-4dab-16f41e1d8ec6@bytedance.com>
-Date:   Thu, 24 Nov 2022 19:55:39 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.0
-Subject: Re: [PATCH v3 0/9] PCI/AER: Fix and optimize usage of status clearing
- api
-Content-Language: en-US
-From:   Zhuo Chen <chenzhuo.1@bytedance.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     ruscur@russell.cc, oohall@gmail.com, fancer.lancer@gmail.com,
-        jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-        james.smart@broadcom.com, dick.kennedy@broadcom.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ntb@lists.linux.dev, linux-scsi@vger.kernel.org
-References: <20220928105946.12469-1-chenzhuo.1@bytedance.com>
- <17b88750-53c2-0653-045a-dde921e37e0c@bytedance.com>
-In-Reply-To: <17b88750-53c2-0653-045a-dde921e37e0c@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229506AbiKXMuf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Nov 2022 07:50:35 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B158E2BC;
+        Thu, 24 Nov 2022 04:50:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 076CA6204E;
+        Thu, 24 Nov 2022 12:50:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59DB3C433D6;
+        Thu, 24 Nov 2022 12:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669294233;
+        bh=owQPJcgBJ5OE4TDSQWZ6ga1q1Y8+GA4UPgz3kR3CBZs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r8p6qHo11zmmmbirwEPcToktZTwKXgo62jlbvLF0KF7rZ6PTHYdnDmdyjpQ9jhmpw
+         v7UhUUeJwtpqN+F9/mrhQ1iatWS9LrknsnRXQcqetisi2bE+SDOJj6B9I0BXuhvEHN
+         XiSJaKW9F/uJFfjqW/LsGP6HlVgFctpGhXz+XWOZcYNJgY+2z7K6Mn6NMe20qmMg8s
+         ekWG/nqZsWlBMPYt+h89KWeBRxotyXt655870ZDqrvqYu76C+yRCIF0v8M0RMRBWgq
+         LhWBCWPbZEjpf3nEsc9iknImf5g2N4xYvQDkhbng2uQJ4x4+VcOwOnUt6UxY2GDjjx
+         nS/3Ik87sf8ng==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oyBgU-008NK8-Tq;
+        Thu, 24 Nov 2022 12:50:31 +0000
+Date:   Thu, 24 Nov 2022 12:50:30 +0000
+Message-ID: <868rk0o6sp.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [patch V2 01/40] irqchip/irq-mvebu-icu: Fix works by chance pointer assignment
+In-Reply-To: <20221121140048.344525618@linutronix.de>
+References: <20221121135653.208611233@linutronix.de>
+        <20221121140048.344525618@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-Ping. Gentle reminder
-
-
-On 11/5/22 1:20 AM, Zhuo Chen wrote:
-> Hi Bjorn, a gentle reminder.
+On Mon, 21 Nov 2022 14:39:29 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Thanks and regards.
+> Assigning a void pointer which points to a struct to two different data
+> types only works by chance if the second type is the first member of the
+> struct.
 > 
-> On 9/28/22 6:59 PM, Zhuo Chen wrote:
->> Hello.
->>
->> Here comes patch v3, which contains some fixes and optimizations of
->> aer api usage. The v1 and v2 can be found on the mailing list.
->>
->> v3:
->> - Modifications to comments proposed by Sathyanarayanan. Remove
->>    pci_aer_clear_nonfatal_status() call in NTB and improve commit log.
->>
->> v2:
->> - Modifications to comments proposed by Bjorn. Split patch into more
->>    obvious parts.
->>
->> Zhuo Chen (9):
->>    PCI/AER: Add pci_aer_clear_uncorrect_error_status() to PCI core
->>    PCI/DPC: Use pci_aer_clear_uncorrect_error_status() to clear
->>      uncorrectable error status
->>    NTB: Remove pci_aer_clear_nonfatal_status() call
->>    scsi: lpfc: Change to use pci_aer_clear_uncorrect_error_status()
->>    PCI/AER: Unexport pci_aer_clear_nonfatal_status()
->>    PCI/AER: Move check inside pcie_clear_device_status().
->>    PCI/AER: Use pcie_aer_is_native() to judge whether OS owns AER
->>    PCI/ERR: Clear fatal error status when pci_channel_io_frozen
->>    PCI/AER: Refine status clearing process with api
->>
->>   drivers/ntb/hw/idt/ntb_hw_idt.c |  2 --
->>   drivers/pci/pci.c               |  7 +++--
->>   drivers/pci/pci.h               |  2 ++
->>   drivers/pci/pcie/aer.c          | 45 +++++++++++++++++++--------------
->>   drivers/pci/pcie/dpc.c          |  3 +--
->>   drivers/pci/pcie/err.c          | 15 ++++-------
->>   drivers/pci/pcie/portdrv_core.c |  3 +--
->>   drivers/scsi/lpfc/lpfc_attr.c   |  4 +--
->>   include/linux/aer.h             |  4 +--
->>   9 files changed, 44 insertions(+), 41 deletions(-)
->>
+> Replace this works by chance code by using the primary struct pointer.
 > 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
 
 -- 
-Zhuo Chen
+Without deviation from the norm, progress is not possible.
