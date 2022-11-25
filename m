@@ -2,183 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33BCA638AAB
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 13:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A14F9638D64
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Nov 2022 16:19:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiKYM7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Nov 2022 07:59:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56776 "EHLO
+        id S229747AbiKYPTl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Nov 2022 10:19:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbiKYM7E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Nov 2022 07:59:04 -0500
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE864D5D3;
-        Fri, 25 Nov 2022 04:58:56 -0800 (PST)
-Received: by mail-lj1-x22d.google.com with SMTP id d3so5120837ljl.1;
-        Fri, 25 Nov 2022 04:58:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=erSKfCU3pTuk1I/bIJQZzdQ++3SxDETdH1OGJv5ABiE=;
-        b=Vb5QdU4KQHrbqp7FP34w6pU+RpSjlVX66KcFdyIBhQUrmDVPTkty9x4cab83kbak86
-         cvHFo+JITH2/HaEanAt8NtuVeCeUc7/eZHW0dYQKCsrRZ+ZsxKOqWzY/KjXEzkzrd9rz
-         LWwNI/+AFdCPo8qgmkysOz5kPWgDDE67w4cZ4tJVzrk6GerUO7aktgx7kyq/+CnO3ltw
-         TFN3goJafZZS9QpxovEeDpRWC8LTZ9oZmtZibtmB/Qa32HlOLs8m7OFRcwXgTuZe1YJm
-         SBJdOygrZ/4wpUsNlCS8641N9yIE247YF/Xz7VVW3/C+Jo+/xguHyj+JynLekR7mDKnU
-         R3PA==
+        with ESMTP id S229480AbiKYPTl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Nov 2022 10:19:41 -0500
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B0C6205C6;
+        Fri, 25 Nov 2022 07:19:40 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso3621761wmp.5;
+        Fri, 25 Nov 2022 07:19:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=erSKfCU3pTuk1I/bIJQZzdQ++3SxDETdH1OGJv5ABiE=;
-        b=5vZvUw9gHX9linQa6X5rABmMEXLNY6jDMh+PuBOiVN4HQwROnu27Fu4O8v0IA7ZUnn
-         u1CFfzOof/wvnZFeexqa2ydrRuOHxwzHwA/fkkmysCHkaiS7D1IfKdxcjwv/onNe9lr/
-         qCT8r5cESbYXDNrJEzZmKZkU9v97/xpYQ7FwRRts0jzRCKw6w76gAFp3muS61bqa6Rja
-         qMULKSWsUjQnC/4zHWkYYd4ky7XuUtFn/ngmDBUJBEwlNlg9FRSlTPZl0lx7FA7mRDmk
-         mm72cDHmQv9C3GoM2lW1rlpKUT0V9G8qRFHLCgndcV2B2pOj9mHm7Zy8mbAZ6dPSS2cZ
-         dHIg==
-X-Gm-Message-State: ANoB5pmQ1Cbt+ZT4bx7mZvgsBVMGhFiyo6lpsfgwSNbhKIj7sDCPCm/j
-        F99+pkUU1ujxWW4LhJ2Dyag=
-X-Google-Smtp-Source: AA0mqf5bkYEKfvpLG98j9zg9nXnagXGZ9s9FVbmlKYE/joHpTlEiCrjckFBR9/GQCzuYsXUFR/hmcA==
-X-Received: by 2002:a2e:8e23:0:b0:26c:4f23:d346 with SMTP id r3-20020a2e8e23000000b0026c4f23d346mr11072077ljk.304.1669381135114;
-        Fri, 25 Nov 2022 04:58:55 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id n3-20020ac242c3000000b004ab98cd5644sm512485lfl.182.2022.11.25.04.58.53
+        bh=hZxVZyzuCq/7TKW0PGUA94kRptUFc8WRLxofFIt0CnI=;
+        b=Zf6ZF0JD8DwFBVe+6XbLpu/G4brufEOWj+Hp3UPXl5LlZjO1UBhWRFykiw1/WA1xZn
+         AjzoCzEPfmvdXJ3295yivvFhOx2I+RdU1Pa4PEORbnshwtTIRNsCiF9nkV/wAEkVRbsW
+         ybpjegAuJLJNzUouHqmSG0WZYcq6u+MVBbxk/w0LWLPQxlqyInJb2vlLICsPMhSF0rJv
+         HR+ZnT0aBOkge3s/uwXhtLvUATzKRBiNhgA/8U59GSEe2l7OZugVFRMLab2dcecFm0re
+         tf7wOImzxQfY/kfQ8s6eQHl0Py8upE0hL/s9ywEZ3Vqx8CxfHPEcnbCQsO7v+96hm8g6
+         9uhQ==
+X-Gm-Message-State: ANoB5pmdJaFHTOOO4uiKJos//ib5PfwCdkAzrWYgYptNN1EeJBWUHvNV
+        NwPvFf3ufBMFBda44K5Jnps=
+X-Google-Smtp-Source: AA0mqf6RdksmLN5860hkrp3lxt4PM3nDpnu7U9LFfaxxW9+solGQCcJhVDWAaW44mPX5LbxbF1jj8A==
+X-Received: by 2002:a05:600c:4b10:b0:3cf:eaf5:77c6 with SMTP id i16-20020a05600c4b1000b003cfeaf577c6mr27241123wmp.56.1669389578960;
+        Fri, 25 Nov 2022 07:19:38 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c445100b003c64c186206sm6133436wmn.16.2022.11.25.07.19.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Nov 2022 04:58:54 -0800 (PST)
-Date:   Fri, 25 Nov 2022 15:58:52 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>, linux-pci@vger.kernel.org,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v7 00/20] PCI: dwc: Add generic resources and Baikal-T1
- support
-Message-ID: <20221125125852.bozaykbckfkek4i3@mobilestation>
-References: <20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru>
- <166921583106.17960.15949667825256145052.b4-ty@kernel.org>
+        Fri, 25 Nov 2022 07:19:38 -0800 (PST)
+Date:   Fri, 25 Nov 2022 15:19:36 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v4 1/1] x86/ioremap: Fix page aligned size calculation in
+ __ioremap_caller()
+Message-ID: <Y4DdCD7555d2SpkZ@liuwe-devbox-debian-v2>
+References: <1669138842-30100-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <166921583106.17960.15949667825256145052.b4-ty@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1669138842-30100-1-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 04:09:12PM +0100, Lorenzo Pieralisi wrote:
-> On Sun, 13 Nov 2022 22:12:41 +0300, Serge Semin wrote:
-> > This patchset is a third one in the series created in the framework of
-> > my Baikal-T1 PCIe/eDMA-related work:
-> > 
-> > [1: Done v5] PCI: dwc: Various fixes and cleanups
-> > Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
-> > Merged: kernel 6.0-rc1
-> > [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
-> > Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
-> > Merged: kernel 6.0-rc1
-> > [3: In-review v7] PCI: dwc: Add generic resources and Baikal-T1 support
-> > Link: ---you are looking at it---
-> > [4: Done v6] dmaengine: dw-edma: Add RP/EP local DMA support
-> > Link: https://lore.kernel.org/linux-pci/20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru/
-> > 
-> > [...]
+On Tue, Nov 22, 2022 at 09:40:42AM -0800, Michael Kelley wrote:
+> Current code re-calculates the size after aligning the starting and
+> ending physical addresses on a page boundary. But the re-calculation
+> also embeds the masking of high order bits that exceed the size of
+> the physical address space (via PHYSICAL_PAGE_MASK). If the masking
+> removes any high order bits, the size calculation results in a huge
+> value that is likely to immediately fail.
 > 
-> I think it is time we merged this series - we went through
-> several rounds of reviews and it should be ready for
-> mainline (in particular wrt using the generic infrastructure
-> it puts in place).
+> Fix this by re-calculating the page-aligned size first. Then mask any
+> high order bits using PHYSICAL_PAGE_MASK.
 > 
-> Applied to pci/dwc, thank you.
+> Fixes: ffa71f33a820 ("x86, ioremap: Fix incorrect physical address handling in PAE mode")
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-Thanks. We've finally done that!
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
 
-Could you please merge the DW eDMA part in too?
-Link: https://lore.kernel.org/linux-pci/20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru/
-Due to the dependencies we agreed to hold it on for until the last DW
-PCIe patchset is merged in. See discussion here:
-https://lore.kernel.org/dmaengine/20220616183900.ww7ora37kmve7av2@mobilestation/
-and here (Vinod ab-tag):
-https://lore.kernel.org/linux-pci/YuKFnjrxnyNa+98X@matsya/
-and here (the last thread mentioned the dependencies):
-https://lore.kernel.org/linux-pci/20220825112843.4pbh37x6wemsdmmp@mobilestation/
-
-The eDMA series has got all the ab/rb/tb-tags from @Vinod and @Mani side.
-The only tiny exception is
-[PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
-for which I had to drop the tags due to an update per the @Robin request
-in the framework of the dma-ranges/DMA-mask discussion:
-https://lore.kernel.org/linux-pci/20220927104831.bovlzl74osb4t5d3@mobilestation/
-https://lore.kernel.org/linux-pci/20221007224515.sseyabdfa2phcsdz@mobilestation/
-
-I failed to reach @Robin since November 8, 2022. If you are able to
-effectively draw his attention so he looked at the updated patch, that
-would be great. Other than that I see no barrier to merge the DW eDMA
-series in too.
-
--Serge(y)
-
+> ---
 > 
-> [01/20] dt-bindings: imx6q-pcie: Fix clock names for imx6sx and imx8mq
->         https://git.kernel.org/lpieralisi/pci/c/b8a83e600bdd
-> [02/20] dt-bindings: visconti-pcie: Fix interrupts array max constraints
->         https://git.kernel.org/lpieralisi/pci/c/4cf4b9b70ab2
-> [03/20] dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
->         https://git.kernel.org/lpieralisi/pci/c/057646a5db2f
-> [04/20] dt-bindings: PCI: dwc: Remove bus node from the examples
->         https://git.kernel.org/lpieralisi/pci/c/b9fe9985aee2
-> [05/20] dt-bindings: PCI: dwc: Add phys/phy-names common properties
->         https://git.kernel.org/lpieralisi/pci/c/875596361910
-> [06/20] dt-bindings: PCI: dwc: Add max-link-speed common property
->         https://git.kernel.org/lpieralisi/pci/c/eaa9d8865287
-> [07/20] dt-bindings: PCI: dwc: Apply generic schema for generic device only
->         https://git.kernel.org/lpieralisi/pci/c/f133396e2d00
-> [08/20] dt-bindings: PCI: dwc: Add max-functions EP property
->         https://git.kernel.org/lpieralisi/pci/c/12f7936c7a0e
-> [09/20] dt-bindings: PCI: dwc: Add interrupts/interrupt-names common properties
->         https://git.kernel.org/lpieralisi/pci/c/35486813c41b
-> [10/20] dt-bindings: PCI: dwc: Add reg/reg-names common properties
->         https://git.kernel.org/lpieralisi/pci/c/4cc13eedb892
-> [11/20] dt-bindings: PCI: dwc: Add clocks/resets common properties
->         https://git.kernel.org/lpieralisi/pci/c/bd9504af9169
-> [12/20] dt-bindings: PCI: dwc: Add dma-coherent property
->         https://git.kernel.org/lpieralisi/pci/c/4a8972542a6d
-> [13/20] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
->         https://git.kernel.org/lpieralisi/pci/c/98b59129cb9f
-> [14/20] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
->         https://git.kernel.org/lpieralisi/pci/c/ce27c4e61f2d
-> [15/20] PCI: dwc: Introduce dma-ranges property support for RC-host
->         https://git.kernel.org/lpieralisi/pci/c/8522e17d4cab
-> [16/20] PCI: dwc: Introduce generic controller capabilities interface
->         https://git.kernel.org/lpieralisi/pci/c/7f9e982dc4fc
-> [17/20] PCI: dwc: Introduce generic resources getter
->         https://git.kernel.org/lpieralisi/pci/c/ef8c58877fe7
-> [18/20] PCI: dwc: Combine iATU detection procedures
->         https://git.kernel.org/lpieralisi/pci/c/9f67ecdd9579
-> [19/20] PCI: dwc: Introduce generic platform clocks and resets
->         https://git.kernel.org/lpieralisi/pci/c/ef69f852a978
-> [20/20] PCI: dwc: Add Baikal-T1 PCIe controller support
->         https://git.kernel.org/lpieralisi/pci/c/ba6ed462dcf4
+> This patch was previously Patch 1 of a larger series[1].  Breaking
+> it out separately per discussion with Dave Hansen and Boris Petkov.
 > 
-> Thanks,
-> Lorenzo
+> [1] https://lore.kernel.org/linux-hyperv/1668624097-14884-1-git-send-email-mikelley@microsoft.com/
+> 
+>  arch/x86/mm/ioremap.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index 78c5bc6..6453fba 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -217,9 +217,15 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+>  	 * Mappings have to be page-aligned
+>  	 */
+>  	offset = phys_addr & ~PAGE_MASK;
+> -	phys_addr &= PHYSICAL_PAGE_MASK;
+> +	phys_addr &= PAGE_MASK;
+>  	size = PAGE_ALIGN(last_addr+1) - phys_addr;
+>  
+> +	/*
+> +	 * Mask out any bits not part of the actual physical
+> +	 * address, like memory encryption bits.
+> +	 */
+> +	phys_addr &= PHYSICAL_PAGE_MASK;
+> +
+>  	retval = memtype_reserve(phys_addr, (u64)phys_addr + size,
+>  						pcm, &new_pcm);
+>  	if (retval) {
+> -- 
+> 1.8.3.1
+> 
