@@ -2,75 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DAB639365
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Nov 2022 03:30:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBFC86394C9
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Nov 2022 10:00:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbiKZCaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Nov 2022 21:30:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58470 "EHLO
+        id S229582AbiKZJAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Nov 2022 04:00:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiKZCaD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Nov 2022 21:30:03 -0500
-X-Greylist: delayed 1043 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 25 Nov 2022 18:30:01 PST
-Received: from mail.rrk.ir (mail.rrk.ir [46.209.19.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE393136D;
-        Fri, 25 Nov 2022 18:30:01 -0800 (PST)
-Received: from localhost (mail.rrk.ir [127.0.0.1])
-        by mail.rrk.ir (Postfix) with ESMTP id EA9C439713E;
-        Sat, 26 Nov 2022 05:42:33 +0330 (+0330)
-X-Virus-Scanned: Debian amavisd-new at mail.rrk.ir
-Received: from mail.rrk.ir ([127.0.0.1])
-        by localhost (mail.rrk.ir [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IzeIoOj2fku4; Sat, 26 Nov 2022 05:42:24 +0330 (+0330)
-Content-Type: text/plain; charset="iso-8859-1"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rrk.ir; s=rrk;
-        t=1669401265; bh=Tek/QbFshVvW3DxuEJIWlwCvxszEYuMod+HhVGwXvdw=;
-        h=Subject:To:From:Date:Reply-To:From;
-        b=XsaGpSI2+BPsPsnjXM4yFUsvvZtG2D3G4mu7WrXewlWGtdJtiw/lhxot1OPNVFGVf
-         KfOjnF6/wtoPXS4GV7gMJGL7wUBB61LKZzEz3ekcgyUmTkcWAb6+q2MbfNaI8W7y8D
-         FAhONqYUnRm167ahaXs6fewXFePk7acVbtylF5Z4=
+        with ESMTP id S229450AbiKZJAK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Nov 2022 04:00:10 -0500
+X-Greylist: delayed 1290 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Nov 2022 01:00:05 PST
+Received: from sp13.canonet.ne.jp (sp13.canonet.ne.jp [210.134.168.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBC802098C;
+        Sat, 26 Nov 2022 01:00:05 -0800 (PST)
+Received: from csp13.canonet.ne.jp (unknown [172.21.160.133])
+        by sp13.canonet.ne.jp (Postfix) with ESMTP id 099161E03D3;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+Received: from echeck13.canonet.ne.jp ([172.21.160.123])
+        by csp3 with ESMTP
+        id yqNVovGVhxJr5yqNVocUA4; Sat, 26 Nov 2022 17:17:37 +0900
+X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=S49nfKgP c=1 sm=1 tr=0
+ ts=6381cba1 cx=g_jp:t_eml p=JJaDG7uySNsA:10 p=Ik1pXvdftEAPl7FGfynI:22
+ a=c8wCX2VJ6RehaN9m5YqYzw==:117 a=yr9NA9NbXb0B05yJHQEWeQ==:17
+ a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10 a=9xFQ1JgjjksA:10 a=x7bEGLp0ZPQA:10
+ a=JQiPw2jszkcqZPIXoVMA:9 a=CjuIK1q_8ugA:10"
+X-CNT-CMCheck-Score: 100.00
+Received: from echeck13.canonet.ne.jp (localhost [127.0.0.1])
+        by esets.canonet.ne.jp (Postfix) with ESMTP id 9B11A1C0251;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+X-Virus-Scanner: This message was checked by ESET Mail Security
+        for Linux/BSD. For more information on ESET Mail Security,
+        please, visit our website: http://www.eset.com/.
+Received: from smtp13.canonet.ne.jp (unknown [172.21.160.103])
+        by echeck13.canonet.ne.jp (Postfix) with ESMTP id 6BA4E1C0263;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+Received: from eikohnet.co.jp (webmail.canonet.ne.jp [210.134.169.250])
+        by smtp13.canonet.ne.jp (Postfix) with ESMTPA id A506115F964;
+        Sat, 26 Nov 2022 17:17:36 +0900 (JST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Re: Liaison Officer Needed In Your State...  
-To:     Recipients <firewall@rrk.ir>
-From:   "Ms. Kelvin Lin " <firewall@rrk.ir>
-Date:   Fri, 25 Nov 2022 10:34:12 -0800
-Reply-To: mail@gukaimail.com
-Message-Id: <20221126021233.EA9C439713E@mail.rrk.ir>
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_99,BAYES_999,
-        DATE_IN_PAST_06_12,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
-        *      [score: 1.0000]
-        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
-        *      [score: 1.0000]
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        *  1.5 DATE_IN_PAST_06_12 Date: is 6 to 12 hours before Received: date
+Message-ID: <20221126081736.00001C7B.0156@eikohnet.co.jp>
+Date:   Sat, 26 Nov 2022 17:17:36 +0900
+From:   "Mrs Zainab Abbas" <toda@eikohnet.co.jp>
+To:     <Inbox@eikohnet.co.jp>
+Reply-To: <mrs.zainababbas75@gmail.com>
+Subject: Hi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+ORGANIZATION: Mrs Zainab Abbas
+X-MAILER: Active! mail
+X-EsetResult: clean, %VIRUSNAME%
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1669450657;VERSION=7940;MC=3218539519;TRN=0;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
+X-I-ESET-AS: RN=0;RNP=
+X-ESET-Antispam: OK
+X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_MR_MRS,
+        SPF_HELO_NONE,SPF_PASS,UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5018]
         * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-X-Spam-Level: *****
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrs.zainababbas75[at]gmail.com]
+        *  1.0 HK_NAME_MR_MRS No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  2.4 XPRIO_SHORT_SUBJ Has X Priority header + short subject
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+
 Hello,
+Good day, I am still waiting for your reply to my previous email, hope you see the email?
+
+Regards
+Mrs Zainab Abbas
 
 
-A reputable pharmaceutical company from Vietnam is in need of a reliable in=
-dividual or corporate entity in your state to act as their Liaison; this wi=
-ll not affect your current job or business operations in anyway.  If intere=
-sted, reply for more information.
-
-
-Sincerely,
-Ms. Kelvin Lin
-CC
