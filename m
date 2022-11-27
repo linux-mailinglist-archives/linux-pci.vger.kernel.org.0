@@ -2,85 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F2CD63991C
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Nov 2022 02:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8E6639A2E
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Nov 2022 12:42:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiK0BKN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Nov 2022 20:10:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56970 "EHLO
+        id S229675AbiK0LmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Nov 2022 06:42:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiK0BKL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Nov 2022 20:10:11 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C42313DD7;
-        Sat, 26 Nov 2022 17:10:10 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id b3so12274789lfv.2;
-        Sat, 26 Nov 2022 17:10:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7tb2mXbdsR6eQa3wvtplNTYB5kFT59Ed36tfjNJz7Go=;
-        b=peqDeBsB+scWRJ971h6/MynvTpfitF/7/U01yUR9FKOx7ivOJSkSt7aDrGH0wYNCz4
-         YniIVyOWfT0+K1WVwq0v6yFnOknNLVUt2FRgVgjHB90OkbvczjufZfnXbbFv0IRk2Gpw
-         0naEecLHad0xQyMdij71NsDxDrTdfYxpV0d435UQJcVAayhiH/LBfSF/0bGdOBo0Eqt9
-         32YYMnteQh13PF9ioOkhLK9X2Zw9PLOHxka/HtF7etEL307aJ3qVK+rUilq48K84H4Mo
-         KHA8N7MV8ahLKhEmQZf3RiXaRzUsew6b5of2wn2uvMvg+2FcDElWyHGrtMgDUah3kppb
-         /qkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7tb2mXbdsR6eQa3wvtplNTYB5kFT59Ed36tfjNJz7Go=;
-        b=nTaEvM1YB/Aac0uMP7xwUiHwoPe37xh2tATBIlkwmJ94gPKxbMZFuaPRzzqumysLow
-         FJgeuPFtkLCBw4yhhn/UMaZAtGkZpOhQ7N96x7LNKUuhyl7r8W5JTyG70Q1lkm0dI9c5
-         KUoowEzn0/6HWL0RnWSpSgrd5LxTVlh83gq2xISIC+i9gBQktVhl05jrvkr+pSkfHWOM
-         xWd5JO7xzxkIwNoBD8q9cNi8SFpNcNdM/S7zx3fWyA+OYDbUQmKG1PlktpbboED13MGv
-         DfV9RftAc7cCcGyoeowgNwptNkbdeMyIn+1pKzc/eYCguylvNttcS5Mz4j1s3aISZSdh
-         2nwg==
-X-Gm-Message-State: ANoB5pkwDVQH/ay/JviPX9h2LCUgYuwaAV9VTbHaRKfiY6G7ZOSp1VoZ
-        DkM70A1FgdmZcbV6bO2oKP0=
-X-Google-Smtp-Source: AA0mqf4Wx8+3aBzxVXvpROh9wAShu+Gtv4ckpYWVntL/AiibLP0wWFLl+jsVY9FrpfkqTRMzQ8nDcg==
-X-Received: by 2002:a05:6512:3084:b0:4aa:83e6:53e4 with SMTP id z4-20020a056512308400b004aa83e653e4mr14801390lfd.13.1669511408444;
-        Sat, 26 Nov 2022 17:10:08 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id o18-20020a056512053200b00497b198987bsm1106423lfc.26.2022.11.26.17.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Nov 2022 17:10:07 -0800 (PST)
-Date:   Sun, 27 Nov 2022 04:10:05 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S229569AbiK0Ll6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Nov 2022 06:41:58 -0500
+Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924F8B85D;
+        Sun, 27 Nov 2022 03:41:56 -0800 (PST)
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+        by mxout3.routing.net (Postfix) with ESMTP id 5FD2C6049F;
+        Sun, 27 Nov 2022 11:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1669549313;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=k349OVoE48gwODCSz008WxiHQQGH0IaZlGYvTDJxc5E=;
+        b=RZy6qm4+4DH3SDLcK8KXNxCGuU2HeGprztTqRY5gnNFCoC+NR1HiQB8e9mNFbfIKS+EKdl
+        c2cihu7sJIYT1zEWLapvwtP9mLxHoovLiV2xdFoDVKyyGvLqQZpQu3mjg4UmgNsFvklL8k
+        UjLeJA55dnqVlpUbBv4bK4Vo5wCoxTY=
+Received: from frank-G5.. (fttx-pool-217.61.157.144.bambit.de [217.61.157.144])
+        by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 0DE951226D4;
+        Sun, 27 Nov 2022 11:41:53 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 17/20] PCI: dwc: Introduce generic resources getter
-Message-ID: <20221127011005.cjzcd6slb6ezy7ix@mobilestation>
-References: <20221113191301.5526-18-Sergey.Semin@baikalelectronics.ru>
- <20221123194436.GA277209@bhelgaas>
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org
+Subject: [next v7 0/8] Add BananaPi R3
+Date:   Sun, 27 Nov 2022 12:41:34 +0100
+Message-Id: <20221127114142.156573-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221123194436.GA277209@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,66 +62,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+From: Frank Wunderlich <frank-w@public-files.de>
 
-On Wed, Nov 23, 2022 at 01:44:36PM -0600, Bjorn Helgaas wrote:
-> Hi Serge,
-> 
-> On Sun, Nov 13, 2022 at 10:12:58PM +0300, Serge Semin wrote:
-> > Currently the DW PCIe Root Port and Endpoint CSR spaces are retrieved in
-> > the separate parts of the DW PCIe core driver. It doesn't really make
-> > sense since the both controller types have identical set of the core CSR
-> > regions: DBI, DBI CS2 and iATU/eDMA. Thus we can simplify the DW PCIe Host
-> > and EP initialization methods by moving the platform-specific registers
-> > space getting and mapping into a common method. It gets to be even more
-> > justified seeing the CSRs base address pointers are preserved in the
-> > common DW PCIe descriptor. Note all the OF-based common DW PCIe settings
-> > initialization will be moved to the new method too in order to have a
-> > single function for all the generic platform properties handling in single
-> > place.
-> > 
-> > A nice side-effect of this change is that the pcie-designware-host.c and
-> > pcie-designware-ep.c drivers are cleaned up from all the direct dw_pcie
-> > storage modification, which makes the DW PCIe core, Root Port and Endpoint
-> > modules more coherent.
-> 
+This Series adds some Nodes to mt7986 devicetree and the BananaPi R3
 
-> Thanks for these new generic interfaces in the DWC core!  And thanks
-> for the changes in this patch to take advantage of them in the
-> pcie-designware drivers.
-> 
-> Do you plan similar changes to other drivers to take advantage of
-> these DWC-generic data and interfaces?  If you add generic things to
-> the DWC core but only take advantage of them in your driver, I don't
-> think they are really usefully generic.
+This version is rebased on linux next from 2022/11/27.
 
-Could you be more specific what generic things you are referring to? I
-am asking because the only part of the changes which is used in my
-low-level driver only is introduced in another patch of this series.
-It's
-< [PATCH v7 19/20] PCI: dwc: Introduce generic platform clocks and resets
-The new clock/reset request interface has been implemented the way it
-is due to reasons I in details described to Rob here:
-Link: https://lore.kernel.org/linux-pci/20220520160246.guczq52v2ycfgc6c@mobilestation
-To cut it short it can't be used by the most of the already available
-low-level drivers since they already have their own versions of the
-names for the clock and reset resources (or don't have any name
-defined at all). The only driver for which the interface could be
-utilized is Toshiba Visconti PCIe host controller driver. The device
-DT-bindings defines the clock names matching the generic names
-introduced in the patches of this series. If you find it appropriate
-enough I can provide a patch for that driver.
+i included sams series for mt7986 DTS with small changes
+https://patchwork.kernel.org/project/linux-mediatek/cover/20220427124741.18245->
 
-Note the main goal of the patch
-[PATCH v7 19/20] PCI: dwc: Introduce generic platform clocks and resets
-was to create some interface to stop the developers of the new drivers
-from creating the platform-specific DT-bindings to the same clock and
-reset resources. Since the already defined DT-bindings can't be
-changed anyway I don't think it would worth risking to catch
-regressions on an attempt to provide a more complicated interface
-utilized in the old drivers too.
+i had run full dtbs-check but i end up with some strange warnings in
+ethernet-node that should not come up as phy-handle and sfp/managed
+properties are already defined. These errors also came up for mt7986a-rfb.
 
--Serge(y)
+phy-handle made optional
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/mediatek,net.yaml#n265
 
-> 
-> Bjorn
+property sfp/managed (which is included for mac subnode in yaml above):
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/ethernet-controller.yaml#n137
+
+changes:
+v7:
+- rebase on next so dropped already applied patches
+- squashed overlay-patch into the bpi-r3 base support
+- moved regulators from mmc-dts to common dtsi
+- changed dtsi to dts (as board base dtb) and mmc-dts to overlays
+- renamed overlays to dtso
+- removed angelos RB because of changes in bpi-r3 patch
+
+v6:
+- dropped regulators from usb-patch as suggested by chunfeng yun
+- moved 3v3 regulator to mmc-patch as it is needed for emmc to work
+  rfbs were tested by sam shih, r3 by me
+- dropped RB from AngeloGioacchino from mmc-patch due to this change
+- fixed links in coverletter which were broken in v5
+- i hope this series is sent without errors now (my mailprovider limited
+  mails last 2 times while sending part 10)
+
+v5:
+- changed usb ranges/reg/unit-adress
+- added reviewd-by's except usb-part due to changes
+
+v4:
+- dropped RFC prefix
+- rebase on matthias' mtk dts-next (for 6.2) branch
+- added author information to overlays
+- fixed sfp binding error
+- added fix for moving wed_pcie node
+- readded missing compatible patches
+
+v3:
+- changed mmc pull-ups
+- added patch for board binding (sent separately before)
+- added pcie node in mt7986 (not yet again in r3)
+- added dt overlays
+
+Frank Wunderlich (5):
+  dt-bindings: phy: mediatek,tphy: add support for mt7986
+  dt-bindings: usb: mtk-xhci: add support for mt7986
+  dt-bindings: PCI: mediatek-gen3: add SoC based clock config
+  dt-bindings: PCI: mediatek-gen3: add support for mt7986
+  arm64: dts: mt7986: add Bananapi R3
+
+Sam Shih (3):
+  arm64: dts: mt7986: add usb related device nodes
+  arm64: dts: mt7986: add mmc related device nodes
+  arm64: dts: mt7986: add pcie related device nodes
+
+ .../bindings/pci/mediatek-pcie-gen3.yaml      |  64 ++-
+ .../bindings/phy/mediatek,tphy.yaml           |   1 +
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   5 +
+ .../mt7986a-bananapi-bpi-r3-emmc.dtso         |  30 ++
+ .../mt7986a-bananapi-bpi-r3-nand.dtso         |  55 +++
+ .../mediatek/mt7986a-bananapi-bpi-r3-nor.dtso |  68 +++
+ .../mediatek/mt7986a-bananapi-bpi-r3-sd.dtso  |  24 +
+ .../dts/mediatek/mt7986a-bananapi-bpi-r3.dts  | 448 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts  | 120 +++++
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi     | 122 +++++
+ arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts  |   8 +
+ 12 files changed, 934 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+
+-- 
+2.34.1
+
