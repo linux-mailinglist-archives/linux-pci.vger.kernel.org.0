@@ -2,53 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0097639E3C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 00:36:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE53639E4A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 00:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbiK0XgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Nov 2022 18:36:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
+        id S229529AbiK0Xzi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Nov 2022 18:55:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiK0XgH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Nov 2022 18:36:07 -0500
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [217.70.178.231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1D7B869
-        for <linux-pci@vger.kernel.org>; Sun, 27 Nov 2022 15:36:04 -0800 (PST)
-Received: (Authenticated sender: gregory.clement@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id C8C32100004;
-        Sun, 27 Nov 2022 23:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1669592163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8eMRJl5sTuIkPBcRNM8NFzVjAYsmGrDM3jIU4r/70Ck=;
-        b=gz7de+4rn1ILNiAOhvtTLoTccYZfORNUC8hNA3oDTg0AZ/G+flcyu0PWgTMkv7rT0HPMYJ
-        08nspse8SdmPpMADmxyTBGqs+I8YhFiv1qCh8ekB2XaTsSTvE58+Lbri1WbprVDuSo4gd3
-        nttMpSamtJrsLPq+X1muFhwlGrKwe5szuYBDK+5C5kWP92uv/Fr7HqmKhpxnw41nvjFlsP
-        hq1nDrh1iaNtWn2869lQAe3YU4nChnnjDXEzHabeurmkDbvX5wJIXuU/bd3+bu21M9wXLp
-        3UzyWFFDPFzDiNcTMPUyHL07ow3GjTiV6JscmaQeJkhwYdnhldRkDUgVX/SQwg==
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, pali@kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>
-Subject: Re: [PATCH v2 04/10] arm64: dts: armada-3720-turris-mox: Define
- slot-power-limit-milliwatt for PCIe
-In-Reply-To: <20220927141926.8895-5-kabel@kernel.org>
-References: <20220927141926.8895-1-kabel@kernel.org>
- <20220927141926.8895-5-kabel@kernel.org>
-Date:   Mon, 28 Nov 2022 00:36:02 +0100
-Message-ID: <87ilj09di5.fsf@BL-laptop>
+        with ESMTP id S229509AbiK0Xzh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Nov 2022 18:55:37 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD0BBC93;
+        Sun, 27 Nov 2022 15:55:36 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id f13so14958183lfa.6;
+        Sun, 27 Nov 2022 15:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rW/OaynwezcBfthmHN1eZjbIoAQJ+mwHqyK5yAvp5is=;
+        b=IqhJThko5CuzLdAN8rIyYd15uBg3KUIrcZPwmST2L2L0AacY3myyVXD1usMtQRtaVL
+         uSmwP470jIDbf/hHHt1YPizuOz8bTypsnhpuN/gRSLXC8rXPY8mIoQMhShc0L8YpVhrr
+         ov0XVkb5Ivvm+xAybcWi4crF1n19fSw6eG26QwftI32hVjQEqvlhXkDXFoWZwJ72W2Sg
+         xxi1B0b3+RJKIqk5x6GXqwTT/LEV8DoFJajuHsI2jY9W3MS8TZePapbLiQrbNgCDwaoN
+         OvhoeYWs14rmaFabfb7IocD82ROJdP/OQZuzt4W3JCN1FWg21YDMz7O+gTQ6ewLFy4rC
+         wB3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rW/OaynwezcBfthmHN1eZjbIoAQJ+mwHqyK5yAvp5is=;
+        b=BtpoFpYs3MYaTNapVQlTk8cNRuzautoMIIAhvybVRUQPylogKUZGkd3Pbw6hFlTpVl
+         w7AhQvWiPmY/dfERvdJeDtSYp1nn8Bqat3TPXBEOt2Z2YRH5GQwn/Y+N3CYwU0Fbcbaz
+         Fh6HjKY2NtRz7a/IHTkXfrUVIkUylUqq6Y+OwTSsL/jMx9ZdYCdvJ9xcI2aIKKGlLeaU
+         5rpZlzenDMoZSeI4pn+bkcjB907FLBw3ikDajM6VjPzVsAllywCjZES3ywa238HY+6C9
+         bRuVXG/OHs4jRIaiyBr8dxAmlhaYspjETBAHTIt1fT8Pf5ttXxHK2XF//+Rza8Vr1ri2
+         po0A==
+X-Gm-Message-State: ANoB5pkjXq6YwlqSWiH2TtnhG6qEnzTInWYqxKFM6I9fQZ29cZ6FG9Lt
+        LHPyhq/7edyolmY7YjDqTIOFxdbf+yLAgQ==
+X-Google-Smtp-Source: AA0mqf6wpRnM6tTvXjKD9WooPEYhWo6KG3+M3C+BtLQS3Pqi6jA/HitFqWQCvIAKqCf3gxLuyvPCwQ==
+X-Received: by 2002:ac2:4bc5:0:b0:4b4:c099:a994 with SMTP id o5-20020ac24bc5000000b004b4c099a994mr15436318lfq.193.1669593335085;
+        Sun, 27 Nov 2022 15:55:35 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id u4-20020a05651220c400b004a4731f75a5sm1467071lfr.250.2022.11.27.15.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Nov 2022 15:55:34 -0800 (PST)
+Date:   Mon, 28 Nov 2022 02:55:32 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, krzk+dt@kernel.org,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Sergey.Semin@baikalelectronics.ru
+Subject: Re: [PATCH v7 5/9] PCI: dwc: Avoid reading a register to detect
+ whether eDMA exists
+Message-ID: <20221127235532.u7q7oou36wymkpyf@mobilestation>
+References: <20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com>
+ <20221121124400.1282768-6-yoshihiro.shimoda.uh@renesas.com>
+ <20221122135550.GD157542@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221122135550.GD157542@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,44 +79,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Marek Beh=C3=BAn <kabel@kernel.org> writes:
+On Tue, Nov 22, 2022 at 07:25:50PM +0530, Manivannan Sadhasivam wrote:
+> + Serge (who authored EDMA support)
 
-> From: Pali Roh=C3=A1r <pali@kernel.org>
->
-> PCIe Slot Power Limit on Turris Mox is 10W.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+Thanks @Mani. It's strange to see a fix for a patch which hasn't been even
+merged in yet and miss the patch author in the Cc list.)
 
-Applied on mvebu/dt64
+@Yoshihiro, on the next patchset revisions please don't forget to add
+my email address to the copy list.
 
-Thanks,
+> 
+> Thanks,
+> Mani
+> 
+> On Mon, Nov 21, 2022 at 09:43:56PM +0900, Yoshihiro Shimoda wrote:
+> > Since reading value of PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL was
+> > 0x00000000 on one of SoCs (R-Car S4-8), it cannot find the eDMA.
+> > So, directly read the eDMA register if edma.reg_base is not zero.
+> > 
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 637d01807c67..2cc8584da6f4 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -836,8 +836,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> >  {
+> >  	u32 val;
+> >  
 
-Gregory
-> ---
->  arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arc=
-h/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> index ada164d423f3..5d2b221dbd96 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> @@ -136,6 +136,7 @@ &pcie0 {
->  	pinctrl-0 =3D <&pcie_reset_pins &pcie_clkreq_pins>;
->  	status =3D "okay";
->  	reset-gpios =3D <&gpiosb 3 GPIO_ACTIVE_LOW>;
-> +	slot-power-limit-milliwatt =3D <10000>;
->  	/*
->  	 * U-Boot port for Turris Mox has a bug which always expects that "rang=
-es" DT property
->  	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) a=
-ddress cells and
-> --=20
-> 2.35.1
->
+> > -	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> > +	if (pci->edma.reg_base) {
+> >  		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> >  
+> >  		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> > @@ -845,6 +844,7 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> >  		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> >  
+> >  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> > +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
 
---=20
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Look what you suggest here:
+< u32 val;
+< ...
+< if (pci->edma.reg_base) {
+< 	...
+< } else if (val != 0xFFFFFFFF) {
+< 	...
+< } else {
+< ...
+
+It would be strange if your compiler didn't warn about 'val' being used
+uninitialized here, which in its turn would introduce a regression for
+the platforms with the indirectly accessible eDMA registers.
+
+Anyway you can't just drop something what didn't work for you
+hardware. The method you suggest to fix here works fine for multiple
+DW PCIe IP-cores. Judging by the HW manuals it should work at least up
+to v5.30a. Are you sure that your controller is of v5.20a? I see you
+overwrite the IP-core version for the PCIe host driver only. Why is
+that necessary? Does the version auto-detection procedure work
+incorrectly for you? What does the dbi+0x8f8 CSR contain in the host
+and EP registers space? Similarly could you also provide a content of
+the +0x978 register?
+
+-Sergey
+
+> >  	} else {
+> >  		return -ENODEV;
+> >  	}
+> > -- 
+> > 2.25.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
