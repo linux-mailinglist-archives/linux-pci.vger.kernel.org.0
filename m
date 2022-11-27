@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13ED5639A38
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Nov 2022 12:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73967639A24
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Nov 2022 12:42:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbiK0LmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Nov 2022 06:42:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
+        id S229583AbiK0Ll7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Nov 2022 06:41:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbiK0Ll7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Nov 2022 06:41:59 -0500
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A83B869;
+        with ESMTP id S229530AbiK0Ll6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Nov 2022 06:41:58 -0500
+Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152CF2AF1;
         Sun, 27 Nov 2022 03:41:56 -0800 (PST)
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-        by mxout1.routing.net (Postfix) with ESMTP id B3FC9401E5;
-        Sun, 27 Nov 2022 11:41:53 +0000 (UTC)
+        by mxout2.routing.net (Postfix) with ESMTP id 17B875FC7C;
+        Sun, 27 Nov 2022 11:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1669549313;
+        s=20200217; t=1669549314;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TXaEWxtn0uFZdcMKR1HVawy7OAcOEaMqyiThbbGx/JQ=;
-        b=RTkTl+SXoG0E6g0M0S3JjtdCmOf0cTkv7RgYAn1JZAIOO9Bq/3GcYNaNGAvDcMVeNuCcH+
-        hB6DXRFKMN/vayaKLP/6rwicfRNZHA/s3LIEbfZU0UzxYZFUXkY8KNSx/7SR9Uj3RMXFEV
-        9Bww7OBZ92IbXOL6AoXamfxiR70rolw=
+        bh=In9W5EgdkU7a4QBxzIaCDmagtpQjNfrjtKnBMS0D15U=;
+        b=Udff+wwMTpcNHQjyz4X+T/fDS74TF+cvj7xyOMfRTX4vE4j1G/tt0gXiM21m95uf/5TCNg
+        EQJ5Ibj+lXCAL5X3MOlC2yT3Mwogf+tv1Ao9DuLlOQTz9ljhB3GJgcwfcjfOxSMvAAWZkx
+        6iZ3CtbTQypx0OJ5Pm64nxD2Fi2kDCk=
 Received: from frank-G5.. (fttx-pool-217.61.157.144.bambit.de [217.61.157.144])
-        by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 62797122713;
+        by mxbulk.masterlogin.de (Postfix) with ESMTPSA id BB5341226D4;
         Sun, 27 Nov 2022 11:41:53 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
@@ -51,9 +51,9 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-Subject: [next v7 1/8] dt-bindings: phy: mediatek,tphy: add support for mt7986
-Date:   Sun, 27 Nov 2022 12:41:35 +0100
-Message-Id: <20221127114142.156573-2-linux@fw-web.de>
+Subject: [next v7 2/8] dt-bindings: usb: mtk-xhci: add support for mt7986
+Date:   Sun, 27 Nov 2022 12:41:36 +0100
+Message-Id: <20221127114142.156573-3-linux@fw-web.de>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221127114142.156573-1-linux@fw-web.de>
 References: <20221127114142.156573-1-linux@fw-web.de>
@@ -78,21 +78,21 @@ Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- Documentation/devicetree/bindings/phy/mediatek,tphy.yaml | 1 +
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml b/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
-index 5613cc5106e3..230a17f24966 100644
---- a/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
-@@ -79,6 +79,7 @@ properties:
-           - enum:
-               - mediatek,mt2712-tphy
-               - mediatek,mt7629-tphy
-+              - mediatek,mt7986-tphy
-               - mediatek,mt8183-tphy
-               - mediatek,mt8186-tphy
-               - mediatek,mt8192-tphy
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+index 939623867a64..a3c37944c630 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+@@ -28,6 +28,7 @@ properties:
+           - mediatek,mt7622-xhci
+           - mediatek,mt7623-xhci
+           - mediatek,mt7629-xhci
++          - mediatek,mt7986-xhci
+           - mediatek,mt8173-xhci
+           - mediatek,mt8183-xhci
+           - mediatek,mt8186-xhci
 -- 
 2.34.1
 
