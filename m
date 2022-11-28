@@ -2,49 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD6963B374
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 21:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D66ED63B3A3
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 21:48:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232932AbiK1Ujh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Nov 2022 15:39:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
+        id S231252AbiK1UsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Nov 2022 15:48:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233054AbiK1Ujg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 15:39:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6582BB5E
-        for <linux-pci@vger.kernel.org>; Mon, 28 Nov 2022 12:39:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0279761425
-        for <linux-pci@vger.kernel.org>; Mon, 28 Nov 2022 20:39:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38302C433D7;
-        Mon, 28 Nov 2022 20:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669667974;
-        bh=S872SNclyqAEsepDsV4nGIWJkWi1gVXAmspzDiMUJL4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qNX65prcLEnoGDkrxUiRqiMOIcpeg0BAycsZFrcEAROZnDl7m4LyO087WTgaI8jJH
-         b5Gsmx2PdiVnL3Rq3N2+dO0YhEBw+XEi/PzV23UlzKikfEInfjiDW6L0gJ6GJdKgUw
-         t6utNON7ar6yAnNwp/9fJBAnnK0mQCknATtFgoKdbw1rwiaMHNmt6w4ce7hY6Ppaqc
-         +OKGDKXFlVN2J05ta99Ba3XpSTkxXZtX8SmBeAcxidAgltG+C2DxaV3Nzg5MkP7qyt
-         GYZkzhbVTwnTOG4guc8HYnQTvXXAPNW8mm3d8CirnUtOhls5V/272P2/A1rcS3SEdg
-         LFrWGgnHt4jqg==
-Date:   Mon, 28 Nov 2022 14:39:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: PCI resource allocation mismatch with BIOS
-Message-ID: <20221128203932.GA644781@bhelgaas>
+        with ESMTP id S234342AbiK1Urv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 15:47:51 -0500
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2072.outbound.protection.outlook.com [40.107.8.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1501A24F11;
+        Mon, 28 Nov 2022 12:47:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D5O8o835XQsHWF9FKZHOdDoQLARwXoxZrmHNuORvFD4Uf4dQhYW/qlvkgV7LrqzEhyS7PNDNUYraMtJ2ycgLNycHNwSie7awwk+NOv0Y5YXlUSGfOpG1xSQTSgT6Ymgdb4iTf3Jr+1wOZbNTZeCBZD1MOkmYusCeLRLXth01sBkYDA7x8JhwoURcRVMPuNXZN207gOsyExenPrZotjnsjQ3MR0wSByWsXNmv9ZtjfCyNhRgOrn0Iy6Zlyf2hnKIF+SAXuOBDymrD2nJawKl+VbDhCXXWFjj5vSe3aQ8nneGq5s/A/04Sg1oH1m0J0ju6V1yD+9FKz/CwoR2Nq2lbsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RM5+fuxttU13lytdgPa6bP03Fv0eyqy2kxa6Nrxtz/4=;
+ b=HiJJ+JJwKtu2jEzQjI0cZvLyAbMzXogiZnA/qnZf/ggnnv/fUagjTq2N5DDyHL/C8E0PXp2NnC2zYAHorL/oTqAAQRd8oFSh2hZOwOx6rIonG4IO0KpyeYPGzV2gcIK+cYm7lR2kLK0dfwPkUcesA5l8JpPU4wDppQDDs2gicMCBfJu0SooODc7M9AojAh5t/lrnJikul+d20dnV87fxHdV78GtYkLFyYpnLnxt6jHzQelvUbwTlNnS+xA5pKMIgAQ+gZpAByXgOvjTbDexXdEhg784AgGcpW0AdaTzdBR2xujpduwu+pp7r64UMEr/BHtof6zZy57cqW2hyl9/Lvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RM5+fuxttU13lytdgPa6bP03Fv0eyqy2kxa6Nrxtz/4=;
+ b=JoiA87RWkv704OMU505VdvzVlRNngMLXmujkr/ISD3qBA4DrW6nTTJbmL+pvAj8uyDjTgYWb9MoRYvbuy5nuAiMz32wtp+RBkYsRbhJKSzFini10u8rSdYxDfBsC2Di8MzfgZizuoUHuHC4ZYE4+wpj/wxVdSQZAN4XJhHJRDJY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
+ by AS8PR04MB9077.eurprd04.prod.outlook.com (2603:10a6:20b:444::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.19; Mon, 28 Nov
+ 2022 20:47:43 +0000
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::203a:e5da:a4a:7663]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::203a:e5da:a4a:7663%12]) with mapi id 15.20.5857.023; Mon, 28 Nov 2022
+ 20:47:43 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     tglx@linutronix.de
+Cc:     agross@kernel.org, ammarfaizi2@gnuweeb.org, andersson@kernel.org,
+        andrew@lunn.ch, bhelgaas@google.com, festevam@gmail.com,
+        gregkh@linuxfoundation.org, gregory.clement@bootlin.com,
+        jgg@mellanox.com, kristo@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        lpieralisi@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        nm@ti.com, okaya@kernel.org, robin.murphy@arm.com,
+        s.hauer@pengutronix.de, sebastian.hesselbarth@gmail.com,
+        shameerali.kolothum.thodi@huawei.com, shawnguo@kernel.org,
+        ssantosh@kernel.org, vkoul@kernel.org, will@kernel.org,
+        yuzenghui@huawei.com, imx@lists.linux.dev
+Subject: Re: [patch V2 33/40] irqchip/imx-mu-msi: Switch to MSI parent
+Date:   Mon, 28 Nov 2022 15:47:10 -0500
+Message-Id: <20221128204710.2084706-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221121140050.386216606@linutronix.de>
+References: <20221121140050.386216606@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR11CA0072.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::49) To HE1PR0401MB2331.eurprd04.prod.outlook.com
+ (2603:10a6:3:24::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y4SYBtaP1hTWGsYn@black.fi.intel.com>
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2331:EE_|AS8PR04MB9077:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3108c46f-3269-49e7-f01a-08dad181cb32
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hWAA49X+tme9kPQENlbZF6FYzApp+eAnecrbwYS+vTPQ2zej0pri5MZddWk78aYscFAq09RstqcceAr6X4EE3fK2PhnGFAxjbh7LRyUS6V6Bc390exwDRyJI0x/lQ3TwdrIuTldvWWVqVOyMzyqO3uMVJ7bqD0uss9qMjnlOneJ25Yj6gxztfldPxJ/CVXj1ocspc2giJSZqQuyCr56w81PUfzp3GYMjwKLn2MSYqCIu/s381DBMTOjGRu+59XRk9qxwx6XFYbWNmFn1qfsvChw0rIM0H4qgi4CapBJODdXMti3BblGb9s/NYkRsGAkvnW9mivgCSbZ2o6FCGU97/tmIcznuG/Jy1TJGeQgqS2RYDMCzzWzO9E85vM3reigSdAmUkegJWUqJvbRSS5/CJYdAKbp6mX93PIT0zoSfFWEO/CBWx5W1yZ+oXOTjfq3StQ1OpuyXGOqApAbG+VnPyzz9R+1XeKmE8nzD50ZhyS1kNslZkpnlXTP4Web0ivTJ4Y4qwd5O6IS4zo3cxFaXxfsDAeSSkbtRiH3BvioGsFCuLyZLc08lE94WmOGTt8C1TEtoa4gc+nzjqT4+4GykFRnHUhU9o7u4h7oyuAiIA7I3u0qFxWzXwRDFo+j+zO5WDw96hxgugkSd/WCiex0dIzRCDdU1iO0bMzqAZVNa78k4nQeDIU+iyptwxlK4xpZb
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(451199015)(7406005)(7416002)(5660300002)(2906002)(41300700001)(8936002)(4326008)(66946007)(8676002)(66556008)(66476007)(316002)(478600001)(6916009)(36756003)(6486002)(26005)(6506007)(2616005)(52116002)(6512007)(1076003)(186003)(6666004)(86362001)(38100700002)(38350700002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bjM9r1EIHxlBzhr6unviSd7x/oWuvmRL1WoAAz6F9vWEwk0s9gT6yG0WRuUU?=
+ =?us-ascii?Q?1JZ5sk9WmEtFCdNjI+qGPOjtS+vPxGkogNad4ps15Tq3vky3OPUtRpyeoJS+?=
+ =?us-ascii?Q?SyCV0So9ZhQZBoZOtIH6nqBLk5Rpqint4JLOrGyD3m/b9IqADSZmxxl5Nlwo?=
+ =?us-ascii?Q?kHLhXGdaI9Klw1w9/6z3OJ8ZlSWgJq/iqVw1BjCDhLfBCPvtMVcSuVdN+XuQ?=
+ =?us-ascii?Q?6cUAFKTKqxfP36fdFAz3TBzitZKJk/YiFSNdIu6/4CNuuv8EXxd6dhlMDJUN?=
+ =?us-ascii?Q?FXGTpP2ucbGO3NUNxyxmchwiCbUVklPonXVjQV8LbkYGCwyb6wo4UzaYY+Io?=
+ =?us-ascii?Q?OGn9b/sDaieceRYrv4eensG/bD+/v71bD0QfR4oeofE5Z3F4KRsveZo+nNaX?=
+ =?us-ascii?Q?GCIIQXHhNIqB+FSC07m49mDJVfCPsJfnWvqKuh9VI1GOZQ33gCZM2Wlfcvn8?=
+ =?us-ascii?Q?tjOEigtxNTk3rXcq7I3HXWRkYDEHc+hrM31sxMmjRwouZGorqwOF/ft/yc/L?=
+ =?us-ascii?Q?H7kx3VhXfxQFfwleTbhCY2/VAdfib5HYe/8CuaV0cwfv8lbIkj3uZrfj6AGI?=
+ =?us-ascii?Q?vNcVURigvjQdLF6v30qz4RI1L8A0LHX1gzJ8SIlKBQtrCGP1b6ZupPJamP8R?=
+ =?us-ascii?Q?hmOhkJP/YqQc8o5Fn7bug4y9OFdb7+n+o7ewPp7yRfzj5ky8Ec9MF8djLiYH?=
+ =?us-ascii?Q?+oMaCuQEP6l3nzb96LoBIRrjcx9U4qQI1cHs/gitFiKpgXvgJyCp/pY8ntCd?=
+ =?us-ascii?Q?YwSQUKVORHWNX0ZqW+qAWfHIcbycLI468/AElyyFLj+q8EBeQDTVX0I9MOsn?=
+ =?us-ascii?Q?beNtXX9jLMbozlI4BZ7pOTDfyDX2t64qyp5187yVLhkYfwy6VYphSEShJobQ?=
+ =?us-ascii?Q?4tp2c0ju5rE7LRv41/HrZTuE/l+csz0LJFqhgW2qJq5VvokUFY3NS5w4vm5Y?=
+ =?us-ascii?Q?TO28+Wbxn8zLJoqRQ6i8ylIUa8RLi7jSldnsa+S3sPZd9Is+IJTNtI2YVV/r?=
+ =?us-ascii?Q?C8nYQPGKEPG4kJ7WAhVLp/e8lQW2gpzYsFdcNPuH2L1D1WdbNdLHIiErG4ID?=
+ =?us-ascii?Q?UFbCgc7KQ6par9YqnTUR6gbDPg/mRgU/I+ZZui+urIWsD7spzsiyswdwUu/7?=
+ =?us-ascii?Q?rGY3M8h9SwLAhqFppHxDlNtPJSd39rm5qjxNvfsAZisMCbhXY5paEOkzE2PT?=
+ =?us-ascii?Q?sDIDoL9qd5FJugp6qBRvSesdRYtgLLnOG467tOfwKeO90YeA8XeDXGgAYe74?=
+ =?us-ascii?Q?nIQISoWfTV4VeN5bNPGTKPs5vb3UDykrywSxbrhLgMSmNKoGfEYuJjAD4GOB?=
+ =?us-ascii?Q?3ach5Lqfwt0/jpMaAWLpiLzLtlXwbG08jC4j6XylFTqwdCq8Dll+yRvpvhhc?=
+ =?us-ascii?Q?U7I/ZFESL5DhCj1Txq7Ld3ygF1PBjoyKSmbNrfWSXtoREu8fCrO2nwlnpBLl?=
+ =?us-ascii?Q?6Rl8Uq5bO1NbAVW9wEmIY9XgdHYL98+u7SKv0yQbzOizC/jGDeJpf8rvSJSZ?=
+ =?us-ascii?Q?pb2wvG+H4xVHx1wPwCebfrQ+4HLUAHZL7CPhS2DJwa/1BES72Xl764soiwTD?=
+ =?us-ascii?Q?SqgOr5ULghYkW0zKegI=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3108c46f-3269-49e7-f01a-08dad181cb32
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2022 20:47:43.5975
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wCTzAAyKmBw2vCgH/4feG79GRDYHTrCLQQNEK0a0UErG8WrcB2VdNfdCKkhHU+ZKm6HLvSSgaJPXEiTOomHGSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9077
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,162 +122,147 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex]
+From: Frank Li <Frank.li@nxp.com>
 
-Hi Mika,
+On Mon, Nov 21, 2022 at 03:40:09PM +0100, Thomas Gleixner wrote:
+> All platform MSI users and the PCI/MSI code handle per device MSI domains
+> when the irqdomain associated to the device provides MSI parent
+> functionality.
+> 
+> Remove the "global" platform domain related code and provide the MSI parent
+> functionality by filling in msi_parent_ops.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> ---
+>  drivers/irqchip/Kconfig           |    1 
+>  drivers/irqchip/irq-gic-msi-lib.c |    2 +
+>  drivers/irqchip/irq-imx-mu-msi.c  |   53 +++++++++++++++-----------------------
+>  3 files changed, 25 insertions(+), 31 deletions(-)
+> 
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -494,6 +494,7 @@ config IMX_MU_MSI
+>  	select IRQ_DOMAIN
+>  	select IRQ_DOMAIN_HIERARCHY
+>  	select GENERIC_MSI_IRQ
+> +	select ARM_GIC_MSI_LIB
+>  	help
+>  	  Provide a driver for the i.MX Messaging Unit block used as a
+>  	  CPU-to-CPU MSI controller. This requires a specially crafted DT
+> --- a/drivers/irqchip/irq-gic-msi-lib.c
+> +++ b/drivers/irqchip/irq-gic-msi-lib.c
+> @@ -90,6 +90,8 @@ bool gic_msi_lib_init_dev_msi_info(struc
+>  	/* Chip updates for all child bus types */
+>  	if (!info->chip->irq_eoi)
+>  		info->chip->irq_eoi	= irq_chip_eoi_parent;
+> +	if (!info->chip->irq_ack)
+> +		info->chip->irq_ack	= irq_chip_ack_parent;
+>  
+>  	/*
+>  	 * The device MSI domain can never have a set affinity callback it
+> --- a/drivers/irqchip/irq-imx-mu-msi.c
+> +++ b/drivers/irqchip/irq-imx-mu-msi.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/pm_domain.h>
+>  #include <linux/spinlock.h>
+>  
+> +#include "irq-gic-msi-lib.h"
+> +
 
-On Mon, Nov 28, 2022 at 01:14:14PM +0200, Mika Westerberg wrote:
-> Hi Bjorn,
-> 
-> There is another PCI resource allocation issue with some Intel GPUs but
-> probably applies to other similar devices as well. This is something
-> encountered in data centers where they trigger reset (secondary bus
-> reset) to the GPUs if there is hang or similar detected. Basically they
-> do something like:
-> 
->   1. Unbind the graphics driver(s) through sysfs.
->   2. Remove the PCIe devices under the root port or the PCIe switch
->      upstream port through sysfs (echo 1 > ../remove).
->   3. Trigger reset through config space or use the sysfs reset attribute.
->   4. Run rescan on the root bus (echo 1 > /sys/bus/pci/rescan) 
-> 
-> Expectation is to see the devices come back in the same way prior the
-> reset but what actually happens is that the Linux PCI resource
-> allocation fails to allocate space for some of the resources. In this
-> case it is the IOV BARs.
-> 
-> BIOS allocates resources for all these at boot time but after the rescan
-> Linux tries to re-allocate them but since the allocation algorithm is
-> more "consuming" some of the BARs do not fit to the available resource
-> space.
+I think irq-gic-msi-lib.h is not good name. Actually mu-msi is not arm gic.
+irq-gic-msi-lib do common work, which not related arm gic at all.
 
-Thanks for the report!  Definitely sounds like an issue.  I doubt that
-I'll have time to work on it myself in the near future.
+>  #define IMX_MU_CHANS            4
+>  
+>  enum imx_mu_xcr {
+> @@ -114,20 +116,6 @@ static void imx_mu_msi_parent_ack_irq(st
+>  	imx_mu_read(msi_data, msi_data->cfg->xRR + data->hwirq * 4);
+>  }
+>  
+> -static struct irq_chip imx_mu_msi_irq_chip = {
+> -	.name = "MU-MSI",
+> -	.irq_ack = irq_chip_ack_parent,
+> -};
+> -
+> -static struct msi_domain_ops imx_mu_msi_irq_ops = {
+> -};
+> -
+> -static struct msi_domain_info imx_mu_msi_domain_info = {
+> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+> -	.ops	= &imx_mu_msi_irq_ops,
+> -	.chip	= &imx_mu_msi_irq_chip,
+> -};
+> -
+>  static void imx_mu_msi_parent_compose_msg(struct irq_data *data,
+>  					  struct msi_msg *msg)
+>  {
+> @@ -195,6 +183,7 @@ static void imx_mu_msi_domain_irq_free(s
+>  }
+>  
+>  static const struct irq_domain_ops imx_mu_msi_domain_ops = {
+> +	.select	= gic_msi_lib_irq_domain_select,
+>  	.alloc	= imx_mu_msi_domain_irq_alloc,
+>  	.free	= imx_mu_msi_domain_irq_free,
+>  };
+> @@ -216,35 +205,37 @@ static void imx_mu_msi_irq_handler(struc
+>  	chained_irq_exit(chip, desc);
+>  }
+>  
+> +#define IMX_MU_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
+> +					 MSI_FLAG_USE_DEF_CHIP_OPS |	\
+> +					 MSI_FLAG_PARENT_PM_DEV)
+> +
+> +#define IMX_MU_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK)
+> +
+> +static const struct msi_parent_ops imx_mu_msi_parent_ops = {
+> +	.supported_flags	= IMX_MU_MSI_FLAGS_SUPPORTED,
+> +	.required_flags		= IMX_MU_MSI_FLAGS_REQUIRED,
+> +	.bus_select_token       = DOMAIN_BUS_NEXUS,
+> +	.bus_select_mask	= MATCH_PLATFORM_MSI,
+> +	.prefix			= "MU-MSI-",
+> +	.init_dev_msi_info	= gic_msi_lib_init_dev_msi_info,
+> +};
+> +
+>  static int imx_mu_msi_domains_init(struct imx_mu_msi *msi_data, struct device *dev)
+>  {
+>  	struct fwnode_handle *fwnodes = dev_fwnode(dev);
+>  	struct irq_domain *parent;
+>  
+>  	/* Initialize MSI domain parent */
+> -	parent = irq_domain_create_linear(fwnodes,
+> -					    IMX_MU_CHANS,
+> -					    &imx_mu_msi_domain_ops,
+> -					    msi_data);
+> +	parent = irq_domain_create_linear(fwnodes, IMX_MU_CHANS, &imx_mu_msi_domain_ops, msi_data);
 
-Is the "remove" before the reset actually necessary?  If we could
-avoid the removal, maybe the config space save/restore we already do
-around reset would avoid the issue?
+coding style change should be in sperated patch.
 
-Bjorn
-
-> Here is an example. The devices involved are:
-> 
-> 53:00.0		GPU with IOV BARs
-> 52:01.0		PCIe switch downstream port
-> 
-> PF = Physical Function
-> VF = Virtual Function
-> 
-> BIOS allocation (dmesg)
-> -----------------------
-> pci 0000:52:01.0: scanning [bus 53-54] behind bridge, pass 0
-> pci 0000:53:00.0: [8086:56c0] type 00 class 0x038000
-> pci 0000:53:00.0: reg 0x10: [mem 0x205e1f000000-0x205e1fffffff 64bit pref]
-> pci 0000:53:00.0: reg 0x18: [mem 0x201c00000000-0x201fffffffff 64bit pref]
-> pci 0000:53:00.0: reg 0x30: [mem 0xffe00000-0xffffffff pref]
-> pci 0000:53:00.0: reg 0x344: [mem 0x205e00000000-0x205e00ffffff 64bit pref]
-> pci 0000:53:00.0: VF(n) BAR0 space: [mem 0x205e00000000-0x205e1effffff 64bit pref] (contains BAR0 for 31 VFs)
-> pci 0000:53:00.0: reg 0x34c: [mem 0x202000000000-0x2021ffffffff 64bit pref]
-> pci 0000:53:00.0: VF(n) BAR2 space: [mem 0x202000000000-0x205dffffffff 64bit pref] (contains BAR2 for 31 VFs)
-> pci 0000:52:01.0: PCI bridge to [bus 53-54]
-> pci 0000:52:01.0:   bridge window [mem 0x201c00000000-0x205e1fffffff 64bit pref]
-> 
-> GPU
-> ~~~
-> 0x201c00000000-0x201fffffffff	PF BAR2 16384M
-> 0x202000000000-0x205dffffffff	VF BAR2	253952M (31 * 8G)
-> 0x205e00000000-0x205e1effffff	VF BAR0 496M (31 * 16M)
-> 0x205e1f000000-0x205e1fffffff 	PF BAR0 16M
-> 					270848M
-> 
-> PCIe downstream port
-> ~~~~~~~~~~~~~~~~~~~~
-> 0x201c00000000-0x205e1fffffff		270848M
-> 
-> Linux allocation (dmesg)
-> ------------------------
-> pci 0000:52:01.0: [8086:4fa4] type 01 class 0x060400
-> pci_bus 0000:52: fixups for bus
-> pci 0000:51:00.0: PCI bridge to [bus 52-54]
-> pci 0000:51:00.0:   bridge window [io  0x0000-0x0fff]
-> pci 0000:51:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> pci 0000:51:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> pci 0000:52:01.0: scanning [bus 00-00] behind bridge, pass 0
-> pci 0000:52:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-> pci 0000:52:01.0: scanning [bus 00-00] behind bridge, pass 1
-> pci_bus 0000:53: scanning bus
-> pci 0000:53:00.0: [8086:56c0] type 00 class 0x038000
-> pci 0000:53:00.0: reg 0x10: [mem 0x00000000-0x00ffffff 64bit pref]
-> pci 0000:53:00.0: reg 0x18: [mem 0x00000000-0x3ffffffff 64bit pref]
-> pci 0000:53:00.0: reg 0x30: [mem 0x00000000-0x001fffff pref]
-> pci 0000:53:00.0: reg 0x344: [mem 0x00000000-0x00ffffff 64bit pref]
-> pci 0000:53:00.0: VF(n) BAR0 space: [mem 0x00000000-0x1effffff 64bit pref] (contains BAR0 for 31 VFs)
-> pci 0000:53:00.0: reg 0x34c: [mem 0x00000000-0x1ffffffff 64bit pref]
-> pci 0000:53:00.0: VF(n) BAR2 space: [mem 0x00000000-0x3dffffffff 64bit pref] (contains BAR2 for 31 VFs)
-> pci_bus 0000:53: fixups for bus
-> pci 0000:52:01.0: PCI bridge to [bus 53-54]
-> pci 0000:52:01.0:   bridge window [io  0x0000-0x0fff]
-> pci 0000:52:01.0:   bridge window [mem 0x00000000-0x000fffff]
-> pci 0000:52:01.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> pci 0000:52:01.0: bridge window [mem 0x200000000-0x7ffffffff 64bit pref] to [bus 53] add_size 3e00000000 add_align 200000000
-> pci 0000:51:00.0: bridge window [mem 0x200000000-0x7ffffffff 64bit pref] to [bus 52-53] add_size 3e00000000 add_align 200000000
-> pcieport 0000:50:02.0: BAR 13: assigned [io  0x8000-0x8fff]
-> pci 0000:51:00.0: BAR 15: no space for [mem size 0x4400000000 64bit pref]
-> pci 0000:51:00.0: BAR 15: failed to assign [mem size 0x4400000000 64bit pref]
-> pci 0000:51:00.0: BAR 0: assigned [mem 0x201c00000000-0x201c007fffff 64bit pref]
-> pci 0000:51:00.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
-> pci 0000:51:00.0: BAR 13: assigned [io  0x8000-0x8fff]
-> pci 0000:51:00.0: BAR 15: assigned [mem 0x201c00000000-0x2021ffffffff 64bit pref]
-> pci 0000:51:00.0: BAR 0: assigned [mem 0x202200000000-0x2022007fffff 64bit pref]
-> pci 0000:51:00.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
-> pci 0000:51:00.0: BAR 15: [mem 0x201c00000000-0x2021ffffffff 64bit pref] (failed to expand by 0x3e00000000)
-> pci 0000:51:00.0: failed to add 3e00000000 res[15]=[mem 0x201c00000000-0x2021ffffffff 64bit pref]
-> pci 0000:52:01.0: BAR 15: no space for [mem size 0x4400000000 64bit pref]
-> pci 0000:52:01.0: BAR 15: failed to assign [mem size 0x4400000000 64bit pref]
-> pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
-> pci 0000:52:01.0: BAR 13: assigned [io  0x8000-0x8fff]
-> pci 0000:52:01.0: BAR 15: assigned [mem 0x201c00000000-0x2021ffffffff 64bit pref]
-> pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
-> pci 0000:52:01.0: BAR 15: [mem 0x201c00000000-0x2021ffffffff 64bit pref] (failed to expand by 0x3e00000000)
-> pci 0000:52:01.0: failed to add 3e00000000 res[15]=[mem 0x201c00000000-0x2021ffffffff 64bit pref]
-> pci 0000:53:00.0: BAR 2: assigned [mem 0x201c00000000-0x201fffffffff 64bit pref]
-> pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000 64bit pref]
-> pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000 64bit pref]
-> pci 0000:53:00.0: BAR 0: assigned [mem 0x202000000000-0x202000ffffff 64bit pref]
-> pci 0000:53:00.0: BAR 7: assigned [mem 0x202001000000-0x20201fffffff 64bit pref]
-> pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff pref]
-> pci 0000:53:00.0: BAR 2: assigned [mem 0x201c00000000-0x201fffffffff 64bit pref]
-> pci 0000:53:00.0: BAR 0: assigned [mem 0x202000000000-0x202000ffffff 64bit pref]
-> pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff pref]
-> pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000 64bit pref]
-> pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000 64bit pref]
-> pci 0000:53:00.0: BAR 7: assigned [mem 0x202001000000-0x20201fffffff 64bit pref]
-> pci 0000:52:01.0: PCI bridge to [bus 53]
-> pci 0000:52:01.0:   bridge window [io  0x8000-0x8fff]
-> pci 0000:52:01.0:   bridge window [mem 0xbb800000-0xbb9fffff]
-> pci 0000:52:01.0:   bridge window [mem 0x201c00000000-0x2021ffffffff 64bit pref]
-> 
-> GPU
-> ~~~
-> 0x201c00000000-0x201fffffffff	PF BAR2 16834M
-> 0x202000000000-0x202000ffffff	PF BAR0	16M
-> 0x202001000000-0x20201fffffff 	VF BAR0	496M (31 * 16M)
-> FAIL				VF BAR2 253952M (31 * 8G)
-> 
-> PCIe downstream port
-> ~~~~~~~~~~~~~~~~~~~~
-> 0x201c00000000-0x2021ffffffff		24576M
-> 
-> Now, if I hack the allocation algorithm (in pbus_size_mem()) to "mimic"
-> the BIOS allocation then these fit fine. However, if the BIOS allocation
-> ever changes we may end up in similar issue. Also the Linux PCI resource
-> allocation code has been like that for aeons so changing it would likely
-> cause regressions.
-> 
-> Let me know if more information is needed. I have one of these cards
-> locally and have remote access to a similar system where the above
-> example was take so I can run additional testing.
-> 
-> Also let me know if you want me to file a bug in kernel.org bugzilla.
-> 
-> Thanks in advance!
+>  	if (!parent) {
+>  		dev_err(dev, "failed to create IRQ domain\n");
+>  		return -ENOMEM;
+>  	}
+>  
+>  	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+> -
+> -	msi_data->msi_domain = platform_msi_create_irq_domain(fwnodes,
+> -					&imx_mu_msi_domain_info,
+> -					parent);
+> -
+> -	if (!msi_data->msi_domain) {
+> -		dev_err(dev, "failed to create MSI domain\n");
+> -		irq_domain_remove(parent);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	irq_domain_set_pm_device(msi_data->msi_domain, dev);
+> -
+> +	parent->dev = parent->pm_dev = dev;
+> +	parent->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
+> +	parent->msi_parent_ops = &imx_mu_msi_parent_ops;
+>  	return 0;
+>  }
