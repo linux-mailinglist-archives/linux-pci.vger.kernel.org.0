@@ -2,131 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BFC463B29C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 20:56:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD6963B374
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 21:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233401AbiK1T4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Nov 2022 14:56:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        id S232932AbiK1Ujh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Nov 2022 15:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232847AbiK1T4g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 14:56:36 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DC5205E1;
-        Mon, 28 Nov 2022 11:56:33 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        with ESMTP id S233054AbiK1Ujg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 15:39:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6582BB5E
+        for <linux-pci@vger.kernel.org>; Mon, 28 Nov 2022 12:39:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 495071EC04AD;
-        Mon, 28 Nov 2022 20:56:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1669665392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=BLpY38TW6Yt4fLZvLKrYAXJTm4+nIuDp4DdS3ewgJM4=;
-        b=SzUkoQD02Ul+NHN9XkR7Cor4g96wZB7Ea9lf4RS2CsKCE4GMsSCz5ahCbcqmSJf4+b88NF
-        VQgylDCkHGC6pztQnrvKZnQiVwSvrY/14xKcJCA50gzj4xAhzOphJwff2zYvoeA/LMOwks
-        fD+B+VVUkjSHEf+m9XQHbIaSctj9T78=
-Date:   Mon, 28 Nov 2022 20:56:31 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use
- standard coco mechanisms
-Message-ID: <Y4USb2niHHicZLCY@zn.tnic>
-References: <1668624097-14884-8-git-send-email-mikelley@microsoft.com>
- <Y3uTK3rBV6eXSJnC@zn.tnic>
- <BYAPR21MB16886AF404739449CA467B1AD70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y31Kqacbp9R5A1PF@zn.tnic>
- <BYAPR21MB16886FF8B35F51964A515CD5D70C9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <BYAPR21MB1688AF2F106CDC14E4F97DB4D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4Ti4UTBRGmbi0hD@zn.tnic>
- <BYAPR21MB1688466C7766148C6B3B4684D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4Tu1tx6E1CfnrJi@zn.tnic>
- <BYAPR21MB1688BCC5DF4636DBF4DEA525D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0279761425
+        for <linux-pci@vger.kernel.org>; Mon, 28 Nov 2022 20:39:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38302C433D7;
+        Mon, 28 Nov 2022 20:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669667974;
+        bh=S872SNclyqAEsepDsV4nGIWJkWi1gVXAmspzDiMUJL4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qNX65prcLEnoGDkrxUiRqiMOIcpeg0BAycsZFrcEAROZnDl7m4LyO087WTgaI8jJH
+         b5Gsmx2PdiVnL3Rq3N2+dO0YhEBw+XEi/PzV23UlzKikfEInfjiDW6L0gJ6GJdKgUw
+         t6utNON7ar6yAnNwp/9fJBAnnK0mQCknATtFgoKdbw1rwiaMHNmt6w4ce7hY6Ppaqc
+         +OKGDKXFlVN2J05ta99Ba3XpSTkxXZtX8SmBeAcxidAgltG+C2DxaV3Nzg5MkP7qyt
+         GYZkzhbVTwnTOG4guc8HYnQTvXXAPNW8mm3d8CirnUtOhls5V/272P2/A1rcS3SEdg
+         LFrWGgnHt4jqg==
+Date:   Mon, 28 Nov 2022 14:39:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: PCI resource allocation mismatch with BIOS
+Message-ID: <20221128203932.GA644781@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688BCC5DF4636DBF4DEA525D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y4SYBtaP1hTWGsYn@black.fi.intel.com>
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 05:55:11PM +0000, Michael Kelley (LINUX) wrote:
-> But vendor AMD effectively offers two different encryption schemes that
-> could be seen by the guest VM.  The hypervisor chooses which scheme a
-> particular guest will see.  Hyper-V has chosen to present the vTOM scheme
-> to guest VMs, including normal Linux and Windows guests, that have been
-> modestly updated to understand vTOM.
+[+cc Alex]
 
-If this is a standard SNP guest then you can detect vTOM support using
-SEV_FEATURES. See this thread here:
+Hi Mika,
 
-https://lore.kernel.org/r/20221117044433.244656-1-nikunj@amd.com
+On Mon, Nov 28, 2022 at 01:14:14PM +0200, Mika Westerberg wrote:
+> Hi Bjorn,
+> 
+> There is another PCI resource allocation issue with some Intel GPUs but
+> probably applies to other similar devices as well. This is something
+> encountered in data centers where they trigger reset (secondary bus
+> reset) to the GPUs if there is hang or similar detected. Basically they
+> do something like:
+> 
+>   1. Unbind the graphics driver(s) through sysfs.
+>   2. Remove the PCIe devices under the root port or the PCIe switch
+>      upstream port through sysfs (echo 1 > ../remove).
+>   3. Trigger reset through config space or use the sysfs reset attribute.
+>   4. Run rescan on the root bus (echo 1 > /sys/bus/pci/rescan) 
+> 
+> Expectation is to see the devices come back in the same way prior the
+> reset but what actually happens is that the Linux PCI resource
+> allocation fails to allocate space for some of the resources. In this
+> case it is the IOV BARs.
+> 
+> BIOS allocates resources for all these at boot time but after the rescan
+> Linux tries to re-allocate them but since the allocation algorithm is
+> more "consuming" some of the BARs do not fit to the available resource
+> space.
 
-Which then means, you don't need any special gunk except extending this
-patch above to check SNP has vTOM support.
+Thanks for the report!  Definitely sounds like an issue.  I doubt that
+I'll have time to work on it myself in the near future.
 
-> In the future, Hyper-V may also choose to present original AMD C-bit scheme
-> in some guest VMs, depending on the use case.  And it will present the Intel
-> TDX scheme when running on that hardware.
+Is the "remove" before the reset actually necessary?  If we could
+avoid the removal, maybe the config space save/restore we already do
+around reset would avoid the issue?
 
-And all those should JustWork(tm) because we already support such guests.
+Bjorn
 
-> To my knowledge, KVM does not support the AMD vTOM scheme.
-> Someone from AMD may have a better sense whether adding that
-> support is likely in the future.
-
-Yah, see above.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> Here is an example. The devices involved are:
+> 
+> 53:00.0		GPU with IOV BARs
+> 52:01.0		PCIe switch downstream port
+> 
+> PF = Physical Function
+> VF = Virtual Function
+> 
+> BIOS allocation (dmesg)
+> -----------------------
+> pci 0000:52:01.0: scanning [bus 53-54] behind bridge, pass 0
+> pci 0000:53:00.0: [8086:56c0] type 00 class 0x038000
+> pci 0000:53:00.0: reg 0x10: [mem 0x205e1f000000-0x205e1fffffff 64bit pref]
+> pci 0000:53:00.0: reg 0x18: [mem 0x201c00000000-0x201fffffffff 64bit pref]
+> pci 0000:53:00.0: reg 0x30: [mem 0xffe00000-0xffffffff pref]
+> pci 0000:53:00.0: reg 0x344: [mem 0x205e00000000-0x205e00ffffff 64bit pref]
+> pci 0000:53:00.0: VF(n) BAR0 space: [mem 0x205e00000000-0x205e1effffff 64bit pref] (contains BAR0 for 31 VFs)
+> pci 0000:53:00.0: reg 0x34c: [mem 0x202000000000-0x2021ffffffff 64bit pref]
+> pci 0000:53:00.0: VF(n) BAR2 space: [mem 0x202000000000-0x205dffffffff 64bit pref] (contains BAR2 for 31 VFs)
+> pci 0000:52:01.0: PCI bridge to [bus 53-54]
+> pci 0000:52:01.0:   bridge window [mem 0x201c00000000-0x205e1fffffff 64bit pref]
+> 
+> GPU
+> ~~~
+> 0x201c00000000-0x201fffffffff	PF BAR2 16384M
+> 0x202000000000-0x205dffffffff	VF BAR2	253952M (31 * 8G)
+> 0x205e00000000-0x205e1effffff	VF BAR0 496M (31 * 16M)
+> 0x205e1f000000-0x205e1fffffff 	PF BAR0 16M
+> 					270848M
+> 
+> PCIe downstream port
+> ~~~~~~~~~~~~~~~~~~~~
+> 0x201c00000000-0x205e1fffffff		270848M
+> 
+> Linux allocation (dmesg)
+> ------------------------
+> pci 0000:52:01.0: [8086:4fa4] type 01 class 0x060400
+> pci_bus 0000:52: fixups for bus
+> pci 0000:51:00.0: PCI bridge to [bus 52-54]
+> pci 0000:51:00.0:   bridge window [io  0x0000-0x0fff]
+> pci 0000:51:00.0:   bridge window [mem 0x00000000-0x000fffff]
+> pci 0000:51:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+> pci 0000:52:01.0: scanning [bus 00-00] behind bridge, pass 0
+> pci 0000:52:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> pci 0000:52:01.0: scanning [bus 00-00] behind bridge, pass 1
+> pci_bus 0000:53: scanning bus
+> pci 0000:53:00.0: [8086:56c0] type 00 class 0x038000
+> pci 0000:53:00.0: reg 0x10: [mem 0x00000000-0x00ffffff 64bit pref]
+> pci 0000:53:00.0: reg 0x18: [mem 0x00000000-0x3ffffffff 64bit pref]
+> pci 0000:53:00.0: reg 0x30: [mem 0x00000000-0x001fffff pref]
+> pci 0000:53:00.0: reg 0x344: [mem 0x00000000-0x00ffffff 64bit pref]
+> pci 0000:53:00.0: VF(n) BAR0 space: [mem 0x00000000-0x1effffff 64bit pref] (contains BAR0 for 31 VFs)
+> pci 0000:53:00.0: reg 0x34c: [mem 0x00000000-0x1ffffffff 64bit pref]
+> pci 0000:53:00.0: VF(n) BAR2 space: [mem 0x00000000-0x3dffffffff 64bit pref] (contains BAR2 for 31 VFs)
+> pci_bus 0000:53: fixups for bus
+> pci 0000:52:01.0: PCI bridge to [bus 53-54]
+> pci 0000:52:01.0:   bridge window [io  0x0000-0x0fff]
+> pci 0000:52:01.0:   bridge window [mem 0x00000000-0x000fffff]
+> pci 0000:52:01.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+> pci 0000:52:01.0: bridge window [mem 0x200000000-0x7ffffffff 64bit pref] to [bus 53] add_size 3e00000000 add_align 200000000
+> pci 0000:51:00.0: bridge window [mem 0x200000000-0x7ffffffff 64bit pref] to [bus 52-53] add_size 3e00000000 add_align 200000000
+> pcieport 0000:50:02.0: BAR 13: assigned [io  0x8000-0x8fff]
+> pci 0000:51:00.0: BAR 15: no space for [mem size 0x4400000000 64bit pref]
+> pci 0000:51:00.0: BAR 15: failed to assign [mem size 0x4400000000 64bit pref]
+> pci 0000:51:00.0: BAR 0: assigned [mem 0x201c00000000-0x201c007fffff 64bit pref]
+> pci 0000:51:00.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> pci 0000:51:00.0: BAR 13: assigned [io  0x8000-0x8fff]
+> pci 0000:51:00.0: BAR 15: assigned [mem 0x201c00000000-0x2021ffffffff 64bit pref]
+> pci 0000:51:00.0: BAR 0: assigned [mem 0x202200000000-0x2022007fffff 64bit pref]
+> pci 0000:51:00.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> pci 0000:51:00.0: BAR 15: [mem 0x201c00000000-0x2021ffffffff 64bit pref] (failed to expand by 0x3e00000000)
+> pci 0000:51:00.0: failed to add 3e00000000 res[15]=[mem 0x201c00000000-0x2021ffffffff 64bit pref]
+> pci 0000:52:01.0: BAR 15: no space for [mem size 0x4400000000 64bit pref]
+> pci 0000:52:01.0: BAR 15: failed to assign [mem size 0x4400000000 64bit pref]
+> pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> pci 0000:52:01.0: BAR 13: assigned [io  0x8000-0x8fff]
+> pci 0000:52:01.0: BAR 15: assigned [mem 0x201c00000000-0x2021ffffffff 64bit pref]
+> pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> pci 0000:52:01.0: BAR 15: [mem 0x201c00000000-0x2021ffffffff 64bit pref] (failed to expand by 0x3e00000000)
+> pci 0000:52:01.0: failed to add 3e00000000 res[15]=[mem 0x201c00000000-0x2021ffffffff 64bit pref]
+> pci 0000:53:00.0: BAR 2: assigned [mem 0x201c00000000-0x201fffffffff 64bit pref]
+> pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000 64bit pref]
+> pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000 64bit pref]
+> pci 0000:53:00.0: BAR 0: assigned [mem 0x202000000000-0x202000ffffff 64bit pref]
+> pci 0000:53:00.0: BAR 7: assigned [mem 0x202001000000-0x20201fffffff 64bit pref]
+> pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff pref]
+> pci 0000:53:00.0: BAR 2: assigned [mem 0x201c00000000-0x201fffffffff 64bit pref]
+> pci 0000:53:00.0: BAR 0: assigned [mem 0x202000000000-0x202000ffffff 64bit pref]
+> pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff pref]
+> pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000 64bit pref]
+> pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000 64bit pref]
+> pci 0000:53:00.0: BAR 7: assigned [mem 0x202001000000-0x20201fffffff 64bit pref]
+> pci 0000:52:01.0: PCI bridge to [bus 53]
+> pci 0000:52:01.0:   bridge window [io  0x8000-0x8fff]
+> pci 0000:52:01.0:   bridge window [mem 0xbb800000-0xbb9fffff]
+> pci 0000:52:01.0:   bridge window [mem 0x201c00000000-0x2021ffffffff 64bit pref]
+> 
+> GPU
+> ~~~
+> 0x201c00000000-0x201fffffffff	PF BAR2 16834M
+> 0x202000000000-0x202000ffffff	PF BAR0	16M
+> 0x202001000000-0x20201fffffff 	VF BAR0	496M (31 * 16M)
+> FAIL				VF BAR2 253952M (31 * 8G)
+> 
+> PCIe downstream port
+> ~~~~~~~~~~~~~~~~~~~~
+> 0x201c00000000-0x2021ffffffff		24576M
+> 
+> Now, if I hack the allocation algorithm (in pbus_size_mem()) to "mimic"
+> the BIOS allocation then these fit fine. However, if the BIOS allocation
+> ever changes we may end up in similar issue. Also the Linux PCI resource
+> allocation code has been like that for aeons so changing it would likely
+> cause regressions.
+> 
+> Let me know if more information is needed. I have one of these cards
+> locally and have remote access to a similar system where the above
+> example was take so I can run additional testing.
+> 
+> Also let me know if you want me to file a bug in kernel.org bugzilla.
+> 
+> Thanks in advance!
