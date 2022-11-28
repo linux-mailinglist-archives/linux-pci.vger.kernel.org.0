@@ -2,254 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36DA263B4E4
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Nov 2022 23:39:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E6163B60A
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 00:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232648AbiK1WjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Nov 2022 17:39:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
+        id S234129AbiK1XjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Nov 2022 18:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232580AbiK1WjY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 17:39:24 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37827B0D;
-        Mon, 28 Nov 2022 14:39:23 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1669675161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v+UGv7VC5HMGlrxxyoqmeanzHAHeNeTk4zGAjjF1eag=;
-        b=QQdbDaUs4b/mblLU59gl1oxkKxGJ7BQGdOGRFGol7xy9OT40cc78djrAImuk70Yxf2QK+x
-        HC24Pt1/5H1tiMuKSEmw580fSBnBHMMCliSWDbufvQeMySpDssf+Q2RBNkALk1wsOpdW8h
-        SBFD7jC/PWnDMaaZOejsp96PDCtr5YOubbIGIzQ1xaZhxR3jXBlwvj0sdwnwcrFE4jKRmT
-        GGfr+LQADVI7pFmEeCFGpSLlt3Dc60rkrJEe2S3dLGpy9fZbGrjyXmakJXPoguOmfgsK0G
-        mijksubxgH07ygg6IXCvJwGqSEjbwpeZpOSHt1W3rDwHEkJcK5wvMu/F0yjE/g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1669675161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v+UGv7VC5HMGlrxxyoqmeanzHAHeNeTk4zGAjjF1eag=;
-        b=C3Q8q8XKZ9rSjpMwBKIGxAOcrST4QkuE4JYyB6ZVmjIOWr+rHEM/lpcTG7G3wYUrCiHBwU
-        kSyNfBFKwK7LvJCQ==
-To:     Frank Li <frank.li@nxp.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>, "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "lznuaa@gmail.com" <lznuaa@gmail.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-        Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: RE: [EXT] Re: [PATCH v13 2/2] PCI: endpoint: pci-epf-vntb: using
- platform MSI as doorbell
-In-Reply-To: <HE1PR0401MB2331DA6C4A52272B08E1661D88139@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-References: <20221124055036.1630573-1-Frank.Li@nxp.com>
- <20221124055036.1630573-3-Frank.Li@nxp.com> <87wn7evql7.ffs@tglx>
- <HE1PR0401MB2331DA6C4A52272B08E1661D88139@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-Date:   Mon, 28 Nov 2022 23:39:20 +0100
-Message-ID: <87r0xmvh47.ffs@tglx>
+        with ESMTP id S234653AbiK1XjH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Nov 2022 18:39:07 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B226A1401D
+        for <linux-pci@vger.kernel.org>; Mon, 28 Nov 2022 15:39:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669678745; x=1701214745;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dOW6qCQQ50/Kt9jynMl+xW0QldWfV0F/xgT7P3ROwfU=;
+  b=Dd3SzjjqeJQ9VGIw+V0vzGrmt2FcYglaCYnP//3xz1hKV2mWaOgVz0Up
+   j5Q09GQw8FEGZMdihxZH3VbxZ+zhDCRzxk88rkncP/z+9/Im9RLLlH5XW
+   3+HDe9xTkb/jm2ZZv4ptu50qUEzQQewID8rU9Rw1wlP30DmFJwM7zj6Bj
+   kmaJPj2Cfi2KcBYDRG+K/CBCAZsg9uMdfo+MENtmrkRenN2RkdIDzU1Ha
+   3PaVUm5aUWH8ts5ELvzqnMMY2PkMc4WOgq6fbeGi9GeFFwsxUO3XXgr+C
+   iBW/+6iKRrUD8Wxn9d9nhZ+9W51zlGpNLcUp2rOHcYfhtiUGMvqQhu1ye
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="302559019"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="302559019"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 15:39:04 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="637399228"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="637399228"
+Received: from fmmunozr-mobl1.amr.corp.intel.com (HELO [10.212.145.95]) ([10.212.145.95])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 15:39:03 -0800
+Message-ID: <ea3fe84c-ec76-86d9-5ec6-22bf73c47756@linux.intel.com>
+Date:   Mon, 28 Nov 2022 15:38:24 -0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH V3] PCI: vmd: Fix secondary bus reset for Intel bridges
+To:     helgaas@kernel.org, alex.williamson@redhat.com,
+        myron.stowe@redhat.com
+Cc:     lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
+        linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+References: <20221103201407.3158-1-francisco.munoz.ruiz@linux.intel.com>
+Content-Language: en-US
+From:   "Munoz Ruiz, Francisco" <francisco.munoz.ruiz@linux.intel.com>
+In-Reply-To: <20221103201407.3158-1-francisco.munoz.ruiz@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Frank!
+On 11/3/2022 1:14 PM, francisco.munoz.ruiz@linux.intel.com wrote:
+> From: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> 
+> The reset was never applied in the current implementation because Intel
+> Bridges owned by VMD are parentless. Internally, pci_reset_bus() applies
+> a reset to the parent of the PCI device supplied as argument, but in this
+> case it failed because there wasn't a parent.
+> 
+> In more detail, this change allows the VMD driver to enumerate NVMe devices
+> in pass-through configurations when guest reboots are performed. Commit id
+> 6aab5622296b ("PCI: vmd: Clean up domain before enumeration") attempted to
+> fix this, but later we discovered that the code inside pci_reset_bus() wasn’t
+> triggering secondary bus resets.  Therefore, we updated the parameters passed
+> to it, and now NVMe SSDs attached to VMD bridges are properly enumerated in
+> VT-d pass-through scenarios.
+> 
+> Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
+> ---
+> V3:
+>     - Add WARN_ON
+>     - Include Jonathan as reviewer
+>     - Update commit message
+> V2:
+>     - Update commit message
+> 
+>  drivers/pci/controller/vmd.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index e06e9f4fc50f..2406be6644f3 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -859,8 +859,17 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	pci_scan_child_bus(vmd->bus);
+>  	vmd_domain_reset(vmd);
+> -	list_for_each_entry(child, &vmd->bus->children, node)
+> -		pci_reset_bus(child->self);
+> +
+> +	list_for_each_entry(child, &vmd->bus->children, node) {
+> +		if (!list_empty(&child->devices)) {
+> +			ret = pci_reset_bus(list_first_entry(&child->devices,
+> +							     struct pci_dev,
+> +							     bus_list));
+> +			WARN_ON(ret);
+> +			break;
+> +		}
+> +	}
+> +
+>  	pci_assign_unassigned_bus_resources(vmd->bus);
+>  
+>  	/*
 
-On Mon, Nov 28 2022 at 21:25, Frank Li wrote:
 
-Can you please fix your mail client to not copy the whole CC list into
-the reply? It's just pointless noise. A simple:
+Hi,
 
-On Mon, Nov 28 200 at 1:15 PM Thomas Gleixner wrote:
+Just a gentle reminder for this one
 
-instead of:
-
->> -----Original Message-----
->> From: Thomas Gleixner <tglx@linutronix.de>
->> Sent: Monday, November 28, 2022 1:15 PM
->> To: Frank Li <frank.li@nxp.com>; lpieralisi@kernel.org
->> Cc: Frank Li <frank.li@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>;
->> bhelgaas@google.com; devicetree@vger.kernel.org; festevam@gmail.com;
->> imx@lists.linux.dev; jdmason@kudzu.us; kernel@pengutronix.de;
->> kishon@ti.com; krzysztof.kozlowski+dt@linaro.org; kw@linux.com; linux-
->> arm-kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>; linux-
->> kernel@vger.kernel.org; linux-pci@vger.kernel.org;
->> lorenzo.pieralisi@arm.com; lznuaa@gmail.com;
->> manivannan.sadhasivam@linaro.org; maz@kernel.org; ntb@lists.linux.dev;
->> Peng Fan <peng.fan@nxp.com>; robh+dt@kernel.org;
->> s.hauer@pengutronix.de; shawnguo@kernel.org
->> Subject: [EXT] Re: [PATCH v13 2/2] PCI: endpoint: pci-epf-vntb: using platform
->> MSI as doorbell
-
-is completely sufficient.
-
->> Caution: EXT Email
-
-We are neither interested in the oddities of NXP's mail categorization system.
-
->> On Thu, Nov 24 2022 at 00:50, Frank Li wrote:
->> >
->> > Using platform MSI interrupt controller as endpoint(EP)'s doorbell.
->> 
->> Can you please explain what the MSI controller is in this picture? MSI
->> controller is not a term which is common in the interrupt handling
->> landscape despite the fact that it's pretty wide spread in device tree
->> bindings presumably through intensive copy & pasta cargo cult.
->
-> I use irq-imx-mu-msi to do test. I supposed it should work for all kinds
-> general msi controller.
-
-Sure it works by some definition of "works" because obviously that
-implementation does not care about where a particular message originates
-from.
-
-But that's still wrong at the conceptual level because it very much
-matters where a message originates from. PCIe devices and general
-platform devices have very distinct mechanisms to transport that
-information.
-
-Just because it "works" does not prove that it is correct.
-
-How are you going to do proper shielding with that approach?
-
-> Our test platform have not GIC ITS supported yet.
-
-And therefore the originating device is irrelevant, right? Get to the
-point where you have ITS and it all falls apart.
-
->> You're explaining what the code does, but fail to explain the underlying
->> mechanisms.
->> 
->> Platform MSI is definitely the wrong mechanism here. Why?
->
-> This patch use Platform MSI.  I never said " Platform MSI is
-> definitely the wrong mechanism here".
-
-I did not claim that _you_ said that. _I_ said that this is wrong. See
-above.
-
-> Base logic is that, get msi controller's message address by irq API. 
-> Map this physical address to DB BAR,  so PCI host write this DB bar, then
-> EP generate irq.
-
-Again, you are explaining what your implementation is doing, but you are
-not describing the conceptual level.
-
->> This is about a PCIe endpoint, which is usually handled by a PCI/MSI
->> interrupt domain. Obviously this usage does not fit into the way how the
->> "global" PCI/MSI domains work.
->
-> PCI endpoint have not standard PCI configure space to enable/disable MSI irq and
-> MSI address (CAP 05).
-
-I'm very well aware of the fact that a PCI endpoint does not have the
-standard MSI configuration space mechanism.
-
->  That's reason why need "platform msi", or you called "global"
-
-Again: platform MSI does not convey the PCIe device originator. It might
-be irrelevant for your actual platform, but that does not make it more
-correct. Once you have the need to track the origin of a MSI message
-then the distinction between platform and MSI matters.
-
-Sure you can argue that you don't care, but that does neither make it
-correct nor future proof and there is no point to rework this whole
-thing 6 month down the road when you actually have to support GIC-ITS.
-
->> There is upcoming work and at least the generic parts should show up in
->> 6.2 which addresses exactly the problem you are trying to solve:
->> 
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.k
->> ernel.org%2Fall%2F20221124225331.464480443%40linutronix.de&amp;data
->> =05%7C01%7CFrank.Li%40nxp.com%7C6a07e33e56af45ffc1ff08dad174d02d
->> %7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6380525969049530
->> 06%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMz
->> IiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=Q8jr
->> eVGGLa2M4yhjGO7Njqwdm59XDC0GyLEwkr0k6B0%3D&amp;reserved=0
->> 
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.k
->> ernel.org%2Fall%2F20221124230505.073418677%40linutronix.de&amp;data
->> =05%7C01%7CFrank.Li%40nxp.com%7C6a07e33e56af45ffc1ff08dad174d02d
->> %7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6380525969049530
->> 06%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMz
->> IiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=Tc9p
->> XNJ499ETFgNWQBNLViFk8D5GbvrrwYDlBW%2Bf2qg%3D&amp;reserved=0
->> 
->> plus the prove that the platform MSI mess can be replaced by this:
->> 
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.k
->> ernel.org%2Fall%2F20221121135653.208611233%40linutronix.de&amp;data
->> =05%7C01%7CFrank.Li%40nxp.com%7C6a07e33e56af45ffc1ff08dad174d02d
->> %7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6380525969049530
->> 06%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMz
->> IiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=R5K
->> NVfcGqxoCam%2FYhY57ihsloWGhGLM3Kh9IkyME4lk%3D&amp;reserved=0
-
-Those outlook artifacts are helpful to our conversation in which way?
- 
->> NTB in it's current form should never have happened, but that's water
->> down the bridge.
->> 
->> What you really want is:
->> 
->>   1) Convert your platform to the new MSI parent model
->> 
->>   2) Utilize PCI/IMS which is giving you exactly what you need with
->>      proper PCI semantics
->
-> Sorry, I still don't understand yet. This patch is just user of msi
-> controller.
-
-As I explained to you before: The concept of MSI controller does not
-exist in the kernel. It might exist in your NXP nomenclature, but that's
-irrelevant here.
-
-> Your patches focus on the msi controller itself. 
-
-No. They focus on changing the hierarchy model from "global" MSI domains
-to per device MSI domains so that the weird constructs of platform MSI
-can be replaced by something which actually matches the hardware and
-provides a proper abstraction for PCIe/NTB at the right level.
-
-> Interface platform_msi_domain_alloc_irqs still exist at your devmsi-v2-part3. 
-
-Sure, but at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
-
-platform_msi_domain_alloc_irqs() does not exist anymore.
-
-You replied to exactly that series which builds on top of devmsi-v2-part3, no?
-
-So what are you trying to tell me?
-
-Thanks,
-
-        tglx
-
+Best wishes,
+Francisco.
