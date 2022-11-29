@@ -2,254 +2,423 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9309E63C3FE
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 16:44:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E2D63C41B
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 16:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbiK2Pod (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 10:44:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41304 "EHLO
+        id S236018AbiK2Pru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 10:47:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231599AbiK2Poc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 10:44:32 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A1231DE9
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 07:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669736671; x=1701272671;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SEGKBSxVdDLjCHzUmX/z6pUB/1TX1q2Ckj6AssKxwdM=;
-  b=ARpfIQAU9FwjR5Or5YxgDGSp4/2/sLFNsno9wSW3a8BzouH42KCLPqJE
-   sYeaBHWCWMTOhGpLUhw8UPlHi4Ch2v46xB0RsoWbij6hAv9QKTU3NFwcm
-   izQnk9Z9Y0ZaFxW0ScldPnn7SbTvNLYejG57ge+vFLxWahiNlQ0k6zdNB
-   AOrlxxbhHRpMTE4+gqmeZIoSadPo7A/5M8G+kW5PObByTrMR1QItGwZaM
-   kubc1dWE7x6Fe2hLgTP+zFYjcpT5tC2oSQuSV/ldrFrK2EO9GYKOb6MZI
-   sMmEq1cPZQ+bCclX2ifYoMzBhioMV8zCyiQr4G4ne9yQNDrQwBRnt56YV
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="316978913"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="316978913"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 07:44:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="643823929"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="643823929"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 29 Nov 2022 07:44:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id B062B10E; Tue, 29 Nov 2022 17:44:54 +0200 (EET)
-Date:   Tue, 29 Nov 2022 17:44:54 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>
-Subject: Re: [PATCH] PCI/DPC: Add Software Trigger as reset method
-Message-ID: <Y4Yo9tk/L9fac9yO@black.fi.intel.com>
-References: <9c1533fd42e9002bd6d2020656fa1dd0e3e3bf3a.1669706952.git.lukas@wunner.de>
+        with ESMTP id S235979AbiK2Prt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 10:47:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E93242F52
+        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 07:46:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669736813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fFCmZLrXuG3nOzoAi5zSMrtphr/E0e0mi6L5Ysip7bs=;
+        b=XJTEMMF3KjAHdfrBWmFEUr5oMBk4Tka9oAPnvQ6ZdEHifuXLyi3p5u/nrWtcpwv+gwKgqh
+        xM2D7/4WpTafr211nF5ljFhwk1aSZnO0Pnbkj9pFpRRdNA9m169oUGN199IhEVPj5u37Rg
+        g/y7iPM+CWkrrIpSs/vpnCntJNmy8AA=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-665-4jx28j7aORCq7rX5YFoRDw-1; Tue, 29 Nov 2022 10:46:51 -0500
+X-MC-Unique: 4jx28j7aORCq7rX5YFoRDw-1
+Received: by mail-il1-f199.google.com with SMTP id k11-20020a056e021a8b00b003030ec907c7so6445612ilv.10
+        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 07:46:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fFCmZLrXuG3nOzoAi5zSMrtphr/E0e0mi6L5Ysip7bs=;
+        b=YamySXSrYXMSRJEZZkT6o17bX0ImSsorRGCMUhgHHc9++wKz3+qoZaRp8gcHuwWURv
+         YAW7tE084NRU8/0W+AkcLPpvpR1Bjl35/rvwcn4bstSewgsMMNrDqiqxnEAcoWtuDRxu
+         B28YvEvLE+PGug62VPPHRVhvRZQz6ln0FCUIMbf9rPAhv6unAegFe3z3AZRZPw2TvseV
+         wMdH2LWy+4KNwpeHJdZC2iFoSKUORXKT4LRF2ji/XaPWheBqxOpvRKXjiGX+VC3FWZpS
+         113EeIs7W4oaTq7uRrc9Q4GmyUBAS0Z9l67Lq/K6vzdzzqTW6erlUMfY88+CEkDSHTl5
+         Ql0A==
+X-Gm-Message-State: ANoB5pmz69Wv6r1EwpD/XOwagYIpFygteY4WtEnRJaGXZ3xJovONDGM5
+        WRgGLx5lpJn9W6pvuIiHgFAmErmQqZECgyLdfV2yXa2U+AtA4MMQzxXY7mNWmYMtKNTrC8YgRNN
+        mGsaNUSqkWKA1xW/GKWDY
+X-Received: by 2002:a05:6e02:be6:b0:302:e6b6:fd9 with SMTP id d6-20020a056e020be600b00302e6b60fd9mr14257113ilu.67.1669736810985;
+        Tue, 29 Nov 2022 07:46:50 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7j+zagVezkPFKdeosduvl96bODPunsJxEODbsxODXnvhfbrTcyqV3XR56xEWVCwnGUb4bz1w==
+X-Received: by 2002:a05:6e02:be6:b0:302:e6b6:fd9 with SMTP id d6-20020a056e020be600b00302e6b60fd9mr14257094ilu.67.1669736810566;
+        Tue, 29 Nov 2022 07:46:50 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id d74-20020a02624d000000b00363e4730a41sm5340971jac.175.2022.11.29.07.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 07:46:49 -0800 (PST)
+Date:   Tue, 29 Nov 2022 08:46:46 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: PCI resource allocation mismatch with BIOS
+Message-ID: <20221129084646.0b22c80b.alex.williamson@redhat.com>
+In-Reply-To: <Y4YgKaml6nh5cB9r@black.fi.intel.com>
+References: <Y4SYBtaP1hTWGsYn@black.fi.intel.com>
+        <20221128203932.GA644781@bhelgaas>
+        <20221128150617.14c98c2e.alex.williamson@redhat.com>
+        <20221129064812.GA1555@wunner.de>
+        <20221129065242.07b5bcbf.alex.williamson@redhat.com>
+        <Y4YgKaml6nh5cB9r@black.fi.intel.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9c1533fd42e9002bd6d2020656fa1dd0e3e3bf3a.1669706952.git.lukas@wunner.de>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, 29 Nov 2022 17:07:21 +0200
+Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
 
-On Tue, Nov 29, 2022 at 08:35:55AM +0100, Lukas Wunner wrote:
-> Add DPC Software Trigger as a reset method to be used for silicon
-> validation among other things:
+> Hi,
 > 
->   # echo dpc_sw_trigger > reset_method
->   # echo 1 > reset
+> On Tue, Nov 29, 2022 at 06:52:42AM -0700, Alex Williamson wrote:
+> > On Tue, 29 Nov 2022 07:48:12 +0100
+> > Lukas Wunner <lukas@wunner.de> wrote:
+> >   
+> > > On Mon, Nov 28, 2022 at 03:06:17PM -0700, Alex Williamson wrote:  
+> > > > Agreed.  Is this convoluted removal process being used to force a SBR,
+> > > > versus a FLR or PM reset that might otherwise be used by twiddling the
+> > > > reset attribute of the GPU directly?  If so, the reset_method attribute
+> > > > can be used to force a bus reset and perform all the state save/restore
+> > > > handling to avoid reallocating BARs.  A reset from the upstream switch
+> > > > port would only be necessary if you have some reason to also reset the
+> > > > switch downstream ports.  Thanks,    
+> > > 
+> > > A Secondary Bus Reset is only offered as a reset_method if the
+> > > device to be reset is the *only* child of the upstream bridge.
+> > > I.e. if the device to be reset has siblings or children,
+> > > a Secondary Bus Reset is not permitted.
+> > > 
+> > > Modern GPUs (including the one Mika is referring to) consist of
+> > > a PCIe switch with the GPU, HD audio and telemetry devices below
+> > > Downstream Bridges.  A Secondary Bus Reset of the Root Port is
+> > > not allowed in this case because the Switch Upstream Port has
+> > > children.  
+> > 
+> > I didn't see such functions in the log provided, the GPU in question
+> > seems to be a single function device at 53:00.0.  This matches what
+> > I've seen on an ARC A380 GPU where the GPU and HD audio are each single
+> > function devices under separate downstream ports of a PCIe switch.  
 > 
-> After validating DPC, the default reset_method(s) may be reinstated:
+> Yes, this one is similar. There is a PCIe switch and then bunch of
+> devices connected to the downstream ports. One of them being the GPU.
 > 
->   # echo default > reset_method
+> Sorry if I missed that part in the report.
 > 
-> Writing the DPC Control Register requires that control was granted by
-> firmware, so expose the reset_method only if DPC is native.  (And AER,
-> which must always be granted or denied in unison per PCI Firmware Spec
-> r3.3 table 4-5.)
+> There are typically multiple of these cards and they want to perform the
+> reset seperately for each.
+
+Maybe the elephant in the room is why it's apparently such common
+practice to need to perform a hard reset these devices outside of
+virtualization scenarios...
+ 
+> > > See this code in pci_parent_bus_reset():
+> > > 
+> > > 	if (pci_is_root_bus(dev->bus) || dev->subordinate ||
+> > > 	    !dev->bus->self || dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
+> > > 		return -ENOTTY;
+> > > 
+> > > The dev->subordinate check disallows a SBR if there are children.
+> > > Note that the code should probably instead check for...
+> > > (dev->subordinate && !list_empty(dev->subordinate->devices))
+> > > ...because the port may have a subordinate bus without children
+> > > (may have been removed for example).
+> > > 
+> > > The "no siblings" rule is enforced by:
+> > > 
+> > > 	list_for_each_entry(pdev, &dev->bus->devices, bus_list)
+> > > 		if (pdev != dev)
+> > > 			return -ENOTTY;
+> > > 
+> > > Note that the devices list is iterated without holding pci_bus_sem,
+> > > which looks fishy.
+> > > 
+> > > That said, it *is* possible that a Secondary Bus Reset is erroneously
+> > > offered despite these checks because we perform them early on device
+> > > enumeration when the subordinate bus hasn't been scanned yet.
+> > > 
+> > > So if the Root Port offers other reset methods besides SBR and the
+> > > user switches to one of them, then reinstates the defaults,
+> > > suddenly SBR will disappear because the subordinate bus has since
+> > > been scanned.  What's missing here is that we re-check availability
+> > > of the reset methods on siblings and the parent when a device is
+> > > added or removed.  This is also necessary to make reset_method
+> > > work properly with hotplug.  However, the result may be that the
+> > > reset_method attribute in sysfs may become invisible after adding
+> > > a device (because there is no reset method available) and reappear
+> > > after removing a device.
+> > > 
+> > > So the reset_method logic is pretty broken right now I'm afraid.  
+> > 
+> > I haven't checked for a while, but I thought we exposed SBR regardless
+> > of siblings, though it can't be accessed via the reset attribute if
+> > there are siblings.  That allows that the sibling devices could be soft
+> > removed, a reset performed, and the bus re-scanned.  If there are in
+> > fact sibling devices, it would make more sense to remove only those to
+> > effect a bus reset to avoid the resource issues with rescanning SR-IOV
+> > on the GPU.  
 > 
-> The reset attribute in sysfs is meant to reset a single PCI Function,
-> but DPC resets the entire hierarchy below the parent.  So only expose
-> the reset method on PCI Functions without siblings or children.
-> Checking for that may happen both *before* the PCI Function has been
-> added to the bus list (via pci_device_add() -> pci_init_capabilities())
-> and *after* (via reset_method_store()), hence differentiate between
-> those two cases on reset probing.
+> If I understand correctly they perform the reset just above the upstream
+> port of the PCIe switch so that it resets the whole "card".
+
+... and even to the extent that an entire PCIe hierarchy is being reset
+rather than individual devices, let alone leaf buses.
+ 
+> > > In any case, for Mika's use case it would be useful to have a
+> > > "reset_subordinate" attribute on ports capable of a SBR such that
+> > > the entire hierarchy below is reset.  The "reset" attribute is
+> > > insufficient.  
+> > 
+> > I'll toss out that a pretty simple vfio tool can be written to bind all
+> > the siblings on a bus enabling the hot reset ioctl in vfio.  Thanks,  
 > 
-> It would be useful for silicon validation to have a separate sysfs
-> attribute for PCI bridges to reset their downstream hierarchy.  Prepare
-> for introduction of such an attribute by adding separate functions
-> pci_dpc_sw_trigger() (to reset the hierarchy below a bridge) and
-> pci_dpc_sw_trigger_parent() (to reset a single PCI Function), where the
-> latter calls the former to trigger DPC on the parent bridge.
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Sounds good but unfortunately I'm not fluent in vfio so I have no idea
+> how this simple tool could be done :( Do you have any examples or
+> pointers that we could use to try this out?
 
-Looks good to me. There are few minor comments below. Feel free to
-ignore them.
+Unfortunately, if your goal is really to reset the whole switch, vfio
+isn't going to help with that.  The vfio-pci driver only binds to
+endpoints and a hot reset can be effected for a given endpoint, in the
+presence of sibling devices which are also owned by the same user.
+There's a rudimentary unit test below which implements this.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+I think the reason we don't have a "reset_subordinate" attribute is
+that there are a number of difficult issues in locking down an entire
+hierarchy that go beyond what vfio does in validating the user's proof
+of ownership for affected endpoints on a leaf bus.  Thanks,
 
-> ---
->  drivers/pci/pci.c             |  1 +
->  drivers/pci/pci.h             |  2 ++
->  drivers/pci/pcie/dpc.c        | 57 +++++++++++++++++++++++++++++++++++
->  include/linux/pci.h           |  2 +-
->  include/uapi/linux/pci_regs.h |  1 +
->  5 files changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index fba95486caaf..f561f84a8bca 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5225,6 +5225,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
->  	{ pci_af_flr, .name = "af_flr" },
->  	{ pci_pm_reset, .name = "pm" },
->  	{ pci_reset_bus_function, .name = "bus" },
-> +	{ pci_dpc_sw_trigger_parent, .name = "dpc_sw_trigger" },
->  };
->  
->  static ssize_t reset_method_show(struct device *dev,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9ed3b5550043..da2a3af4c46c 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -425,11 +425,13 @@ void pci_dpc_init(struct pci_dev *pdev);
->  void dpc_process_error(struct pci_dev *pdev);
->  pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
->  bool pci_dpc_recovered(struct pci_dev *pdev);
-> +int pci_dpc_sw_trigger_parent(struct pci_dev *pdev, bool probe);
->  #else
->  static inline void pci_save_dpc_state(struct pci_dev *dev) {}
->  static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
->  static inline void pci_dpc_init(struct pci_dev *pdev) {}
->  static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
-> +static inline int pci_dpc_sw_trigger_parent(struct pci_dev *pdev, bool probe) { return -ENOTTY; }
->  #endif
->  
->  #ifdef CONFIG_PCIEPORTBUS
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index f5ffea17c7f8..47fd69d0a9c2 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -322,6 +322,63 @@ static irqreturn_t dpc_irq(int irq, void *context)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int pci_dpc_sw_trigger(struct pci_dev *pdev, bool probe)
-> +{
-> +	struct pci_host_bridge *host;
-> +	u16 cap, ctl;
-> +
-> +	if (probe) {
-> +		if (!pdev->dpc_cap)
-> +			return -ENOTTY;
+Alex
 
--ENODEV?
+#include <errno.h>
+#include <libgen.h>
+#include <fcntl.h>
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/vfs.h>
 
-> +
-> +		host = pci_find_host_bridge(pdev->bus);
-> +		if (!host->native_dpc && !pcie_ports_dpc_native)
-> +			return -ENOTTY;
-> +
-> +		if (!pcie_aer_is_native(pdev))
-> +			return -ENOTTY;
-> +
-> +		pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP,
-> +				     &cap);
-> +		if (!(cap & PCI_EXP_DPC_CAP_SW_TRIGGER))
-> +			return -ENOTTY;
-> +
-> +		return 0;
-> +	}
-> +
-> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-> +	ctl |= PCI_EXP_DPC_CTL_SW_TRIGGER;
-> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+#include <linux/ioctl.h>
+#include <linux/vfio.h>
 
-Empty line here.
+void usage(char *name)
+{
+	printf("usage: %s <iommu group id> <ssss:bb:dd.f>\n", name);
+}
 
-> +	return 0;
-> +}
-> +
+#define false 0
+#define true 1
 
-Kernel-doc would make it easier for the caller to figure out what this
-does and what the @probe attribute is used for.
+int main(int argc, char **argv)
+{
+	int i, j, ret, container, *pfd;
+	char path[PATH_MAX];
 
-> +int pci_dpc_sw_trigger_parent(struct pci_dev *pdev, bool probe)
-> +{
-> +	if (probe) {
-> +		/*
-> +		 * Reset must only affect @pdev, so bail out if it has siblings
-> +		 * or descendants.  Need to differentiate whether @pdev has
-> +		 * already been added to the bus list or not:
-> +		 */
-> +		if (list_empty(&pdev->bus_list) &&
-> +		    !list_empty(&pdev->bus->devices))
-> +			return -ENOTTY;
-> +
-> +		if (!list_empty(&pdev->bus_list) &&
-> +		    !list_is_singular(&pdev->bus->devices))
-> +			return -ENOTTY;
-> +
-> +		if (pdev->subordinate &&
-> +		    !list_empty(&pdev->subordinate->devices))
-> +			return -ENOTTY;
-> +
-> +		if (!pdev->bus->self)
-> +			return -ENOTTY;
-> +	}
-> +
-> +	return pci_dpc_sw_trigger(pdev->bus->self, probe);
-> +}
-> +
->  void pci_dpc_init(struct pci_dev *pdev)
->  {
->  	u16 cap;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 28af4414f789..7890cd4eb97d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -50,7 +50,7 @@
->  			       PCI_STATUS_PARITY)
->  
->  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
-> -#define PCI_NUM_RESET_METHODS 7
-> +#define PCI_NUM_RESET_METHODS 8
+	struct vfio_group_status group_status = {
+		.argsz = sizeof(group_status)
+	};
 
-I guess we cannot use ARRAY_SIZE() here?
+	struct vfio_pci_hot_reset_info *reset_info;
+	struct vfio_pci_dependent_device *devices;
+	struct vfio_pci_hot_reset *reset;
 
->  
->  #define PCI_RESET_PROBE		true
->  #define PCI_RESET_DO_RESET	false
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1c3591c8e09e..73b3ccdffb3a 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1035,6 +1035,7 @@
->  #define PCI_EXP_DPC_CTL			0x06	/* DPC control */
->  #define  PCI_EXP_DPC_CTL_EN_FATAL	0x0001	/* Enable trigger on ERR_FATAL message */
->  #define  PCI_EXP_DPC_CTL_EN_NONFATAL	0x0002	/* Enable trigger on ERR_NONFATAL message */
-> +#define  PCI_EXP_DPC_CTL_SW_TRIGGER	0x0040	/* Software Trigger */
->  #define  PCI_EXP_DPC_CTL_INT_EN		0x0008	/* DPC Interrupt Enable */
->  
->  #define PCI_EXP_DPC_STATUS		0x08	/* DPC Status */
-> -- 
-> 2.36.1
+	struct reset_dev {
+		int groupid;
+		int seg;
+		int bus;
+		int dev;
+		int func;
+		int fd;
+		int group;
+	} *reset_devs;
+
+	if (argc < 3) {
+		usage(argv[0]);
+		return -1;
+	}
+
+	printf("Expect %d group/device pairs\n", (argc - 1)/2);
+
+	reset_devs = calloc((argc - 1)/2, sizeof(struct reset_dev));
+	if (!reset_devs)
+		return -1;
+
+	for (i = 0; i < (argc - 1)/2; i++) {
+		ret = sscanf(argv[i*2 + 1], "%d", &reset_devs[i].groupid);
+		if (ret != 1) {
+			usage(argv[0]);
+			return -1;
+		}
+
+		ret = sscanf(argv[i*2 + 2], "%04x:%02x:%02x.%d",
+			     &reset_devs[i].seg, &reset_devs[i].bus,
+			     &reset_devs[i].dev, &reset_devs[i].func);
+		if (ret != 4) {
+			usage(argv[0]);
+			return -1;
+		}
+
+		printf("Using PCI device %04x:%02x:%02x.%d in group %d "
+	               "for hot reset test\n", reset_devs[i].seg,
+		       reset_devs[i].bus, reset_devs[i].dev,
+		       reset_devs[i].func, reset_devs[i].groupid);
+	}
+
+	container = open("/dev/vfio/vfio", O_RDWR);
+	if (container < 0) {
+		printf("Failed to open /dev/vfio/vfio, %d (%s)\n",
+		       container, strerror(errno));
+		return container;
+	}
+
+	for (i = 0; i < (argc - 1)/2; i++) {
+		snprintf(path, sizeof(path), "/dev/vfio/%d",
+			 reset_devs[i].groupid);
+		reset_devs[i].group = open(path, O_RDWR);
+		if (reset_devs[i].group < 0) {
+			printf("Failed to open %s, %d (%s)\n",
+			path, reset_devs[i].group, strerror(errno));
+			return reset_devs[i].group;
+		}
+
+		ret = ioctl(reset_devs[i].group, VFIO_GROUP_GET_STATUS,
+			    &group_status);
+		if (ret) {
+			printf("ioctl(VFIO_GROUP_GET_STATUS) failed\n");
+			return ret;
+		}
+
+		if (!(group_status.flags & VFIO_GROUP_FLAGS_VIABLE)) {
+			printf("Group not viable, are all devices attached to vfio?\n");
+			return -1;
+		}
+
+		ret = ioctl(reset_devs[i].group, VFIO_GROUP_SET_CONTAINER,
+			    &container);
+		if (ret) {
+			printf("Failed to set group container\n");
+			return ret;
+		}
+
+		if (i == 0) {
+			ret = ioctl(container, VFIO_SET_IOMMU,
+				    VFIO_TYPE1_IOMMU);
+			if (ret) {
+				printf("Failed to set IOMMU\n");
+				return ret;
+			}
+		}
+
+		snprintf(path, sizeof(path), "%04x:%02x:%02x.%d",
+			 reset_devs[i].seg, reset_devs[i].bus,
+			 reset_devs[i].dev, reset_devs[i].func);
+
+		reset_devs[i].fd = ioctl(reset_devs[i].group,
+					 VFIO_GROUP_GET_DEVICE_FD, path);
+		if (reset_devs[i].fd < 0) {
+			printf("Failed to get device %s\n", path);
+			return -1;
+		}
+	}
+	getchar();
+
+	reset_info = malloc(sizeof(*reset_info));
+	if (!reset_info) {
+		printf("Failed to alloc info struct\n");
+		return -ENOMEM;
+	}
+
+	reset_info->argsz = sizeof(*reset_info);
+
+	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_GET_PCI_HOT_RESET_INFO,
+		    reset_info);
+	if (ret && errno == ENODEV) {
+		printf("Device does not support hot reset\n");
+		return 0;
+	}
+	if (!ret || errno != ENOSPC) {
+		printf("Expected fail/-ENOSPC, got %d/%d\n", ret, -errno);
+		return -1;
+	}
+
+	printf("Dependent device count: %d\n", reset_info->count);
+
+	reset_info = realloc(reset_info, sizeof(*reset_info) +
+			     (reset_info->count * sizeof(*devices)));
+	if (!reset_info) {
+		printf("Failed to re-alloc info struct\n");
+		return -ENOMEM;
+	}
+
+	reset_info->argsz = sizeof(*reset_info) +
+                             (reset_info->count * sizeof(*devices));
+	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_GET_PCI_HOT_RESET_INFO,
+		    reset_info);
+	if (ret) {
+		printf("Reset Info error\n");
+		return ret;
+	}
+
+	devices = &reset_info->devices[0];
+
+	for (i = 0; i < reset_info->count; i++)
+		printf("%d: %04x:%02x:%02x.%d group %d\n", i,
+		       devices[i].segment, devices[i].bus,
+		       devices[i].devfn >> 3, devices[i].devfn & 7,
+		       devices[i].group_id);
+
+	printf("Press any key to perform reset\n");
+	getchar();
+	printf("Attempting reset: ");
+	fflush(stdout);
+
+	reset = malloc(sizeof(*reset) + (sizeof(*pfd) * reset_info->count));
+	pfd = &reset->group_fds[0];
+
+	for (i = 0; i < reset_info->count; i++) {
+		for (j = 0; j < (argc - 1)/2; j++) {
+			if (devices[i].group_id == reset_devs[j].groupid) {
+				*pfd++ = reset_devs[j].group;
+				break;
+			}
+		}
+
+		if (j == (argc - 1)/2) {
+			printf("Group %d not found\n", devices[i].group_id);
+			return -1;
+		}
+	}
+
+	reset->argsz = sizeof(*reset) + (sizeof(*pfd) * reset_info->count);
+	reset->count = reset_info->count;
+	reset->flags = 0;
+
+	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_PCI_HOT_RESET, reset);
+	printf("%s\n", ret ? "Failed" : "Pass");
+
+	return ret;
+}
+
