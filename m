@@ -2,91 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A016863C8CD
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 20:53:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BF4563C8E0
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 21:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236051AbiK2TxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 14:53:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
+        id S236208AbiK2UA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 15:00:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237012AbiK2TxB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 14:53:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D4817E38;
-        Tue, 29 Nov 2022 11:53:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 43650618CF;
-        Tue, 29 Nov 2022 19:53:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F50C4347C;
-        Tue, 29 Nov 2022 19:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669751579;
-        bh=OcROACIvrb3LiNJuXbTdCona28iOYGS64nqNq44dgWw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZDG9rV6PHI0J1/ftJBGz7DpzeSMkRNt9WynhIHksSsK35T9UZJh3KbEoav9XcaQ2
-         kFkcItn1ZfL48NR6Pv4PEBiZqbgb7IACsQ3llg2IMLvaMkZTTl1xZUc3vgtXSq+aVF
-         F6sMmoQmV6zk75pmuHhM5tAVqJmc2wud1jUM+E9ClLAeqVFNg3t+kN6ENucNV/yOsn
-         9umvOZYOPRk4belQh/b6d7BHnCoiWfeUgHdpaGex2P7EaUN4zMpXvxmtUDvLyluKYz
-         8R7kQIU31rVWaqE71TR+oxLHXFZEzw4lCD62Ktjifao0U3Er4Z4x0ZM8xi/6J7uChV
-         2Bg3TGdbbF3Ag==
-From:   Will Deacon <will@kernel.org>
-To:     jonathan.cameron@huawei.com,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Jonathan Corbet <corbet@lwn.net>, liuqi6124@gmail.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yicong Yang <yangyicong@huawei.com>, bagasdotme@gmail.com
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        prime.zeng@huawei.com, f.fangjian@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
-        shenyang39@huawei.com
-Subject: Re: [PATCH v3 0/4] Add TLP filter support and some fixes for HiSilicon PCIe PMU
-Date:   Tue, 29 Nov 2022 19:52:46 +0000
-Message-Id: <166973225546.3127880.2609206485650719654.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221117084136.53572-1-yangyicong@huawei.com>
-References: <20221117084136.53572-1-yangyicong@huawei.com>
+        with ESMTP id S237139AbiK2UAZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 15:00:25 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DD2248FF
+        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 12:00:23 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id z92so10827410ede.1
+        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 12:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=YjhyPJV2Lrw0TKTNTFpYGI4goEc+ehkf2J65ZOPzpVIutbScCbgPUbTq9lc5GBIZfW
+         fTBPTrPCNi2AjwwagMNlCz3OywzJDMRWI6R5q3+MzAnGuc+uZyGBW6AxS3umwo0MauWl
+         2q3LsX6br5mKAsacPEuFnL7YZiO5feWGp+7kgwIz+ueVZl7t40RLjw95C1i89x4TJPN3
+         FwNtyttR9mJoXP8pOcI22mUnDKnLuEzjdaXiGfOpR95zKEsYUE+Ijq23b2TKHZmdXzLo
+         AjkKDhVkfmCJiLbLuf24+KNLOFnFOETb95Lip40ad/+f+prpfVOZEk5+iH8RFLAr7j1q
+         tdUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=C8WrPZCprRPNJ4JXjmHF4X+Cz8A3M2J+aJVg65qYq4RNw0s6Jx+2DRmZB2lXq6inwB
+         UtIwzfajbU6t0rhs1AQer53ktvO7pv3wWIytE6kQmLApt8z/C03emAlezV1ucVv7MrqN
+         OjZzTdXD9O1A7Bcutik+089oRJIFNo8rhtCOm6mjDwBR3YnfgerTEdnfuH+td+XxLJFg
+         KlPFMfxCmYOo5xsxMm7+y1DNCVjZu7SF8BjIbZH1vy2YfSPLJg8dQZbbBjT7wYlKorT5
+         ITiZ7W3P1hK3/ehAhEnHRaY/kdjF40uOnK/bCESY/l7WCo56nOWhZfbOApmngxzeKyXx
+         MsdQ==
+X-Gm-Message-State: ANoB5pkGIt7asvJn3dQ8+8WGzLVzWKYbi7TF7lXUE6Y6NCgpvcma/xok
+        Fa83e1M8S+UT/bjfxSNyEf5IIAxzK2pUyeoXV9I=
+X-Google-Smtp-Source: AA0mqf52MyoXyyAAVs7Med6Ga76Rh8N1z1vxdboAGQs5LbIM9WG1/y2QgaM60QLK0hhXs2zVAoW2lW5uGupgaL5Q/VU=
+X-Received: by 2002:aa7:c758:0:b0:469:b3fc:8d7c with SMTP id
+ c24-20020aa7c758000000b00469b3fc8d7cmr39008452eds.393.1669752021897; Tue, 29
+ Nov 2022 12:00:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a17:906:9f02:b0:7b2:71f8:d968 with HTTP; Tue, 29 Nov 2022
+ 12:00:21 -0800 (PST)
+Reply-To: mr.abraham022@gmail.com
+From:   "Mr.Abraham" <kojofofone00@gmail.com>
+Date:   Tue, 29 Nov 2022 20:00:21 +0000
+Message-ID: <CA+5DqwAs01EC17wVAVNRN9ApjATJyKYtnjWBND+hHVk+ZqFiaQ@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 17 Nov 2022 16:41:32 +0800, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> HiSilicon PCIe PMU support count the bandwidth of TLP headers, TLP payloads
-> or both. Add support for it. User can set this through perf tool's
-> 'len_mode' like:
-> 
->   $# perf stat -e hisi_pcie0_core0/rx_mrd_flux,len_mode=0x1/ sleep 5
-> 
-> [...]
-
-Applied to will (for-next/perf), thanks!
-
-[1/4] drivers/perf: hisi: Fix some event id for hisi-pcie-pmu
-      https://git.kernel.org/will/c/6b4bb4f38dbf
-[2/4] docs: perf: Fix PMU instance name of hisi-pcie-pmu
-      https://git.kernel.org/will/c/eb79f12b4c41
-[3/4] Documentation: perf: Indent filter options list of hisi-pcie-pmu
-      https://git.kernel.org/will/c/c8dff677e6d4
-[4/4] drivers/perf: hisi: Add TLP filter support
-      https://git.kernel.org/will/c/17d573984d4d
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Regard, Mr.Abraham
