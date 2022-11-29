@@ -2,43 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89C0363C6DA
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 18:54:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CCD63C6DB
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 18:54:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236672AbiK2Ryn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S236666AbiK2Ryn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 29 Nov 2022 12:54:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51480 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236658AbiK2Ryf (ORCPT
+        with ESMTP id S236665AbiK2Ryf (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 12:54:35 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516FF32041;
-        Tue, 29 Nov 2022 09:54:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC9642F70;
+        Tue, 29 Nov 2022 09:54:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669744474; x=1701280474;
+  t=1669744475; x=1701280475;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dBzFJZbFhNILeotZmnucEP1RHjoc1ZShFvJdf0neUIU=;
-  b=aoiweLBGRLHVj38qmBZx++YQ9bsH27KsbEBXehckxQ3PFMdDcGh5MALT
-   zdH3bVWloZnn5gipOrl2W+fgqmZabNLH71mYyVUzQboS54HBPVUzxwCc5
-   oknP1kWa41DGOXFwCD7QfF71Z7TTq01zj956iKYY11f0zRPxuyU0vaAhq
-   pzvY08BUKi1E3vwncZPO7xMK8bO7AGsn4iXwtBXPPxPyjXlwjYdlsWyPN
-   tA9amTZrGdbG/6QjmXUlkze+tvfBk6PR3pRlLKiSnhmP4fstLJWMlf6uG
-   7ZrVf8ahB13UAYtSu7AN+nlFf5igQGfOmctY4o00bKyRunfCmI/a3OuJD
+  bh=7mz9SUDoz1hl6jr4oJTrYyo3Cu04D1Zr8uWanlzRRT8=;
+  b=SUG+omafF3CeeZj/kWE0W8cETOjiWZY6bGsY2PjOjDxFjsl4z3BbBgSv
+   ulTSGKRC1WpB+jTDxvGxfG/IR/pzhYtUMV0TeohCER9F+gOnLGBgEwgBQ
+   4ThlZnNdPdQptakwmH5Lv/giiz3n6LI0yabkyvVt/PNxoUE0KkzCjHKyS
+   JgUbCebYYaMznjlzuY9+tw/12W7CTUnpisWiSjvemyfNEgilt+o6rX6eZ
+   rjWJCmK5u9KdOaahiDqQ9EgPZdTI3HoYz8rjff5s0GECB5Sd7KHKvfrm3
+   zcY7GpRXBzHuFLb63/BoqIYK+FFfrKE3w2peedp8kHdPKrWAEONIXJ7gP
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="317038195"
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="317038214"
 X-IronPort-AV: E=Sophos;i="5.96,204,1665471600"; 
-   d="scan'208";a="317038195"
+   d="scan'208";a="317038214"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 09:49:06 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="749957259"
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 09:49:12 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="749957299"
 X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="749957259"
+   d="scan'208";a="749957299"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 09:49:05 -0800
-Subject: [PATCH v4 10/11] PCI/AER: Add optional logging callback for
- correctable error
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 09:49:11 -0800
+Subject: [PATCH v4 11/11] cxl/pci: Add callback to log AER correctable error
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
@@ -46,8 +45,8 @@ Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
         terry.bowman@amd.com, bhelgaas@google.com,
         sathyanarayanan.kuppuswamy@linux.intel.com, shiju.jose@huawei.com
-Date:   Tue, 29 Nov 2022 10:49:05 -0700
-Message-ID: <166974414546.1608150.4142682712102935008.stgit@djiang5-desk3.ch.intel.com>
+Date:   Tue, 29 Nov 2022 10:49:11 -0700
+Message-ID: <166974415139.1608150.13978145410258604882.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
 References: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -63,82 +62,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some new devices such as CXL devices may want to record additional error
-information on a corrected error. Add a callback to allow the PCI device
-driver to do additional logging such as providing additional stats for user
-space RAS monitoring.
+Add AER error handler callback to read the correctable error status
+register for the CXL device. Log the error as a trace event and clear the
+error. For CXL devices, the driver also needs to write back to the AER CE
+status register to clear the unmasked CEs.
 
-For CXL device, this is actually a need due to CXL needing to write to the
-device AER status register in order to clear the unmasked CEs.
-
-Cc: Bjorn Helgaas <bhelgaas@google.com>
 Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- Documentation/PCI/pci-error-recovery.rst |    7 +++++++
- drivers/pci/pcie/aer.c                   |    8 +++++++-
- include/linux/pci.h                      |    3 +++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/cxl/pci.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-index 187f43a03200..690220255d5e 100644
---- a/Documentation/PCI/pci-error-recovery.rst
-+++ b/Documentation/PCI/pci-error-recovery.rst
-@@ -83,6 +83,7 @@ This structure has the form::
- 		int (*mmio_enabled)(struct pci_dev *dev);
- 		int (*slot_reset)(struct pci_dev *dev);
- 		void (*resume)(struct pci_dev *dev);
-+		void (*cor_error_log)(struct pci_dev *dev);
- 	};
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 11f842df9807..93a68f0f032a 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -622,10 +622,30 @@ static void cxl_error_resume(struct pci_dev *pdev)
+ 		 dev->driver ? "successful" : "failed");
+ }
  
- The possible channel states are::
-@@ -422,5 +423,11 @@ That is, the recovery API only requires that:
-    - drivers/net/cxgb3
-    - drivers/net/s2io.c
- 
-+   The cor_error_log() callback is invoked in handle_error_source() when
-+   the error severity is "correctable". The callback is optional and allows
-+   additional logging to be done if desired. See example:
++static void cxl_correctable_error_log(struct pci_dev *pdev)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++	void __iomem *addr;
++	u32 status;
 +
-+   - drivers/cxl/pci.c
++	if (!cxlds->regs.ras)
++		return;
 +
- The End
- -------
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e2d8a74f83c3..af1b5eecbb11 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -961,8 +961,14 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
- 		if (aer)
- 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
- 					info->status);
--		if (pcie_aer_is_native(dev))
-+		if (pcie_aer_is_native(dev)) {
-+			struct pci_driver *pdrv = dev->driver;
++	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
++	status = le32_to_cpu(readl(addr));
++	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
++		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
++		trace_cxl_aer_correctable_error(dev_name(dev), status);
++	}
++}
 +
-+			if (pdrv && pdrv->err_handler &&
-+			    pdrv->err_handler->cor_error_log)
-+				pdrv->err_handler->cor_error_log(dev);
- 			pcie_clear_device_status(dev);
-+		}
- 	} else if (info->severity == AER_NONFATAL)
- 		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
- 	else if (info->severity == AER_FATAL)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 575849a100a3..54939b3426a9 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -844,6 +844,9 @@ struct pci_error_handlers {
- 
- 	/* Device driver may resume normal operations */
- 	void (*resume)(struct pci_dev *dev);
-+
-+	/* Allow device driver to record more details of a correctable error */
-+	void (*cor_error_log)(struct pci_dev *dev);
+ static const struct pci_error_handlers cxl_error_handlers = {
+ 	.error_detected	= cxl_error_detected,
+ 	.slot_reset	= cxl_slot_reset,
+ 	.resume		= cxl_error_resume,
++	.cor_error_log	= cxl_correctable_error_log,
  };
  
- 
+ static struct pci_driver cxl_pci_driver = {
 
 
