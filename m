@@ -2,46 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25F1063C72C
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 19:28:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E95D63C73F
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 19:35:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232988AbiK2S2F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 13:28:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43618 "EHLO
+        id S235964AbiK2Sfs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 13:35:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232491AbiK2S2E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 13:28:04 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56E127FE6
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 10:28:02 -0800 (PST)
+        with ESMTP id S235761AbiK2Sfr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 13:35:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424C04B982;
+        Tue, 29 Nov 2022 10:35:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A578DCE12B9
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 18:28:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DBDC433D6;
-        Tue, 29 Nov 2022 18:27:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D9D03B817C0;
+        Tue, 29 Nov 2022 18:35:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651B3C433B5;
+        Tue, 29 Nov 2022 18:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669746478;
-        bh=XmAaFzCpw6vQdbf/K8kOlZXBAPZdch3bWlpf/OoP7Fw=;
+        s=k20201202; t=1669746944;
+        bh=fbQH4j08U1ful5CJFqNWUrgI0E0LWc7WjkdOchpGdgM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QN2CQtzvZ+ZUxgxLrqIQQqoCGCOxSXVDSNtSdIu5aN2tjiroospy1zD50VUHlO7p7
-         IBPpV+OXIX/R3OvhAZLwva9+jbUeyPvo/wM9QtLXBqoH1/rRL7Q0R9yRkqFsJcng0r
-         qQ2nC+hxnos891ui1DzAOjkR9bdfly9RlxaZ4mOhYA/Y7qfA/gHmPmdVtCisn40bzL
-         qp5DMzWigi5is/PHHUQSf1UfCf3A3sYpZUxiIejrNGYmIy+V5CJraUmRLdJ6WHdUKb
-         cK5sZ6Aw22hfNJ1CLKnWwmuAKxy8+5Z4HVhF4yhsR+WODSjzhONvgDb47XJOCE6E0k
-         rKzCinjxSvp1g==
-Date:   Tue, 29 Nov 2022 12:27:56 -0600
+        b=vDqzkdJbrOmenpuFzaWfjlmsDjJTMleGqzEcYW5cYhJg00PQwOuHwyOhijfE/MeeN
+         wV+7mkJwwEYHTHcofg6H6WFnTdGogKE8cORv1Ge0LAAno7/r+j4cdU2V675ZSa4iFx
+         YLqE2/iKpo0GK6bRNs8uXFOdcoLQXoBN20BwqGG+8C1oBCzrTxLItE+XF1QUIHoiEP
+         2lqb0AQTSEi/OkK5d8CBC29jtNUpvdqhkLasStquq970/d3AamhOw8U05vm1Jg738C
+         Z/Qvna6Hh3O7LGySyH/ukLRy7Q1HhAqcX7EKXkL2wGyVr6YeeF/mDaIK8f4KkeAjEg
+         BTplrl5OuxQyw==
+Date:   Tue, 29 Nov 2022 12:35:43 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Francisco Blas Izquierdo Riera <klondike@klondike.es>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>
-Subject: Re: [PATCH v2] PCI: Add DMA alias for Intel Corporation 8 Series HECI
-Message-ID: <20221129182756.GA727866@bhelgaas>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 17/20] PCI: dwc: Introduce generic resources getter
+Message-ID: <20221129183543.GA729294@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221121164037.8C73110BB536@smtp.xiscosoft.net>
+In-Reply-To: <20221127011005.cjzcd6slb6ezy7ix@mobilestation>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,91 +68,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Jarkko, tpm_crb author]
+On Sun, Nov 27, 2022 at 04:10:05AM +0300, Serge Semin wrote:
+> On Wed, Nov 23, 2022 at 01:44:36PM -0600, Bjorn Helgaas wrote:
+> > On Sun, Nov 13, 2022 at 10:12:58PM +0300, Serge Semin wrote:
 
-On Mon, Nov 21, 2022 at 05:40:37PM +0100, Francisco Blas Izquierdo Riera wrote:
-> PCI: Add function 7 DMA alias quirk for Intel Corporation 8 Series HECI.
+> > Thanks for these new generic interfaces in the DWC core!  And thanks
+> > for the changes in this patch to take advantage of them in the
+> > pcie-designware drivers.
+> > 
+> > Do you plan similar changes to other drivers to take advantage of
+> > these DWC-generic data and interfaces?  If you add generic things to
+> > the DWC core but only take advantage of them in your driver, I don't
+> > think they are really usefully generic.
 > 
-> Intel Corporation 8 Series HECIs include support for a CRB TPM 2.0
-> device. When the device is enabled on the BIOS, the TPM 2.0 device is
-> detected but the IOMMU prevents it from being accessed.
-> 
-> Even on a computer with a fixed DMAR table, device initialization
-> fails with DMA errors:
->   DMAR: DRHD: handling fault status reg 3
->   DMAR: [DMA Read NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x06] PTE Read access is not set
->   DMAR: DRHD: handling fault status reg 2
->   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
->   DMAR: DRHD: handling fault status reg 2
->   DMAR: [DMA Write NO_PASID] Request device [00:16.7] fault addr 0xdceff000 [fault reason 0x05] PTE Write access is not set
->   tpm tpm0: Operation Timed out
->   DMAR: DRHD: handling fault status reg 3
->   tpm tpm0: Operation Timed out
->   tpm_crb: probe of MSFT0101:00 failed with error -62
-> 
-> After patching the DMAR table and adding this patch, the TPM 2.0
-> device is initialized correctly and no DMA errors appear. Accessing
-> the TPM 2.0 PCR banks also works as expected.
-> 
-> Since most Haswell computers supporting this do not seem to have a
-> valid DMAR table patching the table with an appropriate RMRR is
-> usually also needed. I have published a blogpost describing the
-> process.
-> 
-> This patch currently adds the alias only for function 0. Since this
-> is the only function I have seen provided by the HECI on actual
-> hardware.
-> 
-> 
-> V2: Resent using a sendmail to fix tab mangling made by Thunderbird.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=108251
-> Link: https://klondike.es/klog/2022/11/21/patching-the-acpi-dmar-table-to-allow-tpm2-0/
-> Reported-by: Pierre Chifflier <chifflier@gmail.com>
-> Tested-by: Francisco Blas Izquierdo Riera (klondike) <klondike@klondike.es>
-> Signed-off-by: Francisco Blas Izquierdo Riera <klondike@klondike.es>
-> Suggested-by: Baolu Lu <baolu.lu@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: stable@vger.kernel.org
+> Could you be more specific what generic things you are referring to? I
+> am asking because the only part of the changes which is used in my
+> low-level driver only is introduced in another patch of this series.
 
-Given that significant additional effort to override the DMAR table is
-required before this quirk is useful, I'm deferring this quirk for
-now.  People willing to recompile the DMAR will probably also be able
-to apply the quirk and rebuild the kernel.
+I asked because three of your patches mention "generic" things, but I
+didn't see any changes to drivers except pcie-designware:
 
-Does the TPM work under Windows?  If so, it would suggest that there's
-a different way to use it that doesn't require the quirk or the DMAR
-override.  Or maybe it only works on Windows without the IOMMU being
-enabled?
+  PCI: dwc: Introduce generic platform clocks and reset
+  PCI: dwc: Introduce generic resources getter
+  PCI: dwc: Introduce generic controller capabilities interface
 
-Naive question: apparently the TPM is doing DMA reads/writes.  I see
-tpm_crb.c doing MMIO mappings (ioremap()), but I don't see any DMA
-mappings.  Is that implicit or done elsewhere?
+I hoped that we would be able to use these to remove some code from
+existing drivers, but if they only improve maintainability of future
+drivers, that's useful, too.
 
 Bjorn
-
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4162,6 +4162,22 @@
->  			 0x0122, /* Plextor M6E (Marvell 88SS9183)*/
->  			 quirk_dma_func1_alias);
->  
-> +static void quirk_dma_func7_alias(struct pci_dev *dev)
-> +{
-> +	if (PCI_FUNC(dev->devfn) == 0)
-> +		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 7), 1);
-> +}
-> +
-> +/*
-> + * Certain HECIs in Haswell systems support TPM 2.0. Unfortunately they
-> + * perform DMA using the hidden function 7. Fixing this requires this
-> + * alias and a patch of the DMAR ACPI table to include the appropriate
-> + *  MTRR.
-> + * https://bugzilla.kernel.org/show_bug.cgi?id=108251
-> + */
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9c3a,
-> +			 quirk_dma_func7_alias);
-> +
->  /*
->   * Some devices DMA with the wrong devfn, not just the wrong function.
->   * quirk_fixed_dma_alias() uses this table to create fixed aliases, where
