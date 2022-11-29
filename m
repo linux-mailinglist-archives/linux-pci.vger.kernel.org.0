@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6AD063BF71
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 12:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC78C63BFC7
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 13:11:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232342AbiK2Lyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 06:54:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55198 "EHLO
+        id S232360AbiK2MK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 07:10:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbiK2Lyo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 06:54:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C11054B3B;
-        Tue, 29 Nov 2022 03:54:43 -0800 (PST)
+        with ESMTP id S230083AbiK2MK5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 07:10:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDE52AA;
+        Tue, 29 Nov 2022 04:10:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1170E616E3;
-        Tue, 29 Nov 2022 11:54:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A2CC433C1;
-        Tue, 29 Nov 2022 11:54:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 149A2616E7;
+        Tue, 29 Nov 2022 12:10:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5620C433C1;
+        Tue, 29 Nov 2022 12:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669722882;
-        bh=B358EqJzHqfHpVOoVQSjd9p9tjUfi8PFDuOsY9VvxPA=;
+        s=k20201202; t=1669723854;
+        bh=eK3eWs+NakxQYgxM//BYeenp/ALFDb+g86OEaVascqA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V6eqmIXK18Ikxo0VVZTQfqu8URAT72PYmw1ka2tAjj0v65afbAjuu6S6P+nZLpKJr
-         rMDKhgjld9Q+zpQoNind9nqQ/DYr/XdcS8tTzrAxMTckFAqHn+xSs5XhDAvG8/LL1a
-         Ekalo/xJ2HTUz0lLYBwArSwqKpJlYFSBgtbgKbIXrGWkSS8lOLUE6HzOol9YXJkAqb
-         tAMUfiRhUKfb2uNqCa4Tg6pmbF0qG9N85XCIF6MKJ73D4ZkXYnjKseCsIpUM862AXr
-         zrmhqJClU3zMQ6WRaoSDrgx13+ZgWXerhu3AH0Op9HMjrXA7U/H58Jc5glcZN9yfan
-         EYTdRFs1+MzGw==
-Date:   Tue, 29 Nov 2022 12:54:39 +0100
+        b=Mj9ZmH+0V4LM3h58rvnCrwkPwoNhBo15JZD1/1Iz69v9Lj9WG6c/AHd+QdyoeJejU
+         zIrRCRdAkXPE+zwUaCaljzQQaDnVSY6hJBzRKgF0l+odTrUClVF70Q2k3IMFHCIABA
+         OKNzfNzjsjljqey3uq0OG7mGEagNWoQwXBIDKxF+56OfscLPE8vGF19ucITk7/grMY
+         27rEr8kDWOnErW7KHhTC40hDmaWu0O8JMwMvZmeopHDc8cpB/AzHrDsdxX9pXG6cWH
+         E+uUwAkoMZruyrBVCDkaEyq5yOGtdJHP7G9220yLf12RMS9hVVMjahnQLO8lkTkTcs
+         KtdCPp0bVvB6Q==
+Date:   Tue, 29 Nov 2022 13:10:51 +0100
 From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Leonardo Bras <leobras@redhat.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+To:     Leonardo =?iso-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -56,15 +56,20 @@ Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Wang Yufen <wangyufen@huawei.com>, mtosatti@redhat.com,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] sched/isolation: Improve documentation
-Message-ID: <20221129115439.GA1715045@lothringen>
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        fweisbec@gmail.com
+Subject: Re: [PATCH v2 3/4] sched/isolation: Add HK_TYPE_WQ to isolcpus=domain
+Message-ID: <20221129121051.GB1715045@lothringen>
 References: <20221013184028.129486-1-leobras@redhat.com>
- <20221013184028.129486-3-leobras@redhat.com>
+ <20221013184028.129486-4-leobras@redhat.com>
+ <Y0kfgypRPdJYrvM3@hirez.programming.kicks-ass.net>
+ <20221014132410.GA1108603@lothringen>
+ <7249d33e5b3e7d63b1b2a0df2b43e7a6f2082cf9.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221013184028.129486-3-leobras@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7249d33e5b3e7d63b1b2a0df2b43e7a6f2082cf9.camel@redhat.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -74,79 +79,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 03:40:27PM -0300, Leonardo Bras wrote:
-> Improve documentation on housekeeping types and what to expect from
-> housekeeping functions.
+On Fri, Oct 14, 2022 at 01:27:25PM -0300, Leonardo Brás wrote:
+> Hello Frederic,
 > 
-> Signed-off-by: Leonardo Bras <leobras@redhat.com>
-> ---
->  include/linux/sched/isolation.h | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
+> So, IIUC you are removing all flags composing nohz_full= parameter in favor of a
+> unified NOHZ_FULL flag. 
 > 
-> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-> index 762701f295d1c..9333c28153a7a 100644
-> --- a/include/linux/sched/isolation.h
-> +++ b/include/linux/sched/isolation.h
-> @@ -7,18 +7,25 @@
->  #include <linux/tick.h>
->  
->  enum hk_type {
-> -	HK_TYPE_TIMER,
-> -	HK_TYPE_RCU,
-> -	HK_TYPE_MISC,
-> -	HK_TYPE_SCHED,
-> -	HK_TYPE_TICK,
-> -	HK_TYPE_DOMAIN,
-> -	HK_TYPE_WQ,
-> -	HK_TYPE_MANAGED_IRQ,
-> -	HK_TYPE_KTHREAD,
-> +	HK_TYPE_TIMER,		/* Timer interrupt, watchdogs */
+> I am very new to the code, and I am probably missing the whole picture, but I
+> actually think it's a good approach to keep them split for a couple reasons:
+> 1 - They are easier to understand in code (IMHO): 
+> "This cpu should not do this, because it's not able to do WQ housekeeping" looks
+> better than "because it's not in DOMAIN or NOHZ_FULL housekeeping"
 
-More precisely:
+A comment above each site may solve that.
 
-     /* Unbound timer callbacks */
-
-> +	HK_TYPE_RCU,		/* RCU callbacks */
-
-More generally, because it's more than just about callbacks:
-
-     /* Unbound RCU work */
-
-> +	HK_TYPE_MISC,		/* Minor housekeeping categories */
-> +	HK_TYPE_SCHED,		/* Scheduling and idle load balancing */
-> +	HK_TYPE_TICK,		/* See isolcpus=nohz boot parameter */
-
-Yes or nohz_full=
-
-> +	HK_TYPE_DOMAIN,		/* See isolcpus=domain boot parameter*/
-> +	HK_TYPE_WQ,		/* Work Queues*/
-
-  /* Unbound workqueues */
-
-> +	HK_TYPE_MANAGED_IRQ,	/* See isolcpus=managed_irq boot parameter */
-> +	HK_TYPE_KTHREAD,	/* kernel threads */
-
-  /* Unbound kernel threads */
-
-
->  	HK_TYPE_MAX
->  };
->  
-> +/* Kernel parameters like nohz_full and isolcpus allow passing cpu numbers
-> + * for disabling housekeeping types.
-> + *
-> + * The functions bellow work the opposite way, by referencing which cpus
-> + * are able to perform the housekeeping type in parameter.
-> + */
-
-*below
-
-Thanks!
-
-> +
->  #ifdef CONFIG_CPU_ISOLATION
->  DECLARE_STATIC_KEY_FALSE(housekeeping_overridden);
->  int housekeeping_any_cpu(enum hk_type type);
-> -- 
-> 2.38.0
 > 
+> 2 - They are simpler for using: 
+> Suppose we have this function that should run at a WQ, but we want to keep them
+> out of the isolated cpus. If we have the unified flags, we need to combine both
+> DOMAIN and NOHZ_FULL bitmasks, and then combine it again with something like
+> cpu_online_mask. It usually means allocating a new cpumask_t, and also freeing
+> it afterwards.
+> If we have a single WQ flag, we can avoid the allocation altogether by using
+> for_each_cpu_and(), making the code much simpler.
+
+I guess having a specific function for workqueues would arrange for it.
+
+> 
+> 3 - It makes easier to compose new isolation modes:
+> In case the future requires a new isolation mode that also uses the types of
+> isolation we currently have implemented, it would be much easier to just compose
+> it with the current HK flags, instead of having to go through all usages and do
+> a cpumask_and() there. Also, new isolation modes would make (2) worse.
+
+Actually having a new feature merged in HK_NOHZ_FULL would make it easier to
+handle as it avoids spreading cpumasks. I'm not sure I understand what you
+mean.
+
+Thanks.
