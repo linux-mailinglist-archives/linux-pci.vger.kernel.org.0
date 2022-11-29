@@ -2,80 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98E2D63C41B
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 16:47:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9414C63C423
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 16:50:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236018AbiK2Pru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 10:47:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42400 "EHLO
+        id S235736AbiK2PuY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 10:50:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235979AbiK2Prt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 10:47:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E93242F52
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 07:46:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669736813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fFCmZLrXuG3nOzoAi5zSMrtphr/E0e0mi6L5Ysip7bs=;
-        b=XJTEMMF3KjAHdfrBWmFEUr5oMBk4Tka9oAPnvQ6ZdEHifuXLyi3p5u/nrWtcpwv+gwKgqh
-        xM2D7/4WpTafr211nF5ljFhwk1aSZnO0Pnbkj9pFpRRdNA9m169oUGN199IhEVPj5u37Rg
-        g/y7iPM+CWkrrIpSs/vpnCntJNmy8AA=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-665-4jx28j7aORCq7rX5YFoRDw-1; Tue, 29 Nov 2022 10:46:51 -0500
-X-MC-Unique: 4jx28j7aORCq7rX5YFoRDw-1
-Received: by mail-il1-f199.google.com with SMTP id k11-20020a056e021a8b00b003030ec907c7so6445612ilv.10
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 07:46:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fFCmZLrXuG3nOzoAi5zSMrtphr/E0e0mi6L5Ysip7bs=;
-        b=YamySXSrYXMSRJEZZkT6o17bX0ImSsorRGCMUhgHHc9++wKz3+qoZaRp8gcHuwWURv
-         YAW7tE084NRU8/0W+AkcLPpvpR1Bjl35/rvwcn4bstSewgsMMNrDqiqxnEAcoWtuDRxu
-         B28YvEvLE+PGug62VPPHRVhvRZQz6ln0FCUIMbf9rPAhv6unAegFe3z3AZRZPw2TvseV
-         wMdH2LWy+4KNwpeHJdZC2iFoSKUORXKT4LRF2ji/XaPWheBqxOpvRKXjiGX+VC3FWZpS
-         113EeIs7W4oaTq7uRrc9Q4GmyUBAS0Z9l67Lq/K6vzdzzqTW6erlUMfY88+CEkDSHTl5
-         Ql0A==
-X-Gm-Message-State: ANoB5pmz69Wv6r1EwpD/XOwagYIpFygteY4WtEnRJaGXZ3xJovONDGM5
-        WRgGLx5lpJn9W6pvuIiHgFAmErmQqZECgyLdfV2yXa2U+AtA4MMQzxXY7mNWmYMtKNTrC8YgRNN
-        mGsaNUSqkWKA1xW/GKWDY
-X-Received: by 2002:a05:6e02:be6:b0:302:e6b6:fd9 with SMTP id d6-20020a056e020be600b00302e6b60fd9mr14257113ilu.67.1669736810985;
-        Tue, 29 Nov 2022 07:46:50 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7j+zagVezkPFKdeosduvl96bODPunsJxEODbsxODXnvhfbrTcyqV3XR56xEWVCwnGUb4bz1w==
-X-Received: by 2002:a05:6e02:be6:b0:302:e6b6:fd9 with SMTP id d6-20020a056e020be600b00302e6b60fd9mr14257094ilu.67.1669736810566;
-        Tue, 29 Nov 2022 07:46:50 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id d74-20020a02624d000000b00363e4730a41sm5340971jac.175.2022.11.29.07.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 07:46:49 -0800 (PST)
-Date:   Tue, 29 Nov 2022 08:46:46 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: PCI resource allocation mismatch with BIOS
-Message-ID: <20221129084646.0b22c80b.alex.williamson@redhat.com>
-In-Reply-To: <Y4YgKaml6nh5cB9r@black.fi.intel.com>
-References: <Y4SYBtaP1hTWGsYn@black.fi.intel.com>
-        <20221128203932.GA644781@bhelgaas>
-        <20221128150617.14c98c2e.alex.williamson@redhat.com>
-        <20221129064812.GA1555@wunner.de>
-        <20221129065242.07b5bcbf.alex.williamson@redhat.com>
-        <Y4YgKaml6nh5cB9r@black.fi.intel.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S236071AbiK2Pt5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 10:49:57 -0500
+Received: from na01-obe.outbound.protection.outlook.com (mail-westus2azon11020018.outbound.protection.outlook.com [52.101.46.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248CB65E53;
+        Tue, 29 Nov 2022 07:49:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iLzfl4AWcXJ0ltlEwFTp3nIw/AqAeDYBiJeiaETCW1qBe3qkf9itMSmAU1HKifvNsYAkCvbB/W2J2fifI92IyeCkzHWiUyq/HU8FMJiSK/JSmO/GXHDOQY5m3+BBmygIx6LVqjMswNGne8qDXimqc4Rq6ui5aotSRPTdzTAQNSKApfalapcesqBktu6nP6zW6fRvKqeGAUTCyIEe4bIu/qks5k8h65CiBxBv6AT1hrajIryhQfyraSCWDpY4t5w7GFrfcBebpgZw5ktcypB0rhgmVDMIiG3sRmsP6zv64HvbKIHQccYnftxS4lKLhWRdJ4Nu8kYP+ALd3GODYPm/ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sJ4X800mvg4TiRfgc+sMBtN7Lxh++JlTz8FiNwWbgJA=;
+ b=cOaRIdmJvd+cbxeNfBlK9g1BDC7nS54Rgc3jysWikCcDPEV0wOKX6UMSIu5RJNfvVruRH4nEH7YTb4XndcSJep43Js/1/YrX/wJDuCA3ZWqvgCfmF1HMBNTy6vEvCHThM1fccekJIngYk1uTC3K0GoFMJwxPx7IfvalNcqXuW2HvYxWIbNqG5PirJXx+L87kNIam88dP5fdZxBBFDsfmkVYtnAG/c4r6s2GGjb6eV3vrtsbURiu9i4rm5q302r7UhHnP7WJ4E2aPyVvqMw3nzvD1QIlTDQfhiU5pxphz0IBz80ELPjWi/6gM9Z7fk4/8H4PFc3U2vkp51QoJdRL4yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sJ4X800mvg4TiRfgc+sMBtN7Lxh++JlTz8FiNwWbgJA=;
+ b=ha7rHO4zzcUWTy7yQvPhaBcPUCykDQY1lxUM74MQDMm22npZYTamKa93bihkGtKM+D+2UOSZCwVfqBosPOE4+mgOGUQpXKHQhpV89YfoRurCIjIY7Dc/OHpJyH7H62tFSNocud5nnKNZ/rTLiY73X2dv6y9shA66eB3b0EXyDpg=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by IA1PR21MB3403.namprd21.prod.outlook.com (2603:10b6:208:3e0::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.8; Tue, 29 Nov
+ 2022 15:49:06 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::1e50:78ec:6954:d6dd]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::1e50:78ec:6954:d6dd%6]) with mapi id 15.20.5880.008; Tue, 29 Nov 2022
+ 15:49:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>
+CC:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: RE: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use standard
+ coco mechanisms
+Thread-Topic: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use
+ standard coco mechanisms
+Thread-Index: AQHY+es2O4adbWIH8UyWtCwRyUnUyq5JgOOAgAHDpcCAAEhFgIAAJ7oQgAjDHRCAACLagIAAALfwgAANigCAAAHQEIAAKJ+AgABUTmCAAIE5AIAAb5XA
+Date:   Tue, 29 Nov 2022 15:49:06 +0000
+Message-ID: <BYAPR21MB1688D73FBBF41B6E21265DA3D7129@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <BYAPR21MB16886AF404739449CA467B1AD70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y31Kqacbp9R5A1PF@zn.tnic>
+ <BYAPR21MB16886FF8B35F51964A515CD5D70C9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <BYAPR21MB1688AF2F106CDC14E4F97DB4D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y4Ti4UTBRGmbi0hD@zn.tnic>
+ <BYAPR21MB1688466C7766148C6B3B4684D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y4Tu1tx6E1CfnrJi@zn.tnic>
+ <BYAPR21MB1688BCC5DF4636DBF4DEA525D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y4USb2niHHicZLCY@zn.tnic>
+ <BYAPR21MB16886FF5A63334994476B6ADD7129@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y4XFjqEATqOgEnR6@zn.tnic>
+In-Reply-To: <Y4XFjqEATqOgEnR6@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e946155d-384f-4667-ad6e-0a63b4eabec4;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-29T15:20:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|IA1PR21MB3403:EE_
+x-ms-office365-filtering-correlation-id: b8d43859-3b88-494d-706e-08dad2213f5b
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jnpmE68QYdjSkXKSg5eaVA3mYIE22EPckfvvEcOu+jTVVQdJwR58UwLDqNYAriKnTQBsNMlRlQ3OybOHRW47qjuM9VdbRCshPbygFpifrrfXsPbmcdQSfh0p2/SlmH6Aaf4/J9oLHxXIv2l4de5RU0HGHXNypjGBxAjqvkxpszTDAmwO2CqGysdDJ14aaT5idnp61n3wmC7HfXtgJlGW6Y7jUTbYXcp2L0vocwvVf6FN1mlzHDBfPLx0v9RkMBbCj/chhpEfjbIzaoma+PhqluqA3+wQF/dhGSAxUOL9VE+fgwMK3LQX1/g2RXsKi0H2+6Xc8zBuNsk8Du/OFHohQXbiy6AKyO32m1nAgoYj18XkzFKklhmmUl9sJWI7bceKjkx1DA+/reO+JVTE+NTeJufRIXiNJOPcQARN/b20w2Kppyxw1PLMU3H21/gKaF5sb5NiQrc+iXxpzDAtC0gXvsccoK7t21UNK8a+citM/5C+85V/juCCa6mS0BMNbz53EnF0mtdq4Dz307TiacpgNqelQQuFgA+LHm4aOedVrBh0NDxJXd2CEjubrxA2yzwONZzlRczr8PdJhQsaaWstm6b5gV6UxPqfq5zb0H0XNNPWT3eZ4rxUkKR/rHHAeKRjX0eUNDeSqbi3d+PjlYGZQdxpF0Jnw8lIrCYi4rlaiECwUrithRovaDBQaLEcLHXcuMxCQJEGueLegtGI7RLMzbdQiT/OTjwUUXgZ5t6yqSr0itH/SUsnFL2pMLg6abEr
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(136003)(376002)(366004)(396003)(451199015)(316002)(478600001)(76116006)(66946007)(2906002)(110136005)(54906003)(8990500004)(71200400001)(10290500003)(38100700002)(83380400001)(82960400001)(55016003)(122000001)(82950400001)(33656002)(26005)(6506007)(9686003)(86362001)(7696005)(186003)(38070700005)(52536014)(8936002)(5660300002)(7406005)(7416002)(41300700001)(64756008)(66899015)(4326008)(66476007)(8676002)(66446008)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?j18vLpPqVBSe+/qxAIWKyRseRr/ZHW0bC1xHzSerUUj0rFoXbFn/lVCHvP3/?=
+ =?us-ascii?Q?yXmC24UCscL9SsUszuATDJe+YzjXLy20ATnes2tk0HzZFm1Vwo+veBIwerht?=
+ =?us-ascii?Q?hJ7Akiz2tKiqiIj++ymzpWvHlTaTvxef8SVPOkcZ14joVMkJdlNe3v8cmq+x?=
+ =?us-ascii?Q?2TTLwz0XRXBYSeW1ZodkI4CfTlwskFT2hlS8vVQEt/OgM6DHmpenBkOYUEgA?=
+ =?us-ascii?Q?vK3ZqTa5E/wBiMNuClgRmJLzl863ib3OzIG0+ZYTCuMD9hLgXCK6eJifIypJ?=
+ =?us-ascii?Q?br8il1p3K19oXBnb74qBxexm0ixt3iLT9eSYDkPPAacJY5PNM0o+l51ehROn?=
+ =?us-ascii?Q?NyvENBePGRtIzwO+Jpe5L4fHgxnQ1/E2pkKiDooj2ccf8U9OV39o2D4wDMzI?=
+ =?us-ascii?Q?tzbUV4XZ+iG496Li0SiCsyS0t5iKO+Ug6dWB6PdZ1dKJrtCB4TxKNNcSRQsg?=
+ =?us-ascii?Q?97AFYpnxOCwFK4y+8h9tJghdTF/fQNHqShYXMzZzEgukPBedbOb/WmdXPTJn?=
+ =?us-ascii?Q?u3MkAVAxuiZFn4HENDG/aHUYWGZuq7lsPV77lO8zQ/DXZoDk7bmfCPvMQt6e?=
+ =?us-ascii?Q?sW9PbhBKTKNwPBb2/InkYH0vzuHjNqkuOGh2Zmrc5BixNrxti/YD9Ork+Z91?=
+ =?us-ascii?Q?1tkF2D06rIM8mrirolLsMNmhw0SWNFubPdGp1GxoVMU05ARSbnPUX0lcRYUX?=
+ =?us-ascii?Q?HTyPcvZT2hEdYH6mK52hjppQVlpciRrqcKfP1b7YXgEuFJ4ydHOpHaOD6ZoP?=
+ =?us-ascii?Q?Z29N6MwWp9SRCnaWVRPU/X/MKd0vgGWkPxGKYenWxvAFksRERfZ931EcCAiw?=
+ =?us-ascii?Q?er+8YiQQ8SMvM7gR1lziT26x8OKQKgBU47U0BRZn9CQ6fBzYdiQyaQ9m0SUM?=
+ =?us-ascii?Q?3Nwzl1J2cpNMgc8jZnov8jJCSa1jazFiLqpWMCVuZve8dYl0Dt/k7CD90hIh?=
+ =?us-ascii?Q?Mz9NamAeNCxXXav7o8ZJY33D+0WP6oGXGaNHTzazyqzQc47K+2a5io8EWB2b?=
+ =?us-ascii?Q?61N76bMFdeoHToo0tofODna4RGNDpUlKM/ykqy2LSorx6sjt+5uJbWJt6Yrx?=
+ =?us-ascii?Q?yzgLrfWfZR82ScPnq0ehsUW2jPsC3wckSIRJtTQ0RHyq/hQTDmmLEDSohA+1?=
+ =?us-ascii?Q?zqag+OVHctw1F7X/l7mNGSDXnG7qvpPiKIqmNZf5Czh5299kGo3eihe1CsN2?=
+ =?us-ascii?Q?Iv4uZ/OGwIShNRgx6rfsDujiI2MVcfyKlOhAO6whUt2FOmD4V6c17McWE0Oa?=
+ =?us-ascii?Q?aCRLHnSbZK+LXGO+rGIufet6lkLJeeEWhgRHzjWD4VyCGmMCLYQYaO69Ka+4?=
+ =?us-ascii?Q?9P1H/lyJF5D+6qpz+KPtn3krjjRz+nvU+f1WGuLYsaF04dTZx5trK1du7MZ7?=
+ =?us-ascii?Q?CaeceCqnoX9hrAb41+s7PxCuD6BhszYz0vkIAfZLmVRgqJVksdh1yJIaA9Sb?=
+ =?us-ascii?Q?9sV2TsHot6bCH1owqRviABuHIrzxBkKtzSCBmZIiSGvyyyD9O+6tWXGyitW3?=
+ =?us-ascii?Q?J6ZMWXmAsxCb2VySSPstvFkanbt4q5YP4tHnHA/UHwPvSnY/NzSNAFiEswM2?=
+ =?us-ascii?Q?gcHi7BmH9NSHbg+NX7RTYWMGgU/wf/g8e+P9ku8piVF9Q/TcTY151mfgUdMW?=
+ =?us-ascii?Q?og=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8d43859-3b88-494d-706e-08dad2213f5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2022 15:49:06.4744
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: do0o844QRueXe4JJgsmRyJM35yDAMaBN1UvXTrJYU0fpA7mOdJXX/hI4XHDKAa5QoMbI/JxMsTq10wuRoAY4A9GZYNg8T4mFo1vBC/RnapU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3403
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,342 +167,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 29 Nov 2022 17:07:21 +0200
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+From: Borislav Petkov <bp@alien8.de> Sent: Tuesday, November 29, 2022 12:41=
+ AM
+>=20
+> On Tue, Nov 29, 2022 at 01:15:39AM +0000, Michael Kelley (LINUX) wrote:
+> > So that's why I'm suggesting CC_VENDOR_AMD_VTOM.
+>=20
+> There's no CC_VENDOR_AMD_VTOM. How many times do I need to explain this?!
+> CC_VENDOR is well the CC vendor - not some special case.
 
-> Hi,
-> 
-> On Tue, Nov 29, 2022 at 06:52:42AM -0700, Alex Williamson wrote:
-> > On Tue, 29 Nov 2022 07:48:12 +0100
-> > Lukas Wunner <lukas@wunner.de> wrote:
-> >   
-> > > On Mon, Nov 28, 2022 at 03:06:17PM -0700, Alex Williamson wrote:  
-> > > > Agreed.  Is this convoluted removal process being used to force a SBR,
-> > > > versus a FLR or PM reset that might otherwise be used by twiddling the
-> > > > reset attribute of the GPU directly?  If so, the reset_method attribute
-> > > > can be used to force a bus reset and perform all the state save/restore
-> > > > handling to avoid reallocating BARs.  A reset from the upstream switch
-> > > > port would only be necessary if you have some reason to also reset the
-> > > > switch downstream ports.  Thanks,    
-> > > 
-> > > A Secondary Bus Reset is only offered as a reset_method if the
-> > > device to be reset is the *only* child of the upstream bridge.
-> > > I.e. if the device to be reset has siblings or children,
-> > > a Secondary Bus Reset is not permitted.
-> > > 
-> > > Modern GPUs (including the one Mika is referring to) consist of
-> > > a PCIe switch with the GPU, HD audio and telemetry devices below
-> > > Downstream Bridges.  A Secondary Bus Reset of the Root Port is
-> > > not allowed in this case because the Switch Upstream Port has
-> > > children.  
-> > 
-> > I didn't see such functions in the log provided, the GPU in question
-> > seems to be a single function device at 53:00.0.  This matches what
-> > I've seen on an ARC A380 GPU where the GPU and HD audio are each single
-> > function devices under separate downstream ports of a PCIe switch.  
-> 
-> Yes, this one is similar. There is a PCIe switch and then bunch of
-> devices connected to the downstream ports. One of them being the GPU.
-> 
-> Sorry if I missed that part in the report.
-> 
-> There are typically multiple of these cards and they want to perform the
-> reset seperately for each.
+Let's back up half a step.  We have CC_VENDOR_INTEL and
+CC_VENDOR_AMD because that's a convenient way to identify
+two fairly different schemes for doing guest encryption.  The
+schemes have some things in common, but the details are pretty
+different.  Tagging the schemes based on the vendor makes sense
+because the schemes were independently developed by each
+processor vendor.
 
-Maybe the elephant in the room is why it's apparently such common
-practice to need to perform a hard reset these devices outside of
-virtualization scenarios...
- 
-> > > See this code in pci_parent_bus_reset():
-> > > 
-> > > 	if (pci_is_root_bus(dev->bus) || dev->subordinate ||
-> > > 	    !dev->bus->self || dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
-> > > 		return -ENOTTY;
-> > > 
-> > > The dev->subordinate check disallows a SBR if there are children.
-> > > Note that the code should probably instead check for...
-> > > (dev->subordinate && !list_empty(dev->subordinate->devices))
-> > > ...because the port may have a subordinate bus without children
-> > > (may have been removed for example).
-> > > 
-> > > The "no siblings" rule is enforced by:
-> > > 
-> > > 	list_for_each_entry(pdev, &dev->bus->devices, bus_list)
-> > > 		if (pdev != dev)
-> > > 			return -ENOTTY;
-> > > 
-> > > Note that the devices list is iterated without holding pci_bus_sem,
-> > > which looks fishy.
-> > > 
-> > > That said, it *is* possible that a Secondary Bus Reset is erroneously
-> > > offered despite these checks because we perform them early on device
-> > > enumeration when the subordinate bus hasn't been scanned yet.
-> > > 
-> > > So if the Root Port offers other reset methods besides SBR and the
-> > > user switches to one of them, then reinstates the defaults,
-> > > suddenly SBR will disappear because the subordinate bus has since
-> > > been scanned.  What's missing here is that we re-check availability
-> > > of the reset methods on siblings and the parent when a device is
-> > > added or removed.  This is also necessary to make reset_method
-> > > work properly with hotplug.  However, the result may be that the
-> > > reset_method attribute in sysfs may become invisible after adding
-> > > a device (because there is no reset method available) and reappear
-> > > after removing a device.
-> > > 
-> > > So the reset_method logic is pretty broken right now I'm afraid.  
-> > 
-> > I haven't checked for a while, but I thought we exposed SBR regardless
-> > of siblings, though it can't be accessed via the reset attribute if
-> > there are siblings.  That allows that the sibling devices could be soft
-> > removed, a reset performed, and the bus re-scanned.  If there are in
-> > fact sibling devices, it would make more sense to remove only those to
-> > effect a bus reset to avoid the resource issues with rescanning SR-IOV
-> > on the GPU.  
-> 
-> If I understand correctly they perform the reset just above the upstream
-> port of the PCIe switch so that it resets the whole "card".
+But it turns out that AMD really has two fairly different schemes:
+the C-bit scheme and the vTOM scheme.  The details of these
+two AMD schemes are pretty different.  vTOM is *not* just a minor
+option on the C-bit scheme.  It's an either/or -- a guest VM is either
+doing the C-bit scheme or the vTOM scheme, not some combination.
+Linux code in coco/core.c could choose to treat C-bit and vTOM as
+two sub-schemes under CC_VENDOR_AMD, but that makes the
+code a bit messy because we end up with "if" statements to figure
+out whether to do things the C-bit way or the vTOM way.  The
+difference in the C-bit way and the vTOM way is not Hyper-V
+specific.  Any hypervisor running on an AMD processor can make
+the same choice to offer C-bit VMs or vTOM VMs.
 
-... and even to the extent that an entire PCIe hierarchy is being reset
-rather than individual devices, let alone leaf buses.
- 
-> > > In any case, for Mika's use case it would be useful to have a
-> > > "reset_subordinate" attribute on ports capable of a SBR such that
-> > > the entire hierarchy below is reset.  The "reset" attribute is
-> > > insufficient.  
-> > 
-> > I'll toss out that a pretty simple vfio tool can be written to bind all
-> > the siblings on a bus enabling the hot reset ioctl in vfio.  Thanks,  
-> 
-> Sounds good but unfortunately I'm not fluent in vfio so I have no idea
-> how this simple tool could be done :( Do you have any examples or
-> pointers that we could use to try this out?
+Or we could model the two AMD schemes as two different vendors,
+which is what I'm suggesting.  Doing so recognizes that the two schemes
+are fairly disjoint, and it makes the code cleaner.
 
-Unfortunately, if your goal is really to reset the whole switch, vfio
-isn't going to help with that.  The vfio-pci driver only binds to
-endpoints and a hot reset can be effected for a given endpoint, in the
-presence of sibling devices which are also owned by the same user.
-There's a rudimentary unit test below which implements this.
+Tom Lendacky -- any thoughts on this question from AMD's
+standpoint?  =20
 
-I think the reason we don't have a "reset_subordinate" attribute is
-that there are a number of difficult issues in locking down an entire
-hierarchy that go beyond what vfio does in validating the user's proof
-of ownership for affected endpoints on a leaf bus.  Thanks,
+>=20
+> IOW, the goal here is for generic SNP functionality to be the same for
+> *all* SNP guests. We won't do the AMD's version of vTOM enablement,
+> Hyper-V's version of vTOM enablement and so on. It must be a single
+> vTOM feature which works on *all* hypervisors as vTOM is a generic SNP
+> feature - not Hyper-V feature.
 
-Alex
+Yes, there's only one version of vTOM enablement -- the AMD version.
 
-#include <errno.h>
-#include <libgen.h>
-#include <fcntl.h>
-#include <libgen.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <sys/param.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/vfs.h>
+But the broader AMD SNP functionality is bifurcated:  there's the
+C-bit scheme and the vTOM scheme.  The question is how Linux code
+should model those two different schemes.  I'm suggesting that things
+are cleaner conceptually and in the code if we model the two different
+AMD schemes as two different vendors.
 
-#include <linux/ioctl.h>
-#include <linux/vfio.h>
+Michael
 
-void usage(char *name)
-{
-	printf("usage: %s <iommu group id> <ssss:bb:dd.f>\n", name);
-}
-
-#define false 0
-#define true 1
-
-int main(int argc, char **argv)
-{
-	int i, j, ret, container, *pfd;
-	char path[PATH_MAX];
-
-	struct vfio_group_status group_status = {
-		.argsz = sizeof(group_status)
-	};
-
-	struct vfio_pci_hot_reset_info *reset_info;
-	struct vfio_pci_dependent_device *devices;
-	struct vfio_pci_hot_reset *reset;
-
-	struct reset_dev {
-		int groupid;
-		int seg;
-		int bus;
-		int dev;
-		int func;
-		int fd;
-		int group;
-	} *reset_devs;
-
-	if (argc < 3) {
-		usage(argv[0]);
-		return -1;
-	}
-
-	printf("Expect %d group/device pairs\n", (argc - 1)/2);
-
-	reset_devs = calloc((argc - 1)/2, sizeof(struct reset_dev));
-	if (!reset_devs)
-		return -1;
-
-	for (i = 0; i < (argc - 1)/2; i++) {
-		ret = sscanf(argv[i*2 + 1], "%d", &reset_devs[i].groupid);
-		if (ret != 1) {
-			usage(argv[0]);
-			return -1;
-		}
-
-		ret = sscanf(argv[i*2 + 2], "%04x:%02x:%02x.%d",
-			     &reset_devs[i].seg, &reset_devs[i].bus,
-			     &reset_devs[i].dev, &reset_devs[i].func);
-		if (ret != 4) {
-			usage(argv[0]);
-			return -1;
-		}
-
-		printf("Using PCI device %04x:%02x:%02x.%d in group %d "
-	               "for hot reset test\n", reset_devs[i].seg,
-		       reset_devs[i].bus, reset_devs[i].dev,
-		       reset_devs[i].func, reset_devs[i].groupid);
-	}
-
-	container = open("/dev/vfio/vfio", O_RDWR);
-	if (container < 0) {
-		printf("Failed to open /dev/vfio/vfio, %d (%s)\n",
-		       container, strerror(errno));
-		return container;
-	}
-
-	for (i = 0; i < (argc - 1)/2; i++) {
-		snprintf(path, sizeof(path), "/dev/vfio/%d",
-			 reset_devs[i].groupid);
-		reset_devs[i].group = open(path, O_RDWR);
-		if (reset_devs[i].group < 0) {
-			printf("Failed to open %s, %d (%s)\n",
-			path, reset_devs[i].group, strerror(errno));
-			return reset_devs[i].group;
-		}
-
-		ret = ioctl(reset_devs[i].group, VFIO_GROUP_GET_STATUS,
-			    &group_status);
-		if (ret) {
-			printf("ioctl(VFIO_GROUP_GET_STATUS) failed\n");
-			return ret;
-		}
-
-		if (!(group_status.flags & VFIO_GROUP_FLAGS_VIABLE)) {
-			printf("Group not viable, are all devices attached to vfio?\n");
-			return -1;
-		}
-
-		ret = ioctl(reset_devs[i].group, VFIO_GROUP_SET_CONTAINER,
-			    &container);
-		if (ret) {
-			printf("Failed to set group container\n");
-			return ret;
-		}
-
-		if (i == 0) {
-			ret = ioctl(container, VFIO_SET_IOMMU,
-				    VFIO_TYPE1_IOMMU);
-			if (ret) {
-				printf("Failed to set IOMMU\n");
-				return ret;
-			}
-		}
-
-		snprintf(path, sizeof(path), "%04x:%02x:%02x.%d",
-			 reset_devs[i].seg, reset_devs[i].bus,
-			 reset_devs[i].dev, reset_devs[i].func);
-
-		reset_devs[i].fd = ioctl(reset_devs[i].group,
-					 VFIO_GROUP_GET_DEVICE_FD, path);
-		if (reset_devs[i].fd < 0) {
-			printf("Failed to get device %s\n", path);
-			return -1;
-		}
-	}
-	getchar();
-
-	reset_info = malloc(sizeof(*reset_info));
-	if (!reset_info) {
-		printf("Failed to alloc info struct\n");
-		return -ENOMEM;
-	}
-
-	reset_info->argsz = sizeof(*reset_info);
-
-	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_GET_PCI_HOT_RESET_INFO,
-		    reset_info);
-	if (ret && errno == ENODEV) {
-		printf("Device does not support hot reset\n");
-		return 0;
-	}
-	if (!ret || errno != ENOSPC) {
-		printf("Expected fail/-ENOSPC, got %d/%d\n", ret, -errno);
-		return -1;
-	}
-
-	printf("Dependent device count: %d\n", reset_info->count);
-
-	reset_info = realloc(reset_info, sizeof(*reset_info) +
-			     (reset_info->count * sizeof(*devices)));
-	if (!reset_info) {
-		printf("Failed to re-alloc info struct\n");
-		return -ENOMEM;
-	}
-
-	reset_info->argsz = sizeof(*reset_info) +
-                             (reset_info->count * sizeof(*devices));
-	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_GET_PCI_HOT_RESET_INFO,
-		    reset_info);
-	if (ret) {
-		printf("Reset Info error\n");
-		return ret;
-	}
-
-	devices = &reset_info->devices[0];
-
-	for (i = 0; i < reset_info->count; i++)
-		printf("%d: %04x:%02x:%02x.%d group %d\n", i,
-		       devices[i].segment, devices[i].bus,
-		       devices[i].devfn >> 3, devices[i].devfn & 7,
-		       devices[i].group_id);
-
-	printf("Press any key to perform reset\n");
-	getchar();
-	printf("Attempting reset: ");
-	fflush(stdout);
-
-	reset = malloc(sizeof(*reset) + (sizeof(*pfd) * reset_info->count));
-	pfd = &reset->group_fds[0];
-
-	for (i = 0; i < reset_info->count; i++) {
-		for (j = 0; j < (argc - 1)/2; j++) {
-			if (devices[i].group_id == reset_devs[j].groupid) {
-				*pfd++ = reset_devs[j].group;
-				break;
-			}
-		}
-
-		if (j == (argc - 1)/2) {
-			printf("Group %d not found\n", devices[i].group_id);
-			return -1;
-		}
-	}
-
-	reset->argsz = sizeof(*reset) + (sizeof(*pfd) * reset_info->count);
-	reset->count = reset_info->count;
-	reset->flags = 0;
-
-	ret = ioctl(reset_devs[0].fd, VFIO_DEVICE_PCI_HOT_RESET, reset);
-	printf("%s\n", ret ? "Failed" : "Pass");
-
-	return ret;
-}
-
+>=20
+> > Of course, when you go from N=3D1 hypervisors (i.e., KVM) to N=3D2 (KVM
+> > and Hyper-V, you find some places where incorrect assumptions were
+> > made or some generalizations are needed. Dexuan Cui's patch set for
+> > TDX support is fixing those places that he has encountered. But with
+> > those fixes, the TDX support will JustWork(tm) for Linux guests on
+> > Hyper-V.
+>=20
+> That sounds like the right direction to take.
+>=20
+> > I haven't gone deeply into the situation with AMD C-bit support on
+> > Hyper-V. Tianyu Lan's set of patches for that support is a bit bigger,
+> > and I'm planning to look closely to understand whether it's also just
+> > fixing incorrect assumptions and such, or whether they really are
+> > some differences with Hyper-V. If there are differences, I want to
+> > understand why.
+>=20
+> You and me too. So I guess we should look at Tianyu's set first.
+>=20
