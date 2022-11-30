@@ -2,105 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6CB163CF83
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 08:04:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59A2563CFBB
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 08:30:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiK3HEI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Nov 2022 02:04:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
+        id S231826AbiK3Haz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Nov 2022 02:30:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbiK3HEH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 02:04:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B4D756EE1;
-        Tue, 29 Nov 2022 23:04:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 08E7661A36;
-        Wed, 30 Nov 2022 07:04:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA02C433D6;
-        Wed, 30 Nov 2022 07:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669791845;
-        bh=X2hPhN+EYjcCTx3ChJ6TWYuinHRDF7JJBXdPbw05/5w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CHsf1QVv9nH0bbZCg4lJSQyjpYf9tGr9BYNjQHL6FWKen9L8u99MN6OJyyonVqet7
-         6mu/L1XRnUn7nb6q2xZA3lEkKj1nxOX//lxv1RP4UFlR9sdYUuAw19OODOEeqMZxqp
-         vKaTgnKVmok2zWRHphYGF9HZcS88BrEWYslg89s00Zqd1Y3NVIfjtNc2/t3YBPKpvg
-         /rE5jqqn7tmSL1aG3A001PeKMz5EV/kPHepbLh3ShLz6HB11n43xGYA2IBz6A7bmjO
-         fse/lpKjukDYdTrON4nlKfPf87evDNkio4sik0p2YCU/cLrx9PqAYAbqSrrwSZMkdh
-         nGUCp4ov5SQcg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1p0H8Z-0007n8-Mz; Wed, 30 Nov 2022 08:04:07 +0100
-Date:   Wed, 30 Nov 2022 08:04:07 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom-ep: Fix PERST register description
-Message-ID: <Y4cAZ8ZqnRvR350Z@hovoldconsulting.com>
-References: <20221018093115.7537-1-johan+linaro@kernel.org>
+        with ESMTP id S229648AbiK3Haz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 02:30:55 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8546B2D771
+        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 23:30:53 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id AF29B100DE9DD;
+        Wed, 30 Nov 2022 08:30:51 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 897ABA072C; Wed, 30 Nov 2022 08:30:51 +0100 (CET)
+Date:   Wed, 30 Nov 2022 08:30:51 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] PCI/DPC: Add Software Trigger as reset method
+Message-ID: <20221130073051.GA8198@wunner.de>
+References: <9c1533fd42e9002bd6d2020656fa1dd0e3e3bf3a.1669706952.git.lukas@wunner.de>
+ <Y4Y1EYZ+1Otx9LaT@kbusch-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221018093115.7537-1-johan+linaro@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y4Y1EYZ+1Otx9LaT@kbusch-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 11:31:15AM +0200, Johan Hovold wrote:
-> The 'qcom,perst-regs' property holds a single phandle array with the
-> phandle of the TCSR syscon and offsets of the two PERST registers, but
-> the current schema does not capture this.
+On Tue, Nov 29, 2022 at 09:36:33AM -0700, Keith Busch wrote:
+> On Tue, Nov 29, 2022 at 08:35:55AM +0100, Lukas Wunner wrote:
+> > Add DPC Software Trigger as a reset method to be used for silicon
+> > validation among other things:
 > 
-> Update the binding to describe the single phandle array and its three
-> elements.
+> Do you really need a kernel helper to do this? You can test these with
 > 
-> Fixes: 31c9ef002580 ("dt-bindings: PCI: Add Qualcomm PCIe Endpoint controller")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml          | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>   # setpci -s <dsp's b:d.f> ECAP_DPC+6.w=40:40
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index 977c976ea799..7574291646ad 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -42,13 +42,13 @@ properties:
->      maxItems: 8
->  
->    qcom,perst-regs:
-> -    description: Reference to a syscon representing TCSR followed by the two
-> -                 offsets within syscon for Perst enable and Perst separation
-> -                 enable registers
-> +    description: PERST TCSR registers
->      $ref: "/schemas/types.yaml#/definitions/phandle-array"
->      items:
-> -      minItems: 3
-> -      maxItems: 3
-> +      - items:
-> +          - description: phandle of TCSR syscon
-> +          - description: offset of PERST Enable register
-> +          - description: offset of PERST Separation Enable register
->  
->    interrupts:
->      items:
+> And since the kernel is a not aware you are synthesizing the DPC event,
+> that more naturally tests how the kernel would react to a hardware dpc
+> trigger.
 
-Lorenzo, it seems this one has not yet been picked up so sending a
-reminder.
+I've seen people write a value directly instead of using the "data:mask"
+syntax above and that's dangerous because the register is under the
+control of the kernel.
 
-Johan
+By exposing software trigger as a reset method I hope to make its
+invocation error-proof and more comfortable.
+
+Thanks,
+
+Lukas
