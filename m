@@ -2,222 +2,259 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C11A63DA43
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 17:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 658A763DA53
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 17:14:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiK3QLa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Nov 2022 11:11:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        id S229642AbiK3QOK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Nov 2022 11:14:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbiK3QLY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 11:11:24 -0500
-Received: from DM4PR02CU001-vft-obe.outbound.protection.outlook.com (mail-centralusazon11022025.outbound.protection.outlook.com [52.101.63.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C064884DD2;
-        Wed, 30 Nov 2022 08:11:21 -0800 (PST)
+        with ESMTP id S230143AbiK3QOE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 11:14:04 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2042.outbound.protection.outlook.com [40.107.237.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E554EC3D;
+        Wed, 30 Nov 2022 08:14:02 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EmT2+6066PNkDbpVEBvcFntRZGQqv4v1Caodr6q6ez9dSYaXuRC9oDG6hkn1Fk9DLN06F27vwBHkmU/Uv22NzQi6I2bCbWka3E8rL3EgWbdmhKlfPWW4g/h3nAQR0iZKLLQFYW1vNSTQAynF3YEI9XVblHht1uHx7Mv+LQn7wAH8O/F25bU2HIf/WBghRjtxg2e7QzPld/TyxYg0rmTlwODmzF9SQHwGVjO7YRjUHuIcm0WZgDJnPDwSS2/44pKXWtl2g3ONmbmk/erl8PP7T9ZX6w2kuWBL3ljjsy2Am4At7hxLkT0AUgd43hC2/TUJ4cKzB70BfbLuO3CzTFFMzg==
+ b=i52rnyJ5KvlZU5jCwg8olLrtIzaOPMR8kM5ipf2I1DfSNv5aAx0JlzQibRfwPRjhBb7CnqvhZGDMleqkA4Wi41nRLtBB2+Q9v3c7+20MWFsXEK7bv6C4Q7TbUcyTNySsVYfWJgPujDH6qQEbvmit76xKt3XIcTxG1EA3y7tokdlf41JS+PN4MDkep7nHOlK8HcY1PLEYwn/0IBRlwtmEZFM2qDzW+Ns4qUswoL4rluAMtqsQBtj0oPzxBwLX1q0+IDrtlSrGzBZh08qFTGWYu3GdSFCyfip5tE1byZcTy4MmqfbM0FpHhM8lOUeJKD6ezfdRJWm/y5bAb6biCgh9lQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G2un+YaYUrYcPyG/w1JniPYtm1LjFzWwURIaJT4UpIY=;
- b=VYhNY8MApF7sbrpSC+iSZNXhDpEHg3lDK2aoYkUfRyANoGswRHC5IpCuKwWgd5J6YRyHOIyhfLlx211v1vnA/X6bPVVkxcIK54lMMlX0y2v3bE4a5jH8YnlHYJlNXtV8xIa7Cmd4f9gjyiLFuhqtC5GmbQZkITVl0h+1nv5WtIRlkkex7kEBDmNG/xly+KmGt4oPnxikTSrvHN63HN8Q7q6X1wlJdhu5g8sLKxJTuRQQeZHKfuqq5vOmhhhc+K+Dv6uV58sLBOnJlRk07KjnfcDAmR6w+Fl8TjF3H4W0+ZFV1k5v40C+bHsnR/o7GgzIGRo9+qeszkS+FCMD07hPCQ==
+ bh=Y1nbsY+2PJmOEehdocZTzfKeP0I2UqWWLGbUumuO1hc=;
+ b=OW28ohHckFKuU/Sl6M5uOxSH74iBsWyQiot0XQBFSlaUW+xfcDiVI/t8QZ5NyioHjwQCzIOpCWWzs82ZY91U2bRNDeuPVYNoXvq8EJH2SXtGjLDCUnVki/uUdExXC0tw1OjwnjKRnK8Mo9PygGsovztNL2YLzmt4NG+dnsG7qtajJXmvaI3hXaTCdp9OxYh7lRmV5wwnUmMrrSKuynyec5Bh0MMJIqogZSEj51VqkA8hqSCykWq2iHeu3p/Y0nX8+rt/beJFviqllUT7704BBSToA1k6SroWaWW2mJ8PBx24KaZ4DCfcLWsknPonwdDgGZEc8Sb+tPKv7po6Vq+6mA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G2un+YaYUrYcPyG/w1JniPYtm1LjFzWwURIaJT4UpIY=;
- b=i6Q2Zc/gkyPSP1ZeWnPreEwzh9t7hVk8LglNUYaNGt2TvKEzHe3XY/yPv/IDnKoBzTIwo+vScajeYFE0XhSUn4AtfXB29f1iPXbTrRHpocuFRvvoTfMa8QV5xUhGazMBdd6lMRWYad8AowLcYZmem1V1OGC5I1PjBwSSg4gwPhY=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by MN0PR21MB3171.namprd21.prod.outlook.com (2603:10b6:208:37b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5901.4; Wed, 30 Nov
- 2022 16:11:18 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::1e50:78ec:6954:d6dd]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::1e50:78ec:6954:d6dd%6]) with mapi id 15.20.5880.008; Wed, 30 Nov 2022
- 16:11:18 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use standard
- coco mechanisms
-Thread-Topic: [Patch v3 07/14] x86/hyperv: Change vTOM handling to use
- standard coco mechanisms
-Thread-Index: AQHY+es2O4adbWIH8UyWtCwRyUnUyq5JgOOAgAHDpcCAAEhFgIAAJ7oQgAjDHRCAACLagIAAALfwgAANigCAAAHQEIAAKJ+AgABUTmCAAIE5AIAAb5XAgAApEACAAXbTMA==
-Date:   Wed, 30 Nov 2022 16:11:18 +0000
-Message-ID: <BYAPR21MB168891CB2831C9BAF829EADBD7159@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <BYAPR21MB16886FF8B35F51964A515CD5D70C9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <BYAPR21MB1688AF2F106CDC14E4F97DB4D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4Ti4UTBRGmbi0hD@zn.tnic>
- <BYAPR21MB1688466C7766148C6B3B4684D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4Tu1tx6E1CfnrJi@zn.tnic>
- <BYAPR21MB1688BCC5DF4636DBF4DEA525D7139@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4USb2niHHicZLCY@zn.tnic>
- <BYAPR21MB16886FF5A63334994476B6ADD7129@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4XFjqEATqOgEnR6@zn.tnic>
- <BYAPR21MB1688D73FBBF41B6E21265DA3D7129@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y4ZFmktxPlEjyoeR@zn.tnic>
-In-Reply-To: <Y4ZFmktxPlEjyoeR@zn.tnic>
-Accept-Language: en-US
+ bh=Y1nbsY+2PJmOEehdocZTzfKeP0I2UqWWLGbUumuO1hc=;
+ b=tt+Ud9xGjih0tJKhAjkGntdR1+L+1YpyLWFsjINgT4cpNXw1Tp718MBAqCEeG4JM3ZUhkTNvt17tIRWuLb8fw/E5bmZwcPbAvIHpFGG1deYTSfJUj025W7xVPE2p7iFaz7/DFPHsY4AppNYIlZJFmL81X8Lut+Lw3oc/GWTqrakjJ+C64gjzpv4878EYcVpYKEP+/TQwGhziNhGjmNRbYiXWxqZpfr78AtrPcXwCZ9wfjLBbQKrGznEYhD3VYQiN2UC0PqZHrUA6qBuKjVfcVU8rsOL6iMW++X21sIu2iNlM3mn3FTwVHi3Z8mAPTatFruBT/lAqLExifNMvyM4h6g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3356.namprd12.prod.outlook.com (2603:10b6:5:38::11) by
+ DS0PR12MB7583.namprd12.prod.outlook.com (2603:10b6:8:13f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5857.23; Wed, 30 Nov 2022 16:14:00 +0000
+Received: from DM6PR12MB3356.namprd12.prod.outlook.com
+ ([fe80::c267:3c38:d5bb:db3b]) by DM6PR12MB3356.namprd12.prod.outlook.com
+ ([fe80::c267:3c38:d5bb:db3b%3]) with mapi id 15.20.5857.023; Wed, 30 Nov 2022
+ 16:14:00 +0000
+Message-ID: <c755ee45-fb6d-1f7c-2a3b-bcaa9d292c1b@nvidia.com>
+Date:   Wed, 30 Nov 2022 21:43:45 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 1/3] dt-bindings: PHY: P2U: Add PCIe lane margining
+ support
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4d8ac474-9661-4173-b112-bd1a32d94ebd;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-30T16:08:38Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|MN0PR21MB3171:EE_
-x-ms-office365-filtering-correlation-id: f1bed3aa-93cf-45bd-a5d8-08dad2ed839d
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ngeZelr/5IkfH3kbtD83LLGdjGhe6u8LN0PWeKcLW3CenXuBvJ1dFkWfgU6lPQ8IhZz8MZMRBEtEkReD4W0T7F7Gp267ra80qEaqSs4K8K/oNkIka7WlLVLJMpSJV3eONhz2ZHWLV99ee73X3xIAqZD2uBUiSaQ9lLpR+22DN0WHHtHmFi6QBWU8/W35+tVWl93koszy6MhoxDWE0zYOuugaLzELSx3tALyTqHUU92p/MHNRQ9BIjl5jiLv2KCpX3DiVtGc8jk3viMWlY9QpUFEWY329Rv76bxybMCPHU716QnVU+5tE+tpdN6rIqD04Copp4mOFQFj9V2wmXD7NkWU6NGJ7vX2HdrPzaqKr4JLAVXSuESiso9ptq5mrjR0qihNBb5AQ0irg7LDDDBdkQ04/P8DPrv4bSrlVlAj6e9TD3WW8BZQ7RFULAQFZwhNVwBjjqFFXwp38LNJe7Yvupe+AzMrkrgAR03OSnw87R7GK15L4tV+KTKQUK9tpgYERWc9IaugwfNjrGnEWRrqGH+E/4q07GLkguydcoB6P8qKZ0ibx/9v5psGBXJDEvJj5iv+Uv4coFSgtJuH2T1B7EP/k6KUhI1i52x6uZhGhA13tX7FAVRU8Mep1jf3sq44AXxtLigDdTyE5tVMnyOnjXNduKPjMsmdRm/LaI8IiruHL64DBYCklr4fAnW2zmUa390mfi/yX0GLAlkE1R5mzp/1Rci8Sx7s5nDph+4wgq+WsTQhhHZ6DJ7O+nT5wLn1v
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(451199015)(38100700002)(33656002)(122000001)(55016003)(54906003)(86362001)(38070700005)(82960400001)(82950400001)(9686003)(26005)(6916009)(316002)(71200400001)(478600001)(10290500003)(6506007)(7696005)(8676002)(2906002)(5660300002)(7406005)(7416002)(4326008)(66476007)(76116006)(64756008)(66556008)(52536014)(66446008)(66946007)(41300700001)(186003)(8990500004)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iEJNhDpofC0yQuSb2BF4BqEyFjf2dQX62VSPsMfpYCmomyHQZDCWSKnjyaOG?=
- =?us-ascii?Q?zsa3TYCh/ji35tiearDnXgxfCdMrHQVB5xTKGSe8fgG+uDKQFiujtoQYDuhl?=
- =?us-ascii?Q?v6GHM0l1nsysQ34HUdRk8q9QXnWkfR30m/nW1iuFWjwD+GHusHcwzMgu0JWb?=
- =?us-ascii?Q?ki8EeU5vae/xUxtQQVbEjmrWxT/+T4M57YMUSh5oDUGHg6RcJ2ESl80JlUlk?=
- =?us-ascii?Q?uS8/EHK7LGobrLJqDeTg/7C9hxt5C084maYic/dMeBVHZj7JuCBzZbdSuliR?=
- =?us-ascii?Q?fsAD1oBhU2OMYE2hVXha6gn4125NI3n3um6474q3XVAIhG0ZgWvdRef/X2ct?=
- =?us-ascii?Q?x1El+fkl/VVEBO0UPjn99w+eQ4NpL3fZtkQML7IL0tg+2ChiTRo2By+ILOF2?=
- =?us-ascii?Q?GrhGf35326Pi4YHZ2szXhiSfnmo4BJ7dJKJaJl+JfOc4/BCRyUdQyAUTq2Ot?=
- =?us-ascii?Q?Z6E9JyuxXPPJiPnwKBkHrLS7vM2auBK1QDHdawGDW7kp6P/Tfqtq6oY8pd59?=
- =?us-ascii?Q?hOyhseOJ/EFvy6QV6qlJsow0h1WP6/zjwvbBJJAlyWWzdv7csAX/6/1x6IDq?=
- =?us-ascii?Q?VVJ/t8RBr/xefvZ25tQfIugNpE4TJHysEzSM8H1m72ZGXP2f1hl0Xovc3fX1?=
- =?us-ascii?Q?bnCrnu7ng+6mJ2hwdiAINPvduXAESrXYzKIrcP2hPCYa35cbMwNkwtJ0avfz?=
- =?us-ascii?Q?m7rUef1worYQpxeIBsx7XNSV2Z/dSLl0PJvV1e9VYYCh0O4OWu2e0HaxEF15?=
- =?us-ascii?Q?zViDV9dAHxwiccRJuy8pVurtS4tK6P9a8GheZqBam3nb4D0jZDQb66HmVOXy?=
- =?us-ascii?Q?JKoSXGHoO5YbF9RR7EINR1ibFNuz6ADDy6mrgcMyUaE7nEq/p/fOtgzpsd2w?=
- =?us-ascii?Q?Mtm12kjuJLmRniAjl5a4j+CnZQhksuARdknV6FzSLwi/9u3CPgB6zYLDkSsS?=
- =?us-ascii?Q?F7R++0dNcojkUeTe8E5nkE5ArCdz70La5SMq6ayfg8qSodTUzcLHanv/sjhB?=
- =?us-ascii?Q?ioO7DUSCaxon24Mz/UgT7SgQWZS0qFdk5q6CZJnBmZR2qNSi2OIrxkB0asSq?=
- =?us-ascii?Q?uPsu9d1FBd6w9wBJNS0AJrG3PIjLfhcRDgBhcoJfaARzaF7iQr+x6E85viIb?=
- =?us-ascii?Q?fVXKrovf5poMdgPjJTSRAKwDv87MM1nftjd+VCgnoTt27Wk6Eiq80yfoGUSh?=
- =?us-ascii?Q?ijblIYW7SohBX60Q1La85Obdbrmo7iDRSO8uZtGisE9J3zPN4Yt5O51jdsCM?=
- =?us-ascii?Q?iN//i2f7rHGsBGYkQ5wjp15PI/kcVSdXBZ+Oqosco8Wyv13DRCxKPAGiniCK?=
- =?us-ascii?Q?zXw6W+jmIKP4JE6ISSOJsq82i035vHdueomrXcmibLEo5I2uVey2v7euJCKe?=
- =?us-ascii?Q?wP2UQeZzFSVj/Uy64yvV/1pD10siPcExB77HxHOXQA8jaK6KXOqbid+yckus?=
- =?us-ascii?Q?1C/53Nu2FKfUxa6skTFhnD1JpwdI+3SRgA+yFNlO814Vwuz/mRdon6VVcRiP?=
- =?us-ascii?Q?RDogE5RWiWdBvTqsygsLOiXqIVSi9CNyz4QiYLfeUa1j/cg+yhcT6Sa98kFG?=
- =?us-ascii?Q?BWYKqPdOAa3Rtg4PgMEGZovu51BdQ/jKXgJb2p84cW/aIk9SN7fN84YbGl+y?=
- =?us-ascii?Q?cQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        vkoul@kernel.org, kishon@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, vidyas@nvidia.com
+Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        lpieralisi@kernel.org, nkristam@nvidia.com
+References: <20221124083510.3008139-1-mmaddireddy@nvidia.com>
+ <20221124083510.3008139-2-mmaddireddy@nvidia.com>
+ <0b203c11-851c-fd6c-faeb-e283b158f1c8@linaro.org>
+ <b81c69e0-13a2-6a25-21c7-c0d8804f9c3b@nvidia.com>
+ <7ce2fd0f-621d-dfbb-2ec0-53ccbb3308ae@linaro.org>
+X-Nvconfidentiality: public
+From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <7ce2fd0f-621d-dfbb-2ec0-53ccbb3308ae@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0017.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:80::12) To DM6PR12MB3356.namprd12.prod.outlook.com
+ (2603:10b6:5:38::11)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3356:EE_|DS0PR12MB7583:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7fd7861-c305-4382-652e-08dad2ede3f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QoO6BiZSAb6npKelfFKMvIpgUn3oq91G4jSxFf1jhv/PrAxSFURuWXl93P4X1jj2hfr+u9kNqJLPqae2rHFLNiVWUI/kiwxykUQ8aJE6Omx6bKd6tdWpx10zCetNJRJ4y198sGMDtVj5dsHIAVvVfs3/J88InuXvBywpdQsESW/uIUSyfcEnzGToo/H/thHRZd/PyC7wL7Gowg/s9soXVmKtH+0mBM8s7/nLKyn7kR5NqaSdq4wN44zuAnFhh8wHmWG23uClzKBFkGwPw8g1YZIfl3je9bvKGQFWhqsa3s0VLzuGFbOCxWa+ZuJe6fLi6UvyLndaGLOVW6HHZN3mhXOzq29Jh6KGROnDqY0SSdt78JZbHJnfvOdrW6CtT3cONtbEUzoXyMO1ynMdbvwO/I9DAydPXhoBhj7DKu90gN0ZerYya6MGiIKu377xs19QmRsvSGzP4Cc+bKgyL2IZY16Qan0j3pnV5OeKetwQKxQ5IRbGKja0w7UVxiDJim9mNmt0rTpF6HXXkjVUclV76AM5Ng77Eaou9yAOBaTV/NvacZEdyi3Wt/iSdNUjGxwM+Y0KQtQVXy5sOG3D2vCVbyncZ1jaXCr0P8J1n6OIotdHV3b4o16eRx9I5bpxVrNkOHqqKujPwWejt62tLOc4Qag//ndbn0Hm5ACwFGXs2wW0fJi25bwyY5UBIYbkTZ3eu/U0Pke4wtaSeCO9aB26EKFfFQCsDSoeJY9VQZJqLoLffJIbwEWwkNxRM6mIk8Bwf8z/ENzfZktjGpFJc5Ty9xSi1bNG8ka7bMQAEcS6nPKPpp/ph85BcRj5PgtHter4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(451199015)(478600001)(66556008)(36756003)(53546011)(6486002)(26005)(38100700002)(6666004)(6506007)(66476007)(41300700001)(66946007)(8676002)(86362001)(4326008)(316002)(31696002)(6636002)(7416002)(5660300002)(8936002)(6512007)(2616005)(31686004)(966005)(186003)(107886003)(83380400001)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VDlEZmhLNWtZZTNCVDhteDAxakxHbVNxNEJiRzJmWlptUDFkTWo1eEhFQk1h?=
+ =?utf-8?B?M3ZPdlhNMFpxY0hjMnVnN2hMRXI3azhMOUVHSVV2MXh0N0FNb2lsR0dJWXJi?=
+ =?utf-8?B?TlpNY0JTYk1Jbm5MZGh2eU0zRkZBSnAya3BJUEpGcVNzZEx2WiszNEVZWC9J?=
+ =?utf-8?B?eGx2R1hxRkJkRlJzZnFNL3lkMU1zTi85bjZBMWpQVjhVUmwxdXJqaHVaOS9H?=
+ =?utf-8?B?bXlobGhsa0pQUmdHRk9MQlpxdStwZ3lyNnMyeUQ0enpXZkx5OTBvMHBkQVJW?=
+ =?utf-8?B?NFV5TnE1ekhHUzdJc1RkK3REYlBlakJaSGRTODk2Sm9oWXZwSEVMRzBKK1Fw?=
+ =?utf-8?B?WkYwZ0V3aFdXeGJDalllWkJhajBjbEgxZnhLWkVKODlMNXo2YWIxK0k5MDFt?=
+ =?utf-8?B?U0h1aGN2UitRUkdlbVJWcHVjSGRKV1pqT0REM01FenBvQ1ZYTEtTTjFUTzRl?=
+ =?utf-8?B?eWZtU3pVSHlSVDRJaEdTR3ViMlpRNVA5ODhMcStrQ1dZbUozU2d5eTQxbGFj?=
+ =?utf-8?B?MHM5L2JuQi9TUnhVaHd5eUE0VDN4d1ZMU1dpWGJINXN0SlhQbjN2V24vSXpU?=
+ =?utf-8?B?VFdLQ2pMblJmV0VYWWsyZlJtekFBbm51ZExlMGJWZVJvTFhaRFBVazZtcUo5?=
+ =?utf-8?B?d1ZwZGwxeHdmbW1kNVoyRWdGeXNzUnRTTVg4SDU3QmJyNk5UTWhDc0hvYU1N?=
+ =?utf-8?B?VHpGQTZBcko0Q25TRkVYSGxmZE5sMmNxV1lQbmttaDhkd3dlTHJ2b0xPbW9K?=
+ =?utf-8?B?My9UM2lLYmdmZFlqcUNqeTJNRURmd1lKM3hPLzE0WW1jMDVKamcvaDd0eVA0?=
+ =?utf-8?B?YlhLZnhnZVd5ODBsMmRYZHdteTZQLy9CM2EvN1Nrek9ZQ1JnQXQ5MkQ3YXJ2?=
+ =?utf-8?B?SDRTczVhc0Y3eGVtc2RQazFJZWtEV3Vkb3ZEVHhUZURqVmJiUFJpT0JhcmpJ?=
+ =?utf-8?B?QnZ3R01OaW13T1VFN1d3NjRjeXFMTU91RWYyRlNCNXdZaG5TL2c2RlI2VFJB?=
+ =?utf-8?B?bHNWRHhuMkVDckRDRlNrcTJ6SjA3ME03eVdUaTl4QWFkRkNHendqckhGSFVy?=
+ =?utf-8?B?dVJETjRYd0xLMGVXMldWL3IrQy85ZVdTeTNwUm5HQXNQcjdjcUV0WktXSTVG?=
+ =?utf-8?B?UGdueERrOG1kZktIZnRQb2RlU1pHY2hzZURjNnlFNUhWVFB1RitjS2haNmpN?=
+ =?utf-8?B?MmUvMjlmSHhFU2kzZnd2WlZ1T0RHV09KZVNpdFlYaDJjcGFTUFprSGhIYUlM?=
+ =?utf-8?B?MTB0RUY3SVlwSUZsSzU4Q2N2T3pHTmlOc2k4U2cvUlFkWVhlVVQ3dUdjS3d6?=
+ =?utf-8?B?aXNWR2luSFRSdFRvSWxUNE9ObEhEdjI2THdDSjRuRTcxeVRFRXNtZEFLdjE1?=
+ =?utf-8?B?TkNxaUt0Z3VjdDhxWlVYaXpyNTVDdkRZOVVWL01RVVF2bXlqOFJiQTFsbnV4?=
+ =?utf-8?B?LzVnOTQrZHI2TnVTYzVjSWVHUmFHejUyeVVrZ0txaXJkTFZFMzJpQzg4bkN4?=
+ =?utf-8?B?NXQrU0E3NFU3K0NkVXhnVFRvUkkrUGdYMHIyQ1dlaVh3MWJVd2VYRCtRRnNJ?=
+ =?utf-8?B?SzhsNFQ0WFFJbWpabDl5OU9lV0p0QnliNktKMVBiNjdaVVNTd2d5eWpCYUVV?=
+ =?utf-8?B?Mi9teitiRGpzTzREN2NCalQvdUhoUXM0ejF3K3M2K1BXWmdjY0hDNHpzVlhJ?=
+ =?utf-8?B?aXNBZ0k1dnVOT3ZKZTA1NjNZWFhMZ0N6S1RxanRBSFk0S0w0bUlxVnBLNXNt?=
+ =?utf-8?B?NFFMZDcrK1Q2aWdrdzdIK01VeU50ZTN1WGwweFRnak5zcjhqU3JQMzNoK21v?=
+ =?utf-8?B?aGtYTkJnZStsVS9OMjBCZ3J2WmNjdEZwN2ZSKzI0eE82cGlMVFRMR3JqZUpu?=
+ =?utf-8?B?VUk1WDlhTmR4QUVXY1RNamN6UFNQc1k4aGRYb0dZSjQ1THVrdTNnQXhOV2lW?=
+ =?utf-8?B?Lytvb3NDOFZySXk4WHk4MTBvamxwOWxOK0ErdUNIQ1dZWnB5M0xsOGwxUG9i?=
+ =?utf-8?B?YUpIMnhoNXVXN09KVitVNDU4U200NWVPZmRNTVVhU1YzN1hXQi85Yi9ldWtQ?=
+ =?utf-8?B?SG1Ma3R3MERKeVVScXJDZXhJR1dZYnlzT2xxRmdYSzZtZllCcW9jclNGajc1?=
+ =?utf-8?B?bWdQWEVOaTdOaEhTUlBoKzF4RTZuS3U5K1F2ZVYwZ0kyY3ljSm44VjNsRURz?=
+ =?utf-8?B?Qnc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7fd7861-c305-4382-652e-08dad2ede3f9
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3356.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1bed3aa-93cf-45bd-a5d8-08dad2ed839d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2022 16:11:18.3182
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2022 16:14:00.1607
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uvGkZMQGOXQCeDBYEmXaDXbFf5hF2i90uYC/Fvp+DQd82jK/jukELL3AfibWX0njzXa69S0W/eXDNcts0wXnjO+BCrw+defhiO8J9yViFbs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3171
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BfY3/Ujxh7DY3ZRDpAk8pBD6/IaJwTzXgsVAuiRMC0hqifEpHM3LXirPvU1gHErSfTmKubRt08jLd1vT607/Tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7583
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de> Sent: Tuesday, November 29, 2022 9:47 =
-AM
->=20
-> On Tue, Nov 29, 2022 at 03:49:06PM +0000, Michael Kelley (LINUX) wrote:
-> > But it turns out that AMD really has two fairly different schemes:
-> > the C-bit scheme and the vTOM scheme.
->=20
-> Except it doesn't:
->=20
-> "In the VMSA of an SNP-active guest, the VIRTUAL_TOM field designates
-> a 2MB aligned guest physical address called the virtual top of memory.
-> When bit 1 (vTOM) of SEV_FEATURES is set in the VMSA of an SNP-active
-> VM, the VIRTUAL_TOM..."
->=20
-> So SEV_FEATURES[1] is vTOM and it is part of SNP.
->=20
-> Why do you keep harping on this being something else is beyond me...
->=20
-> I already pointed you to the patch which adds this along with the other
-> SEV_FEATURES.
->=20
-> > The details of these two AMD schemes are pretty different. vTOM is
-> > *not* just a minor option on the C-bit scheme. It's an either/or -- a
-> > guest VM is either doing the C-bit scheme or the vTOM scheme, not some
-> > combination. Linux code in coco/core.c could choose to treat C-bit and
-> > vTOM as two sub-schemes under CC_VENDOR_AMD, but that makes the code a
-> > bit messy because we end up with "if" statements to figure out whether
-> > to do things the C-bit way or the vTOM way.
->=20
-> Are you saying that that:
->=20
-> 	if (cc_vendor =3D=3D CC_VENDOR_AMD &&
-> 	    sev_features & MSR_AMD64_SNP_VTOM_ENABLED)
->=20
-> is messy? Why?
->=20
-> We will have to support vTOM sooner or later.
->=20
-> > Or we could model the two AMD schemes as two different vendors,
-> > which is what I'm suggesting.  Doing so recognizes that the two schemes
-> > are fairly disjoint, and it makes the code cleaner.
->=20
-> How is that any different from the above check?
->=20
-> You *need* some sort of a check to differentiate between the two anyway.
->=20
 
-Alright.  Enough conceptual debate.  I'll do a v4 of the patch series with
-the AMD C-bit and vTOM schemes folder under CC_VENDOR_AMD and
-we can see if there's any further feedback.  I should have that v4 out late=
-r
-today or tomorrow.
+On 11/30/2022 8:45 PM, Krzysztof Kozlowski wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 30/11/2022 16:11, Manikanta Maddireddy wrote:
+>> Thank you for quick review. I will wait for other reviewers to review
+>> patch 2 & 3.
+>> I will address all review comments and sendnew revision.
+>>
+>> On 11/24/2022 2:15 PM, Krzysztof Kozlowski wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 24/11/2022 09:35, Manikanta Maddireddy wrote:
+>>>> Tegra234 supports PCIe lane margining. P2U HW acts as a relay to exchange
+>>> typo: merging?
+>> It is not typo, it is PCIe feature lane margining.
+>> https://pcisig.com/pushing-limits-understanding-lane-margining-pcie%C2%AE
+>>>> margin control data and margin status between PCIe controller and UPHY.
+>>> Please use scripts/get_maintainers.pl to get a list of necessary people
+>>> and lists to CC.  It might happen, that command when run on an older
+>>> kernel, gives you outdated entries.  Therefore please be sure you base
+>>> your patches on recent Linux kernel.
+>> I verified these patches on 6.0.0-rc6 kernel and executed get_maintainers.pl
+>> script on it. Did I miss anyone here?
+> Yes. At least Rob, maybe more. You need to CC all
+> maintainers/reviewers/supporters and all mailing lists.
+>
+> It's not my task to verify each of these addresses to check whether you
+> really missed someone or not. I spotted at least one missing address so
+> just run get_maintainers.pl and use all entries from there.
+I rechecked my "git send-email" command, I did add Rob's email. In my 
+Linux file path, I found a file with name "--to=robh+dt@kernel.org".
+I am not sure what mistake I made during "git send-email". I will do 
+dry-run before sending v2.
 
-Michael
+I rechecked mailing list from get_maintainers.pl, I added everyone from 
+the list expect Tegra developers who contributed to the file 
+tegra234.dtsi, but not for PCIe.
+>
+>>>
+>>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>>>> ---
+>>>>    .../bindings/phy/phy-tegra194-p2u.yaml        | 50 +++++++++++++++++++
+>>>>    1 file changed, 50 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.yaml b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.yaml
+>>>> index 4dc5205d893b..0ba3f6a0b474 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.yaml
+>>>> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.yaml
+>>>> @@ -40,6 +40,51 @@ properties:
+>>>>      '#phy-cells':
+>>>>        const: 0
+>>>>
+>>>> +  interrupts:
+>>>> +    items:
+>>>> +      description: P2U interrupt for Gen4 lane margining functionality.
+>>> typo: merging?
+>> It is not typo, it is PCIe feature lane margining.
+>> https://pcisig.com/pushing-limits-understanding-lane-margining-pcie%C2%AE
+>>>> +
+>>>> +  interrupt-names:
+>>>> +    items:
+>>>> +      - const: intr
+>>> Drop entire property, not really useful.
+>> In driver, I am using platform_get_irq_byname(), I will change it to
+>> platform_get_irq()
+>> and drop this property.
+>>>> +
+>>>> +  nvidia,bpmp:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>>>> +    description: Must contain a pair of phandles to BPMP controller node followed by P2U ID.
+>>>> +    items:
+>>>> +      - items:
+>>>> +          - description: phandle to BPMP controller node
+>>>> +          - description: P2U instance ID
+>>>> +            maximum: 24
+>>>> +
+>>>> +allOf:
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            enum:
+>>>> +              - nvidia,tegra194-p2u
+>>>> +    then:
+>>>> +      required:
+>>>> +        - reg
+>>>> +        - reg-names
+>>>> +        - '#phy-cells'
+>>> That's not how it should be done. You have only two variants here, so
+>>> add a "required:" block with above and only one if:then: clause for
+>>> interrupts and nvidia,bpmp.
+>>>
+>>> Requiring reg/reg-names/phy-cells should be in separate patch with its
+>>> own reasoning.
+>> Ok, I will create two separate patches and add if:then clause only for
+>> tegra234.
+>> As per understanding final change will look like below, right?
+>>
+>>
+>> required:
+>>     - reg
+>>     - reg-names
+>>     - '#phy-cells'
+>>
+>> allOf:
+>>     - if:
+>>         properties:
+>>           compatible:
+>>             contains:
+>>               enum:
+>>                 - nvidia,tegra234-p2u
+>>       then:
+>>         required:
+>>           - interrupts
+>>           - nvidia,bpmp
+> yes
+>
+> Best regards,
+> Krzysztof
+>
