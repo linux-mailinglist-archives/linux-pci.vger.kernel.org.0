@@ -2,1220 +2,283 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5294263DF33
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 19:44:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B6663DFCB
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 19:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbiK3So4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Nov 2022 13:44:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        id S231432AbiK3Suh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Nov 2022 13:50:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbiK3Sog (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 13:44:36 -0500
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3289D48;
-        Wed, 30 Nov 2022 10:44:26 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id v13so4952866oie.3;
-        Wed, 30 Nov 2022 10:44:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6X4oPbPGHLVeOU4RfNTDhcYEEAe8AvqT02R3lwG4F7c=;
-        b=dcFBRIAq2C4fC/sG1UxuBEb0zF68ePO62Tarnq9XBd6Kmcnsrb8ArjIVZSqKSYEGIc
-         uQH9WVlw4L47DXzHPl/P6E2EpHryETCpLw7vsG0ANLmigmwUeDRwaobnG/CRiRshPUqS
-         eCBscD4lktLmcB/FdKuftsXl6R0eSw9WMxkKGXAafU9jwCg1g5PgkYNVHestwMVIQHto
-         5Y6JxgaxyGIQBFebkO8JBUEPj32ynjM4SFdGp0525MH6Q/HFarsDJ6jh99pkz/Viqxhe
-         R4ADJ/vXQnnGQfa4tFrSyiOEays/G2lWesFFJNHndaqIgPTWkJ9GFjlOOqj8LEIr1WD8
-         86jw==
-X-Gm-Message-State: ANoB5pkBvHls8Q3iJ2I/ZOkFM+qnsMZO4fvTOZdrVefA/NQqRfrsNiXs
-        ylWbukPUrIltyr9mbZCJUg==
-X-Google-Smtp-Source: AA0mqf7YHgBy/vNtWqbbiKq1AwON537whqeGtMs4CbKuPy3myki9mLVw+4OlIFFoABWG9uwBzrxxCw==
-X-Received: by 2002:a05:6808:b29:b0:35b:72ea:2fea with SMTP id t9-20020a0568080b2900b0035b72ea2feamr19290331oij.278.1669833865590;
-        Wed, 30 Nov 2022 10:44:25 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id n46-20020a4a9571000000b0049eedb106e2sm1018507ooi.15.2022.11.30.10.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 10:44:25 -0800 (PST)
-Received: (nullmailer pid 2593556 invoked by uid 1000);
-        Wed, 30 Nov 2022 18:44:24 -0000
-Date:   Wed, 30 Nov 2022 12:44:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Shradha Todi <shradha.t@samsung.com>
-Cc:     bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        kishon@ti.com, vkoul@kernel.org, lpieralisi@kernel.org,
-        kw@linux.com, mani@kernel.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, alim.akhtar@samsung.com,
-        ajaykumar.rs@samsung.com, rcsekar@samsung.com,
-        sriranjani.p@samsung.com, bharat.uppal@samsung.com,
-        s.prashar@samsung.com, aswani.reddy@samsung.com,
-        pankaj.dubey@samsung.com, p.rajanbabu@samsung.com,
-        niyas.ahmed@samsung.com, chanho61.park@samsung.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH 3/6] PCI: dwc: fsd: Add FSD PCIe Controller driver support
-Message-ID: <20221130184424.GA2573443-robh@kernel.org>
-References: <20221121105210.68596-1-shradha.t@samsung.com>
- <CGME20221121104731epcas5p48f96c92e5bfb4ede56ce74a78887a2f3@epcas5p4.samsung.com>
- <20221121105210.68596-4-shradha.t@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        with ESMTP id S231452AbiK3Sua (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Nov 2022 13:50:30 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4AB55C89;
+        Wed, 30 Nov 2022 10:50:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669834229; x=1701370229;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=R1w2BrvfcdQC6VD4mDza86pH0QpUTwW4tHm1Z7LrJEM=;
+  b=Rr+IPKsyaeIrLoPlbx95jnNZweIpxutcmPR/u9W9PDGMMRhv8MU82Pv1
+   ojvqBDT88Pr/SWA555HSNKeRe1PIR687FEJYP9RItuQTyGbBtnhvS2efp
+   3ljI1RJEXLyo8LgHsiBOOYcYOSBadmuNfkNIdDK7SqlRG0wXvNWJieNIT
+   BilVkkOFAwaCpWCGaLEXWOVxbXttmU9DZ/iSF9/N0udaQz16v4BsZmD7U
+   qqLQNdHXSP6yalHdWJ810pmWvcA5LH73aRISaKIsTWBFjx2AgIrOOglbi
+   fS7ubNZ8Eku0Vsj9TIc8HB4htok13Tx3l73YZD53Pf5FfKd0sulxaIivi
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="377643861"
+X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
+   d="scan'208";a="377643861"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 10:50:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="818736255"
+X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
+   d="scan'208";a="818736255"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga005.jf.intel.com with ESMTP; 30 Nov 2022 10:50:25 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 30 Nov 2022 10:50:25 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 30 Nov 2022 10:50:24 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Wed, 30 Nov 2022 10:50:24 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Wed, 30 Nov 2022 10:50:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mmKkakKlWj7RBYEyI22z4OyiI4HkMDjs23OENjqdcpR1b381c0w0wnuHzlxAejL0PQohAzzEzEyG9vVUnWV6pviVbTLie41NE00UYH3vMSF4vzEoYyYNijwCQds2Xtd67UPxb4Tr399tf4NAoGgwLAhaw49eaJ29EwBFsiFcVL8sSQ1i6y7FK/zMS+wSSp1qfNNBZo2r5kntW304KB6tkJFkWLlA6dIsg+v8Ty1q7EysNWrMaRhDT+wukd/Hx6toqJQPototBj8u2ojc2UwWN/ocdnYo/XTBq17+i5e4fW2jUtv5gSWq1BrlXVxYhczQU1+BZynf7cYwTl0YfrAqlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h6gih1F6zfGlNwf8+QwzXcQu7vzVqklqOsgkqxBc22s=;
+ b=Bw4wCxtd9jV7e5Wjcjh/uYI3QG3PFXfKuVZDSpNSbWxTeUFxpvV2kv+FlvmNJZUQ33bnpkJXLrkVYIY/LYGKc9JgYrJFc5+8El1tWOquxfE2WFQXoRhuL3nOd0HWUSuE6eRvAXp/oPlist2uFXeC3WYxD8UXB4e+VKi2BAL/3gVQRvYvJHYCUplZHh+o8TG76MN2GoeLJXQ/fT2iIv/h+0fzDZTsRtjehT3hnAsV3BhIXsPMDW7jDHJnRjW0PLVPvBD4fDudu1vBq9PJ4VdiZ77R2og1r7hEASmsH8aELPu8aTSNm9yxKbXazLrD1Z6z5hQeSpVkSm72NvrUWzQTZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by BL1PR11MB5461.namprd11.prod.outlook.com (2603:10b6:208:30b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Wed, 30 Nov
+ 2022 18:50:21 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5857.023; Wed, 30 Nov 2022
+ 18:50:21 +0000
+Date:   Wed, 30 Nov 2022 10:50:16 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI/DOE: Provide synchronous API
+Message-ID: <Y4el6AjYKWcJhhxT@iweiny-desk3>
+References: <cover.1669608950.git.lukas@wunner.de>
+ <7ced46eaf68bed71b6414a93ac41f26cfd54a991.1669608950.git.lukas@wunner.de>
+ <20221130153330.000049b3@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20221121105210.68596-4-shradha.t@samsung.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20221130153330.000049b3@Huawei.com>
+X-ClientProxiedBy: SJ0PR03CA0186.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::11) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BL1PR11MB5461:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a32fa09-af9b-40a6-e073-08dad303bb69
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1kJcHor03TaOHdpO7Q4lvDjQsAEyy7I8k0ZkSRH1oMe+wCOnS4mSDj0E7BLMmAyZuxU0+vQgqH762P1rWw5yRN70qEljE3hbvCmvu+RpfxMWlA8YfHTbOzFdOpCCsLuLxOUV6EFvsuwCTzOGDhfhWB5f5hMuIsI3lE8ECSbWAKgvy3uuA9VPuVqaj1m4YpJchO9IzmiljsYCw82DM58cHT+Y0AsM0JLotC4F41U8DCL3XUVA/QCt1ijlbUsaoqiu3qYgpsIYkE6QneFvauhx2dC5YHNrF4UeNK9M1S25IgSSfGSn5Ex5DWbxdHLe8Xo8KbawZXlJ10nt+L2RkMzKTBNP5SyBYiQIsg8WSSBFoB+gEAiVjITqYBELCV7BUe4sjlo8/ebegPAObOT+NgKygsG2/woy5wXawJqyOj7uUb7MiwjDkl7MrXpUvGv3Fz0FAn+G3Bn/PEqYcG28Zp4JEB+/hu1Cq+5jjnaoSt5MZ1diwNXibEhHh5dPBi2B065hjQMTBoWVDg4qOVhciCpkTDG4rhh0SAZpZHQasCZe/Gse7brK5OSxDoxCw/6vnG36/yVg+9pJHpkRxDKWdnnTZCz0LeWDz3VSLHI/X/phfJVrwtLKfMel5GhGy3Bigyp1H2cLCKjMherTn+zcRsQTJw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(136003)(39860400002)(376002)(366004)(396003)(346002)(451199015)(66476007)(6916009)(2906002)(66899015)(44832011)(41300700001)(54906003)(66556008)(66946007)(4326008)(8676002)(316002)(5660300002)(33716001)(8936002)(186003)(86362001)(26005)(6512007)(6486002)(9686003)(6666004)(6506007)(38100700002)(478600001)(83380400001)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mNhxFPnysRGizo7PjYUZg+VM+S1nCGBj4Xd/NgRKPG1i2MalGxs34ymGP29q?=
+ =?us-ascii?Q?7sn0qNdeApJOoLhEaxybqjWfz6RzoL05coU8vuShZoUufM4ktZ/M4nh5ViSm?=
+ =?us-ascii?Q?DCKT3iO2+BPiViXzmmccyqnZT94hanAeKUe/MH+DqqKgAXVtbChMHGNBR9Pn?=
+ =?us-ascii?Q?de4I5z3QJFpr1pk+gcDtGK/667ZgqRFHrkVhiID7CI4NJqU1mOpDjMyDLLlF?=
+ =?us-ascii?Q?tB3ctf3R6HKT3iSx/Urct93TOpNx4+sqZF9ANmGpDr3F9Ek9J+4H6jRc3RVU?=
+ =?us-ascii?Q?sfEPMdHBmk3Ff9imICraNie3ljmdH/0Ucyraga1e7CNp7ePrPjZvHWerZiNH?=
+ =?us-ascii?Q?3RggGMiulHQr3m5E7QMEL+WBEE6XrQsgE0KIYDaY9jtMF5vPxrM7l80YzFU1?=
+ =?us-ascii?Q?hfEY9zymv5womy9ZdNJx9lE1zO4WwIyULYPTF03M0+s0nZPYPhxR3tqjbfmE?=
+ =?us-ascii?Q?WkBzwd7G90bqvf7m21xOuEkuL4zfe18018UK9wI9dispMD1qLOkS+rWHVjoM?=
+ =?us-ascii?Q?RDu1ylUI/ZYPXp5iiCt9GHB9Izh5t6lvOeAxrM3lz6NhvhQZEZSQPHH18TjI?=
+ =?us-ascii?Q?nYcK0xbu/PE57O/uRXOs11zAPYgRjPR4J/i8CwPOnn+6WnjQBpqyk68HgJXO?=
+ =?us-ascii?Q?7UXyFWZW1U5vpe5dYU7xhvRnBcWzo3GCB8/ukjAK+IzEqVFvqFptYrzeP5qh?=
+ =?us-ascii?Q?EJ/2N60odmfU94n5dY54af06Npo2yGd4961zCkZ8bWuZ6wagHHdiM/ZBDVLU?=
+ =?us-ascii?Q?hq0hiU9Zi32ShMQdwkLt32cVgcg5WuUlynn03htjRmj0VfMN4fHSdzL6EaS/?=
+ =?us-ascii?Q?1EygYbF2X+oSFwcjixs1kUvKm1d5xs3GoJEdHOMkw9GKTHC69ByFZvx9t0yb?=
+ =?us-ascii?Q?saPZddrgFuLqqfYchSpJ+oaKHsccQ9k7FxPRuLX5u44Doi/GS9rMcslgF7na?=
+ =?us-ascii?Q?al6tckYst6ns7uJqWrQdnm1Wi4ZQH6MQA/tcVpndauiAJ/s4Uz3KBPC7sEIy?=
+ =?us-ascii?Q?/RZwMfBmV2XYNbzBE1IYT+RKjoV+4vRKtRWxSqR9G0+zCMos7u6gWTFIekH1?=
+ =?us-ascii?Q?TP6voQfor8nPEvBn+csQa17iw1S2wLm5FqGq0ag5LUHnApx1kRjm2sAl3Slo?=
+ =?us-ascii?Q?62X1s5axKeZvOA5EtrjQL/FV47K743iHsMVn788hNPvZ5mTT4XF8iqtwWhrV?=
+ =?us-ascii?Q?/GF3HRqfiFSezeMriwzSpXiB7bIfa1j8nFKQ90f/TIYkhQiz+yuK9ArLHi8S?=
+ =?us-ascii?Q?0teyNwvNLPW1CmqxnDjKUKcnULTEtMZf6ofEv1a8zlNnDEBsqWBCPl/R5BFn?=
+ =?us-ascii?Q?fzGsiudlQDL1a7HnJHDDxuGbGhR51EXYCvSGrblPaejb+84hmdHv9umYT9P9?=
+ =?us-ascii?Q?Bk7xXY2SKqbjgc/SWO/m03/5P5YpzHO7akWG2vuXyAmp0+/VwBtWI7U+8iaD?=
+ =?us-ascii?Q?wTWbxKVIkfa5EBYQdefSVBZrPWgHh1kMWQco+illHuCq/yor5XaIj4/9b50X?=
+ =?us-ascii?Q?m9dkNEJE6xb3ZltZWKOlPRY2ca3djdO/Ou/jf750sfd2ZOJS5CSPx5hznHjk?=
+ =?us-ascii?Q?Jmf+fQgMUjWBMzMPE5uQ85uupAZW5zbj9A4Gzvtj?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a32fa09-af9b-40a6-e073-08dad303bb69
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2022 18:50:21.0237
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gpMhCU9p0jeiC2ElqNthIgM2zcZmiF9fZ5Ytb2Qp8QSfZ4qZqqiLj6Z2fL7Qmw7Io3Vt4n4ro+zWtP0Fq4X31Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5461
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 04:22:07PM +0530, Shradha Todi wrote:
-> Add PCIe controller driver file for PCIe controller
-> found in fsd SoC family. This driver adds support for both RC
-> and EP mode.
+On Wed, Nov 30, 2022 at 03:33:30PM +0000, Jonathan Cameron wrote:
+> On Mon, 28 Nov 2022 05:25:52 +0100
+> Lukas Wunner <lukas@wunner.de> wrote:
 > 
-> Signed-off-by: Niyas Ahmed S T <niyas.ahmed@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig    |   35 +
->  drivers/pci/controller/dwc/Makefile   |    1 +
->  drivers/pci/controller/dwc/pcie-fsd.c | 1021 +++++++++++++++++++++++++
->  3 files changed, 1057 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-fsd.c
+> > The DOE API only allows asynchronous exchanges and forces callers to
+> > provide a completion callback.  Yet all existing callers only perform
+> > synchronous exchanges.  Upcoming patches for CMA (Component Measurement
+> > and Authentication, PCIe r6.0.1 sec 6.31) likewise require only
+> > synchronous DOE exchanges.  Asynchronous users are currently not
+> > foreseeable.
+> > 
+> > Provide a synchronous pci_doe() API call which builds on the internal
+> > asynchronous machinery.  Should asynchronous users appear, reintroducing
+> > a pci_doe_async() API call will be trivial.
+> > 
+> > Convert all users to the new synchronous API and make the asynchronous
+> > pci_doe_submit_task() as well as the pci_doe_task struct private.
+> > 
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 62ce3abf0f19..9a3d194c979f 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -14,6 +14,41 @@ config PCIE_DW_EP
->  	bool
->  	select PCIE_DW
->  
-> +config PCIE_FSD
-> +	bool "Samsung FSD PCIe Controller"
-> +	default n
-> +	help
-> +	  Enables support for the PCIe controller in the FSD SoC. There are
-> +	  total three instances of PCIe controller in FSD. This controller
-> +	  can work either in RC or EP mode. In order to enable host-specific
-> +	  features, PCI_FSD_HOST must be selected and in order to enable
-> +	  device-specific feature PCI_FSD_EP must be selected.
-> +
-> +config PCIE_FSD_HOST
-> +	bool "PCIe FSD Host Mode"
-> +	depends on PCI
-> +	depends on PCI_MSI_IRQ_DOMAIN || PCI_DOMAIN
-> +	select PCIE_DW_HOST
-> +	select PCIE_FSD
-> +	default n
-> +	help
-> +	  Enables support for the PCIe controller in the FSD SoC to work in
-> +	  host (RC) mode. In order to enable host-specific features,
-> +	  PCIE_DW_HOST must be selected. PCIE_FSD should be selected for
-> +	  fsd controller specific settings.
-> +
-> +config PCIE_FSD_EP
-> +	bool "PCIe FSD Endpoint Mode"
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	select PCIE_FSD
-> +	default n
-> +	help
-> +	  Enables support for the PCIe controller in the FSD SoC to work in
-> +	  endpoint mode. In order to enable device-specific feature
-> +	  PCI_FSD_EP must be selected. PCIE_FSD should be selected for
-> +	  fsd controller specific settings.
-> +
->  config PCI_DRA7XX
->  	tristate
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 8ba7b67f5e50..b76fa6b4e79f 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -25,6 +25,7 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
-> +obj-$(CONFIG_PCIE_FSD) += pcie-fsd.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-fsd.c b/drivers/pci/controller/dwc/pcie-fsd.c
-> new file mode 100644
-> index 000000000000..4531efbfc313
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-fsd.c
-> @@ -0,0 +1,1021 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Tesla fsd SoC
-> + *
-> + * Copyright (C) 2017-2022 Samsung Electronics Co., Ltd. http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-
-You shouldn't need this header.
-
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-
-You shouldn't need this header.
-
-> +#include <linux/pci.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/resource.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/types.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +#define to_fsd_pcie(x)	dev_get_drvdata((x)->dev)
-> +
-> +/* PCIe ELBI registers */
-> +#define PCIE_APP_LTSSM_ENABLE		0x054
-> +#define PCIE_ELBI_LTSSM_ENABLE		0x1
-> +#define PCIE_ELBI_LTSSM_DISABLE		0x0
-> +#define PCIE_ELBI_CXPL_DEBUG_00_31	0x2C8
-> +#define LTSSM_STATE_MASK		0x3f
-> +#define LTSSM_STATE_L0			0x11
-> +#define PCIE_FSD_DEVICE_TYPE		0x080
-> +#define DEVICE_TYPE_RC			0x4
-> +#define DEVICE_TYPE_EP			0x0
-> +#define IRQ_MSI_ENABLE			BIT(17)
-> +#define IRQ0_EN				0x10
-> +#define IRQ1_EN				0x14
-> +#define IRQ2_EN				0x18
-> +#define IRQ5_EN				0x1c
-> +#define IRQ0_STS			0x0
-> +#define IRQ1_STS			0x4
-> +#define IRQ2_STS			0x8
-> +#define IRQ5_STS			0xc
-> +
-> +/* Gen3 Control Register */
-> +#define PCIE_GEN3_RELATED_OFF		0x890
-> +/* Parameters for equalization feature */
-> +#define PCIE_GEN3_EQUALIZATION_DISABLE	BIT(16)
-> +#define PCIE_GEN3_EQ_PHASE_2_3		BIT(9)
-> +#define PCIE_GEN3_RXEQ_PH01_EN		BIT(12)
-> +#define PCIE_GEN3_RXEQ_RGRDLESS_RXTS	BIT(13)
-> +
-> +/**
-> + * struct fsd_pcie - representation of the pci controller
-> + * @pci: representation of dwc pcie device structure
-> + * @aux_clk: auxiliary clock for the pci block
-> + * @dbi_clk: DBI clock
-> + * @mstr_clk: master clock
-> + * @slv_clk: slave clock
-> + * @pdata: private data to determine the oprations supported by device
-> + * @appl_base: represent the appl base
-> + * @sysreg: represent the system register base
-> + * @sysreg_base: represents the offset of the system register required
-> + * @phy: represents the phy device associated for the controller
-> + */
-> +struct fsd_pcie {
-> +	struct dw_pcie *pci;
-> +	struct clk *aux_clk;
-> +	struct clk *dbi_clk;
-> +	struct clk *mstr_clk;
-> +	struct clk *slv_clk;
-> +	const struct fsd_pcie_pdata *pdata;
-> +	void __iomem *appl_base;
-> +	struct regmap *sysreg;
-> +	unsigned int sysreg_base;
-> +	struct phy *phy;
-> +};
-> +
-> +enum fsd_pcie_addr_type {
-> +	ADDR_TYPE_DBI = 0x0,
-> +	ADDR_TYPE_DBI2 = 0x32,
-> +	ADDR_TYPE_ATU = 0x36,
-> +	ADDR_TYPE_DMA = 0x37,
-> +};
-> +
-> +enum IRQ0_ERR_BITS {
-> +	APP_PARITY_ERRS_0,
-> +	APP_PARITY_ERRS_1,
-> +	APP_PARITY_ERRS_2,
-> +	CFG_BW_MGT_INT = 4,
-> +	CFG_LINK_AUTO_BW_INT,
-> +	CFG_SYS_ERR_RC = 7,
-> +	DPA_SUBSTATE_UPDATE,
-> +	FLUSH_DONE,
-> +	RADM_CORRECTABLE_ERR = 12,
-> +	RADM_FATAL_ERR,
-> +	RADM_MSG_CPU_ACTIVE = 22,
-> +	RADM_MSG_IDLE,
-> +	RADM_MSG_LTR,
-> +	RADM_MSG_OBFF,
-> +	RADM_MSG_UNLOCK,
-> +	RADM_NONFATAL_ERR,
-> +	RADM_PM_PME,
-> +	RADM_PM_TO_ACK,
-> +	RADM_PM_TURNOFF,
-> +	RADM_VENDOR_MSG,
-> +};
-> +
-> +enum IRQ1_ERR_BITS {
-> +	TRGT_CPL_TIMEOUT = 0,
-> +	VEN_MSG_GRANT,
-> +	VEN_MSI_GRANT,
-> +};
-> +
-> +enum IRQ2_ERR_BITS {
-> +	APP_LTR_MSG_GRANT = 0,
-> +	APP_OBFF_MSG_GRANT,
-> +	CFG_AER_RC_ERR_INT,
-> +	CFG_BUS_MASTER_EN,
-> +	CFG_LINK_EQ_REQ_INT,
-> +	CFG_PME_INT,
-> +	EDMA_INT_0,
-> +	EDMA_INT_1,
-> +	EDMA_INT_2,
-> +	EDMA_INT_3,
-> +	EDMA_INT_4,
-> +	EDMA_INT_5,
-> +	EDMA_INT_6,
-> +	EDMA_INT_7,
-> +	PM_LINKST_IN_L0S = 18,
-> +	PM_LINKST_IN_L1,
-> +	PM_LINKST_IN_L1SUB_0,
-> +	PM_LINKST_IN_L2,
-> +	PM_LINKST_L2_EXIT,
-> +	PM_XTLH_BLOCK_TLP,
-> +	RADM_CPL_TIMEOUT,
-> +	RADM_Q_NOT_EMPTY,
-> +	RDLH_LINK_UP_0,
-> +	SMLH_LINK_UP = 29,
-> +	WAKE,
-> +	COMPARE_END_CHECKER,
-> +};
-> +
-> +enum IRQ5_ERR_BITS {
-> +	LINK_REQ_RST_NOT,
-> +	PM_LINKST_IN_L1SUB_1,
-> +	RDLH_LINK_UP_1,
-> +	SMLH_REQ_RST_NOT,
-> +};
-> +
-> +struct fsd_pcie_res_ops {
-> +	int (*get_mem_resources)(struct platform_device *pdev,
-> +				 struct fsd_pcie *fsd_ctrl);
-> +	int (*get_clk_resources)(struct platform_device *pdev,
-> +				 struct fsd_pcie *fsd_ctrl);
-> +	int (*init_clk_resources)(struct fsd_pcie *fsd_ctrl);
-> +	void (*deinit_clk_resources)(struct fsd_pcie *fsd_ctrl);
-> +};
-> +
-> +struct fsd_pcie_irq {
-> +	irqreturn_t (*pcie_msi_irq_handler)(int irq, void *arg);
-> +	void (*pcie_msi_init)(struct fsd_pcie *fsd_ctrl);
-> +	irqreturn_t (*pcie_sub_ctrl_handler)(int irq, void *arg);
-> +};
-
-Why the indirection? You only have 1 version of all these functions.
-
-> +
-> +struct fsd_pcie_pdata {
-> +	const struct dw_pcie_ops *dwc_ops;
-> +	struct dw_pcie_host_ops	*host_ops;
-> +	const struct fsd_pcie_res_ops *res_ops;
-> +	const struct fsd_pcie_irq *irq_data;
-> +	unsigned int appl_cxpl_debug_00_31;
-> +	int op_mode;
-> +};
-> +
-> +static int fsd_pcie_get_mem_resources(struct platform_device *pdev,
-> +					  struct fsd_pcie *fsd_ctrl)
-> +{
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	/* External Local Bus interface(ELBI) Register */
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "appl");
-> +	if (!res)
-> +		return -EINVAL;
-> +	fsd_ctrl->appl_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(fsd_ctrl->appl_base)) {
-> +		dev_err(dev, "Failed to map appl_base\n");
-> +		return PTR_ERR(fsd_ctrl->appl_base);
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-
-The DW core code takes care of this.
-
-> +	if (!res)
-> +		return -EINVAL;
-> +	fsd_ctrl->pci->dbi_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(fsd_ctrl->pci->dbi_base)) {
-> +		dev_err(dev, "failed to map dbi_base\n");
-> +		return PTR_ERR(fsd_ctrl->pci->dbi_base);
-> +	}
-> +
-> +	/* sysreg regmap handle */
-> +	fsd_ctrl->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +			"tesla,pcie-sysreg");
-> +	if (IS_ERR(fsd_ctrl->sysreg)) {
-> +		dev_err(dev, "Sysreg regmap lookup failed.\n");
-> +		return PTR_ERR(fsd_ctrl->sysreg);
-> +	}
-> +
-> +	ret = of_property_read_u32_index(dev->of_node, "tesla,pcie-sysreg", 1,
-> +					 &fsd_ctrl->sysreg_base);
-> +	if (ret) {
-> +		dev_err(dev, "Couldn't get the register offset for syscon!\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsd_pcie_get_clk_resources(struct platform_device *pdev,
-> +				       struct fsd_pcie *fsd_ctrl)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +
-> +	fsd_ctrl->aux_clk = devm_clk_get(dev, "aux_clk");
-> +	if (IS_ERR(fsd_ctrl->aux_clk)) {
-> +		dev_err(dev, "couldn't get aux clock\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	fsd_ctrl->dbi_clk = devm_clk_get(dev, "dbi_clk");
-> +	if (IS_ERR(fsd_ctrl->dbi_clk)) {
-> +		dev_err(dev, "couldn't get dbi clk\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	fsd_ctrl->slv_clk = devm_clk_get(dev, "slv_clk");
-> +	if (IS_ERR(fsd_ctrl->slv_clk)) {
-> +		dev_err(dev, "couldn't get slave clock\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	fsd_ctrl->mstr_clk = devm_clk_get(dev, "mstr_clk");
-> +	if (IS_ERR(fsd_ctrl->mstr_clk)) {
-> +		dev_err(dev, "couldn't get master clk\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsd_pcie_init_clk_resources(struct fsd_pcie *fsd_ctrl)
-> +{
-> +	clk_prepare_enable(fsd_ctrl->aux_clk);
-> +	clk_prepare_enable(fsd_ctrl->dbi_clk);
-> +	clk_prepare_enable(fsd_ctrl->mstr_clk);
-> +	clk_prepare_enable(fsd_ctrl->slv_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static void fsd_pcie_deinit_clk_resources(struct fsd_pcie *fsd_ctrl)
-> +{
-> +	clk_disable_unprepare(fsd_ctrl->slv_clk);
-> +	clk_disable_unprepare(fsd_ctrl->mstr_clk);
-> +	clk_disable_unprepare(fsd_ctrl->dbi_clk);
-> +	clk_disable_unprepare(fsd_ctrl->aux_clk);
-> +}
-> +
-> +static const struct fsd_pcie_res_ops fsd_pcie_res_ops_data = {
-> +	.get_mem_resources	= fsd_pcie_get_mem_resources,
-> +	.get_clk_resources	= fsd_pcie_get_clk_resources,
-> +	.init_clk_resources	= fsd_pcie_init_clk_resources,
-> +	.deinit_clk_resources	= fsd_pcie_deinit_clk_resources,
-> +};
-> +
-> +static void fsd_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	u32 reg;
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +
-> +	reg = readl(fsd_ctrl->appl_base + PCIE_APP_LTSSM_ENABLE);
-> +	reg &= ~PCIE_ELBI_LTSSM_ENABLE;
-> +	writel(reg, fsd_ctrl->appl_base + PCIE_APP_LTSSM_ENABLE);
-> +}
-> +
-> +static int fsd_pcie_establish_link(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +	struct dw_pcie_ep *ep;
-> +
-> +	if (dw_pcie_link_up(pci)) {
-> +		dev_info(dev, "Link already up\n");
-
-Print messages on failure, not normal operation.
-
-> +		return 0;
-> +	}
-> +
-> +	/* assert LTSSM enable */
-> +	writel(PCIE_ELBI_LTSSM_ENABLE, fsd_ctrl->appl_base +
-> +			PCIE_APP_LTSSM_ENABLE);
-> +
-> +	/* check if the link is up or not */
-> +	if (!dw_pcie_wait_for_link(pci)) {
-
-IIRC, the DW core will do the wait for you.
-
-> +		dev_info(dev, "Link up done successfully\n");
-> +		if (fsd_ctrl->pdata->op_mode == DEVICE_TYPE_EP) {
-> +			ep = &pci->ep;
-> +			dw_pcie_ep_linkup(ep);
-> +		}
-> +		return 0;
-> +	}
-> +
-> +	if (fsd_ctrl->pdata->op_mode == DEVICE_TYPE_RC) {
-> +		/* Return success as link might come up later */
-> +		return 0;
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static void handle_irq0_interrupts(u32 val, u32 is_en)
-> +{
-> +	u32 bit_off = 0;
-> +
-> +	if (val) {
-> +		while (bit_off < 32) {
-> +			if ((val & (0x1 << bit_off)) == 0 || (is_en &
-> +						(0x1 << bit_off)) == 0) {
-> +				bit_off++;
-> +				continue;
-> +			}
-> +			switch (bit_off) {
-> +			case RADM_VENDOR_MSG:
-> +				pr_info("Interrupt received for\n");
-
-Printing messages is not handling an interrupt. Remove all these.
-
-> +				break;
-> +			case RADM_PM_TURNOFF:
-> +				pr_info("Interrupt received for RADM_PM_TURNOFF\n");
-> +				break;
-> +			case RADM_PM_TO_ACK:
-> +				pr_info("Interrupt received for RADM_PM_TO_ACK\n");
-> +				break;
-> +			case RADM_PM_PME:
-> +				pr_info("Interrupt received for RADM_PM_PME\n");
-> +				break;
-> +			case RADM_NONFATAL_ERR:
-> +				pr_info("Interrupt received for RADM_NONFATAL_ERR\n");
-> +				break;
-> +			case RADM_MSG_UNLOCK:
-> +				pr_info("Interrupt received for RADM_MSG_UNLOCK\n");
-> +				break;
-> +			case RADM_MSG_OBFF:
-> +				pr_info("Interrupt received for RADM_MSG_OBFF\n");
-> +				break;
-> +			case RADM_MSG_LTR:
-> +				pr_info("Interrupt received for RADM_MSG_LTR\n");
-> +				break;
-> +			case RADM_MSG_IDLE:
-> +				pr_info("Interrupt received for RADM_MSG_IDLE\n");
-> +				break;
-> +			case RADM_MSG_CPU_ACTIVE:
-> +				pr_info("Interrupt received for RADM_MSG_CPU_ACTIVE\n");
-> +				break;
-> +			case RADM_FATAL_ERR:
-> +				pr_info("Interrupt received for RADM_FATAL_ERR\n");
-> +				break;
-> +			case RADM_CORRECTABLE_ERR:
-> +				pr_info("Interrupt received for RADM_CORRECTABLE_ERR\n");
-> +				break;
-> +			case FLUSH_DONE:
-> +				pr_info("Interrupt received for FLUSH_DONE\n");
-> +				break;
-> +			case DPA_SUBSTATE_UPDATE:
-> +				pr_info("Interrupt received for DPA_SUBSTATE_UPDATE\n");
-> +				break;
-> +			case CFG_SYS_ERR_RC:
-> +				pr_info("Interrupt received for CFG_SYS_ERR_RC\n");
-> +				break;
-> +			case CFG_LINK_AUTO_BW_INT:
-> +				pr_info("Interrupt received for CFG_LINK_AUTO_BW_INT\n");
-> +				break;
-> +			case CFG_BW_MGT_INT:
-> +				pr_info("Interrupt received for CFG_BW_MGT_INT\n");
-> +				break;
-> +			case APP_PARITY_ERRS_2:
-> +				pr_info("Interrupt received for APP_PARITY_ERRS_2\n");
-> +				break;
-> +			case APP_PARITY_ERRS_1:
-> +				pr_info("Interrupt received for APP_PARITY_ERRS_1\n");
-> +				break;
-> +			case APP_PARITY_ERRS_0:
-> +				pr_info("Interrupt received for APP_PARITY_ERRS_0\n");
-> +				break;
-> +			default:
-> +				pr_info("Unknown Interrupt in IRQ0[%d]\n", bit_off);
-> +				break;
-> +			}
-> +			bit_off++;
-> +		}
-> +	}
-> +}
-> +
-> +static void handle_irq1_interrupts(u32 val, u32 is_en)
-> +{
-> +	u32 bit_off = 0;
-> +
-> +	if (val) {
-> +		while (bit_off < 32) {
-> +			if ((val & (0x1 << bit_off)) == 0 || (is_en &
-> +						(0x1 << bit_off)) == 0) {
-> +				bit_off++;
-> +				continue;
-> +			}
-> +			switch (bit_off) {
-> +			case TRGT_CPL_TIMEOUT:
-> +				pr_info("Interrupt for TRGT_CPL_TIMEOUT\n");
-> +				break;
-> +			case VEN_MSG_GRANT:
-> +				pr_info("Interrupt for VEN_MSG_GRANT\n");
-> +				break;
-> +			case VEN_MSI_GRANT:
-> +				pr_info("Interrupt for VEN_MSI_GRANT\n");
-> +				break;
-> +			default:
-> +				pr_info("Unknown Interrupt in IRQ1[%d]\n", bit_off);
-> +				break;
-> +			}
-> +			bit_off++;
-> +		}
-> +	}
-> +}
-> +
-> +static void handle_irq2_interrupts(u32 val, u32 is_en)
-> +{
-> +	u32 bit_off = 0;
-> +
-> +	if (val) {
-> +		while (bit_off < 32) {
-> +			if ((val & (0x1 << bit_off)) == 0 || (is_en &
-> +						(0x1 << bit_off)) == 0) {
-> +				bit_off++;
-> +				continue;
-> +			}
-> +			switch (bit_off) {
-> +			/* To indicate that controller has accepted to send
-> +			 * Latency Tolerance reporting message
-> +			 */
-> +			case APP_LTR_MSG_GRANT:
-> +				pr_info("Interrupt for APP_LTR_MSG_GRANT\n");
-> +				break;
-> +			case APP_OBFF_MSG_GRANT:
-> +				pr_info("Interrupt for APP_OBFF_MSG_GRANT\n");
-> +				break;
-> +			case CFG_AER_RC_ERR_INT:
-> +				pr_info("Interrupt for CFG_AER_RC_ERR_INT\n");
-> +				break;
-> +			/* IRQ when bus master is enabled */
-> +			case CFG_BUS_MASTER_EN:
-> +				pr_info("Interrupt for CFG_BUS_MASTER_EN\n");
-> +				break;
-> +			/* IRQ to indicate that link Equalization request has been set */
-> +			case CFG_LINK_EQ_REQ_INT:
-> +				pr_info("Interrupt for CFG_LINK_EQ_REQ_INT\n");
-> +				break;
-> +			case CFG_PME_INT:
-> +				pr_info("Interrupt for CFG_PME_INIT\n");
-> +				break;
-> +			case EDMA_INT_0:
-> +			case EDMA_INT_1:
-> +			case EDMA_INT_2:
-> +			case EDMA_INT_3:
-> +			case EDMA_INT_4:
-> +			case EDMA_INT_5:
-> +			case EDMA_INT_6:
-> +			case EDMA_INT_7:
-> +				pr_info("Interrupt for DMA\n");
-> +				break;
-> +			/* IRQ when link entres L0s */
-> +			case PM_LINKST_IN_L0S:
-> +				pr_info("Interrupt for PM_LINKST_IN_L0S\n");
-> +				break;
-> +			/* IRQ when link enters L1 */
-> +			case PM_LINKST_IN_L1:
-> +				pr_info("Interrupt for PM_LINKST_IN_L1\n");
-> +				break;
-> +			/* IRQ when link enters L1 substate */
-> +			case PM_LINKST_IN_L1SUB_0:
-> +				pr_info("Interrupt for PM_LINKST_IN_L1SUB_0\n");
-> +				break;
-> +			/* IRQ when link enters L2 */
-> +			case PM_LINKST_IN_L2:
-> +				pr_info("Interrupt for PM_LINKST_IN_L2\n");
-> +				break;
-> +			/* IRQ when link exits L2 */
-> +			case PM_LINKST_L2_EXIT:
-> +				pr_info("Interrupt for PM_LINKST_L2_EXIT\n");
-> +				break;
-> +			/* Indicates that application must stop sending new
-> +			 * outbound TLP requests due to current power state
-> +			 */
-> +			case PM_XTLH_BLOCK_TLP:
-> +				pr_info("Interrupt for PM_XTLH_BLOCK_TLP\n");
-> +				break;
-> +			/* Request failed to complete in time */
-> +			case RADM_CPL_TIMEOUT:
-> +				pr_info("Interrupt for RADM_CPL_TIMEOUT\n");
-> +				break;
-> +			/* Level indicating that receive queues contain TLP header/data */
-> +			case RADM_Q_NOT_EMPTY:
-> +				pr_info("Interrupt for RADM_Q_NOT_EMPTY\n");
-> +				break;
-> +			/* Data link layer up/down indicator */
-> +			case RDLH_LINK_UP_0:
-> +				pr_info("Interrupt for RDLH_LINK_UP_0\n");
-> +				break;
-> +			/* Phy link up/down indicator */
-> +			case SMLH_LINK_UP:
-> +				pr_info("Interrupt for SMLH_LINK_UP\n");
-> +				break;
-> +			case WAKE:
-> +				pr_info("Interrupt for WAKE\n");
-> +				break;
-> +			case COMPARE_END_CHECKER:
-> +				pr_info("Interrupt for COMPARE_END_CHECKER\n");
-> +				break;
-> +			default:
-> +				pr_info("Unknown Interrupt in IRQ2[%d]\n", bit_off);
-> +				break;
-> +			}
-> +			bit_off++;
-> +		}
-> +	}
-> +}
-> +
-> +static void handle_irq5_interrupts(u32 val, u32 is_en)
-> +{
-> +	u32 bit_off = 0;
-> +
-> +	if (val) {
-> +		while (bit_off < 32) {
-> +			if ((val & (0x1 << bit_off)) == 0 || (is_en &
-> +						(0x1 << bit_off)) == 0) {
-> +				bit_off++;
-> +				continue;
-> +			}
-> +			switch (bit_off) {
-> +			case LINK_REQ_RST_NOT:
-> +				pr_info("Interrupt for LINK_REQ_RST_NOT\n");
-> +				break;
-> +			case PM_LINKST_IN_L1SUB_1:
-> +				pr_info("Interrupt for L1 SUB state Exit\n");
-> +				break;
-> +			case RDLH_LINK_UP_1:
-> +				pr_info("Interrupt for RDLH_LINK_UP_1\n");
-> +				break;
-> +			/* Reset request because PHY link went down/ or got hot reset */
-> +			case SMLH_REQ_RST_NOT:
-> +				pr_info("Interrupt for SMLH_REQ_RST_NOT\n");
-> +				break;
-> +			default:
-> +				pr_info("Unknown Interrupt in IRQ5[%d]\n", bit_off);
-> +				break;
-> +			}
-> +			bit_off++;
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * fsd_pcie_sub_ctrl_handler : Interrupt handler for all PCIe interrupts.
-> + *
-> + * These interrupts trigger on different events happening in the PCIe
-> + * controller like link status, link entering and exiting low power
-> + * states like L0s, L1, DMA completion/abort interrupts, wake being
-> + * triggered and other information.
-> + *
-> + * IRQ_0: (offset 0x0): IRQ for pulse output 1
-> + *	Enable these interrupts at offset 0x10
-> + * IRQ_1: (offset 0x4): IRQ for pulse output 2
-> + *	Enable these interrupts at offset 0x14
-> + * IRQ_2: (offset 0x8): IRQ for level output, rising edge
-> + *	Enable these interrupts at offset 0x18
-> + * IRQ_5: (offset 0xC): IRQ for level output, falling edge
-> + *	Enable these interrupts at offset 0x1C
-> + */
-> +
-> +static irqreturn_t fsd_pcie_sub_ctrl_handler(int irq, void *arg)
-> +{
-> +	u32 irq0, irq1, irq2, irq5;
-> +	struct fsd_pcie *fsd_ctrl = arg;
-> +	u32 irq0_en, irq1_en, irq2_en, irq5_en;
-> +
-> +	/* Read IRQ0 status */
-> +	irq0 = readl(fsd_ctrl->appl_base + IRQ0_STS);
-> +	/* Clear IRQ0 status after storing status value */
-> +	writel(irq0, fsd_ctrl->appl_base + IRQ0_STS);
-> +
-> +	/* Read IRQ1 status */
-> +	irq1 = readl(fsd_ctrl->appl_base + IRQ1_STS);
-> +	/* Clear IRQ1 status after storing status value */
-> +	writel(irq1, fsd_ctrl->appl_base + IRQ1_STS);
-> +
-> +	/* Read IRQ2 status */
-> +	irq2 = readl(fsd_ctrl->appl_base + IRQ2_STS);
-> +	/* Clear IRQ2 status after storing status value */
-> +	writel(irq2, fsd_ctrl->appl_base + IRQ2_STS);
-> +
-> +	/* Read IRQ5 status */
-> +	irq5 = readl(fsd_ctrl->appl_base + IRQ5_STS);
-> +	/* Clear IRQ5 status after storing status value */
-> +	writel(irq5, fsd_ctrl->appl_base + IRQ5_STS);
-> +
-> +	irq0_en = readl(fsd_ctrl->appl_base + IRQ0_EN);
-> +	irq1_en = readl(fsd_ctrl->appl_base + IRQ1_EN);
-> +	irq2_en = readl(fsd_ctrl->appl_base + IRQ2_EN);
-> +	irq5_en = readl(fsd_ctrl->appl_base + IRQ5_EN);
-> +	/* Handle all interrupts */
-> +	handle_irq0_interrupts(irq0, irq0_en);
-> +	handle_irq1_interrupts(irq1, irq1_en);
-> +	handle_irq2_interrupts(irq2, irq2_en);
-> +	handle_irq5_interrupts(irq5, irq5_en);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t fsd_pcie_msi_irq_handler(int irq, void *arg)
-> +{
-> +	u32 val;
-> +	struct fsd_pcie *fsd_ctrl = arg;
-> +	struct dw_pcie *pci = fsd_ctrl->pci;
-> +	struct dw_pcie_rp *pp = &pci->pp;
-> +
-> +	val = readl(fsd_ctrl->appl_base + IRQ2_STS);
-> +
-> +	if ((val & IRQ_MSI_ENABLE) == IRQ_MSI_ENABLE) {
-> +		val &= IRQ_MSI_ENABLE;
-> +		writel(val, fsd_ctrl->appl_base + IRQ2_STS);
-> +		dw_handle_msi_irq(pp);
-> +	} else {
-> +		fsd_pcie_sub_ctrl_handler(irq, arg);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void fsd_pcie_msi_init(struct fsd_pcie *fsd_ctrl)
-> +{
-> +	int val;
-> +
-> +	/* enable MSI interrupt */
-> +	val = readl(fsd_ctrl->appl_base + IRQ2_EN);
-> +	val |= IRQ_MSI_ENABLE;
-> +	writel(val, fsd_ctrl->appl_base + IRQ2_EN);
-> +}
-> +
-> +static void fsd_pcie_enable_interrupts(struct fsd_pcie *fsd_ctrl)
-> +{
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		fsd_ctrl->pdata->irq_data->pcie_msi_init(fsd_ctrl);
-> +}
-> +
-> +static u32 fsd_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-> +				u32 reg, size_t size)
-> +{
-> +	bool is_atu = false;
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +	u32 val;
-> +
-> +	if (pci->atu_base) {
-> +		if (base >= pci->atu_base) {
-> +
-> +			is_atu = true;
-> +			regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base,
-> +					ADDR_TYPE_ATU);
-> +			base = base - DEFAULT_DBI_ATU_OFFSET;
-> +		}
-> +	}
-> +
-> +	dw_pcie_read(base + reg, size, &val);
-> +
-> +	if (is_atu)
-> +		regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_DBI);
-
-You've got the same code twice. Rework this to be a common function 
-that does just:
-
-if (ATU)
-    regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_ATU);
-else
-    regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_DBI);
-
-Then you just call it followed by dw_pcie_read or dw_pcie_write.
-
-> +
-> +	return val;
-> +}
-> +
-> +static void fsd_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-> +				u32 reg, size_t size, u32 val)
-> +{
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +	bool is_atu = false;
-> +
-> +	if (pci->atu_base) {
-> +		if (base >= pci->atu_base) {
-> +			is_atu = true;
-> +			regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base,
-> +					ADDR_TYPE_ATU);
-> +			base = base - DEFAULT_DBI_ATU_OFFSET;
-> +		}
-> +	}
-> +
-> +	dw_pcie_write(base + reg, size, val);
-> +
-> +	if (is_atu)
-> +		regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_DBI);
-> +}
-> +
-> +static void fsd_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
-> +				u32 reg, size_t size, u32 val)
-> +{
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +
-> +	regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_DBI2);
-> +	dw_pcie_write(pci->dbi_base + reg, size, val);
-> +	regmap_write(fsd_ctrl->sysreg, fsd_ctrl->sysreg_base, ADDR_TYPE_DBI);
-> +}
-> +
-> +static int fsd_pcie_link_up(struct dw_pcie *pci)
-> +{
-> +	u32 val;
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +
-> +	val = readl(fsd_ctrl->appl_base +
-> +			fsd_ctrl->pdata->appl_cxpl_debug_00_31);
-> +
-> +	return (val & LTSSM_STATE_MASK) == LTSSM_STATE_L0;
-> +}
-> +
-> +static int fsd_pcie_host_init(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct fsd_pcie *fsd_ctrl = to_fsd_pcie(pci);
-> +
-> +	dw_pcie_writel_dbi(pci, PCIE_GEN3_RELATED_OFF,
-> +				(PCIE_GEN3_EQ_PHASE_2_3 |
-> +				 PCIE_GEN3_RXEQ_PH01_EN |
-> +				 PCIE_GEN3_RXEQ_RGRDLESS_RXTS));
-> +
-> +	fsd_pcie_enable_interrupts(fsd_ctrl);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct dw_pcie_host_ops fsd_pcie_host_ops = {
-> +	.host_init = fsd_pcie_host_init,
-> +};
-> +
-> +static int fsd_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> +				 enum pci_epc_irq_type type, u16 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +
-> +	switch (type) {
-> +	case PCI_EPC_IRQ_LEGACY:
-> +		dev_err(pci->dev, "EP does not support legacy IRQs\n");
-> +		return -EINVAL;
-> +	case PCI_EPC_IRQ_MSI:
-> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> +	default:
-> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pci_epc_features fsd_pcie_epc_features = {
-> +	.linkup_notifier = false,
-> +	.msi_capable = true,
-> +	.msix_capable = false,
-> +};
-> +
-> +static const struct pci_epc_features*
-> +	fsd_pcie_get_features(struct dw_pcie_ep *ep)
-> +{
-> +	return &fsd_pcie_epc_features;
-> +}
-> +
-> +static struct dw_pcie_ep_ops fsd_dw_pcie_ep_ops = {
-> +	.raise_irq	= fsd_pcie_raise_irq,
-> +	.get_features	= fsd_pcie_get_features,
-> +};
-> +
-> +static const struct fsd_pcie_irq fsd_pcie_irq_data = {
-> +	.pcie_msi_irq_handler	= fsd_pcie_msi_irq_handler,
-> +	.pcie_msi_init		= fsd_pcie_msi_init,
-> +	.pcie_sub_ctrl_handler	= fsd_pcie_sub_ctrl_handler,
-> +};
-> +
-> +static int __init fsd_add_pcie_ep(struct fsd_pcie *fsd_ctrl,
-> +		struct platform_device *pdev)
-> +{
-> +	struct dw_pcie_ep *ep;
-> +	struct dw_pcie *pci = fsd_ctrl->pci;
-> +	int ret;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	ep = &pci->ep;
-> +	ep->ops = &fsd_dw_pcie_ep_ops;
-> +
-> +	dw_pcie_writel_dbi(pci, PCIE_GEN3_RELATED_OFF,
-> +				(PCIE_GEN3_EQUALIZATION_DISABLE |
-> +				 PCIE_GEN3_RXEQ_PH01_EN |
-> +				 PCIE_GEN3_RXEQ_RGRDLESS_RXTS));
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret)
-> +		dev_err(dev, "failed to initialize endpoint\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int __init fsd_add_pcie_port(struct fsd_pcie *fsd_ctrl,
-> +					struct platform_device *pdev)
-> +{
-> +	int irq;
-> +	struct device *dev = &pdev->dev;
-> +	int irq_flags;
-> +	int ret;
-> +	struct dw_pcie *pci = fsd_ctrl->pci;
-> +	struct dw_pcie_rp *pp = &pci->pp;
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		irq = platform_get_irq_byname(pdev, "msi");
-
-Wasn't in the binding. And the DWC core does this for you.
-
-> +		if (!irq) {
-> +			dev_err(dev, "failed to get msi irq\n");
-> +			return -ENODEV;
-> +		}
-> +
-> +		irq_flags = IRQF_TRIGGER_RISING | IRQF_SHARED | IRQF_NO_THREAD;
-> +
-> +		ret = devm_request_irq(dev, irq,
-> +					fsd_ctrl->pdata->irq_data->pcie_msi_irq_handler,
-> +					irq_flags, "fsd-pcie", fsd_ctrl);
-> +		if (ret) {
-> +			dev_err(dev, "failed to request msi irq\n");
-> +			return ret;
-> +		}
-> +		pp->msi_irq[0] = -ENODEV;
-> +	}
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret)
-> +		dev_err(dev, "failed to initialize host\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dw_pcie_ops fsd_dw_pcie_ops = {
-> +	.read_dbi	= fsd_pcie_read_dbi,
-> +	.write_dbi	= fsd_pcie_write_dbi,
-> +	.write_dbi2	= fsd_pcie_write_dbi2,
-> +	.start_link	= fsd_pcie_establish_link,
-> +	.stop_link	= fsd_pcie_stop_link,
-> +	.link_up	= fsd_pcie_link_up,
-> +};
-> +
-> +static int fsd_pcie_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	int irq, irq_flags;
-> +	struct dw_pcie *pci;
-> +	struct dw_pcie_rp *pp;
-> +	struct fsd_pcie *fsd_ctrl;
-> +	struct device *dev = &pdev->dev;
-> +	const struct fsd_pcie_pdata *pdata;
-> +	struct device_node *np = dev->of_node;
-> +
-> +	fsd_ctrl = devm_kzalloc(dev, sizeof(*fsd_ctrl), GFP_KERNEL);
-> +	if (!fsd_ctrl)
-> +		return -ENOMEM;
-> +
-> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> +	if (!pci)
-> +		return -ENOMEM;
-> +
-> +	pdata = (const struct fsd_pcie_pdata *) of_device_get_match_data(dev);
-> +
-> +	fsd_ctrl->pci = pci;
-> +	fsd_ctrl->pdata = pdata;
-> +
-> +	pci->dev = dev;
-> +	pci->ops = pdata->dwc_ops;
-> +	pci->dbi_base2 = NULL;
-> +	pci->dbi_base = NULL;
-> +	pci->atu_base = NULL;
-> +	pp = &pci->pp;
-> +	pp->ops = fsd_ctrl->pdata->host_ops;
-> +
-> +	fsd_ctrl->phy = devm_of_phy_get(dev, np, NULL);
-
-Use the non-DT version.
-
-> +	if (IS_ERR(fsd_ctrl->phy)) {
-> +		if (PTR_ERR(fsd_ctrl->phy) == -EPROBE_DEFER)
-> +			return PTR_ERR(fsd_ctrl->phy);
-> +	}
-> +
-> +	phy_init(fsd_ctrl->phy);
-> +
-> +	if (pdata->res_ops && pdata->res_ops->get_mem_resources) {
-> +		ret = pdata->res_ops->get_mem_resources(pdev, fsd_ctrl);
-
-Again, get rid of the indirection. If it does vary, don't invent your 
-own ops. We only need 1 level of abstraction.
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (pdata->res_ops && pdata->res_ops->get_clk_resources) {
-> +		ret = pdata->res_ops->get_clk_resources(pdev, fsd_ctrl);
-> +		if (ret)
-> +			return ret;
-> +		ret = pdata->res_ops->init_clk_resources(fsd_ctrl);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, fsd_ctrl);
-> +
-> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
-> +	if (ret)
-> +		goto fail_dma_set;
-> +
-> +	switch (fsd_ctrl->pdata->op_mode) {
-> +	case DEVICE_TYPE_RC:
-> +		writel(DEVICE_TYPE_RC, fsd_ctrl->appl_base +
-> +					PCIE_FSD_DEVICE_TYPE);
-> +		ret = fsd_add_pcie_port(fsd_ctrl, pdev);
-> +		if (ret)
-> +			goto fail_add_pcie_port;
-> +		break;
-> +	case DEVICE_TYPE_EP:
-> +		writel(DEVICE_TYPE_EP, fsd_ctrl->appl_base +
-> +				PCIE_FSD_DEVICE_TYPE);
-> +
-> +		ret = fsd_add_pcie_ep(fsd_ctrl, pdev);
-> +		if (ret)
-> +			goto fail_add_pcie_ep;
-> +		break;
-> +	}
-> +
-> +	irq = platform_get_irq_byname(pdev, "sub_ctrl_intr");
-> +	if (irq > 0) {
-> +
-> +		irq_flags = IRQF_TRIGGER_RISING | IRQF_SHARED | IRQF_NO_THREAD;
-> +
-> +		ret = devm_request_irq(dev, irq,
-> +				fsd_ctrl->pdata->irq_data->pcie_sub_ctrl_handler,
-> +				irq_flags, "fsd-sub-ctrl-pcie", fsd_ctrl);
-> +		if (ret)
-> +			dev_err(dev, "failed to request sub ctrl irq\n");
-> +	}
-> +
-> +	dev_info(dev, "FSD PCIe probe completed successfully\n");
-> +
-> +	return 0;
-> +
-> +fail_dma_set:
-> +	dev_err(dev, "PCIe Failed to set 36 bit dma mask\n");
-> +fail_add_pcie_port:
-> +	phy_exit(fsd_ctrl->phy);
-> +fail_add_pcie_ep:
-> +	if (pdata->res_ops && pdata->res_ops->deinit_clk_resources)
-> +		pdata->res_ops->deinit_clk_resources(fsd_ctrl);
-> +	return ret;
-> +}
-> +
-> +static int __exit fsd_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct fsd_pcie *fsd_ctrl = platform_get_drvdata(pdev);
-> +	const struct fsd_pcie_pdata *pdata = fsd_ctrl->pdata;
-> +
-> +	if (pdata->res_ops && pdata->res_ops->deinit_clk_resources)
-> +		pdata->res_ops->deinit_clk_resources(fsd_ctrl);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct fsd_pcie_pdata fsd_pcie_rc_pdata = {
-> +	.dwc_ops		= &fsd_dw_pcie_ops,
-> +	.host_ops		= &fsd_pcie_host_ops,
-> +	.res_ops		= &fsd_pcie_res_ops_data,
-> +	.irq_data		= &fsd_pcie_irq_data,
-> +	.appl_cxpl_debug_00_31	= PCIE_ELBI_CXPL_DEBUG_00_31,
-> +	.op_mode		= DEVICE_TYPE_RC,
-> +};
-> +
-> +static const struct fsd_pcie_pdata fsd_pcie_ep_pdata = {
-> +	.dwc_ops		= &fsd_dw_pcie_ops,
-> +	.host_ops		= &fsd_pcie_host_ops,
-> +	.res_ops		= &fsd_pcie_res_ops_data,
-> +	.irq_data		= &fsd_pcie_irq_data,
-> +	.appl_cxpl_debug_00_31	= PCIE_ELBI_CXPL_DEBUG_00_31,
-> +	.op_mode		= DEVICE_TYPE_EP,
-> +};
-> +
-> +static const struct of_device_id fsd_pcie_of_match[] = {
-> +	{
-> +		.compatible = "tesla,fsd-pcie",
-> +		.data = (void *) &fsd_pcie_rc_pdata,
-> +	},
-> +	{
-> +		.compatible = "tesla,fsd-pcie-ep",
-> +		.data = (void *) &fsd_pcie_ep_pdata,
-> +	},
-> +
-> +	{},
-> +};
-> +
-> +static struct platform_driver fsd_pcie_driver = {
-> +	.probe		= fsd_pcie_probe,
-> +	.remove		= __exit_p(fsd_pcie_remove),
-> +	.driver		= {
-> +		.name	= "fsd-pcie",
-> +		.of_match_table = fsd_pcie_of_match,
-> +	},
-> +};
-> +
-> +static int __init fsd_pcie_init(void)
-> +{
-> +	return platform_driver_register(&fsd_pcie_driver);
-> +}
-> +module_init(fsd_pcie_init);
-> -- 
-> 2.17.1
+> Hi Lukas,
 > 
+> Thanks for looking at this.  A few trivial comments line.
+> 
+> This covers the existing question around async vs sync
+> but doesn't have the potential advantages that Ira's series
+> has in terms of ripping out a bunch of complexity.
+> 
+> I'm too tied up in the various implementations to offer a clear
+> view on which way was should go on this - I'll end up spending
+> all day arguing with myself!
+> 
+> It's a bit of crystal ball gazing for how useful keeping the async stuff
+
+I agree that this is much too 'crystal ball gazing' for me as well.  See below
+for more.
+
+> around will be.  Might be a case of taking your first patch then
+> sitting on the current implementation for a cycle or two to see
+> if it get users... Or take approach Ira proposed and only put the
+> infrastructure back in when we have a user for async.
+> 
+> Jonathan
+> 
+> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> > index 52541eac17f1..7d1eb5bef4b5 100644
+> > --- a/drivers/pci/doe.c
+> > +++ b/drivers/pci/doe.c
+> 
+> ...
+> 
+> > +/**
+> > + * struct pci_doe_task - represents a single query/response
+> > + *
+> > + * @prot: DOE Protocol
+> > + * @request_pl: The request payload
+> > + * @request_pl_sz: Size of the request payload (bytes)
+> > + * @response_pl: The response payload
+> > + * @response_pl_sz: Size of the response payload (bytes)
+> > + * @rv: Return value.  Length of received response or error (bytes)
+> > + * @complete: Called when task is complete
+> > + * @private: Private data for the consumer
+> > + * @work: Used internally by the mailbox
+> > + * @doe_mb: Used internally by the mailbox
+> > + *
+> > + * The payload sizes and rv are specified in bytes with the following
+> > + * restrictions concerning the protocol.
+> > + *
+> > + *	1) The request_pl_sz must be a multiple of double words (4 bytes)
+> > + *	2) The response_pl_sz must be >= a single double word (4 bytes)
+> > + *	3) rv is returned as bytes but it will be a multiple of double words
+> > + *
+> > + * NOTE there is no need for the caller to initialize work or doe_mb.
+> 
+> Cut and paste from original, but what's the "caller" of a struct? I'd just
+> drop this NOTE as it's better explained below.
+> 
+> > + */
+> > +struct pci_doe_task {
+> > +	struct pci_doe_protocol prot;
+> > +	u32 *request_pl;
+> > +	size_t request_pl_sz;
+> > +	u32 *response_pl;
+> > +	size_t response_pl_sz;
+> > +	int rv;
+> > +	void (*complete)(struct pci_doe_task *task);
+> > +	void *private;
+> > +
+> > +	/* initialized by pci_doe_submit_task() */
+> > +	struct work_struct work;
+> > +	struct pci_doe_mb *doe_mb;
+> > +};
+> > +
+> 
+> ...
+> 
+> >  /**
+> >   * pci_doe_for_each_off - Iterate each DOE capability
+> >   * @pdev: struct pci_dev to iterate
+> > @@ -72,6 +29,8 @@ struct pci_doe_task {
+> >  
+> >  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+> >  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+> > -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> > +int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+> Whilst there is clearly a verb hidden in that doe, the fact that the
+> whole spec section is called the same is confusing.
+> 
+> pci_doe_query_response() maybe or pci_doe_do() perhaps?
+
+Or just pci_doe_submit()?
+
+Lukas and I discussed this off-line.  Because he is going to need this stuff
+going forward.  I'm going to back off fixing this and let him handle it.
+
+I agree with him that eventually something like a 'flush' operation will be
+needed but right now that mechanism is broken.  I'll let him determine if it
+should be removed or fixed depending on his future needs.
+
+Ira
+
+> 
+> 
+> > +	    void *request, size_t request_sz,
+> > +	    void *response, size_t response_sz);
+> >  
+> >  #endif
 > 
