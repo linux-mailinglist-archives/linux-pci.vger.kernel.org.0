@@ -2,69 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF4563C8E0
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Nov 2022 21:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6018463CC33
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Nov 2022 01:07:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236208AbiK2UA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Nov 2022 15:00:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
+        id S229775AbiK3AH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Nov 2022 19:07:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237139AbiK2UAZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 15:00:25 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DD2248FF
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 12:00:23 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id z92so10827410ede.1
-        for <linux-pci@vger.kernel.org>; Tue, 29 Nov 2022 12:00:23 -0800 (PST)
+        with ESMTP id S229579AbiK3AH2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Nov 2022 19:07:28 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03057044E;
+        Tue, 29 Nov 2022 16:07:26 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id d3so19156525ljl.1;
+        Tue, 29 Nov 2022 16:07:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=YjhyPJV2Lrw0TKTNTFpYGI4goEc+ehkf2J65ZOPzpVIutbScCbgPUbTq9lc5GBIZfW
-         fTBPTrPCNi2AjwwagMNlCz3OywzJDMRWI6R5q3+MzAnGuc+uZyGBW6AxS3umwo0MauWl
-         2q3LsX6br5mKAsacPEuFnL7YZiO5feWGp+7kgwIz+ueVZl7t40RLjw95C1i89x4TJPN3
-         FwNtyttR9mJoXP8pOcI22mUnDKnLuEzjdaXiGfOpR95zKEsYUE+Ijq23b2TKHZmdXzLo
-         AjkKDhVkfmCJiLbLuf24+KNLOFnFOETb95Lip40ad/+f+prpfVOZEk5+iH8RFLAr7j1q
-         tdUw==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GVsAs2Za73d6UJPfTz0MZvUiul0X6sklp6MH+CmRL3k=;
+        b=EL47aYSQjawJcsLLj/QAQ8+YXvjf23CGJROzwdIE7wtldJvsKi46kOiNH8Nl+U7j0h
+         ObfsQI3tr5WATq7qgHwTyBxwj7PrSiOaR02VxnCwSgrUpzSkC3nu+3xCtxPmOe0Nphk6
+         Mn9IyRHFXOE8Ibc+ru3BYcGdiccptw+GhjdbJx9Nr45UIjV7V7pAW9dD9cgK+8JlAmIe
+         1XAbJmKZngaT2SEmNzkp0ukKd97UYj4fGz5Q3r+pQqBsu60DmrdKKxYPM6hSNMi7mqWx
+         KbpVERYTp6984IPccQ7mkqg137Bd/28MVaBxB+ZHzbSgINt2Hk07QNRFTFESs4Df6tHR
+         UutQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=C8WrPZCprRPNJ4JXjmHF4X+Cz8A3M2J+aJVg65qYq4RNw0s6Jx+2DRmZB2lXq6inwB
-         UtIwzfajbU6t0rhs1AQer53ktvO7pv3wWIytE6kQmLApt8z/C03emAlezV1ucVv7MrqN
-         OjZzTdXD9O1A7Bcutik+089oRJIFNo8rhtCOm6mjDwBR3YnfgerTEdnfuH+td+XxLJFg
-         KlPFMfxCmYOo5xsxMm7+y1DNCVjZu7SF8BjIbZH1vy2YfSPLJg8dQZbbBjT7wYlKorT5
-         ITiZ7W3P1hK3/ehAhEnHRaY/kdjF40uOnK/bCESY/l7WCo56nOWhZfbOApmngxzeKyXx
-         MsdQ==
-X-Gm-Message-State: ANoB5pkGIt7asvJn3dQ8+8WGzLVzWKYbi7TF7lXUE6Y6NCgpvcma/xok
-        Fa83e1M8S+UT/bjfxSNyEf5IIAxzK2pUyeoXV9I=
-X-Google-Smtp-Source: AA0mqf52MyoXyyAAVs7Med6Ga76Rh8N1z1vxdboAGQs5LbIM9WG1/y2QgaM60QLK0hhXs2zVAoW2lW5uGupgaL5Q/VU=
-X-Received: by 2002:aa7:c758:0:b0:469:b3fc:8d7c with SMTP id
- c24-20020aa7c758000000b00469b3fc8d7cmr39008452eds.393.1669752021897; Tue, 29
- Nov 2022 12:00:21 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GVsAs2Za73d6UJPfTz0MZvUiul0X6sklp6MH+CmRL3k=;
+        b=FCIaIG3ZGXPK3sb2qT3dtlYa1ubtWPYEQsggbmz+pXH4u/41BAflY21hSjsi/kbO81
+         66au/cNN13Rr9wvE6f2/tSdyQWOIqwXzkJubEkiK71OInZrkJDzpbnNnaXH+XDr42gfi
+         QpeOb4iXJwOqUL5/u2oZHTNAQD+kn0UpOM39FowTgOwC3qUjv+3GeLVlvADzpX67yenn
+         F0FTGgPUauGkF0OO6Oh31/73LTC5Lpf6nzj4jNezQL+uT7KcZFzFgefL5Y00mNyvWpJG
+         XYSnJ7IVvsBwIYaSLwRNTnDdmTAKiv7cXRcmRuIqX4msPZ5DR3wI45HSlcIvyRGrDZ1V
+         YSig==
+X-Gm-Message-State: ANoB5pll4BWNSefYxLzddvceyKtRw3ZIIetnNr4HUSzViekq8j4B5Y7b
+        FgHIU1BfOaZyRWbplXJpKw8=
+X-Google-Smtp-Source: AA0mqf5dURaix8FQhVVoV1kopruBMKkRVWorfEJEfcfyVRXaS6vpE74eyht6je/iu8eJ0ZOiJU6fPw==
+X-Received: by 2002:a2e:be08:0:b0:277:857:87ab with SMTP id z8-20020a2ebe08000000b00277085787abmr12402330ljq.442.1669766845080;
+        Tue, 29 Nov 2022 16:07:25 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0026fc8855c20sm1706704ljc.19.2022.11.29.16.07.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 16:07:24 -0800 (PST)
+Date:   Wed, 30 Nov 2022 03:07:22 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        caihuoqing <caihuoqing@baidu.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 17/20] PCI: dwc: Introduce generic resources getter
+Message-ID: <20221130000722.xfh3q22mo2huhipk@mobilestation>
+References: <20221127011005.cjzcd6slb6ezy7ix@mobilestation>
+ <20221129183543.GA729294@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a17:906:9f02:b0:7b2:71f8:d968 with HTTP; Tue, 29 Nov 2022
- 12:00:21 -0800 (PST)
-Reply-To: mr.abraham022@gmail.com
-From:   "Mr.Abraham" <kojofofone00@gmail.com>
-Date:   Tue, 29 Nov 2022 20:00:21 +0000
-Message-ID: <CA+5DqwAs01EC17wVAVNRN9ApjATJyKYtnjWBND+hHVk+ZqFiaQ@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221129183543.GA729294@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My Greeting, Did you receive the letter i sent to you. Please answer me.
-Regard, Mr.Abraham
+On Tue, Nov 29, 2022 at 12:35:43PM -0600, Bjorn Helgaas wrote:
+> On Sun, Nov 27, 2022 at 04:10:05AM +0300, Serge Semin wrote:
+> > On Wed, Nov 23, 2022 at 01:44:36PM -0600, Bjorn Helgaas wrote:
+> > > On Sun, Nov 13, 2022 at 10:12:58PM +0300, Serge Semin wrote:
+> 
+> > > Thanks for these new generic interfaces in the DWC core!  And thanks
+> > > for the changes in this patch to take advantage of them in the
+> > > pcie-designware drivers.
+> > > 
+> > > Do you plan similar changes to other drivers to take advantage of
+> > > these DWC-generic data and interfaces?  If you add generic things to
+> > > the DWC core but only take advantage of them in your driver, I don't
+> > > think they are really usefully generic.
+> > 
+> > Could you be more specific what generic things you are referring to? I
+> > am asking because the only part of the changes which is used in my
+> > low-level driver only is introduced in another patch of this series.
+> 
+> I asked because three of your patches mention "generic" things, but I
+> didn't see any changes to drivers except pcie-designware:
+> 
+
+>   PCI: dwc: Introduce generic platform clocks and reset
+
+This patch introduces a method to request a generic platform clocks
+and resets by their names. As I already said these names are defined
+by the DT-bindings, which are platform-specific. That's why the most
+of the currently available drivers can't be converted to using it.
+Instead the new drivers are supposed to be encouraged to use the
+generic names (in accordance with the generic DW PCIe DT-schema) and
+the resources request interface (based on the generic DT-bindings) if
+it suits their design.
+
+Anyway I honestly tried to come up with an even more generic
+interface, which could be used by all the low-level drivers. But due
+to too much variations of the resource names and their sometimes too
+complex utilization in the drivers any solution looked too complex.
+After all of thoughts I decided to keep things simpler.
+
+>   PCI: dwc: Introduce generic resources getter
+
+This patch defines a generic resource getter for the DW PCIe host and
+end-point drivers. That's why it's called generic. 
+
+>   PCI: dwc: Introduce generic controller capabilities interface
+
+This patch introduces an interface to set the device-specific
+capabilities. Since these capabilities can be marked as available by
+both the core driver (at least two of them already defined within this
+patchset) and low-level platform drivers the interface is called
+as generic.
+
+> 
+> I hoped that we would be able to use these to remove some code from
+> existing drivers, but if they only improve maintainability of future
+> drivers, that's useful, too.
+
+Removing some code is possible for instance from the pcie-visconti.c
+driver by using the new generic clocks and resets request interface.
+I've scheduled to create a small patchset which would do that after
+the rest of my patches pass the review process.
+
+-Serge(y)
+
+> 
+> Bjorn
