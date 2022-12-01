@@ -2,170 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47C463ECAC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Dec 2022 10:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CED9663ECC1
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Dec 2022 10:44:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbiLAJlF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Dec 2022 04:41:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
+        id S230285AbiLAJof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Dec 2022 04:44:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230225AbiLAJkz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Dec 2022 04:40:55 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C048E5B4
-        for <linux-pci@vger.kernel.org>; Thu,  1 Dec 2022 01:40:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669887654; x=1701423654;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NwpPELaC3wHuInj0CgNYmo6074xYqTIEqhVDCya7mBo=;
-  b=iudMnYtQ2aMX0wADMDBhBoTYemBVQKqMVGzN6c3jiocZqB5ISJBPJMeV
-   wPB2pFLoD85DOfAxfBH2IDK/6lPDOAXR4dqFkZJ+FPYh47nCIhgd5GIIT
-   b1/8disJjRp36wDjVPiSlUxfjDVGbS6wVn89TN9z4iMcbSiaD2/s3/Jxq
-   ol4YBKW1sibSXKqiAFj7AyaLpVd3Z8DBPmknU2YIiJskQOPb9y9Aaey43
-   8ROHSzu4iYes/EM2T61nh9dPPCG0Hjxxwkvs3nBtUc7JZjHvMj4gmpF7S
-   4o3t+DgkjuZcFR2pjKvLS0S3hE0oTpZ1qvCQPXgNIL8wJ6YJ0OML8mVUc
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="295998056"
-X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="295998056"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 01:40:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="595000590"
-X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="595000590"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 01 Dec 2022 01:40:51 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 82EB3179; Thu,  1 Dec 2022 11:41:18 +0200 (EET)
-Date:   Thu, 1 Dec 2022 11:41:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: PCI resource allocation mismatch with BIOS
-Message-ID: <Y4h2vkDMzpkojMT4@black.fi.intel.com>
-References: <20221128150617.14c98c2e.alex.williamson@redhat.com>
- <20221129064812.GA1555@wunner.de>
- <20221129065242.07b5bcbf.alex.williamson@redhat.com>
- <Y4YgKaml6nh5cB9r@black.fi.intel.com>
- <20221129084646.0b22c80b.alex.williamson@redhat.com>
- <20221129160626.GA19822@wunner.de>
- <20221129091249.3b60dd58.alex.williamson@redhat.com>
- <20221130074347.GC8198@wunner.de>
- <Y4cM3qYnaHl3fQsU@black.fi.intel.com>
- <20221130084738.57281dac.alex.williamson@redhat.com>
+        with ESMTP id S230240AbiLAJoX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Dec 2022 04:44:23 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3639E89AFE;
+        Thu,  1 Dec 2022 01:44:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WfSYnhdI83CDMfCrrhGCAfIHqqFxjQqVSqKDPnHZ1JB9Lmn8Ji+pWzck5tEPqFLZWvNjt92MI7Vf4rGROvHaf3iuSv0TproJHs9n/bBN0ooRcg42Mp0X+GArgHJY/xSM6Y2Xq50k384xu5HJYWmBC0apWVdK2VAZ+pJYLydh0VJj4GkeLUEpzzuKl5I4V2/hrp0P2VhCmX50+QIxsEW5tmkqZOlYOgvuNRegQNPqFMBJdYFsxcFOWNir6y8qZNc1yyN+ULtJ2uzdN0/pOqKgknOTQTWwAfYQGO1KXyR30RFBclvwPSAfnpxaz4yhvrLFrgIZVTTqk33vttRKXJOOMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CDfQon3iaLndoknATPr+jYSRc0oe8sdiezR5qyqkCOw=;
+ b=RJUqD1K7PJmZVYF//w1tvMzAouUE74lVkeMDWG+ML29yHfSG3baYY3avKsC9U82+kbnsXIriHN/xgcbhOdBQHNPsjHBx/xaulifzHoNil1PGrii301cqID0N2BkXcs4QKKLaPwol/XieF+JYsipvwSsQLBH7ppzOefNolWXx5rxEjagmQKsEoC4Hpd7ahU3E5h3mvEAdOBTlTqjCe9B/TmG6L6WMvToYfHDeTuKW2FPWjXVc/j6dZjf6P3+pgtv/eaI54JVKOYEmUdN2cJWGfo0bHD/+WeWoD8Yf5GXVCt5f7zb4iL6xMIQ9MV9+lvAiKW8cIQGF5ZuqF4WHMGyMSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CDfQon3iaLndoknATPr+jYSRc0oe8sdiezR5qyqkCOw=;
+ b=U13PJ6aFnKlhPIKR4885kueLT3pZNVO5FJ2FZcxbUQ4uDurQU35Ap0iXJ9vcxMRdu9j23pck1e7w18TTias8tplroRIUVLJwbOtDVe4Z92mgliQjRTWyK+CSTu+AEuR2a5/oiSF0V4DP65Wy/o9o+EcGopGefioNNU3y+XrDfiHCC2bdy5jWJYdNzt+cAPjQEDq62HOjfTQlU5uM4q4fhOYx9R8ef9nIVzJzU67bQfwcZXMZ3duvlLJ0bHUaKtJV1KdzgIJnxFr2KJjML8QUIYWJWy3CUF2zMM06daeKiVBWYJ6swI3yyIcnigLfsBc3yKJRWfqOJM2j6Mj/8MdAxA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
+ SJ2PR12MB7962.namprd12.prod.outlook.com (2603:10b6:a03:4c2::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Thu, 1 Dec
+ 2022 09:44:19 +0000
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::f1be:5d:f297:e2f]) by CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::f1be:5d:f297:e2f%6]) with mapi id 15.20.5880.008; Thu, 1 Dec 2022
+ 09:44:19 +0000
+Message-ID: <1940f7ef-3119-59c6-0ddc-9498806766c9@nvidia.com>
+Date:   Thu, 1 Dec 2022 09:44:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 2/3] arm64: tegra: Add uphy lane number and intr in p2u
+ nodes
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>, vkoul@kernel.org,
+        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        thierry.reding@gmail.com, vidyas@nvidia.com
+Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        lpieralisi@kernel.org, nkristam@nvidia.com
+References: <20221124083510.3008139-1-mmaddireddy@nvidia.com>
+ <20221124083510.3008139-3-mmaddireddy@nvidia.com>
+Content-Language: en-US
+From:   Jon Hunter <jonathanh@nvidia.com>
+In-Reply-To: <20221124083510.3008139-3-mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0202.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:318::8) To CO6PR12MB5444.namprd12.prod.outlook.com
+ (2603:10b6:5:35e::8)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221130084738.57281dac.alex.williamson@redhat.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|SJ2PR12MB7962:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9fcc909b-b2ed-4377-0d55-08dad3809d5b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Yv8SSE5vw7cFGvTwqlSMjHFZHjw9ro+RIa73SzMAr0L9fDFgDcnygh/3AjmHv7TwfEuws+2qbtIKSFscZr1t01W4tydWwz5ffrJYLEYLDxwbbJdGK4wKdDnhthN08hRSQUoUMqf2Gv6fPIxMlRLJkmFjrP+2rPtCQPLG0uwDO7+k6sqcqpflMoxZCeYlYf22BFJ9zFCufrbjesupd+3uEJTDqQwBhJwa4s+iYUS0dFJPknCU6MXCWiqr5j3eIMb6mf65Dh+fjq0jUmrpkO/6dgRpPZvmv4DrPzyAu0tyhLbGIQZ4PmQXTaJ7kji3RFFGsTWfr+g3LWAHMlctJz1gNEYoqTbOqvUXCdCqs7ZJwYdVt3aZupoquntuGcs7rle5THKU14J1MsLLq0jik9675OT4xmzmSFiZjDXNEHuYh22ih1cU/oaSA4tu9l3j0EOtrwGokc9nNXaTXGyULePkcNe7asmLOX4Dg2fOkfuEOgra01r6ZAua7Zt6AohWNJ6yRQifj+9OI06U7jXpZxNPTe7z0cPDiRkgie1emPokGPxb0JnkNtHgZzLY6zY48h8J/WfdWEIbJZ8nm6zqYxLnwDaeu5zVfSTLNlww3Ks/4EZl9amGGf+gqr34tHDlaRF209cWov8speftoqmRPZNMA68thBBaQU/sPd5ejOwUkmOtbCyYo2ye7Sajw95p3VrSNxRZp1iNrSFhHAZR7pIu2idMgfAGDU2peng3aIuGDhk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(451199015)(7416002)(8936002)(66946007)(36756003)(38100700002)(66476007)(4326008)(107886003)(66556008)(41300700001)(4744005)(31696002)(86362001)(6506007)(55236004)(6512007)(6666004)(53546011)(6636002)(316002)(186003)(26005)(2616005)(6486002)(478600001)(8676002)(5660300002)(2906002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VEgxUXdkS2YwRHN3d2xVdFR1aXpPdkdTUDhNM1gzVVZaZlllMUJocWdIR21q?=
+ =?utf-8?B?QUpCc3dDeG1NMnlJUjZpd0d1aDhvdjBlUHJmYlpadUJpZlF6UkFncjBvUExx?=
+ =?utf-8?B?ektTamE0RHJHb3N1ejN5VVBXcjRraytrNU1SVDN0TS9OcUhtR2s0NVl4bWdZ?=
+ =?utf-8?B?d2xzbGpOeFFsalFET0NWNVJLOEt0WmRtU3QybWZYQ2k5d1VYcFBKZVZyRzJS?=
+ =?utf-8?B?ZW1nQkI5Vy9zOGt4azZqK0xTSTFuaWVCaS9EaVRHZ0lVQXRNRnR0cWZOWjI5?=
+ =?utf-8?B?WmpLRk1LUGVGM1hlSFRyVUZPMmp0bGpSSlN1Q25EaFVKMHRkcXh4SmVaVWlv?=
+ =?utf-8?B?eXJKanNsRWNQbnRjWEMvMlNTdlYvOGMzanYzZnlKWXpBUCt6SUVoaWJ2VXEr?=
+ =?utf-8?B?RU5lUmlPNmV1TElYWGhqZWUwaldzdFIwZnFZRVNUMFJmYjV3ZzJzSTBVd2dT?=
+ =?utf-8?B?Nkg4OHlrV0tOb3VQZGVPclc3Vm1pSko5T29zYTJja0xRTFEyVnU1eEpEa2Y4?=
+ =?utf-8?B?U3FjenRhRmwzS2x4SFkxV3VZcG5LUzRJWFl4MlBla1Q1RUNiN2tWNW5WZ1Yy?=
+ =?utf-8?B?a3NxVjZFb05yMG4vYkE2Z1NmMEJ6UlJOQllOc2oyVmpITXZXUnByQmhVTld1?=
+ =?utf-8?B?YmRRMm9ETWFZRndCQTFvSEZoRktGNGZ2L24xY1FCdG5JRzFRaU5UNytUUTQ3?=
+ =?utf-8?B?MVU2ZGNpY0ZIQTd6ZDRzekVpaFhFcEg4WmpobVNFbzk1anhTbk5UdXFrNkhW?=
+ =?utf-8?B?cFdpd2YwNUpwWm5Eem5mR0lONzJuQUM4bHdvdWpDejJ0dWtyTDNxS2J5d1NW?=
+ =?utf-8?B?ZVp2QzVrdXFSWTVqYXR0REJyNDFubERnWWdoSzgvZGJUb1BJYjJiTzVmRmxQ?=
+ =?utf-8?B?eTVDTGhNdnBBUng3aVFFbG1OYUsvOFoyN0Zvd2FuaW9mV1VCczVoWkNwdzhC?=
+ =?utf-8?B?UDcyOXVvTXlndlNOL3VPZWJNK2swY3AxY0tIWTRyTS8yTHdwai9QTmVJYyth?=
+ =?utf-8?B?dThKeWIvTlMyZkZZbHR5bGdnUUJ2Z2dabk05N0ZCUnNEYTdtRkhvNDRhWVVw?=
+ =?utf-8?B?UnJNcGhpdExNZ2x6ZFJwVnU4NDBTaTlYemNaVGVaUDJKNWR1aE5NMDJoNHpP?=
+ =?utf-8?B?dnZBQlNhS2x6UzhBM0ZaL1B6MHB5UmdUU3dYUGIxY1hYNWZjWXZFM0l6Ykxj?=
+ =?utf-8?B?K2RuWjExVDZJV09leUN0bnFBUXN6M1VDL0VMTXN1dGFHbW9WWkRxejVKNER1?=
+ =?utf-8?B?T0R0NWVMVnFpVmp2cnMrVXdPMHZ2aDMwb003TkpnOWlMVWR0N3BuOUhzZFhj?=
+ =?utf-8?B?RlVHSHppM01zSXowOU80My9xY2FSQmVJOHNrQmVFM3V2NDNuTWtZdktCZkFy?=
+ =?utf-8?B?alNvYnIwOWtTTFA0VG9TbkEvMDEvaHlONllzeE9BLzFNOSs5VTBUR0VySlk4?=
+ =?utf-8?B?NTRxaUl4L1NvUHdrUUxjbXF0WktXQTF0d21UTzRnZTRZRnRhVVRsZTFnM0p1?=
+ =?utf-8?B?cm5vd21SL014VlNQdG84Z09ISzJmbGFxaHA5RWppeWxXYm9zcXJVR09oS2ln?=
+ =?utf-8?B?S2pxd1Yyb2hQY0FoajZEb1R2amdkTmp5MjRucmlRb0QvVUN1Wnd5SzM1UTA0?=
+ =?utf-8?B?VmNoL0owRU5GVVZUaFdWcG1HQ0pMUXlONVhIT01RMytVWWRQajJXMTlpOUoy?=
+ =?utf-8?B?MHNNb2RydkVVNjFiM1BYNldENCsrdEZzWUxxTDNhVis4YlVjVkJPVDQwOGov?=
+ =?utf-8?B?cGVxbVVWQWRnNXpQQVBtWkJwWmtYbjhuOGJ2RTczbWRVM090TlNmUDBWT1Vs?=
+ =?utf-8?B?QjBrYlJDMGM1RDdGc283bmxuTnV6WS9palhFdVdWMXhGY2lQZXNVZ1I3eGNh?=
+ =?utf-8?B?T0tiTDEwc3hPa1pJWnNGbVVRbjJmckJFRjZ2SnJmMTNOcHVmWG5tNmJPS0Fw?=
+ =?utf-8?B?dmJ4dk9RcVFhK3JDajJRck04SmtjcHdrOVplS3JlRmZuYjZjL01lb1BxWVNQ?=
+ =?utf-8?B?UThzekk0QmErTVlWdE8vUUdUNmQ3T3UzNWcxa2d5WmYwK01WeHA2OWdQZGFn?=
+ =?utf-8?B?RVlSaGtOYmxpeFpiOUpJL0dnVDd3V0tQbFBPMlY1Vnh5SWNIYS9WMkhOajRv?=
+ =?utf-8?Q?2dvn1SEPGNuL9t+xY5yCbQ1cE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fcc909b-b2ed-4377-0d55-08dad3809d5b
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2022 09:44:19.5775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aCeaTebU0n8XH/yapINM6edDUa/JELJ36lak7lE8FizzI0VbNDJICKPhtvU/zlAmn8hXpLEcyJLlYTu7BI8dsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7962
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On Wed, Nov 30, 2022 at 08:47:38AM -0700, Alex Williamson wrote:
-> On Wed, 30 Nov 2022 09:57:18 +0200
-> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+On 24/11/2022 08:35, Manikanta Maddireddy wrote:
+> UPHY lane number is required to exchange lane margin data between P2U
+> and UPHY. Add uphy lane number in p2u device tree nodes.
 > 
-> > Hi,
-> > 
-> > On Wed, Nov 30, 2022 at 08:43:47AM +0100, Lukas Wunner wrote:
-> > > On Tue, Nov 29, 2022 at 09:12:49AM -0700, Alex Williamson wrote:  
-> > > > On Tue, 29 Nov 2022 17:06:26 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > > > On Tue, Nov 29, 2022 at 08:46:46AM -0700, Alex Williamson wrote:  
-> > > > > > Maybe the elephant in the room is why it's apparently such common
-> > > > > > practice to need to perform a hard reset these devices outside of
-> > > > > > virtualization scenarios...    
-> > > > > 
-> > > > > These GPUs are used as accelerators in cloud environments.
-> > > > > 
-> > > > > They're reset to a pristine state when handed out to another tenant
-> > > > > to avoid info leaks from the previous tenant.
-> > > > > 
-> > > > > That should be a legitimate usage of PCIe reset, no?  
-> > > > 
-> > > > Absolutely, but why the whole switch?  Thanks,  
-> > > 
-> > > The reset is propagated down the hierarchy, so by resetting the
-> > > Switch Upstream Port, it is guaranteed that all endpoints are
-> > > reset with just a single operation.  Per PCIe r6.0.1 sec 6.6.1:
-> > > 
-> > >    "For a Switch, the following must cause a hot reset to be sent
-> > >     on all Downstream Ports:
-> > >     [...]
-> > >     Receiving a hot reset on the Upstream Port"  
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+>   arch/arm64/boot/dts/nvidia/tegra234.dtsi | 120 +++++++++++++++++++++++
+>   1 file changed, 120 insertions(+)
 > 
-> This was never in doubt.
->  
-> > Adding here the reason I got from the GPU folks:
-> > 
-> > In addition to the use case when the GPU is reset when switched to
-> > another tenant, this is used for recovery. The "first level" recovery is
-> > handled by the graphics driver that does Function Level Reset but if
-> > that does not work data centers may trigger reset at higher level (root
-> > port or switch upstream port) to reset the whole card. So called "big
-> > hammer".
-> 
-> Ok, so the first level issue can be solved by the reset_method
-> attribute, allowing userspace to trigger a SBR for a signle function
-> endpoint rather than an FLR (though this might suggest some hardware
-> issues in the FLR implementation).  This will save and restore the
-> device config space, so there should be no resource reallocation issues.
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> index eaf05ee9acd1..ec8a28a9d380 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> @@ -1109,6 +1109,11 @@ p2u_hsio_0: phy@3e00000 {
+>   			reg = <0x03e00000 0x10000>;
+>   			reg-names = "ctl";
+>   
+> +			interrupts = <0 336 0x04>;
 
-Right, I think that already works.
 
-> > There is another use case too - firmware upgrade. This allows data
-> > centers to upgrade firmware on those cards without need to reboot - they
-> > just reset the whole thing to make it run the new firmware.
-> 
-> The above can also be used for this, so long as the firmware update
-> only targets the GPU and device config space layout and features is not
-> modified by the update.  This touches on a long standing issue Bjorn
-> has had with performing bus resets where we assume we get back
-> essentially the same devices after the reset.  That's not guaranteed
-> with a pending firmware update.
+Please use definitions and don't hard-code the values apart from the 
+interrupt number.
 
-Fair enough but if the firmware does not change the resource consumption
-then we would get back the same devices. I guess this is the use-case
-with these cards.
+Jon
 
-> >From the logs in this case, I notice that the BIOS didn't assigned the
-> ROM BAR for the GPU while Linux did when re-scanning.  That's a
-> different address space from the SR-IOV BARs, so doesn't explain this
-> failure, but I wonder if there's another resource in the hierarchy that
-> the BIOS didn't program, ex. BAR0 on the upstream switch maybe?
-
-I don't think there is.
-
-> Possibly if the host were booted with pci=realloc, Linux might expand
-> the resources to something it's happy with, allowing future re-scans.
-
-This was tried (sorry I did not mention that) and it did not work either
-because of the way Linux allocates the resource space. BIOS allocates
-"minimal" window that fulfills the alignment requirement so if we had
-just 16G+16M BARs then we would get 16G+16M bridge window aligned for
-that 16G. However, Linux tries to align the size of the window too so
-instead we get 16G aligned to 8G so 24G memory window. This does not fit
-to the resources BIOS allocated.
-
-With pci=realloc Linux tries to release the resources from the upper
-level bridges and re-allocates more but the IOV resources are put into
-the "additional" list so it is fine if those don't get allocated in the
-end.
-
-> Otherwise I think we'd need a log of all BIOS vs Linux resource
-> allocations from the root port down to see what might be the issue with
-> the rescan.  Thanks,
-
-Sure, I will share dmesg from that system showing the initial allocation
-and the re-scan as soon as I get confirmation that there is nothing
-under embargo in there.
+-- 
+nvpublic
