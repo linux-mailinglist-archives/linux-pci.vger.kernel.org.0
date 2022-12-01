@@ -2,192 +2,283 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C4C63EF2B
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Dec 2022 12:16:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A50E063EFEC
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Dec 2022 12:52:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231297AbiLALQF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Dec 2022 06:16:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
+        id S230223AbiLALwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Dec 2022 06:52:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231296AbiLALPA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Dec 2022 06:15:00 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BB7BB7DD
-        for <linux-pci@vger.kernel.org>; Thu,  1 Dec 2022 03:08:55 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id td2so3356712ejc.5
-        for <linux-pci@vger.kernel.org>; Thu, 01 Dec 2022 03:08:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SFyJfR2WUZBDHeWemxJgoKouNxxtAGHlmHCCEO9QQfg=;
-        b=ihhHeh07lyLQ9+bLJAT02xtbEUUwBhwmY6NbvI/an2JMfUbxhGOKl7udb7lLh5mId9
-         jw5dKTuvmRP+w2K8ZYng51eJLaluDUotqflfy43/10yqWgw/yG+fgTeB0ukeRPMWa9sh
-         dgPYzjd9Y05h6Utm7j5Kxf9v/xCIYLObtVbqg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SFyJfR2WUZBDHeWemxJgoKouNxxtAGHlmHCCEO9QQfg=;
-        b=UG+Si9H+CtmF692K+9CyLV7VBdhUwmwiswjQ7aGIwqVi2rLOQnBPyc8i+gwK6hL3la
-         nmmilLx7qi0xVViHVeDehvIIgj05WnVT2PsNYSWJVMyHOFP0ol7RVcktN4MTLDJ2Zcnz
-         12RK7SKc7upVnte9VdLUTYA53HXaYwhC+jT6EnAHFqwAwGdppazK6vjY2cRlhz2/BchQ
-         oEjLyROz149CbeYXnTMYhMsuUeIDCW2z4DN6d6VBlz+YxVa47lur+TYO3+B4CGu8+Xq8
-         bmU7/KY7y982z2YvuGvGKE/qAbLnKrk7KFJYMwVHKaJdzl59OuijfN1k6GSN7wpWPRwu
-         Pr9A==
-X-Gm-Message-State: ANoB5pmyTM35KLJp7WjP2yLVc+LAn8CQP2SzK+n5ZQDULvRV5/fm6ZAa
-        r3GiYJlVzRc7NtVZ2RMbDeL/vA==
-X-Google-Smtp-Source: AA0mqf5n8q8ZMG+bv3DehJEYX5ANkxpTsyIzmCnCUsZmiYp8gdzbFTHhMnsW4dhR0VzoX//sUAQsMg==
-X-Received: by 2002:a17:906:7f09:b0:7c0:b3a8:a5f9 with SMTP id d9-20020a1709067f0900b007c0b3a8a5f9mr1338546ejr.154.1669892932820;
-        Thu, 01 Dec 2022 03:08:52 -0800 (PST)
-Received: from alco.roam.corp.google.com ([2620:0:1059:10:f554:724a:f89a:73db])
-        by smtp.gmail.com with ESMTPSA id v17-20020a170906293100b0078e0973d1f5sm1663824ejd.0.2022.12.01.03.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 03:08:52 -0800 (PST)
-From:   Ricardo Ribalda <ribalda@chromium.org>
-Date:   Thu, 01 Dec 2022 12:08:23 +0100
-Subject: [PATCH v8 3/3] ASoC: SOF: Fix deadlock when shutdown a frozen userspace
+        with ESMTP id S229728AbiLALw3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Dec 2022 06:52:29 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D164D9AE07;
+        Thu,  1 Dec 2022 03:52:27 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E726D6E;
+        Thu,  1 Dec 2022 03:52:34 -0800 (PST)
+Received: from [10.57.71.118] (unknown [10.57.71.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDCC73F73D;
+        Thu,  1 Dec 2022 03:52:24 -0800 (PST)
+Message-ID: <136b735e-43b0-59bd-c85b-291730cd6371@arm.com>
+Date:   Thu, 1 Dec 2022 11:52:19 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20221127-snd-freeze-v8-3-3bc02d09f2ce@chromium.org>
-References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org>
-In-Reply-To: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org>
-To:     Juergen Gross <jgross@suse.com>, Mark Brown <broonie@kernel.org>,
-        Chromeos Kdump <chromeos-kdump@google.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Content-Language: en-GB
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org
-Cc:     kexec@lists.infradead.org, alsa-devel@alsa-project.org,
-        Ricardo Ribalda <ribalda@chromium.org>, stable@vger.kernel.org,
-        sound-open-firmware@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-X-Mailer: b4 0.11.0-dev-696ae
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2398; i=ribalda@chromium.org;
- h=from:subject:message-id; bh=GWM+B74HgZm8hg965LkIrG7utJXhrwWC6OA28kyyUjA=;
- b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjiIs5X8qunJcdzh4yNadWVeViZgDn3gq/06nr8kdj
- kdUAnBmJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY4iLOQAKCRDRN9E+zzrEiBePD/
- 4n9U/k8s8PcSMHwaDWquOwoHUGMa1OTSXQAeS+zkfPMUpMhgcoTNo49nWa43GN+Y810XaYiML51562
- eLirizXRSalXPpYVLlUge+rUD8YTV54zGi5OoX528K7lwHG8z+THm4BSy0/gmpmwdgB3GttlQH5Xh0
- P4IRFzzQUndzF5+V+rD7ZDsOIqsqHLEl2xVrPlelt3OtQTf7xzm+FTwEgxz8fg42kpdkTUjKNidLBa
- PVVihXzxaPSrNmIcrlXDWrTscOrbX2UGlosoMD4NyfKwacu0juZk+QLlYCoIBu78E/d04Top6bsU/I
- uqQOeIB3UrGvmdWb9fO9H/WX4GIFLG+w7VCfaLbEd22SI+WITCvp/dDA/ZO8fzX1wgQBHvFZRLIuM4
- 0mqtOEszlCVB4pMNrAVJcSULhKWOxrKI7MkUyf/otZRJ67hrWlDDaOmlBsOkJTF1T5obHSRoblMSSE
- UwMVB1vp64JD4LAxJGmFWSPjZ3BMJJK0mblOTi/qOiMm2QR7iraSkhMsUcpx9HI4IeSwbTJszKQ1Hb
- BgqjW0c2l0BpHzIlEvkoUHxIGQdKJLMfmy8GbTMKne5zBzPRx9+b+cGgNvRa/zWp72+v9Fm0r2l8rk
- 2c1+78340GIwSb9Ffj750Evz1ISy6b5FAAiC5q+SWoZEFW2mWMAN+3crcCZw==
-X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
- fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
+ <20221107210438.1515-23-Sergey.Semin@baikalelectronics.ru>
+ <20221107211134.wxaqi2sew6aejxne@mobilestation>
+ <8b7ce195-27b7-a27f-bf4e-fd5f20f2a83b@arm.com>
+ <20221126234509.ezn6vuefnj2f7pyk@mobilestation>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20221126234509.ezn6vuefnj2f7pyk@mobilestation>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If we are shutting down due to kexec and the userspace is frozen, the
-system will stall forever waiting for userspace to complete.
+On 2022-11-26 23:45, Serge Semin wrote:
+> On Fri, Nov 25, 2022 at 03:32:23PM +0000, Robin Murphy wrote:
+>> On 2022-11-07 21:11, Serge Semin wrote:
+>>> On Tue, Nov 08, 2022 at 12:04:36AM +0300, Serge Semin wrote:
+>>>> DW eDMA doesn't perform any translation of the traffic generated on the
+>>>> CPU/Application side. It just generates read/write AXI-bus requests with
+>>>> the specified addresses. But in case if the dma-ranges DT-property is
+>>>> specified for a platform device node, Linux will use it to create a
+>>>> mapping the PCIe-bus regions into the CPU memory ranges. This isn't what
+>>>> we want for the eDMA embedded into the locally accessed DW PCIe Root Port
+>>>> and End-point. In order to work that around let's set the chan_dma_dev
+>>>> flag for each DW eDMA channel thus forcing the client drivers to getting a
+>>>> custom dma-ranges-less parental device for the mappings.
+>>>>
+>>>> Note it will only work for the client drivers using the
+>>>> dmaengine_get_dma_device() method to get the parental DMA device.
+>>>
+>>> @Robin, we particularly need you opinion on this patch. I did as you
+>>> said: call *_dma_configure() method to initialize the child device and
+>>> set the DMA-mask here instead of the platform driver.
+>>
+> 
+>> Apologies, I've been busy and this series got buried in my inbox before I'd
+>> clocked it as something I was supposed to be looking at.
+> 
+> No worries. I'm glad you responded.
+> 
+>>
+>>> @Vinoud, @Manivannan I had to drop your tags from this patch since its
+>>> content had been significantly changed.
+>>>
+>>> -Sergey
+>>>
+>>>>
+>>>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>>>>
+>>>> ---
+>>>>
+>>>> Changelog v2:
+>>>> - Fix the comment a bit to being clearer. (@Manivannan)
+>>>>
+>>>> Changelog v3:
+>>>> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>>>>     be missing on some platforms. (@Manivannan)
+>>>> - Remove Manivannan' rb and tb tags since the patch content has been
+>>>>     changed.
+>>>>
+>>>> Changelog v6:
+>>>> - Directly call *_dma_configure() method on the child device used for
+>>>>     the DMA buffers mapping. (@Robin)
+>>>> - Explicitly set the DMA-mask of the child device in the channel
+>>>>     allocation proecedure. (@Robin)
+>>>> - Drop @Manivannan and @Vinod rb- and ab-tags due to significant patch
+>>>>     content change.
+>>>> ---
+>>>>    drivers/dma/dw-edma/dw-edma-core.c | 44 ++++++++++++++++++++++++++++++
+>>>>    1 file changed, 44 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+>>>> index e3671bfbe186..846518509753 100644
+>>>> --- a/drivers/dma/dw-edma/dw-edma-core.c
+>>>> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+>>>> @@ -6,9 +6,11 @@
+>>>>     * Author: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>     */
+>>>> +#include <linux/acpi.h>
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/device.h>
+>>>>    #include <linux/kernel.h>
+>>>> +#include <linux/of_device.h>
+>>>>    #include <linux/dmaengine.h>
+>>>>    #include <linux/err.h>
+>>>>    #include <linux/interrupt.h>
+>>>> @@ -711,10 +713,52 @@ static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
+>>>>    static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+>>>>    {
+>>>>    	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+>>>> +	struct device *dev = chan->dw->chip->dev;
+>>>> +	int ret;
+>>>>    	if (chan->status != EDMA_ST_IDLE)
+>>>>    		return -EBUSY;
+>>>> +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+>>>> +	 * controlled from the CPU/Application side since in that case
+>>>> +	 * the local memory address is left untranslated.
+>>>> +	 */
+>>>> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> 
+> 
+>>>> +		ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>>>> +						   DMA_BIT_MASK(64));
+>>>> +		if (ret) {
+>>
+>> Setting a 64-bit mask should never fail, especially on any platform that
+>> will actually run this code.
+>>
+>>>> +			ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>>>> +							   DMA_BIT_MASK(32));
+> 
+> Indeed. I can just drop the 32-bit mask test then. (But I'd retain the
+> error check anyway.)
+> 
+> The problem is that actual device DMA-addressing capability is
+> determined by the MASTER_BUS_ADDR_WIDTH IP-core synthesize parameter.
+> I can't predict its value from this generic code since it isn't
+> auto-detectable and is platform-specific. That's why back then in
+> our discussion I was insisting on setting the mask in the low-level
+> device drivers. But after the commit 423511ec23e2 ("PCI: dwc: Drop
+> dependency on ZONE_DMA32") it turned to be pointless now since the
+> DMA-mask would be overwritten by the generic DW PCIe driver code anyway.
+> What do you suggest then in this regard? Just keep setting the 64-bit
+> mask only? This will work for my platform, but will fail for the
+> devices with AXI-bus address of only 32-bits width.
 
-Do not wait for the clients to complete in that case.
+OK, but you already have that problem either way. The point of 
+dma_set_mask() et al is to inform the DMA API of your device's 
+capability - setting a 64-bit mask is saying "I can use 64-bit addresses 
+if you can" to the DMA layer, and as I say the DMA layer is almost 
+always going to respond "indeed I can, let's do that". If the real DMA 
+mask is platform-specific then you need to pass a platform-specific 
+value here.
 
-This fixes:
+>>>> +			if (ret)
+>>>> +				return ret;
+>>>> +		}
+>>>> +
+>>>> +		if (dev_of_node(dev)) {
+>>>> +			struct device_node *node = dev_of_node(dev);
+>>>> +
+>>>> +			ret = of_dma_configure(&dchan->dev->device, node, true);
+>>>> +		} else if (has_acpi_companion(dev)) {
+>>
+> 
+>> Can this can ever happen? AFAICS there's no ACPI binding to match and probe
+>> the DWC driver, at best it could only probe as a standard PNP0A08 host
+>> bridge which wouldn't know anything about eDMA anyway.
+> 
+> There are several ACPI-based platforms with DW PCIe controllers:
+> pcie-tegra194-acpi.c, pcie-al.c, pcie-hisi.c. All of them are fully
+> ECAM-based so no DW eDMA probing from the Linux kernel implied. But
+> these are still DW PCIe controllers and they or some other ones can
+> have eDMA embedded. Do you think it won't be ever possible to either
+> directly handle these controllers (bypassing the ECAM interface) or
+> have a DW PCIe device accessed via the ACPI bindings?
 
-[   84.943749] Freezing user space processes ... (elapsed 0.111 seconds) done.
-[  246.784446] INFO: task kexec-lite:5123 blocked for more than 122 seconds.
-[  246.819035] Call Trace:
-[  246.821782]  <TASK>
-[  246.824186]  __schedule+0x5f9/0x1263
-[  246.828231]  schedule+0x87/0xc5
-[  246.831779]  snd_card_disconnect_sync+0xb5/0x127
-...
-[  246.889249]  snd_sof_device_shutdown+0xb4/0x150
-[  246.899317]  pci_device_shutdown+0x37/0x61
-[  246.903990]  device_shutdown+0x14c/0x1d6
-[  246.908391]  kernel_kexec+0x45/0xb9
+It's not entirely impossible, but would require new ACPI bindings and 
+code changes to the dw-pci driver, so if somebody ever did do that work 
+they should be responsible for any required changes at this end as well. 
+There's no point adding untested dead code now, to maintain indefinitely 
+just for the theoretical possibility that someone might ever make it 
+reachable.
 
-And:
+> Note basically what I've implemented here was based on the
+> platform_dma_configure() DMA-configuration code pattern. I thought it
+> was a reasonable choice since this code path is executed for the
+> platform devices only (implied by the DW_EDMA_CHIP_LOCAL flag
+> semantic).
+> 
+> On the second thought if the problem in subject is only specific to
+> the DT-based platforms, then I could just skip channel device
+> initialization here for the platform devices with no OF-node detected.
+> So the question is is it specific to the DT-based platforms only?
 
-[  246.893222] INFO: task kexec-lite:4891 blocked for more than 122 seconds.
-[  246.927709] Call Trace:
-[  246.930461]  <TASK>
-[  246.932819]  __schedule+0x5f9/0x1263
-[  246.936855]  ? fsnotify_grab_connector+0x5c/0x70
-[  246.942045]  schedule+0x87/0xc5
-[  246.945567]  schedule_timeout+0x49/0xf3
-[  246.949877]  wait_for_completion+0x86/0xe8
-[  246.954463]  snd_card_free+0x68/0x89
-...
-[  247.001080]  platform_device_unregister+0x12/0x35
+I think you still want the DW_EDMA_CHIP_LOCAL flag, since the PCI 
+endpoint device in the dw-edma-pcie case may have an of_node on some 
+platforms, and in that case overriding the chan_dma_dev setup would be 
+wrong. When the flag is set, though, we can simply assume dev_of_node() 
+is valid since it's the only possible way for that to happen (and if 
+someone does ever break that assumption in future, it will likely make 
+itself noticed).
 
-Cc: stable@vger.kernel.org
-Fixes: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- sound/soc/sof/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> (Before answering to the question above please read the last comment
+> in this message.)
+> 
+>>
+>>>> +			struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
+>>>> +
+>>>> +			ret = acpi_dma_configure(&dchan->dev->device,
+>>>> +						 acpi_get_dma_attr(adev));
+>>>> +		} else {
+>>>> +			ret = -EINVAL;
+>>>> +		}
+>>>> +
+>>>> +		if (ret)
+>>>> +			return ret;
+>>>> +
+>>>> +		if (dchan->dev->device.dma_range_map) {
+>>>> +			kfree(dchan->dev->device.dma_range_map);
+>>>> +			dchan->dev->device.dma_range_map = NULL;
+>>>> +		}
+>>
+> 
+>> Ugh, I guess this is still here because now you're passing the channel
+>> device to of_dma_configure() such that it looks like a PCI child :(
+> 
+> No. It's still here because I successfully missed your email in my
+> work inbox so I thought you didn't fix that dma-ranges peculiarity of
+> the PCIe-host nodes.(
+> 
+>>
+>> Can we just set "chan->dev->device.of_node = dev->of_node;" beforehand so it
+>> works as expected (with f1ad5338a4d5 in place) and we don't need to be
+>> messing with the dma_range_map details at all? Note that that isn't as hacky
+>> as it might sound - it's a relatively well-established practice in places
+>> like I2C and SPI, and in this case it seems perfectly appropriate
+>> semantically as well.
+> 
+> Of course we can. But now, thanks to your commit f1ad5338a4d5 ("of:
+> Fix "dma-ranges" handling for bus controllers"), there is no point in
+> any dma-ranges hack here because the dma-ranges property is no longer
+> parsed for the PCIe-host platform device. I can and will just drop the
+> custom DMA-channel device initialization from the patch. The only
+> issue left to solve is about setting the DMA-mask. Please see my notes
+> above regarding that problem.
 
-diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
-index 3e6141d03770..9587b6a85103 100644
---- a/sound/soc/sof/core.c
-+++ b/sound/soc/sof/core.c
-@@ -9,6 +9,8 @@
- //
- 
- #include <linux/firmware.h>
-+#include <linux/kexec.h>
-+#include <linux/freezer.h>
- #include <linux/module.h>
- #include <sound/soc.h>
- #include <sound/sof.h>
-@@ -484,9 +486,10 @@ int snd_sof_device_shutdown(struct device *dev)
- 	 * make sure clients and machine driver(s) are unregistered to force
- 	 * all userspace devices to be closed prior to the DSP shutdown sequence
- 	 */
--	sof_unregister_clients(sdev);
--
--	snd_sof_machine_unregister(sdev, pdata);
-+	if (!(kexec_in_progress() && pm_freezing())) {
-+		sof_unregister_clients(sdev);
-+		snd_sof_machine_unregister(sdev, pdata);
-+	}
- 
- 	if (sdev->fw_state == SOF_FW_BOOT_COMPLETE)
- 		return snd_sof_shutdown(sdev);
+Ah, I assumed you'd still want to keep the chan_dma_dev setup for the 
+sake of independent DMA masks, at least until we get a better solution 
+for the MSI stuff. If you're happy with the compromise of going back to 
+using the real host device to keep things simple, that's fine by me.
 
--- 
-2.39.0.rc0.267.gcb52ba06e7-goog-b4-0.11.0-dev-696ae
+Thanks,
+Robin.
