@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16FCC640FDE
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 22:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E656640FDC
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 22:18:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233977AbiLBVS6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Dec 2022 16:18:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60680 "EHLO
+        id S234407AbiLBVS4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Dec 2022 16:18:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiLBVSw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 16:18:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8776481382;
-        Fri,  2 Dec 2022 13:18:51 -0800 (PST)
+        with ESMTP id S234266AbiLBVSz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 16:18:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B048B39E;
+        Fri,  2 Dec 2022 13:18:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 25EA9623D6;
-        Fri,  2 Dec 2022 21:18:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA61C433D6;
-        Fri,  2 Dec 2022 21:18:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E647C623D6;
+        Fri,  2 Dec 2022 21:18:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D03C433D6;
+        Fri,  2 Dec 2022 21:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670015930;
-        bh=98iM6PYlP1DYwAk+kn2Y+b30wbZFzaWkuIMVL5eYs9E=;
+        s=k20201202; t=1670015932;
+        bh=wsQic+DniH74o9yizSX8yaBBMzi/Wi+iIyhKaROtdo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHW5goLi4gEr/sxsDqMHLD3F5/TDtVgc5DMrBwUgfeIk5J/Sz6gZmeriQGHK0b+Rw
-         fjm0AjUwPVDtaCe/N0Y17PHViz0nvNsN+X3/LSfcRRWNslFzP1SaVtVap8XKIZYzPf
-         AmCiOVIjCOpzc3XXS9KZjJ/MfBQYF06WcOckJ2xs2gr/iQCdPE54shmflRAI1ueOa2
-         AcUjige64Bw1PGcXzqboU1gv4iN7bolYEAhDgsCOMxdVMBc1PxtoTeNnzCxo9nulA1
-         c6vC0P6mCcbZqjWwSnuTI3esa2V7pynZUy0qtH+WLKRzs5hBmqYVmEgyR76mANbClo
-         OEg/V+ZT/Yp1g==
+        b=p3sXXHwxN9VweUd0NumRiwmL3FmBqGo0lrQpAsZNTwWMWhlAH1z4Hvw4Z2wNQpPec
+         owEC9CSEADGVaI21ILS1qF6lSOHhZoQiAlIGQE2DWLNzxtIuIyERr1u9ESbAiaBI6d
+         YwAzIC2FtT/KwO8JBE+KbzFalYk/b/UTa22xwt8zT8KaURtErdrMTiCj0mcY9qsxWA
+         zeFGtNAaoZV6aeMlbE1Q83Lvr/5KjtOhLXYN4P63q8Z0kZXaVFBw8XJ1qOX3Owuyw5
+         wQw2xSON9scGc4fj0HxEFCwhTVfD749EM94NFKN9LtFef604z9Imao+T5hXLlUll1v
+         Yd9Uozi/3S5tw==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Werner Sembach <wse@tuxedocomputers.com>,
         mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/4] x86/PCI: Tidy E820 removal messages
-Date:   Fri,  2 Dec 2022 15:18:37 -0600
-Message-Id: <20221202211838.1061278-4-helgaas@kernel.org>
+Subject: [PATCH 4/4] x86/PCI: Fix log message typo
+Date:   Fri,  2 Dec 2022 15:18:38 -0600
+Message-Id: <20221202211838.1061278-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221202211838.1061278-1-helgaas@kernel.org>
 References: <20221202211838.1061278-1-helgaas@kernel.org>
@@ -62,42 +62,30 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-These messages:
+Add missing word in the log message:
 
-  clipped [mem size 0x00000000 64bit] to [mem size 0xfffffffffffa0000 64bit] for e820 entry [mem 0x0009f000-0x000fffff]
-
-aren't as useful as they could be because (a) the resource is often
-IORESOURCE_UNSET, so we print the size instead of the start/end and (b) we
-print the available resource even if it is empty after removing the E820
-entry.
-
-Print the available space by hand to avoid the IORESOURCE_UNSET problem and
-only if it's non-empty.  No functional change intended.
+  - ... so future kernels can this automatically
+  + ... so future kernels can do this automatically
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Hans de Goede <hdegoede@redhat.com>
 ---
- arch/x86/kernel/resource.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/pci/acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-index bba1abd05bfe..f34454f694cb 100644
---- a/arch/x86/kernel/resource.c
-+++ b/arch/x86/kernel/resource.c
-@@ -42,8 +42,11 @@ static void remove_e820_regions(struct resource *avail)
+diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+index 2f82480fd430..83dfea9e9894 100644
+--- a/arch/x86/pci/acpi.c
++++ b/arch/x86/pci/acpi.c
+@@ -245,7 +245,7 @@ void __init pci_acpi_crs_quirks(void)
+ 	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
+ 	       pci_use_e820 ? "Using" : "Ignoring");
+ 	if (pci_probe & (PCI_NO_E820 | PCI_USE_E820))
+-		printk(KERN_INFO "PCI: Please notify linux-pci@vger.kernel.org so future kernels can this automatically\n");
++		printk(KERN_INFO "PCI: Please notify linux-pci@vger.kernel.org so future kernels can do this automatically\n");
+ }
  
- 		resource_clip(avail, e820_start, e820_end);
- 		if (orig.start != avail->start || orig.end != avail->end) {
--			pr_info("clipped %pR to %pR for e820 entry [mem %#010Lx-%#010Lx]\n",
--				 &orig, avail, e820_start, e820_end);
-+			pr_info("resource: avoiding allocation from e820 entry [mem %#010Lx-%#010Lx]\n",
-+				e820_start, e820_end);
-+			if (avail->end > avail->start)
-+				pr_info("resource: remaining [mem %#010Lx-%#010Lx] available\n",
-+					avail->start, avail->end);
- 			orig = *avail;
- 		}
- 	}
+ #ifdef	CONFIG_PCI_MMCONFIG
 -- 
 2.25.1
 
