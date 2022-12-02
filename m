@@ -2,144 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4C62640CC4
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 19:02:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8FD2640EC5
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 20:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234152AbiLBSCF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Dec 2022 13:02:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57132 "EHLO
+        id S234598AbiLBTvw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Dec 2022 14:51:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234232AbiLBSBq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 13:01:46 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2AFE61D8
-        for <linux-pci@vger.kernel.org>; Fri,  2 Dec 2022 10:01:43 -0800 (PST)
-Received: from frapeml500003.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NP12t2PBGz67QNP;
-        Sat,  3 Dec 2022 02:01:10 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Dec 2022 19:01:41 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Dec
- 2022 18:01:40 +0000
-Date:   Fri, 2 Dec 2022 18:01:40 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Chris Chiu" <chris.chiu@canonical.com>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] PCI: Distribute available resources for root
- buses too
-Message-ID: <20221202180140.000053ae@Huawei.com>
-In-Reply-To: <20221130112221.66612-3-mika.westerberg@linux.intel.com>
-References: <20221130112221.66612-1-mika.westerberg@linux.intel.com>
-        <20221130112221.66612-3-mika.westerberg@linux.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S234854AbiLBTvt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 14:51:49 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEF6EE960;
+        Fri,  2 Dec 2022 11:51:48 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1670010706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ky2yUk8LekMsMaCLi/lZDI8Q5R+Ohf0PcvEm+cGW1MU=;
+        b=4HT1tnErgdjbN4WvLxSokg1x+2yYcCOUI5iJnWRBZcrr0UQeT3vNaXt+mHj1a4kzaHr30W
+        6dnk0qV9Z4Xl9WMJ2uY3HCK41moCnZgtsulVYigSB/tedfaXdoiX/6g3+HrmYLXO2CILLk
+        MirOI7anKQuQde8xibLYHhdcSF7Qqx8IlEt3Plof4QtWhSCBpX9/4BmL5douBS+XSNlYKP
+        hqqhyV1nuUFsVofHm1Ecq8hv2JHj9Wb7qNfVoqe8ozKXhdu+mfp3d6TnTHqpYgZ5m+RH5V
+        vtFvdwkWlHFNOV3gTtUcfErPUv+QXt57CgoiQ1fbnxcmf87Gz/VLPFYPJj3CMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1670010706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ky2yUk8LekMsMaCLi/lZDI8Q5R+Ohf0PcvEm+cGW1MU=;
+        b=DryMIJ6yRK2fF6k5l0OmokMkRQC/of5q2kTTzRP27RYwua7odjz322qUKn90yFwQrJD0Hn
+        EJswk+HkqWjNntBw==
+To:     Reinette Chatre <reinette.chatre@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: Re: [patch 33/33] irqchip: Add IDXD Interrupt Message Store driver
+In-Reply-To: <4a15c569-0545-20ac-e74c-ae17f7eb067d@intel.com>
+References: <20221111133158.196269823@linutronix.de>
+ <20221111135207.141746268@linutronix.de>
+ <4a15c569-0545-20ac-e74c-ae17f7eb067d@intel.com>
+Date:   Fri, 02 Dec 2022 20:51:45 +0100
+Message-ID: <87sfhxoa7i.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 30 Nov 2022 13:22:21 +0200
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+Reinette!
 
-> Previously we distributed spare resources only upon hot-add, so if the
-> initial root bus scan found devices that had not been fully configured by
-> the BIOS, we allocated only enough resources to cover what was then
-> present. If some of those devices were hotplug bridges, we did not leave
-> any additional resource space for future expansion.
-> 
-> Distribute the available resources for root buses, too, to make this work
-> the same way as the normal hotplug case.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
-> Link: https://lore.kernel.org/r/20220905080232.36087-5-mika.westerberg@linux.intel.com
-> Reported-by: Chris Chiu <chris.chiu@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
-> This is a new version of the patch after the revert due to the regression
-> reported by Jonathan Cameron. This one changes pci_bridge_resources_not_assigned()
-> to work with bridges that do not have all the resource windows
-> programmed by the boot firmware (previously we expected all I/O, memory
-> and prefetchable memory were all programmed).
-> 
+On Fri, Dec 02 2022 at 09:55, Reinette Chatre wrote:
+> On 11/11/2022 5:59 AM, Thomas Gleixner wrote:
+>> The necessary iobase is stored in the irqdomain and the PASID which is
+>> required for operation is handed in via msi_dev_cookie in the allocation
+>> function.
+>
+> The use of PASID is optional for dedicated workqueues. Could this be
+> supported to let the irqchip support all scenarios?
 
-Whilst this sounds plausible my understanding of how those flags are used
-is very minimal so I'll leave this one for others to review who hopefully
-already know how that works!
+Sure. I wrote this thing mostly out of thin air based on some ancient
+PoC code. :)
 
+> Since the cookie is always provided I was wondering if an invalid
+> PASID can be used to let the driver disable PASID? Please see the
+> delta snippet below in which I primarily made such a change, but added
+> a few more changes for consideration.
 
->  drivers/pci/setup-bus.c | 56 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index d456175ddc4f..143ec80cc0b2 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1768,7 +1768,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
->  	}
+Let me check.
+
+> With the first change I am able to test IMS on the host using devmsi-v2-part3
+> of the development branch. I did try to update to the most recent development
+> to confirm all is well but version devmsi-v3.1-part3 behaves differently
+> in that pci_ims_alloc_irq() returns successfully but the returned
+> virq is 0. This triggers a problem when request_threaded_irq() runs and
+> reports:
+> genirq: Flags mismatch irq 0. 00000000 (idxd-portal) vs. 00015a00 (timer)
+
+Bah. Let me figure out what I fat-fingered there.
+
+> @@ -33,6 +34,8 @@ struct ims_slot {
+>  #define CTRL_PASID_ENABLE	BIT(3)
+>  /* Position of PASID.LSB in the control word */
+>  #define CTRL_PASID_SHIFT	12
+> +/* Valid PASID is 20 bits */
+> +#define CTRL_PASID_VALID	GENMASK(19, 0)
 >  
->  	res->end = res->start + new_size - 1;
-> -	remove_from_list(add_list, res);
-> +
-> +	/* If the resource is part of the add_list remove it now */
-> +	if (add_list)
-> +		remove_from_list(add_list, res);
->  }
+>  static inline void iowrite32_and_flush(u32 value, void __iomem *addr)
+>  {
+> @@ -93,12 +96,17 @@ static void idxd_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+>  	/* Mask the interrupt for paranoia sake */
+>  	iowrite32_and_flush(CTRL_VECTOR_MASKBIT, &slot->ctrl);
 >  
->  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> @@ -1981,6 +1984,8 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->  	if (!bridge->is_hotplug_bridge)
->  		return;
->  
-> +	pci_dbg(bridge, "distributing available resources\n");
-> +
->  	/* Take the initial extra resources from the hotplug port */
->  	available_io = bridge->resource[PCI_BRIDGE_IO_WINDOW];
->  	available_mmio = bridge->resource[PCI_BRIDGE_MEM_WINDOW];
-> @@ -1992,6 +1997,53 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
->  					       available_mmio_pref);
->  }
->  
-> +static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
-> +{
-> +	const struct resource *r;
-> +
-> +	/*
-> +	 * Check the child device's resources and if they are not yet
-> +	 * assigned it means we are configuring them (not the boot
-> +	 * firmware) so we should be able to extend the upstream
-> +	 * bridge's (that's the hotplug downstream PCIe port) resources
-> +	 * in the same way we do with the normal hotplug case.
-> +	 */
-> +	r = &dev->resource[PCI_BRIDGE_IO_WINDOW];
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return false;
-> +	r = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return false;
-> +	r = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> +	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
-> +		return false;
-> +
-> +	return true;
-> +}
+> -	/*
+> -	 * The caller provided PASID. Shift it to the proper position
+> -	 * and set the PASID enable bit.
+> -	 */
+> -	desc->data.icookie.value <<= CTRL_PASID_SHIFT;
+> -	desc->data.icookie.value |= CTRL_PASID_ENABLE;
+> +	if (pasid_valid((ioasid_t)desc->data.icookie.value)) {
+> +		/*
+> +		 * The caller provided PASID. Shift it to the proper position
+> +		 * and set the PASID enable bit.
+> +		 */
+> +		desc->data.icookie.value &= CTRL_PASID_VALID;
+> +		desc->data.icookie.value <<= CTRL_PASID_SHIFT;
+> +		desc->data.icookie.value |= CTRL_PASID_ENABLE;
+> +	} else {
+> +		desc->data.icookie.value = 0;
+> +	}
 
+Looks about right. But that needs some sanity measures at the call sites
+so that we don't end up with an invalid PASID in cases where a valid
+PASID is truly required.
+
+Thanks,
+
+        tglx
