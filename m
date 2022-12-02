@@ -2,182 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5BC640C77
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 18:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D006D640C86
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Dec 2022 18:48:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233452AbiLBRpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Dec 2022 12:45:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
+        id S234169AbiLBRsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Dec 2022 12:48:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234295AbiLBRpg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 12:45:36 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF0EE1188
-        for <linux-pci@vger.kernel.org>; Fri,  2 Dec 2022 09:45:25 -0800 (PST)
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NP0dH2Ynxz6823d;
-        Sat,  3 Dec 2022 01:42:27 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Dec 2022 18:45:15 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Dec
- 2022 17:45:14 +0000
-Date:   Fri, 2 Dec 2022 17:45:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Chris Chiu" <chris.chiu@canonical.com>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI: Take other bus devices into account when
- distributing resources
-Message-ID: <20221202174513.000000e1@Huawei.com>
-In-Reply-To: <20221130112221.66612-2-mika.westerberg@linux.intel.com>
-References: <20221130112221.66612-1-mika.westerberg@linux.intel.com>
-        <20221130112221.66612-2-mika.westerberg@linux.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S234262AbiLBRsB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Dec 2022 12:48:01 -0500
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740B27DA74;
+        Fri,  2 Dec 2022 09:47:59 -0800 (PST)
+Received: by mail-qt1-f180.google.com with SMTP id fp23so5913137qtb.0;
+        Fri, 02 Dec 2022 09:47:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cZkrcSltncE8/ZuZoYv4b2d7hscDOxyl0JUDZPI6liw=;
+        b=RaGlrd0ba8dYvndE1TLtFoQdEVC7LSet9MIgIcBBC4QOcWYtZn5YZZMX4oVb3ThRUK
+         P7pOUy+ubpMKYXE4xbVbUP3qMGQU63s2QguP8LiQRFvoUIZc3yx5iEEgigxGJ7tvZ6DO
+         /WkvDhcRd2BLd+HQdYgX00yWGKScXs/YEtC1FMFqRymib9P72pBI4NkdCZ26D/RbNdiR
+         kew8s4YydKL7s0NcK3x01xRf5oVT9q4GW5ZToewO5ihFa/BkmTHLcsf2QNeENkhqzHs0
+         Zo1SC5L1St0x0P2F9xBCFl25c+voRlg754QTZylfcFiNot18FmzWtYESxZxH/VkdtRoG
+         gf3A==
+X-Gm-Message-State: ANoB5pmRqeAPQ7my/7gaqlI+AoY1ZzQLgpPjb0m9rURuk11vM3iAs53B
+        X7b43MyNBs6UtZvLGCyWqHb5AijwJondlfQff20=
+X-Google-Smtp-Source: AA0mqf51uIOWkjKSwhAqxTpfKMjsu42I0eiMVKrm0VEx7HQYTsVmieNicP3p40lc7YCyIthr+ry0hUYCl4VWsxspqf0=
+X-Received: by 2002:ac8:7dcb:0:b0:3a6:8dd0:4712 with SMTP id
+ c11-20020ac87dcb000000b003a68dd04712mr11196833qte.411.1670003278849; Fri, 02
+ Dec 2022 09:47:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org> <20221127-snd-freeze-v8-2-3bc02d09f2ce@chromium.org>
+In-Reply-To: <20221127-snd-freeze-v8-2-3bc02d09f2ce@chromium.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 2 Dec 2022 18:47:47 +0100
+Message-ID: <CAJZ5v0jbKSTQopEoXW9FpqDmAqp6Pn=-Om5QP2-7ocuGdq8R9w@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] freezer: refactor pm_freezing into a function.
+To:     Ricardo Ribalda <ribalda@chromium.org>
+Cc:     Juergen Gross <jgross@suse.com>, Mark Brown <broonie@kernel.org>,
+        Chromeos Kdump <chromeos-kdump@google.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        kexec@lists.infradead.org, alsa-devel@alsa-project.org,
+        stable@vger.kernel.org, sound-open-firmware@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 30 Nov 2022 13:22:20 +0200
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+On Thu, Dec 1, 2022 at 12:08 PM Ricardo Ribalda <ribalda@chromium.org> wrote:
+>
+> Add a way to let the drivers know if the processes are frozen.
+>
+> This is needed by drivers that are waiting for processes to end on their
+> shutdown path.
+>
+> Convert pm_freezing into a function and export it, so it can be used by
+> drivers that are either built-in or modules.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-> A PCI bridge may reside on a bus with other devices as well. The
-> resource distribution code does not take this into account properly and
-> therefore it expands the bridge resource windows too much, not leaving
-> space for the other devices (or functions a multifunction device) and
-> this leads to an issue that Jonathan reported. He runs QEMU with the
-> following topoology (QEMU parameters):
-> 
->  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2	\
->  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on	\
->  -device e1000,bus=root_port13,addr=0.1 			\
->  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3	\
->  -device e1000,bus=fun1
-> 
-> The first e1000 NIC here is another function in the switch upstream
-> port. This leads to following errors:
-> 
->   pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
->   pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
->   pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
->   e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
-> 
-> Fix this by taking into account the possible multifunction devices when
-> uptream port resources are distributed.
-> 
-> Link: https://lore.kernel.org/linux-pci/20221014124553.0000696f@huawei.com/
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Trivial comment inline. Either way..
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Why can't you export the original pm_freezing variable and why is this
+fixing anything?
 
 > ---
->  drivers/pci/setup-bus.c | 66 ++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 62 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index b4096598dbcb..d456175ddc4f 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1830,10 +1830,68 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->  	 * bridges below.
->  	 */
->  	if (hotplug_bridges + normal_bridges == 1) {
-> -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> -		if (dev->subordinate)
-> -			pci_bus_distribute_available_resources(dev->subordinate,
-> -				add_list, io, mmio, mmio_pref);
-> +		bridge = NULL;
+>  include/linux/freezer.h |  3 ++-
+>  kernel/freezer.c        |  3 +--
+>  kernel/power/process.c  | 24 ++++++++++++++++++++----
+>  3 files changed, 23 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+> index b303472255be..3413c869d68b 100644
+> --- a/include/linux/freezer.h
+> +++ b/include/linux/freezer.h
+> @@ -13,7 +13,7 @@
+>  #ifdef CONFIG_FREEZER
+>  DECLARE_STATIC_KEY_FALSE(freezer_active);
+>
+> -extern bool pm_freezing;               /* PM freezing in effect */
+> +bool pm_freezing(void);
+>  extern bool pm_nosig_freezing;         /* PM nosig freezing in effect */
+>
+>  /*
+> @@ -80,6 +80,7 @@ static inline int freeze_processes(void) { return -ENOSYS; }
+>  static inline int freeze_kernel_threads(void) { return -ENOSYS; }
+>  static inline void thaw_processes(void) {}
+>  static inline void thaw_kernel_threads(void) {}
+> +static inline bool pm_freezing(void) { return false; }
+>
+>  static inline bool try_to_freeze(void) { return false; }
+>
+> diff --git a/kernel/freezer.c b/kernel/freezer.c
+> index 4fad0e6fca64..2d3530ebdb7e 100644
+> --- a/kernel/freezer.c
+> +++ b/kernel/freezer.c
+> @@ -20,7 +20,6 @@ EXPORT_SYMBOL(freezer_active);
+>   * indicate whether PM freezing is in effect, protected by
+>   * system_transition_mutex
+>   */
+> -bool pm_freezing;
+>  bool pm_nosig_freezing;
+>
+>  /* protects freezing and frozen transitions */
+> @@ -46,7 +45,7 @@ bool freezing_slow_path(struct task_struct *p)
+>         if (pm_nosig_freezing || cgroup_freezing(p))
+>                 return true;
+>
+> -       if (pm_freezing && !(p->flags & PF_KTHREAD))
+> +       if (pm_freezing() && !(p->flags & PF_KTHREAD))
+>                 return true;
+>
+>         return false;
+> diff --git a/kernel/power/process.c b/kernel/power/process.c
+> index ddd9988327fe..8a4d0e2c8c20 100644
+> --- a/kernel/power/process.c
+> +++ b/kernel/power/process.c
+> @@ -108,6 +108,22 @@ static int try_to_freeze_tasks(bool user_only)
+>         return todo ? -EBUSY : 0;
+>  }
+>
+> +/*
+> + * Indicate whether PM freezing is in effect, protected by
+> + * system_transition_mutex.
+> + */
+> +static bool pm_freezing_internal;
 > +
-> +		/* Find the single bridge on this bus first */
+> +/**
+> + * pm_freezing - indicate whether PM freezing is in effect.
+> + *
+> + */
+> +bool pm_freezing(void)
+> +{
+> +       return pm_freezing_internal;
+> +}
+> +EXPORT_SYMBOL(pm_freezing);
 
-> +		for_each_pci_bridge(dev, bus) {
+Use EXPORT_SYMBOL_GPL() instead, please.
 
-We could cache this a few lines up where we calculate the
-number of bridges. Perhaps not worth bothering though other
-than it letting you get rid of the WARN_ON_ONCE. 
-
-
-> +			bridge = dev;
-> +			break;
-> +		}
 > +
-> +		if (WARN_ON_ONCE(!bridge))
-> +			return;
-> +		if (!bridge->subordinate)
-> +			return;
-> +
-> +		/*
-> +		 * Reduce the space available for distribution by the
-> +		 * amount required by the other devices on the same bus
-> +		 * as this bridge.
-> +		 */
-> +		list_for_each_entry(dev, &bus->devices, bus_list) {
-> +			int i;
-> +
-> +			if (dev == bridge)
-> +				continue;
-> +
-> +			for (i = 0; i < PCI_NUM_RESOURCES; i++) {
-> +				const struct resource *dev_res = &dev->resource[i];
-> +				resource_size_t dev_sz;
-> +				struct resource *b_res;
-> +
-> +				if (dev_res->flags & IORESOURCE_IO) {
-> +					b_res = &io;
-> +				} else if (dev_res->flags & IORESOURCE_MEM) {
-> +					if (dev_res->flags & IORESOURCE_PREFETCH)
-> +						b_res = &mmio_pref;
-> +					else
-> +						b_res = &mmio;
-> +				} else {
-> +					continue;
-> +				}
-> +
-> +				/* Size aligned to bridge window */
-> +				align = pci_resource_alignment(bridge, b_res);
-> +				dev_sz = ALIGN(resource_size(dev_res), align);
-> +				if (!dev_sz)
-> +					continue;
-> +
-> +				pci_dbg(dev, "resource %pR aligned to %#llx\n",
-> +					dev_res, (unsigned long long)dev_sz);
-> +
-> +				if (dev_sz > resource_size(b_res))
-> +					memset(b_res, 0, sizeof(*b_res));
-> +				else
-> +					b_res->end -= dev_sz;
-> +
-> +				pci_dbg(bridge, "updated available resources to %pR\n",
-> +					b_res);
-> +			}
-> +		}
-> +
-> +		pci_bus_distribute_available_resources(bridge->subordinate,
-> +						       add_list, io, mmio,
-> +						       mmio_pref);
->  		return;
->  	}
->  
-
+>  /**
+>   * freeze_processes - Signal user space processes to enter the refrigerator.
+>   * The current thread will not be frozen.  The same process that calls
+> @@ -126,12 +142,12 @@ int freeze_processes(void)
+>         /* Make sure this task doesn't get frozen */
+>         current->flags |= PF_SUSPEND_TASK;
+>
+> -       if (!pm_freezing)
+> +       if (!pm_freezing())
+>                 static_branch_inc(&freezer_active);
+>
+>         pm_wakeup_clear(0);
+>         pr_info("Freezing user space processes ... ");
+> -       pm_freezing = true;
+> +       pm_freezing_internal = true;
+>         error = try_to_freeze_tasks(true);
+>         if (!error) {
+>                 __usermodehelper_set_disable_depth(UMH_DISABLED);
+> @@ -187,9 +203,9 @@ void thaw_processes(void)
+>         struct task_struct *curr = current;
+>
+>         trace_suspend_resume(TPS("thaw_processes"), 0, true);
+> -       if (pm_freezing)
+> +       if (pm_freezing())
+>                 static_branch_dec(&freezer_active);
+> -       pm_freezing = false;
+> +       pm_freezing_internal = false;
+>         pm_nosig_freezing = false;
+>
+>         oom_killer_enable();
+>
+> --
