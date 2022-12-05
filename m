@@ -2,203 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C835642E8F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 18:21:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCCBE642FBE
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 19:18:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbiLERVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 12:21:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
+        id S231748AbiLESSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 13:18:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230280AbiLERVr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 12:21:47 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6795B5F89;
-        Mon,  5 Dec 2022 09:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670260906; x=1701796906;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YHEsNPrEEfRQeTTncY1PfHW8fP07M4yk8AbFkOsw29U=;
-  b=Gp9RfEhtcwFkSJUDgimfmFb8mj67HIzW8VQpoeZU4d++UoVNz06GO3jE
-   m8OkYkQr34R+RSzKVN08b+3JvmheK1y1JnLQl4VTGf+8MUG9dFlIrH2g/
-   fLeIkdAhPYp3XqvPwUrF0YjvSg0aQbeEmvPiRdOFBawxAibNHY908LiQN
-   8QV7+VtrwaLEWZbd+cINp2CHdnXiBWtsoS9nkv7ikiTlQNRJvb5N2v3dm
-   UWuQJTQqMVMlt7Vj1BWFgLBe+cywfdA5d/jYjpgEKmELKW41H5xNRwDAq
-   QsZLI7qQKxhpUe9Jcot+kVYBe0GDdNWnAJEckqkvlsUDnwh4vVGtnk3Wq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="343402981"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="343402981"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 09:19:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="820267811"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="820267811"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2022 09:19:54 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 5 Dec 2022 09:19:54 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 5 Dec 2022 09:19:53 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 5 Dec 2022 09:19:53 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.106)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 5 Dec 2022 09:19:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E3BH4e4X+c2yXHP+ZXF0RfQqHIh6ZkNYJa4MuPrpTQkZCtW2TTxeq4yICXcwFeQShEsEUqqwAFqv0CV2V8+ubqnnGgvqfbStlsKfc1dOiU4I+JATjYqvr/ha4QebUGn4FHB/REKVQ3xa9f7vAY1fRnp+E4NJ5cWI3ca+EMzQO/Jc+Fd6a/6zgddm2sd6ahn/bEwAmo+W756814eIG9C1KU+gnwLC1P4ST8s7V4AbOO5JfLs33nqDYZU5w+5RGmdSy5+nPDGqkl7Kkj+z6u7jK/mdTA6xSsYWAL1+XhSM3WTm5oVBe7ZGU6tMP1TaiZb04rfQ+hdix2dwLfjmeGEncg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3lmdfdjROtTfVAb4cq+2lruhc6UyvKnYK9VHSzzxokU=;
- b=mbAZMvt75GJ9JRhiZNvZHqP4mBKZB7xDeTXgh0TXsrHAVNFkAOdrnTuTxgOFvC6kXhakaTG/piazugGGWr2EW4RxhERzyxkNLdTRnMupyFyt6nf6PAFi82qoRDzPEa3BbPWz7CuuJGuEA5CGgnUToJrKu6h1qfE7HMuJc2gENYTQ1sztCY5t7rkQnWx/F5GJkJwdrdcRcHRIJ4uHGjbZlnh3t7kBc/zrm2TkOpiFN9fV++LmvxvzfarTFh3KhGLtpdlrdsOX9NZIMdMPObAJF91lLXmyGucR4wdpJRS5NFYrN/L6Dn0HxW/GlxMQTB8H4yRN3oLgRtVCbvPg4AUgnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY4PR11MB1862.namprd11.prod.outlook.com (2603:10b6:903:124::18)
- by MN2PR11MB4629.namprd11.prod.outlook.com (2603:10b6:208:264::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.13; Mon, 5 Dec
- 2022 17:19:51 +0000
-Received: from CY4PR11MB1862.namprd11.prod.outlook.com
- ([fe80::a1f7:e4c4:e60:c5b3]) by CY4PR11MB1862.namprd11.prod.outlook.com
- ([fe80::a1f7:e4c4:e60:c5b3%6]) with mapi id 15.20.5880.014; Mon, 5 Dec 2022
- 17:19:51 +0000
-Message-ID: <11fede06-0481-511a-f9d0-7393339b05d1@intel.com>
-Date:   Mon, 5 Dec 2022 09:19:46 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [patch 33/33] irqchip: Add IDXD Interrupt Message Store driver
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>, <linux-pci@vger.kernel.org>,
+        with ESMTP id S230450AbiLESSk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 13:18:40 -0500
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D137718B29
+        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 10:18:38 -0800 (PST)
+Received: by mail-io1-xd32.google.com with SMTP id 3so1851648iou.12
+        for <linux-pci@vger.kernel.org>; Mon, 05 Dec 2022 10:18:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1Kwjjsx+waj1NcHgZ8ne7/Y3ZoidRky6q1QRST3mznU=;
+        b=k/D6BRrAiEltqHGAx7SdxcEa8xxfmOjT2Q8OQrBn85TrObX/ggwOvTc/w630GDofxn
+         5mGGw13ytll+9uDYJfi1kQUcIVnouzkhyJJA9S43gB09mJGCNGxYdPUo6JeRjK0kNET4
+         Emjqo8yM/xdPN7/CtKRinsPeLRnn+bQekTW7w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Kwjjsx+waj1NcHgZ8ne7/Y3ZoidRky6q1QRST3mznU=;
+        b=HPijbMBlLy3BTpsoOmUfH+Ogd3M8VWW8cmls+qo1C4Fl9/8vs6F2ETUIL5grL1NFII
+         3W7D+Nf7G0ry8Knz6neuirn+J2RUZsVhEnVHGqQ1WI6peHU3v3BRZudMqX68RwQP0Z6+
+         33eOW44FC6ayzTn9lZDy9i0k6r6jGfDLoSWauff9qmVcmfelJUivfP1CncCo5YHGV2Ja
+         5a3J6WqIT71kin8eN1mszoUa6+OGuql2EBHWjwLWMSfl6/r80NuzpJ2A8aU14FktyihR
+         2JA6rU2yFLSylDqxugWtNmYhy/x1LAlCWdsv+0+IKJdpDndgBETJV8P2SRnCCWkuv6JI
+         kE5Q==
+X-Gm-Message-State: ANoB5plWxz23ElQNMla+uaaYP0ucWCYIJKhDQYJ/+qv94BxQqdCmgLob
+        fzsavh9TSDlegOK7/zsaMZaNbQ==
+X-Google-Smtp-Source: AA0mqf7QEA1CNoWdkleXcJM+P4tT/Lz8FQq9eZlR+KvECnmuIAiYHcC6m9lD6rZLxGtle8E713gXjw==
+X-Received: by 2002:a05:6638:450a:b0:363:a91e:7ead with SMTP id bs10-20020a056638450a00b00363a91e7eadmr39895791jab.196.1670264317535;
+        Mon, 05 Dec 2022 10:18:37 -0800 (PST)
+Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
+        by smtp.gmail.com with UTF8SMTPSA id u30-20020a02cbde000000b0038a55bcfb47sm440373jaq.58.2022.12.05.10.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Dec 2022 10:18:37 -0800 (PST)
+Date:   Mon, 5 Dec 2022 18:18:36 +0000
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, swboyd@chromium.org,
+        dmitry.baryshkov@linaro.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Marc Zyngier" <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>
-References: <20221111133158.196269823@linutronix.de>
- <20221111135207.141746268@linutronix.de>
- <4a15c569-0545-20ac-e74c-ae17f7eb067d@intel.com> <87sfhxoa7i.ffs@tglx>
- <87v8mpg9mo.ffs@tglx>
-Content-Language: en-US
-From:   Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <87v8mpg9mo.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0211.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::6) To CY4PR11MB1862.namprd11.prod.outlook.com
- (2603:10b6:903:124::18)
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported
+ max latencies
+Message-ID: <Y441/Icd2wSgVnNU@google.com>
+References: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
+ <20221205112500.GB4514@thinkpad>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PR11MB1862:EE_|MN2PR11MB4629:EE_
-X-MS-Office365-Filtering-Correlation-Id: e99ab476-2fe4-42fa-984f-08dad6e4eaac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NSEisoQJVtZi0v2Y5J89gvIcWRi8Rmymk9IcLoalJn5kKtBIt+oIeJ4UrJ+ABR13WvjAJFrDWGEn+q3P/hywex18SalosZ/jRwQ4dOb3x+wXbry4C4mVZJU84E05yXBGxkmwnBteALzYdatVdqIKpEt3XXuL/yBV1KYurigoySF98Ms2YXidT4v5Z4y3Dra7j96kxubwWHQDp8WyIMw0VVLzJBJaWthLBZcqv86UpQ4N0SRgMXozxsdyF5UYvl2rdyNkzjwERWz0ql/9axL5FBSqTd7aQXQZS6DOptqZ2cGy3h/X6m4IkfHB8l8ymd/TPukg4RMKefvcVvrHCXszXlwquJSDmG1yHna+v5VbkNlExIBVGHG2ZmfEnS7qtAJDIK99NpbZAoCLGOmvftbYdsmyebB5MHIzReMNKN1VLGRpTxcWAjgax9f5GYMcPX5EKlmeEaTYR+Ik77tiu4uLBD4I7rMTnRWzzYLrViH0vgSz+RxuHB15rk0xCvYwknQGXY8uDs1ED1LLQN7puJ46R39Uhd3imKf9Ru0wlFWHPUbJImqRiUgodTEu4uRXP/r7hzDwJxqd+eQnBxqqojHmvIEynwKIrnrChA851h7hbx/r0ELo7cHROb7oDoli86BlJt8kb0BZneoAtut43xGsEOaGkcGdyVH9zWatm85NF1boZE5Tgy68hCZ4skbSlGkQEcCKKr5yRihb8OAo9NgIlfD5mlfe8k2f2zgfayYhbKA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1862.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(346002)(136003)(396003)(366004)(376002)(451199015)(186003)(31686004)(110136005)(316002)(478600001)(54906003)(6486002)(82960400001)(86362001)(31696002)(36756003)(38100700002)(83380400001)(6506007)(53546011)(2616005)(6512007)(26005)(6666004)(5660300002)(7416002)(15650500001)(2906002)(4326008)(44832011)(66946007)(8676002)(41300700001)(8936002)(66556008)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Ym5Zb3pBMXdCUm1vQ1M1OEp2QllUMFRDTi9ZS2pJNTVGam9FRmsweld0bnFP?=
- =?utf-8?B?Y2lEa3lucXd3bG9YanV0VzdKZ3JjWFNDMThRYW1rdUhrNlVvWVVYUnFRTUQ5?=
- =?utf-8?B?NVRNOHZ5aWhBRVZpTWhibFJyeUE3N3FSb0piMEJpN05vVlZhUmI2ODdtbG1F?=
- =?utf-8?B?VElrdVViVWxIYllSYTVoc3Uxd0J3NWZWdmhGSTdabU9MVWtQWFplOHc4TjNp?=
- =?utf-8?B?OFhIRDRac05KaVFYamRMVzR6aWdJMUxvUlEzdkNWUkdzUGVXbzZuM1Z6akFn?=
- =?utf-8?B?M2tUMXBJMDdZQTNmOFNLNDNBMW5tUm9VeUVPU3VpMThXbU9xNGQ5Y2UvM0xa?=
- =?utf-8?B?aDNuOUNGWnpISGhWZ1ZlazhBbUdnMm1IU1lEU2g5NXZ2QkIyKzBVTGo1S1hY?=
- =?utf-8?B?OEtvR1AyMlA0dkNsd2lWdmVVYVZMcUVxdDFvZVlrTWZXSDYzMjg5UXhjL3BC?=
- =?utf-8?B?bFpLNXh4WDF1UWhScDRwYU1WaG5qK0IwTTRuTWs1L1ZzdTREbW9iV2EvdHht?=
- =?utf-8?B?S1JxSjJ5ZXNTTFdwSW5MQ2FVYzZMcjMwWW5ubTEwbzFacVdpZ2h2QVJoVHdF?=
- =?utf-8?B?REplUUkwa2lVZlVmb09IUFM0ZDREbWJLbkZWUEJKYmlZZlozRmxPaGJxdVlo?=
- =?utf-8?B?MFFNdUUvQXkwWUtvODBhaEJVdEdHeWdOcUVLQVY1STFkNitSUEtZaEhUNmR3?=
- =?utf-8?B?WnBqdnY5R2FOY3BXUjBEVkxZaUZwRGx6bjMxZHBjd2NRdzJvQWIwanVxanBr?=
- =?utf-8?B?V1NKUU1YMjBuNTZRZzY4RWxITzhGSlBaazZsVXlXOUZJM1NHbmRsVU9xRzIw?=
- =?utf-8?B?TjRITWFVVHArOTREWndqcnRadHVtOWRFTXJMZ0VGa21idVp5M2JzdlV2QWZ6?=
- =?utf-8?B?eWVnUTMreEpBa2l3VkdDRWxPMWtOQTJpSzIyRXlPMmFjYTYzMGhoNEI2WU9k?=
- =?utf-8?B?VkdCTE1XZEF6a1pvckptT3lpQzIrVDlHeFAxcFdWOFd4RG5UNTkySnc2c3Zs?=
- =?utf-8?B?aWRHWWhTUlN3UnFXRFBvKzV3QTlsYlgyY2VQSDgwRm81TkNsMDU4bWJIK3Yx?=
- =?utf-8?B?elVRSFJMdE1rOWNId1pHb3VzeDNFb3Q0ZFFMRmtKaE8wSUVtcTJFT0VyNWR5?=
- =?utf-8?B?bCtEcU9EUmExamdXTlR1cGVPQWgweStUZGtUWVpqM2x3MklSUDVIOHRpM3Az?=
- =?utf-8?B?SWFRRmJxWDdEak1QQTJndnJKMXFUckhUS3VVVnhpdXFmRXljcGtnUEtYdDlx?=
- =?utf-8?B?cnZXWGJQTVNnSm8yU2VtcTIxdjhmT1RTcFpMVzMvR1ZtbTY2dkxQR2dQMEVG?=
- =?utf-8?B?Q0ttU1VQaW9lV3dQcy9RY2JCNDdzRk5SbHVCS1ZoclI0eUt5aWFlaVpRVXMz?=
- =?utf-8?B?Z1hjMU1oQ0hJQjRVaDRsRXZqdjhhVWgyM0pjb05ja25qYVFEbk56R3c5cW9r?=
- =?utf-8?B?SmZRNlYwRFBXUld4Wk8wdmZBblE4QnpPNU1XamUyZUY1akV4emNjOW8zOWtt?=
- =?utf-8?B?c0pPaGl6ZlpDY1c1Z2FRSmV2eFRjR213RGR4OTB0M1JQMWdEOFJxd2E2ZFQr?=
- =?utf-8?B?di93cE9uU3FpeHNSWitWMkZZeVhKdkJxQ2ltaXB5SkVMempRYzFrTDJ0QWJv?=
- =?utf-8?B?cU9ZZytxK3Zaa1dXWWhNTGsxZkJIODZBQ3p4dmtTdThXTHRVU2hzdTkvNXZM?=
- =?utf-8?B?V3VxaXJOaklNbTkxbzExTlk1YWV2dkVQZmlwUVNXUFpaZjFUSE9NQWM5OGVK?=
- =?utf-8?B?QTRucFlad2JNZUxTeFZlMWhuRHdLWVVpZ1lZMlhITThTVUtEb0RCZEFsR2xC?=
- =?utf-8?B?Tmg5VU9vTVQxZ1BPVWJsMFNmWWx2ZXlkcVJlbmVlcWVneHBJVm9CM2pkYXVN?=
- =?utf-8?B?RjBFd2xqRjd6bXRFbmpkZERWeE5uTGsxR2xvYWN0a0M5TGlyamxUQkZ5R0w5?=
- =?utf-8?B?ZzAyU3ZGbXJZdEwwMXVRSnMzMUExblRlaG1UOERnR25CeURuM3MyVWw5Qktj?=
- =?utf-8?B?R2diNFp6MFFtNG8wY003VnFOWFRZVURJQ2lzaEYxNWhsKzBrUkFFWGlTSC83?=
- =?utf-8?B?T1BEM2MySCtMZnBzY3FwWTVsZkdSWnRSdkhWTmhDelViKytMdnpucTZESkxv?=
- =?utf-8?B?anZ2TkJ0UE5xdEFTSi9kT3NhL3FySnBlZ3B5cFlsaU9mOVhvNkdJV0RHRUY1?=
- =?utf-8?B?dmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e99ab476-2fe4-42fa-984f-08dad6e4eaac
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1862.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2022 17:19:51.7537
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vXXJUPkMwBH3fk4H4C+QKlkgKee29Pf97kzlJiz2s/2Ha+RZeoIwfRz6Q0kc9rmqf5muYPIdm0a116o9kM7WMMN8OzcC8ZRz01V7DBQVbTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4629
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221205112500.GB4514@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
-
-On 12/5/2022 7:20 AM, Thomas Gleixner wrote:
-> On Fri, Dec 02 2022 at 20:51, Thomas Gleixner wrote:
->> On Fri, Dec 02 2022 at 09:55, Reinette Chatre wrote:
->>> With the first change I am able to test IMS on the host using devmsi-v2-part3
->>> of the development branch. I did try to update to the most recent development
->>> to confirm all is well but version devmsi-v3.1-part3 behaves differently
->>> in that pci_ims_alloc_irq() returns successfully but the returned
->>> virq is 0. This triggers a problem when request_threaded_irq() runs and
->>> reports:
->>> genirq: Flags mismatch irq 0. 00000000 (idxd-portal) vs. 00015a00 (timer)
->>
->> Bah. Let me figure out what I fat-fingered there.
+On Mon, Dec 05, 2022 at 04:55:00PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Sep 16, 2022 at 01:38:37PM +0530, Krishna chaitanya chundru wrote:
+> > In ASPM driver, LTR threshold scale and value are updated based on
+> > tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
+> > LTR threshold scale and value are greater values than max snoop/non-snoop
+> > value.
+> > 
+> > Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+> > reported snoop/no-snoop values is greater than or equal to
+> > LTR_L1.2_THRESHOLD value.
+> > 
+> > Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> tag devmsi-v3.2-part3 works again.
+> I take my Ack back... Sorry that I did not look into this patch closer.
+> 
+> > ---
+> > 
+> > I am taking this patch forward as prasad is no more working with our org.
+> > changes since v6:
+> > 	- Rebasing with pci/next.
+> > changes since v5:
+> > 	- no changes, just reposting as standalone patch instead of reply to
+> > 	  previous patch.
+> > Changes since v4:
+> > 	- Replaced conditional statements with min and max.
+> > changes since v3:
+> > 	- Changed the logic to include this condition "snoop/nosnoop
+> > 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+> > Changes since v2:
+> > 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+> > Changes since v1:
+> > 	- Added missing variable declaration in v1 patch
+> > ---
+> >  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 928bf64..2bb8470 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> >  {
+> >  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> >  	u32 val1, val2, scale1, scale2;
+> > +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+> >  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+> >  	u32 ctl1 = 0, ctl2 = 0;
+> >  	u32 pctl1, pctl2, cctl1, cctl2;
+> > +	u16 ltr;
+> > +	u16 max_snoop_lat, max_nosnoop_lat;
+> >  
+> >  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+> >  		return;
+> >  
+> > +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
+> > +	if (!ltr)
+> > +		return;
+> > +
+> > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
+> > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
+> > +
+> > +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
+> > +
+> > +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
+> > +
+> > +	/* choose the greater max scale value between snoop and no snoop value*/
+> > +	max_scale = max(max_snp_scale, max_nsnp_scale);
+> > +
+> > +	/* choose the greater max value between snoop and no snoop scales */
+> > +	max_val = max(max_snp_val, max_nsnp_val);
+> > +
+> >  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+> >  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> >  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> > @@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> >  	 */
+> >  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+> >  	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> > +
+> > +	/*
+> > +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
+> > +	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
+> 
+> Apart from the bug in calculating the LTR_Threshold as reported by Matthias
+> and Bjorn, I'm wondering if we are covering up for the device firmware issue.
 
-Thank you very much.
+Yes, I think the patch is doing exactly that.
 
-This tag is not yet available but I can confirm that the current tip of
-devmsi, 6bd4ee6cb126 ("irqchip: Add IDXD Interrupt Message Store driver"),
-combined with the earlier irqchip driver delta snippet passes the "dedicated
-kernel work queue using host IMS" tests.
+> As per section 6.18, if the device reports snoop/no-snoop scale/value as 0, then
+> it implies that the device won't tolerate any additional delays from the host.
+>
+> In that case, how can we allow the link to go into L1.2 since that would incur
+> high delay compared to L1.1?
 
-Reinette
+I had the same doubt, a value of 0 doesn't make sense, if it literally means
+'max delay of 0ns'. I did some debugging around this issue. One thing I found
+is that there are NVMe models that don't have issues with entering L1.2 with
+max (no-)snoop latencies of 0. From that I infer that a value of 0 does not
+literally mean a max delay of 0ns.
+
+The PCIe spec doesn't say specifically what a value of 0 in those registers
+means, but chapter "6.18 Latency Tolerance Reporting (LTR) Mechanism" of the
+PCIe 4.0 base spec says something about the latency requirements in LTR
+messages:
+
+  Setting the value and scale fields to all 0’s indicates that the device will
+  be impacted by any delay and that the best possible service is requested.
+
+With that and the fact that several NVMe's don't have issues with all 0 values
+I deduce that all 0's means 'best possible service' and not 'max latency of
+0ns'. It seems the Kioxia firmware has a bug which interprets all 0 values as
+a max latency of 0ns.
+
+Another finding is that the Kioxia NVMe can enter L1.2 if the max latencies
+are set to values >= the LTR threshold. Unfortunately that isn't a viable
+fix for existing devices in the field, devices under development could possibly
+adjust the latencies in the BIOS (coreboot code [1] suggests that this is done
+at least in some cases).
+
+m.
+
+[1] https://github.com/coreboot/coreboot/blob/master/src/device/pciexp_device.c#L313
+
+
+
+
+> > +	 */
+> > +	scale = min(scale, max_scale);
+> > +	value = min(value, max_val);
+> > +
+> >  	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
+> >  
+> >  	/* Some broken devices only support dword access to L1 SS */
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
