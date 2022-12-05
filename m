@@ -2,52 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3EC664384F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 23:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 215836439A8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 00:42:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbiLEWqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 17:46:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41882 "EHLO
+        id S231735AbiLEXmN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 18:42:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231630AbiLEWqj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 17:46:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEF8EE1C
-        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 14:46:38 -0800 (PST)
+        with ESMTP id S230280AbiLEXmM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 18:42:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF631FCC5;
+        Mon,  5 Dec 2022 15:42:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22B91B8159E
-        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 22:46:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3D8C433C1;
-        Mon,  5 Dec 2022 22:46:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2014CB815C9;
+        Mon,  5 Dec 2022 23:42:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3AFFC433D6;
+        Mon,  5 Dec 2022 23:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670280395;
-        bh=ux8WPNsyApCrB+cUhkOYLtMa2yA9Pc1Ki92b7RsHbis=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QL3G2dWXTanAxW3sJyqZph+lxIPTsulowkGcSOG29TcigvR+hYsnPoh798MQHReZs
-         xlq1Dj6prbHYa3cr3P5RBHSmMsAJFtL13T8k9JUNddm21A75ryo4GvQuNN/LBu2Y/p
-         d1Ul3JIcc8e/aNjJ8pwIhs4LxLk9lq8yu/w6jy7I4YRfjNxLiW+UpVQ/eMNI8Kyant
-         eDkSYlkqAQ38jSwmmfuTrPdjBKC7C4+oP63EGveY+QeiiwH+AvWnGley5rSJwAI2IK
-         SFp3xDMp2xiVi16yZ8Hxwg9iX5Oq2vW1+Gxc1xmX6WMtoAeNtypw9mKd65wOHtIdx1
-         vwV7X0jNTZpAA==
-Date:   Mon, 5 Dec 2022 16:46:34 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: Take other bus devices into account when
- distributing resources
-Message-ID: <20221205224634.GA1257222@bhelgaas>
+        s=k20201202; t=1670283727;
+        bh=4wJabThFZ4VUXjAcvXIT97D1YyfJXyrel4+YB/Ab+gk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZobKRLT5ZAge7Mfr+9Ip+dxbQpBkCk2RTtEPH47l4VyLYW/DFp9y9lCOVM+13yuWZ
+         fllnOwfZ79glqC/04eGRrZQXiGq45ZaHctcQak9QyU0/Rb2O9O4Z82roEN2n2fq41j
+         KhCv33+LONiVSItlj/XlkeRrghNVtvj1StcxVtYxrL5NcmXUIFKcfYfEdVhatTB01t
+         lmU8URLZPu8mJmvRX1fk3gTbtlZ/wETFq4mdjBk69QVyhuf2ekVz/0kMn6hgN+irfb
+         Z6i0UmSd9ZzjN8eBqwo1DH6uCwoWPBxrZiBqHd4AdUStpbhc+gwEX+bAiMpLQpweJy
+         l3ah6Xu5mC+Dg==
+Received: by mail-vs1-f54.google.com with SMTP id c184so12679246vsc.3;
+        Mon, 05 Dec 2022 15:42:07 -0800 (PST)
+X-Gm-Message-State: ANoB5plwsgCiwfBWuug66O6CSXBgiSE1jpilM5W40J2pDh9T4PZ8C4+b
+        wdN0OjTbqOwgnsLOxBrczGGVg4IvqH5jiycOwQ==
+X-Google-Smtp-Source: AA0mqf52qMjSmyIkwFrSYPkLIs/sPSoB5CM3A/eqb99puUmDiOUo5CG5r5eXPIEw7a2BH2dvI7oXrkkI0RUmvAZQWgU=
+X-Received: by 2002:a05:6102:2381:b0:3b0:c6ec:cc6a with SMTP id
+ v1-20020a056102238100b003b0c6eccc6amr16733521vsr.0.1670283726721; Mon, 05 Dec
+ 2022 15:42:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y42dniafcY76DctG@black.fi.intel.com>
+References: <20221114155333.234496-1-jonathanh@nvidia.com> <20221114155333.234496-2-jonathanh@nvidia.com>
+ <Y3ap1o2SbNvFw8Vd@orome>
+In-Reply-To: <Y3ap1o2SbNvFw8Vd@orome>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 5 Dec 2022 17:41:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
+Message-ID: <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,77 +66,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 09:28:30AM +0200, Mika Westerberg wrote:
-> On Fri, Dec 02, 2022 at 05:34:24PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Nov 30, 2022 at 01:22:20PM +0200, Mika Westerberg wrote:
-> > > A PCI bridge may reside on a bus with other devices as well. The
-> > > resource distribution code does not take this into account properly and
-> > > therefore it expands the bridge resource windows too much, not leaving
-> > > space for the other devices (or functions a multifunction device) and
+On Thu, Nov 17, 2022 at 3:38 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> > From: Vidya Sagar <vidyas@nvidia.com>
+> >
+> > Add support for ECAM aperture that is only supported for Tegra234
+> > devices.
+> >
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > ---
+> > Changes since V2:
+> > - Avoid duplication of reg items and reg-names
+> > Changes since V1:
+> > - Restricted the ECAM aperture to only Tegra234 devices that support it.
+> >
+> >  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
+> >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+> >  2 files changed, 33 insertions(+), 3 deletions(-)
+>
+> Both patches applied now.
 
-> > > +		 * Reduce the space available for distribution by the
-> > > +		 * amount required by the other devices on the same bus
-> > > +		 * as this bridge.
-> > > +		 */
-> > > +		list_for_each_entry(dev, &bus->devices, bus_list) {
-> > > +			int i;
-> > > +
-> > > +			if (dev == bridge)
-> > > +				continue;
-> > 
-> > Why do we skip "bridge"?  Bridges are allowed to have two BARs
-> > themselves, and it seems like they should be included here.
-> 
-> Good point but then we would need to skip below the bridge window
-> resources to avoid accounting them.
+linux-next now fails with this. I suspect it is due to Sergey's
+changes to the DWC schema.
 
-Seems like we should handle bridge BARs.  There are definitely bridges
-(PCIe for sure, I dunno about conventional PCI) that implement them
-and some drivers starting to appear that use them for performance
-monitoring, etc.
-
-> > This only happens for buses with a single bridge.  Shouldn't it happen
-> > regardless of how many bridges there are?
-> 
-> This branch specifically deals with the "upstream port" so it gives all
-> the spare resources to that upstream port. The whole resource
-> distribution is actually done to accommondate Thunderbolt/USB4
-> topologies which involve only PCIe devices so we always have PCIe
-> upstream port and downstream ports which some of them are able to
-> perform native PCIe hotplug. And for those ports we want to distribute
-> the available resources so that they can expand to further topologies.
-> 
-> I'm slightly concerned that forcing this to support the "generic" PCI
-> case makes this rather complicated. This is something that never appears
-> in the regular PCI based systems because we never distribute resources
-> for those in the first place (->is_hotplug_bridge needs to be set).
-
-This code is fairly complicated in any case :)
-
-I understand why this is useful for Thunderbolt topologies, but it
-should be equally useful for other hotplug topologies because at this
-level we're purely talking about the address space needed by devices
-and how that space is assigned and routed through bridges.  Nothing
-unique to Thunderbolt here.
-
-I don't think we should make this PCIe-specific.  ->is_hotplug_bridge
-is set by a PCIe path (set_pcie_hotplug_bridge()), but also by
-check_hotplug_bridge() in acpiphp, which could be any flavor of PCI,
-and I don't think there's anything intrinsically PCIe-specific about
-it.
-
-> > I don't understand the "bridge" part; it looks like that's basically
-> > to use 4K alignment for I/O windows and 1M for memory windows?
-> > Using "bridge" seems like a clunky way to figure that out.
-> 
-> Okay, but if not using "bridge", how exactly you suggest to doing the
-> calculation?
-
-I was thinking it would always be 4K or 1M, but I guess that's
-actually not true.  There are some Intel bridges that support 1K
-alignment for I/O windows, and some powerpc hypervisor stuff that can
-also influence the alignment.  And it looks like we still need to
-figure out which b_res to use, so we couldn't get rid of the IO/MEM
-case analysis.  So never mind, I guess ...
-
-Bjorn
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+fixed:
+        'dbi' was expected
+        'dbi2' was expected
+        'ecam' is not one of ['elbi', 'app']
+        'atu' was expected
+        'dma' was expected
+        'phy' was expected
+        'config' was expected
+        /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+fixed:
+                'ecam' is not one of ['apb', 'mgmt', 'link', 'ulreg', 'appl']
+                'ecam' is not one of ['atu_dma']
+                'ecam' is not one of ['smu', 'mpu']
+        From schema:
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
