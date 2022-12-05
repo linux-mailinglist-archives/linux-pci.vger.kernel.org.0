@@ -2,77 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8117A642DB6
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 17:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85858642E00
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 17:55:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbiLEQul (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 11:50:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
+        id S231934AbiLEQzz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 11:55:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231420AbiLEQuG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 11:50:06 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329D7D2DB
-        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 08:49:14 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id f13-20020a1cc90d000000b003d08c4cf679so6693706wmb.5
-        for <linux-pci@vger.kernel.org>; Mon, 05 Dec 2022 08:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=Z2wBWagY9UnEZ+M5YPDdGkg6nVUsQfYS1BhjpcwGEao2GhG01+Mm/qvV+1fKOq1lbu
-         EFS78qR+UGfEwXQVt6IRXk6jTGT8mo+KAwwjj0fZxBmjE1jztugOoJP4/rka0x6XFhxu
-         W6iUCvsIDO6eHcdCHFvdIDlIVpJCsES5SD3xSnapoHClZmLcHlXbjXoeix+TX99ab7ry
-         BqOOHDFzUlmJeyU3OvUitATOsPkFA0DOczbi/Afsjm9NHI/YtApk72ny0qjFhFTXO+XP
-         yKXAtBeMHMlIwSKvmuRpEfOfWiK9b959mo8P7Fx64Ot+uHxQXUUrd10S+RG2s/yWLOX2
-         BSUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=r0IQ59RZlErPdZcQU8g61JyYFC031pZSRnpkqsidoem02ALqIDBREauLYJd7WHon5c
-         sEACdsb0q6nzWbzisgzeedH7T4xmPrju3Rl/IU4VpBjg7mriKWshEAziz9ZTudt2OJHE
-         vhYMDRqfod6PCPIx+813i/gA5CwfNjSfXqAAp6WQDJvtpQAeyCghthke1mMkNQCq5+sd
-         huoVw9+ZB/PaqWLdCdyVhzdMwAalnnspqZYGp83lZCOFsiHtcVbut70+4lmbyUN7StUz
-         dNIdIcG3kHStrZHG+T4ECfzWTrS518vtaPJuoKyekD6+17XAN35n4yyWpsQcQtBU8mDc
-         8rbA==
-X-Gm-Message-State: ANoB5plGVey1+36IvyojVf2Eyje+Fkpzk2q9GLjcoDzAh55GORSR0dMs
-        xB+Y6FJM5csr/qDQb2fCyNuq4vj5akPluVzUZkWr89UyMSk=
-X-Google-Smtp-Source: AA0mqf6LlThRqxALxahU+d5CDCL5XgA0Iri4oQFEx6hETTBFBZxUw9iI5CXyM5b3WvWotoaM22oBvK+CwFtVO/zgxX4=
-X-Received: by 2002:a7b:c8d0:0:b0:3cf:ca91:7094 with SMTP id
- f16-20020a7bc8d0000000b003cfca917094mr60628535wml.24.1670258943314; Mon, 05
- Dec 2022 08:49:03 -0800 (PST)
+        with ESMTP id S232726AbiLEQzg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 11:55:36 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CBCCE3B
+        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 08:53:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3B4E4B81183
+        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 16:53:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FF5C433D7;
+        Mon,  5 Dec 2022 16:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670259219;
+        bh=ap1mfsBv8q3XPZhEzL39o1w74V7H3SYD4rvHgyZ08Wk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FFgj1XuQ/wYvo9Rgs6HyOq4WJRvPNp7LQ2XxI7SwHEXlENoYtu2AOKCjMqPqHJm0/
+         tWoMAi7IwOo+VoYGMo7UYsY7Tq2954dGHJTaJjvMxv/FglVUYdTURx+A7dh5CobxGk
+         Vl7PyKdSbsSkOo7YCu5KZtJfSlOPvJvc8CP3I8zro1CXG3G1SIgxAu3xZTFcsZOrYI
+         SCRIqyh8nltloTnI38Vr+b0fquZCNxFD01SS0sMv9ci0qwtqLaEf4kNaLzB0vWpU1+
+         9I8jmkWC+S8XwMgz6s2ldgZB3e516fackmqjCWYsJo0umMaKxl58dJTYNAmkqLp6Hg
+         LusMBEV6BmG9w==
+Date:   Mon, 5 Dec 2022 17:53:33 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     "Munoz Ruiz, Francisco" <francisco.munoz.ruiz@linux.intel.com>
+Cc:     helgaas@kernel.org, alex.williamson@redhat.com,
+        myron.stowe@redhat.com, lorenzo.pieralisi@arm.com,
+        jonathan.derrick@linux.dev, linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+Subject: Re: [PATCH V3] PCI: vmd: Fix secondary bus reset for Intel bridges
+Message-ID: <Y44iDYgQ9h7/UNgM@lpieralisi>
+References: <20221103201407.3158-1-francisco.munoz.ruiz@linux.intel.com>
+ <ea3fe84c-ec76-86d9-5ec6-22bf73c47756@linux.intel.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6000:5c1:0:0:0:0 with HTTP; Mon, 5 Dec 2022 08:49:02
- -0800 (PST)
-Reply-To: phmanu14@hotmail.com
-From:   Philip Manul <zagbamdjala@gmail.com>
-Date:   Mon, 5 Dec 2022 08:49:02 -0800
-Message-ID: <CAPCnorG0wZz4L65xmUUzHEvxvuhrsq0nQnSPJqno3Ah89AhSwA@mail.gmail.com>
-Subject: REP:
-To:     in <in@proposal.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea3fe84c-ec76-86d9-5ec6-22bf73c47756@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Guten tag,
-Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
-einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
-teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
-mein verstorbener Kunde, hat hier in meinem Land einen nicht
-beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
-Verfahren.
-Philip Manul.
+On Mon, Nov 28, 2022 at 03:38:24PM -0800, Munoz Ruiz, Francisco wrote:
+> On 11/3/2022 1:14 PM, francisco.munoz.ruiz@linux.intel.com wrote:
+> > From: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> > 
+> > The reset was never applied in the current implementation because Intel
+> > Bridges owned by VMD are parentless. Internally, pci_reset_bus() applies
+> > a reset to the parent of the PCI device supplied as argument, but in this
+> > case it failed because there wasn't a parent.
+
+Please add a comment in the *code* as well and explain why it is so.
+
+> > In more detail, this change allows the VMD driver to enumerate NVMe devices
+> > in pass-through configurations when guest reboots are performed. Commit id
+> > 6aab5622296b ("PCI: vmd: Clean up domain before enumeration") attempted to
+> > fix this, but later we discovered that the code inside pci_reset_bus() wasn’t
+> > triggering secondary bus resets.  Therefore, we updated the parameters passed
+> > to it, and now NVMe SSDs attached to VMD bridges are properly enumerated in
+> > VT-d pass-through scenarios.
+
+I am not sure this helps much - I'd rather explain why the device
+hierarchy in VMD is as it is - when that's explained is rather clear
+why the current reset is NOP and this patch is needed.
+
+> > Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+> > Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
+> > ---
+> > V3:
+> >     - Add WARN_ON
+> >     - Include Jonathan as reviewer
+> >     - Update commit message
+> > V2:
+> >     - Update commit message
+> > 
+> >  drivers/pci/controller/vmd.c | 13 +++++++++++--
+> >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index e06e9f4fc50f..2406be6644f3 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -859,8 +859,17 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >  
+> >  	pci_scan_child_bus(vmd->bus);
+> >  	vmd_domain_reset(vmd);
+> > -	list_for_each_entry(child, &vmd->bus->children, node)
+> > -		pci_reset_bus(child->self);
+> > +
+> > +	list_for_each_entry(child, &vmd->bus->children, node) {
+> > +		if (!list_empty(&child->devices)) {
+> > +			ret = pci_reset_bus(list_first_entry(&child->devices,
+> > +							     struct pci_dev,
+> > +							     bus_list));
+> > +			WARN_ON(ret);
+
+Technically you are adding a WARN_ON() here to make sure that a failed
+reset is detected - I am not sure a backtrace is really required,
+a pci_warn() maybe ?
+
+Lorenzo
+
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> >  	pci_assign_unassigned_bus_resources(vmd->bus);
+> >  
+> >  	/*
+> 
+> 
+> Hi,
+> 
+> Just a gentle reminder for this one
+> 
+> Best wishes,
+> Francisco.
