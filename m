@@ -2,42 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C31716424E3
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 09:43:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E128642604
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 10:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232248AbiLEInH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 03:43:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35194 "EHLO
+        id S231384AbiLEJqd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 04:46:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232223AbiLEInE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 03:43:04 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1633763C6
-        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 00:42:52 -0800 (PST)
-Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NQcQT6jgpzqSvW;
-        Mon,  5 Dec 2022 16:38:41 +0800 (CST)
-Received: from huawei.com (10.175.100.227) by kwepemi500016.china.huawei.com
- (7.221.188.220) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 5 Dec
- 2022 16:42:49 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
-To:     <paul.walmsley@sifive.com>, <greentime.hu@sifive.com>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <erik.danie@sifive.com>, <hes@sifive.com>,
-        <linux-pci@vger.kernel.org>
-CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH] PCI: fu740: Fix missing clk_disable_unprepare() in fu740_pcie_host_init()
-Date:   Mon, 5 Dec 2022 16:40:44 +0800
-Message-ID: <20221205084044.19936-1-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S231366AbiLEJqb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 04:46:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1982319284;
+        Mon,  5 Dec 2022 01:46:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6761760FFB;
+        Mon,  5 Dec 2022 09:46:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6519C433C1;
+        Mon,  5 Dec 2022 09:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670233588;
+        bh=vlbWmQAQsqVoCP5/iGG9T+Mh7FPLIm+omDon8p2JA10=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bMM7gHLW3WMCRoSscjKR3d5B7dFagYLse28B06cubnjjcjtgrJoAZ+mozdLgS7ydy
+         y5ZCvY/WCTD6z2bVf0C1W9CFnw59bAxUF9kadLyEG+2HzQMm5/HYH7bd49MnBMdfKR
+         1tUBwdYYB96V8fKRqnLE7PL+41HSeabo+7seDSyYP7esxY81ZbM7zLbDny4pH5HZk+
+         y4KdxMaWjF2YIU0+lVh1Z5UVdSsnd8Fuh68iEMqfXaZyaga+vK/ZDp5V+38ankjxya
+         +YoHo9+l/4aIqIJhEV6dNz+CPgjzQen0DRn7EjrZWkEWWpqeZOc7B23iJdH0Z7M/0F
+         talFkUPKSoOlQ==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan+linaro@kernel.org>)
+        id 1p283U-0003MH-Im; Mon, 05 Dec 2022 10:46:33 +0100
+From:   Johan Hovold <johan+linaro@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH] dt-bindings: PCI: qcom: Allow 'dma-coherent' property
+Date:   Mon,  5 Dec 2022 10:45:30 +0100
+Message-Id: <20221205094530.12883-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.37.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500016.china.huawei.com (7.221.188.220)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,27 +61,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The clk_disable_unprepare() should be called in the error handling of
-fu740_pcie_host_init().
+Devices on some PCIe buses may be cache coherent and must be marked as
+such in the devicetree to avoid data corruption.
 
-Fixes: e7e21b3a339b ("PCI: fu740: Add SiFive FU740 PCIe host controller driver")
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
+This is specifically needed on recent Qualcomm platforms like SC8280XP.
+
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-fu740.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-index 0c90583c078b..6d5b7fdc0048 100644
---- a/drivers/pci/controller/dwc/pcie-fu740.c
-+++ b/drivers/pci/controller/dwc/pcie-fu740.c
-@@ -261,6 +261,7 @@ static int fu740_pcie_host_init(struct dw_pcie_rp *pp)
- 	ret = reset_control_deassert(afp->rst);
- 	if (ret) {
- 		dev_err(dev, "unable to deassert pcie_power_up_rst_n\n");
-+		clk_disable_unprepare(afp->pcie_aux);
- 		return ret;
- 	}
+Lorenzo, the corresponding SC8280XP DT fix is heading for 6.2 so it
+would be nice if this one could be merged for 6.2-rc1 (or -rc2) as well
+to avoid the corresponding DT validation warnings.
+
+Johan
+
+
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 2f851c804bb0..a5859bb3dc28 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -62,6 +62,8 @@ properties:
+     minItems: 3
+     maxItems: 13
+ 
++  dma-coherent: true
++
+   interconnects:
+     maxItems: 2
  
 -- 
-2.17.1
+2.37.4
 
