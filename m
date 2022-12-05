@@ -2,124 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 982F2643776
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 22:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2DC764380B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 23:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233010AbiLEVy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 16:54:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52210 "EHLO
+        id S233501AbiLEWZz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 17:25:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233046AbiLEVxv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 16:53:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F3B1C129;
-        Mon,  5 Dec 2022 13:52:58 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6EEFB81151;
-        Mon,  5 Dec 2022 21:52:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 537DFC433C1;
-        Mon,  5 Dec 2022 21:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670277176;
-        bh=IgKvO2pTgDtqxJCdjeqES53WonPY2/VY3lrlG8YhaPc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VR9hqnwZXb/aa72RHD1NKo6cqSeJSoNdAmwPrw6OUOrPc7fBwBWEbmmWRdADfIyni
-         20FTzfCAY0zNj6lnQPHJH1x5TYJnaRXz06CXQa2+Qli1SbJbyy3mrEY1Kfy4Ef6str
-         L6+NpdqjzZpAqEYFxz3JLFK6bFf/FUQ+Rjswg2FnhWIwschJCkY6JWLUzPvsJjgNOx
-         H5whEfiI5SIrQlc/XIEGAIFoM2RGYEEfKSAkk0arOWApuSy970PXHTYfIcva6Izm9p
-         4AqK39EkcBx2HVePJcJ/HfrGfa9wOZgCh8jatkZpXBxVHEjJ1QGHAfu47u3eKLTmD0
-         SA4jV5sg7DAxQ==
-Date:   Mon, 5 Dec 2022 15:52:53 -0600
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     agross@kernel.org, konrad.dybcio@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        svarbanov@mm-sol.com, shawn.guo@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe QMP PHY
-Message-ID: <20221205215253.itobukkyiecn7xi7@builder.lan>
-References: <20221116214841.1116735-1-robimarko@gmail.com>
- <20221116214841.1116735-2-robimarko@gmail.com>
+        with ESMTP id S231867AbiLEWZx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 17:25:53 -0500
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4767AB4B;
+        Mon,  5 Dec 2022 14:25:53 -0800 (PST)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-144bd860fdbso2058941fac.0;
+        Mon, 05 Dec 2022 14:25:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iYt/DH5axArWCdtKIq8L7LqqDIDr8bBvFNydtROy+Xk=;
+        b=iZM2ozifaxWOoAojWIN8LlimlX/zmUWY4PEggdSWIZmuZ7sEefntJlh3nE2jjCyRut
+         WAovbtiGURkFWK9yRVG/dix5c0/BpKmJkbVMUJKd13IDdV0RqPrSV7o+KLWiZb3eAURI
+         QmzEveIlks1OdCl7v6JVTFfpqMGf8LGgczM1qS/2xnnggH+vbQST7bX/+57cBqKdJH5a
+         mDETkLEWHl2XngAWe7lFJCEiC5U3JFUu1AuzzGSazlJUV83SpUX0Yeu68qILicxzdr0f
+         HeSgRIidPx7XIeEjyIcjNP7kP1Eo8+7N/sSYqFKzi+sdlnBaZCJkTUv9L0rZBUPeZfqQ
+         gEPw==
+X-Gm-Message-State: ANoB5pkSwsYk5rpd2eAXED+OS3AxsspGRTnJ6VJXHJhu67EWvgaXj0xB
+        yWE8URqaSY45B63G6gNmdvLOWSoBTA==
+X-Google-Smtp-Source: AA0mqf7+MYm64muTcJa5mzLrg+MyapenmZQOQMjLZWeflzFpG52Pvav0+gpk2TveGELaLB+x1JZIAw==
+X-Received: by 2002:a05:6870:c694:b0:13c:d5bd:6faa with SMTP id cv20-20020a056870c69400b0013cd5bd6faamr37009124oab.275.1670279152484;
+        Mon, 05 Dec 2022 14:25:52 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id n189-20020aca59c6000000b0035a64076e0bsm7542792oib.37.2022.12.05.14.25.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Dec 2022 14:25:52 -0800 (PST)
+Received: (nullmailer pid 2799247 invoked by uid 1000);
+        Mon, 05 Dec 2022 22:25:51 -0000
+Date:   Mon, 5 Dec 2022 16:25:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'dma-coherent' property
+Message-ID: <167027915042.2799181.8429355168491802390.robh@kernel.org>
+References: <20221205094530.12883-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221116214841.1116735-2-robimarko@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221205094530.12883-1-johan+linaro@kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 10:48:34PM +0100, Robert Marko wrote:
-> IPQ8074 comes in 2 silicon versions:
-> * v1 with 2x Gen2 PCIe ports and QMP PHY-s
-> * v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
-> 
-> v2 is the final and production version that is actually supported by the
-> kernel, however it looks like PCIe related nodes were added for the v1 SoC.
-> 
-> Now that we have Gen3 QMP PHY support, we can start fixing the PCIe support
-> by fixing the Gen3 QMP PHY node first.
-> 
-> Change the compatible to the Gen3 QMP PHY, correct the register space start
-> and size, add the missing misc PCS register space.
-> 
 
-Does this imply that the current node doesn't actually work?
-
-If that's the case, could we perhaps adopt Johan Hovolds' new binding
-and drop the subnode in favor of just a flat reg covering the whole
-QMP region?
-
-Regards,
-Bjorn
-
-> Fixes: 33057e1672fe ("ARM: dts: ipq8074: Add pcie nodes")
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
+On Mon, 05 Dec 2022 10:45:30 +0100, Johan Hovold wrote:
+> Devices on some PCIe buses may be cache coherent and must be marked as
+> such in the devicetree to avoid data corruption.
+> 
+> This is specifically needed on recent Qualcomm platforms like SC8280XP.
+> 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> index 6649a758d8df..9503dfb25d50 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> @@ -232,9 +232,9 @@ qusb_phy_0: phy@79000 {
->  			status = "disabled";
->  		};
->  
-> -		pcie_qmp0: phy@86000 {
-> -			compatible = "qcom,ipq8074-qmp-pcie-phy";
-> -			reg = <0x00086000 0x1c4>;
-> +		pcie_qmp0: phy@84000 {
-> +			compatible = "qcom,ipq8074-qmp-gen3-pcie-phy";
-> +			reg = <0x00084000 0x1bc>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -248,10 +248,11 @@ pcie_qmp0: phy@86000 {
->  				      "common";
->  			status = "disabled";
->  
-> -			pcie_phy0: phy@86200 {
-> -				reg = <0x86200 0x16c>,
-> -				      <0x86400 0x200>,
-> -				      <0x86800 0x4f4>;
-> +			pcie_phy0: phy@84200 {
-> +				reg = <0x84200 0x16c>,
-> +				      <0x84400 0x200>,
-> +				      <0x84800 0x1f0>,
-> +				      <0x84c00 0xf4>;
->  				#phy-cells = <0>;
->  				#clock-cells = <0>;
->  				clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-> -- 
-> 2.38.1
+> Lorenzo, the corresponding SC8280XP DT fix is heading for 6.2 so it
+> would be nice if this one could be merged for 6.2-rc1 (or -rc2) as well
+> to avoid the corresponding DT validation warnings.
 > 
+> Johan
+> 
+> 
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
