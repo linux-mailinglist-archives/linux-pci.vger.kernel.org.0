@@ -2,56 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E128642604
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 10:46:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D7D7642720
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 12:04:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231384AbiLEJqd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 04:46:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
+        id S229982AbiLELEn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 06:04:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbiLEJqb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 04:46:31 -0500
+        with ESMTP id S230492AbiLELEn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 06:04:43 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1982319284;
-        Mon,  5 Dec 2022 01:46:29 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0675EB846;
+        Mon,  5 Dec 2022 03:04:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6761760FFB;
-        Mon,  5 Dec 2022 09:46:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6519C433C1;
-        Mon,  5 Dec 2022 09:46:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7682260E9E;
+        Mon,  5 Dec 2022 11:04:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE185C433C1;
+        Mon,  5 Dec 2022 11:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670233588;
-        bh=vlbWmQAQsqVoCP5/iGG9T+Mh7FPLIm+omDon8p2JA10=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bMM7gHLW3WMCRoSscjKR3d5B7dFagYLse28B06cubnjjcjtgrJoAZ+mozdLgS7ydy
-         y5ZCvY/WCTD6z2bVf0C1W9CFnw59bAxUF9kadLyEG+2HzQMm5/HYH7bd49MnBMdfKR
-         1tUBwdYYB96V8fKRqnLE7PL+41HSeabo+7seDSyYP7esxY81ZbM7zLbDny4pH5HZk+
-         y4KdxMaWjF2YIU0+lVh1Z5UVdSsnd8Fuh68iEMqfXaZyaga+vK/ZDp5V+38ankjxya
-         +YoHo9+l/4aIqIJhEV6dNz+CPgjzQen0DRn7EjrZWkEWWpqeZOc7B23iJdH0Z7M/0F
-         talFkUPKSoOlQ==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1p283U-0003MH-Im; Mon, 05 Dec 2022 10:46:33 +0100
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] dt-bindings: PCI: qcom: Allow 'dma-coherent' property
-Date:   Mon,  5 Dec 2022 10:45:30 +0100
-Message-Id: <20221205094530.12883-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.37.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1670238280;
+        bh=H+rKPVhj3z6bT5H5+8s6/DTtMo2pxuSSps9lf4p2xrE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a1iBSWJGHPbQDOsfipFUfaeXRa4q7iON1WbwZi5+/gJQO0R2feLJsmRvw3Ao1twN7
+         HHP1upkbSfW+6z0GhD8HZO+Io9klhavqruxZ5vDoZznf4ASNeHKvHgaemgcmQUjrQF
+         IsmESbGfdCKpi0uBFZHoVkuiJvm8ZjQZF9lmMRv1kVFY/6WJSS137Tmg+0EnLdsOVm
+         o1dsjS5yUwXcua4BNTaB1sqVc/Xk1MwlHQQqJU6xnnAAauVCWIitAm8tee7Bs6aqf+
+         g+gl21cppHWgALnyGyHDEO15zGiIztw6OuRuLcYC98V1ASEVY0gBUdEyByMwaIkCmT
+         SL/YDqTvVFAqQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1p29H4-00AYHe-AW;
+        Mon, 05 Dec 2022 11:04:38 +0000
+Date:   Mon, 05 Dec 2022 11:04:37 +0000
+Message-ID: <86359um7qy.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: Re: [patch V3 00/22] genirq, PCI/MSI: Support for per device MSI and PCI/IMS - Part 2 API rework
+In-Reply-To: <20221124225331.464480443@linutronix.de>
+References: <20221124225331.464480443@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,37 +75,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Devices on some PCIe buses may be cache coherent and must be marked as
-such in the devicetree to avoid data corruption.
+On Thu, 24 Nov 2022 23:24:07 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> This is V3 of the second part of the effort to provide support for per
+> device MSI interrupt domains.
+> 
+> Version 2 of this second part can be found here:
+> 
+>   https://lore.kernel.org/all/20221121083210.309161925@linutronix.de
 
-This is specifically needed on recent Qualcomm platforms like SC8280XP.
+Bandwidth is lacking to review such a series (let alone 3) in details,
+but the direction of travel is the right one (per-device, per-bus MSI
+domains are the natural way to deal with resources managed at the
+device level).
 
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
+I'm sure we'll find issues along the way, but this code is better in
+the kernel than outside, so:
 
-Lorenzo, the corresponding SC8280XP DT fix is heading for 6.2 so it
-would be nice if this one could be merged for 6.2-rc1 (or -rc2) as well
-to avoid the corresponding DT validation warnings.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Johan
+	M.
 
-
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 2f851c804bb0..a5859bb3dc28 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -62,6 +62,8 @@ properties:
-     minItems: 3
-     maxItems: 13
- 
-+  dma-coherent: true
-+
-   interconnects:
-     maxItems: 2
- 
 -- 
-2.37.4
-
+Without deviation from the norm, progress is not possible.
