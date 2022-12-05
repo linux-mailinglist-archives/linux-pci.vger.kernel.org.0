@@ -2,105 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 551F96427FE
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 13:05:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 201D2642979
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 14:35:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbiLEMFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 07:05:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43664 "EHLO
+        id S230230AbiLENfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 08:35:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231160AbiLEMFx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 07:05:53 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39B8DF55
-        for <linux-pci@vger.kernel.org>; Mon,  5 Dec 2022 04:05:52 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id f9so10301391pgf.7
-        for <linux-pci@vger.kernel.org>; Mon, 05 Dec 2022 04:05:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=je642uC/QM2q2uiJ455cWQgJTQZ2s2VIKEuHkYSqLSY=;
-        b=FEmiEyAfYIdpKkVVrcM2myJBq9Gd26hAz6+4yOpADnvfMVE0aPesCBgx342rXF08lp
-         TCQyXF8GkzmtS6Z9YrWkolPOItK1xsEU+96tzXEDb1AlyAmzgDCo23jDO4Kl30xB1XIr
-         tkvIYPgXOQR4RxorORzC5LorpFYswRYs8vLVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=je642uC/QM2q2uiJ455cWQgJTQZ2s2VIKEuHkYSqLSY=;
-        b=BbAVPdJBDsZj61mwXfCnCS0WIBc8NkE80lPMJtoEYVOkEy+irwoVRqBjuhYsjxy/EN
-         AWqspjAJA5geDfWy9OGDxYN2r0woJ1J59kqPg6yjkYYEF//1YtqcTVlIQYKV0Ectf+Ny
-         GqKSL+0x1mzckdzrlP7HMR2J19CHjNTRiW9lHIV8ke67mqDMzcFOl8ZbU/KeV/Wqpz/U
-         DRkCXEPsfnjxHIxln0x83AK7q3Cumq9b62J0E14LvSPjbaJLEReBFl2DBzXIDGIPJmAK
-         LbBw2TlziOu1h0nQw2EeZS9zBokgVzqnfcwk1jSwwI5R4J2TdzH3n1+XMSoku3wuVbJJ
-         kGGg==
-X-Gm-Message-State: ANoB5pnjjBLoDChmpyskpW/NzdiBFlvyX+qHVrga/02MNWoppAZtt85i
-        ib+qAPlJsdOYxrvNWrWNn8MlzTK0hKDR9sRJ
-X-Google-Smtp-Source: AA0mqf4klNLB96IOX0K2ZFxfwCWv+NDL2lBdX/2hhH5CGbmnYQajuUyR47n2zz8oYRNqqBE25IzXsQ==
-X-Received: by 2002:a05:6a00:22ca:b0:56e:64c8:f222 with SMTP id f10-20020a056a0022ca00b0056e64c8f222mr86036094pfj.71.1670241952278;
-        Mon, 05 Dec 2022 04:05:52 -0800 (PST)
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com. [209.85.216.41])
-        by smtp.gmail.com with ESMTPSA id s13-20020a170902ea0d00b001891b01addfsm10369740plg.274.2022.12.05.04.05.51
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Dec 2022 04:05:52 -0800 (PST)
-Received: by mail-pj1-f41.google.com with SMTP id v13-20020a17090a6b0d00b00219c3be9830so3302558pjj.4
-        for <linux-pci@vger.kernel.org>; Mon, 05 Dec 2022 04:05:51 -0800 (PST)
-X-Received: by 2002:a17:902:7d93:b0:186:9cf4:e53b with SMTP id
- a19-20020a1709027d9300b001869cf4e53bmr68703080plm.50.1670241940337; Mon, 05
- Dec 2022 04:05:40 -0800 (PST)
+        with ESMTP id S229785AbiLENfW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 08:35:22 -0500
+X-Greylist: delayed 488 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 05 Dec 2022 05:35:20 PST
+Received: from srv6.fidu.org (srv6.fidu.org [159.69.62.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DDB10FC9;
+        Mon,  5 Dec 2022 05:35:20 -0800 (PST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by srv6.fidu.org (Postfix) with ESMTP id 8C311C80094;
+        Mon,  5 Dec 2022 14:27:10 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at srv6.fidu.org
+Received: from srv6.fidu.org ([127.0.0.1])
+        by localhost (srv6.fidu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id CoHbXArkXHk7; Mon,  5 Dec 2022 14:27:10 +0100 (CET)
+Received: from [192.168.178.52] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: wse@tuxedocomputers.com)
+        by srv6.fidu.org (Postfix) with ESMTPSA id A5FDFC80091;
+        Mon,  5 Dec 2022 14:27:09 +0100 (CET)
+Message-ID: <9869d438-a715-fa5e-2877-b58f1bb6fc91@tuxedocomputers.com>
+Date:   Mon, 5 Dec 2022 14:27:09 +0100
 MIME-Version: 1.0
-References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org>
- <20221127-snd-freeze-v8-2-3bc02d09f2ce@chromium.org> <CAJZ5v0jbKSTQopEoXW9FpqDmAqp6Pn=-Om5QP2-7ocuGdq8R9w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jbKSTQopEoXW9FpqDmAqp6Pn=-Om5QP2-7ocuGdq8R9w@mail.gmail.com>
-From:   Ricardo Ribalda <ribalda@chromium.org>
-Date:   Mon, 5 Dec 2022 13:05:29 +0100
-X-Gmail-Original-Message-ID: <CANiDSCt2+2EQpXvgQqTA3VwbfwDb=BsXn_YNcc05GK9xdTpVkA@mail.gmail.com>
-Message-ID: <CANiDSCt2+2EQpXvgQqTA3VwbfwDb=BsXn_YNcc05GK9xdTpVkA@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] freezer: refactor pm_freezing into a function.
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Juergen Gross <jgross@suse.com>, Mark Brown <broonie@kernel.org>,
-        Chromeos Kdump <chromeos-kdump@google.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        kexec@lists.infradead.org, alsa-devel@alsa-project.org,
-        stable@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 0/4] PCI: Continue E820 vs host bridge window saga
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Florent DELAHAYE <kernelorg@undead.fr>,
+        Konrad J Hambrick <kjhambrick@gmail.com>,
+        Matt Hansen <2lprbe78@duck.com>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20221203175743.GA1121812@bhelgaas>
+ <d7f1408d-ae9f-ad55-5fc9-9d9886384a3d@redhat.com>
+From:   Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <d7f1408d-ae9f-ad55-5fc9-9d9886384a3d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -108,155 +60,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rafael
+Hi
 
-On Fri, 2 Dec 2022 at 18:48, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Dec 1, 2022 at 12:08 PM Ricardo Ribalda <ribalda@chromium.org> wrote:
-> >
-> > Add a way to let the drivers know if the processes are frozen.
-> >
-> > This is needed by drivers that are waiting for processes to end on their
-> > shutdown path.
-> >
-> > Convert pm_freezing into a function and export it, so it can be used by
-> > drivers that are either built-in or modules.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->
-> Why can't you export the original pm_freezing variable and why is this
-> fixing anything?
-
-Because then any module will be able to modify the content of the variable.
-
-The Fixes: is because the last patch on the set is doing a real fix.
-If you only cherry-pick the last patch on a stable branch, the build
-will fail. (Also, the zero-day builder complains)
-
-Anyway, I think we can hold this patch for a bit. The snd people are
-discussing if this the way to handle it, or if we should handle
-.shutdown in a different way.
-
-Thanks!
-
-
->
-> > ---
-> >  include/linux/freezer.h |  3 ++-
-> >  kernel/freezer.c        |  3 +--
-> >  kernel/power/process.c  | 24 ++++++++++++++++++++----
-> >  3 files changed, 23 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-> > index b303472255be..3413c869d68b 100644
-> > --- a/include/linux/freezer.h
-> > +++ b/include/linux/freezer.h
-> > @@ -13,7 +13,7 @@
-> >  #ifdef CONFIG_FREEZER
-> >  DECLARE_STATIC_KEY_FALSE(freezer_active);
-> >
-> > -extern bool pm_freezing;               /* PM freezing in effect */
-> > +bool pm_freezing(void);
-> >  extern bool pm_nosig_freezing;         /* PM nosig freezing in effect */
-> >
-> >  /*
-> > @@ -80,6 +80,7 @@ static inline int freeze_processes(void) { return -ENOSYS; }
-> >  static inline int freeze_kernel_threads(void) { return -ENOSYS; }
-> >  static inline void thaw_processes(void) {}
-> >  static inline void thaw_kernel_threads(void) {}
-> > +static inline bool pm_freezing(void) { return false; }
-> >
-> >  static inline bool try_to_freeze(void) { return false; }
-> >
-> > diff --git a/kernel/freezer.c b/kernel/freezer.c
-> > index 4fad0e6fca64..2d3530ebdb7e 100644
-> > --- a/kernel/freezer.c
-> > +++ b/kernel/freezer.c
-> > @@ -20,7 +20,6 @@ EXPORT_SYMBOL(freezer_active);
-> >   * indicate whether PM freezing is in effect, protected by
-> >   * system_transition_mutex
-> >   */
-> > -bool pm_freezing;
-> >  bool pm_nosig_freezing;
-> >
-> >  /* protects freezing and frozen transitions */
-> > @@ -46,7 +45,7 @@ bool freezing_slow_path(struct task_struct *p)
-> >         if (pm_nosig_freezing || cgroup_freezing(p))
-> >                 return true;
-> >
-> > -       if (pm_freezing && !(p->flags & PF_KTHREAD))
-> > +       if (pm_freezing() && !(p->flags & PF_KTHREAD))
-> >                 return true;
-> >
-> >         return false;
-> > diff --git a/kernel/power/process.c b/kernel/power/process.c
-> > index ddd9988327fe..8a4d0e2c8c20 100644
-> > --- a/kernel/power/process.c
-> > +++ b/kernel/power/process.c
-> > @@ -108,6 +108,22 @@ static int try_to_freeze_tasks(bool user_only)
-> >         return todo ? -EBUSY : 0;
-> >  }
-> >
-> > +/*
-> > + * Indicate whether PM freezing is in effect, protected by
-> > + * system_transition_mutex.
-> > + */
-> > +static bool pm_freezing_internal;
-> > +
-> > +/**
-> > + * pm_freezing - indicate whether PM freezing is in effect.
-> > + *
-> > + */
-> > +bool pm_freezing(void)
-> > +{
-> > +       return pm_freezing_internal;
-> > +}
-> > +EXPORT_SYMBOL(pm_freezing);
->
-> Use EXPORT_SYMBOL_GPL() instead, please.
->
-> > +
-> >  /**
-> >   * freeze_processes - Signal user space processes to enter the refrigerator.
-> >   * The current thread will not be frozen.  The same process that calls
-> > @@ -126,12 +142,12 @@ int freeze_processes(void)
-> >         /* Make sure this task doesn't get frozen */
-> >         current->flags |= PF_SUSPEND_TASK;
-> >
-> > -       if (!pm_freezing)
-> > +       if (!pm_freezing())
-> >                 static_branch_inc(&freezer_active);
-> >
-> >         pm_wakeup_clear(0);
-> >         pr_info("Freezing user space processes ... ");
-> > -       pm_freezing = true;
-> > +       pm_freezing_internal = true;
-> >         error = try_to_freeze_tasks(true);
-> >         if (!error) {
-> >                 __usermodehelper_set_disable_depth(UMH_DISABLED);
-> > @@ -187,9 +203,9 @@ void thaw_processes(void)
-> >         struct task_struct *curr = current;
-> >
-> >         trace_suspend_resume(TPS("thaw_processes"), 0, true);
-> > -       if (pm_freezing)
-> > +       if (pm_freezing())
-> >                 static_branch_dec(&freezer_active);
-> > -       pm_freezing = false;
-> > +       pm_freezing_internal = false;
-> >         pm_nosig_freezing = false;
-> >
-> >         oom_killer_enable();
-> >
-> > --
->
-> --
-> You received this message because you are subscribed to the Google Groups "Chromeos Kdump" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to chromeos-kdump+unsubscribe@google.com.
-> To view this discussion on the web, visit https://groups.google.com/a/google.com/d/msgid/chromeos-kdump/CAJZ5v0jbKSTQopEoXW9FpqDmAqp6Pn%3D-Om5QP2-7ocuGdq8R9w%40mail.gmail.com.
-
-
-
---
-Ricardo Ribalda
+Am 04.12.22 um 10:29 schrieb Hans de Goede:
+> Hi Bjorn,
+> 
+> On 12/3/22 18:57, Bjorn Helgaas wrote:
+>> On Sat, Dec 03, 2022 at 01:44:10PM +0100, Hans de Goede wrote:
+>>> Hi Bjorn,
+>>>
+>>> On 12/2/22 22:18, Bjorn Helgaas wrote:
+>>>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>>>
+>>>> When allocating space for PCI BARs, Linux avoids allocating space mentioned
+>>>> in the E820 map.  This was originally done by 4dc2287c1805 ("x86: avoid
+>>>> E820 regions when allocating address space") to work around BIOS defects
+>>>> that included unusable space in host bridge _CRS.
+>>>>
+>>>> Some recent machines use EfiMemoryMappedIO for PCI MMCONFIG and host bridge
+>>>> apertures, and bootloaders and EFI stubs convert those to E820 regions,
+>>>> which means we can't allocate space for hot-added PCI devices (often a
+>>>> dock) or for devices the BIOS didn't configure (often a touchpad)
+>>>>
+>>>> The current strategy is to add DMI quirks that disable the E820 filtering
+>>>> on these machines and to disable it entirely starting with 2023 BIOSes:
+>>>>
+>>>>    d341838d776a ("x86/PCI: Disable E820 reserved region clipping via quirks")
+>>>>    0ae084d5a674 ("x86/PCI: Disable E820 reserved region clipping starting in 2023")
+>>>>
+>>>> But the quirks are problematic because it's really hard to list all the
+>>>> machines that need them.
+>>>>
+>>>> This series is an attempt at a more generic approach.  I'm told by firmware
+>>>> folks that EfiMemoryMappedIO means "the OS should map this area so EFI
+>>>> runtime services can use it in virtual mode," but does not prevent the OS
+>>>> from using it.
+>>>>
+>>>> The first patch removes any EfiMemoryMappedIO areas from the E820 map.
+>>>> This doesn't affect any virtual mapping of those areas (that would have to
+>>>> be done directly from the EFI memory map) but it means Linux can allocate
+>>>> space for PCI MMIO.
+>>>>
+>>>> The rest are basically cosmetic log message changes.
+>>>
+>>> Thank you for working on this. I'm a bit worried about this series though.
+>>>
+>>> The 2 things which I worry about are:
+>>>
+>>>
+>>> 1. I think this will not help when people boot in BIOS (CSM) mode rather
+>>> then UEFI mode which quite a few Linux users still do because they learned
+>>> to do this years ago when Linux EFI support (and EFI fw itself) was still
+>>> a bit in flux.
+>>>
+>>> IIRC from the last time we looked at this in CSM mode the BIOS itself
+>>> translates the EfiMemoryMappedIO areas to reserved E820 regions. So when
+>>> people use the BIOS CSM mode to boot, then this patch will not help
+>>> since the kernel lacks the info to do the translation.
+>>
+>> Right, if BIOS CSM puts EfiMemoryMappedIO in the E820 map the same way
+>> bootloaders do, and the kernel doesn't have the EFI memory map, this
+>> series won't help.
+> 
+> So I just got the requested dmesg in BIOS CSM mode from:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> 
+> And it says:
+> 
+> [    0.000000] BIOS-e820: [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+> [    0.316140] pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> 
+> So I'm afraid that I remembered correctly and the CSM adds
+> the EfiMemoryMappedIO regions to the E820 map as reserved :(
+> 
+> So as you said, this series won't help for people booting in
+> BIOS compatibility mode. Which means that we should at least keep
+> the current list of no_e820 quirks to avoid regressing those models
+> when booted in BIOS compatibility mode.
+> 
+> And maybe still add at least the Clevo model for which I recently
+> submitted a new no_e820 quirk so that that will work in BIOS CSM
+> mode too ?
+Do you mean the X170KM-G? I don't think it has the option to switch to Legacy 
+BIOS mode (At least i didn't found an option in the bios version i have)
+> 
+> Note I know you did not propose to drop the quirks in this series,
+> just covering all the bases here.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+Kind regards,
+Werner Sembach
