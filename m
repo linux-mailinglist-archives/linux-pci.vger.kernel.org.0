@@ -2,83 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E98D9642B8D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 16:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB515642CBF
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 17:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbiLEPX0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 10:23:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
+        id S231960AbiLEQ0L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 11:26:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232474AbiLEPXD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 10:23:03 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D6311FF88;
-        Mon,  5 Dec 2022 07:20:53 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1670253632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l21gIdgMYZaabZsaA1IPHJrlxOXwuiJTen3Q2rbgl+E=;
-        b=D027ajbWQhryQtqS80uG1eTCEnjySa229Wb7kM74xNp3wv0Hfu5Uqit8JOMQzawg1QeMGr
-        fGukKeJPbCttxKq8UHEc/Dr/4DEa3X2K/d3VfdO5kd4LWHuBvVYREyCP8TU/q6vi1aEkcz
-        OPXx+sF4cPNEL+RReCSpG9ZOb1r+IumMkVmKz2RfjNympHBljwJMKAIy7/o5DCKprYD6h4
-        60fQbfZrRARdiKjQn+c34GJvPs8tKNh5iUCzPe2jOAxWkF5vUeiqmNcZi4uAqouTxdtRnP
-        oHI+copJWlNHP12rog/5D9+IdwXS3nNW8+JgHS5i6COszehLOIcySejJPwD6EQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1670253632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l21gIdgMYZaabZsaA1IPHJrlxOXwuiJTen3Q2rbgl+E=;
-        b=nEhlWcbwHl/mj7qOKF6aHnm5gxYpSiQ2+GA7cZ/OIFzi5xuuDXpI/bEMNmK4cRE9aVvhGN
-        qcSyogEUKtiTigDA==
-To:     Reinette Chatre <reinette.chatre@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
+        with ESMTP id S231969AbiLEQ0K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 11:26:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3FE1DF12;
+        Mon,  5 Dec 2022 08:26:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A742AB81144;
+        Mon,  5 Dec 2022 16:26:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9690BC433D6;
+        Mon,  5 Dec 2022 16:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670257566;
+        bh=IXjbw3od9RX52LgJlY0q/QMMPB1bl3URr+bdkX9l9ow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ABcF1w6j4l/W2nE40FUo6h9qxYW5EDKXgluAYok40DSQsdXi8xaBnr1imFdy7ZG6x
+         1Lu4aT39+UBc6krnJv3sC7WLYewF66c5sz+wdVkF4Xbf9uTgtNqZoYVW52U864zwXr
+         tTRpbqUMZITFNlCkfCI7l+qztQfbhGZdQgU+K2nMYChHUnlTrQ0GyEV4HCnxUL3t8g
+         9bkyOVFkvrvAzEsSLEwm//ICLlWBtO2QMH/ABI0faCHHGkj5QrkXpyl8q7JeS/i2Mh
+         bdabqDHQ6IwfKOZAxqmY4jaZqWHNHJ5fBbX2K9EhVWPLzOkj1XNTQc86BGEHAATWEx
+         9n+ANSlx+PACQ==
+Date:   Mon, 5 Dec 2022 17:26:00 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     John Thomson <git@johnthomson.fastmail.com.au>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: Re: [patch 33/33] irqchip: Add IDXD Interrupt Message Store driver
-In-Reply-To: <87sfhxoa7i.ffs@tglx>
-References: <20221111133158.196269823@linutronix.de>
- <20221111135207.141746268@linutronix.de>
- <4a15c569-0545-20ac-e74c-ae17f7eb067d@intel.com> <87sfhxoa7i.ffs@tglx>
-Date:   Mon, 05 Dec 2022 16:20:31 +0100
-Message-ID: <87v8mpg9mo.ffs@tglx>
+        =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+        linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: mt7621: add sentinel to quirks table
+Message-ID: <Y44bmGfgEJNd8VhK@lpieralisi>
+References: <20221104205242.3440388-1-git@johnthomson.fastmail.com.au>
+ <20221104205242.3440388-3-git@johnthomson.fastmail.com.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221104205242.3440388-3-git@johnthomson.fastmail.com.au>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 02 2022 at 20:51, Thomas Gleixner wrote:
-> On Fri, Dec 02 2022 at 09:55, Reinette Chatre wrote:
->> With the first change I am able to test IMS on the host using devmsi-v2-part3
->> of the development branch. I did try to update to the most recent development
->> to confirm all is well but version devmsi-v3.1-part3 behaves differently
->> in that pci_ims_alloc_irq() returns successfully but the returned
->> virq is 0. This triggers a problem when request_threaded_irq() runs and
->> reports:
->> genirq: Flags mismatch irq 0. 00000000 (idxd-portal) vs. 00015a00 (timer)
->
-> Bah. Let me figure out what I fat-fingered there.
+Always capitalize the sentence in the subject.
 
-tag devmsi-v3.2-part3 works again.
+"PCI: mt7621: Add sentinel to quirks table"
+
+On Sat, Nov 05, 2022 at 06:52:42AM +1000, John Thomson wrote:
+> With mt7621 soc_dev_attr fixed to register the soc as a device,
+> kernel will experience an oops in soc_device_match_attr
+
+Can we reword this please ? What you are describing *exposes* the
+bug but it is not describing the bug per-se.
+
+The bug is related to a missing sentinel in the struct
+soc_device_attribute array and that's true regardless of whether it is
+actually triggered or not.
+
+Please update the commit log promptly and I shall send it upstream.
+
+Thanks,
+Lorenzo
+
+> This quirk test was introduced in the staging driver in
+> commit b483b4e4d3f6 ("staging: mt7621-pci: add quirks for 'E2' revision
+> using 'soc_device_attribute'"), and the staging driver was moved in
+> commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host
+> controller driver") for the 5.16 kernel
+> 
+> Link: https://lore.kernel.org/lkml/26ebbed1-0fe9-4af9-8466-65f841d0b382@app.fastmail.com
+> Fixes: b483b4e4d3f6 ("staging: mt7621-pci: add quirks for 'E2' revision
+> using 'soc_device_attribute'")
+> Signed-off-by: John Thomson <git@johnthomson.fastmail.com.au>
+> ---
+>  drivers/pci/controller/pcie-mt7621.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> index 4bd1abf26008..ee7aad09d627 100644
+> --- a/drivers/pci/controller/pcie-mt7621.c
+> +++ b/drivers/pci/controller/pcie-mt7621.c
+> @@ -466,7 +466,8 @@ static int mt7621_pcie_register_host(struct pci_host_bridge *host)
+>  }
+>  
+>  static const struct soc_device_attribute mt7621_pcie_quirks_match[] = {
+> -	{ .soc_id = "mt7621", .revision = "E2" }
+> +	{ .soc_id = "mt7621", .revision = "E2" },
+> +	{ /* sentinel */ }
+>  };
+>  
+>  static int mt7621_pcie_probe(struct platform_device *pdev)
+> -- 
+> 2.37.2
+> 
