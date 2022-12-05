@@ -2,110 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DFD0642B20
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 16:13:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E98D9642B8D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 16:23:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230233AbiLEPNQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 10:13:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43948 "EHLO
+        id S232459AbiLEPX0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 10:23:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231694AbiLEPMl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 10:12:41 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54C7271F;
-        Mon,  5 Dec 2022 07:12:39 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id db10-20020a0568306b0a00b0066d43e80118so7429356otb.1;
-        Mon, 05 Dec 2022 07:12:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PPBqbySTXATzozEbLBZecs9jcnWXaQpJ4ipGl050YEg=;
-        b=nH2iZzM9ApCfezIAEC9x39cuyoWpFZxoiRfp/Cr9m6UCEe/L1fK+ndytb/qYGCM9MU
-         S6Y5x8mAJThsonwLgrI59Md3RMGkO1cZnxi1Xjz4BQc5/P3KzBZZr2B51aBDs/V72lHx
-         pcnflFeW4m35kFaM8vF3swaZazGRpl0CGMU6FkKQ92a3x8plfIEtG8JLU2jAvJ9Oz/mG
-         nMlls4xpMxY3N3TOC9TxW69Ttgvc/e00Q0tVDnfJfnYw56RLNo17FA3PzLzs8C2/4IJf
-         ufuK4WXEf1ktrt6bcEvvybMIDooLoyWYVN3vEyvAxF53nzgE86DkAwYn62EmWpz3Dmvs
-         ryzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PPBqbySTXATzozEbLBZecs9jcnWXaQpJ4ipGl050YEg=;
-        b=vEoJ7zdxTTBxV0+P+/WLlSolKEgZXkWlg5n3CzRfiDdY0EXyy4wHdFecUr5nNzORcv
-         DxZaBHtXH0f6L7GuFl3xu+C83B2nO9+/vqPIcO5epmVkA6KIAx95DXeg+Kdh6VMizp+4
-         in+VIj6IKdWtCD7xoMZGia/8vLmqGvdbpNFASKBqGP/MCA9hvojNKoFrGRm3Thst1+8z
-         myBCVdTtGyHeqizgDoc49FBJNiEMdLboad1PwzvnWYN/TBRcHVm3BpI3vI542KLQMOY3
-         zj6bLzzNWHDZ17obAMHpi7y8JI0ZQJ1C3hCyqGXStuUhRO0cEzGTCPG5/y7J3MswuiCp
-         SYCg==
-X-Gm-Message-State: ANoB5pnzgFe+u7O8QdNFcCnF5oH8kQrQbHqbggpt2FYfy28nL270Trqe
-        Hk5bczquhN79IOMzDUKFs0ELuvvkYVgDrS472V8=
-X-Google-Smtp-Source: AA0mqf4xxmJweLjSmwR4AjAAP3UK0trE9dsrshk5r1DWy3yLvZfMnTG/86QaRqemLYHn+c9xICft0WkKVQyH94JowRs=
-X-Received: by 2002:a05:6830:1e65:b0:661:b632:4259 with SMTP id
- m5-20020a0568301e6500b00661b6324259mr32439951otr.304.1670253159124; Mon, 05
- Dec 2022 07:12:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20221114012036.2870067-1-git@johnthomson.fastmail.com.au> <CAMhs-H-uKrn-OXX2POPr3ewXUx=h835yBSUcJWun7pC3dPj66w@mail.gmail.com>
-In-Reply-To: <CAMhs-H-uKrn-OXX2POPr3ewXUx=h835yBSUcJWun7pC3dPj66w@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Mon, 5 Dec 2022 16:12:26 +0100
-Message-ID: <CAMhs-H8uCgCgPvesXXg+p-t_CnfChYGNk2oZC2yfs8+s06Nbsg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] PCI: mt7621: add sentinel to quirks table
-To:     John Thomson <git@johnthomson.fastmail.com.au>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S232474AbiLEPXD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 10:23:03 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D6311FF88;
+        Mon,  5 Dec 2022 07:20:53 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1670253632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l21gIdgMYZaabZsaA1IPHJrlxOXwuiJTen3Q2rbgl+E=;
+        b=D027ajbWQhryQtqS80uG1eTCEnjySa229Wb7kM74xNp3wv0Hfu5Uqit8JOMQzawg1QeMGr
+        fGukKeJPbCttxKq8UHEc/Dr/4DEa3X2K/d3VfdO5kd4LWHuBvVYREyCP8TU/q6vi1aEkcz
+        OPXx+sF4cPNEL+RReCSpG9ZOb1r+IumMkVmKz2RfjNympHBljwJMKAIy7/o5DCKprYD6h4
+        60fQbfZrRARdiKjQn+c34GJvPs8tKNh5iUCzPe2jOAxWkF5vUeiqmNcZi4uAqouTxdtRnP
+        oHI+copJWlNHP12rog/5D9+IdwXS3nNW8+JgHS5i6COszehLOIcySejJPwD6EQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1670253632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l21gIdgMYZaabZsaA1IPHJrlxOXwuiJTen3Q2rbgl+E=;
+        b=nEhlWcbwHl/mj7qOKF6aHnm5gxYpSiQ2+GA7cZ/OIFzi5xuuDXpI/bEMNmK4cRE9aVvhGN
+        qcSyogEUKtiTigDA==
+To:     Reinette Chatre <reinette.chatre@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: Re: [patch 33/33] irqchip: Add IDXD Interrupt Message Store driver
+In-Reply-To: <87sfhxoa7i.ffs@tglx>
+References: <20221111133158.196269823@linutronix.de>
+ <20221111135207.141746268@linutronix.de>
+ <4a15c569-0545-20ac-e74c-ae17f7eb067d@intel.com> <87sfhxoa7i.ffs@tglx>
+Date:   Mon, 05 Dec 2022 16:20:31 +0100
+Message-ID: <87v8mpg9mo.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 7:05 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
+On Fri, Dec 02 2022 at 20:51, Thomas Gleixner wrote:
+> On Fri, Dec 02 2022 at 09:55, Reinette Chatre wrote:
+>> With the first change I am able to test IMS on the host using devmsi-v2-part3
+>> of the development branch. I did try to update to the most recent development
+>> to confirm all is well but version devmsi-v3.1-part3 behaves differently
+>> in that pci_ims_alloc_irq() returns successfully but the returned
+>> virq is 0. This triggers a problem when request_threaded_irq() runs and
+>> reports:
+>> genirq: Flags mismatch irq 0. 00000000 (idxd-portal) vs. 00015a00 (timer)
 >
-> Hi John,
->
-> On Mon, Nov 14, 2022 at 2:20 AM John Thomson
-> <git@johnthomson.fastmail.com.au> wrote:
-> >
-> > With mt7621 soc_dev_attr fixed to register the soc as a device,
-> > kernel will experience an oops in soc_device_match_attr
-> >
-> > This quirk test was introduced in the staging driver in
-> > commit b483b4e4d3f6 ("staging: mt7621-pci: add quirks for 'E2' revision
-> > using 'soc_device_attribute'"), and the staging driver was moved in
-> > commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host
-> > controller driver") for the 5.16 kernel
-> >
-> > Link: https://lore.kernel.org/lkml/26ebbed1-0fe9-4af9-8466-65f841d0b382@app.fastmail.com
-> > Fixes: b483b4e4d3f6 ("staging: mt7621-pci: add quirks for 'E2' revision using 'soc_device_attribute'")
-> > Signed-off-by: John Thomson <git@johnthomson.fastmail.com.au>
-> > ---
-> > v1 Link: https://lore.kernel.org/lkml/20221104205242.3440388-3-git@johnthomson.fastmail.com.au/#t
-> > v2: no newline in middle of Fixes tag
-> > ---
-> >  drivers/pci/controller/pcie-mt7621.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> I am pretty sure I already gave my Acked-by in the previous version of
-> this patch. You should add tags when you submit new versiones. Anyway:
->
-> Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->
-> Thanks,
->     Sergio Paracuellos
+> Bah. Let me figure out what I fat-fingered there.
 
-Gentle ping for this patch :)
-
-Thanks,
-    Sergio Paracuellos
+tag devmsi-v3.2-part3 works again.
