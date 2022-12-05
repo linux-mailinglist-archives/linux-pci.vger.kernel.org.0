@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7D7642720
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 12:04:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7EBF642728
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Dec 2022 12:08:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbiLELEn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Dec 2022 06:04:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
+        id S231246AbiLELIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Dec 2022 06:08:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230492AbiLELEn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 06:04:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0675EB846;
-        Mon,  5 Dec 2022 03:04:41 -0800 (PST)
+        with ESMTP id S230505AbiLELIE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Dec 2022 06:08:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4FDA19D;
+        Mon,  5 Dec 2022 03:08:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7682260E9E;
-        Mon,  5 Dec 2022 11:04:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE185C433C1;
-        Mon,  5 Dec 2022 11:04:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D5B7CB80E6F;
+        Mon,  5 Dec 2022 11:08:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FCAEC433C1;
+        Mon,  5 Dec 2022 11:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670238280;
-        bh=H+rKPVhj3z6bT5H5+8s6/DTtMo2pxuSSps9lf4p2xrE=;
+        s=k20201202; t=1670238480;
+        bh=fAoAXwtGghg7+sXhFoSJcHceZbcl2NJbjBqZH8kibSE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a1iBSWJGHPbQDOsfipFUfaeXRa4q7iON1WbwZi5+/gJQO0R2feLJsmRvw3Ao1twN7
-         HHP1upkbSfW+6z0GhD8HZO+Io9klhavqruxZ5vDoZznf4ASNeHKvHgaemgcmQUjrQF
-         IsmESbGfdCKpi0uBFZHoVkuiJvm8ZjQZF9lmMRv1kVFY/6WJSS137Tmg+0EnLdsOVm
-         o1dsjS5yUwXcua4BNTaB1sqVc/Xk1MwlHQQqJU6xnnAAauVCWIitAm8tee7Bs6aqf+
-         g+gl21cppHWgALnyGyHDEO15zGiIztw6OuRuLcYC98V1ASEVY0gBUdEyByMwaIkCmT
-         SL/YDqTvVFAqQ==
+        b=okwS3pbqFuyyGRYr9OTQyoDypMmroUawA/YiG77VzNsBaRLUIX7pPblGQEQvyU6RC
+         MJwPkk0XeN287Zo2TDxzBH0RMoTqMDsKDbJta+x4oPxZAQNt9AmgXyKKbylYAFnJ9Z
+         Bwr2AvZRjvQe/scxxgwp6CyAOsUujaGma2o1kGGw3hMb9EVlyyDaQ2ygznab/DuY3j
+         jARB50L46W38+oasMSk3niMrSBWyVEuupspkfIzp0v/n4Coweit7JxU8MJBoGlwOQn
+         J+x/wH7Dz7+LcpWQh4Qh8akHZ09z5y0lBOJvdMZYnj1ANTpgl/m6UOTapBFITF90i3
+         KA5cVBW+qmk7g==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1p29H4-00AYHe-AW;
-        Mon, 05 Dec 2022 11:04:38 +0000
-Date:   Mon, 05 Dec 2022 11:04:37 +0000
-Message-ID: <86359um7qy.wl-maz@kernel.org>
+        id 1p29KH-00AYJV-WC;
+        Mon, 05 Dec 2022 11:07:58 +0000
+Date:   Mon, 05 Dec 2022 11:07:57 +0000
+Message-ID: <861qpem7le.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
@@ -54,9 +54,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Logan Gunthorpe <logang@deltatee.com>,
         Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
         Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [patch V3 00/22] genirq, PCI/MSI: Support for per device MSI and PCI/IMS - Part 2 API rework
-In-Reply-To: <20221124225331.464480443@linutronix.de>
-References: <20221124225331.464480443@linutronix.de>
+Subject: Re: [patch V3 00/33] genirq, PCI/MSI: Support for per device MSI and PCI/IMS - Part 3 implementation
+In-Reply-To: <20221124230505.073418677@linutronix.de>
+References: <20221124230505.073418677@linutronix.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -75,23 +75,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 24 Nov 2022 23:24:07 +0000,
+On Thu, 24 Nov 2022 23:25:45 +0000,
 Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> This is V3 of the second part of the effort to provide support for per
-> device MSI interrupt domains.
-> 
-> Version 2 of this second part can be found here:
-> 
->   https://lore.kernel.org/all/20221121083210.309161925@linutronix.de
+> This is V3 of the third part of the effort to provide support for per device
+> MSI interrupt domains.
 
-Bandwidth is lacking to review such a series (let alone 3) in details,
-but the direction of travel is the right one (per-device, per-bus MSI
-domains are the natural way to deal with resources managed at the
-device level).
+As for Part-2, I have only glanced at the various changes due to
+limited bandwidth, but this seems to be a reasonable approach to the
+multi-bus (punt intended!) MSI thingy.
 
-I'm sure we'll find issues along the way, but this code is better in
-the kernel than outside, so:
+FWIW:
 
 Acked-by: Marc Zyngier <maz@kernel.org>
 
