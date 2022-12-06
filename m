@@ -2,86 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56743644280
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 12:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD61164429A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 12:57:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235067AbiLFLvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Dec 2022 06:51:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
+        id S231434AbiLFL5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Dec 2022 06:57:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235082AbiLFLvn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 06:51:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E0827DED;
-        Tue,  6 Dec 2022 03:51:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6A836B819BB;
-        Tue,  6 Dec 2022 11:51:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C8D6C433D6;
-        Tue,  6 Dec 2022 11:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670327500;
-        bh=s4K6bUN232iqgGLvJebgGUOXpM0Nekv+4mjWez6DWJ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XiES+w/sgACehabQ6uDUpA2H2rgqaWd2j8ft6FggvWDX77Skw6L7pY7Z+A7LqWQUO
-         dSKU50T7pQCD+ueZThDG0C3Xmdp6qggNQGgKEgu+u0GlFBeJ1gG52mklvgTC+fn/Db
-         X3wbHEvReFDEc1gctm7Wq5A3oKuJLodsoMvhgArGsKIS+gCF5qlPKLT9Y7Ju1zF0f8
-         HoKdasAplW9SjPPt1jgPd/kGvxPPWKeEKjpPktupwDv5VRZqRZGez5h0JbZEMTlYgp
-         zyR36nP8kZ5qj+R7etGVXufEpWtx1EIBM6tjzmyJsE6QImfdASM9kodNcpkywY7gDM
-         C5NwERGeObbcw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1p2WUF-0000Vi-IY; Tue, 06 Dec 2022 12:51:47 +0100
-Date:   Tue, 6 Dec 2022 12:51:47 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'dma-coherent' property
-Message-ID: <Y48s09HMMkb34kRn@hovoldconsulting.com>
-References: <20221205094530.12883-1-johan+linaro@kernel.org>
- <Y48f4ktAwsPBW60y@lpieralisi>
+        with ESMTP id S235132AbiLFL4z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 06:56:55 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D521810546;
+        Tue,  6 Dec 2022 03:56:54 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NRJll4nJvzRpn5;
+        Tue,  6 Dec 2022 19:56:03 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 6 Dec 2022 19:56:52 +0800
+Subject: Re: [PATCH 1/2] hwtracing: hisi_ptt: Only add the supported devices
+ to the filters list
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Yicong Yang <yangyicong@huawei.com>,
+        <mathieu.poirier@linaro.org>
+CC:     <yangyicong@hisilicon.com>, <alexander.shishkin@linux.intel.com>,
+        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <prime.zeng@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <jonathan.cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20221122120209.25682-1-yangyicong@huawei.com>
+ <fb2441ce-fe4c-3733-5cd3-93a7d949d9f0@huawei.com>
+ <47d600f0-e62e-e3b5-7fbe-68adce92af4f@arm.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <e82eed9c-164e-5454-299d-611882150cdb@huawei.com>
+Date:   Tue, 6 Dec 2022 19:56:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y48f4ktAwsPBW60y@lpieralisi>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <47d600f0-e62e-e3b5-7fbe-68adce92af4f@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 06, 2022 at 11:56:34AM +0100, Lorenzo Pieralisi wrote:
-> On Mon, Dec 05, 2022 at 10:45:30AM +0100, Johan Hovold wrote:
-> > Devices on some PCIe buses may be cache coherent and must be marked as
-> > such in the devicetree to avoid data corruption.
-> > 
-> > This is specifically needed on recent Qualcomm platforms like SC8280XP.
-> > 
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
-> > 
-> > Lorenzo, the corresponding SC8280XP DT fix is heading for 6.2 so it
-> > would be nice if this one could be merged for 6.2-rc1 (or -rc2) as well
-> > to avoid the corresponding DT validation warnings.
+On 2022/12/6 19:46, Suzuki K Poulose wrote:
+> Hi Yicong Yang
 > 
-> What's the commit base for this patch ? I tried applying to my pci/dt
-> branch to no avail, please let me know and I will merge it.
+> On 06/12/2022 11:34, Yicong Yang wrote:
+>> Hi Mathieu,
+>>
+>> Do we still have a chance to catch this cycle for these 2 patches?
+> 
+> Sorry, I have been handling the coresight tree this cycle (and will be
+> going forward). I have already sent the pull request to Greg. I am
+> afraid it is late for this cycle.
+> 
+> I can queue it for the next cycle.
+> 
 
-That should be pci/qcom which has 3a936b2a5a58 ("dt-bindings: PCI: qcom:
-Add SC8280XP/SA8540P interconnects").
+Thanks for the information.
+It's ok, I'll resend in the next cycle.
 
-Johan
+Thanks,
+Yicong
+
+>>
+>> Thanks!
+>>
+>> On 2022/11/22 20:02, Yicong Yang wrote:
+>>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>>
+>>> The PTT device can only support the devices on the same PCIe core,
+>>> within BDF range [lower_bdf, upper_bdf]. It's not correct to assume
+>>> the devices on the root bus are from the same PCIe core, there are
+>>> cases that root ports from different PCIe core are sharing the same
+>>> bus. So add the checking when initialize the filters list.
+>>>
+>>> Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
+>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>>> ---
+>>>   drivers/hwtracing/ptt/hisi_ptt.c | 10 ++++++++++
+>>>   1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>>> index 5d5526aa60c4..30f1525639b5 100644
+>>> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+>>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>>> @@ -356,8 +356,18 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+>>>     static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+>>>   {
+>>> +    struct pci_dev *root_port = pcie_find_root_port(pdev);
+>>>       struct hisi_ptt_filter_desc *filter;
+>>>       struct hisi_ptt *hisi_ptt = data;
+>>> +    u32 port_devid;
+>>> +
+>>> +    if (!root_port)
+>>> +        return 0;
+>>> +
+>>> +    port_devid = PCI_DEVID(root_port->bus->number, root_port->devfn);
+>>> +    if (port_devid < hisi_ptt->lower_bdf ||
+>>> +        port_devid > hisi_ptt->upper_bdf)
+>>> +        return 0;
+>>>         /*
+>>>        * We won't fail the probe if filter allocation failed here. The filters
+>>>
+> 
+> 
+> .
