@@ -2,91 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1F8E644836
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 16:43:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C3E764499A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 17:44:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234153AbiLFPnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Dec 2022 10:43:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
+        id S234799AbiLFQo5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Dec 2022 11:44:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232897AbiLFPnC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 10:43:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B2A63DD;
-        Tue,  6 Dec 2022 07:43:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C163B81AA6;
-        Tue,  6 Dec 2022 15:43:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C8EC433C1;
-        Tue,  6 Dec 2022 15:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670341378;
-        bh=b/5+AO9U5t+K6P2Qc72IGGvfLNBkWTdkKVJBlGbBbqg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XW9NlZ0DGcOT577Q6XkL82z2pzFS61TaxTo/2qp6umxKWHM6XNBhYzrHaFgT72Cvi
-         JheV2qBoLC7xlJ4qQ6LhUSM5adgmQKarz+bAunznpmmJbVkTMKeIL/T8aB13Sgi4LL
-         JLwV6hJTkvwgy+k1Am6y5D0TyVOerx6Nl3+Z79cCbdwZ5n2d5NhKDDdQu5/43r5UMy
-         IhXw+wURveFx3VJCleJw02tutPVpaGfi+smUHIP7+dRTSQGAs+ro2m+1QHH2AkNMxk
-         wsu2CxraTZdSMWFKs6fPzuOHQlVkYn/DnYQSPufrEidZ0QMLGhn3WHSx53tV0Vp49s
-         xf1PAFhIlnhaw==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
+        with ESMTP id S230093AbiLFQo4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 11:44:56 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35ED8BB0;
+        Tue,  6 Dec 2022 08:44:55 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id d14so16159505edj.11;
+        Tue, 06 Dec 2022 08:44:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S6yIH7MQsLl6LEDg45qMcCaM1O7Ac9+38QvTCM2uDf8=;
+        b=L74YGzYG9EA12cBG2uOSAnIn2gta3+EYRxNkg7R+CzBtJREqTJ/6Awi8Lo4rx3t5Pp
+         FUXsta1vcPSBAvBK/kbKa+hOumJEd6n/L4xKzr1nl/RQLiO5rydYyKvMxRH3KlJqOprF
+         9gK0sViZiNHfhwbGezlrz7CPLSSzrtu3X+xGDL1tgKUpPCfOPONpPvCvXnH14VRmXQkk
+         44xeG3Endhoemy76dTqgm8iVCvCavdmf95ccOjeu9qjStHg8UIRTb1TUuI8/9rIDt9rJ
+         Sq6bJx2gLuR6cgyCA5vsw4B2Rsxhgfw8l+zeXHdvAR3cB410lblGzFPIANFGXV6wRwIt
+         Umug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S6yIH7MQsLl6LEDg45qMcCaM1O7Ac9+38QvTCM2uDf8=;
+        b=fzIjg8+YIAxvfllVNchHmdHaMR7h1hPidA7NZDhjXeJT+LUfltRzKBPiMNN4diREcg
+         LoNUs12YD6ZF3dYtNj0CUdk7g5FKgrEwHTcd6i8NwCSOcpxxfh8zzTXEv/oK9Mr4E297
+         uaZgYXGf0AiA5nb8kcKL4iwt3/e8lp2QQ3DV83g5+Eq/WPCMYninEmlJlXGtO/zryc/T
+         hUXw+5TJq9liufoqY+WZ3qDbRY/J59pS5wRvjd6KmoXwZWAaQxz96dj97NEejr+gmrQR
+         xLUcP5ykQ4VtX/dF2swXK8QY406w6baxfVtf/zk0pfhtVBpkl9T2ChadAddGuq5iOBlO
+         zGpQ==
+X-Gm-Message-State: ANoB5pkqBwPjFW9UBd7qymF/+ZVBM179mp1u4dR90Ot4GbtuHNGM9XgN
+        XDRm5N2sl6xeRuRFy2uHrQw=
+X-Google-Smtp-Source: AA0mqf4d5IQSOBJ9Ni0MEoRNMSWD+64Rc76CRZsIYhnAvwhxPMDlcM2aP0chtpUg5uAQlMVvSiY1gg==
+X-Received: by 2002:a05:6402:4497:b0:46c:cff8:207d with SMTP id er23-20020a056402449700b0046ccff8207dmr6948354edb.370.1670345093607;
+        Tue, 06 Dec 2022 08:44:53 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id h9-20020aa7cdc9000000b0046b471596e6sm1175775edw.57.2022.12.06.08.44.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 08:44:53 -0800 (PST)
+Date:   Tue, 6 Dec 2022 17:44:51 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
+        Sergey Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jon Hunter <jonathanh@nvidia.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-pci@vger.kernel.org,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Rob Herring <robh@kernel.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: (subset) [next v7 0/8] Add BananaPi R3
-Date:   Tue,  6 Dec 2022 16:42:50 +0100
-Message-Id: <167034135386.88271.140848740488398853.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221127114142.156573-1-linux@fw-web.de>
-References: <20221127114142.156573-1-linux@fw-web.de>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+Message-ID: <Y49xg7wptRweHd4I@orome>
+References: <20221114155333.234496-1-jonathanh@nvidia.com>
+ <20221114155333.234496-2-jonathanh@nvidia.com>
+ <Y3ap1o2SbNvFw8Vd@orome>
+ <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="goj6zW39Iopsic0N"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 27 Nov 2022 12:41:34 +0100, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> This Series adds some Nodes to mt7986 devicetree and the BananaPi R3
-> 
-> This version is rebased on linux next from 2022/11/27.
-> 
-> i included sams series for mt7986 DTS with small changes
-> https://patchwork.kernel.org/project/linux-mediatek/cover/20220427124741.18245->
-> 
-> [...]
 
-Applied to pci/dt, thanks!
+--goj6zW39Iopsic0N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[3/8] dt-bindings: PCI: mediatek-gen3: add SoC based clock config
-      https://git.kernel.org/lpieralisi/pci/c/ec9eaf68c1dc
-[4/8] dt-bindings: PCI: mediatek-gen3: add support for mt7986
-      https://git.kernel.org/lpieralisi/pci/c/d3fd0ee7a4a1
+On Mon, Dec 05, 2022 at 05:41:55PM -0600, Rob Herring wrote:
+> On Thu, Nov 17, 2022 at 3:38 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> >
+> > On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> > > From: Vidya Sagar <vidyas@nvidia.com>
+> > >
+> > > Add support for ECAM aperture that is only supported for Tegra234
+> > > devices.
+> > >
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > > ---
+> > > Changes since V2:
+> > > - Avoid duplication of reg items and reg-names
+> > > Changes since V1:
+> > > - Restricted the ECAM aperture to only Tegra234 devices that support =
+it.
+> > >
+> > >  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++=
+--
+> > >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+> > >  2 files changed, 33 insertions(+), 3 deletions(-)
+> >
+> > Both patches applied now.
+>=20
+> linux-next now fails with this. I suspect it is due to Sergey's
+> changes to the DWC schema.
+>=20
+> /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,=
+tegra194-pcie.example.dtb:
+> pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> fixed:
+>         'dbi' was expected
+>         'dbi2' was expected
+>         'ecam' is not one of ['elbi', 'app']
+>         'atu' was expected
+>         'dma' was expected
+>         'phy' was expected
+>         'config' was expected
+>         /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci=
+/nvidia,tegra194-pcie.example.dtb:
+> pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> fixed:
+>                 'ecam' is not one of ['apb', 'mgmt', 'link', 'ulreg', 'ap=
+pl']
+>                 'ecam' is not one of ['atu_dma']
+>                 'ecam' is not one of ['smu', 'mpu']
+>         From schema:
+> /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,=
+tegra194-pcie.yaml
 
-Thanks,
-Lorenzo
+Stephen reported the other day that he wasn't able to resolve this
+conflict in linux-next, so he dropped the ECAM bits. The ECAM patch has
+now propagated to ARM SoC so it can't be easily backed out, but I guess
+we could revert on that tree and instead apply the patch to the DT tree
+and resolve the conflict there.
+
+I guess the better alternative would be to try and resolve the merge
+properly and let Stephen (and Linus) know.
+
+Thierry
+
+--goj6zW39Iopsic0N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmOPcYMACgkQ3SOs138+
+s6GSZxAAqiSCEN4r5z2mlNa1HQ5oRefamRktZeZ/5G/9jm+QEkzo0EGf25gDuDpK
+wZtdV9hIVozGV9NIFUGo8STYFvxRmLRqKqP3kDwQHSU1IIalE2eXUFabG1x/l53/
+8KKeT+/YbQt+mU2+7/Pzb64TmQfgjeKUmgU7kTKiv9qj71BXqXf2ol4cV5nZeDob
+EcZEc87/s26bMjLnCZXAgig6F1glrP1JQaiE22ZUMZ252LZlRCJ+yViawBefOPCs
+OPx/n1RIHyUCQrgTtANMCWnbMmAwp87mJEd4W58b/0si979zqBPjHhpDZpjA/3TB
+WWcYeRQyh+THN1+joqZNRXCn5RkQxteyR9KOKkGmHbYCKe1z06WVd9IUJjErvlEL
+u8rlb8ytz3gsiit7eRbOm6+3aqntU6APwlT1nWVnT+X7US898sFf5fox8vSfGXao
+dBwQyN0tpCUVezvQjYv057XkfVCYLj5d2qrJoB+V4PTxWvH/OsZgSQ3AXeXN3c1i
+xViWc7DiUNOBUzhyK4aOY6/IexiMW6E0Qn+vch2YNPFByjPsEikDyiXoN2o1BLmZ
+r05xl+8Yb4mG91y1k7MpXoBZoc9Cgy0kEnct0nMo8QUU+Byp8Kv9Rlhbontw8iJL
+y78KEbQYkfbKJHlvr6hPKU3l2LgKb8Ebohi/J9Pe1B3JYsSD+DY=
+=81y3
+-----END PGP SIGNATURE-----
+
+--goj6zW39Iopsic0N--
