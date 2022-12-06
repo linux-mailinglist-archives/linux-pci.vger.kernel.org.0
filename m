@@ -2,53 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1939D6449FF
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 18:11:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD2C644A49
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Dec 2022 18:26:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235384AbiLFRLg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Dec 2022 12:11:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45770 "EHLO
+        id S234207AbiLFR0J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Dec 2022 12:26:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231168AbiLFRLR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 12:11:17 -0500
+        with ESMTP id S230450AbiLFR0I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 12:26:08 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC53E2FA7E
-        for <linux-pci@vger.kernel.org>; Tue,  6 Dec 2022 09:11:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A813AC10;
+        Tue,  6 Dec 2022 09:26:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 77162617A2
-        for <linux-pci@vger.kernel.org>; Tue,  6 Dec 2022 17:11:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91190C43470;
-        Tue,  6 Dec 2022 17:11:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F67B615FC;
+        Tue,  6 Dec 2022 17:26:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BEADC433D6;
+        Tue,  6 Dec 2022 17:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670346675;
-        bh=acVFhdBjhDeBcDfQenjzAfdtvy9axWF7peOFBqE57cI=;
+        s=k20201202; t=1670347566;
+        bh=i4LFHgRC3eGQ/h/gsi4nG4EfbOLbqNKtWfgCfmTwX0c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aTpHmcnpBsE2REvFuHnRWS8IAU4wd9BZ4UsQf46joSOlyp6CP0Ywjkqv4lvl5fjYb
-         wHggzC4WxeHBjaLSqhzSXpDSRkcxv5sESoWjK+m54CxcTKZEh6SWhGIwnltKYXpwqp
-         M1y3Fr6ZfjoX9Duwp3B74kl4z+xyIiGLODdLSueufH+iimJ0ceSimAE/2BtlP/lqGA
-         LgK7ooh9aGwrb/A1o8dHm9khRWzauZUyXJNzrmTWZsIl8mz9fae00PAXL0Plv5gW8M
-         uTxnaHp3oR5QavuS0iHLcDOLkB47GqPEKeucQretu+4Cav/gsYVF9EWxupFduHfWeE
-         TLJZSwDHzYaWQ==
-Date:   Tue, 6 Dec 2022 11:11:14 -0600
+        b=PRHv0B5xJ2GAr1bKgFD8L8KIUI75dpWUvoOl1JkwpcMZpMsZb7mrYf7WUgZQV6f1B
+         vMo94bzvnSOKsXr2LQT8u0cwgAe+00mfYbwEJB68Xvajf8VrALHJdAmlB1CJXkRRxg
+         /dMDgIxn2/IYXp9stpunIJGl3XjA1iUaJjht0UVB3eN6M89zftjSJyjAEV6SFEw4yq
+         SCDJkA3XSCd5yiVePRgsWet6+hxP2Ro4qCebopzCo5+r979Q4aX638QYjCIOddc6zV
+         UoaFSci2x1r+YOg7PssexvqUKZGyK29RTwLHHT+Tsj8H7/1330DjYrM9u/2muuimRg
+         J3SzBtVTwPEZg==
+Date:   Tue, 6 Dec 2022 11:26:04 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PCI/DPC: Add Software Trigger as reset method
-Message-ID: <20221206171114.GA1356056@bhelgaas>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linuxkernelml@undead.fr,
+        Florent DELAHAYE <kernelorg@undead.fr>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Disable E820 reserved region clipping for Clevo
+ NL4XLU laptops
+Message-ID: <20221206172604.GA1356368@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c1533fd42e9002bd6d2020656fa1dd0e3e3bf3a.1669706952.git.lukas@wunner.de>
+In-Reply-To: <9faa7393-a985-52f6-4ceb-f853c0210a71@redhat.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -58,42 +53,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas,
+On Sun, Dec 04, 2022 at 10:42:38AM +0100, Hans de Goede wrote:
+> On 12/2/22 22:58, Bjorn Helgaas wrote:
+> > On Wed, Oct 12, 2022 at 10:23:12AM +0200, Hans de Goede wrote:
+> >> On 10/11/22 19:40, Bjorn Helgaas wrote:
+> >>> On Mon, Oct 10, 2022 at 05:02:06PM +0200, Hans de Goede wrote:
+> >>>> Clevo NL4XLU barebones have the same E820 reservation covering
+> >>>> the entire _CRS 32-bit window issue as the Lenovo *IIL* and
+> >>>> Clevo X170KM-G models, relevant dmesg bits (with pci=no_e820):
+> >>>> ...
+> >>>> Add a no_e820 quirk for these models to fix the touchpad not working
+> >>>> (due to Linux being unable to assign a PCI BAR for the i2c-controller).
+> ...
 
-On Tue, Nov 29, 2022 at 08:35:55AM +0100, Lukas Wunner wrote:
-> Add DPC Software Trigger as a reset method to be used for silicon
-> validation among other things:
+> As I mentioned in the email-thread about that patch-series (and there
+> now is dmesg E820 output to confirm this) your generic fix will
+> unfortunately only work when people boot in EFI mode. It will still
+> be good to have the generic fix of course.
 > 
->   # echo dpc_sw_trigger > reset_method
->   # echo 1 > reset
-> 
-> After validating DPC, the default reset_method(s) may be reinstated:
-> 
->   # echo default > reset_method
-> 
-> Writing the DPC Control Register requires that control was granted by
-> firmware, so expose the reset_method only if DPC is native.  (And AER,
-> which must always be granted or denied in unison per PCI Firmware Spec
-> r3.3 table 4-5.)
-> 
-> The reset attribute in sysfs is meant to reset a single PCI Function,
-> but DPC resets the entire hierarchy below the parent.  So only expose
-> the reset method on PCI Functions without siblings or children.
-> Checking for that may happen both *before* the PCI Function has been
-> added to the bus list (via pci_device_add() -> pci_init_capabilities())
-> and *after* (via reset_method_store()), hence differentiate between
-> those two cases on reset probing.
-> 
-> It would be useful for silicon validation to have a separate sysfs
-> attribute for PCI bridges to reset their downstream hierarchy.  Prepare
-> for introduction of such an attribute by adding separate functions
-> pci_dpc_sw_trigger() (to reset the hierarchy below a bridge) and
-> pci_dpc_sw_trigger_parent() (to reset a single PCI Function), where the
-> latter calls the former to trigger DPC on the parent bridge.
+> But maybe we should also add this quirk to make sure these
+> Clevo-s also work properly when booted in BIOS CSM mode ?
 
-Does this add functionality above what the "bus" method (Secondary Bus
-Reset) provides?  If it's effectively the same as SBR, I'm not sure
-it's worth complicating the user interface just to support silicon
-validation.
+Yes, if they can boot in CSM mode, we should probably add the quirk.
+But Florent doesn't see a way to boot his Clevo NL41LU2/NL4XLU in CSM
+mode, so I think we can postpone adding the quirk until we find a
+machine where it makes a difference:
 
-Bjorn
+  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1948811/comments/8
+
+I added a note to https://bugzilla.kernel.org/show_bug.cgi?id=216565
+to that effect.
+
+> >>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216565
+> >>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >>>> ---
+> >>>>  arch/x86/pci/acpi.c | 13 +++++++++++++
+> >>>>  1 file changed, 13 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+> >>>> index 2f82480fd430..45ef65d31a40 100644
+> >>>> --- a/arch/x86/pci/acpi.c
+> >>>> +++ b/arch/x86/pci/acpi.c
+> >>>> @@ -189,6 +189,19 @@ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
+> >>>>  			DMI_MATCH(DMI_BOARD_NAME, "X170KM-G"),
+> >>>>  		},
+> >>>>  	},
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * Clevo NL4XLU barebones have the same E820 reservation covering
+> >>>> +	 * the entire _CRS 32-bit window issue as the Lenovo *IIL* models.
+> >>>> +	 * See https://bugzilla.kernel.org/show_bug.cgi?id=216565
+> >>>> +	 */
+> >>>> +	{
+> >>>> +		.callback = set_no_e820,
+> >>>> +		.ident = "Clevo NL4XLU Barebone",
+> >>>> +		.matches = {
+> >>>> +			DMI_MATCH(DMI_BOARD_NAME, "NL4XLU"),
+> >>>> +		},
+> >>>> +	},
+> >>>>  	{}
+> >>>>  };
