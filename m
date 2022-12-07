@@ -2,105 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 837E5645CA1
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 15:29:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 703DC645CA7
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 15:31:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbiLGO3r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Dec 2022 09:29:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        id S229968AbiLGObS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 09:31:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiLGO3l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 09:29:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0C856EC0
-        for <linux-pci@vger.kernel.org>; Wed,  7 Dec 2022 06:29:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BCD25B81E66
-        for <linux-pci@vger.kernel.org>; Wed,  7 Dec 2022 14:29:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CD7C433C1;
-        Wed,  7 Dec 2022 14:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670423377;
-        bh=6AueI/R7NkY5/yznLeaPmx1C6XPv/QQTTXkT55QnZhM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gxquZ4G5MCdgIzZBBwRm1O3iITEHwuoqcju1+xmdA9s9FaF2e2TYyn6TGKKMvumST
-         Zfn6hThPkWYG1yJbYFGzA/JkHTcjB/iw8A9JDA5/u8bD4jX/bOf7nxig/iWiBMVN6N
-         4EYQTu9q6crkhxnGEpmopQB8m8RsQ3yF/yA9JrN0li/zz3V+HtolbP/qlwvdt7JRdH
-         PiUm1CXfgKvM779F+XWpxaN9f3DWVvIw1fWNQksfzE5NJ6h1eMaqRNGYs/MoelwHy5
-         yt+cx1rkKC4K/rbPRkZJehPO3cAxUeKJxalaEC6v1qyw1b5KdaU9HjfkeT0hLPFs+7
-         Cahb1FOKE8IYA==
-Date:   Wed, 7 Dec 2022 08:29:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>, pali@kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v2 01/10] PCI: pciehp: Enable Command Completed Interrupt
- only if supported
-Message-ID: <20221207142935.GA1440263@bhelgaas>
+        with ESMTP id S229971AbiLGObM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 09:31:12 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4124C36C73
+        for <linux-pci@vger.kernel.org>; Wed,  7 Dec 2022 06:31:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670423470; x=1701959470;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VsrhTY5goZhHjTyeGaxSkMMRy6iwcgLp74JX8Kl0zH8=;
+  b=jlbCnpopvQDAcOikFK/fMXWobw1jSSkjfFKgN3+xVdjEA0ns9/rPepOe
+   3HuvgvyntFhJlzT10mMSAsKbgzUVPg5UXaxWTtwR89ESoZwJ4Xq64Zd5r
+   0Go1rWYs/uBBS7wphtQ5/MJZZfUuMD2USFW9ynvBZIP1QRcvJef6a7/yk
+   5vinFplGrjNLQlf2Pm89LVTcY5PuyHunEXArXp3TclcINn02gFmxeQjzf
+   eITXVRe7Tq4GU9kprWQ3xTrPtf5MAMs4Se4fK4QO3rFcbf75zOFRHUXyJ
+   sakM6ui6mJdjhI22UL+dtHs5qLFANS+cbm8MubPVPqHnIBv06Jdtp5KXn
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="343935641"
+X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
+   d="scan'208";a="343935641"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 06:31:08 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="677381908"
+X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
+   d="scan'208";a="677381908"
+Received: from gjalliso-mobl.amr.corp.intel.com (HELO [10.212.135.231]) ([10.212.135.231])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 06:31:05 -0800
+Message-ID: <2d00e2f1-387d-ba78-76d4-d657a942ee5b@linux.intel.com>
+Date:   Wed, 7 Dec 2022 06:31:03 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220927141926.8895-2-kabel@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.2
+Subject: Re: [PATCH v2] PCI/portdrv: Do not require an interrupt for all AER
+ capable ports
+Content-Language: en-US
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+References: <20221207084105.84947-1-mika.westerberg@linux.intel.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20221207084105.84947-1-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 04:19:17PM +0200, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> The No Command Completed Support bit in the Slot Capabilities register
-> indicates whether Command Completed Interrupt Enable is unsupported.
-> 
-> We already check whether No Command Completed Support bit is set in
-> pcie_wait_cmd(), and do not wait in this case.
-> 
-> Let's not enable this Command Completed Interrupt at all if NCCS is set,
-> so that when users dump configuration space from userspace, the dump
-> does not confuse them by saying that Command Completed Interrupt is not
-> supported, but it is enabled.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
-Since this isn't directly related to aardvark or the rest of the
-series, I applied this to pci/hotplug for v6.2, thanks!
+
+On 12/7/22 12:41 AM, Mika Westerberg wrote:
+> Only Root Ports and Event Collectors use MSI for AER. PCIe Switch ports
+> or endpoints on the other hand only send messages (that get collected by
+> the former). For this reason do not require PCIe switch ports and
+> endpoints to use interrupt if they support AER.
+> 
+> This allows portdrv to attach PCIe switch ports of Intel DG1 and DG2
+> discrete graphics cards. These do not declare MSI or legacy interrupts.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
 > ---
->  drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes from v1:
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 040ae076ec0e..10e9670eea0b 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -811,7 +811,9 @@ static void pcie_enable_notification(struct controller *ctrl)
->  	else
->  		cmd |= PCI_EXP_SLTCTL_PDCE;
->  	if (!pciehp_poll_mode)
-> -		cmd |= PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_CCIE;
-> +		cmd |= PCI_EXP_SLTCTL_HPIE;
-> +	if (!pciehp_poll_mode && !NO_CMD_CMPL(ctrl))
-> +		cmd |= PCI_EXP_SLTCTL_CCIE;
+>  * Updated commit message to be more specific on which hardware this is
+>    needed.
+> 
+>  drivers/pci/pcie/portdrv_core.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 1ac7fec47d6f..1b1c386e50c4 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -164,7 +164,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+>   */
+>  static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  {
+> -	int ret, i;
+> +	int ret, i, type;
 >  
->  	mask = (PCI_EXP_SLTCTL_PDCE | PCI_EXP_SLTCTL_ABPE |
->  		PCI_EXP_SLTCTL_PFDE |
-> -- 
-> 2.35.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+>  		irqs[i] = -1;
+> @@ -177,6 +177,19 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  	if ((mask & PCIE_PORT_SERVICE_PME) && pcie_pme_no_msi())
+>  		goto legacy_irq;
+>  
+> +	/*
+> +	 * Only root ports and event collectors use MSI for errors. Endpoints,
+> +	 * switch ports send messages to them but don't use MSI for that (PCIe
+> +	 * 5.0 sec 6.2.3.2).
+> +	 */
+> +	type = pci_pcie_type(dev);
+> +	if ((mask & PCIE_PORT_SERVICE_AER) &&
+> +	    type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_RC_EC)
+> +		mask &= ~PCIE_PORT_SERVICE_AER;
+> +
+> +	if (!mask)
+> +		return 0;
+> +
+>  	/* Try to use MSI-X or MSI if supported */
+>  	if (pcie_port_enable_irq_vec(dev, irqs, mask) == 0)
+>  		return 0;
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
