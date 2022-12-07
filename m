@@ -2,144 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ED6B64537C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 06:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10C426454FC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 08:58:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiLGFjl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Dec 2022 00:39:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        id S229470AbiLGH57 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 02:57:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbiLGFjj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 00:39:39 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE0D4045F
-        for <linux-pci@vger.kernel.org>; Tue,  6 Dec 2022 21:39:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670391578; x=1701927578;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3+uVNJOBFls4FdMveN0eFhwqRECLSkd5emwISPoyltI=;
-  b=hM4uIFP46FiQA07U0gKXTVW2xdTt+B5v5xhpqdpsHwveUf7kauSzE5e9
-   RESrF4L8/R76BDulrEvwBPX1rRFkglM4Wsr26IEum3TKHAtgAaEflPj6/
-   g37vo7JBuhRmIAtCfLMq8cCmQAJcknhm+ZybU2xLKbw2+OZA7/7iZnrXg
-   cd1ElcNfQnI2zQ07t+jux5MQJExOrge63qLt+DW8XaCe7YM9PkUx40vi1
-   SJ1l6BgY8bMny6wxMsezrDKKhI4iKvYeE+qkYU7huI8w06LoxDVMc27sR
-   NV/amxoOxSY6b9RMGliMcL0FJprbs/zWGBT8rLBanKr3ey/AsuFCYQfx5
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="317951552"
-X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
-   d="scan'208";a="317951552"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 21:39:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="891661890"
-X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
-   d="scan'208";a="891661890"
-Received: from lkp-server01.sh.intel.com (HELO b3c45e08cbc1) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Dec 2022 21:39:36 -0800
-Received: from kbuild by b3c45e08cbc1 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p2n9b-0001bd-26;
-        Wed, 07 Dec 2022 05:39:35 +0000
-Date:   Wed, 07 Dec 2022 13:38:39 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [lpieralisi-pci:pci/dt] BUILD SUCCESS
- d3fd0ee7a4a1e796413fab7affc72eeec31bed13
-Message-ID: <639026df.R+op4GqscYazVKAA%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229530AbiLGH56 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 02:57:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C389527CC2;
+        Tue,  6 Dec 2022 23:57:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6DE78B815D4;
+        Wed,  7 Dec 2022 07:57:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0A6C433C1;
+        Wed,  7 Dec 2022 07:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670399874;
+        bh=QIubHp3cNpcEzieEe4V2CpRX/GSoVpl49aRjbV0Dzzs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I9rgaMxhx2b/hDw6MeXI4mKG8LxIMxeDPfrkmYjrT1bmz7ZzHbSiQ88zZ16wnLgnR
+         d2fgfxoC2kl983o58Tc7k/qBRjtyAwMIfK1qZ8VLaeesGJ94K0VuW2vvetGPx7aIVl
+         dZ40z0HCDvWHIZCwc5ffEcNZf7DPLQ+U76v8Dpuag63HkGrSukKfoZNhS04uFYAB/s
+         meSmCgUwaNfvpHYVIQCZu7W5Xd/mV4GWOay4P8ix7HlEsvcGpaUF2ZQXADduaJNnMz
+         72Flyg+CQk0wAJ7yiDX3xyjDtZWodhnUNkQR6z9deLqhil4SuUoHtJun2k0i6UfeaC
+         jP6NZtFD3gn0A==
+Received: by pali.im (Postfix)
+        id 1447A9D7; Wed,  7 Dec 2022 08:57:51 +0100 (CET)
+Date:   Wed, 7 Dec 2022 08:57:50 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
+ devm_gpiod_get_optional()
+Message-ID: <20221207075750.6usm4mgejtpcrktw@pali>
+References: <Y3KMEZFv6dpxA+Gv@google.com>
+ <Y4/s3227WQyGQiOI@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y4/s3227WQyGQiOI@google.com>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dt
-branch HEAD: d3fd0ee7a4a1e796413fab7affc72eeec31bed13  dt-bindings: PCI: mediatek-gen3: add support for mt7986
+On Tuesday 06 December 2022 17:31:11 Dmitry Torokhov wrote:
+> On Mon, Nov 14, 2022 at 10:42:25AM -0800, Dmitry Torokhov wrote:
+> > Switch the driver to the generic version of gpiod API (and away from
+> > OF-specific variant), so that we can stop exporting
+> > devm_gpiod_get_from_of_node().
+> > 
+> > Acked-by: Pali Rohár <pali@kernel.org>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> > 
+> > v2:
+> >  - collected reviewed-by/acked-by tags
+> >  - updated commit description to remove incorrect assumption of why
+> >    devm_gpiod_get_from_of_node() was used in the first place
+> > 
+> > This is the last user of devm_gpiod_get_from_of_node() in the mainline
+> > (next), it would be great to have it in so that we can remove the API in
+> > the next release cycle.
+> > 
+> > Thanks!
+> 
+> Gentle ping on this one... I'd really like to remove
+> [devm_]gpiod_get_from_of_node() API from 6.2.
+> 
+> Thanks.
+> 
+> -- 
+> Dmitry
 
-elapsed time: 732m
-
-configs tested: 62
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-powerpc                           allnoconfig
-s390                                defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-sh                               allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-ia64                             allmodconfig
-arm                  randconfig-r046-20221206
-arc                  randconfig-r043-20221206
-x86_64                          rhel-8.3-rust
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-i386                                defconfig
-x86_64                               rhel-8.3
-x86_64                              defconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-i386                             allyesconfig
-x86_64                           allyesconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-x86_64                            allnoconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-
-clang tested configs:
-hexagon              randconfig-r041-20221206
-hexagon              randconfig-r045-20221206
-riscv                randconfig-r042-20221206
-s390                 randconfig-r044-20221206
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Hello Dmitry! You would need to wait with your change. There are more
+important fixes and less important cleanups for this aardvark driver
+which are waiting in the queue for longer time:
+https://patchwork.kernel.org/project/linux-pci/list/?series=&submitter=&state=&q=aardvark&archive=&delegate=
