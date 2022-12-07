@@ -2,106 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCFF164513E
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 02:31:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED6B64537C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 06:39:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbiLGBbR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Dec 2022 20:31:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48788 "EHLO
+        id S229619AbiLGFjl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 00:39:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbiLGBbQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Dec 2022 20:31:16 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB0652158;
-        Tue,  6 Dec 2022 17:31:16 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id p24so15688564plw.1;
-        Tue, 06 Dec 2022 17:31:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=k7urdQE78p912qO0A7x+cXXIHloLKsW1NnErtpLTCgE=;
-        b=PF8d6NSlKi9CbBejIf+IJfb6sGIV2inLi1UDQw0YGbamjjviRKOD3JWzJnDVQlpXLM
-         +XF+oUZpjIUV3TJ6+WrZnarkThTgxf3wpqn6rf1kzZ1lmVQgI99WNByJ+hZMyrrtj3Ax
-         OpMj9NyrxTrNiypIavUPCnzeYbqeuXV/T9MgUdDZMtFmhHqagqhJwSPFQUeABGoAqWiX
-         JTsQIYMl3wxud32/MkncAmheSThngjdKGLc7V+NAawh6vrrzYy7jVF+7OOfP4Oqjm8C9
-         j3hSfseiaY2BFVaSFTIi8w11Firj2Edev8kItXukE8NnU2gFPbytv6awkw1eLujE/Nqi
-         XCmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k7urdQE78p912qO0A7x+cXXIHloLKsW1NnErtpLTCgE=;
-        b=AMoiKQAJ8iKh6w17EZIg+XWAhkFqgvQA3V82JNQfANbzOXfNTKw87MQW1WjbIDulGU
-         AMYd7VqwzCZnkgVBVN9aKtUVk1SKR0RpcPozBuNxBG0p4SdRodZnor14a/vsHE+v3kPw
-         NWJ3i16aN8JfCcViA9iermXRI4gcGWqRcrdmSBGuINlIqGUXdWGcRxb6rAjLXJbN3M49
-         EwteFYFN2diIUIaS5Z5pd5vDyNCtRWOKwgxUeVqq8ILSisYL/Ht8DF8CsZPF93oRW0M4
-         D9lG3MXtGYt5x3Dm+QaHFSyduNK6zvnmIxoe/4AHkc3OODDtdQQ1AniC1pRC4ip7OZGZ
-         YdgA==
-X-Gm-Message-State: ANoB5pmKmg439EtRnqi6BcLND6ZgEqpL4UqdTtqJKaBseQhPtfRiJJcM
-        j75QmhxYYiV4NHDxkPmAiQsXKa7h3JU=
-X-Google-Smtp-Source: AA0mqf6muuuxbEIJAn0cAhL8ISoINjfzW0o2hKewGkvmHMwrtI+1P5hPiYKRmPvzM/rJEuIuw07Bmw==
-X-Received: by 2002:a17:903:1246:b0:189:63f2:d584 with SMTP id u6-20020a170903124600b0018963f2d584mr58297572plh.156.1670376675391;
-        Tue, 06 Dec 2022 17:31:15 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:7a61:38c7:d37a:7f43])
-        by smtp.gmail.com with ESMTPSA id 65-20020a620544000000b00575448ab0e9sm12247461pff.123.2022.12.06.17.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 17:31:14 -0800 (PST)
-Date:   Tue, 6 Dec 2022 17:31:11 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
- devm_gpiod_get_optional()
-Message-ID: <Y4/s3227WQyGQiOI@google.com>
-References: <Y3KMEZFv6dpxA+Gv@google.com>
+        with ESMTP id S229536AbiLGFjj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 00:39:39 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE0D4045F
+        for <linux-pci@vger.kernel.org>; Tue,  6 Dec 2022 21:39:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670391578; x=1701927578;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3+uVNJOBFls4FdMveN0eFhwqRECLSkd5emwISPoyltI=;
+  b=hM4uIFP46FiQA07U0gKXTVW2xdTt+B5v5xhpqdpsHwveUf7kauSzE5e9
+   RESrF4L8/R76BDulrEvwBPX1rRFkglM4Wsr26IEum3TKHAtgAaEflPj6/
+   g37vo7JBuhRmIAtCfLMq8cCmQAJcknhm+ZybU2xLKbw2+OZA7/7iZnrXg
+   cd1ElcNfQnI2zQ07t+jux5MQJExOrge63qLt+DW8XaCe7YM9PkUx40vi1
+   SJ1l6BgY8bMny6wxMsezrDKKhI4iKvYeE+qkYU7huI8w06LoxDVMc27sR
+   NV/amxoOxSY6b9RMGliMcL0FJprbs/zWGBT8rLBanKr3ey/AsuFCYQfx5
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="317951552"
+X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
+   d="scan'208";a="317951552"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 21:39:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="891661890"
+X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
+   d="scan'208";a="891661890"
+Received: from lkp-server01.sh.intel.com (HELO b3c45e08cbc1) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Dec 2022 21:39:36 -0800
+Received: from kbuild by b3c45e08cbc1 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1p2n9b-0001bd-26;
+        Wed, 07 Dec 2022 05:39:35 +0000
+Date:   Wed, 07 Dec 2022 13:38:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/dt] BUILD SUCCESS
+ d3fd0ee7a4a1e796413fab7affc72eeec31bed13
+Message-ID: <639026df.R+op4GqscYazVKAA%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y3KMEZFv6dpxA+Gv@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 10:42:25AM -0800, Dmitry Torokhov wrote:
-> Switch the driver to the generic version of gpiod API (and away from
-> OF-specific variant), so that we can stop exporting
-> devm_gpiod_get_from_of_node().
-> 
-> Acked-by: Pali Rohár <pali@kernel.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> 
-> v2:
->  - collected reviewed-by/acked-by tags
->  - updated commit description to remove incorrect assumption of why
->    devm_gpiod_get_from_of_node() was used in the first place
-> 
-> This is the last user of devm_gpiod_get_from_of_node() in the mainline
-> (next), it would be great to have it in so that we can remove the API in
-> the next release cycle.
-> 
-> Thanks!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dt
+branch HEAD: d3fd0ee7a4a1e796413fab7affc72eeec31bed13  dt-bindings: PCI: mediatek-gen3: add support for mt7986
 
-Gentle ping on this one... I'd really like to remove
-[devm_]gpiod_get_from_of_node() API from 6.2.
+elapsed time: 732m
 
-Thanks.
+configs tested: 62
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+powerpc                           allnoconfig
+s390                                defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+s390                             allyesconfig
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+sh                               allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+ia64                             allmodconfig
+arm                  randconfig-r046-20221206
+arc                  randconfig-r043-20221206
+x86_64                          rhel-8.3-rust
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+i386                                defconfig
+x86_64                               rhel-8.3
+x86_64                              defconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                             allyesconfig
+x86_64                           allyesconfig
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+x86_64                            allnoconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+
+clang tested configs:
+hexagon              randconfig-r041-20221206
+hexagon              randconfig-r045-20221206
+riscv                randconfig-r042-20221206
+s390                 randconfig-r044-20221206
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-k001
 
 -- 
-Dmitry
+0-DAY CI Kernel Test Service
+https://01.org/lkp
