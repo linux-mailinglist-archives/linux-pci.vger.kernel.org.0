@@ -2,126 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 703DC645CA7
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 15:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1070645CAE
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Dec 2022 15:33:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbiLGObS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Dec 2022 09:31:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
+        id S230058AbiLGOd4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 09:33:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229971AbiLGObM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 09:31:12 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4124C36C73
-        for <linux-pci@vger.kernel.org>; Wed,  7 Dec 2022 06:31:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670423470; x=1701959470;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VsrhTY5goZhHjTyeGaxSkMMRy6iwcgLp74JX8Kl0zH8=;
-  b=jlbCnpopvQDAcOikFK/fMXWobw1jSSkjfFKgN3+xVdjEA0ns9/rPepOe
-   3HuvgvyntFhJlzT10mMSAsKbgzUVPg5UXaxWTtwR89ESoZwJ4Xq64Zd5r
-   0Go1rWYs/uBBS7wphtQ5/MJZZfUuMD2USFW9ynvBZIP1QRcvJef6a7/yk
-   5vinFplGrjNLQlf2Pm89LVTcY5PuyHunEXArXp3TclcINn02gFmxeQjzf
-   eITXVRe7Tq4GU9kprWQ3xTrPtf5MAMs4Se4fK4QO3rFcbf75zOFRHUXyJ
-   sakM6ui6mJdjhI22UL+dtHs5qLFANS+cbm8MubPVPqHnIBv06Jdtp5KXn
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="343935641"
-X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
-   d="scan'208";a="343935641"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 06:31:08 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="677381908"
-X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
-   d="scan'208";a="677381908"
-Received: from gjalliso-mobl.amr.corp.intel.com (HELO [10.212.135.231]) ([10.212.135.231])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 06:31:05 -0800
-Message-ID: <2d00e2f1-387d-ba78-76d4-d657a942ee5b@linux.intel.com>
-Date:   Wed, 7 Dec 2022 06:31:03 -0800
+        with ESMTP id S229677AbiLGOdz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 09:33:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9424874A;
+        Wed,  7 Dec 2022 06:33:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D00C61A21;
+        Wed,  7 Dec 2022 14:33:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F9DC433C1;
+        Wed,  7 Dec 2022 14:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670423633;
+        bh=c+KvtVD0WLo5gwEphtibdZzJjkwLKgNGQrH2V1E1aXU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OfTWS5hUSadr7o7xtdJ0R+zDfShXDpQX3tRV0YLBAE7y1YdiWf/4TVnd6XbwyfW7D
+         9pshZ5piIcEEBKGAYOwT7RUDqxscXns3qktQUeysF1bbMy9pqGvtqXK7NkBQj+jEGh
+         /En73LUpdGivrTIqPQyFldJ4/nB48m+P9QyqGDgqo93wMn++Ajsb4tc10erl+gKDZo
+         Ct+IenQvCaxiOaGQ6dHb8iaA9ISMa6FElcpXfhZ3cXxIpWqd5VMNravgNPjvu5xcNQ
+         HZ3INZyw87gUmXf31XYLPufE79jmKXRfW7vhhprjOPwcrq1DBnbKH2i4JhAr/q3LD7
+         VCg56qtXC+jmw==
+Date:   Wed, 7 Dec 2022 08:33:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
+ devm_gpiod_get_optional()
+Message-ID: <20221207143351.GA1439513@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH v2] PCI/portdrv: Do not require an interrupt for all AER
- capable ports
-Content-Language: en-US
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org
-References: <20221207084105.84947-1-mika.westerberg@linux.intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20221207084105.84947-1-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y3KMEZFv6dpxA+Gv@google.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 12/7/22 12:41 AM, Mika Westerberg wrote:
-> Only Root Ports and Event Collectors use MSI for AER. PCIe Switch ports
-> or endpoints on the other hand only send messages (that get collected by
-> the former). For this reason do not require PCIe switch ports and
-> endpoints to use interrupt if they support AER.
+On Mon, Nov 14, 2022 at 10:42:25AM -0800, Dmitry Torokhov wrote:
+> Switch the driver to the generic version of gpiod API (and away from
+> OF-specific variant), so that we can stop exporting
+> devm_gpiod_get_from_of_node().
 > 
-> This allows portdrv to attach PCIe switch ports of Intel DG1 and DG2
-> discrete graphics cards. These do not declare MSI or legacy interrupts.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+This is unrelated to other pending aardvark changes and will help
+unblock the API removal, so I applied this to pci/ctrl/aardvark for
+v6.2, thanks!
 
 > ---
-> Changes from v1:
 > 
->  * Updated commit message to be more specific on which hardware this is
->    needed.
+> v2:
+>  - collected reviewed-by/acked-by tags
+>  - updated commit description to remove incorrect assumption of why
+>    devm_gpiod_get_from_of_node() was used in the first place
 > 
->  drivers/pci/pcie/portdrv_core.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+> This is the last user of devm_gpiod_get_from_of_node() in the mainline
+> (next), it would be great to have it in so that we can remove the API in
+> the next release cycle.
 > 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 1ac7fec47d6f..1b1c386e50c4 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -164,7 +164,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
->   */
->  static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  {
-> -	int ret, i;
-> +	int ret, i, type;
+> Thanks!
+> 
+> 
+>  drivers/pci/controller/pci-aardvark.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index ba36bbc5897d..5ecfac23c9fc 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -1859,20 +1859,19 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
 >  
->  	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
->  		irqs[i] = -1;
-> @@ -177,6 +177,19 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  	if ((mask & PCIE_PORT_SERVICE_PME) && pcie_pme_no_msi())
->  		goto legacy_irq;
+> -	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
+> -						       "reset-gpios", 0,
+> -						       GPIOD_OUT_LOW,
+> -						       "pcie1-reset");
+> +	pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+>  	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
+>  	if (ret) {
+> -		if (ret == -ENOENT) {
+> -			pcie->reset_gpio = NULL;
+> -		} else {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev, "Failed to get reset-gpio: %i\n",
+> -					ret);
+> -			return ret;
+> -		}
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get reset-gpio: %i\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
+> +	if (ret) {
+> +		dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
+> +		return ret;
+>  	}
 >  
-> +	/*
-> +	 * Only root ports and event collectors use MSI for errors. Endpoints,
-> +	 * switch ports send messages to them but don't use MSI for that (PCIe
-> +	 * 5.0 sec 6.2.3.2).
-> +	 */
-> +	type = pci_pcie_type(dev);
-> +	if ((mask & PCIE_PORT_SERVICE_AER) &&
-> +	    type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_RC_EC)
-> +		mask &= ~PCIE_PORT_SERVICE_AER;
-> +
-> +	if (!mask)
-> +		return 0;
-> +
->  	/* Try to use MSI-X or MSI if supported */
->  	if (pcie_port_enable_irq_vec(dev, irqs, mask) == 0)
->  		return 0;
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+>  	ret = of_pci_get_max_link_speed(dev->of_node);
+> -- 
+> 2.38.1.431.g37b22c650d-goog
+> 
+> 
+> -- 
+> Dmitry
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
