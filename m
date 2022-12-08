@@ -2,139 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA27646752
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 03:56:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D3E6467A4
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 04:18:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbiLHC4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Dec 2022 21:56:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
+        id S229628AbiLHDSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 22:18:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiLHC4l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 21:56:41 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E54B5B5AF;
-        Wed,  7 Dec 2022 18:56:41 -0800 (PST)
+        with ESMTP id S229470AbiLHDSb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 22:18:31 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE343205F
+        for <linux-pci@vger.kernel.org>; Wed,  7 Dec 2022 19:18:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670468201; x=1702004201;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ghhfzdKqDWyzvVgFa6iLW+Gcu3nztPR5Gp+3f2Uy3a4=;
-  b=HGUsViS4unm6huJZqZSuIXGlCaYN5Q8wTP4C4v3CWe/UTCzv13kU0gSq
-   QMpotEfWhv+6l6R4B1klIILcBZD5un+bbMwF2Wl46wxgzOpYb7TlA5HxP
-   OhEo4wdnLpqJAYxSxXS1p60Z/9T/bdY2SFlGi9FP0zXihODfG+m4VVdfO
-   vfKfMT6fhLDI3quo63CM7w6eQMSQ3xY5FTEIMR0MwLiKoAAk+TJ9k0S0Q
-   eHVoewcqygZMnSsuNigQuyN3X6+oZjyEvcVroVAno1ZhOWQ/VVqJvXKh8
-   eq61Fi9pGcEbiUfXcc2awLrB4QcrTuBccohZsyGIHO1AHYdD1c/T3Xzcp
+  t=1670469510; x=1702005510;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1xq4lcxYX0rj0wXsmLaSamfxP1sOqC1NT9bxUxwwtaM=;
+  b=FvcDL8StezMFkhdg1XStJnmjoKLNn/+z0ga1/jRndFXEPnUgwaOsXweM
+   NYiRp0CZhiTRDIasQUwc+2BHCCFetOLYlCW8041Xgh75Npe43+HMTzq1R
+   4pzrxlRy9BKcbGptwAFjg1HL2Ng4cv0mpHGlFME8lWn1x+GqSYCNEoKHl
+   sRFUv7nkUD46O75S5KJ9r85arhVygRrfA2SjRIeGR1ByOyPvUZZyY/1fw
+   LitYm0cJda3BJYt8ejgtmdFcWSZQKEYJNbyiBAVp6Avk2QQ/Gu4AsEnSl
+   KmbuJvSl2fhu3kIdRXWop7HY3YwHLzUZ6Pn+0nEQYiytVaT2PxG34otND
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="314704195"
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="381353213"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="314704195"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:56:40 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="975690055"
+   d="scan'208";a="381353213"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 19:18:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="715429913"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="975690055"
-Received: from gjalliso-mobl.amr.corp.intel.com (HELO [10.212.135.231]) ([10.212.135.231])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:56:39 -0800
-Message-ID: <4d0d03c0-2880-1b90-ea94-e36d581ca040@linux.intel.com>
-Date:   Wed, 7 Dec 2022 18:56:38 -0800
+   d="scan'208";a="715429913"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Dec 2022 19:18:28 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1p37QZ-0000md-1T;
+        Thu, 08 Dec 2022 03:18:27 +0000
+Date:   Thu, 08 Dec 2022 11:18:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/aardvark] BUILD SUCCESS
+ 7ccb966779645636679a723588b7bae4f0a8d7d5
+Message-ID: <63915777.P25X4L+2wYpV51zw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH V9 2/4] PCI: vmd: Use PCI_VDEVICE in device list
-Content-Language: en-US
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
-        rafael@kernel.org, me@adhityamohan.in
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221208023942.491721-1-david.e.box@linux.intel.com>
- <20221208023942.491721-3-david.e.box@linux.intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20221208023942.491721-3-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,UPPERCASE_50_75 autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/aardvark
+branch HEAD: 7ccb966779645636679a723588b7bae4f0a8d7d5  PCI: aardvark: Switch to using devm_gpiod_get_optional()
 
+elapsed time: 723m
 
-On 12/7/22 6:39 PM, David E. Box wrote:
-> Refactor the PCI ID list to use PCI_VDEVICE.
+configs tested: 71
+configs skipped: 2
 
-Add some info about why it is done.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
-> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> ---
->  V9 - No change
-> 
->  V8 - No change
-> 
->  V7 - New Patch. Separate patch suggested by Lorenzo
-> 
->  drivers/pci/controller/vmd.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index e06e9f4fc50f..9dedca714c18 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -994,33 +994,33 @@ static int vmd_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(vmd_dev_pm_ops, vmd_suspend, vmd_resume);
->  
->  static const struct pci_device_id vmd_ids[] = {
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
-> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
-> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
-> +	{PCI_VDEVICE(INTEL, 0x467f),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
-> +	{PCI_VDEVICE(INTEL, 0x4c3d),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa77f),
-> +	{PCI_VDEVICE(INTEL, 0xa77f),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7d0b),
-> +	{PCI_VDEVICE(INTEL, 0x7d0b),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xad0b),
-> +	{PCI_VDEVICE(INTEL, 0xad0b),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
-> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
->  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+gcc tested configs:
+arc                  randconfig-r043-20221207
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+riscv                randconfig-r042-20221207
+x86_64                          rhel-8.3-rust
+powerpc                           allnoconfig
+s390                 randconfig-r044-20221207
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                               rhel-8.3
+x86_64                        randconfig-a015
+sh                               allmodconfig
+arc                                 defconfig
+x86_64                        randconfig-a002
+x86_64                              defconfig
+s390                             allmodconfig
+i386                          randconfig-a001
+alpha                               defconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+ia64                             allmodconfig
+x86_64                        randconfig-a004
+i386                          randconfig-a003
+s390                                defconfig
+i386                                defconfig
+arm                                 defconfig
+i386                          randconfig-a005
+m68k                             allyesconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+arm64                            allyesconfig
+s390                             allyesconfig
+x86_64                           allyesconfig
+arm                              allyesconfig
+x86_64                            allnoconfig
+i386                             allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+loongarch                           defconfig
+loongarch                         allnoconfig
+loongarch                        allmodconfig
+
+clang tested configs:
+arm                  randconfig-r046-20221207
+hexagon              randconfig-r041-20221207
+hexagon              randconfig-r045-20221207
+x86_64                        randconfig-a014
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-k001
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+0-DAY CI Kernel Test Service
+https://01.org/lkp
