@@ -2,43 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64D3B6475B6
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 19:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B29C6475C9
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 19:49:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbiLHSld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Dec 2022 13:41:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        id S229885AbiLHStB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Dec 2022 13:49:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229968AbiLHSla (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Dec 2022 13:41:30 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E80884248;
-        Thu,  8 Dec 2022 10:41:29 -0800 (PST)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1p3Lpn-00007C-NX; Thu, 08 Dec 2022 19:41:27 +0100
-Message-ID: <dec37fc9-1a69-74dc-d613-d806c732ffd7@leemhuis.info>
-Date:   Thu, 8 Dec 2022 19:41:27 +0100
+        with ESMTP id S229788AbiLHStA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Dec 2022 13:49:00 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948B08BD15;
+        Thu,  8 Dec 2022 10:48:59 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id h33so1875449pgm.9;
+        Thu, 08 Dec 2022 10:48:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=weEZOEnZa0pdtpaJMp87RdmAilln7Cqu31ebVo2xgNk=;
+        b=pxoM8Y0EeyyGqEukVegcbFJYlyBqqzZp2AuYYzAewbIj/3QH1ynhAqG7gDtgZP5SRR
+         JmOqlR55lWyDb2Ygjp/iYvEDaZ9l0l8tNjMlWFgqvXSEi8ZBZbv/twfmxThHRKWffpzV
+         qlBGx2/fR3u72h4d51TG2dT2BIUtsCTMxpZUsqskhDGg1oiJb6vtS+sTDe5rpP9xJVke
+         xlHMOBSSplkyq5y2GTShXVxCgZHeYc11JpbIAZOZpAUIY/3yw0Dw2LX01cDCFMrFtANw
+         N2Fu99eJ1ErO3/kw4Hq3x59SxG67Q4w6UekPH+hdsDoNe4vPcoWFqWBcx083iO+VajsC
+         d42Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=weEZOEnZa0pdtpaJMp87RdmAilln7Cqu31ebVo2xgNk=;
+        b=3M3iyDGUBWjr5MqIcUP4VMyBC6McKA8TXM9ytuw8+Fj82aronCG27ixqeHWqdiyit5
+         kAkQ6dyrKsW7qQWy1/0BrWQF5NMB64O0/Fe5YG/cwpytrO39HbMZSyQ0dDv3qWQ4bHAS
+         w4CsLI93pMn33Qmc7lfjUvRuopy81R18qecLVVpioj5+KszWhPvV1ZCEwGyuYNrH4069
+         3YjNO3MHp+V0iDSZwm/ZLUputsox/m1Wp/a8p4/K/AhUqXf3eCnT07TUC6+cXtRXAV2W
+         Lhael+g2/hWILY/y+J518iI+SSrn0ZGVNEPuLkNrn3f1+Xfu27jc8gOMniL0BExisaid
+         6S5A==
+X-Gm-Message-State: ANoB5pkJMdR7XGUrTEPnHRRort7Y0DOiiae5swMp4OEs4U57iNz8YubQ
+        psc137n/j3eZlAkgb1a51Uy5OqrFdL2NvSyWdj8=
+X-Google-Smtp-Source: AA0mqf7YsKCYXQfcFSpcyTBM0eDMDVY+aTSsVSAUeUxBWThPcQ3A4H+jN0RQkvzTX7fIRQcxQ2uUTeGOaBi2yDq3+VM=
+X-Received: by 2002:a63:5b64:0:b0:478:ae53:a299 with SMTP id
+ l36-20020a635b64000000b00478ae53a299mr17576140pgm.260.1670525339058; Thu, 08
+ Dec 2022 10:48:59 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216782_-_resume_from_susp?=
- =?UTF-8?Q?end_broken_on_Asus_UX305FA?=
-Content-Language: en-US, de-DE
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-References: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
-Cc:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>
-In-Reply-To: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670524889;762026d0;
-X-HE-SMSGID: 1p3Lpn-00007C-NX
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+References: <CANBBZXPWe56VYJtzXdimEnkFgF+A=G15TXrd8Z5kBcUOGgHeRw@mail.gmail.com>
+ <20221208165008.GA1547952@bhelgaas> <20221208102527.33917ff9.alex.williamson@redhat.com>
+ <CANBBZXPBRr6On_3q0Ac0iQtrV5Bs84=GuHNvLz527T3ohHSuCw@mail.gmail.com> <20221208112133.36efe5ff.alex.williamson@redhat.com>
+In-Reply-To: <20221208112133.36efe5ff.alex.williamson@redhat.com>
+From:   Major Saheb <majosaheb@gmail.com>
+Date:   Fri, 9 Dec 2022 00:18:46 +0530
+Message-ID: <CANBBZXPCvY_ePdOA02NcTc2omM0oEBB5=KWv5LFVD-tWvtE0WA@mail.gmail.com>
+Subject: Re: vfio-pci rejects binding to devices having same pcie vendor id
+ and device id
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -47,45 +71,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, this is your Linux kernel regression tracker.
+Sure , I will read the process and try to submit the patch.
+Thanks.
 
-On 08.12.22 15:43, Thorsten Leemhuis wrote:
-> 
-> I noticed a regression report in bugzilla.kernel.org. It afaics needs
-> more debugging, but I nevertheless want add it to the tracking.
-
-Bjorn, if you have a minute, could you please take a quick look at this
-please: https://bugzilla.kernel.org/show_bug.cgi?id=216782
-
-To quote
-
-```
-> Starting from kernel 6.1-rc1 for the first time in 8 years the
-> resume
-> from suspend is broken on my Asus UX305FA. After resume the sysrsq keys
-> do not work and a hard reset is the only solution for shutdown, the
-> screen is black, keyboard and mouse do not respond.
-> 
-> After bisecting the first bad commit is:
-> 
-> commit a47126ec29f538e1197862919f94d3b6668144a4
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Fri Sep 9 15:24:57 2022 -0500
-> 
->     PCI/PTM: Cache PTM Capability offset
->     
->     Cache the PTM Capability offset instead of searching for it every time we
->     enable/disable PTM or save/restore PTM state.  No functional change
->     intended.
-```
-
-The reporter has some trouble with the bisection (see the ticket for
-details), but it looks a bit like the problems are actually caused by
-that patch or something in that series.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+On Thu, Dec 8, 2022 at 11:51 PM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Thu, 8 Dec 2022 23:25:07 +0530
+> Major Saheb <majosaheb@gmail.com> wrote:
+>
+> > Thanks Alex ,
+> > That works for me
+> >
+> > ~$ sudo driverctl --nosave set-override 0000:00:05.0 vfio-pci
+> > ~$ sudo driverctl --nosave set-override 0000:00:06.0 vfio-pci
+> > ~$ sudo driverctl --nosave set-override 0000:00:07.0 vfio-pci
+> > admin@node-1:~$ sudo nvme list
+> > Node                  SN                   Model
+> >              Namespace Usage                      Format           FW
+> > Rev
+> > --------------------- --------------------
+> > ---------------------------------------- ---------
+> > -------------------------- ---------------- --------
+> > /dev/nvme10n1         akqvf2-0_10          QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme11n1         akqvf2-0_11          QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme5n1          akqvf2-0_5           QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme6n1          akqvf2-0_6           QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme7n1          akqvf2-0_7           QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme8n1          akqvf2-0_8           QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> > /dev/nvme9n1          akqvf2-0_9           QEMU NVMe Ctrl
+> >              1         274.88  GB / 274.88  GB    512   B +  0 B   1.0
+> >
+> > I came across you blogspot after I fired the mail
+> > http://vfio.blogspot.com/2015/05/vfio-gpu-how-to-series-part-3-host.html
+> > Some should update https://docs.kernel.org/driver-api/vfio.html in
+> > public interest , If I knew how to do that I would do it,
+>
+> Yes, that documentation is from before the driver_override method was
+> introduced.  There's some non vfio specific documentation of
+> driver_override here:
+>
+> https://docs.kernel.org/admin-guide/abi-testing.html?highlight=driver_override#abi-sys-bus-pci-devices-driver-override
+>
+> Otherwise, documentation updates gladly accepted.  This documentation
+> is part of the kernel source tree and follows the same process as
+> submitting code changes, outlined here:
+>
+> https://docs.kernel.org/process/submitting-patches.html
+>
+> The kvm@vger.kernel.org mailing list handles patches for vfio, but
+> please keep me in Cc if you submit something.  Thanks,
+>
+> Alex
+>
