@@ -2,198 +2,478 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EE64647721
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 21:20:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 453196477DA
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 22:19:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbiLHUUd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Dec 2022 15:20:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
+        id S229563AbiLHVTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Dec 2022 16:19:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiLHUU2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Dec 2022 15:20:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C65A2B1B4
-        for <linux-pci@vger.kernel.org>; Thu,  8 Dec 2022 12:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670530769;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mKHzWNJ7JSA7UPpo6qNq0rP4CnM5zYPQGSntpfKSPk8=;
-        b=c0A8gl1K9SZLyvmyHOjsy3gK/ls+viXcADKk1aTr4x3Kz9/I0HT0f/pdK0c8lMOFA+9pt5
-        j9PjOLrL2ecg0m8U+MqQUlJcsasEsQAUbr7HBt7W8cnNIWozRY6CdyrK2U1cN3IdRy2m6T
-        Qrw3IjQcW7uqaqOcJKOfjKerR8dW9qA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-487-trJQUQt7NEGlTFtj4avSSg-1; Thu, 08 Dec 2022 15:19:28 -0500
-X-MC-Unique: trJQUQt7NEGlTFtj4avSSg-1
-Received: by mail-ed1-f71.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so121530edz.21
-        for <linux-pci@vger.kernel.org>; Thu, 08 Dec 2022 12:19:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mKHzWNJ7JSA7UPpo6qNq0rP4CnM5zYPQGSntpfKSPk8=;
-        b=FzM1Ww3z6IJl/ub2vYhsSkwI3WWzhtfBBOZ7X01a17k0C2CyvxQd2jtEvewu7ps3pV
-         kLMX5oBgwDMi08YRswEmpukJqbRyoYRzp8ZF12Wel8e5HdXF9Mwh8U1riYmZEYXH0TDJ
-         MJrbxwTeE0gI2wKIdRZKJFv/sbefDJpsUbAsnCuFQjIVE4acNYLhS7VKbuIOJHpxHRU8
-         f1+6NsINH1vaJyWhXwGUjXv3jJt9vSsIP9zBxfXXM3C/F1aC5I9sbbtiLX7rRCl2qXZ4
-         tHhBSG2/eqJHwEbtm66y80sXNTDLz44UjY+ykPPf3CSdKeKfAtZ8xb4AgkX9rVguhGRj
-         x7LQ==
-X-Gm-Message-State: ANoB5pnEoooiGoFkFKvjzAii7BmCjQy0YMLdOL8sJt9Qei8eyEVGWU/6
-        rYTnArpZavI6J9yPKHA2fUe/qRxedJoLJt6fTzwEW0h2/nyADDfnjQs2uB5Nkyd+UrDbffk/oVX
-        VmYiGXVXqrGPVUZKKKWAs
-X-Received: by 2002:a17:906:9f23:b0:7c1:1ad9:e5b0 with SMTP id fy35-20020a1709069f2300b007c11ad9e5b0mr2612490ejc.33.1670530767035;
-        Thu, 08 Dec 2022 12:19:27 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5qLAF0gLqrx/eRPyh21FaHB793/ueuMNyqAZ8hP4ElQDFnheRxg+heDR/LvRlqLubJyHLjjg==
-X-Received: by 2002:a17:906:9f23:b0:7c1:1ad9:e5b0 with SMTP id fy35-20020a1709069f2300b007c11ad9e5b0mr2612478ejc.33.1670530766853;
-        Thu, 08 Dec 2022 12:19:26 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id g1-20020a17090604c100b0073dc5bb7c32sm10061712eja.64.2022.12.08.12.19.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 12:19:26 -0800 (PST)
-Message-ID: <33a65ae8-784d-920f-8542-3762916e070c@redhat.com>
-Date:   Thu, 8 Dec 2022 21:19:25 +0100
+        with ESMTP id S229523AbiLHVTD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Dec 2022 16:19:03 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8238610DC;
+        Thu,  8 Dec 2022 13:19:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670534341; x=1702070341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=daCo9aJnrElRYa5owQZwNuiIR5bcMFlsrMklej38QaA=;
+  b=lf1ftUc0U7/dKHN3VoMX8FdEVv9lYq8ezF6O8or7rleh7CruePltPIri
+   iHMhnJVwJSFvIgHEDifjbsDM7oxbBh40gLbutGimBozMGJy0iA3R4No3a
+   07P7JAtXT9ZLHvEp/T9AX4Ng9RgzoUbhTIxt0+c4o96I3ndVW3SWeMNYG
+   52n7MNaC1NyuZ4pz094nPK69uGmFH4kQIoMeWpWfhUgL6t61snGXqm3PP
+   ZcWMD1AXOR9lgnVCFATeXYIwJ368eqywkYp5Sy3l9yChbG4lgfZWGFunZ
+   SXSXZIl6Vbh+5qMVFKad6Yz6RZeWuH0+kJCNfkauCZM5eT9y4QOkez/xN
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="318456974"
+X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
+   d="scan'208";a="318456974"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:19:01 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="679692168"
+X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
+   d="scan'208";a="679692168"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.199.197])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:19:00 -0800
+Date:   Thu, 8 Dec 2022 13:18:59 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] cxl/pci: Move tracepoint definitions to drivers/cxl/core/
+Message-ID: <Y5JUw8pepX9McceV@aschofie-mobl2>
+References: <167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 0/4] PCI: Continue E820 vs host bridge window saga
-Content-Language: en-US, nl
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Florent DELAHAYE <kernelorg@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20221208200654.GA1562951@bhelgaas>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221208200654.GA1562951@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 12/8/22 21:06, Bjorn Helgaas wrote:
-> On Thu, Dec 08, 2022 at 08:16:31PM +0100, Hans de Goede wrote:
->> Hi Bjorn,
->>
->> On 12/8/22 19:57, Bjorn Helgaas wrote:
->>> On Wed, Dec 07, 2022 at 04:31:12PM +0100, Hans de Goede wrote:
->>>> On 12/4/22 10:13, Hans de Goede wrote:
->>>>
->>>> <snip>
->>>>
->>>>>>> 2. I am afraid that now allowing PCI MMIO space to be allocated
->>>>>>> in regions marked as EfiMemoryMappedIO will cause regressions
->>>>>>> on some systems. Specifically when I tried something similar
->>>>>>> the last time I looked at this (using the BIOS date cut-off
->>>>>>> approach IIRC) there was a suspend/resume regression on
->>>>>>> a Lenovo ThinkPad X1 carbon (20A7) model:
->>>>>>>
->>>>>>> https://bugzilla.redhat.com/show_bug.cgi?id=2029207
->>>>>>>
->>>>>>> Back then I came to the conclusion that the problem is that not
->>>>>>> avoiding the EfiMemoryMappedIO regions caused PCI MMIO space to
->>>>>>> be allocated in the 0xdfa00000 - 0xdfa10000 range which is
->>>>>>> listed in the EFI memmap as:
->>>>>>>
->>>>>>> [    0.000000] efi: mem46: [MMIO        |RUN|  |  |  |  |  |  |  |  |   |  |  |  |  ] range=[0x00000000dfa00000-0x00000000dfa0ffff] (0MB)
->>>>>>>
->>>>>>> And with current kernels with the extra logging added for this
->>>>>>> the following is logged related to this:
->>>>>>>
->>>>>>> [    0.326504] acpi PNP0A08:00: clipped [mem 0xdfa00000-0xfebfffff window] to [mem 0xdfa10000-0xfebfffff window] for e820 entry [mem 0xdceff000-0xdfa0ffff]
->>>>>>>
->>>>>>> I believe patch 1/4 of this set will make this clipping go away,
->>>>>>> re-introducing the suspend/resume problem.
->>>>>>
->>>>>> Yes, I'm afraid you're right.  Comparing the logs at comment #31
->>>>>> (fails) and comment #38 (works):
->>>>>>
->>>>>>   pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
->>>>>>   pci 0000:00:1c.0: BAR 14: assigned [mem 0xdfa00000-0xdfbfffff] fails
->>>>>>   pci 0000:00:1c.0: BAR 14: assigned [mem 0xdfb00000-0xdfcfffff] works
->>>>>>
->>>>>> Since 0xdfa00000 is included in the host bridge _CRS, but isn't
->>>>>> usable, my guess is this is a _CRS bug.
->>>>>
->>>>> Ack.
->>>>>
->>>>> So I was thinking to maybe limit the removal of EfiMemoryMappedIO
->>>>> regions from the E820 map if they are big enough to cause troubles?
->>>>>
->>>>> Looking at the EFI map MMIO regions on this Lenovo ThinkPad X1 carbon
->>>>> (20A7) model, they are tiny. Where as the ones which we know cause
->>>>> problems are huge. So maybe add a bit of heuristics to patch 1/4 based
->>>>> on the EfiMemoryMappedIO region size and only remove the big ones
->>>>> from the E820 map ?
->>>>>
->>>>> I know that adding heuristics like this always feels a bit wrong,
->>>>> because you end up putting a somewhat arbitrary cut off point in
->>>>> the code on which to toggle behavior on/off, but I think that in
->>>>> this case it should work nicely given how huge the EfiMemoryMappedIO
->>>>> regions which are actually causing problems are.
->>>
->>> I'll post a v2 that removes only regions 256KB or larger in a minute.
->>
->> Ok, may I ask why 256KB?
->>
->> I see that that rules out then troublesome MMIO regions from the X1 carbon from:
->> https://bugzilla.redhat.com/show_bug.cgi?id=2029207 :
->> efi: mem46: [MMIO|RUN|  ] range=[0xdfa00000-0xdfa0ffff] (0MB) [64K]
->> which we know we need to avoid / keep reserved.
->>
->> But OTOH the reservations which are causing the problems with assigning
->> resources to PCI devices by Linux look like this:
->> efi: mem50: [MMIO        |RUN|  |  |  |  |  |  |  |  |   |  |  |  |UC] range=[0x0000000065400000-0x00000000cfffffff] (1708MB)
->> which is significantly larger then 256KB.
->>
->> So we could e.g. also put the cut-off point at 16MB and still
->> remove the above troublesome reservation from the E820 table.
->> Note just thinking out loud here. I have no idea if 16MB
->> would be better...
+On Thu, Dec 08, 2022 at 09:02:00AM -0800, Dan Williams wrote:
+> CXL is using tracepoints for reporting RAS capability register payloads
+> for AER events, and has plans to use tracepoints for the output payload
+> of Get Poison List and Get Event Records commands. For organization
+> purposes it would be nice to keep those all under a single + local CXL
+> trace system. This also organization also potentially helps in the
+> future when CXL drivers expand beyond generic memory expanders, however
+> that would also entail a move away from the expander-specific
+> cxl_dev_state context, save that for later.
 > 
-> No good reason for 256KB.  We know it needs to be at least 64KB for
-> the X1 Carbon.  I picked 4x bigger just for headroom, since I assume
-> the 64KB is platform-specific host bridge registers or something.  Do
-> you think a bigger number would be better, i.e., we would retain more
-> MMIO things in E820?
+> Note that the powerpc-specific drivers/misc/cxl/ also defines a 'cxl'
+> trace system, however, it is unlikely that a single platform will ever
+> load both drivers simultaneously.
+
+Verified this on top of cxl/next with the get-poison-list patchset
+using the new trace file layout.
+
+Also, confirmed that the cxl_aer_*_error events appeared correctly
+in sys/kernel/debug/tracing/events/ and that 'cxl monitor' could 
+be run.
+
+Tested-by: Alison Schofield <alison.schofield@intel.com>
+
 > 
-> ECAM areas would be 1MB per bus, so between 1MB and 256MB.  Those areas
-> *should* be reserved by PNP0C02 _CRS, but IIRC the early MMCONFIG code
-> checks E820, and the late code checks for _CRS.  I guess one could
-> argue that ignoring those, e.g., by retaining anything 256MB or
-> smaller in E820, would reduce the amount of change.  
-
-Right, reducing how much we change what the E820 map looks like after
-this would be the main reason to make the cut of point bigger then
-256KB.
-
-> But if the host bridge _CRS includes 256MB of legitimate window that
-> EFI says is MMIO and is hence included in E820, that seems like kind
-> of a lot of usable window space to give up.
-
-Ack, I guess we can just go with 256KB for now and then see how things go.
-
-Regards,
-
-Hans
-
-
-
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> This patch is targeting v6.3.  I am sending it out now to enable the
+> in-flight Event and Poison list patch sets to build upon. It will not
+> move to a non-rebasing branch until after v6.2-rc2, but in the meantime
+> I can throw it out on the list and the cxl/preview branch.
+> 
+>  drivers/cxl/core/Makefile  |    3 +
+>  drivers/cxl/core/pci.c     |  112 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/trace.c   |    5 ++
+>  drivers/cxl/core/trace.h   |   11 ++--
+>  drivers/cxl/cxl.h          |    2 +
+>  drivers/cxl/cxlpci.h       |    3 +
+>  drivers/cxl/pci.c          |  111 --------------------------------------------
+>  tools/testing/cxl/Kbuild   |    2 +
+>  8 files changed, 131 insertions(+), 118 deletions(-)
+>  create mode 100644 drivers/cxl/core/trace.c
+>  rename include/trace/events/cxl.h => drivers/cxl/core/trace.h (94%)
+> 
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 79c7257f4107..ca4ae31d8f57 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -3,6 +3,8 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
+>  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
+>  
+>  ccflags-y += -I$(srctree)/drivers/cxl
+> +CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
+> +
+>  cxl_core-y := port.o
+>  cxl_core-y += pmem.o
+>  cxl_core-y += regs.o
+> @@ -10,4 +12,5 @@ cxl_core-y += memdev.o
+>  cxl_core-y += mbox.o
+>  cxl_core-y += pci.o
+>  cxl_core-y += hdm.o
+> +cxl_core-$(CONFIG_TRACING) += trace.o
+>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 57764e9cd19d..1d1492440287 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -9,6 +9,7 @@
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+>  #include "core.h"
+> +#include "trace.h"
+>  
+>  /**
+>   * DOC: cxl core pci
+> @@ -622,3 +623,114 @@ void read_cdat_data(struct cxl_port *port)
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+> +
+> +void cxl_cor_error_detected(struct pci_dev *pdev)
+> +{
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *dev = &cxlmd->dev;
+> +	void __iomem *addr;
+> +	u32 status;
+> +
+> +	if (!cxlds->regs.ras)
+> +		return;
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+> +	status = readl(addr);
+> +	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> +		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> +		trace_cxl_aer_correctable_error(dev, status);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, CXL);
+> +
+> +/* CXL spec rev3.0 8.2.4.16.1 */
+> +static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
+> +{
+> +	void __iomem *addr;
+> +	u32 *log_addr;
+> +	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
+> +	log_addr = log;
+> +
+> +	for (i = 0; i < log_u32_size; i++) {
+> +		*log_addr = readl(addr);
+> +		log_addr++;
+> +		addr += sizeof(u32);
+> +	}
+> +}
+> +
+> +/*
+> + * Log the state of the RAS status registers and prepare them to log the
+> + * next error status. Return 1 if reset needed.
+> + */
+> +static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+> +{
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *dev = &cxlmd->dev;
+> +	u32 hl[CXL_HEADERLOG_SIZE_U32];
+> +	void __iomem *addr;
+> +	u32 status;
+> +	u32 fe;
+> +
+> +	if (!cxlds->regs.ras)
+> +		return false;
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+> +	status = readl(addr);
+> +	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+> +		return false;
+> +
+> +	/* If multiple errors, log header points to first error from ctrl reg */
+> +	if (hweight32(status) > 1) {
+> +		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
+> +		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
+> +	} else {
+> +		fe = status;
+> +	}
+> +
+> +	header_log_copy(cxlds, hl);
+> +	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
+> +	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+> +
+> +	return true;
+> +}
+> +
+> +pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+> +				    pci_channel_state_t state)
+> +{
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *dev = &cxlmd->dev;
+> +	bool ue;
+> +
+> +	/*
+> +	 * A frozen channel indicates an impending reset which is fatal to
+> +	 * CXL.mem operation, and will likely crash the system. On the off
+> +	 * chance the situation is recoverable dump the status of the RAS
+> +	 * capability registers and bounce the active state of the memdev.
+> +	 */
+> +	ue = cxl_report_and_clear(cxlds);
+> +
+> +	switch (state) {
+> +	case pci_channel_io_normal:
+> +		if (ue) {
+> +			device_release_driver(dev);
+> +			return PCI_ERS_RESULT_NEED_RESET;
+> +		}
+> +		return PCI_ERS_RESULT_CAN_RECOVER;
+> +	case pci_channel_io_frozen:
+> +		dev_warn(&pdev->dev,
+> +			 "%s: frozen state error detected, disable CXL.mem\n",
+> +			 dev_name(dev));
+> +		device_release_driver(dev);
+> +		return PCI_ERS_RESULT_NEED_RESET;
+> +	case pci_channel_io_perm_failure:
+> +		dev_warn(&pdev->dev,
+> +			 "failure state error detected, request disconnect\n");
+> +		return PCI_ERS_RESULT_DISCONNECT;
+> +	}
+> +	return PCI_ERS_RESULT_NEED_RESET;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
+> diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+> new file mode 100644
+> index 000000000000..29ae7ce81dc5
+> --- /dev/null
+> +++ b/drivers/cxl/core/trace.c
+> @@ -0,0 +1,5 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> diff --git a/include/trace/events/cxl.h b/drivers/cxl/core/trace.h
+> similarity index 94%
+> rename from include/trace/events/cxl.h
+> rename to drivers/cxl/core/trace.h
+> index ad085a2534ef..20ca2fe2ca8e 100644
+> --- a/include/trace/events/cxl.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -1,15 +1,14 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>  #undef TRACE_SYSTEM
+>  #define TRACE_SYSTEM cxl
+>  
+>  #if !defined(_CXL_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
+>  #define _CXL_EVENTS_H
+>  
+> +#include <cxl.h>
+>  #include <linux/tracepoint.h>
+>  
+> -#define CXL_HEADERLOG_SIZE		SZ_512
+> -#define CXL_HEADERLOG_SIZE_U32		SZ_512 / sizeof(u32)
+> -
+>  #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
+>  #define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
+>  #define CXL_RAS_UC_CACHE_BE_PARITY	BIT(2)
+> @@ -106,7 +105,5 @@ TRACE_EVENT(cxl_aer_correctable_error,
+>  
+>  #endif /* _CXL_EVENTS_H */
+>  
+> -/* This part must be outside protection */
+> -#undef TRACE_INCLUDE_FILE
+> -#define TRACE_INCLUDE_FILE cxl
+> +#define TRACE_INCLUDE_FILE trace
+>  #include <trace/define_trace.h>
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1b1cf459ac77..aa3af3bb73b2 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -140,6 +140,8 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
+>  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+>  #define CXL_RAS_CAPABILITY_LENGTH 0x58
+> +#define CXL_HEADERLOG_SIZE SZ_512
+> +#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+>  
+>  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+>  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 920909791bb9..77dbdb980b12 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -66,4 +66,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>  struct cxl_dev_state;
+>  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
+>  void read_cdat_data(struct cxl_port *port);
+> +void cxl_cor_error_detected(struct pci_dev *pdev);
+> +pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+> +				    pci_channel_state_t state);
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 33083a522fd1..3a66aadb4df0 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -14,8 +14,6 @@
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+>  #include "cxl.h"
+> -#define CREATE_TRACE_POINTS
+> -#include <trace/events/cxl.h>
+>  
+>  /**
+>   * DOC: cxl pci
+> @@ -514,96 +512,6 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
+>  };
+>  MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+>  
+> -/* CXL spec rev3.0 8.2.4.16.1 */
+> -static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
+> -{
+> -	void __iomem *addr;
+> -	u32 *log_addr;
+> -	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
+> -
+> -	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
+> -	log_addr = log;
+> -
+> -	for (i = 0; i < log_u32_size; i++) {
+> -		*log_addr = readl(addr);
+> -		log_addr++;
+> -		addr += sizeof(u32);
+> -	}
+> -}
+> -
+> -/*
+> - * Log the state of the RAS status registers and prepare them to log the
+> - * next error status. Return 1 if reset needed.
+> - */
+> -static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+> -{
+> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> -	struct device *dev = &cxlmd->dev;
+> -	u32 hl[CXL_HEADERLOG_SIZE_U32];
+> -	void __iomem *addr;
+> -	u32 status;
+> -	u32 fe;
+> -
+> -	if (!cxlds->regs.ras)
+> -		return false;
+> -
+> -	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+> -	status = readl(addr);
+> -	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+> -		return false;
+> -
+> -	/* If multiple errors, log header points to first error from ctrl reg */
+> -	if (hweight32(status) > 1) {
+> -		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
+> -		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
+> -	} else {
+> -		fe = status;
+> -	}
+> -
+> -	header_log_copy(cxlds, hl);
+> -	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
+> -	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+> -
+> -	return true;
+> -}
+> -
+> -static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+> -					   pci_channel_state_t state)
+> -{
+> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> -	struct device *dev = &cxlmd->dev;
+> -	bool ue;
+> -
+> -	/*
+> -	 * A frozen channel indicates an impending reset which is fatal to
+> -	 * CXL.mem operation, and will likely crash the system. On the off
+> -	 * chance the situation is recoverable dump the status of the RAS
+> -	 * capability registers and bounce the active state of the memdev.
+> -	 */
+> -	ue = cxl_report_and_clear(cxlds);
+> -
+> -	switch (state) {
+> -	case pci_channel_io_normal:
+> -		if (ue) {
+> -			device_release_driver(dev);
+> -			return PCI_ERS_RESULT_NEED_RESET;
+> -		}
+> -		return PCI_ERS_RESULT_CAN_RECOVER;
+> -	case pci_channel_io_frozen:
+> -		dev_warn(&pdev->dev,
+> -			 "%s: frozen state error detected, disable CXL.mem\n",
+> -			 dev_name(dev));
+> -		device_release_driver(dev);
+> -		return PCI_ERS_RESULT_NEED_RESET;
+> -	case pci_channel_io_perm_failure:
+> -		dev_warn(&pdev->dev,
+> -			 "failure state error detected, request disconnect\n");
+> -		return PCI_ERS_RESULT_DISCONNECT;
+> -	}
+> -	return PCI_ERS_RESULT_NEED_RESET;
+> -}
+> -
+>  static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
+>  {
+>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> @@ -628,25 +536,6 @@ static void cxl_error_resume(struct pci_dev *pdev)
+>  		 dev->driver ? "successful" : "failed");
+>  }
+>  
+> -static void cxl_cor_error_detected(struct pci_dev *pdev)
+> -{
+> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> -	struct device *dev = &cxlmd->dev;
+> -	void __iomem *addr;
+> -	u32 status;
+> -
+> -	if (!cxlds->regs.ras)
+> -		return;
+> -
+> -	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+> -	status = readl(addr);
+> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> -		trace_cxl_aer_correctable_error(dev, status);
+> -	}
+> -}
+> -
+>  static const struct pci_error_handlers cxl_error_handlers = {
+>  	.error_detected	= cxl_error_detected,
+>  	.slot_reset	= cxl_slot_reset,
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 0805f08af8b3..12af1c9270ff 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -17,6 +17,7 @@ CXL_SRC := $(DRIVERS)/cxl
+>  CXL_CORE_SRC := $(DRIVERS)/cxl/core
+>  ccflags-y := -I$(srctree)/drivers/cxl/
+>  ccflags-y += -D__mock=__weak
+> +ccflags-y += -DTRACE_INCLUDE_PATH=$(CXL_CORE_SRC) -I$(srctree)/drivers/cxl/core/
+>  
+>  obj-m += cxl_acpi.o
+>  
+> @@ -49,6 +50,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
+>  cxl_core-y += $(CXL_CORE_SRC)/mbox.o
+>  cxl_core-y += $(CXL_CORE_SRC)/pci.o
+>  cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+> +cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+>  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+>  cxl_core-y += config_check.o
+>  
+> 
