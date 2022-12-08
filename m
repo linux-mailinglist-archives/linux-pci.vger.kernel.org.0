@@ -2,143 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11ED7646724
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 03:41:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EA27646752
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Dec 2022 03:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbiLHClR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Dec 2022 21:41:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
+        id S229523AbiLHC4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Dec 2022 21:56:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbiLHCkx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 21:40:53 -0500
+        with ESMTP id S229486AbiLHC4l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Dec 2022 21:56:41 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F04950D8;
-        Wed,  7 Dec 2022 18:40:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E54B5B5AF;
+        Wed,  7 Dec 2022 18:56:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670467226; x=1702003226;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=rgKXJv6opyDZ2Xf2woNRRDyis1PUsvqbEpmVPH8vHAA=;
-  b=O4P2At4NY7CKfKIparaDyH0XN6h74qJTnncdJMtU3pcG6lio+IchBZE2
-   DZ6E+6JEpfSRc42KosMjkrdrhJ0R24M6rhSwqd9btNicfVciPzhPNjXKA
-   mD5c0R3fuqafBjCQ+2JKoH2hu0vH9OZ5jwbVB4PjqdH3ZI40KmAKy4Edo
-   slISb2PDslORy18chf97va710psqOpkAAljm+/ZXdYFDfvHru/TZBtJ2t
-   GeQE5+dBPWxeXtaat+Mh4aqaUyVf6lOvo/POOjQp2X67FQDCJ0PqlCB34
-   zMBqwiNTqDLT4FIa5TUKu4bF1a5Iu+mxZf4wEhxCWuUsC1r0ncagiKRVa
+  t=1670468201; x=1702004201;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ghhfzdKqDWyzvVgFa6iLW+Gcu3nztPR5Gp+3f2Uy3a4=;
+  b=HGUsViS4unm6huJZqZSuIXGlCaYN5Q8wTP4C4v3CWe/UTCzv13kU0gSq
+   QMpotEfWhv+6l6R4B1klIILcBZD5un+bbMwF2Wl46wxgzOpYb7TlA5HxP
+   OhEo4wdnLpqJAYxSxXS1p60Z/9T/bdY2SFlGi9FP0zXihODfG+m4VVdfO
+   vfKfMT6fhLDI3quo63CM7w6eQMSQ3xY5FTEIMR0MwLiKoAAk+TJ9k0S0Q
+   eHVoewcqygZMnSsuNigQuyN3X6+oZjyEvcVroVAno1ZhOWQ/VVqJvXKh8
+   eq61Fi9pGcEbiUfXcc2awLrB4QcrTuBccohZsyGIHO1AHYdD1c/T3Xzcp
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="314702364"
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="314704195"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="314702364"
+   d="scan'208";a="314704195"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:40:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="975687056"
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:56:40 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="975690055"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="975687056"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Dec 2022 18:40:24 -0800
-Received: from plstone-mobl1.amr.corp.intel.com (unknown [10.212.164.201])
-        by linux.intel.com (Postfix) with ESMTP id E159B580C4C;
-        Wed,  7 Dec 2022 18:40:23 -0800 (PST)
-Message-ID: <f277a3cf2e0c51d47c6af0a53547792d727a5a79.camel@linux.intel.com>
-Subject: Re: [PATCH V8 0/4] PCI: vmd: Enable PCIe ASPM and LTR on select
- hardware
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Luke Jones <luke@ljones.dev>, nirmal.patel@linux.intel.com,
-        jonathan.derrick@linux.dev, lorenzo.pieralisi@arm.com,
-        hch@infradead.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, michael.a.bottini@intel.com,
+   d="scan'208";a="975690055"
+Received: from gjalliso-mobl.amr.corp.intel.com (HELO [10.212.135.231]) ([10.212.135.231])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:56:39 -0800
+Message-ID: <4d0d03c0-2880-1b90-ea94-e36d581ca040@linux.intel.com>
+Date:   Wed, 7 Dec 2022 18:56:38 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.2
+Subject: Re: [PATCH V9 2/4] PCI: vmd: Use PCI_VDEVICE in device list
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
         rafael@kernel.org, me@adhityamohan.in
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 07 Dec 2022 18:40:23 -0800
-In-Reply-To: <8b8c7ae512291532ea227b8a1c3f87c460e11e2f.camel@ljones.dev>
-References: <20221103021822.308586-1-david.e.box@linux.intel.com>
-         <8b8c7ae512291532ea227b8a1c3f87c460e11e2f.camel@ljones.dev>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221208023942.491721-1-david.e.box@linux.intel.com>
+ <20221208023942.491721-3-david.e.box@linux.intel.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20221208023942.491721-3-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,UPPERCASE_50_75 autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2022-12-07 at 22:05 +1300, Luke Jones wrote:
-> On Wed, 2022-11-02 at 19:18 -0700, David E. Box wrote:
-> > This series adds a work around for enabling PCIe ASPM and for setting
-> > PCIe
-> > LTR values on VMD reserved root ports on select platforms. While
-> > configuration of these capabilities is usually done by BIOS, on these
-> > platforms these capabilities will not be configured because the ports
-> > are
-> > not visible to BIOS. This was part of an initial design that expected
-> > the
-> > driver to completely handle the ports, including power management.
-> > However
-> > on Linux those ports are still managed by the PCIe core, which has
-> > the
-> > expectation that they adhere to device standards including BIOS
-> > configuration, leading to this problem.
-> >=20
-> > The target platforms are Tiger Lake, Alder Lake, and Raptor Lake
-> > though the
-> > latter has already implemented support for configuring the LTR
-> > values.
-> > Meteor Lake is expected add BIOS ASPM support, eliminating the future
-> > need
-> > for this work around.
-> >=20
-> > Note, the driver programs the LTRs because BIOS would also normally
-> > do this
-> > for devices that do not set them by default. Without this, SoC power
-> > management would be blocked on those platform. This SoC specific
-> > value is
-> > the maximum latency required to allow the SoC to enter the deepest
-> > power
-> > state.
-> >=20
-> > This patch addresses the following open bugzillas on VMD enabled
-> > laptops
-> > that cannot enter low power states.
-> >=20
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D212355
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215063
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D213717
-> >=20
-> > David E. Box (3):
-> > =C2=A0 PCI: vmd: Use PCI_VDEVICE in device list
-> > =C2=A0 PCI: vmd: Create feature grouping for client products
-> > =C2=A0 PCI: vmd: Add quirk to configure PCIe ASPM and LTR
-> >=20
-> > Michael Bottini (1):
-> > =C2=A0 PCI/ASPM: Add pci_enable_link_state()
-> >=20
-> > =C2=A0drivers/pci/controller/vmd.c | 96 ++++++++++++++++++++++++++-----=
----
-> > --
-> > =C2=A0drivers/pci/pcie/aspm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 54 ++++++=
-++++++++++++++
-> > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 7 +++
-> > =C2=A03 files changed, 131 insertions(+), 26 deletions(-)
-> >=20
-> >=20
-> > base-commit: 247f34f7b80357943234f93f247a1ae6b6c3a740
->=20
-> I'd like to confirm that this patch series solves the VMD power issues
-> present on the ASUS ROG M16 (GU603) laptop range (PCI dev ID =3D 467f).
->=20
-> The difference is quite drastic.
->=20
 
-Thanks for testing this Luke.
 
-David
+On 12/7/22 6:39 PM, David E. Box wrote:
+> Refactor the PCI ID list to use PCI_VDEVICE.
 
+Add some info about why it is done.
+
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
+> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+>  V9 - No change
+> 
+>  V8 - No change
+> 
+>  V7 - New Patch. Separate patch suggested by Lorenzo
+> 
+>  drivers/pci/controller/vmd.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index e06e9f4fc50f..9dedca714c18 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -994,33 +994,33 @@ static int vmd_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(vmd_dev_pm_ops, vmd_suspend, vmd_resume);
+>  
+>  static const struct pci_device_id vmd_ids[] = {
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
+> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
+> +	{PCI_VDEVICE(INTEL, 0x467f),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
+> +	{PCI_VDEVICE(INTEL, 0x4c3d),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa77f),
+> +	{PCI_VDEVICE(INTEL, 0xa77f),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7d0b),
+> +	{PCI_VDEVICE(INTEL, 0x7d0b),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xad0b),
+> +	{PCI_VDEVICE(INTEL, 0xad0b),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+> +	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+>  				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
