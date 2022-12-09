@@ -2,85 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A90647EEE
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 09:07:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E046480C7
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 11:17:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbiLIIHt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Dec 2022 03:07:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
+        id S229626AbiLIKRz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Dec 2022 05:17:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbiLIIHr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 03:07:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84FD5B5AE
-        for <linux-pci@vger.kernel.org>; Fri,  9 Dec 2022 00:06:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670573209;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V3QgFqyfFrbqLPDlT52YmMXtZ218dmGSv5KKxRxqdCk=;
-        b=bxtO0mRsRQwOfLSHoPM+1kQngIxM66B8DLztMRfSaJebE5icGE54rQQ875WiC2mUc3dgJa
-        2zfPHbbmfI0s8pSpQPKm3gz8H6pah8BHLAt0UePnhsetgjQdOURla0DwWGoXjuvcRNY2gF
-        Ei1b3bM6iLtRI3T80SNdpfJA19qGqik=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-573-3o4seh9SO_O3redJzVSWZw-1; Fri, 09 Dec 2022 03:06:48 -0500
-X-MC-Unique: 3o4seh9SO_O3redJzVSWZw-1
-Received: by mail-ed1-f70.google.com with SMTP id b13-20020a056402350d00b00464175c3f1eso920745edd.11
-        for <linux-pci@vger.kernel.org>; Fri, 09 Dec 2022 00:06:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V3QgFqyfFrbqLPDlT52YmMXtZ218dmGSv5KKxRxqdCk=;
-        b=N/58rUBtxUgkNcMclABfaMaYJccEzn72ZJbVifi8wOYkxsbSmtEzBO+lMbGE0p53LI
-         FZCZsO7C84JhWufUWd82NY0Z5kW9our311Wc7+pxKWLneDZoG8b06mszlhcOqo0IAWOB
-         hEwiRmiEYiW0nx2JY0v2ygGcdbKNSNN1H+zQ+YvInx1KjiwtSQffKhgNpfL3yYevkdjG
-         5Dg0HWl3jMJRUy2cKpOEAZX29zqJIDX8OMbC5dwGZqw+ANmHXnij3gYL2RHemIOW9bAN
-         xvRiypxBS/emdMTJ998kfd7xowhZLvp4CD4M8Y3/mzjo+nuQ6gVPv05Prq6NuvjVp4yr
-         tJqw==
-X-Gm-Message-State: ANoB5pn1UJQmp0s39zWics8Tkm62G1jbxQ53NwzaWjWR6Z9+1qSaSe+K
-        T5ZmycIV4+HjOTXW1nQF0eD3Myihqb69jVyaqEQlJSEEkWEz1UigyJTr2EPIxlsZXR+F9rxK98V
-        12cg3HFXjOmDfJuGZVQoM
-X-Received: by 2002:a17:907:cb83:b0:7a7:3f0c:e99b with SMTP id un3-20020a170907cb8300b007a73f0ce99bmr5064395ejc.6.1670573207474;
-        Fri, 09 Dec 2022 00:06:47 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7klU0966/E4UhDV6QpTmeUmszwvubniR+Nwjaz9MxI9+rSghMh5wa219tCfxgWffAwigYiUQ==
-X-Received: by 2002:a17:907:cb83:b0:7a7:3f0c:e99b with SMTP id un3-20020a170907cb8300b007a73f0ce99bmr5064371ejc.6.1670573207238;
-        Fri, 09 Dec 2022 00:06:47 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id lo14-20020a170906fa0e00b007c0d0dad9c6sm263054ejb.108.2022.12.09.00.06.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Dec 2022 00:06:46 -0800 (PST)
-Message-ID: <805ea628-77a2-a1c1-10fe-edf2203e9c86@redhat.com>
-Date:   Fri, 9 Dec 2022 09:06:45 +0100
+        with ESMTP id S229545AbiLIKRy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 05:17:54 -0500
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5357B2AE35;
+        Fri,  9 Dec 2022 02:17:46 -0800 (PST)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 7B1D1E0EE7;
+        Fri,  9 Dec 2022 13:17:44 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-type:content-type:date
+        :from:from:in-reply-to:message-id:mime-version:references
+        :reply-to:subject:subject:to:to; s=post; bh=Ec3ViA1L+1+zRfJZ8e1q
+        eQl0OyxR+BM/2+3K7g2BZ9I=; b=R05EYE98HzQ0MxHVk6hVIH3+DWnkwj2TU15o
+        xM5JYoXYcFUipO5pL1Tuuu6LTKPYRcIq9fjgzXUOxqajVeC484NeGt8fdrup9/Wm
+        5t9YJEO2ewtD4StEPy6kx11pH2SY5PEAse137DbDyJmdGBlDU4aOsoxwkj+aZH0/
+        2aJCQJo=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 5D9B6E0ED4;
+        Fri,  9 Dec 2022 13:17:44 +0300 (MSK)
+Received: from mobilestation (10.8.30.6) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 9 Dec 2022 13:17:44 +0300
+Date:   Fri, 9 Dec 2022 13:17:43 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <vidyas@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+Message-ID: <20221209101743.uzyw5ejubkbfm5di@mobilestation>
+References: <20221114155333.234496-1-jonathanh@nvidia.com>
+ <20221114155333.234496-2-jonathanh@nvidia.com>
+ <Y3ap1o2SbNvFw8Vd@orome>
+ <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
+ <Y49xg7wptRweHd4I@orome>
+ <CAL_JsqK+BxHB8__aN=84R4xpoJtf4_7xHeTkbgPakdNqzywJWw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v2 1/4] efi/x86: Remove EfiMemoryMappedIO from E820 map
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Florent DELAHAYE <kernelorg@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20221208190341.1560157-1-helgaas@kernel.org>
- <20221208190341.1560157-2-helgaas@kernel.org>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221208190341.1560157-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK+BxHB8__aN=84R4xpoJtf4_7xHeTkbgPakdNqzywJWw@mail.gmail.com>
+X-Originating-IP: [10.8.30.6]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,151 +64,112 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-One comment (logging bug in patch) below:
-
-On 12/8/22 20:03, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Dec 06, 2022 at 03:14:58PM -0600, Rob Herring wrote:
+> On Tue, Dec 6, 2022 at 10:44 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+> >
+> > On Mon, Dec 05, 2022 at 05:41:55PM -0600, Rob Herring wrote:
+> > > On Thu, Nov 17, 2022 at 3:38 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > >
+> > > > On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> > > > > From: Vidya Sagar <vidyas@nvidia.com>
+> > > > >
+> > > > > Add support for ECAM aperture that is only supported for Tegra234
+> > > > > devices.
+> > > > >
+> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > > Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> > > > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > > > > ---
+> > > > > Changes since V2:
+> > > > > - Avoid duplication of reg items and reg-names
+> > > > > Changes since V1:
+> > > > > - Restricted the ECAM aperture to only Tegra234 devices that support it.
+> > > > >
+> > > > >  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
+> > > > >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+> > > > >  2 files changed, 33 insertions(+), 3 deletions(-)
+> > > >
+> > > > Both patches applied now.
+> > >
+> > > linux-next now fails with this. I suspect it is due to Sergey's
+> > > changes to the DWC schema.
+> > >
+> > > /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+> > > pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> > > fixed:
+> > >         'dbi' was expected
+> > >         'dbi2' was expected
+> > >         'ecam' is not one of ['elbi', 'app']
+> > >         'atu' was expected
+> > >         'dma' was expected
+> > >         'phy' was expected
+> > >         'config' was expected
+> > >         /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+> > > pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> > > fixed:
+> > >                 'ecam' is not one of ['apb', 'mgmt', 'link', 'ulreg', 'appl']
+> > >                 'ecam' is not one of ['atu_dma']
+> > >                 'ecam' is not one of ['smu', 'mpu']
+> > >         From schema:
+> > > /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> >
+> > Stephen reported the other day that he wasn't able to resolve this
+> > conflict in linux-next, so he dropped the ECAM bits. The ECAM patch has
+> > now propagated to ARM SoC so it can't be easily backed out, but I guess
+> > we could revert on that tree and instead apply the patch to the DT tree
+> > and resolve the conflict there.
+> >
+> > I guess the better alternative would be to try and resolve the merge
+> > properly and let Stephen (and Linus) know.
 > 
-> Firmware can use EfiMemoryMappedIO to request that MMIO regions be mapped
-> by the OS so they can be accessed by EFI runtime services, but should have
-> no other significance to the OS (UEFI r2.10, sec 7.2).  However, most
-> bootloaders and EFI stubs convert EfiMemoryMappedIO regions to
-> E820_TYPE_RESERVED entries, which prevent Linux from allocating space from
-> them (see remove_e820_regions()).
+
+> Instead, can you prepare a patch on top of Sergey's adding a 'oneOf'
+> entry with 'ecam'. As this is a new thing, it should have its own
+> entry. Then when merging, we just throw out the change from your side.
+
+Right, the only change that is required here is to extend the
+reg-names oneOf list of the DT-bindings:
+< Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+with the 'ecam' entry. If it's a vendor-specific part then add to the
+last the last entry defines the vendor-specific duplicates of the generic CSR
+spaces.
+
+On the other hand I don't really see a reason in adding the ECAM CSRs
+space to the generic DW PCIe device since basically the ECAM memory is
+just a pre-configured outbound iATU window. So if it's a ECAM-based
+device then it should have been already configured by the system
+bootloader upon the kernel boot up. Thus there is no point in having
+the generic DW PCIe resources and it should be just a generic
+ECAM-based device with a single ECAM CSR space as the
+"snps,dw-pcie-ecam"/"pci-host-ecam-generic" DT-bindings require
+especially seeing the Nvidia low-level driver doesn't use the ECAM
+registers at all. Moreover the DW PCIe core driver doesn't
+differentiate between the already configured iATU windows and the one
+available for the ranges-based mapping. Instead the DW PCIe core just
+disables all the detected in- and outbound iATUs by means of the
+dw_pcie_iatu_setup() method. So the pre-configured ECAM space will be
+reset by the driver core anyway.
+
+What I would suggest here is to split up the devices:
+1. If it's a ECAM-based device, then it should be identified as
+"snps,dw-pcie-ecam"/"pci-host-ecam-generic", then it will have a
+single ECAM CSR space with no need in other resources.
+2. If it's a DW PCIe device with Nvidia Tegra194-specific settings,
+then it should be identified as "nvidia,tegra194-pcie" with no ECAM
+registers.
+
+Thus we wouldn't need to have any modifications applied to the
+bindings and to the DT-files. What do you think?
+
+-Serge(y)
+
 > 
-> Some platforms use EfiMemoryMappedIO entries for PCI MMCONFIG space and PCI
-> host bridge windows, which means Linux can't allocate BAR space for
-> hot-added devices.
+> I'd really prefer that bindings don't go thru the soc tree unless
+> there's some strong reason. The default is to go via the subsystem
+> trees. Beyond 'we are running the dtschema checks on all our dts files
+> and can't have the warnings', I don't know what that would be. I wish
+> everyone was doing that, but I'm pretty sure most are not.
 > 
-> Remove large EfiMemoryMappedIO regions from the E820 map to avoid this
-> problem.
+> Rob
 > 
-> Leave small (< 256KB) EfiMemoryMappedIO regions alone because on some
-> platforms, these describe non-window space that's included in host bridge
-> _CRS.  If we assign that space to PCI devices, they don't work.  On the
-> Lenovo X1 Carbon, this leads to suspend/resume failures.
-> 
-> The previous solution to the problem of allocating BARs in these regions
-> was to add pci_crs_quirks[] entries to disable E820 checking for these
-> machines (see d341838d776a ("x86/PCI: Disable E820 reserved region clipping
-> via quirks")):
-> 
->   Acer   DMI_PRODUCT_NAME    Spin SP513-54N
->   Clevo  DMI_BOARD_NAME      X170KM-G
->   Lenovo DMI_PRODUCT_VERSION *IIL*
-> 
-> Florent reported the BAR allocation issue on the Clevo NL4XLU.  We could
-> add another quirk for the NL4XLU, but I hope this generic change can solve
-> it for many machines without having to add quirks.
-> 
-> This change has been tested on Clevo X170KM-G (Konrad) and Lenovo Ideapad
-> Slim 3 (Matt) and solves the problem even when overriding the existing
-> quirks by booting with "pci=use_e820".
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216565     Clevo NL4XLU
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206459#c78 Clevo X170KM-G
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868899    Ideapad Slim 3
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2029207    X1 Carbon
-> Reported-by: Florent DELAHAYE <kernelorg@undead.fr>
-> Tested-by: Konrad J Hambrick <kjhambrick@gmail.com>
-> Tested-by: Matt Hansen <2lprbe78@duck.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> ---
->  arch/x86/platform/efi/efi.c | 46 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index ebc98a68c400..dee1852e95cd 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -303,6 +303,50 @@ static void __init efi_clean_memmap(void)
->  	}
->  }
->  
-> +/*
-> + * Firmware can use EfiMemoryMappedIO to request that MMIO regions be
-> + * mapped by the OS so they can be accessed by EFI runtime services, but
-> + * should have no other significance to the OS (UEFI r2.10, sec 7.2).
-> + * However, most bootloaders and EFI stubs convert EfiMemoryMappedIO
-> + * regions to E820_TYPE_RESERVED entries, which prevent Linux from
-> + * allocating space from them (see remove_e820_regions()).
-> + *
-> + * Some platforms use EfiMemoryMappedIO entries for PCI MMCONFIG space and
-> + * PCI host bridge windows, which means Linux can't allocate BAR space for
-> + * hot-added devices.
-> + *
-> + * Remove large EfiMemoryMappedIO regions from the E820 map to avoid this
-> + * problem.
-> + *
-> + * Retain small EfiMemoryMappedIO regions because on some platforms, these
-> + * describe non-window space that's included in host bridge _CRS.  If we
-> + * assign that space to PCI devices, they don't work.
-> + */
-> +static void __init efi_remove_e820_mmio(void)
-> +{
-> +	efi_memory_desc_t *md;
-> +	u64 size, start, end;
-> +	int i = 0;
-> +
-> +	for_each_efi_memory_desc(md) {
-> +		if (md->type == EFI_MEMORY_MAPPED_IO) {
-> +			size = md->num_pages << EFI_PAGE_SHIFT;
-> +			if (size >= 256*1024) {
-> +				start = md->phys_addr;
-> +				end = start + size - 1;
-> +				pr_info("Remove mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluMB) from e820 map\n",
-> +					i, start, end, size >> 20);
-> +				e820__range_remove(start, size,
-> +						   E820_TYPE_RESERVED, 1);
-> +			} else {
-> +				pr_info("Not removing mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluKB) from e820 map\n",
-> +					i, start, end, size >> 10);
-
-The logging in this else is re-using the start and end from the previous section which was actually removed.
-
-E.g. Matt's latest log from:
-https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-has:
-
-[    0.000000] e820: remove [mem 0xfc800000-0xfe7fffff] reserved
-[    0.000000] efi: Not removing mem46: MMIO range=[0xfc800000-0xfe7fffff] (4KB) from e820 map
-[    0.000000] efi: Not removing mem47: MMIO range=[0xfc800000-0xfe7fffff] (32KB) from e820 map
-[    0.000000] efi: Not removing mem49: MMIO range=[0xfc800000-0xfe7fffff] (8KB) from e820 map
-[    0.000000] efi: Not removing mem50: MMIO range=[0xfc800000-0xfe7fffff] (4KB) from e820 map
-
-Notice how all the "Not removing ..." lines log the same range as
-the actually removed map entry above them.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-> +			}
-> +		}
-> +		i++;
-> +	}
-> +}
-> +
->  void __init efi_print_memmap(void)
->  {
->  	efi_memory_desc_t *md;
-> @@ -474,6 +518,8 @@ void __init efi_init(void)
->  	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
->  	efi_clean_memmap();
->  
-> +	efi_remove_e820_mmio();
-> +
->  	if (efi_enabled(EFI_DBG))
->  		efi_print_memmap();
->  }
 
