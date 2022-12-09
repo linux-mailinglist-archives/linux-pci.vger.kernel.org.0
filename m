@@ -2,141 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA42D647E5A
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 08:14:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90E60647E62
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 08:17:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbiLIHOM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Dec 2022 02:14:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54948 "EHLO
+        id S229751AbiLIHRM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Dec 2022 02:17:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiLIHOK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 02:14:10 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23CA02FC22
-        for <linux-pci@vger.kernel.org>; Thu,  8 Dec 2022 23:14:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670570049; x=1702106049;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WRzcoDIkTysAJxUS9R9v9u5Anp/8tsb0SAyQs5lj06A=;
-  b=f9Bz0C2wNmpxdCagls053Vfh7+pLdU0q6z+VSqqKO0cgO/T2iK6514pL
-   ziu6ldM+aOQRohyIoT9C5S+gJu1TC7mBiyx0H3VLS8VeAtTpl2qVHBfNp
-   bWAC7bwrz75z9nHy99UJ50vTPpvJPdWwrj4IPT36HjbRLc87eh3Z9KwAK
-   O3YKh0R8hbDHfj9diaaB9Thr7j5QSmzeWQbUPBG7aJUORAKbuhClKAfxa
-   65wLni7qBHYEmN0h5s4Ge/dZkCHv2TmdNpyTEAFJBgoMCKejoWqMLswgr
-   y/wPa33HAkFNyC2fcgtVweqgXViZlNr0VPxyR1J6cLWqUMPoe5y/s81OK
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="315036205"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="315036205"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 23:14:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="892562483"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="892562483"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Dec 2022 23:14:07 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p3XaB-0001id-0X;
-        Fri, 09 Dec 2022 07:14:07 +0000
-Date:   Fri, 09 Dec 2022 15:13:25 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/resource] BUILD SUCCESS
- 4aece762789a2277bf9f0eda8b0cd229ccbbc88e
-Message-ID: <6392e015.MuOLPKUg3YYXD1WE%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229886AbiLIHRJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 02:17:09 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D83A31DD7;
+        Thu,  8 Dec 2022 23:17:08 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id j5-20020a05600c410500b003cfa9c0ea76so2741290wmi.3;
+        Thu, 08 Dec 2022 23:17:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8/LCy/d/7cFCAy3kAThheVqXGRbKxH6e9mviumbYm7c=;
+        b=Ep5jefDyiLAXJnhqR+U2NKELAg+lA97eqqHMhvkVV+aRjYE4InGCkBCOle7ysDnbTO
+         PKaVDBdtcp1EJkvwwrSCcY2AtQ8tI6w95+Xk4YBQbgQ+cwPBl7rwCAEI8P6hN+ofp7M7
+         XlL0rLPuFw5YiPjyKeuDl21SWZfgwuIKSFQuOe6NFhEyUIILCCNwUaiw8PxUeDLQV3xt
+         GNAeDtGIJu9z2sqZ/Z33nJc+IiW5WvysqNV3g4psYxP2rqJ3rCtZFpXss8JYqkanavfV
+         1vaOFJElsrkSL8x2TLqq+mb1OW2wYptbCsS1uI+Sqjw7P3GHodmlu2NUDsTXQiXVKmSy
+         aMOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8/LCy/d/7cFCAy3kAThheVqXGRbKxH6e9mviumbYm7c=;
+        b=lhTFyMvN6jHI4dAJ2X0yvFAzW6P9WaMLDxoJVuyV4FfnOOreX0HHXQHYHc7EYmIcrd
+         6q1d+YWFdpqz5EaBCSpUhw/Z7I3qtFNN1R7ObfIXmxbD9KHtDmn9gw1nCS9p5RwxZA3B
+         i/MeQrqusR15IcM27uhwSku9lF/jDyXI1C/vZoHhmAVGWQ/Y/M5HYgjQIHRq1ZCZbqGF
+         ygcdYjUHNuYL/aNp9iTtEMKnzYKYNeFpQgz924htw040WXbQnQwYyq8HglrugV6vapcZ
+         7VjlEZjQUfh1Qg7fJ3VZEQT7/06o2jVzOYeOJ35sS4U4gOQ0v/CRXfmrbuQ0ZbbCA1Dz
+         zzPg==
+X-Gm-Message-State: ANoB5pnG8utuda3PiINGHkmlVvGbnTwh1QqiQCW5RblCjrJkpNNOBCLk
+        CIMEY4ho5r3ffVX3gR5iZo3yglghY/8=
+X-Google-Smtp-Source: AA0mqf5yU2g+sGKdKn91qa1TmxluiqjdrDClfICOFqEJUtyO738YTISN0kqyFNWFPXVxdyE4s+4AJA==
+X-Received: by 2002:a05:600c:4fd1:b0:3d0:6c60:b4d1 with SMTP id o17-20020a05600c4fd100b003d06c60b4d1mr4820311wmq.6.1670570226308;
+        Thu, 08 Dec 2022 23:17:06 -0800 (PST)
+Received: from localhost.localdomain (188.red-88-10-59.dynamicip.rima-tde.net. [88.10.59.188])
+        by smtp.gmail.com with ESMTPSA id j10-20020a05600c1c0a00b003b49bd61b19sm8249488wms.15.2022.12.08.23.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Dec 2022 23:17:05 -0800 (PST)
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: mt7621: Sleep a bit after power on the PCIs phy ports
+Date:   Fri,  9 Dec 2022 08:17:03 +0100
+Message-Id: <20221209071703.2891714-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/resource
-branch HEAD: 4aece762789a2277bf9f0eda8b0cd229ccbbc88e  x86/PCI: Fix log message typo
+Some devices like ZBT WE1326 and ZBT WF3526-P need to sleep a bit after call
+to mt7621_pcie_init_port() driver function to get into reliable boots for
+both warn and hard resets. The needed time for these devices to always detect
+the ports seems to be from 75 to 100 milliseconds. Hence, properly add an
+extra 100 milliseconds msleep() call to make also these devices work.
 
-elapsed time: 728m
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+---
+Hi Bjorn / Lorenzo,
 
-configs tested: 60
-configs skipped: 2
+I send previous patch here [0] related with this issue. Since after a bit
+of testing with these devices by openwrt community [1] we end up that there is
+no need of increasing PERST_DELAY_MS definition. This is also the reason
+of not sending a v2 for this but a new patch with the proper solution.
+I preferred to just use the same PERST_DELAY_MS define also for this to
+not perform extra changes but the needed to the driver. If you prefer
+me to write new definitions for all the sleep paths you pointed out in
+[0], just let me know and I will send them also.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks in advance for your time.
 
-gcc tested configs:
-powerpc                           allnoconfig
-arc                                 defconfig
-alpha                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                               rhel-8.3
-m68k                             allyesconfig
-x86_64                              defconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-s390                             allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-arc                  randconfig-r043-20221207
-riscv                randconfig-r042-20221207
-s390                 randconfig-r044-20221207
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                          rhel-8.3-rust
-x86_64                    rhel-8.3-kselftests
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                                defconfig
-ia64                             allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-i386                             allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a005
-x86_64                        randconfig-a006
+Best regards,
+    Sergio Paracuellos
 
-clang tested configs:
-arm                  randconfig-r046-20221207
-hexagon              randconfig-r041-20221207
-hexagon              randconfig-r045-20221207
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a004
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a006
+[0]: https://lore.kernel.org/linux-pci/20221119110837.2419466-1-sergio.paracuellos@gmail.com/T/#u
+[1]: https://github.com/openwrt/openwrt/pull/11220
 
+ drivers/pci/controller/pcie-mt7621.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+index 4bd1abf26008..3311ca64b315 100644
+--- a/drivers/pci/controller/pcie-mt7621.c
++++ b/drivers/pci/controller/pcie-mt7621.c
+@@ -369,6 +369,7 @@ static int mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
+ 		}
+ 	}
+ 
++	msleep(PERST_DELAY_MS);
+ 	mt7621_pcie_reset_ep_deassert(pcie);
+ 
+ 	tmp = NULL;
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.25.1
+
