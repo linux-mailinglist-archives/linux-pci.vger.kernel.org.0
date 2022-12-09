@@ -2,134 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 295C36481F9
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 12:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0026483CA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Dec 2022 15:30:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbiLILyD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Dec 2022 06:54:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
+        id S229650AbiLIOaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Dec 2022 09:30:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiLILyC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 06:54:02 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4510A2F644;
-        Fri,  9 Dec 2022 03:54:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670586840; x=1702122840;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=i6l99AsOk7Ek/fC/JJlzKRTZl8kQmivMJCaJu9pD6WY=;
-  b=g70OOyfpq57JmzL5fNoWYyVwu5sApRbF+H0X/Ja0tg51Gqeitl7PkDK+
-   dPsM1QjjjEuUlOzBjtpONK4QD4hcPZ+7kjVu3X84kpkXbQJNXSpEXPzGg
-   9Q+KrqrDZjZRR0gxgaUhVa+zcyJ4RLhNLD/m1K+9RzxoZvhzgBtw7zZDV
-   f58WPBIFy1KzO0bnf7YrZqlfpRSbezkRCAKcSHtGizkYo7j7i8rZuuhfM
-   CteNhoMvf5Is2mjhWkT6NXmoA0Cmk5+lsUyLwmAX88bTkNQ42B6NEBkCQ
-   oP6Mbg34Q4Vbn+jocPCpol7WK+fKDW4Y9Xuek6DIPJjddXOPYYyjPOLUT
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="305085941"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="305085941"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:59 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="736191278"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="736191278"
-Received: from eliteleevi.tm.intel.com ([10.237.54.20])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:50 -0800
-Date:   Fri, 9 Dec 2022 13:53:31 +0200 (EET)
-From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
-X-X-Sender: kvehmane@eliteleevi.tm.intel.com
-To:     Ricardo Ribalda <ribalda@chromium.org>
-cc:     Oliver Neukum <oneukum@suse.com>, Juergen Gross <jgross@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Chromeos Kdump <chromeos-kdump@google.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        kexec@lists.infradead.org,
-        Alsa-devel <alsa-devel@alsa-project.org>, stable@vger.kernel.org,
-        sound-open-firmware@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v8 3/3] ASoC: SOF: Fix deadlock when shutdown a frozen
- userspace
-In-Reply-To: <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2212091349310.3532114@eliteleevi.tm.intel.com>
-References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org> <20221127-snd-freeze-v8-3-3bc02d09f2ce@chromium.org> <716e5175-7a44-7ae8-b6bb-10d9807552e6@suse.com> <CANiDSCtwSb50sjn5tM7jJ6W2UpeKzpuzng+RdJuywiC3-j2zdg@mail.gmail.com>
- <d3730d1d-6f92-700a-06c4-0e0a35e270b0@suse.com> <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
+        with ESMTP id S229561AbiLIOaJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Dec 2022 09:30:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D100205C5;
+        Fri,  9 Dec 2022 06:30:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B8E2EB8287F;
+        Fri,  9 Dec 2022 14:30:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E31C433F1;
+        Fri,  9 Dec 2022 14:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670596205;
+        bh=a+obGw3XVMUgASOc8FIE8ScuBYM0lR28Ui9u4J3KSSw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=evYP4PkUi2/2b7jX7db6YhIdWE1vyjJsHtneNdVjASPc3wp/JvLGQvPueihcNQJAP
+         /qtC+41vZU4R5OEri+9O5Iw3sN3FrNCpQtxe+ZaToNocefQI53eEKOs70UjyIFvj5M
+         pmeklMhsIjMCjoKNsJJFgW7Np+XsWSFB8jsHhijZBZ5EFnqifkxDgFRMzW17gV2Z9A
+         6acYGobJjHtpcwkiS5ZrJNw8XDh8dgL8CwahFmYwDvdtheDG2cMHw1YpQw/0XSaUmn
+         onKb+5C6K+mNHd2wQhU8TD0RPEXwOan1ItvzaHTlblzAlVplQLrNQFlNvjXC2bur/h
+         giX8eVEKXzNSA==
+Received: by mail-vk1-f173.google.com with SMTP id z23so2182504vkb.12;
+        Fri, 09 Dec 2022 06:30:05 -0800 (PST)
+X-Gm-Message-State: ANoB5pmXH4yWeyVQ8NZqU7SS4Et1qp4MyO4XyJKTJGo2khdLdx4KOqTh
+        mh6cfuDgD3jWqNsWLPJx2cfNw3TMh9hvLP+aVQ==
+X-Google-Smtp-Source: AA0mqf53boM2A4hfZJBHsALfQhmvj3CWarRFhZegP+duCkmWd1VI9ygmXmydjZTSN0pUVc4Gpi0ad+IlynSnuQ5IjzY=
+X-Received: by 2002:a1f:2348:0:b0:3bd:51f6:1f3 with SMTP id
+ j69-20020a1f2348000000b003bd51f601f3mr15880344vkj.35.1670596204403; Fri, 09
+ Dec 2022 06:30:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20221114155333.234496-1-jonathanh@nvidia.com> <20221114155333.234496-2-jonathanh@nvidia.com>
+ <Y3ap1o2SbNvFw8Vd@orome> <CAL_JsqKpyn=mWXv4tuS4U8AahNPkL6hpNQCfyRdf9bDY1EqSJg@mail.gmail.com>
+ <Y49xg7wptRweHd4I@orome> <CAL_JsqK+BxHB8__aN=84R4xpoJtf4_7xHeTkbgPakdNqzywJWw@mail.gmail.com>
+ <20221209101743.uzyw5ejubkbfm5di@mobilestation>
+In-Reply-To: <20221209101743.uzyw5ejubkbfm5di@mobilestation>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 9 Dec 2022 08:29:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLp7QVgxrAZkW=z38iB7SV5VeWH1O6s+DVCm9p338Czdw@mail.gmail.com>
+Message-ID: <CAL_JsqLp7QVgxrAZkW=z38iB7SV5VeWH1O6s+DVCm9p338Czdw@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: PCI: tegra234: Add ECAM support
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, vidyas@nvidia.com,
+        mmaddireddy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Thu, 1 Dec 2022, Ricardo Ribalda wrote:
-
-> On Thu, 1 Dec 2022 at 14:22, 'Oliver Neukum' via Chromeos Kdump <chromeos-kdump@google.com> wrote:
-> >
-> > On 01.12.22 14:03, Ricardo Ribalda wrote:
-> > > This patchset does not modify this behaviour. It simply fixes the
-> > > stall for kexec().
+On Fri, Dec 9, 2022 at 4:17 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Tue, Dec 06, 2022 at 03:14:58PM -0600, Rob Herring wrote:
+> > On Tue, Dec 6, 2022 at 10:44 AM Thierry Reding <thierry.reding@gmail.com> wrote:
 > > >
-> > > The  patch that introduced the stall:
-> > > 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers
-> > > in .shutdown")
+> > > On Mon, Dec 05, 2022 at 05:41:55PM -0600, Rob Herring wrote:
+> > > > On Thu, Nov 17, 2022 at 3:38 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > > >
+> > > > > On Mon, Nov 14, 2022 at 03:53:32PM +0000, Jon Hunter wrote:
+> > > > > > From: Vidya Sagar <vidyas@nvidia.com>
+> > > > > >
+> > > > > > Add support for ECAM aperture that is only supported for Tegra234
+> > > > > > devices.
+> > > > > >
+> > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > > > Co-developed-by: Jon Hunter <jonathanh@nvidia.com>
+> > > > > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > > > > > ---
+> > > > > > Changes since V2:
+> > > > > > - Avoid duplication of reg items and reg-names
+> > > > > > Changes since V1:
+> > > > > > - Restricted the ECAM aperture to only Tegra234 devices that support it.
+> > > > > >
+> > > > > >  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 34 +++++++++++++++++--
+> > > > > >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+> > > > > >  2 files changed, 33 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > Both patches applied now.
+> > > >
+> > > > linux-next now fails with this. I suspect it is due to Sergey's
+> > > > changes to the DWC schema.
+> > > >
+> > > > /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+> > > > pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> > > > fixed:
+> > > >         'dbi' was expected
+> > > >         'dbi2' was expected
+> > > >         'ecam' is not one of ['elbi', 'app']
+> > > >         'atu' was expected
+> > > >         'dma' was expected
+> > > >         'phy' was expected
+> > > >         'config' was expected
+> > > >         /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.example.dtb:
+> > > > pcie@14160000: reg-names:4: 'oneOf' conditional failed, one must be
+> > > > fixed:
+> > > >                 'ecam' is not one of ['apb', 'mgmt', 'link', 'ulreg', 'appl']
+> > > >                 'ecam' is not one of ['atu_dma']
+> > > >                 'ecam' is not one of ['smu', 'mpu']
+> > > >         From schema:
+> > > > /builds/robherring/linux-dt/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> > >
+> > > Stephen reported the other day that he wasn't able to resolve this
+> > > conflict in linux-next, so he dropped the ECAM bits. The ECAM patch has
+> > > now propagated to ARM SoC so it can't be easily backed out, but I guess
+> > > we could revert on that tree and instead apply the patch to the DT tree
+> > > and resolve the conflict there.
+> > >
+> > > I guess the better alternative would be to try and resolve the merge
+> > > properly and let Stephen (and Linus) know.
 > >
-> > That patch is problematic. I would go as far as saying that
-> > it needs to be reverted.
-> 
-> It fixes a real issue. We have not had any complaints until we tried
-> to kexec in the platform.
-> I wont recommend reverting it until we have an alternative implementation.
-> 
-> kexec is far less common than suspend/reboot.
+>
+> > Instead, can you prepare a patch on top of Sergey's adding a 'oneOf'
+> > entry with 'ecam'. As this is a new thing, it should have its own
+> > entry. Then when merging, we just throw out the change from your side.
+>
+> Right, the only change that is required here is to extend the
+> reg-names oneOf list of the DT-bindings:
+> < Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> with the 'ecam' entry. If it's a vendor-specific part then add to the
+> last the last entry defines the vendor-specific duplicates of the generic CSR
+> spaces.
+>
+> On the other hand I don't really see a reason in adding the ECAM CSRs
+> space to the generic DW PCIe device since basically the ECAM memory is
+> just a pre-configured outbound iATU window. So if it's a ECAM-based
+> device then it should have been already configured by the system
+> bootloader upon the kernel boot up. Thus there is no point in having
+> the generic DW PCIe resources and it should be just a generic
+> ECAM-based device with a single ECAM CSR space as the
+> "snps,dw-pcie-ecam"/"pci-host-ecam-generic" DT-bindings require
+> especially seeing the Nvidia low-level driver doesn't use the ECAM
+> registers at all. Moreover the DW PCIe core driver doesn't
+> differentiate between the already configured iATU windows and the one
+> available for the ranges-based mapping. Instead the DW PCIe core just
+> disables all the detected in- and outbound iATUs by means of the
+> dw_pcie_iatu_setup() method. So the pre-configured ECAM space will be
+> reset by the driver core anyway.
 
-I've posted an alternative to ALSA list that reverts the problematic
-patch and fixes the problem (the patch was originally addressing)
-in a different way:
+This was discussed some before. This is for the firmware/bootloader to
+setup ECAM mode. Then the kernel will see generic (ACPI) ECAM.
 
-https://mailman.alsa-project.org/pipermail/alsa-devel/2022-December/209776.html
+Yes, it is iATU config, but so is 'config'. If we were starting over,
+I'd say 'reg' should just have the entire address space for iATU and
+the driver could figure out how to configure it (beyond what ranges
+says). But that ship has sailed. Also, note that the address range
+here is disjoint from 'config', so it looks like we'd need 2 entries
+anyways.
 
-No changes outside sound/soc/ are needed with this approach.
-
-Br, Kai
+Rob
