@@ -2,97 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8185E6490C3
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Dec 2022 21:56:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D992C6490FB
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Dec 2022 23:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbiLJU4H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Dec 2022 15:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
+        id S229720AbiLJWHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Dec 2022 17:07:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbiLJU4G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Dec 2022 15:56:06 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AD81705D;
-        Sat, 10 Dec 2022 12:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670705761; x=1702241761;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y7EY/fEnqd+axs7T9udq7qbX8oJHRputjPJmAXvmSEs=;
-  b=XDgr22K4dhdQrjCmD2Rfj9jYh10CLQ4TILW5n8FrKh5MrFBIO5YNqIBu
-   LzOnjJVdL2p2vCLA9HQ6bHXSrtHGX8go0pHobjIigIBzcjHtnlz2bpSHZ
-   Tdz2jSTpiEwz4Y6RpRv8IrnjTmkDwKwcHbdQPKQr0VTTY8xvnJdtegIie
-   NxPRzgT1dzM0GKkFA+6s3Eeywd8nIitMlQX3t0T1i+X3UsM10Hz1M5oHQ
-   ajFR2SJR+ctS7hfD8GhN6YdbhYAy/z3wLcAJono1PL3BzYttq9Wp3EOkJ
-   0HZu/aK0+A8lBbmQrN0Ya2OHhxos5GPhWuinQ564tQxQtc3DifzBmbdZb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="305293144"
-X-IronPort-AV: E=Sophos;i="5.96,234,1665471600"; 
-   d="scan'208";a="305293144"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2022 12:56:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="772185219"
-X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
-   d="scan'208";a="772185219"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2022 12:55:42 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p46sl-007g0s-37;
-        Sat, 10 Dec 2022 22:55:39 +0200
-Date:   Sat, 10 Dec 2022 22:55:39 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florent DELAHAYE <kernelorg@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 4/4] x86/PCI: Fix log message typo
-Message-ID: <Y5TyS2rNxQRIdL5C@smile.fi.intel.com>
-References: <Y5OqPSV2RDdkAITE@smile.fi.intel.com>
- <20221209215211.GA1736471@bhelgaas>
+        with ESMTP id S229710AbiLJWHW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Dec 2022 17:07:22 -0500
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1F212083;
+        Sat, 10 Dec 2022 14:07:20 -0800 (PST)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 754C61C0002;
+        Sat, 10 Dec 2022 22:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1670710038;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ueh8h8K5la+rt80fMQ8vcYLiSzG6Mqr+N8q3yCay810=;
+        b=Zv8t/FhTd1Zc2QlXoRmxmacKAZv75Rfx3VVjjTJns95L95S8o352asFO7BYWrY0IIsdnl8
+        lHxeqg2CWb6BSAQzY7ZeV6YBsa4zQD88dIX3uDi459AKB0ZVgTdZukGZe+eM02YXuSH9Rx
+        J7TNQLGd29uFin7i6PDyyAdPhQVV929JwWWbk5mX6owi7CHB4wXcsE3ilKaAFaBwNBrtDU
+        UZXWRd5dvg5KlxiDvDkAO0VB0vLCf9tlZZjN0K/iSInx7RiGuHboPdNgBzNNosDnGmVzbR
+        R+snAOpDsaRqivcL9kcaNdpu2Mm+SMX9Nvw0WHqqllaPmrJ0+qtmj3uCavQWoA==
+Date:   Sat, 10 Dec 2022 23:07:14 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: Re: (subset) [PATCH 06/12] dt-bindings: rtc: convert rtc-meson.txt
+ to dt-schema
+Message-ID: <167070996827.280754.10880226731567626980.b4-ty@bootlin.com>
+References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v1-6-3f025599b968@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221209215211.GA1736471@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221117-b4-amlogic-bindings-convert-v1-6-3f025599b968@linaro.org>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 09, 2022 at 03:52:11PM -0600, Bjorn Helgaas wrote:
-> On Fri, Dec 09, 2022 at 11:35:57PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 09, 2022 at 02:51:31PM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Dec 09, 2022 at 08:43:06PM +0200, Andy Shevchenko wrote:
-
-...
-
-> > >     Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > 
-> > I prefer @linux.intel.com.
+On Fri, 18 Nov 2022 15:33:32 +0100, Neil Armstrong wrote:
+> Convert the Amlogic Meson6 RTC bindings to dt-schema.
 > 
-> Oops, sorry, I should have known that.  I had copied that from
-> the From: line of your email
-> (https://lore.kernel.org/r/Y5OBupWBghHfvG/h@smile.fi.intel.com)
+> 
 
-I understand. It's not your fault.
+Applied, thanks!
+
+[06/12] dt-bindings: rtc: convert rtc-meson.txt to dt-schema
+        commit: 800b55b4dc62c4348fbc1f7570a8ac8be3f0eb66
+
+Best regards,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
