@@ -2,170 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C732764926A
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Dec 2022 06:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 590906494CF
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Dec 2022 16:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbiLKFJO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Dec 2022 00:09:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
+        id S230212AbiLKP24 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Dec 2022 10:28:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229877AbiLKFJO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Dec 2022 00:09:14 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4240F11C3A
-        for <linux-pci@vger.kernel.org>; Sat, 10 Dec 2022 21:09:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670735353; x=1702271353;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P4yMS5Y+Uv/LgmxRgFndWhiOongZtipTN1LPtck0nbI=;
-  b=g0i2N9gMg0bjPY5FCBkUZEta3gcm8hcCGLNy6tXSwZ/smbCcXmUI5SVt
-   sohouqGoPo0++jWAMJ1UFcKTxBx0W6ff6yFhX+VgOlB/HsHbg0Y7VaYZb
-   whfPeCxd8a2kotJUtgzYDsJWVfZi6aTN2vT52lhTE17KZrXAnH9KT2sP0
-   64d7zJJINTFUfIxnhBoHAexTJWs/HYHAND+48Pyuwlq4Sd1rGbFyVvond
-   m9aygpj8g3xdtbryimsLs9O5I9R6hgA07dXIy2+MAnuAWoFZQkuKqRqHd
-   NfezFdHsfINCaHqkaPs4GJFWS61oHtM4V3aXI11fQYmmjw8MNYcAODo33
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="298020325"
-X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
-   d="scan'208";a="298020325"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2022 21:09:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="822133628"
-X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
-   d="scan'208";a="822133628"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 10 Dec 2022 21:09:10 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p4EaL-0002rP-1g;
-        Sun, 11 Dec 2022 05:09:09 +0000
-Date:   Sun, 11 Dec 2022 13:08:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/portdrv] BUILD SUCCESS
- d8d2b65a940bb497749d66bdab59b530901d3854
-Message-ID: <639565d5.Pqyq4r87EPqmUW0x%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229471AbiLKP2z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Dec 2022 10:28:55 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CE410F7;
+        Sun, 11 Dec 2022 07:28:54 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id v11so308103ljk.12;
+        Sun, 11 Dec 2022 07:28:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kmJQ3JX0cNEDcibAVe7dwqeACzxUsNklsuHAlAAT2AY=;
+        b=YPN6UipKS+mCxGrq1OPDGEAuFbMF9H7dWVi1shmS/sdsmgmFgpmPDEakvtLgyUfVgP
+         6y+Z7sFOqZaClN04RxLVe/Yro2nLQSBlhJ26bEhW4ji77w9VPcQqNlTFr4UDxtP9e4/4
+         lG61PHk3jYNX+VU2UsaewdUyHZX7O3u9ZrLXIz6TyrXbpB/kC25ubKNVTcDazVLPHkG6
+         hvHtAlXKOALb58Y3/5A66iwcAD1jL1T+JLcWVn3bMrQPGb/suyP5ix6oEd27tKwlpEkz
+         ll1FtdeX9r1Gqf8D9prfEpEqxtZu9U0XJPVhHcjroxqMvykgiKK6kkOWW5XDjVHfhphh
+         i2yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kmJQ3JX0cNEDcibAVe7dwqeACzxUsNklsuHAlAAT2AY=;
+        b=EWklhZ/19zbMRTK0g62oE5nidnGtOAcsjs9y1c3qovcScc8CWORcrTTck2C/u8U3Hj
+         GRAwPY+BPDTrX0vDj9OfUhPEWkAZLgRjh8Jhc4nWna6Nq3AZ1cHtkLP7Gi7AfyBLVunS
+         TaZOznKu5NjeSpsHt99ZfEvzHb9m4JtBPDSIFZZ3taAab4m7lhDQIAax9+DBO1dKq2on
+         hxgzEyOQs7NYTn+VG5d3EExNU6n93FGSL5gBFMgy0O/tH+GXpHGI9vTPjPLDGd+ENnN+
+         hVdib+l2jCX+BKJbo6T/5mLYwnlS+MqcJPmgF4wJC91EM9U5jQylGj9qe/2VJVxWL/Kd
+         Xtcg==
+X-Gm-Message-State: ANoB5pnb3NhhKRr6K5DeN30e3Mht8qLAchzGHMF0CaT8up5L23zob7aq
+        QdpiVhiNFB5iUQHhMCRl6KU=
+X-Google-Smtp-Source: AA0mqf4ec29PpXJgYvIXxoes0t+4hDpqBAloIHb1c2Zsw986jbFrb0kGPangD4gQLbS4VlDC9BKNNQ==
+X-Received: by 2002:a05:651c:233:b0:279:f59a:4888 with SMTP id z19-20020a05651c023300b00279f59a4888mr3308367ljn.37.1670772532814;
+        Sun, 11 Dec 2022 07:28:52 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id u4-20020a05651c140400b00279ceee1678sm934297lje.73.2022.12.11.07.28.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Dec 2022 07:28:52 -0800 (PST)
+Date:   Sun, 11 Dec 2022 18:28:49 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "Sergey.Semin@baikalelectronics.ru" 
+        <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [EXT] RE: [PATCH v7 5/9] PCI: dwc: Avoid reading a register to
+ detect whether eDMA exists
+Message-ID: <20221211152849.y2dcxpc2teervlcl@mobilestation>
+References: <20221127235532.u7q7oou36wymkpyf@mobilestation>
+ <TYBPR01MB5341932B42719E026AA16D40D8139@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20221128115908.awhznkkrelk7h3nm@mobilestation>
+ <TYBPR01MB534107A3C2B521BA0D67B4A7D8139@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20221128161114.deacldwbckfnn6ft@mobilestation>
+ <TYBPR01MB5341FA664D5F1FCA07294F96D8129@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <TYBPR01MB53413E1BE13CCA65307770FDD81D9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20221208140111.7phlnsxktxzsc55f@mobilestation>
+ <TYBPR01MB5341B4EB94F1B829F0E0431CD81C9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <HE1PR0401MB23319A9F4AF7630A82249D65881C9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <HE1PR0401MB23319A9F4AF7630A82249D65881C9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/portdrv
-branch HEAD: d8d2b65a940bb497749d66bdab59b530901d3854  PCI/portdrv: Allow AER service only for Root Ports & RCECs
+Hi Frank
 
-elapsed time: 725m
+On Fri, Dec 09, 2022 at 03:52:42PM +0000, Frank Li wrote:
+> Hi Serge,
+> 
+> > From: Serge Semin, Sent: Thursday, December 8, 2022 11:01 PM
+> >
+> > Cc += Frank Li
+> >
+> > @Frank could you have a look at the thread and check the content of
+> > the CSRs dbi+0x8f8 and dbi+0x978 on available to you DW PCIe +EDMA
+> > devices?
+> 
 
-configs tested: 89
-configs skipped: 2
+> [    2.598038] imx6q-pcie 5f010000.pcie_ep: imx_add_pcie_ep: +0x8f8 = 3438302a, +0x978 = 00010001
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks for the reply. So it's 4.80a with the legacy viewport-based
+access. Alas it isn't what we need in this thread. We'll need
+@Mani's respond in order to decide how to fix the auto-detection
+procedure.
 
-gcc tested configs:
-powerpc                           allnoconfig
-x86_64                            allnoconfig
-x86_64                              defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                                defconfig
-arm                                 defconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arc                  randconfig-r043-20221211
-arm                  randconfig-r046-20221211
-arc                        nsim_700_defconfig
-x86_64                           rhel-8.3-bpf
-x86_64                          rhel-8.3-rust
-x86_64                               rhel-8.3
-arm                        realview_defconfig
-i386                          randconfig-a001
-x86_64                           rhel-8.3-syz
-powerpc                     tqm8555_defconfig
-x86_64                          rhel-8.3-func
-i386                          randconfig-a003
-x86_64                         rhel-8.3-kunit
-sh                               allmodconfig
-ia64                             allmodconfig
-arc                                 defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                    rhel-8.3-kselftests
-x86_64                        randconfig-a006
-i386                          randconfig-a005
-ia64                            zx1_defconfig
-x86_64                        randconfig-a013
-s390                             allmodconfig
-x86_64                           allyesconfig
-x86_64                        randconfig-a011
-alpha                            alldefconfig
-alpha                               defconfig
-mips                    maltaup_xpa_defconfig
-arm                              allyesconfig
-m68k                             allyesconfig
-s390                                defconfig
-m68k                             allmodconfig
-arm64                            allyesconfig
-x86_64                        randconfig-a015
-arc                              allyesconfig
-mips                             allyesconfig
-powerpc                     pq2fads_defconfig
-powerpc                          allmodconfig
-alpha                            allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-s390                             allyesconfig
-i386                             allyesconfig
-i386                          randconfig-c001
-m68k                          atari_defconfig
-sh                             shx3_defconfig
-powerpc                      ppc6xx_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-loongarch                           defconfig
-loongarch                         allnoconfig
-loongarch                        allmodconfig
+-Serge(y)
 
-clang tested configs:
-hexagon              randconfig-r041-20221211
-hexagon              randconfig-r045-20221211
-x86_64                        randconfig-a014
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-mips                  cavium_octeon_defconfig
-arm                          sp7021_defconfig
-powerpc                     kmeter1_defconfig
-s390                 randconfig-r044-20221211
-x86_64                        randconfig-a003
-i386                          randconfig-a006
-i386                          randconfig-a004
-riscv                randconfig-r042-20221211
-x86_64                        randconfig-a012
-x86_64                        randconfig-a005
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> 
+> Frank Li
+> 
+> 
