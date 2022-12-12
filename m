@@ -2,143 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA6264A939
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Dec 2022 22:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BA3864A97E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Dec 2022 22:25:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233222AbiLLVKV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Dec 2022 16:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49420 "EHLO
+        id S232915AbiLLVZI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Dec 2022 16:25:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232643AbiLLVKU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Dec 2022 16:10:20 -0500
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F8812AD2
-        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 13:10:18 -0800 (PST)
-Received: by mail-qt1-x82f.google.com with SMTP id cg5so10142469qtb.12
-        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 13:10:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ixsystems.com; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XZElR/i3qIpvoamHe5o1flBC7ahh+gLiU83zIQ0+fqY=;
-        b=dg+nllr9m+0N1y5HDs+3GUcTUOrQFuaIvcQ+dG6gMJrHFmXKyg1Q5/VPIT0WsgyyVY
-         ISmhfKVp2ZAzeUMfTdVhps1fj/AjT0cWHrNXQWLmE5Z0M2DF381Q3Yffr/BKIrZlREIb
-         qT6nWJw7EzQXjxhEGkwtZO/70kj6UfGHufuz1PrXHn2O+OXlarBiGQf2mdH/FwoqXCiS
-         /uNkKAC7NE1AZCsJTvTAnRWrH00oOvtXzlSMIyA9jdIK7Me52jKRMvYzkxAilfZz5KcJ
-         wZbaJTiZx/i6ywc9L6J+tEoE4lBQpdjbkVLw7TIUUWLQmO6YyQeVZ5ggZs11RAqBwXO3
-         NQNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZElR/i3qIpvoamHe5o1flBC7ahh+gLiU83zIQ0+fqY=;
-        b=zESHcD36qNZ60O1gavG/658ezgv8xCI8KyopufXNXBGMybIqpiW6KW/BIt8qXjvMXZ
-         4hwvaSr+Bxq7HYz1nAFVHSdy0jS0JLAeYiDKzYc9Kt/oey1dYtRPMgrmuxtGroJyyejZ
-         PdURrLfBqSqouH0F3E933LVWT2pt0pQZfIx5JweDqcjKiY6DNe+h0gIdUci04z10135Z
-         V6GmkpwgQ1oH953xqtqXo2oDxoruW+VV4UExda6ScCXHWRm7EGV2z9JZ4JJFG4Llmq+4
-         c+jmsqHX4+wHXPrrK0qlIxX8nrYLFX/y6YIu9tvSPyJPXsEA8DOC58RhhHZVMWv+moT1
-         xbfA==
-X-Gm-Message-State: ANoB5pkUtMzwy7ooNt1huP2UBVK81pA3OcX7eX0qndgeI3l1TpUSdOEY
-        z8l5KWHXHMk1HwTLorQ+p556/Q==
-X-Google-Smtp-Source: AA0mqf7In6ZQ5yyysnIVIDDvXqHuOd/NsxV1nP77BH329wuavYSh3ByT357k+n9yeGqnegFqCbwA9g==
-X-Received: by 2002:a05:622a:2487:b0:39c:da21:f1a2 with SMTP id cn7-20020a05622a248700b0039cda21f1a2mr28881631qtb.3.1670879417980;
-        Mon, 12 Dec 2022 13:10:17 -0800 (PST)
-Received: from [10.230.45.5] ([38.32.73.2])
-        by smtp.gmail.com with ESMTPSA id x1-20020ac85381000000b003a7eceb8cbasm6304209qtp.90.2022.12.12.13.10.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Dec 2022 13:10:17 -0800 (PST)
-Message-ID: <6053736d-1923-41e7-def9-7585ce1772d9@ixsystems.com>
-Date:   Mon, 12 Dec 2022 16:10:16 -0500
+        with ESMTP id S229600AbiLLVZH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Dec 2022 16:25:07 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2380E1741A;
+        Mon, 12 Dec 2022 13:25:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670880306; x=1702416306;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=aDteQ6DtvW9h+ePCbnreJu+ubUxADDdM3EbGrxhOak4=;
+  b=P5bYi5K9jvLpML47WbIF8/g+ZSfdhBgt82iT/qDsc0XUGu/twNpLHwz4
+   33l2uVhZjWMEcAo83VohByS29r2rJUNqogz6XS0P6ABxqb5tYG20pJmWN
+   fvCd6UlVr0Y4iDa6YkYAf8PJjWVpWPHTtzpU/I4Y13AIPZiTUiC09hqcd
+   pvrSKJ2ls5ySCajNeMScUbEpSzwR90jsrOoVch+M+C16wWo/um5/qKm5B
+   S6/88GXZOaWsZ1SfHPtMMXVKQJwRzmXDTytZH91z0dpM9BCRhxKiNII8q
+   zb4XqloKRA9lpitQQlHFou8MKKmIh5VDC21U5d1a4JWxnKACdPVl0um3T
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="305610955"
+X-IronPort-AV: E=Sophos;i="5.96,239,1665471600"; 
+   d="scan'208";a="305610955"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2022 13:25:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="716955399"
+X-IronPort-AV: E=Sophos;i="5.96,239,1665471600"; 
+   d="scan'208";a="716955399"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2022 13:25:05 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 12 Dec 2022 13:25:05 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 12 Dec 2022 13:25:04 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Mon, 12 Dec 2022 13:25:04 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Mon, 12 Dec 2022 13:25:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K7YzorSKCc6hEeIBvIfgL8+FrtISj/nUWD4vFW1cJ1/uj93uQdxnbtnyj7msKawPN+hpt+8UK/sMqJq3G7+sfxQwp3FHDba2diH6DtT/TAOQd8n0oU6dt3C3iw9vXLU0oc2sBvw0Fg5cdQus0vm9Ze1YglUdhG/1OBgkxjdXjdMoNrdyDiWvEcZa2DRTxL9xZs0Y+f9zy+U7Aq29CBM1Y6HA2uSDTAqsGAR4a2tlWHswzAgQZP2MSVcRjuhSOGSJeYBCiCzgvU3UeIWCyLZHTlJ/0YOolXeQ7gH1vDD4oa8A6mjLjruwtFVkWwo9II0736B+9emOZsfc+jBN4ZbT4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h9NFwJ87h7/7TvXk6VxCsBkcvWfZy4/rt2kc2PqazjM=;
+ b=HzuyiNCCb+m027vm3nkgZ91fIPdXsSQfU22qKQ7M2QtAtqy6hC1dfB8zXsGUS0cxTdhY0Dtf4MDtzRJ8+rYu8n5hvRvV/erHQGWJpEnuyQlC8I5eofxzodp6lESsrvWp5tMrNvuTigak8g7Q9a4NSTYHvsdL9QWuO2zYwO5Gov5vo3hvKaSLOEU0IU1AlUDh/gBAZWNMUPR9DbbbTYTapjnEYozCfye6dBf9ZtKSAAuqmLWJ+feovQXP43JlaKLE07F+kpmT8hPPmUxjJsobHi2ThxyShwE5RvVZBzqFgzKuC333TxbX8ERq0gK8144wtgGOTGk541OpmdvTa4/vDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by IA1PR11MB7917.namprd11.prod.outlook.com (2603:10b6:208:3fe::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.19; Mon, 12 Dec
+ 2022 21:25:02 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f%5]) with mapi id 15.20.5880.019; Mon, 12 Dec 2022
+ 21:25:02 +0000
+Date:   Mon, 12 Dec 2022 13:24:56 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+CC:     Davidlohr Bueso <dave@stgolabs.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 0/9] CXL: Process event logs
+Message-ID: <Y5ecKKUv+cz0s3N0@iweiny-desk3>
+References: <20221211-test-b4-v4-0-9f45dfeec102@intel.com>
+ <Y5a88UgaE3EzJFQh@iweiny-mobl>
+ <20221212161613.mz42m7n6eswjwdjv@meerkat.local>
+ <Y5d3ArpuLYl4g4Mc@iweiny-desk3>
+ <20221212185459.x5wn42exhhycckun@meerkat.local>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20221212185459.x5wn42exhhycckun@meerkat.local>
+X-ClientProxiedBy: BYAPR01CA0047.prod.exchangelabs.com (2603:10b6:a03:94::24)
+ To SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; FreeBSD amd64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: pci_bus_distribute_available_resources() is wrong?
-Content-Language: en-US
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Nick Wolff <nwolff@ixsystems.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>, linux-pci@vger.kernel.org
-References: <2ec11223-edb3-5f5c-62cd-3532d92de0a4@ixsystems.com>
- <CAErSpo7WrAg5D4xyv0SycoDc1etSspU_TL6XMAK4STYrXDrGNQ@mail.gmail.com>
-From:   Alexander Motin <mav@ixsystems.com>
-In-Reply-To: <CAErSpo7WrAg5D4xyv0SycoDc1etSspU_TL6XMAK4STYrXDrGNQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA1PR11MB7917:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a92f885-b375-4c44-1688-08dadc875488
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Pt0mCmLJZssiF/0XQ1DLqvaxAuJra4f2YVdHSlY8cn05DqGVpFey6Km8bzMoGquKs1xli3AOMXnVMrQ0y6U5xhZNkdCUTnT5QTt0ju1zfNpUDOSe0rCUHAJK5fjESQphrYpHWTOEd9OYuXbJsOrvpMJiMZfvwqd5HJDH2Wffqnhk2KD9RuocIJuWcrQjlH5lz0XMorwCNUZ8FG2PS6ybiLiCHcfidSDiVvbghUL6T3UEQTDu5L30gpdJVHL5x/n71vvRdawQRgdSSJ//tI/7LONoe+GlxfG1ZEkHBfCpHBp6/1VvG4gVOPOykA885WmTpk/U1gsvfaB0QzI0hn00to2hSOyHgqP5tfWzEzEj8MWMpAyfg19i1W5PIpTsvF75a3TL1+clsaKFNkbOhoYNkblD+V5SxDciaaEiZt7yKkVDojiKO2jrHFryA9YdxEX6+K+/B/wxzFY+yrZH0pccMydu31cCcy/5DsF8MyH6CwHbG24VK14HCThbFhTVbEvFec/PHpw3ZvTybpMhaVLsM2UIaHPPXqigYnuPg+HY9++IgGqkZMR9MQrmw5qVPfRv1ZRyoOzAl5y7IpZPcCl1WZCaJS+HBEsvc5jgbT3oF68qT95qGoWb6HxZll8BDyz8Rc98yTvM5mCTpJ542hs6ucFwLYdYzespXlrzL2mUB2Bm2f9i7MaSpKWhGvs22hCyZZNx8KgU955ZHsQZYHtp3A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(376002)(366004)(346002)(136003)(396003)(39860400002)(451199015)(86362001)(2906002)(6666004)(6506007)(5660300002)(54906003)(41300700001)(4326008)(83380400001)(6916009)(316002)(8676002)(66476007)(66556008)(66946007)(9686003)(82960400001)(186003)(44832011)(8936002)(26005)(38100700002)(6512007)(33716001)(478600001)(6486002)(966005)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZoUgnmy6izkldmfYa3n3ukdaBAlGeoF9C7Y21Tjl28YBCPwCzqjK2LQzu8C7?=
+ =?us-ascii?Q?ymkq2z87G9eR3V5S/khAR77DviQh07m8Gyn3VCPTop4ZPnnB0kLs1f6cYnfq?=
+ =?us-ascii?Q?pOIrCMCt7hDOcM/FnM3eUArB12ud0HJ58hT5U1Sqbx6G+KS39zf1Kg7BqQ4q?=
+ =?us-ascii?Q?WNzpPcaE0a1WnpYX1Y7wAkcC4o3VFT9KRW2HuHQmfJ/RRPy/5ln4AlA/Ud2G?=
+ =?us-ascii?Q?XoU2x7euSnx4IqB+ZyjPzcyGc6s8IOSsRULYf5MBr5mln7vC8jO3BrrnX+J1?=
+ =?us-ascii?Q?fYh7dAGlvDnmIefe81k2I3cXQ58oULwZ9DtySkJFlWBnGrvyN4gRlFZQYY0f?=
+ =?us-ascii?Q?4ccqDrRUiBFtYAThXo9slsaLuCskvtXaaPWITisnXR1wyZPJNt1U/k/3IYWm?=
+ =?us-ascii?Q?eR4VinzKazmXGa675gtmXEEacAuVvUGH8vm9vhmHE/OmnI/uDMEq6dboMHzK?=
+ =?us-ascii?Q?NFR+bt4cUtaGv0C1W6hPJi5lRveifM6DPdY4PRPXzkbDqLNW06TAOpNAAPCo?=
+ =?us-ascii?Q?5sPOMR/1MAUaTenPTEjM2Y1jzktW70HrcpHm7YlIPaOeRmQNzOYueqWs8i3T?=
+ =?us-ascii?Q?UECyZ4BLybPN8wV9LLqQQKZnuRED6rMrWpS9G6P1+BPzV4aoj14wizljRIzD?=
+ =?us-ascii?Q?l6v/E1jiCu/HcgTU12LPc2hl0A2IHXhsxy7smDru7vmb1jEkUOt6Jcs0Zzif?=
+ =?us-ascii?Q?qsVpEYmG8ly5ysPSTpAEtqbkS5nItVDhxbO1Lb07MDPYzeazJ7ENxuLACIhI?=
+ =?us-ascii?Q?ADz0YvAy9JUX3YUGN/62AicQLKl2ZNbTf6oJdugQjIpPrSoiBIZvmNK8Jnoy?=
+ =?us-ascii?Q?TA1ZOGAffYAbf+hyFLCB79G9LIVjkYalkTKO927wSZtQlJHBOUsDBi/hoCVl?=
+ =?us-ascii?Q?c3g0neQz+WsQSNG7/hBBSJBPw0XmeRpNlMQrggg4YfX1nvjwoxjN1lKvRlUP?=
+ =?us-ascii?Q?tC26ANY19kKo6RNcZa0O2ma7bnQSoliVnQpXKcjHsMF4xwmv9dKmsgHqeHBK?=
+ =?us-ascii?Q?71F2MxM8dXLePpyM0k8LB47kT7pDkmmUKFiLwwhdhP7Cqm6Crlz0XA8FY2og?=
+ =?us-ascii?Q?Ga64Jgsvr4jjimSh9yIl+99iuzqIQ+iTxKulOeZNKMA+sX2FMMTzAJcm8xP7?=
+ =?us-ascii?Q?Ok6BgR//mglrCtfibg85cUWOwzwcRsJY2haEdiCQEGOUBg6guQRhlToU9Y4C?=
+ =?us-ascii?Q?LcOMk44JSjldTtAjxB5vPFXop/Ts8plRCnv1AQ4AphheywR81kmJf8wNOh7Q?=
+ =?us-ascii?Q?8jPuglNu+xKYUCskczRVT1KKyrXc6hzQKkl4aDIDQoMXhNxttYI02+gQ82ls?=
+ =?us-ascii?Q?C2xF4O/8FOm1Ihoyu/8YZpYdmcz3JVRz97fPD499Lit96gHVTZskunilSSLf?=
+ =?us-ascii?Q?3x2C13ONYdivVLd37PMAx/PtWBHOpU38rLkxGe9jJWX1GfC7xN3xTKceb+Qa?=
+ =?us-ascii?Q?ByhQsv4jsxdt8B6O4dOVA8O+xNYggz49nii/UmSRx4YITbhpMVFsBvC7MmUp?=
+ =?us-ascii?Q?9hJE8oNvCqcrFQaLL/g3btuTzIDj5f6xXLBXrCQOmcYIhmaINDv/J/Nyd5yV?=
+ =?us-ascii?Q?cngkzsFwT9EfK+Ns/EC1P1c+vdDPlKQOTGQUXSi3?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a92f885-b375-4c44-1688-08dadc875488
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2022 21:25:02.4809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PURbxJnp+PesJOrpbT1hNieb0AxeGQMJz0MH23YHi6sASkJ3zzgzXt6f3M2WDW+qq94UoIYvLYG3D5bCBQESbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7917
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12.12.2022 15:32, Bjorn Helgaas wrote:
-> On Mon, Dec 12, 2022 at 1:36 PM Alexander Motin <mav@ixsystems.com> wrote:
->> Hi,
->>
->> I am writing to you three as the authors of Linux
->> drivers/pci/setup-bus.c pci_bus_distribute_available_resources()
->> function.  Trying to debug PCI hot-plug issue on passive side of AMD NTB
->> I hit this function, behavior of which I looks very suspicious to me,
->> which I believe cause resource allocation problems we observe.
->>
->> As I see, this function distributes extra size of parent memory window
->> of hot-plug PCI bridge between memory windows of child bridges.  It
->> probably makes some sense, but I see a problem in the fact that the
->> function only looks on children bridge memory windows, but not any other
->> resources (of bridges or other devices that may be there).
->>
->> In my AMD NTB case PCI topology looks this way:
->>
->> +-[0000:80]-+-00.0
->> |           +-01.1-[81-83]----00.0-[82-83]----00.0-[83]--+-00.0 Dummy
->> |           |                                            \-00.1 NTB
->>
->> 80:01.1 is the root bridge where the hot-plug happens.  The 81:00.0
->> bridge in addition to memory windows has small 16KB BAR.  But since it
->> is the only bridge on the bus, the function passes all available
->> resources down to its children.  As result, that BAR fails to allocate.
->>    And while that BAR seems not really needed, in some cases the
->> allocation error makes whole memory window to be disabled, that ends up
->> in NTB device driver attach failure.
+On Mon, Dec 12, 2022 at 01:54:59PM -0500, Konstantin Ryabitsev wrote:
+> On Mon, Dec 12, 2022 at 10:46:26AM -0800, Ira Weiny wrote:
+> > > It fills out the To: and Cc: headers but doesn't actually send
+> > > actual mail to those accounts. Mail servers don't actually pay any attention
+> > > to those headers -- all that matters is what destinations are given to the
+> > > server during the envelope negotiation.
+> > 
+> > I did not know that.  But I was kind of coming to that conclusion based on
+> > what I saw happen.
+> > 
+> > > 
+> > > I do realize that this is confusing. :/
+> > 
+> > Only to those mere mortals such as myself who don't know squat about mail
+> > protocols!  :-D
 > 
-> Mika is working on what sounds like the same problem.  His current
-> patch series is at
-> https://lore.kernel.org/linux-pci/20221130112221.66612-1-mika.westerberg@linux.intel.com/
+> It's completely normal not to know how that works -- and you shouldn't either.
 > 
-> We would appreciate your comments and testing as that series is developed.
+> > > Should I include anything in the output about this?
+> > 
+> > Maybe.  I'm not trying to put more burden on you.  But for the ignorant maybe
+> > it is a good idea.  I did panic when I saw all the to/cc addresses filled in.
+> 
+> I added a large notice about that to the --reflect output:
+> 
+> 	[...]
+> 	---
+> 	Ready to:
+> 	  - send the above messages to just konstantin@linuxfoundation.org (REFLECT MODE)
+> 	  - via web endpoint: https://lkml.kernel.org/_b4_submit
+> 
+> 	REFLECT MODE:
+> 		The To: and Cc: headers will be fully populated, but the only
+> 		address given to the mail server for actual delivery will be
+> 		konstantin@linuxfoundation.org
+> 
+> 		Addresses in To: and Cc: headers will NOT receive this series.
+> 
+> 	Press Enter to proceed or Ctrl-C to abort
+> 
+> Hopefully, it will be less worrisome to others in the future.
 
-Thank you, Bjorn.  This definitely looks related, but as you've already 
-noted in your review there, present patch does not handle BARs of the 
-bridge itself, that I have in my case.  I'd be happy to test the updated 
-patch.  Please keep me in a loop.
+Yes that should help a lot!
 
-I also agree with your comment that the same should be done in case of 
-multiple bridges.  I am generally not sure the cases of single bridge or 
-not having hot-plug on this level should be any specific.
+> 
+> Thank you for trying out b4 prep/send!
 
->> It may be rare to see PCI bridges with BARs, but I know that at least
->> some PLX bridges also have BARs for configuration purposes.  Also I
->> suppose the same problem would happen if there are other device on the
->> bus aside of the bridge.
->>
->> I've tried to disable pci_bus_distribute_available_resources(), and it
->> fixed the problem.  But I suppose it may cause problems in cases for
->> which this function was developed (hot-plug of JBOD supporting
->> hot-plug?).  Am I right?
->>
->> I would appreciate your feedback on this issue.  I am new to this code
->> area of Linux and not sure how to better fix this, but the way the code
->> is written now looks very wrong to me.
->>
->> Thanks.
->>
->> --
->> Alexander Motin
+NP
 
--- 
-Alexander Motin
+Thanks!
+Ira
