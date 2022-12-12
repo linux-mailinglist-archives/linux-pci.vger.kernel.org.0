@@ -2,118 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5121264A7AE
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Dec 2022 19:57:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08B0664A7E3
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Dec 2022 20:05:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232271AbiLLS5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Dec 2022 13:57:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43566 "EHLO
+        id S232450AbiLLTFN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Dec 2022 14:05:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233214AbiLLS4u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Dec 2022 13:56:50 -0500
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6941417886
-        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 10:55:05 -0800 (PST)
-Received: by mail-qt1-x82b.google.com with SMTP id fz10so9798133qtb.3
-        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 10:55:05 -0800 (PST)
+        with ESMTP id S232977AbiLLTFK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Dec 2022 14:05:10 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE417CC1
+        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 11:05:02 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id x25-20020a056830115900b00670932eff32so2487521otq.3
+        for <linux-pci@vger.kernel.org>; Mon, 12 Dec 2022 11:05:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sad/hrzFQ5ykbrLpJr7Z8NgF9Sic8iJyl9PZUlU3hdI=;
-        b=HjPs699wgKkANUQrrhYdOTrHOAL4jYLpg7OJ1yz695y7KhpcMvaOPPVdEpp6ZEyW1Y
-         IRoxQ+ksxppdnTdYZGlvCrLZ141S9pSJCNtydJFsjeimRv6sh/FwhY43EAdfPr7rnn16
-         29oBLcf0jY3RtzO3p+L3Onn37XV7HJ0S1Mf5U=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ikOi/brEDS1RRSKmqeJmcWUMDmT651JD+MszxE9reuE=;
+        b=Cw0oiXQ1iV3nwKNAb2Bm0S13p6hv8dYl8gkEbj48HuTZGf12sKG/HL5sS59bGEIBUl
+         XqA3yGrssoSrZknRnJm7xQoucpT0W+VDfmGm3qAjJZC+P3CgYQcDZnUkmiz0JvAaIQfc
+         OCIpBi24jtzbP4CatV8Le2CPb9L4WtzYhSjQcflx1D9XWD/hDdXS3AfjsaNKoGdQvwsc
+         /iOoNFXMdz0eciDKS9DCu7/fz6u6+/ie0yhouiem3BlBJlvSZxNIlc9gJir0wq3dOLMw
+         FpQxRnOnPZECUWdk2cpRgrfeT0dgDxte2lv0Nq/a3u74y6jSnRe6s/0Ui3H7sxpom2BF
+         sFSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sad/hrzFQ5ykbrLpJr7Z8NgF9Sic8iJyl9PZUlU3hdI=;
-        b=MUfeQ+EVKWje/6+/zwhzHwMVx2NOuINWUmfpXaXb6ZZ+Q3Rtr82XeQ9Ozt7+ExX7uV
-         dTBktf1JybU98HLV6fhs6ySz/SDfkGQ7lIMg7AoVUanioJ/Sr1IU+MT7GuQLTu+cicNs
-         +0sG1fbnSIXEJ5jL0TTtxGxHGKKRL0hIuRkDVLVjli9J5FDFj2XxdaW1/vvo10JqHuT1
-         xDzB+xYDpYWAPFI6yVlHL+IlJD11QYmQYu9VIXjyMOyUuG8yKVT1YOQnZxwd2HacFcgK
-         KSfyeWMQEW3rfeCHJs+rXvLWL6mwBSH8E6lBll51+mCt8ed+97/MN0wlbvqUXpoO1e5R
-         5R6A==
-X-Gm-Message-State: ANoB5plXbuba9YwGCLSfS/kEDRsbnvR5gztq+zPLfIEYAdtyYzN+RWNK
-        TOz+NKdA6Q3UqHoQItqE72+nbGH5ee2Ok9cz
-X-Google-Smtp-Source: AA0mqf5u3yvJyeQ73wKo0JZCXelSPXCh7UDX321VC/+pogVrXrwdOU1ppocOhYM701mRKvSRVhBBmw==
-X-Received: by 2002:a05:622a:4017:b0:3a5:a2f7:36aa with SMTP id cf23-20020a05622a401700b003a5a2f736aamr24563314qtb.44.1670871304540;
-        Mon, 12 Dec 2022 10:55:04 -0800 (PST)
-Received: from meerkat.local ([142.113.79.147])
-        by smtp.gmail.com with ESMTPSA id f16-20020ac859d0000000b00397e97baa96sm6445727qtf.0.2022.12.12.10.55.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 10:55:04 -0800 (PST)
-Date:   Mon, 12 Dec 2022 13:54:59 -0500
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 0/9] CXL: Process event logs
-Message-ID: <20221212185459.x5wn42exhhycckun@meerkat.local>
-References: <20221211-test-b4-v4-0-9f45dfeec102@intel.com>
- <Y5a88UgaE3EzJFQh@iweiny-mobl>
- <20221212161613.mz42m7n6eswjwdjv@meerkat.local>
- <Y5d3ArpuLYl4g4Mc@iweiny-desk3>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ikOi/brEDS1RRSKmqeJmcWUMDmT651JD+MszxE9reuE=;
+        b=TPZwLh7vgUbcusvXnHryswd6rAC0e+fWPVAjCOK3gyrTguETANZg5MzvgAabR+a51F
+         z5I4Gvm0xG9MuO/FmofmQIr0fSCcS3b1Gj69R1JBZ2TgP68EfsN6qCjFH4nuCSUXTHJl
+         hmApHzMXvzGa7b+xVYYG9g2FktjxzkiPO3/PgKm6LZh048vwZdCkZnC5R8qBLZUQLBRg
+         V659Kt3sM5uT+PgH/MzjfQB47WuwZI05cyRGm/CS+HgeUPXA5RZVWJVpg8ueoyVjeqMF
+         2w6XE7/5YM18K5EKrytxRIMR2BeCRchod7FKyrz1kuHFH19ZaTk2K0qXuxm3t4kVEtC2
+         oK3w==
+X-Gm-Message-State: ANoB5pkRF85fUduZjP9WD5uRDroRapHlLLWW1yeoA34kDnFapxF+8Cog
+        FbmbQV3ZOPyuUWuhRMQEbNw=
+X-Google-Smtp-Source: AA0mqf66QD7e1pgPXpU6quuymHO4LOa340MQczZT+ccvn0dgfx9ZCe2VpS37DWiZM+q0PxNVQidlpA==
+X-Received: by 2002:a9d:4b0b:0:b0:66e:c0c9:876e with SMTP id q11-20020a9d4b0b000000b0066ec0c9876emr9243456otf.38.1670871902305;
+        Mon, 12 Dec 2022 11:05:02 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c7-20020a9d4807000000b0066193df8edasm268395otf.34.2022.12.12.11.05.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Dec 2022 11:05:01 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f02e6f0f-d144-3eed-03e2-e55f459f666c@roeck-us.net>
+Date:   Mon, 12 Dec 2022 11:05:00 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y5d3ArpuLYl4g4Mc@iweiny-desk3>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 3/3 v4] virtio: vdpa: new SolidNET DPU driver.
+Content-Language: en-US
+To:     Alvaro Karsz <alvaro.karsz@solid-run.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>
+References: <20221212142454.3225177-1-alvaro.karsz@solid-run.com>
+ <20221212142454.3225177-4-alvaro.karsz@solid-run.com>
+ <848cc714-b152-8cec-ce03-9b606f268aef@roeck-us.net>
+ <CAJs=3_AdgWS23-t6dELgSfz7DS4U0eXuXP_UZ3Fn21VCEwA-4w@mail.gmail.com>
+ <3f83e874-3d7c-cc97-2207-a47dbcfe960f@roeck-us.net>
+ <CAJs=3_D6_TayfdSz9e6P6G+axyUht4iyHnwHgPJ8sXG2a3sm2w@mail.gmail.com>
+ <CAJs=3_DhEpGjgNZ6+cJiK6WVCQkBYW0V2EvF9vhTW-K6VodB_Q@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <CAJs=3_DhEpGjgNZ6+cJiK6WVCQkBYW0V2EvF9vhTW-K6VodB_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 10:46:26AM -0800, Ira Weiny wrote:
-> > It fills out the To: and Cc: headers but doesn't actually send
-> > actual mail to those accounts. Mail servers don't actually pay any attention
-> > to those headers -- all that matters is what destinations are given to the
-> > server during the envelope negotiation.
+On 12/12/22 09:56, Alvaro Karsz wrote:
+>> Even better would be a separate CONFIG_SNET_VDPA_HWMON Kconfig option.
 > 
-> I did not know that.  But I was kind of coming to that conclusion based on
-> what I saw happen.
+> I prefer to wrap everything with a single Kconfig option.
 > 
-> > 
-> > I do realize that this is confusing. :/
+>> depends on HWMON || HWMON=n
 > 
-> Only to those mere mortals such as myself who don't know squat about mail
-> protocols!  :-D
+> Are you referring here to CONFIG_SNET_VDPA, or to the
+> CONFIG_SNET_VDPA_HWMON you suggested?
 
-It's completely normal not to know how that works -- and you shouldn't either.
+Either
 
-> > Should I include anything in the output about this?
+> Because if this refers to CONFIG_SNET_VDPA, HWMON=m  will block the driver.
 > 
-> Maybe.  I'm not trying to put more burden on you.  But for the ignorant maybe
-> it is a good idea.  I did panic when I saw all the to/cc addresses filled in.
 
-I added a large notice about that to the --reflect output:
+No, it won't. It would force SNET_VDPA to be built as module if HWMON
+is built as module. Then you would not need IS_REACHABLE but could use
+IS_ENABLED instead.
 
-	[...]
-	---
-	Ready to:
-	  - send the above messages to just konstantin@linuxfoundation.org (REFLECT MODE)
-	  - via web endpoint: https://lkml.kernel.org/_b4_submit
+Guenter
 
-	REFLECT MODE:
-		The To: and Cc: headers will be fully populated, but the only
-		address given to the mail server for actual delivery will be
-		konstantin@linuxfoundation.org
-
-		Addresses in To: and Cc: headers will NOT receive this series.
-
-	Press Enter to proceed or Ctrl-C to abort
-
-Hopefully, it will be less worrisome to others in the future.
-
-Thank you for trying out b4 prep/send!
-
--K
