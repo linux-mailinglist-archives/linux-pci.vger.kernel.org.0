@@ -2,324 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AE7649567
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Dec 2022 18:33:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAB37649861
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Dec 2022 05:22:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230078AbiLKRdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Dec 2022 12:33:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
+        id S229766AbiLLEWB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Dec 2022 23:22:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbiLKRdp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Dec 2022 12:33:45 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31361DEAB;
-        Sun, 11 Dec 2022 09:33:43 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id z4so10203121ljq.6;
-        Sun, 11 Dec 2022 09:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eCA+ESw2O4jwFU+4PiuKyyj+p2JGfKrFRUlGANlskWk=;
-        b=BpG3MHUS0oiWb2nLBw/YM90o7Gt/LHngXjWirgfjItBrOLw6xFfQvij7LmACaYjIUM
-         IvdU0ts9VA/T4BFaky85C9W3dvScOydI8jExJm3PTsT0vz/tykiajdopHYscUlvbDFWP
-         7xLtfD4HzYyprNGr2SsYJRkXZvsLqRrU52/Jp2lAXjf49nXCUDIjZYlBavhRbjnw/OXN
-         OpIRkEK9pouXD4gVNbm4aNr3OXbzyB78rhyJArGPcxnMphSginKiLjYg4NGuko9lyBkI
-         Xzm+GL+iXsqtShqb6j3nVJsvVfJOJLtySUYi1EFtCuBjwtrvnnzQTBKsU6HsqVBJNBh4
-         Hyfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eCA+ESw2O4jwFU+4PiuKyyj+p2JGfKrFRUlGANlskWk=;
-        b=qbJtN3tae2MLh+xHMo4g9gDRe7HK+9jnINXiOa8QxlekADD2SBwMPsMcjHzNJz2eTD
-         FES+Y2Xkbzo5tjCH0dKeZ8s4vIKk/+LWCl9nMcjflrUxcjbpHTS9dg3cmVkt79i0gw3m
-         9Ll3Nj5oPryUlIuWgjXwglHqSYzlISZgCB7mDcUpOaOh6lmeW8fwPlSPpm9n8y8zHn8h
-         uF3OggSi14xBBkr6TdJBC1gDbpEWeZJkTwYKqyHLSlBi4r+F36eX4d8s0ZUnqZw2tSqN
-         9Ke4W8xM+zAu2FosmfEWfkZYYKPE2M5D1V3Ak4ISEEruIhFjUfkArePoicKepO8d2j6b
-         C25A==
-X-Gm-Message-State: ANoB5pmAg8fglM9Kf7ZWfp79etnkS6XCg7dir/69YsiQ90/nsrLElhwV
-        4rGwjJLaPimkIbOG+trprTs=
-X-Google-Smtp-Source: AA0mqf5ZTZ7Tqam4vP6jFXMn1RCZFD/CgBoi+rAahGysvjNAvMtNDqeNpadq7U+ZGA4slPKqq3Acjg==
-X-Received: by 2002:a2e:7819:0:b0:279:d3ba:81c1 with SMTP id t25-20020a2e7819000000b00279d3ba81c1mr3255854ljc.31.1670780021477;
-        Sun, 11 Dec 2022 09:33:41 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id a15-20020a05651c030f00b0027a081bfee9sm971108ljp.43.2022.12.11.09.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Dec 2022 09:33:40 -0800 (PST)
-Date:   Sun, 11 Dec 2022 20:33:38 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S230523AbiLLEV7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Dec 2022 23:21:59 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8F3B1D6;
+        Sun, 11 Dec 2022 20:21:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670818915; x=1702354915;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=IkJ6Gx5UnrfhuZJH2Jp5crgX7Bgzr6K8Waaq0MXkwz4=;
+  b=C0OZ61gYcu3938YedClY/Nvl2xjw6q2aZiNWY3eClbkTv4ewMBt1hwOv
+   7IMkOULDSwfFoQ0zKGPRcnnFPPBfu3b1lYIaBqI4issXibHA6Zo/FSgvm
+   p572bxxvD6EeZvSVsFbphiKCvvVUmC3r/FO8EsKIUHsdia60DzvklBu/q
+   cvVODo/tNqaLc/tMPklbCO23DcTtT4sURW84PWKBQCXgJvI5nH3oZDxfz
+   Fx8qYmGweXXqS0m5rMgBWn93RhSWMlwTWFg2ZxtX9DV6KfF0POnbubJWR
+   dIfy2y36/FcRduEkj8IL+BEukbYyKxOfyyLJPOECg9d8b4WbQh7JEKwuy
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="319621459"
+X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
+   d="scan'208";a="319621459"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2022 20:21:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="641612910"
+X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
+   d="scan'208";a="641612910"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga007.jf.intel.com with ESMTP; 11 Dec 2022 20:21:39 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Sun, 11 Dec 2022 20:21:38 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Sun, 11 Dec 2022 20:21:38 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Sun, 11 Dec 2022 20:21:38 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.107)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Sun, 11 Dec 2022 20:21:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FEz8jboeMSiu8VdZ9QQmBtbyBE/qc5PKFrc2/cJ7aKKI/REH9mC6YKzv308XgBnCPIlGhf4QqLDSIy06eYnKxnpZ45tryeeA7vFIq3MymPimYOcdfzdYINjJVN6OFiGp/0PIBll609jJUcui41FjCFwuNwCxISEj5Puq5v2+fXGSnx5M8M8QxCoyTkgZg7d0ggphYklart6iBmEnInR/dcbqsPw83u5q8cIbomI/8CwH5X8Bs4JWbfIncbQ1XAKYd1qRi+8oFjuhFQwFcKs2BRTJlFjwo9oCcSmKNVbI0LS4JAT44Lwt8gswZfyJs0/PuLRgrSJW6C3FkfdQbXmUkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6WrFYnjs8qTIiILSGHAsLIQsJ2CLOrSdl21DWgfR4ak=;
+ b=RmUmT4wBl8XGkmKXgW5DM5lHPiD/HJxaT3+GtLeh0narASx2UxtGBW4vNs+oRQckE1M9d7w9NTphxsO3uusERCe9UkqYwT+tXUNERYCaD63q/0nGR+2qEUNoj+FTyAr+0lmijKFGCFBogFIXHXLlQ5wE4xd6hxsWY/IaydSmvKWFsWM5qvR2ulpfdM5KBfbNC89kzNsdr7iuD8JEZgjZQVHGNzKzkxVD6cEuYMbXT5N78zyT4oP7eEBIYrAKs6v8HkKgdHisdhxoFM8LslB0lyVPInhWV/G76+vyBsallsJ6+oyg2Z9zsc2juKXRh3f05SshmlDAoXtt8dyIFHHqdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by BL1PR11MB5317.namprd11.prod.outlook.com (2603:10b6:208:309::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.19; Mon, 12 Dec
+ 2022 04:21:34 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f%5]) with mapi id 15.20.5880.019; Mon, 12 Dec 2022
+ 04:21:34 +0000
+Date:   Sun, 11 Dec 2022 20:21:23 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
- for the local setup
-Message-ID: <20221211173338.a57dhnw5ik6arcof@mobilestation>
-References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
- <20221107210438.1515-23-Sergey.Semin@baikalelectronics.ru>
- <20221107211134.wxaqi2sew6aejxne@mobilestation>
- <8b7ce195-27b7-a27f-bf4e-fd5f20f2a83b@arm.com>
- <20221126234509.ezn6vuefnj2f7pyk@mobilestation>
- <136b735e-43b0-59bd-c85b-291730cd6371@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V3 8/8] cxl/test: Simulate event log overflow
+Message-ID: <Y5asQ5d1TYRC9sHd@iweiny-mobl>
+References: <20221208052115.800170-1-ira.weiny@intel.com>
+ <20221208052115.800170-9-ira.weiny@intel.com>
+ <6393bc47d518d_579c129475@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <136b735e-43b0-59bd-c85b-291730cd6371@arm.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <6393bc47d518d_579c129475@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: SJ0PR13CA0027.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::32) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BL1PR11MB5317:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8582c441-aa30-4789-9004-08dadbf85981
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QjlZmRL+cQGMkG6UHdM88BoFNELNDm4s3Kyn6+pifHhBCxOo+4qnHjzsmRgg7eBteIq3TshxFLKHqkjr6jvtHVCzNXi/TjMRDt03CQYMNfaJlZ92t1r5uMtr/DV/cGPIskcbDF3GE6B/AD4Ywxh/LX7Yvcm3lSDa0uN8CX93MIxpCRjF5W2Ibmgjqp2n16PdEn50wri7Z3nwGJcjdkrRdpce+KVX+qIBGOIioh9GJNUajdQGvJFPYyS2m3EMcrLVNFuqSwl0Iys4ppld4KfmZp9kBJO4NzZOGAPFH3uKOp2nhaa3ET7/ypTS8AB01TqilHOC3k5gUGcmwkBM3eI/VTymALWz/JcknEqk+pKyVMtLu14y+KfrT7skFuk4FpE1J6fze34idOTJaAtxpZDekSCsg41AXiM1pNiHSJbyatlb28m6UekcGlZTIKTJhTA2StJifKsNvRUci4sl3r9vPiPL00wKzjp2dgAmnS+PWX4YIS38+qX1Z2O1UQMVoaKYZXneJnx7azyEpLeNhkeN2HLwpmCbZcZLzmp0PdKvcOrDRqVdpYsJBmxSMGIksNAOQckrNCDmXGg1/xcun2cwRtGJbqJGVvXSwqF6E8mrAV0TY4WW5uEXAP5DHtU7CmZQ4pdN0/j9ySnxj2pLTp6/aQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(366004)(396003)(136003)(39860400002)(376002)(346002)(451199015)(478600001)(6666004)(6486002)(33716001)(26005)(6506007)(9686003)(6512007)(186003)(83380400001)(6636002)(316002)(5660300002)(4744005)(2906002)(54906003)(66946007)(4326008)(8676002)(66556008)(66476007)(8936002)(6862004)(86362001)(44832011)(41300700001)(38100700002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VRDPO13P9+u/z4GY7QuRv5ZkDzEHrDD1oRgqp03NVIv8289HOiWfIWMkMCO1?=
+ =?us-ascii?Q?kxmf07pePWKuhxKUF5Ol17BjbMJmCP996CCVSHtOO0qCYepba4lcFVvdPdmk?=
+ =?us-ascii?Q?cCdtc5nBEjRscl4lSzsuTKBjk8BlwZQ7CKtOG0o76oEk7LtV7sTaM1OYtbg/?=
+ =?us-ascii?Q?OsqMihqo3TPRFHQHr16/dkgWeK6CzfLHq9QfcTfslM9d4mEf4gfHxT19u9fo?=
+ =?us-ascii?Q?4QCP1vZhEmmVfblnoDjw2mdsfYhkV6ZCTi7dbAgKq54axmPonKMUrz6N/g0u?=
+ =?us-ascii?Q?SyYK5baQXsa/QS4f92GCfiSZweu1JEHsEX1WUZsjKvlvzwzvwhyPcTC8o0/L?=
+ =?us-ascii?Q?YSqRM7nN/Us5p7wb7gj68GO9dH1fPQd6wYkyTPdrFmIq5pFc26zjjpg8BUJb?=
+ =?us-ascii?Q?WtPoThGF2IW6HQMQ2zLzQVfG3i2b4tBpkzfxdvIdmnBLVk1kTU6TeqEf3M/X?=
+ =?us-ascii?Q?qBk06DuYZeocawF3EM6pfZHRDytRo5b6+ORFV6jN4Dd620ndpQLuLFcKc30G?=
+ =?us-ascii?Q?2CbGaQ6yiKirpMuqv2xLmD8k+2loqVvigkqfK5GsaCAlBdXB39L8mYtpcusB?=
+ =?us-ascii?Q?F3KqUWbPO/cDWV4KiI9XjbTsOnd7vdcOEdHdaLfrfxjNbZvPjdn+kGmpV5pI?=
+ =?us-ascii?Q?T6eAyvul0/Y877fKA2jcrzPeJpcoGu4ogL2Pj1iSjXOt3rwS7vpCV4L/GZfE?=
+ =?us-ascii?Q?xADm3oLcQIviLExL752i9k/UYjXGHCKFObJ/lsWzBaGzjN6hm7AOicmINYJQ?=
+ =?us-ascii?Q?ffBCSGxmo5B+crJmUqffuV5eigEKZuxu6ksXSiHpKBM2zDoWBCSYtUOVjLyX?=
+ =?us-ascii?Q?+QSGT7woiQnLbuLs3IzgaDm4fbWZmPEoNKmfLgTa3pNAqEht3gm4FajvnuZU?=
+ =?us-ascii?Q?YttWa8qqDH+BLoLmZ1hHps2DevS5qGTwQi/k7LLDI35Ii5/GtE8EIXe7wJKQ?=
+ =?us-ascii?Q?6h4YKpS7laogPV49UEbTbnTPK5pJL3kdKfTHn/XoL8POlEJ4oFGg5R1TGk1W?=
+ =?us-ascii?Q?UtMQllGhCuQeA3Dw2bAnLFIvvRTwg8cpYssrnYTLld8AbqSOhkSX2mVmKokJ?=
+ =?us-ascii?Q?SJ14KRf4wpmcuTZdkWNyECsrMrJhs9Z+1jD5LVkEvuqZ2KmcxG3AiO32j6sU?=
+ =?us-ascii?Q?M98SYRPeZ4OIYyTgYkQNQ6i5BvO125EC0OgV99QG6lclyhjP/CIuT5ZWxz26?=
+ =?us-ascii?Q?bFRs/ujPWVvZ8oKlS588YfI7pq+FACM3oc/DAqmAUaNYfzYiF7mo7vfgMb6n?=
+ =?us-ascii?Q?K9SNSi177HOwMElpmSn5szgG747waNpNt2M2Wy/REdQwUlLZO2Dtox8ZDuOx?=
+ =?us-ascii?Q?/BdiiZ6ULxNVvUCKNrQ7tOiOv3zylcfQU5gaMgOI9p8Vtw8++8tpZdv8y8nC?=
+ =?us-ascii?Q?6zTv9O3ffIKmBjHWSFvUsoyZ6HbrRNQgpbN1cJhb0MJqw5yR1e5aE3VPPa2L?=
+ =?us-ascii?Q?dYf9SNfvK9z+AdweJGKqREGxitvUU5pnJUSqU+7gJJ39TKH+JEFeVziYhU2p?=
+ =?us-ascii?Q?U56Wl7phi3GTniuCwpRNiOsrBGgrtHleZ92uKZaIMcpCzeFp0HccAiLxyfsR?=
+ =?us-ascii?Q?yMSJO8RifIN45is7vneXHmjKPpsiFaZXELLiqe5G?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8582c441-aa30-4789-9004-08dadbf85981
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2022 04:21:33.9205
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NL/O7R48liwx7aXbaX6oms/j6c34Fj+XiEPVAtBMSbHjPvAF1a9/BhWJCT7Wh3Aqh+Y/P/nz4OjUhvnn1IFM/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5317
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 11:52:19AM +0000, Robin Murphy wrote:
-> On 2022-11-26 23:45, Serge Semin wrote:
-> > On Fri, Nov 25, 2022 at 03:32:23PM +0000, Robin Murphy wrote:
-> > > On 2022-11-07 21:11, Serge Semin wrote:
-> > > > On Tue, Nov 08, 2022 at 12:04:36AM +0300, Serge Semin wrote:
-> > > > > DW eDMA doesn't perform any translation of the traffic generated on the
-> > > > > CPU/Application side. It just generates read/write AXI-bus requests with
-> > > > > the specified addresses. But in case if the dma-ranges DT-property is
-> > > > > specified for a platform device node, Linux will use it to create a
-> > > > > mapping the PCIe-bus regions into the CPU memory ranges. This isn't what
-> > > > > we want for the eDMA embedded into the locally accessed DW PCIe Root Port
-> > > > > and End-point. In order to work that around let's set the chan_dma_dev
-> > > > > flag for each DW eDMA channel thus forcing the client drivers to getting a
-> > > > > custom dma-ranges-less parental device for the mappings.
-> > > > > 
-> > > > > Note it will only work for the client drivers using the
-> > > > > dmaengine_get_dma_device() method to get the parental DMA device.
-> > > > 
-> > > > @Robin, we particularly need you opinion on this patch. I did as you
-> > > > said: call *_dma_configure() method to initialize the child device and
-> > > > set the DMA-mask here instead of the platform driver.
-> > > 
+On Fri, Dec 09, 2022 at 02:52:55PM -0800, Dan Williams wrote:
+> ira.weiny@ wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > > Apologies, I've been busy and this series got buried in my inbox before I'd
-> > > clocked it as something I was supposed to be looking at.
+> > Log overflow is marked by a separate trace message.
 > > 
-> > No worries. I'm glad you responded.
-> > 
-> > > 
-> > > > @Vinoud, @Manivannan I had to drop your tags from this patch since its
-> > > > content had been significantly changed.
-> > > > 
-> > > > -Sergey
-> > > > 
-> > > > > 
-> > > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > > 
-> > > > > ---
-> > > > > 
-> > > > > Changelog v2:
-> > > > > - Fix the comment a bit to being clearer. (@Manivannan)
-> > > > > 
-> > > > > Changelog v3:
-> > > > > - Conditionally set dchan->dev->device.dma_coherent field since it can
-> > > > >     be missing on some platforms. (@Manivannan)
-> > > > > - Remove Manivannan' rb and tb tags since the patch content has been
-> > > > >     changed.
-> > > > > 
-> > > > > Changelog v6:
-> > > > > - Directly call *_dma_configure() method on the child device used for
-> > > > >     the DMA buffers mapping. (@Robin)
-> > > > > - Explicitly set the DMA-mask of the child device in the channel
-> > > > >     allocation proecedure. (@Robin)
-> > > > > - Drop @Manivannan and @Vinod rb- and ab-tags due to significant patch
-> > > > >     content change.
-> > > > > ---
-> > > > >    drivers/dma/dw-edma/dw-edma-core.c | 44 ++++++++++++++++++++++++++++++
-> > > > >    1 file changed, 44 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > index e3671bfbe186..846518509753 100644
-> > > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > @@ -6,9 +6,11 @@
-> > > > >     * Author: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > > >     */
-> > > > > +#include <linux/acpi.h>
-> > > > >    #include <linux/module.h>
-> > > > >    #include <linux/device.h>
-> > > > >    #include <linux/kernel.h>
-> > > > > +#include <linux/of_device.h>
-> > > > >    #include <linux/dmaengine.h>
-> > > > >    #include <linux/err.h>
-> > > > >    #include <linux/interrupt.h>
-> > > > > @@ -711,10 +713,52 @@ static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
-> > > > >    static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
-> > > > >    {
-> > > > >    	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-> > > > > +	struct device *dev = chan->dw->chip->dev;
-> > > > > +	int ret;
-> > > > >    	if (chan->status != EDMA_ST_IDLE)
-> > > > >    		return -EBUSY;
-> > > > > +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
-> > > > > +	 * controlled from the CPU/Application side since in that case
-> > > > > +	 * the local memory address is left untranslated.
-> > > > > +	 */
-> > > > > +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-> > 
-> > 
-> > > > > +		ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
-> > > > > +						   DMA_BIT_MASK(64));
-> > > > > +		if (ret) {
-> > > 
-> > > Setting a 64-bit mask should never fail, especially on any platform that
-> > > will actually run this code.
-> > > 
-> > > > > +			ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
-> > > > > +							   DMA_BIT_MASK(32));
-> > 
-> > Indeed. I can just drop the 32-bit mask test then. (But I'd retain the
-> > error check anyway.)
-> > 
-> > The problem is that actual device DMA-addressing capability is
-> > determined by the MASTER_BUS_ADDR_WIDTH IP-core synthesize parameter.
-> > I can't predict its value from this generic code since it isn't
-> > auto-detectable and is platform-specific. That's why back then in
-> > our discussion I was insisting on setting the mask in the low-level
-> > device drivers. But after the commit 423511ec23e2 ("PCI: dwc: Drop
-> > dependency on ZONE_DMA32") it turned to be pointless now since the
-> > DMA-mask would be overwritten by the generic DW PCIe driver code anyway.
-> > What do you suggest then in this regard? Just keep setting the 64-bit
-> > mask only? This will work for my platform, but will fail for the
-> > devices with AXI-bus address of only 32-bits width.
+> > Simulate a log with lots of messages and flag overflow until space is
+> > cleared.
 > 
-> OK, but you already have that problem either way. The point of
-> dma_set_mask() et al is to inform the DMA API of your device's capability -
-> setting a 64-bit mask is saying "I can use 64-bit addresses if you can" to
-> the DMA layer, and as I say the DMA layer is almost always going to respond
-> "indeed I can, let's do that". If the real DMA mask is platform-specific
-> then you need to pass a platform-specific value here.
+> This and patch 7 look good to me after addressing the move to mem.c.
 > 
-> > > > > +			if (ret)
-> > > > > +				return ret;
-> > > > > +		}
-> > > > > +
-> > > > > +		if (dev_of_node(dev)) {
-> > > > > +			struct device_node *node = dev_of_node(dev);
-> > > > > +
-> > > > > +			ret = of_dma_configure(&dchan->dev->device, node, true);
-> > > > > +		} else if (has_acpi_companion(dev)) {
-> > > 
-> > 
-> > > Can this can ever happen? AFAICS there's no ACPI binding to match and probe
-> > > the DWC driver, at best it could only probe as a standard PNP0A08 host
-> > > bridge which wouldn't know anything about eDMA anyway.
-> > 
-> > There are several ACPI-based platforms with DW PCIe controllers:
-> > pcie-tegra194-acpi.c, pcie-al.c, pcie-hisi.c. All of them are fully
-> > ECAM-based so no DW eDMA probing from the Linux kernel implied. But
-> > these are still DW PCIe controllers and they or some other ones can
-> > have eDMA embedded. Do you think it won't be ever possible to either
-> > directly handle these controllers (bypassing the ECAM interface) or
-> > have a DW PCIe device accessed via the ACPI bindings?
-> 
-> It's not entirely impossible, but would require new ACPI bindings and code
-> changes to the dw-pci driver, so if somebody ever did do that work they
-> should be responsible for any required changes at this end as well. There's
-> no point adding untested dead code now, to maintain indefinitely just for
-> the theoretical possibility that someone might ever make it reachable.
-> 
-> > Note basically what I've implemented here was based on the
-> > platform_dma_configure() DMA-configuration code pattern. I thought it
-> > was a reasonable choice since this code path is executed for the
-> > platform devices only (implied by the DW_EDMA_CHIP_LOCAL flag
-> > semantic).
-> > 
-> > On the second thought if the problem in subject is only specific to
-> > the DT-based platforms, then I could just skip channel device
-> > initialization here for the platform devices with no OF-node detected.
-> > So the question is is it specific to the DT-based platforms only?
-> 
-> I think you still want the DW_EDMA_CHIP_LOCAL flag, since the PCI endpoint
-> device in the dw-edma-pcie case may have an of_node on some platforms, and
-> in that case overriding the chan_dma_dev setup would be wrong. When the flag
-> is set, though, we can simply assume dev_of_node() is valid since it's the
-> only possible way for that to happen (and if someone does ever break that
-> assumption in future, it will likely make itself noticed).
-> 
-> > (Before answering to the question above please read the last comment
-> > in this message.)
-> > 
-> > > 
-> > > > > +			struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
-> > > > > +
-> > > > > +			ret = acpi_dma_configure(&dchan->dev->device,
-> > > > > +						 acpi_get_dma_attr(adev));
-> > > > > +		} else {
-> > > > > +			ret = -EINVAL;
-> > > > > +		}
-> > > > > +
-> > > > > +		if (ret)
-> > > > > +			return ret;
-> > > > > +
-> > > > > +		if (dchan->dev->device.dma_range_map) {
-> > > > > +			kfree(dchan->dev->device.dma_range_map);
-> > > > > +			dchan->dev->device.dma_range_map = NULL;
-> > > > > +		}
-> > > 
-> > 
-> > > Ugh, I guess this is still here because now you're passing the channel
-> > > device to of_dma_configure() such that it looks like a PCI child :(
-> > 
-> > No. It's still here because I successfully missed your email in my
-> > work inbox so I thought you didn't fix that dma-ranges peculiarity of
-> > the PCIe-host nodes.(
-> > 
-> > > 
-> > > Can we just set "chan->dev->device.of_node = dev->of_node;" beforehand so it
-> > > works as expected (with f1ad5338a4d5 in place) and we don't need to be
-> > > messing with the dma_range_map details at all? Note that that isn't as hacky
-> > > as it might sound - it's a relatively well-established practice in places
-> > > like I2C and SPI, and in this case it seems perfectly appropriate
-> > > semantically as well.
-> > 
-> > Of course we can. But now, thanks to your commit f1ad5338a4d5 ("of:
-> > Fix "dma-ranges" handling for bus controllers"), there is no point in
-> > any dma-ranges hack here because the dma-ranges property is no longer
-> > parsed for the PCIe-host platform device. I can and will just drop the
-> > custom DMA-channel device initialization from the patch. The only
-> > issue left to solve is about setting the DMA-mask. Please see my notes
-> > above regarding that problem.
-> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-> Ah, I assumed you'd still want to keep the chan_dma_dev setup for the sake
-> of independent DMA masks, at least until we get a better solution for the
-> MSI stuff. If you're happy with the compromise of going back to using the
-> real host device to keep things simple, that's fine by me.
-
-My biggest concern was connected with the 'dma-ranges' problem. The
-DMA-mask thing was another issue, but since the eDMA setup is executed
-after the MSI setup we can just override the mask specified by the
-later procedure. Though I'll have to add some loud comment regarding
-that implicit order requirement.
-
-In anyway thanks for your fix. I'll resubmit the series with the
-DMA-mask overridden in the dw_edma_probe() method. The mask will be
-calculated based on an additional flag specified in the
-dw_edma_chip.flags field. It seems like the best solution at this
-stage.
-
--Serge(y)
-
-> 
-> Thanks,
-> Robin.
+Thanks!
+Ira
