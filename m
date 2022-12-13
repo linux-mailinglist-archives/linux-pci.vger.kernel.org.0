@@ -2,100 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8622964B81A
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Dec 2022 16:10:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 773F264B837
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Dec 2022 16:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235777AbiLMPJ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Dec 2022 10:09:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        id S236049AbiLMPRw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Dec 2022 10:17:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236095AbiLMPJj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Dec 2022 10:09:39 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D706B64DF
-        for <linux-pci@vger.kernel.org>; Tue, 13 Dec 2022 07:09:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670944178; x=1702480178;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rSSMwIQD+G+i9tnloMHYHmBwBmpvRTkXzg0Lp62Cfrk=;
-  b=fXqNP/KWXI2hCk/vAfD6FU7mege9STBljBqBOWXw3neP429t2evPOH/M
-   qfvBbQSNpLYhpjkGTWgGsBTBFkGZRsGjf+I9A/s7p874y3D4yG/qXfXRE
-   WZ3WGi0PdCnWO7IJ7c/GFDejdDoVRGHlN7eBkbRG6Fw5am59b5DoqJ8XP
-   Wff35SHwtFXdxxAF+bU7yWQHcMbhURxCv6niialHevPxMD7uLB/y5owv+
-   MElmPuJ19Y7sYBUWeG0bDN8SU4rJvoHhgUdqYd62hloKxrW12FPPRgYgL
-   o2L0x00xAUDKVeEfGtYRbkWTYlcYOQrh4sh3N44/kmEZPZv996wz6fbaA
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10560"; a="315788707"
-X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="315788707"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 07:09:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10560"; a="737422020"
-X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="737422020"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Dec 2022 07:09:36 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 58857F7; Tue, 13 Dec 2022 17:10:05 +0200 (EET)
-Date:   Tue, 13 Dec 2022 17:10:05 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Alexander Motin <mav@ixsystems.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Nick Wolff <nwolff@ixsystems.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>, linux-pci@vger.kernel.org
-Subject: Re: pci_bus_distribute_available_resources() is wrong?
-Message-ID: <Y5iVzTcS6OzIMM7a@black.fi.intel.com>
-References: <2ec11223-edb3-5f5c-62cd-3532d92de0a4@ixsystems.com>
- <CAErSpo7WrAg5D4xyv0SycoDc1etSspU_TL6XMAK4STYrXDrGNQ@mail.gmail.com>
- <6053736d-1923-41e7-def9-7585ce1772d9@ixsystems.com>
- <Y5gSfJd0H4rKXe9H@black.fi.intel.com>
- <35208ffe-0aee-b055-0ed7-99b6414af6da@ixsystems.com>
- <Y5iQtaNgr0nMWjAI@black.fi.intel.com>
- <2f49eee1-7c72-8281-50c1-debaccd43c81@ixsystems.com>
+        with ESMTP id S236059AbiLMPRv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Dec 2022 10:17:51 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F715FEC;
+        Tue, 13 Dec 2022 07:17:49 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NWhq168Gpz6HJRm;
+        Tue, 13 Dec 2022 23:14:05 +0800 (CST)
+Received: from localhost (10.45.149.116) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 13 Dec
+ 2022 15:17:45 +0000
+Date:   Tue, 13 Dec 2022 15:17:44 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <rostedt@goodmis.org>, <terry.bowman@amd.com>,
+        <bhelgaas@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <shiju.jose@huawei.com>
+Subject: Re: [PATCH v4 00/11] cxl/pci: Add fundamental error handling
+Message-ID: <20221213151744.00003e58@Huawei.com>
+In-Reply-To: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
+References: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2f49eee1-7c72-8281-50c1-debaccd43c81@ixsystems.com>
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.149.116]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, 29 Nov 2022 10:48:06 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-On Tue, Dec 13, 2022 at 10:00:42AM -0500, Alexander Motin wrote:
-> On 13.12.2022 09:48, Mika Westerberg wrote:
-> > On Tue, Dec 13, 2022 at 09:11:12AM -0500, Alexander Motin wrote:
-> > > > I'm also more than happy to test any patches regarding this if someone
-> > > > else wants to work on it ;-)
-> > > 
-> > > I was kind of ready to dive in, I hate hacks and tunables to workaround
-> > > bugs.  But as I have told, I see this code first time, so my solutions may
-> > > appear not right.  But I'll help as I can, if needed.
-> > 
-> > That's good to hear :) Okay feel free to use any of my previous patches
-> > as base if needed. I can test the Thunderbolt/USB4 and the QEMU PCI/PCIe
-> > topologies so please keep me in the loop when submitting.
+> Hi Bjorn,
+> I added a new optional callback for AER error handler to allow the PCI
+> device driver to do additional logging. Please Ack the patch if it looks
+> reasonable to you and Dan can take the series through cxl tree. Thank you!
 > 
-> It is quite a quick change of roles, don't you find?  It is you created the
-> problem.  It is your email includes "@linux.intel.com" here.  Don't you feel
-> some responsibility? ;)
+> Hi Steve,
+> Please review the trace event implementation and Ack if it looks ok.
+> Thank you!
+> 
 
-Sorry I must have misunderstood what you meant then. I was under
-impression that you were ready to go and fix the issue. Okay no problem
-I will work on this myself then and keep you guys updated.
+In the interests of avoiding possible duplication, this is a quick note that
+we are looking into the associated RAS daemon support for these errors.
 
-> Where are the current result of "I'm working on a new version of the patch
-> series that should take these into consideration"?
+Jonathan
 
-Still early "draft" I will submit it once it is in better shape (and I
-have validated it works in the known cases). Anyway it will happen after
-the merge window is closed.
+> v4:
+> - Change header log for eventtrace to static array (Steve)
+> - Fix CE status bits (Shiju)
+> - Fix ECC capitalization (Shiju)
+> - Add PCI error handler callback documentation (Sathyanarayanan)
+> - Clarify callback as additional information capture only (Jonathan)
+> - Clarify need of callback to clear CE by CXL device (Jonathan)
+> - Fix 0-day complaint of __force __le32.
+> 
+> v3:
+> - Copy header log in 32bit chunks (Jonathan)
+> - Export header log whole as raw data (Jonathan)
+> - Added callback in PCI AER err handler for correctable errors (Jonathan)
+> - Tested on qemu thanks to Jonathan's CXL AER injection enabling!
+> 
+> v2:
+> - Convert error reporting via printk to trace events
+> - Drop ".rmap =" initialization (Jonathan)
+> - return PCI_ERS_RESULT_NEED_RESET for UE in pci_channel_io_normal (Shiju)
+> 
+> Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
+> Section 8.2.4.16 "CXL RAS Capability Structure" of the CXL rev3.0
+> specification defines the error sources considered in this
+> implementation. The RAS Capability Structure defines protocol, link and
+> internal errors which are distinct from memory poison errors that are
+> conveyed via direct consumption and/or media scanning.
+> 
+> The errors reported by the RAS registers are categorized into
+> correctable and uncorrectable errors, where the uncorrectable errors are
+> optionally steered to either fatal or non-fatal AER events. Table 12-2 
+> "Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
+> rev3.0 specification outlines that the remediation for uncorrectable errors
+> is a reset to recover. This matches how the Linux PCIe AER core treats
+> uncorrectable errors as occasions to reset the device to recover
+> operation.
+> 
+> While the specification notes "CXL Reset" or "Secondary Bus Reset" as
+> theoretical recovery options, they are not feasible in practice since
+> in-flight CXL.mem operations may not terminate and cause knock-on system
+> fatal events. Reset is only reliable for recovering CXL.io, it is not
+> reliable for recovering CXL.mem. Assuming the system survives, a reset
+> causes CXL.mem operation to restart from scratch.
+> 
+> The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
+> recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
+> least provide a mechanism for the Root Port to terminate in flight
+> CXL.mem operations with completions. That still poses problems in
+> practice if the kernel is running out of "System RAM" backed by the CXL
+> device and poison is used to convey the data lost to the protocol error.
+> 
+> Regardless of whether the reset and restart of CXL.mem operations is
+> feasible / successful, the logging is still useful. So, the
+> implementation reads, reports, and clears the status in the RAS
+> Capability Structure registers, and it notifies the 'struct cxl_memdev'
+> associated with the given PCIe endpoint to reattach to its driver over
+> the reset so that the HDM decoder configuration can be reconstructed.
+> 
+> The first half of the series reworks component register mapping so that
+> the cxl_pci driver can own the RAS Capability while the cxl_port driver
+> continues to own the HDM Decoder Capability. The last half implements
+> the RAS Capability Structure mapping and reporting via 'struct
+> pci_error_handlers'.
+> 
+> The reporting of error information is done through event tracing. A new
+> cxl_ras event is introduced to report the Uncorrectable and Correctable
+> errors raised by CXL. The expectation is a monitoring user daemon such as
+> "cxl monitor" will harvest those events and record them in a log in a
+> format (JSON) that's consumable by management applications.
+> 
+> For correctable errors, current Linux implementation does not provide any
+> means to reach the pci device driver. Add an optional callback with the
+> PCI aer error handler to allow the pci device driver to log additional
+> information from the device.
+> 
+> [1]: https://www.computeexpresslink.org/spec-landing
+> 
+> ---
+> 
+> Dan Williams (8):
+>       cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
+>       cxl/pci: Cleanup cxl_map_device_regs()
+>       cxl/pci: Kill cxl_map_regs()
+>       cxl/core/regs: Make cxl_map_{component, device}_regs() device generic
+>       cxl/port: Limit the port driver to just the HDM Decoder Capability
+>       cxl/pci: Prepare for mapping RAS Capability Structure
+>       cxl/pci: Find and map the RAS Capability Structure
+>       cxl/pci: Add (hopeful) error handling support
+> 
+> Dave Jiang (3):
+>       cxl/pci: add tracepoint events for CXL RAS
+>       PCI/AER: Add optional logging callback for correctable error
+>       cxl/pci: Add callback to log AER correctable error
+> 
+> 
+>  Documentation/PCI/pci-error-recovery.rst |   7 +
+>  drivers/cxl/core/hdm.c                   |  33 ++--
+>  drivers/cxl/core/memdev.c                |   1 +
+>  drivers/cxl/core/pci.c                   |   3 +-
+>  drivers/cxl/core/port.c                  |   2 +-
+>  drivers/cxl/core/regs.c                  | 172 ++++++++++--------
+>  drivers/cxl/cxl.h                        |  38 +++-
+>  drivers/cxl/cxlmem.h                     |   2 +
+>  drivers/cxl/cxlpci.h                     |   9 -
+>  drivers/cxl/pci.c                        | 213 ++++++++++++++++++-----
+>  drivers/pci/pcie/aer.c                   |   8 +-
+>  include/linux/pci.h                      |   3 +
+>  include/trace/events/cxl.h               | 112 ++++++++++++
+>  13 files changed, 453 insertions(+), 150 deletions(-)
+>  create mode 100644 include/trace/events/cxl.h
+> 
+> --
+> 
+
