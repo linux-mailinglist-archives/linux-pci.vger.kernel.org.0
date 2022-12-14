@@ -2,109 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B639664CED3
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Dec 2022 18:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC46564CF0D
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Dec 2022 19:02:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237887AbiLNRXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Dec 2022 12:23:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49068 "EHLO
+        id S238064AbiLNSBr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Dec 2022 13:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237720AbiLNRXT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Dec 2022 12:23:19 -0500
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2049.outbound.protection.outlook.com [40.107.22.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8F7E0A9;
-        Wed, 14 Dec 2022 09:23:19 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZJsXq1A1cW4AprUn+5gt7otc88bDITxH1GnRFsF+jcRo1MYFL1a8RjuJZ3/ma83gyPU9xHuR9GC1Ps3cCaIhrQzbx/Vb0bO6jA1iydsbPh7qdVQI4czQQ38Bu6jFQm1luuRO1+4LIKNCW+R9W3wHrvH3TYZn41YNxQhAdJy2WAdew1mSangpwnINQ9DvJoTeU+Yxd9mW7CHgzHEuqAFBZCJPXS4Y7CHdnqBGT+wEM3qubJWW48yfu7hn3DL0tG5LGDD+/gCUZa2eyrT3MYSxHRzqIvP5n8IDID1+CUsgWxnLAxqlvs0jO4fGNRa0d2AlUSh4ihMlP0FXcUhvyQYojw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dOAOvNEzX0Rr7ekgZsw1MuLt3OMB6AOpLdSQv3uahOs=;
- b=dDcqjHK4kprxU7AsrdUyViNdV31FUym/hSvrlkVHIn6YmHeRplHUmSa8TvUSpdqeAMznzlaeKzKCTJnwSKtUeQjTRwR2ZRT8stouSLfpQUp/J5LovAtUiEFcuYxfnzaE7RcrYssmbI0izMefe303xIIGqltVc4OJ4l2P1u4VHdzgrv0QJ1rQuVifQvNnXGR/rxhUR5XWqsDB3FfbSUDN+qD4Sn+L2Ro9Y/7yJDNJAcGnG6lfthHX99/abT67lAaleBAWhcv+F3O63AEV9hDYeg4NWZhfeJ9LSKseMbV7b9VMmvVOT0H1dJeLwyBvig2fl7LZyHBiE//6+WwrpkZSiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dOAOvNEzX0Rr7ekgZsw1MuLt3OMB6AOpLdSQv3uahOs=;
- b=C5qCIwsR2jUTs0yYhOPrgkVXbve6TQpBZ+do47KPn7m/BbTQSUvwFeliWfOL5lWi68AS2GJWT8dqoPNmv1LL3w/J7cvv8bVcvrPCDPf0B8b3zgFlhW0FbPqlT1k8H4zU85ScgO5mo68L45ju234K5mKIYSPSzjenCKbWhFRNXLc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
- by AS1PR04MB9311.eurprd04.prod.outlook.com (2603:10a6:20b:4dd::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.19; Wed, 14 Dec
- 2022 17:23:14 +0000
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::203a:e5da:a4a:7663]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::203a:e5da:a4a:7663%12]) with mapi id 15.20.5880.019; Wed, 14 Dec 2022
- 17:23:13 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     lpieralisi@kernel.org
-Cc:     Frank.Li@nxp.com, allenbh@gmail.com, bhelgaas@google.com,
-        dave.jiang@intel.com, helgaas@kernel.org, imx@lists.linux.dev,
-        jdmason@kudzu.us, kw@linux.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mani@kernel.org, ntb@lists.linux.dev
-Subject: [PATCH 1/1] PCI: endpoint: pci-epf-vntb: fix typo span in comments
-Date:   Wed, 14 Dec 2022 12:22:54 -0500
-Message-Id: <20221214172254.668282-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0045.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::20) To HE1PR0401MB2331.eurprd04.prod.outlook.com
- (2603:10a6:3:24::22)
+        with ESMTP id S238470AbiLNSBg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Dec 2022 13:01:36 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F77AE44
+        for <linux-pci@vger.kernel.org>; Wed, 14 Dec 2022 10:01:35 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id g4so659032ybg.7
+        for <linux-pci@vger.kernel.org>; Wed, 14 Dec 2022 10:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=in0+4T7zsT1szAcuDpgB7UD6oKEoJr8ruNZ5Dg7YtpA=;
+        b=NX5Fj1ezfKxiLPTzV0af2fewGQYUkwGctpfcN9Pi2mGgyBt01CD1BBSVTY/sivXdF3
+         7kyzkC1cFP0Z0AI21bt1bJXSFE+tFvY1zBuKuOifzVtQSZSGmeKciSjqqtlI7i1tlFBp
+         4a4HJafAE3yvStOb6KSBezQvMUaRzDoFMs7/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=in0+4T7zsT1szAcuDpgB7UD6oKEoJr8ruNZ5Dg7YtpA=;
+        b=V8wYSmcSUTM+wEvZSk1N6bIlD23rxiB2GJMP+1+NZlATWie5OiwdbggEQmfI+2E3Bz
+         fEb5sPG0Z2gesDIZVWzfA/GyGS1gaT+VZU6GaUK1onzdCBlidRhGur0Fv65loTpU58is
+         i7eH9XIuAZyp2bgbJPG+c1mlYLIgJORzVib3TS9WzV09NN7T5l3W+Hb6QwsHmBkItsrI
+         CNOCsLlZHWXFDCEs2hbKBP4eqdzldgYvIy912Gjfhp5fmvz/CCVYsjWkctpwmWDAMfnK
+         +EKeDtc6bMpbldeVXwUyZHBqJAaxFKj9lnwR7ufeLrmesF2HpHTe8dfW+hUjEgX0S/Cf
+         Shlw==
+X-Gm-Message-State: ANoB5plmafQSOwdgGd9uatpAKATS+tfcxD5aKgA4XkoL9wt3AHlKcIMy
+        4K7/nqYyFJiVkqd/rQNe16GQCb7AMSA5X9JF
+X-Google-Smtp-Source: AA0mqf44FyayuEP/BXiMs0dD7PklnEXNMHVUAoRLyWKrjgIbeLDDHJYQ8Ki2EO9le/NClGmbKGG89w==
+X-Received: by 2002:a25:b2a5:0:b0:6f1:4b27:9c7f with SMTP id k37-20020a25b2a5000000b006f14b279c7fmr19672291ybj.10.1671040894681;
+        Wed, 14 Dec 2022 10:01:34 -0800 (PST)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
+        by smtp.gmail.com with ESMTPSA id l24-20020a37f918000000b006fc5a1d9cd4sm10449749qkj.34.2022.12.14.10.01.32
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Dec 2022 10:01:33 -0800 (PST)
+Received: by mail-qk1-f179.google.com with SMTP id k3so1588075qki.13
+        for <linux-pci@vger.kernel.org>; Wed, 14 Dec 2022 10:01:32 -0800 (PST)
+X-Received: by 2002:a05:620a:8420:b0:6ff:812e:a82f with SMTP id
+ pc32-20020a05620a842000b006ff812ea82fmr638686qkn.336.1671040892215; Wed, 14
+ Dec 2022 10:01:32 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0401MB2331:EE_|AS1PR04MB9311:EE_
-X-MS-Office365-Filtering-Correlation-Id: b98638e2-1b70-45a0-6ba6-08daddf7e075
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EDUED3odKWgW9J2FdJNc5beUnUS7KRlFZcw62CJ6LYIdwxLHJk+TXW+jPKZnKO0+kmR3SCOT6t8QYoAhuB4JztVW+a0oWVEmyGo8WB16Uj5717SGrpZ1OPl+5r4oli2jlAQXaxwVjVtGfAQ21akr62uHpydcpCUVF1pkMg7pgveRkm0DlmIBeUUmtrU/GtAbCNxnmenlAPYb+u4OGvBWpU/IRxueJIJg4QHIX/Y6saTMnVr7O7KO2jsEK/pU9HM+wgTX3BEx2ByJWMw4GT6u4fR4GltvORC3aG4De//qfnTQMhYS1yhlgc9CHR5esPVmcdyvgGFAE5VJjhgZoIjoPlbdAa+SprMSLGmCKtYNz9tq9n8m1LzH4WZxJZN7A0CdPoSv3+tm2xasVPtk8HmLifHXI5Z/bSQhh+JjnmlwYcMa5Fk2wYRryRVKlHZK4H9FEyzSKtC98yW7NaQ6Ub3/1tPJdh9smDyaBBgKD5PuBA0Masp40K2aHBZv/lBbanBevGI+jCqFj6OtA4R86shy2zevnJjvnG8hbDZlWQp1aDVzhu3r0eS3xnWlTfMvRhry6WEDPCrtpXgPgZpI6ManwyCfrj3T9WL43ZL9rA/lsmM54guO9l3rGXBMC7w6wvMnj5m4q9ZuE3uLM+2fIj3qY8d965E0WqGLx+hsVxaiOXxVe62rSVcXbW+wYPQFPOhxJOwYR7Hj8YvIWU9lNQaStw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(451199015)(8676002)(8936002)(4326008)(7416002)(66476007)(66946007)(5660300002)(66556008)(2906002)(316002)(41300700001)(6506007)(6916009)(6512007)(26005)(478600001)(186003)(36756003)(52116002)(6666004)(83380400001)(6486002)(86362001)(2616005)(1076003)(38350700002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EIiL5xb8YlGI8tY1g9Dj1MjHkQDQLVK6zVpUG9+lM+L6Z/8vB4B8LNRmJ78z?=
- =?us-ascii?Q?uTE+Bgzy/5kkE8FBlh99a09y1ZaPSqcVdgjXjyy9bJoyKdiKGab/UKTD0a2o?=
- =?us-ascii?Q?UIhjDveSXVu89fetF2xTen6eHD/0opASr+kA2cHRY/lknX6gtRNOUk2fg2/K?=
- =?us-ascii?Q?WV+54KfF8Uh6lH89uLrdCSYa8Sq4S9HJKx02BzZz250BkXdwNOLrApk/EQeN?=
- =?us-ascii?Q?cVUWWABg+0127yaqE9H9/6DpxGqDIDt/rz3agBJGUGofiQVtJfLelP3mTKg8?=
- =?us-ascii?Q?zGWIRbsnKXpRdHeHfmJHMgYSYlbww+Tngr7L7r7THWRFoRUOtAYuccfPkKi4?=
- =?us-ascii?Q?XmpeAX1JE0F8DFaYV8S2rVwsojAILKpFc9c1H+Bz0Jj2Aso8H1JWUd/QJX25?=
- =?us-ascii?Q?dfmosLZDsaCwWhS8TtcCCT2zeH/n4+PXGAK6ySoRDH+M5JgL+nb8kom5i0ho?=
- =?us-ascii?Q?52mX8pgAoaXYBEmjbvs9YwFjQA5kYvVbx1AnPiNF4n3ZLrTnEFA9PQwn2Nuj?=
- =?us-ascii?Q?fAxrP1PTuosPynUd1XOV6xl3Vl8BCLZleFcVkW4dORFTv4HX5afIXr47K8dX?=
- =?us-ascii?Q?mTEkUpl+Cmdls9kAf79KzVgE6gEPEthhKGy3zGbJiGMs6TrdaKK4WZx/2upz?=
- =?us-ascii?Q?LWTPsBsLopmmEk6DhjE8oUq257g5+xP7PVydQux/BIl8Zy+D5HVb7e1vREqs?=
- =?us-ascii?Q?jRQ53xCSurVWcz6rTB9XrfsOlESIv5AHcK5QWfa30oAUgSlcOgeVcmWO7SVy?=
- =?us-ascii?Q?qFqEKlBts+qi2NhmbF3HdjC03P4vI4j+741pMNmQIHu0/xfjZ04L3PiSFd6A?=
- =?us-ascii?Q?FtVVdfoVhDdbqiZCOEKtXgEt8C+n7O8ZYVAajAZCGiCS0abw6e18mj/3EzUf?=
- =?us-ascii?Q?Yzz4+60nge2RvtkxxClyznJ5kpocouQ/ru243t8XImEpvBV867HrLInKzmIo?=
- =?us-ascii?Q?rEyiVk6OVNM5yoBIiAOPNaKhiNliWQ+ybGYntpsmB3a3IsjmcL9OUPmFS1dF?=
- =?us-ascii?Q?S5lWY9XMQ27JfgO/2YS1eGS9hDOiQO7Q42FbSadox68guM+2mljcCw2c4Uk7?=
- =?us-ascii?Q?4t5slqqTFBiurCM34KSui6CgphqaH8LfqGZEBdZFfFUTL9tQ3TH2XWCtbsG4?=
- =?us-ascii?Q?j/lxQyem7dpwHAtKnW4DWmrJi+kAdb5mrhIHMZQ8x93vpxyBbmnLPCiWMmgt?=
- =?us-ascii?Q?1lil8ul8XODCPRZu4GbpQqXE0b6AdXHSwZmxcxQL8iKEOYN91xP65+O1H8nR?=
- =?us-ascii?Q?wZBz5xZgkqc4F5F3P4+bRba6J6BxKaF+fxr3Y1eUAIcAP6G5HhZa1H20vbU9?=
- =?us-ascii?Q?1Wwe71CPpAW+Sa0a03hD4mLsHeQXuuG5KMFAh4N4Mm4nbU51ZqVYcXjgArhK?=
- =?us-ascii?Q?LeRcgBPmIZQlH1YOH8t+ZYlII8czWtxjEIYhgwaXfMawzzR6bpBFHLAdg0vT?=
- =?us-ascii?Q?Csr4x/WKCGGvP4pPJJaPI6bnJLNYWGd+Zr1wKv0TRttXOL4TB9Z9/U4Ea1Ks?=
- =?us-ascii?Q?DAWnmizXHLLbO9ZPP7N/KpQUnVlZ89LMVEV26qYUHJSn0PwhpdTQloQ6LILn?=
- =?us-ascii?Q?XdKIO5e9qZuWSy4IDta6YDq+tr74EH+erhTE3O4r?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b98638e2-1b70-45a0-6ba6-08daddf7e075
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2022 17:23:13.6609
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pjyed2Oa6Q1LmVz2P2VJPq2+zlBSTTNWI2yU913BTjVltHheudm1dtF2PASy7LAMReLy453FqzNVqIaUtJDpGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9311
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <20221213233050.GA218218@bhelgaas>
+In-Reply-To: <20221213233050.GA218218@bhelgaas>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 14 Dec 2022 10:01:16 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whC3-Q_-gt3NU8cfY4ivs2CsaON8Ci0aiD6qvT1xzVL=g@mail.gmail.com>
+Message-ID: <CAHk-=whC3-Q_-gt3NU8cfY4ivs2CsaON8Ci0aiD6qvT1xzVL=g@mail.gmail.com>
+Subject: Re: [GIT PULL] PCI changes for v6.2
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -112,38 +78,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace span with spad.
+On Tue, Dec 13, 2022 at 3:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> You will see a merge conflict in
+> Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml between these:
+>
+>   5c3741492d2e ("dt-bindings: PCI: tegra234: Add ECAM support")
+>   4cc13eedb892 ("dt-bindings: PCI: dwc: Add reg/reg-names common properties")
+>
+> 5c3741492d2e is already in your tree via arm-soc, and 4cc13eedb892 is in
+> this pull request.  The resolution I suggest is to use 4cc13eedb892, which
+> means we'll lose the addition of "ecam" from 5c3741492d2e.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Heh. I only read this part once I had already resolved that thing differently.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 58a23ef4b572..935748244078 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -84,15 +84,15 @@ enum epf_ntb_bar {
-  * |                                                  |
-  * |                                                  |
-  * |                                                  |
-- * +-----------------------+--------------------------+ Base+span_offset
-+ * +-----------------------+--------------------------+ Base+spad_offset
-  * |                       |                          |
-- * |    Peer Span Space    |    Span Space            |
-+ * |    Peer Spad Space    |    Spad Space            |
-  * |                       |                          |
-  * |                       |                          |
-- * +-----------------------+--------------------------+ Base+span_offset
-- * |                       |                          |     +span_count * 4
-+ * +-----------------------+--------------------------+ Base+spad_offset
-+ * |                       |                          |     +spad_count * 4
-  * |                       |                          |
-- * |     Span Space        |   Peer Span Space        |
-+ * |     Spad Space        |   Peer Spad Space        |
-  * |                       |                          |
-  * +-----------------------+--------------------------+
-  *       Virtual PCI             PCIe Endpoint
--- 
-2.34.1
+I dunno, I used my own - possibly bad - judgment to add a case for
+that 'ecam' thing under the vendor-specific list.
 
+That was very much a "monkey see, monkey do" resolution, so some DT
+person should check it out and possibly make fun of me and my dubious
+ancestry. Rob? Thierry?
+
+                  Linus
