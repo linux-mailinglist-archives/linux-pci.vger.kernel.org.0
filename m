@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7173864C10A
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Dec 2022 01:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA2B64C126
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Dec 2022 01:27:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237744AbiLNAKL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Dec 2022 19:10:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        id S237265AbiLNA1D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Dec 2022 19:27:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237277AbiLNAJq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Dec 2022 19:09:46 -0500
+        with ESMTP id S237117AbiLNA0r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Dec 2022 19:26:47 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F2D27CD7
-        for <linux-pci@vger.kernel.org>; Tue, 13 Dec 2022 16:08:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53414B1E8;
+        Tue, 13 Dec 2022 16:26:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DF5D8B8161C
-        for <linux-pci@vger.kernel.org>; Wed, 14 Dec 2022 00:08:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60887C433D2;
-        Wed, 14 Dec 2022 00:08:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1F710B81609;
+        Wed, 14 Dec 2022 00:26:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B43C433EF;
+        Wed, 14 Dec 2022 00:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670976530;
-        bh=S5xdl8ZAfBCjV+HN2e2hpCPrLm6Lu9QedLOb1rL+608=;
+        s=k20201202; t=1670977603;
+        bh=NDgzNzla8xVcW0uTm0lMUqLVpqM6P7lvLIQIDHm7YwY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UopKoRFgJuHFK+tGqklcCxgcH9FfQ6FX/O/Tm9yp3KhM8kuhfKY68lREeyQ+vXbmc
-         1LUNcaiw68zujyZZVVujiPz7BAEZ+mhCAd7RXWeZklLJREjzQF8zbDLt7mwoBeWsgx
-         sRsVuOiXCVaznw8NH1DJ2NkpvYME2MMp0WNCTFX1AMAN7N0g0Zgs+xSuSV28HKNKVQ
-         rzlvT6/Tg5rmrAn8yaLs9COh/DsG9maPGaU1eHr4Er2bo7hIJ+PS0CVNZpXbTbNjRq
-         aR2mHPjr7xTOKRo5NkVFwsUQBWISLfyY9xmuoSsaCFyKXi4bbFztWUUInttQkjFrt/
-         uWM+FNtODYSfg==
-Date:   Tue, 13 Dec 2022 18:08:48 -0600
+        b=hv51f69k1nOkqwhvVxLbREu63I/O7Y+KIgmKi81hYB/T91GuYo8bAuLiEJUFSQGSM
+         dg42kpX9k2E9HlVKit9ZurnhoiUDRyaBB//FB1AbkTEUBSd3y2VWW6wzAXU9AKE3XA
+         g9HMVocOgpwn5qzUivFll8Ki+HeILE2cs26K2W3qM6mGWJzp0VMVM6HY80/9Nxh28p
+         9rKGd9c/YS7lvKDtl1z/ceTz3kM3UEftxKAc4j2jHs/KV/3E+rgiw7tzZmd4U76+8Z
+         /v4kZM7Sytcm5Il+qUxoXcqnQiMlURELN5b4Dwgcj5uJiSxufbTzWwvB71l6OBNUWm
+         VNMmGmDCah4Aw==
+Date:   Tue, 13 Dec 2022 18:26:42 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frank Li <Frank.Li@nxp.com>
-Cc:     kishon@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lznuaa@gmail.com, hongxing.zhu@nxp.com, jdmason@kudzu.us,
-        dave.jiang@intel.com, allenbh@gmail.com,
-        linux-ntb@googlegroups.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] PCI: endpoint: Support NTB transfer between RC
- and EP
-Message-ID: <20221214000848.GA221546@bhelgaas>
+Cc:     mani@kernel.org, allenbh@gmail.com, bhelgaas@google.com,
+        dave.jiang@intel.com, imx@lists.linux.dev, jdmason@kudzu.us,
+        kw@linux.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
+        ntb@lists.linux.dev
+Subject: Re: [PATCH v16 7/7] PCI: endpoint: pci-epf-vntb: fix sparse build
+ warning at ntb->reg
+Message-ID: <20221214002642.GA216337@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220222162355.32369-4-Frank.Li@nxp.com>
+In-Reply-To: <20221102141014.1025893-8-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,45 +55,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 10:23:54AM -0600, Frank Li wrote:
+On Wed, Nov 02, 2022 at 10:10:14AM -0400, Frank Li wrote:
+> From: Frank Li <frank.li@nxp.com>
+> 
+>   pci-epf-vntb.c:1128:33: sparse:     expected void [noderef] __iomem *base
+>   pci-epf-vntb.c:1128:33: sparse:     got struct epf_ntb_ctrl *reg
+> 
+> Add __iomem type convert in vntb_epf_peer_spad_read() and
+> vntb_epf_peer_spad_write().
 
-> + * +--------------------------------------------------+ Base
-> + * |                                                  |
-> + * |                                                  |
-> + * |                                                  |
-> + * |          Common Control Register                 |
-> + * |                                                  |
-> + * |                                                  |
-> + * |                                                  |
-> + * +-----------------------+--------------------------+ Base+span_offset
-> + * |                       |                          |
-> + * |    Peer Span Space    |    Span Space            |
-> + * |                       |                          |
-> + * |                       |                          |
-> + * +-----------------------+--------------------------+ Base+span_offset
-> + * |                       |                          |     +span_count * 4
-> + * |                       |                          |
-> + * |     Span Space        |   Peer Span Space        |
-> + * |                       |                          |
-> + * +-----------------------+--------------------------+
+I don't understand all the bits and pieces here, but I'm a little
+dubious about adding all these "(void __iomem *)"casts.  There are
+very few of them in drivers/pci/, and I doubt this driver is so unique
+that it needs them.
 
-Are these comments supposed to say *spad*, i.e., scratchpad space,
-instead of "span", to correspond with spad_offset and spad_count
-below?
+> @@ -1121,7 +1121,7 @@ static u32 vntb_epf_spad_read(struct ntb_dev *ndev, int idx)
+>  	struct epf_ntb *ntb = ntb_ndev(ndev);
+>  	int off = ntb->reg->spad_offset, ct = ntb->reg->spad_count * sizeof(u32);
+>  	u32 val;
+> -	void __iomem *base = ntb->reg;
+> +	void __iomem *base = (void __iomem *)ntb->reg;
+>  
+>  	val = readl(base + off + ct + idx * sizeof(u32));
+>  	return val;
+> @@ -1132,7 +1132,7 @@ static int vntb_epf_spad_write(struct ntb_dev *ndev, int idx, u32 val)
+>  	struct epf_ntb *ntb = ntb_ndev(ndev);
+>  	struct epf_ntb_ctrl *ctrl = ntb->reg;
+>  	int off = ctrl->spad_offset, ct = ctrl->spad_count * sizeof(u32);
+> -	void __iomem *base = ntb->reg;
+> +	void __iomem *base = (void __iomem *)ntb->reg;
+>  
+>  	writel(val, base + off + ct + idx * sizeof(u32));
 
-> +struct epf_ntb_ctrl {
-> +	u32     command;
-> +	u32     argument;
-> +	u16     command_status;
-> +	u16     link_status;
-> +	u32     topology;
-> +	u64     addr;
-> +	u64     size;
-> +	u32     num_mws;
-> +	u32	reserved;
-> +	u32     spad_offset;
-> +	u32     spad_count;
-> +	u32	db_entry_size;
-> +	u32     db_data[MAX_DB_COUNT];
-> +	u32     db_offset[MAX_DB_COUNT];
-> +} __packed;
+These things look gratuitously different to begin with:
+
+  int off = ntb->reg->spad_offset, ct = ntb->reg->spad_count * sizeof(u32);
+  int off = ctrl->spad_offset, ct = ctrl->spad_count * sizeof(u32);
+
+They're doing the same thing, and they should do it the same way.
+
+Since db_data[] and db_offset[] are never referenced except to be
+initialized to zero, I'm guessing the point of vntb_epf_spad_read()
+and vntb_epf_spad_write() is to read/write things in those arrays?
+
+You access other things in ntb->reg directly by dereferencing a
+pointer, e.g.,
+
+  ntb->reg->link_status |= LINK_STATUS_UP;
+  addr = ntb->reg->addr;
+  ctrl->command_status = COMMAND_STATUS_OK;
+
+Why don't you just compute the appropriate *index* and access the
+array directly instead of using readl() and writel()?
+
+Bjorn
