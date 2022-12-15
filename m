@@ -2,95 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E641F64D496
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Dec 2022 01:22:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD39964D5B1
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Dec 2022 04:49:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbiLOAWs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Dec 2022 19:22:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43584 "EHLO
+        id S229506AbiLODti (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Dec 2022 22:49:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbiLOAWp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Dec 2022 19:22:45 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A3EA33D;
-        Wed, 14 Dec 2022 16:22:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C2850CE1BA1;
-        Thu, 15 Dec 2022 00:22:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6100C433EF;
-        Thu, 15 Dec 2022 00:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671063759;
-        bh=bfB8V50v6OcR7ZKFZ6fJTBBezlJ1YwPl/3pfyrMdzjk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e+nHh8DS7jyVJaTjxiIW3DYJySB04gadKq0YxmAHlZKAeIwj37SzydSBa+ijOEqb7
-         fMzBss16lbHgJ4ZuGPv+vD4gHLUHeoEMi71khI0fcCXi0s8xXsAP7P/B9xKDG0iTqN
-         Oe+IdC8D4yCnezrIq1i55ttO5LD5E0zb2TSLNcGF0no2/1VYBH9AuLi86LhcuOASbo
-         3ZxQLdcMbI6V/CD3KgrJlFWyd3j+5x8FywhSpN1Ost8MsdD05lKvuwXbtbGiULN1Pb
-         sFvB+/njA9BbYffVuRIEoYGpjPqnWN9lSgFxI6Xi12BZjSSH0oTTgyz1XwgjeGt2bc
-         QvIEVJT/oHWqQ==
-Received: by mail-vk1-f182.google.com with SMTP id o136so4005282vka.2;
-        Wed, 14 Dec 2022 16:22:39 -0800 (PST)
-X-Gm-Message-State: ANoB5pnC0Cxvi7AsAbQGKq6HCo4jCuYpM2tbGERgR1snNSh5qBF+9m3N
-        YeBGXyvUiRhWIsDN92PpUcitwVNdndHe5w/LPw==
-X-Google-Smtp-Source: AA0mqf6etgVsXqu0YC4dE4uscO5REGQ0oBZ9xZMPswn/iiFA51bJm1Nia0JZZqQjZPLEB3WFBuvouxs8CsL2NW1PZj8=
-X-Received: by 2002:a1f:2c01:0:b0:3c1:1c3b:c4d9 with SMTP id
- s1-20020a1f2c01000000b003c11c3bc4d9mr876106vks.19.1671063758777; Wed, 14 Dec
- 2022 16:22:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20221213233050.GA218218@bhelgaas> <CAHk-=whC3-Q_-gt3NU8cfY4ivs2CsaON8Ci0aiD6qvT1xzVL=g@mail.gmail.com>
-In-Reply-To: <CAHk-=whC3-Q_-gt3NU8cfY4ivs2CsaON8Ci0aiD6qvT1xzVL=g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 14 Dec 2022 18:22:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Y1CN4BMhB-FXFunr1rFs62QEMi_zj3zmvjXrksCQ0sA@mail.gmail.com>
-Message-ID: <CAL_Jsq+Y1CN4BMhB-FXFunr1rFs62QEMi_zj3zmvjXrksCQ0sA@mail.gmail.com>
-Subject: Re: [GIT PULL] PCI changes for v6.2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229451AbiLODtg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Dec 2022 22:49:36 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F380D532EB;
+        Wed, 14 Dec 2022 19:49:33 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id 17so5599797pll.0;
+        Wed, 14 Dec 2022 19:49:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WoGErgG0tPjEmHbvShVDwwWrf8srDtoKq+kmmat95m4=;
+        b=X/gzNQ0eQQmf65T1aVS5FnWeKPIqq7d5KelstASURwfxQbb4bBxhD17W9QzQdWuoiO
+         lcwQWTXobQ12aI7Qpm2Dn/rv6LuKHGln+mV+xuxKy+slrKmmlxWeWplqNXpdgjDHxaYg
+         O4lMbHrOM0m+VC/iijnAgmsA0zUakdui9e+p2Tf3TX2ASTPa+Cz+nEVcMloS/MVpPG4f
+         mddWGnIclG7v2RGyO5j5CJjeh4eYJkWy5KdZJEPfch4N4JRn4dOdmSdnD4jsYukl5Vze
+         zhlAoAoFaiOuiPEC07jmmJ2aeSAPavLbQA3DWjUk1aoQUtRnRtxd8HYYyhjIIGH+ERQl
+         Tfrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WoGErgG0tPjEmHbvShVDwwWrf8srDtoKq+kmmat95m4=;
+        b=gbXSxvlQXJOKZ10rAK7OHeDoj6w2NuG3r5YR8ZZ769SzQLxNbG0kZhyXnIS+kag2vX
+         nw9yN36nPrD/5j5eaHmn33XeGHptS4x0NtYXykvHrsa+zR99usg3dwmuzLbYg2T2+/UO
+         j12EYjD5a4Sb/y3v85Ao9KvTdV4dF0tzsexOJc0WlQZ6XPPoGZzVFug/E9yHjYUBzC/t
+         CTfFFR+EY2GFXlwBnYXD2DYWqmOjKayEwdCpaBdVlna3PuECorgf+/Kx2D9qeDuz7VRp
+         rWglQLn/z4M/Wxj7DDznN9Ppj54p7ilJs7q6MoES5gG4SiVyLYIUJu+IOY/Wwfd/ozEV
+         sUag==
+X-Gm-Message-State: ANoB5pmjA14MrG9pizwmrsyCPCgfjs7nLJ9BWyy+wn3aKsYHkOzCNXLy
+        JSPpoS/lvCQSW4czRwzt5kA=
+X-Google-Smtp-Source: AA0mqf5FN9N2BagNPjFbLCKWMwGh2ybPt7IpL3XwDFlzON8j/WcEg0aF3EKVbrnrhHM2ktFkHbJN1Q==
+X-Received: by 2002:a05:6a20:9c93:b0:a5:6e3d:1055 with SMTP id mj19-20020a056a209c9300b000a56e3d1055mr30770655pzb.16.1671076173361;
+        Wed, 14 Dec 2022 19:49:33 -0800 (PST)
+Received: from dell-cros.hitronhub.home ([119.77.166.223])
+        by smtp.gmail.com with ESMTPSA id o15-20020a170902d4cf00b0018980f14940sm2577852plg.178.2022.12.14.19.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 19:49:32 -0800 (PST)
+From:   Ron Lee <ron.lee.intel@gmail.com>
+X-Google-Original-From: Ron Lee <ron.lee@intel.com>
+To:     bhelgaas@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lmajczak@google.com, rajatja@google.com,
+        Ron Lee <ron.lee@intel.com>
+Subject: [PATCH] PCI: Fix up L1SS capability for Intel Apollolake PCIe bridge
+Date:   Thu, 15 Dec 2022 11:48:57 +0800
+Message-Id: <20221215034857.9076-1-ron.lee@intel.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 12:01 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Dec 13, 2022 at 3:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > You will see a merge conflict in
-> > Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml between these:
-> >
-> >   5c3741492d2e ("dt-bindings: PCI: tegra234: Add ECAM support")
-> >   4cc13eedb892 ("dt-bindings: PCI: dwc: Add reg/reg-names common properties")
-> >
-> > 5c3741492d2e is already in your tree via arm-soc, and 4cc13eedb892 is in
-> > this pull request.  The resolution I suggest is to use 4cc13eedb892, which
-> > means we'll lose the addition of "ecam" from 5c3741492d2e.
->
-> Heh. I only read this part once I had already resolved that thing differently.
->
-> I dunno, I used my own - possibly bad - judgment to add a case for
-> that 'ecam' thing under the vendor-specific list.
->
-> That was very much a "monkey see, monkey do" resolution, so some DT
-> person should check it out and possibly make fun of me and my dubious
-> ancestry. Rob? Thierry?
+On Google Coral and Reef family chromebooks, the PCIe bridge lost its
+L1 PM Substates capability after resumed from D3cold, and identify that
+the pointer to the this capability and capapability header are missing
+from the capability list.
 
-Good job writing valid json-schema! :) It's close enough and better
-than just dropping which caused warnings. It is Tegra only ATM, but
-anyone else that sets up an ECAM region should use the same name.
+....
+Capabilities: [150 v0] Null
+Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ ...
+                  PortCommonModeRestoreTime=40us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+                   T_CommonMode=40us LTR1.2_Threshold=98304ns
+        L1SubCtl2: T_PwrOn=60us
+...
 
-Rob
+This patch fix up the header and the pointer to the L1SS capability
+after resuming from D3Cold.
+
+Signed-off-by: Ron Lee <ron.lee@intel.com>
+---
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 285acc4aaccc..e538f6d066f7 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5992,3 +5992,18 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+ #endif
++
++static void chromeos_fixup_apl_bridge_l1ss_capability(struct pci_dev *pdev)
++{
++	if (!dmi_match(DMI_SYS_VENDOR, "Google") ||
++		(!dmi_match(DMI_PRODUCT_FAMILY, "Google_Coral") &&
++		 !dmi_match(DMI_PRODUCT_FAMILY, "Google_Reef")))
++		return;
++
++	pci_info(pdev, "Fix up L1SS Capability\n");
++	/* Fix up the L1SS Capability Header*/
++	pci_write_config_dword(pdev, pdev->l1ss, (0x220 << 20) | (1 << 16) | (PCI_EXT_CAP_ID_L1SS));
++	/* Fix up the pointer to L1SS Capability*/
++	pci_write_config_dword(pdev, 0x150, pdev->l1ss << 20);
++}
++DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_fixup_apl_bridge_l1ss_capability);
+-- 
+2.17.1
+
