@@ -2,93 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09DD264E094
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Dec 2022 19:21:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79D0A64E0BC
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Dec 2022 19:27:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbiLOSV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Dec 2022 13:21:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49320 "EHLO
+        id S229603AbiLOS1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Dec 2022 13:27:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbiLOSVv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Dec 2022 13:21:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C90046660;
-        Thu, 15 Dec 2022 10:21:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 096D0B81C34;
-        Thu, 15 Dec 2022 18:21:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F59FC433D2;
-        Thu, 15 Dec 2022 18:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671128508;
-        bh=1f7os4xVJq22jqG8ELql3guTBTtv0Z9Z/m2XWhn4W8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdfqgnlKJyMcTPNdQoZ6UxUpZ4Iv+vdbt7Ewp9advVoG0C3pF5kFCHFg21m1z4CE4
-         KqHjIEbjHcWwcRLq4v9acL2ly6sHJVxTtJlB5xYbvNKtF8Snv+9Ion9HA5Ed4NUZXx
-         51Tq37zfUAuxiNsRK4iGTfEYzhqQWWwNi9/nE3/49MxDjhCJbpXI+1roK+4waHgE2k
-         LcUwaBzMPL7rLqLR1UWigY0n7kBbcRtsdrERkDE7ZY17BC1J8v9oiT4TF4qFY77Xtq
-         y/+tdBidN75WgEyi1LMcZkHFwpatj16egwCjFlEMi4I/9Tz17wAMnqKwdIJsbF0Lth
-         +E6CVMERgHMoA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>
+        with ESMTP id S229867AbiLOS1I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Dec 2022 13:27:08 -0500
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D3349B5B;
+        Thu, 15 Dec 2022 10:27:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=jqMEDeWBrjVZzXSeVS/jldK/d6kBDhQQz9ZteGOroFI=; b=krHv2dKaq7UsdCKaakpvQE8GzR
+        7nqDl2+YWnjcKiNTkSxM0eNtkVREAQN6rtZVejCbT1uggjHWW8w/CmUJgaPMHzfo4sNosLxcXdrjN
+        tb6sWy7OE5zMOqvMlMRiEstYfNcFGV+9GJ9X3cSJBt6Qs+TMbrTUHdIA6EqEWIoUwZEb+fqQUSqa0
+        AqKhGFyPZ9vMrpr/SZWpJAS/tvSkYVqsLJQHP0CzQ00cvRvT1yLTE7vEpjpja8mdi83UDzJpOPYjX
+        cjmjtZBrBkFv1OpGEljISLnWggy1RSY+TRuKjZnkcrC6Rwm5Hn01lrn74cIrpSeoi7OkUsoo7LUOP
+        a+dk/bYg==;
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1p5swU-0094Mo-I5; Thu, 15 Dec 2022 11:26:51 -0700
+Message-ID: <f4f1f1b1-018f-dbee-eeba-ff84dfca899d@deltatee.com>
+Date:   Thu, 15 Dec 2022 11:26:49 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI: switchtec: Remove useless assignments in switchtec_dev_read()
-Date:   Thu, 15 Dec 2022 12:21:40 -0600
-Message-Id: <20221215182140.129559-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221215182140.129559-1-helgaas@kernel.org>
 References: <20221215182140.129559-1-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20221215182140.129559-2-helgaas@kernel.org>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20221215182140.129559-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, kurt.schwemmer@microsemi.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 1/2] PCI: switchtec: Simplify switchtec_dma_mrpc_isr()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
 
-Some switchtec_dev_read() error cases assign to "rc", then branch to "out".
-But the code at "out" never uses "rc".  Drop the useless assignments.  No
-functional change intended.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/switch/switchtec.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+On 2022-12-15 11:21, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> The "ret" variable in switchtec_dma_mrpc_isr() is superfluous.  Remove it
+> and just return the value.  No functional change intended.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index d7ae84070e29..c04c7ee35184 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -605,18 +605,14 @@ static ssize_t switchtec_dev_read(struct file *filp, char __user *data,
- 
- 	rc = copy_to_user(data, &stuser->return_code,
- 			  sizeof(stuser->return_code));
--	if (rc) {
--		rc = -EFAULT;
-+	if (rc)
- 		goto out;
--	}
- 
- 	data += sizeof(stuser->return_code);
- 	rc = copy_to_user(data, &stuser->data,
- 			  size - sizeof(stuser->return_code));
--	if (rc) {
--		rc = -EFAULT;
-+	if (rc)
- 		goto out;
--	}
- 
- 	stuser_set_state(stuser, MRPC_IDLE);
- 
--- 
-2.25.1
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
+Thanks,
+
+Logan
