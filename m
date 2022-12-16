@@ -2,176 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53A6C64F09D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 18:48:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB71464F0C9
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:15:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231721AbiLPRs2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 12:48:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51486 "EHLO
+        id S230460AbiLPSP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 13:15:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231725AbiLPRsZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 12:48:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C356E6F0EB;
-        Fri, 16 Dec 2022 09:48:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D6D86216D;
-        Fri, 16 Dec 2022 17:48:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7104AC4339B;
-        Fri, 16 Dec 2022 17:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671212901;
-        bh=hMB2FhazVydSSDyeFONqUk55IYJavlKCCinGabQMRQs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cRa9aWsUrF054V9v3/oSv0TFtG6cYFf0223HRml6wgQI2/t9eHzOrKIqDo7i2tp90
-         3Hzbzw/imlxTzJWhz1iB/pKxJ0uSc4KZFzW7V0GuzhPOfKubN1TAvrTXl5ms6MLDxP
-         RvoLtvcp0lECcIb7/8gT6QYg1jAP5NmvGZdA4b6iDrH6mj8rN+XmIpl4kBL/7Hb9wk
-         VhKN4ZLoPpYkJPLZOsjQNK0FYTMj3mkjMADoMXO8EA1qWzpyNu5Dse1/9COfhTJgbl
-         wh2eyFAuY0gHEhhxTDMWzVq3itj4aqAHYaBXxKgKKQ5QOXILQaSPKljZwdslH4iKVA
-         s0SaZtqPhOEIQ==
-Date:   Fri, 16 Dec 2022 11:48:20 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Lee, Ron" <ron.lee@intel.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lmajczak@google.com" <lmajczak@google.com>,
-        "Jain, Rajat" <rajatja@google.com>,
-        Ron Lee <ron.lee.intel@gmail.com>
-Subject: Re: [PATCH v2] PCI: Fix up L1SS capability for Intel Apollolake PCIe
- bridge
-Message-ID: <20221216174820.GA209655@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        with ESMTP id S229453AbiLPSPZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:15:25 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75C0201B0;
+        Fri, 16 Dec 2022 10:15:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671214524; x=1702750524;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=31qrinnmibLOCpUXa/HlLvj7g6+QzG+LsavymXza0fM=;
+  b=FteGBy79SOmJtr8YzUOnVFtc3MddoUc25JpPkwTw7VsL3GHfGlH67Xcz
+   1wo0DshW6g+1AFdTxKhskEB+Sbm982tujwZLrXIun8dBijhczq2oH+6cS
+   54qjnKxAyHtjpsIvOoSZ0WSnkjLCAlcUx/DjuLofIHOZtIGoXYfqLGK+D
+   90SYvptsdmdI63hCZxp4drF5N8SXZzj8W3Dyiu2wVJONDJIAc7wm6IYkV
+   UyCQ1QvkEOfi/z9lUEKlIxHm8saCTGjDpBQaDrjiprBg/CLDvOIfzcRU6
+   +nYBFD0LlXzXmCgVtOX2pVeTg1domsT7Ny3EnDA0duvuGsAhRI5ENjcwd
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="381245512"
+X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
+   d="scan'208";a="381245512"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 10:15:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="792169016"
+X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
+   d="scan'208";a="792169016"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Dec 2022 10:15:21 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 16 Dec 2022 10:15:21 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 16 Dec 2022 10:15:21 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 16 Dec 2022 10:15:21 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c8Fe1MPFTwIt2MS0m07Tn4CWAmjcDZk2g3A5sDFBiLurW201EDd6rQVGQNueudRp4XNjKVxgquJTkfbF7Bo6WRky3sarujD7nSL43YPb+eNxHpXpi1WRv1/Kv5RNg54g3o4Rg+1ndAFN8gSTlh/25ZkYCPcEnwGQEPCxQjwPQE1ZsR2f6RI9HM7r47QPgAcURqNAHnWlsfg1K+fkyxSL3U5DAJGj60t6rNfNZlm3CSbk/AS2gj2BkiJYSvYY/isV3Okglm3nUoOaOjAdojZyvdHS3UxdAgFIQWOBCQdPT2moETcN3WumwIWV5WYDjcSqBtA48RVXiXk9UCsTc2gotg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iVvh+SIkADg23/ct3Z6KGPNh+m+oxlF4LsEqx4GXBYY=;
+ b=MxtgSO/eBy3d+qtHjqqhGS08fRd3SA22PoA8OGjGW4abCC+QHAvw/bukcFn7ZGnGVSgFaT5OkPhkbVjD2M1i+wewBqVojYbJzI2ysgjLZPdnRaizRw40Ob5aFXEosgF+XarJzgEdhdj2nzwZcDMEf7GvFp7eFMPLUyF+lDnmzW+tmHaSika/jHrFXxThtRACnXxAn9PSK+BJQMivGHxVk9fPQHXfxa5f5rz70QJgRWwdR60H/fGRck6iJFMRAfQgOS2hKnBiKRLyC8FiR7dv5FByIPUeDnyUJAQ7gYuwBj8+doaykGD4BzilZqOeFwFKQ+fDUwTWzYL7y3j81rVXrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ2PR11MB7715.namprd11.prod.outlook.com (2603:10b6:a03:4f4::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.12; Fri, 16 Dec
+ 2022 18:15:18 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::288d:5cae:2f30:828b]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::288d:5cae:2f30:828b%6]) with mapi id 15.20.5924.011; Fri, 16 Dec 2022
+ 18:15:18 +0000
+Date:   Fri, 16 Dec 2022 10:15:14 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 0/9] CXL: Process event logs
+Message-ID: <Y5y1spikvIrH4qsg@iweiny-desk3>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+ <20221216122531.00001bef@huawei.com>
+ <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <BL0PR11MB34577E415B692A2B1CB000ACFEE69@BL0PR11MB3457.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: SJ0PR05CA0089.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::34) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ2PR11MB7715:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1885260-464a-4ce1-3c49-08dadf917ccf
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ljf1QuL1zc2XbOb2Bib95MEolEtYQBDft8XU1nnADkUlkr08COEbHiXTAq0jTgEV0h12n6PLb6EOFG5EbKdgFKlsjhf5mShIumkpCPbnUKFxMxB2iOh5KlLHI9bnm5VUno3nUvd2HAPfRUm96vRempJsKH9zAyAJrYEHqlxm9ovosZJAaNI20Es4fZqbLLWDUkOBTW+QRJxKObXBuoMdgUPs3fxzMpKmP5ZPxnsiUWV3pUK4ISU7wMDeL7jRqoWSgOMdqgouYvqab0nGk103KNZ2BTp+K4eAPxdWXe6ZFDhc/jdsi+CU/we0D1MInOe3B/iLvFvePn4lJINjS4FSAChlFEsdB1pNBJ/kH9CuNRjNhpjQAyFnPYBPuhIYITp2Xl9+fosCJ4exFgB0v1BMDVQ/RODwklgq8n+7jCKHYwZauNSBZ5/fj93Yt+QageoihjEB3PRte6LXXpcT0GQXi8mpEnEJ3Ogk/5y4eFCQuzTrGhhLKxCh6FIFQCz/MJdd82x+djfDKjBM9tRgIMZECDIj6cTP1KqfnlTRU1Ad+3s7xfGrn+xj3B2VMxomLZGzatCnPFwoUM+qASiwLzMbwL0FiixrW5KGNIk5cYMNNZU+/OkGuFeeTfYe8ydcj74QukLVui6QZyBQLEjKEo+WdtnLi9ZJ5XsSztRSaCIgRIN+1WpXLB1Jv+Bvqlq9nlq9KpcK1WD+hEtusnfALF0KlQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(136003)(346002)(396003)(376002)(39860400002)(366004)(451199015)(83380400001)(86362001)(38100700002)(2906002)(5660300002)(6862004)(41300700001)(8936002)(33716001)(4326008)(6666004)(26005)(8676002)(186003)(9686003)(6512007)(66556008)(316002)(66476007)(6506007)(66946007)(6486002)(966005)(478600001)(54906003)(44832011)(6636002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2Exfxlfs5OwvU0i6P0vITMbESEkgZgUvSvgwf6vFPECB6WEIET7QpJZQVcrI?=
+ =?us-ascii?Q?QCo0cavG/ZL8s2wVG+fZe3O10T54XCb0E3Ky9Njfqjl5/9qeCG94Og3gwOoV?=
+ =?us-ascii?Q?XwhFzYenlkNExCrVzT1EGhT+9ZtdfRZdIp56Lv/FI3ONEIYTYDi1pEcacE96?=
+ =?us-ascii?Q?cJ8fpV/MhuVouCo4ozmCis4U4EREtm4dyqs/EvM6gWBZ2RwL3dX8g1CqJUam?=
+ =?us-ascii?Q?hXeyVgXFbsVLgTRSBSGYhb+p1GiQIILjrWTieyJPha6h0uQaan5AZWannRH0?=
+ =?us-ascii?Q?wdeg1LiF0wohtkEiEyZAnuiziWW4FR/71T28W66zO4bSAyozHE+HnwDa8sEM?=
+ =?us-ascii?Q?tdakDQMv9f9ZcQZl9v7gP5aGNgA4j8EUm+A4hnVuHbB1GgKzRYgaIJpRmHfu?=
+ =?us-ascii?Q?X3BGDMgwBFUl+ex9WsNcY6O2ZIVKeYTdrJxT4BYwcUhfrCiilOu0ccpMa8hr?=
+ =?us-ascii?Q?pSjWgM+DPiISb5rLuBcU0QbCXTx9ASD+w+pCWiYEuo4+Qk+UlbOXM5M2iORz?=
+ =?us-ascii?Q?VxH/vTX98wI1VZjFEFNpDqJerIXUTPFbmKdet6s9Y77nmmDoXSGLZ5aoaAtR?=
+ =?us-ascii?Q?g5zoqjJqSCChvCRiwgnnb36tGoRIpuxST8d5OdAib+rlk5xl2MnsGUU7KaXY?=
+ =?us-ascii?Q?eT1J6Q23se4yeyZUlQ81STb5DxbDHnA1yq4OFWURNAwqrqctUlChVwwonsYS?=
+ =?us-ascii?Q?Mj2OFb+brleEu3B0Kr6CUmSYGQno7gH0vgUAVFVuqRCQJXIA8sVtPqrsMeBT?=
+ =?us-ascii?Q?p0J87/uCvvopq/rnqBV9JzGn3diqjQUDmKOQBnYtxvq8xvNXoRZSuwH38mgh?=
+ =?us-ascii?Q?MpNNI+QpUR2he58kVwcgUgpwoL3GJbPtonY8LG3E1NOkyQ/oLxfbxJilrIDi?=
+ =?us-ascii?Q?ek+NpoRy31cMui4Z+/OcioJxXZWj5WnA6IcCXAHspBhxGIbb0lkEw4wylNle?=
+ =?us-ascii?Q?f3bZD2FGCbnLkV0GrgqI8tmdJJCSz4OAy0fjIGn8/aQeCi2AiOzYKPY3kPAe?=
+ =?us-ascii?Q?X41NYmmrnqxX9Ean9DNIAcGSN6BOa5xxDHjlka/R2rwrsOJryE4ZL2c+xq3c?=
+ =?us-ascii?Q?ARWFFSw85E6Ykyu5hT8UFaI3qQIIT+vZRQBl25KGLJPJlvyApW2KH3C8GIcb?=
+ =?us-ascii?Q?rRLA8QLPIsJxhFPr+xlLBrOFCphC7LCMNxIx+Lg4rUqTJ02Jh0wgLEjpwvlv?=
+ =?us-ascii?Q?OPb9JqbAnRomn9Kp3MwtiwGVqlnJBpM+/UvI5EDUZvE/xB6+dgc1oI1aq7IJ?=
+ =?us-ascii?Q?lWHep0sktdRI0U3GDyqCOtfsF2epgBg3jraRkLl/o1dWU9xtL+XCsWlbTtDb?=
+ =?us-ascii?Q?WbWbCc16vYO9r8G63bQFdSkI2CI1QKKu9rI5UbBuQFisnKlwpCRILDlP4i/R?=
+ =?us-ascii?Q?rjRaAFTI5WJkoR1EduPtFFn9sHLA/LNgRdycINikzaJrE7Ea2e6LIJwctYr8?=
+ =?us-ascii?Q?K9fHA0NvuI5Def81MrEto0k+XbfAnh2zDBU7WajOvM/C2TMCS3QsPhRM4EvR?=
+ =?us-ascii?Q?VXz2cuTVBB3a+G8hm/2IlDSfSNmUvtg8UKEinYP9g1pF6j5AA6KhBFkaN3CW?=
+ =?us-ascii?Q?nMMMlWO99TIL7wJJBUJ7Ofz0sfTlusIj7o2ZsDdT?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1885260-464a-4ce1-3c49-08dadf917ccf
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2022 18:15:18.5429
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Br9ExwCEQznlhZnkB6JR5netEqzp0YNZN8EXP5kZNzDBUyNXajRU/cbngPuYwomyZPL1z+VGDgheWE18RdirCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7715
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 04:29:39PM +0000, Lee, Ron wrote:
-> > On Thu, Dec 15, 2022 at 05:13:57PM +0800, Ron Lee wrote:
-> > > On Google Coral and Reef family chromebooks, the PCIe bridge lost its
-> > > L1 PM Substates capability after resumed from D3cold, and identify
-> > > that the pointer to the this capability and capapability header are
-> > > missing from the capability list.
-
-> > This should say what problem we're solving.  I assume some devices
-> > used L1 PM Substates before suspend, but after resume they do not,
-> > so the user-visible effect is that battery life is worse after
-> > resume.
->
-> This bug has existed since these series of Chromebooks was shipping,
-> it seems no harm for system execution, and we didn't identified
-> battery life drop after resume. However we still expect this issue
-> could be solved and follow spec criteria as per PCIe spec rev6.0,
-> section 5.5.4 L1 PM Substates Configuration
+On Fri, Dec 16, 2022 at 09:01:13AM -0800, Dan Williams wrote:
+> Jonathan Cameron wrote:
+> > On Sun, 11 Dec 2022 23:06:18 -0800
+> > ira.weiny@intel.com wrote:
+> > 
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > This code has been tested with a newer qemu which allows for more events to be
+> > > returned at a time as well an additional QMP event and interrupt injection.
+> > > Those patches will follow once they have been cleaned up.
+> > > 
+> > > The series is now in 3 parts:
+> > > 
+> > > 	1) Base functionality including interrupts
+> > > 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
+> > > 	3) cxl-test infrastructure for basic tests
+> > > 
+> > > Changes from V3
+> > > 	Feedback from Dan
+> > > 	Spit out ACPI changes for Bjorn
+> > > 
+> > > - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/
+> > 
+> > Because I'm in a grumpy mood (as my colleagues will attest!)...
+> > This is dependent on the patch that moves the trace definitions and
+> > that's not upstream yet except in cxl/preview which is optimistic
+> > place to use for a base commit.  The id isn't the one below either which
+> > isn't in either mailine or the current CXL trees.
 > 
->     An L1 PM Substate enable bit must only be Set in the Upstream
->     and Downstream Ports on a Link when the corresponding supported
->     capability bit is Set by both the Upstream and Downstream Ports
->     on that Link, otherwise the behavior is undefined
-
-Even if you haven't seen a battery life issue, I suspect you might be
-able to measure a power consumption difference if you looked for it
-and likely could see issues with manual ASPM enable/disable using
-sysfs.  That might be a legitimate reason for this quirk, and if it
-is, we should mention it here.
-
-> The following merged commit can save/restore the
-> L1SubCap/L1SubCtl1/L1SubCtl2 registers for this bridge, However this
-> bridge not only lost its capability contents but also lost the link
-> to this capability.
+> I do not want to commit to a new baseline until after -rc1, so yes this
+> is in a messy period.
 > 
->     PCI/ASPM: Save/restore L1SS Capability for suspend/resume
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/pci/pcie/aspm.c?h=v6.1&id=4257f7e008ea394fcecc050f1569c3503b8bcc15
-
-The current version of that code:
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aspm.c?id=v6.1#n760
-doesn't search for the L1SS capability; it uses dev->l1ss just like
-your patch does.  So it should restore the capability even though the
-linked list is broken.
-
-> > > This patch fix up the header and the pointer to the L1SS
-> > > capability after resuming from D3Cold.
+> > Not that I actually checked the cover letter until it failed to apply
+> > (and hence already knew what was missing) but still, please call out
+> > dependencies unless they are in the branches Dan has queued up to push.
 > > 
-> > The main problem here is that this patch covers up an issue
-> > without saying what the root cause is.  Presumably this is a
-> > firmware issue.  Has that been identified?  Has it been fixed for
-> > future firmware releases?
->
-> This issue could be and should be fixed by BIOS, however the
-> manufacturers have no resource for firmware validation and it's
-> risky for firmware update per their assessment.
-
-This fix is risky, too, because it writes to random places in config
-space and there's no guarantee that this is safe or even that the
-capabilities are at those locations.
-
-> > Is there a bug report for this issue?  Include the URL here.
+> > I just want to play with Dave's fix for the RAS errors so having to jump
+> > through these other sets.
+> 
+> Yes, that is annoying, apologies.
+> 
 > > 
-> > Is there a bug report for the firmware?
+> > Thanks,
 > > 
-> There is a Google's internal issue tracker for this bug, seems not
-> available for public.
-
-Maybe you can make a public report with any secret details removed?
-A simple email would be enough.  I haven't seen the internal issue;
-hopefully it has more details than are in this patch.
-
-> Actually this bug had a discussion on this thread, and Lukasz
-> Majczak identified this issue on Apollo Lake platform.
-> https://patchwork.kernel.org/project/linux-pci/patch/20220705060014.10050-1-vidyas@nvidia.com/
-
-That patch mentions Dell XPS 13, not a Chromebook, so your patch
-wouldn't affect it.  Are you saying this issue is common across all
-Apollo Lake platforms?  If so, maybe a fix should be more generic?
-
-> > > +#ifdef CONFIG_PCIEASPM
-> > > +static void chromeos_fixup_apl_bridge_l1ss_capability(struct pci_dev
-> > > +*pdev) {
-> > > +	if (!dmi_match(DMI_SYS_VENDOR, "Google") ||
-> > > +		(!dmi_match(DMI_PRODUCT_FAMILY, "Google_Coral") &&
-> > > +		 !dmi_match(DMI_PRODUCT_FAMILY, "Google_Reef")))
-> > > +		return;
-> > > +
-> > > +	pci_info(pdev, "Fix up L1SS Capability\n");
-> > > +	/* Fix up the L1SS Capability Header*/
-> > > +	pci_write_config_dword(pdev, pdev->l1ss, (0x220 << 20) | (1 << 16) |
-> > > +(PCI_EXT_CAP_ID_L1SS));
+> > Jonathan
 > > 
-> > This looks like it adds a link to another capability at offset
-> > 0x220.  What is that, and how do we know this is safe?
->
-> The following is the dump of this bridge config before suspend, the
-> L1SS capability is at offset 0x200 and it point to offset 0x220
-> which is a null capability. This patch just add it to keep
-> consistent during suspend/resume.
-> ...
+> > > 
+> > > 
+> > > Davidlohr Bueso (1):
+> > >   cxl/mem: Wire up event interrupts
+> > > 
+> > > Ira Weiny (8):
+> > >   PCI/CXL: Export native CXL error reporting control
+> > >   cxl/mem: Read, trace, and clear events on driver load
+> > >   cxl/mem: Trace General Media Event Record
+> > >   cxl/mem: Trace DRAM Event Record
+> > >   cxl/mem: Trace Memory Module Event Record
+> > >   cxl/test: Add generic mock events
+> > >   cxl/test: Add specific events
+> > >   cxl/test: Simulate event log overflow
+> > > 
+> > >  drivers/acpi/pci_root.c       |   3 +
+> > >  drivers/cxl/core/mbox.c       | 186 +++++++++++++
+> > >  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/cxl.h             |  16 ++
+> > >  drivers/cxl/cxlmem.h          | 171 ++++++++++++
+> > >  drivers/cxl/cxlpci.h          |   6 +
+> > >  drivers/cxl/pci.c             | 236 +++++++++++++++++
+> > >  drivers/pci/probe.c           |   1 +
+> > >  include/linux/pci.h           |   1 +
+> > >  tools/testing/cxl/test/Kbuild |   2 +-
+> > >  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
+> > >  11 files changed, 1452 insertions(+), 1 deletion(-)
+> > > 
+> > > 
+> > > base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e
+> > 
+> 
+> I think going forward these base-commits need to be something that are
+> reachable on cxl.git.
 
-My point is that there is no PCI requirement for capabilities to be at
-0x150 and 0x220.  The only defined way to find these capabilities is
-to traverse the list starting at offset 0x100.
+Agreed.  I thought this was in preview.  But even preview is not stable and I
+should have waited and asked to see this land in next first.
 
-The L1SS capability at pdev->l1ss is reasonable since we found it by
-traversing that list, but 0x150 and 0x220 are magic numbers with no
-justification.  We have no reason to believe there are capabilities
-there.
+Ira
 
-We might know this based on device-specific knowledge of the Root
-Port.  If that's the case, please cite the Intel spec for device 5ad6
-so we can tell this quirk can't be blindly applied to other Root
-Ports.
-
-> > > +	/* Fix up the pointer to L1SS Capability*/
-> > > +	pci_write_config_dword(pdev, 0x150, pdev->l1ss << 20); }
-> > > +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL, 0x5ad6,
-> > > +chromeos_fixup_apl_bridge_l1ss_capability);
-> > > +#endif
+> For now I have pushed out a baseline for both Dave
+> and Ira's patches to cxl/preview which will rebase after -rc1 comes out.
+> 
+> Just the small matter of needing some acks/reviews on those lead in
+> patches so I can move them to through cxl/pending to cxl/next:
+> 
+> http://lore.kernel.org/r/167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com
+> http://lore.kernel.org/r/20221212070627.1372402-2-ira.weiny@intel.com
