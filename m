@@ -2,133 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EAEF464ECB2
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 15:12:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A345764ECD5
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 15:24:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230371AbiLPOMP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 09:12:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        id S231137AbiLPOYs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 09:24:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbiLPOMJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 09:12:09 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504B36324;
-        Fri, 16 Dec 2022 06:12:08 -0800 (PST)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BGDhckJ008983;
-        Fri, 16 Dec 2022 14:11:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=SSx0prXKqtXXKE0mkR7Lylinu406QRa/4P16kiHqIHY=;
- b=K9Tio6rWaKuqG2SnYew/uBwa/8eiKfnR8Nuhj6VHB28lp2XlKn8HjBG4Rz6sse9qGTC0
- C3eoely3JljcOfXbvBh8ooLMeGLZaNxYT0VDyDnW34RhPeNrpaYyc2Gkp+FuqibTU1Pw
- yqzE1JfzrrTlDWXBeYs0/MI3OSZBkhMH/qQzEA2+f+aKfFQJKQqfwm4N8X7TgtZrtK0z
- oJH4iNGgBiqRVDrFcClEQteuQtCCQueHtDP6pF5r3729VUReHjcqfHUSlFvDoLQVmD2t
- OCsSkyQReNnKxseR660jpt9HzqFxf7koEbclDLlxw3bOerpLBy7SI2Ri2gieb6A3bzJq 5g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mgsterqye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 14:11:29 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BGDjEN1016415;
-        Fri, 16 Dec 2022 14:11:28 GMT
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mgsterqxm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 14:11:28 +0000
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BGCDwmO027630;
-        Fri, 16 Dec 2022 14:11:27 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([9.208.130.100])
-        by ppma01wdc.us.ibm.com (PPS) with ESMTPS id 3mf00x2bq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 14:11:27 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-        by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BGEBQH510027728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Dec 2022 14:11:26 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E5C658054;
-        Fri, 16 Dec 2022 14:11:26 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D66AE58066;
-        Fri, 16 Dec 2022 14:11:23 +0000 (GMT)
-Received: from [9.160.114.181] (unknown [9.160.114.181])
-        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 16 Dec 2022 14:11:23 +0000 (GMT)
-Message-ID: <20d5b238-4c2c-6232-0251-c17b07dffbe3@linux.ibm.com>
-Date:   Fri, 16 Dec 2022 09:11:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [patch V3 09/33] genirq/msi: Add range checking to
- msi_insert_desc()
-Content-Language: en-US
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        with ESMTP id S229981AbiLPOYr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 09:24:47 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0AC1402D;
+        Fri, 16 Dec 2022 06:24:45 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYWVF5WzBz688G2;
+        Fri, 16 Dec 2022 22:20:53 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 14:24:42 +0000
+Date:   Fri, 16 Dec 2022 14:24:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-References: <20221124230505.073418677@linutronix.de>
- <20221124232325.798556374@linutronix.de>
- <20221213190425.GA3943240@roeck-us.net>
- <4e0a129855490febb1c57e7e979bcfb579d39054.camel@linux.ibm.com>
- <87fsdgzpqs.ffs@tglx> <e570e70d-19bc-101b-0481-ff9a3cab3504@linux.ibm.com>
- <86wn6rptdu.wl-maz@kernel.org>
- <0acb8c63-7f6c-6df6-cb40-66b265a6e6ce@linux.ibm.com>
- <86v8mbphzw.wl-maz@kernel.org> <86tu1vphs9.wl-maz@kernel.org>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <86tu1vphs9.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: p9MS-957VGoLdmSafHmocM2tMIuSZVSl
-X-Proofpoint-GUID: 8mppAF6KhDxEx5xrR6U10-WQlPF5QyAy
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
+Message-ID: <20221216142438.00006588@Huawei.com>
+In-Reply-To: <20221212070627.1372402-4-ira.weiny@intel.com>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+        <20221212070627.1372402-4-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-16_08,2022-12-15_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 suspectscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2212160124
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/16/22 9:03 AM, Marc Zyngier wrote:
-> On Fri, 16 Dec 2022 13:58:59 +0000,
-> Marc Zyngier <maz@kernel.org> wrote:
->>
->> I'll update Thomas' patch. Once Guenter confirms that PPC is OK, I'll
->> send it out.
+On Sun, 11 Dec 2022 23:06:21 -0800
+ira.weiny@intel.com wrote:
+
+> From: Davidlohr Bueso <dave@stgolabs.net>
 > 
-> And FWIW, the branch is at [1].
+> Currently the only CXL features targeted for irq support require their
+> message numbers to be within the first 16 entries.  The device may
+> however support less than 16 entries depending on the support it
+> provides.
 > 
-> Thanks,
+> Attempt to allocate these 16 irq vectors.  If the device supports less
+> then the PCI infrastructure will allocate that number.  Upon successful
+> allocation, users can plug in their respective isr at any point
+> thereafter.
 > 
-> 	M.
+> CXL device events are signaled via interrupts.  Each event log may have
+> a different interrupt message number.  These message numbers are
+> reported in the Get Event Interrupt Policy mailbox command.
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/msi-fixes-6.2
+> Add interrupt support for event logs.  Interrupts are allocated as
+> shared interrupts.  Therefore, all or some event logs can share the same
+> message number.
+> 
+> In addition all logs are queried on any interrupt in order of the most
+> to least severe based on the status register.
+> 
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > 
 
-FYI, your patch there mentions MSI_XA_DOMAIN_SIZE in the commit message but the code (and comment) is still returning MSI_MAX_INDEX 
+> +/**
+> + * Event Interrupt Policy
+> + *
+> + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> + */
+> +enum cxl_event_int_mode {
+> +	CXL_INT_NONE		= 0x00,
+> +	CXL_INT_MSI_MSIX	= 0x01,
+> +	CXL_INT_FW		= 0x02
+> +};
+> +struct cxl_event_interrupt_policy {
+> +	u8 info_settings;
+> +	u8 warn_settings;
+> +	u8 failure_settings;
+> +	u8 fatal_settings;
+
+This is an issue for your QEMU code which has this set at 5 bytes.
+Guess our handling of record lengths needs updating now we have two different
+spec versions to support and hence these can have multiple lengths.
+
+Btw, do you have an updated version of the QEMU patches you can share?
+I was planning on just doing the AER type RAS stuff for the first pull this cycle
+but given this set means we never reach that code I probably need to do QEMU
+support for this and the stuff to support those all in one go - otherwise
+no one will be able to test it :)  We rather optimistically have the OSC set
+to say the OS can have control of these, but upstream code doesn't emulate
+anything yet. Oops. Should have pretended the hardware was handling them
+until we had this support in place in QEMU.
+
+Jonathan
+
+> +} __packed;
+> +
+>  /**
+>   * struct cxl_event_state - Event log driver state
+>   *
+> @@ -288,6 +305,8 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+>  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+> +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+> +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+>  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
