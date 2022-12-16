@@ -2,243 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69F0964E8E9
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 10:53:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB09664E943
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 11:18:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbiLPJxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 04:53:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41300 "EHLO
+        id S229809AbiLPKSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 05:18:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229902AbiLPJxJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 04:53:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C65F49B79;
-        Fri, 16 Dec 2022 01:53:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EF230B81D3C;
-        Fri, 16 Dec 2022 09:53:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 570F4C433EF;
-        Fri, 16 Dec 2022 09:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671184384;
-        bh=hCl+cicqUSnV5iI07PLhBx4iYYATP5a9sMb9OaXHz/U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jO7WYOE1OKX0otFdpHnVAZS9jQmwS/Pome4sOYuUobdJWA04Uebcv9Ejje0T2PWLT
-         qeZxYIR2zOFpnBcdwPfN32arO8R60EDahckKw19J6tfc7LtATrmy0aHqGB68+NS4rz
-         92SIbvjN+wAmF0oJfhk1d7cdK2K5UB7Qe64weqjeKCiTHx1XRDRZ+pDgAfishfGquQ
-         f923mTUKw0TyU1oFG23qdBH3kDyyFBdue3wxPlkJAm9eXrOa7wPuI/qQ6OPFGOgEO9
-         n/LDBeL3WUIfhn7DkbfuaHT//Fzl8Yc5nqO7/4y503MKM/PdOmb6SaSmbsknPEfR2L
-         dcVgewQrmOYvg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1p67On-00D2UT-V0;
-        Fri, 16 Dec 2022 09:53:02 +0000
-Date:   Fri, 16 Dec 2022 09:53:01 +0000
-Message-ID: <86wn6rptdu.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S229475AbiLPKSd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 05:18:33 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A06132BAB;
+        Fri, 16 Dec 2022 02:18:32 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id p36so2725684lfa.12;
+        Fri, 16 Dec 2022 02:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1igdSOtUouIGen/HpbtAViaw0EJJfv4JYj0+NTM01k=;
+        b=ROLtX1krmQo+dkS/Nr+TmfLJyCAku038Btlhf9OkeTugSsfHEOFv89pxIypz/nOoYz
+         RbiywK2PhC8VsInGr7MvQvPkBkilq5lkRKjErXrOGZe9rt0riNO92LZX8uZEUhftO17k
+         kr50uW7W/uNn68CPKX9PyGDOKruLWbG0J6JMjrYV/d85utpFvHnk1u+LgDk3rywFaAd5
+         oYGEygYdxUfw47/8lAQdLMsVO+stHrZGXsp5mftad1L60VFq/97oGjSizdNuz+oZxTYD
+         2LKOSiEUYv61KniFHHNzlNn6edwLb+t6/iIL0naWYYZIyQCuHNiypc8P1xS+PoTYf52Z
+         WCnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d1igdSOtUouIGen/HpbtAViaw0EJJfv4JYj0+NTM01k=;
+        b=yHf+hbBAuBeKGX85jMZ+mw9YNiJdjjYLZs6MoehvIYA6L84uBnw0r3+ch7p96iMgSu
+         aRrLl6Nqv8unTvIUvKg9FccECSEd0AZofCQq78JXJsvVNvZDIedTRyMTksEywe18iQmo
+         VSZYYb6Wnn4FRN9OjWA2eiha3s2GvGUrxi+9xE3kDU8hTwd2ocBfX/AtpGr6wz0Mqae5
+         ll17CI5wyaJCH3Vr0nsm8B8aCiFQgnv51rEDIfhAkBHxVF7Qi0HDwbun/0tfsiZBqTC0
+         kli3CLXv7S9mmq26dovXf98ln4UpvPqnwYH4HHeO9nZKzgMEbp1esiGY6S/bNOM8c8jb
+         GyRw==
+X-Gm-Message-State: ANoB5pkq2ayTvP4HJ2OS9z8huppzPS8YlcFUc3kRmx5TqkOQZ9vxB69/
+        EXF8+WEIGv4CKk4eiiik3JY=
+X-Google-Smtp-Source: AA0mqf68eI3DrksOg2kRKgLIBZKXzRe3rlqmcZeVcP5jDtA1uj4KcmjjMsD4lu0pO24gs5dkKqwI5g==
+X-Received: by 2002:a05:6512:23a0:b0:4b6:f22c:800e with SMTP id c32-20020a05651223a000b004b6f22c800emr7075968lfv.10.1671185910814;
+        Fri, 16 Dec 2022 02:18:30 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id u2-20020ac24c22000000b004979db5aa5bsm179192lfq.223.2022.12.16.02.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Dec 2022 02:18:30 -0800 (PST)
+Date:   Fri, 16 Dec 2022 13:18:27 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [patch V3 09/33] genirq/msi: Add range checking to msi_insert_desc()
-In-Reply-To: <e570e70d-19bc-101b-0481-ff9a3cab3504@linux.ibm.com>
-References: <20221124230505.073418677@linutronix.de>
-        <20221124232325.798556374@linutronix.de>
-        <20221213190425.GA3943240@roeck-us.net>
-        <4e0a129855490febb1c57e7e979bcfb579d39054.camel@linux.ibm.com>
-        <87fsdgzpqs.ffs@tglx>
-        <e570e70d-19bc-101b-0481-ff9a3cab3504@linux.ibm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mjrosato@linux.ibm.com, tglx@linutronix.de, schnelle@linux.ibm.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data
+ allocation
+Message-ID: <20221216101827.owq7qpakjduf3rit@mobilestation>
+References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
+ <20221214235305.31744-24-Sergey.Semin@baikalelectronics.ru>
+ <Y5rJJfZeVqliA5Rg@infradead.org>
+ <20221215092721.tvz3hpaql3kotgnu@mobilestation>
+ <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
+ <20221215235218.wsuwy5uckqfxjnb6@mobilestation>
+ <Y5wgvdnMWQDxkUd+@infradead.org>
+ <20221216093423.4bettdxisserdzsh@mobilestation>
+ <Y5w/MkA4N857+AWQ@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y5w/MkA4N857+AWQ@infradead.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 15 Dec 2022 16:23:20 +0000,
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+On Fri, Dec 16, 2022 at 01:49:38AM -0800, Christoph Hellwig wrote:
+> On Fri, Dec 16, 2022 at 12:34:23PM +0300, Serge Semin wrote:
+> > What about instead of save/restore pattern I'll just change the
+> > dma_set_mask_and_coherent() method with the dma_set_coherent_mask()
+> > function call? It seems cleaner. Like this:
 > 
-> On 12/15/22 9:49 AM, Thomas Gleixner wrote:
-> > On Wed, Dec 14 2022 at 10:42, Niklas Schnelle wrote:
-> >> On Tue, 2022-12-13 at 11:04 -0800, Guenter Roeck wrote:
-> >>> This patch results in various s390 qemu test failures.
-> >>> There is a warning backtrace
-> >>>
-> >>>    12.674858] WARNING: CPU: 0 PID: 1 at kernel/irq/msi.c:167 msi_ctrl_valid+0x2a/0xb0
-> >>>
-> >>> followed by
-> >>>
-> >>> [   12.684333] virtio_net: probe of virtio0 failed with error -34
-> >>>
-> >>> and Ethernet interfaces don't instantiate.
-> >> As far as I'm aware so far he tracked this down to code calling
-> >> msi_domain_get_hwsize() which in turn calls msi_get_device_domain()
-> >> which then returns NULL leading to msi_domain_get_hwsize() returning 0.
-> >> I think this is related to the fact that we currently don't use IRQ
-> >> domains.
-> > 
-> > Correct and for some stupid reason I thought 0 is a good return value
-> > here :)
-> > 
-> > 
-> > 
-> > diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> > index bd4d4dd626b4..8fb10f216dc0 100644
-> > --- a/kernel/irq/msi.c
-> > +++ b/kernel/irq/msi.c
-> > @@ -609,8 +609,8 @@ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid
-> >  		info = domain->host_data;
-> >  		return info->hwsize;
-> >  	}
-> > -	/* No domain, no size... */
-> > -	return 0;
-> > +	/* No domain, default to MSI_MAX_INDEX */
-> > +	return MSI_MAX_INDEX;
-> >  }
-> >  
-> >  static inline void irq_chip_write_msi_msg(struct irq_data *data,
-> 
-> Ah, that makes sense...  So, with that diff applied, that fixes most of the issues I'm seeing incl. the virtio one that Guenter mentioned.  But it looks like NVMe devices are still broken on s390 with a different backtrace -- the bisect for that one points to another patch in part2 of this work and looks like another issue with missing irq domain:
-> 
-> 40742716f294 genirq/msi: Make msi_add_simple_msi_descs() device domain aware
-> 
-> 
-> [    4.308861] ------------[ cut here ]------------
-> [    4.308865] WARNING: CPU: 7 PID: 9 at kernel/irq/msi.c:167 msi_domain_free_msi_descs_range+0x3c/0xd0
-> [    4.308877] Modules linked in: mlx5_core aes_s390 nvme des_s390 libdes sha3_512_s390 sha3_256_s390 sha512_s390 sha256_s390 nvme_core sha1_s390 sha_common pkey zcrypt rng_core autofs4
-> [    4.308896] CPU: 7 PID: 9 Comm: kworker/u20:0 Not tainted 6.1.0 #179
-> [    4.308898] Hardware name: IBM 3931 A01 782 (KVM/Linux)
-> [    4.308900] Workqueue: events_unbound async_run_entry_fn
-> [    4.308905] Krnl PSW : 0704c00180000000 00000000b6426b78 (msi_domain_free_msi_descs_range+0x40/0xd0)
-> [    4.308909]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-> [    4.308911] Krnl GPRS: 0700000080eda0a0 0000000000000000 0000000080eda0a0 0000000000000000
-> [    4.308913]            0000000000000000 0000000000000000 0000000000000cc0 0000000080eda000
-> [    4.308914]            00000000b7ddc000 0000000091934aa8 000000000000ffff 0000000000000000
-> [    4.308915]            0000000080344200 0000000080f2b1c0 0000037fffb5b918 0000037fffb5b8c8
-> [    4.308924] Krnl Code: 00000000b6426b68: e54cf0ac0000	mvhi	172(%r15),0
-> [    4.308924]            00000000b6426b6e: ec3c000b017f	clij	%r3,1,12,00000000b6426b84
-> [    4.308924]           #00000000b6426b74: af000000		mc	0,0
-> [    4.308924]           >00000000b6426b78: eb9ff0b00004	lmg	%r9,%r15,176(%r15)
-> [    4.308924]            00000000b6426b7e: 07fe		bcr	15,%r14
-> [    4.308924]            00000000b6426b80: 47000700		bc	0,1792
-> [    4.308924]            00000000b6426b84: b90400a5		lgr	%r10,%r5
-> [    4.308924]            00000000b6426b88: b9040013		lgr	%r1,%r3
-> [    4.308935] Call Trace:
-> [    4.308938]  [<00000000b6426b78>] msi_domain_free_msi_descs_range+0x40/0xd0 
-> [    4.308945]  [<00000000b6bb126e>] pci_free_msi_irqs+0x26/0x48 
-> [    4.308950]  [<00000000b6baf4d4>] pci_disable_msix+0x6c/0x80 
-> [    4.308954]  [<00000000b6baf716>] pci_free_irq_vectors+0x26/0x88 
-> [    4.308956]  [<000003ff7fdfa8f4>] nvme_setup_io_queues+0x18c/0x398 [nvme] 
-> [    4.308968]  [<000003ff7fdfbf1e>] nvme_probe+0x2e6/0x3b0 [nvme] 
-> [    4.308972]  [<00000000b6ba44cc>] local_pci_probe+0x44/0x80 
-> [    4.308974]  [<00000000b6ba46d8>] pci_call_probe+0x50/0x180 
-> [    4.308976]  [<00000000b6ba5166>] pci_device_probe+0xae/0x110 
-> [    4.308978]  [<00000000b6c0a19a>] really_probe+0xd2/0x480 
-> [    4.308982]  [<00000000b6c0a6f8>] driver_probe_device+0x40/0xf0 
-> [    4.308984]  [<00000000b6c0a80e>] __driver_attach_async_helper+0x66/0xf0 
-> [    4.308986]  [<00000000b63cfb72>] async_run_entry_fn+0x4a/0x1b0 
-> [    4.308987]  [<00000000b63c1368>] process_one_work+0x200/0x458 
-> [    4.308991]  [<00000000b63c1aee>] worker_thread+0x66/0x480 
-> [    4.308993]  [<00000000b63caa00>] kthread+0x108/0x110 
-> [    4.308996]  [<00000000b634f2dc>] __ret_from_fork+0x3c/0x58 
-> [    4.308999]  [<00000000b6f8da2a>] ret_from_fork+0xa/0x40 
-> [    4.309006] Last Breaking-Event-Address:
-> [    4.309007]  [<00000000b6426ba8>] msi_domain_free_msi_descs_range+0x70/0xd0
-> [    4.309009] ---[ end trace 0000000000000000 ]---
-> [    8.957187] nvme: probe of 0003:00:00.0 failed with error -22
-> [    8.957216] ------------[ cut here ]------------
-> [    8.957217] WARNING: CPU: 5 PID: 9 at kernel/irq/msi.c:275 msi_device_data_release+0x76/0xa0
-> [    8.957229] Modules linked in: mlx5_core aes_s390 nvme des_s390 libdes sha3_512_s390 sha3_256_s390 sha512_s390 sha256_s390 nvme_core sha1_s390 sha_common pkey zcrypt rng_core autofs4
-> [    8.957248] CPU: 5 PID: 9 Comm: kworker/u20:0 Tainted: G        W          6.1.0 #179
-> [    8.957252] Hardware name: IBM 3931 A01 782 (KVM/Linux)
-> [    8.957254] Workqueue: events_unbound async_run_entry_fn
-> [    8.957259] Krnl PSW : 0704e00180000000 00000000b642729a (msi_device_data_release+0x7a/0xa0)
-> [    8.957262]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> [    8.957265] Krnl GPRS: a813fdc020800000 00000000928b6840 0000000091934ab8 0000000080344200
-> [    8.957267]            0000000000000000 0000000091934a80 0000000080d79988 0000000000000000
-> [    8.957268]            0000000080eda0a0 0000037fffb5bc10 0000000080eda0a0 0000000091934aa8
-> [    8.957270]            0000000080344200 00000000800e0402 00000000b642724e 0000037fffb5bad0
-> [    8.957279] Krnl Code: 00000000b642728c: f0a0000407fe	srp	4(11,%r0),2046,0
-> [    8.957279]            00000000b6427292: 47000700		bc	0,1792
-> [    8.957279]           #00000000b6427296: af000000		mc	0,0
-> [    8.957279]           >00000000b642729a: a7f4ffdf		brc	15,00000000b6427258
-> [    8.957279]            00000000b642729e: af000000		mc	0,0
-> [    8.957279]            00000000b64272a2: 4120b048		la	%r2,72(%r11)
-> [    8.957279]            00000000b64272a6: c0e5005a0c4d	brasl	%r14,00000000b6f68b40
-> [    8.957279]            00000000b64272ac: e548a1180000	mvghi	280(%r10),0
-> [    8.957290] Call Trace:
-> [    8.957292]  [<00000000b642729a>] msi_device_data_release+0x7a/0xa0 
-> [    8.957295] ([<00000000b642724e>] msi_device_data_release+0x2e/0xa0)
-> [    8.957298]  [<00000000b6c0f608>] release_nodes+0x50/0xd8 
-> [    8.957305]  [<00000000b6c111aa>] devres_release_all+0xaa/0xf0 
-> [    8.957308]  [<00000000b6c0a2f2>] really_probe+0x22a/0x480 
-> [    8.957310]  [<00000000b6c0a6f8>] driver_probe_device+0x40/0xf0 
-> [    8.957312]  [<00000000b6c0a80e>] __driver_attach_async_helper+0x66/0xf0 
-> [    8.957314]  [<00000000b63cfb72>] async_run_entry_fn+0x4a/0x1b0 
-> [    8.957315]  [<00000000b63c1368>] process_one_work+0x200/0x458 
-> [    8.957320]  [<00000000b63c1aee>] worker_thread+0x66/0x480 
-> [    8.957322]  [<00000000b63caa00>] kthread+0x108/0x110 
-> [    8.957325]  [<00000000b634f2dc>] __ret_from_fork+0x3c/0x58 
-> [    8.957328]  [<00000000b6f8da2a>] ret_from_fork+0xa/0x40 
-> [    8.957336] Last Breaking-Event-Address:
-> [    8.957337]  [<00000000b6427254>] msi_device_data_release+0x34/0xa0
-> [    8.957339] ---[ end trace 0000000000000000 ]---
-> 
-> The line number for the first warning points to the WARN_ON check in msi_ctrl_valid -- specifically it's the !dev->msi.data->__domains[ctrl->domid].domain check that is failing.
-> 
-> The second warning is the WARN_ON_ONCE(!xa_empty(&md->__domains[i].store)) check in msi_device_data_release, presumably a victim of backing out after the first error.
+> > Thus the platform-specific streaming DMA mask would be preserved.
+> > Since it's PCIe then having the streaming DMA-mask less than 32-bits
+> > wide is very much improbable. Moreover DW PCIe AXI-interface can be
+> > synthesize only with one out of two address bus widths: 32 and 64.
 > 
 
-Yeah, the non-irqdomain legacy path definitely wounds up here, and we
-end-up leaking descriptors. If the following hack works for you, I'll
-ferry the two fixes to Linus asap.
+> Where platform-specific means the dwc subdriver? 
 
-Thanks,
+Right. I meant the streaming DMA-mask set by the low-level DWC PCIe drivers
+(like pcie-qcom(-ep)?.c, pcie-bt1.c, etc). It's very much important to
+have the real DMA-mask (at least the streaming one) set for the eDMA-capable
+controllers so the DMA-engine clients would work with the best performance.
 
-	M.
+> Yes, that seems to work. 
 
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index bd4d4dd626b4..9921dc57f1b4 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -165,7 +165,8 @@ static bool msi_ctrl_valid(struct device *dev, struct msi_ctrl *ctrl)
- 	unsigned int hwsize;
- 
- 	if (WARN_ON_ONCE(ctrl->domid >= MSI_MAX_DEVICE_IRQDOMAINS ||
--			 !dev->msi.data->__domains[ctrl->domid].domain))
-+			 (dev->msi.domain &&
-+			  !dev->msi.data->__domains[ctrl->domid].domain))
- 		return false;
- 
- 	hwsize = msi_domain_get_hwsize(dev, ctrl->domid);
+Ok. I'll just use the direct dma_set_coherent_mask() method here then.
 
--- 
-Without deviation from the norm, progress is not possible.
+> Alternatively have a flag that says which streaming mask
+> to set.
+
+I'd prefer to have more flexibility here relying on the low-level
+drivers to set the mask(s) instead of adding the new flag, just in case
+if there is vendor-specific IP-core/platform changes in the address
+bus width.
+
+-Serge(y)
