@@ -2,48 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFE0B64F123
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C535364F12E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231792AbiLPSkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 13:40:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42746 "EHLO
+        id S231282AbiLPSmW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 13:42:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbiLPSjf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:39:35 -0500
+        with ESMTP id S231485AbiLPSmV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:42:21 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452F82B243;
-        Fri, 16 Dec 2022 10:39:09 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYd7n1LyCz6HJVH;
-        Sat, 17 Dec 2022 02:35:17 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA61DB6;
+        Fri, 16 Dec 2022 10:42:19 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYdCR4sVLz6HJW1;
+        Sat, 17 Dec 2022 02:38:27 +0800 (CST)
 Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
- 2022 18:39:06 +0000
-Date:   Fri, 16 Dec 2022 18:39:02 +0000
+ 2022 18:42:16 +0000
+Date:   Fri, 16 Dec 2022 18:42:15 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 0/9] CXL: Process event logs
-Message-ID: <20221216183902.00002bc8@Huawei.com>
-In-Reply-To: <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
+Message-ID: <20221216184215.000015dd@Huawei.com>
+In-Reply-To: <20221216142438.00006588@Huawei.com>
 References: <20221212070627.1372402-1-ira.weiny@intel.com>
-        <20221216122531.00001bef@huawei.com>
-        <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+        <20221212070627.1372402-4-ira.weiny@intel.com>
+        <20221216142438.00006588@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.45.152.125]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -55,110 +57,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 16 Dec 2022 09:01:13 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 16 Dec 2022 14:24:38 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Sun, 11 Dec 2022 23:06:18 -0800
-> > ira.weiny@intel.com wrote:
+> On Sun, 11 Dec 2022 23:06:21 -0800
+> ira.weiny@intel.com wrote:
+> 
+> > From: Davidlohr Bueso <dave@stgolabs.net>
+> > 
+> > Currently the only CXL features targeted for irq support require their
+> > message numbers to be within the first 16 entries.  The device may
+> > however support less than 16 entries depending on the support it
+> > provides.
+> > 
+> > Attempt to allocate these 16 irq vectors.  If the device supports less
+> > then the PCI infrastructure will allocate that number.  Upon successful
+> > allocation, users can plug in their respective isr at any point
+> > thereafter.
+> > 
+> > CXL device events are signaled via interrupts.  Each event log may have
+> > a different interrupt message number.  These message numbers are
+> > reported in the Get Event Interrupt Policy mailbox command.
+> > 
+> > Add interrupt support for event logs.  Interrupts are allocated as
+> > shared interrupts.  Therefore, all or some event logs can share the same
+> > message number.
+> > 
+> > In addition all logs are queried on any interrupt in order of the most
+> > to least severe based on the status register.
+> > 
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > >   
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > This code has been tested with a newer qemu which allows for more events to be
-> > > returned at a time as well an additional QMP event and interrupt injection.
-> > > Those patches will follow once they have been cleaned up.
-> > > 
-> > > The series is now in 3 parts:
-> > > 
-> > > 	1) Base functionality including interrupts
-> > > 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
-> > > 	3) cxl-test infrastructure for basic tests
-> > > 
-> > > Changes from V3
-> > > 	Feedback from Dan
-> > > 	Spit out ACPI changes for Bjorn
-> > > 
-> > > - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/  
-> > 
-> > Because I'm in a grumpy mood (as my colleagues will attest!)...
-> > This is dependent on the patch that moves the trace definitions and
-> > that's not upstream yet except in cxl/preview which is optimistic
-> > place to use for a base commit.  The id isn't the one below either which
-> > isn't in either mailine or the current CXL trees.  
 > 
-> I do not want to commit to a new baseline until after -rc1, so yes this
-> is in a messy period.
-
-Fully understood. I only push trees out as 'testing' for 0-day to hit
-until I can rebase on rc1.
-
+> > +/**
+> > + * Event Interrupt Policy
+> > + *
+> > + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> > + */
+> > +enum cxl_event_int_mode {
+> > +	CXL_INT_NONE		= 0x00,
+> > +	CXL_INT_MSI_MSIX	= 0x01,
+> > +	CXL_INT_FW		= 0x02
+> > +};
+> > +struct cxl_event_interrupt_policy {
+> > +	u8 info_settings;
+> > +	u8 warn_settings;
+> > +	u8 failure_settings;
+> > +	u8 fatal_settings;  
 > 
-> > Not that I actually checked the cover letter until it failed to apply
-> > (and hence already knew what was missing) but still, please call out
-> > dependencies unless they are in the branches Dan has queued up to push.
-> > 
-> > I just want to play with Dave's fix for the RAS errors so having to jump
-> > through these other sets.  
+> This is an issue for your QEMU code which has this set at 5 bytes.
+> Guess our handling of record lengths needs updating now we have two different
+> spec versions to support and hence these can have multiple lengths.
 > 
-> Yes, that is annoying, apologies.
-Not really a problem I just felt like grumbling :)
+> Btw, do you have an updated version of the QEMU patches you can share?
 
-Have a good weekend.
+Note that I'm happy to take your QEMU series forwards, just don't want to duplicate
+stuff you have already done!
 
 Jonathan
 
+> I was planning on just doing the AER type RAS stuff for the first pull this cycle
+> but given this set means we never reach that code I probably need to do QEMU
+> support for this and the stuff to support those all in one go - otherwise
+> no one will be able to test it :)  We rather optimistically have the OSC set
+> to say the OS can have control of these, but upstream code doesn't emulate
+> anything yet. Oops. Should have pretended the hardware was handling them
+> until we had this support in place in QEMU.
 > 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > 
-> > > Davidlohr Bueso (1):
-> > >   cxl/mem: Wire up event interrupts
-> > > 
-> > > Ira Weiny (8):
-> > >   PCI/CXL: Export native CXL error reporting control
-> > >   cxl/mem: Read, trace, and clear events on driver load
-> > >   cxl/mem: Trace General Media Event Record
-> > >   cxl/mem: Trace DRAM Event Record
-> > >   cxl/mem: Trace Memory Module Event Record
-> > >   cxl/test: Add generic mock events
-> > >   cxl/test: Add specific events
-> > >   cxl/test: Simulate event log overflow
-> > > 
-> > >  drivers/acpi/pci_root.c       |   3 +
-> > >  drivers/cxl/core/mbox.c       | 186 +++++++++++++
-> > >  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxl.h             |  16 ++
-> > >  drivers/cxl/cxlmem.h          | 171 ++++++++++++
-> > >  drivers/cxl/cxlpci.h          |   6 +
-> > >  drivers/cxl/pci.c             | 236 +++++++++++++++++
-> > >  drivers/pci/probe.c           |   1 +
-> > >  include/linux/pci.h           |   1 +
-> > >  tools/testing/cxl/test/Kbuild |   2 +-
-> > >  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
-> > >  11 files changed, 1452 insertions(+), 1 deletion(-)
-> > > 
-> > > 
-> > > base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e  
-> >   
+> Jonathan
 > 
-> I think going forward these base-commits need to be something that are
-> reachable on cxl.git. For now I have pushed out a baseline for both Dave
-> and Ira's patches to cxl/preview which will rebase after -rc1 comes out.
-> 
-> Just the small matter of needing some acks/reviews on those lead in
-> patches so I can move them to through cxl/pending to cxl/next:
-
-
-Don't move too fast with Ira's.  Some issues coming up in testing..
-(admittedly half of them were things where QEMU hadn't kept up with
-what the kernel code now uses).
-
-
-> 
-> http://lore.kernel.org/r/167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com
-> http://lore.kernel.org/r/20221212070627.1372402-2-ira.weiny@intel.com
+> > +} __packed;
+> > +
+> >  /**
+> >   * struct cxl_event_state - Event log driver state
+> >   *
+> > @@ -288,6 +305,8 @@ enum cxl_opcode {
+> >  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+> >  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+> >  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+> > +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+> > +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+> >  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+> >  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+> >  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,  
 
