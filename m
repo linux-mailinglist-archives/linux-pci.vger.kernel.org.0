@@ -2,246 +2,429 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB71464F0C9
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:15:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5F7764F0D9
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:21:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230460AbiLPSP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 13:15:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
+        id S231575AbiLPSVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 13:21:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiLPSPZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:15:25 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75C0201B0;
-        Fri, 16 Dec 2022 10:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671214524; x=1702750524;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=31qrinnmibLOCpUXa/HlLvj7g6+QzG+LsavymXza0fM=;
-  b=FteGBy79SOmJtr8YzUOnVFtc3MddoUc25JpPkwTw7VsL3GHfGlH67Xcz
-   1wo0DshW6g+1AFdTxKhskEB+Sbm982tujwZLrXIun8dBijhczq2oH+6cS
-   54qjnKxAyHtjpsIvOoSZ0WSnkjLCAlcUx/DjuLofIHOZtIGoXYfqLGK+D
-   90SYvptsdmdI63hCZxp4drF5N8SXZzj8W3Dyiu2wVJONDJIAc7wm6IYkV
-   UyCQ1QvkEOfi/z9lUEKlIxHm8saCTGjDpBQaDrjiprBg/CLDvOIfzcRU6
-   +nYBFD0LlXzXmCgVtOX2pVeTg1domsT7Ny3EnDA0duvuGsAhRI5ENjcwd
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="381245512"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="381245512"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 10:15:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="792169016"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="792169016"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Dec 2022 10:15:21 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 16 Dec 2022 10:15:21 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Fri, 16 Dec 2022 10:15:21 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Fri, 16 Dec 2022 10:15:21 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c8Fe1MPFTwIt2MS0m07Tn4CWAmjcDZk2g3A5sDFBiLurW201EDd6rQVGQNueudRp4XNjKVxgquJTkfbF7Bo6WRky3sarujD7nSL43YPb+eNxHpXpi1WRv1/Kv5RNg54g3o4Rg+1ndAFN8gSTlh/25ZkYCPcEnwGQEPCxQjwPQE1ZsR2f6RI9HM7r47QPgAcURqNAHnWlsfg1K+fkyxSL3U5DAJGj60t6rNfNZlm3CSbk/AS2gj2BkiJYSvYY/isV3Okglm3nUoOaOjAdojZyvdHS3UxdAgFIQWOBCQdPT2moETcN3WumwIWV5WYDjcSqBtA48RVXiXk9UCsTc2gotg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iVvh+SIkADg23/ct3Z6KGPNh+m+oxlF4LsEqx4GXBYY=;
- b=MxtgSO/eBy3d+qtHjqqhGS08fRd3SA22PoA8OGjGW4abCC+QHAvw/bukcFn7ZGnGVSgFaT5OkPhkbVjD2M1i+wewBqVojYbJzI2ysgjLZPdnRaizRw40Ob5aFXEosgF+XarJzgEdhdj2nzwZcDMEf7GvFp7eFMPLUyF+lDnmzW+tmHaSika/jHrFXxThtRACnXxAn9PSK+BJQMivGHxVk9fPQHXfxa5f5rz70QJgRWwdR60H/fGRck6iJFMRAfQgOS2hKnBiKRLyC8FiR7dv5FByIPUeDnyUJAQ7gYuwBj8+doaykGD4BzilZqOeFwFKQ+fDUwTWzYL7y3j81rVXrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SJ2PR11MB7715.namprd11.prod.outlook.com (2603:10b6:a03:4f4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.12; Fri, 16 Dec
- 2022 18:15:18 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b%6]) with mapi id 15.20.5924.011; Fri, 16 Dec 2022
- 18:15:18 +0000
-Date:   Fri, 16 Dec 2022 10:15:14 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
+        with ESMTP id S231561AbiLPSVT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:21:19 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEB337FB1;
+        Fri, 16 Dec 2022 10:21:17 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYcly3ZX1z67H19;
+        Sat, 17 Dec 2022 02:18:06 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 18:21:13 +0000
+Date:   Fri, 16 Dec 2022 18:21:10 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 0/9] CXL: Process event logs
-Message-ID: <Y5y1spikvIrH4qsg@iweiny-desk3>
+Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
+Message-ID: <20221216182110.00003f62@Huawei.com>
+In-Reply-To: <20221212070627.1372402-4-ira.weiny@intel.com>
 References: <20221212070627.1372402-1-ira.weiny@intel.com>
- <20221216122531.00001bef@huawei.com>
- <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: SJ0PR05CA0089.namprd05.prod.outlook.com
- (2603:10b6:a03:332::34) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        <20221212070627.1372402-4-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ2PR11MB7715:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1885260-464a-4ce1-3c49-08dadf917ccf
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ljf1QuL1zc2XbOb2Bib95MEolEtYQBDft8XU1nnADkUlkr08COEbHiXTAq0jTgEV0h12n6PLb6EOFG5EbKdgFKlsjhf5mShIumkpCPbnUKFxMxB2iOh5KlLHI9bnm5VUno3nUvd2HAPfRUm96vRempJsKH9zAyAJrYEHqlxm9ovosZJAaNI20Es4fZqbLLWDUkOBTW+QRJxKObXBuoMdgUPs3fxzMpKmP5ZPxnsiUWV3pUK4ISU7wMDeL7jRqoWSgOMdqgouYvqab0nGk103KNZ2BTp+K4eAPxdWXe6ZFDhc/jdsi+CU/we0D1MInOe3B/iLvFvePn4lJINjS4FSAChlFEsdB1pNBJ/kH9CuNRjNhpjQAyFnPYBPuhIYITp2Xl9+fosCJ4exFgB0v1BMDVQ/RODwklgq8n+7jCKHYwZauNSBZ5/fj93Yt+QageoihjEB3PRte6LXXpcT0GQXi8mpEnEJ3Ogk/5y4eFCQuzTrGhhLKxCh6FIFQCz/MJdd82x+djfDKjBM9tRgIMZECDIj6cTP1KqfnlTRU1Ad+3s7xfGrn+xj3B2VMxomLZGzatCnPFwoUM+qASiwLzMbwL0FiixrW5KGNIk5cYMNNZU+/OkGuFeeTfYe8ydcj74QukLVui6QZyBQLEjKEo+WdtnLi9ZJ5XsSztRSaCIgRIN+1WpXLB1Jv+Bvqlq9nlq9KpcK1WD+hEtusnfALF0KlQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(136003)(346002)(396003)(376002)(39860400002)(366004)(451199015)(83380400001)(86362001)(38100700002)(2906002)(5660300002)(6862004)(41300700001)(8936002)(33716001)(4326008)(6666004)(26005)(8676002)(186003)(9686003)(6512007)(66556008)(316002)(66476007)(6506007)(66946007)(6486002)(966005)(478600001)(54906003)(44832011)(6636002)(82960400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2Exfxlfs5OwvU0i6P0vITMbESEkgZgUvSvgwf6vFPECB6WEIET7QpJZQVcrI?=
- =?us-ascii?Q?QCo0cavG/ZL8s2wVG+fZe3O10T54XCb0E3Ky9Njfqjl5/9qeCG94Og3gwOoV?=
- =?us-ascii?Q?XwhFzYenlkNExCrVzT1EGhT+9ZtdfRZdIp56Lv/FI3ONEIYTYDi1pEcacE96?=
- =?us-ascii?Q?cJ8fpV/MhuVouCo4ozmCis4U4EREtm4dyqs/EvM6gWBZ2RwL3dX8g1CqJUam?=
- =?us-ascii?Q?hXeyVgXFbsVLgTRSBSGYhb+p1GiQIILjrWTieyJPha6h0uQaan5AZWannRH0?=
- =?us-ascii?Q?wdeg1LiF0wohtkEiEyZAnuiziWW4FR/71T28W66zO4bSAyozHE+HnwDa8sEM?=
- =?us-ascii?Q?tdakDQMv9f9ZcQZl9v7gP5aGNgA4j8EUm+A4hnVuHbB1GgKzRYgaIJpRmHfu?=
- =?us-ascii?Q?X3BGDMgwBFUl+ex9WsNcY6O2ZIVKeYTdrJxT4BYwcUhfrCiilOu0ccpMa8hr?=
- =?us-ascii?Q?pSjWgM+DPiISb5rLuBcU0QbCXTx9ASD+w+pCWiYEuo4+Qk+UlbOXM5M2iORz?=
- =?us-ascii?Q?VxH/vTX98wI1VZjFEFNpDqJerIXUTPFbmKdet6s9Y77nmmDoXSGLZ5aoaAtR?=
- =?us-ascii?Q?g5zoqjJqSCChvCRiwgnnb36tGoRIpuxST8d5OdAib+rlk5xl2MnsGUU7KaXY?=
- =?us-ascii?Q?eT1J6Q23se4yeyZUlQ81STb5DxbDHnA1yq4OFWURNAwqrqctUlChVwwonsYS?=
- =?us-ascii?Q?Mj2OFb+brleEu3B0Kr6CUmSYGQno7gH0vgUAVFVuqRCQJXIA8sVtPqrsMeBT?=
- =?us-ascii?Q?p0J87/uCvvopq/rnqBV9JzGn3diqjQUDmKOQBnYtxvq8xvNXoRZSuwH38mgh?=
- =?us-ascii?Q?MpNNI+QpUR2he58kVwcgUgpwoL3GJbPtonY8LG3E1NOkyQ/oLxfbxJilrIDi?=
- =?us-ascii?Q?ek+NpoRy31cMui4Z+/OcioJxXZWj5WnA6IcCXAHspBhxGIbb0lkEw4wylNle?=
- =?us-ascii?Q?f3bZD2FGCbnLkV0GrgqI8tmdJJCSz4OAy0fjIGn8/aQeCi2AiOzYKPY3kPAe?=
- =?us-ascii?Q?X41NYmmrnqxX9Ean9DNIAcGSN6BOa5xxDHjlka/R2rwrsOJryE4ZL2c+xq3c?=
- =?us-ascii?Q?ARWFFSw85E6Ykyu5hT8UFaI3qQIIT+vZRQBl25KGLJPJlvyApW2KH3C8GIcb?=
- =?us-ascii?Q?rRLA8QLPIsJxhFPr+xlLBrOFCphC7LCMNxIx+Lg4rUqTJ02Jh0wgLEjpwvlv?=
- =?us-ascii?Q?OPb9JqbAnRomn9Kp3MwtiwGVqlnJBpM+/UvI5EDUZvE/xB6+dgc1oI1aq7IJ?=
- =?us-ascii?Q?lWHep0sktdRI0U3GDyqCOtfsF2epgBg3jraRkLl/o1dWU9xtL+XCsWlbTtDb?=
- =?us-ascii?Q?WbWbCc16vYO9r8G63bQFdSkI2CI1QKKu9rI5UbBuQFisnKlwpCRILDlP4i/R?=
- =?us-ascii?Q?rjRaAFTI5WJkoR1EduPtFFn9sHLA/LNgRdycINikzaJrE7Ea2e6LIJwctYr8?=
- =?us-ascii?Q?K9fHA0NvuI5Def81MrEto0k+XbfAnh2zDBU7WajOvM/C2TMCS3QsPhRM4EvR?=
- =?us-ascii?Q?VXz2cuTVBB3a+G8hm/2IlDSfSNmUvtg8UKEinYP9g1pF6j5AA6KhBFkaN3CW?=
- =?us-ascii?Q?nMMMlWO99TIL7wJJBUJ7Ofz0sfTlusIj7o2ZsDdT?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1885260-464a-4ce1-3c49-08dadf917ccf
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2022 18:15:18.5429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Br9ExwCEQznlhZnkB6JR5netEqzp0YNZN8EXP5kZNzDBUyNXajRU/cbngPuYwomyZPL1z+VGDgheWE18RdirCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7715
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 09:01:13AM -0800, Dan Williams wrote:
-> Jonathan Cameron wrote:
-> > On Sun, 11 Dec 2022 23:06:18 -0800
-> > ira.weiny@intel.com wrote:
-> > 
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > This code has been tested with a newer qemu which allows for more events to be
-> > > returned at a time as well an additional QMP event and interrupt injection.
-> > > Those patches will follow once they have been cleaned up.
-> > > 
-> > > The series is now in 3 parts:
-> > > 
-> > > 	1) Base functionality including interrupts
-> > > 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
-> > > 	3) cxl-test infrastructure for basic tests
-> > > 
-> > > Changes from V3
-> > > 	Feedback from Dan
-> > > 	Spit out ACPI changes for Bjorn
-> > > 
-> > > - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/
-> > 
-> > Because I'm in a grumpy mood (as my colleagues will attest!)...
-> > This is dependent on the patch that moves the trace definitions and
-> > that's not upstream yet except in cxl/preview which is optimistic
-> > place to use for a base commit.  The id isn't the one below either which
-> > isn't in either mailine or the current CXL trees.
-> 
-> I do not want to commit to a new baseline until after -rc1, so yes this
-> is in a messy period.
-> 
-> > Not that I actually checked the cover letter until it failed to apply
-> > (and hence already knew what was missing) but still, please call out
-> > dependencies unless they are in the branches Dan has queued up to push.
-> > 
-> > I just want to play with Dave's fix for the RAS errors so having to jump
-> > through these other sets.
-> 
-> Yes, that is annoying, apologies.
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > > 
-> > > 
-> > > Davidlohr Bueso (1):
-> > >   cxl/mem: Wire up event interrupts
-> > > 
-> > > Ira Weiny (8):
-> > >   PCI/CXL: Export native CXL error reporting control
-> > >   cxl/mem: Read, trace, and clear events on driver load
-> > >   cxl/mem: Trace General Media Event Record
-> > >   cxl/mem: Trace DRAM Event Record
-> > >   cxl/mem: Trace Memory Module Event Record
-> > >   cxl/test: Add generic mock events
-> > >   cxl/test: Add specific events
-> > >   cxl/test: Simulate event log overflow
-> > > 
-> > >  drivers/acpi/pci_root.c       |   3 +
-> > >  drivers/cxl/core/mbox.c       | 186 +++++++++++++
-> > >  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxl.h             |  16 ++
-> > >  drivers/cxl/cxlmem.h          | 171 ++++++++++++
-> > >  drivers/cxl/cxlpci.h          |   6 +
-> > >  drivers/cxl/pci.c             | 236 +++++++++++++++++
-> > >  drivers/pci/probe.c           |   1 +
-> > >  include/linux/pci.h           |   1 +
-> > >  tools/testing/cxl/test/Kbuild |   2 +-
-> > >  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
-> > >  11 files changed, 1452 insertions(+), 1 deletion(-)
-> > > 
-> > > 
-> > > base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e
-> > 
-> 
-> I think going forward these base-commits need to be something that are
-> reachable on cxl.git.
+On Sun, 11 Dec 2022 23:06:21 -0800
+ira.weiny@intel.com wrote:
 
-Agreed.  I thought this was in preview.  But even preview is not stable and I
-should have waited and asked to see this land in next first.
-
-Ira
-
-> For now I have pushed out a baseline for both Dave
-> and Ira's patches to cxl/preview which will rebase after -rc1 comes out.
+> From: Davidlohr Bueso <dave@stgolabs.net>
 > 
-> Just the small matter of needing some acks/reviews on those lead in
-> patches so I can move them to through cxl/pending to cxl/next:
+> Currently the only CXL features targeted for irq support require their
+> message numbers to be within the first 16 entries.  The device may
+> however support less than 16 entries depending on the support it
+> provides.
 > 
-> http://lore.kernel.org/r/167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com
-> http://lore.kernel.org/r/20221212070627.1372402-2-ira.weiny@intel.com
+> Attempt to allocate these 16 irq vectors.  If the device supports less
+> then the PCI infrastructure will allocate that number.  Upon successful
+> allocation, users can plug in their respective isr at any point
+> thereafter.
+> 
+> CXL device events are signaled via interrupts.  Each event log may have
+> a different interrupt message number.  These message numbers are
+> reported in the Get Event Interrupt Policy mailbox command.
+> 
+> Add interrupt support for event logs.  Interrupts are allocated as
+> shared interrupts.  Therefore, all or some event logs can share the same
+> message number.
+> 
+> In addition all logs are queried on any interrupt in order of the most
+> to least severe based on the status register.
+> 
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+Sometimes it feels like we go around in circles as I'm sure we've
+fixed this at least 3 times now in different sets that got dropped
+(was definitely in the DOE interrupt support set and was controversial ;)
+
+Nothing in this patch set calls pci_set_master() so no interrupts
+will even be delivered.  I don't think there are any sets in flight
+that would fix that.
+
+Jonathan
+
+
+> 
+> ---
+> Changes from V3:
+> 	Adjust based on changes in patch 1
+> 	Consolidate event setup into cxl_event_config()
+> 	Consistently use cxl_event_* for function names
+> 	Remove cxl_event_int_is_msi()
+> 	Ensure DCD log is ignored in status
+> 	Simplify event status loop logic
+> 	Dan
+> 		Fail driver load if the irq's are not allocated
+> 		move cxl_event_config_msgnums() to pci.c
+> 		s/CXL_PCI_REQUIRED_VECTORS/CXL_PCI_DEFAULT_MAX_VECTORS
+> 		s/devm_kmalloc/devm_kzalloc
+> 		Fix up pci_alloc_irq_vectors() comment
+> 		Pass pdev to cxl_alloc_irq_vectors()
+> 		Check FW irq policy prior to configuration
+> 	Jonathan
+> 		Use FIELD_GET instead of manual masking
+> ---
+>  drivers/cxl/cxl.h    |   4 +
+>  drivers/cxl/cxlmem.h |  19 ++++
+>  drivers/cxl/cxlpci.h |   6 ++
+>  drivers/cxl/pci.c    | 208 +++++++++++++++++++++++++++++++++++++++++--
+>  4 files changed, 231 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 5974d1082210..b3964149c77b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -168,6 +168,10 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  				 CXLDEV_EVENT_STATUS_FAIL |	\
+>  				 CXLDEV_EVENT_STATUS_FATAL)
+>  
+> +/* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
+> +#define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
+> +#define CXLDEV_EVENT_INT_MSGNUM_MASK	GENMASK(7, 4)
+> +
+>  /* CXL 2.0 8.2.8.4 Mailbox Registers */
+>  #define CXLDEV_MBOX_CAPS_OFFSET 0x00
+>  #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index dd9aa3dd738e..bd8bfbe61ec8 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -194,6 +194,23 @@ struct cxl_endpoint_dvsec_info {
+>  	struct range dvsec_range[2];
+>  };
+>  
+> +/**
+> + * Event Interrupt Policy
+> + *
+> + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> + */
+> +enum cxl_event_int_mode {
+> +	CXL_INT_NONE		= 0x00,
+> +	CXL_INT_MSI_MSIX	= 0x01,
+> +	CXL_INT_FW		= 0x02
+> +};
+> +struct cxl_event_interrupt_policy {
+> +	u8 info_settings;
+> +	u8 warn_settings;
+> +	u8 failure_settings;
+> +	u8 fatal_settings;
+> +} __packed;
+> +
+>  /**
+>   * struct cxl_event_state - Event log driver state
+>   *
+> @@ -288,6 +305,8 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+>  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+> +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+> +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+>  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 77dbdb980b12..a8ea04f536ab 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -53,6 +53,12 @@
+>  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
+>  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+>  
+> +/*
+> + * NOTE: Currently all the functions which are enabled for CXL require their
+> + * vectors to be in the first 16.  Use this as the default max.
+> + */
+> +#define CXL_PCI_DEFAULT_MAX_VECTORS 16
+> +
+>  /* Register Block Identifier (RBI) */
+>  enum cxl_regloc_type {
+>  	CXL_REGLOC_RBI_EMPTY = 0,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index a2d8382bc593..d42d87faddb8 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -445,6 +445,201 @@ static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
+>  	return 0;
+>  }
+>  
+> +static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
+> +{
+> +	int nvecs;
+> +
+> +	/*
+> +	 * CXL requires MSI/MSIX support.
+> +	 *
+> +	 * Additionally pci_alloc_irq_vectors() handles calling
+> +	 * pci_free_irq_vectors() automatically despite not being called
+> +	 * pcim_*.  See pci_setup_msi_context().
+> +	 */
+> +	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
+> +				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
+> +	if (nvecs < 1) {
+> +		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
+> +		return -ENXIO;
+> +	}
+> +	return 0;
+> +}
+> +
+> +struct cxl_dev_id {
+> +	struct cxl_dev_state *cxlds;
+> +};
+> +
+> +static irqreturn_t cxl_event_thread(int irq, void *id)
+> +{
+> +	struct cxl_dev_id *dev_id = id;
+> +	struct cxl_dev_state *cxlds = dev_id->cxlds;
+> +	u32 status;
+> +
+> +	do {
+> +		/*
+> +		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
+> +		 * ignore the reserved upper 32 bits
+> +		 */
+> +		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
+> +		/* Ignore logs unknown to the driver */
+> +		status &= CXLDEV_EVENT_STATUS_ALL;
+> +		if (!status)
+> +			break;
+> +		cxl_mem_get_event_records(cxlds, status);
+> +		cond_resched();
+> +	} while (status);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct cxl_dev_id *dev_id;
+> +	int irq;
+> +
+> +	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
+> +		return -ENXIO;
+> +
+> +	/* dev_id must be globally unique and must contain the cxlds */
+> +	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
+> +	if (!dev_id)
+> +		return -ENOMEM;
+> +	dev_id->cxlds = cxlds;
+> +
+> +	irq =  pci_irq_vector(pdev,
+> +			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
+> +					 IRQF_SHARED, NULL, dev_id);
+> +}
+> +
+> +static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
+> +				    struct cxl_event_interrupt_policy *policy)
+> +{
+> +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
+> +		.payload_out = policy,
+> +		.size_out = sizeof(*policy),
+> +	};
+> +	int rc;
+> +
+> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +	if (rc < 0)
+> +		dev_err(cxlds->dev, "Failed to get event interrupt policy : %d",
+> +			rc);
+> +
+> +	return rc;
+> +}
+> +
+> +static int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
+> +				    struct cxl_event_interrupt_policy *policy)
+> +{
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	int rc;
+> +
+> +	policy->info_settings = CXL_INT_MSI_MSIX;
+> +	policy->warn_settings = CXL_INT_MSI_MSIX;
+> +	policy->failure_settings = CXL_INT_MSI_MSIX;
+> +	policy->fatal_settings = CXL_INT_MSI_MSIX;
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
+> +		.payload_in = policy,
+> +		.size_in = sizeof(*policy),
+> +	};
+> +
+> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +	if (rc < 0) {
+> +		dev_err(cxlds->dev, "Failed to set event interrupt policy : %d",
+> +			rc);
+> +		return rc;
+> +	}
+> +
+> +	/* Retrieve final interrupt settings */
+> +	return cxl_event_get_int_policy(cxlds, policy);
+> +}
+> +
+> +static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
+> +{
+> +	struct cxl_event_interrupt_policy policy;
+> +	int rc;
+> +
+> +	rc = cxl_event_config_msgnums(cxlds, &policy);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_event_req_irq(cxlds, policy.info_settings);
+> +	if (rc) {
+> +		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
+> +	if (rc) {
+> +		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
+> +	if (rc) {
+> +		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
+> +	if (rc) {
+> +		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
+> +		return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool cxl_event_int_is_fw(u8 setting)
+> +{
+> +	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
+> +
+> +	return mode == CXL_INT_FW;
+> +}
+> +
+> +static int cxl_event_config(struct pci_host_bridge *host_bridge,
+> +			    struct cxl_dev_state *cxlds)
+> +{
+> +	struct cxl_event_interrupt_policy policy;
+> +	int rc;
+> +
+> +	/*
+> +	 * When BIOS maintains CXL error reporting control, it will process
+> +	 * event records.  Only one agent can do so.
+> +	 */
+> +	if (!host_bridge->native_cxl_error)
+> +		return 0;
+> +
+> +	rc = cxl_event_get_int_policy(cxlds, &policy);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (cxl_event_int_is_fw(policy.info_settings) ||
+> +	    cxl_event_int_is_fw(policy.warn_settings) ||
+> +	    cxl_event_int_is_fw(policy.failure_settings) ||
+> +	    cxl_event_int_is_fw(policy.fatal_settings)) {
+> +		dev_err(cxlds->dev, "FW still in control of Event Logs despite _OSC settings\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	rc = cxl_event_irqsetup(cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+> +	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> @@ -519,6 +714,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_alloc_irq_vectors(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+>  	cxlmd = devm_cxl_add_memdev(cxlds);
+>  	if (IS_ERR(cxlmd))
+>  		return PTR_ERR(cxlmd);
+> @@ -527,12 +726,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> -	/*
+> -	 * When BIOS maintains CXL error reporting control, it will process
+> -	 * event records.  Only one agent can do so.
+> -	 */
+> -	if (host_bridge->native_cxl_error)
+> -		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
+> +	rc = cxl_event_config(host_bridge, cxlds);
+> +	if (rc)
+> +		return rc;
+>  
+>  	if (cxlds->regs.ras) {
+>  		pci_enable_pcie_error_reporting(pdev);
+
