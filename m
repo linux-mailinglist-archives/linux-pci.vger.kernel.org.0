@@ -2,429 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5F7764F0D9
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:21:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BF0064F0E8
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:25:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbiLPSVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 13:21:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
+        id S230396AbiLPSZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 13:25:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231561AbiLPSVT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:21:19 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEB337FB1;
-        Fri, 16 Dec 2022 10:21:17 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYcly3ZX1z67H19;
-        Sat, 17 Dec 2022 02:18:06 +0800 (CST)
-Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
- 2022 18:21:13 +0000
-Date:   Fri, 16 Dec 2022 18:21:10 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
-Message-ID: <20221216182110.00003f62@Huawei.com>
-In-Reply-To: <20221212070627.1372402-4-ira.weiny@intel.com>
-References: <20221212070627.1372402-1-ira.weiny@intel.com>
-        <20221212070627.1372402-4-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230089AbiLPSZd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:25:33 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430A553EF8;
+        Fri, 16 Dec 2022 10:25:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E20C6B81DD8;
+        Fri, 16 Dec 2022 18:25:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF4EC433D2;
+        Fri, 16 Dec 2022 18:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671215126;
+        bh=4XtEoEvMYyg+OLEZfHG9djBuFTM7o2ZQCFES+gxEroE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aD2KCvdg3kKv09BaCnVXMz09pfqHt+WN5mHE937fM/UB7lIsiumYRFq2gH3p2ubL0
+         b+v9L0fuJZyXwbcykzfXKi1zWwno00rdfpGtd8WLU+TTNfE3LdHP9FredI46xwgi03
+         kx1euGydfduw0D5ttm419X9ds07l5WaKr4vD5OaRGW/+5PeSIVWexnE0Zu7PjcOMR6
+         88sF0++26Ul5MhBADAKPp/gstCMHmfrirVYMMelP8ecI4/BiYSBW60rE6wV9L1WQrs
+         YayESk9QhiMXchYskO9jbZ4GHhk2HKLfMpH+CI3tBm2b52fBYX6psvP4Ko6ej2N9x8
+         3+pL0cOPNLbWg==
+Received: by pali.im (Postfix)
+        id 22897711; Fri, 16 Dec 2022 19:25:24 +0100 (CET)
+Date:   Fri, 16 Dec 2022 19:25:24 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
+ devm_gpiod_get_optional()
+Message-ID: <20221216182524.s6a4uihgavji7bti@pali>
+References: <Y3KMEZFv6dpxA+Gv@google.com>
+ <20221207143351.GA1439513@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.152.125]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221207143351.GA1439513@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 11 Dec 2022 23:06:21 -0800
-ira.weiny@intel.com wrote:
+On Wednesday 07 December 2022 08:33:51 Bjorn Helgaas wrote:
+> On Mon, Nov 14, 2022 at 10:42:25AM -0800, Dmitry Torokhov wrote:
+> > Switch the driver to the generic version of gpiod API (and away from
+> > OF-specific variant), so that we can stop exporting
+> > devm_gpiod_get_from_of_node().
+> > 
+> > Acked-by: Pali Rohár <pali@kernel.org>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> This is unrelated to other pending aardvark changes and will help
+> unblock the API removal, so I applied this to pci/ctrl/aardvark for
+> v6.2, thanks!
 
-> From: Davidlohr Bueso <dave@stgolabs.net>
-> 
-> Currently the only CXL features targeted for irq support require their
-> message numbers to be within the first 16 entries.  The device may
-> however support less than 16 entries depending on the support it
-> provides.
-> 
-> Attempt to allocate these 16 irq vectors.  If the device supports less
-> then the PCI infrastructure will allocate that number.  Upon successful
-> allocation, users can plug in their respective isr at any point
-> thereafter.
-> 
-> CXL device events are signaled via interrupts.  Each event log may have
-> a different interrupt message number.  These message numbers are
-> reported in the Get Event Interrupt Policy mailbox command.
-> 
-> Add interrupt support for event logs.  Interrupts are allocated as
-> shared interrupts.  Therefore, all or some event logs can share the same
-> message number.
-> 
-> In addition all logs are queried on any interrupt in order of the most
-> to least severe based on the status register.
-> 
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+I'm disappointed that such unimportant change is prioritized and taken
+before any other important changes which are fixing real issue and
+waiting for applying about half of year.
 
-Sometimes it feels like we go around in circles as I'm sure we've
-fixed this at least 3 times now in different sets that got dropped
-(was definitely in the DOE interrupt support set and was controversial ;)
-
-Nothing in this patch set calls pci_set_master() so no interrupts
-will even be delivered.  I don't think there are any sets in flight
-that would fix that.
-
-Jonathan
-
-
-> 
-> ---
-> Changes from V3:
-> 	Adjust based on changes in patch 1
-> 	Consolidate event setup into cxl_event_config()
-> 	Consistently use cxl_event_* for function names
-> 	Remove cxl_event_int_is_msi()
-> 	Ensure DCD log is ignored in status
-> 	Simplify event status loop logic
-> 	Dan
-> 		Fail driver load if the irq's are not allocated
-> 		move cxl_event_config_msgnums() to pci.c
-> 		s/CXL_PCI_REQUIRED_VECTORS/CXL_PCI_DEFAULT_MAX_VECTORS
-> 		s/devm_kmalloc/devm_kzalloc
-> 		Fix up pci_alloc_irq_vectors() comment
-> 		Pass pdev to cxl_alloc_irq_vectors()
-> 		Check FW irq policy prior to configuration
-> 	Jonathan
-> 		Use FIELD_GET instead of manual masking
-> ---
->  drivers/cxl/cxl.h    |   4 +
->  drivers/cxl/cxlmem.h |  19 ++++
->  drivers/cxl/cxlpci.h |   6 ++
->  drivers/cxl/pci.c    | 208 +++++++++++++++++++++++++++++++++++++++++--
->  4 files changed, 231 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 5974d1082210..b3964149c77b 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -168,6 +168,10 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  				 CXLDEV_EVENT_STATUS_FAIL |	\
->  				 CXLDEV_EVENT_STATUS_FATAL)
->  
-> +/* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
-> +#define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
-> +#define CXLDEV_EVENT_INT_MSGNUM_MASK	GENMASK(7, 4)
-> +
->  /* CXL 2.0 8.2.8.4 Mailbox Registers */
->  #define CXLDEV_MBOX_CAPS_OFFSET 0x00
->  #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index dd9aa3dd738e..bd8bfbe61ec8 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -194,6 +194,23 @@ struct cxl_endpoint_dvsec_info {
->  	struct range dvsec_range[2];
->  };
->  
-> +/**
-> + * Event Interrupt Policy
-> + *
-> + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
-> + */
-> +enum cxl_event_int_mode {
-> +	CXL_INT_NONE		= 0x00,
-> +	CXL_INT_MSI_MSIX	= 0x01,
-> +	CXL_INT_FW		= 0x02
-> +};
-> +struct cxl_event_interrupt_policy {
-> +	u8 info_settings;
-> +	u8 warn_settings;
-> +	u8 failure_settings;
-> +	u8 fatal_settings;
-> +} __packed;
-> +
->  /**
->   * struct cxl_event_state - Event log driver state
->   *
-> @@ -288,6 +305,8 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
->  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
->  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-> +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
-> +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
->  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
->  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 77dbdb980b12..a8ea04f536ab 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -53,6 +53,12 @@
->  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
->  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
->  
-> +/*
-> + * NOTE: Currently all the functions which are enabled for CXL require their
-> + * vectors to be in the first 16.  Use this as the default max.
-> + */
-> +#define CXL_PCI_DEFAULT_MAX_VECTORS 16
-> +
->  /* Register Block Identifier (RBI) */
->  enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_EMPTY = 0,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index a2d8382bc593..d42d87faddb8 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -445,6 +445,201 @@ static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
->  	return 0;
->  }
->  
-> +static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
-> +{
-> +	int nvecs;
-> +
-> +	/*
-> +	 * CXL requires MSI/MSIX support.
-> +	 *
-> +	 * Additionally pci_alloc_irq_vectors() handles calling
-> +	 * pci_free_irq_vectors() automatically despite not being called
-> +	 * pcim_*.  See pci_setup_msi_context().
-> +	 */
-> +	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
-> +				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +	if (nvecs < 1) {
-> +		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
-> +		return -ENXIO;
-> +	}
-> +	return 0;
-> +}
-> +
-> +struct cxl_dev_id {
-> +	struct cxl_dev_state *cxlds;
-> +};
-> +
-> +static irqreturn_t cxl_event_thread(int irq, void *id)
-> +{
-> +	struct cxl_dev_id *dev_id = id;
-> +	struct cxl_dev_state *cxlds = dev_id->cxlds;
-> +	u32 status;
-> +
-> +	do {
-> +		/*
-> +		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
-> +		 * ignore the reserved upper 32 bits
-> +		 */
-> +		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> +		/* Ignore logs unknown to the driver */
-> +		status &= CXLDEV_EVENT_STATUS_ALL;
-> +		if (!status)
-> +			break;
-> +		cxl_mem_get_event_records(cxlds, status);
-> +		cond_resched();
-> +	} while (status);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
-> +{
-> +	struct device *dev = cxlds->dev;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_dev_id *dev_id;
-> +	int irq;
-> +
-> +	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
-> +		return -ENXIO;
-> +
-> +	/* dev_id must be globally unique and must contain the cxlds */
-> +	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
-> +	if (!dev_id)
-> +		return -ENOMEM;
-> +	dev_id->cxlds = cxlds;
-> +
-> +	irq =  pci_irq_vector(pdev,
-> +			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
-> +					 IRQF_SHARED, NULL, dev_id);
-> +}
-> +
-> +static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
-> +				    struct cxl_event_interrupt_policy *policy)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
-> +		.payload_out = policy,
-> +		.size_out = sizeof(*policy),
-> +	};
-> +	int rc;
-> +
-> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +	if (rc < 0)
-> +		dev_err(cxlds->dev, "Failed to get event interrupt policy : %d",
-> +			rc);
-> +
-> +	return rc;
-> +}
-> +
-> +static int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
-> +				    struct cxl_event_interrupt_policy *policy)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	int rc;
-> +
-> +	policy->info_settings = CXL_INT_MSI_MSIX;
-> +	policy->warn_settings = CXL_INT_MSI_MSIX;
-> +	policy->failure_settings = CXL_INT_MSI_MSIX;
-> +	policy->fatal_settings = CXL_INT_MSI_MSIX;
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
-> +		.payload_in = policy,
-> +		.size_in = sizeof(*policy),
-> +	};
-> +
-> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +	if (rc < 0) {
-> +		dev_err(cxlds->dev, "Failed to set event interrupt policy : %d",
-> +			rc);
-> +		return rc;
-> +	}
-> +
-> +	/* Retrieve final interrupt settings */
-> +	return cxl_event_get_int_policy(cxlds, policy);
-> +}
-> +
-> +static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_event_interrupt_policy policy;
-> +	int rc;
-> +
-> +	rc = cxl_event_config_msgnums(cxlds, &policy);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_event_req_irq(cxlds, policy.info_settings);
-> +	if (rc) {
-> +		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
-> +		return rc;
-> +	}
-> +
-> +	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
-> +	if (rc) {
-> +		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
-> +		return rc;
-> +	}
-> +
-> +	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
-> +	if (rc) {
-> +		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
-> +		return rc;
-> +	}
-> +
-> +	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
-> +	if (rc) {
-> +		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static bool cxl_event_int_is_fw(u8 setting)
-> +{
-> +	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-> +
-> +	return mode == CXL_INT_FW;
-> +}
-> +
-> +static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> +			    struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_event_interrupt_policy policy;
-> +	int rc;
-> +
-> +	/*
-> +	 * When BIOS maintains CXL error reporting control, it will process
-> +	 * event records.  Only one agent can do so.
-> +	 */
-> +	if (!host_bridge->native_cxl_error)
-> +		return 0;
-> +
-> +	rc = cxl_event_get_int_policy(cxlds, &policy);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (cxl_event_int_is_fw(policy.info_settings) ||
-> +	    cxl_event_int_is_fw(policy.warn_settings) ||
-> +	    cxl_event_int_is_fw(policy.failure_settings) ||
-> +	    cxl_event_int_is_fw(policy.fatal_settings)) {
-> +		dev_err(cxlds->dev, "FW still in control of Event Logs despite _OSC settings\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	rc = cxl_event_irqsetup(cxlds);
-> +	if (rc)
-> +		return rc;
-> +
-> +	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-> +
-> +	return 0;
-> +}
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> @@ -519,6 +714,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	rc = cxl_alloc_irq_vectors(pdev);
-> +	if (rc)
-> +		return rc;
-> +
->  	cxlmd = devm_cxl_add_memdev(cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
-> @@ -527,12 +726,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> -	/*
-> -	 * When BIOS maintains CXL error reporting control, it will process
-> -	 * event records.  Only one agent can do so.
-> -	 */
-> -	if (host_bridge->native_cxl_error)
-> -		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-> +	rc = cxl_event_config(host_bridge, cxlds);
-> +	if (rc)
-> +		return rc;
->  
->  	if (cxlds->regs.ras) {
->  		pci_enable_pcie_error_reporting(pdev);
-
+> > ---
+> > 
+> > v2:
+> >  - collected reviewed-by/acked-by tags
+> >  - updated commit description to remove incorrect assumption of why
+> >    devm_gpiod_get_from_of_node() was used in the first place
+> > 
+> > This is the last user of devm_gpiod_get_from_of_node() in the mainline
+> > (next), it would be great to have it in so that we can remove the API in
+> > the next release cycle.
+> > 
+> > Thanks!
+> > 
+> > 
+> >  drivers/pci/controller/pci-aardvark.c | 23 +++++++++++------------
+> >  1 file changed, 11 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index ba36bbc5897d..5ecfac23c9fc 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1859,20 +1859,19 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> >  		return ret;
+> >  	}
+> >  
+> > -	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
+> > -						       "reset-gpios", 0,
+> > -						       GPIOD_OUT_LOW,
+> > -						       "pcie1-reset");
+> > +	pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> >  	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
+> >  	if (ret) {
+> > -		if (ret == -ENOENT) {
+> > -			pcie->reset_gpio = NULL;
+> > -		} else {
+> > -			if (ret != -EPROBE_DEFER)
+> > -				dev_err(dev, "Failed to get reset-gpio: %i\n",
+> > -					ret);
+> > -			return ret;
+> > -		}
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "Failed to get reset-gpio: %i\n",
+> > +				ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
+> > +		return ret;
+> >  	}
+> >  
+> >  	ret = of_pci_get_max_link_speed(dev->of_node);
+> > -- 
+> > 2.38.1.431.g37b22c650d-goog
+> > 
+> > 
+> > -- 
+> > Dmitry
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
