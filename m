@@ -2,91 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB09664E943
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 11:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22DE364EB63
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 13:25:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiLPKSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 05:18:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
+        id S229729AbiLPMZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 07:25:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiLPKSd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 05:18:33 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A06132BAB;
-        Fri, 16 Dec 2022 02:18:32 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id p36so2725684lfa.12;
-        Fri, 16 Dec 2022 02:18:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1igdSOtUouIGen/HpbtAViaw0EJJfv4JYj0+NTM01k=;
-        b=ROLtX1krmQo+dkS/Nr+TmfLJyCAku038Btlhf9OkeTugSsfHEOFv89pxIypz/nOoYz
-         RbiywK2PhC8VsInGr7MvQvPkBkilq5lkRKjErXrOGZe9rt0riNO92LZX8uZEUhftO17k
-         kr50uW7W/uNn68CPKX9PyGDOKruLWbG0J6JMjrYV/d85utpFvHnk1u+LgDk3rywFaAd5
-         oYGEygYdxUfw47/8lAQdLMsVO+stHrZGXsp5mftad1L60VFq/97oGjSizdNuz+oZxTYD
-         2LKOSiEUYv61KniFHHNzlNn6edwLb+t6/iIL0naWYYZIyQCuHNiypc8P1xS+PoTYf52Z
-         WCnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d1igdSOtUouIGen/HpbtAViaw0EJJfv4JYj0+NTM01k=;
-        b=yHf+hbBAuBeKGX85jMZ+mw9YNiJdjjYLZs6MoehvIYA6L84uBnw0r3+ch7p96iMgSu
-         aRrLl6Nqv8unTvIUvKg9FccECSEd0AZofCQq78JXJsvVNvZDIedTRyMTksEywe18iQmo
-         VSZYYb6Wnn4FRN9OjWA2eiha3s2GvGUrxi+9xE3kDU8hTwd2ocBfX/AtpGr6wz0Mqae5
-         ll17CI5wyaJCH3Vr0nsm8B8aCiFQgnv51rEDIfhAkBHxVF7Qi0HDwbun/0tfsiZBqTC0
-         kli3CLXv7S9mmq26dovXf98ln4UpvPqnwYH4HHeO9nZKzgMEbp1esiGY6S/bNOM8c8jb
-         GyRw==
-X-Gm-Message-State: ANoB5pkq2ayTvP4HJ2OS9z8huppzPS8YlcFUc3kRmx5TqkOQZ9vxB69/
-        EXF8+WEIGv4CKk4eiiik3JY=
-X-Google-Smtp-Source: AA0mqf68eI3DrksOg2kRKgLIBZKXzRe3rlqmcZeVcP5jDtA1uj4KcmjjMsD4lu0pO24gs5dkKqwI5g==
-X-Received: by 2002:a05:6512:23a0:b0:4b6:f22c:800e with SMTP id c32-20020a05651223a000b004b6f22c800emr7075968lfv.10.1671185910814;
-        Fri, 16 Dec 2022 02:18:30 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id u2-20020ac24c22000000b004979db5aa5bsm179192lfq.223.2022.12.16.02.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Dec 2022 02:18:30 -0800 (PST)
-Date:   Fri, 16 Dec 2022 13:18:27 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        with ESMTP id S229620AbiLPMZg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 07:25:36 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB2514D19;
+        Fri, 16 Dec 2022 04:25:35 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYSsX4n5Fz6J6J6;
+        Fri, 16 Dec 2022 20:22:24 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 12:25:32 +0000
+Date:   Fri, 16 Dec 2022 12:25:31 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data
- allocation
-Message-ID: <20221216101827.owq7qpakjduf3rit@mobilestation>
-References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
- <20221214235305.31744-24-Sergey.Semin@baikalelectronics.ru>
- <Y5rJJfZeVqliA5Rg@infradead.org>
- <20221215092721.tvz3hpaql3kotgnu@mobilestation>
- <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
- <20221215235218.wsuwy5uckqfxjnb6@mobilestation>
- <Y5wgvdnMWQDxkUd+@infradead.org>
- <20221216093423.4bettdxisserdzsh@mobilestation>
- <Y5w/MkA4N857+AWQ@infradead.org>
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 0/9] CXL: Process event logs
+Message-ID: <20221216122531.00001bef@huawei.com>
+In-Reply-To: <20221212070627.1372402-1-ira.weiny@intel.com>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5w/MkA4N857+AWQ@infradead.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,35 +54,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 01:49:38AM -0800, Christoph Hellwig wrote:
-> On Fri, Dec 16, 2022 at 12:34:23PM +0300, Serge Semin wrote:
-> > What about instead of save/restore pattern I'll just change the
-> > dma_set_mask_and_coherent() method with the dma_set_coherent_mask()
-> > function call? It seems cleaner. Like this:
+On Sun, 11 Dec 2022 23:06:18 -0800
+ira.weiny@intel.com wrote:
+
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> > Thus the platform-specific streaming DMA mask would be preserved.
-> > Since it's PCIe then having the streaming DMA-mask less than 32-bits
-> > wide is very much improbable. Moreover DW PCIe AXI-interface can be
-> > synthesize only with one out of two address bus widths: 32 and 64.
+> This code has been tested with a newer qemu which allows for more events to be
+> returned at a time as well an additional QMP event and interrupt injection.
+> Those patches will follow once they have been cleaned up.
 > 
+> The series is now in 3 parts:
+> 
+> 	1) Base functionality including interrupts
+> 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
+> 	3) cxl-test infrastructure for basic tests
+> 
+> Changes from V3
+> 	Feedback from Dan
+> 	Spit out ACPI changes for Bjorn
+> 
+> - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/
 
-> Where platform-specific means the dwc subdriver? 
+Because I'm in a grumpy mood (as my colleagues will attest!)...
+This is dependent on the patch that moves the trace definitions and
+that's not upstream yet except in cxl/preview which is optimistic
+place to use for a base commit.  The id isn't the one below either which
+isn't in either mailine or the current CXL trees.
 
-Right. I meant the streaming DMA-mask set by the low-level DWC PCIe drivers
-(like pcie-qcom(-ep)?.c, pcie-bt1.c, etc). It's very much important to
-have the real DMA-mask (at least the streaming one) set for the eDMA-capable
-controllers so the DMA-engine clients would work with the best performance.
+Not that I actually checked the cover letter until it failed to apply
+(and hence already knew what was missing) but still, please call out
+dependencies unless they are in the branches Dan has queued up to push.
 
-> Yes, that seems to work. 
+I just want to play with Dave's fix for the RAS errors so having to jump
+through these other sets.
 
-Ok. I'll just use the direct dma_set_coherent_mask() method here then.
+Thanks,
 
-> Alternatively have a flag that says which streaming mask
-> to set.
+Jonathan
 
-I'd prefer to have more flexibility here relying on the low-level
-drivers to set the mask(s) instead of adding the new flag, just in case
-if there is vendor-specific IP-core/platform changes in the address
-bus width.
+> 
+> 
+> Davidlohr Bueso (1):
+>   cxl/mem: Wire up event interrupts
+> 
+> Ira Weiny (8):
+>   PCI/CXL: Export native CXL error reporting control
+>   cxl/mem: Read, trace, and clear events on driver load
+>   cxl/mem: Trace General Media Event Record
+>   cxl/mem: Trace DRAM Event Record
+>   cxl/mem: Trace Memory Module Event Record
+>   cxl/test: Add generic mock events
+>   cxl/test: Add specific events
+>   cxl/test: Simulate event log overflow
+> 
+>  drivers/acpi/pci_root.c       |   3 +
+>  drivers/cxl/core/mbox.c       | 186 +++++++++++++
+>  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h             |  16 ++
+>  drivers/cxl/cxlmem.h          | 171 ++++++++++++
+>  drivers/cxl/cxlpci.h          |   6 +
+>  drivers/cxl/pci.c             | 236 +++++++++++++++++
+>  drivers/pci/probe.c           |   1 +
+>  include/linux/pci.h           |   1 +
+>  tools/testing/cxl/test/Kbuild |   2 +-
+>  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
+>  11 files changed, 1452 insertions(+), 1 deletion(-)
+> 
+> 
+> base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e
 
--Serge(y)
