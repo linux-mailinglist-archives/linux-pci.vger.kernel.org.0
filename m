@@ -2,44 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B92AF64EEE5
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 17:22:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE82C64EEE7
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 17:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231602AbiLPQWE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 11:22:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54762 "EHLO
+        id S231671AbiLPQWI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 11:22:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbiLPQVg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 11:21:36 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF3711150;
-        Fri, 16 Dec 2022 08:21:34 -0800 (PST)
+        with ESMTP id S231759AbiLPQVi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 11:21:38 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBF03F070;
+        Fri, 16 Dec 2022 08:21:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 74200B81D12;
+        by sin.source.kernel.org (Postfix) with ESMTPS id 9A1FACE1D96;
+        Fri, 16 Dec 2022 16:21:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB46C433D2;
         Fri, 16 Dec 2022 16:21:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC311C433D2;
-        Fri, 16 Dec 2022 16:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671207692;
-        bh=PcFvDWvuGm/hNaofCgIJSIFQ8fcKSkyPREIHB70eKYg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TQFRbvjRnIVZy9EUABEqSELdr21+SdA0pbhQrpV83rfmVVZXdmcy0pscNkLBC6DR5
-         WXTEarDX0f5gyiXLkNq1jSg9fcnYREMrJkh5GJbSARGf9zcclRLNuAeKAm6c/Mnj09
-         OQughPVzkT9/wA5nxMClC1Ezp7uMztaud86JAXMTE78u4EbHRG+hPMzFiXndun2MJL
-         vGJd9iMVYVEoaoG7cgLWqhJjPOgPZth9uYzEg8C41QNqM/PYx1t/GzxInatR4WJTmo
-         dk3PH3VZUCx1zt6W2z8F+XrVUyERHTld1+d0MnChdVImwcNFISbMipr8k2xsnSiF75
-         E7u+xDp8MFV/A==
+        s=k20201202; t=1671207693;
+        bh=PzuPc7E2HGZcpKuiGsxipxlDPcMLq+hLcAA6BrGvXh8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KNP6sHNuqvsfLwddUOtgW00IFIbDXFC5VOfkOxvaXCmrT34Ud8SdZORryruHKnqa/
+         CVZouFi3Go0zZIVhkTLo0kO8nUSEvD4ESUY5aSa8RNyOi08jsL1fnpbn51E7DKE7qs
+         ioi5DNMNI6eTJ/RJW2QaY3LjEU5CbouE1UHVXoo3jg3/c5TBTP1/CyoilB4IxNfPYS
+         BOpzE7lJKfrJCqgDd5LkZqBmZvjY7cy3rMCiogfntS1F8b+MdyQrTM6Md3qEq0Rm8I
+         6Oc7H2eLXxHHxeBaDk/7PLV41rMUjGhCgHJDfhvdCaO0zHKgh2z+v/rCgEPhH3pi9C
+         Dl/4Tc4CiXB7A==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 0/2] PCI: switchtec: Trivial cleanups
-Date:   Fri, 16 Dec 2022 10:21:24 -0600
-Message-Id: <20221216162126.207863-1-helgaas@kernel.org>
+Subject: [PATCH v2 1/2] PCI: switchtec: Simplify switchtec_dma_mrpc_isr()
+Date:   Fri, 16 Dec 2022 10:21:25 -0600
+Message-Id: <20221216162126.207863-2-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221216162126.207863-1-helgaas@kernel.org>
+References: <20221216162126.207863-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -53,18 +55,36 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Simplify switchtec_dma_mrpc_isr() slightly and return the right
-copy_to_user() error code from switchtec_dev_read().
+The "ret" variable in switchtec_dma_mrpc_isr() is superfluous.  Remove it
+and just return the value.  No functional change intended.
 
-Bjorn Helgaas (2):
-  PCI: switchtec: Simplify switchtec_dma_mrpc_isr()
-  PCI: switchtec: Return -EFAULT for copy_to_user() errors
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/switch/switchtec.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
- drivers/pci/switch/switchtec.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-Changes between v1 and v2:
-- Return -EFAULT for copy_to_user() errors.
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 75be4fe22509..d7ae84070e29 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1480,15 +1480,13 @@ static irqreturn_t switchtec_event_isr(int irq, void *dev)
+ static irqreturn_t switchtec_dma_mrpc_isr(int irq, void *dev)
+ {
+ 	struct switchtec_dev *stdev = dev;
+-	irqreturn_t ret = IRQ_NONE;
+ 
+ 	iowrite32(SWITCHTEC_EVENT_CLEAR |
+ 		  SWITCHTEC_EVENT_EN_IRQ,
+ 		  &stdev->mmio_part_cfg->mrpc_comp_hdr);
+ 	schedule_work(&stdev->mrpc_work);
+ 
+-	ret = IRQ_HANDLED;
+-	return ret;
++	return IRQ_HANDLED;
+ }
+ 
+ static int switchtec_init_isr(struct switchtec_dev *stdev)
 -- 
 2.25.1
 
