@@ -2,146 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF0064F0E8
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFE0B64F123
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 19:40:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbiLPSZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 13:25:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36156 "EHLO
+        id S231792AbiLPSkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 13:40:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbiLPSZd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:25:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430A553EF8;
-        Fri, 16 Dec 2022 10:25:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E20C6B81DD8;
-        Fri, 16 Dec 2022 18:25:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF4EC433D2;
-        Fri, 16 Dec 2022 18:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671215126;
-        bh=4XtEoEvMYyg+OLEZfHG9djBuFTM7o2ZQCFES+gxEroE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aD2KCvdg3kKv09BaCnVXMz09pfqHt+WN5mHE937fM/UB7lIsiumYRFq2gH3p2ubL0
-         b+v9L0fuJZyXwbcykzfXKi1zWwno00rdfpGtd8WLU+TTNfE3LdHP9FredI46xwgi03
-         kx1euGydfduw0D5ttm419X9ds07l5WaKr4vD5OaRGW/+5PeSIVWexnE0Zu7PjcOMR6
-         88sF0++26Ul5MhBADAKPp/gstCMHmfrirVYMMelP8ecI4/BiYSBW60rE6wV9L1WQrs
-         YayESk9QhiMXchYskO9jbZ4GHhk2HKLfMpH+CI3tBm2b52fBYX6psvP4Ko6ej2N9x8
-         3+pL0cOPNLbWg==
-Received: by pali.im (Postfix)
-        id 22897711; Fri, 16 Dec 2022 19:25:24 +0100 (CET)
-Date:   Fri, 16 Dec 2022 19:25:24 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] PCI: aardvark: switch to using
- devm_gpiod_get_optional()
-Message-ID: <20221216182524.s6a4uihgavji7bti@pali>
-References: <Y3KMEZFv6dpxA+Gv@google.com>
- <20221207143351.GA1439513@bhelgaas>
+        with ESMTP id S231854AbiLPSjf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 13:39:35 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452F82B243;
+        Fri, 16 Dec 2022 10:39:09 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYd7n1LyCz6HJVH;
+        Sat, 17 Dec 2022 02:35:17 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 18:39:06 +0000
+Date:   Fri, 16 Dec 2022 18:39:02 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 0/9] CXL: Process event logs
+Message-ID: <20221216183902.00002bc8@Huawei.com>
+In-Reply-To: <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+        <20221216122531.00001bef@huawei.com>
+        <639ca459102ad_b41e3294c7@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221207143351.GA1439513@bhelgaas>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 07 December 2022 08:33:51 Bjorn Helgaas wrote:
-> On Mon, Nov 14, 2022 at 10:42:25AM -0800, Dmitry Torokhov wrote:
-> > Switch the driver to the generic version of gpiod API (and away from
-> > OF-specific variant), so that we can stop exporting
-> > devm_gpiod_get_from_of_node().
+On Fri, 16 Dec 2022 09:01:13 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Jonathan Cameron wrote:
+> > On Sun, 11 Dec 2022 23:06:18 -0800
+> > ira.weiny@intel.com wrote:
+> >   
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > This code has been tested with a newer qemu which allows for more events to be
+> > > returned at a time as well an additional QMP event and interrupt injection.
+> > > Those patches will follow once they have been cleaned up.
+> > > 
+> > > The series is now in 3 parts:
+> > > 
+> > > 	1) Base functionality including interrupts
+> > > 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
+> > > 	3) cxl-test infrastructure for basic tests
+> > > 
+> > > Changes from V3
+> > > 	Feedback from Dan
+> > > 	Spit out ACPI changes for Bjorn
+> > > 
+> > > - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/  
 > > 
-> > Acked-by: Pali Rohár <pali@kernel.org>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Because I'm in a grumpy mood (as my colleagues will attest!)...
+> > This is dependent on the patch that moves the trace definitions and
+> > that's not upstream yet except in cxl/preview which is optimistic
+> > place to use for a base commit.  The id isn't the one below either which
+> > isn't in either mailine or the current CXL trees.  
 > 
-> This is unrelated to other pending aardvark changes and will help
-> unblock the API removal, so I applied this to pci/ctrl/aardvark for
-> v6.2, thanks!
+> I do not want to commit to a new baseline until after -rc1, so yes this
+> is in a messy period.
 
-I'm disappointed that such unimportant change is prioritized and taken
-before any other important changes which are fixing real issue and
-waiting for applying about half of year.
+Fully understood. I only push trees out as 'testing' for 0-day to hit
+until I can rebase on rc1.
 
-> > ---
+> 
+> > Not that I actually checked the cover letter until it failed to apply
+> > (and hence already knew what was missing) but still, please call out
+> > dependencies unless they are in the branches Dan has queued up to push.
 > > 
-> > v2:
-> >  - collected reviewed-by/acked-by tags
-> >  - updated commit description to remove incorrect assumption of why
-> >    devm_gpiod_get_from_of_node() was used in the first place
+> > I just want to play with Dave's fix for the RAS errors so having to jump
+> > through these other sets.  
+> 
+> Yes, that is annoying, apologies.
+Not really a problem I just felt like grumbling :)
+
+Have a good weekend.
+
+Jonathan
+
+> 
 > > 
-> > This is the last user of devm_gpiod_get_from_of_node() in the mainline
-> > (next), it would be great to have it in so that we can remove the API in
-> > the next release cycle.
+> > Thanks,
 > > 
-> > Thanks!
-> > 
-> > 
-> >  drivers/pci/controller/pci-aardvark.c | 23 +++++++++++------------
-> >  1 file changed, 11 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index ba36bbc5897d..5ecfac23c9fc 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -1859,20 +1859,19 @@ static int advk_pcie_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> >  
-> > -	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
-> > -						       "reset-gpios", 0,
-> > -						       GPIOD_OUT_LOW,
-> > -						       "pcie1-reset");
-> > +	pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> >  	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
-> >  	if (ret) {
-> > -		if (ret == -ENOENT) {
-> > -			pcie->reset_gpio = NULL;
-> > -		} else {
-> > -			if (ret != -EPROBE_DEFER)
-> > -				dev_err(dev, "Failed to get reset-gpio: %i\n",
-> > -					ret);
-> > -			return ret;
-> > -		}
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(dev, "Failed to get reset-gpio: %i\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = gpiod_set_consumer_name(pcie->reset_gpio, "pcie1-reset");
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set reset gpio name: %d\n", ret);
-> > +		return ret;
-> >  	}
-> >  
-> >  	ret = of_pci_get_max_link_speed(dev->of_node);
-> > -- 
-> > 2.38.1.431.g37b22c650d-goog
-> > 
-> > 
-> > -- 
-> > Dmitry
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > Jonathan
+> >   
+> > > 
+> > > 
+> > > Davidlohr Bueso (1):
+> > >   cxl/mem: Wire up event interrupts
+> > > 
+> > > Ira Weiny (8):
+> > >   PCI/CXL: Export native CXL error reporting control
+> > >   cxl/mem: Read, trace, and clear events on driver load
+> > >   cxl/mem: Trace General Media Event Record
+> > >   cxl/mem: Trace DRAM Event Record
+> > >   cxl/mem: Trace Memory Module Event Record
+> > >   cxl/test: Add generic mock events
+> > >   cxl/test: Add specific events
+> > >   cxl/test: Simulate event log overflow
+> > > 
+> > >  drivers/acpi/pci_root.c       |   3 +
+> > >  drivers/cxl/core/mbox.c       | 186 +++++++++++++
+> > >  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/cxl.h             |  16 ++
+> > >  drivers/cxl/cxlmem.h          | 171 ++++++++++++
+> > >  drivers/cxl/cxlpci.h          |   6 +
+> > >  drivers/cxl/pci.c             | 236 +++++++++++++++++
+> > >  drivers/pci/probe.c           |   1 +
+> > >  include/linux/pci.h           |   1 +
+> > >  tools/testing/cxl/test/Kbuild |   2 +-
+> > >  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
+> > >  11 files changed, 1452 insertions(+), 1 deletion(-)
+> > > 
+> > > 
+> > > base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e  
+> >   
+> 
+> I think going forward these base-commits need to be something that are
+> reachable on cxl.git. For now I have pushed out a baseline for both Dave
+> and Ira's patches to cxl/preview which will rebase after -rc1 comes out.
+> 
+> Just the small matter of needing some acks/reviews on those lead in
+> patches so I can move them to through cxl/pending to cxl/next:
+
+
+Don't move too fast with Ira's.  Some issues coming up in testing..
+(admittedly half of them were things where QEMU hadn't kept up with
+what the kernel code now uses).
+
+
+> 
+> http://lore.kernel.org/r/167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com
+> http://lore.kernel.org/r/20221212070627.1372402-2-ira.weiny@intel.com
+
