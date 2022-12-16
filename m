@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE82C64EEE7
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 17:22:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BF3B64EEEA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 17:22:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231671AbiLPQWI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 11:22:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
+        id S231674AbiLPQWF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 11:22:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231759AbiLPQVi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 11:21:38 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBF03F070;
-        Fri, 16 Dec 2022 08:21:37 -0800 (PST)
+        with ESMTP id S231687AbiLPQVh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 11:21:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95752A271;
+        Fri, 16 Dec 2022 08:21:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 9A1FACE1D96;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53E1C61FDD;
+        Fri, 16 Dec 2022 16:21:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849D6C433EF;
         Fri, 16 Dec 2022 16:21:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB46C433D2;
-        Fri, 16 Dec 2022 16:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671207693;
-        bh=PzuPc7E2HGZcpKuiGsxipxlDPcMLq+hLcAA6BrGvXh8=;
+        s=k20201202; t=1671207695;
+        bh=rf/kiQvV904IrlTYmlNmOzv2wh9Ar7q41y6LIAE+Or8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNP6sHNuqvsfLwddUOtgW00IFIbDXFC5VOfkOxvaXCmrT34Ud8SdZORryruHKnqa/
-         CVZouFi3Go0zZIVhkTLo0kO8nUSEvD4ESUY5aSa8RNyOi08jsL1fnpbn51E7DKE7qs
-         ioi5DNMNI6eTJ/RJW2QaY3LjEU5CbouE1UHVXoo3jg3/c5TBTP1/CyoilB4IxNfPYS
-         BOpzE7lJKfrJCqgDd5LkZqBmZvjY7cy3rMCiogfntS1F8b+MdyQrTM6Md3qEq0Rm8I
-         6Oc7H2eLXxHHxeBaDk/7PLV41rMUjGhCgHJDfhvdCaO0zHKgh2z+v/rCgEPhH3pi9C
-         Dl/4Tc4CiXB7A==
+        b=oi2Et4GfdoQdyzLPIZ1SbYq8/8VIHiwgSJ8mxaRLr6tXw93y0Orz1U8kNwvkiyzax
+         jOAwBgAmT3ETkYxFYShh4bNuy1iTF2w4DVjtgOApePWMIPNtXM9RKIJ3VkufRsQDbu
+         QjtjhaheDWP8YcIQsOriWOXmytdi5oXNWuV+cHv3aMGGx6YC2yNE1qcjixaTYc5DEI
+         ih/tZ0yRxyNr7RfPiO7+kT0vnOgb/UQw0VzCC+RVB4q6P2V+M6ROgnLqwfqaMIAaNY
+         zMFEBXK8UOKZZGsmOHfZRASO4yNwtWFJzoRN2Bxh0Jo7k0POhT6WtiPYFMZWCYXVhm
+         ah3wEyI9OZmYQ==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 1/2] PCI: switchtec: Simplify switchtec_dma_mrpc_isr()
-Date:   Fri, 16 Dec 2022 10:21:25 -0600
-Message-Id: <20221216162126.207863-2-helgaas@kernel.org>
+Subject: [PATCH v2 2/2] PCI: switchtec: Return -EFAULT for copy_to_user() errors
+Date:   Fri, 16 Dec 2022 10:21:26 -0600
+Message-Id: <20221216162126.207863-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221216162126.207863-1-helgaas@kernel.org>
 References: <20221216162126.207863-1-helgaas@kernel.org>
@@ -55,36 +55,43 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-The "ret" variable in switchtec_dma_mrpc_isr() is superfluous.  Remove it
-and just return the value.  No functional change intended.
+switchtec_dev_read() didn't handle copy_to_user() errors correctly: it
+assigned "rc = -EFAULT", but actually returned either "size", -ENXIO, or
+-EBADMSG instead.
 
+Update the failure cases to unlock mrpc_mutex and return -EFAULT directly.
+
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/pci/switch/switchtec.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/switch/switchtec.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 75be4fe22509..d7ae84070e29 100644
+index d7ae84070e29..0ac9d4488210 100644
 --- a/drivers/pci/switch/switchtec.c
 +++ b/drivers/pci/switch/switchtec.c
-@@ -1480,15 +1480,13 @@ static irqreturn_t switchtec_event_isr(int irq, void *dev)
- static irqreturn_t switchtec_dma_mrpc_isr(int irq, void *dev)
- {
- 	struct switchtec_dev *stdev = dev;
--	irqreturn_t ret = IRQ_NONE;
+@@ -606,16 +606,16 @@ static ssize_t switchtec_dev_read(struct file *filp, char __user *data,
+ 	rc = copy_to_user(data, &stuser->return_code,
+ 			  sizeof(stuser->return_code));
+ 	if (rc) {
+-		rc = -EFAULT;
+-		goto out;
++		mutex_unlock(&stdev->mrpc_mutex);
++		return -EFAULT;
+ 	}
  
- 	iowrite32(SWITCHTEC_EVENT_CLEAR |
- 		  SWITCHTEC_EVENT_EN_IRQ,
- 		  &stdev->mmio_part_cfg->mrpc_comp_hdr);
- 	schedule_work(&stdev->mrpc_work);
+ 	data += sizeof(stuser->return_code);
+ 	rc = copy_to_user(data, &stuser->data,
+ 			  size - sizeof(stuser->return_code));
+ 	if (rc) {
+-		rc = -EFAULT;
+-		goto out;
++		mutex_unlock(&stdev->mrpc_mutex);
++		return -EFAULT;
+ 	}
  
--	ret = IRQ_HANDLED;
--	return ret;
-+	return IRQ_HANDLED;
- }
- 
- static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 	stuser_set_state(stuser, MRPC_IDLE);
 -- 
 2.25.1
 
