@@ -2,103 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6F2664EC90
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 15:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A8A864ECAB
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Dec 2022 15:10:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbiLPODl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Dec 2022 09:03:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
+        id S230294AbiLPOKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Dec 2022 09:10:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiLPODj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 09:03:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB061A3A9;
-        Fri, 16 Dec 2022 06:03:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E7CC62122;
-        Fri, 16 Dec 2022 14:03:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFAE8C433EF;
-        Fri, 16 Dec 2022 14:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671199417;
-        bh=NgWOLwOJiLMaC1Qbs4VrQAUuhPBGlg0ueOxm6XwNJr4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=px9gvbKMj8/A2/VM6w70X9PUFbcL7Rtukqu7UnQcuTN6SvTPzEqua8Iu99pgqEbrW
-         6avryIIu1sORmrw9toXL0UMaVewQ7vnNWTYp2MDDgNowtuD7jpJ3ZzYVxCsWp82aPg
-         Sw8Wyoik2klQdQs8lVHYfYf/I9mfYVsa635/STWaYhhDDOS8SSPQODyzSIpVNFuas6
-         O4c+jVp0PmVtiWJYT/u1NmEorLIZVCrMtpgqY+c9jrfkFFjYROXlC3YhO68mJamttN
-         6Tdscedm1OXGxKsgOhxGym9Q0W9hMoqmFiHTy7YjD9v5OFuHFwGm4GHwIMz2u1zcTY
-         xIQZf8WiGg6Sg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1p6BJH-00D5TB-Ea;
-        Fri, 16 Dec 2022 14:03:35 +0000
-Date:   Fri, 16 Dec 2022 14:03:34 +0000
-Message-ID: <86tu1vphs9.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        with ESMTP id S230499AbiLPOKT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Dec 2022 09:10:19 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883675C777;
+        Fri, 16 Dec 2022 06:09:53 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYWD46Dxxz67Q1X;
+        Fri, 16 Dec 2022 22:08:36 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 14:09:50 +0000
+Date:   Fri, 16 Dec 2022 14:09:47 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [patch V3 09/33] genirq/msi: Add range checking to msi_insert_desc()
-In-Reply-To: <86v8mbphzw.wl-maz@kernel.org>
-References: <20221124230505.073418677@linutronix.de>
-        <20221124232325.798556374@linutronix.de>
-        <20221213190425.GA3943240@roeck-us.net>
-        <4e0a129855490febb1c57e7e979bcfb579d39054.camel@linux.ibm.com>
-        <87fsdgzpqs.ffs@tglx>
-        <e570e70d-19bc-101b-0481-ff9a3cab3504@linux.ibm.com>
-        <86wn6rptdu.wl-maz@kernel.org>
-        <0acb8c63-7f6c-6df6-cb40-66b265a6e6ce@linux.ibm.com>
-        <86v8mbphzw.wl-maz@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mjrosato@linux.ibm.com, tglx@linutronix.de, schnelle@linux.ibm.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, kevin.tian@intel.com, dan.j.williams@intel.com, logang@deltatee.com, ashok.raj@intel.com, jdmason@kudzu.us, allenbh@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 1/9] PCI/CXL: Export native CXL error reporting
+ control
+Message-ID: <20221216140947.00002f22@Huawei.com>
+In-Reply-To: <20221212070627.1372402-2-ira.weiny@intel.com>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+        <20221212070627.1372402-2-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 16 Dec 2022 13:58:59 +0000,
-Marc Zyngier <maz@kernel.org> wrote:
+On Sun, 11 Dec 2022 23:06:19 -0800
+ira.weiny@intel.com wrote:
+
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> I'll update Thomas' patch. Once Guenter confirms that PPC is OK, I'll
-> send it out.
+> CXL _OSC Error Reporting Control is used by the OS to determine if
+> Firmware has control of various CXL error reporting capabilities
+> including the event logs.
+> 
+> Expose the result of negotiating CXL Error Reporting Control in struct
+> pci_host_bridge for consumption by the CXL drivers.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-acpi@vger.kernel.org
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-And FWIW, the branch is at [1].
+> ---
+> Changes from V3:
+> 	New patch split out
+> ---
+>  drivers/acpi/pci_root.c | 3 +++
+>  drivers/pci/probe.c     | 1 +
+>  include/linux/pci.h     | 1 +
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index b3c202d2a433..84030804a763 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1047,6 +1047,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+>  		host_bridge->native_dpc = 0;
+>  
+> +	if (!(root->osc_ext_control_set & OSC_CXL_ERROR_REPORTING_CONTROL))
+> +		host_bridge->native_cxl_error = 0;
+> +
+>  	/*
+>  	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+>  	 * exists and returns 0, we must preserve any PCI resource
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2f4e88a44e8b..34c9fd6840c4 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -596,6 +596,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>  	bridge->native_ltr = 1;
+>  	bridge->native_dpc = 1;
+>  	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
+> +	bridge->native_cxl_error = 1;
+>  
+>  	device_initialize(&bridge->dev);
+>  }
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 1f81807492ef..08c3ccd2617b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -577,6 +577,7 @@ struct pci_host_bridge {
+>  	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+>  	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+>  	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
+> +	unsigned int	native_cxl_error:1;	/* OS may use CXL RAS/Events */
+>  	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+>  	unsigned int	size_windows:1;		/* Enable root bus sizing */
+>  	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
 
-Thanks,
-
-	M.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/msi-fixes-6.2
-
--- 
-Without deviation from the norm, progress is not possible.
