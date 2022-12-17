@@ -2,51 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7F2A64FB0D
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 17:39:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C8064FB11
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 17:40:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbiLQQi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Dec 2022 11:38:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44330 "EHLO
+        id S230018AbiLQQk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Dec 2022 11:40:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbiLQQi6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 11:38:58 -0500
+        with ESMTP id S229627AbiLQQk2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 11:40:28 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BD610B58;
-        Sat, 17 Dec 2022 08:38:55 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NZBTW08S1z67m28;
-        Sun, 18 Dec 2022 00:37:34 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D88F11C15;
+        Sat, 17 Dec 2022 08:40:27 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NZBSK39Yjz67kFH;
+        Sun, 18 Dec 2022 00:36:33 +0800 (CST)
 Received: from localhost (10.81.207.254) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Sat, 17 Dec
- 2022 16:38:51 +0000
-Date:   Sat, 17 Dec 2022 16:38:50 +0000
+ 2022 16:40:24 +0000
+Date:   Sat, 17 Dec 2022 16:40:23 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 2/9] cxl/mem: Read, trace, and clear events on driver
- load
-Message-ID: <20221217163850.00000bc4@Huawei.com>
-In-Reply-To: <Y5zo+UqOmGCE4ObC@iweiny-desk3>
+Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
+Message-ID: <20221217164023.00007597@Huawei.com>
+In-Reply-To: <Y5zjBD6j4b3dBreR@iweiny-desk3>
 References: <20221212070627.1372402-1-ira.weiny@intel.com>
-        <20221212070627.1372402-3-ira.weiny@intel.com>
-        <20221216153939.00007c41@Huawei.com>
-        <Y5zo+UqOmGCE4ObC@iweiny-desk3>
+        <20221212070627.1372402-4-ira.weiny@intel.com>
+        <20221216142438.00006588@Huawei.com>
+        <20221216184215.000015dd@Huawei.com>
+        <Y5zjBD6j4b3dBreR@iweiny-desk3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.81.207.254]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -58,285 +59,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 16 Dec 2022 13:54:01 -0800
+On Fri, 16 Dec 2022 13:28:36 -0800
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Fri, Dec 16, 2022 at 03:39:39PM +0000, Jonathan Cameron wrote:
-> > On Sun, 11 Dec 2022 23:06:20 -0800
-> > ira.weiny@intel.com wrote:
+> On Fri, Dec 16, 2022 at 06:42:15PM +0000, Jonathan Cameron wrote:
+> > On Fri, 16 Dec 2022 14:24:38 +0000
+> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 > >   
-> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > On Sun, 11 Dec 2022 23:06:21 -0800
+> > > ira.weiny@intel.com wrote:
+> > >   
+> > > > From: Davidlohr Bueso <dave@stgolabs.net>
+> > > > 
+> > > > Currently the only CXL features targeted for irq support require their
+> > > > message numbers to be within the first 16 entries.  The device may
+> > > > however support less than 16 entries depending on the support it
+> > > > provides.
+> > > > 
+> > > > Attempt to allocate these 16 irq vectors.  If the device supports less
+> > > > then the PCI infrastructure will allocate that number.  Upon successful
+> > > > allocation, users can plug in their respective isr at any point
+> > > > thereafter.
+> > > > 
+> > > > CXL device events are signaled via interrupts.  Each event log may have
+> > > > a different interrupt message number.  These message numbers are
+> > > > reported in the Get Event Interrupt Policy mailbox command.
+> > > > 
+> > > > Add interrupt support for event logs.  Interrupts are allocated as
+> > > > shared interrupts.  Therefore, all or some event logs can share the same
+> > > > message number.
+> > > > 
+> > > > In addition all logs are queried on any interrupt in order of the most
+> > > > to least severe based on the status register.
+> > > > 
+> > > > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> > > >     
+> > >   
+> > > > +/**
+> > > > + * Event Interrupt Policy
+> > > > + *
+> > > > + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> > > > + */
+> > > > +enum cxl_event_int_mode {
+> > > > +	CXL_INT_NONE		= 0x00,
+> > > > +	CXL_INT_MSI_MSIX	= 0x01,
+> > > > +	CXL_INT_FW		= 0x02
+> > > > +};
+> > > > +struct cxl_event_interrupt_policy {
+> > > > +	u8 info_settings;
+> > > > +	u8 warn_settings;
+> > > > +	u8 failure_settings;
+> > > > +	u8 fatal_settings;    
 > > > 
-> > > CXL devices have multiple event logs which can be queried for CXL event
-> > > records.  Devices are required to support the storage of at least one
-> > > event record in each event log type.
+> > > This is an issue for your QEMU code which has this set at 5 bytes.
+> > > Guess our handling of record lengths needs updating now we have two different
+> > > spec versions to support and hence these can have multiple lengths.
 > > > 
-> > > Devices track event log overflow by incrementing a counter and tracking
-> > > the time of the first and last overflow event seen.
-> > > 
-> > > Software queries events via the Get Event Record mailbox command; CXL
-> > > rev 3.0 section 8.2.9.2.2 and clears events via CXL rev 3.0 section
-> > > 8.2.9.2.3 Clear Event Records mailbox command.
-> > > 
-> > > If the result of negotiating CXL Error Reporting Control is OS control,
-> > > read and clear all event logs on driver load.
-> > > 
-> > > Ensure a clean slate of events by reading and clearing the events on
-> > > driver load.
-> > > 
-> > > The status register is not used because a device may continue to trigger
-> > > events and the only requirement is to empty the log at least once.  This
-> > > allows for the required transition from empty to non-empty for interrupt
-> > > generation.  Handling of interrupts is in a follow on patch.
-> > > 
-> > > The device can return up to 1MB worth of event records per query.
-> > > Allocate a shared large buffer to handle the max number of records based
-> > > on the mailbox payload size.
-> > > 
-> > > This patch traces a raw event record and leaves specific event record
-> > > type tracing to subsequent patches.  Macros are created to aid in
-> > > tracing the common CXL Event header fields.
-> > > 
-> > > Each record is cleared explicitly.  A clear all bit is specified but is
-> > > only valid when the log overflows.
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > > Btw, do you have an updated version of the QEMU patches you can share?  
 > > 
-> > A few things noticed inline.  I've tightened the QEMU code to reject the
-> > case of the input payload claims to be bigger than the mailbox size
-> > and hacked the size down to 256 bytes so it triggers the problem
-> > highlighted below.  
+> > Note that I'm happy to take your QEMU series forwards, just don't want to duplicate
+> > stuff you have already done!  
 > 
-> I'm not sure what you did here.
+> I do have updates to handle more than 3 records at a time which I was polishing
+> until I saw your review.
 
-Nor am I. I think this might have been a case of chasing the undersized
-length bug in QEMU because it was the CXL 3.0 issue and misunderstanding
-one of the debug prints I got.
-
-Friday silliness. Sorry about that!
-
-However, the over sized payload communicated to the hardware is still
-a potential problem. See below.
+Great. I'll work on other stuff in the meantime and hopefully we can get all the
+error emulation upstream this QEMU cycle.
 
 > 
-> >   
-> > > 
-> > > ---
-> > > Changes from V3:
-> > > 	Dan
-> > > 		Split off _OSC pcie bits
-> > > 			Use existing style for host bridge flag in that
-> > > 			patch
-> > > 		Clean up event processing loop
-> > > 		Use dev_err_ratelimited()
-> > > 		Clean up version change log
-> > > 		Delete 'EVENT LOG OVERFLOW'
-> > > 		Remove cxl_clear_event_logs()
-> > > 		Add comment for native cxl control
-> > > 		Fail driver load on event buf allocation failure
-> > > 		Comment why events are not processed without _OSC flag
-> > > ---
-> > >  drivers/cxl/core/mbox.c  | 136 +++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/core/trace.h | 120 ++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxl.h        |  12 ++++
-> > >  drivers/cxl/cxlmem.h     |  84 ++++++++++++++++++++++++
-> > >  drivers/cxl/pci.c        |  40 ++++++++++++
-> > >  5 files changed, 392 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > index b03fba212799..9fb327370e08 100644
-> > > --- a/drivers/cxl/core/mbox.c
-> > > +++ b/drivers/cxl/core/mbox.c  
-> >   
-> > > +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
-> > > +				  enum cxl_event_log_type log,
-> > > +				  struct cxl_get_event_payload *get_pl)
-> > > +{
-> > > +	struct cxl_mbox_clear_event_payload payload = {
-> > > +		.event_log = log,
-> > > +	};
-> > > +	u16 total = le16_to_cpu(get_pl->record_count);
-> > > +	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
-> > > +	size_t pl_size = sizeof(payload);
-> > > +	struct cxl_mbox_cmd mbox_cmd;
-> > > +	u16 cnt;
-> > > +	int rc;
-> > > +	int i;
-> > > +
-> > > +	/* Payload size may limit the max handles */
-> > > +	if (pl_size > cxlds->payload_size) {
-> > > +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
-
-Definition of that is more complex than it needs to be - see below.
-
-> > > +		pl_size = cxlds->payload_size;  
+> I was getting all geared up to respin the patches but I'm not sure there is an
+> issue now that I look at it.
 > 
-> pl_size is only the max size possible if that size was smaller than the size of
-> the record [sizeof(payload) above].
-
-Sorry. For some reason my eyes skipped over this completely.
-So we are fine for all my comments on overflowing.  On plus side
-will now check if that happens in QEMU and return an error which we
-weren't doing before.
-
-> 
-> > > +	}
-> > > +
-> > > +	mbox_cmd = (struct cxl_mbox_cmd) {
-> > > +		.opcode = CXL_MBOX_OP_CLEAR_EVENT_RECORD,
-> > > +		.payload_in = &payload,
-> > > +		.size_in = pl_size,  
-> > 
-> > This payload size should be whatever we need to store the records,
-> > not the max size possible.  Particularly as that size is currently
-> > bigger than the mailbox might be.  
-> 
-> But the above check and set ensures that does not happen.
-> 
-> > 
-> > It shouldn't fail (I think) simply because a later version of the spec might
-> > add more to this message and things should still work, but definitely not
-> > good practice to tell the hardware this is much longer than it actually is.  
-> 
-> I don't follow.
-> 
-> The full payload is going to be sent even if we are just clearing 1 record
-> which is inefficient but it should never overflow the hardware because it is
-> limited by the check above.
-> 
-> So why would this be a problem?
-I'm struggling to find a clear spec statement on if this allowed, so the following
-is a thought experiment. There is language in definition of the "invalid payload length"
-error code "The input payload length is not valid for the specified command", but it
-doesn't go into what counts as valid.
-
-What you have looks fine because a device can't fail on the basis it's told the
-payload is longer than it expects, because you might be sending a CXL 4.0 spec
-payload that is backwards compatible with CXL 3.0 - hence the fact the sizes
-don't match up with that expected can't be considered an error.
-So far so good... However, we may have a situation not dissimilar to the
-change in record length for the set event interrupt policy payload between CXL 2.0
-and CXL 3.0. The only way the endpoint knows what version of message it got is because the
-record is 4 bytes or 5 bytes.  If we have extra stuff on the end of this record
-in future the end point can assume that it is a new version of the spec and interpret
-what is in that payload space.
-
-Say the future structure looks like
-
-struct cxl_mbox_clear_event_payload_future {
-	u8 event_log;		/* enum cxl_event_log_type */
-	u8 clear_flags;
-	u8 nr_recs;
-	u8 reserved[3];
-	__le16 handle[nr_recs]; 
-	__le16 otherdata[nr_recs];
-}
-
-Endpoint receiving your 'overly long payload' will assume all those otherdata fields
-are 0, not necessarily the same as non present.
-For the set event interrupt policy, if we sent an overlong payload like you've done here
-with assumption of the CXL 2.0 spec we would be turning off the DCD interrupt rather
-that doing nothing (unlikely to be a problem in that particularly case as that one
-doesn't have a FW Interrupt option - but that's more luck than design).
-
-I'm not sure why we'd have extra stuff for this payload, but it 'might' happen'.
-
-> > 
-> 
-> > 
-> >   
-> > > +	};
-> > > +
-> > > +	/*
-> > > +	 * Clear Event Records uses u8 for the handle cnt while Get Event
-> > > +	 * Record can return up to 0xffff records.
-> > > +	 */
-> > > +	i = 0;
-> > > +	for (cnt = 0; cnt < total; cnt++) {
-> > > +		payload.handle[i++] = get_pl->records[cnt].hdr.handle;
-> > > +		dev_dbg(cxlds->dev, "Event log '%d': Clearing %u\n",
-> > > +			log, le16_to_cpu(payload.handle[i]));
-> > > +
-> > > +		if (i == max_handles) {
-> > > +			payload.nr_recs = i;
-> > > +			rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> > > +			if (rc)
-> > > +				return rc;
-> > > +			i = 0;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* Clear what is left if any */
-> > > +	if (i) {
-> > > +		payload.nr_recs = i;
-> > > +		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> > > +		if (rc)
-> > > +			return rc;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}  
-> > 
-> > 
-> > ...
-> >   
-> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > index ab138004f644..dd9aa3dd738e 100644
-> > > --- a/drivers/cxl/cxlmem.h
-> > > +++ b/drivers/cxl/cxlmem.h  
-> > 
-> > ...
-> >   
-> > > +
-> > > +/*
-> > > + * Clear Event Records input payload
-> > > + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
-> > > + */
-> > > +#define CXL_CLEAR_EVENT_MAX_HANDLES (0xff)
-> > > +struct cxl_mbox_clear_event_payload {
-> > > +	u8 event_log;		/* enum cxl_event_log_type */
-> > > +	u8 clear_flags;
-> > > +	u8 nr_recs;
-> > > +	u8 reserved[3];
-> > > +	__le16 handle[CXL_CLEAR_EVENT_MAX_HANDLES];  
-> > 
-> > Doesn't fit in the smallest possible payload buffer.
-> > It's 526 bytes long.  Payload buffer might be 256 bytes in total.
-> > (8.2.8.4.3 Mailbox capabilities)
-> > 
-> > Lazy approach, make this smaller and do more loops when clearing.
-> > If we want to optimize this later can expand it to this size.  
-> 
-> I agree but the code already checks for and adjusts this on the fly based on
-> cxlds->payload_size?
-> 
->  +	/* Payload size may limit the max handles */
->  +	if (pl_size > cxlds->payload_size) {
->  +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
->  +		pl_size = cxlds->payload_size;
->  +	}
-> 
-> Why is this not ok?  [Other than being potentially inefficient.]
-> 
-> Do you have a patch to qemu which causes this?
-
-Two issues crossing I think on my side and me thinking this one was obviously
-the problem when it wasn't.
-
+> I'm still investigating.
 > 
 > Ira
 > 
-> > > +} __packed;
-> > > +#define CXL_CLEAR_EVENT_LIMIT_HANDLES(payload_size)			\
-> > > +	(((payload_size) -						\
-> > > +		(sizeof(struct cxl_mbox_clear_event_payload) -		\
-> > > +		 (sizeof(__le16) * CXL_CLEAR_EVENT_MAX_HANDLES))) /	\
-
-Could use offsetof() to simplify this
-
-> > > +		sizeof(__le16))
-> > > +  
 > > 
-> > ...
+> > Jonathan
+> >   
+> > > I was planning on just doing the AER type RAS stuff for the first pull this cycle
+> > > but given this set means we never reach that code I probably need to do QEMU
+> > > support for this and the stuff to support those all in one go - otherwise
+> > > no one will be able to test it :)  We rather optimistically have the OSC set
+> > > to say the OS can have control of these, but upstream code doesn't emulate
+> > > anything yet. Oops. Should have pretended the hardware was handling them
+> > > until we had this support in place in QEMU.
+> > > 
+> > > Jonathan
+> > >   
+> > > > +} __packed;
+> > > > +
+> > > >  /**
+> > > >   * struct cxl_event_state - Event log driver state
+> > > >   *
+> > > > @@ -288,6 +305,8 @@ enum cxl_opcode {
+> > > >  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+> > > >  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+> > > >  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+> > > > +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+> > > > +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+> > > >  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+> > > >  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+> > > >  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,    
 > >   
 
