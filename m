@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13AC264FA29
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 16:33:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3135E64FA34
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 16:33:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbiLQP3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Dec 2022 10:29:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
+        id S230200AbiLQPcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Dec 2022 10:32:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbiLQP3H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 10:29:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB351705F;
-        Sat, 17 Dec 2022 07:27:57 -0800 (PST)
+        with ESMTP id S230239AbiLQPbQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 10:31:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADC919282;
+        Sat, 17 Dec 2022 07:28:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6DB26B802C3;
-        Sat, 17 Dec 2022 15:27:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DC4C43392;
-        Sat, 17 Dec 2022 15:27:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1886D60C17;
+        Sat, 17 Dec 2022 15:28:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDABC43396;
+        Sat, 17 Dec 2022 15:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671290876;
+        s=k20201202; t=1671290921;
         bh=wgtxMlx7CjihsMRuaBVm90tUKVAegYDMFYtSba8yGNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzC6iBjQuIUK4ZnW6J3rBH57bWp111YPFTIz+WHJ7UOUmSmvZh2JsP9JdG3N9eaWA
-         0gOpM/bVvrj6B5Aq940abyCz3y1Ja7X+SeX5zDfRnD/2DM1diKPxo35SUvVCJxsIPD
-         +S8CUXJFszg9ujw4dq+dcTBwGOWtLiemtDQ3qKWcDZLK/1Q3qDRgZ0SCXzNGp114hp
-         M9L6nz2832GY2Llbj86rgGXBLeHI4CSgdAqe6OIuszAW4lfBDiwVY56/+USK1Ot3zM
-         eiqMrEtCDXFtk7cssF9ABv/FxdQnFASSmYhDGJAEuP/X/M39i3xzR16et6I/VvR195
-         TK0Z14tjPgqug==
+        b=SbZZJk50nBppuIdUY1j4IaiUIDAdmotphFGppfEvTBRSiANIMO/YEGDE20iDxDEvr
+         ysijFiLYlI+wtzzZD9MtLewVCyeOxs1Rab9tQR7QGS53PghO+7wdJ6DlQFpdZuQ0Lf
+         3C/ExFy3q4vvi+T5wtRKCw19IL/Aqcci4w8I7DCvCf54xkE7gmX0tYUrM6rnFfn5sH
+         SHhKXbxsETSC/hpUDmXuHkU99yfUg69Yc5GI8nII+b/WTA4Qypv6pXaQapS791JR2Z
+         Wgjy+iuehu3tkfEn6Kj8ORtOinAC2QsgR7KBfpUzJZdjKDVUHLm9DYQyM2aIoL+GF/
+         8s/oxhHERHSfA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
@@ -38,12 +38,12 @@ Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
         bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 16/22] ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
-Date:   Sat, 17 Dec 2022 10:27:17 -0500
-Message-Id: <20221217152727.98061-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.0 11/16] ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
+Date:   Sat, 17 Dec 2022 10:28:14 -0500
+Message-Id: <20221217152821.98618-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221217152727.98061-1-sashal@kernel.org>
-References: <20221217152727.98061-1-sashal@kernel.org>
+In-Reply-To: <20221217152821.98618-1-sashal@kernel.org>
+References: <20221217152821.98618-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
