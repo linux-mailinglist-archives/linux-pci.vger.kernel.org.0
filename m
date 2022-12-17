@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3135E64FA34
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 16:33:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64DE764FAB4
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Dec 2022 16:45:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbiLQPcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Dec 2022 10:32:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
+        id S230426AbiLQPiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Dec 2022 10:38:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230239AbiLQPbQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 10:31:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADC919282;
-        Sat, 17 Dec 2022 07:28:42 -0800 (PST)
+        with ESMTP id S230511AbiLQPf4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Dec 2022 10:35:56 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2DB1FFAE;
+        Sat, 17 Dec 2022 07:30:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1886D60C17;
-        Sat, 17 Dec 2022 15:28:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDABC43396;
-        Sat, 17 Dec 2022 15:28:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 50917B80315;
+        Sat, 17 Dec 2022 15:30:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E0DC43398;
+        Sat, 17 Dec 2022 15:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671290921;
-        bh=wgtxMlx7CjihsMRuaBVm90tUKVAegYDMFYtSba8yGNE=;
+        s=k20201202; t=1671291003;
+        bh=Sz7l4xKYsp8/UzC1w0mGcroM+1Sam1cNhuZ7a6E95M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbZZJk50nBppuIdUY1j4IaiUIDAdmotphFGppfEvTBRSiANIMO/YEGDE20iDxDEvr
-         ysijFiLYlI+wtzzZD9MtLewVCyeOxs1Rab9tQR7QGS53PghO+7wdJ6DlQFpdZuQ0Lf
-         3C/ExFy3q4vvi+T5wtRKCw19IL/Aqcci4w8I7DCvCf54xkE7gmX0tYUrM6rnFfn5sH
-         SHhKXbxsETSC/hpUDmXuHkU99yfUg69Yc5GI8nII+b/WTA4Qypv6pXaQapS791JR2Z
-         Wgjy+iuehu3tkfEn6Kj8ORtOinAC2QsgR7KBfpUzJZdjKDVUHLm9DYQyM2aIoL+GF/
-         8s/oxhHERHSfA==
+        b=OzBE30nu/aAwTXmrWnmuuKu2+u6qaqlaWbTQ/77/cUzv4h9b55oCnHRl4MOv9epYk
+         qgys4xitfnmAayJU4BPM9ZE6nuSQ1T7fJeFCQHcxDNir7g1F2GPUeZan/eozAJ+xx/
+         rhJYiPQlEPuzDRZpqjLGC5nY2dxX1Mjf27163A23gzAB8jMn5UDbLJ903VRwTSYxc3
+         o/jXWB7RjzF1Bqij5bbXK9liSk+7H33VYwgi7Txy7g0WHBkuXLxhvec9CDiccri+cF
+         QJzpCJu3NZ2c/uLMXz7fAU+yDWef0rX6CAsZDw7RqLMFCAQhu+5+iwM5r6bb5pVZnM
+         brZ1lgJLo48bw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
@@ -38,12 +38,12 @@ Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
         bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 11/16] ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
-Date:   Sat, 17 Dec 2022 10:28:14 -0500
-Message-Id: <20221217152821.98618-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 7/9] ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
+Date:   Sat, 17 Dec 2022 10:29:45 -0500
+Message-Id: <20221217152949.99146-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221217152821.98618-1-sashal@kernel.org>
-References: <20221217152821.98618-1-sashal@kernel.org>
+In-Reply-To: <20221217152949.99146-1-sashal@kernel.org>
+References: <20221217152949.99146-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -85,10 +85,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index 08e15774fb9f..ff30ceca2203 100644
+index dea8a60e18a4..7b843a70f33d 100644
 --- a/drivers/acpi/pci_irq.c
 +++ b/drivers/acpi/pci_irq.c
-@@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+@@ -399,13 +399,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
  	u8 pin;
  	int triggering = ACPI_LEVEL_SENSITIVE;
  	/*
