@@ -2,122 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9115764FEA5
-	for <lists+linux-pci@lfdr.de>; Sun, 18 Dec 2022 12:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E919464FEE2
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Dec 2022 13:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbiLRL0O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Dec 2022 06:26:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48914 "EHLO
+        id S230254AbiLRMau (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 18 Dec 2022 07:30:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbiLRL0O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Dec 2022 06:26:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44AE9559E;
-        Sun, 18 Dec 2022 03:26:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D640860C83;
-        Sun, 18 Dec 2022 11:26:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263FCC433D2;
-        Sun, 18 Dec 2022 11:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671362772;
-        bh=S2W7s2hO1dctHAJf1a1lbMWsT9yzlq7GO6zic55D1js=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EUng88W8gWI7PODPOVYzCxxBEuFSZe9+ius1uJc0nqxig5j05cELMV/5hvf0Yj22U
-         yf2JmSjq1gEl2bFtyFYSpBZCfXP37vsWViEOryCaqZxI2MZfZ74k8qqcMTC09MScl/
-         khAx12xjxaFQrLAvwdDcc8kiV85/4TP1fDHSdo/JDItmPG71+iwqA8zg/Bj+kvcyYw
-         neLqkoicNL8U5nAXJum78bKMGda5Z99H/y/zuzo/XVW3DGj36cGrK3UCpObGjFNbcv
-         cjl8kaMMuB8g5KJlzKoOykiEWjHGwRgB9RNO+OHcCN9rCyRO/09Sgbnr6SI7nUbnn9
-         Z18QGbaA+D5MQ==
-Date:   Sun, 18 Dec 2022 06:26:10 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>, bhelgaas@google.com,
-        rafael@kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.0 11/16] ACPI / PCI: fix LPIC IRQ model default
- PCI IRQ polarity
-Message-ID: <Y5740vP0CfJ2u+0n@sashalap>
-References: <20221217152821.98618-1-sashal@kernel.org>
- <20221217152821.98618-11-sashal@kernel.org>
- <86pmchq4y9.wl-maz@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <86pmchq4y9.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230505AbiLRMas (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Dec 2022 07:30:48 -0500
+X-Greylist: delayed 543 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 18 Dec 2022 04:30:45 PST
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD214F2A
+        for <linux-pci@vger.kernel.org>; Sun, 18 Dec 2022 04:30:45 -0800 (PST)
+Received: by air.basealt.ru (Postfix, from userid 490)
+        id 05F692F2022A; Sun, 18 Dec 2022 12:21:41 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+Received: from localhost (broadband-188-32-10-232.ip.moscow.rt.ru [188.32.10.232])
+        by air.basealt.ru (Postfix) with ESMTPSA id 45D7B2F20227;
+        Sun, 18 Dec 2022 12:21:39 +0000 (UTC)
+Date:   Sun, 18 Dec 2022 15:21:39 +0300
+From:   "Alexey V. Vissarionov" <gremlin@altlinux.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     "Alexey V. Vissarionov" <gremlin@altlinux.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yu.zhao@intel.com>, linux-pci@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: Re: [PATCH] PCI/IOV: "virtfn4294967295\0" requires 17 bytes
+Message-ID: <20221218122139.GA1182@altlinux.org>
+References: <20221218033347.23743-1-gremlin@altlinux.org>
+ <Y57x/iCSkdtU3kov@rocinante>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y57x/iCSkdtU3kov@rocinante>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 06:07:42PM +0000, Marc Zyngier wrote:
->On Sat, 17 Dec 2022 15:28:14 +0000,
->Sasha Levin <sashal@kernel.org> wrote:
->>
->> From: Jianmin Lv <lvjianmin@loongson.cn>
->>
->> [ Upstream commit d0c50cc4b957b2cf6e43cec4998d212b5abe9220 ]
->>
->> On LoongArch based systems, the PCI devices (e.g. SATA controllers and
->> PCI-to-PCI bridge controllers) in Loongson chipsets output high-level
->> interrupt signal to the interrupt controller they are connected (see
->> Loongson 7A1000 Bridge User Manual v2.00, sec 5.3, "For the bridge chip,
->> AC97 DMA interrupts are edge triggered, gpio interrupts can be configured
->> to be level triggered or edge triggered as needed, and the rest of the
->> interrupts are level triggered and active high."), while the IRQs are
->> active low from the perspective of PCI (see Conventional PCI spec r3.0,
->> sec 2.2.6, "Interrupts on PCI are optional and defined as level sensitive,
->> asserted low."), which means that the interrupt output of PCI devices plugged
->> into PCI-to-PCI bridges of Loongson chipset will be also converted to high-level.
->> So high level triggered type is required to be passed to acpi_register_gsi()
->> when creating mappings for PCI devices.
->>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> Link: https://lore.kernel.org/r/20221022075955.11726-2-lvjianmin@loongson.cn
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  drivers/acpi/pci_irq.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
->> index 08e15774fb9f..ff30ceca2203 100644
->> --- a/drivers/acpi/pci_irq.c
->> +++ b/drivers/acpi/pci_irq.c
->> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->>  	u8 pin;
->>  	int triggering = ACPI_LEVEL_SENSITIVE;
->>  	/*
->> -	 * On ARM systems with the GIC interrupt model, level interrupts
->> +	 * On ARM systems with the GIC interrupt model, or LoongArch
->> +	 * systems with the LPIC interrupt model, level interrupts
->>  	 * are always polarity high by specification; PCI legacy
->>  	 * IRQs lines are inverted before reaching the interrupt
->>  	 * controller and must therefore be considered active high
->>  	 * as default.
->>  	 */
->> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
->> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
->> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
->>  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
->>  	char *link = NULL;
->>  	char link_desc[16];
->
->This is pointless on its own too, as it requires plenty of other
->changes, none of which are stable candidates. Please drop this as well
->as the v6.1 backport.
+On 2022-12-18 19:57:02 +0900, Krzysztof Wilczyński wrote:
 
-Ack, will do. Thanks!
+ > Thank you for sending the patch over! However, if possible,
+ > can you send it as plain text without any multi-part MIME
+ > involved?
+
+ACK.
+
+ > If possible, it would be nice to mention that this needed
+ > to make sure that there is enough space to correctly
+ > NULL-terminate the ID string.
+
+ACK.
+
+So, here goes the corrected text:
+
+Although unlikely, the 'id' value may be as big as 4294967295
+(uint32_max) and "virtfn4294967295\0" would require 17 bytes
+instead of 16 to make sure that buffer has enough space to
+properly NULL-terminate the ID string.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: dd7cc44d0 ("PCI: add SR-IOV API for Physical Function driver")
+Signed-off-by: Alexey V. Vissarionov <gremlin@altlinux.org>
+
+
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 9522175..ad54a07 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -14,7 +14,7 @@
+ #include <linux/delay.h>
+ #include "pci.h"
+ 
+-#define VIRTFN_ID_LEN	16
++#define VIRTFN_ID_LEN	17
+ 
+ int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
+ {
+
 
 -- 
-Thanks,
-Sasha
+Alexey V. Vissarionov
+gremlin ПРИ altlinux ТЧК org; +vii-cmiii-ccxxix-lxxix-xlii
+GPG: 0D92F19E1C0DC36E27F61A29CD17E2B43D879005 @ hkp://keys.gnupg.net
