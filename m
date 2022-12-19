@@ -2,60 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F00650891
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Dec 2022 09:35:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BB7650892
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Dec 2022 09:35:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231244AbiLSIfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Dec 2022 03:35:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54666 "EHLO
+        id S231379AbiLSIfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Dec 2022 03:35:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiLSIfW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 03:35:22 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246C895AB
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 00:35:21 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id ay2-20020a05600c1e0200b003d22e3e796dso5835579wmb.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 00:35:21 -0800 (PST)
+        with ESMTP id S229499AbiLSIfY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 03:35:24 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410CE95AB
+        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 00:35:23 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id ay2-20020a05600c1e0200b003d22e3e796dso5835648wmb.0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 00:35:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=solid-run-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJNvWlx4hs2HzBNceRW3/M7eig4DdhugN3XpshYak/4=;
-        b=vxew87ZC1wciAGea9e0EpXjGmJdmIIHDwsGA+WFKNonuRW+0xmvdaN1P9DrIXzIFlc
-         UL1+upmwr7nSo83Ew9G4Bnuif1t+14rh1c//hwkQY7Ss/NstccMlKqJrDrmbCCHodWX/
-         bwvMKywJKVVOMddNVmu6LmCVj7fOxe7R6Q9ZReasI6xScBXGDZWNZFo+ANKa2SQulXAO
-         qzjpjmqWEqT4fyEevB4wVvm6s8tIYWX+a9sqbSMTNULIux9Qgv6nybjpWoOjlkeTffuR
-         3aWjlHlMH0rPJBh6xUWZ12VHSGAHMopH2NfabBzukQBQEmzFgA/Jdjrj3iZK2lW065Zr
-         huVA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eqrrdFR0yGu0+OvA2xJ/WZwnDOsQc12K4sxW6RZEG+U=;
+        b=1VPk/0j1vwFjcWXN+D7MN9A9coTcbbGH05rafVceAXxqmaBwKqo6xBTJjt9tMe5urA
+         S0Luc573uI5EeSg9LaMBNk5uVBTXVKy/ogHmNkMwavwQuH7D3r2R1BlHganekPxjTEQA
+         sbEBnQZoxyx10G9oNRS3NNvAeJzYCAeG+npl+a2d+ZdpoZj3noG0GPii0Ahg+n0c6f8n
+         JqU+SnedH11PVOYhTM3hUAwJ2s9jQgYoWh1+yrOmp4P4e53eP489zO+vjXQee6Z84rUT
+         gGHoPiw5owuL9k5Zzxr6eaADWxgt5rUqFauEmuS9FGCVLuGriEWB/8a2aWy99OwG8fjw
+         G5xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QJNvWlx4hs2HzBNceRW3/M7eig4DdhugN3XpshYak/4=;
-        b=eAhSZJcesDrobyMIZFoQzNl7lZ+oRgaoz6f55ClFPRw19YFjTB4kopZD/UndDubqkF
-         4Flm5lyT/eJux6rrf2EGX3wvqElVtNV7IABl+47pKMmFEet1DbZ0V7LgVXcOWscF2ozB
-         OzoTJ3uq4zQQCvDa950BWlAZ053NkOk/YddiDVRHFzD5LUxMeCRJLsuHCPYhIAEWYl7a
-         l1xKTxNWsv5P6KJw0D/KQ878M8CKJdb4Q9MJui5H3RxomjnXuMNP8mX7PmU6gEFx6zjx
-         ZPGGkPYuA94BpR/jZGXM/AIFOcKZA18a5ZTAK6UwsWGyCnakh6xeoZIBg4r+PVg2zVvn
-         Werg==
-X-Gm-Message-State: AFqh2koacOB1zH0tA0Fktqy/0cTfbWWv6wwvu4tzrjchfG+ZP0LyAJhg
-        Aej5MCwLVS0pOZ18Y3fj5+CCqw==
-X-Google-Smtp-Source: AMrXdXuPMXY4qJBry1TzKs47PEIklDEv++kof+LSyU3ukg70r+xBAV2/+gnOipHwdDp9j059uTPBAA==
-X-Received: by 2002:a05:600c:4f83:b0:3d3:56ce:5673 with SMTP id n3-20020a05600c4f8300b003d356ce5673mr2597815wmq.6.1671438919611;
-        Mon, 19 Dec 2022 00:35:19 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eqrrdFR0yGu0+OvA2xJ/WZwnDOsQc12K4sxW6RZEG+U=;
+        b=xdhlItuvqdnn2cjE8mE+rp7L2dYxWllAtDb489vEAO7wjcpWk2I85tvYsJOZQyVlrn
+         eo4Ug6xlLaNB+a9CHoiXlYakFrd5tVX7yaHMKBOwYWPtsLINReaR49E8JVheQeWGK2S3
+         +bDBQUxKAm/fBFSrQ+ACgWuvntjqbainz+pN/N2TeQz7rZnJyX7B7vrN8uiUytYQl+de
+         ROftmCNsXsFXIwldQT+Iqln7QRUJePi8lRPSIEs6qtpyhl+wZz2YtTLOOTEfhKv3ueSM
+         PpWFB0kmJBweV31XCaZmsJL0sfSaaQMmxeUjtLthvTEJgC/EzhLfGY2gLdpvCCMAi0RA
+         KNTQ==
+X-Gm-Message-State: ANoB5pnDa0oHi9p0OgalRlSo84vHWPp9CFebwQXgUZdahTQfzj7jbNo4
+        x8PPdzwMM6yL7LIaVf+IqgQDaw==
+X-Google-Smtp-Source: AA0mqf7iRpS6BZHAjXZ8g5DKrHj0jEqXC5AIJHXWWXnNyoD5pvIxVXDZ74K0NZgxcMersI3Dy67KKw==
+X-Received: by 2002:a05:600c:538f:b0:3d0:2485:c046 with SMTP id hg15-20020a05600c538f00b003d02485c046mr31592306wmb.27.1671438921724;
+        Mon, 19 Dec 2022 00:35:21 -0800 (PST)
 Received: from localhost.localdomain (bzq-84-110-153-254.static-ip.bezeqint.net. [84.110.153.254])
-        by smtp.gmail.com with ESMTPSA id z22-20020a05600c0a1600b003cfd0bd8c0asm11364246wmp.30.2022.12.19.00.35.18
+        by smtp.gmail.com with ESMTPSA id z22-20020a05600c0a1600b003cfd0bd8c0asm11364246wmp.30.2022.12.19.00.35.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 00:35:18 -0800 (PST)
+        Mon, 19 Dec 2022 00:35:21 -0800 (PST)
 From:   Alvaro Karsz <alvaro.karsz@solid-run.com>
 To:     virtualization@lists.linux-foundation.org,
         linux-pci@vger.kernel.org
 Cc:     bhelgaas@google.com, Alvaro Karsz <alvaro.karsz@solid-run.com>
-Subject: [RESEND PATCH 0/3] virtio: vdpa: new SolidNET DPU driver
-Date:   Mon, 19 Dec 2022 10:35:08 +0200
-Message-Id: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
+Subject: [RESEND PATCH 1/3] Add SolidRun vendor id
+Date:   Mon, 19 Dec 2022 10:35:09 +0200
+Message-Id: <20221219083511.73205-2-alvaro.karsz@solid-run.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
+References: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,34 +70,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series adds a vDPA driver for SolidNET DPU.
+The vendor id is used in 2 differrent source files,
+the SNET vdpa driver and pci quirks.
 
-Patch 1 adds SolidRun vendor id to pci_ids.
-Patch 2 adds a pci quirk needed by the DPU.
-Patch 3 has the driver source code.
+Signed-off-by: Alvaro Karsz <alvaro.karsz@solid-run.com>
+---
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch 1 is prerequisite for both patch 2 and patch 3.
-
-Alvaro Karsz (3):
-  Add SolidRun vendor id
-  New PCI quirk for SolidRun SNET DPU.
-  virtio: vdpa: new SolidNET DPU driver.
-
- MAINTAINERS                        |    4 +
- drivers/pci/quirks.c               |    8 +
- drivers/vdpa/Kconfig               |   10 +
- drivers/vdpa/Makefile              |    1 +
- drivers/vdpa/solidrun/Makefile     |    6 +
- drivers/vdpa/solidrun/snet_hwmon.c |  188 +++++
- drivers/vdpa/solidrun/snet_main.c  | 1111 ++++++++++++++++++++++++++++
- drivers/vdpa/solidrun/snet_vdpa.h  |  196 +++++
- include/linux/pci_ids.h            |    2 +
- 9 files changed, 1526 insertions(+)
- create mode 100644 drivers/vdpa/solidrun/Makefile
- create mode 100644 drivers/vdpa/solidrun/snet_hwmon.c
- create mode 100644 drivers/vdpa/solidrun/snet_main.c
- create mode 100644 drivers/vdpa/solidrun/snet_vdpa.h
-
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index b362d90eb9b..33bbe3160b4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3115,4 +3115,6 @@
+ 
+ #define PCI_VENDOR_ID_NCUBE		0x10ff
+ 
++#define PCI_VENDOR_ID_SOLIDRUN		0xd063
++
+ #endif /* _LINUX_PCI_IDS_H */
 -- 
 2.32.0
 
