@@ -2,88 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1074F6524DD
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 17:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D42652810
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 21:49:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbiLTQrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Dec 2022 11:47:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
+        id S233255AbiLTUtL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Dec 2022 15:49:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230058AbiLTQrI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 11:47:08 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6BDB850
-        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 08:46:58 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id e190so4260224pgc.9
-        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 08:46:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S9MYeEEvKypc4mpQnza4+BeXfUFl1039ZqekhzchkzA=;
-        b=gC92C0srqh0bzt3sZl8p90ERaBFv3q+IPEHBDqiAr8Gl6w7ssHuuRnrkIo//rjBc0+
-         NMz5S9Q6XtOZi3FBx0E4TRU7spQ80ylSiU/NxJnUr/h377BcLdzO84mLlTUDTWoU/hU5
-         H5dlKsnn5YiA+baudcN6twCWz2MT+yKYBKya4HsSRisHj0AI9Km4laR1jl1d96uWv4hi
-         +u/Rw/vtvudGmC3fXdcTMh2BVpVP6r6DGm4X+w9i+NmCdlo/MvWp/aC+XJw8m4uKIlR7
-         p5DY7y+Qy2vvXMyM3VzWeYwuraPTqOaX25iKSnMpYOl4l1BQup2SR/jySluyKyi+45pk
-         cLNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S9MYeEEvKypc4mpQnza4+BeXfUFl1039ZqekhzchkzA=;
-        b=4kG8VBTREi58l4tDLora9eQByxvbezcdil9ALNfLpTpvV4Rhy0ooJ596DaWjiyAvM/
-         +IXh3LdUJxHOU3ZSazRTw52DZAUmFKMN6grwAoYw0UW5O31ES3fztbgmWgVeJf8CrcMc
-         7SVRG6yKO/upvVF2eGQgX8AzE41nvJ0Dh4fFC+2CbuqJbX54uNwniabzPVTKW9jokV3x
-         0xzlomAqSV5NEBH6DueZEhScMFM5yH37fjIShHWD/OAAiJdSNRoVNad6d38WsJkmuitf
-         mMVc7KhInLvTxkGQ9Y13c7iTvfmwiHtTZMSaRS5u2qu8cVMUYyfkE5NwTaNhW8INJqkG
-         uEkg==
-X-Gm-Message-State: ANoB5pn5VsP/DVmIDgY7Zuen/pwzSS8QUHJR5Vr47mXYEvule1AA32Y0
-        5Iluv/VuZ5H66H63GqG2XIduwkF8bcmy13A/ret/9sp1KiLGYXso
-X-Google-Smtp-Source: AA0mqf4Ey+s+5l8jI3qYvVeBn8nM7I7QUh+8bTEBMtc1ra/8US8uJ2wgBMg7DP97/O+NPnVsIALqABdGhJE1Hd+5H6I=
-X-Received: by 2002:a63:2226:0:b0:478:54e2:ecb1 with SMTP id
- i38-20020a632226000000b0047854e2ecb1mr39520530pgi.550.1671554817603; Tue, 20
- Dec 2022 08:46:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
- <20221219083511.73205-4-alvaro.karsz@solid-run.com> <Y6HjpvDfIusAz2uS@dev-arch.thelio-3990X>
-In-Reply-To: <Y6HjpvDfIusAz2uS@dev-arch.thelio-3990X>
-From:   Alvaro Karsz <alvaro.karsz@solid-run.com>
-Date:   Tue, 20 Dec 2022 18:46:20 +0200
-Message-ID: <CAJs=3_B7WoERAiXPyvz=6d7O5rcwXMfWZJFsi_ds-OAemvfcgQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v6] virtio: vdpa: new SolidNET DPU driver.
-To:     Nathan Chancellor <nathan@kernel.org>
+        with ESMTP id S229684AbiLTUtK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 15:49:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F2113F4A
+        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 12:49:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3B094B8169C
+        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 20:49:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6483BC433D2;
+        Tue, 20 Dec 2022 20:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671569346;
+        bh=b1QzGcjyJ0SvKkss0XqmKPLN8odBoTy+KeVrQOrrXK4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q2D+9hApS5qFTuwdr5pWtGo0CpBAbnAD5jCn6WMhAftx9E3EqFguuIbA53biGX5YU
+         MVMvALX6NnqVuWz4YoCJJghO9qNZ7ZuMMBjUKfaGlwa9RzOjcl1xXukpZkfw8pat6V
+         d0SbTBn82Egp+5aQ4A4Q0iM6CZHA49TW5PG0Jt1LAUoTPWCtYALqPUckXTpZ8nWCVE
+         2CZv2dSLEZiiAYPpLgtoNjLYbTt7FQpRt/4or4KYxdlDLm0vrseuoOi8Bx0Kdxr36q
+         B4ho16vYMs+IvXE1gDQMczGwTMZAiBZIs1uehTIg0WlQQ4AvGJyp0sVHIVzW+YfWLO
+         RY9IDaFIh/8uQ==
+Date:   Tue, 20 Dec 2022 13:49:04 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Alvaro Karsz <alvaro.karsz@solid-run.com>
 Cc:     virtualization@lists.linux-foundation.org,
         linux-pci@vger.kernel.org, bhelgaas@google.com,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 3/3 v6] virtio: vdpa: new SolidNET DPU driver.
+Message-ID: <Y6IfwHicoMojJrIB@dev-arch.thelio-3990X>
+References: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
+ <20221219083511.73205-4-alvaro.karsz@solid-run.com>
+ <Y6HjpvDfIusAz2uS@dev-arch.thelio-3990X>
+ <CAJs=3_B7WoERAiXPyvz=6d7O5rcwXMfWZJFsi_ds-OAemvfcgQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJs=3_B7WoERAiXPyvz=6d7O5rcwXMfWZJFsi_ds-OAemvfcgQ@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nathan,
+On Tue, Dec 20, 2022 at 06:46:20PM +0200, Alvaro Karsz wrote:
+> Hi Nathan,
+> 
+> > This does not appear to be a false positive but what was the intent
+> > here? Should the local name variables increase their length or should
+> > the buffer length be reduced?
+> 
+> You're right, the local name variables and snprintf argument don't match.
+> Thanks for noticing.
+> I think that we should increase the name variables  to be
+> SNET_NAME_SIZE bytes long.
+> 
+> How should I proceed from here?
+> Should I create a new version for this patch, or should I fix it in a
+> follow up patch?
 
-> This does not appear to be a false positive but what was the intent
-> here? Should the local name variables increase their length or should
-> the buffer length be reduced?
+That is up to Michael at the end of the day (each maintainer handles
+their tree differently) but I would recommend sending a follow up fix,
+as it is easy to fold it in if they want to rebase the tree for it or
+just take it as a fix.
 
-You're right, the local name variables and snprintf argument don't match.
-Thanks for noticing.
-I think that we should increase the name variables  to be
-SNET_NAME_SIZE bytes long.
+Thanks for the quick triage and response!
 
-How should I proceed from here?
-Should I create a new version for this patch, or should I fix it in a
-follow up patch?
-
-Thanks,
-Alvaro
+Cheers,
+Nathan
