@@ -2,140 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F060D651513
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Dec 2022 22:46:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A28076517BA
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 02:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbiLSVqP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Dec 2022 16:46:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57020 "EHLO
+        id S232859AbiLTBVY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Dec 2022 20:21:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232647AbiLSVqM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 16:46:12 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E184CA184
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 13:46:06 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id bf43so15738329lfb.6
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 13:46:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XB6cREulQAxqSm/nFa6k4wjD6bFB02amrV76mX+yCIs=;
-        b=XxoN9bRVvG18VXJeePFuxyk1L13yeJxtTlVRlH+RXOWKsZxCpJ2AAHvgl8VQ+UnsoC
-         1qhE0iFe0yCXrI++jKmPTPNLuJ+tjfnW0iIi4+rjTMjgEOEtm4IXF4zB7wSoFxAQd4Wc
-         Hp/IlT0TrSVrfecF4KnZZrzzQYI37AUQf9wQbS2Tr6CeIM9XxXt1agMGXbnY0i7YpK9T
-         grYk0E+YNwT9L043+5ME2Oo8Q6rJWz4tpFZ8I6cRp4PF0dX8alA5WqX/0fqqw8RqcuVP
-         uR0eDUunFyal/u53Y2zju3Swu2EDFsi69XnH/zhUK5zqZk9TvRgVWpZK1cRcu/onlyNN
-         GlOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XB6cREulQAxqSm/nFa6k4wjD6bFB02amrV76mX+yCIs=;
-        b=u5VNcVUjvSt27m3CgToSzFXjGBVEFABrE7eaGB8UeeyYTXNq+Olm3JR21vHT5vjWtl
-         K0WBV5jGHb4Qdw881DVxlmLLhOKyyDQLCYq0hjwFHpZphByyTFRdbbywjYEP/XUz3yAN
-         w90+Lc310u8oWbMmnBOyNYGWMIpYyGf38k0VBYu5y4y3yFrEErk5EsG9PNIwGEKQafgV
-         2jE7kk+YWWLJ9cLFbtW/FhlMPWfISrglyPfjLSod/zhErseyIqAgKUwFaklbC5zdT1J0
-         IHCMJAL3zMJ7MhGK3E0xLhpUCFdXGNzKam2nxaaelRZf0S1PcXTqN69GjGrLxgAOZ+ZM
-         lagQ==
-X-Gm-Message-State: ANoB5pnmq11mBBLo1zj9ZcQMIiAmK18XidMCPv2MIJtLmujuW9uoq/BC
-        x8pXvvDgG+fZIR7gdt6BDXfnrA==
-X-Google-Smtp-Source: AA0mqf598/MCF/JjEFs4sytej/bZyytsruYpkdumZTQtJfjYvaqHK4GOJ3jxcNm12jWpnEvG729kiQ==
-X-Received: by 2002:a05:6512:304b:b0:4b5:892:3987 with SMTP id b11-20020a056512304b00b004b508923987mr24595255lfb.9.1671486365267;
-        Mon, 19 Dec 2022 13:46:05 -0800 (PST)
-Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
-        by smtp.gmail.com with ESMTPSA id a12-20020a056512200c00b004b700ba3cf3sm1205396lfb.203.2022.12.19.13.46.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Dec 2022 13:46:04 -0800 (PST)
-Message-ID: <6a59addb-b1a0-8536-c909-25c4c4447e09@linaro.org>
-Date:   Mon, 19 Dec 2022 23:46:03 +0200
+        with ESMTP id S232158AbiLTBVN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 20:21:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B41B65AE;
+        Mon, 19 Dec 2022 17:21:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80E686112E;
+        Tue, 20 Dec 2022 01:21:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72289C433F0;
+        Tue, 20 Dec 2022 01:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671499265;
+        bh=XknLPQW+r/NWKRWn+iQQ1a3zK3Edy3Qz6rW4qZq5W+s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qcKq8t/OaJn70cCOzgWa0JsIcKSdaly7CG4tV5D50cQNPWQkCCSnfVlw182tg27I8
+         qs6QW/DjidVKp+zVfsHhIycRvR2WPqppPSnfad0m1YA6fofySHn7gQfY4fr8PtOVXD
+         CQyEIt9HQXNHp5jPwDe8+CRuMAhWIyn/Uvzj84QHJjkztFNE/aXFZ4LxPNDcK8vxBD
+         OFx36KJkQOYgYgsvSKsiqPevtFxBejJAoNRmxbejjo096iblNYJBzpW0ksvzaDeHkQ
+         wFSJ2JkTmWArmKOklDUruthyfATxflyYQMp+3CiNjOZp0KzykKY17s8fFfby5esmj3
+         suVTPGJvdPruA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 05/16] Revert "PCI: Clear PCI_STATUS when setting up device"
+Date:   Mon, 19 Dec 2022 20:20:42 -0500
+Message-Id: <20221220012053.1222101-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221220012053.1222101-1-sashal@kernel.org>
+References: <20221220012053.1222101-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0 and
- PCIe1
-Content-Language: en-GB
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     bhelgaas@google.com, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221219191427.480085-1-manivannan.sadhasivam@linaro.org>
- <20221219191427.480085-4-manivannan.sadhasivam@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20221219191427.480085-4-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19/12/2022 21:14, Manivannan Sadhasivam wrote:
-> Both PCIe0 and PCIe1 controllers are capable of receiving MSIs from
-> endpoint devices using GIC-ITS MSI controller. Add support for it.
-> 
-> Currently, BDF (0:0.0) and BDF (1:0.0) are enabled and with the
-> msi-map-mask of 0xff00, all the 32 devices under these two busses can
-> share the same Device ID.
-> 
-> The GIC-ITS MSI implementation provides an advantage over internal MSI
-> implementation using Locality-specific Peripheral Interrupts (LPI) that
-> would allow MSIs to be targeted for each CPU core.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/sm8450.dtsi | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index 570475040d95..276ceba4c247 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -1733,9 +1733,9 @@ pcie0: pci@1c00000 {
->   			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
->   				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
->   
-> -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names = "msi";
-> -			#interrupt-cells = <1>;
-> +			msi-map = <0x0 &gic_its 0x5980 0x1>,
-> +				  <0x100 &gic_its 0x5981 0x1>;
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Does ITS support handling more than one MSI interrupt per device? 
-Otherwise it might be better to switch to multi-MSI scheme using SPI 
-interrupts.
+[ Upstream commit 44e985938e85503d0a69ec538e15fd33c1a4df05 ]
 
-> +			msi-map-mask = <0xff00>;
->   			interrupt-map-mask = <0 0 0 0x7>;
->   			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->   					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> @@ -1842,9 +1842,9 @@ pcie1: pci@1c08000 {
->   			ranges = <0x01000000 0x0 0x40200000 0 0x40200000 0x0 0x100000>,
->   				 <0x02000000 0x0 0x40300000 0 0x40300000 0x0 0x1fd00000>;
->   
-> -			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names = "msi";
-> -			#interrupt-cells = <1>;
-> +			msi-map = <0x0 &gic_its 0x5a01 0x1>,
-> +				  <0x100 &gic_its 0x5a00 0x1>;
+This reverts commit 6cd514e58f12b211d638dbf6f791fa18d854f09c.
 
-Are you sure that the order is correct here?
+Christophe Fergeau reported that 6cd514e58f12 ("PCI: Clear PCI_STATUS when
+setting up device") causes boot failures when trying to start linux guests
+with Apple's virtualization framework (for example using
+https://developer.apple.com/documentation/virtualization/running_linux_in_a_virtual_machine?language=objc)
 
-> +			msi-map-mask = <0xff00>;
->   			interrupt-map-mask = <0 0 0 0x7>;
->   			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->   					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+6cd514e58f12 only solved a cosmetic problem, so revert it to fix the boot
+failures.
 
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2137803
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/probe.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b66fa42c4b1f..1d6f7b502020 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1891,9 +1891,6 @@ int pci_setup_device(struct pci_dev *dev)
+ 
+ 	dev->broken_intx_masking = pci_intx_mask_broken(dev);
+ 
+-	/* Clear errors left from system firmware */
+-	pci_write_config_word(dev, PCI_STATUS, 0xffff);
+-
+ 	switch (dev->hdr_type) {		    /* header type */
+ 	case PCI_HEADER_TYPE_NORMAL:		    /* standard header */
+ 		if (class == PCI_CLASS_BRIDGE_PCI)
 -- 
-With best wishes
-Dmitry
+2.35.1
 
