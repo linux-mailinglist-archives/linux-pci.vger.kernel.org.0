@@ -2,103 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C630651B07
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 07:58:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC068651B9C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 08:27:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233221AbiLTG63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Dec 2022 01:58:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
+        id S233193AbiLTH1O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Dec 2022 02:27:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233224AbiLTG6Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 01:58:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD26A13EA2
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 22:57:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671519465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PgjDO6YmPzI6EXFNoVsU/pqgee9rvpcuz0guJ0Z7ptM=;
-        b=WvGLW6H0DDm8XyRwb/+W/aewtZDHfgTI7KUfGk8HUMwfUYRilVJ/TPTKBw3OmtGLsEggFD
-        J8JNqZbo1WdZuQHVdyg+9YiSJ7aq67lo62qOOQLFrzZ0ePm7odluPM+Do9sHumML95IeXE
-        h8+qM9y9JGRvnvsSzM6+Nby4mLYNmq4=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-393-k-gfCgR_Olmil1hH184bGw-1; Tue, 20 Dec 2022 01:57:38 -0500
-X-MC-Unique: k-gfCgR_Olmil1hH184bGw-1
-Received: by mail-oo1-f72.google.com with SMTP id v10-20020a4a860a000000b00480b3e2b5afso5267680ooh.12
-        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 22:57:38 -0800 (PST)
+        with ESMTP id S233621AbiLTH0T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 02:26:19 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2A2167DF
+        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 23:26:17 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id w26so7924034pfj.6
+        for <linux-pci@vger.kernel.org>; Mon, 19 Dec 2022 23:26:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oyr16lkkO+f52LJilby/v2FdwozTbFlzoHJ/tqUoOH0=;
+        b=V/ydCelJ/1e4NaKd/oZmpUIGZ5NWJzikt1y9DeK3EnIBX7Tpsl2sBZmrsrNIoX4u0T
+         WNu1OcpcjMCKuaEWsc9xlaQdAE1+8wmsGroVRqS/ZTbCzTypU9ZP3cs6KgF9QLpKqIz/
+         yTRbb/yoteeZv7Bx/U4cVyZkNW9nlfUtkEQBp6ribd5iPly0/dnzdRiOtn6Eyy8ErE0O
+         aWVkP73RN+hAEWlGGAteu86kxtOq4cRk5dggcFn23gtLeOjU3V0+73bBGfcUGscDRk66
+         q92b4LhF0yrdQNy822RyEEXY916C9PBjAbTiDtdFhXyA1jtM1x2c7d0ULeMGiqdG+FaT
+         Jjqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PgjDO6YmPzI6EXFNoVsU/pqgee9rvpcuz0guJ0Z7ptM=;
-        b=ggPavgYedohHsWAwSr8/VbNhs70sog+sTrA96t4LdLbHv2nUucyUGU681JPB/eMYUD
-         Vv+vztmlCepudvnBXSN/O8BgxNQDKROlGqFZPSrrIonUAtP3s0bRvlfZKQgvebfBrVVS
-         sPJXdfk/OPUOHWjb3tJXYCkh4rzH2t4yFO4OuODurqbNY6bz6Piw1an5jglJeml7YmlP
-         l/rEEHw8zgvSaowQhAmBwP1i64oEr6WJuxoX1Bg4EqRUHymE6gtf0ntnC0WJC3254tw1
-         +KLw3Dh/2eXvTZ+a6WKw4+OUFWLvHGiE6AakgK5T2oTtf5lgnNNXTmjfyFLO0VHKW9Is
-         54hw==
-X-Gm-Message-State: ANoB5pks4WbhkU+ZAjjq4fzQmsWqKXSiEDpGfDTaO0MQC/+DMB1VZdb4
-        IJY7+rbAj7JoqswHc6qo+xjOuU/q/hS1IgevR31UKTzxUB1HekttRszH85JAZwYFUV0Iqhi2CYX
-        EXNRudhFVuxwaavMQMuZx
-X-Received: by 2002:aca:d909:0:b0:35b:b20d:53e9 with SMTP id q9-20020acad909000000b0035bb20d53e9mr18301881oig.55.1671519457265;
-        Mon, 19 Dec 2022 22:57:37 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7gU8wXwyG7y7JilikoaWDJ51dcAKEUNsDSYXNSc+a5O4RaE++39oKb2zSEmb0O24Awl74Xdw==
-X-Received: by 2002:aca:d909:0:b0:35b:b20d:53e9 with SMTP id q9-20020acad909000000b0035bb20d53e9mr18301862oig.55.1671519456982;
-        Mon, 19 Dec 2022 22:57:36 -0800 (PST)
-Received: from ?IPv6:2804:431:c7ec:1f35:e7a0:7a03:cbfa:5430? ([2804:431:c7ec:1f35:e7a0:7a03:cbfa:5430])
-        by smtp.gmail.com with ESMTPSA id bk22-20020a0568081a1600b003544822f725sm5196652oib.8.2022.12.19.22.57.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 22:57:36 -0800 (PST)
-Message-ID: <c161b52f68adf9c6b3961991ba8fb2f6f96912af.camel@redhat.com>
-Subject: Re: [PATCH v2 3/4] sched/isolation: Add HK_TYPE_WQ to
- isolcpus=domain
-From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Antoine Tenart <atenart@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Wang Yufen <wangyufen@huawei.com>, mtosatti@redhat.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        fweisbec@gmail.com
-Date:   Tue, 20 Dec 2022 03:57:29 -0300
-In-Reply-To: <20221129121051.GB1715045@lothringen>
-References: <20221013184028.129486-1-leobras@redhat.com>
-         <20221013184028.129486-4-leobras@redhat.com>
-         <Y0kfgypRPdJYrvM3@hirez.programming.kicks-ass.net>
-         <20221014132410.GA1108603@lothringen>
-         <7249d33e5b3e7d63b1b2a0df2b43e7a6f2082cf9.camel@redhat.com>
-         <20221129121051.GB1715045@lothringen>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oyr16lkkO+f52LJilby/v2FdwozTbFlzoHJ/tqUoOH0=;
+        b=KnQwHBXy3E80gmY//xYEVVhWpf/40Hvfs9HSh0XgtRN+hz7b3vUGGWPBmcWLiekie+
+         Y346XdmYolptdDJFfdMjHGfta1kwRk88NDxQQGgvqf1DeeqToSm40pJEsp2JL2JzeBUF
+         auanNPzbmNQ1KgFwx850TjG4a9na7OEN2T4Knc/omy8GvxoZmOgaZmWREtgdoRfX62y6
+         dyM4z89lSDB1b67gIsjjJg9p7hXzy6RCIeSNkd16GfW7HOTCzzgFcsz9KT+aqQHKM+V3
+         sVutBOsf1xFwhkg3jQYbKhbjo6iz0P+rsHoL3o+CObrcecX+q6EALBpJCfTwM+B1xVZ6
+         jlSQ==
+X-Gm-Message-State: AFqh2krLxlM7HOZL9DB2I0CW9ulVke+LdEccGtvrzsC+UoO6K383kDyT
+        Ep8Te1K6Psqtb+n1hgkA4z2E8SUSuIH8boEtuG35Uw==
+X-Google-Smtp-Source: AMrXdXvgorYeaCukKa+Ic1F+7aqNFQsn9V+GDrAfXDBuRuhaW9TbfEfOw8D+OyfPUBv+NJHe/nuip5DKTGbcS11svBA=
+X-Received: by 2002:a63:ee44:0:b0:489:17a2:a53d with SMTP id
+ n4-20020a63ee44000000b0048917a2a53dmr499886pgk.255.1671521177155; Mon, 19 Dec
+ 2022 23:26:17 -0800 (PST)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+References: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
+ <20221219083511.73205-4-alvaro.karsz@solid-run.com> <96d85666-106b-a43e-6115-b9959b4e3e66@redhat.com>
+In-Reply-To: <96d85666-106b-a43e-6115-b9959b4e3e66@redhat.com>
+From:   Alvaro Karsz <alvaro.karsz@solid-run.com>
+Date:   Tue, 20 Dec 2022 09:25:40 +0200
+Message-ID: <CAJs=3_DkqB=6MXfUd02j6kKXahS6AWLRes5NUjj9Wp9iRecewg@mail.gmail.com>
+Subject: Re: [PATCH 3/3 v6] virtio: vdpa: new SolidNET DPU driver.
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -106,122 +69,16 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2022-11-29 at 13:10 +0100, Frederic Weisbecker wrote:
-> On Fri, Oct 14, 2022 at 01:27:25PM -0300, Leonardo Br=C3=A1s wrote:
-> > Hello Frederic,
-> >=20
-> > So, IIUC you are removing all flags composing nohz_full=3D parameter in=
- favor of a
-> > unified NOHZ_FULL flag.=20
-> >=20
-> > I am very new to the code, and I am probably missing the whole picture,=
- but I
-> > actually think it's a good approach to keep them split for a couple rea=
-sons:
-> > 1 - They are easier to understand in code (IMHO):=C2=A0
-> > "This cpu should not do this, because it's not able to do WQ housekeepi=
-ng" looks
-> > better than "because it's not in DOMAIN or NOHZ_FULL housekeeping"
->=20
-> A comment above each site may solve that.
+Hi Jason,
 
-Sure, but not having to leave comments would be better. Or am I missing
-something?
-
->=20
-> >=20
-> > 2 - They are simpler for using:=C2=A0
-> > Suppose we have this function that should run at a WQ, but we want to k=
-eep them
-> > out of the isolated cpus. If we have the unified flags, we need to comb=
-ine both
-> > DOMAIN and NOHZ_FULL bitmasks, and then combine it again with something=
- like
-> > cpu_online_mask. It usually means allocating a new cpumask_t, and also =
-freeing
-> > it afterwards.
-> > If we have a single WQ flag, we can avoid the allocation altogether by =
-using
-> > for_each_cpu_and(), making the code much simpler.
->=20
-> I guess having a specific function for workqueues would arrange for it.
-
-You mean keeping a WQ housekeeping bitmap? This could be a solution, but it
-would affect only the WQ example.
-
->=20
-> >=20
-> > 3 - It makes easier to compose new isolation modes:
-> > In case the future requires a new isolation mode that also uses the typ=
-es of
-> > isolation we currently have implemented, it would be much easier to jus=
-t compose
-> > it with the current HK flags, instead of having to go through all usage=
-s and do
-> > a cpumask_and() there. Also, new isolation modes would make (2) worse.
->=20
-> Actually having a new feature merged in HK_NOHZ_FULL would make it easier=
- to
-> handle as it avoids spreading cpumasks. I'm not sure I understand what yo=
-u
-> mean.
-
-IIUC, your queued patch merges the housekeeping types HK_TYPE_TIMER,
-HK_TYPE_RCU, HK_TYPE_MISC, HK_TYPE_TICK, HK_TYPE_WQ and HK_TYPE_KTHREAD in =
-a
-single HK_TYPE_NOHZ_FULL.
-
-Suppose in future we need a new isolation feature in cmdline, say=C2=A0
-isol_new=3D<cpulist>, and it works exactly like nohz_full=3D<cpulist>, but =
-also
-needs to isolate cpulist against something else, say doing X.
-
-How would this get implemented? IIUC, following the same pattern:
-- A new type HK_TYPE_ISOL_NEW would be created together with a cpumask,
-- The new cpumask would be used to keep cpulist from doing X
-- All places that use HK_TYPE_NOHZ_FULL bitmap for isolation would need to =
-also
-bitmask_and() the new cpumask. (sometimes needing a local cpumask_t)
-
-Ok, there may be shortcuts for this, like keeping an intermediary bitmap, b=
-ut
-that can become tricky.
-
-Other more complex example: New isolation feature isol_new2=3D<cpulist> beh=
-aves
-like nohz_full=3D<cpulist>, keeps cpulist from doing X, but allows unbound =
-RCU
-work. Now it's even harder to have shortcuts from previous implementation.
-
-What I am trying to defend here is that keeping the HK_type with the idea o=
-f
-"things to get cpulist isolated from" works better for future implementatio=
-ns
-than a single flag with a lot of responsibilities:
-- A new type HK_TYPE_X would be created together with a cpumask,
-- The new cpumask would be used to keep cpulist from doing X
-- isol_new=3D<cpulist> is composed with the flags for what cpulist is getti=
-ng
-isolated.
-- (No need to touch already implemented isolations.)
-
-In fact, I propose that it works better for current implementations also:
-The current patch (3/4) takes the WQ isolation responsibility from
-HK_TYPE_DOMAIN and focus it in HK_TYPE_WQ, adding it to isolcpus=3D<cpulist=
+> So I think we actually don't need to depend on HWMON here?
 >
-flags. This avoids some cpumask_and()s, and a cpumask_t kzalloc, and makes =
-the
-code less complex to implement when we need to put isolation in further par=
-ts of
-the code. (patch 4/4)
+> hwmon.c is only complied when HWMON is enabled and we use IS_ENABLED to
+> exclude the hwmon specific does.
 
-I am not sure if I am missing some important point here.=C2=A0
-Please let me know if it's the case.=20
+We are not really depending on HWMON with "(HWMON || HWMON=n)"
+If HWMON=n, the driver can be compiled either as a module or built-in.
+If HWMON=y, the driver can be compiled either as a module or built-in.
+If HWMON=m, the driver will be forced to be compiled as a module.
 
->=20
-> Thanks.
->=20
-
-Thank you for replying!
-Leo
-
+This technique allows us to use IS_ENABLED instead of IS_REACHABLE
