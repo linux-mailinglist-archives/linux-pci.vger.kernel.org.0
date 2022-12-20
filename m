@@ -2,118 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE6D8652051
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 13:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C219F6524A8
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 17:32:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230184AbiLTMVR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Dec 2022 07:21:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
+        id S230189AbiLTQcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Dec 2022 11:32:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233331AbiLTMVJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 07:21:09 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B9D192A3
-        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 04:21:04 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id b9so12231683ljr.5
-        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 04:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=leGyKEE6HxuefN20VFLstDPXqSDSxwW9HW3/3WDSeu8=;
-        b=OKMMbj+k1nAhb2y2538itML8thuXHBqN+N50sa2+Ot4GRlDZ8UCzeuV04JF5BkraDm
-         cLxlvSUPbHyLTOIniB9MbiSMiBtVkpYG/4dWXTIGt+3kMRt7FFpTGORtsKBuGlLBmHZH
-         lpXkcB5GdlQnbx7vUW8e3lLaRnvEZn00q9/lHDRJfafKmyj6e0VYUz0UZDWq7IovPTRq
-         k9m/X2RR6CuBwQwL2WW/8n4U++luGVYYB/Lh5NA5UUSQXRkaAj+f6xy4uo4Fgs8i2+oL
-         c3+2Jp/drgSjfncKtST6kcPliI06V7RWKtKa9yrbAzdH8DhjSnTlnnJeI0JPg6Xaafm3
-         F2rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=leGyKEE6HxuefN20VFLstDPXqSDSxwW9HW3/3WDSeu8=;
-        b=04YuBE+kv2p3YPvgkU2TpDUz9I5rdWb4HYV34SeHGjCZFPxJVVUM49kWMFV6U8bt5g
-         1WTW4NaEhSnx78Zjk9+a0iH+v66XGPe315mnkVXVl5IVz3oseue1xbWEmbggnlbBD77o
-         rX44MNuG2TvCWVtPyI2aCAcUz2a6SNfPN0jDNtsrBmoHLj8bnKrlq8/WMywgEsa0l6bn
-         yfcrZVawI+BsaliX0nnzkSm8O5EsBhmbZX8bwDyYTsNm9AeMI5F9BbthFzZSlhCDYG20
-         8HbxDN29GI3YJZ8dqk+Frcw7vhWPYJXJ8t+d1Y7eWR9S7iQc96Dnz8bsS8X0hmTZTvxX
-         vNfA==
-X-Gm-Message-State: ANoB5pkQbKglvbGPzcPPUWU8Q1L8i7LaG3qhZPtsOuhtkHpAtdQ7oaK3
-        l7Wk/ig61oFpfy6JilgQK9s/jNpv6oGFrO00qKU=
-X-Google-Smtp-Source: AA0mqf6e1GCMNYSjbLNzTDGl5gCKxfEvyRdIPAhdkNKmOejgNufTEGrW3e1ErIwAEQgUHlqpxUoc1bf0LlRyM3h+Ev8=
-X-Received: by 2002:a2e:a5c6:0:b0:277:22c3:afbb with SMTP id
- n6-20020a2ea5c6000000b0027722c3afbbmr26137071ljp.204.1671538863146; Tue, 20
- Dec 2022 04:21:03 -0800 (PST)
+        with ESMTP id S229638AbiLTQcp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Dec 2022 11:32:45 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83317DFE7
+        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 08:32:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id CC8F5CE1320
+        for <linux-pci@vger.kernel.org>; Tue, 20 Dec 2022 16:32:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52CF9C433D2;
+        Tue, 20 Dec 2022 16:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671553960;
+        bh=Bem8z5//1aEvoEVVdnx5RIqRMonjMFHjFzpnJmFo32M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RAodN6DClMr8hmKGNFCfW2DeFLSmvd+YgOftHqGH0g8PMDm2wuYHUPiZFVObuJUpC
+         xKYaNlkePLkV3NAYAnZQNYyYBmT+ls2jgTL42ZtIgswRVeTNFrsIdVqCHO7jKN3wtN
+         cqvmE3hJtL4vGutpOiJiwHjdwT/Tl268yDfML8rYsNzc8LkBr4FIbK9IjoGb3APs+W
+         ewmvKnlYKe2qJ87FNXDMIP7pIp37xy0lMIJTbJjShQqnigZptoMtvDsWLuFGVGrjt3
+         vtGPnUWJc4e4IuC/SwgabpYGPtrcfwI7ZmElBtOp/ELnQB6eJpuOXSbgk8k5i0quWe
+         4N7x73MNzi5EA==
+Date:   Tue, 20 Dec 2022 09:32:38 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Alvaro Karsz <alvaro.karsz@solid-run.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, llvm@lists.linux.dev
+Subject: Re: [PATCH 3/3 v6] virtio: vdpa: new SolidNET DPU driver.
+Message-ID: <Y6HjpvDfIusAz2uS@dev-arch.thelio-3990X>
+References: <20221219083511.73205-1-alvaro.karsz@solid-run.com>
+ <20221219083511.73205-4-alvaro.karsz@solid-run.com>
 MIME-Version: 1.0
-Sender: hassantamboura55@gmail.com
-Received: by 2002:a05:6504:191b:b0:200:fe6f:9779 with HTTP; Tue, 20 Dec 2022
- 04:21:02 -0800 (PST)
-From:   Mrs Roselyn John Carlsen <roselyncqrlsen10@gmail.com>
-Date:   Tue, 20 Dec 2022 13:21:02 +0100
-X-Google-Sender-Auth: MM4N-tk5dchA8Hhi2zJwtdQ5Ivc
-Message-ID: <CACRr12A=5Go2fpMFKGNrhjWPmp9XPnDH4ROHAH_sosyp4Qw5YQ@mail.gmail.com>
-Subject: Dearest One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_80,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,HK_RANDOM_FROM,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,T_MONEY_PERCENT,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:230 listed in]
-        [list.dnswl.org]
-        *  2.0 BAYES_80 BODY: Bayes spam probability is 80 to 95%
-        *      [score: 0.8738]
-        *  1.0 HK_RANDOM_FROM From username looks random
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [hassantamboura55[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [roselyncqrlsen10[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  2.4 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221219083511.73205-4-alvaro.karsz@solid-run.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dearest One,
+Hi Alvaro,
 
-It is my pleasure to communicate with you, I know that this
-messagewill be a surprise to you my name is Mrs. Roselyn John Carlsen,
-I am diagnosed with ovarian cancer
+On Mon, Dec 19, 2022 at 10:35:11AM +0200, Alvaro Karsz wrote:
+> This commit includes:
+>  1) The driver to manage the controlplane over vDPA bus.
+>  2) A HW monitor device to read health values from the DPU.
+> 
+> Signed-off-by: Alvaro Karsz <alvaro.karsz@solid-run.com>
 
-which my doctor have confirmed that Ihave only some weeks to live so I
-have decided you handover the sum of($11,000.000 Million Dollars)
-through I decided handover the
+<snip>
 
-moneyin my account to you for help of the orphanage homes and the
-needy once in my account to you for help of the orphanage homes and
-the needy once
+> +static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
+> +{
+> +	char name[25];
+> +	int ret, i, mask = 0;
+> +	/* We don't know which BAR will be used to communicate..
+> +	 * We will map every bar with len > 0.
+> +	 *
+> +	 * Later, we will discover the BAR and unmap all other BARs.
+> +	 */
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (pci_resource_len(pdev, i))
+> +			mask |= (1 << i);
+> +	}
+> +
+> +	/* No BAR can be used.. */
+> +	if (!mask) {
+> +		SNET_ERR(pdev, "Failed to find a PCI BAR\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	snprintf(name, SNET_NAME_SIZE, "psnet[%s]-bars", pci_name(pdev));
+> +	ret = pcim_iomap_regions(pdev, mask, name);
+> +	if (ret) {
+> +		SNET_ERR(pdev, "Failed to request and map PCI BARs\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (mask & (1 << i))
+> +			psnet->bars[i] = pcim_iomap_table(pdev)[i];
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int snet_open_vf_bar(struct pci_dev *pdev, struct snet *snet)
+> +{
+> +	char name[20];
+> +	int ret;
+> +
+> +	snprintf(name, SNET_NAME_SIZE, "snet[%s]-bar", pci_name(pdev));
+> +	/* Request and map BAR */
+> +	ret = pcim_iomap_regions(pdev, BIT(snet->psnet->cfg.vf_bar), name);
+> +	if (ret) {
+> +		SNET_ERR(pdev, "Failed to request and map PCI BAR for a VF\n");
+> +		return ret;
+> +	}
+> +
+> +	snet->bar = pcim_iomap_table(pdev)[snet->psnet->cfg.vf_bar];
+> +
+> +	return 0;
+> +}
 
-Please   kindly reply me here as soon as possible to enable me giveyou
-more information but before handing over my bank to you please assure
-me that you will only take
+This patch as commit 73a720b16fa1 ("virtio: vdpa: new SolidNET DPU
+driver.") in next-20221220 causes the following clang warnings:
 
-40%  of the money and share the restto the poor orphanage home and the
-needy once, thank you am waiting to hear from you
+  drivers/vdpa/solidrun/snet_main.c:561:2: error: 'snprintf' size argument is too large; destination buffer has size 25, but size argument is 256 [-Werror,-Wfortify-source]
+          snprintf(name, SNET_NAME_SIZE, "psnet[%s]-bars", pci_name(pdev));
+          ^
+  drivers/vdpa/solidrun/snet_main.c:581:2: error: 'snprintf' size argument is too large; destination buffer has size 20, but size argument is 256 [-Werror,-Wfortify-source]
+          snprintf(name, SNET_NAME_SIZE, "snet[%s]-bar", pci_name(pdev));
+          ^
+  2 errors generated.
 
+This does not appear to be a false positive but what was the intent
+here? Should the local name variables increase their length or should
+the buffer length be reduced?
 
-Yours Sincerely,
-Mrs, Roselyn John Carlsen.
+Cheers,
+Nathan
