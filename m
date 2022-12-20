@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A28076517BA
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 02:21:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A5E6517F9
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Dec 2022 02:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232859AbiLTBVY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Dec 2022 20:21:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        id S232969AbiLTBXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Dec 2022 20:23:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232158AbiLTBVN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 20:21:13 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B41B65AE;
-        Mon, 19 Dec 2022 17:21:06 -0800 (PST)
+        with ESMTP id S232392AbiLTBWU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Dec 2022 20:22:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10B413F58;
+        Mon, 19 Dec 2022 17:21:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80E686112E;
-        Tue, 20 Dec 2022 01:21:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72289C433F0;
-        Tue, 20 Dec 2022 01:21:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 58986B810FA;
+        Tue, 20 Dec 2022 01:21:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B6EC433EF;
+        Tue, 20 Dec 2022 01:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671499265;
-        bh=XknLPQW+r/NWKRWn+iQQ1a3zK3Edy3Qz6rW4qZq5W+s=;
+        s=k20201202; t=1671499298;
+        bh=RGJDOU0CQ402OaMUXRraXDNKYQZybk4l++nVvWs5NCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcKq8t/OaJn70cCOzgWa0JsIcKSdaly7CG4tV5D50cQNPWQkCCSnfVlw182tg27I8
-         qs6QW/DjidVKp+zVfsHhIycRvR2WPqppPSnfad0m1YA6fofySHn7gQfY4fr8PtOVXD
-         CQyEIt9HQXNHp5jPwDe8+CRuMAhWIyn/Uvzj84QHJjkztFNE/aXFZ4LxPNDcK8vxBD
-         OFx36KJkQOYgYgsvSKsiqPevtFxBejJAoNRmxbejjo096iblNYJBzpW0ksvzaDeHkQ
-         wFSJ2JkTmWArmKOklDUruthyfATxflyYQMp+3CiNjOZp0KzykKY17s8fFfby5esmj3
-         suVTPGJvdPruA==
+        b=Sbx4fv3fxxsnmSQIakLZkKqRFXhcScNwS3RM/Wssv6MQc8ZE0P5PbnFvI447f0KuE
+         k0VHd6OytjMY+2vMRqCYpUFbzd8iUvR4uChMsGUIjsb3uMNPRdS8VZ1Gl/KQ8a2n5u
+         Ka8KCWKGWWTiyeDOdO3DJOVfbWGYHeMtZ5Hw3s73XThFHDIOaPYtjhwh3VIucUZ26B
+         AZ/BzqzMSLQplfCLY4+M4jq3gPT/NiLImU05vdLSHikljqngTJdMiIUDVoIRjFtjC7
+         by77/TAbszOZIGKEomQ7HQwjnyYa8l3tGDUEdENB9iuN1j9D2fX39/yaX1KrsjykHZ
+         3EK9odNVJ1Uug==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 05/16] Revert "PCI: Clear PCI_STATUS when setting up device"
-Date:   Mon, 19 Dec 2022 20:20:42 -0500
-Message-Id: <20221220012053.1222101-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.0 05/16] Revert "PCI: Clear PCI_STATUS when setting up device"
+Date:   Mon, 19 Dec 2022 20:21:15 -0500
+Message-Id: <20221220012127.1222311-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221220012053.1222101-1-sashal@kernel.org>
-References: <20221220012053.1222101-1-sashal@kernel.org>
+In-Reply-To: <20221220012127.1222311-1-sashal@kernel.org>
+References: <20221220012127.1222311-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -76,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 deletions(-)
 
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b66fa42c4b1f..1d6f7b502020 100644
+index c5286b027f00..bdcad5e0f057 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -1891,9 +1891,6 @@ int pci_setup_device(struct pci_dev *dev)
+@@ -1890,9 +1890,6 @@ int pci_setup_device(struct pci_dev *dev)
  
  	dev->broken_intx_masking = pci_intx_mask_broken(dev);
  
