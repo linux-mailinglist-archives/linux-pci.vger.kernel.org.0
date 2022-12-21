@@ -2,63 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8156532E8
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Dec 2022 16:09:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 459AE6533E3
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Dec 2022 17:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbiLUPJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Dec 2022 10:09:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48328 "EHLO
+        id S230399AbiLUQ0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Dec 2022 11:26:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiLUPJA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Dec 2022 10:09:00 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5007F22B01;
-        Wed, 21 Dec 2022 07:08:59 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id o15so11375404wmr.4;
-        Wed, 21 Dec 2022 07:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OXTq8sebFtJCOj2ociK9GeRfG8lBsoPqCb0yS+CSPS8=;
-        b=EN7oMT5rjrIRJvyVaC/QdFIEDYM+UzOV5EBaftH2racgVsgMoQzMFRlkR1zMQLnhVp
-         VkGnLH/fV/DvbZFfS61A3Y7/EVE4mzTGx/PB/TuKMMQYPrLsRJ1V1rYgvqsJqYianeVD
-         STacOrZhkcGMReTm40n2VeCFED1RFfKpEWcBtkY7LFeM6iEVCSPd7qfJ7bHWqW9Fp4f5
-         LSHu35aRYJD8xP6FyU7HBsru4BDtuGgOiWV/ahZqtyYfcTI0rBI8/0PFrkF0taKWzhbL
-         w4WhD2BOuQ4nmdmcH2PKH+N2j20ZROTpF0wXPR/hMPByPNPubNVJWvWUW5Ob1/7k3pHa
-         hjqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OXTq8sebFtJCOj2ociK9GeRfG8lBsoPqCb0yS+CSPS8=;
-        b=vTK/o7hE5+wggztu0vrS62yTJix7q6+y3EzX5JqRFFz1fhIPM44RKRTMayxaddTelh
-         aB84pNUN9ghzLBDYa6KEmPgGezDAx4qBi0pG0JYzourBRQE098+LTYVoN3ih8FJCZ3Sq
-         Hu15wG3nQatKB4hPIuSmVqdiVjlYqGBGOjMWTbuX2KrHNr5mF3Wtz2fAy1gia2ynjR6U
-         7E+8huIi8GikMzak8ymqkA3zgSX/lVOZvkAFXU/laBPFMOWfo/9EEoDIq8ikMQbrv1CV
-         3KOxzrmaDtECZLVd5Tx+4JyF91VTWf5Sc7wV86xucH2RlShj0S3OMRN4zRlVCk/6Smzd
-         E07A==
-X-Gm-Message-State: AFqh2kqY4KAWjUBGZH0AZI0RqZ/Ha2ObBmncDnAfTawNle5iTb9BQlFo
-        /J4vUdNjHwnh9SaJnPR0Y9ybIbpIsOotAoM6FW73FopF
-X-Google-Smtp-Source: AMrXdXvbreqW1N4Iv6xe2I6QmjzM7ZPwEApyn0Kkk/CcJYjy3hGRfIyACRkOHyT+WP3i0uraOpFTN7ozjuahNMmOEV4=
-X-Received: by 2002:a05:600c:4395:b0:3d0:7513:d149 with SMTP id
- e21-20020a05600c439500b003d07513d149mr159969wmn.156.1671635337433; Wed, 21
- Dec 2022 07:08:57 -0800 (PST)
+        with ESMTP id S229578AbiLUQ0j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Dec 2022 11:26:39 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AF610568;
+        Wed, 21 Dec 2022 08:26:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1671639997; x=1703175997;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=urUO3lBnUtgO+026vENV9ZHIqNZxZaA6oDAmSzARVN0=;
+  b=yXPcyDSyhP93ri/pWIgK0+NxSS+wlvegvlv8iKnDYd89iJP+t57BU52j
+   1bKIjVfGcVnAz0VeK7KrwxV00qenmz6Rb9OGaFIJvM/I2nHA7TcFGQafO
+   ahTEeYFc6gO9js87ZBQsrpxGvo+R+VvPMfdSwtvs4Z77PsCyHExnIZdmC
+   FzZ6EZU1DmEpPO1t/r4qwfUkTQst07ZjhneoBoZFIbR49U2p4gh3unA52
+   p/ClT8YIlv+t24wb3/ETEvnlD41MLceUw51M8/+qTdCVhj96cJaM8SRTa
+   6gf15mbfUfnEHfmOvrjDlCIRc0s+8PDNXF1MaB2q2zZiofPn3H3b95eri
+   A==;
+X-IronPort-AV: E=Sophos;i="5.96,262,1665471600"; 
+   d="scan'208";a="204941736"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Dec 2022 09:26:36 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 21 Dec 2022 09:26:36 -0700
+Received: from daire-X570.emdalo.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.16 via Frontend Transport; Wed, 21 Dec 2022 09:26:33 -0700
+From:   <daire.mcnamara@microchip.com>
+To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>
+Subject: [PATCH v2 0/9] PCI: microchip: Partition address translations
+Date:   Wed, 21 Dec 2022 16:26:21 +0000
+Message-ID: <20221221162630.3632486-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   Major Saheb <majosaheb@gmail.com>
-Date:   Wed, 21 Dec 2022 20:38:46 +0530
-Message-ID: <CANBBZXNCaZx9fmHsre2mF2yr7Ru66BSEZxFT7ou=Y04zv5a8Zw@mail.gmail.com>
-Subject: DMAR: [DMA Read NO_PASID] Request device [0b:00.0] fault addr
- 0xffffe000 [fault reason 0x06] PTE Read access is not set
-To:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,27 +63,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have an ubuntu guest running on kvm , and I am passing it 10 qemu
-emulated nvme drives
-    <iommu model='intel'>
-      <driver intremap='on' eim='on'/>
-    </iommu>
-<qemu:arg value='pcie-root-port,id=pcie-root-port%d,slot=%d'/>
-<qemu:arg value='nvme,drive=NVME%d,serial=%s_%d,id=NVME%d,bus=pcie-root-port%d'/>
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-kernel
-Linux node-1 5.15.0-56-generic #62-Ubuntu SMP ----- x86_64 x86_64
-x86_64 GNU/Linux
+Changes since v1:
+- Removed unused variables causing compile warnings
+- Removed incorrect Signed-off-by: tags
+- Capitalised msi and msi-x
+- Capitalised FIC and respelled busses to buses
+- Capitalised all comments
+- Renamed fabric inter connect to Fabric Interface Controller as per PolarFire SoC TRM
 
-kernel command line
-intel_iommu=on
+Microchip PolarFire SoC is a 64-bit device and has DDR starting at
+0x80000000 and 0x1000000000. Its PCIe rootport is connected to the CPU
+Coreplex via an FPGA fabric. The AXI connections between the Coreplex and
+the fabric are 64-bit and the AXI connections between the fabric and the
+rootport are 32-bit.  For the CPU CorePlex to act as an AXI-Master to the
+PCIe devices and for the PCIe devices to act as bus masters to DDR at these
+base addresses, the fabric can be customised to add/remove offsets for bits
+38-32 in each direction. These offsets, if present, vary with each
+customer's design.
 
-I have attached these drives to vfio-pcie.
+To support this variety, the rootport driver must know how much address
+translation (both inbound and outbound) is performed by a particular
+customer design and how much address translation must be provided by the
+rootport.
 
-when I try to send IO commands to these drives VIA a userspace nvme
-driver using VFIO I get
-[ 1474.752590] DMAR: DRHD: handling fault status reg 2
-[ 1474.754463] DMAR: [DMA Read NO_PASID] Request device [0b:00.0]
-fault addr 0xffffe000 [fault reason 0x06] PTE Read access is not set
+This patchset contains a parent/child dma-ranges scheme suggested by Rob
+Herring. It creates an FPGA PCIe parent bus which wraps the PCIe rootport
+and implements a parsing scheme where the root port identifies what address
+translations are performed by the FPGA fabric parent bus, and what
+address translations must be done by the rootport itself.
 
-Can someone explain to me what's happening here ?
+See https://lore.kernel.org/linux-pci/20220902142202.2437658-1-daire.mcnamara@microchip.com/
+for the relevant previous patch submission discussion.
+
+It also re-partitions the probe() and init() functions as suggested by
+Bjorn Helgaas to make them more maintainable as the init() function had
+become too large.
+
+It also contains some minor fixes and clean-ups that are pre-requisites:
+- to align register, offset, and mask names with the hardware documentation
+  and to have the register definitions appear in the same order as in the
+  hardware documentation;
+- to harvest the MSI information from the hardware configuration register
+  as these depend on the FPGA fabric design and can vary with different
+  customer designs;
+- to clean up interrupt initialisation to make it more maintainable;
+- to fix SEC and DED interrupt handling.
+
+I expect Conor will take the dts patch via the soc tree once the PCIe parts
+of the series are accepted.
+
+Conor Dooley (1):
+  riscv: dts: microchip: add parent ranges and dma-ranges for IKRD
+    v2022.09
+
+Daire McNamara (8):
+  PCI: microchip: Correct the DED and SEC interrupt bit offsets
+  PCI: microchip: Align register, offset, and mask names with hw docs
+  PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+  PCI: microchip: Clean up initialisation of interrupts
+  PCI: microchip: Gather MSI information from hardware config registers
+  PCI: microchip: Re-partition code between probe() and init()
+  PCI: microchip: Partition outbound address translation
+  PCI: microchip: Partition inbound address translation
+
+ .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  62 +-
+ drivers/pci/controller/pcie-microchip-host.c  | 678 +++++++++++++-----
+ 2 files changed, 524 insertions(+), 216 deletions(-)
+
+
+base-commit: 3c1f24109dfc4fb1a3730ed237e50183c6bb26b3
+-- 
+2.25.1
+
