@@ -2,318 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5733B652DE9
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Dec 2022 09:30:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA7D86532CA
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Dec 2022 15:59:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234457AbiLUIaS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Dec 2022 03:30:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        id S232739AbiLUO7s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Dec 2022 09:59:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234435AbiLUIaH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Dec 2022 03:30:07 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C983F2037A
-        for <linux-pci@vger.kernel.org>; Wed, 21 Dec 2022 00:30:05 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id n3so10169295pfq.10
-        for <linux-pci@vger.kernel.org>; Wed, 21 Dec 2022 00:30:05 -0800 (PST)
+        with ESMTP id S231888AbiLUO7q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Dec 2022 09:59:46 -0500
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A63ED76
+        for <linux-pci@vger.kernel.org>; Wed, 21 Dec 2022 06:59:44 -0800 (PST)
+Received: by mail-io1-xd29.google.com with SMTP id y4so8145417iof.0
+        for <linux-pci@vger.kernel.org>; Wed, 21 Dec 2022 06:59:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=frfzN6uzxKuFlIA4+uAAJAKmU4/TiLZEky6Q9V4EHls=;
-        b=YxVCozZ/OiXZoKCffQ/7/VLyLPeNZWLabBVWhNG80D0/ifWtJnDxEUllcZdYpbGGTV
-         2Rq+TRhgqKAIk4SLFuKWiy4AeNMzNvuK5UMlhnsRiwpQAHq0QSi0U58YRL7nOALoE4N1
-         99N+TRzf18xN++6+BobNelw3oT9MFwGNbEptVe82CKx8kvt2Qib5JVt+oaY0bHgjy9i+
-         AGSSvpQ8EfPvWxVq6x2Qds2I7diVoRPxV27cGK4GVSejTLDhQGDntlza4IKJpP0qrSzg
-         6hwJdb1gWNpwM5WaGz4L7Yb/rXz17NwZSTgUgjoLlDboN3FaI3quHMT8kuLpFWmG1+bN
-         XE3g==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VSTSYuF2IGWHhVL1H4R/UBsYbY3GgJPyleeG4rMWVfE=;
+        b=EbRH3h1/sjS6Kos+PZMzeKjbriG50DkBaoLywTVgC7IYaW0bF8rQjVcYd5sHTC2IRF
+         istKKDdWOplUTKrD73Z7umq9PSxGHv7WVLy/jkyJgrXxEoL4WsUofTL964FUD6dRzvc2
+         OEBFSWplL5+ztuzB7aIMv643KEt3ZtY2tStkc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=frfzN6uzxKuFlIA4+uAAJAKmU4/TiLZEky6Q9V4EHls=;
-        b=ZwXumqvpHvO/HMFJkhp9Txp/MFhLTAvqi53vYrFBNoCJWCPNsugrNiyKaDRzwhEYA7
-         fe7eNJ4/corjdBn9SAFRS+0jxK4Y+zzz62f6dJXzuLyEu1jTnEa9ENzSlzew1bF4Z5to
-         JNSKt/6L+QIX0p2EF3TC4VNqicrqEgoYIpFrZodqlHM1CraTwr5XqjgHhSV6n9/tGUqm
-         bxWt1BFHJem2ZZY6ToNp18pnvMCtlucKW6wwsN+o3rYoIDlFZSLig8TrST3l1WbLOEM9
-         dqV5I1s2TZ78F7MYXnt2GHOQxD5OaaGoVo39Jcae+fPFmLPT/WsZYVw2RHeDH50Z2uij
-         1PVQ==
-X-Gm-Message-State: AFqh2koBUudfcR+Stm7h+TSf9r1ew4wHz7ju7D+BgcGeTaMlh0RPnt/r
-        CiYdFUXn+LkXQl/EnYcf9h6sEA==
-X-Google-Smtp-Source: AMrXdXsJfv40/jw9500d7K5v2qz14fqmFwoEDRalvvmLS2G/yI5NN4VbyJ1RwMwDEhIgl0ymr8HOXQ==
-X-Received: by 2002:a62:1c43:0:b0:577:c84d:cb81 with SMTP id c64-20020a621c43000000b00577c84dcb81mr1425117pfc.16.1671611405206;
-        Wed, 21 Dec 2022 00:30:05 -0800 (PST)
-Received: from [10.16.128.218] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id x27-20020aa7957b000000b00576670cc170sm10188259pfq.93.2022.12.21.00.30.02
+        bh=VSTSYuF2IGWHhVL1H4R/UBsYbY3GgJPyleeG4rMWVfE=;
+        b=TQx5CnJzlgjQqIbpY+L52tClWiNxe9QjfTduGxLCkbEhad8cnKQZ5DNqQQAq5Yj94+
+         Z3ujia8/zh5gs0xq7bZOVPKPHG4xtLcw1S4qT96bX3gvcrNgscHT5zmaRsP9xIN1hOmI
+         T9N9rVLdxHySosKBkXUKRhqdDEgZuZ5PtgH2fX3LfmB9Rnr+1TPmdvsTxcGuhtcMbcX8
+         0HS5r7IsBrvmmcTl0ePo21O7yavOvw8/2FDARxWS22FQtNijInLHoXKNzVhFZu+yR3Fc
+         2auTQ0iBBrv35NifyyCwb3Zs/PQYBeGa5ooDNphuWlpilEJwUWgaim7YRavktGi2wTnq
+         fIcQ==
+X-Gm-Message-State: AFqh2koz+LwtFYxjrV1HIQHBwXhaZeowox6qfjaIhaS38kQYEUH3Yk/c
+        TzshqDjAha8KsrAxgy3aU8ipXA==
+X-Google-Smtp-Source: AMrXdXs6kcBBuwh3xgUFBvquqCWpgvIdrC1wD2pI6lE+JKWx5qb+rt5psMSJfoUy1s/8t4OUaAZqvg==
+X-Received: by 2002:a6b:c747:0:b0:6e0:380b:b900 with SMTP id x68-20020a6bc747000000b006e0380bb900mr1397553iof.12.1671634783929;
+        Wed, 21 Dec 2022 06:59:43 -0800 (PST)
+Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
+        by smtp.gmail.com with UTF8SMTPSA id c59-20020a029641000000b0039c8a9d4a82sm2768283jai.108.2022.12.21.06.59.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Dec 2022 00:30:04 -0800 (PST)
-Message-ID: <7d982a83-a841-ca56-20cc-cb5373a4bcdc@igel.co.jp>
-Date:   Wed, 21 Dec 2022 17:30:00 +0900
+        Wed, 21 Dec 2022 06:59:43 -0800 (PST)
+Date:   Wed, 21 Dec 2022 14:59:42 +0000
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, swboyd@chromium.org,
+        dmitry.baryshkov@linaro.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported
+ max latencies
+Message-ID: <Y6MfXltck34gSwU9@google.com>
+References: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
+ <20221205112500.GB4514@thinkpad>
+ <Y441/Icd2wSgVnNU@google.com>
+ <20221221054953.GA2922@thinkpad>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
- endpoint driver test
-Content-Language: en-US
-To:     Aman Gupta <aman1.gupta@samsung.com>, shradha.t@samsung.com,
-        pankaj.dubey@samsung.com, kishon@ti.com, lpieralisi@kernel.org,
-        kw@linux.com, shuah@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
- <20221007053934.5188-1-aman1.gupta@samsung.com>
-From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <20221007053934.5188-1-aman1.gupta@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221221054953.GA2922@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Aman,
+On Wed, Dec 21, 2022 at 11:19:53AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Dec 05, 2022 at 06:18:36PM +0000, Matthias Kaehlcke wrote:
+> > On Mon, Dec 05, 2022 at 04:55:00PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Sep 16, 2022 at 01:38:37PM +0530, Krishna chaitanya chundru wrote:
+> > > > In ASPM driver, LTR threshold scale and value are updated based on
+> > > > tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
+> > > > LTR threshold scale and value are greater values than max snoop/non-snoop
+> > > > value.
+> > > > 
+> > > > Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+> > > > reported snoop/no-snoop values is greater than or equal to
+> > > > LTR_L1.2_THRESHOLD value.
+> > > > 
+> > > > Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+> > > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > I take my Ack back... Sorry that I did not look into this patch closer.
+> > > 
+> > > > ---
+> > > > 
+> > > > I am taking this patch forward as prasad is no more working with our org.
+> > > > changes since v6:
+> > > > 	- Rebasing with pci/next.
+> > > > changes since v5:
+> > > > 	- no changes, just reposting as standalone patch instead of reply to
+> > > > 	  previous patch.
+> > > > Changes since v4:
+> > > > 	- Replaced conditional statements with min and max.
+> > > > changes since v3:
+> > > > 	- Changed the logic to include this condition "snoop/nosnoop
+> > > > 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+> > > > Changes since v2:
+> > > > 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+> > > > Changes since v1:
+> > > > 	- Added missing variable declaration in v1 patch
+> > > > ---
+> > > >  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+> > > >  1 file changed, 30 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > index 928bf64..2bb8470 100644
+> > > > --- a/drivers/pci/pcie/aspm.c
+> > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > @@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > > >  {
+> > > >  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> > > >  	u32 val1, val2, scale1, scale2;
+> > > > +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+> > > >  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+> > > >  	u32 ctl1 = 0, ctl2 = 0;
+> > > >  	u32 pctl1, pctl2, cctl1, cctl2;
+> > > > +	u16 ltr;
+> > > > +	u16 max_snoop_lat, max_nosnoop_lat;
+> > > >  
+> > > >  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+> > > >  		return;
+> > > >  
+> > > > +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
+> > > > +	if (!ltr)
+> > > > +		return;
+> > > > +
+> > > > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
+> > > > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
+> > > > +
+> > > > +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > > > +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
+> > > > +
+> > > > +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > > > +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
+> > > > +
+> > > > +	/* choose the greater max scale value between snoop and no snoop value*/
+> > > > +	max_scale = max(max_snp_scale, max_nsnp_scale);
+> > > > +
+> > > > +	/* choose the greater max value between snoop and no snoop scales */
+> > > > +	max_val = max(max_snp_val, max_nsnp_val);
+> > > > +
+> > > >  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+> > > >  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> > > >  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> > > > @@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > > >  	 */
+> > > >  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+> > > >  	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> > > > +
+> > > > +	/*
+> > > > +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
+> > > > +	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
+> > > 
+> > > Apart from the bug in calculating the LTR_Threshold as reported by Matthias
+> > > and Bjorn, I'm wondering if we are covering up for the device firmware issue.
+> > 
+> > Yes, I think the patch is doing exactly that.
+> > 
+> > > As per section 6.18, if the device reports snoop/no-snoop scale/value as 0, then
+> > > it implies that the device won't tolerate any additional delays from the host.
+> > >
+> > > In that case, how can we allow the link to go into L1.2 since that would incur
+> > > high delay compared to L1.1?
+> > 
+> > I had the same doubt, a value of 0 doesn't make sense, if it literally means
+> > 'max delay of 0ns'. I did some debugging around this issue. One thing I found
+> > is that there are NVMe models that don't have issues with entering L1.2 with
+> > max (no-)snoop latencies of 0. From that I infer that a value of 0 does not
+> > literally mean a max delay of 0ns.
+> > 
+> 
+> This is interesting.
+> 
+> > The PCIe spec doesn't say specifically what a value of 0 in those registers
+> > means, but chapter "6.18 Latency Tolerance Reporting (LTR) Mechanism" of the
+> > PCIe 4.0 base spec says something about the latency requirements in LTR
+> > messages:
+> > 
+> >   Setting the value and scale fields to all 0’s indicates that the device will
+> >   be impacted by any delay and that the best possible service is requested.
+> > 
+> > With that and the fact that several NVMe's don't have issues with all 0 values
+> > I deduce that all 0's means 'best possible service' and not 'max latency of
+> > 0ns'. It seems the Kioxia firmware has a bug which interprets all 0 values as
+> > a max latency of 0ns.
+> > 
+> > Another finding is that the Kioxia NVMe can enter L1.2 if the max latencies
+> > are set to values >= the LTR threshold. Unfortunately that isn't a viable
+> > fix for existing devices in the field, devices under development could possibly
+> > adjust the latencies in the BIOS (coreboot code [1] suggests that this is done
+> > at least in some cases).
+> > 
+> 
+> I fully agree that it is a firmware issue. And yes, we should refrain to fixes
+> in the bootloader if possible.
+> 
+> Another option would be to add a quirk for specific devices in the ASPM code.
+> But in that case, I'm not sure what would be the optimal snoop/no-snoop value
+> that could be used.
 
-It is a nice work.
+I had/have the same doubt.
 
-On 2022/10/07 14:39, Aman Gupta wrote:
-> This patch enables the support to perform selftest on PCIe endpoint
-> driver present in the system. The following tests are currently
-> performed by the selftest utility
->
-> 1. BAR Tests (BAR0 to BAR5)
-> 2. MSI Interrupt Tests (MSI1 to MSI32)
-> 3. Read Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 4. Write Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
-> 5. Copy Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
->
-> Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
-> Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
-> ---
->   tools/testing/selftests/Makefile           |   1 +
->   tools/testing/selftests/pci/.gitignore     |   1 +
->   tools/testing/selftests/pci/Makefile       |   7 +
->   tools/testing/selftests/pci/pci-selftest.c | 167 +++++++++++++++++++++
-This test is for a pci endpoint test driver. so I think it should be 
-located on tools/testing/selftest/drivers/pci/endpoint. What do you think?
->   4 files changed, 176 insertions(+)
->   create mode 100644 tools/testing/selftests/pci/.gitignore
->   create mode 100644 tools/testing/selftests/pci/Makefile
->   create mode 100644 tools/testing/selftests/pci/pci-selftest.c
->
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index c2064a35688b..81584169a80f 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -49,6 +49,7 @@ TARGETS += net/forwarding
->   TARGETS += net/mptcp
->   TARGETS += netfilter
->   TARGETS += nsfs
-> +TARGETS += pci
->   TARGETS += pidfd
->   TARGETS += pid_namespace
->   TARGETS += powerpc
-> diff --git a/tools/testing/selftests/pci/.gitignore b/tools/testing/selftests/pci/.gitignore
-> new file mode 100644
-> index 000000000000..db01411b8200
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/.gitignore
-> @@ -0,0 +1 @@
-> +pci-selftest
-> diff --git a/tools/testing/selftests/pci/Makefile b/tools/testing/selftests/pci/Makefile
-> new file mode 100644
-> index 000000000000..76b7725a45ae
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/Makefile
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +CFLAGS += -O2 -Wl,-no-as-needed -Wall
-> +LDFLAGS += -lrt -lpthread -lm
-> +
-> +TEST_GEN_PROGS = pci-selftest
-> +
-> +include ../lib.mk
-> diff --git a/tools/testing/selftests/pci/pci-selftest.c b/tools/testing/selftests/pci/pci-selftest.c
-> new file mode 100644
-> index 000000000000..73e8f3eb1982
-> --- /dev/null
-> +++ b/tools/testing/selftests/pci/pci-selftest.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Endpoint Driver Test Program
-> + *
-> + * Copyright (c) 2022 Samsung Electronics Co., Ltd.
-> + *             https://www.samsung.com
-> + * Author: Aman Gupta <aman1.gupta@samsung.com>
-> + */
-> +
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <sys/ioctl.h>
-> +#include <unistd.h>
-> +
-> +#include "../kselftest_harness.h"
-> +
-> +#define PCITEST_BAR		_IO('P', 0x1)
-> +#define PCITEST_LEGACY_IRQ	_IO('P', 0x2)
-> +#define PCITEST_MSI		_IOW('P', 0x3, int)
-> +#define PCITEST_WRITE		_IOW('P', 0x4, unsigned long)
-> +#define PCITEST_READ		_IOW('P', 0x5, unsigned long)
-> +#define PCITEST_COPY		_IOW('P', 0x6, unsigned long)
-> +#define PCITEST_MSIX		_IOW('P', 0x7, int)
-> +#define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
-> +#define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
-> +#define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> +
-> +static char *test_device = "/dev/pci-endpoint-test.0";
-> +
-> +struct xfer_param {
-> +	unsigned long size;
-> +	unsigned char flag;
-> +	};
-> +
-> +FIXTURE(device)
-> +{
-> +	int fd;
-> +};
-> +
-> +FIXTURE_SETUP(device)
-> +{
-> +
-> +	self->fd = open(test_device, O_RDWR);
-> +
-> +	ASSERT_NE(-1, self->fd) {
-> +		TH_LOG("Can't open PCI Endpoint Test device\n");
-> +	}
-> +}
-> +
-> +FIXTURE_TEARDOWN(device)
-> +{
-> +	close(self->fd);
-> +}
-> +
-> +TEST_F(device, BAR_TEST)
-> +{
-> +	int ret = -EINVAL;
-> +	int final = 0;
-> +
-> +	for (int i = 0; i <= 5; i++) {
-> +		ret = ioctl(self->fd, PCITEST_BAR, i);
-> +
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR BAR %d\n", i);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, MSI_TEST)
-> +{
-> +	int ret = -EINVAL;
-> +	int final = 0;
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	for (int i = 1; i <= 32; i++) {
-> +		ret = ioctl(self->fd, PCITEST_MSI, i);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR MSI%d\n", i);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, READ_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_READ, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, WRITE_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_WRITE, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +
-> +TEST_F(device, COPY_TEST)
-> +{
-> +	int final = 0;
-> +	int ret = -EINVAL;
-> +	unsigned long SIZE[5] = {1, 1024, 1025, 1024000, 1024001};
-> +
-> +	ret = ioctl(self->fd, PCITEST_SET_IRQTYPE, 1);
-> +	ASSERT_EQ(1, ret);
-> +
-> +	struct xfer_param param;
-> +
-> +	param.flag = 0;
-> +
-> +	for (int i = 0; i < 5; i++) {
-> +		param.size = SIZE[i];
-> +		ret = ioctl(self->fd, PCITEST_COPY, &param);
-> +		EXPECT_EQ(1, ret) {
-> +			TH_LOG("TEST FAILED FOR size =%ld.\n", SIZE[i]);
-> +			final++;
-> +		}
-> +	}
-> +
-> +	ASSERT_EQ(0, final);
-> +}
-> +TEST_HARNESS_MAIN
+> There is another issue where if we have some other device on the same bus
+> that explicitly requires 0ns latency.
 
-
-Best,
-
-Shunsuke
-
+Would that be reasonable requirement, i.e. can 0ns latency ever be achieved?
