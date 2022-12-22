@@ -2,42 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AB7D65412A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 13:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 589166541E1
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 14:31:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235657AbiLVMlN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Dec 2022 07:41:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33038 "EHLO
+        id S235191AbiLVNbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Dec 2022 08:31:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbiLVMlL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Dec 2022 07:41:11 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4400A2BF5;
-        Thu, 22 Dec 2022 04:41:08 -0800 (PST)
-Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Nd8vz62qNzJpGc;
-        Thu, 22 Dec 2022 20:37:19 +0800 (CST)
-Received: from shaphisprc00214.huawei.com (100.108.184.173) by
- kwepemi500002.china.huawei.com (7.221.188.171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 22 Dec 2022 20:41:05 +0800
-From:   Jiantao Zhang <water.zhangjiantao@huawei.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zhangjianrong5@huawei.com>
-CC:     <suzhuangluan@hisilicon.com>, <caiyadong@huawei.com>,
-        <guhengsheng@hisilicon.com>, <songxiaowei@hisilicon.com>,
-        <water.zhangjiantao@huawei.com>
-Subject: [PATCH] PCI: Exit restore process when device is still powerdown
-Date:   Thu, 22 Dec 2022 12:41:04 +0000
-Message-ID: <20221222124104.69607-1-water.zhangjiantao@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S229962AbiLVNbk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Dec 2022 08:31:40 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4073413FAB
+        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:31:39 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id v3so1333947pgh.4
+        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:31:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M9AOTspnzS63f7kZcAgxpIv7jWjlVbIrVgKjR+w8Mgo=;
+        b=Rfi5VqDGO9usqpGX1sY3c7nqjL+S9mczwYS9pRIdnTVKkaaTBNRojQ1yfLvk+rcNi8
+         R+8J+mG5ZSGH9dGMh/0JZ3a6X7Fz4L5VE6nt/3W+jiPW7vNx1LlP42jwa2v841u/fQ8l
+         P4swMhu0RI9yZqZlPZADMWMXU6GGEfQIb5re4i0F2N5VaHnmh8f+OwM6nsnt8FnXhcad
+         hFx6kO95zEpMJAZeBhbTpbA5qQDrYX69viO959PvGm5w6xvWuckMdD5HJ+50w8mAuQds
+         TZi1SA3XUoWLcJLvRVu+W7EJP0fy9WHeUWWVhv978tMDShwhc0El0NyO7hwIsvS4Gxtv
+         UVEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M9AOTspnzS63f7kZcAgxpIv7jWjlVbIrVgKjR+w8Mgo=;
+        b=yxbgRNS16RNIdCWNUEc+daaY7sucGVxq23I835s2wBG553sEavFDd2UfuTczNozItb
+         mG1ydCbOuC5ZnIGSDyUIiXTq80BcYesAiZLGZi6It7tLYRuyl3wtEIZe1lfC7IzUhR6h
+         zz0z1kVT+XU5izbnMkK3AU8tLeBF7JA15PUW9FCRmfWQ67APYsn+kI+mgdtvR+hthAXq
+         TKXZXZ2Dbqs4yzNYfe0THVMQ2g26yhuQwE+w0P+K/+OHox9lHLzanDr0CxCOOXCroNiB
+         2OHBjjaiwwU0ny3imKHSNbcq+7nPp5QFUeUD2DfdMMyqKMKe1rhrq9clT2a/dr5duBbZ
+         cA4A==
+X-Gm-Message-State: AFqh2krXDvr5X0pIGBRkN2grTsplxgizpbfpk1gXWWdYytFg7t/C2CCJ
+        G05OIVhGYoo0UXi311uyyGDa
+X-Google-Smtp-Source: AMrXdXuMUb9imbzsYfTE5En5nuHtn/TmzHDACIlyvsGN0hE5lVGaisW6wgzm2Fyqg9E+Iq7B7w4ISg==
+X-Received: by 2002:a62:1855:0:b0:577:213e:8cab with SMTP id 82-20020a621855000000b00577213e8cabmr6209285pfy.16.1671715898726;
+        Thu, 22 Dec 2022 05:31:38 -0800 (PST)
+Received: from localhost.localdomain ([117.217.177.99])
+        by smtp.gmail.com with ESMTPSA id f66-20020a623845000000b00573a9d13e9esm737467pfa.36.2022.12.22.05.31.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Dec 2022 05:31:37 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     bhelgaas@google.com, konrad.dybcio@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/3] Qcom: Add GIC-ITS support to SM8450 PCIe controllers
+Date:   Thu, 22 Dec 2022 19:01:20 +0530
+Message-Id: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [100.108.184.173]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500002.china.huawei.com (7.221.188.171)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,51 +70,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We get this stack when the rp doesn't power up in resume noirq:
-    dump_backtrace.cfi_jt+0x0/0x4
-    dump_stack_lvl+0xb4/0x10c
-    show_regs_before_dump_stack+0x1c/0x30
-    arm64_serror_panic+0x110/0x1a8
-    do_serror+0x16c/0x1cc
-    el1_error+0x8c/0x10c
-    do_raw_spin_unlock+0x74/0xdc
-    pci_bus_read_config_word+0xdc/0x1dc
-    pci_restore_msi_state+0x2f4/0x36c
-    pci_restore_state+0x13f0/0x1444
-    pci_pm_resume_noirq+0x158/0x318
-    dpm_run_callback+0x178/0x5e8
-    device_resume_noirq+0x250/0x264
-    async_resume_noirq+0x20/0xf8
-    async_run_entry_fn+0xfc/0x364
-    process_one_work+0x37c/0x7f4
-    worker_thread+0x3e8/0x754
-    kthread+0x168/0x204
-    ret_from_fork+0x10/0x18
-The ep device uses msix, the restore process will write bar space
-in __pci_msix_desc_mask_irq, which will result in accessing the
-powerdown area when the rp doesn't power on.
+Hello,
 
-It makes sense we should do nothing when the device is still powerdown.
+This series adds GIC-ITS support to SM8450 PCIe controllers for receiving
+the MSIs from endpoint devices.
 
-Signed-off-by: Jianrong Zhang <zhangjianrong5@huawei.com>
-Signed-off-by: Jiantao Zhang <water.zhangjiantao@huawei.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The GIC-ITS MSI implementation provides an advantage over internal MSI
+implementation using Locality-specific Peripheral Interrupts (LPI) that
+would allow MSIs to be targeted for each CPU core.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index fba95486caaf..279f6e8c5a00 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1764,7 +1764,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
-  */
- void pci_restore_state(struct pci_dev *dev)
- {
--	if (!dev->state_saved)
-+	if (!dev->state_saved || dev->current_state == PCI_UNKNOWN)
- 		return;
- 
- 	/*
+This series has been tested on SM8450 based dev board that works using an
+out-of-tree dts where the MSIs from endpoint devices are distributed across
+the CPU cores.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Swapped the Device ID for PCIe0 as it causes same issue as PCIe1
+* Removed the definition of msi-map and msi-map-mask from binding
+* Added Ack from Krzysztof
+
+Manivannan Sadhasivam (3):
+  dt-bindings: PCI: qcom: Update maintainers
+  dt-bindings: PCI: qcom: Document msi-map and msi-map-mask properties
+  arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0 and PCIe1
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 14 +++++++++----
+ arch/arm64/boot/dts/qcom/sm8450.dtsi          | 20 +++++++++++++------
+ 2 files changed, 24 insertions(+), 10 deletions(-)
+
 -- 
-2.17.1
+2.25.1
 
