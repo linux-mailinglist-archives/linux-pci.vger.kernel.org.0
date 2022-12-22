@@ -2,68 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F75D6541F2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 14:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1828F654207
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 14:39:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235395AbiLVNb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Dec 2022 08:31:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57340 "EHLO
+        id S230302AbiLVNjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Dec 2022 08:39:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235212AbiLVNbx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Dec 2022 08:31:53 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F527140BE
-        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:31:51 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id 4so2035771plj.3
-        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:31:51 -0800 (PST)
+        with ESMTP id S235011AbiLVNjl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Dec 2022 08:39:41 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD9C13CDA
+        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:39:38 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id t2so2058353ply.2
+        for <linux-pci@vger.kernel.org>; Thu, 22 Dec 2022 05:39:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2xuFcNG+Lmd6sCAcx37A72Ddu+m83mu9NNvxLdsptSw=;
-        b=nA0ejjbc4ytOQVnxKuefw8MAuoRRUqjMaGNYnMY+ffjK/YbyiaNBpzJcU+FMdCNPv9
-         qzJ+NCcvT5bJcFZsC+3gSV9hOTT10rdAe7l12HO/wqnJ3E5e1Iz1Oyo7zDYY6iJfo2Yr
-         abNHgiimpIb4/+OxWWJ83YaQciW8gx1jdh/CiWuA4yoRQ9JXoZU/J6WLVLCG9eWXpYqZ
-         Pzssu2lDki9ge53ut13Cr6nDhJJvEng5+Gt0G0Yd6CJh9ZXuScFZdiV+socMh4eDvQWG
-         qyXqE6bmxNqbqhIaRZK4pZDCEg7UDXXXZzL53S0KezKK9Mr5F6o/kxJiNUQTQKE37WxJ
-         UAAA==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XkH6OCe/x7JQpec0bculCGFtQ6ZNz0wh9corwULkI6E=;
+        b=FHVUziAoXjTfQ8658Fz9bwN0Axo0vLmOhfG4Ls9YhXfuE0H267tuhjHuesk9fD2K4W
+         YPQXKDwl5aopv6vRGezEP4B9N9zw4a3u7G6Bz4yO3DD67p7mZTqlSa4PnAR5MEiyW9bJ
+         dsGwTXvS3xKr2R1D9Ycerfrn21+Eul85nUP/XU6zE3v7jtoOAPPeTp8r3gvIqljBqNbY
+         n58FCmLREKEpE5OW6kCAMEiBrj6vzqI71CBF2zAopovLxV9Qqn1C4KpVlGvv7LDupbaO
+         hD5Xc176rzoQVE5I+chEqQDievaykAMcXpuLKEEZ/Ctqq7yXoTO1TgE17UMhm3MANEOP
+         fL7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2xuFcNG+Lmd6sCAcx37A72Ddu+m83mu9NNvxLdsptSw=;
-        b=Ufp0I2FMfWpA/07FVDHFmefDkAlPFHotnhfN+r8QkCgvCkHqrVz7Pgc1u9a0UJS2zq
-         zpKY0ry+thL4/XtPHZApmG80vqO2J97r9eKFuiUjNq+AZ9XmgGJnfuKHPdpz9ZVQ9+nu
-         YCTwTIW3uJY6dffhYUJXIwMmqqeG5Hl3AkCRevhJxYbdxlb4188hSaRnTohYzNxrAKKd
-         nGBbfi2RUZr/zP8buuBfppNjQ6Y4mzbSz0wtcqW+7O3TafrVxioJxEPBQjzQUVMgP3zz
-         wUsdld/WnxPiOKKTg1lpGmjkBR/Ihtad9A/MYvkpQQC5PHnWG+EJrZzQNVjNe2z8D/F9
-         ohtQ==
-X-Gm-Message-State: AFqh2krCcCPqPjUpcIzF6YJk4SXrSkHfpO0La0oPUoIUcl3PEk5kyhEZ
-        kWMWAGAj3En/ouqYNKYDMZ2j
-X-Google-Smtp-Source: AMrXdXssTF2j/7G2W7A5SzQqs9JwTq3TPxXMUyLOzEdRGDV92xCWp41iMryIUYKECqxp58XVPBCdlw==
-X-Received: by 2002:a05:6a20:3d14:b0:af:b909:2b3f with SMTP id y20-20020a056a203d1400b000afb9092b3fmr8965864pzi.34.1671715910863;
-        Thu, 22 Dec 2022 05:31:50 -0800 (PST)
-Received: from localhost.localdomain ([117.217.177.99])
-        by smtp.gmail.com with ESMTPSA id f66-20020a623845000000b00573a9d13e9esm737467pfa.36.2022.12.22.05.31.47
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XkH6OCe/x7JQpec0bculCGFtQ6ZNz0wh9corwULkI6E=;
+        b=r6IHStmZK0lgCS23La9mU1dN3b2np2c2DIjTQHV+FIQoyVuT7+3rl+ks1vFyaHA5BG
+         QSVaRQjeA+WXnsy15o7DIuqdMd3rZgp+fiCWHcqJHNW3RMz5dTv1sUk3MPgqZ8oMGaZF
+         v8/t8RwovXmHylKZtCRdwFWYOIi35r9nW6bzXB3dtzGskT3FF16hON1v3XemqNrutIw5
+         maZJlGgwyqhKsAy8DWIdqrvSNgi3oh6DUmq6mqx2r3FQw/YbEm2SBlrlIooIkRzP5J9Y
+         Igq9TUUiw/x9tfS7o2ITZRvzLTwTWHkfbY7E2MosEhfbwmvaWXSMcEfwAWsVeBMpmSkm
+         bySg==
+X-Gm-Message-State: AFqh2kpQCl2zm13YoGVxnrOeVCFAQaqX65CKfOPbQYtsPXOkzpnLjOM6
+        GGmwhnZE6qHBA5yrxTzyRoBR
+X-Google-Smtp-Source: AMrXdXv2M1IfxFj/4CiOC19ST6aljTgL/aYpmm8XATNS5YYQkHSGGLRZiUWulnL1zLa8NWat1LI+4g==
+X-Received: by 2002:a05:6a21:3393:b0:ab:fb31:be13 with SMTP id yy19-20020a056a21339300b000abfb31be13mr31582570pzb.37.1671716378114;
+        Thu, 22 Dec 2022 05:39:38 -0800 (PST)
+Received: from thinkpad ([117.217.177.99])
+        by smtp.gmail.com with ESMTPSA id 37-20020a631765000000b0046b2ebb0a52sm756040pgx.17.2022.12.22.05.39.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 05:31:50 -0800 (PST)
+        Thu, 22 Dec 2022 05:39:36 -0800 (PST)
+Date:   Thu, 22 Dec 2022 19:09:26 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     bhelgaas@google.com, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0 and PCIe1
-Date:   Thu, 22 Dec 2022 19:01:23 +0530
-Message-Id: <20221222133123.50676-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
-References: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, swboyd@chromium.org,
+        dmitry.baryshkov@linaro.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v7] PCI/ASPM: Update LTR threshold based upon reported
+ max latencies
+Message-ID: <20221222133926.GA50976@thinkpad>
+References: <1663315719-21563-1-git-send-email-quic_krichai@quicinc.com>
+ <20221205112500.GB4514@thinkpad>
+ <Y441/Icd2wSgVnNU@google.com>
+ <20221221054953.GA2922@thinkpad>
+ <Y6MfXltck34gSwU9@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y6MfXltck34gSwU9@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -74,63 +88,154 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Both PCIe0 and PCIe1 controllers are capable of receiving MSIs from
-endpoint devices using GIC-ITS MSI controller. Add support for it.
+On Wed, Dec 21, 2022 at 02:59:42PM +0000, Matthias Kaehlcke wrote:
+> On Wed, Dec 21, 2022 at 11:19:53AM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Dec 05, 2022 at 06:18:36PM +0000, Matthias Kaehlcke wrote:
+> > > On Mon, Dec 05, 2022 at 04:55:00PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Fri, Sep 16, 2022 at 01:38:37PM +0530, Krishna chaitanya chundru wrote:
+> > > > > In ASPM driver, LTR threshold scale and value are updated based on
+> > > > > tcommon_mode and t_poweron values. In Kioxia NVMe L1.2 is failing due to
+> > > > > LTR threshold scale and value are greater values than max snoop/non-snoop
+> > > > > value.
+> > > > > 
+> > > > > Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+> > > > > reported snoop/no-snoop values is greater than or equal to
+> > > > > LTR_L1.2_THRESHOLD value.
+> > > > > 
+> > > > > Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+> > > > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > > > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > I take my Ack back... Sorry that I did not look into this patch closer.
+> > > > 
+> > > > > ---
+> > > > > 
+> > > > > I am taking this patch forward as prasad is no more working with our org.
+> > > > > changes since v6:
+> > > > > 	- Rebasing with pci/next.
+> > > > > changes since v5:
+> > > > > 	- no changes, just reposting as standalone patch instead of reply to
+> > > > > 	  previous patch.
+> > > > > Changes since v4:
+> > > > > 	- Replaced conditional statements with min and max.
+> > > > > changes since v3:
+> > > > > 	- Changed the logic to include this condition "snoop/nosnoop
+> > > > > 	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+> > > > > Changes since v2:
+> > > > > 	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+> > > > > Changes since v1:
+> > > > > 	- Added missing variable declaration in v1 patch
+> > > > > ---
+> > > > >  drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 30 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > > index 928bf64..2bb8470 100644
+> > > > > --- a/drivers/pci/pcie/aspm.c
+> > > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > > @@ -486,13 +486,35 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > > > >  {
+> > > > >  	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> > > > >  	u32 val1, val2, scale1, scale2;
+> > > > > +	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+> > > > >  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+> > > > >  	u32 ctl1 = 0, ctl2 = 0;
+> > > > >  	u32 pctl1, pctl2, cctl1, cctl2;
+> > > > > +	u16 ltr;
+> > > > > +	u16 max_snoop_lat, max_nosnoop_lat;
+> > > > >  
+> > > > >  	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+> > > > >  		return;
+> > > > >  
+> > > > > +	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
+> > > > > +	if (!ltr)
+> > > > > +		return;
+> > > > > +
+> > > > > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
+> > > > > +	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
+> > > > > +
+> > > > > +	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > > > > +	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
+> > > > > +
+> > > > > +	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
+> > > > > +	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
+> > > > > +
+> > > > > +	/* choose the greater max scale value between snoop and no snoop value*/
+> > > > > +	max_scale = max(max_snp_scale, max_nsnp_scale);
+> > > > > +
+> > > > > +	/* choose the greater max value between snoop and no snoop scales */
+> > > > > +	max_val = max(max_snp_val, max_nsnp_val);
+> > > > > +
+> > > > >  	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+> > > > >  	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> > > > >  	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+> > > > > @@ -525,6 +547,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> > > > >  	 */
+> > > > >  	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+> > > > >  	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
+> > > > > +	 * snoop/no-snoop values are greater than or equal to LTR_L1.2_THRESHOLD value.
+> > > > 
+> > > > Apart from the bug in calculating the LTR_Threshold as reported by Matthias
+> > > > and Bjorn, I'm wondering if we are covering up for the device firmware issue.
+> > > 
+> > > Yes, I think the patch is doing exactly that.
+> > > 
+> > > > As per section 6.18, if the device reports snoop/no-snoop scale/value as 0, then
+> > > > it implies that the device won't tolerate any additional delays from the host.
+> > > >
+> > > > In that case, how can we allow the link to go into L1.2 since that would incur
+> > > > high delay compared to L1.1?
+> > > 
+> > > I had the same doubt, a value of 0 doesn't make sense, if it literally means
+> > > 'max delay of 0ns'. I did some debugging around this issue. One thing I found
+> > > is that there are NVMe models that don't have issues with entering L1.2 with
+> > > max (no-)snoop latencies of 0. From that I infer that a value of 0 does not
+> > > literally mean a max delay of 0ns.
+> > > 
+> > 
+> > This is interesting.
+> > 
+> > > The PCIe spec doesn't say specifically what a value of 0 in those registers
+> > > means, but chapter "6.18 Latency Tolerance Reporting (LTR) Mechanism" of the
+> > > PCIe 4.0 base spec says something about the latency requirements in LTR
+> > > messages:
+> > > 
+> > >   Setting the value and scale fields to all 0’s indicates that the device will
+> > >   be impacted by any delay and that the best possible service is requested.
+> > > 
+> > > With that and the fact that several NVMe's don't have issues with all 0 values
+> > > I deduce that all 0's means 'best possible service' and not 'max latency of
+> > > 0ns'. It seems the Kioxia firmware has a bug which interprets all 0 values as
+> > > a max latency of 0ns.
+> > > 
+> > > Another finding is that the Kioxia NVMe can enter L1.2 if the max latencies
+> > > are set to values >= the LTR threshold. Unfortunately that isn't a viable
+> > > fix for existing devices in the field, devices under development could possibly
+> > > adjust the latencies in the BIOS (coreboot code [1] suggests that this is done
+> > > at least in some cases).
+> > > 
+> > 
+> > I fully agree that it is a firmware issue. And yes, we should refrain to fixes
+> > in the bootloader if possible.
+> > 
+> > Another option would be to add a quirk for specific devices in the ASPM code.
+> > But in that case, I'm not sure what would be the optimal snoop/no-snoop value
+> > that could be used.
+> 
+> I had/have the same doubt.
+> 
+> > There is another issue where if we have some other device on the same bus
+> > that explicitly requires 0ns latency.
+> 
+> Would that be reasonable requirement, i.e. can 0ns latency ever be achieved?
 
-Currently, BDF (0:0.0) and BDF (1:0.0) are enabled and with the
-msi-map-mask of 0xff00, all the 32 devices under these two busses can
-share the same Device ID.
+Well, not in an ideal world. But the device vendors do not fail to surprise us ;)
 
-The GIC-ITS MSI implementation provides an advantage over internal MSI
-implementation using Locality-specific Peripheral Interrupts (LPI) that
-would allow MSIs to be targeted for each CPU core.
+Thanks,
+Mani
 
-It should be noted that the MSIs for BDF (1:0.0) only works with Device
-ID of 0x5980 and 0x5a00. Hence, the IDs are swapped.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8450.dtsi | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index 570475040d95..c4dd5838fac6 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -1733,9 +1733,13 @@ pcie0: pci@1c00000 {
- 			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
- 				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
- 
--			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "msi";
--			#interrupt-cells = <1>;
-+			/*
-+			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
-+			 * Hence, the IDs are swapped.
-+			 */
-+			msi-map = <0x0 &gic_its 0x5981 0x1>,
-+				  <0x100 &gic_its 0x5980 0x1>;
-+			msi-map-mask = <0xff00>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
- 					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-@@ -1842,9 +1846,13 @@ pcie1: pci@1c08000 {
- 			ranges = <0x01000000 0x0 0x40200000 0 0x40200000 0x0 0x100000>,
- 				 <0x02000000 0x0 0x40300000 0 0x40300000 0x0 0x1fd00000>;
- 
--			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "msi";
--			#interrupt-cells = <1>;
-+			/*
-+			 * MSIs for BDF (1:0.0) only works with Device ID 0x5a00.
-+			 * Hence, the IDs are swapped.
-+			 */
-+			msi-map = <0x0 &gic_its 0x5a01 0x1>,
-+				  <0x100 &gic_its 0x5a00 0x1>;
-+			msi-map-mask = <0xff00>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
- 					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
