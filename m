@@ -2,75 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 377CF653B00
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 04:46:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8956F653C7F
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Dec 2022 08:26:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbiLVDqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Dec 2022 22:46:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
+        id S234880AbiLVH0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Dec 2022 02:26:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiLVDqd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Dec 2022 22:46:33 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD0D23329;
-        Wed, 21 Dec 2022 19:46:32 -0800 (PST)
-Received: from dggpemm500007.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Ncx381tGRzJpRt;
-        Thu, 22 Dec 2022 11:42:44 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 22 Dec
- 2022 11:46:07 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ntb@lists.linux.dev>
-CC:     <jdmason@kudzu.us>, <dave.jiang@intel.com>, <allenbh@gmail.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <mani@kernel.org>,
-        <kishon@kernel.org>, <bhelgaas@google.com>, <helgaas@kernel.org>
-Subject: [PATCH v2] PCI: endpoint: pci-epf-vntb: fix doc warning in pci-epf-vntb.c
-Date:   Thu, 22 Dec 2022 11:43:24 +0800
-Message-ID: <20221222034324.3294639-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229608AbiLVH0I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Dec 2022 02:26:08 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A8538B4;
+        Wed, 21 Dec 2022 23:26:07 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id x66so650596pfx.3;
+        Wed, 21 Dec 2022 23:26:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C1M6sI8nGjn1AQZW7MjYI4O6nfdLnBf5J3+wPQ6ghb0=;
+        b=KZRpJQE2dMcoZOUADI+9CK3UIfA+yeOJRhVV06WaoBzBZFtg5CdZP5hSE68WLOOdXm
+         rG8tFq14LpuMpsAzqBqXWMdbGZYMyGIQka9dtDTu9Z0iNl1g7AiYDphbg44aUydjiiaS
+         TuK6DrJjGI1cOwkQxLoSaKogyEP3yeyP+rasQspiBvXFLV8sNUIRPw7oj6UtTpLhfUV6
+         7xz/qHNDbXb8f2Zqsoz+dIcgYoWolASTcAcCD70/oNGbes+I0+4ZkgcXp+k9QUtqaAUC
+         NyLYQmrC52cU6+XUGtmFw5AxyCxtKkWHiAUMIQXHDjVZZb2Z4YPqvLKlXoylD3mbxDCh
+         OgJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C1M6sI8nGjn1AQZW7MjYI4O6nfdLnBf5J3+wPQ6ghb0=;
+        b=13v8N6MhXyuD7XNvmql05xK8xp49um2Fe+wFzsCpFkHwRl2WTl7sbCCeM1IvCZmMBb
+         Ki09o5wldhZi/tmEsg2o17jRNpdQYskdJAcIMaX+KQTOnOi9I83NUKmC02+kcFJbrJRn
+         9rQy1ybCwk/gfGmDfsyeaUd5yqiEehjit0i5AyGVM9EfenmI1rlQLhreYKLMR4rysegU
+         InMw/qls+m1yfO1aKzQ5bNH7MEfKeBUiUVUL9TNnm8PP7OODUe6f1suLYyye8JfGVTzq
+         6KN3LeFtjGhDvArsdigzokOJB/qRlHv6LMYyO4UYWdhKIyWfvoLv90Zm0GgpgFwnW5Kx
+         r4Fw==
+X-Gm-Message-State: AFqh2kq0605eupuvKR9z/keIBpsThISVg/8XBKZ93bvBIMqVAzMtaEHK
+        hD1Ev/k7AaraZoYZjnSq9MI=
+X-Google-Smtp-Source: AMrXdXuMdbHUhQAzE0MiH3d0myApJ7/oKLKYNYQRn7zJ2MLcR9aEZ57SMdbpCEwj2o/zAnLNy4GSwg==
+X-Received: by 2002:a05:6a00:3691:b0:577:6264:9d0f with SMTP id dw17-20020a056a00369100b0057762649d0fmr5425480pfb.6.1671693967081;
+        Wed, 21 Dec 2022 23:26:07 -0800 (PST)
+Received: from localhost.localdomain ([43.132.141.4])
+        by smtp.gmail.com with ESMTPSA id j186-20020a62c5c3000000b00573eb4a9a66sm11815117pfg.2.2022.12.21.23.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Dec 2022 23:26:06 -0800 (PST)
+From:   korantwork@gmail.com
+To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
+Subject: [PATCH] PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
+Date:   Thu, 22 Dec 2022 15:26:03 +0800
+Message-Id: <20221222072603.1175248-1-korantwork@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the following make W=1 warning:
+From: Xinghui Li <korantli@tencent.com>
 
-  drivers/pci/endpoint/functions/pci-epf-vntb.c:645: warning: Function parameter or member 'num_mws' not described in 'epf_ntb_mw_bar_clear'
+Commit ee81ee84f873("PCI: vmd: Disable MSI-X remapping when possible")
+disable the vmd MSI-X remapping for optimizing pci performance.However,
+this feature severely negatively optimized performance in multi-disk
+situations.
 
-Fixes: 8e4bfbe644a6 ("PCI: endpoint: pci-epf-vntb: fix error handle in epf_ntb_mw_bar_init()")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+In FIO 4K random test, we test 1 disk in the 1 CPU
+
+when disable MSI-X remapping:
+read: IOPS=1183k, BW=4622MiB/s (4847MB/s)(1354GiB/300001msec)
+READ: bw=4622MiB/s (4847MB/s), 4622MiB/s-4622MiB/s (4847MB/s-4847MB/s),
+io=1354GiB (1454GB), run=300001-300001msec
+
+When not disable MSI-X remapping:
+read: IOPS=1171k, BW=4572MiB/s (4795MB/s)(1340GiB/300001msec)
+READ: bw=4572MiB/s (4795MB/s), 4572MiB/s-4572MiB/s (4795MB/s-4795MB/s),
+io=1340GiB (1438GB), run=300001-300001msec
+
+However, the bypass mode could increase the interrupts costs in CPU.
+We test 12 disks in the 6 CPU,
+
+When disable MSI-X remapping:
+read: IOPS=562k, BW=2197MiB/s (2304MB/s)(644GiB/300001msec)
+READ: bw=2197MiB/s (2304MB/s), 2197MiB/s-2197MiB/s (2304MB/s-2304MB/s),
+io=644GiB (691GB), run=300001-300001msec
+
+When not disable MSI-X remapping:
+read: IOPS=1144k, BW=4470MiB/s (4687MB/s)(1310GiB/300005msec)
+READ: bw=4470MiB/s (4687MB/s), 4470MiB/s-4470MiB/s (4687MB/s-4687MB/s),
+io=1310GiB (1406GB), run=300005-300005msec
+
+Signed-off-by: Xinghui Li <korantli@tencent.com>
 ---
-v1 -> v2:
-  Based on latest commit.
----
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/vmd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 04698e7995a5..37134aead77c 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -594,6 +594,7 @@ static void epf_ntb_db_bar_clear(struct epf_ntb *ntb)
- /**
-  * epf_ntb_mw_bar_init() - Configure Memory window BARs
-  * @ntb: NTB device that facilitates communication between HOST and VHOST
-+ * @num_mws: the number of Memory window BARs that to be cleared
-  *
-  * Returns: Zero for success, or an error code in case of failure
-  */
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e06e9f4fc50f..9f6e9324d67d 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -998,8 +998,7 @@ static const struct pci_device_id vmd_ids[] = {
+ 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+ 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
+-				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+-				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
++				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
+ 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+ 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
 -- 
-2.25.1
+2.39.0
 
