@@ -2,71 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C6A76551A4
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Dec 2022 15:52:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 406336551CB
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Dec 2022 16:02:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236410AbiLWOwj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Dec 2022 09:52:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
+        id S236461AbiLWPCm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Dec 2022 10:02:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbiLWOwi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Dec 2022 09:52:38 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8742613F23
-        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 06:52:37 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id m4so5173543pls.4
-        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 06:52:37 -0800 (PST)
+        with ESMTP id S236456AbiLWPCl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Dec 2022 10:02:41 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D370626115
+        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 07:02:40 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id m4so5196656pls.4
+        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 07:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=p4c7xeEqpZFltAtynpIOAI0IKcOIz2iKznrCv3M1zGs=;
-        b=qjYXQuHB9RGkuu3DlFhIcPMc97bB/cL5IGsGEG64Cqi/hdbrIWqiJ5xkynxwxjGWkI
-         XR1FF7e4OsW0R+BLrkRKgmncZJImyMzkZwp+2I5RqxqO+A7z/rXkdcL5TdRptLL9m3Z/
-         QaN+AMQOCKf6V3a2MXMDZvYRH6kKvuEvwWtJFfpGBq2aIAHS5NC+Sv6jF1CnD4auFnJ6
-         7MZWAtfHSIMgCk/zbrvZNVN/AY6ogLx78bOHbM0RO57PB2a2Uh9M0m7sLMJ+tMKLuCHS
-         uAphnpXs8MwcsLQ/haIGwqhMwBghrVdcs3LBfQO9UWL/BGqqcxe87A5r0aPNV6bDmWh+
-         JIQA==
+        bh=hym9I/8Zx2heqtzvbjDG8T0F+0F1WrxSB82+3fgXrCs=;
+        b=RkCDOqxRJ5Xj+NtiaIuQ7fE0ZtalDZpwA/P+90rf5TxBXdVQ443U5LuxQLa9Tm/iJR
+         D9+DuWqGVaV85SXh7UOEIQqZgr2KHx5o/sV6sXxpfT1o0iGRqjGE42Ojx2a6zsOF9nAX
+         ZCWcdCbbLudnqN/jTnwkQFRzR4UiohqVkiiBkoesaQ/2+N+tZYqORIU239tmSqGQzZlG
+         I5zWinTF/XhOZOTYXqVRVxrNGNR1ONpTXfaUWaSSKoIsAG/U7WQCfm1F0saKWyYo1ytZ
+         1Vg9kpU1Jun115p3Nk0259QS97eHycTJta0AofuqIzWsclScrcV6zBjVABn8EeTmNImK
+         vqhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p4c7xeEqpZFltAtynpIOAI0IKcOIz2iKznrCv3M1zGs=;
-        b=KYMq3TieqssYKDE5ESz81u3JymM892RLkHdYUE+t3Y+DwSN2TyytZjOS1R+ljK8KEv
-         ZNjCxyEY4ezbKAzpg+M6H9ySDR1Xx2W+OLZOZj1ZGKacQuca8PZcJVjDS4FqaM9JvGHW
-         t1bidrw7Y8RcULUeo+9lNjY08US3TydQMBOf2v8ZFH8IpYCTIwL+CHI/kYcBagMvfQ+u
-         nc3a20mUPzoiLmsFnonTjRLjdI9zNafbjnNVT4yMIFM9PdRe9FhvA8jhqNumPiYXNCPK
-         VltzRzF6O5yPqtAEW7TJtirTC7VYETY6eKeaF/Kh7DUCY/GPMohUIPoykG0zv1R9Ux5B
-         IhQQ==
-X-Gm-Message-State: AFqh2kqPn0VAPxH+FVXSJvMyLOZOY599VIbDuauMy8C/DqoRzYBD8H5U
-        W8D1f0O8DVj5GYMtLHeXMPGy
-X-Google-Smtp-Source: AMrXdXvSa1lWysAnMFmjkHDIkODKzciYlSGUdV5+Y7XWDKHP7unxftXnBP2vnAr5u8uO/nVChVFEFA==
-X-Received: by 2002:a05:6a21:168c:b0:a4:2a7d:59a5 with SMTP id np12-20020a056a21168c00b000a42a7d59a5mr30259905pzb.59.1671807157028;
-        Fri, 23 Dec 2022 06:52:37 -0800 (PST)
+        bh=hym9I/8Zx2heqtzvbjDG8T0F+0F1WrxSB82+3fgXrCs=;
+        b=Bh7QcHYCxThcfLgGPxpV/4KSiW+twl7m0/Ixh9k4o22AAsY2Olp+Nskdlho+lNdA1H
+         GI+9Sb2r+j5URpjQ10pBm8McQf0sOZpK+CoC2xpvH8YJIGuhIU4YHgtqL5gfCTir0Q2d
+         DAnMru0iw7EfoW7DFd4p19gFKfprrz2fj13EaHjzmoK7H5fIGwAabSoIeJQ6h1P8pppg
+         Vkf+bT+upzg2xkoczX1q4hWscKmYi7KBF0EYkXFNTzOWzfINTkMBmVXv0atgClPtOipk
+         VzzCP3Gd5sFub9jUsABydRFVNge1Y4nmnLT8q9gMGGxbRIlSzCrT4WrYQ07brA+zNpbm
+         UMhg==
+X-Gm-Message-State: AFqh2kp7PkIfNoKqVWrBEB8YQ1p+Ip0md6E/hMISibxvLYvhu/RAAfDc
+        YY+S1ut1tUHrSmtDZ+H6bblr
+X-Google-Smtp-Source: AMrXdXtsYyuhBmpwbDlQIl+Ry+zm4L2NR4g7iB8qu6wucOubA3roxo2rzNv7BgX/Hpk+rfDsHjmOOA==
+X-Received: by 2002:a17:90a:ce8c:b0:223:f6c2:f21a with SMTP id g12-20020a17090ace8c00b00223f6c2f21amr10749315pju.35.1671807760314;
+        Fri, 23 Dec 2022 07:02:40 -0800 (PST)
 Received: from thinkpad ([27.111.75.82])
-        by smtp.gmail.com with ESMTPSA id p30-20020a635b1e000000b0043a0de69c94sm2406393pgb.14.2022.12.23.06.52.28
+        by smtp.gmail.com with ESMTPSA id 3-20020a17090a034300b002191e769546sm2373891pjf.4.2022.12.23.07.02.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 06:52:36 -0800 (PST)
-Date:   Fri, 23 Dec 2022 20:22:26 +0530
+        Fri, 23 Dec 2022 07:02:39 -0800 (PST)
+Date:   Fri, 23 Dec 2022 20:32:11 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        bhelgaas@google.com, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: qcom: Document msi-map and
- msi-map-mask properties
-Message-ID: <20221223145226.GB4587@thinkpad>
-References: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
- <20221222133123.50676-3-manivannan.sadhasivam@linaro.org>
- <20221222190141.GA1908434-robh@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Aman Gupta <aman1.gupta@samsung.com>, shradha.t@samsung.com,
+        pankaj.dubey@samsung.com, kishon@ti.com, lpieralisi@kernel.org,
+        kw@linux.com, shuah@kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
+Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
+ endpoint driver test
+Message-ID: <20221223150211.GC4587@thinkpad>
+References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
+ <20221007053934.5188-1-aman1.gupta@samsung.com>
+ <641d1e50-a9d0-dc15-be76-07b8ace25dae@linuxfoundation.org>
+ <20221222174532.GA59500@thinkpad>
+ <b2a5db97-dc59-33ab-71cd-f591e0b1b34d@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221222190141.GA1908434-robh@kernel.org>
+In-Reply-To: <b2a5db97-dc59-33ab-71cd-f591e0b1b34d@linuxfoundation.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -76,72 +79,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 22, 2022 at 01:01:41PM -0600, Rob Herring wrote:
-> On Thu, Dec 22, 2022 at 07:01:22PM +0530, Manivannan Sadhasivam wrote:
-> > The Qcom PCIe controller is capable of using either internal MSI controller
-> > or the external GIC-ITS for receiving the MSIs from endpoint devices.
-> > Currently, the binding only documents the internal MSI implementation.
+On Thu, Dec 22, 2022 at 10:49:48AM -0700, Shuah Khan wrote:
+> On 12/22/22 10:45, Manivannan Sadhasivam wrote:
+> > On Thu, Dec 22, 2022 at 09:58:30AM -0700, Shuah Khan wrote:
+> > > On 10/6/22 23:39, Aman Gupta wrote:
+> > > > This patch enables the support to perform selftest on PCIe endpoint
+> > > > driver present in the system. The following tests are currently
+> > > > performed by the selftest utility
+> > > > 
+> > > > 1. BAR Tests (BAR0 to BAR5)
+> > > > 2. MSI Interrupt Tests (MSI1 to MSI32)
+> > > > 3. Read Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> > > > 4. Write Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> > > > 5. Copy Tests (For 1, 1024, 1025, 1024000, 1024001 Bytes)
+> > > > 
+> > > > Signed-off-by: Aman Gupta <aman1.gupta@samsung.com>
+> > > > Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
+> > > 
+> > > Adding Bjorn Helgaas to the thread.
+> > > 
+> > > Adding pcit test under selftests is good. There is another pcitest
+> > > under tools/pci. I would like to see if the existing code in
+> > > tools/pci/pcitest.c can be leveraged.
+> > > 
+> > > As part of this test work, also look into removing tools/pci so
+> > > we don't have to maintain duplicate code in two places.
+> > > 
 > > 
-> > Let's document the GIC-ITS imeplementation by making use of msi-map and
-> > msi-map-mask properties. Only one of the implementation should be used
-> > at a time.
+> > It has been agreed in a thread with Greg [1] to {re}move the tests under
+> > tools/pci and utilize the kselftest.
+> > 
 > 
-> Isn't that up to the OS to decide? Some versions may not support MSIs.
+> Inline with what I am suggesting. However, I don't see either move or
+> delete of tools/pci in the patch?
 > 
-
-Yes, OS may choose either of them but the controller supports both and only one
-implementation can be used at a time.
-
-AFAIK, all of the SoCs supported in upstream support both MSI and legacy
-interrupts.
-
-> What about legacy interrupts? Don't you need to keep the interrupt 
-> properties for them?
+> The first patch could start with git mv of the existing files and then
+> make changes to preserver the history.
 > 
 
-We have "interrupt-map-mask" and "interrupt-map" properties for legacy
-interrupts.
+Right. This patch was posted independently of the series [1] that I submitted to
+fix the return values of IOCTL calls used in drivers/misc/pci_endpoint_test.c
+driver.
+
+Then in that series, it was decided to move the existing test to kselftest. So,
+I suggested Aman Gupta [2] to integrate my latest patches, add the kselftest
+patch on top, then remove the existing test under tools/pci.
+
+The kselftest patch can also move the driver first and then make the change as
+you suggested. Either way it is fine by me.
 
 Thanks,
 Mani
 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
+[1] https://lore.kernel.org/lkml/20220824123010.51763-1-manivannan.sadhasivam@linaro.org/
+[2] https://lore.kernel.org/linux-pci/20221221072423.GC2922@thinkpad/ 
+
 > > 
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > index 02450fb26bb9..10fec6a7abfc 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > @@ -104,14 +104,20 @@ required:
-> >    - compatible
-> >    - reg
-> >    - reg-names
-> > -  - interrupts
-> > -  - interrupt-names
-> > -  - "#interrupt-cells"
-> >    - interrupt-map-mask
-> >    - interrupt-map
-> >    - clocks
-> >    - clock-names
-> >  
-> > +oneOf:
-> > +  - required:
-> > +      - interrupts
-> > +      - interrupt-names
-> > +      - "#interrupt-cells"
-> > +  - required:
-> > +      - msi-map
-> > +      - msi-map-mask
-> > +
-> >  allOf:
-> >    - $ref: /schemas/pci/pci-bus.yaml#
-> >    - if:
-> > -- 
-> > 2.25.1
+> > [1] https://lore.kernel.org/lkml/Y2FTWLw0tKuZ9Cdl@kroah.com/
 > > 
-> > 
+> 
+> thanks,
+> -- Shuah
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
