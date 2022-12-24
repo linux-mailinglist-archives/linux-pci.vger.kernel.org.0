@@ -2,191 +2,820 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA5265538A
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Dec 2022 19:15:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BAA9655B07
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Dec 2022 20:01:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231523AbiLWSPk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Dec 2022 13:15:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50358 "EHLO
+        id S229507AbiLXTBN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Dec 2022 14:01:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231404AbiLWSPj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Dec 2022 13:15:39 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237641E3F4
-        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 10:15:37 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id p36so7950199lfa.12
-        for <linux-pci@vger.kernel.org>; Fri, 23 Dec 2022 10:15:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CMkaNS6uOrb3D/0kArTYvqSqllKQ1UyONAfya7XClCA=;
-        b=cee0DxFYkfwQEw34e2mDPCBPHQiakE8mCBUi8vVzvNg9TSRfwPL5y4nI2U3jPBr7W6
-         aQqjVPyNM80fqCRVpCJZhcftBq207Rg5spm3CiAbRZrGUYnnAJ8kJ/w75ymQmuH1Bhmp
-         fyYroAmrSMoCaA57pK6Ti0sFrnL7g2TUKVkX9j5rtQ/BjzDL0a+qHYNQZeCdQxJfnWxO
-         axs4SrU3W1rQUbqUIlbk7yQIQx54fKJG3S74Pc/HKI6T4h86v53pM2ZJVUOuRpqsHBCf
-         FxDhrnlD/EddETcA8n+FrCE5JspFBauFqwOZ5P2/gbkzvY/WMfPlspo7dUYvky0nnzl2
-         +RnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CMkaNS6uOrb3D/0kArTYvqSqllKQ1UyONAfya7XClCA=;
-        b=JJXZ6NQNpnqy/ShUFHi3vz3SlrnAaj3DmbyDK6m+FpdM401vo5bolckrPC+ZDI7dLR
-         GPNAMiPL2GdRpGL6YGM1cjnHCJIpPodu14QwhVeETiojjytTpBgzB89Dx5mwIeGYpC69
-         2mfE3rRrcNOvF1IC7Aqnyxkw1YwwgZQcCgsRWY5mkECJybXJ5/VfTlidWOOiigvu88Zg
-         myKVmNTuuJvMaw5rDPPKYJ5t3lUGW2Ugp6NILE92p2HrDF9++IGuTW6vD0ivnAt3iIo1
-         1xwFlZ2z6FcLNvLfEkXTYEN59n69S9CHvD3nZ98/GB4kpmeYsoKXHPFJtgSxi/RcHqoV
-         sLhw==
-X-Gm-Message-State: AFqh2krzMjZZ1qpSTIU1wMiPbICGozgKEoIfVqgpQYGw2i2XjMVO8dCy
-        90lNv8ksIFug3vs0ttsUKGBAfQ==
-X-Google-Smtp-Source: AMrXdXuSe9oHqaAYvBlNeeWbuqVFOSg5lsAHJITWWPA7bEZcLVtnTx9oVng0bWGOZczwtVtCBkVgXw==
-X-Received: by 2002:a05:6512:1383:b0:4b6:ed8b:4f11 with SMTP id p3-20020a056512138300b004b6ed8b4f11mr3488771lfa.53.1671819335407;
-        Fri, 23 Dec 2022 10:15:35 -0800 (PST)
-Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
-        by smtp.gmail.com with ESMTPSA id u9-20020ac258c9000000b004bb8a796a6bsm609785lfo.66.2022.12.23.10.15.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Dec 2022 10:15:34 -0800 (PST)
-Message-ID: <9c7cb68c-6516-6087-92ad-e707d8b122ed@linaro.org>
-Date:   Fri, 23 Dec 2022 20:15:32 +0200
+        with ESMTP id S229445AbiLXTBN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Dec 2022 14:01:13 -0500
+Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF4D10E1;
+        Sat, 24 Dec 2022 11:01:10 -0800 (PST)
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.96)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1p99lG-0007OA-2A;
+        Sat, 24 Dec 2022 20:00:46 +0100
+Date:   Sat, 24 Dec 2022 19:00:40 +0000
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     linux-mediatek@lists.infradead.org,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-usb@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [next v7 8/8] arm64: dts: mt7986: add Bananapi R3
+Message-ID: <Y6dMWFy7gChG88j0@makrotopia.org>
+References: <20221127114142.156573-1-linux@fw-web.de>
+ <20221127114142.156573-9-linux@fw-web.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0
- and PCIe1
-Content-Language: en-GB
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, bhelgaas@google.com,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
- <20221222133123.50676-4-manivannan.sadhasivam@linaro.org>
- <e756516a-a5e2-a6ac-fd7f-71726766fa81@linaro.org>
- <20221223174555.GE4587@thinkpad>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20221223174555.GE4587@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221127114142.156573-9-linux@fw-web.de>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23/12/2022 19:45, Manivannan Sadhasivam wrote:
-> On Fri, Dec 23, 2022 at 07:18:32PM +0200, Dmitry Baryshkov wrote:
->> On 22/12/2022 15:31, Manivannan Sadhasivam wrote:
->>> Both PCIe0 and PCIe1 controllers are capable of receiving MSIs from
->>> endpoint devices using GIC-ITS MSI controller. Add support for it.
->>>
->>> Currently, BDF (0:0.0) and BDF (1:0.0) are enabled and with the
->>> msi-map-mask of 0xff00, all the 32 devices under these two busses can
->>> share the same Device ID.
->>>
->>> The GIC-ITS MSI implementation provides an advantage over internal MSI
->>> implementation using Locality-specific Peripheral Interrupts (LPI) that
->>> would allow MSIs to be targeted for each CPU core.
->>>
->>> It should be noted that the MSIs for BDF (1:0.0) only works with Device
->>> ID of 0x5980 and 0x5a00. Hence, the IDs are swapped.
->>>
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> ---
->>>    arch/arm64/boot/dts/qcom/sm8450.dtsi | 20 ++++++++++++++------
->>>    1 file changed, 14 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->>> index 570475040d95..c4dd5838fac6 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->>> @@ -1733,9 +1733,13 @@ pcie0: pci@1c00000 {
->>>    			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
->>>    				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
->>> -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
->>> -			interrupt-names = "msi";
->>> -			#interrupt-cells = <1>;
->>> +			/*
->>> +			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
->>> +			 * Hence, the IDs are swapped.
->>> +			 */
->>> +			msi-map = <0x0 &gic_its 0x5981 0x1>,
->>> +				  <0x100 &gic_its 0x5980 0x1>;
->>
->> This definitely doesn't match what has been used in the downstream.
->>
-> 
-> Yes, I do not know why the downstream Device ID doesn't work. I tried finding
-> the answer within Qcom but didn't get any answer so far :/ So I just went with
-> the value that works on multiple boards.
+Hi Frank,
 
-Ugh :-(
+please see some comments inline below:
 
+On Sun, Nov 27, 2022 at 12:41:42PM +0100, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
->> Also if I understand correctly this change would prevent us from using
->> multiple MSI interrupts for the connected device, as the last value of the
->> 0x100 mapping is 0x1, while the vendor kernel uses <0x100 &its 0x5981 0x20>.
->>
+> Add support for Bananapi R3 SBC.
 > 
-> Not true. The controller can still support multiple MSIs for the endpoint
-> devices but the only difference is, it would use the same Device ID for all.
+> - SD/eMMC support (switching first 4 bits of data-bus with sw6/D)
+> - SPI-NAND/NOR support (switched CS by sw5/C)
+> - all rj45 ports and both SFP working (eth1/lan4)
+> - all USB-Ports + SIM-Slot tested
+> - i2c and all uarts tested
+> - wifi tested (with eeprom calibration data)
+> 
+> The device can boot from all 4 storage options. Both, SPI and MMC, can
+> be switched using hardware switches on the board, see
+> https://wiki.banana-pi.org/Banana_Pi_BPI-R3#Jumper_setting
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> changes:
+> v7:
+> - squashed overlay-patch and converted sd/emmc dts to overlay too
+> - moved mmc-regulators to base dts
+> - changed common dtsi to (base dts) and overlay extension to dtso
+> 
+> v6:
+> - drop usb 5v regulator from bpi-r3
+>   based on chunfengs response it is only needed if regulator is
+>   switched (like for otg), usb works without it.
+> 
+> v4:
+> - add PCIe nodes
+> - fix sfp-properties of sfp-1 (need to be plural)
+>   thx to Denis Odintsov for this
+> 
+> v3:
+> - rename factory-key to reset-key
+> - add dcin regulator and add it as input for 3v3 (with renaming)
+> - remove memory-node
+> - dropped wifi eeprom (calibration) data
+> - move mmc0 pinctrl to common dtsi and drop sdcard comment
+> - change mmc pull-up/down to have generic bias-pull*
+> 
+> v2:
+> - remove pcie to be added later (discussion about clocks)
+> - some fixes based on suggestions on ML
+>   - add key suffix like it's done in mt7622-bpi-r64 devicetree
+>   - add dash in sfp node names
+>   - use reg as unit for switch-node
+>   - drop "-3-4" suffix from i2c-pins node name
+>   - fix order in Makefile
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile         |   5 +
+>  .../mt7986a-bananapi-bpi-r3-emmc.dtso         |  30 ++
+>  .../mt7986a-bananapi-bpi-r3-nand.dtso         |  55 +++
+>  .../mediatek/mt7986a-bananapi-bpi-r3-nor.dtso |  68 +++
+>  .../mediatek/mt7986a-bananapi-bpi-r3-sd.dtso  |  24 +
+>  .../dts/mediatek/mt7986a-bananapi-bpi-r3.dts  | 448 ++++++++++++++++++
+>  6 files changed, 630 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dtso
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dtso
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dtso
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index 813e735c5b96..d5cd7b3e09cf 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -8,6 +8,11 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtbo
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nand.dtbo
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nor.dtbo
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd.dtbo
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso
+> new file mode 100644
+> index 000000000000..c15f2f5760ed
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (C) 2021 MediaTek Inc.
+> + * Author: Sam.Shih <sam.shih@mediatek.com>
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+> +	model = "Bananapi BPI-R3 (emmc)";
 
-I see, please excuse me then. But don't we have to define multiple MSI 
-vectors here too?
+Why do you set the model string here?
 
-> 
-> The Qcom GIC-ITS implementation could only support 32 Device IDs. By specifying
-> the size of 0x20, a separate Device ID would be used for each devices of bus 1.
-> But if a PCIe switch is connected and the bus count becomes > 1, then the MSI
-> allocation would fail because Device IDs are exhausted.
-> 
-> The downstream implementation just assumes that there will be only bus 1 and I
-> do not want to follow that assumption.
-> 
-> That's why I used "msi-map-mask" property of value "0xff00" here, as that will
-> allow all the devices under the bus 1 to share the same Device ID. For now I
-> only mapped bus 1, but extending that in the future for other busses is simple.
-> 
-> Thanks,
-> Mani
-> 
->> Do you know by chance, why do we differ from the vendor dtsi?
->>
->>> +			msi-map-mask = <0xff00>;
->>>    			interrupt-map-mask = <0 0 0 0x7>;
->>>    			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->>>    					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->>> @@ -1842,9 +1846,13 @@ pcie1: pci@1c08000 {
->>>    			ranges = <0x01000000 0x0 0x40200000 0 0x40200000 0x0 0x100000>,
->>>    				 <0x02000000 0x0 0x40300000 0 0x40300000 0x0 0x1fd00000>;
->>> -			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
->>> -			interrupt-names = "msi";
->>> -			#interrupt-cells = <1>;
->>> +			/*
->>> +			 * MSIs for BDF (1:0.0) only works with Device ID 0x5a00.
->>> +			 * Hence, the IDs are swapped.
->>> +			 */
->>> +			msi-map = <0x0 &gic_its 0x5a01 0x1>,
->>> +				  <0x100 &gic_its 0x5a00 0x1>;
->>> +			msi-map-mask = <0xff00>;
->>>    			interrupt-map-mask = <0 0 0 0x7>;
->>>    			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->>>    					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->>
->> -- 
->> With best wishes
->> Dmitry
->>
-> 
 
--- 
-With best wishes
-Dmitry
+> +
+> +	fragment@0 {
+> +		target-path = "/soc/mmc@11230000";
+> +		__overlay__ {
+> +			bus-width = <8>;
+> +			max-frequency = <200000000>;
+> +			cap-mmc-highspeed;
+> +			mmc-hs200-1_8v;
+> +			mmc-hs400-1_8v;
+> +			hs400-ds-delay = <0x14014>;
+> +			non-removable;
+> +			no-sd;
+> +			no-sdio;
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> +
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dtso b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dtso
+> new file mode 100644
+> index 000000000000..15ee8c568f3c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nand.dtso
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+> +/*
+> + * Authors: Daniel Golle <daniel@makrotopia.org>
+> + *          Frank Wunderlich <frank-w@public-files.de>
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+> +
+> +	fragment@0 {
+> +		target-path = "/soc/spi@1100a000";
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			spi_nand: spi_nand@0 {
+> +				compatible = "spi-nand";
+> +				reg = <0>;
+> +				spi-max-frequency = <10000000>;
+> +				spi-tx-buswidth = <4>;
+> +				spi-rx-buswidth = <4>;
+> +
+> +				partitions {
+> +					compatible = "fixed-partitions";
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +
+> +					partition@0 {
+> +						label = "bl2";
+> +						reg = <0x0 0x80000>;
+> +						read-only;
+> +					};
+> +
+> +					partition@80000 {
+> +						label = "reserved";
+> +						reg = <0x80000 0x300000>;
+> +					};
+> +
+> +					partition@380000 {
+> +						label = "fip";
+> +						reg = <0x380000 0x200000>;
+> +						read-only;
+> +					};
+> +
+> +					partition@580000 {
+> +						label = "ubi";
+> +						reg = <0x580000 0x7a80000>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dtso b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dtso
+> new file mode 100644
+> index 000000000000..84aa229e80f3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-nor.dtso
+> @@ -0,0 +1,68 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+> +/*
+> + * Authors: Daniel Golle <daniel@makrotopia.org>
+> + *          Frank Wunderlich <frank-w@public-files.de>
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+> +
+> +	fragment@0 {
+> +		target-path = "/soc/spi@1100a000";
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			flash@0 {
+> +				compatible = "jedec,spi-nor";
+> +				reg = <0>;
+> +				spi-max-frequency = <10000000>;
+> +
+> +				partitions {
+> +					compatible = "fixed-partitions";
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +
+> +					partition@0 {
+> +						label = "bl2";
+> +						reg = <0x0 0x20000>;
+> +						read-only;
+> +					};
+> +
+> +					partition@20000 {
+> +						label = "reserved";
+> +						reg = <0x20000 0x20000>;
+> +					};
+> +
+> +					partition@40000 {
+> +						label = "u-boot-env";
+> +						reg = <0x40000 0x40000>;
+> +					};
+> +
+> +					partition@80000 {
+> +						label = "reserved2";
+> +						reg = <0x80000 0x80000>;
+> +					};
+> +
+> +					partition@100000 {
+> +						label = "fip";
+> +						reg = <0x100000 0x80000>;
+> +						read-only;
+> +					};
+> +
+> +					partition@180000 {
+> +						label = "recovery";
+> +						reg = <0x180000 0xa80000>;
+> +					};
+> +
+> +					partition@c00000 {
+> +						label = "fit";
+> +						reg = <0xc00000 0x1400000>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dtso b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dtso
+> new file mode 100644
+> index 000000000000..08af778d8adc
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-sd.dtso
+> @@ -0,0 +1,24 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (C) 2021 MediaTek Inc.
+> + * Author: Sam.Shih <sam.shih@mediatek.com>
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+> +	model = "Bananapi BPI-R3 (sdmmc)";
+> +
+> +	fragment@0 {
+> +		target-path = "/soc/mmc@11230000";
+> +		__overlay__ {
+> +			bus-width = <4>;
+> +			max-frequency = <52000000>;
+> +			cap-sd-highspeed;
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> +
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+> new file mode 100644
+> index 000000000000..618d3bb2f32f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+> @@ -0,0 +1,448 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (C) 2021 MediaTek Inc.
+> + * Authors: Sam.Shih <sam.shih@mediatek.com>
+> + *          Frank Wunderlich <frank-w@public-files.de>
+> + *          Daniel Golle <daniel@makrotopia.org>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/mt65xx.h>
+> +
+> +#include "mt7986a.dtsi"
+> +
+> +/ {
+> +	model = "Bananapi BPI-R3";
+> +	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		ethernet0 = &gmac0;
+> +		ethernet1 = &gmac1;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	dcin: regulator-12vd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "12vd";
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		reset-key {
+> +			label = "reset";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		wps-key {
+> +			label = "wps";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	/* i2c of the left SFP cage (wan) */
+> +	i2c_sfp1: i2c-gpio-0 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&pio 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&pio 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +
+> +	/* i2c of the right SFP cage (lan) */
+> +	i2c_sfp2: i2c-gpio-1 {
+> +		compatible = "i2c-gpio";
+> +		sda-gpios = <&pio 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		scl-gpios = <&pio 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +		i2c-gpio,delay-us = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		green_led: led-0 {
+> +			color = <LED_COLOR_ID_GREEN>;
+> +			function = LED_FUNCTION_POWER;
+> +			gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +
+> +		blue_led: led-1 {
+> +			color = <LED_COLOR_ID_BLUE>;
+> +			function = LED_FUNCTION_STATUS;
+> +			gpios = <&pio 86 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1.8vd";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +		vin-supply = <&dcin>;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3.3vd";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +		vin-supply = <&dcin>;
+> +	};
+> +
+> +	/* left SFP cage (wan) */
+> +	sfp1: sfp-1 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c_sfp1>;
+> +		los-gpios = <&pio 46 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpios = <&pio 49 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	/* right SFP cage (lan) */
+> +	sfp2: sfp-2 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c_sfp2>;
+> +		los-gpios = <&pio 31 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpios = <&pio 47 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpios = <&pio 15 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpios = <&pio 48 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&crypto {
+> +	status = "okay";
+> +};
+> +
+> +&eth {
+> +	status = "okay";
+> +
+> +	gmac0: mac@0 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <0>;
+> +		phy-mode = "2500base-x";
+> +
+> +		fixed-link {
+> +			speed = <2500>;
+> +			full-duplex;
+> +			pause;
+> +		};
+> +	};
+> +
+> +	gmac1: mac@1 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <1>;
+> +		phy-mode = "2500base-x";
+> +		sfp = <&sfp1>;
+> +		managed = "in-band-status";
+> +	};
+> +
+> +	mdio: mdio-bus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +};
+> +
+> +&mdio {
+> +	switch: switch@31 {
+> +		compatible = "mediatek,mt7531";
+> +		reg = <31>;
+> +		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
 
+Please add:
+
+                interrupt-controller;
+                #interrupt-cells = <1>;
+                interrupt-parent = <&pio>;
+                interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
+
+to have IRQ driven phy status instead of having to poll the link status
+of the 5x rj-45 ports.
+The value comes from schematics (pin AD24, GPIO66, 7531_INT) and I've
+tested this on my board.
+
+
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc0_pins_default>;
+> +	pinctrl-1 = <&mmc0_pins_uhs>;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	vqmmc-supply = <&reg_1p8v>;
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&pcie {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	i2c_pins: i2c-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups = "i2c";
+> +		};
+> +	};
+> +
+> +	mmc0_pins_default: mmc0-pins {
+> +		mux {
+> +			function = "emmc";
+> +			groups = "emmc_51";
+> +		};
+> +		conf-cmd-dat {
+> +			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
+> +			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
+> +			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
+> +			input-enable;
+> +			drive-strength = <4>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
+> +		};
+> +		conf-clk {
+> +			pins = "EMMC_CK";
+> +			drive-strength = <6>;
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
+> +		};
+> +		conf-ds {
+> +			pins = "EMMC_DSL";
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
+> +		};
+> +		conf-rst {
+> +			pins = "EMMC_RSTB";
+> +			drive-strength = <4>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
+> +		};
+> +	};
+> +
+> +	mmc0_pins_uhs: mmc0-uhs-pins {
+> +		mux {
+> +			function = "emmc";
+> +			groups = "emmc_51";
+> +		};
+> +		conf-cmd-dat {
+> +			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
+> +			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
+> +			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
+> +			input-enable;
+> +			drive-strength = <4>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
+> +		};
+> +		conf-clk {
+> +			pins = "EMMC_CK";
+> +			drive-strength = <6>;
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
+> +		};
+> +		conf-ds {
+> +			pins = "EMMC_DSL";
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>; /* pull-down 50K */
+> +		};
+> +		conf-rst {
+> +			pins = "EMMC_RSTB";
+> +			drive-strength = <4>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_01>; /* pull-up 10K */
+> +		};
+> +	};
+> +
+> +	pcie_pins: pcie-pins {
+> +		mux {
+> +			function = "pcie";
+> +			groups = "pcie_clk", "pcie_pereset";
+> +		};
+> +	};
+> +
+> +	spi_flash_pins: spi-flash-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spi0", "spi0_wp_hold";
+> +		};
+> +	};
+> +
+> +	spic_pins: spic-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spi1_0";
+> +		};
+> +	};
+> +
+> +	uart1_pins: uart1-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart1_rx_tx";
+> +		};
+> +	};
+> +
+> +	uart2_pins: uart2-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart2_0_rx_tx";
+> +		};
+> +	};
+> +
+> +	wf_2g_5g_pins: wf-2g-5g-pins {
+> +		mux {
+> +			function = "wifi";
+> +			groups = "wf_2g", "wf_5g";
+> +		};
+> +		conf {
+> +			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
+> +			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
+> +			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
+> +			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
+> +			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
+> +			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
+> +			       "WF1_TOP_CLK", "WF1_TOP_DATA";
+> +			drive-strength = <4>;
+> +		};
+> +	};
+> +
+> +	wf_dbdc_pins: wf-dbdc-pins {
+> +		mux {
+> +			function = "wifi";
+> +			groups = "wf_dbdc";
+> +		};
+> +		conf {
+> +			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
+> +			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
+> +			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
+> +			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
+> +			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
+> +			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
+> +			       "WF1_TOP_CLK", "WF1_TOP_DATA";
+> +			drive-strength = <4>;
+> +		};
+> +	};
+> +
+> +	wf_led_pins: wf-led-pins {
+> +		mux {
+> +			function = "led";
+> +			groups = "wifi_led";
+> +		};
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi_flash_pins>;
+> +	cs-gpios = <0>, <0>;
+
+I don't think those bogus cs-gpios here and for spi1 below are needed.
+
+> +	status = "okay";
+> +};
+> +
+> +&spi1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spic_pins>;
+> +	cs-gpios = <0>, <0>;
+> +	status = "okay";
+> +};
+> +
+> +&ssusb {
+> +	status = "okay";
+> +};
+> +
+> +&switch {
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			label = "wan";
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +			label = "lan0";
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +			label = "lan1";
+> +		};
+> +
+> +		port@3 {
+> +			reg = <3>;
+> +			label = "lan2";
+> +		};
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +			label = "lan3";
+> +		};
+> +
+> +		port5: port@5 {
+> +			reg = <5>;
+> +			label = "lan4";
+> +			phy-mode = "2500base-x";
+> +			sfp = <&sfp2>;
+> +			managed = "in-band-status";
+> +		};
+> +
+> +		port@6 {
+> +			reg = <6>;
+> +			label = "cpu";
+> +			ethernet = <&gmac0>;
+> +			phy-mode = "2500base-x";
+> +
+> +			fixed-link {
+> +				speed = <2500>;
+> +				full-duplex;
+> +				pause;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&trng {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&usb_phy {
+> +	status = "okay";
+> +};
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> +
+> +&wifi {
+> +	status = "okay";
+> +	pinctrl-names = "default", "dbdc";
+> +	pinctrl-0 = <&wf_2g_5g_pins>, <&wf_led_pins>;
+> +	pinctrl-1 = <&wf_dbdc_pins>, <&wf_led_pins>;
+> +};
+> +
+> -- 
+> 2.34.1
+> 
+> 
