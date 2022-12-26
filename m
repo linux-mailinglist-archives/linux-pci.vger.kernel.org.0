@@ -2,190 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DA48655CF3
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Dec 2022 12:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20FC96563D7
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Dec 2022 16:31:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbiLYLvD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 25 Dec 2022 06:51:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
+        id S229931AbiLZPbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Dec 2022 10:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiLYLvA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Dec 2022 06:51:00 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F81BA0;
-        Sun, 25 Dec 2022 03:50:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1671968822;
-        bh=cigTGUVAg3Yj9PBuOXrP7a8GktisvMkb4W/saccjwJQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Ma/xkta6H/Vvu8O4rhc4uZyrSkGoLzcj0u3e+4+TsD4ecPjO4RdiTm8nzUIpHBg8t
-         yODU1TLBIFTfdJLVBlQPzfNkaUw4INHVjuJ4gklf1gC+4NS7bQxFhZdLTJComCawxT
-         FoNsX+YKxX2QusrfdnIZzotnf9ovGBKNZvqERLVsG8XKa+QpTP+3jnz5cduXBc6ZJb
-         XDpzyAP8rRElSmXpRYqE6Flyu5JYhkA9jbHoa88IAt8F0oKr/i8WXIlnG/A1H+x37k
-         jIamcERWlvttUqlamw9zawJZdLhlNurOM2MxVzlYyQE7NYgmOINTAzmtKMDzqbr6AT
-         fINsT6KW8DG/g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [157.180.225.172] ([157.180.225.172]) by web-mail.gmx.net
- (3c-app-gmx-bap38.server.lan [172.19.172.108]) (via HTTP); Sun, 25 Dec 2022
- 12:47:02 +0100
+        with ESMTP id S229623AbiLZPbk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Dec 2022 10:31:40 -0500
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7372135;
+        Mon, 26 Dec 2022 07:31:38 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 9281E42832;
+        Mon, 26 Dec 2022 15:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1672068697;
+        bh=0MdCug5jtApVxCbACAza5eayqP2DubrBGd6UD6PDHQU=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=l2Js2VpTmoMTGvjnbPFLWivfBUPBu2r/d4McFVg49MR6NpOCUJ1qkdwm3n51ExOkf
+         dzi3vJI1lHc2Ma2FnBgQTZKhmyOfKVn5a6aD1LBDfxHWRs+xUJQ3Rl/AhX3+iqYB/J
+         CC6h9sB4zp933VItC20tE/xhsk9JU9Lrmg9RPqFlJtgRSgUF7G8WwXHxxMxKiZCgtg
+         JHdp4WyfUBCcWIE67i3aklMSzCr87Rp/NYTGNLhC++aOg2lMO/Ju17sPbq3wuceK+9
+         +r7EenhFLjksUR9qSh8ORprA5ZXNOWsG4xK96a4Mkqtgo7cQXE1OD8fM0LQ+BeYbnm
+         xjvxedttKn1Gw==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/portdrv: Avoid enabling AER on Thunderbolt devices
+Date:   Mon, 26 Dec 2022 23:30:31 +0800
+Message-Id: <20221226153048.1208359-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Message-ID: <trinity-b51cbf64-8df3-4a0b-883a-dbb7443eb954-1671968822286@3c-app-gmx-bap38>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Daniel Golle <daniel@makrotopia.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-usb@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org
-Subject: Aw: Re: [next v7 8/8] arm64: dts: mt7986: add Bananapi R3
-Content-Type: text/plain; charset=UTF-8
-Date:   Sun, 25 Dec 2022 12:47:02 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <Y6dMWFy7gChG88j0@makrotopia.org>
-References: <20221127114142.156573-1-linux@fw-web.de>
- <20221127114142.156573-9-linux@fw-web.de> <Y6dMWFy7gChG88j0@makrotopia.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:10CT/kHfUVpSwqOqwS7PiCBR0/UkRQWIuyHUPEIPBF4ZQybqHeav5erxkfhPt6CkPU6ev
- P2jwPeR/U1/CsU0cypsmIs4UKNmh6TMGRmE9N8BKS0TbhXVNMX4nifJlVBx0/sT+mC1DTHpe7Lm0
- ZWTvo5zBoXH7rzgei9CR+fXrJGdfl+LYJmaNbBJV9dJV3cfgTHqW/IWi9dXZWuu9PEWsGOdppoeX
- JFIMemszjkAeplliNJluXNK5PmagMPT+eXXsMkTHO3XWdQck6hJrq/ckQvChW3JNDndJB1bzqU4q
- GY=
-UI-OutboundReport: notjunk:1;M01:P0:pwFcvI8EngI=;Xzb4kTlhYwuChZI1qpgA1uiBqPU
- 0VRdCykSt9KTXu8yY9kmRrx7TUx5EFBj/CWBFLhFCAuUvqO+4VGvbUWKt0/ui4Stz591phL4x
- V6D2S/PlSOoK+x7PH/19JEuZKEr5cZZhv/LAaLdmWxmbQ6Ch8dMf/wUp1jZ/eXMG6DQ5sj46p
- EXO5bAt6xkRITCny9gY4QR1XL7ITdV97qUPfmQRubcACLurNRiTr1QjoIHgepkenO2tKABFEZ
- aJlUCiDQm5KNF8h4qRZgm+UrvL87097zlMkEmBYS0EhImEM4apgdFixunpgiN9VC0tE6hKIN0
- RulXsPDMfJyIbonqk8r0HLhEzVeqs6enS34vIqnFEbe8J51x8eU6Jg6NdGPFevExob8aDMeA5
- r4qRPKfr7LrlcIZgNnTPkmGZlLHG8op2cuELClFACNBxSYklDi61bGdcrGZ7zgWk3QN5sMjFd
- KlKgPUWpw5/2Ky/5xfMK3GT7p3vDoQsfCHWpotsshwNqzEVX7wneqQHwqgxD//E/bDFOw5OMa
- ok4obFcCNMkLzPS+ofYi4/P0dL4DeC2uH2WDbe3VoYjcV/6sH3jn/5XmyqldDIs+E5Djrt7LP
- QLVtrJzCxdBJwNbpDlCK6jlqsRSUyIk7Auv2qYiSoTNGfBqQuwpHW2LI5G2C0x3uOnx2kkzUP
- sFzbOVN9r/dTxS9JeWVf4mH3r5urzdXFrMvBaujgNVJ3jt6wvufj84Ejbe88doESaimya4+QF
- +jTNS8V4hj1DozC05FKDuBggiU2hqUxx5Q6lGPoMFa94cU4cBp5hYxx4dU5WsG6eYssc0MUJe
- v7pKBoXRZTACH/SOAAOVa4uzu3j406KqJjqu430gP7Hiw=
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
+We are seeing igc ethernet device on Thunderbolt dock stops working
+after S3 resume because of AER error, or even make S3 resume freeze:
+pcieport 0000:00:1d.0: AER: Multiple Corrected error received: 0000:00:1d.0
+pcieport 0000:00:1d.0: PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00008000/00002000
+pcieport 0000:00:1d.0:    [15] HeaderOF
+pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:1d.0
+pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
+pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
+pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a000052 00000000 00000000
+pcieport 0000:00:1d.0: AER:   Error of this Agent is reported first
+pcieport 0000:04:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+pcieport 0000:04:01.0:   device [8086:1136] error status/mask=00300000/00000000
+pcieport 0000:04:01.0:    [20] UnsupReq               (First)
+pcieport 0000:04:01.0:    [21] ACSViol
+pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04000052 00000000 00000000
+thunderbolt 0000:05:00.0: AER: can't recover (no error_detected callback)
 
-> Gesendet: Samstag, 24. Dezember 2022 um 20:00 Uhr
-> Von: "Daniel Golle" <daniel@makrotopia.org>
+This supposedly should be fixed by commit c01163dbd1b8 ("PCI/PM: Always disable
+PTM for all devices during suspend"), but somehow it doesn't work for
+this case.
 
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-emmc.dtso
-> > @@ -0,0 +1,30 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/*
-> > + * Copyright (C) 2021 MediaTek Inc.
-> > + * Author: Sam.Shih <sam.shih@mediatek.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +
-> > +/ {
-> > +	compatible =3D "bananapi,bpi-r3", "mediatek,mt7986a";
-> > +	model =3D "Bananapi BPI-R3 (emmc)";
->
-> Why do you set the model string here?
+By dumping the PCI_PTM_CTRL register on resume, it turns out PTM is
+already flipped on by either the Thunderbolt dock firmware or the host
+BIOS. Writing 0 to PCI_PTM_CTRL yields the same result.
 
-seems to be a left over from testing where i wanted to see which base-dtb =
-was
-loaded without comparing mmc-node settings. Was easier to see with model-s=
-tring :)
+Windows is however not affected by this issue, by using WinDbg's !pci
+command, it shows that AER is not enabled for devices connected via
+Thunderbolt port, and that's the reason why Windows doesn't exhibit the
+issue.
 
-> > +
-> > +	fragment@0 {
-> > +		target-path =3D "/soc/mmc@11230000";
-> > +		__overlay__ {
-> > +			bus-width =3D <8>;
-> > +			max-frequency =3D <200000000>;
-> > +			cap-mmc-highspeed;
-> > +			mmc-hs200-1_8v;
-> > +			mmc-hs400-1_8v;
-> > +			hs400-ds-delay =3D <0x14014>;
-> > +			non-removable;
-> > +			no-sd;
-> > +			no-sdio;
-> > +			status =3D "okay";
-> > +		};
-> > +	};
-> > +};
+So turn a blind eye on external Thunderbolt devices like Windows does by
+disabling AER.
 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts =
-b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-> > new file mode 100644
-> > index 000000000000..618d3bb2f32f
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216850
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pcie/portdrv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > +&mdio {
-> > +	switch: switch@31 {
-> > +		compatible =3D "mediatek,mt7531";
-> > +		reg =3D <31>;
-> > +		reset-gpios =3D <&pio 5 GPIO_ACTIVE_HIGH>;
->
-> Please add:
->
->                 interrupt-controller;
->                 #interrupt-cells =3D <1>;
->                 interrupt-parent =3D <&pio>;
->                 interrupts =3D <66 IRQ_TYPE_LEVEL_HIGH>;
->
-> to have IRQ driven phy status instead of having to poll the link status
-> of the 5x rj-45 ports.
-> The value comes from schematics (pin AD24, GPIO66, 7531_INT) and I've
-> tested this on my board.
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 2cc2e60bcb396..59d00e20e57bf 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -237,7 +237,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+ 	    dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer))
++	    (pcie_ports_native || host->native_aer) &&
++	    !dev_is_removable(&dev->dev))
+ 		services |= PCIE_PORT_SERVICE_AER;
+ #endif
+ 
+-- 
+2.34.1
 
-ok, if you have it tested i add these properties in next version (and test=
- it too).
-I wait for tphy-binding to be applied to next (pcie and xhci already in to=
-rvalds/master).
-
-> > +	};
-> > +};
-> > +
-
-> > +&spi0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&spi_flash_pins>;
-> > +	cs-gpios =3D <0>, <0>;
->
-> I don't think those bogus cs-gpios here and for spi1 below are needed.
-
-can drop them in next version
-
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&spi1 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&spic_pins>;
-> > +	cs-gpios =3D <0>, <0>;
-> > +	status =3D "okay";
-> > +};
-> > +
-
-regards Frank
