@@ -2,67 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EFF4656981
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Dec 2022 11:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3E8656DEA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Dec 2022 19:23:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbiL0KmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Dec 2022 05:42:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        id S229770AbiL0SXp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Dec 2022 13:23:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbiL0KmQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Dec 2022 05:42:16 -0500
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E081DD7B;
-        Tue, 27 Dec 2022 02:42:14 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2BRAfwDe043730;
-        Tue, 27 Dec 2022 04:41:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1672137718;
-        bh=MUAVMn74IGXYLv7Q++PQxdFGnFfhRT4Sr3sH7enrpNA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vBHHD6WqfoaJLLLY67B3L5ch54N7XF//vCunanQ9pXA1KUHpGcf/QEDKOcYXeTiPq
-         iC+3pHS4HbLphA6cpnmAdMHMyZaz8iyQnG+FDoldDoHzZzirpNCJ5/PS1SG+6OZia4
-         SmfSJUVpjqZwQx0P6889NzSg+k8G01M1lfRUvJoA=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2BRAfwww005331
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Dec 2022 04:41:58 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 27
- Dec 2022 04:41:58 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Tue, 27 Dec 2022 04:41:58 -0600
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2BRAfvhm085478;
-        Tue, 27 Dec 2022 04:41:58 -0600
-From:   Achal Verma <a-verma1@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Achal Verma <a-verma1@ti.com>,
-        Milind Parab <mparab@cadence.com>
-Subject: [PATCH 2/2] PCI: j721e: Add support to build pci-j721e as module.
-Date:   Tue, 27 Dec 2022 16:11:54 +0530
-Message-ID: <20221227104154.1022426-3-a-verma1@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221227104154.1022426-1-a-verma1@ti.com>
-References: <20221227104154.1022426-1-a-verma1@ti.com>
+        with ESMTP id S229488AbiL0SXo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Dec 2022 13:23:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A6AA479
+        for <linux-pci@vger.kernel.org>; Tue, 27 Dec 2022 10:23:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 39E66B81134
+        for <linux-pci@vger.kernel.org>; Tue, 27 Dec 2022 18:23:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFEBC433EF;
+        Tue, 27 Dec 2022 18:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672165420;
+        bh=IhO1foa7/IRw1C0r4ahk6UohIRi0GNIRvoVzvl8vp9k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Zy+QGM+IHBNIgM1t7FJjt/XLIoO/4/T/GalTNokt/hAijAUYhj4TDw/mEB07deE0I
+         ecny/hcEHftXNadef43wKovOHC0Qc3IMeiY8D5yrpp0WHDlO9UuAQNXK7xVjhK6LDT
+         aam3jIDhfsHAwfT1I9rcLQB7W0zLzMyDtPJ6PhSSxzJEyGnOMXwVt2+6psOIHqPu2b
+         GvqS1z7ZafI2prczxcwWmJ/+Eos2HitGsSpI6ulPSHZruy2zt9co644Zo97rgS0NG8
+         ykjUykcejnXYYSwfQ1PI8IPIxTcQTT9F6W4T2rOPLlhzlyOnCni1F5Rq3MkQH6BOIM
+         VdiQFwLTx5fJQ==
+Date:   Tue, 27 Dec 2022 12:23:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Guchun Chen <guchun.chen@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com,
+        hawking.zhang@amd.com, lijo.lazar@amd.com, evan.quan@amd.com,
+        Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] drm/amd/pm/smu11: BACO is supported when it's in
+ BACO state
+Message-ID: <20221227182339.GA452254@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221123014307.263178-1-guchun.chen@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,61 +53,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to build pci-j721e as module.
+[+cc Stefan, linux-pci]
 
-Signed-off-by: Achal Verma <a-verma1@ti.com>
----
- drivers/pci/controller/cadence/Kconfig     | 6 +++---
- drivers/pci/controller/cadence/pci-j721e.c | 6 +++++-
- 2 files changed, 8 insertions(+), 4 deletions(-)
+On Wed, Nov 23, 2022 at 09:43:07AM +0800, Guchun Chen wrote:
+> Return true early if ASIC is in BACO state already, no need
+> to talk to SMU. It can fix the issue that driver was not
+> calling BACO exit at all in runtime pm resume, and a timing
+> issue leading to a PCI AER error happened eventually.
 
-diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-index 693c41fe32ce..54464c9b3b29 100644
---- a/drivers/pci/controller/cadence/Kconfig
-+++ b/drivers/pci/controller/cadence/Kconfig
-@@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
- 	  different vendors SoCs.
- 
- config PCI_J721E
--	bool
-+	tristate
- 
- config PCI_J721E_HOST
--	bool "TI J721E PCIe platform host controller"
-+	tristate "TI J721E PCIe platform host controller"
- 	depends on OF
- 	select PCIE_CADENCE_HOST
- 	select PCI_J721E
-@@ -56,7 +56,7 @@ config PCI_J721E_HOST
- 	  core.
- 
- config PCI_J721E_EP
--	bool "TI J721E PCIe platform endpoint controller"
-+	tristate "TI J721E PCIe platform endpoint controller"
- 	depends on OF
- 	depends on PCI_ENDPOINT
- 	select PCIE_CADENCE_EP
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index cc83a8925ce0..c4017fa6ae61 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -13,6 +13,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/pci.h>
-@@ -565,4 +566,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(j721e_pcie_driver);
-+module_platform_driver(j721e_pcie_driver);
-+
-+MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
+This sounds suspiciously racy.
 
+> Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
+
+To clarify, this patch avoids a driver problem, not a problem with
+8795e182b02d.
+
+See question below.
+
+> Suggested-by: Lijo Lazar <lijo.lazar@amd.com>
+> Signed-off-by: Guchun Chen <guchun.chen@amd.com>
+> ---
+>  drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
+> index 70b560737687..ad5f6a15a1d7 100644
+> --- a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
+> +++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
+> @@ -1588,6 +1588,10 @@ bool smu_v11_0_baco_is_support(struct smu_context *smu)
+>  	if (amdgpu_sriov_vf(smu->adev) || !smu_baco->platform_support)
+>  		return false;
+>  
+> +	/* return true if ASIC is in BACO state already */
+> +	if (smu_v11_0_baco_get_state(smu) == SMU_BACO_STATE_ENTER)
+> +		return true;
+
+smu_v13_0_baco_is_support() is essentially identical to
+smu_v11_0_baco_is_support().  Does it need a similar change?
+
+>  	/* Arcturus does not support this bit mask */
+>  	if (smu_cmn_feature_is_supported(smu, SMU_FEATURE_BACO_BIT) &&
+>  	   !smu_cmn_feature_is_enabled(smu, SMU_FEATURE_BACO_BIT))
+> -- 
+> 2.25.1
+> 
