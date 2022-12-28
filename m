@@ -2,201 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECAAC657469
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 10:04:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F076575A7
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 12:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232618AbiL1JEs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Dec 2022 04:04:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
+        id S230080AbiL1LKm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Dec 2022 06:10:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231477AbiL1JEp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 04:04:45 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9550AD125
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 01:04:43 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id jn22so15484690plb.13
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 01:04:43 -0800 (PST)
+        with ESMTP id S229864AbiL1LKc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 06:10:32 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404C821F;
+        Wed, 28 Dec 2022 03:10:29 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id fy4so15955586pjb.0;
+        Wed, 28 Dec 2022 03:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=W/FTEJ8XCt6QzrbvqyxI8eyBUAXbA8Tx6jTMYIdd6hg=;
-        b=mgScZBtHjxG944kgEKqqjyrMOB5bEzMmCzaKYFz9oowAHB40eja7ubIkgrx54v3Y9f
-         5VR6VRyR+oCdQhw3PO3cdqfLoG13gT8WKobCs1gKeV4qmcaK5TSl4vMwPtLyzhKkcK04
-         cPbY0zjqCnRQVpTVuqwp98ntaNCOqqd2/jBQprD4HKUt6AtmEqUrPVxqRRaniv92vfWU
-         yb6yAUABrH4ioOg5x9DnWzGgNCpYZ8g+NBgcGOB9jTmJYtgno4I3hpkH12Ly9cNbb6jq
-         ziulXLkupFCBm7C/JyhKy4O3JoS30p65ZS8J+YPtwWCYhXM/xoOJNm8bbJWO6neslOqg
-         Ia2w==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9naIqkNaMLLvBoGYLzFhWmmFiWmpVPHULOvj3Di9g6k=;
+        b=eGH05jcojq8zeolUJcWkGi13CoWSOuiL6roVFk71k5HBNaFEMs0LV2JrvAy/InsyIw
+         Dqe7pp5Pnv319wrjp/4mjTmxT6RsHaD//5XzUuSjnpbXky3m424p2xrkTuxfJ7OmVRP+
+         2SM9uqz18R6sC4azPQJAIHacJxxzjJa967YYXhDHgY4swyLsvzi1/YuTtPIgzw++wyA1
+         KH/PWLGM3T9Q4naPyj6v+jydtZCCDAjmUdCJWWbbxVnXM4YuemoqfKgc5PL5BJ/eaXDl
+         MjcJ5OWzNjMhzeJMzg0RjYC+W8cfOM32RfZ1VRIqfrOgPs4ZJXgedd5nQ5yKTAl+db3e
+         gOKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/FTEJ8XCt6QzrbvqyxI8eyBUAXbA8Tx6jTMYIdd6hg=;
-        b=wiz8uHPrtLHpCptCkrztV9RTh/ysOFx8RqvaBmpdtA5c+KEM6IKs3ajqyqXQUpxtlG
-         bWxakQhlmzlvalzxrX349N7SU/C1cxv2sQemA9w5Qt9hXC2ZuPIfWCnoeVrRKeex8YPp
-         SYFh6Q1KpnEbRCIcKAzwvyXrwJndXHwhtLSrvylMG1jmlk5SMsQKBpzUMXmeZSHfHVMn
-         ZPR52WTD6gxFyU0auM/Z4HlQbGN8zN3/5UHFoW6TCk+DjouGWyCz3kq+dIqMxvwIBBzp
-         tlzDo5RnCrqxSMpmlxcLpPWO7xHCMXN/Pew4MnbQfwF5/n4OlmgxrqU69gkbFWH+cntJ
-         cTfw==
-X-Gm-Message-State: AFqh2kraSgZcS2rD+fal35sPNeWbS/lj7+n1vKCrPoEXKrkVI9xszkl0
-        wS2ghHDerBG3K9do1KXkEnqS
-X-Google-Smtp-Source: AMrXdXvUqXiREoyvpHVXLT3s8wVEI3QvBcRUreLN9CynaeWqp2Hs6Pjf58YpmTmSqmtz6sBUhtJ3mQ==
-X-Received: by 2002:a17:90b:2688:b0:225:f8ce:5cd8 with SMTP id pl8-20020a17090b268800b00225f8ce5cd8mr8829683pjb.4.1672218282862;
-        Wed, 28 Dec 2022 01:04:42 -0800 (PST)
-Received: from thinkpad ([117.217.178.73])
-        by smtp.gmail.com with ESMTPSA id j8-20020a17090a94c800b00219bf165b5fsm9406890pjw.21.2022.12.28.01.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Dec 2022 01:04:41 -0800 (PST)
-Date:   Wed, 28 Dec 2022 14:34:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, bhelgaas@google.com,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0
- and PCIe1
-Message-ID: <20221228090433.GC30143@thinkpad>
-References: <20221222133123.50676-1-manivannan.sadhasivam@linaro.org>
- <20221222133123.50676-4-manivannan.sadhasivam@linaro.org>
- <e756516a-a5e2-a6ac-fd7f-71726766fa81@linaro.org>
- <20221223174555.GE4587@thinkpad>
- <9c7cb68c-6516-6087-92ad-e707d8b122ed@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9naIqkNaMLLvBoGYLzFhWmmFiWmpVPHULOvj3Di9g6k=;
+        b=2U7vwRQ8O6yLb00IWXtfXDmdk7+WcYz8Untmi63eqBJX4R6jnWjW696+D3701Psst8
+         iZMkWq92roeoWPqCD9CXHmkaQVSDGeEboRjkLuhQHlommNQjwJTQF89mo3giLOiK9N7i
+         TupZrmJkVCZGWCHrATFK64NJP8utWLu+Nte33BofCXyhP/ebBbz3XB6+q6qjwrKDutWK
+         An0LeSadaT96Nh7Mj39oukUIlympC+xIieWHOdpMyO/CXHVTYTtFkP2ITcKnwfoFB2WN
+         fauZsqpcuwZjTu3o5CFudoZzAiymxnkRO4ODEcEfzTo5R3SVjADerZdl3EMPdP2iO4tk
+         zy8g==
+X-Gm-Message-State: AFqh2kq8fXrzRcvBEhNJOSQS6lK+jdrWL0mq/pnA2D6xMNaNlHVMEnBR
+        v8mkUKOX/ZseNYDA5nc5Met5LSGSNQ2W9bpX6jg=
+X-Google-Smtp-Source: AMrXdXsR2yBJjTWXi9Mcq9RAHhoH5ym7DSPJZ4GBvFZ7UCjdbK9Z7RqQU3pfsUC8aO/1M1t4cyIPFu1YXwSA9Hpx6RM=
+X-Received: by 2002:a17:903:2301:b0:192:55ab:890c with SMTP id
+ d1-20020a170903230100b0019255ab890cmr1494771plh.57.1672225828681; Wed, 28 Dec
+ 2022 03:10:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c7cb68c-6516-6087-92ad-e707d8b122ed@linaro.org>
+References: <20221116214841.1116735-1-robimarko@gmail.com> <20221116214841.1116735-2-robimarko@gmail.com>
+ <20221205215253.itobukkyiecn7xi7@builder.lan> <CAOX2RU5C6uYKS4Hc7NBwnzRju1=gzewrEHudMksUAL1XdKcfCQ@mail.gmail.com>
+ <20221227192049.zk5gqhpnq2m7baqa@builder.lan>
+In-Reply-To: <20221227192049.zk5gqhpnq2m7baqa@builder.lan>
+From:   Robert Marko <robimarko@gmail.com>
+Date:   Wed, 28 Dec 2022 12:10:17 +0100
+Message-ID: <CAOX2RU4SGmmZT6e0V5YCsCYU82wAJH736PhEz4Tx+Q0XTFU_9A@mail.gmail.com>
+Subject: Re: [PATCH 2/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe QMP PHY
+To:     Bjorn Andersson <andersson@kernel.org>
+Cc:     agross@kernel.org, konrad.dybcio@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+        svarbanov@mm-sol.com, shawn.guo@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 23, 2022 at 08:15:32PM +0200, Dmitry Baryshkov wrote:
-> On 23/12/2022 19:45, Manivannan Sadhasivam wrote:
-> > On Fri, Dec 23, 2022 at 07:18:32PM +0200, Dmitry Baryshkov wrote:
-> > > On 22/12/2022 15:31, Manivannan Sadhasivam wrote:
-> > > > Both PCIe0 and PCIe1 controllers are capable of receiving MSIs from
-> > > > endpoint devices using GIC-ITS MSI controller. Add support for it.
-> > > > 
-> > > > Currently, BDF (0:0.0) and BDF (1:0.0) are enabled and with the
-> > > > msi-map-mask of 0xff00, all the 32 devices under these two busses can
-> > > > share the same Device ID.
-> > > > 
-> > > > The GIC-ITS MSI implementation provides an advantage over internal MSI
-> > > > implementation using Locality-specific Peripheral Interrupts (LPI) that
-> > > > would allow MSIs to be targeted for each CPU core.
-> > > > 
-> > > > It should be noted that the MSIs for BDF (1:0.0) only works with Device
-> > > > ID of 0x5980 and 0x5a00. Hence, the IDs are swapped.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >    arch/arm64/boot/dts/qcom/sm8450.dtsi | 20 ++++++++++++++------
-> > > >    1 file changed, 14 insertions(+), 6 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > > index 570475040d95..c4dd5838fac6 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > > @@ -1733,9 +1733,13 @@ pcie0: pci@1c00000 {
-> > > >    			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
-> > > >    				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
-> > > > -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -			interrupt-names = "msi";
-> > > > -			#interrupt-cells = <1>;
-> > > > +			/*
-> > > > +			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
-> > > > +			 * Hence, the IDs are swapped.
-> > > > +			 */
-> > > > +			msi-map = <0x0 &gic_its 0x5981 0x1>,
-> > > > +				  <0x100 &gic_its 0x5980 0x1>;
-> > > 
-> > > This definitely doesn't match what has been used in the downstream.
-> > > 
-> > 
-> > Yes, I do not know why the downstream Device ID doesn't work. I tried finding
-> > the answer within Qcom but didn't get any answer so far :/ So I just went with
-> > the value that works on multiple boards.
-> 
-> Ugh :-(
-> 
-> > 
-> > > Also if I understand correctly this change would prevent us from using
-> > > multiple MSI interrupts for the connected device, as the last value of the
-> > > 0x100 mapping is 0x1, while the vendor kernel uses <0x100 &its 0x5981 0x20>.
-> > > 
-> > 
-> > Not true. The controller can still support multiple MSIs for the endpoint
-> > devices but the only difference is, it would use the same Device ID for all.
-> 
-> I see, please excuse me then. But don't we have to define multiple MSI
-> vectors here too?
-> 
+On Tue, 27 Dec 2022 at 20:20, Bjorn Andersson <andersson@kernel.org> wrote:
+>
+> On Tue, Dec 06, 2022 at 10:51:40AM +0100, Robert Marko wrote:
+> > On Mon, 5 Dec 2022 at 22:52, Bjorn Andersson <andersson@kernel.org> wrote:
+> > >
+> > > On Wed, Nov 16, 2022 at 10:48:34PM +0100, Robert Marko wrote:
+> > > > IPQ8074 comes in 2 silicon versions:
+> > > > * v1 with 2x Gen2 PCIe ports and QMP PHY-s
+> > > > * v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
+> > > >
+> > > > v2 is the final and production version that is actually supported by the
+> > > > kernel, however it looks like PCIe related nodes were added for the v1 SoC.
+> > > >
+> > > > Now that we have Gen3 QMP PHY support, we can start fixing the PCIe support
+> > > > by fixing the Gen3 QMP PHY node first.
+> > > >
+> > > > Change the compatible to the Gen3 QMP PHY, correct the register space start
+> > > > and size, add the missing misc PCS register space.
+> > > >
+> > >
+> > > Does this imply that the current node doesn't actually work?
+> >
+> > Hi Bjorn,
+> > Yes, the node is for a completely different PHY generation, basically
+> > PCIe on IPQ8074
+> > is completely broken, hence this patch series.
+> >
+> > >
+> > > If that's the case, could we perhaps adopt Johan Hovolds' new binding
+> > > and drop the subnode in favor of just a flat reg covering the whole
+> > > QMP region?
+> >
+> > I have not seen that so far, any examples?
+> >
+>
+> See
+> Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml in
+> v6.2-rc1.
+>
+> The idea is to, at least, use this for all new platforms introduced.
+>
+> And if the current definition doesn't actually work I suggest that we
+> replace it with the new one.
 
-No, it is not required. GIC-ITS driver will handle the MSI mapping internally
-and devicetree only needs to specify the Device ID for each PCIe device.
+I understand the intention, but these bindings dont match the QMP generation
+found in IPQ8074 at all, and Gen3 has already been documented in bindings.
 
-Thanks,
-Mani
+This would require updating the driver to carry the offsets and rework
+of bindings to
+not require power domains, etc for IPQ8074 as I have not found any
+code downstream
+to indicate it has GSDC-s for PCIe though I dont have any docs at all
+for the SoC.
 
-> > 
-> > The Qcom GIC-ITS implementation could only support 32 Device IDs. By specifying
-> > the size of 0x20, a separate Device ID would be used for each devices of bus 1.
-> > But if a PCIe switch is connected and the bus count becomes > 1, then the MSI
-> > allocation would fail because Device IDs are exhausted.
-> > 
-> > The downstream implementation just assumes that there will be only bus 1 and I
-> > do not want to follow that assumption.
-> > 
-> > That's why I used "msi-map-mask" property of value "0xff00" here, as that will
-> > allow all the devices under the bus 1 to share the same Device ID. For now I
-> > only mapped bus 1, but extending that in the future for other busses is simple.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > Do you know by chance, why do we differ from the vendor dtsi?
-> > > 
-> > > > +			msi-map-mask = <0xff00>;
-> > > >    			interrupt-map-mask = <0 0 0 0x7>;
-> > > >    			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> > > >    					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> > > > @@ -1842,9 +1846,13 @@ pcie1: pci@1c08000 {
-> > > >    			ranges = <0x01000000 0x0 0x40200000 0 0x40200000 0x0 0x100000>,
-> > > >    				 <0x02000000 0x0 0x40300000 0 0x40300000 0x0 0x1fd00000>;
-> > > > -			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -			interrupt-names = "msi";
-> > > > -			#interrupt-cells = <1>;
-> > > > +			/*
-> > > > +			 * MSIs for BDF (1:0.0) only works with Device ID 0x5a00.
-> > > > +			 * Hence, the IDs are swapped.
-> > > > +			 */
-> > > > +			msi-map = <0x0 &gic_its 0x5a01 0x1>,
-> > > > +				  <0x100 &gic_its 0x5a00 0x1>;
-> > > > +			msi-map-mask = <0xff00>;
-> > > >    			interrupt-map-mask = <0 0 0 0x7>;
-> > > >    			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> > > >    					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> > > 
-> > > -- 
-> > > With best wishes
-> > > Dmitry
-> > > 
-> > 
-> 
-> -- 
-> With best wishes
-> Dmitry
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Robert
+>
+> Regards,
+> Bjorn
