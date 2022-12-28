@@ -2,99 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE6C8657215
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 03:20:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F6AE6573D1
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 09:16:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbiL1CUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Dec 2022 21:20:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
+        id S229583AbiL1IQP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Dec 2022 03:16:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbiL1CUK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Dec 2022 21:20:10 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8510EFC4;
-        Tue, 27 Dec 2022 18:20:09 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id t2so14836095ply.2;
-        Tue, 27 Dec 2022 18:20:09 -0800 (PST)
+        with ESMTP id S229526AbiL1IQO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 03:16:14 -0500
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8B02AED
+        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:16:12 -0800 (PST)
+Received: by mail-qv1-xf31.google.com with SMTP id h10so10621191qvq.7
+        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:16:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=enzzl8bA/q6QyP6u99nHb/wMrkuqUD77A3Gv70HGdP8=;
-        b=msuuYF6lSCKGPsHI2vlC693kxlwgzRvFdY/pnEartRdp2EpSWrTugmSSmqROCEWO6d
-         HXUM1XOvGdJYbE2VJjPJrY52Y61ksrAC9L7gZQiAUUeI7RRB7s+2P+FvmnNhFYWSojFu
-         rYL24fFfpJleB+tPe3O68Tj+0tnkTc2mYevXUpZ0NPK4H/nHgdrqUwA2/vhxXjMJqAl5
-         J4lKz+h6U9oQG/9jpcHD/EPzasoODB6Ca3Z2IoA7eRnFEhwk89gp3Mdgfe42DkyGD1Dr
-         Ya4+i9abip/Rc7XhKgQ4ndW2+vAk++e7rkPDq65AGMSXl/ElRlOgWZFd8ouWjNKWuYZW
-         I8Qg==
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S+AexItR+I648G4QSKn8d0qt+rpO3t/AnHrW9fmVULc=;
+        b=YF8yyjy97Vra2gPRcyjM8MaOKQ5YmXdfaXEQJ5lCAJoWtl5x5U0UyYMN3TGL7/TloB
+         CdWcdcv6LX3abUk9IEXcVUofWbAOVUl7GwXI/BNRphV4SwqfB72Ko3wOcawTiHjK5c9K
+         CTQfdKddLrD92s5v9qo5r20RtKQxQ02rj9ugFJJVD8lGtMtMnswGaCxsnWwUtM7d7yz6
+         xlmIAdxxpz6A8Slp5BH8w6u1lxoVeKw7aGeZbjO57V09igpDRpp5Fw3IeKoLE4SZuNzh
+         RYTIQZrJUIOD1wkNJRz0TYYKohATnibdG8hbt1bl57LrSTW8f1BuELiZx2KIOglEvE//
+         x0QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=enzzl8bA/q6QyP6u99nHb/wMrkuqUD77A3Gv70HGdP8=;
-        b=PnJzjPtG90Ls1Wq3ZzA+T/UeDYs+a3TGZZbaYWjr2U1D1Wgj9BNr6aHdVXp092KW/E
-         nXiXFP1VM56v0DPxqlKJKXKND3erlSbHjEujl13+ZTGCv7zKI19IqxFvRMngi02cq/wN
-         er30IwNP2V8qlRYpK1WlKFLhZO4C4gFmztEUeqSGyQKv8huMiJvMKySQ0URVG0WzviLl
-         X0g9XIIivKOMhnh1J1G5Llj78uTXoRdQeGy2m7Qe+pAZ1/ntiiOIKcdtWVGddHbFExm4
-         zYHIEVGPxTC0XSi0+uK7u7cVplXeOP4/bl5zpbNpQmgg0ylQTHhvnfqpE+rSGFuXvP5b
-         8dIQ==
-X-Gm-Message-State: AFqh2kr0a4K+7yFU59hYWyB1SzkqKODxcYGVwHBEMb9UARaTj7yxQkDr
-        Uy4U7ngT6qQmJmQpP7tH+OZx33bD5FjmUofOpCg+xQhJHOmdpw==
-X-Google-Smtp-Source: AMrXdXtsJrx3dJyiNK2syLZTnlMlVPWU22m0IT0vCJrQ0/IsvUq6egHtCosQWzRKBFgjl45g23cObGU4B84KahwTruk=
-X-Received: by 2002:a17:90a:6505:b0:223:fd3b:538e with SMTP id
- i5-20020a17090a650500b00223fd3b538emr2275993pjj.120.1672194009112; Tue, 27
- Dec 2022 18:20:09 -0800 (PST)
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+AexItR+I648G4QSKn8d0qt+rpO3t/AnHrW9fmVULc=;
+        b=3oGjoAmJ46SRDciDtRcGbzrXARCqiXmaXdBr+p4UvHrVEQRrD7dqSZVSEFBcBUl2v1
+         Q2ArXjYHzH/2xNKK+x+EFHCnD/SDwac53mg4jSkiFAjdCHbvuM5I8vDhXmxBjUuQgDVw
+         9s4O77+mwmoBzgdfrb8oy2DM6BheaFRbxZ0KLjHQj6ldLAdyMJf+xGdpKMXTbMg4Xmv1
+         2QB+fk00XhTHU1xFEadD+WYT1Pb2/xn6sA5Cq7DzaKivER3qGj64uUkPk0RQTQAShTvV
+         hWzdvqmx2iFyYPKuVKlqdplFd9MoNu8LveewWZk9jQdRphqAKFLKac1EGtOwU+90egs5
+         EHXg==
+X-Gm-Message-State: AFqh2krQwFPpPSW3kP5XH43IqPrFqfzel21hebUpZ+mjSdqCLCucQ28D
+        rq+z9Mq88537SRQf2OaMxdfn1he+Ri+kP9BQxJ70Uvsqltc=
+X-Google-Smtp-Source: AMrXdXvzeC2Z/8nBtWsfMFGRNJoZPTsBQMBfpsF852BvnhSH1ZKMbFvg5HyB8Rg4HwovKOKVhar0Oxba/OdxM/uFopo=
+X-Received: by 2002:a05:6214:2f8b:b0:52c:4ccc:5f7f with SMTP id
+ ob11-20020a0562142f8b00b0052c4ccc5f7fmr1316236qvb.27.1672215371010; Wed, 28
+ Dec 2022 00:16:11 -0800 (PST)
+Received: from 52669349336 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 28 Dec 2022 00:16:10 -0800
+Received: from 52669349336 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 28 Dec 2022 00:16:09 -0800
 MIME-Version: 1.0
-References: <20221222072603.1175248-1-korantwork@gmail.com>
- <3d1834d9-7905-1225-741a-f298dd5b8a8e@linux.dev> <Y6TSgGdCTvkwPiVg@kbusch-mbp.dhcp.thefacebook.com>
- <CAEm4hYUWf+Fx3FV7vNTc8+O9NSb0iQp75MTC6gra6XapXK=cxw@mail.gmail.com> <d14ac29d-027a-08a7-c5c8-848a6920d4a2@linux.dev>
-In-Reply-To: <d14ac29d-027a-08a7-c5c8-848a6920d4a2@linux.dev>
-From:   Xinghui Li <korantwork@gmail.com>
-Date:   Wed, 28 Dec 2022 10:19:58 +0800
-Message-ID: <CAEm4hYXncuvL-Gk1aEZExrvkbx=N1aiOQNeNjFdB4443EbKNBA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
-To:     Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc:     Keith Busch <kbusch@kernel.org>, nirmal.patel@linux.intel.com,
-        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xinghui Li <korantli@tencent.com>
+Sender: swastik <nk15374nk@gmail.com>
+From:   swastik <nk15374nk@gmail.com>
+Date:   Wed, 28 Dec 2022 00:16:10 -0800
+X-Google-Sender-Auth: JDLL4tDmeouaXLu3tn2LCrse510
+Message-ID: <CAE6MXDsCPqP_UXPaADV562As9W4wFrV3XxVuH2O7AwYGUdezPg@mail.gmail.com>
+Subject: BEST WISHES AND MESSAGES BLOG
+To:     Linux-Pci <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=1.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
+        UPPERCASE_75_100 autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonathan Derrick <jonathan.derrick@linux.dev> =E4=BA=8E2022=E5=B9=B412=E6=
-=9C=8828=E6=97=A5=E5=91=A8=E4=B8=89 06:32=E5=86=99=E9=81=93=EF=BC=9A
->
-> The bypass mode should help in the cases where drives irqs (eg nproc) exc=
-eed
-> VMD I/O irqs. VMD I/O irqs for 28c0 should be min(63, nproc). You have
-> very few cpus for a Skylake system with that many drives, unless you mean=
- you
-> are explicitly restricting the 12 drives to only 6 cpus. Either way, bypa=
-ss mode
-> is effectively VMD-disabled, which points to other issues. Though I have =
-also seen
-> much smaller interrupt aggregation benefits.
+HELLO,
+         I HAVE STARTED MY BLOG BEST WISHES AND MESSAGES. IN THIS BLOG YOU
+WILL FIND GOOD MORNING WISHES, BIRTHDAY WISHES , FATHER'S DAY
+WISHES.FRIENDSHIP WISHES AND SO ON. IF YOU LIKE THIS BLOG PLEASE SHARE
+AND SUBSCRIBE THIS BLOG.
+ WEB SITE ADDRESS IS  https://greetingsandwishes123.blogspot.com/
 
-Firstly=EF=BC=8CI am sorry for my words misleading you. We totally tested 1=
-2 drives.
-And each drive run in 6 CPU cores with 8 jobs.
-
-Secondly, I try to test the drives with VMD disabled,I found the results to
-be largely consistent with bypass mode. I suppose the bypass mode just
-"bypass" the VMD controller.
-
-The last one=EF=BC=8Cwe found in bypass mode the CPU idle is 91%. But in re=
-mapping mode
-the CPU idle is 78%. And the bypass's context-switchs is much fewer
-than the remapping
-mode's. It seems the system is watiing for something in bypass mode.
+THANKS AND REGARD
+SWASTIK
