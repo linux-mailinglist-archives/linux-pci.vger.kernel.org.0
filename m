@@ -2,78 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6AE6573D1
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 09:16:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C85657456
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Dec 2022 09:53:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbiL1IQP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Dec 2022 03:16:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
+        id S229691AbiL1Iw5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Dec 2022 03:52:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbiL1IQO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 03:16:14 -0500
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8B02AED
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:16:12 -0800 (PST)
-Received: by mail-qv1-xf31.google.com with SMTP id h10so10621191qvq.7
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:16:12 -0800 (PST)
+        with ESMTP id S229630AbiL1Iw5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 03:52:57 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B82120
+        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:52:56 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id kw15so36916663ejc.10
+        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 00:52:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S+AexItR+I648G4QSKn8d0qt+rpO3t/AnHrW9fmVULc=;
-        b=YF8yyjy97Vra2gPRcyjM8MaOKQ5YmXdfaXEQJ5lCAJoWtl5x5U0UyYMN3TGL7/TloB
-         CdWcdcv6LX3abUk9IEXcVUofWbAOVUl7GwXI/BNRphV4SwqfB72Ko3wOcawTiHjK5c9K
-         CTQfdKddLrD92s5v9qo5r20RtKQxQ02rj9ugFJJVD8lGtMtMnswGaCxsnWwUtM7d7yz6
-         xlmIAdxxpz6A8Slp5BH8w6u1lxoVeKw7aGeZbjO57V09igpDRpp5Fw3IeKoLE4SZuNzh
-         RYTIQZrJUIOD1wkNJRz0TYYKohATnibdG8hbt1bl57LrSTW8f1BuELiZx2KIOglEvE//
-         x0QQ==
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EJ058JRM7D+mqwq/vtQFBuL2rBPdsvIRLlRah8/kU5U=;
+        b=PWYpTBdAbvD0Gzhl+2CLotED9HxWnsIfcIkAuDEGILEaZa/yynfBY1TinmqKFBxOGT
+         Mz5CGdEaD/hoCusiwh9J3HVpjFmPEjNTs22vFCog8jL3FhaUEpXI7gy+wl2q44OTSmjS
+         SHw9abEQMj+P/CGNrh4y0CW7XAtCbFOT7NYaXS7rmzBEwIXXDKPEoWEu5e4j1crmuPla
+         g6A36Q9Jl5x9uZDfW6MBbv5sNjNj+ivSoJhgfcyFrjKemhGFZCc12uyx+0wVJpXpeI5d
+         yvhi1Fw8cA4Qj4zECSUOP5RJsv3+u26SoXO2hXJuvNGtoit3l87v3GvRl0qIpVNn5np7
+         Pf9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+AexItR+I648G4QSKn8d0qt+rpO3t/AnHrW9fmVULc=;
-        b=3oGjoAmJ46SRDciDtRcGbzrXARCqiXmaXdBr+p4UvHrVEQRrD7dqSZVSEFBcBUl2v1
-         Q2ArXjYHzH/2xNKK+x+EFHCnD/SDwac53mg4jSkiFAjdCHbvuM5I8vDhXmxBjUuQgDVw
-         9s4O77+mwmoBzgdfrb8oy2DM6BheaFRbxZ0KLjHQj6ldLAdyMJf+xGdpKMXTbMg4Xmv1
-         2QB+fk00XhTHU1xFEadD+WYT1Pb2/xn6sA5Cq7DzaKivER3qGj64uUkPk0RQTQAShTvV
-         hWzdvqmx2iFyYPKuVKlqdplFd9MoNu8LveewWZk9jQdRphqAKFLKac1EGtOwU+90egs5
-         EHXg==
-X-Gm-Message-State: AFqh2krQwFPpPSW3kP5XH43IqPrFqfzel21hebUpZ+mjSdqCLCucQ28D
-        rq+z9Mq88537SRQf2OaMxdfn1he+Ri+kP9BQxJ70Uvsqltc=
-X-Google-Smtp-Source: AMrXdXvzeC2Z/8nBtWsfMFGRNJoZPTsBQMBfpsF852BvnhSH1ZKMbFvg5HyB8Rg4HwovKOKVhar0Oxba/OdxM/uFopo=
-X-Received: by 2002:a05:6214:2f8b:b0:52c:4ccc:5f7f with SMTP id
- ob11-20020a0562142f8b00b0052c4ccc5f7fmr1316236qvb.27.1672215371010; Wed, 28
- Dec 2022 00:16:11 -0800 (PST)
-Received: from 52669349336 named unknown by gmailapi.google.com with HTTPREST;
- Wed, 28 Dec 2022 00:16:10 -0800
-Received: from 52669349336 named unknown by gmailapi.google.com with HTTPREST;
- Wed, 28 Dec 2022 00:16:09 -0800
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EJ058JRM7D+mqwq/vtQFBuL2rBPdsvIRLlRah8/kU5U=;
+        b=6LoXvmw7fZoIm+orSAlTJrtUc/nJjKM3fc2JMLDriYRN+ZjQICQZxw8jam/Ef0Lqpi
+         uTbyHVl9qAHr8HEzF3b2h9Q8hKVe986P7R6CLZ9kMJEtXOGPnjeBZd01Ch86hRQLQQOm
+         ggX7p7MUlpC87YHN1Dg0Q3rTtopTETYnPt9Ni05WZeE6nFiS5LR2oD802jv2WnxbbTw/
+         Uwfgn9UobzXY2h+4yILJzcwXqIzPrI0xX9hCALMjdBhUbAWrI4MLU7C2vah0x7HbtgOO
+         DFDibYpBuJIYwsLQy8GPKNZgw6lNHHZfCb97cgA/ZxKDhCcs0OOPehM8VSueervZd+8H
+         09Lw==
+X-Gm-Message-State: AFqh2krwcBf++tjrtmCamPv/x4J4sA4cNv38IThBIC/rKlnnjYwgTazT
+        X9VGX3Laqw2Ww1IyEBa+CKE1DO2WNFq385e4ncpbtlMZ7UGBEQ==
+X-Google-Smtp-Source: AMrXdXtcWjkj8yZsgRvSTMeYRfbiJJ67XaD9HKNA3kSlXB6lWUhRq4hMJS+W/Lp9ThXSMtGvhtf6fIi96zLkUNbhd10=
+X-Received: by 2002:a17:906:5dd0:b0:7ff:7876:a703 with SMTP id
+ p16-20020a1709065dd000b007ff7876a703mr3159627ejv.103.1672217574574; Wed, 28
+ Dec 2022 00:52:54 -0800 (PST)
 MIME-Version: 1.0
-Sender: swastik <nk15374nk@gmail.com>
-From:   swastik <nk15374nk@gmail.com>
-Date:   Wed, 28 Dec 2022 00:16:10 -0800
-X-Google-Sender-Auth: JDLL4tDmeouaXLu3tn2LCrse510
-Message-ID: <CAE6MXDsCPqP_UXPaADV562As9W4wFrV3XxVuH2O7AwYGUdezPg@mail.gmail.com>
-Subject: BEST WISHES AND MESSAGES BLOG
-To:     Linux-Pci <linux-pci@vger.kernel.org>
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Wed, 28 Dec 2022 09:52:43 +0100
+Message-ID: <CAOkhzLXfc9rrcXw3iwe-yjVQXNBURZJrT7+24r6gi1kamdJ9fg@mail.gmail.com>
+Subject: PCI bridge to bus boot hang at enumeration; works on v6.0, stops
+ working at v6.1-rc1 upto v6.2.-rc1
+To:     linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=1.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        UPPERCASE_75_100 autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-HELLO,
-         I HAVE STARTED MY BLOG BEST WISHES AND MESSAGES. IN THIS BLOG YOU
-WILL FIND GOOD MORNING WISHES, BIRTHDAY WISHES , FATHER'S DAY
-WISHES.FRIENDSHIP WISHES AND SO ON. IF YOU LIKE THIS BLOG PLEASE SHARE
-AND SUBSCRIBE THIS BLOG.
- WEB SITE ADDRESS IS  https://greetingsandwishes123.blogspot.com/
+Hello there
 
-THANKS AND REGARD
-SWASTIK
+1. Happy holidays ;)
+2. Please see: https://bugzilla.kernel.org/show_bug.cgi?id=216859
+
+With Kernel 6.1-rc1 the enumeration process stopped working for me,
+see attachments.
+
+The enumeration works fine with Kernel 6.0 and below.
+
+Same problem still exists with v6.1. and v6.2.-rc1
+
+Please see attachments.
+
+Best
+Zeno
