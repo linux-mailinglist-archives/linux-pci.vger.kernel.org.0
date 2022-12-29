@@ -2,56 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE39658FDA
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 18:31:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B94658FE6
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 18:32:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233905AbiL2RbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Dec 2022 12:31:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
+        id S233845AbiL2RcS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Dec 2022 12:32:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234075AbiL2RaP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 12:30:15 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DCA1573E;
-        Thu, 29 Dec 2022 09:29:50 -0800 (PST)
+        with ESMTP id S233949AbiL2Rbs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 12:31:48 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897B015825;
+        Thu, 29 Dec 2022 09:31:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D0376CE16B8;
-        Thu, 29 Dec 2022 17:29:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0C57C433D2;
-        Thu, 29 Dec 2022 17:29:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 46DC0B81A13;
+        Thu, 29 Dec 2022 17:31:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E31C433EF;
+        Thu, 29 Dec 2022 17:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672334987;
-        bh=G+SWBiYi4yJIL5V5j7GqWjgDRQL0QUPCjoveiHSWEys=;
+        s=k20201202; t=1672335097;
+        bh=j3qG4bGdaEXrYNRPEIJY/y6BAFFyj1LA3ARl7FLkrLc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CwTopccyU0qtmz7hrUHjKgdNsQrcMOeRCMSs3du5zRXM/bVQDZMF937F/K9PDK2bC
-         4bfWT8xNGQWeOQGGmaJD+VjgOK79IrJftXw3YkZybR7Tgz0qJsM8wuWPGaG1v9bQA2
-         ZzdkyN9sF1aIkFK8uGUlXRuABUNG2JdKwXU15WbDUg2XlZZWblFqbDwpcX/bfNcS0r
-         rAWoAo2m4fkWP6cl8RQJPeAPG70QWmA5LFSexq8EjBjFz+avfaLJRC7OVAHd0AUdXG
-         wYN/VF8NIj9EURov3AQkOpZg/U4yYL2FpDwVM6f02C3C1+oyWNwXwUXi4XGr8D23N2
-         pbGMZnwr7JjEA==
-Date:   Thu, 29 Dec 2022 11:29:44 -0600
+        b=A4sAGzauvpyN7efg6S4Tt8IiUEpZ0pASvRe3oGUwwaLxVTNcPdlHIqrN58hpmaUUa
+         RiM42MzPJVTqIJe9AaD62iuWZQDB/STAAszJSBI2BMPdbPDzp12xY7nk22is9soD/t
+         qeAX9Bgon5afLZcXNpUckXI7DxqyBeEwUt64BhPYSf+TO3ZMWipEzT9+/gAokNa6Zi
+         OLE8z+ltM47ZoJsjQZ68IRB+FhS46sZIC60r2C2e59Y/m931blIbdT9TWtfKHb428C
+         kUWSuVrFYQNjK6TN89D+dVXgmG2KxR40igx+ARV/vRLI+B3j68ZLaNOBJz5bP5SClB
+         QjsaX0jrHUlFw==
+Date:   Thu, 29 Dec 2022 11:31:34 -0600
 From:   Bjorn Andersson <andersson@kernel.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     agross@kernel.org, konrad.dybcio@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        svarbanov@mm-sol.com, shawn.guo@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe QMP PHY
-Message-ID: <20221229172944.6lg6mb53uqj2hps6@builder.lan>
-References: <20221116214841.1116735-1-robimarko@gmail.com>
- <20221116214841.1116735-2-robimarko@gmail.com>
- <20221205215253.itobukkyiecn7xi7@builder.lan>
- <CAOX2RU5C6uYKS4Hc7NBwnzRju1=gzewrEHudMksUAL1XdKcfCQ@mail.gmail.com>
- <20221227192049.zk5gqhpnq2m7baqa@builder.lan>
- <CAOX2RU4SGmmZT6e0V5YCsCYU82wAJH736PhEz4Tx+Q0XTFU_9A@mail.gmail.com>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/8] PCI: qcom: Add support for SM8350
+Message-ID: <20221229173134.ul2kzupf4yjvbvgk@builder.lan>
+References: <20221118233242.2904088-1-dmitry.baryshkov@linaro.org>
+ <20221118233242.2904088-4-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOX2RU4SGmmZT6e0V5YCsCYU82wAJH736PhEz4Tx+Q0XTFU_9A@mail.gmail.com>
+In-Reply-To: <20221118233242.2904088-4-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,67 +66,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 28, 2022 at 12:10:17PM +0100, Robert Marko wrote:
-> On Tue, 27 Dec 2022 at 20:20, Bjorn Andersson <andersson@kernel.org> wrote:
-> >
-> > On Tue, Dec 06, 2022 at 10:51:40AM +0100, Robert Marko wrote:
-> > > On Mon, 5 Dec 2022 at 22:52, Bjorn Andersson <andersson@kernel.org> wrote:
-> > > >
-> > > > On Wed, Nov 16, 2022 at 10:48:34PM +0100, Robert Marko wrote:
-> > > > > IPQ8074 comes in 2 silicon versions:
-> > > > > * v1 with 2x Gen2 PCIe ports and QMP PHY-s
-> > > > > * v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
-> > > > >
-> > > > > v2 is the final and production version that is actually supported by the
-> > > > > kernel, however it looks like PCIe related nodes were added for the v1 SoC.
-> > > > >
-> > > > > Now that we have Gen3 QMP PHY support, we can start fixing the PCIe support
-> > > > > by fixing the Gen3 QMP PHY node first.
-> > > > >
-> > > > > Change the compatible to the Gen3 QMP PHY, correct the register space start
-> > > > > and size, add the missing misc PCS register space.
-> > > > >
-> > > >
-> > > > Does this imply that the current node doesn't actually work?
-> > >
-> > > Hi Bjorn,
-> > > Yes, the node is for a completely different PHY generation, basically
-> > > PCIe on IPQ8074
-> > > is completely broken, hence this patch series.
-> > >
-> > > >
-> > > > If that's the case, could we perhaps adopt Johan Hovolds' new binding
-> > > > and drop the subnode in favor of just a flat reg covering the whole
-> > > > QMP region?
-> > >
-> > > I have not seen that so far, any examples?
-> > >
-> >
-> > See
-> > Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml in
-> > v6.2-rc1.
-> >
-> > The idea is to, at least, use this for all new platforms introduced.
-> >
-> > And if the current definition doesn't actually work I suggest that we
-> > replace it with the new one.
+On Sat, Nov 19, 2022 at 01:32:37AM +0200, Dmitry Baryshkov wrote:
+> Add support for the PCIe host on Qualcomm SM8350 platform.
 > 
-> I understand the intention, but these bindings dont match the QMP generation
-> found in IPQ8074 at all, and Gen3 has already been documented in bindings.
-> 
-> This would require updating the driver to carry the offsets and rework
-> of bindings to
-> not require power domains, etc for IPQ8074 as I have not found any
-> code downstream
-> to indicate it has GSDC-s for PCIe though I dont have any docs at all
-> for the SoC.
-> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I was only thinking of the structural difference, not the power-domains
-etc. But yes you're right that it means updating the driver and the
-binding.
-
-The end result would be much nicer though...
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
 Regards,
 Bjorn
+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 77e5dc7b88ad..b9350d93b4ba 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1826,6 +1826,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sdm845", .data = &cfg_2_7_0 },
+>  	{ .compatible = "qcom,pcie-sm8150", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sm8350", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>  	{ }
+> -- 
+> 2.35.1
+> 
