@@ -2,61 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1B94658FE6
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 18:32:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B95CE659029
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 19:13:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233845AbiL2RcS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Dec 2022 12:32:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
+        id S231313AbiL2SNE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Dec 2022 13:13:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233949AbiL2Rbs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 12:31:48 -0500
+        with ESMTP id S229831AbiL2SND (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 13:13:03 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897B015825;
-        Thu, 29 Dec 2022 09:31:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938E613CD3
+        for <linux-pci@vger.kernel.org>; Thu, 29 Dec 2022 10:13:02 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 46DC0B81A13;
-        Thu, 29 Dec 2022 17:31:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E31C433EF;
-        Thu, 29 Dec 2022 17:31:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3D0A2B818ED
+        for <linux-pci@vger.kernel.org>; Thu, 29 Dec 2022 18:13:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AC7C433D2;
+        Thu, 29 Dec 2022 18:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672335097;
-        bh=j3qG4bGdaEXrYNRPEIJY/y6BAFFyj1LA3ARl7FLkrLc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A4sAGzauvpyN7efg6S4Tt8IiUEpZ0pASvRe3oGUwwaLxVTNcPdlHIqrN58hpmaUUa
-         RiM42MzPJVTqIJe9AaD62iuWZQDB/STAAszJSBI2BMPdbPDzp12xY7nk22is9soD/t
-         qeAX9Bgon5afLZcXNpUckXI7DxqyBeEwUt64BhPYSf+TO3ZMWipEzT9+/gAokNa6Zi
-         OLE8z+ltM47ZoJsjQZ68IRB+FhS46sZIC60r2C2e59Y/m931blIbdT9TWtfKHb428C
-         kUWSuVrFYQNjK6TN89D+dVXgmG2KxR40igx+ARV/vRLI+B3j68ZLaNOBJz5bP5SClB
-         QjsaX0jrHUlFw==
-Date:   Thu, 29 Dec 2022 11:31:34 -0600
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        s=k20201202; t=1672337580;
+        bh=l/D2CzKz+miEhUlEGnXdga8DRdqgBLoREPjXAmzWUyk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uGk5G5IJ1Tf7D3CXQ22VSWFs2n9NpRaCR8Bo5UeVoJY1PWgN6RtTQstNacWNb8tb7
+         rOSpCPs4K0QpDLj9jpmKSNxDqzOdZjLeayPo71CMWu0aMnkm5kfpSdu1DFM5zfJEwQ
+         N6oXHGZuk0AwjReTRjD0yxwHKsae4MS1iZjhS8dSaUvB5BzPA956hw/ZR14uDGx/7v
+         OqfDf71/e1DMWRnqO1pYucW3+zi68bYIDS3ubl7igkpeH634nd26bIcpy7VZlHnG2n
+         g+tULo3lgTWQLeUDlWRDUBYj/QiOETD8zlyxGo0RsiDZGSs9X/Ftc0M+IVL4/PQYyo
+         nf7bbo+hs0iDw==
+Date:   Thu, 29 Dec 2022 12:12:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Alexey V. Vissarionov" <gremlin@altlinux.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/8] PCI: qcom: Add support for SM8350
-Message-ID: <20221229173134.ul2kzupf4yjvbvgk@builder.lan>
-References: <20221118233242.2904088-1-dmitry.baryshkov@linaro.org>
- <20221118233242.2904088-4-dmitry.baryshkov@linaro.org>
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        Yu Zhao <yu.zhao@intel.com>, linux-pci@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: Re: [PATCH] PCI/IOV: "virtfn4294967295\0" requires 17 bytes
+Message-ID: <20221229181258.GA616291@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221118233242.2904088-4-dmitry.baryshkov@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y5+R7DUZFaFNEeza@casper.infradead.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -66,32 +57,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 19, 2022 at 01:32:37AM +0200, Dmitry Baryshkov wrote:
-> Add support for the PCIe host on Qualcomm SM8350 platform.
+On Sun, Dec 18, 2022 at 10:19:24PM +0000, Matthew Wilcox wrote:
+> On Sun, Dec 18, 2022 at 03:21:39PM +0300, Alexey V. Vissarionov wrote:
+> > On 2022-12-18 19:57:02 +0900, Krzysztof Wilczyński wrote:
+> ...
+
+> > Although unlikely, the 'id' value may be as big as 4294967295
+> > (uint32_max) and "virtfn4294967295\0" would require 17 bytes
+> > instead of 16 to make sure that buffer has enough space to
+> > properly NULL-terminate the ID string.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Wait, what?  How can we get to a number that large for the virtual
+> function ID?  devfn is 8 bits, bus is a further 8 bits.  Sure, domain
+> is an extra 16 bits on top of that but I'm pretty sure that virtual
+> functions can't span multiple domains.  Unless that's changed recently?
+> 
+> Even if they can, we'd need to span 2^14 domains to get up to a billion
+> IDs.  That's a hell of a system and I think overflowing here is the
+> least of our problems.
+> 
+> So while this is typed as u32, I don't think it can get anywhere close.
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Is there an argument *against* this patch (as opposed to "this is
+probably unnecessary and it requires a lot of analysis to prove that
+we don't need it")?
 
-Regards,
+My biggest concern here is that there's no connection between the
+VIRTFN_ID_LEN definition and the use.  Even a comment about how the
+value of 16 or 17 was derived would help.
+
 Bjorn
-
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 77e5dc7b88ad..b9350d93b4ba 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1826,6 +1826,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sdm845", .data = &cfg_2_7_0 },
->  	{ .compatible = "qcom,pcie-sm8150", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
-> +	{ .compatible = "qcom,pcie-sm8350", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ }
-> -- 
-> 2.35.1
-> 
