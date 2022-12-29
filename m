@@ -2,201 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A284658967
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 05:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 578E7658C4B
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 12:39:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232879AbiL2E0x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Dec 2022 23:26:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
+        id S230515AbiL2LjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Dec 2022 06:39:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232678AbiL2E0v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Dec 2022 23:26:51 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B4A10C
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 20:26:49 -0800 (PST)
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S230173AbiL2LjP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 06:39:15 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873A013E24;
+        Thu, 29 Dec 2022 03:39:11 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 93065445B3
-        for <linux-pci@vger.kernel.org>; Thu, 29 Dec 2022 04:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1672288007;
-        bh=h/KnO9804k/G0ANgwnUXrRLhABXcv9swhnywHJA4Q/k=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=EGVsP6cL+VATZN+g6w2Pt+BI1SNVIdZHBc4oqkXAebQshMRG+aPS9na7uQvhGFfMw
-         pYeVsWtVJVCK2iqTWKOy3eu+MnHaat1ebhxSCjGa7vrdKCJQQ+ZI7tgaw3UE/MDgTk
-         OYUnMIymzHqwquNIrTl/52rHzJ0Se2obiwPRFKe+r/dQ9nvzuMUCRZngu/bk2EjLNZ
-         LzNyVs98A95H7B/vIqXflI7fusltEeECSL90feqxaPVgeWrzL7v96JTreLF+NwnM33
-         7d0zH4eGgn99ejHTx8OPvNQyAp534ZwPaGn+wn9HdNDq3NjtgQ+spKpOHbB9XY9lm1
-         q2+LmeEw0Z2KQ==
-Received: by mail-pf1-f197.google.com with SMTP id z16-20020a056a001d9000b0057d4ebe9513so9180166pfw.22
-        for <linux-pci@vger.kernel.org>; Wed, 28 Dec 2022 20:26:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h/KnO9804k/G0ANgwnUXrRLhABXcv9swhnywHJA4Q/k=;
-        b=4B9KkIVIVyQffPj9tJx2cvWOyd0EwU5jcIyLD5WZgLueOzjl8/RFO1NU82zBFQNh2S
-         zQZBFto/qjnp/glFkN2cic0CG63iNDpqiaDKcIOwlUO3NcLWJRkSdGTAegJPH48OcF/C
-         uMGFZ1Fn/iu2pZrqZofyj5yktMJpw6t3GrF2CrUNbItZ0hVfIPL3K8BEfdGQxT0htBiX
-         J/Pjd6ZP7/doPpzNI+EDJ03QEJgUPENoLaDeQTh7gm0vBpiMF1JiFUsFJPeWANAJIpQA
-         R7nHGBtbVmfYP+gLw1WHjW2kOZwfYS3Ry5m/AzbIMk/qMWcDWhgXZ4ncOEC/hF/3AdRo
-         nM3w==
-X-Gm-Message-State: AFqh2kpL1w9ru4Cg1qkqQMZFj040Kz669c2wVfpB2gKmkUVpHpnRZBit
-        GhHEGz76jMdI48flqEE+zDz+oBpiIwAkscFwQ3wFS+glnoO+D07BlZJMx2F+26OVw3Lcm9rgCLO
-        UTIHz1HsyOLvtnHKPoPmihazo6h9y5uTay3Zs4/BgtwVZ+5eTx8PVFg==
-X-Received: by 2002:a62:5e44:0:b0:576:af2d:4c4d with SMTP id s65-20020a625e44000000b00576af2d4c4dmr1722905pfb.69.1672288005701;
-        Wed, 28 Dec 2022 20:26:45 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuM9UYhGiric0aikn1KEG4Oqkm3D18jNrtqP3adjypRkT7mW9I3ssB4c0s7s319ZxFMt6FFs8hOk4wiyfmqOVY=
-X-Received: by 2002:a62:5e44:0:b0:576:af2d:4c4d with SMTP id
- s65-20020a625e44000000b00576af2d4c4dmr1722897pfb.69.1672288005268; Wed, 28
- Dec 2022 20:26:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20221226153048.1208359-1-kai.heng.feng@canonical.com> <20221226225045.GA400369@bhelgaas>
-In-Reply-To: <20221226225045.GA400369@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 29 Dec 2022 12:26:33 +0800
-Message-ID: <CAAd53p6pt462kcKeh6gaqU0fwTjFp+2zquCQfUHzyW5jRhfC6A@mail.gmail.com>
-Subject: Re: [PATCH] PCI/portdrv: Avoid enabling AER on Thunderbolt devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, Mario Limonciello <mario.limonciello@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D43761EC064D;
+        Thu, 29 Dec 2022 12:39:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1672313949;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ul44K3f4ZupNPx/eCMwjHBaV6XqkOzJhw1crDNySdnk=;
+        b=bxNiEBBLAaBnIPVoCbb+hCeekBNbVKTQcB3i2k6jDvY//NgNcPOphifK0E8Zy75BUtZmBE
+        dt186MvMyBnoFlR8z5b6TFHAhdWikrfAqAunyUzuWfmpmJ7xW0AXAHtjeEfb7rl/9lsD3Z
+        FWBWKkS8+hFeKC0KzPo1PEwvMPoQ5e0=
+Date:   Thu, 29 Dec 2022 12:39:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David E. Box" <david.e.box@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [Patch v4 01/13] x86/ioapic: Gate decrypted mapping on
+ cc_platform_has() attribute
+Message-ID: <Y618Wf6tAVpXo/qm@zn.tnic>
+References: <1669951831-4180-1-git-send-email-mikelley@microsoft.com>
+ <1669951831-4180-2-git-send-email-mikelley@microsoft.com>
+ <Y4+WjB/asSvxXW/t@zn.tnic>
+ <BYAPR21MB16882C3F39AB321A53BA4129D71B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB16882C3F39AB321A53BA4129D71B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Dec 06, 2022 at 07:54:02PM +0000, Michael Kelley (LINUX) wrote:
+> Exactly correct.
 
-On Tue, Dec 27, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc David]
->
-> Hi Kai-Heng,
->
-> Thanks for the report and the debugging!
->
-> On Mon, Dec 26, 2022 at 11:30:31PM +0800, Kai-Heng Feng wrote:
-> > We are seeing igc ethernet device on Thunderbolt dock stops working
-> > after S3 resume because of AER error, or even make S3 resume freeze:
-> > pcieport 0000:00:1d.0: AER: Multiple Corrected error received: 0000:00:1d.0
-> > pcieport 0000:00:1d.0: PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
-> > pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00008000/00002000
-> > pcieport 0000:00:1d.0:    [15] HeaderOF
-> > pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-> > pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> > pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-> > pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-> > pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a000052 00000000 00000000
->
-> From a very quick look, I think 34...... ......52 is a PTM message (as
-> you suggest below).
->
-> > pcieport 0000:00:1d.0: AER:   Error of this Agent is reported first
-> > pcieport 0000:04:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> > pcieport 0000:04:01.0:   device [8086:1136] error status/mask=00300000/00000000
-> > pcieport 0000:04:01.0:    [20] UnsupReq               (First)
-> > pcieport 0000:04:01.0:    [21] ACSViol
-> > pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04000052 00000000 00000000
-> > thunderbolt 0000:05:00.0: AER: can't recover (no error_detected callback)
-> >
-> > This supposedly should be fixed by commit c01163dbd1b8 ("PCI/PM: Always disable
-> > PTM for all devices during suspend"), but somehow it doesn't work for
-> > this case.
-> >
-> > By dumping the PCI_PTM_CTRL register on resume, it turns out PTM is
-> > already flipped on by either the Thunderbolt dock firmware or the host
-> > BIOS. Writing 0 to PCI_PTM_CTRL yields the same result.
->
-> Can you share your debug patch and corresponding dmesg log in the
-> bugzilla?
+Ok, thanks.
 
-Actually Windows has the same PTM issue too like what I replied to
-Pali's message.
+Let's put that in the commit message and get rid of the "subsequent
+patch" wording as patch order in git is ambiguous.
 
->
-> > Windows is however not affected by this issue, by using WinDbg's !pci
-> > command, it shows that AER is not enabled for devices connected via
-> > Thunderbolt port, and that's the reason why Windows doesn't exhibit the
-> > issue.
-> >
-> > So turn a blind eye on external Thunderbolt devices like Windows does by
-> > disabling AER.
->
-> Unless there's something in the PCIe or Thunderbolt spec that says AER
-> shouldn't be used on external devices, I think we need to figure out
-> the root cause before disabling AER on all removable devices.
+IOW, something like this:
 
-You are right.
+    Current code always maps the IO-APIC as shared (decrypted) in a
+    confidential VM. But Hyper-V guest VMs on AMD SEV-SNP with vTOM enabled
+    use a paravisor running in VMPL0 to emulate the IO-APIC.
 
-The most outstanding difference I can find is that the ACS is disabled
-for all TBT dock's downstream ports.
-So the ACS violation probably doesn't happen under Windows.
+    In such a case, the IO-APIC must be accessed as private (encrypted)
+    because the paravisor emulates the IO-APIC in the lower half of the vTOM
+    where all accesses must be encrypted.
 
-However the PTM message is still considered as Uncorrected error, so
-the AER reset still happens on device resume.
+    Add a new CC attribute which determines how the IO-APIC MMIO mapping
+    should be established depending on the platform the kernel is running on
+    as a guest.
 
-I think when the reset happens (i.e. pcie_do_recovery()), the device
-resume should be skipped. Not sure how to achieve that in a non-racy
-way though.
+Thx.
 
->
-> The dmesg in the bugzilla below is from an HP ZBook Fury 16.  Do you
-> see this on any other platforms?  Do you have any HP BIOS contacts to
-> ask about this?
->
-> It seems like a firmware defect to enable PTM without knowing whether
-> upstream devices have PTM enabled.
+-- 
+Regards/Gruss,
+    Boris.
 
-Yes, just raised the issue to HP.
-
->
-> We could leave PTM enabled on upstream devices when suspending, but
-> that apparently prevents some low-power states.  Adding David since he
-> worked on that.
-
-Leaving PTM enabled makes the system unable to suspend.
-
-Kai-Heng
-
->
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216850
-> > Cc: Mario Limonciello <mario.limonciello@amd.com>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pcie/portdrv.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > index 2cc2e60bcb396..59d00e20e57bf 100644
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -237,7 +237,8 @@ static int get_port_device_capability(struct pci_dev *dev)
-> >       if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >               pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
-> >           dev->aer_cap && pci_aer_available() &&
-> > -         (pcie_ports_native || host->native_aer))
-> > +         (pcie_ports_native || host->native_aer) &&
-> > +         !dev_is_removable(&dev->dev))
-> >               services |= PCIE_PORT_SERVICE_AER;
-> >  #endif
-> >
-> > --
-> > 2.34.1
-> >
+https://people.kernel.org/tglx/notes-about-netiquette
