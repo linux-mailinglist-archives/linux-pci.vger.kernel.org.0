@@ -2,50 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BB3E6598AA
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 14:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B26B86598BF
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 14:34:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbiL3NXz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Dec 2022 08:23:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35916 "EHLO
+        id S231474AbiL3Ne4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Dec 2022 08:34:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231439AbiL3NXr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 08:23:47 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF81D1AD9C;
-        Fri, 30 Dec 2022 05:23:45 -0800 (PST)
+        with ESMTP id S231392AbiL3Nex (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 08:34:53 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 475311A834;
+        Fri, 30 Dec 2022 05:34:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4878061172;
-        Fri, 30 Dec 2022 13:23:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FFC8C433D2;
-        Fri, 30 Dec 2022 13:23:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D2926B81AD4;
+        Fri, 30 Dec 2022 13:34:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3229C433EF;
+        Fri, 30 Dec 2022 13:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672406624;
-        bh=NqmqGbk5hNMzGGcEm4dJNpuxoV4wFsE7sNHS+ETbSqw=;
+        s=k20201202; t=1672407287;
+        bh=yrf2Y3khUKxgM7o3Wxz+A9SrdKCJD/kM3XHdczUHHOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jO61gvfKtXf+0r3Va55qQpluFxWwsQ/h/hi6h5D31HrsyUkm0FRcX9BU4gKmfaThg
-         cl7n+oAnzEWMq+3pW6lOlIL+1Id1yJstOrpABJYr6U/032CQJaLwnVbGLsr1iTi+8Q
-         I7x/gcmobqcsIYB8M3zXttLV+vnn5CXdRP5mJhThKunawto9a0j7l5VWFZEmRu9caY
-         QUL8qPVq9d8drPJxWL2VkEZZsH/gIHkNMf2jLAz2sTfFplu4jlVz3w/acrSAHvYZwr
-         oplcFo7WdZagkGFrxLdRyPKwNkRGb/2CwBzd6jcmVMvLt97PLeKbLOXkQS1p0TOd0v
-         DTBQRgzstEk8A==
+        b=bstHmpurRjvPkBxZV4rUmq4T5nmLlDq0Lwm5RwqpyYJMS6Eyj1gdwvjxn1vQzMqf7
+         gfDcD8fYulm9R92JEn0YGYbQ4NEbIOAfPc3jno2y+p7ScnF0MqwG7kOUVG8rWCkvhN
+         WJ0YF7aDcCmnmabzQZFdvU1dnQbBdkq2ojpQRakIMAMkPAxXyZSTepP6pGVeNkjtPJ
+         IsMBlv9qfd+6CLascwe2rfzpcFprPlL1U77q6hK7p+1jnett0w03WIMZaMZbyjA8R5
+         1QUhz78+6wiWpKP7SUubltEnM//9YbaJkYrK11kNkpY/ReAQ8o/U7YHJyu2C+J35+X
+         5aV48SEu6fJ4w==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+To:     Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: adjust to recent removal of PCI_MSI_IRQ_DOMAIN
-Date:   Fri, 30 Dec 2022 14:23:38 +0100
-Message-Id: <167240660288.752172.35470572785572794.b4-ty@kernel.org>
+Cc:     linux-phy@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: (subset) [PATCH v4 0/8] PCI/phy: Add support for PCI on sm8350 platform
+Date:   Fri, 30 Dec 2022 14:34:38 +0100
+Message-Id: <167240726511.753517.16556407698236838050.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221215103452.23131-1-lukas.bulwahn@gmail.com>
-References: <20221215103452.23131-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20221118233242.2904088-1-dmitry.baryshkov@linaro.org>
+References: <20221118233242.2904088-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -58,21 +66,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 15 Dec 2022 11:34:52 +0100, Lukas Bulwahn wrote:
-> Commit a474d3fbe287 ("PCI/MSI: Get rid of PCI_MSI_IRQ_DOMAIN") removes the
-> config PCI_MSI_IRQ_DOMAIN and makes all previous references to that config
-> then refer to PCI_MSI instead.
+On Sat, 19 Nov 2022 01:32:34 +0200, Dmitry Baryshkov wrote:
+> SM8350 is one of the recent Qualcomm platforms which lacks PCIe support.
+> Use sm8450 PHY tables to add support for the PCIe hosts on Qualcomm SM8350 platform.
 > 
-> Commit ba6ed462dcf4 ("PCI: dwc: Add Baikal-T1 PCIe controller support")
-> adds the config PCIE_BT1, which following the previous default pattern
-> depends on the config PCI_MSI_IRQ_DOMAIN.
+> Note: the PCIe0 table is based on the lahaina-v2.1.dtsi file, so it
+> might work incorrectly on earlier SoC revisions.
+> 
+> Dependencies:
+> - phy/next (for PHY patches only)
 > 
 > [...]
 
-Applied to pci/dwc, thanks!
+Applied to pci/qcom, thanks!
 
-[1/1] PCI: dwc: adjust to recent removal of PCI_MSI_IRQ_DOMAIN
-      https://git.kernel.org/lpieralisi/pci/c/3c9686173220
+[1/8] dt-bindings: PCI: qcom: Add sm8350 to bindings
+      https://git.kernel.org/lpieralisi/pci/c/781d814cc348
 
 Thanks,
 Lorenzo
