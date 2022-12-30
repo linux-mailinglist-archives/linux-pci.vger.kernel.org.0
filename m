@@ -2,74 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7FE659BC4
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 20:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A318A659BD2
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 21:07:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbiL3Twg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Dec 2022 14:52:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43224 "EHLO
+        id S235164AbiL3UHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Dec 2022 15:07:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbiL3Twf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 14:52:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423BA11A32;
-        Fri, 30 Dec 2022 11:52:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C37D061B9C;
-        Fri, 30 Dec 2022 19:52:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0DAC433EF;
-        Fri, 30 Dec 2022 19:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672429953;
-        bh=8d81TX58YH1G9J+afWPRLe8LwaJbseEEbaaCSWCyhUw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FZ0aRG52Zqkc4eP+mgUb3RQa0QaxbxWEYHFibI5hIv5age03Zz3UpWas9exd+utXz
-         kNzq8BucpbMEaK/dg702NKqxaQzm1QTziVsCHQTG7PQxa/PLLHGTu75l6lBaCNLQUV
-         v9Diu3UOp4hMot/Z9fDReK6oAj4Rw0H7J1g4YWaPqh+l+Lg4TdarkySNmU9vSqYzUa
-         K9FJGRJJBGM9M0fXIzHPCOrUlLHXfuPUtRVBgYciTrPb004ekbalKO5gpbFZPT2wzK
-         q8FEHdlASbSJf4oZE0eeGo5ihklt75WwECj6dYMj7zhL/P7gomo5vWdzdAy7EP7w6r
-         0LoQnp4mMD3pw==
-Date:   Fri, 30 Dec 2022 13:52:31 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     daire.mcnamara@microchip.com, conor.dooley@microchip.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 8/9] PCI: microchip: Partition inbound address
- translation
-Message-ID: <20221230195231.GA704036@bhelgaas>
+        with ESMTP id S231598AbiL3UHx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 15:07:53 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208F1AA29;
+        Fri, 30 Dec 2022 12:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=MydDErlf0p2Elc8XRPiBelXsjalT5pPXeWspcIgHS68=; b=Ke6V2T929M654AAxtU5zc4tpPM
+        4xY7vfOUjS5MZYcrIm9KqqEucgZ1WjCHHxyC+sShYDyaHnkA8ggGn169x0SUym3jpbnbHjV/lJJvW
+        vxKPz3XK5wnebDlPAjHF2qbFE8OynZLrQqTGfU60wgPy8/ZYpiDQILeUkhfiGG2nczKSjFL6vVqEH
+        7ME06c8qfxTA9toX6L64Rc2wuesFMfQvg0+W2pvMlRJ3I+iY+w9S80WuB1hVnmEglLMJYP41WWuEf
+        K/0HNAtjvBb7sIA/aSlIzYjzbqKehmQwzVV2p7dn4jfOgbI143H7Y9ZVZ9Lh5KxoLo0GLRFLY6AeS
+        fzr9lUGw==;
+Received: from [2001:8b0:10b:5:ace3:8d6b:ae0:b73f] (helo=[IPv6:::1])
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pBLfK-00GwnQ-2m;
+        Fri, 30 Dec 2022 20:07:43 +0000
+Date:   Fri, 30 Dec 2022 20:07:44 +0000
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Major Saheb <majosaheb@gmail.com>
+CC:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: =?US-ASCII?Q?Re=3A_DMAR=3A_=5BDMA_Read_NO=5FPASID=5D_?= =?US-ASCII?Q?Request_device_=5B0b=3A00=2E0=5D_fault_?= =?US-ASCII?Q?addr_0xffffe000_=5Bfault_reason_0?= =?US-ASCII?Q?x06=5D_PTE_Read_access_is_not_set?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20221230192042.GA697217@bhelgaas>
+References: <20221230192042.GA697217@bhelgaas>
+Message-ID: <29F6A46D-FBE0-40E3-992B-2C5CC6CD59D7@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202212221347.puj3IN6d-lkp@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 22, 2022 at 01:30:03PM +0800, kernel test robot wrote:
-> ...
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/pci/controller/pcie-microchip-host.c:896:32: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
->            devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
->                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I know this particular warning wasn't added by *this* series, but of
-600+ instances of devm_add_action_or_reset(), only 4 have similar cast
-ugliness like this.  I think most others define a trivial stub that
-takes a void * and passes it on to the underlying function that
-expects a more specific type.  That's kind of ugly too, but arguably
-a little less so.
 
-Bjorn
+On 30 December 2022 19:20:42 GMT, Bjorn Helgaas <helgaas@kernel=2Eorg> wro=
+te:
+>Hi Major,
+>
+>Thanks for the report!
+>
+>On Wed, Dec 21, 2022 at 08:38:46PM +0530, Major Saheb wrote:
+>> I have an ubuntu guest running on kvm , and I am passing it 10 qemu
+>> emulated nvme drives
+>>     <iommu model=3D'intel'>
+>>       <driver intremap=3D'on' eim=3D'on'/>
+>>     </iommu>
+>> <qemu:arg value=3D'pcie-root-port,id=3Dpcie-root-port%d,slot=3D%d'/>
+>> <qemu:arg value=3D'nvme,drive=3DNVME%d,serial=3D%s_%d,id=3DNVME%d,bus=
+=3Dpcie-root-port%d'/>
+>>=20
+>> kernel
+>> Linux node-1 5=2E15=2E0-56-generic #62-Ubuntu SMP ----- x86_64 x86_64
+>> x86_64 GNU/Linux
+>>=20
+>> kernel command line
+>> intel_iommu=3Don
+>>=20
+>> I have attached these drives to vfio-pcie=2E
+>>=20
+>> when I try to send IO commands to these drives VIA a userspace nvme
+>> driver using VFIO I get
+>> [ 1474=2E752590] DMAR: DRHD: handling fault status reg 2
+>> [ 1474=2E754463] DMAR: [DMA Read NO_PASID] Request device [0b:00=2E0]
+>> fault addr 0xffffe000 [fault reason 0x06] PTE Read access is not set
+>>=20
+>> Can someone explain to me what's happening here ?
+>
+>I'm not an IOMMU expert, but I think the device (0b:00=2E0, I assume an
+>nvme device) did a DMA read to 0xffffe000 (which looks suspiciously
+>like a null pointer (-8192 off a null pointer)), and the IOMMU had no
+>mapping for that address=2E
+
+We tend to assign I/O virtual addresses from the top of the 4GiB address s=
+pace and going downwards, so that could just be the first or second page ma=
+pped=2E
+
+>Can you point us to the userspace nvme driver?  I'm not a VFIO expert
+>either, but I assume it uses something like a VFIO_IOMMU_MAP_DMA ioctl
+>to map buffers and get IOVAs to give to the device?
+>
+>Can you collect a dmesg log and output of "sudo lspci -vv" for your
+>guest?  Is this something that worked in the past and broke on a newer
+>kernel?  It looks like you're using a 5=2E15 kernel; have you tried any
+>newer kernels?
+>
+>Bjorn
