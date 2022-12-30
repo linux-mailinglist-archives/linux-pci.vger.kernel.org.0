@@ -2,143 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD95B659273
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Dec 2022 23:28:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BDB6659636
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 09:19:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiL2W2j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Dec 2022 17:28:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        id S234572AbiL3ITD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Dec 2022 03:19:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbiL2W2i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Dec 2022 17:28:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FCE7679
-        for <linux-pci@vger.kernel.org>; Thu, 29 Dec 2022 14:27:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672352872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cHbnoPEKbPMw3NITOja3/J1RVGN2ZoCb1fhOFa94LW4=;
-        b=QALd6T2BfZ0l5w2iOeeDgkEjfOjJRGUxhvPojbJMjGRHgddpm66qXYoqX/ZhyXn2fivFrk
-        Sqxy0MntHqY580RG/Aa4iAdx3QTv6J+1h/yTKAG/fChfpWXDbFFmRs5KZTDFDPIt0ZJS4V
-        u3U9/LGrD6EGsFll6zGM+g2v0i79bfE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-413-qpdPmxa4N0annPgHvVO6lA-1; Thu, 29 Dec 2022 17:27:50 -0500
-X-MC-Unique: qpdPmxa4N0annPgHvVO6lA-1
-Received: by mail-qt1-f200.google.com with SMTP id fp22-20020a05622a509600b003ab920c4c89so3500036qtb.1
-        for <linux-pci@vger.kernel.org>; Thu, 29 Dec 2022 14:27:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cHbnoPEKbPMw3NITOja3/J1RVGN2ZoCb1fhOFa94LW4=;
-        b=Dfb+e+0/lQvuwuYvWOt37M0+DvDcDz9fFTdqx6xBI/vimbMBLCXT1GncYdHCzpwLrf
-         jeRUgBCW3YYjwkD4Pmm+ohVCx1tl+GH0vL02zrPzHTKTTMXO2HtJmTCql42i8vswKsfV
-         gaaqLAts1C7uzQjSNDR1lo5y0jDHhEa6TjqMey/KGQmgHM+FCmTx6sEHSsJmWt2PoqIn
-         ME1wlqL7HGkL+EKRPp72aEqnfpQhmX1FT4iC9HlmEiHLlJfA/VrSbO6ti0JicCNVX9Qc
-         XDkBBAy4GJSXPZKjgsYu5WgfNIRCk3UIsw4uWr5XbF+9e1orDUAqn8HW9xZyJngdOpsN
-         9g0Q==
-X-Gm-Message-State: AFqh2kpRMaQsyb8L1DwDu5fS/IQAsuIiLEqnpOYHdXhtCv+si+RAxCDs
-        uxlmjI6eiw0hqaRVYZYr2juQ6UgRVOt5Yx3lvlW0jDzmZfhrrrajUFJXdbr8YEY9qpuc/SMBLYa
-        SIPhjfpmKNfNnLrgVqvv3
-X-Received: by 2002:ac8:65da:0:b0:3a9:7332:3f74 with SMTP id t26-20020ac865da000000b003a973323f74mr39481607qto.19.1672352870115;
-        Thu, 29 Dec 2022 14:27:50 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvl1146S1SoqnZLGbNKPU35QzmMmqiJgwLqeEadXm8SV5fx7paXucmPsv2beTTyd8SjCaMJYw==
-X-Received: by 2002:ac8:65da:0:b0:3a9:7332:3f74 with SMTP id t26-20020ac865da000000b003a973323f74mr39481590qto.19.1672352869857;
-        Thu, 29 Dec 2022 14:27:49 -0800 (PST)
-Received: from redhat.com ([5.181.234.214])
-        by smtp.gmail.com with ESMTPSA id bn35-20020a05620a2ae300b00702311aea78sm13723685qkb.82.2022.12.29.14.27.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Dec 2022 14:27:48 -0800 (PST)
-Date:   Thu, 29 Dec 2022 17:27:43 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alvaro Karsz <alvaro.karsz@solid-run.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [RESEND PATCH 1/3] Add SolidRun vendor id
-Message-ID: <20221229172715-mutt-send-email-mst@kernel.org>
-References: <CAJs=3_AJnj9udpJ1LRtC+9qvo5Fw-=FjvZRqZkHCaQSEP-FyYg@mail.gmail.com>
- <20221229212906.GA631104@bhelgaas>
+        with ESMTP id S234794AbiL3ITB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 03:19:01 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD421A05C;
+        Fri, 30 Dec 2022 00:19:00 -0800 (PST)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pBAbQ-0003Oo-SD; Fri, 30 Dec 2022 09:18:56 +0100
+Message-ID: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+Date:   Fri, 30 Dec 2022 09:18:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221229212906.GA631104@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: =?UTF-8?Q?=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0216865?=
+ =?UTF-8?Q?_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_with_AM?=
+ =?UTF-8?Q?D_IOMMU_enabled?=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672388340;85de40be;
+X-HE-SMSGID: 1pBAbQ-0003Oo-SD
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 03:29:06PM -0600, Bjorn Helgaas wrote:
-> On Thu, Dec 29, 2022 at 11:06:02PM +0200, Alvaro Karsz wrote:
-> > > On Mon, Dec 19, 2022 at 10:35:09AM +0200, Alvaro Karsz wrote:
-> > > > The vendor id is used in 2 differrent source files,
-> > > > the SNET vdpa driver and pci quirks.
-> > >
-> > > s/id/ID/                   # both in subject and commit log
-> > > s/differrent/different/
-> > > s/vdpa/vDPA/               # seems to be the conventional style
-> > > s/pci/PCI/
-> > >
-> > > Make the commit log say what this patch does.
-> > >
-> > > > Signed-off-by: Alvaro Karsz <alvaro.karsz@solid-run.com>
-> > >
-> > > With the above and the sorting fix below:
-> > >
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > > ---
-> > > >  include/linux/pci_ids.h | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > > index b362d90eb9b..33bbe3160b4 100644
-> > > > --- a/include/linux/pci_ids.h
-> > > > +++ b/include/linux/pci_ids.h
-> > > > @@ -3115,4 +3115,6 @@
-> > > >
-> > > >  #define PCI_VENDOR_ID_NCUBE          0x10ff
-> > > >
-> > > > +#define PCI_VENDOR_ID_SOLIDRUN               0xd063
-> > >
-> > > Move this to the right spot so the file is sorted by vendor ID.
-> > > PCI_VENDOR_ID_NCUBE, PCI_VENDOR_ID_OCZ, and PCI_VENDOR_ID_XEN got
-> > > added in the wrong place.
-> > >
-> > > >  #endif /* _LINUX_PCI_IDS_H */
-> > > > --
-> > 
-> > Thanks for your comments.
-> > 
-> > The patch was taken by another maintainer (CCed)
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/commit/?h=linux-next&id=afc9dcfb846bf35aa7afb160d5370ab5c75e7a70
-> > 
-> > So, Michael and Bjorn,
-> > Do you want me to create a new version, or fix it in a follow up patch?
-> > 
-> > BTW, the same is true for the next patch in the series, New PCI quirk
-> > for SolidRun SNET DPU
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/commit/?h=linux-next&id=136dd8d8f3a0ac19f75a875e9b27b83d365a5be3
+Hi, this is your Linux kernel regression tracker speaking.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216865 :
+
+>  Matt Fagnani 2022-12-29 18:39:56 UTC
 > 
-> I don't know how Michael runs his tree, so it's up to him, but "New
-> PCI quirk for SolidRun SNET DPU." is completely different from all the
-> history and not very informative, so if it were via my tree I would
-> definitely update both.
+> I booted the Fedora Rawhide KDE Plasma live image
+> Fedora-KDE-Live-x86_64-Rawhide-20221227.n.0.iso
+> https://koji.fedoraproject.org/koji/buildinfo?buildID=2104562 from a USB
+> flash drive written with Fedora Media Writer on an hp laptop with an
+> integrated Radeon R5 GPU. The system froze with a black screen when
+> amdgpu started during 6.2-rc1 kernel boot. When I booted with quiet rhgb
+> removed from the kernel command line the last line shown before the
+> black screen was
+>
+> kernel: [drm] amdgpu kernel modesetting enabled.
 > 
-> Bjorn
+> This problem happened each of several boots when using the amdgpu
+> driver (the default). This problem didn't happen when I booted the same
+> image using Troubleshooting > Boot Fedora-KDE-Plasma-live in basic
+> graphics mode which used the simpledrm driver and started Plasma on X
+> normally. This problem also didn't happen when I booted the image in a
+> QEMU/KVM VM in GNOME Boxes with 3 GB RAM using the virtio-gpu driver.
+> 
+> The data from the previous boots using live images aren't saved by
+> default so I couldn't get the journal that way as far as I knew. I
+> installed kernel-6.2.0-0.rc1.14.fc38 in my Fedora 37 KDE Plasma
+> installation and reproduced the problem 3 times with quiet rhgb removed
+> from the kernel command line and sysrq_always_enabled drm.debug=14 added
+> to it. I used sysrq+alt+r,s,u,b which rebooted the system so the kernel
+> wasn't completely frozen. The journals from the boots with the problem
+> weren't shown in journalctl. I booted with amdgpu.dc=0 on the kernel
+> command line and the screen froze with the last line
+> kernel: [drm] amdgpu kernel modesetting enabled. and the black
+> screen
+> didn't happen. I booted with drm.debug=94 on the kernel command line and
+> the screen's drm settings were shown repeatedly until I rebooted after
+> 2-3 minutes.
+> 
+> This problem didn't happen with kernel-6.1.0-65.fc38 or earlier in
+> the
+> Fedora Rawhide live image
+> Fedora-KDE-Live-x86_64-Rawhide-20221217.n.0.iso. The first Fedora
+> Rawhide kernel with this problem was
+> 6.2.0-0.rc0.20221215git041fae9c105a.5.fc38, while
+> 6.2.0-0.rc0.20221214gite2ca6ba6ba01.3.fc38 was the last one without the
+> problem. I bisected the mainline kernel between e2ca6ba6ba01 and
+> 041fae9c105a. The first bad commit was the following involving PCI and
+> IOMMUs.
+> 
+> 201007ef707a8bb5592cd07dd46fc9222c48e0b9 is the first bad commit
+> commit 201007ef707a8bb5592cd07dd46fc9222c48e0b9
+> Author: Lu Baolu <baolu.lu@linux.intel.com>
+> Date:   Mon Oct 31 08:59:08 2022 +0800
+> 
+>     PCI: Enable PASID only when ACS RR & UF enabled on upstream path
+>     
+>     The Requester ID/Process Address Space ID (PASID) combination
+>     identifies an address space distinct from the PCI bus address space,
+>     e.g., an address space defined by an IOMMU.
+>     
+> [...]
+> 
+> My system has an AMD IOMMU enabled. When I booted 6.2-rc1 with
+> amd_iommu=off on the kernel command line, the problem didn't happen and
+> the boot completed. There were IOMMU-related errors when amdgpu started
+> with amd_iommu=off. So the problem appears to involve amdgpu not
+> starting properly when the IOMMU is enabled after that change. When I
+> booted with quiet rhgb removed from the kernel command line, I noted
+> that the AMD IOMMU started about 3 seconds before the problem happened
+> when amdgpu started with a line like kernel: AMD-Vi: AMD IOMMUv2 loaded
+> and initialized
+> 
+> I reported this problem at
+> https://gitlab.freedesktop.org/drm/amd/-/issues/2319 where Alex Deucher
+> wrote "Please report this upstream to the IOMMU subsystem:
+> https://bugzilla.kernel.org/" I reported it for Fedora at
+> https://bugzilla.redhat.com/show_bug.cgi?id=2156691
 
-New version pls, I rebase so no problem to replace.
+See the ticket for more details.
 
--- 
-MST
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
+#regzbot introduced: 201007ef707a8bb
+https://bugzilla.kernel.org/show_bug.cgi?id=216865
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
