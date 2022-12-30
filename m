@@ -2,53 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A350665977C
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 12:08:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06332659787
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 12:20:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbiL3LIv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Dec 2022 06:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58776 "EHLO
+        id S234162AbiL3LUA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Dec 2022 06:20:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiL3LIu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 06:08:50 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CE82BE6;
-        Fri, 30 Dec 2022 03:08:49 -0800 (PST)
+        with ESMTP id S229461AbiL3LT7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 06:19:59 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2804E1AD81;
+        Fri, 30 Dec 2022 03:19:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 814ADB81BB3;
-        Fri, 30 Dec 2022 11:08:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E075C433D2;
-        Fri, 30 Dec 2022 11:08:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CACE8B81BB7;
+        Fri, 30 Dec 2022 11:19:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93E2C433D2;
+        Fri, 30 Dec 2022 11:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672398527;
-        bh=x960N/FOlAW8vIqJIIQSYtb2+7LJKCRkTDYzD2ebnMg=;
+        s=k20201202; t=1672399196;
+        bh=66+Utcio1Yvnm6IqPcSYYfhn1IhtICBAOV3ml14FGKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FSQ/Izs30GpDwt/PvZVjyAqSfsF16ud3fxls/WN3ZEooGJ8HY48MP+pE+COFTvMpx
-         VLgW/AqPAR3jAekfoFRJms+XqGBTIfhJF6HqIAEENHvlqAwc78CnfjTYCvuABnmL1I
-         j7KDELG8t8sagMBkPxIItHrQW/L6FE18H3XqSDvIzyvuKkTTqk4CJ+cG7uPqeCs2/c
-         2o1up9Fta2e/Gar/nSqC6lFkAQ+1rl55d8jizfze6u2wiwObum8A0Or7Zxu5P3nrjL
-         RwJY4cad0IPXfluIEbVYLqGtEY8Vxmb87B59nQTBf1vk8jipUTZf92/q855+NvvwlV
-         ZHEq0HVaiVwtg==
+        b=Hwu1qn0mjo+k62TPiPpDqoqgYJ+SvClfHp5/BmvAj6znQv1DiNqniZiOPpus4nCSi
+         o+qSirm1CSH6+2n7CYUuzbJU5Pf6v7fJlZSO6zaeB0/PSw+P41M7Wa0ONCZXy7OiO0
+         MqarN7GqKsFoHjSlrJLTKasL5TuJXcjqQdynFmBJS+dvb7ws6rO5tYR72enrHKePGt
+         IIbAtC67jDDnVNJuMhNqEAYRI+f+QxBJXjFaFcCXN00XsgMATxbUZNAni8GawdcJqL
+         RJbaf5QlszT5S1/oxXd2yYZ8kIE1dSDDynffNbblk+l/mOBBRQyzogncaMqlq2uDPK
+         ypOAPibHZXWbA==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+To:     Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: (subset) [PATCH 1/4] dt-bindings: PCI: qcom: add MSM8998 specific compatible
-Date:   Fri, 30 Dec 2022 12:08:25 +0100
-Message-Id: <167239846281.742638.918628227544664589.b4-ty@kernel.org>
+        Rob Herring <robh@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/1] dt-bindings: PCI: uniphier: Fix endpoint descriptions
+Date:   Fri, 30 Dec 2022 12:19:49 +0100
+Message-Id: <167239915876.744743.14217216236475860697.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221115125310.184012-1-krzysztof.kozlowski@linaro.org>
-References: <20221115125310.184012-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221223070713.20549-1-hayashi.kunihiko@socionext.com>
+References: <20221223070713.20549-1-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -61,18 +58,21 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 15 Nov 2022 13:53:07 +0100, Krzysztof Kozlowski wrote:
-> Add new compatible for MSM8998 (compatible with MSM8996) to allow
-> further customizing if needed and to accurately describe the hardware.
+On Fri, 23 Dec 2022 16:07:12 +0900, Kunihiko Hayashi wrote:
+> This series fixes dt-schema descriptions for PCI endpoint controller
+> implemented in UniPhier SoCs.
 > 
+> Drop the patch in this series,
+> "dt-bindings: PCI: designware-ep: Increase maxItems of reg and reg-names",
+> because this was done by the commit 4cc13eedb892
+> ("dt-bindings: PCI: dwc: Add reg/reg-names common properties").
 > 
+> [...]
 
 Applied to pci/dt, thanks!
 
-[1/4] dt-bindings: PCI: qcom: add MSM8998 specific compatible
-      https://git.kernel.org/lpieralisi/pci/c/c427f45c1e99
-[2/4] dt-bindings: PCI: qcom: unify clock order between MSM8996 and MSM8998
-      https://git.kernel.org/lpieralisi/pci/c/3617fb0d8345
+[1/1] dt-bindings: PCI: uniphier-ep: Clean up reg, clocks, resets, and their names using compatible string
+      https://git.kernel.org/lpieralisi/pci/c/89836d5becf2
 
 Thanks,
 Lorenzo
