@@ -2,110 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A318A659BD2
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Dec 2022 21:07:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13CD665A107
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Dec 2022 02:55:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235164AbiL3UHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Dec 2022 15:07:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45940 "EHLO
+        id S236037AbiLaBzu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Dec 2022 20:55:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231598AbiL3UHx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 15:07:53 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208F1AA29;
-        Fri, 30 Dec 2022 12:07:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-        :MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=MydDErlf0p2Elc8XRPiBelXsjalT5pPXeWspcIgHS68=; b=Ke6V2T929M654AAxtU5zc4tpPM
-        4xY7vfOUjS5MZYcrIm9KqqEucgZ1WjCHHxyC+sShYDyaHnkA8ggGn169x0SUym3jpbnbHjV/lJJvW
-        vxKPz3XK5wnebDlPAjHF2qbFE8OynZLrQqTGfU60wgPy8/ZYpiDQILeUkhfiGG2nczKSjFL6vVqEH
-        7ME06c8qfxTA9toX6L64Rc2wuesFMfQvg0+W2pvMlRJ3I+iY+w9S80WuB1hVnmEglLMJYP41WWuEf
-        K/0HNAtjvBb7sIA/aSlIzYjzbqKehmQwzVV2p7dn4jfOgbI143H7Y9ZVZ9Lh5KxoLo0GLRFLY6AeS
-        fzr9lUGw==;
-Received: from [2001:8b0:10b:5:ace3:8d6b:ae0:b73f] (helo=[IPv6:::1])
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pBLfK-00GwnQ-2m;
-        Fri, 30 Dec 2022 20:07:43 +0000
-Date:   Fri, 30 Dec 2022 20:07:44 +0000
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Major Saheb <majosaheb@gmail.com>
-CC:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_DMAR=3A_=5BDMA_Read_NO=5FPASID=5D_?= =?US-ASCII?Q?Request_device_=5B0b=3A00=2E0=5D_fault_?= =?US-ASCII?Q?addr_0xffffe000_=5Bfault_reason_0?= =?US-ASCII?Q?x06=5D_PTE_Read_access_is_not_set?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20221230192042.GA697217@bhelgaas>
-References: <20221230192042.GA697217@bhelgaas>
-Message-ID: <29F6A46D-FBE0-40E3-992B-2C5CC6CD59D7@infradead.org>
+        with ESMTP id S235911AbiLaBzt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Dec 2022 20:55:49 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB01C5F76
+        for <linux-pci@vger.kernel.org>; Fri, 30 Dec 2022 17:55:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672451747; x=1703987747;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tJVV3aehw0ITKu+wpd2DLcoyVNxcMKhjl3ukMt7d9f4=;
+  b=YviEtK3vF6UHYjIZecNaFKqttcWqZ+dUaVVsldeKtohWxLsRYE3fnwZP
+   /0EMPdDflANL4k5sQCVAlPQlXAsUfQA/XgLbjDKWaig1XPxqkw2/rWgCw
+   3sZG4XYfx7zdq6gPKCNvFaEmy1tbF2amWUjAmbhIjez8LLHbRvEhANGof
+   pZHg3LQKrxkFZmURrCdQ3zvL7oAc31chZ+tu6t2X2ohgHrH8iSmv+i5b8
+   V9WE2LG1jFEp/Nh304DbYZH3XJWO2+2fpqDPWT6hKC7/3h2tLEm2b8eHx
+   jyDZnLz9zKMOlIXwDbVhS7eySQAD20NKyVxJio51d0XGhV5i2Zs5IY20P
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10576"; a="383574667"
+X-IronPort-AV: E=Sophos;i="5.96,288,1665471600"; 
+   d="scan'208";a="383574667"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2022 17:55:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10576"; a="655985028"
+X-IronPort-AV: E=Sophos;i="5.96,288,1665471600"; 
+   d="scan'208";a="655985028"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Dec 2022 17:55:45 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pBR68-000Mq1-32;
+        Sat, 31 Dec 2022 01:55:44 +0000
+Date:   Sat, 31 Dec 2022 09:55:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/switchtec] BUILD SUCCESS
+ fbc855bce49eda88408c329d6b2bc1176ab08dcd
+Message-ID: <63af9684.OCkgUl5zxhC6DBfa%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/switchtec
+branch HEAD: fbc855bce49eda88408c329d6b2bc1176ab08dcd  PCI: switchtec: Return -EFAULT for copy_to_user() errors
 
+Unverified Warning (likely false positive, please contact us if interested):
 
-On 30 December 2022 19:20:42 GMT, Bjorn Helgaas <helgaas@kernel=2Eorg> wro=
-te:
->Hi Major,
->
->Thanks for the report!
->
->On Wed, Dec 21, 2022 at 08:38:46PM +0530, Major Saheb wrote:
->> I have an ubuntu guest running on kvm , and I am passing it 10 qemu
->> emulated nvme drives
->>     <iommu model=3D'intel'>
->>       <driver intremap=3D'on' eim=3D'on'/>
->>     </iommu>
->> <qemu:arg value=3D'pcie-root-port,id=3Dpcie-root-port%d,slot=3D%d'/>
->> <qemu:arg value=3D'nvme,drive=3DNVME%d,serial=3D%s_%d,id=3DNVME%d,bus=
-=3Dpcie-root-port%d'/>
->>=20
->> kernel
->> Linux node-1 5=2E15=2E0-56-generic #62-Ubuntu SMP ----- x86_64 x86_64
->> x86_64 GNU/Linux
->>=20
->> kernel command line
->> intel_iommu=3Don
->>=20
->> I have attached these drives to vfio-pcie=2E
->>=20
->> when I try to send IO commands to these drives VIA a userspace nvme
->> driver using VFIO I get
->> [ 1474=2E752590] DMAR: DRHD: handling fault status reg 2
->> [ 1474=2E754463] DMAR: [DMA Read NO_PASID] Request device [0b:00=2E0]
->> fault addr 0xffffe000 [fault reason 0x06] PTE Read access is not set
->>=20
->> Can someone explain to me what's happening here ?
->
->I'm not an IOMMU expert, but I think the device (0b:00=2E0, I assume an
->nvme device) did a DMA read to 0xffffe000 (which looks suspiciously
->like a null pointer (-8192 off a null pointer)), and the IOMMU had no
->mapping for that address=2E
+drivers/pci/switch/switchtec.c:623:1: sparse: sparse: unused label 'out'
 
-We tend to assign I/O virtual addresses from the top of the 4GiB address s=
-pace and going downwards, so that could just be the first or second page ma=
-pped=2E
+Warning ids grouped by kconfigs:
 
->Can you point us to the userspace nvme driver?  I'm not a VFIO expert
->either, but I assume it uses something like a VFIO_IOMMU_MAP_DMA ioctl
->to map buffers and get IOVAs to give to the device?
->
->Can you collect a dmesg log and output of "sudo lspci -vv" for your
->guest?  Is this something that worked in the past and broke on a newer
->kernel?  It looks like you're using a 5=2E15 kernel; have you tried any
->newer kernels?
->
->Bjorn
+gcc_recent_errors
+|-- arc-randconfig-s041-20221225
+|   `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+|-- i386-randconfig-s001
+|   `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+|-- loongarch-randconfig-s043-20221225
+|   `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+|-- parisc-randconfig-s031-20221225
+|   `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+|-- powerpc-randconfig-s042-20221225
+|   `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+`-- sparc-randconfig-s053-20221225
+    `-- drivers-pci-switch-switchtec.c:sparse:sparse:unused-label-out
+
+elapsed time: 724m
+
+configs tested: 75
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+alpha                            allyesconfig
+arc                              allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+powerpc                           allnoconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+um                             i386_defconfig
+s390                             allyesconfig
+um                           x86_64_defconfig
+sh                               allmodconfig
+x86_64                           rhel-8.3-bpf
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                                defconfig
+ia64                             allmodconfig
+x86_64                              defconfig
+x86_64               randconfig-a014-20221226
+x86_64                               rhel-8.3
+x86_64               randconfig-a013-20221226
+x86_64               randconfig-a011-20221226
+x86_64                    rhel-8.3-kselftests
+x86_64               randconfig-a012-20221226
+x86_64                          rhel-8.3-func
+arm                                 defconfig
+i386                             allyesconfig
+x86_64                           allyesconfig
+x86_64               randconfig-a016-20221226
+x86_64               randconfig-a015-20221226
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                  randconfig-r046-20221225
+arc                  randconfig-r043-20221225
+arc                  randconfig-r043-20221227
+arm                  randconfig-r046-20221227
+arc                  randconfig-r043-20221226
+riscv                randconfig-r042-20221226
+s390                 randconfig-r044-20221226
+x86_64                            allnoconfig
+i386                          randconfig-c001
+
+clang tested configs:
+x86_64               randconfig-a002-20221226
+x86_64               randconfig-a003-20221226
+x86_64               randconfig-a001-20221226
+x86_64               randconfig-a004-20221226
+i386                          randconfig-a013
+i386                          randconfig-a011
+x86_64               randconfig-a005-20221226
+x86_64               randconfig-a006-20221226
+i386                          randconfig-a015
+x86_64                          rhel-8.3-rust
+i386                 randconfig-a004-20221226
+i386                 randconfig-a001-20221226
+i386                 randconfig-a003-20221226
+i386                 randconfig-a002-20221226
+i386                 randconfig-a005-20221226
+i386                 randconfig-a006-20221226
+hexagon              randconfig-r045-20221225
+riscv                randconfig-r042-20221227
+hexagon              randconfig-r041-20221225
+s390                 randconfig-r044-20221227
+hexagon              randconfig-r041-20221227
+hexagon              randconfig-r041-20221226
+arm                  randconfig-r046-20221226
+s390                 randconfig-r044-20221225
+hexagon              randconfig-r045-20221226
+riscv                randconfig-r042-20221225
+hexagon              randconfig-r045-20221227
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
