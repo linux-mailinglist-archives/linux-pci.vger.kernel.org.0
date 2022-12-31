@@ -2,52 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 745F665A37E
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Dec 2022 11:36:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7169565A618
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Dec 2022 19:34:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbiLaKgd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 31 Dec 2022 05:36:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
+        id S230053AbiLaSek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Dec 2022 13:34:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiLaKgc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Dec 2022 05:36:32 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84F310CC;
-        Sat, 31 Dec 2022 02:36:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-        :MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=TsW62Eh7HZlyUbKA+A/Mar8D1usoJjy+ytSxp2K7qwQ=; b=QA22YSLMn2agfVYH6FSpg1mj3P
-        a+qBfYShWXWIUVFauSp93yGBDBapPj68IlXGGmZGXZsRa8ymjcxDuSvaru6yqQTdJRb8qYK5hbnZQ
-        K8ykCC5gzrLrzKWe6FG4Fh6hzGzXodczlioEjUVwRBgjMx7tNX3cRaTp6spR1L7bMoI9sPx8ekkX1
-        iPhBXhO7zccNwWisoIoBt9thLxUCNdot5J+1YPVitMIEnkRhAOVEr6YkzPSIgHmv4aIUZ7C3PAkmc
-        zRzQmj0+s+dKk28uW79LoHJSVRxmn0aoo7+ZNmqp+4beAOEVKxV3lK3bmdEFUOqb43kx4uGhxhEDS
-        k/cbqE1A==;
-Received: from [2a00:23ee:1340:47e2:1764:351d:ad92:fc1a] (helo=[IPv6:::1])
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pBZDr-00H9Dw-34;
-        Sat, 31 Dec 2022 10:36:16 +0000
-Date:   Sat, 31 Dec 2022 10:36:11 +0000
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Yi Liu <yi.l.liu@intel.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        Major Saheb <majosaheb@gmail.com>
-CC:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_DMAR=3A_=5BDMA_Read_NO=5FPASID=5D_?= =?US-ASCII?Q?Request_device_=5B0b=3A00=2E0=5D_fault_?= =?US-ASCII?Q?addr_0xffffe000_=5Bfault_reason_0?= =?US-ASCII?Q?x06=5D_PTE_Read_access_is_not_set?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <0e5dc3e1-3be2-f7bc-a93c-d3e23739aa3d@intel.com>
-References: <20221230192042.GA697217@bhelgaas> <29F6A46D-FBE0-40E3-992B-2C5CC6CD59D7@infradead.org> <0e5dc3e1-3be2-f7bc-a93c-d3e23739aa3d@intel.com>
-Message-ID: <0E552CD3-1AD0-41FA-AF8B-186A916894CA@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        with ESMTP id S229628AbiLaSei (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Dec 2022 13:34:38 -0500
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5fcc:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB95DD8
+        for <linux-pci@vger.kernel.org>; Sat, 31 Dec 2022 10:34:36 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout1.hostsharing.net (Postfix) with ESMTPS id D0BE81007A8D7;
+        Sat, 31 Dec 2022 19:34:33 +0100 (CET)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id A6552601C12D;
+        Sat, 31 Dec 2022 19:34:33 +0100 (CET)
+X-Mailbox-Line: From a2ff8481c3f08458dcd2b4028a838730e965c72f Mon Sep 17 00:00:00 2001
+Message-Id: <cover.1672511016.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Sat, 31 Dec 2022 19:33:36 +0100
+Subject: [PATCH 0/3] PCI reset delay fixes
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc:     Keith Busch <kbusch@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sheng Bi <windy.bi.enflame@gmail.com>,
+        Stanislav Spassov <stanspas@amazon.de>,
+        Yang Su <yang.su@linux.alibaba.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,51 +49,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+When recovering from a DPC reset, we neglect to observe the delays
+prescribed by PCIe r6.0 sec 6.6.1 before accessing devices on the
+secondary bus.  As a result, devices which take a little longer to
+recover remain inaccessible because their config space is restored
+too early.
+
+One affected device is Intel's Ponte Vecchio HPC GPU.  Ravi Kishore
+kindly tested that this series solves the issue.
 
 
-On 31 December 2022 10:13:37 GMT, Yi Liu <yi=2El=2Eliu@intel=2Ecom> wrote:
->On 2022/12/31 04:07, David Woodhouse wrote:
->>=20
->>=20
->> On 30 December 2022 19:20:42 GMT, Bjorn Helgaas <helgaas@kernel=2Eorg> =
-wrote:
->>> Hi Major,
->>>=20
->>> Thanks for the report!
->>>=20
->>> On Wed, Dec 21, 2022 at 08:38:46PM +0530, Major Saheb wrote:
->>>> I have an ubuntu guest running on kvm , and I am passing it 10 qemu
->>>> emulated nvme drives
->>>>      <iommu model=3D'intel'>
->>>>        <driver intremap=3D'on' eim=3D'on'/>
->>>>      </iommu>
->>>> <qemu:arg value=3D'pcie-root-port,id=3Dpcie-root-port%d,slot=3D%d'/>
->>>> <qemu:arg value=3D'nvme,drive=3DNVME%d,serial=3D%s_%d,id=3DNVME%d,bus=
-=3Dpcie-root-port%d'/>
->>>>=20
->>>> kernel
->>>> Linux node-1 5=2E15=2E0-56-generic #62-Ubuntu SMP ----- x86_64 x86_64
->>>> x86_64 GNU/Linux
->>>>=20
->>>> kernel command line
->>>> intel_iommu=3Don
->>>>=20
->>>> I have attached these drives to vfio-pcie=2E
->>>>=20
->>>> when I try to send IO commands to these drives VIA a userspace nvme
->>>> driver using VFIO I get
->>>> [ 1474=2E752590] DMAR: DRHD: handling fault status reg 2
->>>> [ 1474=2E754463] DMAR: [DMA Read NO_PASID] Request device [0b:00=2E0]
->>>> fault addr 0xffffe000 [fault reason 0x06] PTE Read access is not set
->>>>=20
->>>> Can someone explain to me what's happening here ?
->
->You can enable iommu debugfs (CONFIG_INTEL_IOMMU_DEBUGFS=3Dy) to check
->the mapping=2E In this file, you can see if the 0xffffe000 is mapped or
->not=2E
->
->/sys/kernel/debug/iommu/intel/domain_translation_struct
+As a byproduct, the series fixes a similar delay issue for Secondary
+Bus Resets.  Sheng Bi proposed a patch last May, a variation of which
+is contained herein:
 
-My first guess would be that it *was* using queues mapped at that address,=
- but was taken out of the IOMMU domain to be given to userspace, without st=
-opping them=2E
+https://patchwork.kernel.org/project/linux-pci/patch/20220523171517.32407-1-windy.bi.enflame@gmail.com/
+
+
+A second byproduct of this series is an optimization for Secondary
+Bus Resets whereby the delay after reset is reduced on modern PCIe
+systems.  Yang Su and Stanislav Spassov proposed a patch in August
+which is subsumed by the present series:
+
+https://patchwork.kernel.org/project/linux-pci/patch/4315990a165dd019d970633713cf8e06e9b4c282.1660746147.git.yang.su@linux.alibaba.com/
+
+
+If the present series is accepted, the two above-linked patches
+can be closed in patchwork.  (For some reason, Sheng Bi's patch
+is in "New" state, but marked "Archived".)
+
+Thanks!
+
+
+Lukas Wunner (3):
+  PCI/PM: Observe reset delay irrespective of bridge_d3
+  PCI: Unify delay handling for reset and resume
+  PCI/DPC: Await readiness of secondary bus after reset
+
+ drivers/pci/pci-driver.c |  2 +-
+ drivers/pci/pci.c        | 55 +++++++++++++++++-----------------------
+ drivers/pci/pci.h        |  6 ++++-
+ drivers/pci/pcie/dpc.c   |  4 +--
+ 4 files changed, 31 insertions(+), 36 deletions(-)
+
+-- 
+2.39.0
+
