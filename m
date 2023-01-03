@@ -2,199 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE92F65C44D
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 17:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C920E65C4EE
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 18:17:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbjACQzv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Jan 2023 11:55:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38146 "EHLO
+        id S238463AbjACRRJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Jan 2023 12:17:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233476AbjACQzu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 11:55:50 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A8EB30;
-        Tue,  3 Jan 2023 08:55:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672764949; x=1704300949;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lCf3CkygM0RRymks3SyRZKTWmUhd9Lv3qTfO+5Y+XeQ=;
-  b=jGzcuX5FopK9dGp4YeznBafHxbzwqgqlguEZ2IDRTrRb6zUinI0GZZRs
-   aDbBXAIYs3ChsK/GE2BkqYZ5XDeCGHTUuocdx7+qTdqD6GAHDml5zLcdO
-   NYyaRlw4vpeqDBdoxwBnhLWODSjjEK7HuO8bSDSn9jtRkoDLTvBr74uDO
-   6U2U/uRj1+Lia+tqRtNNWhkHmRrifsqrstiShdyYJmfxo67cRbg5uOrpV
-   qVLoFJZIry2ek8ucx0hhkKHpf7G8E2apshL5xGS4iNGA4LFVH0/lblknu
-   kQ/nhDcM5MmsWJ00+co9SadLaHOxaJqDxmV/fKeR2QzqcVMnZcec6+tA0
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="301385066"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="301385066"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 08:55:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="656820695"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="656820695"
-Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 08:55:46 -0800
-From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-To:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajat.khandelwal@intel.com,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-Subject: [PATCH] PCI/AER: Rate limit the reporting of the correctable errors
-Date:   Tue,  3 Jan 2023 22:25:48 +0530
-Message-Id: <20230103165548.570377-1-rajat.khandelwal@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S238404AbjACRRH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 12:17:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AFC8335;
+        Tue,  3 Jan 2023 09:17:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5BC7B80E12;
+        Tue,  3 Jan 2023 17:17:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8418C433D2;
+        Tue,  3 Jan 2023 17:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672766223;
+        bh=NjPyEb+7G3mfwu5Ui90hyTTySgvhBTP+HjDquXjxoXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h8ynO3FjWLUp5rAM+BsXMdghGepwYtxqLiZOaXk2YPMRGSLBeepHNu31slrnTsDQn
+         OlXE/K/ZiYE++LiLWZo0ENK9ktqb/RjeCJsMSf9GGWg+v2WljLeKtzD/EWECgfqR2H
+         z1KVwPFqiJkW/XGV3rlS76iWh7KFXIgtYjPBBAmChHuRPXhbGKjSW+4WVJE+8zyIVJ
+         IB9CDCbfFjJoc2L4eRFNp8qIqFZd18HBS/1reilA1PLXs3qUhbSOMsAq65Dv73yPtk
+         M0uS/r/ZNNWJIVOo6LeC8ZeXyPnnNOeVSsH2OfCAfZZh+OtrbUGpgbdz5xHX6PbnBR
+         8gfxTblAZanMg==
+Date:   Tue, 3 Jan 2023 19:16:58 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
+        anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+        rajat.khandelwal@intel.com, jesse.brandeburg@intel.com,
+        linux-kernel@vger.kernel.org, edumazet@google.com,
+        intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, kuba@kernel.org,
+        pabeni@redhat.com, davem@davemloft.net
+Subject: Re: [Intel-wired-lan] [PATCH] igc: Mask replay rollover/timeout
+ errors in I225_LMVP
+Message-ID: <Y7RjCkanr0Ulx3TD@unreal>
+References: <Y7QYxAhcUa2JtjSy@unreal>
+ <20230103142104.GA996978@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230103142104.GA996978@bhelgaas>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are many instances where correctable errors tend to inundate
-the message buffer. We observe such instances during thunderbolt PCIe
-tunneling.
+On Tue, Jan 03, 2023 at 08:21:04AM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 03, 2023 at 02:00:04PM +0200, Leon Romanovsky wrote:
+> > On Tue, Jan 03, 2023 at 05:54:02AM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Jan 03, 2023 at 11:54:24AM +0200, Leon Romanovsky wrote:
+> > > > On Sun, Jan 01, 2023 at 11:34:21AM +0100, Paul Menzel wrote:
+> > > > > Am 01.01.23 um 09:32 schrieb Leon Romanovsky:
+> > > > > > On Thu, Dec 29, 2022 at 05:56:40PM +0530, Rajat Khandelwal wrote:
+> > > > > > > The CPU logs get flooded with replay rollover/timeout AER errors in
+> > > > > > > the system with i225_lmvp connected, usually inside thunderbolt devices.
+> > > > > > > 
+> > > > > > > One of the prominent TBT4 docks we use is HP G4 Hook2, which incorporates
+> > > > > > > an Intel Foxville chipset, which uses the igc driver.
+> > > > > > > On connecting ethernet, CPU logs get inundated with these errors. The point
+> > > > > > > is we shouldn't be spamming the logs with such correctible errors as it
+> > > > > > > confuses other kernel developers less familiar with PCI errors, support
+> > > > > > > staff, and users who happen to look at the logs.
+> > > 
+> > > > > > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> > > > > > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> > > 
+> > > > > > > +static void igc_mask_aer_replay_correctible(struct igc_adapter *adapter)
+> > > 
+> > > > > > Shouldn't this igc_mask_aer_replay_correctible function be implemented
+> > > > > > in drivers/pci/quirks.c and not in igc_probe()?
+> > > > > 
+> > > > > Probably. Though I think, the PCI quirk file, is getting too big.
+> > > > 
+> > > > As long as that file is right location, we should use it.
+> > > > One can refactor quirk file later.
+> > > 
+> > > If a quirk like this is only needed when the driver is loaded, 
+> > 
+> > This is always the case with PCI devices managed through kernel, isn't it?
+> > Users don't care/aware about "broken" devices unless they start to use them.
+> 
+> Indeed, that's usually the case.  There's a lot of stuff in quirks.c
+> that could probably be in drivers instead.
 
-It's true that they are mitigated by the hardware and are non-fatal
-but we shouldn't be spamming the logs with such correctable errors as it
-confuses other kernel developers less familiar with PCI errors, support
-staff, and users who happen to look at the logs, hence rate limit them.
+NP, so or deprecate quirks.c and prohibit any change to that file or
+don't allow drivers to mangle PCI in their probe routines.
+Everything in-between will cause to enormous mess in long run.
 
-A typical example log inside an HP TBT4 dock:
-[54912.661142] pcieport 0000:00:07.0: AER: Multiple Corrected error received: 0000:2b:00.0
-[54912.661194] igc 0000:2b:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
-[54912.661203] igc 0000:2b:00.0:   device [8086:5502] error status/mask=00001100/00002000
-[54912.661211] igc 0000:2b:00.0:    [ 8] Rollover
-[54912.661219] igc 0000:2b:00.0:    [12] Timeout
-[54982.838760] pcieport 0000:00:07.0: AER: Corrected error received: 0000:2b:00.0
-[54982.838798] igc 0000:2b:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
-[54982.838808] igc 0000:2b:00.0:   device [8086:5502] error status/mask=00001000/00002000
-[54982.838817] igc 0000:2b:00.0:    [12] Timeout
-This gets repeated continuously, thus inundating the buffer.
+Thanks
 
-Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
----
- drivers/pci/pcie/aer.c | 54 +++++++++++++++++++++++++++---------------
- include/linux/pci.h    |  3 +++
- 2 files changed, 38 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e2d8a74f83c3..7ae6761a8e59 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -684,23 +684,24 @@ static void __aer_print_error(struct pci_dev *dev,
- {
- 	const char **strings;
- 	unsigned long status = info->status & ~info->mask;
--	const char *level, *errmsg;
-+	const char *errmsg;
- 	int i;
- 
--	if (info->severity == AER_CORRECTABLE) {
-+	if (info->severity == AER_CORRECTABLE)
- 		strings = aer_correctable_error_string;
--		level = KERN_WARNING;
--	} else {
-+	else
- 		strings = aer_uncorrectable_error_string;
--		level = KERN_ERR;
--	}
- 
- 	for_each_set_bit(i, &status, 32) {
- 		errmsg = strings[i];
- 		if (!errmsg)
- 			errmsg = "Unknown Error Bit";
- 
--		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
-+		if (info->severity == AER_CORRECTABLE)
-+			pci_warn_ratelimited(dev, "   [%2d] %-22s%s\n", i, errmsg,
-+					     info->first_error == i ? " (First)" : "");
-+		else
-+			pci_err(dev, "   [%2d] %-22s%s\n", i, errmsg,
- 				info->first_error == i ? " (First)" : "");
- 	}
- 	pci_dev_aer_stats_incr(dev, info);
-@@ -710,7 +711,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- {
- 	int layer, agent;
- 	int id = ((dev->bus->number << 8) | dev->devfn);
--	const char *level;
- 
- 	if (!info->status) {
- 		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-@@ -721,14 +718,21 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
- 
--	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
-+	if (info->severity == AER_CORRECTABLE) {
-+		pci_warn_ratelimited(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-+				     aer_error_severity_string[info->severity],
-+				     aer_error_layer[layer], aer_agent_string[agent]);
- 
--	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
--		   aer_error_severity_string[info->severity],
--		   aer_error_layer[layer], aer_agent_string[agent]);
-+		pci_warn_ratelimited(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-+				     dev->vendor, dev->device, info->status, info->mask);
-+	} else {
-+		pci_err(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-+			aer_error_severity_string[info->severity],
-+			aer_error_layer[layer], aer_agent_string[agent]);
- 
--	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
--		   dev->vendor, dev->device, info->status, info->mask);
-+		pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-+			dev->vendor, dev->device, info->status, info->mask);
-+	}
- 
- 	__aer_print_error(dev, info);
- 
-@@ -748,11 +755,19 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
- 	u8 bus = info->id >> 8;
- 	u8 devfn = info->id & 0xff;
- 
--	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
--		 info->multi_error_valid ? "Multiple " : "",
--		 aer_error_severity_string[info->severity],
--		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
--		 PCI_FUNC(devfn));
-+	if (info->severity == AER_CORRECTABLE)
-+		pci_info_ratelimited(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-+				     info->multi_error_valid ? "Multiple " : "",
-+				     aer_error_severity_string[info->severity],
-+				     pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-+				     PCI_FUNC(devfn));
-+	else
-+		pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-+			 info->multi_error_valid ? "Multiple " : "",
-+			 aer_error_severity_string[info->severity],
-+			 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-+			 PCI_FUNC(devfn));
-+
- }
- 
- #ifdef CONFIG_ACPI_APEI_PCIEAER
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 060af91bafcd..d9434bae10c8 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2491,6 +2491,9 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #define pci_info_ratelimited(pdev, fmt, arg...) \
- 	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
- 
-+#define pci_warn_ratelimited(pdev, fmt, arg...) \
-+	dev_warn_ratelimited(&(pdev)->dev, fmt, ##arg)
-+
- #define pci_WARN(pdev, condition, fmt, arg...) \
- 	WARN(condition, "%s %s: " fmt, \
- 	     dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
--- 
-2.34.1
-
+> 
+> Bjorn
