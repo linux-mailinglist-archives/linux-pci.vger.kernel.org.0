@@ -2,151 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7372F65C819
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 21:32:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A7A265C825
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 21:39:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231881AbjACUcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Jan 2023 15:32:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
+        id S233700AbjACUjV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Jan 2023 15:39:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230388AbjACUcH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 15:32:07 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF6713F26;
-        Tue,  3 Jan 2023 12:32:07 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id y19so14824049plb.2;
-        Tue, 03 Jan 2023 12:32:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lWS6045Sqj+UNo6j97/cMXasJ422pH4cxGvxpkvbD2Q=;
-        b=mTfDrY8Vkw8ftCHsbxPDOIKOHXhXVPbsrMgCZLjEDLTUlwBUtkm6ckQ/kC0P7MynIw
-         pBUxILNQ/E4AnBrdlZhh2XetSK06ppKvYzYyYblTDcXgHQfNFzGZfSjXl04X1JOMoBt9
-         3cE0cRvuvIDykOsEdSryS7O3P2TuZTNF1hSpKd25Nh5eEbBau+i0Zv9iJGYGEjy2WP6j
-         ItJggYwCABrW5EhbGAx4KQu/jFp7gKMzi4NntBv4qQYoVoI5Ma2t9zUDqLwTo89RdLlF
-         whoAeJr7yi7D4RgS+aAlNpjXAmw1fw8fXlkqmL/8hUPjpvC9UTnurR9h5vNPvfiBGags
-         hxPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lWS6045Sqj+UNo6j97/cMXasJ422pH4cxGvxpkvbD2Q=;
-        b=pTYj3k/WCSu1YcJreJxi4w3ODDiO/82mfCXmOY6o3JUDEMTCuWfsJcmIACjUOTowtL
-         EXv+X6cSSXx/ovKC+ByBijH78tOUovw3VIOr6hEeSeQ6J3D8/T+U8S6x6H/19VDhVEP2
-         cdrVsCwV+dh+4fgtAOOvPjx+xmzcQVq3g9et/CoCfIy7ksgGC1Mgkutt/+QD0QtYu3dz
-         gUbCWq40BfuDiBYqYghmB7dccCKLUsxdNJMebnOlmWiOXLCuLVY+bLq+ANTGYGGz14rg
-         iesun4EepmlqY6F9TbZW7/znkNTkoWPexrtCf44iSeZgpVMT099ZoMho1/do+7Ud3tUl
-         Puvg==
-X-Gm-Message-State: AFqh2kp9PwKr5kizy4smGFSqcgM7FUXwCVt1NKy06ZaLvUAKNC8ZDTqV
-        VxNY2PnLb6D1+G+seGLEYGlSQNtG2dkMALJGg2w=
-X-Google-Smtp-Source: AMrXdXsDo+pE0O4bLVZdjG42s7+bK+VCkeLLmW7EahsTQD3uNpYDHDdjWvuLtLBvvm3flW3ehrg656L2uj18hqp7wbw=
-X-Received: by 2002:a17:90a:3187:b0:226:abeb:d073 with SMTP id
- j7-20020a17090a318700b00226abebd073mr34968pjb.142.1672777926573; Tue, 03 Jan
- 2023 12:32:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20221116214841.1116735-1-robimarko@gmail.com> <20221116214841.1116735-2-robimarko@gmail.com>
- <20221205215253.itobukkyiecn7xi7@builder.lan> <CAOX2RU5C6uYKS4Hc7NBwnzRju1=gzewrEHudMksUAL1XdKcfCQ@mail.gmail.com>
- <20221227192049.zk5gqhpnq2m7baqa@builder.lan> <CAOX2RU4SGmmZT6e0V5YCsCYU82wAJH736PhEz4Tx+Q0XTFU_9A@mail.gmail.com>
- <20221229172944.6lg6mb53uqj2hps6@builder.lan>
-In-Reply-To: <20221229172944.6lg6mb53uqj2hps6@builder.lan>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Tue, 3 Jan 2023 21:31:55 +0100
-Message-ID: <CAOX2RU7uWDuw0_8wxcmM07tpWpXZ_m2WRz-GGcRu9Ny8zoctNA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe QMP PHY
-To:     Bjorn Andersson <andersson@kernel.org>
-Cc:     agross@kernel.org, konrad.dybcio@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        svarbanov@mm-sol.com, shawn.guo@linaro.org,
+        with ESMTP id S230388AbjACUjU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 15:39:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3859DD2F0;
+        Tue,  3 Jan 2023 12:39:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C629561509;
+        Tue,  3 Jan 2023 20:39:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAA7C433D2;
+        Tue,  3 Jan 2023 20:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672778358;
+        bh=qHvw7TqJ6cPDkYRnlA1AfRE2VUgBjuTgxJT0EOvT+mA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n4W6E+l9mqKxp8pq4uTlXkUofQBU28moAscYkumViFYhakx33ESmTHMVOPRvyrmBh
+         bFmrQAWwmlM700lNqBUMJXONMjcEba2ULla6VQIlXTDUIjB7tV2eCf+bonCgr/vX/G
+         oEQoxReeywHawrC/fTYDrQmtZxVzykoywUzbUku9AZBjjSU/lYzTYg16IwFVSTqU3a
+         +fqJda6sYo4dTq9Jbvwmx+EOUkOWQRrhoS+DhDyTNxL2TIdsmKSEpbeIoaWjjPhp/3
+         0sIa8GYH31KH3rPDT3JMaGAyGg+1q9hCfTYlRfYpRv+z/yZbzh0BfegR1bU0peFss2
+         COTkABJRG/80Q==
+Date:   Tue, 3 Jan 2023 14:39:15 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: qcom: add MSM8998 specific
+ compatible
+Message-ID: <20230103203915.GA1020424@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221115125310.184012-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 29 Dec 2022 at 18:29, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> On Wed, Dec 28, 2022 at 12:10:17PM +0100, Robert Marko wrote:
-> > On Tue, 27 Dec 2022 at 20:20, Bjorn Andersson <andersson@kernel.org> wrote:
-> > >
-> > > On Tue, Dec 06, 2022 at 10:51:40AM +0100, Robert Marko wrote:
-> > > > On Mon, 5 Dec 2022 at 22:52, Bjorn Andersson <andersson@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, Nov 16, 2022 at 10:48:34PM +0100, Robert Marko wrote:
-> > > > > > IPQ8074 comes in 2 silicon versions:
-> > > > > > * v1 with 2x Gen2 PCIe ports and QMP PHY-s
-> > > > > > * v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
-> > > > > >
-> > > > > > v2 is the final and production version that is actually supported by the
-> > > > > > kernel, however it looks like PCIe related nodes were added for the v1 SoC.
-> > > > > >
-> > > > > > Now that we have Gen3 QMP PHY support, we can start fixing the PCIe support
-> > > > > > by fixing the Gen3 QMP PHY node first.
-> > > > > >
-> > > > > > Change the compatible to the Gen3 QMP PHY, correct the register space start
-> > > > > > and size, add the missing misc PCS register space.
-> > > > > >
-> > > > >
-> > > > > Does this imply that the current node doesn't actually work?
-> > > >
-> > > > Hi Bjorn,
-> > > > Yes, the node is for a completely different PHY generation, basically
-> > > > PCIe on IPQ8074
-> > > > is completely broken, hence this patch series.
-> > > >
-> > > > >
-> > > > > If that's the case, could we perhaps adopt Johan Hovolds' new binding
-> > > > > and drop the subnode in favor of just a flat reg covering the whole
-> > > > > QMP region?
-> > > >
-> > > > I have not seen that so far, any examples?
-> > > >
-> > >
-> > > See
-> > > Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml in
-> > > v6.2-rc1.
-> > >
-> > > The idea is to, at least, use this for all new platforms introduced.
-> > >
-> > > And if the current definition doesn't actually work I suggest that we
-> > > replace it with the new one.
-> >
-> > I understand the intention, but these bindings dont match the QMP generation
-> > found in IPQ8074 at all, and Gen3 has already been documented in bindings.
-> >
-> > This would require updating the driver to carry the offsets and rework
-> > of bindings to
-> > not require power domains, etc for IPQ8074 as I have not found any
-> > code downstream
-> > to indicate it has GSDC-s for PCIe though I dont have any docs at all
-> > for the SoC.
-> >
->
-> I was only thinking of the structural difference, not the power-domains
-> etc. But yes you're right that it means updating the driver and the
-> binding.
->
-> The end result would be much nicer though...
+On Tue, Nov 15, 2022 at 01:53:07PM +0100, Krzysztof Kozlowski wrote:
+> Add new compatible for MSM8998 (compatible with MSM8996) to allow
+> further customizing if needed and to accurately describe the hardware.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I agree that it would be nicer, though it's asking for many changes, especially
-bindings since it's already described there.
+Hi Krzysztof,
 
-The current patchset has been thoroughly tested for months at this point.
+Would you mind splitting this into two patches?
 
-How would you like to proceed here, as I would really like to get PCI working
-upstream?
+  - Convert "compatible:" from enum: to oneOf:
+  - Add MSM8998
 
-Regards,
-Robert
->
-> Regards,
-> Bjorn
+Having them combined makes the history a little bit harder to follow.
+
+Bjorn
+
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    | 42 ++++++++++---------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index 54f07852d279..0411e2e67661 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -16,25 +16,29 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - qcom,pcie-ipq8064
+> -      - qcom,pcie-ipq8064-v2
+> -      - qcom,pcie-apq8064
+> -      - qcom,pcie-apq8084
+> -      - qcom,pcie-msm8996
+> -      - qcom,pcie-ipq4019
+> -      - qcom,pcie-ipq8074
+> -      - qcom,pcie-qcs404
+> -      - qcom,pcie-sa8540p
+> -      - qcom,pcie-sc7280
+> -      - qcom,pcie-sc8180x
+> -      - qcom,pcie-sc8280xp
+> -      - qcom,pcie-sdm845
+> -      - qcom,pcie-sm8150
+> -      - qcom,pcie-sm8250
+> -      - qcom,pcie-sm8450-pcie0
+> -      - qcom,pcie-sm8450-pcie1
+> -      - qcom,pcie-ipq6018
+> +    oneOf:
+> +      - enum:
+> +          - qcom,pcie-ipq8064
+> +          - qcom,pcie-ipq8064-v2
+> +          - qcom,pcie-apq8064
+> +          - qcom,pcie-apq8084
+> +          - qcom,pcie-msm8996
+> +          - qcom,pcie-ipq4019
+> +          - qcom,pcie-ipq8074
+> +          - qcom,pcie-qcs404
+> +          - qcom,pcie-sa8540p
+> +          - qcom,pcie-sc7280
+> +          - qcom,pcie-sc8180x
+> +          - qcom,pcie-sc8280xp
+> +          - qcom,pcie-sdm845
+> +          - qcom,pcie-sm8150
+> +          - qcom,pcie-sm8250
+> +          - qcom,pcie-sm8450-pcie0
+> +          - qcom,pcie-sm8450-pcie1
+> +          - qcom,pcie-ipq6018
+> +      - items:
+> +          - const: qcom,pcie-msm8998
+> +          - const: qcom,pcie-msm8996
+>  
+>    reg:
+>      minItems: 4
+> -- 
+> 2.34.1
+> 
