@@ -2,113 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1050565BEAF
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 12:10:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB73465BEC7
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 12:16:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230309AbjACLJ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Jan 2023 06:09:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50088 "EHLO
+        id S233200AbjACLQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Jan 2023 06:16:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237413AbjACLJU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 06:09:20 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099C6FAFD
-        for <linux-pci@vger.kernel.org>; Tue,  3 Jan 2023 03:09:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672744159; x=1704280159;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VmlxNUEVzrxo146ySgp68w1j1ztUeghyznrO8vuMFIM=;
-  b=jMSCYNZtlx3w8X4zZU9/sFqhmn6PlnQ02aCKaAx8DcVnC1nCvHqGKAIq
-   h5y0njJBMv6Lx9ddZR0XTc3+N+cdXBot5SncdRlFbIVOJ47MmB7rD0wzo
-   Q+3YvuMcH0R4E/Ff3dSGbdSTuXOXqiXyg5+MtLjlWuhNUmw0xeViOgSts
-   Wp0mvf4vh866ZasSalaEzDCG8B7o1u3potXO0rCLJiAuiiiFGoGL6jTgt
-   cPsDjAjHkTmxzyJ3qCORc8wxLD1zaTT7CmLM6hZhCKAQDNPgon0oXYpmK
-   LwXNqvEAN7cb+c3CvkFRZx61lQt1p9WvmMUWMHiqD8iX5snamO0X0Dbgg
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10578"; a="309407058"
-X-IronPort-AV: E=Sophos;i="5.96,296,1665471600"; 
-   d="scan'208";a="309407058"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 03:09:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10578"; a="654757646"
-X-IronPort-AV: E=Sophos;i="5.96,296,1665471600"; 
-   d="scan'208";a="654757646"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 03 Jan 2023 03:09:16 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 559B719E; Tue,  3 Jan 2023 13:09:48 +0200 (EET)
-Date:   Tue, 3 Jan 2023 13:09:48 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>
-Subject: Re: [PATCH 0/3] PCI reset delay fixes
-Message-ID: <Y7QM/NWXrLfvn0ey@black.fi.intel.com>
-References: <cover.1672511016.git.lukas@wunner.de>
+        with ESMTP id S236652AbjACLQ1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 06:16:27 -0500
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A997110B;
+        Tue,  3 Jan 2023 03:16:26 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 303BGGCi094124;
+        Tue, 3 Jan 2023 05:16:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1672744576;
+        bh=RMcrotq/Tz8HcR5hKM3/+kFg3e7/OG5DejTKOeZFUIY=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=UCHdUPYII7rIGRosvNkBCmaLPJ9xEA6N3CJW01tt+FD6RjE4Ln/cDhk1nDAw4nNna
+         pIsxprzch6QkKVg/igc833PduYVoqfJkWpgCzRhdt4P7TUGtdegA3gmlWgaCIO/F4p
+         M40e8aWr000SyP5G/X+4a9x8RWMRCRQDoANCjy1E=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 303BGG5Y029962
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Jan 2023 05:16:16 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 3
+ Jan 2023 05:16:16 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Tue, 3 Jan 2023 05:16:15 -0600
+Received: from [10.24.69.26] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 303BGBr3048662;
+        Tue, 3 Jan 2023 05:16:12 -0600
+Message-ID: <dad3aba3-a40b-8b76-c689-3dc877800263@ti.com>
+Date:   Tue, 3 Jan 2023 16:46:11 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1672511016.git.lukas@wunner.de>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/1] PCI: qcom: Add support for system suspend and resume
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>
+CC:     <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_krichai@quicinc.com>, <johan+linaro@kernel.org>,
+        <steev@kali.org>
+References: <20230103074907.12784-1-manivannan.sadhasivam@linaro.org>
+ <20230103074907.12784-2-manivannan.sadhasivam@linaro.org>
+From:   Dhruva Gole <d-gole@ti.com>
+In-Reply-To: <20230103074907.12784-2-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas,
 
-On Sat, Dec 31, 2022 at 07:33:36PM +0100, Lukas Wunner wrote:
-> When recovering from a DPC reset, we neglect to observe the delays
-> prescribed by PCIe r6.0 sec 6.6.1 before accessing devices on the
-> secondary bus.  As a result, devices which take a little longer to
-> recover remain inaccessible because their config space is restored
-> too early.
-> 
-> One affected device is Intel's Ponte Vecchio HPC GPU.  Ravi Kishore
-> kindly tested that this series solves the issue.
-> 
-> 
-> As a byproduct, the series fixes a similar delay issue for Secondary
-> Bus Resets.  Sheng Bi proposed a patch last May, a variation of which
-> is contained herein:
-> 
-> https://patchwork.kernel.org/project/linux-pci/patch/20220523171517.32407-1-windy.bi.enflame@gmail.com/
-> 
-> 
-> A second byproduct of this series is an optimization for Secondary
-> Bus Resets whereby the delay after reset is reduced on modern PCIe
-> systems.  Yang Su and Stanislav Spassov proposed a patch in August
-> which is subsumed by the present series:
-> 
-> https://patchwork.kernel.org/project/linux-pci/patch/4315990a165dd019d970633713cf8e06e9b4c282.1660746147.git.yang.su@linux.alibaba.com/
-> 
-> 
-> If the present series is accepted, the two above-linked patches
-> can be closed in patchwork.  (For some reason, Sheng Bi's patch
-> is in "New" state, but marked "Archived".)
-> 
-> Thanks!
-> 
-> 
-> Lukas Wunner (3):
->   PCI/PM: Observe reset delay irrespective of bridge_d3
->   PCI: Unify delay handling for reset and resume
->   PCI/DPC: Await readiness of secondary bus after reset
 
-All look good to me,
+On 03/01/23 13:19, Manivannan Sadhasivam wrote:
+> During the system suspend, vote for minimal interconnect bandwidth and
+> also turn OFF the resources like clock and PHY if there are no active
+> devices connected to the controller. For the controllers with active
+> devices, the resources are kept ON as removing the resources will
+> trigger access violation during the late end of suspend cycle as kernel
+> tries to access the config space of PCIe devices to mask the MSIs.
+> 
+> Also, it is not desirable to put the link into L2/L3 state as that
+> implies VDD supply will be removed and the devices may go into powerdown
+> state. This will affect the lifetime of storage devices like NVMe.
+> 
+> And finally, during resume, turn ON the resources if the controller was
+> truly suspended (resources OFF) and update the interconnect bandwidth
+> based on PCIe Gen speed.
+> 
+> Suggested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Nice to have another driver added to the list of system suspend
+support!
+
+Acked-by: Dhruva Gole <d-gole@ti.com>
+
+>   drivers/pci/controller/dwc/pcie-qcom.c | 52 ++++++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 5696e327795b..48810f1f2dba 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -227,6 +227,7 @@ struct qcom_pcie {
+>   	struct gpio_desc *reset;
+>   	struct icc_path *icc_mem;
+>   	const struct qcom_pcie_cfg *cfg;qcom_pcie_icc_update
+> +	bool suspended;
+>   };
+>   
+>   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -1835,6 +1836,52 @@ static int qcom_pcie_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +static int qcom_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = icc_set_bw(pcie->icc_mem, 0, 0);
+> +	if (ret) {
+> +		dev_err(pcie->pci->dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Turn OFF the resources only for controllers without active PCIe devices. For controllers
+> +	 * with active devices, the resources are kept ON and the link is expected to be in L0/L1
+> +	 * (sub)states.
+> +	 *
+> +	 * Turning OFF the resources for controllers with active PCIe devices will trigger access
+> +	 * violation during the end of the suspend cycle, as kernel tries to access the PCIe devices
+> +	 * config space for masking MSIs.
+> +	 *
+> +	 * Also, it is not desirable to put the link into L2/L3 state as that implies VDD supply
+> +	 * will be removed and the devices may go into powerdown state. This will affect the
+> +	 * lifetime of the storage devices like NVMe.
+> +	 */
+> +	if (!dw_pcie_link_up(pcie->pci)) {
+> +		qcom_pcie_host_deinit(&pcie->pci->pp);
+> +		pcie->suspended = true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (pcie->suspended) {
+> +		qcom_pcie_host_init(&pcie->pci->pp);
+> +		pcie->suspended = false;
+> +	}
+> +
+> +	qcom_pcie_icc_update(pcie);
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct of_device_id qcom_pcie_match[] = {
+>   	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+>   	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> @@ -1870,12 +1917,17 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+>   
+> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
+> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_suspend_noirq, qcom_pcie_resume_noirq)
+> +};
+> +
+>   static struct platform_driver qcom_pcie_driver = {
+>   	.probe = qcom_pcie_probe,
+>   	.remove = qcom_pcie_remove,
+>   	.driver = {
+>   		.name = "qcom-pcie",
+>   		.of_match_table = qcom_pcie_match,
+> +		.pm = &qcom_pcie_pm_ops,
+>   	},
+>   };
+>   module_platform_driver(qcom_pcie_driver);
+
+Out of curiosity, were you able to measure how much power you were able
+to save after adding suspend support for PCIe? I don't know if clock
+gating really saves much amount of power, but yeah its true that we
+can't really cut off the power domain entirely in this case.
+
+-- 
+Thanks and Regards,
+Dhruva Gole
