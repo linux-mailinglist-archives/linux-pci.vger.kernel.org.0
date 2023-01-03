@@ -2,124 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE7265BD82
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 10:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00F6265BE11
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Jan 2023 11:31:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233082AbjACJyf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Jan 2023 04:54:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
+        id S233014AbjACKaj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Jan 2023 05:30:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237108AbjACJyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 04:54:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74203B5A;
-        Tue,  3 Jan 2023 01:54:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230309AbjACKai (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Jan 2023 05:30:38 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE89FACA;
+        Tue,  3 Jan 2023 02:30:37 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 11A2660E97;
-        Tue,  3 Jan 2023 09:54:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DD7C433EF;
-        Tue,  3 Jan 2023 09:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672739669;
-        bh=BpfDQ8HqIK6YKlZtjbbpD8Zo3Pb/8YhLfqVQpatUtt0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KxJii57/6HLZ5doJil0NXj28Kw4JpRkyPmP7KGXKsLj4q3nx9/+eBuPvve4qqAvvn
-         GMp0W+1yVkKF9vK4hhcKvKGJN3KNZaSkG+JskFvdXGm2KNMN25TM2TtDySGpOReh9w
-         etMBWuT8aISx+egjmKosD8zICLvqak10muDDkbeiLNHV6yml4gNhmf1C/hs27dC4J2
-         R0aBXrrf88B5574M0quLMUDDPuTzV6Kjz+7ONopNNM2l5C+Y8Bbgq73NXEh1SLENuo
-         exYF8Yv7UYU/BAQ76jVmo6A1LxSQ0XSdEf7PDK8idSO9P28r+jW+JdSLsVxSc7tDsa
-         rOe4mrEXoO92g==
-Date:   Tue, 3 Jan 2023 11:54:24 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-        intel-wired-lan@lists.osuosl.org, rajat.khandelwal@intel.com,
-        jesse.brandeburg@intel.com, linux-kernel@vger.kernel.org,
-        edumazet@google.com, anthony.l.nguyen@intel.com,
-        netdev@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
-        davem@davemloft.net, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [Intel-wired-lan] [PATCH] igc: Mask replay rollover/timeout
- errors in I225_LMVP
-Message-ID: <Y7P7UKpmE8/LsmOn@unreal>
-References: <20221229122640.239859-1-rajat.khandelwal@linux.intel.com>
- <Y7FFESJONJqGJUkb@unreal>
- <a4216a94-72b3-4711-bc90-ad564a57b310@molgen.mpg.de>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1D357384B9;
+        Tue,  3 Jan 2023 10:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1672741836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4ySrPxV3zhESWmq67sZZJzg1CJ6Yayz+hsQTCiO9cYA=;
+        b=bP8XS/I0HM8LJOSSoJIq2nyAuBCBNgbZjegXymSCM9nMzQaDBBTZRkBuE4K4qpbxKHU+R6
+        Hko4Kr/yzxeJVx/a4wWj7hArNq+2FsBl46Vu6xCC8y8kM1PdPl1J0/5IryLIrF2s4DWKxJ
+        HkWRmzQPbP6jVJp6NhJTnVlapB4aVmg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1672741836;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4ySrPxV3zhESWmq67sZZJzg1CJ6Yayz+hsQTCiO9cYA=;
+        b=yb+gU+KVGvvRYdz4C0uGJFD0BzaESqtpR2TVdwImv8MinanrkJYLaO6hlI21jbgpcT1JWZ
+        y8c9HdGJDSYSvuCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CDD621392B;
+        Tue,  3 Jan 2023 10:30:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id +YXBMMsDtGOKRAAAMHmgww
+        (envelope-from <jroedel@suse.de>); Tue, 03 Jan 2023 10:30:35 +0000
+Date:   Tue, 3 Jan 2023 11:30:34 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [regression, =?iso-8859-1?Q?bisected?=
+ =?iso-8859-1?Q?=2C_pci=2Fiommu=5D_Bug=A0216865_-_Black_screen_when_amdgp?=
+ =?iso-8859-1?Q?u?= started during 6.2-rc1 boot with AMD IOMMU enabled
+Message-ID: <Y7QDyr2b3zviKdLc@suse.de>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <a4216a94-72b3-4711-bc90-ad564a57b310@molgen.mpg.de>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 01, 2023 at 11:34:21AM +0100, Paul Menzel wrote:
-> [Cc: +Bjorn, +linux-pci]
-> 
-> Dear Leon, dear Rajat,
-> 
-> 
-> Am 01.01.23 um 09:32 schrieb Leon Romanovsky:
-> > On Thu, Dec 29, 2022 at 05:56:40PM +0530, Rajat Khandelwal wrote:
-> > > The CPU logs get flooded with replay rollover/timeout AER errors in
-> > > the system with i225_lmvp connected, usually inside thunderbolt devices.
-> > > 
-> > > One of the prominent TBT4 docks we use is HP G4 Hook2, which incorporates
-> > > an Intel Foxville chipset, which uses the igc driver.
-> > > On connecting ethernet, CPU logs get inundated with these errors. The point
-> > > is we shouldn't be spamming the logs with such correctible errors as it
-> > > confuses other kernel developers less familiar with PCI errors, support
-> > > staff, and users who happen to look at the logs.
-> > > 
-> > > Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-> > > ---
-> > >   drivers/net/ethernet/intel/igc/igc_main.c | 28 +++++++++++++++++++++--
-> > >   1 file changed, 26 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> > > index ebff0e04045d..a3a6e8086c8d 100644
-> > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> > > @@ -6201,6 +6201,26 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
-> > >   	return value;
-> > >   }
-> > > +#ifdef CONFIG_PCIEAER
-> > > +static void igc_mask_aer_replay_correctible(struct igc_adapter *adapter)
-> > > +{
-> > > +	struct pci_dev *pdev = adapter->pdev;
-> > > +	u32 aer_pos, corr_mask;
-> > > +
-> > > +	if (pdev->device != IGC_DEV_ID_I225_LMVP)
-> > > +		return;
-> > > +
-> > > +	aer_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-> > > +	if (!aer_pos)
-> > > +		return;
-> > > +
-> > > +	pci_read_config_dword(pdev, aer_pos + PCI_ERR_COR_MASK, &corr_mask);
-> > > +
-> > > +	corr_mask |= PCI_ERR_COR_REP_ROLL | PCI_ERR_COR_REP_TIMER;
-> > > +	pci_write_config_dword(pdev, aer_pos + PCI_ERR_COR_MASK, corr_mask);
-> > 
-> > Shouldn't this igc_mask_aer_replay_correctible function be implemented
-> > in drivers/pci/quirks.c and not in igc_probe()?
-> 
-> Probably. Though I think, the PCI quirk file, is getting too big.
+Baolu,
 
-As long as that file is right location, we should use it.
-One can refactor quirk file later.
+On Fri, Dec 30, 2022 at 09:18:56AM +0100, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216865 :
 
-Thanks
+can you have a look at this please?
 
-> 
-> 
-> Kind regards,
-> 
-> Paul
+Thanks,
+
+-- 
+Jörg Rödel
+jroedel@suse.de
+
+SUSE Software Solutions Germany GmbH
+Frankenstraße 146
+90461 Nürnberg
+Germany
+
+(HRB 36809, AG Nürnberg)
+Geschäftsführer: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+
