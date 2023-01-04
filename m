@@ -2,70 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1048A65D36A
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jan 2023 13:56:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67CFB65D61A
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jan 2023 15:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239303AbjADMzd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Jan 2023 07:55:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
+        id S235207AbjADOkm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Jan 2023 09:40:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236020AbjADMzF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 07:55:05 -0500
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C88201DF3F
-        for <linux-pci@vger.kernel.org>; Wed,  4 Jan 2023 04:54:53 -0800 (PST)
-Received: by mail-qt1-x82b.google.com with SMTP id bp44so24452311qtb.0
-        for <linux-pci@vger.kernel.org>; Wed, 04 Jan 2023 04:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=BQfo1+41q2NZR57Q7BFlMODaOza2AgrRvUpAp3daCd4t1w84OEhFtXAM1g7CkVTr/y
-         mvXWkJvXCDM96Iy3cSf9E37Th3uZX5TzmwlIsHFzK3DAyLuSjJ8d3uR9drr/ahkzPGkt
-         iW+sw+gZOJCd7bumtfoM4UR2xOfXz6tdmGq2f+IJJhoSBazdofAm5Gs9PxuweXnk264c
-         knSGf1CtrqZScdeov1GoaGbl2sApMUXYjJGPCObPVA0UTlHx2t6+wdp4VOKHmsqLWM8X
-         lQt15zqigA6uJCG+q37n0r4mLK1MKtsniT1i9jhRA9qlN9E2Mf0sYN4W9Jd0n+39BoCK
-         yzWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=v2hXR6Vzcu5ECL1f3gVe0iAi1OW/M/r36Zh/uG70X5ie+XhRiPd/i+aIESSloxFcck
-         2Or0pfrvpJQliuxcWsL6DIgFR2/R18uhtAzfe28XCTYPXU8aD/pQSMLGodsvupJNZavl
-         XZjTqFo0cSHzdVN4VrjQT8ZGE0j3gdeBUvEu/KQkMxN4yVfAp5uLhc2vhyFOgJpBTbKc
-         vCfqTLpOAiTuviWX/isvwaV9b/OlNC5H/aa4aMosyaaE26yDTBpJXT44InyjT6Z6SDIZ
-         npGfw/XqsAAplItY2ZVl0FxKEqXyDcQ1QG0/kcO2yOibELkkZaBJYqjxgA6Ono/rDerq
-         wIWA==
-X-Gm-Message-State: AFqh2kpr/PtvNvNFpZyDJbJZMrj9vlmBbuBcINOX+UGMoHvVkZpfGtmM
-        w35OURizm2ZA9lCeUzQA2CILx/JfzbZUW+SoW2OttRKnQPM=
-X-Google-Smtp-Source: AMrXdXuKXTvNK0aSB9vnyjtdhrZfKmRzvU9Jw1W0zhcD7x19AMFVNgTh5oL+8ilZBOfTDf/bL64QVz1mYULxa/ftADs=
-X-Received: by 2002:ac8:568a:0:b0:3a9:688d:fad2 with SMTP id
- h10-20020ac8568a000000b003a9688dfad2mr1976067qta.646.1672836882017; Wed, 04
- Jan 2023 04:54:42 -0800 (PST)
+        with ESMTP id S239730AbjADOkD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 09:40:03 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6FC4FCEF;
+        Wed,  4 Jan 2023 06:40:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672843201; x=1704379201;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   content-transfer-encoding;
+  bh=6ZofUMm+cxxUEzHHPkg7Pjvp3X9FLpspJ38PZ2T64bE=;
+  b=d7+jhHiNGseyYNMEicxWdbL3SQW78RCCUCtR5j/YITsihLPyX7ErA1Vo
+   9bMjVjFlOlvG7tP2j9vS79Z5TmOeCCtfHyLgW0vHolBeqgIjJoJHYwzvU
+   IgElgIaZFDr2L93z45qFOgUiK26PyKUgAu2+McTK3M9unGhBNHGDeofGj
+   iGlrtFv9XkU84josEzp86dT2lxZpdTKZxTATB5/M4e0tJieY9eV2cjrPi
+   Ad1hwM3a84vFDdRE8lrF+6oKJWsWHaEdrxT+P0HgtLqFD24lmYUJsviCy
+   oIy4Qa34cpCNXHHXElV+0OwB6lcmHxopYSPNQ/ErBHYTqtdfBcjCWNkXy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="384237996"
+X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
+   d="scan'208";a="384237996"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 06:40:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="900574761"
+X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
+   d="scan'208";a="900574761"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 04 Jan 2023 06:40:00 -0800
+Received: from [10.252.212.169] (kliang2-mobl1.ccr.corp.intel.com [10.252.212.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id C36E4580A8B;
+        Wed,  4 Jan 2023 06:39:57 -0800 (PST)
+Message-ID: <ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com>
+Date:   Wed, 4 Jan 2023 09:39:56 -0500
 MIME-Version: 1.0
-Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
- 04:54:41 -0800 (PST)
-Reply-To: Gregdenzell9@gmail.com
-From:   Greg Denzell <mzsophie@gmail.com>
-Date:   Wed, 4 Jan 2023 12:54:41 +0000
-Message-ID: <CAEoj5=ZpJ15GRz-U33Ocbu5-P3Va+3bNv3476+mmJJ52cwx7tA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Bug report: the extended PCI config space is missed with 6.2-rc2
+To:     bhelgaas@google.com
+Cc:     hdegoede@redhat.com, kernelorg@undead.fr, kjhambrick@gmail.com,
+        2lprbe78@duck.com, nicholas.johnson-opensource@outlook.com.au,
+        benoitg@coeus.ca, mika.westerberg@linux.intel.com,
+        wse@tuxedocomputers.com, mumblingdrunkard@protonmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        david.e.box@intel.com, yunying.sun@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Seasons Greetings!
+Hi Bjorn,
 
-This will remind you again that I have not yet received your reply to
-my last message to you.
+Happy new year!
+
+We found some PCI issues with the latest 6.2-rc2.
+
+- Using the lspci -xxxx, the extended PCI config space of all PCI
+devices are missed with the latest 6.2-rc2. The system we used had 932
+PCI devices, at least 800 which have extended space as seen when booted
+into a 5.15 kernel. But none of them appeared in 6.2-rc2.
+- The drivers which rely on the information in the extended PCI config
+space don't work anymore. We have confirmed that the perf uncore driver
+(uncore performance monitoring) and Intel VSEC driver (telemetry) don't
+work in 6.2-rc2. There could be more drivers which are impacted.
+
+After a bisect, we found the regression is caused by the below commit
+07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map").
+After reverting the commit, the issues are gone.
+
+Could you please take a look at the issues?
+
+Thanks,
+Kan
