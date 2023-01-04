@@ -2,83 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF96F65CF51
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Jan 2023 10:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 560EC65CF4D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Jan 2023 10:16:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233862AbjADJQ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Jan 2023 04:16:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        id S233868AbjADJQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Jan 2023 04:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234306AbjADJQX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 04:16:23 -0500
-Received: from cstnet.cn (smtp23.cstnet.cn [159.226.251.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6ACE711C27;
-        Wed,  4 Jan 2023 01:16:20 -0800 (PST)
-Received: from localhost.localdomain (unknown [124.16.138.125])
-        by APP-03 (Coremail) with SMTP id rQCowABHT5fSQ7VjbrFsCg--.39697S2;
-        Wed, 04 Jan 2023 17:16:05 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-        lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-        kishon@kernel.org, bhelgaas@google.com
-Cc:     ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] PCI: endpoint: pci-epf-ntb: Add missing check for alloc_workqueue
-Date:   Wed,  4 Jan 2023 17:16:01 +0800
-Message-Id: <20230104091601.22719-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230060AbjADJQJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 04:16:09 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A01167C9
+        for <linux-pci@vger.kernel.org>; Wed,  4 Jan 2023 01:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672823767; x=1704359767;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kRdYd1BBUDFRXpS8n225Vc+pQfnBq+ne5kGQHwXdAX0=;
+  b=IW09PNYy0PrQfoOw1e+Bi2zm1Mx3+R6eRIvzPDX/SnP4oz/K6ovnBiDw
+   o7rQzwy/aX9LBNTVPHYF9FhcWQwS+jPjeHoTNs5akoiTsIGQf0IWvtMUj
+   Y5XTHdPYSpufrBjYaq/Hg32m74SRuFYAS7Bh3cZQke/m+1OoSImlFFmNm
+   +zBqEA+LBVTDHjnsetOhV3cTdhlTIm/Awuv7qS8+OB+a+QXL9kZH8qo7r
+   nvp+tQoaHcuD6PQySEqyyywuHq0QWGRsPvS4WzGjVxe2sNjabgEoZE1RC
+   3IAzz4QFzYq1Rcmj673zrOCcxQ5fzvylsN1N71JNsRZLbaqD6s8XKLg5z
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="301578364"
+X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
+   d="scan'208";a="301578364"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 01:16:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="723580078"
+X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
+   d="scan'208";a="723580078"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Jan 2023 01:16:02 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 1CB1219E; Wed,  4 Jan 2023 11:16:35 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Alexander Motin <mav@ixsystems.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v4 0/2] PCI: distribute resources for root buses
+Date:   Wed,  4 Jan 2023 11:16:33 +0200
+Message-Id: <20230104091635.63331-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: rQCowABHT5fSQ7VjbrFsCg--.39697S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrWrWw1rZrWxWrW8Wr4fuFg_yoWfuFb_Wa
-        y7ZrsrWrZ8Kr1kury5Kw4xZFyIk3s0qFnxXF4rtF9IkFy8CrZY9w4DXryDAr18ur15Kr1q
-        934jvr98Jw17KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkrc
-        fUUUUU=
-X-Originating-IP: [124.16.138.125]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add check for the return value of alloc_workqueue since it may return
-NULL pointer.
+Hi all,
 
-Fixes: 8b821cf76150 ("PCI: endpoint: Add EP function driver to provide NTB functionality")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/pci/endpoint/functions/pci-epf-ntb.c | 3 +++
- 1 file changed, 3 insertions(+)
+This is fourth iteration of the patch series trying to solve the problem
+reported by Chris Chiu [1]. In summary the current resource distribution
+code does not cover the initial device enumeration so if we find
+unconfigured bridges they get the bare minimum.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-index 9a00448c7e61..304956bc0516 100644
---- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-@@ -2124,6 +2124,9 @@ static int __init epf_ntb_init(void)
- 
- 	kpcintb_workqueue = alloc_workqueue("kpcintb", WQ_MEM_RECLAIM |
- 					    WQ_HIGHPRI, 0);
-+	if (!kpcintb_workqueue)
-+		return -ENOMEM;
-+
- 	ret = pci_epf_register_driver(&epf_ntb_driver);
- 	if (ret) {
- 		destroy_workqueue(kpcintb_workqueue);
+In addition to that it turned out the current resource distribution code
+does not take into account possible multifunction devices and/or other
+devices on the bus. The patch 1/2 tries to make it more generic. I've
+tested it on QEMU following the topology Jonathan is using and also in a
+a couple of systems with Thunderbolt controller and complex topologies
+to make sure it still keeps working.
+
+The previous versions of the series can be found:
+
+v3: https://lore.kernel.org/linux-pci/20221130112221.66612-1-mika.westerberg@linux.intel.com/
+
+v2: https://lore.kernel.org/linux-pci/20221114115953.40236-1-mika.westerberg@linux.intel.com/
+v1: https://lore.kernel.org/linux-pci/20221103103254.30497-1-mika.westerberg@linux.intel.com/
+
+Changes from v3:
+  * Make it more generic and not depend on how many bridges there are
+    on the bus.
+
+Changes from v2:
+  * Make both patches to work with PCI devices too (do not expect that
+    the bridge is always first device on the bus).
+  * Allow distribution with bridges that do not have all resource
+    windows programmed (therefore the patch 2/2 is not revert anymore)
+  * I did not add the tags from Rafael and Jonathan because the code is
+    not exactly the same anymore so was not sure if they still apply.
+
+Changes from v1:
+  * Re-worded the commit message to hopefully explain the problem better
+  * Added Link: to the bug report
+  * Update the comment according to Bjorn's suggestion
+  * Dropped the ->multifunction check
+  * Use %#llx in log format.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=216000
+
+Mika Westerberg (2):
+  PCI: Take other bus devices into account when distributing resources
+  PCI: Distribute available resources for root buses too
+
+ drivers/pci/setup-bus.c | 262 ++++++++++++++++++++++++++++------------
+ 1 file changed, 185 insertions(+), 77 deletions(-)
+
 -- 
-2.25.1
+2.35.1
 
