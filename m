@@ -2,71 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A8EB65ED1E
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 14:33:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8285E65ED28
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 14:37:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbjAENdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Jan 2023 08:33:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        id S230397AbjAENhC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Jan 2023 08:37:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232575AbjAENd3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 08:33:29 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F7AE0E8
-        for <linux-pci@vger.kernel.org>; Thu,  5 Jan 2023 05:33:29 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id c2so11790787plc.5
-        for <linux-pci@vger.kernel.org>; Thu, 05 Jan 2023 05:33:29 -0800 (PST)
+        with ESMTP id S230348AbjAENgt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 08:36:49 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D722D5
+        for <linux-pci@vger.kernel.org>; Thu,  5 Jan 2023 05:36:47 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id cl14so3406689pjb.2
+        for <linux-pci@vger.kernel.org>; Thu, 05 Jan 2023 05:36:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=P1XTYzDF9NJQbx4B1YsRwvEAHgL0fcQoxLMdSzR8vZs=;
-        b=GuqmWhu4ipfzeo5HktK3MzfCI/ZrekXDMAJgFC9c4nrIwWfyXY+Uj+c8C1a0QpbPts
-         I6r+gXYIsnRn5VBxpIEbULISKk0yzbDAZP256LblS1+FoPQ+AUBq5UHZOf2jgLsXwnAG
-         wU04oqcQJl9qK4PLmpdssHxZ3v2Erc0ALQjV7UgAuuEslPWCanymTxqZt+cCWCpK9Ay8
-         Wxq4HYWn4ClKswVoz3kBso7kwOgoE0OhxeA6KN1BOpBIxCY1xGFsxXIS9DnggygelAy1
-         8tfqUvZR6VMSgCd3KgXQqggX+PFonQqLWKYd9yMGhUagvAUTb4NDwghLV8rGrBBJyeS2
-         UsxQ==
+        bh=AUq/fH3433jj5mBTye1N9Y+4Kwha1VQSzZyDmC40ABs=;
+        b=qqi1KR0CwVwPialeP/vVz4H2BrZcPEUSCREGYjXQQShJCMoNB0+HQeVXeRubvB1e2e
+         x2RAYpDlaRt3BOKkEyV14HcAeIaAWx9pcf1LhlN2nESIhE581wZYE/TT2RnLx9nQJEj9
+         1DWbG/O/NH/gLFa1WyB2drG7aqQBPh2NE0AaVKlgVviZmocgRrXY/Wx1SO2+kfvmDVf8
+         4pquiqpJtZbvh93ky60+1qo/px80CmlvMKaIR14dSQ8HzpjufuHuwpZBJEsxQ865rzGB
+         Tcbkn3pkreOCnOvb/5lpwisXCQvI3NXI1JRIMU45tfX6TjlER6Sbl0OSTg1ytho4tyRC
+         u5NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P1XTYzDF9NJQbx4B1YsRwvEAHgL0fcQoxLMdSzR8vZs=;
-        b=iajlekzuIrtxTSp2ilvjJejCv5MgXVO/Y9IZNRa3+f5HwDJPb+qotEQRo2IyRDY009
-         sk9bpf/Emv00R6/M5GQzV24fw/CpFYRW5wTwNv1KFTCtpCWzwcIP//fEgaDquZhxIEKs
-         l4H6Y3JcDP+CPy6xU8/CEDxi16b73Jgmq2v2pbaXzZRDu+GO1g+eikQd4AVY0g6xNZRk
-         2nETA2lk0tneF7TyzBURN5CUKSoJq3pbRbo3b2SprGan9Hs58UQkKJd4+8RI7Homa6jM
-         e/U985ssbTrKRRMB8jVZF3BWo+ZrO/GkxJivelklj++nMbwI/F78rbHk6Cfo0sJ5yPwX
-         BfDg==
-X-Gm-Message-State: AFqh2kqrV6h+4BbEmq0guzF+G1L1DfMXt5MlZF3Q8XyMerUob26s4w3G
-        pk+UV22y8CI4WjgTTwueN+tr
-X-Google-Smtp-Source: AMrXdXtpjWCms1lufElm6OEGP5Qs4jSawz8d0bczXV7qXGNcgQsg/SWKwxSPduTYO6qBfTVjO/5lJg==
-X-Received: by 2002:a05:6a21:3583:b0:9d:efc0:62 with SMTP id az3-20020a056a21358300b0009defc00062mr62581142pzc.10.1672925608376;
-        Thu, 05 Jan 2023 05:33:28 -0800 (PST)
+        bh=AUq/fH3433jj5mBTye1N9Y+4Kwha1VQSzZyDmC40ABs=;
+        b=YRyqjzWOsNpmbfIldO1A2WhHv1+O0De13IEUzSKuZc2RDB+w6/AZHbQaDv32IL0GlQ
+         EEVuvJQgo75ie2LWXidGPhGV1/CfUWpFloEIBvlh1Po5YsKXlDuMDrVx+n0xcZmwVw9M
+         JnSVskXIebzFoNiGB+P1MhDpxX34UjVmb3euwX2Htibsh5YcbKi6iOOa32BPhTk6blkf
+         RoLRRetqO8qQkFMaNh/KznGcifUO/Ioa1kRTOyuhmQ99gPuNfGeiEoInnZvWe1+iW+2z
+         61pNSbFJWa54m+TirxNUUZb/I6zhe4vLuCUVymCwAiNAn35gqS66lHqMgg4IpE10aoup
+         ewfw==
+X-Gm-Message-State: AFqh2kqL0PZT+jmnCi71sWXVuwN9mgVrDkuUdVKpVLACaLQaaImECfT3
+        Tfo52m1csMm9rP2jk9B6iO2m+QRWiC4R+bg=
+X-Google-Smtp-Source: AMrXdXveHUkpZc56ezsxEQLj/WhfUvK+o1mZVoRR76QAthztmcXb8pZvYykCG5PNid64jKKC8USPgA==
+X-Received: by 2002:a17:903:110d:b0:189:89e2:5406 with SMTP id n13-20020a170903110d00b0018989e25406mr92514518plh.24.1672925807368;
+        Thu, 05 Jan 2023 05:36:47 -0800 (PST)
 Received: from thinkpad ([27.111.75.153])
-        by smtp.gmail.com with ESMTPSA id e28-20020a056a0000dc00b00576f7bd92cdsm14807409pfj.14.2023.01.05.05.33.23
+        by smtp.gmail.com with ESMTPSA id i6-20020a170902c94600b00189651e5c26sm26132627pla.236.2023.01.05.05.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 05:33:27 -0800 (PST)
-Date:   Thu, 5 Jan 2023 19:03:21 +0530
+        Thu, 05 Jan 2023 05:36:46 -0800 (PST)
+Date:   Thu, 5 Jan 2023 19:06:39 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Johan Hovold <johan@kernel.org>
+To:     Dhruva Gole <d-gole@ti.com>
 Cc:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org,
         konrad.dybcio@linaro.org, kw@linux.com, bhelgaas@google.com,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, quic_krichai@quicinc.com,
         johan+linaro@kernel.org, steev@kali.org
 Subject: Re: [PATCH 1/1] PCI: qcom: Add support for system suspend and resume
-Message-ID: <20230105133321.GB4463@thinkpad>
+Message-ID: <20230105133639.GC4463@thinkpad>
 References: <20230103074907.12784-1-manivannan.sadhasivam@linaro.org>
  <20230103074907.12784-2-manivannan.sadhasivam@linaro.org>
- <Y7Qqv+kyREvXdRu1@hovoldconsulting.com>
+ <dad3aba3-a40b-8b76-c689-3dc877800263@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y7Qqv+kyREvXdRu1@hovoldconsulting.com>
+In-Reply-To: <dad3aba3-a40b-8b76-c689-3dc877800263@ti.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -77,8 +77,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 03, 2023 at 02:16:47PM +0100, Johan Hovold wrote:
-> On Tue, Jan 03, 2023 at 01:19:07PM +0530, Manivannan Sadhasivam wrote:
+On Tue, Jan 03, 2023 at 04:46:11PM +0530, Dhruva Gole wrote:
+> 
+> 
+> On 03/01/23 13:19, Manivannan Sadhasivam wrote:
 > > During the system suspend, vote for minimal interconnect bandwidth and
 > > also turn OFF the resources like clock and PHY if there are no active
 > > devices connected to the controller. For the controllers with active
@@ -97,45 +99,113 @@ On Tue, Jan 03, 2023 at 02:16:47PM +0100, Johan Hovold wrote:
 > > Suggested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 52 ++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
 > 
-> I just gave this a quick spin on the sc8280xp-crd, and unfortunately
-> this change appears to break suspend (e.g. hangs during suspend or
-> resume). Setting a non-zero (250 MBps) peak bandwidth during suspend
-> makes things work again.
+> Nice to have another driver added to the list of system suspend
+> support!
 > 
-> Presumably something is relying on these interconnect clocks to remain
-> enabled. And isn't that expected as we need to set a non-zero icc bw to
-> enable the interconnect clocks during probe?
+> Acked-by: Dhruva Gole <d-gole@ti.com>
+> 
+> >   drivers/pci/controller/dwc/pcie-qcom.c | 52 ++++++++++++++++++++++++++
+> >   1 file changed, 52 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5696e327795b..48810f1f2dba 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -227,6 +227,7 @@ struct qcom_pcie {
+> >   	struct gpio_desc *reset;
+> >   	struct icc_path *icc_mem;
+> >   	const struct qcom_pcie_cfg *cfg;qcom_pcie_icc_update
+> > +	bool suspended;
+> >   };
+> >   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> > @@ -1835,6 +1836,52 @@ static int qcom_pcie_remove(struct platform_device *pdev)
+> >   	return 0;
+> >   }
+> > +static int qcom_pcie_suspend_noirq(struct device *dev)
+> > +{
+> > +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	ret = icc_set_bw(pcie->icc_mem, 0, 0);
+> > +	if (ret) {
+> > +		dev_err(pcie->pci->dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Turn OFF the resources only for controllers without active PCIe devices. For controllers
+> > +	 * with active devices, the resources are kept ON and the link is expected to be in L0/L1
+> > +	 * (sub)states.
+> > +	 *
+> > +	 * Turning OFF the resources for controllers with active PCIe devices will trigger access
+> > +	 * violation during the end of the suspend cycle, as kernel tries to access the PCIe devices
+> > +	 * config space for masking MSIs.
+> > +	 *
+> > +	 * Also, it is not desirable to put the link into L2/L3 state as that implies VDD supply
+> > +	 * will be removed and the devices may go into powerdown state. This will affect the
+> > +	 * lifetime of the storage devices like NVMe.
+> > +	 */
+> > +	if (!dw_pcie_link_up(pcie->pci)) {
+> > +		qcom_pcie_host_deinit(&pcie->pci->pp);
+> > +		pcie->suspended = true;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int qcom_pcie_resume_noirq(struct device *dev)
+> > +{
+> > +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> > +
+> > +	if (pcie->suspended) {
+> > +		qcom_pcie_host_init(&pcie->pci->pp);
+> > +		pcie->suspended = false;
+> > +	}
+> > +
+> > +	qcom_pcie_icc_update(pcie);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   static const struct of_device_id qcom_pcie_match[] = {
+> >   	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> >   	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > @@ -1870,12 +1917,17 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+> >   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+> >   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> > +static const struct dev_pm_ops qcom_pcie_pm_ops = {
+> > +	NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_suspend_noirq, qcom_pcie_resume_noirq)
+> > +};
+> > +
+> >   static struct platform_driver qcom_pcie_driver = {
+> >   	.probe = qcom_pcie_probe,
+> >   	.remove = qcom_pcie_remove,
+> >   	.driver = {
+> >   		.name = "qcom-pcie",
+> >   		.of_match_table = qcom_pcie_match,
+> > +		.pm = &qcom_pcie_pm_ops,
+> >   	},
+> >   };
+> >   module_platform_driver(qcom_pcie_driver);
+> 
+> Out of curiosity, were you able to measure how much power you were able
+> to save after adding suspend support for PCIe? I don't know if clock
+> gating really saves much amount of power, but yeah its true that we
+> can't really cut off the power domain entirely in this case.
 > 
 
-After suspend, I assumed that there won't be any access to the controller
-specific registers, so thought it should be fine. And it works on X13s too.
-Maybe, the access to device config space is triggering issues on CRD? I will
-check with Qcom.
-
-> I'm afraid I won't have time to look into this for a while myself, but
-> have you tried this on the CRD, Mani? 
-> 
-
-Thanks for testing, Johan!
-
-I did not test this on CRD. Since both X13s and CRD are sharing the same
-SoC, I thought it would work on CRD too. But since you have tested and
-reported the issue, I will look into it.
-
-> One obvious difference is the modem on the CRD which I believe neither
-> of our X13s have, but this seems like more of a general problem.
-> 
-
-Yeah, this seems to be a platform issue. I will check on this behaviour and
-report back.
+I did not measure the power consumption and I agree that we won't save much
+power with setting icc bandwidth to 0. But it is better to have something
+than nothing. And in the coming days, I have plans to look into other power
+saving measures also.
 
 Thanks,
 Mani
 
-> Johan
+> -- 
+> Thanks and Regards,
+> Dhruva Gole
 
 -- 
 மணிவண்ணன் சதாசிவம்
