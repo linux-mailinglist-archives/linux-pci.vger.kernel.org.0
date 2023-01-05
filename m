@@ -2,95 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4997265F3AF
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 19:29:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95BE265F3EB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 19:44:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbjAES3z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Jan 2023 13:29:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
+        id S234735AbjAESow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Jan 2023 13:44:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234680AbjAES3y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 13:29:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4429E564DC;
-        Thu,  5 Jan 2023 10:29:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C9D4361BD1;
-        Thu,  5 Jan 2023 18:29:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FBBCC433EF;
-        Thu,  5 Jan 2023 18:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672943392;
-        bh=iHaiS0GM2MGSXZ+IjKPLHBtGHmeOC5SlrukdUXCOrQE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bnoWIP/vPhtNJvTZctVf/Jup3ayusP8RlZZ3dRmqzKU/OBPf9pChxfMr9wF6qrwX5
-         ddZ7YQjRS+/9y3oHZ6wuJY51WeTjArJ49sP+hwIL5UtvlOpeZQkPE/vzTuYL/mDcRB
-         niERtYU7lSU1o7g6TsxNA13B6V5Q73SFNJs3gNf+qSkECyf8qO/7sVlVPpiuau7haQ
-         Ukc8Kk40QZyQgRw/bAZbjdZ6Tvd828talbNp847Ce2SRAQrgLNMC1MqT+Qm+CYNnaJ
-         haZarSCy5BT7j7Ycnt/KBr3PjJhWJtlL57pFUeaj7qe2kzwh6Duyp0fOZiMFbK/IoP
-         CrBsJr501lHCw==
-Date:   Thu, 5 Jan 2023 12:29:50 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "kernelorg@undead.fr" <kernelorg@undead.fr>,
-        "kjhambrick@gmail.com" <kjhambrick@gmail.com>,
-        "2lprbe78@duck.com" <2lprbe78@duck.com>,
-        "nicholas.johnson-opensource@outlook.com.au" 
-        <nicholas.johnson-opensource@outlook.com.au>,
-        "benoitg@coeus.ca" <benoitg@coeus.ca>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "wse@tuxedocomputers.com" <wse@tuxedocomputers.com>,
-        "mumblingdrunkard@protonmail.com" <mumblingdrunkard@protonmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Sun, Yunying" <yunying.sun@intel.com>
-Subject: Re: Bug report: the extended PCI config space is missed with 6.2-rc2
-Message-ID: <20230105182950.GA1158496@bhelgaas>
+        with ESMTP id S234467AbjAESov (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 13:44:51 -0500
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206162BFC
+        for <linux-pci@vger.kernel.org>; Thu,  5 Jan 2023 10:44:50 -0800 (PST)
+Received: by mail-qt1-x832.google.com with SMTP id a16so30655021qtw.10
+        for <linux-pci@vger.kernel.org>; Thu, 05 Jan 2023 10:44:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wDGw99ShhAk4BTfbiq/HSg4iz18los6PguJhzuGnQnY=;
+        b=XgEpbxNVDAvvOf6J3A2TwDGJnpHNkX/AZYYLf7z49hyrdmaG/1mrQnxKw/RxWIBFpT
+         F4LyDyZaVWujnLPvV/7auLtQsSznaTE/bSs/QIheK6GEJi3veeMn0Au4cQo5dxjp5Qss
+         Lx37aTtxAJUJcgWRDw5f3CFfykpkJk0cSgaQPagcHwLupQj7vtx0/4F9k4e3tbySMCs9
+         Q4yCnMX2WaA+Y89X+hofBZKBvVtju/cGCHdIHUGv1L0aRQ13ntPZdyfRjlhkUgORqdeC
+         efKOd5r2jsLWnunpJ+5gSFqRTzVnWmkqbES0S05EYZvCg+7zklnXznXiwQjgStSXalTW
+         Qb7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wDGw99ShhAk4BTfbiq/HSg4iz18los6PguJhzuGnQnY=;
+        b=N3OBzWAmQ8EcyJiMXIycQ2r10l1+55BQY3vXEEAnSPnuI5TZxpqPDk5Kpd071whYnP
+         95DrvvwXDmCtpi0yS2xxB/Wvt0snAy6aw64vX7stP8NJ6468SLSWi9YbDza94lKynO3g
+         NE57r1ch+/f9nP3P9GJwEyV0Q+HiEgLMDovtVnsara6dUpggRtROSCz8sXvl47pUt6nj
+         fFZ3ZqIQOj+OubYpQJ3X/Yg+wfJGboyqu/aDHbFviShUjmTchfXkwo7rmTcXqymm9Ofj
+         Rynrs6VBIDVMRsc6wSFcNy6qj9H3SJ8WGg0qISO9ctkFII19Enf1kCr4iYW3y1GPQ6SU
+         GgWA==
+X-Gm-Message-State: AFqh2kpLnL42vvx5tC+UAAoyev9niyuYt9NT1edzX7HR0SU5tgFN9fR1
+        A6ATkY+Gru8QCoQk4p6UObO+ylaSwTY+6NEC
+X-Google-Smtp-Source: AMrXdXsCBao5sj2mA3pCbmn7CVNG8OxdS3ux1KK5fPjIVNoASvx47cX20cWWXXrs9FUsPa7nYbB/uA==
+X-Received: by 2002:ac8:5392:0:b0:3a5:1dcb:d231 with SMTP id x18-20020ac85392000000b003a51dcbd231mr74028496qtp.59.1672944289119;
+        Thu, 05 Jan 2023 10:44:49 -0800 (PST)
+Received: from smtp.xilinx.com (atlvpn.amd.com. [165.204.84.11])
+        by smtp.gmail.com with ESMTPSA id h24-20020ac87458000000b003a7ef7a758dsm21956801qtr.59.2023.01.05.10.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 10:44:48 -0800 (PST)
+From:   Anatoli Antonovitch <a.antonovitch@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, lukas@wunner.de, Alexander.Deucher@amd.com,
+        christian.koenig@amd.com,
+        Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+Subject: [PATCH] PCI/hotplug: Replaced down_write_nested with hotplug_slot_rwsem if ctrl->depth > 0 when taking the ctrl->reset_lock.
+Date:   Thu,  5 Jan 2023 13:43:55 -0500
+Message-Id: <20230105184355.9829-1-a.antonovitch@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083C504335B2DE1B31C440CFCFA9@SJ1PR11MB6083.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 05, 2023 at 06:04:52PM +0000, Luck, Tony wrote:
-> > Hi Tony, can you share a dmesg log?  Does it look like the same thing
-> > Kan reported, where the ECAM space is reported only via an
-> > EfiMemoryMappedIO region and is not otherwise reserved by firmware?
-> 
-> Attached are serial logs. "broken" is the one from v6.2-rc2, "revert" is the
-> one with your commit reverted.
-> 
-> I don't see the string "ECAM" in either of them.
+From: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
 
-Yeah, "ECAM" is what the PCIe spec calls it, but Linux logging uses
-"MMCONFIG".  Probably should change that.
+It is to avoid any potential issues when S3 resume but at the same time we want to hot-unplug.
+Need to do some more testing to see if it is still necessary.
 
-Anyway, your dmesg log shows the same problem:
+To fix the race between pciehp and AER reported in https://bugzilla.kernel.org/show_bug.cgi?id=215590
 
-  DMI: Intel Corporation BRICKLAND/BRICKLAND, BIOS BRBDXSD1.86B.0338.V01.1603162127 03/16/2016
-  efi: Remove mem48: MMIO range=[0x80000000-0x8fffffff] (256MB) from e820 map
-  PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-  [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
-  PCI: not using MMCONFIG
-  acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended configuration space under this bridge
+INFO: task irq/26-aerdrv:104 blocked for more than 120 seconds.
+Tainted: G        W          6.1.0-rc5-custom-master-nov14+ #2
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:irq/26-aerdrv   state:D stack:0     pid:104   ppid:2      flags:0x00004000
+Call Trace:
+<TASK>
+__schedule+0x39c/0xe90
+? rcu_read_lock_sched_held+0x25/0x80
+schedule+0x6b/0xf0
+rwsem_down_write_slowpath+0x3b2/0x9c0
+down_write_nested+0x16b/0x210
+pciehp_reset_slot+0x63/0x160
+pci_reset_hotplug_slot+0x44/0x70
+pci_slot_reset+0x10d/0x190
+pci_bus_error_reset+0xb2/0xe0
+aer_root_reset+0x144/0x190
+pcie_do_recovery+0x15a/0x270
+? aer_dev_correctable_show+0xc0/0xc0
+aer_process_err_devices+0xcf/0xea
+aer_isr.cold+0x52/0xa1
+? __kmem_cache_free+0x36a/0x3b0
+? irq_thread+0xb0/0x1e0
+? irq_thread+0xb0/0x1e0
+irq_thread_fn+0x28/0x70
+irq_thread+0x106/0x1e0
+? irq_forced_thread_fn+0xb0/0xb0
+? wake_threads_waitq+0x40/0x40
+? irq_thread_check_affinity+0xf0/0xf0
+kthread+0x10a/0x130
+? kthread_complete_and_exit+0x20/0x20
+ret_from_fork+0x22/0x30
+</TASK>
 
-Apparently the only mention of [mem 0x80000000-0x8fffffff] in the
-firmware/kernel interface is as an EfiMemoryMappedIO region.
+INFO: task irq/26-pciehp:105 blocked for more than 120 seconds.
+Tainted: G        W          6.1.0-rc5-custom-master-nov14+ #2
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:irq/26-pciehp   state:D stack:0     pid:105   ppid:2      flags:0x00004000
+Call Trace:
+<TASK>
+__schedule+0x39c/0xe90
+schedule+0x6b/0xf0
+schedule_preempt_disabled+0x18/0x30
+__mutex_lock+0x685/0xf60
+? rcu_read_lock_sched_held+0x25/0x80
+? lock_release+0x24d/0x410
+? __device_driver_lock+0x2d/0x50
+mutex_lock_nested+0x1b/0x30
+? mutex_lock_nested+0x1b/0x30
+__device_driver_lock+0x2d/0x50
+device_release_driver_internal+0x1f/0x170
+device_release_driver+0x12/0x20
+pci_stop_bus_device+0x74/0xa0
+pci_stop_bus_device+0x30/0xa0
+pci_stop_and_remove_bus_device+0x13/0x30
+pciehp_unconfigure_device+0x80/0x140
+pciehp_disable_slot+0x6e/0x110
+pciehp_handle_presence_or_link_change+0xf1/0x310
+pciehp_ist+0x1a0/0x1b0
+? irq_thread+0xb0/0x1e0
+irq_thread_fn+0x28/0x70
+irq_thread+0x106/0x1e0
+? irq_forced_thread_fn+0xb0/0xb0
+? wake_threads_waitq+0x40/0x40
+? irq_thread_check_affinity+0xf0/0xf0
+kthread+0x10a/0x130
+? kthread_complete_and_exit+0x20/0x20
+ret_from_fork+0x22/0x30
+</TASK>
 
-I think this is a firmware bug, but obviously we're going to have to
-figure out a way around it.
+Signed-off-by: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+---
+ drivers/pci/hotplug/pciehp_hpc.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Bjorn
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 10e9670eea0b..b1084e67f798 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -27,6 +27,8 @@
+ #include "../pci.h"
+ #include "pciehp.h"
+ 
++static DECLARE_RWSEM(hotplug_slot_rwsem);
++
+ static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+ 	/*
+ 	 * Match all Dell systems, as some Dell systems have inband
+@@ -911,7 +913,10 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
+ 	if (probe)
+ 		return 0;
+ 
+-	down_write_nested(&ctrl->reset_lock, ctrl->depth);
++	if (ctrl->depth > 0)
++		down_write_nested(&ctrl->reset_lock, ctrl->depth);
++	else
++		down_write(&hotplug_slot_rwsem);
+ 
+ 	if (!ATTN_BUTTN(ctrl)) {
+ 		ctrl_mask |= PCI_EXP_SLTCTL_PDCE;
+@@ -931,7 +936,11 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
+ 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
+ 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, ctrl_mask);
+ 
+-	up_write(&ctrl->reset_lock);
++	if (ctrl->depth > 0)
++		up_write(&ctrl->reset_lock);
++	else
++		up_write(&hotplug_slot_rwsem);
++
+ 	return rc;
+ }
+ 
+-- 
+2.25.1
+
