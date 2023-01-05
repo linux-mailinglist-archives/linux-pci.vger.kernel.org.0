@@ -2,90 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 265DF65E1C4
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 01:41:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77DA565E226
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 02:04:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240270AbjAEAlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Jan 2023 19:41:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46882 "EHLO
+        id S229762AbjAEBEu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Jan 2023 20:04:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240724AbjAEAix (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 19:38:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BDCDE2;
-        Wed,  4 Jan 2023 16:38:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DEB71618BC;
-        Thu,  5 Jan 2023 00:38:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F88C4332E;
-        Thu,  5 Jan 2023 00:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672879095;
-        bh=UjkrzubYnsQygg5xUFcf0zzRRPdEO1lA8NbpaEs5Q3k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ka31L00eyKKuwmjxEQfuPzindN6L982vKDLeYcs5CqFzznr2US1FdPPZGWI6RNCtt
-         kIaSdU7QLvxIA0Ct0SbEVEuTk4A1RwDtZgT5mqh5eD07DktJnn3TZV73fhMB7+jB0o
-         Pw3nDIQOh4XvBiarU0nsq85ZUtvEZVJuX13KRpL7Y7e2TxfRmUXhLRibixbJknQTdd
-         9cgjP4kvahLo5X8fifk8m2U7zmuhH8U2Mq3BC0og6GoakLn5fzEa3yYnOihpnQelhV
-         /mAENSBTNHcbfxgU+NUf3ztwXlPj3++PpnRsQNps1QJHj1JUYCWNY6LKzQu/lONyJn
-         QUvWoVN/opOuA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id D48045C1C9B; Wed,  4 Jan 2023 16:38:14 -0800 (PST)
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@meta.com,
-        rostedt@goodmis.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH rcu 17/27] drivers/pci/controller: Remove "select SRCU"
-Date:   Wed,  4 Jan 2023 16:38:03 -0800
-Message-Id: <20230105003813.1770367-17-paulmck@kernel.org>
-X-Mailer: git-send-email 2.31.1.189.g2e36527f23
-In-Reply-To: <20230105003759.GA1769545@paulmck-ThinkPad-P17-Gen-1>
-References: <20230105003759.GA1769545@paulmck-ThinkPad-P17-Gen-1>
+        with ESMTP id S229746AbjAEBEq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Jan 2023 20:04:46 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70A513DD1
+        for <linux-pci@vger.kernel.org>; Wed,  4 Jan 2023 17:04:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672880685; x=1704416685;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FIL6Lff7u9WO/AEkJO7pCdBYksIW8QzD82JExgAVOPA=;
+  b=c3ai30nBRpw7afhg4g09jutndmGuPRYRLgfiMc140sls8vP0b+9Z9HiZ
+   NRPpciHKNuvwV+Fgqa01SE3b2wNEATl5P0gCyw4JBByl7rOU5Q389jIQe
+   9cZNRBI44I/UsTKx620+87/+bCrX2RlPMyhOuPYhL1Hx2D8ESCmGGCKb6
+   LuecUkco/BQj0N11C1Fhbefo0Upnk1POURYhrFZsTG7CQy2EwEJ8Da/sB
+   v96NZ+1J5B8jP6zNVkL02lamTctSlF6/LYraSZ6iTrLIjaY5evksb8tRp
+   GnQJADay519r3qILa+sG1x7dEutPcR13El8O/fviNlRS7PN0eaPWi/v74
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="302456301"
+X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
+   d="scan'208";a="302456301"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 17:04:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="655378426"
+X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
+   d="scan'208";a="655378426"
+Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 04 Jan 2023 17:04:43 -0800
+Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pDEgP-0000xj-2w;
+        Thu, 05 Jan 2023 01:04:37 +0000
+Date:   Thu, 05 Jan 2023 09:04:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ 760d560f71c828a97c77596af5c3f9978aefd9d1
+Message-ID: <63b62212.DWJ62hRQNcZZiWKg%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that the SRCU Kconfig option is unconditionally selected, there is
-no longer any point in selecting it.  Therefore, remove the "select SRCU"
-Kconfig statements.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 760d560f71c828a97c77596af5c3f9978aefd9d1  PCI: dwc: Adjust to recent removal of PCI_MSI_IRQ_DOMAIN
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <linux-pci@vger.kernel.org>
----
- drivers/pci/controller/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+elapsed time: 727m
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 1569d9a3ada0b..b09cdc59bfd02 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -258,7 +258,7 @@ config PCIE_MEDIATEK_GEN3
- 	  MediaTek SoCs.
- 
- config VMD
--	depends on PCI_MSI && X86_64 && SRCU && !UML
-+	depends on PCI_MSI && X86_64 && !UML
- 	tristate "Intel Volume Management Device Driver"
- 	help
- 	  Adds support for the Intel Volume Management Device (VMD). VMD is a
+configs tested: 75
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+s390                             allyesconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+x86_64                            allnoconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+sh                               allmodconfig
+powerpc                          allmodconfig
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-bpf
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+ia64                             allmodconfig
+x86_64                           rhel-8.3-kvm
+i386                                defconfig
+i386                 randconfig-a004-20230102
+x86_64                              defconfig
+i386                 randconfig-a003-20230102
+i386                 randconfig-a001-20230102
+i386                 randconfig-a002-20230102
+x86_64                               rhel-8.3
+i386                 randconfig-a005-20230102
+i386                 randconfig-a006-20230102
+i386                             allyesconfig
+x86_64                           allyesconfig
+arm                                 defconfig
+x86_64               randconfig-a003-20230102
+x86_64               randconfig-a001-20230102
+x86_64               randconfig-a004-20230102
+x86_64               randconfig-a002-20230102
+x86_64               randconfig-a006-20230102
+x86_64               randconfig-a005-20230102
+arm64                            allyesconfig
+arm                              allyesconfig
+riscv                randconfig-r042-20230101
+s390                 randconfig-r044-20230101
+arc                  randconfig-r043-20230102
+arm                  randconfig-r046-20230102
+arc                  randconfig-r043-20230101
+mips                         db1xxx_defconfig
+openrisc                            defconfig
+arm                         at91_dt_defconfig
+s390                 randconfig-r044-20230103
+arc                  randconfig-r043-20230103
+riscv                randconfig-r042-20230103
+i386                          randconfig-c001
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+i386                 randconfig-a011-20230102
+i386                 randconfig-a014-20230102
+i386                 randconfig-a013-20230102
+i386                 randconfig-a012-20230102
+i386                 randconfig-a015-20230102
+i386                 randconfig-a016-20230102
+hexagon              randconfig-r041-20230102
+hexagon              randconfig-r045-20230101
+hexagon              randconfig-r045-20230102
+arm                  randconfig-r046-20230101
+riscv                randconfig-r042-20230102
+hexagon              randconfig-r041-20230101
+s390                 randconfig-r044-20230102
+x86_64               randconfig-a014-20230102
+x86_64               randconfig-a016-20230102
+x86_64               randconfig-a012-20230102
+x86_64               randconfig-a011-20230102
+x86_64               randconfig-a015-20230102
+x86_64               randconfig-a013-20230102
+
 -- 
-2.31.1.189.g2e36527f23
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
