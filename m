@@ -2,97 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7727765E948
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 11:49:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8EB65ED1E
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 14:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233134AbjAEKt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Jan 2023 05:49:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39380 "EHLO
+        id S231916AbjAENdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Jan 2023 08:33:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233351AbjAEKtR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 05:49:17 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D09152757;
-        Thu,  5 Jan 2023 02:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672915755; x=1704451755;
-  h=message-id:date:mime-version:cc:to:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=hYw5mt3Ho/5cEDP9Y30N0YmdDHdyUr2/axWszivFQR4=;
-  b=GbuLLxUYR7Qg1dYaKXdx2fWq97nqUG+M4wuYmKyRaV3yc1R/m7jzuIzD
-   RH5kb2mwH9fH9W1dCT06s6oO5zXJN8iTMW2YB1RrnbFN3uIgGzP0SJVAM
-   oNazwBveE5ccWRgZNDsIMkPXaiT5bO3XHe7DYUxelNrmoIIkgiOQDWbjR
-   MHlh7BQKSeoIjrHGlFOWzHTmjx21oLvVUSjIeeIkhVEMScAdDQDQ4zhIr
-   DFuqdj6W5AuMU9GAMo8GZncvkZV6mEQ22dBBn7c5p+0nvaiLVX58daJAF
-   yOBuU9Bur6jnOyZtJsSuCMJLpV37YIq3gBv1ETyQ5mSbTUd5SRSgwMcbS
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="320882571"
-X-IronPort-AV: E=Sophos;i="5.96,302,1665471600"; 
-   d="scan'208";a="320882571"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 02:49:14 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="655527744"
-X-IronPort-AV: E=Sophos;i="5.96,302,1665471600"; 
-   d="scan'208";a="655527744"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.114]) ([10.254.211.114])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 02:49:12 -0800
-Message-ID: <d9d8fba9-a53a-11ea-9b28-ee5695da48eb@linux.intel.com>
-Date:   Thu, 5 Jan 2023 18:49:09 +0800
+        with ESMTP id S232575AbjAENd3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 08:33:29 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F7AE0E8
+        for <linux-pci@vger.kernel.org>; Thu,  5 Jan 2023 05:33:29 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id c2so11790787plc.5
+        for <linux-pci@vger.kernel.org>; Thu, 05 Jan 2023 05:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P1XTYzDF9NJQbx4B1YsRwvEAHgL0fcQoxLMdSzR8vZs=;
+        b=GuqmWhu4ipfzeo5HktK3MzfCI/ZrekXDMAJgFC9c4nrIwWfyXY+Uj+c8C1a0QpbPts
+         I6r+gXYIsnRn5VBxpIEbULISKk0yzbDAZP256LblS1+FoPQ+AUBq5UHZOf2jgLsXwnAG
+         wU04oqcQJl9qK4PLmpdssHxZ3v2Erc0ALQjV7UgAuuEslPWCanymTxqZt+cCWCpK9Ay8
+         Wxq4HYWn4ClKswVoz3kBso7kwOgoE0OhxeA6KN1BOpBIxCY1xGFsxXIS9DnggygelAy1
+         8tfqUvZR6VMSgCd3KgXQqggX+PFonQqLWKYd9yMGhUagvAUTb4NDwghLV8rGrBBJyeS2
+         UsxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P1XTYzDF9NJQbx4B1YsRwvEAHgL0fcQoxLMdSzR8vZs=;
+        b=iajlekzuIrtxTSp2ilvjJejCv5MgXVO/Y9IZNRa3+f5HwDJPb+qotEQRo2IyRDY009
+         sk9bpf/Emv00R6/M5GQzV24fw/CpFYRW5wTwNv1KFTCtpCWzwcIP//fEgaDquZhxIEKs
+         l4H6Y3JcDP+CPy6xU8/CEDxi16b73Jgmq2v2pbaXzZRDu+GO1g+eikQd4AVY0g6xNZRk
+         2nETA2lk0tneF7TyzBURN5CUKSoJq3pbRbo3b2SprGan9Hs58UQkKJd4+8RI7Homa6jM
+         e/U985ssbTrKRRMB8jVZF3BWo+ZrO/GkxJivelklj++nMbwI/F78rbHk6Cfo0sJ5yPwX
+         BfDg==
+X-Gm-Message-State: AFqh2kqrV6h+4BbEmq0guzF+G1L1DfMXt5MlZF3Q8XyMerUob26s4w3G
+        pk+UV22y8CI4WjgTTwueN+tr
+X-Google-Smtp-Source: AMrXdXtpjWCms1lufElm6OEGP5Qs4jSawz8d0bczXV7qXGNcgQsg/SWKwxSPduTYO6qBfTVjO/5lJg==
+X-Received: by 2002:a05:6a21:3583:b0:9d:efc0:62 with SMTP id az3-20020a056a21358300b0009defc00062mr62581142pzc.10.1672925608376;
+        Thu, 05 Jan 2023 05:33:28 -0800 (PST)
+Received: from thinkpad ([27.111.75.153])
+        by smtp.gmail.com with ESMTPSA id e28-20020a056a0000dc00b00576f7bd92cdsm14807409pfj.14.2023.01.05.05.33.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 05:33:27 -0800 (PST)
+Date:   Thu, 5 Jan 2023 19:03:21 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, kw@linux.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_krichai@quicinc.com,
+        johan+linaro@kernel.org, steev@kali.org
+Subject: Re: [PATCH 1/1] PCI: qcom: Add support for system suspend and resume
+Message-ID: <20230105133321.GB4463@thinkpad>
+References: <20230103074907.12784-1-manivannan.sadhasivam@linaro.org>
+ <20230103074907.12784-2-manivannan.sadhasivam@linaro.org>
+ <Y7Qqv+kyREvXdRu1@hovoldconsulting.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Cc:     baolu.lu@linux.intel.com, senozhatsky@chromium.org,
-        bingbu.cao@linux.intel.com, sangram.k.y@intel.com
-Content-Language: en-US
-To:     bingbu.cao@intel.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux.dev
-References: <20230105082857.4180299-1-bingbu.cao@intel.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-Subject: Re: [RESEND PATCH v3] iommu/vt-d: Use passthrough mode for the Intel
- IPUs
-In-Reply-To: <20230105082857.4180299-1-bingbu.cao@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y7Qqv+kyREvXdRu1@hovoldconsulting.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/1/5 16:28, bingbu.cao@intel.com wrote:
-> Intel IPU(Image Processing Unit) has its own (IO)MMU hardware,
-> The IPU driver allocates its own page table that is not mapped
-> via the DMA, and thus the Intel IOMMU driver blocks access giving
-> this error:
+On Tue, Jan 03, 2023 at 02:16:47PM +0100, Johan Hovold wrote:
+> On Tue, Jan 03, 2023 at 01:19:07PM +0530, Manivannan Sadhasivam wrote:
+> > During the system suspend, vote for minimal interconnect bandwidth and
+> > also turn OFF the resources like clock and PHY if there are no active
+> > devices connected to the controller. For the controllers with active
+> > devices, the resources are kept ON as removing the resources will
+> > trigger access violation during the late end of suspend cycle as kernel
+> > tries to access the config space of PCIe devices to mask the MSIs.
+> > 
+> > Also, it is not desirable to put the link into L2/L3 state as that
+> > implies VDD supply will be removed and the devices may go into powerdown
+> > state. This will affect the lifetime of storage devices like NVMe.
+> > 
+> > And finally, during resume, turn ON the resources if the controller was
+> > truly suspended (resources OFF) and update the interconnect bandwidth
+> > based on PCIe Gen speed.
+> > 
+> > Suggested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 52 ++++++++++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
 > 
-> DMAR: DRHD: handling fault status reg 3
-> DMAR: [DMA Read] Request device [00:05.0] PASID ffffffff
->        fault addr 76406000 [fault reason 06] PTE Read access is not set
+> I just gave this a quick spin on the sc8280xp-crd, and unfortunately
+> this change appears to break suspend (e.g. hangs during suspend or
+> resume). Setting a non-zero (250 MBps) peak bandwidth during suspend
+> makes things work again.
+> 
+> Presumably something is relying on these interconnect clocks to remain
+> enabled. And isn't that expected as we need to set a non-zero icc bw to
+> enable the interconnect clocks during probe?
+> 
 
-Do you mind telling why does such DMA fault occur? How does the IPU
-driver map the fault address 76406000 ?
+After suspend, I assumed that there won't be any access to the controller
+specific registers, so thought it should be fine. And it works on X13s too.
+Maybe, the access to device config space is triggering issues on CRD? I will
+check with Qcom.
 
-> As IPU is not an external facing device which is not risky, so use
-> IOMMU passthrough mode for Intel IPUs.
+> I'm afraid I won't have time to look into this for a while myself, but
+> have you tried this on the CRD, Mani? 
+> 
 
-You can also set the passthrough mode with kernel option iommu=pt
-(globally) or by writing IDENTITY to
+Thanks for testing, Johan!
 
-/sys/..path_to_device../iommu_group/type
+I did not test this on CRD. Since both X13s and CRD are sharing the same
+SoC, I thought it would work on CRD too. But since you have tested and
+reported the issue, I will look into it.
 
-(per-device).
+> One obvious difference is the modem on the CRD which I believe neither
+> of our X13s have, but this seems like more of a general problem.
+> 
 
-> Fixes: 26f5689592e2 ("media: staging/intel-ipu3: mmu: Implement driver")
+Yeah, this seems to be a platform issue. I will check on this behaviour and
+report back.
 
-Please don't try to fix any problem in the device driver by adding any
-hard-coded quirky code in the IOMMU code.
+Thanks,
+Mani
 
-> Signed-off-by: Bingbu Cao<bingbu.cao@intel.com>
+> Johan
 
---
-Best regards,
-baolu
+-- 
+மணிவண்ணன் சதாசிவம்
