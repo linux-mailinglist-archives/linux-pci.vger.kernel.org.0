@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FD165E666
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 09:03:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE6165E6CB
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Jan 2023 09:24:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230282AbjAEIDA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Jan 2023 03:03:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49256 "EHLO
+        id S230292AbjAEIYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Jan 2023 03:24:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbjAEICx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 03:02:53 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AB250F4C;
-        Thu,  5 Jan 2023 00:02:52 -0800 (PST)
+        with ESMTP id S232233AbjAEIYG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 03:24:06 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621DB58F82;
+        Thu,  5 Jan 2023 00:21:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672905772; x=1704441772;
+  t=1672906869; x=1704442869;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=gTdmaEIXM0CetcuquO33CxCL8gL+ukVn2Q9KZ2a2Guw=;
-  b=dWplkrZkVVLpOpxHxjxaNC0WcqoGKHZY+uifasWs6G7STBJu32CHJqiP
-   8Ii6Qk7IiEHGWjL5y8slsEa1DkcbUnoh9jF76XI6K8+0Fub1Wr+nxcz8o
-   jYMBDPskaVWntfSDgHIs1uMZLET56/4KgKWl3m06nMRj5yGfPIZ4cmhOc
-   iPvvUrGL1ad2USFvlxu8prmaNrN5BHva9osfHEE7q9hdUVCvh3YgXa2Tf
-   Sd2IGpQM/ZiOgUbKAXg6CB5d9DtYGcv0TdZC4VqQmm4gdnATjCliX1ztH
-   1AGKTeQ1l/Jbr3AJEFnEGQrwcOZyJvsGOIkwa7INsjWlyfHLIG4U7yef+
+  bh=ldOSn4RJNcTLaRtEAxrO/RtpGFwPKJQdNeOLTmCm9Kc=;
+  b=KoOit2mj1atc7XUBbB4Wme42c3iWfpHpg0/WyOYtTBQHfCPGJXncko/H
+   EZ3tU/GxGYrQLDEKCdYWQINm3j89NNEcz4J8XnYa28DqsvgDshODh9KZa
+   G71iPWGrSZlsiypYXQOlpgHkzjIYOmheKE94Wzz/yl7j5wAkyIxKH0Czl
+   8JTFMJBR53XoRRZxHPS0RUGuhOKmLZgyYMM6cPkqprxDJZny5/3Crfh7S
+   38EQp2He+/S+jgMexzX582T4tycy9cawctjN0ZXNt10Dn29JmIUX8YyDl
+   epG84phRdHMDmLyCJFWjPcRlLL5rrJZ2oTwK+VRl3lRqM4H/8i6FfOIr9
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="305645058"
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="301843072"
 X-IronPort-AV: E=Sophos;i="5.96,302,1665471600"; 
-   d="scan'208";a="305645058"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 00:02:38 -0800
+   d="scan'208";a="301843072"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 00:20:58 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="779499786"
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="900848238"
 X-IronPort-AV: E=Sophos;i="5.96,302,1665471600"; 
-   d="scan'208";a="779499786"
+   d="scan'208";a="900848238"
 Received: from icg-kernel3.bj.intel.com ([172.16.126.100])
-  by orsmga004.jf.intel.com with ESMTP; 05 Jan 2023 00:02:35 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jan 2023 00:20:55 -0800
 From:   bingbu.cao@intel.com
 To:     linux-kernel@vger.kernel.org,
         stable.vger.kernel.org@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
+        iommu@lists.linux.dev
 Cc:     baolu.lu@linux.intel.com, senozhatsky@chromium.org,
         bingbu.cao@intel.com, bingbu.cao@linux.intel.com,
         sangram.k.y@intel.com
-Subject: [PATCH v3] iommu/vt-d: Use passthrough mode for the Intel IPUs
-Date:   Thu,  5 Jan 2023 16:10:36 +0800
-Message-Id: <20230105081036.4080071-1-bingbu.cao@intel.com>
+Subject: [RESEND PATCH v3] iommu/vt-d: Use passthrough mode for the Intel IPUs
+Date:   Thu,  5 Jan 2023 16:28:57 +0800
+Message-Id: <20230105082857.4180299-1-bingbu.cao@intel.com>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -76,8 +76,6 @@ IOMMU passthrough mode for Intel IPUs.
 
 Fixes: 26f5689592e2 ("media: staging/intel-ipu3: mmu: Implement driver")
 Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
----
-changes v2 -> v3: add 2 new IPU devices DIDs
 ---
  drivers/iommu/intel/iommu.c | 32 ++++++++++++++++++++++++++++++++
  1 file changed, 32 insertions(+)
