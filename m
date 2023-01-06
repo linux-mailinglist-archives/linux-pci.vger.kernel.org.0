@@ -2,162 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01DA865FB1C
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 06:56:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 889CD65FBC2
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 08:14:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjAFF4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Jan 2023 00:56:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
+        id S232011AbjAFHOJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Jan 2023 02:14:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbjAFF4F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 00:56:05 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B864060CF5;
-        Thu,  5 Jan 2023 21:56:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672984562; x=1704520562;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5FYmc733b78fRd3B3tStq5rzw45ZjZPIs3hLf607W+U=;
-  b=XYxLxvmyeH7K8fy2k89VWV/X3oSSfIviWF+c6l/hMrlxK8yFmmX9KEuj
-   G2HmiD23KTWi317DuMl0NCs+cNOxSXf/PkJeXccmbXhhuz0X3JRulFtTs
-   10CI5l7zfYrl8e+w/IjdPf0oJ/8LB5tFQC3Jo++6/AtUeyCo1uRXpLUdI
-   XmKObNNosy42nuTTrUMuGV1MEY6L3oYj2nyplcExhCI8X6kRUYqSK4Gek
-   rLBsJZEp3kJ9zxXhdtwrJq6AqYa7R4Qvv2FycLyAa4c24HIDTXtmkFzQN
-   AOTORdplrkGVgvujw95nL9P8RK2yFjSxM79mUubzJwNmmJHjp3jH3NNhB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="323663145"
-X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
-   d="scan'208";a="323663145"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 21:56:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="724333183"
-X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
-   d="scan'208";a="724333183"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jan 2023 21:55:58 -0800
-Message-ID: <7bbc0f65-e1c6-f388-29a8-390b8c9c92c8@linux.intel.com>
-Date:   Fri, 6 Jan 2023 13:48:11 +0800
+        with ESMTP id S230182AbjAFHOI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 02:14:08 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB761C93F
+        for <linux-pci@vger.kernel.org>; Thu,  5 Jan 2023 23:14:07 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id g1so1148121edj.8
+        for <linux-pci@vger.kernel.org>; Thu, 05 Jan 2023 23:14:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GfS4/KXKGQsPO432hXwHidKTEwL2frnKcJ42qRrZ2f0=;
+        b=RO7SlAKa6aEUrRYWCH5NFQ++68VKB8sUxprEulYvXkWiAKAJG10tqszXYo++4jR0b5
+         z0yZXjRK23f8BOsEGtIDkn6vYgGhl4hNpG0T9ssutDXfUcCLSeOv+VDTCQXIPNk0S+Uy
+         P+lHZ5kT0iWW1HEebeodEr08pfR/ZWDgw77xkcTXdg5iilcI14qxO/Sh+3w8CL1c2nnz
+         Dujk1JWwpXJYqwevEv7PbxGCoEmu7DzAWAXDBb7ckB63/FN3PT9F3S89vqHL4EaGokbU
+         FJ9NMdcAUQ9DMPh5UfPgRPIFyWQVM8GvUoS6313oLXHVM/d6bMtcVQl4iV6cWJHZ6PO0
+         POsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GfS4/KXKGQsPO432hXwHidKTEwL2frnKcJ42qRrZ2f0=;
+        b=tNf1jY0++8K4vL8K0C3QTk+hDsuLOArc/qeA4j5HuRO3rInnItNSIXJInh1S9IF4fK
+         MKjxBlV51uAF7NSBAzuuO7rMhopkktyiu5Obi9Nm0rWRBX7ufXb/uLNPZnsrliRvcCFa
+         SuHf+uKi116hIC7IgDBkjXX3JjpjXWML3QSEcnyb1Drb7qFCpbwm9me/j8mekCcNLlH2
+         efGGodX5CdQg3/Isv7lU8vBIoOlzD5k4GPpBQe9oc3Nx7nutS3/3nrcVemBluI+Tj9er
+         OJJAI0yMbJATZkC2HoJbVjJlSwdE4/G/ghIGMA/ijIxM2Aisq6iH8Es80kQJYcvQ13am
+         EWYA==
+X-Gm-Message-State: AFqh2krG+iPeZo9yK/LaM5QTyW2ze1yIAIeLpF76sySNEYY4eJk3ZgRD
+        Ku4ZgBQ74/uuCZdPjIHXRh0UnvahKOpe5a5ZNXNGxTIilD+PBg==
+X-Google-Smtp-Source: AMrXdXti1oiS95Q5fqon9BPiWtROmLXCFWPFDs9YRpbF9wep3zIAKSXQsX94aQxFgO15Sb9WCskzFA/0gFCUxtDDSgM=
+X-Received: by 2002:aa7:d895:0:b0:486:3d22:5685 with SMTP id
+ u21-20020aa7d895000000b004863d225685mr4301472edq.106.1672989245880; Thu, 05
+ Jan 2023 23:14:05 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Cc:     baolu.lu@linux.intel.com,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
- =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
- =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
-Content-Language: en-US
-To:     Felix Kuehling <felix.kuehling@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Hegde, Vasant" <Vasant.Hegde@amd.com>,
-        Matt Fagnani <matt.fagnani@bell.net>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jason Gunthorpe <jgg@nvidia.com>
-References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
- <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
- <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
- <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
- <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
- <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
- <6b5baa30-c218-0845-d6c2-32ac21ed6a6d@linux.intel.com>
- <86099ef0-5a8d-bd1e-4e38-a3b361a68f10@amd.com>
- <BL1PR12MB51448996E36254ADC80B5BF6F7FA9@BL1PR12MB5144.namprd12.prod.outlook.com>
- <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <CAAhV-H5muGHQ=awDckP2Fv6kg_-Mrcpre2ng52yKrTnhpqrVOA@mail.gmail.com>
+ <20230105040114.GA1115282@bhelgaas>
+In-Reply-To: <20230105040114.GA1115282@bhelgaas>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Fri, 6 Jan 2023 15:13:54 +0800
+Message-ID: <CAAhV-H6jRDfLWJK7pCH4xsD=8cNYB0UNx89G0=uFkzfBeBgbKw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: Add quirk for LS7A to avoid reboot failure
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Jason
+On Thu, Jan 5, 2023 at 12:01 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jan 05, 2023 at 10:49:53AM +0800, Huacai Chen wrote:
+> > On Thu, Jan 5, 2023 at 2:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Tue, Jan 03, 2023 at 03:34:01PM +0800, Huacai Chen wrote:
+> > > > cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe services during shutdown")
+> > > > causes poweroff/reboot failure on systems with LS7A chipset. We found
+> > > > that if we remove "pci_command &= ~PCI_COMMAND_MASTER" in do_pci_disable
+> > > > _device(), it can work well. The hardware engineer says that the root
+> > > > cause is that CPU is still accessing PCIe devices while poweroff/reboot,
+> > >
+> > > Did you ever figure out what these CPU accesses are?  If we call the
+> > > Root Port .shutdown() method, and later access a downstream device,
+> > > that seems like a problem in itself.  At least, we should understand
+> > > exactly *why* we access that downstream device.
+> >
+> > Maybe I failed to get the key point, but from my point of view, the
+> > root cause is clear in previous discussions:
+> > https://lore.kernel.org/linux-pci/CAAhV-H5uT+wDRkVbW_o1hG2u0rtv6FFABTymL1VdjMMD_UEN+Q@mail.gmail.com/
+> > https://lore.kernel.org/linux-pci/20220617113708.GA1177054@bhelgaas/
+> > https://lore.kernel.org/linux-pci/CAAhV-H6raQnXZ4ZZRq19cugew26wXYONctcFO0392gZ00LC6bw@mail.gmail.com/
+>
+> That's great, but the root cause should be summarized here in the
+> commit log.
+OK, I will update the commit log.
 
-On 1/5/23 11:27 PM, Felix Kuehling wrote:
-> Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
->> [AMD Official Use Only - General]
->>
->>> -----Original Message-----
->>> From: Hegde, Vasant <Vasant.Hegde@amd.com>
->>> Sent: Thursday, January 5, 2023 5:46 AM
->>> To: Baolu Lu <baolu.lu@linux.intel.com>; Matt Fagnani
->>> <matt.fagnani@bell.net>; Thorsten Leemhuis <regressions@leemhuis.info>;
->>> Deucher, Alexander <Alexander.Deucher@amd.com>; Joerg Roedel
->>> <jroedel@suse.de>
->>> Cc: iommu@lists.linux.dev; LKML <linux-kernel@vger.kernel.org>;
->>> regressions@lists.linux.dev; Linux PCI <linux-pci@vger.kernel.org>; 
->>> Bjorn
->>> Helgaas <bhelgaas@google.com>
->>> Subject: Re: [regression, bisected, pci/iommu] Bug 216865 - Black screen
->>> when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
->>>
->>> Baolu,
->>>
->>>
->>> On 1/5/2023 4:07 PM, Baolu Lu wrote:
->>>> On 2023/1/5 18:27, Vasant Hegde wrote:
->>>>> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
->>>>>> I built 6.2-rc2 with the patch applied. The same black screen
->>>>>> problem happened with 6.2-rc2 with the patch. I tried to use early
->>>>>> kdump with 6.2-rc2 with the patch twice by panicking the kernel with
->>>>>> sysrq+alt+c after the black screen happened. The system rebooted
->>>>>> after about 10-20 seconds both times, but no kdump and dmesg files
->>>>>> were saved in /var/crash. I'm attaching the lspci -vvv output as
->>> requested.
->>>>> Thanks for testing. As mentioned earlier I was not expecting this
->>>>> patch to fix the black screen issue. It should fix kernel warnings
->>>>> and IOMMU page fault related call traces. By any chance do you have 
->>>>> the
->>> kernel boot logs?
->>>>> @Baolu,
->>>>>     Looking into lspci output, it doesn't list ACS feature for
->>>>> Graphics card. So with your fix it didn't enable PASID and hence it 
->>>>> failed to
->>> boot.
->>>> So do you mind telling why does the PASID need to be enabled for the
->>>> graphic device? Or in another word, what does the graphic driver use
->>>> the PASID for?
->>> Honestly I don't know the complete details of how PASID works with 
->>> graphics
->>> card. May be Alex or Joerg can explain it better.
->> + Felix
->>
->> The GPU driver uses the pasid for shared virtual memory between the 
->> CPU and GPU.  I.e., so that the user apps can use the same virtual 
->> address space on the GPU and the CPU.  It also uses pasid to take 
->> advantage of recoverable device page faults using PRS.
-> 
-> Agreed. This applies to GPU computing on some older AMD APUs that take 
-> advantage of memory coherence and IOMMUv2 address translation to create 
-> a shared virtual address space between the CPU and GPU. In this case it 
-> seems to be a Carrizo APU. It is also true for Raven APUs.
+>
+> > > To be clear, cc27b735ad3a does not cause the failure.  IIUC, the cause
+> > > is:
+> >
+> > cc27b735ad3a is not a bug, we refer to it just because we observe
+> > problems after it.
+>
+> Right.  But you said "cc27b735ad3a ... causes failure," which is not
+> quite true.  cc27b735ad3a may *expose* an LS7A hardware defect that
+> previously didn't cause a problem, but I don't want to blame
+> cc27b735ad3a for that hardware issue.
+OK, got it.
 
-Thanks for the explanation.
-
-This is actually the problem that commit 201007ef707a was trying to fix.
-The PCIe fabric routes Memory Requests based on the TLP address,
-ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with PASID that
-should go upstream to the IOMMU may instead be routed as a P2P
-Request if its address falls in a bridge window.
-
-In SVA case, the IOMMU shares the address space of a user application.
-The user application side has no knowledge about the PCI bridge window.
-It is entirely possible that the device is programed with a P2P address
-and results in a disaster.
-
---
-Best regards,
-baolu
+Huacai
+>
+> Bjorn
