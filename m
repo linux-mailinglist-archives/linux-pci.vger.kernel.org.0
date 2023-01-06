@@ -2,64 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10CA0660409
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 17:12:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10A906604AF
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 17:43:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233398AbjAFQMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Jan 2023 11:12:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
+        id S230075AbjAFQnn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Jan 2023 11:43:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235279AbjAFQM1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 11:12:27 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C6C3225F;
-        Fri,  6 Jan 2023 08:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673021546; x=1704557546;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yiB/HmNLk6RRBwRo9+bpToiRB1wJzr3BowDDu9kV9VA=;
-  b=lXUwhQnE51sKCh+846bzd4tNGJrDVKHm04e1q7gEICjPoCYrPMKGDQi4
-   IaKrZ2NYP3a888exH3XBV61q2Z0j9PtB3M7RCRAc2mmv28Y3/QNTp07FL
-   02twCt6YHyi5dPRqtv3gG4rncz+4USsAKaS9E2IeTyd8iep3QbQnar+ZH
-   Tmv5EdudI4vIrHItfuBK8DRz8TRmz2xiJNDvS/HC6sx9BS8aki08tD86N
-   kVCs5G3k5v0+PVzSmRAd17tV8YVI7dutMGC0WAHdT1B3tJaEyjQhlWbVh
-   AA73mm3URKyK36miRmipSiBr0RLAeN3gMpUb0jfPfbVMUE1fJQpXdnYEk
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="408754447"
-X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
-   d="scan'208";a="408754447"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 08:12:26 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="744679234"
-X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
-   d="scan'208";a="744679234"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.171.41]) ([10.213.171.41])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 08:12:25 -0800
-Message-ID: <18574003-2c20-6219-20aa-d21869ecb467@intel.com>
-Date:   Fri, 6 Jan 2023 09:12:25 -0700
+        with ESMTP id S236035AbjAFQnW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 11:43:22 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906577CBE3;
+        Fri,  6 Jan 2023 08:42:47 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id z11so2984075ede.1;
+        Fri, 06 Jan 2023 08:42:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JiN0D2J3+n33EKJXHj2eJSeOJuV46ibVR+Pu8QRby/c=;
+        b=X0iQvwlwbonClW8x8wFl4mrLjb3Q80EZDdKE1nruwZ9rpzTwnLxLVnW8fuWvTgGXt8
+         SUa04Mb4uZ+5JcNyTLF7irHSUunZluLpxpTwAeG59JdHoCjbhyCUcJHlqsUsXYdtKXtY
+         7DsiFILAaa3jy4621Ul/qpiBH5JftE6kU6NDkRWJ0yJtFs45qN3SxEa9KxstsXhLDeDX
+         BkOqvbOlTtYVSktAKdK6MZRULfjsDaWkQ0RZwoQVoEgjq/aUlpRi8oZctEm71+YFdCZe
+         qkpkDn70afthSSg5/hSsy1fKfc682pDCRAsjNrHeWZoG19S7Z/buRoSWTW5AuWtxJn9Q
+         JR3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JiN0D2J3+n33EKJXHj2eJSeOJuV46ibVR+Pu8QRby/c=;
+        b=7ZaKleuQ8G6W3L0Uq7Xb8RsQsbTg3PbjFqoGUql7YxAG4kjDLvMGBu7bvfjUHO/fj8
+         Uu7bfWDUAKz1ywSN9AlF1o0Os2AKvHcdJQ0gxXF0c41Wg2BwKOOcbKcGqcs4PHvpvRvX
+         8IyQeTxSJJbjM7YGRrhbTZNgOqsw8bNxWaFr2/A8TA85Xd665GgJssS73ZC5AVvnh1Df
+         oGwg9sghve/lbLZTdCMUzhPCGUDKv5j0xizbBO1GgeaD8app2TyEaVFIf6M+i4abUOxi
+         RnJM/vGwWV4fXKvRTV/+ZjTH2V7pvK7Uvqgs17wvXfjT1duygLUWaaMjIGYz/9XLyrlT
+         j/qQ==
+X-Gm-Message-State: AFqh2kqvxyLxIpYjpdb01JAT2tlZ7SWCKbOiGwgyksd8sptGwPdmNtRq
+        PnQPVluKKgp+FiQd9syIxeLvyuewWaqPhfqoo5w=
+X-Google-Smtp-Source: AMrXdXs014uw2ZoXuMBkSyIw3dJCJDWEW0sIPi5WSRgiH0ctOXC2g/CVUU0Iuj95o7opBERdqnSdKBtVDcQAedwf2UU=
+X-Received: by 2002:aa7:d915:0:b0:493:2a50:5f23 with SMTP id
+ a21-20020aa7d915000000b004932a505f23mr437812edr.235.1673023366000; Fri, 06
+ Jan 2023 08:42:46 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v4 09/11] cxl/pci: Add (hopeful) error handling support
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rostedt@goodmis.org, terry.bowman@amd.com, bhelgaas@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, shiju.jose@huawei.com
-References: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
- <166974413966.1608150.15522782911404473932.stgit@djiang5-desk3.ch.intel.com>
- <20230106160515.000046b8@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230106160515.000046b8@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+References: <20221228184234.GA530399@bhelgaas> <20221230185006.GA695815@bhelgaas>
+In-Reply-To: <20221230185006.GA695815@bhelgaas>
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Fri, 6 Jan 2023 17:42:33 +0100
+Message-ID: <CAOkhzLW+1z58681zBV7LT=Lw=tcT9EgVPEbKx8YGsa+EJyxUSw@mail.gmail.com>
+Subject: Re: [Bug 216859] New: PCI bridge to bus boot hang at enumeration
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bruno Moreira-Guedes <brunodout.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,80 +66,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Dear Bjorn
 
+Happy New Year!
 
-On 1/6/23 9:05 AM, Jonathan Cameron wrote:
-> On Tue, 29 Nov 2022 10:48:59 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> From: Dan Williams <dan.j.williams@intel.com>
->>
->> Add nominal error handling that tears down CXL.mem in response to error
->> notifications that imply a device reset. Given some CXL.mem may be
->> operating as System RAM, there is a high likelihood that these error
->> events are fatal. However, if the system survives the notification the
->> expectation is that the driver behavior is equivalent to a hot-unplug
->> and re-plug of an endpoint.
->>
->> Note that this does not change the mask values from the default. That
->> awaits CXL _OSC support to determine whether platform firmware is in
->> control of the mask registers.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> I've been messing around with improving the qemu injection to do multiple
-> errors and ran into a bug...
-> 
-> I'll send a patch next week, but in meantime...
-> 
-> 
->> ---
-> 
->> +/*
->> + * Log the state of the RAS status registers and prepare them to log the
->> + * next error status. Return 1 if reset needed.
->> + */
->> +static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
->> +{
->> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
->> +	struct device *dev = &cxlmd->dev;
->> +	u32 hl[CXL_HEADERLOG_SIZE_U32];
->> +	void __iomem *addr;
->> +	u32 status;
->> +	u32 fe;
->> +
->> +	if (!cxlds->regs.ras)
->> +		return false;
->> +
->> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->> +	status = le32_to_cpu((__force __le32)readl(addr));
->> +	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
->> +		return false;
->> +
->> +	/* If multiple errors, log header points to first error from ctrl reg */
->> +	if (hweight32(status) > 1) {
->> +		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
->> +		fe = BIT(le32_to_cpu((__force __le32)readl(addr)) &
->> +				     CXL_RAS_CAP_CONTROL_FE_MASK);
->> +	} else {
->> +		fe = status;
->> +	}
->> +
->> +	header_log_copy(cxlds, hl);
->> +	trace_cxl_aer_uncorrectable_error(dev_name(dev), status, fe, hl);
->> +	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
-> 
-> This address is meant to be that of the CXL_RAS_UNCORRECTABLE_STATUS register
-> but in the event hweight32(status) > 1 it's been ovewritten with the
-> address of CXL_RAS_CAP_CONTROL.
+On Fri, Dec 30, 2022 at 7:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Bruno, to include you here as well as the bugzilla]
+>
+> On Wed, Dec 28, 2022 at 12:42:34PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 28, 2022 at 06:42:38PM +0100, Zeno Davatz wrote:
+> > > On Wed, Dec 28, 2022 at 1:02 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
+> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
+> > > >
+> > > > >            Summary: PCI bridge to bus boot hang at enumeration
+> > > > >     Kernel Version: 6.1-rc1
+> > > > > ...
+> > > >
+> > > > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
+> > > > > see attachments.
+> > > > >
+> > > > > The enumeration works fine with Kernel 6.0 and below.
+> > > > >
+> > > > > Same problem still exists with v6.1. and v6.2.-rc1
+> > > >
+> > > > Thank you very much for your report, Zeno!
+> > > >
+> > > > v6.0 works, v6.1-rc1 fails.  Would you mind booting v6.1-rc1 with the
+> > > > "ignore_loglevel initcall_debug" kernel parameters and taking a photo
+> > > > when it hangs?
+> > >
+> > > I will try this after Januar 7th 2023.
 
-Great catch! I'll send out a fix.
+I updated the issue:
 
-> 
-> 
->> +
->> +	return true;
->> +}
->> +
+https://bugzilla.kernel.org/show_bug.cgi?id=216859
+
+I booted with the option: "ignore_loglevel initcall_debug"
+
+Best
+Zeno
