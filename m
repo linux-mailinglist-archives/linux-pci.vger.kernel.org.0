@@ -2,204 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4359165F856
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 01:50:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01DA865FB1C
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Jan 2023 06:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235987AbjAFAul (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Jan 2023 19:50:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
+        id S229628AbjAFF4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Jan 2023 00:56:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235969AbjAFAui (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Jan 2023 19:50:38 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8792561329;
-        Thu,  5 Jan 2023 16:50:37 -0800 (PST)
+        with ESMTP id S229597AbjAFF4F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 00:56:05 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B864060CF5;
+        Thu,  5 Jan 2023 21:56:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672966237; x=1704502237;
-  h=message-id:date:mime-version:subject:to:cc:references:
+  t=1672984562; x=1704520562;
+  h=message-id:date:mime-version:cc:subject:to:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=7r33uxFZaEZ3sirZC2Q1R9GU+Zmntk4xR0BpDvqw8CU=;
-  b=E7vizuzeA+V/v4cd7rEeUtzFXwRZNBYCqj3oVmONixnw+RKkBW5S18xv
-   RNBRPM9kC99aXuj+OUkbMUgVZ50lEeYhb13z1bEvQaxSYPzYXWMDyCyFK
-   FRogTJR+Ppv18zEZeN0Gh6qTRn072aTTf+GEaWOtiIGwM4bwMpgnEFDX1
-   ao0JoslQrhItAyLeQEtnYueK6EG/yqLig1ygiZxSP1JQuqgGNTVa0di78
-   txCo56E8VMsnpGzRiXvIOsZoAZZ1zVqC/jE7lAbhqn0DTG3kZaks9Rl1P
-   GoCa0qqrKHhMS4K/AszpFVx42W/4oQPmCEpee2d0bFY5zPeFAe96zZkIr
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="408619139"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="408619139"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 16:50:36 -0800
+  bh=5FYmc733b78fRd3B3tStq5rzw45ZjZPIs3hLf607W+U=;
+  b=XYxLxvmyeH7K8fy2k89VWV/X3oSSfIviWF+c6l/hMrlxK8yFmmX9KEuj
+   G2HmiD23KTWi317DuMl0NCs+cNOxSXf/PkJeXccmbXhhuz0X3JRulFtTs
+   10CI5l7zfYrl8e+w/IjdPf0oJ/8LB5tFQC3Jo++6/AtUeyCo1uRXpLUdI
+   XmKObNNosy42nuTTrUMuGV1MEY6L3oYj2nyplcExhCI8X6kRUYqSK4Gek
+   rLBsJZEp3kJ9zxXhdtwrJq6AqYa7R4Qvv2FycLyAa4c24HIDTXtmkFzQN
+   AOTORdplrkGVgvujw95nL9P8RK2yFjSxM79mUubzJwNmmJHjp3jH3NNhB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="323663145"
+X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
+   d="scan'208";a="323663145"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 21:56:02 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="763339807"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="763339807"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Jan 2023 16:50:35 -0800
-Received: from [10.252.211.52] (kliang2-mobl1.ccr.corp.intel.com [10.252.211.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 582DE580418;
-        Thu,  5 Jan 2023 16:50:33 -0800 (PST)
-Message-ID: <edb001f3-d685-4c57-b614-02f2c8d33ff1@linux.intel.com>
-Date:   Thu, 5 Jan 2023 19:50:31 -0500
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="724333183"
+X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
+   d="scan'208";a="724333183"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Jan 2023 21:55:58 -0800
+Message-ID: <7bbc0f65-e1c6-f388-29a8-390b8c9c92c8@linux.intel.com>
+Date:   Fri, 6 Jan 2023 13:48:11 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: Bug report: the extended PCI config space is missed with 6.2-rc2
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Cc:     baolu.lu@linux.intel.com,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, hdegoede@redhat.com, kernelorg@undead.fr,
-        kjhambrick@gmail.com, 2lprbe78@duck.com,
-        nicholas.johnson-opensource@outlook.com.au, benoitg@coeus.ca,
-        mika.westerberg@linux.intel.com, wse@tuxedocomputers.com,
-        mumblingdrunkard@protonmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, david.e.box@intel.com,
-        yunying.sun@intel.com, Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20230105223257.GA1177387@bhelgaas>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230105223257.GA1177387@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Felix Kuehling <felix.kuehling@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Hegde, Vasant" <Vasant.Hegde@amd.com>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Joerg Roedel <jroedel@suse.de>,
+        Jason Gunthorpe <jgg@nvidia.com>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+ <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
+ <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
+ <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
+ <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
+ <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
+ <6b5baa30-c218-0845-d6c2-32ac21ed6a6d@linux.intel.com>
+ <86099ef0-5a8d-bd1e-4e38-a3b361a68f10@amd.com>
+ <BL1PR12MB51448996E36254ADC80B5BF6F7FA9@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
++Jason
 
-
-On 2023-01-05 5:32 p.m., Bjorn Helgaas wrote:
-> [+cc Tony, Dan]
-> 
-> On Wed, Jan 04, 2023 at 09:39:56AM -0500, Liang, Kan wrote:
->> Hi Bjorn,
+On 1/5/23 11:27 PM, Felix Kuehling wrote:
+> Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
+>> [AMD Official Use Only - General]
 >>
->> Happy new year!
+>>> -----Original Message-----
+>>> From: Hegde, Vasant <Vasant.Hegde@amd.com>
+>>> Sent: Thursday, January 5, 2023 5:46 AM
+>>> To: Baolu Lu <baolu.lu@linux.intel.com>; Matt Fagnani
+>>> <matt.fagnani@bell.net>; Thorsten Leemhuis <regressions@leemhuis.info>;
+>>> Deucher, Alexander <Alexander.Deucher@amd.com>; Joerg Roedel
+>>> <jroedel@suse.de>
+>>> Cc: iommu@lists.linux.dev; LKML <linux-kernel@vger.kernel.org>;
+>>> regressions@lists.linux.dev; Linux PCI <linux-pci@vger.kernel.org>; 
+>>> Bjorn
+>>> Helgaas <bhelgaas@google.com>
+>>> Subject: Re: [regression, bisected, pci/iommu] Bug 216865 - Black screen
+>>> when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
+>>>
+>>> Baolu,
+>>>
+>>>
+>>> On 1/5/2023 4:07 PM, Baolu Lu wrote:
+>>>> On 2023/1/5 18:27, Vasant Hegde wrote:
+>>>>> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
+>>>>>> I built 6.2-rc2 with the patch applied. The same black screen
+>>>>>> problem happened with 6.2-rc2 with the patch. I tried to use early
+>>>>>> kdump with 6.2-rc2 with the patch twice by panicking the kernel with
+>>>>>> sysrq+alt+c after the black screen happened. The system rebooted
+>>>>>> after about 10-20 seconds both times, but no kdump and dmesg files
+>>>>>> were saved in /var/crash. I'm attaching the lspci -vvv output as
+>>> requested.
+>>>>> Thanks for testing. As mentioned earlier I was not expecting this
+>>>>> patch to fix the black screen issue. It should fix kernel warnings
+>>>>> and IOMMU page fault related call traces. By any chance do you have 
+>>>>> the
+>>> kernel boot logs?
+>>>>> @Baolu,
+>>>>>     Looking into lspci output, it doesn't list ACS feature for
+>>>>> Graphics card. So with your fix it didn't enable PASID and hence it 
+>>>>> failed to
+>>> boot.
+>>>> So do you mind telling why does the PASID need to be enabled for the
+>>>> graphic device? Or in another word, what does the graphic driver use
+>>>> the PASID for?
+>>> Honestly I don't know the complete details of how PASID works with 
+>>> graphics
+>>> card. May be Alex or Joerg can explain it better.
+>> + Felix
 >>
->> We found some PCI issues with the latest 6.2-rc2.
->>
->> - Using the lspci -xxxx, the extended PCI config space of all PCI
->> devices are missed with the latest 6.2-rc2. The system we used had 932
->> PCI devices, at least 800 which have extended space as seen when booted
->> into a 5.15 kernel. But none of them appeared in 6.2-rc2.
->> - The drivers which rely on the information in the extended PCI config
->> space don't work anymore. We have confirmed that the perf uncore driver
->> (uncore performance monitoring) and Intel VSEC driver (telemetry) don't
->> work in 6.2-rc2. There could be more drivers which are impacted.
->>
->> After a bisect, we found the regression is caused by the below commit
->> 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map").
->> After reverting the commit, the issues are gone.
+>> The GPU driver uses the pasid for shared virtual memory between the 
+>> CPU and GPU.  I.e., so that the user apps can use the same virtual 
+>> address space on the GPU and the CPU.  It also uses pasid to take 
+>> advantage of recoverable device page faults using PRS.
 > 
-> Can you try this patch (based on v6.2-rc1):
-> 
-> > commit 89a0067217b0 ("x86/pci: Treat EfiMemoryMappedIO as reservation
-of ECAM space")
-> parent 1b929c02afd3
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Thu Jan 5 16:02:58 2023 -0600
-> 
->     x86/pci: Treat EfiMemoryMappedIO as reservation of ECAM space
->     
->     Normally we reject ECAM space unless it is reported as reserved in the E820
->     table or via a PNP0C02 _CRS method (PCI Firmware, r3.3, sec 4.1.2).  This
->     means extended config space (offsets 0x100-0xfff) may not be accessible.
->     
->     Some firmware doesn't report ECAM space via PNP0C02 _CRS methods, but does
->     mention it as an EfiMemoryMappedIO region via EFI GetMemoryMap(), which is
->     normally converted to an E820 entry by a bootloader or EFI stub.
->     
->     07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map"), removes
->     E820 entries that correspond to EfiMemoryMappedIO regions because some
->     other firmware uses EfiMemoryMappedIO for PCI host bridge windows, and the
->     E820 entries prevent Linux from allocating BAR space for hot-added devices.
->     
->     Allow use of ECAM for extended config space when the region is covered by
->     an EfiMemoryMappedIO region, even if it's not included in E820 or PNP0C02
->     _CRS.
->     
->     Fixes: 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map")
->     Link: https://lore.kernel.org/r/ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com
-> 
+> Agreed. This applies to GPU computing on some older AMD APUs that take 
+> advantage of memory coherence and IOMMUv2 address translation to create 
+> a shared virtual address space between the CPU and GPU. In this case it 
+> seems to be a Carrizo APU. It is also true for Raven APUs.
 
-The patch fixes the issue I reported.
+Thanks for the explanation.
 
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
+This is actually the problem that commit 201007ef707a was trying to fix.
+The PCIe fabric routes Memory Requests based on the TLP address,
+ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with PASID that
+should go upstream to the IOMMU may instead be routed as a P2P
+Request if its address falls in a bridge window.
 
-Thanks,
-Kan
+In SVA case, the IOMMU shares the address space of a user application.
+The user application side has no knowledge about the PCI bridge window.
+It is entirely possible that the device is programed with a P2P address
+and results in a disaster.
 
-> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> index 758cbfe55daa..4adc587a4c94 100644
-> --- a/arch/x86/pci/mmconfig-shared.c
-> +++ b/arch/x86/pci/mmconfig-shared.c
-> @@ -12,6 +12,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/efi.h>
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/bitmap.h>
-> @@ -442,6 +443,25 @@ static bool is_acpi_reserved(u64 start, u64 end, enum e820_type not_used)
->  	return mcfg_res.flags;
->  }
->  
-> +static bool is_efi_reserved(u64 start, u64 end, enum e820_type not_used)
-> +{
-> +	efi_memory_desc_t *md;
-> +	u64 size, mmio_start, mmio_end;
-> +
-> +	for_each_efi_memory_desc(md) {
-> +		if (md->type == EFI_MEMORY_MAPPED_IO) {
-> +			size = md->num_pages << EFI_PAGE_SHIFT;
-> +			mmio_start = md->phys_addr;
-> +			mmio_end = mmio_start + size - 1;
-> +
-> +			if (mmio_start <= start && end <= mmio_end)
-> +				return true;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  typedef bool (*check_reserved_t)(u64 start, u64 end, enum e820_type type);
->  
->  static bool __ref is_mmconf_reserved(check_reserved_t is_reserved,
-> @@ -452,7 +472,7 @@ static bool __ref is_mmconf_reserved(check_reserved_t is_reserved,
->  	u64 size = resource_size(&cfg->res);
->  	u64 old_size = size;
->  	int num_buses;
-> -	char *method = with_e820 ? "E820" : "ACPI motherboard resources";
-> +	char *method = with_e820 ? "E820" : "ACPI motherboard resources or EFI";
->  
->  	while (!is_reserved(addr, addr + size, E820_TYPE_RESERVED)) {
->  		size >>= 1;
-> @@ -502,15 +522,17 @@ pci_mmcfg_check_reserved(struct device *dev, struct pci_mmcfg_region *cfg, int e
->  	if (!early && !acpi_disabled) {
->  		if (is_mmconf_reserved(is_acpi_reserved, cfg, dev, 0))
->  			return true;
-> +		if (is_mmconf_reserved(is_efi_reserved, cfg, dev, 0))
-> +			return true;
->  
->  		if (dev)
->  			dev_info(dev, FW_INFO
-> -				 "MMCONFIG at %pR not reserved in "
-> +				 "MMCONFIG at %pR not reserved in EFI "
->  				 "ACPI motherboard resources\n",
->  				 &cfg->res);
->  		else
->  			pr_info(FW_INFO PREFIX
-> -			       "MMCONFIG at %pR not reserved in "
-> +			       "MMCONFIG at %pR not reserved in EFI or "
->  			       "ACPI motherboard resources\n",
->  			       &cfg->res);
->  	}
+--
+Best regards,
+baolu
