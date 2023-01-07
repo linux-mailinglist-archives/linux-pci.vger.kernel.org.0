@@ -2,242 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62EB7660BED
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Jan 2023 03:25:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A923660C02
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Jan 2023 03:44:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235567AbjAGCZg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Jan 2023 21:25:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
+        id S229620AbjAGCow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Jan 2023 21:44:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjAGCZf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 21:25:35 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F2B8B512;
-        Fri,  6 Jan 2023 18:25:33 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id vm8so7417627ejc.2;
-        Fri, 06 Jan 2023 18:25:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aVkqW/VlD62aed6D+7+RgKmMWkXZ1aLfYRi1OL465sE=;
-        b=q1s664iMMU5Di1K5voCDyfTd6c0W6S+PZ68OSC9y+75jiec+HVhSl4hhSpCGNBVxf6
-         W9qujyQz1vFI2CEM+qIFoy2W9eqm1DnYaE6ZrfZVZQ1IlJAsyLwoa3Nrxb92g+bXgJG6
-         9PDVToM7fsZRhnuCKZWiMu1taD2+EuHvDbA9iBR+IycWV9NcOrrXjnX0IrObYbJ4Susr
-         rdNg0B0klLKG9IHba1VyctUMMa6oUnG7z7aM/i0jbE/Dno7XgcIN8DMrgtnsfUGagLz7
-         RTEGHf7DsyX95up9fGQfYUs0CMfT1nEx8OFQWiehDU0dGZpnd0KHbP8/Sk/eY5bFNQHA
-         OWeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aVkqW/VlD62aed6D+7+RgKmMWkXZ1aLfYRi1OL465sE=;
-        b=gyZk428uyJJtjM7AIeT/Y0GEwTKeqhQxPfNZs+2pDQr9dDLeBOsrWxxb0IQpvzZGYC
-         jl6lZMaB48VT7GACbqpHFDDZNuM2VjaYr1b2z7ZWO7zSPrYejJvSmhY22nMLEW30AWBD
-         bqwlvS6ccZaZ7JAyLmf3tXtui57bnpmf7eA4jRAqHmJuNr/qTjV7RKsBM/qEGdhXzSUl
-         0uh/ng5H3GDe/PVmkO1h/Hk+U38ue0Bx6TP25ljL4tXeh6b1KpRxqLEEJOcJnueyIVJU
-         ssC7YAQapZ62LDdx+VqR0r7/dh6ZmJ+Mf6MHFMhAWbO3v9sEbVQxRQMkx/OE82bauWGR
-         jlyA==
-X-Gm-Message-State: AFqh2krzCd+EVds0ixF+PpEV98QpWRLJ3HIsDNSFocAU6cG9X6QhynvN
-        DUwCKnpmue+mDGTThYlpAKvTEaTC7EY400k3LTg=
-X-Google-Smtp-Source: AMrXdXv+KGQcT/QYlokNoX38VqAxQui1BSTqEE5aMSJ8JxQsP8U94dYGDcXdG93LYywBTHyouJtWc3UDdpwLLka6kt4=
-X-Received: by 2002:a17:906:168d:b0:7c0:ff76:7866 with SMTP id
- s13-20020a170906168d00b007c0ff767866mr3453138ejd.272.1673058332283; Fri, 06
- Jan 2023 18:25:32 -0800 (PST)
+        with ESMTP id S229521AbjAGCov (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Jan 2023 21:44:51 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFD684BFC;
+        Fri,  6 Jan 2023 18:44:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673059490; x=1704595490;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=G0fbwXW0MolWEJ1yoKtJ5qcnQjpT3neE3ClvtGEJC38=;
+  b=F/JsXysuwQcxGX0ceSbWWtOqTBIIwouupnC+dOB8MmZH06RDqN0/q/Li
+   83vAJaCMsViV6LTqne0m6yoKjQQjuWbfW+iwLBen6v+nzIJXE5VCI89DY
+   4KDwaHoYyv3qF+Ezqo1TRdw98mwEyVdmuKIVdQ/Yb7fwHtyje8rJdOW4l
+   O6SCFYh0fgIqcA5jLR+u8AWKF7LwBc0q1Nn4ceL0zpQRDNvPpO9rYnQV9
+   Qsf/lBQadyokMOMbwxLb7aFnd49QFDLERioVFLI+a64lZS8fc5ndvNAdn
+   kBFf0wlJaRlxUYVp0k/9yrGkItwZMQnn0v2MltZN0IpjFyY6E/exi9XwN
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="322678315"
+X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
+   d="scan'208";a="322678315"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 18:44:50 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="901474463"
+X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
+   d="scan'208";a="901474463"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.209.158]) ([10.254.209.158])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 18:44:48 -0800
+Message-ID: <bb865b8f-6f8f-769a-6364-d46b45caca85@linux.intel.com>
+Date:   Sat, 7 Jan 2023 10:44:46 +0800
 MIME-Version: 1.0
-References: <20230106095143.3158998-3-chenhuacai@loongson.cn> <20230106153840.GA1226257@bhelgaas>
-In-Reply-To: <20230106153840.GA1226257@bhelgaas>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 7 Jan 2023 10:25:21 +0800
-Message-ID: <CAAhV-H6agjbbkhHL4GT4rv_hVJ0y2D93Atp2veP-c8vbv45gVA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Vasant Hegde <vasant.hegde@amd.com>
+Cc:     Matt Fagnani <matt.fagnani@bell.net>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Joerg Roedel <jroedel@suse.de>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+ <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
+ <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
+ <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
+ <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
+ <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com> <Y7gs0zYKp/VXACBi@nvidia.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <Y7gs0zYKp/VXACBi@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm, linux-kernel in case you have comments on
-> whether devices should still be usable after .remove()/.shutdown()]
->
-> On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
-> > After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe services during
-> > shutdown") we observe poweroff/reboot failures on systems with LS7A
-> > chipset.
-> >
-> > We found that if we remove "pci_command &= ~PCI_COMMAND_MASTER" in
-> > do_pci_disable_device(), it can work well. The hardware engineer says
-> > that the root cause is that CPU is still accessing PCIe devices while
-> > poweroff/reboot, and if we disable the Bus Master Bit at this time, the
-> > PCIe controller doesn't forward requests to downstream devices, and also
-> > does not send TIMEOUT to CPU, which causes CPU wait forever (hardware
-> > deadlock).
-> >
-> > To be clear, the sequence is like this:
-> >
-> >   - CPU issues MMIO read to device below Root Port
-> >
-> >   - LS7A Root Port fails to forward transaction to secondary bus
-> >     because of LS7A Bus Master defect
-> >
-> >   - CPU hangs waiting for response to MMIO read
-> >
-> > Then how is userspace able to use a device after the device is removed?
-> >
-> > To give more details, let's take the graphics driver (e.g. amdgpu) as
-> > an example. The userspace programs call printf() to display "shutting
-> > down xxx service" during shutdown/reboot, or the kernel calls printk()
-> > to display something during shutdown/reboot. These can happen at any
-> > time, even after we call pcie_port_device_remove() to disable the pcie
-> > port on the graphic card.
-> >
-> > The call stack is: printk() --> call_console_drivers() --> con->write()
-> > --> vt_console_print() --> fbcon_putcs()
-> >
-> > This scenario happens because userspace programs (or the kernel itself)
-> > don't know whether a device is 'usable', they just use it, at any time.
->
-> Thanks for this background.  So basically we want to call .remove() on
-> a console device (or a bridge leading to it), but we expect it to keep
-> working as usual afterwards?
->
-> That seems a little weird.  Is that the design we want?  Maybe we
-> should have a way to mark devices so we don't remove them during
-> shutdown or reboot?
-Sounds reasonable, but it seems no existing way can mark this.
+On 1/6/2023 10:14 PM, Jason Gunthorpe wrote:
+> On Thu, Jan 05, 2023 at 03:57:28PM +0530, Vasant Hegde wrote:
+>> Matt,
+>>
+>> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
+>>> I built 6.2-rc2 with the patch applied. The same black screen problem happened
+>>> with 6.2-rc2 with the patch. I tried to use early kdump with 6.2-rc2 with the
+>>> patch twice by panicking the kernel with sysrq+alt+c after the black screen
+>>> happened. The system rebooted after about 10-20 seconds both times, but no kdump
+>>> and dmesg files were saved in /var/crash. I'm attaching the lspci -vvv output as
+>>> requested.
+>>>
+>>
+>> Thanks for testing. As mentioned earlier I was not expecting this patch to fix
+>> the black screen issue. It should fix kernel warnings and IOMMU page fault
+>> related call traces. By any chance do you have the kernel boot logs?
+>>
+>>
+>> @Baolu,
+>>    Looking into lspci output, it doesn't list ACS feature for Graphics card. So
+>> with your fix it didn't enable PASID and hence it failed to boot.
+> 
+> The ACS checks being done are feature of the path not the end point or
+> root port.
+> 
+> If we are expecting ACS on the end port then it is just a bug in how
+> the test was written.. The test should be a NOP because there are no
+> switches in this topology.
+> 
+> Looking at it, this seems to just be because pci_enable_pasid is
+> calling pci_acs_path_enabled wrong, the only other user is here:
+> 
+> 	for (bus = pdev->bus; !pci_is_root_bus(bus); bus = bus->parent) {
+> 		if (!bus->self)
+> 			continue;
+> 
+> 		if (pci_acs_path_enabled(bus->self, NULL, REQ_ACS_FLAGS))
+> 			break;
+> 
+> 		pdev = bus->self;
+> 
+> 		group = iommu_group_get(&pdev->dev);
+> 		if (group)
+> 			return group;
+> 	}
+> 
+> And notice it is calling it on pdev->bus not on pdev itself which
+> naturally excludes the end point from the ACS validation.
+> 
+> So try something like:
+> 
+> 	if (!pci_acs_path_enabled(pdev->bus->self, NULL, PCI_ACS_RR | PCI_ACS_UF))
+> 
+> (and probably need to check for null ?)
 
-Huacai
->
-> > This hardware behavior is a PCIe protocol violation (Bus Master should
-> > not be involved in CPU MMIO transactions), and it will be fixed in new
-> > revisions of hardware (add timeout mechanism for CPU read request,
-> > whether or not Bus Master bit is cleared).
-> >
-> > On some x86 platforms, radeon/amdgpu devices can cause similar problems
-> > [1][2]. Once before I wanted to make a single patch to solve "all of
-> > these problems" together, but it seems unreasonable because maybe they
-> > are not exactly the same problem. So, this patch add a new function
-> > pcie_portdrv_shutdown(), a slight modified copy of pcie_portdrv_remove()
-> > dedicated for the shutdown path, and then add a quirk just for LS7A to
-> > avoid clearing Bus Master bit in pcie_portdrv_shutdown(). Leave other
-> > platforms behave as before.
-> >
-> > [1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
-> > [2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/pci/controller/pci-loongson.c | 17 +++++++++++++++++
-> >  drivers/pci/pcie/portdrv.c            | 21 +++++++++++++++++++--
-> >  include/linux/pci.h                   |  1 +
-> >  3 files changed, 37 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> > index 759ec211c17b..641308ba4126 100644
-> > --- a/drivers/pci/controller/pci-loongson.c
-> > +++ b/drivers/pci/controller/pci-loongson.c
-> > @@ -93,6 +93,24 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >                       DEV_PCIE_PORT_2, loongson_mrrs_quirk);
-> >
-> > +static void loongson_bmaster_quirk(struct pci_dev *pdev)
-> > +{
-> > +     /*
-> > +      * Some Loongson PCIe ports will cause CPU deadlock if there is
-> > +      * MMIO access to a downstream device when the root port disable
-> > +      * the Bus Master bit during poweroff/reboot.
-> > +      */
-> > +     struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> > +
-> > +     bridge->no_dis_bmaster = 1;
-> > +}
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_0, loongson_bmaster_quirk);
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_1, loongson_bmaster_quirk);
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_2, loongson_bmaster_quirk);
-> > +
-> >  static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-> >  {
-> >       pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > index 2cc2e60bcb39..96f45c444422 100644
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -501,7 +501,6 @@ static void pcie_port_device_remove(struct pci_dev *dev)
-> >  {
-> >       device_for_each_child(&dev->dev, NULL, remove_iter);
-> >       pci_free_irq_vectors(dev);
-> > -     pci_disable_device(dev);
-> >  }
-> >
-> >  /**
-> > @@ -727,6 +726,24 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-> >       }
-> >
-> >       pcie_port_device_remove(dev);
-> > +
-> > +     pci_disable_device(dev);
-> > +}
-> > +
-> > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> > +{
-> > +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> > +
-> > +     if (pci_bridge_d3_possible(dev)) {
-> > +             pm_runtime_forbid(&dev->dev);
-> > +             pm_runtime_get_noresume(&dev->dev);
-> > +             pm_runtime_dont_use_autosuspend(&dev->dev);
-> > +     }
-> > +
-> > +     pcie_port_device_remove(dev);
-> > +
-> > +     if (!bridge->no_dis_bmaster)
-> > +             pci_disable_device(dev);
-> >  }
-> >
-> >  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> > @@ -777,7 +794,7 @@ static struct pci_driver pcie_portdriver = {
-> >
-> >       .probe          = pcie_portdrv_probe,
-> >       .remove         = pcie_portdrv_remove,
-> > -     .shutdown       = pcie_portdrv_remove,
-> > +     .shutdown       = pcie_portdrv_shutdown,
-> >
-> >       .err_handler    = &pcie_portdrv_err_handler,
-> >
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 3df2049ec4a8..a64dbcb89231 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -573,6 +573,7 @@ struct pci_host_bridge {
-> >       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy */
-> >       unsigned int    no_ext_tags:1;          /* No Extended Tags */
-> >       unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
-> > +     unsigned int    no_dis_bmaster:1;       /* No Disable Bus Master */
-> >       unsigned int    native_aer:1;           /* OS may use PCIe AER */
-> >       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplug */
-> >       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplug */
-> > --
-> > 2.31.1
-> >
+Yeah! This really is a misuse of pci_acs_path_enabled().
+
+But if @pdev is an endpoint of a multiple function device, perhaps we
+still need to check acs on it?
+
+--
+Best regards,
+baolu
+
