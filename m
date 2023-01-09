@@ -2,107 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0876C6623DC
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 12:11:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C93662457
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 12:38:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230499AbjAILK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Jan 2023 06:10:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
+        id S230499AbjAILir (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Jan 2023 06:38:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbjAILK5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 06:10:57 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3961F64C3
-        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 03:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673262656; x=1704798656;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0xQk74+xvyKIcdFX00z0CYMSL/O7r51rogIWSBwGo8g=;
-  b=JN/69ZAZUMHQ03SefSZWtPqN1s8R/Jp/OxBB4j9AL+lpXPD1VLuH0BYU
-   txqYEkC5PrUA26o7QXFN8N6cXUGFOWp3PaQGSUteEiMKF1kgOFqByuv6I
-   YYEQed8zqBX1eRoluSS6YjCpW3KnatjXUgg+McC0MKr+s0rLSJyOukeNV
-   EtKTp5EP3DkOD/Qn6H+hxFCKXZC/sgnM4s44H/AdmiB2RSZ0UwSdiwjYi
-   nHl6KXKxfs1YM5ya+eKwuJ6WzQ0Ny3LqLvd0Lbh0PHh+zkTzqWqxwhHhd
-   5CLsHogEdaJnLYlpewEIR5LU/7WDE0erABjzIpVjVxzcXZhTzJ5Fjm6iC
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="322923517"
-X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="322923517"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 03:10:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="656647331"
-X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="656647331"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2023 03:10:52 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id BB58DF4; Mon,  9 Jan 2023 13:11:25 +0200 (EET)
-Date:   Mon, 9 Jan 2023 13:11:25 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Alexander Motin <mav@ixsystems.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] PCI: Take other bus devices into account when
- distributing resources
-Message-ID: <Y7v2XT1N4J1deVEt@black.fi.intel.com>
-References: <Y7bUAaxt6viswdXV@black.fi.intel.com>
- <20230105170413.GA1150738@bhelgaas>
+        with ESMTP id S234657AbjAILio (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 06:38:44 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EB6B42
+        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 03:38:41 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id ja17so6037837wmb.3
+        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 03:38:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=uWRQwZU7Q5uXmRpQpJb8/BTaeDI/2pDdqBknaeuYMoc=;
+        b=y1NBPAWB/5QSk15IQF0sayDsBGK9DTwzo64Fwhce+Wv3f7tVbPw++Vm7KjFJ/ePuIH
+         alZSxq4wMtI3JYRZn3zmZrqmW5U+tcE/36mSZS+ao+PBouUNXkLt8uMAN3EDUZoM8y1Z
+         V38rcAlr6k9TL1waTrhaRP8dMZcyQgFxWY3TRRWCtw3tASJlyK9l3O/MWYqVGJgAknVC
+         jyzHq/yTgZ5C7OdYW+njoDU4LjZ+sYY1fS9XGuRSIkUPXzN3ekBZA31uKMfMGcdTnJze
+         j7zyR4Zp7HBcTCJS529n0Jvj5PuGWJpqpZXzP6IkeqqXkPlbC7aVB/jHNAVTFf8RXMND
+         S+Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uWRQwZU7Q5uXmRpQpJb8/BTaeDI/2pDdqBknaeuYMoc=;
+        b=qB5MEilk2gh8ciCf8w98rEbGxKBZMA+fjQ51VYgl+2817Q3/BUY9Qdvqe5r+Rj9c7f
+         +PbcOu0S/yYsEI9QM5wTuAHwvcftLWcTT9P84TGd+Z6FOhd3lVkYIhnVgnhetI7gAZYr
+         HEo1IG4BWWGl/uSzyolsBosrq9L7ox1pIrqkjzoQAlm2NL/6zQIVJZskyzJSzF+huWUt
+         90EMAE8Cfiw2G8XNUUcps2/cWm1kBmvzM13/yBxXHxesKkwu0iI/Uuz8s6BjKwOH6J5o
+         IRAS5/5LcRCZ3gQiU08MMoaD85aJHE2Uc1Vl8Vz7v2Al/cZWqsWAejbwTazYwYhDskp0
+         7Psg==
+X-Gm-Message-State: AFqh2kqIMiv+sLabapsvpPKYUzqbzuXSQyDZqZ2agH5BfeKuGK02oVvF
+        DTHIBQ3FTnIEyUUlB5iIjA+ZmQ==
+X-Google-Smtp-Source: AMrXdXsgKZSO61ZWkew6Daa4r2uBx8Xe/DlWi/W5u/PDxgxQsVfDr2oBgtSbr4LJo3JD2nU14fQRlg==
+X-Received: by 2002:a05:600c:1f12:b0:3cf:8155:2adc with SMTP id bd18-20020a05600c1f1200b003cf81552adcmr47185923wmb.33.1673264319841;
+        Mon, 09 Jan 2023 03:38:39 -0800 (PST)
+Received: from [192.168.7.111] (679773502.box.freepro.com. [212.114.21.58])
+        by smtp.gmail.com with ESMTPSA id r126-20020a1c2b84000000b003d35c845cbbsm15439361wmr.21.2023.01.09.03.38.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jan 2023 03:38:39 -0800 (PST)
+Message-ID: <6c784b12-ea81-2ac9-ff99-e33f5c123483@linaro.org>
+Date:   Mon, 9 Jan 2023 12:38:37 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230105170413.GA1150738@bhelgaas>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 03/12] dt-bindings: nvmem: convert
+ amlogic-meson-mx-efuse.txt to dt-schema
+Content-Language: en-US
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Eric Dumazet <edumazet@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v1-3-3f025599b968@linaro.org>
+ <CAFBinCANM=AOw1bbGCheFy20mqQ1ym_maK0C1sYpjceoNH-dNQ@mail.gmail.com>
+Organization: Linaro Developer Services
+In-Reply-To: <CAFBinCANM=AOw1bbGCheFy20mqQ1ym_maK0C1sYpjceoNH-dNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On 26/11/2022 00:04, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> thanks for your work on this!
+> 
+> On Fri, Nov 18, 2022 at 3:33 PM Neil Armstrong
+> <neil.armstrong@linaro.org> wrote:
+> [...]
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +
+>> +        sn: sn@14 {
+>> +            reg = <0x14 0x10>;
+>> +        };
+>> +
+>> +        eth_mac: mac@34 {
+>> +            reg = <0x34 0x10>;
+>> +        };
+>> +
+>> +        bid: bid@46 {
+>> +            reg = <0x46 0x30>;
+>> +        };
+> I assume you took these examples from the newer, GX eFuse?
+> Unfortunately on boards with these older SoCs the serial number and
+> MAC address are often not stored in the eFuse.
+> This is just an example, so I won't be sad if we keep them. To avoid
+> confusion I suggest switching to different examples:
+>    ethernet_mac_address: mac@1b4 {
+>      reg = <0x1b4 0x6>;
+>    };
+>    temperature_calib: calib@1f4 {
+>       reg = <0x1f4 0x4>;
+>    };
+> 
+> What do you think?
 
-On Thu, Jan 05, 2023 at 11:04:13AM -0600, Bjorn Helgaas wrote:
-> On Thu, Jan 05, 2023 at 03:43:29PM +0200, Mika Westerberg wrote:
-> > On Thu, Jan 05, 2023 at 11:12:11AM +0200, Mika Westerberg wrote:
-> > > > What happens in a topology like this:
-> > > > 
-> > > >   10:00.0 non-hotplug bridge to [bus 20-3f]
-> > > >   10:01.0 non-hotplug bridge to [bus 40]
-> > > >   20:00.0 hotplug bridge
-> > > >   40:00.0 NIC
-> > > > 
-> > > > where we're distributing space on "bus" 10, hotplug_bridges == 0 and
-> > > > normal_bridges == 2?  Do we give half the extra space to bus 20 and
-> > > > the other half to bus 40, even though we could tell up front that bus
-> > > > 20 is the only place that can actually use any extra space?
-> > > 
-> > > Yes we split it into half.
-> > 
-> > Forgot to reply also that would it make sense here to look at below the
-> > non-hotplug bridges and if we find hotplug bridges, distribute the space
-> > equally between those or something like that?
-> 
-> Yes, I do think ultimately it would make sense to keep track at every
-> bridge whether it or any descendant is a hotplug bridge so we could
-> distribute extra space only to bridges that could potentially use it.
-> 
-> But I don't know if that needs to be done in this series.  This code
-> is so complicated and fragile that I think being ruthless about
-> defining the minimal problem we're solving and avoiding scope creep
-> will improve our chances of success.
-> 
-> So treat this as a question to improve my understanding more than
-> anything.
 
-Okay, undestood ;-)
+Sure switched to it !
+
+Neil
+> 
+> 
+> Best regards,
+> Martin
+
