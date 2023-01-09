@@ -2,122 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3C1D662019
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 09:35:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0876C6623DC
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 12:11:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbjAIIfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Jan 2023 03:35:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
+        id S230499AbjAILK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Jan 2023 06:10:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbjAIIfk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 03:35:40 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53766575;
-        Mon,  9 Jan 2023 00:35:38 -0800 (PST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Nr6hm3whKz4xVnD;
-        Mon,  9 Jan 2023 16:35:36 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-        by mse-fl2.zte.com.cn with SMTP id 3098ZNiW068141;
-        Mon, 9 Jan 2023 16:35:23 +0800 (+08)
-        (envelope-from guo.ziliang@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-        by mapi (Zmail) with MAPI id mid32;
-        Mon, 9 Jan 2023 16:35:25 +0800 (CST)
-Date:   Mon, 9 Jan 2023 16:35:25 +0800 (CST)
-X-Zmail-TransId: 2afb63bbd1cd5bc25402
-X-Mailer: Zmail v1.0
-Message-ID: <202301091635256312056@zte.com.cn>
-In-Reply-To: <20230106121845.GA1216249@bhelgaas>
-References: 20230106121845.GA1216249@bhelgaas
-Mime-Version: 1.0
-From:   <guo.ziliang@zte.com.cn>
-To:     <helgaas@kernel.org>
-Cc:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chen.lin5@zte.com.cn>
-Subject: =?UTF-8?B?562U5aSNOiBbUEFUQ0hdIFBDSTogb2Y6IFdhcm4gaWYgYnJpZGdlIGJhc2UvbGltaXQgcmVnaW9uIG92ZXJsYXBzIHdpdGggc3lzdGVtIHJhbSByZWdpb24=?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 3098ZNiW068141
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.138.novalocal with ID 63BBD1D8.000 by FangMail milter!
-X-FangMail-Envelope: 1673253336/4Nr6hm3whKz4xVnD/63BBD1D8.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<guo.ziliang@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 63BBD1D8.000/4Nr6hm3whKz4xVnD
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229663AbjAILK5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 06:10:57 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3961F64C3
+        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 03:10:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673262656; x=1704798656;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0xQk74+xvyKIcdFX00z0CYMSL/O7r51rogIWSBwGo8g=;
+  b=JN/69ZAZUMHQ03SefSZWtPqN1s8R/Jp/OxBB4j9AL+lpXPD1VLuH0BYU
+   txqYEkC5PrUA26o7QXFN8N6cXUGFOWp3PaQGSUteEiMKF1kgOFqByuv6I
+   YYEQed8zqBX1eRoluSS6YjCpW3KnatjXUgg+McC0MKr+s0rLSJyOukeNV
+   EtKTp5EP3DkOD/Qn6H+hxFCKXZC/sgnM4s44H/AdmiB2RSZ0UwSdiwjYi
+   nHl6KXKxfs1YM5ya+eKwuJ6WzQ0Ny3LqLvd0Lbh0PHh+zkTzqWqxwhHhd
+   5CLsHogEdaJnLYlpewEIR5LU/7WDE0erABjzIpVjVxzcXZhTzJ5Fjm6iC
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="322923517"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="322923517"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 03:10:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="656647331"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="656647331"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2023 03:10:52 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id BB58DF4; Mon,  9 Jan 2023 13:11:25 +0200 (EET)
+Date:   Mon, 9 Jan 2023 13:11:25 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Alexander Motin <mav@ixsystems.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] PCI: Take other bus devices into account when
+ distributing resources
+Message-ID: <Y7v2XT1N4J1deVEt@black.fi.intel.com>
+References: <Y7bUAaxt6viswdXV@black.fi.intel.com>
+ <20230105170413.GA1150738@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230105170413.GA1150738@bhelgaas>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-bridge base/limit(memory behind in lspci info, outbound pcie address/size)
-region is used to route outbound mem read/write transaction to ep. This
-base/limit region also may filter out inbound transactions which will
-result in inbound(eg: dma) transaction fail.
+Hi,
 
-For example, if bridge base/limit is [0x20000000, 0x203fffff], system ram
-is [0x20000000, 0x27ffffff]. The inbound mapping is usually 1:1 equal
-mapping. When allocated system ram for inbound tansaction is 0x20004000
-(any in bridge base/limit), this inbound transactions will be filter out.
+On Thu, Jan 05, 2023 at 11:04:13AM -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 05, 2023 at 03:43:29PM +0200, Mika Westerberg wrote:
+> > On Thu, Jan 05, 2023 at 11:12:11AM +0200, Mika Westerberg wrote:
+> > > > What happens in a topology like this:
+> > > > 
+> > > >   10:00.0 non-hotplug bridge to [bus 20-3f]
+> > > >   10:01.0 non-hotplug bridge to [bus 40]
+> > > >   20:00.0 hotplug bridge
+> > > >   40:00.0 NIC
+> > > > 
+> > > > where we're distributing space on "bus" 10, hotplug_bridges == 0 and
+> > > > normal_bridges == 2?  Do we give half the extra space to bus 20 and
+> > > > the other half to bus 40, even though we could tell up front that bus
+> > > > 20 is the only place that can actually use any extra space?
+> > > 
+> > > Yes we split it into half.
+> > 
+> > Forgot to reply also that would it make sense here to look at below the
+> > non-hotplug bridges and if we find hotplug bridges, distribute the space
+> > equally between those or something like that?
+> 
+> Yes, I do think ultimately it would make sense to keep track at every
+> bridge whether it or any descendant is a hotplug bridge so we could
+> distribute extra space only to bridges that could potentially use it.
+> 
+> But I don't know if that needs to be done in this series.  This code
+> is so complicated and fragile that I think being ruthless about
+> defining the minimal problem we're solving and avoiding scope creep
+> will improve our chances of success.
+> 
+> So treat this as a question to improve my understanding more than
+> anything.
 
-AER may report 'UnsupReq' on inbound mem read/write transactions if address
-is in this base/limit region, but not all pcie AER enabled or work well. We
-warn it also in bridge pci address setting phase.
-
-Signed-off-by: Chen Lin <chen.lin5@zte.com.cn>
----
- drivers/pci/setup-bus.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index b4096598dbcb..1a9f527d2317 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -608,6 +608,24 @@ static void pci_setup_bridge_io(struct pci_dev *bridge)
- 	pci_write_config_dword(bridge, PCI_IO_BASE_UPPER16, io_upper16);
- }
-
-+static void check_bridge_region_overlaps_systemram(struct pci_dev *bridge,
-+							struct pci_bus_region *region)
-+{
-+	int is_ram;
-+
-+	/*
-+	 * bridge base/limit(memory behind) region may filter out inbound
-+	 * transactions which will result in inbound(eg: dma) fail of ep.
-+	 * AER may report it if enabled, we warn it also.
-+	 */
-+	is_ram = region_intersects(region->start, region->end - region->start + 1,
-+				IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE);
-+	if (is_ram == REGION_INTERSECTS) {
-+		pci_warn(bridge, "%#012llx..%#012llx bridge base/limit region overlaps with system ram, may result in inbound fail\n",
-+			region->start, region->end);
-+	}
-+}
-+
- static void pci_setup_bridge_mmio(struct pci_dev *bridge)
- {
- 	struct resource *res;
-@@ -621,6 +639,7 @@ static void pci_setup_bridge_mmio(struct pci_dev *bridge)
- 		l = (region.start >> 16) & 0xfff0;
- 		l |= region.end & 0xfff00000;
- 		pci_info(bridge, "  bridge window %pR\n", res);
-+		check_bridge_region_overlaps_systemram(bridge, &region);
- 	} else {
- 		l = 0x0000fff0;
- 	}
-@@ -652,6 +671,7 @@ static void pci_setup_bridge_mmio_pref(struct pci_dev *bridge)
- 			lu = upper_32_bits(region.end);
- 		}
- 		pci_info(bridge, "  bridge window %pR\n", res);
-+		check_bridge_region_overlaps_systemram(bridge, &region);
- 	} else {
- 		l = 0x0000fff0;
- 	}
--- 
-2.15.2
+Okay, undestood ;-)
