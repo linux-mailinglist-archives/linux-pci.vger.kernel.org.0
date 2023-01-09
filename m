@@ -2,197 +2,414 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 174E3663016
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 20:15:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1789D66306F
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 20:33:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235006AbjAITPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Jan 2023 14:15:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
+        id S237040AbjAITdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Jan 2023 14:33:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235538AbjAITO7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 14:14:59 -0500
-Received: from BN6PR00CU002-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11021025.outbound.protection.outlook.com [52.101.57.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FA28FD9;
-        Mon,  9 Jan 2023 11:14:57 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n9no5nM9Lrg9jbshi0bsQQWx/n+tSqqKlr7zXO8WLfADV84+2AS7ZSjYWeka10br2yQyjdLqrjfqHN9V5cWqiNRaHnB+L4JXfz/R0BrBIooZvBnEIpvbw4xVaa5kkLxwC3SzuUqBuTy7W1FafzXnykuxgrYnztyiOzlSCiYTcN8D0FeqnZV2qCBNCiFHGguAN4iytnVq+z2Q68YzWJzBs2SEpQihZi1/EmvGYGhWETgf8NEtX7LiqvKlSEjqu6f1JSYl9+HJEg6GIdUEB8IAuiFw6fReyKKu0XxUrMzcfRRFfP5hKBEQFjBnFgc4MyAs+i76XeV3MbNp/TTkxzbILg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xBfP1UUUu/m3u4QCqt5hPIRo13W3hzr5F4cZI15EgL4=;
- b=QL9ZXO+Xv9X2yy+RJoZUi0g/Xb6jzVJizsJXmNHKTp+P0UTZUSg7Y+LTsxnwCMavzdQhEh4AfCD/Et3ObVRghh/7YvshE/sGSpGk2x/Bp1JgFU7KiQBhasZSkp+2PDBPZyHKHaPHPuYiimcrNw1uKEaZ6/2dDjKeie/wWGsw/00Vo1HnNJ68TfsatGGVclx3aTpbNrPGlkgfyOHh+B3Pmq9wFqXjUsS24BgcOshkWzvDEfTEbPQ2A4lpB0eocTorgWkYfLCE0b8X5aVyxHJkoPugL5un0l7EH3rIqYMCz/6kijmm3O3bxD98JG/UOD7pa2GP+O9rlTENdo0Y3TXyaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xBfP1UUUu/m3u4QCqt5hPIRo13W3hzr5F4cZI15EgL4=;
- b=iZYbIS2ThToDwe2g031XBzsk1/TF9a8Fbtv0AhgCXF8KhAH9dfR6SeGrl48jn5tGcD2xOjI+FQpBCAGpIX66OTo8HvSPV3+Rae8OOqrgDJuSVEXk938KibtE4yJHrKdCaKY0fD7wyPnIeDXTGazTpGv9MnLnXN7ds5Xc6NEVBp4=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by PH0PR21MB2079.namprd21.prod.outlook.com (2603:10b6:510:a8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.3; Mon, 9 Jan
- 2023 19:14:54 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::db1a:4e71:c688:b7b1]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::db1a:4e71:c688:b7b1%5]) with mapi id 15.20.6002.009; Mon, 9 Jan 2023
- 19:14:54 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [Patch v4 04/13] x86/mm: Handle decryption/re-encryption of
- bss_decrypted consistently
-Thread-Topic: [Patch v4 04/13] x86/mm: Handle decryption/re-encryption of
- bss_decrypted consistently
-Thread-Index: AQHZBf6qXxv12SnI/0WwIL+HXSylNa6E8yMAgAA/XSCAEX2zAIAAAIfg
-Date:   Mon, 9 Jan 2023 19:14:54 +0000
-Message-ID: <BYAPR21MB1688568F9F76C1FB4AA49FE9D7FE9@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1669951831-4180-1-git-send-email-mikelley@microsoft.com>
- <1669951831-4180-5-git-send-email-mikelley@microsoft.com>
- <Y62FbJ1rZ6TVUgml@zn.tnic>
- <BYAPR21MB16884038F7EE406322181C58D7F39@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y7xmvt2/mGyox9L+@zn.tnic>
-In-Reply-To: <Y7xmvt2/mGyox9L+@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=aba4fbda-5485-4ae5-a69b-7cfc3ce8ae3b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-01-09T19:12:47Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|PH0PR21MB2079:EE_
-x-ms-office365-filtering-correlation-id: c808704f-adc7-498d-ec1a-08daf275ca71
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: z1Md2UbmDSewAfeEL3ZRPPRLC/xme6gL6EwSqPYDl/E5lEK2Hk9BmH/wFITft3tWwS9rjtTkRwPFgSaJwgnHe9Snu/KOIDM8ZuIfKhILAnzVIU9Rf1M79Ap5WyH92+b3EPtGOReM+HYT/6py5Fpm9dP13MofxMDkTTcBmD0wDDO0BySs3WJaCPvx0c+QdKiF74574NFcEhhbNbbFxuhnxOCVpEe22Z1DjlTqmF0SLMSejkR+UE7GkV0DlP/uLSMeKQ4f9EAWQKqjayPlo63QZJ2gfX1RO82Ehk1dhsE2ys4WtuhU15Izp0fXLQq0OkNVjnDtJbAkdfR7/IwpgNwBDgCFv1QCDZGBEWWugiKWxeHkdw7N70rSgHFh/ZcVJNAPfgjtNJq6bz3dCtaEcrL7RwjVmtOfCGVeuu4kTIuJBevmmGf/x92NMwmQ5UEyAI3YtmzxSgW81or5DIcoyBVFtlFsrkUiZo/UPMOFb7AldIz5VmjJIfPfWsFMcMNAqHb+cE0oH0OGwJXCIk+VQYjt+8mpJcXGG7tGDJhxfnOVF4DolfRHugTfU1RpXCMSkW7S6pxCBihRiigs+eYtUpImum52/7dDN36DObW+aS0dyB9nCuil1h15Ur38vNNXz+uwDCCFgAERAqjU040lhUOw7IzIUWYxiJdhj/Zut9vWmim57sImUhSAApSogW7f01Uiw9ZT2TUFxEgWvkRaWOz6ELzG0oNIAZ8aW7sv4xiCTQzvzUtSK7jxh8YZVyc545s5
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(346002)(39860400002)(366004)(376002)(451199015)(33656002)(478600001)(54906003)(7406005)(7416002)(8936002)(122000001)(52536014)(2906002)(10290500003)(5660300002)(8990500004)(71200400001)(186003)(9686003)(26005)(82960400001)(82950400001)(7696005)(55016003)(316002)(38100700002)(6506007)(38070700005)(41300700001)(6916009)(8676002)(4326008)(76116006)(66556008)(66446008)(66946007)(86362001)(66476007)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?snwJ3cYFBqqb1H1rGdGYrhCP9VQDHNXULimOG5yqGlw70N/e/b8nWzCX9A4m?=
- =?us-ascii?Q?zi3FgPdBtFsxmpGW25ydRsdv7i4veX3vTDc7m1842KEP3LgeJNDUBIj4EGDh?=
- =?us-ascii?Q?ZNv1DE1LhTwq6SuImKRe9wkP1Lfg6dxYOxnvfpZR1Lt61xZ2GmKrbiE2w7hV?=
- =?us-ascii?Q?USxIQ0czTqCZ/Oy6nuDfTfIjRlljPoFDdfdXheluKDg0XT9ob0xOrlD2p3jk?=
- =?us-ascii?Q?90hbR4jVQ26rafT4oZWiegrUG+QfZNKpqJyjV2SkQdSFCFrSVSxYlt4QpPJ1?=
- =?us-ascii?Q?vOgWQWQeRVWa+RyUCbuhwJCImbh+GesWwQRhHvEg5T8w0WbJaBr7P8HhmGB5?=
- =?us-ascii?Q?2L+c7WOGGgxzcIfQL50oJfelkL9meFOy2DwgTT6kglgXivD2x5BhNJTC3+YW?=
- =?us-ascii?Q?8szwXMcbux+VgMIBLm3x3QCAXRyxT/+rb+yp/y9Y8EJetyTSLYGpITCU4BdP?=
- =?us-ascii?Q?VQxOlV2DNoI61KLkfWmCHYpeHN+CBliUW5kYqHEGUlMPgdLKYw3A9iJItRsU?=
- =?us-ascii?Q?nv7Y9d7G5YhdENLAHovMlgJVGcOaC0thVz7ZlbRJubI6CTfy3VVonHaOY9CL?=
- =?us-ascii?Q?eTX5rwpQhFXKFIutg2kZPkNYE7wChgwTQFaGudibmzBl1H7rX8cErrNancw8?=
- =?us-ascii?Q?6LIGVBeQxVi5BZdDN69s5NJsB6Pjop84jU8E9do46ksJqpE/4k7BHLOK2EXQ?=
- =?us-ascii?Q?mh/fwzrPcvnwyKanV8Vg3kElC0eX6DnaUO2DWwxUjCi8pVPxkbR/FcoB5Hir?=
- =?us-ascii?Q?cvFvXC/pj16Llxz3ZhkLemmpp2KREn9Stdf+gbT4ejs7YLpiOZi+hHjhY/b+?=
- =?us-ascii?Q?1Dr24Ld6ye+qdNOeamtOq5kj3RAh3Ja3NmBhtsdBWhyuP1D/JKcUGoM5WlgL?=
- =?us-ascii?Q?KFphbjY/aDnHQWIwy8brjddJXaNfkraTuAx73fPQAoa1TN/jycAyyNiomGDa?=
- =?us-ascii?Q?AeGm5gnfAOM8jg8k64iXTb3zRoZl2Dj9p1mXmslpNhWAs5vReaXNjbD3KBpF?=
- =?us-ascii?Q?bcuv9AE45YnVYn6f0QfpP0VZQD9tZWIU1t5aaaS2DxVG+BBUXQ71AVPcGmXc?=
- =?us-ascii?Q?ZrvM16hI21Vaf5qzASKXq6rpJJXPSLE3De0SsiFHpIT1i1uzyUDQEXefHUrr?=
- =?us-ascii?Q?6Pqstg9xSsDYYejeuaPWxo7D49PQ4OrU+4ocTLQZbEZnaoSNSKy8UvYLkzC4?=
- =?us-ascii?Q?LpSEPG6CrzvX8zDukQ9lzcLRS1prXRkdsbeYslfcbu6NOcIIgyOs649eAxkF?=
- =?us-ascii?Q?VFTX/G/GaQmX3+48RwC25EiuTD9ZGv/kDj9U9QfEGoIT5C6r078lcFQ6Zkde?=
- =?us-ascii?Q?JpPB7ZOauwhsPUydndCbq4ewbJPMawHdQeb42T8HHjjYQ3g4uum86muQEz9e?=
- =?us-ascii?Q?xk4NihoiiKjj4YM+KqgQYBc2wONb0uUVSQUAwcdXkX9ckHo7zO54j3kEqf5W?=
- =?us-ascii?Q?utzd8JOfdbryoMyL4mTranttRFRp8K3MP9Z7LY+piODTtAHsP7ZSQ7iR6v2U?=
- =?us-ascii?Q?r98H+d6XweoogXwZRhocafkwCsTJyYweB+oxXCa/k0HoPfXWY5WSw+8ErRCG?=
- =?us-ascii?Q?h79Hk2UT8la8iHW9dxJct/5wAP1TabH7A89Zkyj05KuvAyMIb4AEuHBnupqB?=
- =?us-ascii?Q?gA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S237702AbjAITdj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 14:33:39 -0500
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C027963B3
+        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 11:33:37 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id i188so9779806vsi.8
+        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 11:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ixsystems.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dgdyy1Z+2Ju0e/iq2YUL8oWPCTY8WT7CrnDhBmYlAlE=;
+        b=E3McBq2WdP1Lf4LD+7yIgDucHzaT5l4hO5iiIyTjirBB09dOKzWcUrABIWjjy5HOi8
+         TjStmVdNG+hIURknB2kZfIpfQ1RB8mFI9a16hq5ND3OUzptGWdFOrdeAqFKGdCKVRG5t
+         a+Q4QbONHdWMyN8kxv55XP4czHEmCY4GCWnfKt35Z3BeK+//a07BadJxPaanmF44FL0s
+         dDeXj5ZIXBDBaqfA/6j1/i2t6NI4pc6Tn4ScEtWOx0eGCGCcxAsN14gnue+AlXzdzwOd
+         /vLoXJMyTjRASVnJYe8nUH797TEoMpWPBEIZdGEK4sbEUHszT9dRq1fL5MVJz974MpgW
+         x1Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dgdyy1Z+2Ju0e/iq2YUL8oWPCTY8WT7CrnDhBmYlAlE=;
+        b=gp8M5feOa2oKRGDo685rsNvSI6eWytLTYPw7NIabyXv3C8LeqWk3wPeFmZbJJc1z9i
+         FKzG4eLICBYN9HyNKRPDiLytj1gHqo6TqCSyswVaR7Zo47F+ZR17CN4m7k1J9EHiYv2p
+         CTD+XeBSpmpjIZeHXEmPO3IB4HpLVskKhzGni7ku6/Bugq2hvPoQknEL4gFRRbZpXQ65
+         tCAjjYZaXuXYpBCcMAWXMJe4KUz5wPFxIkThfCNAMhxzn5BQVaVgI1Vp8YwHUPvbEDAh
+         KKc/HoD4BTNMQRFjngQA2/tvTnyEdeFuklc4g2/clnMKASQ6c/RvcYHo4CvBsWIp2tnF
+         ceag==
+X-Gm-Message-State: AFqh2krlZx5+xZA1urtsLeFg3lYUBcusmE9Ke8kbuU56iR0eEsCNDsv+
+        tPASPXSvGUzDhthK4U7/wwODeQ==
+X-Google-Smtp-Source: AMrXdXuFuCSXBOKrUBc5j0eF98pQltbB0QQo2a8nMINqZlwM06BmUHyjS9S68V/wjOweCJicr48CZw==
+X-Received: by 2002:a05:6102:3c8d:b0:3b0:d65c:3d02 with SMTP id c13-20020a0561023c8d00b003b0d65c3d02mr36907265vsv.21.1673292816648;
+        Mon, 09 Jan 2023 11:33:36 -0800 (PST)
+Received: from [10.230.45.5] ([38.32.73.2])
+        by smtp.gmail.com with ESMTPSA id v7-20020a05620a440700b006fb112f512csm5865306qkp.74.2023.01.09.11.33.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jan 2023 11:33:36 -0800 (PST)
+Message-ID: <7bdef8bb-7a5e-2b5d-35ba-56cefb38d91f@ixsystems.com>
+Date:   Mon, 9 Jan 2023 14:33:35 -0500
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c808704f-adc7-498d-ec1a-08daf275ca71
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2023 19:14:54.7749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2uyS1SyyLqP8EmurMCyDa7+ER2eMQlIC3gVpWryrHH6iScJKymrv0IwVZr5O86kT3eYWMcSLOwsbEA3qR32SDGwWd2COr4Bn4qfQDg58NUg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB2079
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; FreeBSD amd64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v4 1/2] PCI: Take other bus devices into account when
+ distributing resources
+Content-Language: en-US
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org
+References: <20230104091635.63331-1-mika.westerberg@linux.intel.com>
+ <20230104091635.63331-2-mika.westerberg@linux.intel.com>
+From:   Alexander Motin <mav@ixsystems.com>
+In-Reply-To: <20230104091635.63331-2-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de> Sent: Monday, January 9, 2023 11:11 AM
->=20
-> On Thu, Dec 29, 2022 at 04:25:16PM +0000, Michael Kelley (LINUX) wrote:
-> > I'm ambivalent on the backport to stable.  One might argue that older
-> > kernel versions are conceptually wrong in using different conditions fo=
-r
-> > the decryption and re-encryption.  But as you said, they aren't broken
-> > from a practical standpoint because sme_me_mask and
-> > CC_ATTR_MEM_ENCRYPT are equivalent prior to my patch set.  However,
-> > the email thread with Sathyanarayanan Kuppuswamy, Tom Lendacky,
-> > and Dexuan Cui concluded that a Fixes: tag is appropriate.
->=20
-> Right, just talked to Tom offlist.
->=20
-> A Fixes tag triggers a lot of backporting activity and if it is not reall=
-y
-> needed, then let's leave it out.
->=20
-> If distros decide to pick up vTOM support, then they'll pick up the whole=
- set
-> anyway.
->=20
-> And if we decide we really need it backported for whatever reason, we wil=
-l
-> simply send it into stable and the same backporting activity will be trig=
-gered
-> then. But then we'd at least have a concrete reason for it.
->=20
-> Makes sense?
->=20
+On 04.01.2023 04:16, Mika Westerberg wrote:
+> A PCI bridge may reside on a bus with other devices as well. The
+> resource distribution code does not take this into account properly and
+> therefore it expands the bridge resource windows too much, not leaving
+> space for the other devices (or functions of a multifunction device) and
+> this leads to an issue that Jonathan reported. He runs QEMU with the
+> following topology (QEMU parameters):
+> 
+>   -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2  \
+>   -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+>   -device e1000,bus=root_port13,addr=0.1                         \
+>   -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3    \
+>   -device e1000,bus=fun1
+> 
+> The first e1000 NIC here is another function in the switch upstream
+> port. This leads to following errors:
+> 
+>    pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
+>    pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
+>    pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
+>    e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
+> 
+> Fix this by taking into account the device BARs on the bus, including
+> the ones belonging to bridges themselves.
+> 
+> Link: https://lore.kernel.org/linux-pci/20221014124553.0000696f@huawei.com/
+> Link: https://lore.kernel.org/linux-pci/6053736d-1923-41e7-def9-7585ce1772d9@ixsystems.com/
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reported-by: Alexander Motin <mav@ixsystems.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>   drivers/pci/setup-bus.c | 205 +++++++++++++++++++++++++---------------
+>   1 file changed, 129 insertions(+), 76 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index b4096598dbcb..cf6a7bdf2427 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1750,6 +1750,7 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+>   				 resource_size_t new_size)
+>   {
+>   	resource_size_t add_size, size = resource_size(res);
+> +	resource_size_t min_size;
+>   
+>   	if (res->parent)
+>   		return;
+> @@ -1757,30 +1758,87 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+>   	if (!new_size)
+>   		return;
+>   
+> +	/* Minimum granularity of a bridge bridge window */
+> +	min_size = window_alignment(bridge->bus, res->flags);
+> +
+>   	if (new_size > size) {
+>   		add_size = new_size - size;
+> +		if (add_size < min_size)
+> +			return;
+>   		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+>   			&add_size);
+>   	} else if (new_size < size) {
+>   		add_size = size - new_size;
+> +		if (add_size < min_size)
+> +			return;
 
-Yep, that matches my thinking.  I've avoided marking something for stable u=
-nless
-it fixes something that is actually broken.
+May be I don't understand something, but in what situation it may 
+happen, and won't it be a problem if you silently do nothing here, while 
+the calling code will use the passed new_size as-is?
 
-Michael
+>   		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+>   			&add_size);
+> +	} else {
+> +		return;
+>   	}
+>   
+>   	res->end = res->start + new_size - 1;
+>   	remove_from_list(add_list, res);
+>   }
+>   
+> +static void reduce_dev_resources(struct pci_dev *dev, struct resource *io,
+> +				 struct resource *mmio,
+> +				 struct resource *mmio_pref)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
+> +		struct resource *res = &dev->resource[i];
+> +		resource_size_t align, tmp, size;
+> +
+> +		size = resource_size(res);
+> +		if (!size)
+> +			continue;
+> +
+> +		align = pci_resource_alignment(dev, res);
+> +
+> +		if (resource_type(res) == IORESOURCE_IO) {
+> +			align = align ? ALIGN(io->start, align) - io->start : 0;
+> +			tmp = align + size;
+> +			io->start = min(io->start + tmp, io->end + 1);
+> +		} else if (resource_type(res) == IORESOURCE_MEM) {
+> +			if (res->flags & IORESOURCE_PREFETCH) {
+> +				align = align ? ALIGN(mmio_pref->start, align) -
+> +						mmio_pref->start : 0;
+> +				tmp = align + size;
+> +				mmio_pref->start = min(mmio_pref->start + tmp,
+> +						       mmio_pref->end + 1);
+> +			} else {
+> +				align = align ? ALIGN(mmio->start, align) -
+> +						mmio->start : 0;
+> +				tmp = align + size;
+> +				mmio->start = min(mmio->start + tmp,
+> +						  mmio->end + 1);
+> +			}
+> +		}
+> +	}
+> +}
+> +
+> +/*
+> + * io, mmio and mmio_pref contain the total amount of bridge window
+> + * space available. This includes the minimal space needed to cover all
+> + * the existing devices on the bus and the possible extra space that can
+> + * be shared with the bridges.
+> + *
+> + * The resource space consumed by bus->self (the bridge) is already
+> + * reduced.
+> + */
+>   static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+>   					    struct list_head *add_list,
+>   					    struct resource io,
+>   					    struct resource mmio,
+>   					    struct resource mmio_pref)
+>   {
+> +	resource_size_t io_align, mmio_align, mmio_pref_align;
+> +	resource_size_t io_per_b, mmio_per_b, mmio_pref_per_b;
+>   	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+>   	struct resource *io_res, *mmio_res, *mmio_pref_res;
+>   	struct pci_dev *dev, *bridge = bus->self;
+> -	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
+>   
+>   	io_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
+>   	mmio_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+> @@ -1790,17 +1848,17 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+>   	 * The alignment of this bridge is yet to be considered, hence it must
+>   	 * be done now before extending its bridge window.
+>   	 */
+> -	align = pci_resource_alignment(bridge, io_res);
+> -	if (!io_res->parent && align)
+> -		io.start = min(ALIGN(io.start, align), io.end + 1);
+> +	io_align = pci_resource_alignment(bridge, io_res);
+> +	if (!io_res->parent && io_align)
+> +		io.start = min(ALIGN(io.start, io_align), io.end + 1);
+>   
+> -	align = pci_resource_alignment(bridge, mmio_res);
+> -	if (!mmio_res->parent && align)
+> -		mmio.start = min(ALIGN(mmio.start, align), mmio.end + 1);
+> +	mmio_align = pci_resource_alignment(bridge, mmio_res);
+> +	if (!mmio_res->parent && mmio_align)
+> +		mmio.start = min(ALIGN(mmio.start, mmio_align), mmio.end + 1);
+>   
+> -	align = pci_resource_alignment(bridge, mmio_pref_res);
+> -	if (!mmio_pref_res->parent && align)
+> -		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
+> +	mmio_pref_align = pci_resource_alignment(bridge, mmio_pref_res);
+> +	if (!mmio_pref_res->parent && mmio_pref_align)
+> +		mmio_pref.start = min(ALIGN(mmio_pref.start, mmio_pref_align),
+>   			mmio_pref.end + 1);
+>   
+>   	/*
+> @@ -1824,94 +1882,89 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+>   			normal_bridges++;
+>   	}
+>   
+> -	/*
+> -	 * There is only one bridge on the bus so it gets all available
+> -	 * resources which it can then distribute to the possible hotplug
+> -	 * bridges below.
+> -	 */
+> -	if (hotplug_bridges + normal_bridges == 1) {
+> -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> -		if (dev->subordinate)
+> -			pci_bus_distribute_available_resources(dev->subordinate,
+> -				add_list, io, mmio, mmio_pref);
+> -		return;
+> -	}
+> -
+> -	if (hotplug_bridges == 0)
+> +	if (!(hotplug_bridges + normal_bridges))
+>   		return;
+>   
+>   	/*
+>   	 * Calculate the total amount of extra resource space we can
+> -	 * pass to bridges below this one.  This is basically the
+> -	 * extra space reduced by the minimal required space for the
+> -	 * non-hotplug bridges.
+> +	 * pass to bridges below this one. This is basically the extra
+> +	 * space reduced by the minimal required space for the bridge
+> +	 * windows and device BARs on this bus.
+>   	 */
+> -	for_each_pci_bridge(dev, bus) {
+> -		resource_size_t used_size;
+> -		struct resource *res;
+> -
+> -		if (dev->is_hotplug_bridge)
+> -			continue;
+> -
+> -		/*
+> -		 * Reduce the available resource space by what the
+> -		 * bridge and devices below it occupy.
+> -		 */
+> -		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+> -		align = pci_resource_alignment(dev, res);
+> -		align = align ? ALIGN(io.start, align) - io.start : 0;
+> -		used_size = align + resource_size(res);
+> -		if (!res->parent)
+> -			io.start = min(io.start + used_size, io.end + 1);
+> -
+> -		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+> -		align = pci_resource_alignment(dev, res);
+> -		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
+> -		used_size = align + resource_size(res);
+> -		if (!res->parent)
+> -			mmio.start = min(mmio.start + used_size, mmio.end + 1);
+> +	list_for_each_entry(dev, &bus->devices, bus_list)
+> +		reduce_dev_resources(dev, &io, &mmio, &mmio_pref);
+>   
+> -		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+> -		align = pci_resource_alignment(dev, res);
+> -		align = align ? ALIGN(mmio_pref.start, align) -
+> -			mmio_pref.start : 0;
+> -		used_size = align + resource_size(res);
+> -		if (!res->parent)
+> -			mmio_pref.start = min(mmio_pref.start + used_size,
+> -				mmio_pref.end + 1);
+> +	/*
+> +	 * If there is at least one hotplug bridge on this bus it gets
+> +	 * all the extra resource space that was left after the
+> +	 * reductions above.
+> +	 *
+> +	 * If there are no hotplug bridges the extra resource space is
+> +	 * split between non-hotplug bridges. This is to allow possible
+> +	 * hotplug bridges below them to get the extra space as well.
+> +	 */
+> +	if (hotplug_bridges) {
+> +		io_per_b = div64_ul(resource_size(&io), hotplug_bridges);
+> +		mmio_per_b = div64_ul(resource_size(&mmio), hotplug_bridges);
+> +		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
+> +					   hotplug_bridges);
+> +	} else {
+> +		io_per_b = div64_ul(resource_size(&io), normal_bridges);
+> +		mmio_per_b = div64_ul(resource_size(&mmio), normal_bridges);
+> +		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
+> +					   normal_bridges);
+>   	}
+>   
+> -	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
+> -	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
+> -	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
+> -		hotplug_bridges);
+> -
+>   	/*
+> -	 * Go over devices on this bus and distribute the remaining
+> -	 * resource space between hotplug bridges.
+> +	 * Make sure the split resource space is properly aligned for
+> +	 * bridge windows (align it down to avoid going above what is
+> +	 * available).
+>   	 */
+> +	if (io_align)
+> +		io_per_b = ALIGN_DOWN(io_per_b, io_align);
+> +	if (mmio_align)
+> +		mmio_per_b = ALIGN_DOWN(mmio_per_b, mmio_align);
+> +	if (mmio_pref_align)
+> +		mmio_pref_per_b = ALIGN_DOWN(mmio_pref_per_b, mmio_align);
+
+If I understand it right, you are applying alignment requirements of the 
+parent bridge to the windows of its children.  I don't have examples of 
+any bridge with different alignment, but shouldn't we better get and use 
+proper alignment inside the loop below?
+
+> +
+>   	for_each_pci_bridge(dev, bus) {
+> +		resource_size_t allocated_io, allocated_mmio, allocated_mmio_pref;
+> +		const struct resource *res;
+>   		struct pci_bus *b;
+>   
+>   		b = dev->subordinate;
+> -		if (!b || !dev->is_hotplug_bridge)
+> +		if (!b)
+> +			continue;
+> +		if (hotplug_bridges && !dev->is_hotplug_bridge)
+>   			continue;
+>   
+> +		io.end = io.start + io_per_b - 1;
+>   		/*
+> -		 * Distribute available extra resources equally between
+> -		 * hotplug-capable downstream ports taking alignment into
+> -		 * account.
+> +		 * The x_per_b holds the extra resource space that can
+> +		 * be added for each bridge but there is the minimal
+> +		 * already reserved as well so adjust x.start down
+> +		 * accordingly to cover the whole space.
+>   		 */
+> -		io.end = io.start + io_per_hp - 1;
+> -		mmio.end = mmio.start + mmio_per_hp - 1;
+> -		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
+> +		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+> +		allocated_io = resource_size(res);
+> +		io.start -= allocated_io;
+> +
+> +		mmio.end = mmio.start + mmio_per_b - 1;
+> +		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+> +		allocated_mmio = resource_size(res);
+> +		mmio.start -= allocated_mmio;
+> +
+> +		mmio_pref.end = mmio_pref.start + mmio_pref_per_b - 1;
+> +		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+> +		allocated_mmio_pref = resource_size(res);
+> +		mmio_pref.start -= allocated_mmio_pref;
+>   
+>   		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+>   						       mmio_pref);
+>   
+> -		io.start += io_per_hp;
+> -		mmio.start += mmio_per_hp;
+> -		mmio_pref.start += mmio_pref_per_hp;
+> +		io.start += allocated_io + io_per_b;
+> +		mmio.start += allocated_mmio + mmio_per_b;
+> +		mmio_pref.start += allocated_mmio_pref + mmio_pref_per_b;
+>   	}
+>   }
+>   
+
+-- 
+Alexander Motin
