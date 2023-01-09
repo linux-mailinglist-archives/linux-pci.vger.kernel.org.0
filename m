@@ -2,154 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9BCB6625E9
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 13:53:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAE97662619
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 13:54:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjAIMxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Jan 2023 07:53:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
+        id S236199AbjAIMyT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Jan 2023 07:54:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233336AbjAIMxW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 07:53:22 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80357DC
-        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 04:53:21 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id gh17so19843456ejb.6
-        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 04:53:21 -0800 (PST)
+        with ESMTP id S234245AbjAIMxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 07:53:34 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA7615FC6
+        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 04:53:33 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id m26-20020a05600c3b1a00b003d9811fcaafso6619676wms.5
+        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 04:53:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JWcWhdL0MGFlmpHHzw+nzUE0W1FuXam1XrT9yOATWIA=;
-        b=Cv/RpAzHarCz+tumN0XaZY4dW84AUEJ1icCb2g3uP3XBEr/9UAPr8uaQHcFNzCMzxV
-         ECPVRe2IdOw8AdQr47HE7KfvnJdf1aOe+i6Zq7Ff2ap9QfMWFuJBM81WgYH0w+dBnGWU
-         goGxZ3fDXqLOeKf6yzuf/paHSwSN8hUHD8Hyzy8+JhRHi5d/pSdwye8n1U6LYi9YExpB
-         1kS3cFggCyreJOVfHUztuAFQw5XVIc94PRN4ERjBMZnLV5GpHReN7v/LCAcgVWmQ428p
-         KuvJIqPvQj4uok56PG8GjqhjFVt3SmONJCeVTdJL17rDL/BP6w2041h2aYbjol3yxbgu
-         W+JA==
+        d=linaro.org; s=google;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2oUr8w/fBVkJnE59k2x6LjFTgvfWlu1602Zu3esq0gQ=;
+        b=yw7651Zfiaa/ETLY1KrF3sA59Qt0nq2p9DYlfctPDk3lmFGFgxggxE1j9xeV4bWlz6
+         EJHzBbK5iAv2IEEosCynJKk6OzKB0omA/4odpZkIoCPLMKsu09p2zyYkXourRrSw2VL5
+         1GQsPjAHf3eyuc7yKnvLrLCl+mX7SXR7+KO1yANTVXg5DR0PloCvslrjAt/jq3umiql4
+         OeWyumIvb5oNn+k2blGF+uHuGRPrNWvdjSXXeWQlwFHNpan8JJYwMYBBmMpfGcDb2vOX
+         2L27BJCG4Obp0QFgf9f16SycA4f63/y5LQ0Yvay6aZRKLGheyCsfyBM7hX9y+IOzEB4z
+         BHng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JWcWhdL0MGFlmpHHzw+nzUE0W1FuXam1XrT9yOATWIA=;
-        b=N4BgfxcDAJg+p7kuDHhCiE0KOCf9Aef0ZYLkBgYpRH9sEVmdeks3L5h8NdXHQLQF2Q
-         hSeIc0zGE9e6q2e6huHQIv3Kjk9Hdbl7gJ1wL64pzJh6Sy8TDoespkpEu29zAfHV7g4a
-         NHgRc0676C9F06BhvS7UckAQQRYHTSn+QsxLyoeCAMo+PwUIqmVfb6zXZaiT/TednYNW
-         nV59UeBtNvOLyeVztnH1pShbNCa6TfGGXfXNBRvaTnsy33yFZEAvIcBwFYTStrIo5tZT
-         wuPRiLEtmHawDKTe6ewr2k1rxl3hOe585hP0MZcdRFttJe60tU83EkoKxHHnz7O0vqG3
-         w5VQ==
-X-Gm-Message-State: AFqh2kqCN84OVlym7WOgZqUI/hNp0n1qGtlmnbuoJ4MUIiEX/RRWDtkx
-        Hu++JdpTnEwMHKV/CBPKHMOflTw4mzccmg==
-X-Google-Smtp-Source: AMrXdXsqtwpG/CaRK1fU6As1AI76bg4pjUWBgRjcByWon2DZqVGE8SF7/qOef/854gdi/wIMswVvWg==
-X-Received: by 2002:a17:906:5e41:b0:84d:465e:49b7 with SMTP id b1-20020a1709065e4100b0084d465e49b7mr2782341eju.63.1673268799666;
-        Mon, 09 Jan 2023 04:53:19 -0800 (PST)
-Received: from AHUANG12-3ZHH9X.lenovo.com (220-143-195-242.dynamic-ip.hinet.net. [220.143.195.242])
-        by smtp.gmail.com with ESMTPSA id wl21-20020a170907311500b0084d37cc06fesm2565652ejb.94.2023.01.09.04.53.16
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2oUr8w/fBVkJnE59k2x6LjFTgvfWlu1602Zu3esq0gQ=;
+        b=uydLjX4ugHh1L4ZvW2WJTZVOTtcKMfOzV2P3H7CrOI8A2yIffPDtv0XSkj7wC+18tG
+         O2FprpyEP/g25VQrMJy0V/jtpNkkwsjactPe/3v2UywScSxeE5W8tBHZZWnDgXesFIlx
+         JNoxsgC/Sh2ULbvIdcYlHPXDDBsibylzNw9hI+EWbn/YBXRvZAokygDIcJpah5quMCzt
+         OMX/3RDq+c/eDEA4BuWu465JhZ00LUyyInUMvWNEk4zkFN+fiF57DFP8ZZc19xd5Tadw
+         M1I/pwYPLty/kyL073C/faETsFlLp/KuBz3nNI29N7/UdQRLjZc2rAmWTHdH+b6JA2/L
+         3Jmg==
+X-Gm-Message-State: AFqh2kpt2MiJNdg9/XYVdhqe3Agl4MCVaQiJMxTZo6FaLDzS+NBa48df
+        AOSwCvGqd3rdtr8MAbCPR62wEQ==
+X-Google-Smtp-Source: AMrXdXvGChqLrkdOYMIrvP3oiZBLJmzLXN7wzV4hvUgkqWIZvi4SN9pHUanVnXVyf/b8Nfwm+x5bRQ==
+X-Received: by 2002:a05:600c:8507:b0:3d9:6c7d:c9ee with SMTP id gw7-20020a05600c850700b003d96c7dc9eemr41487743wmb.25.1673268811818;
+        Mon, 09 Jan 2023 04:53:31 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id y7-20020a7bcd87000000b003d997e5e679sm12805667wmj.14.2023.01.09.04.53.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 04:53:19 -0800 (PST)
-From:   Adrian Huang <adrianhuang0701@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Adrian Huang <adrianhuang0701@gmail.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Adrian Huang <ahuang12@lenovo.com>
-Subject: [PATCH 1/1] PCI: vmd: Fix boot failure when trying to clean up domain before enumeration
-Date:   Mon,  9 Jan 2023 20:51:48 +0800
-Message-Id: <20230109125148.16813-1-adrianhuang0701@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 09 Jan 2023 04:53:31 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Mon, 09 Jan 2023 13:53:25 +0100
+Subject: [PATCH v2 01/11] dt-bindings: firmware: convert meson_sm.txt to dt-schema
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20221117-b4-amlogic-bindings-convert-v2-1-36ad050bb625@linaro.org>
+References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
+In-Reply-To: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.11.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Adrian Huang <ahuang12@lenovo.com>
+Convert the Amlogic Secure Monitor bindings to dt-schema.
 
-Commit 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-clears PCI configuration space of VMD root ports. However, the host OS
-cannot boot successfully with the following error message:
+Take in account usage the used variant with amlogic,meson-gx-sm.
 
-  vmd 0000:64:05.5: PCI host bridge to bus 10000:00
-  ...
-  vmd 0000:64:05.5: Bound to PCI domain 10000
-  ...
-  DMAR: VT-d detected Invalidation Queue Error: Reason f
-  DMAR: VT-d detected Invalidation Time-out Error: SID ffff
-  DMAR: VT-d detected Invalidation Completion Error: SID ffff
-  DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: Invalidation Time-out Error (ITE) cleared
-
-The root cause is that memset_io() clears prefetchable memory base/limit
-registers and prefetchable base/limit 32 bits registers sequentially. This
-might enable prefetchable memory if the device disables prefetchable memory
-originally. Here is an example (before memset_io()):
-
-  PCI configuration space for 10000:00:00.0:
-  86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
-  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
-  00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
-  00 00 00 00 40 00 00 00 00 00 00 00 00 01 02 00
-
-So, prefetchable memory is ffffffff00000000-575000fffff, which is disabled.
-Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
-
-  The Prefetchable Memory Limit register must be programmed to a smaller
-  value than the Prefetchable Memory Base register if there is no
-  prefetchable memory on the secondary side of the bridge.
-
-When memset_io() clears prefetchable base 32 bits register, the
-prefetchable memory becomes 0000000000000000-575000fffff, which is enabled.
-This behavior causes that the content of PCI configuration space of VMD
-root ports is 0xff after invoking memset_io() in vmd_domain_reset():
-
-  10000:00:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev ff) (prog-if ff)
-          !!! Unknown header type 7f
-  00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ...
-  f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-
-  10000:00:01.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port B (rev ff) (prog-if ff)
-          !!! Unknown header type 7f
-  00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ...
-  f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-
-To fix the issue, prefetchable limit upper 32 bits register needs to be
-cleared firstly. This also adheres to the implementation of
-pci_setup_bridge_mmio_pref(). Please see the function for detail.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216644
-Fixes: 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/pci/controller/vmd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../bindings/firmware/amlogic,meson-gxbb-sm.yaml   | 39 ++++++++++++++++++++++
+ .../bindings/firmware/meson/meson_sm.txt           | 15 ---------
+ 2 files changed, 39 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..e520aec55b68 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -526,6 +526,9 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
- 				     PCI_CLASS_BRIDGE_PCI))
- 					continue;
- 
-+				/* Clear the upper 32 bits of PREF limit. */
-+				memset_io(base + PCI_PREF_LIMIT_UPPER32, 0, 4);
+diff --git a/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml b/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml
+new file mode 100644
+index 000000000000..8f50e698760e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/amlogic,meson-gxbb-sm.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/amlogic,meson-gxbb-sm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 				memset_io(base + PCI_IO_BASE, 0,
- 					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
- 			}
--- 
-2.31.1
++title: Amlogic Secure Monitor (SM)
++
++description:
++  In the Amlogic SoCs the Secure Monitor code is used to provide access to the
++  NVMEM, enable JTAG, set USB boot, etc...
++
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
++
++properties:
++  compatible:
++    oneOf:
++      - const: amlogic,meson-gxbb-sm
++      - items:
++          - const: amlogic,meson-gx-sm
++          - const: amlogic,meson-gxbb-sm
++
++  power-controller:
++    type: object
++    $ref: /schemas/power/amlogic,meson-sec-pwrc.yaml#
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    firmware {
++        secure-monitor {
++            compatible = "amlogic,meson-gxbb-sm";
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+deleted file mode 100644
+index c248cd44f727..000000000000
+--- a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-* Amlogic Secure Monitor
+-
+-In the Amlogic SoCs the Secure Monitor code is used to provide access to the
+-NVMEM, enable JTAG, set USB boot, etc...
+-
+-Required properties for the secure monitor node:
+-- compatible: Should be "amlogic,meson-gxbb-sm"
+-
+-Example:
+-
+-	firmware {
+-		sm: secure-monitor {
+-			compatible = "amlogic,meson-gxbb-sm";
+-		};
+-	};
 
+-- 
+2.34.1
