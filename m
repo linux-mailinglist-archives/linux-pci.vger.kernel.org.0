@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A71DB661F9D
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 09:05:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF295661F9F
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Jan 2023 09:05:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231219AbjAIIFF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Jan 2023 03:05:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
+        id S233672AbjAIIF0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Jan 2023 03:05:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233477AbjAIIFE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 03:05:04 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D1512084
-        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 00:05:03 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id ja17so5638082wmb.3
-        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 00:05:02 -0800 (PST)
+        with ESMTP id S233477AbjAIIF0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Jan 2023 03:05:26 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4401913D78
+        for <linux-pci@vger.kernel.org>; Mon,  9 Jan 2023 00:05:25 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id m7so7272629wrn.10
+        for <linux-pci@vger.kernel.org>; Mon, 09 Jan 2023 00:05:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=solid-run-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FZEnByuYZvS4oCO1vsa+paT8I+UTZXQmFwyne1ALlrI=;
-        b=BuJW0gQ8Gc5KrObkxInIyw9PuEH78Wd4O2dd2DrEKlw2s4KULrGCkmrTdJWfh+KpI/
-         O9aZOpadf7+gOZ8iiaYxCu5Wlv90r/vGUMTGQhqGAhNNMYTdrEFeozk6o/6IB9X9Yxsr
-         NjUESK+0q+bjcrT3MCv4xVjsuXZznuXbV2zWY7aa61pSApxfG/CHhzLmhUM5AOBHASnw
-         udccYsgKbF1qVbLmIjVTfIBul5vJPQI3ew172d8ZAzYTe9OzIjYMLvNDUIloyoyarsy5
-         2LOmvEeG8xF0aTOgtLIc6+H23jKIadnxH/RWhkleR5U+v9KJtpk4UzET0iduKSnQA03L
-         O2CA==
+        bh=cGPSxy7QLFpAMcyajFwTiQmrNr019Rt19d70cLX622A=;
+        b=aQDUM7y3VoRimkBLQS+6D4F4ZZhqgi2OHhGkLKLLZZflWAvld4qDM8kamEtpgCSm+s
+         kfRG4gKuhq5PN3Zb6sTqxkGm8p1bACjLaCXcvp6il7e0HmQ9qyFrxUiiUm3Mw0PZjjrd
+         PycwgBeOSBwmiL7Zb00HJWwmL8gNJrxHAAsJBKhHsgIK7dtmusVH3FnDDGCeLIYJwR3h
+         AkslaDFQR7WhZIbyYx0hKZl0eqdmQqFM2T68Hke8sEBBGha7gTx/wzc/5NBs/fTppEWH
+         y7tHNKsbpZ8RCfGkHfMjUN0L+uDN0ok7Bg03U9AWO9aGUXIW5tgB21cTH5shLg4ZieeJ
+         hQYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FZEnByuYZvS4oCO1vsa+paT8I+UTZXQmFwyne1ALlrI=;
-        b=ViwWJkImWgwkcfnDdhywyOZivWEdoEkAD/SmfXJ3i+JX6Y9ahi0VzoJE4Kf0ZZhDqe
-         FuGyjtrKtjwJoVjcrg3SH8l1XniXtX+H/yHy+7Jj5+/p6y8lnGll1EjJ4vM1j9fnWoUn
-         +Bc81XMRIQNSttLDdty+f7roqSewJimk+sE1W3SrgzOeI09a338XGTzlkDsX6JcWoFSG
-         PInTKWJnbvfWYicUCCzhpIM+SAPLeKkFtpsZfoB3EB+XSl3E4lx4ZHQKcW+De+jr4ZmA
-         SsdDTFtLZveLeRRuwX5Q5DumjB7hhoTGLT8BxfBnN4syu05CU52C3t8SzZfITQz3JIOe
-         JU/g==
-X-Gm-Message-State: AFqh2krUdRVmnlKAqxCjaMFDJIGJmwkhX2FpQpxr8S4FJDhTRjlUjjyZ
-        /jlmE/UMclCVbFEixqxxAFVCjA==
-X-Google-Smtp-Source: AMrXdXtlCLU9gB3jqVupm3Tx0U0gBBgA61YGRuQhR0b+lwt+fRT56ka/gWU6kCOroTd0tvZca3EUag==
-X-Received: by 2002:a05:600c:3d8b:b0:3d9:f0d8:708c with SMTP id bi11-20020a05600c3d8b00b003d9f0d8708cmr1356882wmb.26.1673251501438;
-        Mon, 09 Jan 2023 00:05:01 -0800 (PST)
+        bh=cGPSxy7QLFpAMcyajFwTiQmrNr019Rt19d70cLX622A=;
+        b=kAcy/CFWHrVTTslw6+C8LksvPmLKVTYKDr81kjwsB/0QSmMPhcPusUaCnwWRfyW6Tx
+         o7ODyJRHVUbX0h8YdRsKCoafgtT6nuIoHVtMtjST4OwuaHcDp6oNbtsoatfvPoKi7Dw/
+         NOn75XZ7XtQ5NWDqVCa/5N07MIINcr6FXspZ2NGm2mK97Rqfa87PIf80wWiaSHcjkd5v
+         Wo5ZkFA2C2Znd5h2wzWk6pH/4xJ46CXBrrYd6/CdTtzdJFLstfvVhh1/xA8NI5yCd5Ay
+         ZYE+C3NfwlES9IxcEqRwEIRhCpDzT78OnhLJG3AgeOUfFDZuax+DapkZuS6VGL+qcTAf
+         0Nfg==
+X-Gm-Message-State: AFqh2kqEav0ZNDptw8KZHHZ7t5kMx125YO2M15Rm2vkpeWoTBG2xtv0L
+        Vsvl9c4yVBjv8QjZPyQi1ByLRQ==
+X-Google-Smtp-Source: AMrXdXv4NWKNzfM/eWUIfTwSf/GRmZt7LJRTM3llNMRyanTQj8SZn+0wFN15+7Gl2nyIn11zdd/3Ow==
+X-Received: by 2002:a5d:4bc1:0:b0:2bb:7a1a:aeba with SMTP id l1-20020a5d4bc1000000b002bb7a1aaebamr4488868wrt.49.1673251523748;
+        Mon, 09 Jan 2023 00:05:23 -0800 (PST)
 Received: from localhost.localdomain (bzq-84-110-153-254.static-ip.bezeqint.net. [84.110.153.254])
-        by smtp.gmail.com with ESMTPSA id h8-20020a05600c350800b003d990372dd5sm16361989wmq.20.2023.01.09.00.04.59
+        by smtp.gmail.com with ESMTPSA id i2-20020adfdec2000000b002b9b9445149sm9191153wrn.54.2023.01.09.00.05.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 00:05:00 -0800 (PST)
+        Mon, 09 Jan 2023 00:05:23 -0800 (PST)
 From:   Alvaro Karsz <alvaro.karsz@solid-run.com>
 To:     virtualization@lists.linux-foundation.org,
         linux-pci@vger.kernel.org
 Cc:     bhelgaas@google.com, mst@redhat.com,
         Alvaro Karsz <alvaro.karsz@solid-run.com>
-Subject: [PATCH v8 1/3] PCI: Add SolidRun vendor ID
-Date:   Mon,  9 Jan 2023 10:04:53 +0200
-Message-Id: <20230109080453.1155113-1-alvaro.karsz@solid-run.com>
+Subject: [PATCH v8 2/3] PCI: Avoid FLR for SolidRun SNET DPU rev 1
+Date:   Mon,  9 Jan 2023 10:05:20 +0200
+Message-Id: <20230109080520.1155220-1-alvaro.karsz@solid-run.com>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,29 +68,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add SolidRun vendor ID to pci_ids.h
+This patch fixes a FLR bug on the SNET DPU rev 1 by setting
+the PCI_DEV_FLAGS_NO_FLR_RESET flag.
 
-The vendor ID is used in 2 different source files,
-the SNET vDPA driver and PCI quirks.
+As there is a quirk to avoid FLR (quirk_no_flr), I added a new
+quirk to check the rev ID before calling to quirk_no_flr.
+
+Without this patch, a SNET DPU rev 1 may hang when FLR is applied.
 
 Signed-off-by: Alvaro Karsz <alvaro.karsz@solid-run.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b362d90eb9b..9a3102e61db 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3092,6 +3092,8 @@
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 285acc4aacc..809d03272c2 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5343,6 +5343,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
 
- #define PCI_VENDOR_ID_3COM_2		0xa727
-
-+#define PCI_VENDOR_ID_SOLIDRUN          0xd063
++/* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
++static void quirk_no_flr_snet(struct pci_dev *dev)
++{
++	if (dev->revision == 0x1)
++		quirk_no_flr(dev);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLIDRUN, 0x1000, quirk_no_flr_snet);
 +
- #define PCI_VENDOR_ID_DIGIUM		0xd161
- #define PCI_DEVICE_ID_DIGIUM_HFC4S	0xb410
-
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
 --
 2.32.0
