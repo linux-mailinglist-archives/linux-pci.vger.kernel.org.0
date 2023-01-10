@@ -2,86 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27D59664508
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 16:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DD7664539
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 16:47:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233081AbjAJPiO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Jan 2023 10:38:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        id S232148AbjAJPrQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Jan 2023 10:47:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232997AbjAJPiM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 10:38:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5D0AE70;
-        Tue, 10 Jan 2023 07:38:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C0417B81731;
-        Tue, 10 Jan 2023 15:38:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CCCC433EF;
-        Tue, 10 Jan 2023 15:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673365087;
-        bh=Ae0S8Vw/l+xGMbOvlfmhz4OmrcFgB5X+e/tuUD64qhI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LAWqU2ypxGwCgqobnWL36+/jv/dCMhLsYAZUHxhpU110wHlVuN2EUk7Vvz4RC6X/E
-         xff/aw4iDInfuL3EQZFPF4bs+vnYhRE91JbuGx3spYd4ZeybMLbTfmYBnXZ9ttamZz
-         EBFMnKR8DXo9vOEZ3xvmKBPXnc/doVhI7SSeJ3CmSuhz/QItKad0x4TkR3hPrvHPBM
-         7crUXpv96kb6eqgL4UyOkoYbj4UF+4ApTdaf9wDnLXRcoPcchW7SB/YV39AY6IHiWn
-         2Uc7SWjQwWCTRfQBhPtTw0y/LMAH8l79DjKdRw4/sTWEjbFXpFnT5oZrBF2CcO67S7
-         HaKhi4i/GF4dg==
-Date:   Tue, 10 Jan 2023 09:38:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Achal Verma <a-verma1@ti.com>, Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Milind Parab <mparab@cadence.com>
-Subject: Re: [PATCH v2 2/2] PCI: j721e: Add support to build pci-j721e as
- module.
-Message-ID: <20230110153805.GA1505901@bhelgaas>
+        with ESMTP id S232644AbjAJPrP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 10:47:15 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F204544C51
+        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 07:47:14 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id 200so2988307pfx.7
+        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 07:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TqAonkvvlkjP3xf6w+ybB+UtrnG/dwyrsl+5Eu8mqc8=;
+        b=mf/FK5QQ/vY8QNUoC+WI5SG18LUF8Xluig+DDuFtLBqLVw5dgihnvVzK7W+Ppyh269
+         loiqyPI3tiYgww9XXoKRNXiu5kWzC8qeSGFlzagrNlwFaiop0VTNDAfyboGd5suCbcoO
+         DOcOduMPFb8sHqfltXjBPKTGXIgikMDhANtS+gatesjve5RBGazeust3y4Q6ltlZuzxo
+         lrZ8XMpCJDzJ1vqdC0Wr8P+ETEdHhS+TI91RGEss/pgVvky6iXVFLdrVUnhOpk6rYpab
+         T1/o50CZkdIjqF7C8BWjlr7IenQjp5XFPPoK96RdkQFOAjAdCSFCi0VgsTzmfclxu6+H
+         2Vbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TqAonkvvlkjP3xf6w+ybB+UtrnG/dwyrsl+5Eu8mqc8=;
+        b=iIxrzKLFQP2SVA7VReYKLngRVGjnkRihIAUtdtZfXuRMsICckVG1mLdjdVXnC/Z2Z6
+         QE5VfudP8kX5MHa2u8tAKLS4YB3huyKBRKtuLjTl5Mi/rftJV4DVqCBFbAiWNcPl/2AZ
+         N1CEDUTnuiXil5Pt7005ZPXeSZVOya2B91n45z9aJaklKMJFel90Drp5EATa5GmToVaU
+         VVCs8b0VgP5Jh827PAUi6FasPDtJyTyFEw1643RSNsMvHdViYm2mZn3K709WdbMpAsA7
+         Lc+XjzyIHNXNwiXBo2qJ0cY4sXp7Z2rbyM4qCJ9Ca9bgM/CpbA0BeHxycSdryy6Ba4R2
+         aTdg==
+X-Gm-Message-State: AFqh2kp2ybjyLcIuApymTZHA3Gux3MM0SO3zimfpoY2/QXZl9NoTpuhG
+        rVFsZcof+ptsF7nAYpkSuVUXdW6tf0VGsNgx4S2SYQ==
+X-Google-Smtp-Source: AMrXdXsURvGSkkSc47ezsF3JNgU2Nl01yJsOr807CaAaqedHJcAD6cgm3G2hlvTSKbCOXRiBQXM13PbppreWaK5XaeY=
+X-Received: by 2002:a63:eb07:0:b0:4ad:2049:2aa6 with SMTP id
+ t7-20020a63eb07000000b004ad20492aa6mr1148308pgh.550.1673365634426; Tue, 10
+ Jan 2023 07:47:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db93c472-f617-3207-af57-55b14de8e236@ti.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230109080453.1155113-1-alvaro.karsz@solid-run.com> <20230110153434.GA1505598@bhelgaas>
+In-Reply-To: <20230110153434.GA1505598@bhelgaas>
+From:   Alvaro Karsz <alvaro.karsz@solid-run.com>
+Date:   Tue, 10 Jan 2023 17:46:37 +0200
+Message-ID: <CAJs=3_Cx1Pxg4iwLY5eWV9RVJoJ-btZVop3rHhzFmtErMJzj1Q@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] PCI: Add SolidRun vendor ID
+To:     mst@redhat.com, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 09:06:14PM +0530, Vignesh Raghavendra wrote:
-> On 09/01/23 6:05 pm, Achal Verma wrote:
-> > Discussed with Vignesh the current config dependency of pcie-cadence and pci-j721e modules,
-> > it seems like for now to modularize these drivers with minimal changes is to use "select"
-> > as they were used before in PCI_J721E_HOST and PCI_J721E_EP config options.
-> 
-> With this patch its now impossible to build PCI_J721E_HOST without
-> pcie endpoint support (as PCI_ENDPOINT is now a dependency). I don't
-> know a way to achieve this via Kconfig magic w/o splitting pci-j721e.c
-> into EP/RC (like pcie-rcar* or pcie-rockchip*)
-> 
-> > Will push updated version with "depends on PCI_ENDPOINT" in PCI_J721E config to check
-> > dependency on PCI_ENDPOINT before selecting PCIE_CADENCE_EP.
-> > 
-> 
-> Please don't top post and respond inline:
-> https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
+Thanks Bjorn.
 
-Apparently there was also email from Achal to Vignesh that didn't make
-it to the archives, probably because it was HTML or other "fancy"
-email.  See the thread overview here, which is missing something:
-https://lore.kernel.org/all/20230108155755.2614147-1-a-verma1@ti.com/
+> This should be indented with tabs instead of spaces so it matches the
+> rest of the file.
 
-It's best to use plain text email when possible.  See
-http://vger.kernel.org/majordomo-info.html for details.
+Michael, sorry about all the versions..
+Do you want me to fix it in a new version?
+I could fix it with a patch directly to the pci maintainers after your
+linux-next is merged, if this is ok with everyone.
 
-Bjorn
+> It's helpful if you can send the patches in a series so the individual
+> patches are replies to the cover letter.  That makes tools and
+> archives work better:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v6.1#n342
+
+Yes, I fixed it in the next version:
+https://lists.linuxfoundation.org/pipermail/virtualization/2023-January/064190.html
+
+Alvaro
