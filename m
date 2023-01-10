@@ -2,157 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2AD2663DE9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 11:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EC67663E4D
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 11:34:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbjAJKT4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Jan 2023 05:19:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
+        id S230364AbjAJKeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Jan 2023 05:34:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjAJKTe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 05:19:34 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C330C76204
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:18:04 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id i17-20020a05600c355100b003d99434b1cfso9464941wmq.1
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:18:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PM3i+83BPLCvCkjcHeSsVRsAE5H2Nw7gtRNrJCRY2Ks=;
-        b=dCctDUIS0wC58/aHLK5o+YpcliPRN6sleu5Xkbclt/zqSjkzezo8juF4OGzlLsvyGf
-         tUK3Rkiu727qQvxILep6HVoaAKnbkXRJxXvgarWY5BU8gAhVnxynCpG6cAqFAtwFfQan
-         3pwJ3RN0AT5mFJYR+byVFD9HC1x7kN8/SimGHmYJMdTQmmPWlFJml+nBX3qwrwOyQ0L2
-         UvUktrvtRBUHh2RAj9it+AGiFB2eOiNTbZqual4iMCHAWr+CVeoF7M3ea+Zyeosp0P2O
-         Fta/A301YwGUtq0CiX/gKZAwpIxyloMcGasDLKovqyrb3C28XcQSXdlOKbYVcLBa90Gh
-         bQdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PM3i+83BPLCvCkjcHeSsVRsAE5H2Nw7gtRNrJCRY2Ks=;
-        b=VaF5QLphY35OrhyyNL+o3VH7vCkPzqJnkJhxEd0mRlyt3XMfMIWkk1n3KW0qQf8Kq5
-         4sEZb1y5eZ8xSzf6ge1lD9rtocBb4L3+zVamFROLs/LCLePdQKJRmTsuXqTL/wA1vXIa
-         Q1yQom4m2c/Yq40PzEqYtqHp0BhMy+Rp9NQILYTHcRXwQtyzsqugut5TLGM2xFtNzToN
-         Iaegdb6WMafioks1Z3098+qVbjLG3DCp29HBAkZ21pil1EeFQWGsUqN5Z4V12a9Aoo34
-         /pyfaRke98YWX94yZBYq3YSq43w9e7K4VIi9W0fjtdab9uHGN2ys9I7lUfxOVenlc5i6
-         HNVw==
-X-Gm-Message-State: AFqh2kpBWsPeb/cIKV02/64n6uX9C5eJEHamwwoB1lTPboJehLnvc3EE
-        npUPiV8TpSvwt1T7QWboYQgiDA==
-X-Google-Smtp-Source: AMrXdXvxClrR4BtCis3ALpFrfvnnBH5INQXfgVxgssgGc8gS8VU+28Qjf2O0/5xOZ+1CSwryJpUEpQ==
-X-Received: by 2002:a05:600c:48a1:b0:3d1:f270:a81e with SMTP id j33-20020a05600c48a100b003d1f270a81emr48836013wmp.17.1673345883348;
-        Tue, 10 Jan 2023 02:18:03 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id z9-20020a7bc7c9000000b003d9ef37ec1bsm8484251wmk.5.2023.01.10.02.17.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jan 2023 02:18:02 -0800 (PST)
-Message-ID: <e3d32fe1-9f2b-09fb-d7e0-2c8f42e5365c@linaro.org>
-Date:   Tue, 10 Jan 2023 11:17:52 +0100
+        with ESMTP id S237591AbjAJKeI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 05:34:08 -0500
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4222A4FD6F;
+        Tue, 10 Jan 2023 02:34:06 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30AAXiGI060354;
+        Tue, 10 Jan 2023 04:33:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1673346824;
+        bh=DsTzouR69qoDyHh7VdYjjFd89D92gjs6h/qx5zUB254=;
+        h=Date:CC:Subject:To:References:From:In-Reply-To;
+        b=ijZDCUzg0RCqWyFSgnCaD83/ZVrGbruguEGHXqxLDpB97yhKj9hzyLrpiRHwNSpaJ
+         uc5eOrP+KSgT4Ze1bnimOXwWpzMT1/olCCZnfvd0NwZWomc2RBNepogNpKoyDZQ9hv
+         bFaG3YK4JH9gcKEQrnLWCeyFYWlJA9M571tb405c=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30AAXi0Z019981
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Jan 2023 04:33:44 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 10
+ Jan 2023 04:33:44 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Tue, 10 Jan 2023 04:33:44 -0600
+Received: from [172.24.145.61] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30AAXepN104976;
+        Tue, 10 Jan 2023 04:33:40 -0600
+Message-ID: <cf8c7d73-1e51-7dcd-bb32-34272a63066f@ti.com>
+Date:   Tue, 10 Jan 2023 16:03:39 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v2 09/11] dt-bindings: mmc: convert amlogic,meson-gx.txt
- to dt-schema
+ Thunderbird/102.4.2
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
+        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [RESEND PATCH] PCI: cadence: Fix Gen2 Link Retraining process
+To:     <tjoseph@cadence.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
+        <kw@linux.com>, <bhelgaas@google.com>, <nadeem@cadence.com>
+References: <20230102075656.260333-1-s-vadapalli@ti.com>
 Content-Language: en-US
-To:     Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
- <20221117-b4-amlogic-bindings-convert-v2-9-36ad050bb625@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221117-b4-amlogic-bindings-convert-v2-9-36ad050bb625@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20230102075656.260333-1-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09/01/2023 13:53, Neil Armstrong wrote:
-> Convert the Amlogic SD / eMMC controller for S905/GXBB family SoCs
-> to dt-schema.
+Hello All,
+
+Can this patch please be merged in case of no feedback or issues?
+
+Regards,
+Siddharth.
+
+On 02/01/23 13:26, Siddharth Vadapalli wrote:
+> The Link Retraining process is initiated to account for the Gen2 defect in
+> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+> is i2085, documented at:
+> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
 > 
-> Take in account the used variant with amlogic,meson-gx-mmc.
+> The existing workaround implemented for the errata waits for the Data Link
+> initialization to complete and assumes that the link retraining process
+> at the Physical Layer has completed. However, it is possible that the
+> Physical Layer training might be ongoing as indicated by the
+> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Fix the existing workaround, to ensure that the Physical Layer training
+> has also completed, in addition to the Data Link initialization.
+> 
+> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > ---
->  .../bindings/mmc/amlogic,meson-gx-mmc.yaml         | 75 ++++++++++++++++++++++
->  .../devicetree/bindings/mmc/amlogic,meson-gx.txt   | 39 -----------
->  2 files changed, 75 insertions(+), 39 deletions(-)
+>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml
-> new file mode 100644
-> index 000000000000..30228964fd9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/amlogic,meson-gx-mmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 940c7dd701d6..5b14f7ee3c79 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -12,6 +12,8 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> +#define LINK_RETRAIN_TIMEOUT HZ
 > +
-> +title: Amlogic SD / eMMC controller for S905/GXBB family SoCs
+>  static u64 bar_max_size[] = {
+>  	[RP_BAR0] = _ULL(128 * SZ_2G),
+>  	[RP_BAR1] = SZ_2G,
+> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
+>  	.write		= pci_generic_config_write,
+>  };
+>  
+> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+> +{
+> +	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+> +	unsigned long end_jiffies;
+> +	u16 lnk_stat;
 > +
-> +description:
-> +  The MMC 5.1 compliant host controller on Amlogic provides the
-> +  interface for SD, eMMC and SDIO devices
+> +	/* Wait for link training to complete. Exit after timeout. */
+> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> +	do {
+> +		lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
+> +		if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
+> +			break;
+> +		usleep_range(0, 1000);
+> +	} while (time_before(jiffies, end_jiffies));
 > +
-> +maintainers:
-> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +	if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
+> +		return 0;
 > +
-> +allOf:
-> +  - $ref: mmc-controller.yaml#
+> +	return -ETIMEDOUT;
+> +}
 > +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - amlogic,meson-gx-mmc
-> +          - amlogic,meson-axg-mmc
-> +      - items:
-> +          - const: amlogic,meson-gx-mmc
-
-This does not look correct. Either gx is alone (not compatible with
-gxbb) or it is compatible with gxbb. Cannot be both.
-
-
-
-Best regards,
-Krzysztof
-
+>  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+>  				    lnk_ctl);
+>  
+> +		ret = cdns_pcie_host_training_complete(pcie);
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = cdns_pcie_host_wait_for_link(pcie);
+>  	}
+>  	return ret;
