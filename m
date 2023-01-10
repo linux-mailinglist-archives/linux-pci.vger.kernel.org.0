@@ -2,148 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EC67663E4D
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 11:34:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF1BB664011
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 13:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbjAJKeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Jan 2023 05:34:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
+        id S232932AbjAJMPu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Jan 2023 07:15:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237591AbjAJKeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 05:34:08 -0500
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4222A4FD6F;
-        Tue, 10 Jan 2023 02:34:06 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30AAXiGI060354;
-        Tue, 10 Jan 2023 04:33:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1673346824;
-        bh=DsTzouR69qoDyHh7VdYjjFd89D92gjs6h/qx5zUB254=;
-        h=Date:CC:Subject:To:References:From:In-Reply-To;
-        b=ijZDCUzg0RCqWyFSgnCaD83/ZVrGbruguEGHXqxLDpB97yhKj9hzyLrpiRHwNSpaJ
-         uc5eOrP+KSgT4Ze1bnimOXwWpzMT1/olCCZnfvd0NwZWomc2RBNepogNpKoyDZQ9hv
-         bFaG3YK4JH9gcKEQrnLWCeyFYWlJA9M571tb405c=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30AAXi0Z019981
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Jan 2023 04:33:44 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 10
- Jan 2023 04:33:44 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Tue, 10 Jan 2023 04:33:44 -0600
-Received: from [172.24.145.61] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30AAXepN104976;
-        Tue, 10 Jan 2023 04:33:40 -0600
-Message-ID: <cf8c7d73-1e51-7dcd-bb32-34272a63066f@ti.com>
-Date:   Tue, 10 Jan 2023 16:03:39 +0530
+        with ESMTP id S233237AbjAJMPX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 07:15:23 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719432009;
+        Tue, 10 Jan 2023 04:14:02 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1673352841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X2y9vD/h9xsyVCCbYvsCOwthcc+ZcX9CU02bbo8R6CQ=;
+        b=PUOkQzoUAGGJ4BpHkJjmDf07TJY/lmgnLXhHyJAks6BCusPHr1YB6/l3Q2EglShcExeYGe
+        UjK3eXjfcy+GHfOyK26R3U+2mGvtPdTxMhuyYgQf1zSZdcxs69HIknLbq9etp+iyyTU8kF
+        bnBf1FwMnEsYGnL+bVTR54Uxky7VunE9KyN79pSn7UiFcsrumtK7IbOPzVeAf60CtpBbF/
+        FEI6ZN00/sACv8Iq/Uz+8Q/u2LxVpII/mCwzuexnbBvEtfj7s5r+GFpgYqSmwA904BBsMi
+        76BrikmeiQwTE+BzDbRxm1lQfTwE6p21SRTulzDwLDf7XQ4ZFRYLS5i6MBx5JA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1673352841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X2y9vD/h9xsyVCCbYvsCOwthcc+ZcX9CU02bbo8R6CQ=;
+        b=OMgBgUG7u5Pt/4nPkHDS1N7iBV2Aa2YurZvaMgpVFEazX91Hjqij9da/dHRwRylC9easFY
+        PFWkhWLhADrH7QCQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
+        Shay Drory <shayd@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: Re: [patch V3 13/33] x86/apic/vector: Provide MSI parent domain
+In-Reply-To: <Y7VyXNbWMdWWAC6d@nvidia.com>
+References: <20221124230505.073418677@linutronix.de>
+ <20221124232326.034672592@linutronix.de> <Y7VyXNbWMdWWAC6d@nvidia.com>
+Date:   Tue, 10 Jan 2023 13:14:00 +0100
+Message-ID: <87eds2k2nr.ffs@tglx>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [RESEND PATCH] PCI: cadence: Fix Gen2 Link Retraining process
-To:     <tjoseph@cadence.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>, <nadeem@cadence.com>
-References: <20230102075656.260333-1-s-vadapalli@ti.com>
-Content-Language: en-US
-From:   Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <20230102075656.260333-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello All,
+Jason,
 
-Can this patch please be merged in case of no feedback or issues?
+On Wed, Jan 04 2023 at 08:34, Jason Gunthorpe wrote:
+> Our test team has discovered some kmem leak complaints on rc1 and
+> bisected it to this patch.
+>
+> I don't see an obvious way that fwnode gets destroyed here. So maybe
+> it should be like this?
+>
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index 955267bbc2be63..cbbcb7fd2bd00d 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -1000,7 +1000,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
+>  fail:
+>  	msi_unlock_descs(dev);
+>  free_fwnode:
+> -	kfree(fwnode);
+> +	irq_domain_free_fwnode(fwnode); // ???
 
-Regards,
-Siddharth.
+That's correct. kfree(fwnode) leaks fwnode->name
 
-On 02/01/23 13:26, Siddharth Vadapalli wrote:
-> The Link Retraining process is initiated to account for the Gen2 defect in
-> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
-> is i2085, documented at:
-> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
-> 
-> The existing workaround implemented for the errata waits for the Data Link
-> initialization to complete and assumes that the link retraining process
-> at the Physical Layer has completed. However, it is possible that the
-> Physical Layer training might be ongoing as indicated by the
-> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
-> 
-> Fix the existing workaround, to ensure that the Physical Layer training
-> has also completed, in addition to the Data Link initialization.
-> 
-> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 940c7dd701d6..5b14f7ee3c79 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,6 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> +#define LINK_RETRAIN_TIMEOUT HZ
-> +
->  static u64 bar_max_size[] = {
->  	[RP_BAR0] = _ULL(128 * SZ_2G),
->  	[RP_BAR1] = SZ_2G,
-> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
->  	.write		= pci_generic_config_write,
->  };
->  
-> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
-> +{
-> +	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
-> +	unsigned long end_jiffies;
-> +	u16 lnk_stat;
-> +
-> +	/* Wait for link training to complete. Exit after timeout. */
-> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
-> +	do {
-> +		lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
-> +		if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
-> +			break;
-> +		usleep_range(0, 1000);
-> +	} while (time_before(jiffies, end_jiffies));
-> +
-> +	if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
-> +		return 0;
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
->  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>  free_bundle:
+>  	kfree(bundle);
+>  	return false;
+> @@ -1013,6 +1013,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
+>   */
+>  void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
 >  {
->  	struct device *dev = pcie->dev;
-> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
->  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
->  				    lnk_ctl);
+> +	struct fwnode_handle *fwnode = NULL;
+>  	struct msi_domain_info *info;
+>  	struct irq_domain *domain;
 >  
-> +		ret = cdns_pcie_host_training_complete(pcie);
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = cdns_pcie_host_wait_for_link(pcie);
->  	}
->  	return ret;
+> @@ -1025,7 +1026,10 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
+>  
+>  	dev->msi.data->__domains[domid].domain = NULL;
+>  	info = domain->host_data;
+> +	if (domain->flags & IRQ_DOMAIN_FLAG_MSI_DEVICE)
+> +		fwnode = domain->fwnode;
+
+irq_domain_is_msi_device() ?
+
+>  	irq_domain_remove(domain);
+> +	irq_domain_free_fwnode(fwnode);
+
+For some reason I thought the fwnode would be handled by
+irq_domain_remove() but fwnode_handle_put() is a NOP for the named
+fwnodes.
+
+Care to send a proper patch with changelog?
+
+Thanks,
+
+        tglx
