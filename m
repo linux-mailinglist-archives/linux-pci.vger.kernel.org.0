@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CAED663DB8
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 11:16:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD035663DC6
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 11:16:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231887AbjAJKQB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Jan 2023 05:16:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41584 "EHLO
+        id S238365AbjAJKQe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Jan 2023 05:16:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238138AbjAJKPj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 05:15:39 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED71551DC
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:15:11 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id j16-20020a05600c1c1000b003d9ef8c274bso5085157wms.0
-        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:15:11 -0800 (PST)
+        with ESMTP id S238137AbjAJKQC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 05:16:02 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFEFE7654
+        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:16:00 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id h16so11161814wrz.12
+        for <linux-pci@vger.kernel.org>; Tue, 10 Jan 2023 02:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AOaM9klxyd9oBpbyKATfQLn+xwTyF3728aG0uRNv66U=;
-        b=yoUk4O+00nkGYkYXyiqjTxWK4c7uEc66lLsyapNN3lN4GWq40l5XLLk6lO9MKtmxLQ
-         0mF0Rhs+YcdM7Am20PD9umvFqLKrgIs2WmrZqIoUhClE+yw2sEunnBBIg5tONlN8P8cg
-         T/1xm7p/HoG0u7bVzXhlUjL5p8+Fvq6t2cK3PJCGiI7caXb7zzfRZcI4qprHbjxN3Gal
-         hVatrgn4tWSnEMLt3nvou6IN6lw7QGsWFvZT88CEO87sTEeS8NAtT4PaEbRYqoFH/rKp
-         gsFXYOEShYrosm9/rWZnYkZv6fcSTdHmPOYz9UXe0E+RXWhxZ3TWNIKjLHIFrlUHmJ/e
-         RjHQ==
+        bh=G6m47pJ/58Hq8p7TJbcNCm8zVbjrhNNs4P/gWK+tMI8=;
+        b=yHxzcr9U9WVUxu0CfdLJGsHZKmUX8EdHygpQCodC4TPZe7ChByni5EFoxjbKjG4CB9
+         zqm1FtO4AMCKyq0Il3XcCB98mSSF+UxQzFR6zKgo61CPkTeI/xURnN2+tqVOYw7NZo54
+         Vr4ovZm9fiTOSmhzRhi72hdQQD6PSFiFSwoVDDk5OGDB8l0r4f2PXxFLzF2MEcpb4eYt
+         drNtDkBsghZyLBosolfbkSZr+S60rgUftMeDRiaKG6SRnrk+mZC5Xh2ID1lnQmx60heD
+         bcNFTY2FGmCFiqqTxtnmQpx1XeujtQrzGmHje59EXXUQZpidvUvzlYTZpQPFaYrWdRD4
+         EkXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AOaM9klxyd9oBpbyKATfQLn+xwTyF3728aG0uRNv66U=;
-        b=XMseb5AvBtefJ05/CrKqUPnMBt/z5RFJcZngtM0FXUz/TjOI1JeSHYgX6+lIjsjuaJ
-         pSOvKAT11Y4nSQglnO8GE1KeBQ9H+8q+LwLzInM8wtfknu7T5YPFoWDP/P7mYqtMgfMG
-         6/TdxrlJt3qrjd6aO7dwKPY+8oEY90VgoXlVcQ6FhfTKaOouwSkwf3dIJ3HAWk519Z3Y
-         va/25ctkjx1gMdfGpo+mf8iaWs2LnbEkDmEE6zXxILrmz308hv/WJ5Li5FMJs3iodh24
-         xh8NZ5HgNgr23sNkQwzB2DRiFINVhVQPOoFWu+804OLIRhLb1ljiy24SHpwbVegJc/Fu
-         T3zQ==
-X-Gm-Message-State: AFqh2kopwFBX0F9bvagyHLpx0apMsIX5sqJo1c79VdXVsDPrscP9l0iE
-        j4dRsXtTWf46681R2wBm7wgtJg==
-X-Google-Smtp-Source: AMrXdXstKuMbnF6GLlV2QioeyL83rfUZ/PCM9H9gtVt4kpI2kfbu1FzMUYifSv02GGXMFgTeLR3h+Q==
-X-Received: by 2002:a05:600c:3b02:b0:3c7:18:b339 with SMTP id m2-20020a05600c3b0200b003c70018b339mr58648300wms.37.1673345710203;
-        Tue, 10 Jan 2023 02:15:10 -0800 (PST)
+        bh=G6m47pJ/58Hq8p7TJbcNCm8zVbjrhNNs4P/gWK+tMI8=;
+        b=0nWkFGsTa2CCGdTETp/soykxb+0Ec/WVVct2BU4wp6c23q7TjZ51RiAt6cg9ZmBglT
+         KsjkhXoC4CvAX0xhmawwXM77XKISgsizsF2zcZ+WxT46k5WXsJ6OHwj8ikiBpLDqOjkk
+         XmyC1wUmLldobQWSqG2qcF/FlnCGsHWpkl4W30WCrWrq47rySZ26uQDLyhJM9h076rI3
+         rQuUOCrECUu7xkNrp06QW6Xyb32x7cx7HRdaGSxA9rgDT+rL8QU2DnrTfWVHVuRRWp6f
+         gX0AOlFlUHDApuhp0iI+h6/UxixK5lGrvg0Tf0ZUuI9ydgUgJw7jCG7KtP2Cj4kr2zg0
+         5qWg==
+X-Gm-Message-State: AFqh2kqVMkvOdouv3jxdkcv/KsD1Bmko3t7rYZ7VKY06mZ2ZKcN+N0dn
+        BFj9mmFgd8vXgk8rD7PfOud7Vw==
+X-Google-Smtp-Source: AMrXdXungLocivNlI60dcFce730ob7mgkYD26Ohpn86HXP7EmMvFIO9LBoSeY/bYq+MnrHw4cCqeTQ==
+X-Received: by 2002:a5d:51cc:0:b0:29d:f817:42d4 with SMTP id n12-20020a5d51cc000000b0029df81742d4mr19057934wrv.19.1673345759433;
+        Tue, 10 Jan 2023 02:15:59 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id f19-20020a1c6a13000000b003d9fb04f658sm754592wmc.4.2023.01.10.02.15.06
+        by smtp.gmail.com with ESMTPSA id w10-20020a5d608a000000b0027cfd9463d7sm10822105wrt.110.2023.01.10.02.15.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jan 2023 02:15:09 -0800 (PST)
-Message-ID: <2a0408ab-085b-c104-7e84-ce2fe1e6bea7@linaro.org>
-Date:   Tue, 10 Jan 2023 11:15:05 +0100
+        Tue, 10 Jan 2023 02:15:58 -0800 (PST)
+Message-ID: <5c59d432-3785-8eaa-af77-03fee09b5fd3@linaro.org>
+Date:   Tue, 10 Jan 2023 11:15:55 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v2 02/11] dt-bindings: nvmem: convert amlogic-efuse.txt to
- dt-schema
+Subject: Re: [PATCH v2 03/11] dt-bindings: nvmem: convert
+ amlogic-meson-mx-efuse.txt to dt-schema
 Content-Language: en-US
 To:     Neil Armstrong <neil.armstrong@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -88,9 +88,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
         netdev@vger.kernel.org
 References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
- <20221117-b4-amlogic-bindings-convert-v2-2-36ad050bb625@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v2-3-36ad050bb625@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221117-b4-amlogic-bindings-convert-v2-2-36ad050bb625@linaro.org>
+In-Reply-To: <20221117-b4-amlogic-bindings-convert-v2-3-36ad050bb625@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -104,15 +104,63 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 09/01/2023 13:53, Neil Armstrong wrote:
-> Convert the  Amlogic Meson GX eFuse bindings to dt-schema.
-> 
-> Take in account the used variant with amlogic,meson-gx-efuse.
+> Convert the Amlogic Meson6 eFuse bindings to dt-schema.
 > 
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
+>  .../bindings/nvmem/amlogic,meson6-efuse.yaml       | 60 ++++++++++++++++++++++
+>  .../bindings/nvmem/amlogic-meson-mx-efuse.txt      | 22 --------
+>  2 files changed, 60 insertions(+), 22 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic,meson6-efuse.yaml b/Documentation/devicetree/bindings/nvmem/amlogic,meson6-efuse.yaml
+> new file mode 100644
+> index 000000000000..11cace95d18c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/amlogic,meson6-efuse.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/nvmem/amlogic,meson6-efuse.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Meson6 eFuse
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> +
+> +allOf:
+> +  - $ref: nvmem.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson6-efuse
+> +      - amlogic,meson8-efuse
+> +      - amlogic,meson8b-efuse
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: core
+> +
+> +  secure-monitor:
+> +    description: phandle to the secure-monitor node
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Missing $ref
 
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
 Best regards,
 Krzysztof
 
