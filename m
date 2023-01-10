@@ -2,46 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8126D6639C1
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 08:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABD66663A84
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Jan 2023 09:08:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjAJHNg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Jan 2023 02:13:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40552 "EHLO
+        id S235593AbjAJIII (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Jan 2023 03:08:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235424AbjAJHNf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 02:13:35 -0500
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4694564B;
-        Mon,  9 Jan 2023 23:13:33 -0800 (PST)
-Received: from [192.168.0.2] (ip5f5aefa0.dynamic.kabel-deutschland.de [95.90.239.160])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id A6C6960293A85;
-        Tue, 10 Jan 2023 08:13:30 +0100 (CET)
-Message-ID: <db100b8a-b27e-af17-1095-420dca7884e6@molgen.mpg.de>
-Date:   Tue, 10 Jan 2023 08:13:29 +0100
+        with ESMTP id S235352AbjAJIHT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Jan 2023 03:07:19 -0500
+Received: from cmx-mtlrgo002.bell.net (mta-mtl-003.bell.net [209.71.208.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D5D193F3;
+        Tue, 10 Jan 2023 00:07:16 -0800 (PST)
+X-RG-CM-BuS: 0
+X-RG-CM-SC: 0
+X-RG-CM: Clean
+X-Originating-IP: [70.54.80.171]
+X-RG-Env-Sender: matt.fagnani@bell.net
+X-RG-Rigid: 63B600CD009937F6
+X-CM-Envelope: MS4xfCUGo27GhQgcr70sf442nrT2B06JG7JQm4Oo8WeAVI9/mwH+42A9EtzIcaAz/Z409dfEdYCjUrK/DxGZbrK4YAjwOkun/Ymxbn7R/AsKWZxR64kPD0kd
+ cvjkrud2NELDAx2JCY1URQMKLYsVKv0heaods7dV9V30vwqcL3BO60Cz+uoPJzPtrkiUzGqzNzAxprKsvsheAcC7jOrvr2xD+kNKQJdg9NLdWHZaG3QyifnS
+ C+JNo9k1yMAGDylXuTQUMvZPc4DnGhHXdat8ywuPXvFF43qQrI5CWSt3T/SGIrwln6/EUsoiWfJSQ2QmelgnNTSNx+JF+FV0k33ck/Vs5T4FVN78z2/HZ6wW
+ qpDQyjYLlSlbtO6mZCUoicQ6u1nAlY1YY/U+JQS6wGya9etMUQAht3y2D1ta7xsOxyOhFNxyo3W8megGhMipVdC/LEd9eAnF06ecL73Y7xpgTShbwSdeUWOp
+ ORE+y58BGvjcJzS6idZVZgkNQqbe+taPyuSOc0EC3VrZolI1LC40FpD1t6M=
+X-CM-Analysis: v=2.4 cv=d6kzizvE c=1 sm=1 tr=0 ts=63bd1c9e
+ a=I0QgvDUx5pjUA0xIX2H+Tw==:117 a=I0QgvDUx5pjUA0xIX2H+Tw==:17
+ a=IkcTkHD0fZMA:10 a=5KLPUuaC_9wA:10 a=fc0oe9_eLKIsakoo4NEA:9
+ a=QEXdDO2ut3YA:10
+Received: from [192.168.2.10] (70.54.80.171) by cmx-mtlrgo002.bell.net (5.8.807) (authenticated as matt.fagnani@bell.net)
+        id 63B600CD009937F6; Tue, 10 Jan 2023 03:06:54 -0500
+Message-ID: <be2b2dfc-ed6c-f762-7e4c-9d22b13717fe@bell.net>
+Date:   Tue, 10 Jan 2023 03:06:53 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [Bug 216863] ThinkPad X1 Extreme Gen 5: PCIe Bus Error:
- severity=Corrected, type=Data Link Layer, (Transmitter ID) after resuming
- from sleep
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Frederick Zhang <frederick888@tsundere.moe>,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Mark Pearson <markpearson@lenovo.com>
-References: <20230110012620.GA1460882@bhelgaas>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101
+ Firefox/110.0 Thunderbird/110.0a1
+From:   Matt Fagnani <matt.fagnani@bell.net>
+Subject: =?UTF-8?Q?Re=3A_=5Bregression=2C_bisected=2C_pci/iommu=5D_Bug=C2=A0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2E2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
+To:     Baolu Lu <baolu.lu@linux.intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Vasant Hegde <vasant.hegde@amd.com>
+Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        Joerg Roedel <jroedel@suse.de>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+ <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
+ <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
+ <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
+ <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
+ <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com> <Y7gs0zYKp/VXACBi@nvidia.com>
+ <f96b1cf3-6865-663d-f1cd-466a71519b08@linux.intel.com>
 Content-Language: en-US
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20230110012620.GA1460882@bhelgaas>
+In-Reply-To: <f96b1cf3-6865-663d-f1cd-466a71519b08@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,57 +70,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Cc: +Mark]
+Baolu,
 
-Am 10.01.23 um 02:26 schrieb Bjorn Helgaas:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216863
-> 
-> Frederick reports:
-> 
->> I recently purchased a Thunderbolt 4 dock (CalDigit TS4) and started
->> having millions of these warnings in my logs after resuming from sleep.
->> I previously didn't have any Thunderbolt peripherals. The device is a
->> ThinkPad X1 Extreme Gen 5 (BIOS 1.12 N3JET28W, EC 1.08 N3JHT21W).
->>
->> Dec 29 18:51:05 FredArch systemd[1]: Starting System Suspend...
->> Dec 29 18:51:05 FredArch systemd-sleep[31007]: Entering sleep state 'suspend'...
->> Dec 29 18:51:05 FredArch kernel: PM: suspend entry (s2idle)
->> Dec 29 18:51:07 FredArch kernel: Filesystems sync: 1.566 seconds
->> Dec 29 18:52:30 FredArch kernel: Freezing user space processes ... (elapsed 0.001 seconds) done.
->> Dec 29 18:52:30 FredArch kernel: OOM killer disabled.
->> Dec 29 18:52:30 FredArch kernel: Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
->> Dec 29 18:52:30 FredArch kernel: printk: Suspending console(s) (use no_console_suspend to debug)
->> Dec 29 18:52:30 FredArch kernel: ACPI: EC: interrupt blocked
->> Dec 29 18:52:30 FredArch kernel: ACPI: EC: interrupt unblocked
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:00:1d.0: AER: Multiple Corrected error received: 0000:21:01.0
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:   device [8086:1136] error status/mask=00001100/00002000
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:    [ 8] Rollover
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:    [12] Timeout
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0: AER:   Error of this Agent is reported first
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:23:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:23:00.0:   device [8086:0b26] error status/mask=00001000/00002000
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:23:00.0:    [12] Timeout
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:00:1d.0: AER: Corrected error received: 0000:21:01.0
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:   device [8086:1136] error status/mask=00001100/00002000
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:    [ 8] Rollover
->> Dec 29 18:52:30 FredArch kernel: pcieport 0000:21:01.0:    [12] Timeout
-> 
-> And disabling ASPM seems to have some effect:
-> 
->> It happened every time after resuming from sleep. pcie_aspm=off solved
->> the issue for me.
-> 
-> But also broke other stuff:
-> 
->> I just realised that pcie_aspm=off broke most of my dock's functions. I
->> still had Ethernet but wake-on-lan stopped working. The dock's
->> Thunderbolt ports, USB Type-A/C data ports, SD card slots all stopped
->> working too (no logs at all after plugging in things).
->>
->> Then I tested pcie_aspm.policy=performance. The dock started working
->> again but the warning logs were also back.
->>
->> Also tried applying quirk_disable_aspm_l0s_l1 on the Thunderbolt bridges
->> but unfortunately I still had the logs.
+I tried to apply your patch after checking out 6.2-rc3 and origin/master 
+but there were there the following errors.
+
+git apply amd-iommu-amdgpu-boot-crash-2.patch
+error: patch failed: drivers/pci/ats.c:382
+error: drivers/pci/ats.c: patch does not apply
+
+I manually changed drivers/pci/ats.c as shown in the patch. I built 
+6.2-rc3 + the patch. 6.2-rc3 with the patch had the same black screen 
+problem when booting. I added rd.driver.blacklist=amdgpu on the kernel 
+command line to prevent amdgpu from being started while the initramfs 
+was in use, and the black screen happened later in the boot as I 
+described in my previous email. The journal showed the same two warnings 
+and null pointer dereference which made amdgpu crash as I reported.
+
+Thanks,
+
+Matt
+
+
