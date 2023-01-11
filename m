@@ -2,175 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8232B665DC7
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 15:25:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D997665E26
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 15:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239334AbjAKOZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 09:25:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37370 "EHLO
+        id S232328AbjAKOkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 09:40:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239354AbjAKOY4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 09:24:56 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED701A202
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 06:24:55 -0800 (PST)
+        with ESMTP id S235053AbjAKOkS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 09:40:18 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061c.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eab::61c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E7D1E3D8
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 06:36:41 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CG++iB4ZpNh7CGmTB7pBI0eTVAKG0tIbjX3f3DomgzDWP9GEeVf9sK7+L9hG8UNax5HlPT5Wzl1Ayy0knKUMOUAe4o33DL9VdBngwxccEdvtjxqXO/FcXpm3IzSg9+poLir/qLLmInFT1b0YRgMRBtnAlpZJMJD0wqaG7Vymk+b7sWl2xgzjfPvK4H43fZ2csEHPiG+enUUrzd2WnWdEHVgLLGs/oIGoAwG6yELdUhAjsM2FSs0PzV2qyXrlGdV5l33rVQjgNsIcQ1p/Ahmq16+lVrSEElCZwO9LkQ3vyClsetH3S74spw84r9rNvX7kkGEK+P+21vRSjgMkwj5SMw==
+ b=XtwDA49/8JIZjkH9tfGhIDtKf2FXcKCMscnPlPc5a5HjwAanR3VYXDWNqinrSylsQgzxVypejnWU4fteVh2VYYGiqaZf9D4s9oJEdJJ8vwOmJO5NgIGdYWMHI3HTmwXNpyw+SAmD6xtWGvMX1NyolmDGgYhsgYx5TG36ffN3PHV5MLFDUcEfCsLN9mexuWlfyN5TlvjZs7+OoMCt24Yz87lGv04FukvUZew2BVzgzDAxd4q4Xh93aYhKvoHxorC+Vxc5GBLvkoMI9KyFkULzkfTOW5up2Ha1Q20jm6PTmUp0MW+k8Z6ZnuaG1dWW2GfbD8O3ceNlSajl+YqyhxK5vw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fESHjcs4caVF2apVXfh8oORoplwtmKrohAJnVP18tFc=;
- b=lIxmTeRdWMo3T/cb4j5zVWgtm0kOC5rlvyeiIMvHwH9WkoXcia/RcXL7v1Jdq6/+jVZTux516fpb5knDyW4mndAjckKXAfOk21xNN71jkB6xHYx/cxF2wqRAZpaiLeC0QKMCw7NlqfwwQSCpR7mcX6hWMfSksogW3HB1G3iFOEQcMkkyomQNPP90JJoNk1DXAS1lxdl+VB4AaPpGuDvh2PM/l+QhhW2NZNB0ckvQCA9QBOk1WCHb9NItwNzznAXT+YE2KbVVPeA7CaJY0wwNIPzsvkFnuBAqiCkH9V/+2hvDOOWjPbqzvzrSDc/Ezks88FGyqwa5sncJXZTkHB6yJw==
+ bh=MH32gXp6Gu1ejcPqr88SxOMxW3EjtGlW1MOa+0AeyuA=;
+ b=eqzY6W3NhbJs3xK6LXr9lRWvPlhEfFDMrKNRH9ZPdIcuf0ClFbym4ZNuOuelEWHNHvKjDNMIghFtrpIau/2ZyRchq7297ci/PN6tplj0xW4Tki6Qnl67xGmW2rghIqyS134Vc6dAP6Y+rbLMeWvm+DcAv+D1JbtcEYhJfwtUrsIK+Ho6Sn5gCz4me7BoOgb5LjIzrh7g0SVolSlzByrOXn3OrUnPFLCYl+FiDeiqZd20FPLknCLeaTrUbgmKq290s1DDwORZVvSgFJZWbd0siSszGvAU4ZVaCYGATjFpbYgOwJFcfKeYjWjOkq49fwGDo7aKUWrG7uZv2xx+rNkEcA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fESHjcs4caVF2apVXfh8oORoplwtmKrohAJnVP18tFc=;
- b=tuS8zbZMy5+6NliM3Q9V1KuNM0nEYRMhxny8A5jgqu+epT+Jo4+izhm7vfgA6udb+Nd1/z/qDTxg1GgTluZndIfxcKKKSZA6nyTYo4pSENIG8EJniNb74+uF+srG7Y7UKFEDoG3K4B5Ph8+qPLaclBJDJw9Yi7ajJQ31MN6RwgQ=
+ bh=MH32gXp6Gu1ejcPqr88SxOMxW3EjtGlW1MOa+0AeyuA=;
+ b=CT88MVXF5b9/ERkIMoH/taIOYFd1ApZjgL8PkaasAGN49/iPSLdPukSfs+X3e+ShnvoiaWMuNEbTBEnpFBRAde2Zxatm1uPCEvDqbqSa8Bg/sSB3oVUdTkPa2YKh3dt1NKuTkPW1o02H1+pLdiu+fb22H4J9s8YTsBpfto4UOkc5YJQhWfv9uD7uOJRsv9nAatS/A+pL2sRg18BbAT2rhBNZ9iRtDpL8LPIj7JWQ/xtbLL3gh3BMvRjXjfzUf3MoJhTd6wxUZ/+FjGz9x75dBhWXQh1UDf1WylWTJY5ttqA+KCI3eg6RmZZXxWLu0ZgdCjK8OufUfNDe04tltwxZng==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by DS7PR12MB5934.namprd12.prod.outlook.com (2603:10b6:8:7d::16) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by MW4PR12MB7000.namprd12.prod.outlook.com (2603:10b6:303:20a::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.13; Wed, 11 Jan
- 2023 14:24:53 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::80d8:934f:caa7:67b0]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::80d8:934f:caa7:67b0%3]) with mapi id 15.20.5986.018; Wed, 11 Jan 2023
- 14:24:53 +0000
-Message-ID: <6b0f54c0-4ee6-124c-fed8-307b434a86a9@amd.com>
-Date:   Wed, 11 Jan 2023 15:24:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled
- on upstream path"
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ 2023 14:36:39 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a%9]) with mapi id 15.20.6002.013; Wed, 11 Jan 2023
+ 14:36:39 +0000
+Date:   Wed, 11 Jan 2023 10:36:37 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc:     Christian =?utf-8?B?S8O2bmln?= <ckoenig.leichtzumerken@gmail.com>,
         linux-pci@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Tony Zhu <tony.zhu@intel.com>, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled
+ on upstream path"
+Message-ID: <Y77JdR5LgjFnP7FI@nvidia.com>
 References: <20230111085745.401710-1-christian.koenig@amd.com>
- <Y760hRDQbXRlc2Yz@nvidia.com> <0da0f213-5d6a-c692-b9f7-9babb40adc96@amd.com>
+ <Y760hRDQbXRlc2Yz@nvidia.com>
+ <0da0f213-5d6a-c692-b9f7-9babb40adc96@amd.com>
  <Y769WqrbEUPQ3pt7@nvidia.com>
- <38a7baf4-9b3b-154b-f764-fa8cfa600858@linux.intel.com>
- <Y77ETB282pVL9/x6@nvidia.com> <8c33f83b-3b8c-4714-b812-1e0627fd5537@amd.com>
- <Y77FuaSI8AV/i2cW@nvidia.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-In-Reply-To: <Y77FuaSI8AV/i2cW@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <41e25f9f-b106-de77-97ab-d50196de7514@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FRYP281CA0008.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::18)
- To BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
+In-Reply-To: <41e25f9f-b106-de77-97ab-d50196de7514@amd.com>
+X-ClientProxiedBy: MN2PR20CA0054.namprd20.prod.outlook.com
+ (2603:10b6:208:235::23) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|DS7PR12MB5934:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54c04275-4c3b-44f8-aa61-08daf3df9b41
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|MW4PR12MB7000:EE_
+X-MS-Office365-Filtering-Correlation-Id: d528a57e-d15a-480b-8100-08daf3e13fd0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zXTQfNIQaipIy0Yy1RNyRXTocDHoMPM/yehv3vI5VJOM5RQdSeLqNmJWercxv/8jwBLI7ofM6oKwntoDf7KHsK4kj6LPjNaFCPleY6wQ92UO+9W4uotBBblwyVtJeqrGdjieD5dchnMpkh4sBWEahnP4KKBA2q7s5M3cBK0PeTWpIERZYIncKwNyKIeeP3jgFp2myIjw3NA8pEDS51j40O9dMa8QxVelAnJGjQ0SUY/vKDSXr6Eq/TdsChcUPz7pvjZ0yejUngsCVPovDHPG/QcevOm450xbiDaLM10pG0GHm7vOu8POvQi886LZh/Rsh9+AjNx0iZLBKLTWxiCbE3yzc9L9Wmn2zWl8IGyLHoesXeIouldGjkfF+AyRlNUNWExRa1OJVePesKjH+CO2zuiSgW31IPKwVu8AsQpV2vPyxQlldldgVi9vl7KoPfxjYg5/JeVXFbip8nA2Ctn7ZDyz+Xk4LrI8ZtBS7O6sZea7lZ4Ye4uYK1RtTCoJBWmRKN8KaL+Lrt/OQwj9voWtOsLJ27V0rHTDvsEzWW2hBCOF+1NKePkYJOwSEIabWXmV355PaSN6q8Z7/aB/MS+sqPiiuSUAmxBqhuTCviWUhdycsmVCX+6y21+ji+7RQnbBY+J2KLOUmJctAGRa58kRopEpq1qAZxIyKApKlxsxfHwdWAZyciagmjrG+ye9fdTVgKgxjF0O5iMpRAEHTamgxmYRR4lTAJ1Wh86ThlYNL6g=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(451199015)(6666004)(6506007)(2906002)(36756003)(8676002)(4326008)(6916009)(53546011)(5660300002)(8936002)(31686004)(38100700002)(6512007)(66574015)(41300700001)(6486002)(478600001)(66476007)(66946007)(66556008)(186003)(86362001)(31696002)(2616005)(54906003)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: c50cq6EpiMURV4hNpD+7Qt8cu9hlAwuKaY8vf9PPuFnmRvRhHx3TFcuHBfhJ3fu96h374lU9dleYoF2EKYuLnWphZqHubW1dIJM/qkOzVrrUHw9FVtibyy9/Hr64wBOWZbFwTzk2w2yEqJDhAtgN1cwjFgRyK8KjvLPT+fBbVBI3mi8+9stJLFFar5gErQ8oZwgJutA3mNGBEXkSHHaMFIrL5Bxvm5Hz1u73Ccey26z4YxrDFGwWCU+WvSAga+pkQ/O3DFOQEqV+9PZM/b9w6GNxu1Bu6JYqoPC97BjCjzprq+wujPclmXbfmzJfsfw36SLkwE7B14/FJPS5IAkGZ0pr+11lTCFG2kNd0wkFicHWIPhFBTgua9vHR6EhHnjSs/zGYH+Pn+L47c1i8gifmTGTSb2U1x/5TWcJSPdfhtKrqycNk8Ab+s06cnpvhDb7gr88VSN+Z4SFMSxs66ajsSArmRRKm4Gq8pUKNyoO2OgetTIJZp63FVNfz/rBOYCf3lt+BosX5YcuYvNy4zeH5Yw5UkPXFCvgfFxJPhFhQ/u6S+mVGwkzSfvCSKGObABtVZ21Ef0mLKKp437TzMMRiXcfAlAOKR6fCQDASH+Nz/yqR2RN9qhqbW5dr6/U52IyoBvNnWv/LBhhOeLrVspiRA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(366004)(136003)(39860400002)(396003)(376002)(451199015)(66574015)(41300700001)(6506007)(4744005)(8936002)(5660300002)(2906002)(66556008)(66476007)(66946007)(8676002)(6916009)(4326008)(36756003)(38100700002)(2616005)(316002)(54906003)(478600001)(6486002)(86362001)(26005)(186003)(6512007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cFVrNTREMEhvMkV0N21EVE9veFZObjBURTh2a21pOWVKU2k2dzZsY2hRTVR1?=
- =?utf-8?B?YmJUOHRqbE1VZ1hrbW5KUG8zMGRMbWFwNFh2UmJXSmJ3azQ3cUgyNTlwVmJI?=
- =?utf-8?B?RTB0RE5NdmVMaVBtQis5eHZmTDd0aHNkOG5OVHFwQkF6VU9FMlhoZnlLT25u?=
- =?utf-8?B?bHM0SWIyeDZ3a3pZQnBrWWpOb0o4QThTQzVRRkVEbENyelhKdzF2UzhEcFAv?=
- =?utf-8?B?eDNTL0l1K0VFSHhFSW9Uc1ZVaGw5SjNkVlZEMFVuZG1YUTJUL1FjckkyRFpM?=
- =?utf-8?B?bEhhY2wwUUZQTXo3M2FadGg2VEdpdXJ2dGQxZDQ3eTdvNW1tSDdHQ2crT3dW?=
- =?utf-8?B?ZGxCMllWWEZsMDNIZGZIUFZlMno3RmJiNjdZdDFwSGdHUThmTlUrTnppMnZR?=
- =?utf-8?B?UmdTWlkvK3pRc25YejF2WDFDWGw3N1QrZzRxdG9jWk83WE1LdFpmdWsxT245?=
- =?utf-8?B?UVNYQ2p2L2ZaTkhWZnNRRlZadGc3Tk5uQUl0dFh4R3lsaFJpanl4d2VkbWJr?=
- =?utf-8?B?YVJpT1Y5SkZVeEVqd2RxVlRWUmZGalg2a3U3WlMxZVlScDU5ay90Tm8vTGpE?=
- =?utf-8?B?ck9IUGF4cWwzTVhXRkV4dnJiMDJWc003YmcwMytFdWUyd2NPQnJyUG5pRjE1?=
- =?utf-8?B?MGg2Sk1yc3FTMjQyYkxhQzNkem82amwrdEhIMlpDUWExMjNyK0tGbXdXOGVC?=
- =?utf-8?B?ZmpFQ3BZa0JPVXVmWXdPTXViN2RqV2VBdGpnWlZHMXgxakVRbEFPSnB4NWZy?=
- =?utf-8?B?RStqcElOSk5VUldsREpmNldCVW5NTUpYWjltOHpyS0I5MjVxelV1T0NteGtS?=
- =?utf-8?B?ZWlyU0h0RWROODlYSUtZRUgvdXVPajdJQzdRS2tzZ0hQWVZ0dXNFd2tOTFZW?=
- =?utf-8?B?RDh0NjNPV093UWV5czdxcXJVMXRGOFREWHpieFo0aHh5K0VkWkxtSWF2NE9F?=
- =?utf-8?B?WHphVEVqbkhCQTFGaGdoK2pyV0tNeTRZREYyeVp5T0dMWWhLUXphOFZxT1BC?=
- =?utf-8?B?WlB5MlR1T09WR1grd29PVXVVSGljUE8rbjVTSkZKUHRhdkJKOVc5UTBXSmlC?=
- =?utf-8?B?eG9qY1ZnY2t1aUNaaEVKNEVkR3FtWThRZlkxdEpTRmU2bzBvQWFNakxkTFNH?=
- =?utf-8?B?SlI0Z1FiclN5R2cya21XZmcrRU94NHBnRTVqM0ZqdVk4OUpReU5ISHlJcVJG?=
- =?utf-8?B?T2hncVQ5SURpcHNlYnJpZ0dsd0hqUGJjQnRBZVNiZHl2M2g4YkNES0hvTmV3?=
- =?utf-8?B?ZVhtMWhIeVE3U2hwaUtBblRtWXcxZ25KK2JuSFBnV2dKWG1GeThRcWZHaEo0?=
- =?utf-8?B?bEVjMmtjRmYrWXRKQVZBdVAyc2t4TXpERVJpV2xrc25ndmlacExBOGp3M3Q3?=
- =?utf-8?B?dDV5ZzZUYTlabk01TVBRRmhuN3ArL2x6ZmkzMW52bHp0V0JxNHdpREVrVVZC?=
- =?utf-8?B?QVMrTG00MG5ITlRFQllJT0ZxQlIwOE41akExZEVDcFJPUzJFa0NvMDZrSFpF?=
- =?utf-8?B?MUJTTFhUZUlVczdJS2ZSbFJJQ3g3eFJ5Vkp6TEFoSVpaU1BRUGZDdHpTNDJz?=
- =?utf-8?B?bUhLVHFsMUFmWkxtK2J4VXI4aUEvZVMydGtTa2xLYlhHVDliSDBuR1dhRDJ2?=
- =?utf-8?B?ek9YYkQwSEhWaHpRd29xNlU1ekZna1AvRy9FQy9hdjhJWDB0V3QxUTVWSmsv?=
- =?utf-8?B?MHg2cHVScEhOWWY2WHprNnJnRkRpaUpZcHdJSGZWNnBrVW9leWVTWGpYZ2g5?=
- =?utf-8?B?YmU3REQzZWczZ016NGl5U0VFTkxEdFI1TDQvakhOMGFtajliMmN4Ui9XYk5o?=
- =?utf-8?B?MUZrbUpGTnFvaExraVhNTUo0M293dGU1Q1lndTlkZCtSbXpxM2tSSnFseVNP?=
- =?utf-8?B?Sk1vdTJCQkVMZklINDVHNlZDTEZJY3dybXZEdUxPY29RazVPVDBOUHFxZ2tm?=
- =?utf-8?B?VmFJZnRMTG1nQzhvQzEycE9uMGt6VmhMN3QwSXZFSHYvZUduQktMNmVzaFA3?=
- =?utf-8?B?M0dXOGxEay9SNGVJVkVFQ2VpQUZ4RmNOenloY3NrVkRHQm5xNUZQWHJYbkk0?=
- =?utf-8?B?OXF5Vm5FMDRDTVd0UlJmYlprQnl0ZVNpWDNJMy96NUlKTHZIMDRXOGU3b0x3?=
- =?utf-8?B?TXlLNDZjbEJHWk02eVVCLzhWdi9BaHQ2TElTTGJETmtyR01pS05MMXlYZVdz?=
- =?utf-8?Q?7Y8f1HJBTp5R6EC1X6rJvPW9JCyabT4RmR0P7n0myBwF?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54c04275-4c3b-44f8-aa61-08daf3df9b41
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VnNxcmRXWmVnV2tRK2d2WTV2bkIxQnAyM0I4Njh5bDgxRVo2dTlOMGhwc1hB?=
+ =?utf-8?B?NjFJTGF3UXh6TExUb0xxNnJzaXZ1WS85U2svRWJtbDkxTFI3K0xZSzlabmhP?=
+ =?utf-8?B?NklZTCtSYlg2V0c0WklOWXdwblU0WW03cHRjUHBxNVBwQ3hNOFh4MlUyUmJX?=
+ =?utf-8?B?ZUJtVC9GRHZtZXlCcmtLNWd2UHhiQWtPK0d5U1JQeGlhWFhMWW10QmNPN3py?=
+ =?utf-8?B?MklVWXN5ZC9Fb3FyaTFON2xSbWxRWFV0RTlRbVVvZnl2TGZ6eWh5WlJsVGRv?=
+ =?utf-8?B?Y2ExR1l5TkFWbDF0bTlORFl4VXo5blVzWlp6ZjZjRGtDenFwODd4cm9GWjBa?=
+ =?utf-8?B?eDRGZkl1dEROL3VMSXovMndEY1QvT0Viemd1YkJKaVF6SGxEYzY1ZFRWRUgx?=
+ =?utf-8?B?dkRaQ2E1TjZKbXRBd2JVTWhKdzIvT0lsbUg3UDFvN1BvRzVmcXI2ZXN0QUw5?=
+ =?utf-8?B?aU9FZTc1Y3pJQXZjVzVScmxvTFVGT3YrTC80STZCTENaMTNnQ1VhOHVxVEtP?=
+ =?utf-8?B?Qll2YUc5VU1YZDg5SmZ4N21pa2J5NEpCZUU0Ly81SmZBRXY3eHRGbVl6QlRS?=
+ =?utf-8?B?WWM5S3lGZGhoZG5rM3JVUmxTOXZWRnNNREsvYVJsRGRhYjY3aklvakp1ZGxr?=
+ =?utf-8?B?TmJMS0ttRnU1cWp6cm5aNEROY3owZ0FVN2dEUmNnU2FYMm40T1JEenFQc0M3?=
+ =?utf-8?B?Y3RuL2krSm9LK2NPZHk3RWpmaHFrY25qSWpDVWVBaUkxdWRadjlXcDZTMHA3?=
+ =?utf-8?B?Uk9MM3N6MC9qMGFQZExlNnpiMS9pSkNsZUlUbGU0dmFoOHRIQXZMT3JDRFZl?=
+ =?utf-8?B?RGdZRzJnNS96eEF6ank5NWpGSW1QbXRlVDhIcUtpSE94QmFYSUdhSy9DZlRT?=
+ =?utf-8?B?WHpSTFd2akVUdTh6cEJCc3ordEVMZDVCTkN5bExDVXAyd1hVSGI5VGlud2dL?=
+ =?utf-8?B?TENLb1BqZ2c3ZWY5dFV2eVU2Tyt2QVJnaFMrRXlnWnRvL0EwcE45eHBwTER1?=
+ =?utf-8?B?eUJPL0dGNG5oU21kbEllL3psU3F6cEY4TXY5NCtOZ0w4eUJLcm5oR2dFbE9S?=
+ =?utf-8?B?UlIyU3JyZmhLT3EzSDRMS2dtcDAzWEMyY1phRmZOL3R6ak96NTF3cnNnQ0Fi?=
+ =?utf-8?B?ZDBFM2tMZUhBZ0l2L0ZYeWsxUlUyN2EvWjdFeHB6bjlMaEtXWTFiamtFZXA5?=
+ =?utf-8?B?SjJoN1F0YzlBeXlwWHBYMlhENDNXa1RjUGhHSnFyaTd2LzRNMFFSdGJPV1M0?=
+ =?utf-8?B?aVkzN0ZoeG5reVNkdDlGK3JPWVBwN1IxWTByeEtUdGdVOXZPZXIvVDJBcitw?=
+ =?utf-8?B?YUo4MXg4Zm5iZ2NNVWZ0MGdtMVN5bjNxMlZUU29ZTEZNT0VMYXdTb1NnYTVS?=
+ =?utf-8?B?ckcxT2VoSmhnRExYR1RLY0U2N0g0STFQQmxNSTg0VkdYdjNnVlZ0UHZSQ003?=
+ =?utf-8?B?MHI4NDBKN1BxZ0J2RHN2SDNQaXFVZk5MaFdyTlBGbmgwamtLWVBRZmZyQUxM?=
+ =?utf-8?B?TXp1dXdWZHhPMkd1M2FMRnhzcmJuSEFIaWRWc3I3SG9NV2k4ejVrbWYzVFo0?=
+ =?utf-8?B?RFpxK2pDMCtqd2Vab0dwaGlrT0NxWXI4NFFudnBmdXloVnFYT0RxZ2NNUGgz?=
+ =?utf-8?B?V1dRWWZ4VkNUTWkwdkxtUWpiK3BLY3RPRDV2OXhOSXozQTRjanBOS2t1VzN4?=
+ =?utf-8?B?c2QwK2poY0tBT253VTVGNG5qc0xJdlcwcUc3dHM3Ti9TdGUvTmNlUDhVOExq?=
+ =?utf-8?B?U2liV1lvYzVJZzBnYTdHZk14RFliOU9oSHhUMFJyWTFiZEdkRHpZVkFXbDhu?=
+ =?utf-8?B?OExwUStEM1NhVkFLODErUjdieU9oZlI0T1VUdUFYRE41NkJOcDRjckJ3ZVdo?=
+ =?utf-8?B?V0pkMFBoMk5tNS8zL3RnenhsdHBsV1NERzdYdXptMzZTTVczU01JSEpXNVYy?=
+ =?utf-8?B?OVNtUXRCZ3pCZGhGcjFDaFNCVDZTZ3lISStUOGlMbXNxUUVHL3BMNlRKNGty?=
+ =?utf-8?B?UmtKVjFFSzU5Q3VBZjNPWkFmUE9JSXFOdHM4ZjlrMFdObnhVTnBQNDJXRTVD?=
+ =?utf-8?B?NHYvUjFHaXlGdjgxamlybVYzQVQ3dGVncDhLWjAvWVowQjhETytMYWJ0dlBU?=
+ =?utf-8?Q?7MLn07rEgDtzB20By47MJEd9K?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d528a57e-d15a-480b-8100-08daf3e13fd0
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2023 14:24:53.5468
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2023 14:36:39.1572
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q3VOS0JNtvzWbu8kLtq8npiZRUVEKZXB1AlhxdnmeWzSDapAKtfQ6VYg9JBee+dK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5934
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: RN6MihJlxFQA93ZUu6VOHtICkce0r8UEzSr7xVu8/63xtXOdILhBEldmZDphJ2wW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7000
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 11.01.23 um 15:20 schrieb Jason Gunthorpe:
-> On Wed, Jan 11, 2023 at 03:17:03PM +0100, Christian König wrote:
->> Am 11.01.23 um 15:14 schrieb Jason Gunthorpe:
->>> On Wed, Jan 11, 2023 at 09:54:03PM +0800, Baolu Lu wrote:
->>>> On 2023/1/11 21:44, Jason Gunthorpe wrote:
->>>>>> iommu_enable_pci_caps() in the Intel IOMMU driver. This also does some
->>>>>> handling for ATS, so here we could check the info->ats_supported flag if ACS
->>>>>> needs to be checked or not.
->>>>> *groan*  this is seems wrong 🙁 Lu why are we doing this inside iommu
->>>>> drivers instead of in the device drivers to declare they want to use
->>>>> PASID?
->>>> Currently it's common to enable pasid in the IOMMU drivers, but device
->>>> driver has more knowledge of the device, hence it makes more sense to
->>>> move pci_enable_pasid() to the device driver.
->>> So, lets fix it that way.
->>>
->>> Add the flag to the pci_enable_pasid(), set the flag in the AMD
->>> IOMMU's special AMD GPU only path assuming the device will always use
->>> ATS
->> That will fix at least this the AMD use case.
->>
->>> Do not set the flag in the other iommu drivers
->> Don't we have other hardware which supports ATS as well and might run into
->> the same problem?
-> As I said, I think we have only 1 user of the common PASID API and it
-> was happy with things as-is, so I think for v6.2 we are fine.
->
-> Honestly, not declaring ACS in a 'enterprise' multi-function device is
-> already kind of sketchy/rare - even if ATS saves things for the PASID
-> case.
+On Wed, Jan 11, 2023 at 03:07:36PM +0100, Christian König wrote:
 
-Yeah, as I said I've checked a couple of different AMD hardware. And 
-what I have available always has ACS, ATS, PRI and PASID enabled together.
+>    Well no, we can perfectly fine enable this as we have done in the past.
+>    What we can't do is rejecting it without driver specific knowledge,
+>    because the hardware might still work correctly.
 
-That there is a Carizzo variant which enables ATS/PASID but not ACS is 
-indeed a bit strange.
+It is an interesting point that any device using PASID for SVA must
+necessary also be doing ATS/PRI and thus must always be setting the
+translated bit in their Mem TLPs
 
-Christian.
+So, at least at this instant in the kernel we have no need for the ACS
+check as everything is SVA.
 
->
-> Jason
+This is forward looking where we are going to have non SVA uses of
+PASIDs and we cannot guarantee translated TLPs.
 
+Keep in mind this is pretty much an integrity problem, eg if I allow
+iommufd to assign page tables to a PASID without PRI we can get bad
+behaviors if the HW does not route properly.
+
+So we are justified to be conservative here to prevent data corruption
+in bad cases.
+
+Jason
