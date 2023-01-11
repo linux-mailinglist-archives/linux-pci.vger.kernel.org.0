@@ -2,101 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CFCB6665B2
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 22:42:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7024066660E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 23:14:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235088AbjAKVmY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 16:42:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        id S236061AbjAKWO4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 17:14:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235290AbjAKVmX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 16:42:23 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E0D1EC56;
-        Wed, 11 Jan 2023 13:42:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673473342; x=1705009342;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bcAWwGCMXT32qahjM/225JG23YMKXua4UF2lHbC3gRc=;
-  b=Pi2lRVAxQhhi1/9nbxnzA1cd0x7bzYeOn2jVa5nTa+6BYUe+DPMiP7zV
-   kJw0LE+hxskTeIP7yEnfTzY663wlxagtx+FJgMGTdgvdSTHE0THkU5nH1
-   xzutiwK40MxFm9kRNZADLAO8EYTd9uwEMmKB83VyLlHOf+ibx3RZUiAJC
-   dpBMvfizL/eLWEIyuEiR/uPOhXOZTixA49xZaOQqmgRiWGo7fT0VMGFSu
-   ttEfVbYiYQ/hJiLXTzkOY1lePMZcC76uib6vWRHaxs87oi3jlroBxSpO0
-   fxxScGdlc9YbY+TlCVePEMubB+TGvUxEp7i2cr4+6n6FOtfP6DDk1EW1V
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="303238993"
-X-IronPort-AV: E=Sophos;i="5.96,318,1665471600"; 
-   d="scan'208";a="303238993"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2023 13:42:22 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="689903563"
-X-IronPort-AV: E=Sophos;i="5.96,318,1665471600"; 
-   d="scan'208";a="689903563"
-Received: from jguerber-mobl1.amr.corp.intel.com (HELO [10.209.5.105]) ([10.209.5.105])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2023 13:42:21 -0800
-Message-ID: <a9126d49-6e98-956c-f4a3-699cc86d8b11@linux.intel.com>
-Date:   Wed, 11 Jan 2023 13:42:21 -0800
+        with ESMTP id S236070AbjAKWOY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 17:14:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE34243E45;
+        Wed, 11 Jan 2023 14:14:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7C748B81CD5;
+        Wed, 11 Jan 2023 22:14:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC377C433EF;
+        Wed, 11 Jan 2023 22:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673475261;
+        bh=brVowBD7+XLa5K8t/DrjPINuNXrFSej5bIzDIj+mIFI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dG3fOAFX0pDPm9wB7aarisELFuK5eWKPQ1eHhaEiS5CXGgVo8fswI+q6JmaGaJzQq
+         4PW7BjrZHQnZIwDnxBabdJCo/XstfAqNrQWO9z7s3YRYf2NkTXayVJHhc9KSnR42+M
+         RlRxsc9oqJFIe3aPzKNaxDrHTJan9pHD70nkp8j3ReR8MgKkDjsJrkoqw9NcilnO5f
+         iO+hkJA2t7+aJOXa6/XUOo58D4nFucoDM3DMRV9pNFlfbRS6gSe/g9F825KmhJuCQo
+         Up33XjlCLgLtu+/RJRoxWjvJj+m4Xu8KlOpx0wekWfREKUGu83AUKlP6ZLi+wVrRJZ
+         koV0YRz1S7q8A==
+Date:   Wed, 11 Jan 2023 16:14:19 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jian Yang <jian.yang@mediatek.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        chuanjia.liu@mediatek.com, jieyy.yang@mediatek.com,
+        qizhong.cheng@mediatek.com, rex-bc.chen@mediatek.com,
+        david-yh.chiu@mediatek.com
+Subject: Re: [PATCH 1/2] PCI: mediatek-gen3: Add power and reset control
+ feature for downstream component
+Message-ID: <20230111221419.GA1710905@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH V1] PCI/AER: Configure ECRC only AER is native
-Content-Language: en-US
-To:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        ruscur@russell.cc, oohall@gmail.com, treding@nvidia.com,
-        jonathanh@nvidia.com
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, vsethi@nvidia.com, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20230111203116.4896-1-vidyas@nvidia.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230111203116.4896-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230111032542.20306-2-jian.yang@mediatek.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-
-On 1/11/23 12:31 PM, Vidya Sagar wrote:
-> As the ECRC configuration bits are part of AER registers, configure
-> ECRC only if AER is natively owned by the kernel.
-
-ecrc command line option takes "bios/on/off" as possible options. It
-does not clarify whether "on/off" choices can only be used if AER is
-owned by OS or it can override the ownership of ECRC configuration 
-similar to pcie_ports=native option. Maybe that needs to be clarified.
-
+On Wed, Jan 11, 2023 at 11:25:41AM +0800, Jian Yang wrote:
+> From: "jian.yang" <jian.yang@mediatek.com>
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/pcie/aer.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Make MediaTek's controller driver capable of controlling power
+> supplies and reset pin of a downstream component in power-on and
+> power-off flow.
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e2d8a74f83c3..730b47bdcdef 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -184,6 +184,9 @@ static int disable_ecrc_checking(struct pci_dev *dev)
->   */
->  void pcie_set_ecrc_checking(struct pci_dev *dev)
->  {
-> +	if (!pcie_aer_is_native(dev))
-> +		return;
-> +
->  	switch (ecrc_policy) {
->  	case ECRC_POLICY_DEFAULT:
->  		return;
+> Some downstream components (e.g., a WIFI chip) may need an extra
+> reset other than of PERST# and their power supplies, depending on
+> the requirements of platform, may need to controlled by their
+> parent's driver. To meet the requirements described above, I add this
+> feature to MediaTek's PCIe controller driver as a optional feature.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Is this delay (dsc-reset-msleep) specific to a device downstream from
+the MediaTek controller, not to the MediaTek controller itself?  If
+so, it sounds like it should be a generic value that could be used by
+other drivers, too.
+
+How do you determine the value?  If there's some PCIe spec that
+determines this, please include a citation to it.  
+
+Bjorn
