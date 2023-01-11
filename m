@@ -2,67 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6D4665782
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:32:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55E57665851
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:57:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232154AbjAKJc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 04:32:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33144 "EHLO
+        id S232664AbjAKJ5e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 04:57:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235868AbjAKJbm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:31:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A86D120AE;
-        Wed, 11 Jan 2023 01:30:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A73961B19;
-        Wed, 11 Jan 2023 09:30:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0ABC433EF;
-        Wed, 11 Jan 2023 09:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673429421;
-        bh=pNfMIqO9t73o1w5Ym2sYx549qBwB7dkKL+u78E64yg0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=FsueOTAIOrGEA4Pg+SXHDGPjBZcoJL8km4y68X6NDgXyfStiYknAv7prSI0U7SSxH
-         T41K10gPZqOUT5aQhW8WugjDhW9FdCLYPWp62o5OPxywFlCij8WcUFU6Iz8T3YotGP
-         R17mf8Xxs+ftPHgXo3Nfirtb/VUa5ZMuDPnH6J4qTcPZxwbm9Pkv39rn8kSj6UciGD
-         Q8/V7Gbf8WPAMvb8an9EhdZdDTCg0lJn5Ta3GqsF//PWHp7Dsna+M7GvYc5QzjbxX/
-         HZyp1NqIs/ienbF+iUwPo8NypH22x24WNlPCskL95Bdt6/7CIPRGewawNZ8f3bipvM
-         GM7ydKRHCrEgA==
-Message-ID: <dccfa004-1d40-acc0-6220-9232193b648f@kernel.org>
-Date:   Wed, 11 Jan 2023 10:30:11 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: mediatek-gen3: Add support for
- controlling power and reset
-Content-Language: en-US
-To:     Jian Yang <jian.yang@mediatek.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
+        with ESMTP id S239220AbjAKJ4z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:56:55 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4688CC9;
+        Wed, 11 Jan 2023 01:54:11 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id jo4so35476599ejb.7;
+        Wed, 11 Jan 2023 01:54:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m8kExCUKRNhblEbW+B8lIqskfGoABqtXBunGasaq1Oo=;
+        b=kgSSuMjCic6AcTBc/EZpLz9gNiQVLoTJMu/wm4fQcLczNMuXE85aCL4ohw1hQ9EXfk
+         basT8jf5u5sfV7woGgAfTsqpVUyQ6ZCtNcVtBfyck925RBBQpVTySHotWywXi9DJ/43P
+         VZzbzyWJnJOl4E4c5w/taxrV4y46mWDR85QOzEjj3WbkA9A7uI6eaZ666/5DzoCnt4w1
+         OWGTRiSpz0+g5KyNK/NtTCJPHLO6HozLwy1VLB5tutOoQsWV+1+e7A4s98p15+BRS8fw
+         wl8q9eMMgAqLrKVQRNHQy4C6a8ptWtjConGv7DLdYhNo15EeHole0REU5fKmr1KSxdaR
+         zHwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m8kExCUKRNhblEbW+B8lIqskfGoABqtXBunGasaq1Oo=;
+        b=2pSlnhkB3ZVPDknK6FkH+ZU5a5ru1bwJUyH9IY/R3Jm3aHB6kTPFTPKVRs0wKCJ4DE
+         WzO15bR//Gksirqrs3Imiz/DMOq5qDkZOufVt0NH8uILHkgcTOS35myPlehM+ZZj7h70
+         PubhFICDQcuahisgLot3VxKPwohOy1Q9yWEptwXNPP6f4hIfile8frSnrlHdDKgZ2Ebz
+         1RKz92PvKeeLeLvJ1CMgtluBYghFUPE7k/d0iu0TAxuM1lK8xB3tvb6OLeoQA1rf9z8N
+         oMyLKSeXr/gnwnvHPyQjvYz/fXRez+jdf1KbT1KVwydKjxhrQe9mOfaRStU/POae3kAo
+         6OYw==
+X-Gm-Message-State: AFqh2ko1hxuOZC21xBq28KTm6w7JDBYDhXLkVwb9VOyRoGtu/kOGOmRZ
+        UGuID7dvuNL6Tix1qSivMVQ=
+X-Google-Smtp-Source: AMrXdXviwQ9qBVfsVUAk9RIHULDycXIVNWkW/bbCw0pNuqvVggqjD4WexAU7d9BEgpVYjulNSCTIWg==
+X-Received: by 2002:a17:906:3513:b0:7ff:7205:414e with SMTP id r19-20020a170906351300b007ff7205414emr54002294eja.69.1673430849942;
+        Wed, 11 Jan 2023 01:54:09 -0800 (PST)
+Received: from felia.fritz.box ([2a02:810d:2a40:1104:a47e:7f3e:6b25:bafb])
+        by smtp.gmail.com with ESMTPSA id k2-20020a17090632c200b007b47749838asm5891101ejk.45.2023.01.11.01.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jan 2023 01:54:09 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        chuanjia.liu@mediatek.com, jieyy.yang@mediatek.com,
-        qizhong.cheng@mediatek.com, rex-bc.chen@mediatek.com,
-        david-yh.chiu@mediatek.com
-References: <20230111032830.20447-1-jian.yang@mediatek.com>
- <20230111032830.20447-3-jian.yang@mediatek.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230111032830.20447-3-jian.yang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] PCI: dwc: remove redundant config PCI dependency for config PCIE_DW_PLAT_EP
+Date:   Wed, 11 Jan 2023 10:54:01 +0100
+Message-Id: <20230111095401.17071-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,70 +68,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/01/2023 04:28, Jian Yang wrote:
-> From: "jian.yang" <jian.yang@mediatek.com>
-> 
-> Add new properties to support control power supplies and reset pin of
-> a downstream component.
-> 
-> Signed-off-by: jian.yang <jian.yang@mediatek.com>
+While reviewing dependencies in some Kconfig files, I noticed the redundant
+dependency "depends on PCI && PCI_MSI". The config PCI_MSI has always,
+since its introduction, been dependent on the config PCI. So, it is
+sufficient to just depend on PCI_MSI, and know that the dependency on PCI
+is implicitly implied.
 
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC.  It might happen, that command when run on an older
-kernel, gives you outdated entries.  Therefore please be sure you base
-your patches on recent Linux kernel.
+Reduce the dependencies of config PCIE_DW_PLAT_EP.
+No functional change and effective change of Kconfig dependendencies.
 
-> ---
->  .../bindings/pci/mediatek-pcie-gen3.yaml      | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> index 7e8c7a2a5f9b..46149cc63989 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -84,6 +84,29 @@ properties:
->      items:
->        enum: [ phy, mac ]
->  
-> +  pcie1v8-supply:
-> +    description:
-> +      The regulator phandle that provides 1.8V power to downstream component.
-> +
-> +  pcie3v3-supply:
-> +    description:
-> +      The regulator phandle that provides 3.3V power to downstream component.
-> +
-> +  pcie12v-supply:
-> +    description:
-> +      The regulator phandle that provides 12V power to downstream component.
-> +
-> +  dsc-reset-gpios:
-> +    description:
-> +      The reset GPIO of a downstream component.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ drivers/pci/controller/dwc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why you cannot use standard reset-gpios property?
-
-> +    maxItems: 1
-> +
-> +  dsc-reset-msleep:
-
-Wrong property unit/suffix.
-
-> +    description:
-> +      The delay time between assertion and de-assertion of a downstream
-> +      component's reset GPIO.
-
-Why this should be a property of DT?
-
-> +    maxItems: 1
-
-maxItems of what?
-
-> +
->    clocks:
->      minItems: 4
->      maxItems: 6
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 99ec91e2a5cf..ff2e478e48b5 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -67,7 +67,7 @@ config PCIE_DW_PLAT_HOST
+ 
+ config PCIE_DW_PLAT_EP
+ 	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
+-	depends on PCI && PCI_MSI
++	depends on PCI_MSI
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+ 	select PCIE_DW_PLAT
+-- 
+2.17.1
 
