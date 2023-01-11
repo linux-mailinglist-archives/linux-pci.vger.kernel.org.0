@@ -2,114 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E165665B64
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 13:30:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF63665BC3
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 13:53:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232420AbjAKMam (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 07:30:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
+        id S232793AbjAKMxl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 07:53:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232757AbjAKMa2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 07:30:28 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BB8B07
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 04:30:26 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id c26so6853246pfp.10
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 04:30:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jUBhq6gDwIZT95NIs8306ERf1NfWP566N/5jgccgjik=;
-        b=gpkiR1z4I+KOuHdaHilhRu5VCtC51kivd5GKp//dSEGu5DwZiH4SAFcM7NzqrIh1JF
-         Z/ArtivzRkvhOVxaXS1VSZ8HBpMjHz/KQF0EWbFUCwYhAGaxy1jgByeZUWH7TfwFXAyd
-         FOMJ+ImDvD5Vv+a4mrvm1jvtv+gjptCASHJpOZ5G1oQmb945slLCChIZBc4v/pPmBvIe
-         uG6yC/nKHZ0C6N0/HecAf+fxgjk2UejEH1lqcTGXJVvEsTE8Mura07pRZVJdvMl7wX6E
-         yJEUp8pA6o5KXZ0fSE7nB1e12AaH+AjpC6XUHpZ1bOc4qIZ8Pa5xy4VKNlosnV3n6uxJ
-         jjww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jUBhq6gDwIZT95NIs8306ERf1NfWP566N/5jgccgjik=;
-        b=nEgDhnzc7YiKi5DiqiX5WfJIuspAeSuDa5Kr8hY/KiuUznv3sm8QBKKhM29q4RrBBp
-         1Ntz4DZ/7AqBKoVKfhoOv2A+blkXPF1idq5FnCXC83JeV5PtM0vRDK2zA+FjAy5qBZAk
-         QSkBueGaBUbHZXTHrXq9tYO2ALawvPKIadui+/l+qoOFPya/qYr2jSvuzlmQZJS/Lf4k
-         zs8BRIsumoIJ+aVhoMsrpGquxvoZRpXDloWVqH86RAUnlDBE2beL1jbRO8W1yz0CgEc1
-         GAKlur7+ZfFC6ZVvgJj3pfaiIHEYSYnQ/AuPpwRvhoUDEYq0Xre4+My7yNuQ5joTrufa
-         dYYA==
-X-Gm-Message-State: AFqh2koIEeaA7jAGhgNEgpuS9tTT8MHc+TJZcKnWLHn/YoR3HZG/3tCW
-        2lNs3R7DZc0uuPp0/cfWhvJd
-X-Google-Smtp-Source: AMrXdXuk2tFmgf8IGHH8e6xsf8DemGt04XaOt1fpa8Kz8SzpJugkztdcodDwZgpBv6K3oXTrSW0GZg==
-X-Received: by 2002:a62:6001:0:b0:582:33b4:4c57 with SMTP id u1-20020a626001000000b0058233b44c57mr2062856pfb.33.1673440226258;
-        Wed, 11 Jan 2023 04:30:26 -0800 (PST)
-Received: from localhost.localdomain ([117.217.177.1])
-        by smtp.gmail.com with ESMTPSA id c15-20020aa7952f000000b005747b59fc54sm8719594pfp.172.2023.01.11.04.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jan 2023 04:30:25 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     bhelgaas@google.com, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lpieralisi@kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: sm8450: Allow both GIC-ITS and internal MSI controller
-Date:   Wed, 11 Jan 2023 18:00:04 +0530
-Message-Id: <20230111123004.21048-2-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S238549AbjAKMxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 07:53:34 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EA818B10;
+        Wed, 11 Jan 2023 04:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1673441614; x=1704977614;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QKLSe53ZxfhTjhv3XU7LdIwDt1114h07vebSpiOwft4=;
+  b=Ilk7fx/hscrVQfBDU6abK2L2wwosdEa7djxDymOUJnmguMVrgOS/4Mzo
+   8NnTTkwwCqCUg9Iu/kz1NCg0+h6AO+Rg5XKtg3SSCK77SDTisZPX2GLg1
+   CSD95djrs28F7uRufAnIAHGo+/ew3QSUGLe9sTXfMiZw2uE4GOfAgBX0X
+   mYGap52M+uYaPVpLOoEGSDyAFF58GDbaGTyEHIXeb6vIkvdcUjzZkLAcQ
+   3VKoPe/q5MLzbZ1JTX//8GBH2Vtfm7MjPVyieXuTlrQ0fqdvmpg5+kcUC
+   70SYL+Bny6ne7hAtMSDlI0CD8kKvsRQJDNitIVxb+eEtI++ntNFTzjgs6
+   A==;
+X-IronPort-AV: E=Sophos;i="5.96,317,1665471600"; 
+   d="scan'208";a="191745067"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jan 2023 05:53:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 11 Jan 2023 05:53:29 -0700
+Received: from daire-X570.amer.actel.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.16 via Frontend Transport; Wed, 11 Jan 2023 05:53:26 -0700
+From:   <daire.mcnamara@microchip.com>
+To:     <conor.dooley@microchip.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>
+Subject: [PATCH v3 00/11] PCI: microchip: Partition address translations
+Date:   Wed, 11 Jan 2023 12:53:12 +0000
+Message-ID: <20230111125323.1911373-1-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
-References: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The devicetree should specify both MSI implementations and the OS/driver
-should choose the one based on the platform requirements. Currently, Linux
-DWC driver will choose GIC-ITS over the internal MSI controller.
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-Fixes: a11bbf6adef4 ("arm64: dts: qcom: sm8450: Use GIC-ITS for PCIe0 and PCIe1")
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8450.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v2:
+- Replaced GENMASK(63,0) with GENMASK_ULL(63,0) to remove warning
+- Added patch to avoid warning on cast of argument to devm_add_action_or_reset()
+- Added patch to enable building driver as a module
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index c4dd5838fac6..442b7be10858 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -1740,6 +1740,9 @@ pcie0: pci@1c00000 {
- 			msi-map = <0x0 &gic_its 0x5981 0x1>,
- 				  <0x100 &gic_its 0x5980 0x1>;
- 			msi-map-mask = <0xff00>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
- 					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-@@ -1853,6 +1856,9 @@ pcie1: pci@1c08000 {
- 			msi-map = <0x0 &gic_its 0x5a01 0x1>,
- 				  <0x100 &gic_its 0x5a00 0x1>;
- 			msi-map-mask = <0xff00>;
-+			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
- 					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+Changes since v1:
+- Removed unused variables causing compile warnings
+- Removed incorrect Signed-off-by: tags
+- Capitalised msi and msi-x
+- Capitalised FIC and respelled busses to buses
+- Capitalised all comments
+- Renamed fabric inter connect to Fabric Interface Controller as per PolarFire SoC TRM
+
+Microchip PolarFire SoC is a 64-bit device and has DDR starting at
+0x80000000 and 0x1000000000. Its PCIe rootport is connected to the CPU
+Coreplex via an FPGA fabric. The AXI connections between the Coreplex and
+the fabric are 64-bit and the AXI connections between the fabric and the
+rootport are 32-bit.  For the CPU CorePlex to act as an AXI-Master to the
+PCIe devices and for the PCIe devices to act as bus masters to DDR at these
+base addresses, the fabric can be customised to add/remove offsets for bits
+38-32 in each direction. These offsets, if present, vary with each
+customer's design.
+
+To support this variety, the rootport driver must know how much address
+translation (both inbound and outbound) is performed by a particular
+customer design and how much address translation must be provided by the
+rootport.
+
+This patchset contains a parent/child dma-ranges scheme suggested by Rob
+Herring. It creates an FPGA PCIe parent bus which wraps the PCIe rootport
+and implements a parsing scheme where the root port identifies what address
+translations are performed by the FPGA fabric parent bus, and what
+address translations must be done by the rootport itself.
+
+See https://lore.kernel.org/linux-pci/20220902142202.2437658-1-daire.mcnamara@microchip.com/
+for the relevant previous patch submission discussion.
+
+It also re-partitions the probe() and init() functions as suggested by
+Bjorn Helgaas to make them more maintainable as the init() function had
+become too large.
+
+It also contains some minor fixes and clean-ups that are pre-requisites:
+- to align register, offset, and mask names with the hardware documentation
+  and to have the register definitions appear in the same order as in the
+  hardware documentation;
+- to harvest the MSI information from the hardware configuration register
+  as these depend on the FPGA fabric design and can vary with different
+  customer designs;
+- to clean up interrupt initialisation to make it more maintainable;
+- to fix SEC and DED interrupt handling.
+
+I expect Conor will take the dts patch via the soc tree once the PCIe parts
+of the series are accepted.
+
+Conor Dooley (1):
+  riscv: dts: microchip: add parent ranges and dma-ranges for IKRD
+    v2022.09
+
+Daire McNamara (10):
+  PCI: microchip: Correct the DED and SEC interrupt bit offsets
+  PCI: microchip: Remove cast warning for devm_add_action_or_reset() arg
+  PCI: microchip: enable building this driver as a module
+  PCI: microchip: Align register, offset, and mask names with hw docs
+  PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+  PCI: microchip: Clean up initialisation of interrupts
+  PCI: microchip: Gather MSI information from hardware config registers
+  PCI: microchip: Re-partition code between probe() and init()
+  PCI: microchip: Partition outbound address translation
+  PCI: microchip: Partition inbound address translation
+
+ .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  62 +-
+ drivers/pci/controller/Kconfig                |   2 +-
+ drivers/pci/controller/pcie-microchip-host.c  | 688 +++++++++++++-----
+ 3 files changed, 533 insertions(+), 219 deletions(-)
+
+
+base-commit: 3c1f24109dfc4fb1a3730ed237e50183c6bb26b3
 -- 
 2.25.1
 
