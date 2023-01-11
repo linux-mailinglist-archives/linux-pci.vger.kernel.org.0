@@ -2,75 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23065665FDB
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 16:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A33B665FE8
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 17:02:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbjAKP7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 10:59:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
+        id S232923AbjAKQCZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 11:02:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232923AbjAKP7d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 10:59:33 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBA4BF42;
-        Wed, 11 Jan 2023 07:59:32 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S234175AbjAKQCV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 11:02:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189C6140F5;
+        Wed, 11 Jan 2023 08:02:20 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id E543B229C3;
-        Wed, 11 Jan 2023 15:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1673452770; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/HTBltF58i7LUrPAUCrtSR4KiHvUGIaCssrQvyPf0Y8=;
-        b=1qWC+RAJZ+EP2Sq6vyhuO75N9X7w+srQDHNr+a78cCAzZGJ7lDbf7s3snvLe4bNBNpNZqE
-        zszpa3NB1BeZgvbqzZo1BWzet1RTuzHMgibWgwHgKeV3RdrTWjrEZJ9n05mExszMkGIXnu
-        F3md/NzOA0vX53EOiHY0DOEdbnPvsyc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1673452770;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/HTBltF58i7LUrPAUCrtSR4KiHvUGIaCssrQvyPf0Y8=;
-        b=42+I24GLIBM8vA7hF6VRYCoqNyMCbqoVQkXYiS3JieqPPkCLj3WQM6rRA4LS5MayN3Y14U
-        V6K2RIUcfvMs0kDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9DE831358A;
-        Wed, 11 Jan 2023 15:59:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id UFiBJOLcvmN8RAAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Wed, 11 Jan 2023 15:59:30 +0000
-Message-ID: <e0c0e249-30bc-c310-0175-92ea379ef0d6@suse.de>
-Date:   Wed, 11 Jan 2023 16:59:30 +0100
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6958A61D8F;
+        Wed, 11 Jan 2023 16:02:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06ADC433EF;
+        Wed, 11 Jan 2023 16:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673452939;
+        bh=WDPK4ezOCWydIceMJVIpzVu3xHbUz8bsTbKyssT5l9A=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=sh0Erk94yVz5Y+9iwmzpb1XW5N3jNnDPLYkBDHOoP/UoyAOkO8S0QiVtcO896KS5q
+         J03RTgedaKSYofVgiPNPOg9PXk2jquJzH2RNZ0Bv6T/wPq+Of5Mtfj7gWcp2UoedOl
+         kL9z2liB6IAydXzXxXmeLs/WcXzLXcTtm0FPTBYrJG2fVOEq5yZ+lHHhknJW9uAkBO
+         zJw4mhoDAsLksgFK937mI8MoqFamN6AsjkKOFLk86IpfyKs813G1MyKxhWAF+WVT+f
+         waKi3Xhi6LZabmIoJMuQEYZPZuKjUZDPsiD1Z412va0XbBylIwRpga81y+zK42mLv9
+         bnrFRZkxSZY7Q==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Moshe Shemesh <moshe@nvidia.com>,
+        Shay Drory <shayd@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: Re: [patch V3 13/33] x86/apic/vector: Provide MSI parent domain
+References: <20221124230505.073418677@linutronix.de>
+        <20221124232326.034672592@linutronix.de> <Y7VyXNbWMdWWAC6d@nvidia.com>
+        <87eds2k2nr.ffs@tglx> <Y719OcFueTg09OUV@nvidia.com>
+Date:   Wed, 11 Jan 2023 18:02:13 +0200
+In-Reply-To: <Y719OcFueTg09OUV@nvidia.com> (Jason Gunthorpe's message of "Tue,
+        10 Jan 2023 10:59:05 -0400")
+Message-ID: <87o7r5dpq2.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 04/11] video/aperture: use generic code to figure out the
- vga default device
-Content-Language: en-US
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
- <20230111154112.90575-4-daniel.vetter@ffwll.ch>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20230111154112.90575-4-daniel.vetter@ffwll.ch>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------aLlWn0UCCGF9KGvwr0HJNdgi"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,103 +69,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------aLlWn0UCCGF9KGvwr0HJNdgi
-Content-Type: multipart/mixed; boundary="------------e0BQCwu0JWreKuzdprfSHEQY";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>,
- DRI Development <dri-devel@lists.freedesktop.org>
-Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>, Daniel Vetter
- <daniel.vetter@intel.com>, Javier Martinez Canillas <javierm@redhat.com>,
- Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Message-ID: <e0c0e249-30bc-c310-0175-92ea379ef0d6@suse.de>
-Subject: Re: [PATCH 04/11] video/aperture: use generic code to figure out the
- vga default device
-References: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
- <20230111154112.90575-4-daniel.vetter@ffwll.ch>
-In-Reply-To: <20230111154112.90575-4-daniel.vetter@ffwll.ch>
+Jason Gunthorpe <jgg@nvidia.com> writes:
 
---------------e0BQCwu0JWreKuzdprfSHEQY
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> On Tue, Jan 10, 2023 at 01:14:00PM +0100, Thomas Gleixner wrote:
+>
+>> Care to send a proper patch with changelog?
+>
+> Yes, I'll post it in a few days once the test team confirms it
 
-SGkNCg0KQW0gMTEuMDEuMjMgdW0gMTY6NDEgc2NocmllYiBEYW5pZWwgVmV0dGVyOg0KPiBT
-aW5jZSB2Z2FhcmIgaGFzIGJlZW4gcHJvbW90ZWQgdG8gYmUgYSBjb3JlIHBpZWNlIG9mIHRo
-ZSBwY2kgc3Vic3lzdGVtDQo+IHdlIGRvbid0IGhhdmUgdG8gb3BlbiBjb2RlIHJhbmRvbSBn
-dWVzc2VzIGFueW1vcmUsIHdlIGFjdHVhbGx5IGtub3cNCj4gdGhpcyBpbiBhIHBsYXRmb3Jt
-IGFnbm9zdGljIHdheSwgYW5kIHRoZXJlJ3Mgbm8gbmVlZCBmb3IgYW4geDg2DQo+IHNwZWNp
-ZmljIGhhY2suIFNlZSBhbHNvIDFkMzhmZTZlZTZhOCAoIlBDSS9WR0E6IE1vdmUgdmdhYXJi
-IHRvDQo+IGRyaXZlcnMvcGNpIikNCj4gDQo+IFRoaXMgc2hvdWxkIG5vdCByZXN1bHQgaW4g
-YW55IGZ1bmN0aW9uYWwgY2hhbmdlLCBhbmQgdGhlIG5vbi14ODYNCj4gbXVsdGktZ3B1IHBj
-aSBzeXN0ZW1zIGFyZSBwcm9iYWJseSByYXJlIGVub3VnaCB0byBub3QgbWF0dGVyIChJIGRv
-bid0DQo+IGtub3cgb2YgYW55IHRiaCkuIEJ1dCBpdCdzIGEgbmljZSBjbGVhbnVwLCBzbyBs
-ZXQncyBkbyBpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmll
-bC52ZXR0ZXJAaW50ZWwuY29tPg0KPiBDYzogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJt
-YW5uQHN1c2UuZGU+DQo+IENjOiBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllcm1A
-cmVkaGF0LmNvbT4NCj4gQ2M6IEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT4NCj4gQ2M6
-IGxpbnV4LWZiZGV2QHZnZXIua2VybmVsLm9yZw0KPiBDYzogQmpvcm4gSGVsZ2FhcyA8Ymhl
-bGdhYXNAZ29vZ2xlLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4g
-LS0tDQo+ICAgZHJpdmVycy92aWRlby9hcGVydHVyZS5jIHwgNiArKy0tLS0NCj4gICAxIGZp
-bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vYXBlcnR1cmUuYyBiL2RyaXZlcnMvdmlkZW8vYXBl
-cnR1cmUuYw0KPiBpbmRleCA0MWU3N2RlMWVhODIuLjNkOGM5MjVjNzM2NSAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy92aWRlby9hcGVydHVyZS5jDQo+ICsrKyBiL2RyaXZlcnMvdmlkZW8v
-YXBlcnR1cmUuYw0KPiBAQCAtMzI0LDEzICszMjQsMTEgQEAgRVhQT1JUX1NZTUJPTChhcGVy
-dHVyZV9yZW1vdmVfY29uZmxpY3RpbmdfZGV2aWNlcyk7DQo+ICAgICovDQo+ICAgaW50IGFw
-ZXJ0dXJlX3JlbW92ZV9jb25mbGljdGluZ19wY2lfZGV2aWNlcyhzdHJ1Y3QgcGNpX2RldiAq
-cGRldiwgY29uc3QgY2hhciAqbmFtZSkNCj4gICB7DQo+IC0JYm9vbCBwcmltYXJ5ID0gZmFs
-c2U7DQo+ICsJYm9vbCBwcmltYXJ5Ow0KPiAgIAlyZXNvdXJjZV9zaXplX3QgYmFzZSwgc2l6
-ZTsNCj4gICAJaW50IGJhciwgcmV0Ow0KPiAgIA0KPiAtI2lmZGVmIENPTkZJR19YODYNCj4g
-LQlwcmltYXJ5ID0gcGRldi0+cmVzb3VyY2VbUENJX1JPTV9SRVNPVVJDRV0uZmxhZ3MgJiBJ
-T1JFU09VUkNFX1JPTV9TSEFET1c7DQo+IC0jZW5kaWYNCj4gKwlwcmltYXJ5ID0gcGRldiA9
-PSB2Z2FfZGVmYXVsdF9kZXZpY2UoKTsNCg0KdmdhX2RlZmF1bHRfZGV2aWNlKCkgaXMgcGFy
-dCBvZiB2Z2FhcmIgYW5kIGNhbiByZXR1cm4gTlVMTC4gWzFdIFRoYXQgbmV3IA0KdGVzdCBp
-cyBsaWtlbHkgdG8gYmUgaW5jb3JyZWN0IG9uIG1hbnkgc3lzdGVtcy4NCg0KSSBzdWdnZXN0
-IHRvIGltcGxlbWVudCBhIGhlbHBlciBsaWtlIGZiX2lzX3ByaW1hcnlfZGV2aWNlKCkgb24g
-eDg2OiBpdCANCnVzZXMgdGhlIGRlZmF1bHQgVkdBIGlmIHNldCwgb3IgZmFsbHMgYmFjayB0
-byB0aGUgb3JpZ2luYWwgdGVzdC4gWzJdDQoNCkl0J3Mgbm90ZXdvcnRoeSB0aGF0IG9uIG1v
-c3QgYXJjaGl0ZWN0dXJlcywgZmJfaXNfcHJpbWFyeV9kZXZpY2UoKSANCnJldHVybnMgMC4g
-QnV0IGF0IGxlYXN0IG9uIFNwYXJjIFszXSBhbmQgc29tZSBQYXJpc2MgWzRdIG1hY2hpbmVz
-LCBpdCANCmRvZXMgbm90Lg0KDQpJJ3ZlIGxvbmcgd2FudGVkIHRvIHJld29yayB0aGlzIGhl
-bHBlciBhbnl3YXkuIFNvIHRoaXMgaXMgYSBnb29kIA0Kb3Bwb3J0dW5pdHkuDQoNCkJlc3Qg
-cmVnYXJkcw0KVGhvbWFzDQoNClsxXSANCmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xp
-bnV4L2xhdGVzdC9zb3VyY2UvaW5jbHVkZS9saW51eC92Z2FhcmIuaCNMNjkNClsyXSANCmh0
-dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvYXJjaC94ODYv
-dmlkZW8vZmJkZXYuYyNMMTQNClszXSANCmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xp
-bnV4L2xhdGVzdC9zb3VyY2UvYXJjaC9zcGFyYy9pbmNsdWRlL2FzbS9mYi5oI0wxOA0KWzRd
-IA0KaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0ZXN0L3NvdXJjZS9kcml2
-ZXJzL3ZpZGVvL2NvbnNvbGUvc3RpY29yZS5jI0wxMTUzDQoNCg0KPiAgIA0KPiAgIAlmb3Ig
-KGJhciA9IDA7IGJhciA8IFBDSV9TVERfTlVNX0JBUlM7ICsrYmFyKSB7DQo+ICAgCQlpZiAo
-IShwY2lfcmVzb3VyY2VfZmxhZ3MocGRldiwgYmFyKSAmIElPUkVTT1VSQ0VfTUVNKSkNCg0K
-LS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VT
-RSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQw
-OSBOw7xybmJlcmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2No
-w6RmdHNmw7xocmVyOiBJdm8gVG90ZXYNCg==
+I think I'm seeing the same leak and it's spamming logs on my test box a
+lot. Let me know if you need any help with testing, I can do that pretty
+quickly.
 
---------------e0BQCwu0JWreKuzdprfSHEQY--
+unreferenced object 0xffff888113dc7520 (size 96):
+comm "insmod", pid 50676, jiffies 4301551867 (age 1463.666s)
+hex dump (first 32 bytes):
+00 00 00 00 00 00 00 00 00 25 68 a5 ff ff ff ff  .........%h.....
+00 00 00 00 00 00 00 00 38 75 dc 13 81 88 ff ff  ........8u......
+backtrace:
+[<ffffffffa3105532>] __kmem_cache_alloc_node+0x1d2/0x2b0
+[<ffffffffa2fdfb45>] kmalloc_trace+0x25/0x60
+[<ffffffffa2cb8b42>] __irq_domain_alloc_fwnode+0x52/0x2b0
+[<ffffffffa2cc6add>] msi_create_device_irq_domain+0x27d/0x630
+[<ffffffffa3aaf5a9>] pci_setup_msi_device_domain+0xe9/0x120
+[<ffffffffa3aababd>] __pci_enable_msi_range+0x3fd/0x5a0
+[<ffffffffa3aa8ac3>] pci_alloc_irq_vectors_affinity+0x153/0x200
+[<ffffffffa3aa8b7c>] pci_alloc_irq_vectors+0xc/0x10
+[<ffffffffc0b75287>] ath11k_pci_alloc_msi+0xb7/0x610 [ath11k_pci]
+[<ffffffffc0b7696e>] ath11k_pci_probe+0x5be/0x1090 [ath11k_pci]
+[<ffffffffa3a8d4e9>] local_pci_probe+0xd9/0x170
+[<ffffffffa3a8f687>] pci_call_probe+0x167/0x440
+[<ffffffffa3a919f6>] pci_device_probe+0xa6/0x100
+[<ffffffffa43c2c09>] really_probe+0x1c9/0xa50
+[<ffffffffa43c361a>] __driver_probe_device+0x18a/0x460
+[<ffffffffa43c393a>] driver_probe_device+0x4a/0x120
 
---------------aLlWn0UCCGF9KGvwr0HJNdgi
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmO+3OIFAwAAAAAACgkQlh/E3EQov+BP
-0A//UE6PoqEAcTqpNAgiktgdxW78OLw49B8NivQxxGx0K/I3Gpc8JgvTRo49z+BolE4gYljskS2Q
-kpLjVJRT7dNVU2v1/hNB0VcAKZaKjF90TFvbp4e1TmnMQoei/1gUrJJPIDlHWCh0mJ2UZ5/d9ZHG
-6GGtSsfrX1qyaiG55U2DgBUlQQ72UZp61UFUhIw6LKTgvJyJMlIpkDvicP2PAQNGxwNA/IAR02Tg
-BMDHjZozc/wKfyNkmT4YhJhzioitBcHUEmXS+xcdmAEn/eeAiFnRZLq/euI9kffcOEmBEabDJ5kW
-YSQmshlAxsj9yAJs0cDlOtaq2KG0ze4MCHaFoc9Izl+wZiv2rEcNxHBvCnS399YkuFL9GM6cPb/f
-nKEHwWDkmUYjqk5fqavGEGeOxx+Mj3EsdNb+M4djSJTDurtyJFAA8cbs977NZuzrA3/HndIdDgE4
-ObwLQwGhmieD9jxsU6fyLjS0frDxQE9cEuIo3MVb/8h3CPJJy68iTKhhomofDRoYZQOIxdgzv63s
-IL5BBkFt9Tjh5v8l+rnuaVCbzy5FhdAMOjM+0NAnQatDNhx+x6d23dG2BPir5ZcTYUsmQbHTNAZw
-csYYe+JEEth/cPafQNmn3XkAYCuJoQCpmdcvESHEsMKuqDbNKkZALaQERWQ0f8/Lgq6FwyiGMwX1
-m2o=
-=KYQw
------END PGP SIGNATURE-----
-
---------------aLlWn0UCCGF9KGvwr0HJNdgi--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
