@@ -2,118 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26503665F65
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 16:41:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 060DD665FD5
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 16:58:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235405AbjAKPlc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 10:41:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34136 "EHLO
+        id S232094AbjAKP6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 10:58:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234544AbjAKPl2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 10:41:28 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F609BEB
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 07:41:27 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id d17so15464118wrs.2
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 07:41:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3apArcl7OMNeWOL87XhRmEIILQii5IFqm3oMsEY2uTQ=;
-        b=TWS3RJUGnec7HJ8IdThWihyacAzGTfgOMMVKgAJ3sP5gvHzb6Hv2fQ8yYcj9IsnVVA
-         o219u3LYZ8uCnmmEdWK9E++vy2du8AWTGfafd+vHo4u8SlnZt/LoMDlKNNioYzUIuXPf
-         TJ6xYHvwDOSOn4s2j1NLyLLyiRMiLhKLjL0bQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3apArcl7OMNeWOL87XhRmEIILQii5IFqm3oMsEY2uTQ=;
-        b=7MyU/ZQdSLHMLgzX56Jr/6alpjPHaDvNb79I06dW+cejQADbeIoifezPtl0XTVkuXl
-         tfqS55CI4VepgV4TFl0xy7mbtiyuj3FEqtVrcxZXL67dNWGCW/bd9FfBu7BCQG9qTMkY
-         GqrtzHwyunbUvy+8qcWOkAfV9wGxycXn54xnPdL5LFcaOukRUcja6QMj95P7KfMorKGj
-         X3YwdSlKBMyU8cPqbGJ3NI+A3IbYzLGaWD52u2ZgmSpnjxEwnnOst4R5XLDzjZOctfGE
-         IhXLC5yC39XMkIhC6jI7RvEzxOmMgf3NkJg+COw4J3asVf+lvK9VOZa5zNsP8iqYDF68
-         glhg==
-X-Gm-Message-State: AFqh2kq6bXZtRhwfJHOQIVQzpM2zNbfAKfIjxRJOM8yo4QSsccH/aXME
-        pcl0UEELoL6SnbBBvLFRYnqF3Q==
-X-Google-Smtp-Source: AMrXdXsZQQb90TZBhyIGbWCTV3hGh5NVwdW1rv7mMEKuwv41FW1zTUhYSl2ws/vK/PGYSdPl/U3j9w==
-X-Received: by 2002:a5d:664c:0:b0:281:b594:c716 with SMTP id f12-20020a5d664c000000b00281b594c716mr39704840wrw.36.1673451685621;
-        Wed, 11 Jan 2023 07:41:25 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t9-20020a05600c198900b003d9e74dd9b2sm15936149wmq.9.2023.01.11.07.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jan 2023 07:41:24 -0800 (PST)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 04/11] video/aperture: use generic code to figure out the vga default device
-Date:   Wed, 11 Jan 2023 16:41:05 +0100
-Message-Id: <20230111154112.90575-4-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
-References: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
+        with ESMTP id S239284AbjAKP6j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 10:58:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D3165EB
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 07:58:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07DE0B81C67
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 15:58:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6325CC433EF;
+        Wed, 11 Jan 2023 15:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673452715;
+        bh=IfoLSJyUDbeZkBSc6nbVgDgXhbLN5ZkCLMtzDDdDXFI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HfolJOCd2nv7XCDc1kdiC6FjH7octvOc8d0p7P1uJhykdh1y6pL237XA1KGUtiLia
+         dmU1EncfqYD6LO3zOcDozzylX3LuwpIldKUQ8U4rSI+ncfjjo1hOu8XtMI+TMeWIHT
+         D9DBgxrEV2zVpac8+dGhE6hkgrS4dNxhehHalFae2uqPCZSPlh57hR62O9o3CoiHj4
+         mYLlx44Z443bTrnUJLUhyviTuH1qoGhftof25hfgcCbnJxrrmnUEkuXEk9luZ3OA2z
+         xb6O+jt+5XnJ2SGuZslejXPyL56WdyXhFzg1cDqJCr+ggRg7L5Tk2rcxWHZ09Y41kd
+         Lgvu0tI0E1wyA==
+Date:   Wed, 11 Jan 2023 09:58:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Adrian Huang <adrianhuang0701@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Adrian Huang <ahuang12@lenovo.com>,
+        Jon Derrick <jonathan.derrick@linux.dev>
+Subject: Re: [PATCH v2 1/1] PCI: vmd: Avoid acceidental enablement of window
+ when zeroing config space of VMD root ports
+Message-ID: <20230111155833.GA1668483@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230111092911.8039-1-adrianhuang0701@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since vgaarb has been promoted to be a core piece of the pci subsystem
-we don't have to open code random guesses anymore, we actually know
-this in a platform agnostic way, and there's no need for an x86
-specific hack. See also 1d38fe6ee6a8 ("PCI/VGA: Move vgaarb to
-drivers/pci")
+s/acceidental/accidental/ in subject
 
-This should not result in any functional change, and the non-x86
-multi-gpu pci systems are probably rare enough to not matter (I don't
-know of any tbh). But it's a nice cleanup, so let's do it.
+On Wed, Jan 11, 2023 at 05:29:11PM +0800, Adrian Huang wrote:
+> From: Adrian Huang <ahuang12@lenovo.com>
+> 
+> Commit 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
+> clears PCI configuration space of VMD root ports. However, the host OS
+> cannot boot successfully with the following error message:
+> 
+>   vmd 0000:64:05.5: PCI host bridge to bus 10000:00
+>   ...
+>   vmd 0000:64:05.5: Bound to PCI domain 10000
+>   ...
+>   DMAR: VT-d detected Invalidation Queue Error: Reason f
+>   DMAR: VT-d detected Invalidation Time-out Error: SID ffff
+>   DMAR: VT-d detected Invalidation Completion Error: SID ffff
+>   DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
+>   DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
+>   DMAR: Invalidation Time-out Error (ITE) cleared
+> 
+> The root cause is that memset_io() clears prefetchable memory base/limit
+> registers and prefetchable base/limit 32 bits registers sequentially. This
+> might enable prefetchable memory if the device disables prefetchable memory
+> originally. Here is an example (before memset_io()):
+> 
+>   PCI configuration space for 10000:00:00.0:
+>   86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
+>   00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
+>   00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
+>   00 00 00 00 40 00 00 00 00 00 00 00 00 01 02 00
+> 
+> So, prefetchable memory is ffffffff00000000-575000fffff, which is disabled.
+> Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
+> 
+>   The Prefetchable Memory Limit register must be programmed to a smaller
+>   value than the Prefetchable Memory Base register if there is no
+>   prefetchable memory on the secondary side of the bridge.
+> 
+> When memset_io() clears prefetchable base 32 bits register, the
+> prefetchable memory becomes 0000000000000000-575000fffff, which is enabled.
+> This behavior (accidental enablement of window) causes that config accesses
+> get routed to the wrong place, and the access content of PCI configuration
+> space of VMD root ports is 0xff after invoking memset_io() in
+> vmd_domain_reset():
 
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Javier Martinez Canillas <javierm@redhat.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/video/aperture.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+I was thinking the problem was only between clearing
+PCI_PREF_MEMORY_BASE and PCI_PREF_BASE_UPPER32, but that would be a
+pretty small window, and you're seeing a lot of config accesses going
+wrong.  Why is that?  Is there enumeration that races with this domain
+reset?
 
-diff --git a/drivers/video/aperture.c b/drivers/video/aperture.c
-index 41e77de1ea82..3d8c925c7365 100644
---- a/drivers/video/aperture.c
-+++ b/drivers/video/aperture.c
-@@ -324,13 +324,11 @@ EXPORT_SYMBOL(aperture_remove_conflicting_devices);
-  */
- int aperture_remove_conflicting_pci_devices(struct pci_dev *pdev, const char *name)
- {
--	bool primary = false;
-+	bool primary;
- 	resource_size_t base, size;
- 	int bar, ret;
- 
--#ifdef CONFIG_X86
--	primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
--#endif
-+	primary = pdev == vga_default_device();
- 
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; ++bar) {
- 		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
--- 
-2.39.0
+I guess the same problem occurs with PCI_IO_BASE/PCI_IO_BASE_UPPER16,
+but maybe there's no concurrent I/O port access?
 
+>   10000:00:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev ff) (prog-if ff)
+>           !!! Unknown header type 7f
+>   00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ...
+>   f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> 
+>   10000:00:01.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port B (rev ff) (prog-if ff)
+>           !!! Unknown header type 7f
+>   00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ...
+>   f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> 
+> To fix the issue, prefetchable limit upper 32 bits register needs to be
+> cleared firstly. This also adheres to the implementation of
+> pci_setup_bridge_mmio_pref(). Please see the function for detail.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216644
+> Fixes: 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
+> Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
+> ---
+> Changes since v1:
+>   - Changed subject per Bjorn's suggestion
+> 
+>  drivers/pci/controller/vmd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 769eedeb8802..e520aec55b68 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -526,6 +526,9 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+>  				     PCI_CLASS_BRIDGE_PCI))
+>  					continue;
+>  
+> +				/* Clear the upper 32 bits of PREF limit. */
+> +				memset_io(base + PCI_PREF_LIMIT_UPPER32, 0, 4);
+> +
+>  				memset_io(base + PCI_IO_BASE, 0,
+>  					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
+>  			}
+> -- 
+> 2.31.1
+> 
