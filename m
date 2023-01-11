@@ -2,122 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C97936656BB
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:01:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F37F366572E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:18:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230262AbjAKJBa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 04:01:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36276 "EHLO
+        id S238177AbjAKJSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 04:18:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235993AbjAKJA4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:00:56 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DD0BE8
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:00:54 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id ay40so10603934wmb.2
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:00:54 -0800 (PST)
+        with ESMTP id S237223AbjAKJRh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:17:37 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3EECC7
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:16:01 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id fy8so35124645ejc.13
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:16:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=UIgNk4h0ykNf4W9R10f+g8s9MtlXPDlZWGID0CLp804=;
-        b=ACz2pUEAplUyKMwahar14IEYYnawh0ar2G+KL0+AdO+fXKDb6L1+7Aq1cR/JhRxMxF
-         mptt0m7OE+hHLEPyv2GGxmbq78+4PKJIg2OU+Et0ss+4vM4s35EB+0jdnp7VOr0n3o4Y
-         sVNrXDS1NCtl4llNRycijVOG7GqCqJE9sTXrkMnrFCkCNHARqK/VingD2ZFf2CaIyh5R
-         BkUyz70LPfPlxaoLoSrL9Eyv1OPob/snhvTSgSee+4oBHoO28UzKBMYs7qZmo3PKc7Oj
-         TZY7YEEZvny5IzPNF2MZFoR+8B8dExdbws1pT2JocEc7BXwbvR4fsYcDcyxTp6JjTglr
-         yNAw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DGj8jgAyFszET7QdJP3q6l/SlbFxu+eKlrahuw4x3Dc=;
+        b=cNcZIO2f7f772HEebAFRwcoFge2/LG159lSKUVerbwlVlzrarX197dtdhGbZ8bM1L7
+         ffOD3vHRe1lrKD3yi5p5ipupi0ft5VK5DL6RNekDLcYMCDRC+/BHnOEvbZIKQZoQnxe/
+         S47KZwOcioj3Ncx14lJJl/QdgwwSOgvGk+2g/EUERhvvL4eEPlRScHL2FDTq3gRXaGTw
+         7eQ9CLKOCYNjT2vp6pjVjLUFPRXyXwiw/fQNYS72Dp7N6vEdDySAP8xzIoPpaXzHhqoy
+         z9bHn7aeJxUEsaKlBlOCSgg2Ro61n3fZrBxY4pDJX954mLI8Jmdkf6zDxTI9eTCOnsOe
+         CJ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UIgNk4h0ykNf4W9R10f+g8s9MtlXPDlZWGID0CLp804=;
-        b=knIrl2gEWzZGXnvIWBlNX3WYxADRGwsQSnVNjq/MsWa2OpVQIEi5k1zKhDi7WCBxhd
-         s0lZgCAQb43qN59S1fPckCyTwEJpOk93vvJSdw9CfXutxh2Jn7iUc9bF01mzvm4FMQGB
-         KjtgA1VfCBqRqUXwraPmfTWi03uzs9VwjibqPa77VHYtPqHjIXTulIVipHqZgC8nFYg4
-         0s0Y8BB+8upDjmILDJvhzfw7KdyS3pk7x/z0HpwQQ4c2e6Lxf6xjHuLahjYCBi0dsweZ
-         5Zfa7yc8Lq4HthMobEV23VnYN9ITb+reoN7irzlQm89Fo9/D64/MJIUrAN6U4djR81mP
-         TENA==
-X-Gm-Message-State: AFqh2krHTtYJvOC4dZ6FayI1aeHeEvtPTNmd306CSX1kyklLNFiXhvDZ
-        L5ZNvocxEhNx4MTsYzRAXOPKUA==
-X-Google-Smtp-Source: AMrXdXu50nuURvF/uZXf+xmLuSwesdnOY8E4IcaZoYRp8Au4jWUve2YDc0RJ8X2U2aelNYBfkHhv2g==
-X-Received: by 2002:a05:600c:34d0:b0:3d6:b691:b80d with SMTP id d16-20020a05600c34d000b003d6b691b80dmr50949988wmq.21.1673427652953;
-        Wed, 11 Jan 2023 01:00:52 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:d95d:43b7:d6a9:39a5? ([2a01:e0a:982:cbb0:d95d:43b7:d6a9:39a5])
-        by smtp.gmail.com with ESMTPSA id o21-20020a1c7515000000b003d995a704fdsm17507540wmc.33.2023.01.11.01.00.51
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DGj8jgAyFszET7QdJP3q6l/SlbFxu+eKlrahuw4x3Dc=;
+        b=8Qml8+Oim/Th43eVIHArUx83iRii1hpxUqxaYI3d4/F5ORskTv0K4gr4kGvNe60bUx
+         lDM1eTOq+sfh0spuNfbkoCv8hAn5w5mGbxxMIHsSLdzntdHkF/EVdVFhNgBw/Y6Mv43m
+         JcJzXiNTxQnaAOF0pjXZNguFUb1kgPJSvgmXU4nqAjr1zyGe38P4gaXrhcpmQRgOXwWx
+         Rh8m9o8H0aoajEn/EP9eIfUSDZQfklvIzfSY1IlW9Zlm2TPdXzvW6nmNoIG/BSmXtVQX
+         iSwyZwMHe9pwJt6esP/VCBlHMlNrWDosiYbuOiDGyLOnOKZ31PCnMamGrDZ3HD88Rs5c
+         iVtg==
+X-Gm-Message-State: AFqh2ko+Tmpxg6pSnje4tuIw8na1beqAtT7TKdeyZgn8wRaGPC2i066C
+        IQN1ZinFgkPzCRbQ7IJJVY/5DCZi1SI=
+X-Google-Smtp-Source: AMrXdXviJt0ZQwnVOfcBN4gx4Gc2kN3b2WAsoeTsel7jlUGypxPLVpM/5R7sia6Xnj5FmyEK9lM/VA==
+X-Received: by 2002:a17:907:7e8a:b0:84c:e89e:bb4c with SMTP id qb10-20020a1709077e8a00b0084ce89ebb4cmr31171143ejc.49.1673428560060;
+        Wed, 11 Jan 2023 01:16:00 -0800 (PST)
+Received: from ?IPV6:2a02:908:1256:79a0:752d:cd68:6cff:3acf? ([2a02:908:1256:79a0:752d:cd68:6cff:3acf])
+        by smtp.gmail.com with ESMTPSA id oz39-20020a1709077da700b008617cb00654sm83416ejc.212.2023.01.11.01.15.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 01:00:52 -0800 (PST)
-Message-ID: <08698c06-49b0-1cf7-efd3-1038104972cf@linaro.org>
-Date:   Wed, 11 Jan 2023 10:00:51 +0100
+        Wed, 11 Jan 2023 01:15:59 -0800 (PST)
+Message-ID: <801745b6-3019-daa9-8ede-f4de10c3f64b@gmail.com>
+Date:   Wed, 11 Jan 2023 10:15:58 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 00/11] dt-bindings: first batch of dt-schema
- conversions for Amlogic Meson bindings
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled
+ on upstream path"
 Content-Language: en-US
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
- <20230110152324.1e19974d@kernel.org>
-Organization: Linaro Developer Services
-In-Reply-To: <20230110152324.1e19974d@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     "Kuehling, Felix" <Felix.Kuehling@amd.com>
+References: <20230111085745.401710-1-christian.koenig@amd.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <20230111085745.401710-1-christian.koenig@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Forgot to add Felix as CC as well.
 
-On 11/01/2023 00:23, Jakub Kicinski wrote:
-> On Mon, 09 Jan 2023 13:53:25 +0100 Neil Armstrong wrote:
->> - patch 12: added reviewed-by
->> - Link to v1: https://lore.kernel.org/r/20221117-b4-amlogic-bindings-convert-v1-0-3f025599b968@linaro.org
-> 
-> I'm guessing patch 12 is patch 11 in this posting.
-> Should we take it via net-next? Looks acked & ready.
-
-Exact it's ready to be taken
-
-Thanks,
-Neil
+Am 11.01.23 um 09:57 schrieb Christian König:
+> This reverts commit 201007ef707a8bb5592cd07dd46fc9222c48e0b9.
+>
+> It's correct that the PCIe fabric routes Memory Requests based on the
+> TLP address, but enabling the PASID mapping doesn't necessary mean that
+> Memory Requests will have a PASID associated with them.
+>
+> The alternative is ATS which lets the device resolve the PASID+addr pair
+> before a memory request is made into a routeable TLB address through the
+> TA. Those resolved addresses are then cached on the device instead of
+> in the IOMMU TLB.
+>
+> So the assumption that you mandatory need ACS to enabled PASID handling
+> on a device is simply not correct, we need to take ATS into account as
+> well.
+>
+> The patch caused failures with AMDs integrated GPUs because some of them
+> only enable ATS but not ACS.
+>
+> For now just revert the patch until this is completely solved.
+>
+> CC: Jason Gunthorpe <jgg@nvidia.com>
+> CC: Kevin Tian <kevin.tian@intel.com>
+> CC: Lu Baolu <baolu.lu@linux.intel.com>
+> CC: Bjorn Helgaas <bhelgaas@google.com>
+> CC: Tony Zhu <tony.zhu@intel.com>
+> CC: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Christian König <christian.koenig@amd.com>
+> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=216865
+> ---
+>   drivers/pci/ats.c | 3 ---
+>   1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index f9cc2e10b676..c967ad6e2626 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -382,9 +382,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+>   	if (!pasid)
+>   		return -EINVAL;
+>   
+> -	if (!pci_acs_path_enabled(pdev, NULL, PCI_ACS_RR | PCI_ACS_UF))
+> -		return -EINVAL;
+> -
+>   	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
+>   	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
+>   
 
