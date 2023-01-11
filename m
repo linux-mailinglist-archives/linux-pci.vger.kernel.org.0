@@ -2,52 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 060DD665FD5
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 16:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23065665FDB
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 16:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbjAKP6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 10:58:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
+        id S232575AbjAKP7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 10:59:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239284AbjAKP6j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 10:58:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D3165EB
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 07:58:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S232923AbjAKP7d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 10:59:33 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBA4BF42;
+        Wed, 11 Jan 2023 07:59:32 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 07DE0B81C67
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 15:58:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6325CC433EF;
-        Wed, 11 Jan 2023 15:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673452715;
-        bh=IfoLSJyUDbeZkBSc6nbVgDgXhbLN5ZkCLMtzDDdDXFI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HfolJOCd2nv7XCDc1kdiC6FjH7octvOc8d0p7P1uJhykdh1y6pL237XA1KGUtiLia
-         dmU1EncfqYD6LO3zOcDozzylX3LuwpIldKUQ8U4rSI+ncfjjo1hOu8XtMI+TMeWIHT
-         D9DBgxrEV2zVpac8+dGhE6hkgrS4dNxhehHalFae2uqPCZSPlh57hR62O9o3CoiHj4
-         mYLlx44Z443bTrnUJLUhyviTuH1qoGhftof25hfgcCbnJxrrmnUEkuXEk9luZ3OA2z
-         xb6O+jt+5XnJ2SGuZslejXPyL56WdyXhFzg1cDqJCr+ggRg7L5Tk2rcxWHZ09Y41kd
-         Lgvu0tI0E1wyA==
-Date:   Wed, 11 Jan 2023 09:58:33 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Adrian Huang <adrianhuang0701@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Adrian Huang <ahuang12@lenovo.com>,
-        Jon Derrick <jonathan.derrick@linux.dev>
-Subject: Re: [PATCH v2 1/1] PCI: vmd: Avoid acceidental enablement of window
- when zeroing config space of VMD root ports
-Message-ID: <20230111155833.GA1668483@bhelgaas>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E543B229C3;
+        Wed, 11 Jan 2023 15:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1673452770; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/HTBltF58i7LUrPAUCrtSR4KiHvUGIaCssrQvyPf0Y8=;
+        b=1qWC+RAJZ+EP2Sq6vyhuO75N9X7w+srQDHNr+a78cCAzZGJ7lDbf7s3snvLe4bNBNpNZqE
+        zszpa3NB1BeZgvbqzZo1BWzet1RTuzHMgibWgwHgKeV3RdrTWjrEZJ9n05mExszMkGIXnu
+        F3md/NzOA0vX53EOiHY0DOEdbnPvsyc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1673452770;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/HTBltF58i7LUrPAUCrtSR4KiHvUGIaCssrQvyPf0Y8=;
+        b=42+I24GLIBM8vA7hF6VRYCoqNyMCbqoVQkXYiS3JieqPPkCLj3WQM6rRA4LS5MayN3Y14U
+        V6K2RIUcfvMs0kDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9DE831358A;
+        Wed, 11 Jan 2023 15:59:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id UFiBJOLcvmN8RAAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Wed, 11 Jan 2023 15:59:30 +0000
+Message-ID: <e0c0e249-30bc-c310-0175-92ea379ef0d6@suse.de>
+Date:   Wed, 11 Jan 2023 16:59:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230111092911.8039-1-adrianhuang0701@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 04/11] video/aperture: use generic code to figure out the
+ vga default device
+Content-Language: en-US
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
+ <20230111154112.90575-4-daniel.vetter@ffwll.ch>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <20230111154112.90575-4-daniel.vetter@ffwll.ch>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------aLlWn0UCCGF9KGvwr0HJNdgi"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,102 +78,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-s/acceidental/accidental/ in subject
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------aLlWn0UCCGF9KGvwr0HJNdgi
+Content-Type: multipart/mixed; boundary="------------e0BQCwu0JWreKuzdprfSHEQY";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ DRI Development <dri-devel@lists.freedesktop.org>
+Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>, Daniel Vetter
+ <daniel.vetter@intel.com>, Javier Martinez Canillas <javierm@redhat.com>,
+ Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Message-ID: <e0c0e249-30bc-c310-0175-92ea379ef0d6@suse.de>
+Subject: Re: [PATCH 04/11] video/aperture: use generic code to figure out the
+ vga default device
+References: <20230111154112.90575-1-daniel.vetter@ffwll.ch>
+ <20230111154112.90575-4-daniel.vetter@ffwll.ch>
+In-Reply-To: <20230111154112.90575-4-daniel.vetter@ffwll.ch>
 
-On Wed, Jan 11, 2023 at 05:29:11PM +0800, Adrian Huang wrote:
-> From: Adrian Huang <ahuang12@lenovo.com>
-> 
-> Commit 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-> clears PCI configuration space of VMD root ports. However, the host OS
-> cannot boot successfully with the following error message:
-> 
->   vmd 0000:64:05.5: PCI host bridge to bus 10000:00
->   ...
->   vmd 0000:64:05.5: Bound to PCI domain 10000
->   ...
->   DMAR: VT-d detected Invalidation Queue Error: Reason f
->   DMAR: VT-d detected Invalidation Time-out Error: SID ffff
->   DMAR: VT-d detected Invalidation Completion Error: SID ffff
->   DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: Invalidation Time-out Error (ITE) cleared
-> 
-> The root cause is that memset_io() clears prefetchable memory base/limit
-> registers and prefetchable base/limit 32 bits registers sequentially. This
-> might enable prefetchable memory if the device disables prefetchable memory
-> originally. Here is an example (before memset_io()):
-> 
->   PCI configuration space for 10000:00:00.0:
->   86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
->   00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
->   00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
->   00 00 00 00 40 00 00 00 00 00 00 00 00 01 02 00
-> 
-> So, prefetchable memory is ffffffff00000000-575000fffff, which is disabled.
-> Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
-> 
->   The Prefetchable Memory Limit register must be programmed to a smaller
->   value than the Prefetchable Memory Base register if there is no
->   prefetchable memory on the secondary side of the bridge.
-> 
-> When memset_io() clears prefetchable base 32 bits register, the
-> prefetchable memory becomes 0000000000000000-575000fffff, which is enabled.
-> This behavior (accidental enablement of window) causes that config accesses
-> get routed to the wrong place, and the access content of PCI configuration
-> space of VMD root ports is 0xff after invoking memset_io() in
-> vmd_domain_reset():
+--------------e0BQCwu0JWreKuzdprfSHEQY
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-I was thinking the problem was only between clearing
-PCI_PREF_MEMORY_BASE and PCI_PREF_BASE_UPPER32, but that would be a
-pretty small window, and you're seeing a lot of config accesses going
-wrong.  Why is that?  Is there enumeration that races with this domain
-reset?
+SGkNCg0KQW0gMTEuMDEuMjMgdW0gMTY6NDEgc2NocmllYiBEYW5pZWwgVmV0dGVyOg0KPiBT
+aW5jZSB2Z2FhcmIgaGFzIGJlZW4gcHJvbW90ZWQgdG8gYmUgYSBjb3JlIHBpZWNlIG9mIHRo
+ZSBwY2kgc3Vic3lzdGVtDQo+IHdlIGRvbid0IGhhdmUgdG8gb3BlbiBjb2RlIHJhbmRvbSBn
+dWVzc2VzIGFueW1vcmUsIHdlIGFjdHVhbGx5IGtub3cNCj4gdGhpcyBpbiBhIHBsYXRmb3Jt
+IGFnbm9zdGljIHdheSwgYW5kIHRoZXJlJ3Mgbm8gbmVlZCBmb3IgYW4geDg2DQo+IHNwZWNp
+ZmljIGhhY2suIFNlZSBhbHNvIDFkMzhmZTZlZTZhOCAoIlBDSS9WR0E6IE1vdmUgdmdhYXJi
+IHRvDQo+IGRyaXZlcnMvcGNpIikNCj4gDQo+IFRoaXMgc2hvdWxkIG5vdCByZXN1bHQgaW4g
+YW55IGZ1bmN0aW9uYWwgY2hhbmdlLCBhbmQgdGhlIG5vbi14ODYNCj4gbXVsdGktZ3B1IHBj
+aSBzeXN0ZW1zIGFyZSBwcm9iYWJseSByYXJlIGVub3VnaCB0byBub3QgbWF0dGVyIChJIGRv
+bid0DQo+IGtub3cgb2YgYW55IHRiaCkuIEJ1dCBpdCdzIGEgbmljZSBjbGVhbnVwLCBzbyBs
+ZXQncyBkbyBpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmll
+bC52ZXR0ZXJAaW50ZWwuY29tPg0KPiBDYzogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJt
+YW5uQHN1c2UuZGU+DQo+IENjOiBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllcm1A
+cmVkaGF0LmNvbT4NCj4gQ2M6IEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT4NCj4gQ2M6
+IGxpbnV4LWZiZGV2QHZnZXIua2VybmVsLm9yZw0KPiBDYzogQmpvcm4gSGVsZ2FhcyA8Ymhl
+bGdhYXNAZ29vZ2xlLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4g
+LS0tDQo+ICAgZHJpdmVycy92aWRlby9hcGVydHVyZS5jIHwgNiArKy0tLS0NCj4gICAxIGZp
+bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vYXBlcnR1cmUuYyBiL2RyaXZlcnMvdmlkZW8vYXBl
+cnR1cmUuYw0KPiBpbmRleCA0MWU3N2RlMWVhODIuLjNkOGM5MjVjNzM2NSAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy92aWRlby9hcGVydHVyZS5jDQo+ICsrKyBiL2RyaXZlcnMvdmlkZW8v
+YXBlcnR1cmUuYw0KPiBAQCAtMzI0LDEzICszMjQsMTEgQEAgRVhQT1JUX1NZTUJPTChhcGVy
+dHVyZV9yZW1vdmVfY29uZmxpY3RpbmdfZGV2aWNlcyk7DQo+ICAgICovDQo+ICAgaW50IGFw
+ZXJ0dXJlX3JlbW92ZV9jb25mbGljdGluZ19wY2lfZGV2aWNlcyhzdHJ1Y3QgcGNpX2RldiAq
+cGRldiwgY29uc3QgY2hhciAqbmFtZSkNCj4gICB7DQo+IC0JYm9vbCBwcmltYXJ5ID0gZmFs
+c2U7DQo+ICsJYm9vbCBwcmltYXJ5Ow0KPiAgIAlyZXNvdXJjZV9zaXplX3QgYmFzZSwgc2l6
+ZTsNCj4gICAJaW50IGJhciwgcmV0Ow0KPiAgIA0KPiAtI2lmZGVmIENPTkZJR19YODYNCj4g
+LQlwcmltYXJ5ID0gcGRldi0+cmVzb3VyY2VbUENJX1JPTV9SRVNPVVJDRV0uZmxhZ3MgJiBJ
+T1JFU09VUkNFX1JPTV9TSEFET1c7DQo+IC0jZW5kaWYNCj4gKwlwcmltYXJ5ID0gcGRldiA9
+PSB2Z2FfZGVmYXVsdF9kZXZpY2UoKTsNCg0KdmdhX2RlZmF1bHRfZGV2aWNlKCkgaXMgcGFy
+dCBvZiB2Z2FhcmIgYW5kIGNhbiByZXR1cm4gTlVMTC4gWzFdIFRoYXQgbmV3IA0KdGVzdCBp
+cyBsaWtlbHkgdG8gYmUgaW5jb3JyZWN0IG9uIG1hbnkgc3lzdGVtcy4NCg0KSSBzdWdnZXN0
+IHRvIGltcGxlbWVudCBhIGhlbHBlciBsaWtlIGZiX2lzX3ByaW1hcnlfZGV2aWNlKCkgb24g
+eDg2OiBpdCANCnVzZXMgdGhlIGRlZmF1bHQgVkdBIGlmIHNldCwgb3IgZmFsbHMgYmFjayB0
+byB0aGUgb3JpZ2luYWwgdGVzdC4gWzJdDQoNCkl0J3Mgbm90ZXdvcnRoeSB0aGF0IG9uIG1v
+c3QgYXJjaGl0ZWN0dXJlcywgZmJfaXNfcHJpbWFyeV9kZXZpY2UoKSANCnJldHVybnMgMC4g
+QnV0IGF0IGxlYXN0IG9uIFNwYXJjIFszXSBhbmQgc29tZSBQYXJpc2MgWzRdIG1hY2hpbmVz
+LCBpdCANCmRvZXMgbm90Lg0KDQpJJ3ZlIGxvbmcgd2FudGVkIHRvIHJld29yayB0aGlzIGhl
+bHBlciBhbnl3YXkuIFNvIHRoaXMgaXMgYSBnb29kIA0Kb3Bwb3J0dW5pdHkuDQoNCkJlc3Qg
+cmVnYXJkcw0KVGhvbWFzDQoNClsxXSANCmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xp
+bnV4L2xhdGVzdC9zb3VyY2UvaW5jbHVkZS9saW51eC92Z2FhcmIuaCNMNjkNClsyXSANCmh0
+dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvYXJjaC94ODYv
+dmlkZW8vZmJkZXYuYyNMMTQNClszXSANCmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xp
+bnV4L2xhdGVzdC9zb3VyY2UvYXJjaC9zcGFyYy9pbmNsdWRlL2FzbS9mYi5oI0wxOA0KWzRd
+IA0KaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0ZXN0L3NvdXJjZS9kcml2
+ZXJzL3ZpZGVvL2NvbnNvbGUvc3RpY29yZS5jI0wxMTUzDQoNCg0KPiAgIA0KPiAgIAlmb3Ig
+KGJhciA9IDA7IGJhciA8IFBDSV9TVERfTlVNX0JBUlM7ICsrYmFyKSB7DQo+ICAgCQlpZiAo
+IShwY2lfcmVzb3VyY2VfZmxhZ3MocGRldiwgYmFyKSAmIElPUkVTT1VSQ0VfTUVNKSkNCg0K
+LS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VT
+RSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQw
+OSBOw7xybmJlcmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2No
+w6RmdHNmw7xocmVyOiBJdm8gVG90ZXYNCg==
 
-I guess the same problem occurs with PCI_IO_BASE/PCI_IO_BASE_UPPER16,
-but maybe there's no concurrent I/O port access?
+--------------e0BQCwu0JWreKuzdprfSHEQY--
 
->   10000:00:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev ff) (prog-if ff)
->           !!! Unknown header type 7f
->   00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ...
->   f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> 
->   10000:00:01.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port B (rev ff) (prog-if ff)
->           !!! Unknown header type 7f
->   00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ...
->   f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> 
-> To fix the issue, prefetchable limit upper 32 bits register needs to be
-> cleared firstly. This also adheres to the implementation of
-> pci_setup_bridge_mmio_pref(). Please see the function for detail.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216644
-> Fixes: 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-> Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
-> Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
-> ---
-> Changes since v1:
->   - Changed subject per Bjorn's suggestion
-> 
->  drivers/pci/controller/vmd.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..e520aec55b68 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -526,6 +526,9 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
->  				     PCI_CLASS_BRIDGE_PCI))
->  					continue;
->  
-> +				/* Clear the upper 32 bits of PREF limit. */
-> +				memset_io(base + PCI_PREF_LIMIT_UPPER32, 0, 4);
-> +
->  				memset_io(base + PCI_IO_BASE, 0,
->  					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
->  			}
-> -- 
-> 2.31.1
-> 
+--------------aLlWn0UCCGF9KGvwr0HJNdgi
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmO+3OIFAwAAAAAACgkQlh/E3EQov+BP
+0A//UE6PoqEAcTqpNAgiktgdxW78OLw49B8NivQxxGx0K/I3Gpc8JgvTRo49z+BolE4gYljskS2Q
+kpLjVJRT7dNVU2v1/hNB0VcAKZaKjF90TFvbp4e1TmnMQoei/1gUrJJPIDlHWCh0mJ2UZ5/d9ZHG
+6GGtSsfrX1qyaiG55U2DgBUlQQ72UZp61UFUhIw6LKTgvJyJMlIpkDvicP2PAQNGxwNA/IAR02Tg
+BMDHjZozc/wKfyNkmT4YhJhzioitBcHUEmXS+xcdmAEn/eeAiFnRZLq/euI9kffcOEmBEabDJ5kW
+YSQmshlAxsj9yAJs0cDlOtaq2KG0ze4MCHaFoc9Izl+wZiv2rEcNxHBvCnS399YkuFL9GM6cPb/f
+nKEHwWDkmUYjqk5fqavGEGeOxx+Mj3EsdNb+M4djSJTDurtyJFAA8cbs977NZuzrA3/HndIdDgE4
+ObwLQwGhmieD9jxsU6fyLjS0frDxQE9cEuIo3MVb/8h3CPJJy68iTKhhomofDRoYZQOIxdgzv63s
+IL5BBkFt9Tjh5v8l+rnuaVCbzy5FhdAMOjM+0NAnQatDNhx+x6d23dG2BPir5ZcTYUsmQbHTNAZw
+csYYe+JEEth/cPafQNmn3XkAYCuJoQCpmdcvESHEsMKuqDbNKkZALaQERWQ0f8/Lgq6FwyiGMwX1
+m2o=
+=KYQw
+-----END PGP SIGNATURE-----
+
+--------------aLlWn0UCCGF9KGvwr0HJNdgi--
