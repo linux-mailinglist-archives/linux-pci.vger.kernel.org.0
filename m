@@ -2,69 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C62B665781
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:31:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6D4665782
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 10:32:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233992AbjAKJbq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 04:31:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33198 "EHLO
+        id S232154AbjAKJc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 04:32:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232323AbjAKJbP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:31:15 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD275F97
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:30:00 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id 17so16212318pll.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 01:30:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CLqjgQrYV/9llu7u0zTqMyy4KVzHPwgJKEC2KvdEJPw=;
-        b=RDzgpLUd5Xcg7GvUnBDuVYvgMfa+ZtbdTgw5u82L39SljrpFWmAHsoGskA5tTNKnBP
-         tW0V2Bvp4f70P/V5ebyUz1Bg0smxTwKmgu0f+IVXwApAiFwNfmGq1gF0OMfiinbKUmkM
-         nIqkE/x5KBc9BINUhYkC0moJ444xcFMJLauP412Ps2DHGKRecVLtwp+uejIiu0STpaoQ
-         uD/13CbC/MmIGNaK/tHE0NHV8pEnswEh9lv+ALi3fnhJS0Wv+uYlToTVHrWEDp2EhR8y
-         v6F9As/tRFaJHZJAWEUi5H/k7MUPDcH3bXxJDho1zyMdjSV237HwT3WUPiSvBqdHgAKq
-         sQyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CLqjgQrYV/9llu7u0zTqMyy4KVzHPwgJKEC2KvdEJPw=;
-        b=Wz0b+p4Tpx9zN0q8yDJmSUuKJXuTynwEwExuh3m2RZQHDNeP6+1yDl3+2ZW4t93cMK
-         xC3VuZCkvVGNaNVjkm8QxD0FggmGHNtUshivKbebgtLN8HntkXfZhkEIgs7DyM5Twq2R
-         idSKOLMuz2jjaOj1VaYSyPmEd9dWYE5YSjWvvGX7bUskS+jZ2srX/DzmNt1GZzvvY+bj
-         3PkPF4ue3qstDIr6cJSlEYalE8bjk28Nn26640JDKHCl0TNIqC/ONOmPETAGguqnbzzb
-         em4pIhQrbKuwhe12CEY3tUu6zjvjcdwMyj5B3BUhkUCL3VwhI19/hWB82yAjxu24d/mA
-         9dDQ==
-X-Gm-Message-State: AFqh2kqng7PEcsUa5ca8LuaQctoa2AGPTfh4EEqINPF7PymwVQuMFNov
-        76lk3OQhp39wGmjYLrBwq5dmKplRsEwHcQ==
-X-Google-Smtp-Source: AMrXdXsSAZcNUALeF6TLdkKPqpItXTEDu+eGkP1+vSYM8jy8CPIoG+gLMc7WLR1zzh1xj7AGUKjkPQ==
-X-Received: by 2002:a05:6a20:4996:b0:9d:efbf:6607 with SMTP id fs22-20020a056a20499600b0009defbf6607mr75235227pzb.21.1673429399197;
-        Wed, 11 Jan 2023 01:29:59 -0800 (PST)
-Received: from AHUANG12-3ZHH9X.lenovo.com (220-143-163-101.dynamic-ip.hinet.net. [220.143.163.101])
-        by smtp.gmail.com with ESMTPSA id t21-20020a635355000000b0049f5da82b12sm7805605pgl.93.2023.01.11.01.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jan 2023 01:29:58 -0800 (PST)
-From:   Adrian Huang <adrianhuang0701@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Adrian Huang <adrianhuang0701@gmail.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Adrian Huang <ahuang12@lenovo.com>,
-        Jon Derrick <jonathan.derrick@linux.dev>
-Subject: [PATCH v2 1/1] PCI: vmd: Avoid acceidental enablement of window when zeroing config space of VMD root ports
-Date:   Wed, 11 Jan 2023 17:29:11 +0800
-Message-Id: <20230111092911.8039-1-adrianhuang0701@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S235868AbjAKJbm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 04:31:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A86D120AE;
+        Wed, 11 Jan 2023 01:30:22 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A73961B19;
+        Wed, 11 Jan 2023 09:30:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0ABC433EF;
+        Wed, 11 Jan 2023 09:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673429421;
+        bh=pNfMIqO9t73o1w5Ym2sYx549qBwB7dkKL+u78E64yg0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=FsueOTAIOrGEA4Pg+SXHDGPjBZcoJL8km4y68X6NDgXyfStiYknAv7prSI0U7SSxH
+         T41K10gPZqOUT5aQhW8WugjDhW9FdCLYPWp62o5OPxywFlCij8WcUFU6Iz8T3YotGP
+         R17mf8Xxs+ftPHgXo3Nfirtb/VUa5ZMuDPnH6J4qTcPZxwbm9Pkv39rn8kSj6UciGD
+         Q8/V7Gbf8WPAMvb8an9EhdZdDTCg0lJn5Ta3GqsF//PWHp7Dsna+M7GvYc5QzjbxX/
+         HZyp1NqIs/ienbF+iUwPo8NypH22x24WNlPCskL95Bdt6/7CIPRGewawNZ8f3bipvM
+         GM7ydKRHCrEgA==
+Message-ID: <dccfa004-1d40-acc0-6220-9232193b648f@kernel.org>
+Date:   Wed, 11 Jan 2023 10:30:11 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ controlling power and reset
+Content-Language: en-US
+To:     Jian Yang <jian.yang@mediatek.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        chuanjia.liu@mediatek.com, jieyy.yang@mediatek.com,
+        qizhong.cheng@mediatek.com, rex-bc.chen@mediatek.com,
+        david-yh.chiu@mediatek.com
+References: <20230111032830.20447-1-jian.yang@mediatek.com>
+ <20230111032830.20447-3-jian.yang@mediatek.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20230111032830.20447-3-jian.yang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,90 +70,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Adrian Huang <ahuang12@lenovo.com>
+On 11/01/2023 04:28, Jian Yang wrote:
+> From: "jian.yang" <jian.yang@mediatek.com>
+> 
+> Add new properties to support control power supplies and reset pin of
+> a downstream component.
+> 
+> Signed-off-by: jian.yang <jian.yang@mediatek.com>
 
-Commit 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-clears PCI configuration space of VMD root ports. However, the host OS
-cannot boot successfully with the following error message:
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC.  It might happen, that command when run on an older
+kernel, gives you outdated entries.  Therefore please be sure you base
+your patches on recent Linux kernel.
 
-  vmd 0000:64:05.5: PCI host bridge to bus 10000:00
-  ...
-  vmd 0000:64:05.5: Bound to PCI domain 10000
-  ...
-  DMAR: VT-d detected Invalidation Queue Error: Reason f
-  DMAR: VT-d detected Invalidation Time-out Error: SID ffff
-  DMAR: VT-d detected Invalidation Completion Error: SID ffff
-  DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: Invalidation Time-out Error (ITE) cleared
+> ---
+>  .../bindings/pci/mediatek-pcie-gen3.yaml      | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> index 7e8c7a2a5f9b..46149cc63989 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> @@ -84,6 +84,29 @@ properties:
+>      items:
+>        enum: [ phy, mac ]
+>  
+> +  pcie1v8-supply:
+> +    description:
+> +      The regulator phandle that provides 1.8V power to downstream component.
+> +
+> +  pcie3v3-supply:
+> +    description:
+> +      The regulator phandle that provides 3.3V power to downstream component.
+> +
+> +  pcie12v-supply:
+> +    description:
+> +      The regulator phandle that provides 12V power to downstream component.
+> +
+> +  dsc-reset-gpios:
+> +    description:
+> +      The reset GPIO of a downstream component.
 
-The root cause is that memset_io() clears prefetchable memory base/limit
-registers and prefetchable base/limit 32 bits registers sequentially. This
-might enable prefetchable memory if the device disables prefetchable memory
-originally. Here is an example (before memset_io()):
+Why you cannot use standard reset-gpios property?
 
-  PCI configuration space for 10000:00:00.0:
-  86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
-  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
-  00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
-  00 00 00 00 40 00 00 00 00 00 00 00 00 01 02 00
+> +    maxItems: 1
+> +
+> +  dsc-reset-msleep:
 
-So, prefetchable memory is ffffffff00000000-575000fffff, which is disabled.
-Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
+Wrong property unit/suffix.
 
-  The Prefetchable Memory Limit register must be programmed to a smaller
-  value than the Prefetchable Memory Base register if there is no
-  prefetchable memory on the secondary side of the bridge.
+> +    description:
+> +      The delay time between assertion and de-assertion of a downstream
+> +      component's reset GPIO.
 
-When memset_io() clears prefetchable base 32 bits register, the
-prefetchable memory becomes 0000000000000000-575000fffff, which is enabled.
-This behavior (accidental enablement of window) causes that config accesses
-get routed to the wrong place, and the access content of PCI configuration
-space of VMD root ports is 0xff after invoking memset_io() in
-vmd_domain_reset():
+Why this should be a property of DT?
 
-  10000:00:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev ff) (prog-if ff)
-          !!! Unknown header type 7f
-  00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ...
-  f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> +    maxItems: 1
 
-  10000:00:01.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port B (rev ff) (prog-if ff)
-          !!! Unknown header type 7f
-  00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ...
-  f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+maxItems of what?
 
-To fix the issue, prefetchable limit upper 32 bits register needs to be
-cleared firstly. This also adheres to the implementation of
-pci_setup_bridge_mmio_pref(). Please see the function for detail.
+> +
+>    clocks:
+>      minItems: 4
+>      maxItems: 6
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216644
-Fixes: 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
----
-Changes since v1:
-  - Changed subject per Bjorn's suggestion
-
- drivers/pci/controller/vmd.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..e520aec55b68 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -526,6 +526,9 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
- 				     PCI_CLASS_BRIDGE_PCI))
- 					continue;
- 
-+				/* Clear the upper 32 bits of PREF limit. */
-+				memset_io(base + PCI_PREF_LIMIT_UPPER32, 0, 4);
-+
- 				memset_io(base + PCI_IO_BASE, 0,
- 					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
- 			}
--- 
-2.31.1
+Best regards,
+Krzysztof
 
